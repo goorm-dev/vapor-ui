@@ -1,0 +1,41 @@
+{
+    "background": {
+        "primary": "#2a6ff3",
+        "secondary": "#e8e8ee",
+        "success": "#0a8672",
+        "warning": "#d14905",
+        "danger": "#df3337",
+        "hint": "#6c6e7e",
+        "contrast": "#3e404c",
+        "normal": "#ffffff",
+        "normal-lighter": "#f7f7fa",
+        "normal-darker": "#f0f0f5"
+    },
+    "foreground": {
+        "primary": "#245ecf",
+        "primary-lighter": "#2a6ff3",
+        "primary-darker": "#1d4eaa",
+        "secondary": "#3e404c",
+        "secondary-lighter": "#3e404c",
+        "secondary-darker": "#2b2d36",
+        "success": "#097261",
+        "success-lighter": "#0a8672",
+        "success-darker": "#075e50",
+        "warning": "#b23e04",
+        "warning-lighter": "#d14905",
+        "warning-darker": "#923304",
+        "danger": "#be2b2f",
+        "danger-lighter": "#df3337",
+        "danger-darker": "#9c2427",
+        "hint": "#6c6e7e",
+        "hint-lighter": "#6c6e7e",
+        "contrast": "#3e404c",
+        "contrast-lighter": "#3e404c"
+    },
+    "border": {
+        "normal": "#e1e1e8"
+    },
+    "logo": {
+        "normal": "#2b2d36"
+    }
+}

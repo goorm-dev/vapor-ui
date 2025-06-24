@@ -1,0 +1,30 @@
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@import '@vapor-ui/core/styles.css' layer(vapor);
+
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+@theme {
+    --color-fd-background: var(--background-normal);
+    --color-fd-primary: var(--vapor-color-background-primary);
+    --color-fd-border: var(--vapor-color-border-normal);
+    --color-fd-accent: var(--vapor-color-background-secondary);
+    --color-fd-accent-foreground: var(--vapor-color-foreground-secondary);
+    --color-fd-muted: var(--vapor-color-secondary);
+    --color-fd-muted-foreground: var(--vapor-color-foreground-secondary);
+    --color-fd-foreground: var(--vapor-color-foreground-secondary);
+    --color-fd-secondary: var(--vapor-color-secondary);
+    --color-fd-secondary-foreground: var(--vapor-color-foreground-secondary);
+    --color-fd-card: var(--vapor-color-background-normal);
+    --color-fd-card-foreground: var(--vapor-color-foreground-secondary);
+    --color-fd-popover-foreground: var(--vapor-color-foreground-secondary);
+    --color-fd-popover: var(--vapor-color-background-normal);
+    --color-fd-primary-foreground: var(--vapor-color-foreground-primary);
+}
+
+a[data-active='true'] {
+    color: var(--primary);
+}

@@ -1,0 +1,29 @@
+name: 'Install Playwright Browsers'
+description: 'Install Playwright browsers with caching, using pnpm (should already be installed)'
+
+inputs:
+    working-directory:
+        description: The working directory for the Playwright installation
+        required: true
+
+runs:
+    using: 'composite'
+    steps:
+        - name: Extract Playwright version
+          working-directory: ${{ inputs.working-directory }}
+          shell: bash
+          run: |
+              echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' package.json | sed 's/^[^0-9]*//')" >> $GITHUB_ENV
+
+        - name: Cache Playwright
+          id: playwright-cache
+          uses: actions/cache@v4
+          with:
+              path: ~/.cache/ms-playwright
+              key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}
+
+        - name: Install Playwright dependencies
+          shell: bash
+          working-directory: ${{ inputs.working-directory }}
+          if: steps.playwright-cache.outputs.cache-hit != 'true'
+          run: pnpm exec playwright install chromium firefox webkit msedge

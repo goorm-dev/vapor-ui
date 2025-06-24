@@ -1,0 +1,84 @@
+name: '[CI] 시각적 회귀 테스트'
+
+'on':
+    workflow_dispatch:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+        paths:
+            - packages/vapor-core/**
+
+permissions:
+    id-token: write
+    contents: read
+
+env:
+    BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+    AWS_REGION: ${{ secrets.AWS_REGION }}
+    AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
+    AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
+    PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+    REPORT_PATH:
+
+jobs:
+    visual-regression:
+        runs-on: macos-latest
+        steps:
+            - name: Git clone the repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Install Dependencies
+              uses: ./.github/composite/install
+              with:
+                  PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+
+            - name: Install Playwright Browsers
+              uses: ./.github/composite/browser-install
+              with:
+                  working-directory: packages/vapor-core
+
+            - name: Run Snapshot Tests
+              run: pnpm core test
+
+            - uses: actions/upload-artifact@v4
+              if: '${{ !cancelled() }}'
+              with:
+                  name: test-results
+                  path: ./packages/vapor-core/tests/report/
+
+    deploy-report:
+        needs: visual-regression
+        if: always()
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/download-artifact@v4
+              with:
+                  name: test-results
+                  path: ./report/
+
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: ${{ env.AWS_IAM_ROLE_NAME }}
+                  role-session-name: ${{ env.AWS_IAM_ROLE_SESSION_NAME }}
+                  aws-region: ${{ env.AWS_REGION }}
+
+            - name: Set report path
+              run: |
+                  FORMATTED_BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
+                  echo "REPORT_PATH=${FORMATTED_BRANCH_NAME}" >> $GITHUB_ENV
+
+            - name: Upload Report to S3
+              run: |
+                  aws s3 rm s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
+                  aws s3 cp './report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
+
+            - name: Post Test Result
+              uses: daun/playwright-report-summary@v3
+              with:
+                  github-token: ${{ secrets.PACKAGE_TOKEN }}
+                  report-file: ./report/index.json
+                  report-url: http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html

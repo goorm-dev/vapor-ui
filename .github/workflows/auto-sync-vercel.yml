@@ -1,0 +1,40 @@
+name: '[CI] GDS Fork 계정 동기화'
+
+on:
+    workflow_call:
+        secrets:
+            FORK_GITHUB_TOKEN:
+                required: true
+    workflow_dispatch:
+    push:
+        branches:
+            - '*' # 동기화하려는 브랜치 이름
+
+permissions: write-all
+
+jobs:
+    sync-fork-repo:
+        runs-on: ubuntu-latest
+        if: github.repository == 'ZeroChoi2781/vapor-previous'
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 0
+                  token: ${{ secrets.FORK_GITHUB_TOKEN }}
+            - name: Extract branch name
+              shell: bash
+              run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+              id: extract_branch
+            - name: Commit files
+              run: |
+                  git config user.email "saas@goorm.io"
+                  git config user.name "goorm-saas"
+                  git commit --amend --author="goorm-saas <saas@goorm.io>" --no-edit
+            - name: Push changes
+              uses: ad-m/github-push-action@master
+              with:
+                  github_token: ${{ secrets.FORK_GITHUB_TOKEN }}
+                  repository: goorm-saas/vapor-previous-fork
+                  force: true
+                  branch: ${{ steps.extract_branch.outputs.branch }}

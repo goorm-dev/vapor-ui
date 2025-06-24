@@ -1,0 +1,17 @@
+.container {
+    display: grid;
+    align-items: flex-start;
+    grid-gap: var(--space-250, 1.25rem);
+}
+
+.tabList[data-orientation='horizontal'] {
+    padding-inline: 0;
+}
+
+.tabPanel {
+    display: grid;
+    gap: var(--space-250, 1.25rem);
+    grid-template-columns: repeat(auto-fill, minmax(8.75rem, 1fr));
+
+    padding-inline: 0;
+}

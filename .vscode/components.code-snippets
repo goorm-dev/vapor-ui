@@ -1,0 +1,32 @@
+{
+    "single separator": {
+        "scope": "typescriptreact",
+        "prefix": "--single",
+        "body": [
+            "/* -----------------------------------------------------------------------------------------------*/",
+            "",
+        ],
+        "description": "Create Component Separator",
+    },
+
+    "double separator": {
+        "scope": "typescriptreact",
+        "prefix": "--double",
+        "body": [
+            "/* -------------------------------------------------------------------------------------------------",
+            " * $1",
+            " * -----------------------------------------------------------------------------------------------*/",
+            "",
+        ],
+        "description": "Create Component Separator",
+    },
+
+    "import styles": {
+        "scope": "typescriptreact",
+        "prefix": "styles",
+        "body": [
+            "import * as styles from './${TM_DIRECTORY/^.+\\/(.*)$/$1/}.css';",
+        ],
+        "description": "Import styles using the current directory name",
+    },
+}

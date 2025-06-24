@@ -1,0 +1,36 @@
+.card {
+    height: 100%;
+    transition: box-shadow 0.5s ease;
+
+    & > a:hover {
+        text-decoration: none;
+    }
+
+    &:hover {
+        box-shadow: 0rem 0.25rem 1rem 0rem rgba(0, 0, 0, 0.2);
+    }
+}
+
+.header {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    isolation: isolate;
+    left: 0;
+    object-fit: contain;
+    overflow: hidden;
+    position: relative;
+    top: 0;
+    width: 100%;
+    height: 11.25rem;
+    border-bottom: 0;
+    border-radius: var(--border-radius-300) var(--border-radius-300) 0 0;
+}
+.body {
+    display: flex;
+    padding: var(--space-300, 1.5rem);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-100, 0.5rem);
+    align-self: stretch;
+}

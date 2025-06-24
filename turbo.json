@@ -1,0 +1,30 @@
+{
+    "$schema": "https://turbo.build/schema.json",
+    "ui": "tui",
+    "tasks": {
+        "build": {
+            "dependsOn": ["^build"],
+            "inputs": ["$TURBO_DEFAULT$", ".env*"],
+            "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+        },
+        "lint": {
+            "outputs": []
+        },
+        "website#start": {
+            "dependsOn": ["website#build"],
+            "outputs": [".next/**", "!.next/cache/**"]
+        },
+        "website#dev": {
+            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
+            "outputs": ["dist/**"]
+        },
+        "typecheck": {
+            "dependsOn": ["^typecheck"]
+        },
+        "clean": {
+            "cache": false
+        }
+    },
+    "globalEnv": ["NODE_ENV", "CI", "TEST_URL", "PORT", "npm_lifecycle_event"],
+    "globalPassThroughEnv": ["FIGMA_API_KEY"]
+}

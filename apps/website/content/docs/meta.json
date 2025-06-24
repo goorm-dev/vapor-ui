@@ -1,0 +1,11 @@
+{
+    "title": "Vapor Docs",
+    "pages": [
+        "guides",
+        "foundation",
+        "theme-provider",
+        "icon",
+        "---Components---",
+        "vapor-core"
+    ]
+}
