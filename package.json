@@ -12,7 +12,7 @@
     "scripts": {
         "build": "turbo run build",
         "lint": "turbo run lint",
-        "clean": "turbo run clean && rimraf node_modules .turbo",
+        "clean": "pnpm -r --parallel exec rimraf node_modules .turbo dist .next .source",
         "start": "turbo run start",
         "storybook": "storybook dev -p 9009",
         "build-storybook": "storybook build",
