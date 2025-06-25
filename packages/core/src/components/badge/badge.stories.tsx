@@ -18,3 +18,7 @@ type Story = StoryObj<typeof Badge>;
 export const Default: Story = {
     render: (args) => <Badge {...args}>버튼</Badge>,
 };
+
+export const TestBed: Story = {
+    render: (args) => <Badge {...args}>버튼</Badge>,
+};

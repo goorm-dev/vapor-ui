@@ -45,3 +45,12 @@ export const Controlled: Story = {
         );
     },
 };
+
+export const TestBed: Story = {
+    render: (args) => (
+        <TextInput placeholder="sadf" {...args}>
+            <TextInput.Label>레이블</TextInput.Label>
+            <TextInput.Field />
+        </TextInput>
+    ),
+};

@@ -36,11 +36,17 @@ export const TestBed: Story = {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div style={{ display: 'flex' }}>
                 <Buttons color="primary" />
+                <Buttons color="primary" disabled />
                 <Buttons color="secondary" />
+                <Buttons color="secondary" disabled />
                 <Buttons color="success" />
+                <Buttons color="success" disabled />
                 <Buttons color="warning" />
+                <Buttons color="warning" disabled />
                 <Buttons color="danger" />
+                <Buttons color="danger" disabled />
                 <Buttons color="contrast" />
+                <Buttons color="contrast" disabled />
             </div>
 
             <div>
@@ -54,16 +60,16 @@ export const TestBed: Story = {
     ),
 };
 
-const Buttons = ({ color }: ButtonProps) => {
+const Buttons = ({ color, disabled }: ButtonProps) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Button color={color} variant="fill" gap="050">
+            <Button color={color} disabled={disabled} variant="fill" gap="050">
                 {upperFirst(`${color}`)}
             </Button>
-            <Button color={color} variant="ghost">
+            <Button color={color} disabled={disabled} variant="ghost">
                 {upperFirst(`${color}`)}
             </Button>
-            <Button color={color} variant="outline">
+            <Button color={color} disabled={disabled} variant="outline">
                 {upperFirst(`${color}`)}
             </Button>
         </div>
