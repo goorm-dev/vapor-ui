@@ -5,13 +5,6 @@ import Image from 'next/image';
 
 import { source } from '~/lib/source';
 
-/**
- * Shared layout configurations
- *
- * you can customise layouts individually from:
- * Home Layout: app/(home)/layout.tsx
- * Docs Layout: app/docs/layout.tsx
- */
 export const baseOptions: BaseLayoutProps = {
     nav: {
         title: (
@@ -28,13 +21,16 @@ export const baseOptions: BaseLayoutProps = {
     links: [
         {
             icon: (
-                <Image
-                    src="/icons/figma-color.svg"
-                    alt="Figma"
-                    width={16}
-                    height={16}
-                    style={{ display: 'inline-block' }}
-                />
+                <div
+                    style={{ position: 'relative', width: 20, height: 20, display: 'inline-block' }}
+                >
+                    <Image
+                        src="/icons/figma-color.svg"
+                        alt="Figma"
+                        fill
+                        style={{ objectFit: 'contain' }}
+                    />
+                </div>
             ),
             text: 'Figma',
             url: 'https://www.figma.com/community/file/1508829832204351721/vapor-design-system',
@@ -43,13 +39,16 @@ export const baseOptions: BaseLayoutProps = {
         },
         {
             icon: (
-                <Image
-                    src="/icons/discord-color.svg"
-                    alt="Discord"
-                    width={16}
-                    height={16}
-                    style={{ display: 'inline-block' }}
-                />
+                <div
+                    style={{ position: 'relative', width: 20, height: 20, display: 'inline-block' }}
+                >
+                    <Image
+                        src="/icons/discord-color.svg"
+                        alt="Discord"
+                        fill
+                        style={{ objectFit: 'contain' }}
+                    />
+                </div>
             ),
             text: 'Discord',
             url: 'https://discord.gg/7Z8Ecur63D',
