@@ -1,4 +1,4 @@
-name: '[CI] Code Quality'
+name: 'Code Quality Checks'
 
 on:
     push:
