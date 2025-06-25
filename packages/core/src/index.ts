@@ -8,5 +8,5 @@ export * from './components/grid';
 export * from './components/flex';
 export * from './components/avatar';
 export * from './components/text-input';
-export * from './components/theme-provider';
 export * from './components/text';
+export * from './components/theme-provider';
