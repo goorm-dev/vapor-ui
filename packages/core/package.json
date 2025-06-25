@@ -35,7 +35,7 @@
         "dist"
     ],
     "sideEffects": [
-        "**/*.css"
+        "*.css.ts"
     ],
     "repository": {
         "type": "git",
