@@ -23,7 +23,7 @@ jobs:
             - name: Install
               uses: ./.github/composite-actions/install
               with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Build packages
               run: pnpm build
@@ -33,8 +33,10 @@ jobs:
               with:
                   name: build-artifacts
                   path: |
-                      packages/vapor-*/dist
-                      packages/vapor-*/package.json
+                      packages/*/dist
+                      !packages/*config*/dist
+                      packages/*/package.json
+                      !packages/*config*/package.json
 
     eslint:
         name: ESLint
@@ -46,7 +48,7 @@ jobs:
             - name: Install
               uses: ./.github/composite-actions/install
               with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Run ESLint
               run: pnpm lint
@@ -61,7 +63,7 @@ jobs:
             - name: Install
               uses: ./.github/composite-actions/install
               with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Run typecheck
               run: pnpm typecheck
@@ -76,7 +78,7 @@ jobs:
             - name: Install
               uses: ./.github/composite-actions/install
               with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Run prettier
               run: pnpm format:check
@@ -99,7 +101,7 @@ jobs:
             - name: Install
               uses: ./.github/composite-actions/install
               with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Run type check report
               id: type-check
