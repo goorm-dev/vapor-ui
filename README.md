@@ -45,3 +45,9 @@ Vapor is a monorepo that efficiently manages multiple packages using pnpm Worksp
 | apps/website            | Official documentation website                                       | -                                                                                                         |
 | @repo/eslint-config     | Shared ESLint configuration                                          | -                                                                                                         |
 | @repo/typescript-config | Shared TypeScript tsconfig configuration                             | -                                                                                                         |
+
+## Community & Support
+
+- **Bugs & Feature Requests**: Use [GitHub Issues](https://github.com/goorm-dev/vapor-ui/issues) to report bugs or request new features.
+- **Discord**: Join the [Vapor UI Discord](https://discord.gg/PMqxs3xaHC) to chat with the community and team.
+- **Email**: For other inquiries, you can contact us at vapor.ui@goorm.io
