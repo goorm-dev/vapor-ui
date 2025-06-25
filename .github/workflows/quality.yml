@@ -55,6 +55,7 @@ jobs:
 
     types:
         name: TypeScript
+        needs: build
         runs-on: ubuntu-latest
         steps:
             - name: Checkout branch
@@ -64,6 +65,12 @@ jobs:
               uses: ./.github/composite-actions/install
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-artifacts
+                  path: .
 
             - name: Run typecheck
               run: pnpm typecheck
