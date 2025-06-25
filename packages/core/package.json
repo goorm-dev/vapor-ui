@@ -105,7 +105,7 @@
         "tsup": "^8.3.6",
         "typescript": "^5.7.3",
         "vitest": "^3.2.4",
-        "vitest-axe": "^0.1.0"
+        "vitest-axe": "^1.0.0-pre.5"
     },
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
