@@ -15,7 +15,7 @@ interface FoundationCardProps {
 
 const FoundationCard = ({ title, description, imageUrl, href }: FoundationCardProps) => {
     return (
-        <Card className={clsx(styles.card, 'not-prose')}>
+        <Card className={clsx(styles.card)}>
             <Link href={href}>
                 <Card.Header className={styles.header}>
                     <Image
