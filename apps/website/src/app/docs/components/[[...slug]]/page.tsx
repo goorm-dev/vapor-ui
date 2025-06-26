@@ -8,7 +8,7 @@ import { getMDXComponents } from '~/mdx-components';
 const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
     const { slug = [] } = await params;
 
-    const page = source.getPage(['vapor-core', ...slug]);
+    const page = source.getPage(['components', ...slug]);
 
     if (!page) notFound();
     const { body: MDX, toc, lastModified } = await page.data.load();
