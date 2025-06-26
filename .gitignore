@@ -41,8 +41,8 @@ storybook-static
 *storybook.log
 
 # Playwright
-**/tests/report
-**/tests/results
+**/__tests__/report
+**/__tests__/results
 
 # docs
 /.source/
