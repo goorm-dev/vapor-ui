@@ -61,7 +61,7 @@ git checkout main
 git pull upstream main
 
 # Create a new feature branch
-git checkout -b feature/button-loading-state
+git checkout -b create-button-loading-state
 ```
 
 ### 2. Commit Messages (Conventional Commits)
