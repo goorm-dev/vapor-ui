@@ -37,7 +37,11 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         FoundationList,
         IconList,
         PropsTable,
-        AccessibilityTable,
+
+        AccessibilityTable: AccessibilityTable as unknown as (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any,
+        ) => JSX.Element,
         ...components,
     } as MDXComponents;
 };

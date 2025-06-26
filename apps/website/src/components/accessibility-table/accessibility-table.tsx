@@ -1,6 +1,4 @@
-'use client';
-
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment } from 'react';
 
 import { Badge, Text } from '@vapor-ui/core';
 import clsx from 'clsx';
@@ -213,44 +211,23 @@ const Section = ({ section }: { section: AccessibilitySection }) => {
  * Main component
  * -------------------------------------------------------------------------*/
 
-const AccessibilityTable = ({ file, data, className }: AccessibilityTableProps) => {
-    const [resolved, setResolved] = useState<AccessibilityData | null>(() => {
-        if (data) return normalizeAccessibilityData(data);
+const AccessibilityTable = async ({ data, className }: AccessibilityTableProps) => {
+    let resolved: AccessibilityData | null = null;
+
+    resolved = normalizeAccessibilityData(data);
+
+    if (resolved === null) {
         return null;
-    });
-
-    /* ---------------------------------- fetch ---------------------------------*/
-    useEffect(() => {
-        if (data || !file) return; // prefer direct data
-
-        const controller = new AbortController();
-        fetch(`/components/${file}.json`, { signal: controller.signal })
-            .then((res) => res.json())
-            .then((json) => {
-                const acc = json['accessibility'] ?? json;
-                setResolved(normalizeAccessibilityData(acc));
-            })
-            .catch((err) => {
-                if (err.name !== 'AbortError') {
-                    console.error(
-                        `Failed to load accessibility data from /components/${file}.json`,
-                        err,
-                    );
-                }
-            });
-
-        return () => controller.abort();
-    }, [file, data]);
-
-    if (resolved === null) return null;
+    }
 
     if (!resolved.sections.length) {
         return <p>표시할 데이터가 없습니다.</p>;
     }
+
     return (
         <div className={clsx('flex flex-col gap-8 w-full', className)}>
             <Heading description={resolved.headingDescription} />
-            {resolved.sections.map((section, idx) => (
+            {resolved.sections.map((section: AccessibilitySection, idx: number) => (
                 <Section key={idx} section={section} />
             ))}
         </div>
