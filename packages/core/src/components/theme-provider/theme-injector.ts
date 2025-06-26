@@ -15,14 +15,14 @@ const THEME_CONFIG = {
 } as const;
 
 type ThemeConfig = typeof THEME_CONFIG;
-type ColorTheme = keyof typeof THEME_CONFIG.CLASS_NAMES;
-type RadiusTheme = keyof typeof THEME_CONFIG.RADIUS_FACTOR_MAP;
-type ScaleFactor = number;
+type Appearance = keyof typeof THEME_CONFIG.CLASS_NAMES;
+type Radius = keyof typeof THEME_CONFIG.RADIUS_FACTOR_MAP;
+type Scaling = number;
 
 interface ThemeState {
-    colorTheme: ColorTheme;
-    radiusTheme: RadiusTheme;
-    scaleFactor: ScaleFactor;
+    appearance: Appearance;
+    radius: Radius;
+    scaling: Scaling;
 }
 
 /**
@@ -69,7 +69,7 @@ const themeInjectScript = (
 
         try {
             // 1. Color theme
-            if (currentThemes.colorTheme === 'dark') {
+            if (currentThemes.appearance === 'dark') {
                 root.classList.add(config.CLASS_NAMES.dark);
                 root.classList.remove(config.CLASS_NAMES.light);
             } else {
@@ -78,11 +78,11 @@ const themeInjectScript = (
             }
 
             // 2. Radius theme
-            const radiusFactor = config.RADIUS_FACTOR_MAP[currentThemes.radiusTheme] ?? 1;
+            const radiusFactor = config.RADIUS_FACTOR_MAP[currentThemes.radius] ?? 1;
             root.style.setProperty(`--${cssVarNames.radiusFactor}`, radiusFactor.toString());
 
             // 3. Scale theme
-            const scaleFactor = currentThemes.scaleFactor ?? 1;
+            const scaleFactor = currentThemes.scaling ?? 1;
             root.style.setProperty(`--${cssVarNames.scaleFactor}`, scaleFactor.toString());
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -97,8 +97,8 @@ export {
     THEME_CONFIG,
     themeInjectScript,
     type ThemeConfig,
-    type ColorTheme,
-    type RadiusTheme,
-    type ScaleFactor,
+    type Appearance,
+    type Radius,
+    type Scaling,
     type ThemeState,
 };
