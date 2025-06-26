@@ -1,7 +1,4 @@
-import {
-    ThemeProvider,
-    VaporThemeConfig,
-} from '../packages/vapor-core/src/components/theme-provider';
+import { ThemeProvider, VaporThemeConfig } from '../packages/core/src/components/theme-provider';
 import type { Preview } from '@storybook/react';
 
 const themeConfig: VaporThemeConfig = {

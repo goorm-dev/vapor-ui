@@ -26,7 +26,7 @@ const config: StorybookConfig = {
     typescript: {
         reactDocgen: 'react-docgen-typescript',
         reactDocgenTypescriptOptions: {
-            tsconfigPath: path.resolve(__dirname, '../packages/vapor-core/tsconfig.json'),
+            tsconfigPath: path.resolve(__dirname, '../packages/core/tsconfig.json'),
         },
     },
 
@@ -42,7 +42,7 @@ const config: StorybookConfig = {
                 alias: {
                     ...config.resolve?.alias,
                     // ...convertTsConfigPathsToWebpackAliases(),
-                    '~': path.resolve(__dirname, '../packages/vapor-core/src'),
+                    '~': path.resolve(__dirname, '../packages/core/src'),
                 },
             },
             plugins: [vanillaExtractPlugin(), reactDocgenTypescript()],
