@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { ComponentDocsMap } from '~/constants/components';
 
 interface PropItem {
     prop: string;
@@ -27,27 +27,14 @@ export interface PropsTableProps {
 }
 
 const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => {
-    const [items, setItems] = useState<PropItem[] | null>(null);
+    const doc = ComponentDocsMap[file];
 
-    useEffect(() => {
-        const controller = new AbortController();
-        fetch(`/components/${file}.json`, { signal: controller.signal })
-            .then((res) => res.json())
-            .then((json) => {
-                setItems(json[section] ?? []);
-            })
-            .catch((err) => {
-                if (err.name !== 'AbortError') {
-                    console.error(`Failed to load props from /components/${file}.json`, err);
-                }
-            });
-
-        return () => controller.abort();
-    }, [file, section]);
-
-    if (items === null) {
-        return null; // could return a spinner here if desired
+    if (!doc) {
+        console.error(`PropsTable: No documentation preloaded for file "${file}"`);
+        return null;
     }
+
+    const items = (doc[section] as PropItem[]) ?? [];
 
     if (items.length === 0) {
         return <p>표시할 데이터가 없습니다.</p>;
