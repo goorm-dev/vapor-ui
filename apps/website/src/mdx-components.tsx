@@ -12,6 +12,7 @@ import FoundationSizeTabs from '~/components/foundation-size-tabs';
 import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
 import IconList from '~/components/icon-list-tabs/icon-list-tabs';
 import InstallSelector from '~/components/install-selector/install-selector';
+import PropsTable from '~/components/props-table';
 
 export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
     return {
@@ -34,6 +35,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         FoundationCard,
         FoundationList,
         IconList,
+        PropsTable,
         ...components,
     } as MDXComponents;
 };
