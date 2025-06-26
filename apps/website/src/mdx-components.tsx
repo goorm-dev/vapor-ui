@@ -3,6 +3,7 @@ import * as TabsComponents from 'fumadocs-ui/components/tabs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 
+import AccessibilityTable from '~/components/accessibility-table';
 import AllComponentsContainer from '~/components/all-components-container';
 import ComponentsCard from '~/components/component-card/component-card';
 import FoundationCard from '~/components/foundation-card/foundation-card';
@@ -36,6 +37,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         FoundationList,
         IconList,
         PropsTable,
+        AccessibilityTable,
         ...components,
     } as MDXComponents;
 };

@@ -86,5 +86,71 @@
             "default": null,
             "description": "Nav.LinkItem 내부의 Nav.Link 요소에 전달할 추가 클래스를 지정합니다."
         }
+    ],
+    "accessibility": [
+        {
+            "headingDescription": "Nav WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.\nVapor Nav는 Radix 기능을 기반으로 구축되어 일부 웹 접근성은 Radix에서 제공하고 있습니다.",
+            "sections": [
+                {
+                    "title": "개발 시 준수해야 할 내용을 명시합니다.",
+                    "headerList": {
+                        "props": "Props",
+                        "description": "Description"
+                    },
+                    "items": [
+                        {
+                            "itemKey": "aria-label",
+                            "descriptions": [
+                                "페이지에 여러 개의 네비게이션이 있는 경우, 네비게이션의 목적을 명확하게 설명해야 합니다.",
+                                "이 때, aria-label에는 navigation이란 단어를 사용하지 않습니다."
+                            ],
+                            "exampleCode": "<nav aria-label=\"주 메뉴\">\n  <!-- 주요 내비게이션 콘텐츠 -->\n</nav>\n\n<nav aria-label=\"푸터 링크\">\n  <!-- 푸터 관련 링크 -->\n</nav>",
+                            "badgeColor": "primary"
+                        }
+                    ]
+                },
+                {
+                    "title": "컴포넌트 내부적으로 준수되고 있는 접근성 기능을 명시합니다.",
+                    "headerList": {
+                        "accessibility": "Accessibility",
+                        "description": "Description"
+                    },
+                    "items": [
+                        {
+                            "itemKey": "role=\"navigation\"",
+                            "descriptions": [
+                                "해당 요소가 네비게이션의 역할을 수행 중임을 안내합니다."
+                            ],
+                            "exampleCode": "",
+                            "badgeColor": "primary"
+                        },
+                        {
+                            "itemKey": "aria-current=\"page\"",
+                            "descriptions": [
+                                "내비게이션의 여러 링크 중에서 사용자가 현재 보고 있는 페이지를 나타냅니다."
+                            ],
+                            "exampleCode": "",
+                            "badgeColor": "primary"
+                        }
+                    ]
+                },
+                {
+                    "title": "Keyboard Interactions",
+                    "headerList": {
+                        "interaction": "Interaction",
+                        "description": "Description"
+                    },
+                    "items": [
+                        {
+                            "itemKey": "Space",
+                            "descriptions": [
+                                "체크박스에 포커스가 있을 때 Space 키를 누르면 체크박스의 상태가 변경됩니다."
+                            ],
+                            "badgeColor": "hint"
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }
