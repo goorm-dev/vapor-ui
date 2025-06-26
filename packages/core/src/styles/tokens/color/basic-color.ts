@@ -1,5 +1,4 @@
 export const LIGHT_BASIC_COLORS = {
-    // Gray colors
     gray: {
         '000': '#ffffff',
         '050': '#f7f7fa',
@@ -14,7 +13,6 @@ export const LIGHT_BASIC_COLORS = {
         '900': '#2b2d36',
         '950': '#252730',
     },
-    // Red colors
     red: {
         '050': '#fcebeb',
         '100': '#f9d6d7',
@@ -27,7 +25,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#861f21',
         '900': '#701a1c',
     },
-    // Pink colors
     pink: {
         '050': '#fbeaf1',
         '100': '#f8d5e3',
@@ -40,7 +37,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#831c46',
         '900': '#6d183a',
     },
-    // Grape colors
     grape: {
         '050': '#f8eafc',
         '100': '#f2d5f9',
@@ -53,7 +49,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#721a88',
         '900': '#5f1671',
     },
-    // Violet colors
     violet: {
         '050': '#f3eefe',
         '100': '#e7ddfe',
@@ -66,7 +61,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#513295',
         '900': '#442a7d',
     },
-    // Blue colors
     blue: {
         '050': '#eaf1fe',
         '100': '#d4e2fd',
@@ -79,7 +73,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#194392',
         '900': '#15387a',
     },
-    // Cyan colors
     cyan: {
         '050': '#e7f2f5',
         '100': '#cfe6ec',
@@ -92,7 +85,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#084d60',
         '900': '#074150',
     },
-    // Green colors
     green: {
         '050': '#e6f3f1',
         '100': '#cee7e3',
@@ -105,7 +97,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#065044',
         '900': '#054339',
     },
-    // Lime colors
     lime: {
         '050': '#f4fbe9',
         '100': '#e9f6d4',
@@ -118,7 +109,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#567f17',
         '900': '#486a14',
     },
-    // Yellow colors
     yellow: {
         '050': '#fef8e5',
         '100': '#fef1cc',
@@ -131,7 +121,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#967000',
         '900': '#7d5e00',
     },
-    // Orange colors
     orange: {
         '050': '#faede6',
         '100': '#f6dbcd',
@@ -144,9 +133,6 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#7d2c03',
         '900': '#692503',
     },
-    // Base colors
-    'rgb-black': '43, 45, 54',
     black: '#000000',
-    'rgb-white': '255, 255, 255',
     white: '#ffffff',
 };
