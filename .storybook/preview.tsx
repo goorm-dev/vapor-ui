@@ -3,11 +3,11 @@ import type { Preview } from '@storybook/react';
 
 const themeConfig: VaporThemeConfig = {
     defaultTheme: {
-        colorTheme: 'dark',
-        radiusTheme: 'full',
-        scaleFactor: 1.5,
+        colorTheme: 'light',
+        radiusTheme: 'md',
+        scaleFactor: 1,
     },
-    storageKey: 'my-vapor-theme',
+    storageKey: 'vapor-ui',
     enableSystemTheme: false,
 };
 
@@ -25,17 +25,17 @@ const preview: Preview = {
     globalTypes: {
         colorTheme: {
             name: 'Color Theme',
-            description: '컴포넌트의 전체 컬러 테마를 설정합니다.',
+            description: 'Set the overall color theme for components.',
             toolbar: {
-                title: 'Color', // 툴바 메뉴의 제목
+                title: 'Color',
                 icon: 'circlehollow',
                 items: ['light', 'dark'],
-                dynamicTitle: true, // 선택된 값으로 제목이 동적으로 변경됩니다.
+                dynamicTitle: true,
             },
         },
         radiusTheme: {
             name: 'Radius Theme',
-            description: '컴포넌트의 전체 border-radius를 설정합니다.',
+            description: 'Set the overall border-radius for components.',
             toolbar: {
                 title: 'Radius',
                 icon: 'star',
@@ -45,7 +45,7 @@ const preview: Preview = {
         },
         scaleFactor: {
             name: 'Scale Factor',
-            description: '컴포넌트의 전체 스케일을 조절합니다.',
+            description: 'Adjust the overall scale of components.',
             toolbar: {
                 title: 'Scale',
                 icon: 'zoom',
@@ -67,19 +67,22 @@ const preview: Preview = {
             },
         },
     },
-    initialGlobals: {
-        colorTheme: 'light',
-        radiusTheme: 'md',
-        scaleFactor: 2.4,
-    },
 
     decorators: [
         (Story, context) => {
             const { colorTheme, radiusTheme, scaleFactor } = context.globals;
             const theme = { colorTheme, radiusTheme, scaleFactor };
 
+            const dynamicTheme = {
+                ...themeConfig,
+                defaultTheme: {
+                    ...themeConfig.defaultTheme,
+                    ...theme,
+                },
+            };
+
             return (
-                <ThemeProvider config={themeConfig}>
+                <ThemeProvider config={dynamicTheme}>
                     <Story />
                 </ThemeProvider>
             );
