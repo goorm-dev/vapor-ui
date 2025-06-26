@@ -20,7 +20,7 @@
 저희 프로젝트는 다음의 개발 환경을 사용합니다:
 
 - **Package Manager**: `pnpm` v10+
-- **Node.js**: v18+
+- **Node.js**: v20+
 - **Linting & Formatting**: ESLint, Prettier
 
 먼저 프로젝트를 Fork 및 Clone 한 후, 아래 명령어로 의존성을 설치하고 개발 서버를 실행하세요.

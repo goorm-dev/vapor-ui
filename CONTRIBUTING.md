@@ -20,7 +20,7 @@ There are many ways to contribute to Vapor UI:
 Our project uses the following development environment:
 
 - **Package Manager**: `pnpm` v10+
-- **Node.js**: v18+
+- **Node.js**: v20+
 - **Linting & Formatting**: ESLint, Prettier
 
 First, fork and clone the project, then install the dependencies and run the development server with the commands below:
