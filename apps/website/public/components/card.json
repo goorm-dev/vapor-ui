@@ -1,0 +1,58 @@
+{
+    "props": [
+        {
+            "prop": "className",
+            "type": "string | undefined",
+            "default": null,
+            "description": "카드 루트 요소에 적용할 추가 CSS 클래스를 지정합니다."
+        },
+        {
+            "prop": "children",
+            "type": "React.ReactNode",
+            "default": null,
+            "description": "카드에 표시할 콘텐츠입니다."
+        }
+    ],
+    "headerProps": [
+        {
+            "prop": "className",
+            "type": "string | undefined",
+            "default": null,
+            "description": "헤더 요소에 적용할 추가 CSS 클래스를 지정합니다."
+        },
+        {
+            "prop": "children",
+            "type": "React.ReactNode",
+            "default": null,
+            "description": "헤더에 표시할 콘텐츠입니다."
+        }
+    ],
+    "bodyProps": [
+        {
+            "prop": "className",
+            "type": "string | undefined",
+            "default": null,
+            "description": "바디 요소에 적용할 추가 CSS 클래스를 지정합니다."
+        },
+        {
+            "prop": "children",
+            "type": "React.ReactNode",
+            "default": null,
+            "description": "바디에 표시할 콘텐츠입니다."
+        }
+    ],
+    "footerProps": [
+        {
+            "prop": "className",
+            "type": "string | undefined",
+            "default": null,
+            "description": "푸터 요소에 적용할 추가 CSS 클래스를 지정합니다."
+        },
+        {
+            "prop": "children",
+            "type": "React.ReactNode",
+            "default": null,
+            "description": "푸터에 표시할 콘텐츠입니다."
+        }
+    ]
+}

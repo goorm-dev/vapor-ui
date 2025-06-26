@@ -1,0 +1,28 @@
+{
+    "props": [
+        {
+            "prop": "typography",
+            "type": "'display1' | 'display2' | 'display3' | 'display4' | 'heading1' | 'heading2' | 'heading3' | 'heading4' | 'heading5' | 'heading6' | 'subtitle1' | 'subtitle2' | 'body1' | 'body2' | 'body3' | 'body4' | 'code1' | 'code2' | undefined",
+            "default": null,
+            "description": "적용할 타이포그래피 스타일 토큰입니다."
+        },
+        {
+            "prop": "foreground",
+            "type": "'primary' | 'primary-darker' | 'secondary' | 'secondary-darker' | 'success' | 'success-darker' | 'warning' | 'warning-darker' | 'danger' | 'danger-darker' | 'hint' | 'hint-darker' | 'contrast' | 'contrast-darker' | 'normal' | 'normal-lighter' | 'accent' | 'accent-darker' | undefined",
+            "default": null,
+            "description": "텍스트 색상을 지정하는 전경색 토큰입니다."
+        },
+        {
+            "prop": "as",
+            "type": "React.ElementType | undefined",
+            "default": "'span'",
+            "description": "HTML 시멘틱 태그를 변경하기 위해 사용합니다. 예: 'p', 'strong', 'h1' 등."
+        },
+        {
+            "prop": "children",
+            "type": "React.ReactNode",
+            "default": null,
+            "description": "텍스트 내용입니다."
+        }
+    ]
+}

@@ -1,0 +1,40 @@
+{
+    "props": [
+        {
+            "prop": "color",
+            "type": "'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'contrast'",
+            "default": "'primary'",
+            "description": "아이콘 버튼의 주 색상(의미)을 설정합니다."
+        },
+        {
+            "prop": "size",
+            "type": "'sm' | 'md' | 'lg' | 'xl'",
+            "default": "'md'",
+            "description": "버튼 및 아이콘의 크기를 설정합니다."
+        },
+        {
+            "prop": "variant",
+            "type": "'fill' | 'outline' | 'ghost'",
+            "default": "'fill'",
+            "description": "버튼의 스타일 변형을 선택합니다."
+        },
+        {
+            "prop": "rounded",
+            "type": "boolean",
+            "default": "false",
+            "description": "true일 경우 버튼이 완전히 원형이 됩니다."
+        },
+        {
+            "prop": "disabled",
+            "type": "boolean",
+            "default": "false",
+            "description": "버튼을 비활성화합니다."
+        },
+        {
+            "prop": "aria-label",
+            "type": "string",
+            "default": null,
+            "description": "화면 읽기 전용 사용자에게 아이콘 버튼의 용도를 설명하는 텍스트입니다. 가시적 레이블이 없으므로 필수입니다."
+        }
+    ]
+}
