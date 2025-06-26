@@ -8,22 +8,18 @@ import { source } from '~/lib/source';
 export const baseOptions: BaseLayoutProps = {
     nav: {
         title: (
-            <>
-                <Image
-                    width={68}
-                    height={26}
-                    src="https://statics.goorm.io/gds/resources/brand-images/light/logo_vapor.svg"
-                    alt="Goorm Design System: Vapor"
-                />
-            </>
+            <Image
+                width={68}
+                height={26}
+                src="https://statics.goorm.io/gds/resources/brand-images/light/logo_vapor.svg"
+                alt="Goorm Design System: Vapor"
+            />
         ),
     },
     links: [
         {
             icon: (
-                <div
-                    style={{ position: 'relative', width: 20, height: 20, display: 'inline-block' }}
-                >
+                <div className="relative inline-block w-5 h-5">
                     <Image
                         src="/icons/figma-color.svg"
                         alt="Figma"
@@ -39,9 +35,7 @@ export const baseOptions: BaseLayoutProps = {
         },
         {
             icon: (
-                <div
-                    style={{ position: 'relative', width: 20, height: 20, display: 'inline-block' }}
-                >
+                <div className="relative inline-block w-5 h-5">
                     <Image
                         src="/icons/discord-color.svg"
                         alt="Discord"
