@@ -3,6 +3,8 @@ import { Fragment } from 'react';
 import { Badge, Text } from '@vapor-ui/core';
 import clsx from 'clsx';
 
+import { ComponentAccessibilityDataMap } from '~/constants/accessibility';
+
 interface RawAccessibilityItem {
     accessibility: string;
     description: string;
@@ -31,15 +33,7 @@ export interface AccessibilityData {
 }
 
 export interface AccessibilityTableProps {
-    /**
-     * Path base filename under `/public/components` (without extension).
-     * If provided, the component will fetch the JSON and infer `data` from it.
-     */
     file?: string;
-    /**
-     * Direct data to render. If provided, `file` will be ignored.
-     */
-    data?: AccessibilityData;
     className?: string;
 }
 
@@ -211,10 +205,13 @@ const Section = ({ section }: { section: AccessibilitySection }) => {
  * Main component
  * -------------------------------------------------------------------------*/
 
-const AccessibilityTable = async ({ data, className }: AccessibilityTableProps) => {
+const AccessibilityTable = ({ file, className }: AccessibilityTableProps) => {
     let resolved: AccessibilityData | null = null;
-
-    resolved = normalizeAccessibilityData(data);
+    if (file && file in ComponentAccessibilityDataMap) {
+        resolved = normalizeAccessibilityData(ComponentAccessibilityDataMap[file]);
+    } else if (file) {
+        console.error(`AccessibilityTable: No accessibility data preloaded for file "${file}"`);
+    }
 
     if (resolved === null) {
         return null;
