@@ -13,6 +13,14 @@ const config = {
             },
         ];
     },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'statics.goorm.io',
+            },
+        ],
+    },
 };
 
 export default withMDX(config);
