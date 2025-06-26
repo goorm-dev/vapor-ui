@@ -61,7 +61,7 @@ git checkout main
 git pull upstream main
 
 # 새 기능 브랜치 생성
-git checkout -b feature/button-loading-state
+git checkout -b create-button-loading-state
 ```
 
 ### 2. 커밋 메시지 (Conventional Commits)
