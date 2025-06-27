@@ -78,6 +78,21 @@ function validateThemeConfig(config: unknown): config is VaporThemeConfig {
 
     const c = config as Partial<VaporThemeConfig>;
 
+    if (c.appearance !== undefined && !['light', 'dark'].includes(c.appearance as Appearance)) {
+        console.warn('[@vapor-ui/core] Invalid appearance type. Expected "light" or "dark".');
+        return false;
+    }
+    if (
+        c.radius !== undefined &&
+        !Object.keys(THEME_CONFIG.RADIUS_FACTOR_MAP).includes(c.radius as Radius)
+    ) {
+        console.warn('[@vapor-ui/core] Invalid radius type. Expected a valid radius key.');
+        return false;
+    }
+    if (c.scaling !== undefined && typeof c.scaling !== 'number') {
+        console.warn('[@vapor-ui/core] Invalid scaling type. Expected a number.');
+        return false;
+    }
     if (c.storageKey !== undefined && typeof c.storageKey !== 'string') {
         console.warn('[@vapor-ui/core] Invalid storageKey type. Expected string.');
         return false;
