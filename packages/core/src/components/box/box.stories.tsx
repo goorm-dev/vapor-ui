@@ -77,12 +77,12 @@ export const TestBed = {
                 borderRadius="$300"
                 display="flex"
                 flexDirection="column"
-                gap="$500"
-                padding="$800"
+                gap="$200"
+                padding="$500"
                 background="$gray-500"
             >
                 <Box style={{ backgroundColor: 'red' }} asChild>
-                    <Button>sadfasdf</Button>
+                    <Button>I'm Button</Button>
                 </Box>
                 <Box
                     display="flex"

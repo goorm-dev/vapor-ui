@@ -1,3 +1,4 @@
+import { HStack } from '../h-stack';
 import type { ButtonProps } from './button';
 import { Button } from './button';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -22,12 +23,12 @@ type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
     render: (args) => (
-        <>
-            <Button {...args}>버튼</Button>,
+        <HStack gap="$200">
+            <Button {...args}>Button</Button>
             <Button {...args} asChild>
                 <a href="https://vapor.goorm.io">Link Button(Polymorphic)</a>
             </Button>
-        </>
+        </HStack>
     ),
 };
 
