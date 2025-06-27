@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, Nav, Text } from '@vapor-ui/core';
 import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
-import type { LinkItemType, NavOptions } from 'fumadocs-ui/layouts/shared';
+import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
 import Image from 'next/image';
 
 import { navLinks } from '~/constants/site-links';
@@ -47,18 +47,7 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
     return 'url' in item && typeof (item as { url?: unknown }).url === 'string';
 }
 
-export const SiteNavBar: React.FC<
-    Partial<
-        NavOptions & {
-            /**
-             * Open mobile menu when hovering the trigger
-             */
-            enableHoverToOpen?: boolean;
-            links: LinkItemType[];
-            githubUrl?: string;
-        }
-    >
-> = () => {
+export const SiteNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     // Items displayed inside the collapsible menu on mobile.
 
