@@ -37,7 +37,7 @@ pnpm install
 pnpm storybook
 ```
 
-이제 `http://localhost:6006`에서 실행 중인 Storybook을 통해 컴포넌트 개발을 시작할 수 있습니다.
+이제 `http://localhost:9009`에서 실행 중인 Storybook을 통해 컴포넌트 개발을 시작할 수 있습니다.
 
 ## Git & 버전 관리
 

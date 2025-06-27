@@ -37,7 +37,7 @@ pnpm install
 pnpm storybook
 ```
 
-Now you can start developing components by viewing the Storybook at `http://localhost:6006`.
+Now you can start developing components by viewing the Storybook at `http://localhost:9009`.
 
 ## Git & Version Management
 
