@@ -2,6 +2,8 @@ import './global.css';
 import { layers } from './layers.css';
 import {
     BORDER_RADIUS,
+    DARK_BASIC_COLORS,
+    DARK_SEMANTIC_COLORS,
     DIMENSION,
     FONT_FAMILY,
     FONT_SIZE,
@@ -13,6 +15,10 @@ import {
     SPACE,
 } from './tokens';
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
+
+export const LIGHT_CLASS_NAME = 'vapor-light-theme';
+
+export const DARK_CLASS_NAME = 'vapor-dark-theme';
 
 const themeTokens = {
     color: {
@@ -37,6 +43,11 @@ export const vars = createGlobalThemeContract(themeTokens, (_, path) => `vapor-$
 
 createGlobalTheme(':root', vars, { '@layer': layers.theme, ...themeTokens });
 
-// TODO: Add dark theme support
-// const darkThemeTokens = {}
-// createGlobalTheme(':root.dark', vars, {});
+createGlobalTheme(`:root.${DARK_CLASS_NAME}`, vars, {
+    '@layer': layers.theme,
+    ...themeTokens,
+    color: {
+        ...DARK_BASIC_COLORS,
+        ...DARK_SEMANTIC_COLORS,
+    },
+});

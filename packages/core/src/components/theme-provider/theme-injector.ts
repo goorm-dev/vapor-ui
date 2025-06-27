@@ -1,8 +1,10 @@
+import { DARK_CLASS_NAME, LIGHT_CLASS_NAME } from '~/styles/contract.css';
+
 const THEME_CONFIG = {
     STORAGE_KEY: 'vapor-ui-theme',
     CLASS_NAMES: {
-        dark: 'vapor-dark-theme',
-        light: 'vapor-light-theme',
+        dark: DARK_CLASS_NAME,
+        light: LIGHT_CLASS_NAME,
     },
     RADIUS_FACTOR_MAP: {
         none: 0,

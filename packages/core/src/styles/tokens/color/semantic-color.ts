@@ -55,3 +55,5 @@ export const LIGHT_SEMANTIC_COLORS = {
         normal: LIGHT_BASIC_COLORS.gray['900'],
     },
 };
+
+export const DARK_SEMANTIC_COLORS = LIGHT_SEMANTIC_COLORS;
