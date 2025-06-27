@@ -1,4 +1,4 @@
-import { Flex } from '../flex';
+import { VStack } from '../v-stack';
 import { Text } from './text';
 import type { StoryObj } from '@storybook/react';
 
@@ -53,12 +53,12 @@ export default {
     },
 };
 
-const PANGRAM = '유쾌했던 땃쥐 토끼풀 쫓기 바쁨';
+const PANGRAM = 'Bright vixens jump; dozy fowl quack.';
 
 export const Default: StoryObj<typeof Text> = {
     render: () => {
         return (
-            <Flex gap="$300">
+            <VStack gap="$300">
                 <Text typography="code2">{PANGRAM}</Text>
                 <Text typography="code1">{PANGRAM}</Text>
                 <Text typography="body4">{PANGRAM}</Text>
@@ -75,7 +75,35 @@ export const Default: StoryObj<typeof Text> = {
                 <Text typography="display3">{PANGRAM}</Text>
                 <Text typography="display2">{PANGRAM}</Text>
                 <Text typography="display1">{PANGRAM}</Text>
-            </Flex>
+            </VStack>
+        );
+    },
+};
+
+export const TestBed: StoryObj<typeof Text> = {
+    render: () => {
+        return (
+            <VStack gap="$050">
+                <Text typography="code2">{PANGRAM}</Text>
+                <Text typography="code1">{PANGRAM}</Text>
+
+                <Text typography="body4">{PANGRAM}</Text>
+                <Text typography="body3">{PANGRAM}</Text>
+                <Text typography="body2">{PANGRAM}</Text>
+                <Text typography="body1">{PANGRAM}</Text>
+
+                <Text typography="heading6">{PANGRAM}</Text>
+                <Text typography="heading5">{PANGRAM}</Text>
+                <Text typography="heading4">{PANGRAM}</Text>
+                <Text typography="heading3">{PANGRAM}</Text>
+                <Text typography="heading2">{PANGRAM}</Text>
+                <Text typography="heading1">{PANGRAM}</Text>
+
+                <Text typography="display4">{PANGRAM}</Text>
+                <Text typography="display3">{PANGRAM}</Text>
+                <Text typography="display2">{PANGRAM}</Text>
+                <Text typography="display1">{PANGRAM}</Text>
+            </VStack>
         );
     },
 };

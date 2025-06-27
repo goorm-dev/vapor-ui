@@ -15,3 +15,13 @@ export const Default: StoryObj<typeof Card> = {
         </Card>
     ),
 };
+
+export const TestBed: StoryObj<typeof Card> = {
+    render: () => (
+        <Card>
+            <Card.Header>Header</Card.Header>
+            <Card.Body>Body</Card.Body>
+            <Card.Footer>Footer</Card.Footer>
+        </Card>
+    ),
+};
