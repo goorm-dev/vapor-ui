@@ -43,11 +43,8 @@ export const vars = createGlobalThemeContract(themeTokens, (_, path) => `vapor-$
 
 createGlobalTheme(':root', vars, { '@layer': layers.theme, ...themeTokens });
 
-createGlobalTheme(`:root.${DARK_CLASS_NAME}`, vars, {
+createGlobalTheme(`:root.${DARK_CLASS_NAME}`, vars.color, {
     '@layer': layers.theme,
-    ...themeTokens,
-    color: {
-        ...DARK_BASIC_COLORS,
-        ...DARK_SEMANTIC_COLORS,
-    },
+    ...DARK_BASIC_COLORS,
+    ...DARK_SEMANTIC_COLORS,
 });
