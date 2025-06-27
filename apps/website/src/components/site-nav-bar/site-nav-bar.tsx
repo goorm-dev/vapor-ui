@@ -3,8 +3,8 @@
 import React, { useMemo, useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { IconButton, Nav } from '@vapor-ui/core';
-import { CloseOutlineIcon, MenuOutlineIcon } from '@vapor-ui/icons';
+import { IconButton, Nav, Text } from '@vapor-ui/core';
+import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType, NavOptions } from 'fumadocs-ui/layouts/shared';
 
@@ -88,7 +88,11 @@ export const SiteNavBar: React.FC<
                                 {navItems
                                     .filter((item) => !isSecondary(item))
                                     .map((item, i) => (
-                                        <Nav.LinkItem key={i} className="text-sm">
+                                        <Nav.LinkItem
+                                            key={i}
+                                            className="text-sm"
+                                            href={hasUrl(item) ? item.url : '#'}
+                                        >
                                             {item.type === 'icon'
                                                 ? item.icon
                                                 : hasText(item)
@@ -139,7 +143,7 @@ export const SiteNavBar: React.FC<
                 <Dialog.Overlay className="fixed inset-0 bg-black/40 md:hidden" />
                 {/* Content */}
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 w-[300px] bg[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
+                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >
@@ -153,15 +157,22 @@ export const SiteNavBar: React.FC<
                     </header>
                     <ul className="flex flex-col gap-4 p-6">
                         {finalLinks.map((item, i) => (
-                            <li key={i} className="flex h-10 px-6 items-center">
-                                <Link
-                                    href={hasUrl(item) ? item.url : '#'}
+                            <li key={i} className="flex h-10 px-6 items-center justify-between">
+                                <Text
                                     className="flex items-center gap-2 text-base"
                                     onClick={() => setIsOpen(false)}
+                                    asChild
                                 >
-                                    {item.type === 'icon' ? item.icon : null}
-                                    {hasText(item) ? item.text : null}
-                                </Link>
+                                    <h6>
+                                        {item.type === 'icon' ? item.icon : null}
+                                        {hasText(item) ? item.text : null}
+                                    </h6>
+                                </Text>
+                                <IconButton size="md" color="secondary" variant="fill">
+                                    <Link href={hasUrl(item) ? item.url : '#'}>
+                                        <OpenInNewOutlineIcon />
+                                    </Link>
+                                </IconButton>
                             </li>
                         ))}
                     </ul>
