@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
+import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, Nav } from '@vapor-ui/core';
+import { CloseOutlineIcon, MenuOutlineIcon } from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType, NavOptions } from 'fumadocs-ui/layouts/shared';
 
@@ -33,6 +35,15 @@ function isSecondary(item: LinkItemType): boolean {
     return ('secondary' in item && item.secondary === true) || item.type === 'icon';
 }
 
+// Add type guard helpers to safely access optional properties
+function hasText(item: LinkItemType): item is LinkItemType & { text: string } {
+    return 'text' in item && typeof (item as { text?: unknown }).text === 'string';
+}
+
+function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
+    return 'url' in item && typeof (item as { url?: unknown }).url === 'string';
+}
+
 /**
  * Global navigation bar used across the website.
  * Note: SearchToggle, ThemeToggle, etc. are intentionally omitted as requested.
@@ -49,6 +60,7 @@ export const SiteNavBar: React.FC<
         }
     >
 > = ({ title, url, links, githubUrl }) => {
+    const [isOpen, setIsOpen] = useState(false);
     // Items displayed inside the collapsible menu on mobile.
     const finalLinks = useMemo(() => getLinks(links, githubUrl), [links, githubUrl]);
 
@@ -56,56 +68,106 @@ export const SiteNavBar: React.FC<
     const menuItems = finalLinks.filter((item) => ['menu', 'all'].includes(item.on ?? 'all'));
 
     return (
-        <header className="flex w-full py-3 px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
-            <div className="flex items-center gap-10 relative w-full">
-                <Nav
-                    label="nav"
-                    size="lg"
-                    shape="ghost"
-                    className="flex justify-between items-center gap-10 w-full"
-                >
-                    <div className="flex items-center gap-10">
-                        <Link
-                            href={url ?? '/'}
-                            className="inline-flex items-center gap-2.5 font-semibold w-[68px] h-[26px]"
-                        >
-                            {title}
-                        </Link>
-                        <ul className="flex flex-row items-center gap-2 px-6 max-sm:hidden">
-                            {navItems
-                                .filter((item) => !isSecondary(item))
-                                .map((item, i) => (
-                                    <Nav.LinkItem key={i} className="text-sm">
-                                        {item.type === 'icon' ? item.icon : item.text}
-                                    </Nav.LinkItem>
-                                ))}
-                        </ul>
-                    </div>
-                    <div className="flex items-center gap-10">
-                        <ul className="flex flex-row items-center max-sm:hidden">
-                            {menuItems
-                                .filter((item) => isSecondary(item))
-                                .map((item, i) => {
-                                    return (
-                                        <Nav.LinkItem key={i} className="p-0" asChild>
-                                            <IconButton
-                                                size="lg"
-                                                color="secondary"
-                                                variant="ghost"
-                                                asChild
-                                            >
-                                                <Link href={item.url}>
-                                                    {item.type === 'icon' ? item.icon : item.text}
-                                                </Link>
-                                            </IconButton>
+        <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+            <header className="flex w-full py-3 px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
+                <div className="flex items-center gap-10 relative w-full">
+                    <Nav
+                        label="nav"
+                        size="lg"
+                        shape="ghost"
+                        className="flex justify-between items-center gap-10 w-full"
+                    >
+                        <div className="flex items-center gap-10">
+                            <Link
+                                href={url ?? '/'}
+                                className="inline-flex items-center gap-2.5 font-semibold w-[68px] h-[26px]"
+                            >
+                                {title}
+                            </Link>
+                            <ul className="hidden md:flex flex-row items-center gap-2 p-0">
+                                {navItems
+                                    .filter((item) => !isSecondary(item))
+                                    .map((item, i) => (
+                                        <Nav.LinkItem key={i} className="text-sm">
+                                            {item.type === 'icon'
+                                                ? item.icon
+                                                : hasText(item)
+                                                  ? item.text
+                                                  : null}
                                         </Nav.LinkItem>
-                                    );
-                                })}
-                        </ul>
-                    </div>
-                </Nav>
-            </div>
-        </header>
+                                    ))}
+                            </ul>
+                        </div>
+                        <div className="flex items-center gap-10">
+                            <ul className="hidden md:flex flex-row items-center">
+                                {menuItems
+                                    .filter((item) => isSecondary(item))
+                                    .map((item, i) => {
+                                        return (
+                                            <Nav.LinkItem key={i} className="p-0" asChild>
+                                                <IconButton
+                                                    size="lg"
+                                                    color="secondary"
+                                                    variant="ghost"
+                                                    asChild
+                                                >
+                                                    <Link href={hasUrl(item) ? item.url : '#'}>
+                                                        {item.type === 'icon'
+                                                            ? item.icon
+                                                            : hasText(item)
+                                                              ? item.text
+                                                              : null}
+                                                    </Link>
+                                                </IconButton>
+                                            </Nav.LinkItem>
+                                        );
+                                    })}
+                            </ul>
+                        </div>
+                    </Nav>
+                </div>
+                {/* Mobile menu trigger */}
+                <Dialog.Trigger asChild>
+                    <IconButton size="md" color="secondary" variant="fill" className="md:hidden">
+                        <MenuOutlineIcon />
+                    </IconButton>
+                </Dialog.Trigger>
+            </header>
+            {/* Radix Dialog for mobile side panel */}
+            <Dialog.Portal>
+                {/* Overlay */}
+                <Dialog.Overlay className="fixed inset-0 bg-black/40 md:hidden" />
+                {/* Content */}
+                <Dialog.Content
+                    className="fixed inset-y-0 right-0 w-[300px] bg[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
+                    onEscapeKeyDown={() => setIsOpen(false)}
+                    onPointerDownOutside={() => setIsOpen(false)}
+                >
+                    <Dialog.Title className="sr-only">Mobile navigation menu</Dialog.Title>
+                    <header className="flex justify-end px-6 py-4">
+                        <Dialog.Close asChild>
+                            <IconButton color="secondary" variant="ghost">
+                                <CloseOutlineIcon size={20} />
+                            </IconButton>
+                        </Dialog.Close>
+                    </header>
+                    <ul className="flex flex-col gap-4 p-6">
+                        {finalLinks.map((item, i) => (
+                            <li key={i} className="flex h-10 px-6 items-center">
+                                <Link
+                                    href={hasUrl(item) ? item.url : '#'}
+                                    className="flex items-center gap-2 text-base"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {item.type === 'icon' ? item.icon : null}
+                                    {hasText(item) ? item.text : null}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </Dialog.Content>
+            </Dialog.Portal>
+        </Dialog.Root>
     );
 };
 
