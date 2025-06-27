@@ -3,28 +3,24 @@ import type { DocsLayoutProps as NotebookLayoutProps } from 'fumadocs-ui/layouts
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import Image from 'next/image';
 
+import { navLinks } from '~/constants/site-links';
 import { source } from '~/lib/source';
 
-// Logo element used in nav title
-const logoTitle = (
-    <Image
-        width={68}
-        height={26}
-        src="https://statics.goorm.io/gds/resources/brand-images/light/logo_vapor.svg"
-        alt="Goorm Design System: Vapor"
-    />
-);
-
-// nav object needs to be mutable to assign component afterwards
-const nav: BaseLayoutProps['nav'] = {
-    title: logoTitle,
-};
-
-// Assign the actual component now that nav object exists
-
 export const baseOptions: BaseLayoutProps = {
-    nav,
-    githubUrl: 'https://github.com/goorm-dev/gds',
+    nav: {
+        title: (
+            <Image
+                width={68}
+                height={26}
+                src="https://statics.goorm.io/gds/resources/brand-images/light/logo_vapor.svg"
+                alt="Goorm Design System: Vapor"
+            />
+        ),
+    },
+    links: navLinks,
+    themeSwitch: {
+        enabled: false,
+    },
 };
 
 export const docsOptions: DocsLayoutProps = {

@@ -57,6 +57,6 @@ export const navLinks = [
     },
     {
         text: 'Playground',
-        url: '/docs/playground',
+        url: '/playground',
     },
 ] as LinkItemType[];
