@@ -20,7 +20,6 @@ const foregrounds = {
     normal: { color: vars.color.foreground.normal },
     'normal-lighter': { color: vars.color.foreground['normal-lighter'] },
     accent: { color: vars.color.foreground.accent },
-    'accent-darker': { color: vars.color.foreground['accent-darker'] },
 };
 
 const foregroundProperties = defineProperties({
