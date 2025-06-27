@@ -38,7 +38,6 @@ function isSecondary(item: LinkItemType): boolean {
     return ('secondary' in item && item.secondary === true) || item.type === 'icon';
 }
 
-// Add type guard helpers to safely access optional properties
 function hasText(item: LinkItemType): item is LinkItemType & { text: string } {
     return 'text' in item && typeof (item as { text?: unknown }).text === 'string';
 }
@@ -49,7 +48,6 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
 
 export const SiteNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    // Items displayed inside the collapsible menu on mobile.
 
     const navItems = navLinks.filter((item) => ['nav', 'all'].includes(item.on ?? 'all'));
     const menuItems = navLinks.filter((item) => ['menu', 'all'].includes(item.on ?? 'all'));
@@ -122,18 +120,15 @@ export const SiteNavBar = () => {
                         </div>
                     </Nav>
                 </div>
-                {/* Mobile menu trigger */}
                 <Dialog.Trigger asChild>
                     <IconButton size="md" color="secondary" variant="fill" className="md:hidden">
                         <MenuOutlineIcon />
                     </IconButton>
                 </Dialog.Trigger>
             </header>
-            {/* Radix Dialog for mobile side panel */}
             <Dialog.Portal>
-                {/* Overlay */}
                 <Dialog.Overlay className="fixed inset-0 bg-black/40 md:hidden" />
-                {/* Content */}
+
                 <Dialog.Content
                     className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
                     onEscapeKeyDown={() => setIsOpen(false)}
