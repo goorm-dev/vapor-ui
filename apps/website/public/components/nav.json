@@ -144,7 +144,7 @@
                         {
                             "itemKey": "Space",
                             "descriptions": [
-                                "체크박스에 포커스가 있을 때 Space 키를 누르면 체크박스의 상태가 변경됩니다."
+                                "링크에 포커스가 있을 때 Space 키를 누르면 링크가 활성화(클릭)됩니다."
                             ],
                             "badgeColor": "hint"
                         }

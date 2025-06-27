@@ -62,17 +62,17 @@
                     },
                     "items": [
                         {
-                            "itemKey": "role=”button”",
+                            "itemKey": "role=\"button\"",
                             "descriptions": [
-                                "버튼 요소에는 암시적으로 role=”button”이 적용됩니다."
+                                "버튼 요소에는 암시적으로 role=\"button\"이 적용됩니다."
                             ],
                             "exampleCode": "",
                             "badgeColor": "primary"
                         },
                         {
-                            "itemKey": "role=”presentation”",
+                            "itemKey": "role=\"presentation\"",
                             "descriptions": [
-                                "버튼의 하위 요소에는 암시적으로 role=”presentation”이 적용됩니다."
+                                "버튼의 하위 요소에는 암시적으로 role=\"presentation\"이 적용됩니다."
                             ],
                             "exampleCode": "",
                             "badgeColor": "primary"
