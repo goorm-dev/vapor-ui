@@ -82,7 +82,6 @@ export default function Layout({ children }: { children: ReactNode }) {
             {...baseOptions}
             nav={{
                 enabled: false,
-                transparentMode: 'none',
             }}
         >
             <SiteNavBar title={logoTitle} links={navLinks} />

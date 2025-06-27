@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, Nav, Text } from '@vapor-ui/core';
 import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType, NavOptions } from 'fumadocs-ui/layouts/shared';
+import Image from 'next/image';
+
+import { navLinks } from '~/constants/site-links';
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];
@@ -44,10 +47,6 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
     return 'url' in item && typeof (item as { url?: unknown }).url === 'string';
 }
 
-/**
- * Global navigation bar used across the website.
- * Note: SearchToggle, ThemeToggle, etc. are intentionally omitted as requested.
- */
 export const SiteNavBar: React.FC<
     Partial<
         NavOptions & {
@@ -55,17 +54,16 @@ export const SiteNavBar: React.FC<
              * Open mobile menu when hovering the trigger
              */
             enableHoverToOpen?: boolean;
-            links?: LinkItemType[];
+            links: LinkItemType[];
             githubUrl?: string;
         }
     >
-> = ({ title, url, links, githubUrl }) => {
+> = () => {
     const [isOpen, setIsOpen] = useState(false);
     // Items displayed inside the collapsible menu on mobile.
-    const finalLinks = useMemo(() => getLinks(links, githubUrl), [links, githubUrl]);
 
-    const navItems = finalLinks.filter((item) => ['nav', 'all'].includes(item.on ?? 'all'));
-    const menuItems = finalLinks.filter((item) => ['menu', 'all'].includes(item.on ?? 'all'));
+    const navItems = navLinks.filter((item) => ['nav', 'all'].includes(item.on ?? 'all'));
+    const menuItems = navLinks.filter((item) => ['menu', 'all'].includes(item.on ?? 'all'));
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -79,10 +77,15 @@ export const SiteNavBar: React.FC<
                     >
                         <div className="flex items-center gap-10">
                             <Link
-                                href={url ?? '/'}
+                                href="/"
                                 className="inline-flex items-center gap-2.5 font-semibold w-[68px] h-[26px]"
                             >
-                                {title}
+                                <Image
+                                    width={68}
+                                    height={26}
+                                    src="https://statics.goorm.io/gds/resources/brand-images/light/logo_vapor.svg"
+                                    alt="Goorm Design System: Vapor"
+                                />
                             </Link>
                             <ul className="hidden md:flex flex-row items-center gap-2 p-0">
                                 {navItems
@@ -156,7 +159,7 @@ export const SiteNavBar: React.FC<
                         </Dialog.Close>
                     </header>
                     <ul className="flex flex-col gap-4 p-6">
-                        {finalLinks.map((item, i) => (
+                        {navLinks.map((item, i) => (
                             <li key={i} className="flex h-10 px-6 items-center justify-between">
                                 <Text
                                     className="flex items-center gap-2 text-base"
