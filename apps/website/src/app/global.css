@@ -1,9 +1,10 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+@layer vapor-reset, base,vapor-theme, theme, vapor-utilities, utilities, vapor-component, component;
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/theme.css' layer(theme);
-@import '@vapor-ui/core/styles.css' layer(vapor);
+@import './index.css';
 @import 'tailwindcss/utilities.css' layer(utilities);
-
-
 
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';

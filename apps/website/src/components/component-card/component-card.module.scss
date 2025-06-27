@@ -27,25 +27,25 @@
 
 .body {
     display: flex;
-    padding: var(--space-300, 1.5rem);
+    padding: var(--vapor-size-space-300, 1.5rem);
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-100, 0.5rem);
+    gap: var(--vapor-size-space-100, 0.5rem);
     align-self: stretch;
 }
 
 .componentName {
     display: flex;
     align-items: center;
-    gap: var(--space-050);
+    gap: var(--vapor-size-space-050);
     align-self: stretch;
 }
 
 .image {
     width: 100%; /* Added width to 100% */
     height: auto; /* Maintain aspect ratio */
-    border-top-left-radius: var(--border-radius-300, 0.5rem);
-    border-top-right-radius: var(--border-radius-300, 0.5rem);
+    border-top-left-radius: var(--vapor-size-borderRadius-300, 0.5rem);
+    border-top-right-radius: var(--vapor-size-borderRadius-300, 0.5rem);
     margin: 0;
 }
 .description {

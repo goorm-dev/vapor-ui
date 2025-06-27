@@ -16,7 +16,7 @@
 
     display: flex;
     align-items: flex-start;
-    gap: var(--space-100, 0.5rem);
+    gap: var(--vapor-size-space-100, 0.5rem);
 
     &_start {
         justify-content: flex-start;
@@ -50,7 +50,7 @@
     &[data-orientation='vertical'] {
         flex-direction: column;
 
-        padding-block: var(--space-300, 1.5rem);
+        padding-block: var(--vapor-size-space-300, 1.5rem);
         border-right: 0.0625rem solid transparent;
 
         &.list_hasBorder {
@@ -156,7 +156,7 @@
     }
 
     &[data-orientation='horizontal'] {
-        padding: 0 var(--space-050, 0.25rem);
+        padding: 0 var(--vapor-size-space-050, 0.25rem);
 
         &::after {
             @include horizontal-effect(transparent);
@@ -175,7 +175,7 @@
 
     &[data-orientation='vertical'] {
         width: 100%;
-        padding: 0 var(--space-200, 1rem);
+        padding: 0 var(--vapor-size-space-200, 1rem);
 
         &::after {
             @include vertical-effect(transparent);
