@@ -1,13 +1,22 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import styles from './page.module.scss';
-import { Badge, Button, Text, TextInput } from '@vapor-ui/core';
+import { Badge, Button, Text, TextInput, useTheme } from '@vapor-ui/core';
 import { ForwardPageOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function HomePage() {
+    const { setTheme } = useTheme();
+
+    useEffect(() => {
+        setTheme({
+            appearance: 'dark',
+        });
+    }, [setTheme]);
     return (
         <main
             className={clsx(
@@ -69,7 +78,11 @@ export default function HomePage() {
                 <Button size="xl" color="secondary" className={styles.gradientButton} asChild>
                     <Link href="/docs">
                         Docs 보러 가기
-                        <ForwardPageOutlineIcon width="24" height="24" color="var(--text-normal)" />
+                        <ForwardPageOutlineIcon
+                            width="24"
+                            height="24"
+                            color="var(--vapor-color-foreground-secondary)"
+                        />
                     </Link>
                 </Button>
             </div>
