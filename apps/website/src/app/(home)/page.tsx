@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 
 import styles from './page.module.scss';
-import { Badge, Button, Text, TextInput, useTheme } from '@vapor-ui/core';
-import { ForwardPageOutlineIcon } from '@vapor-ui/icons';
+import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
+import { ForwardPageOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -56,23 +56,45 @@ export default function HomePage() {
                             생산성을 높이고 사용자 경험을 개선하는 것을 목표로 합니다.
                         </Text>
                     </div>
-                    <div
+                    <button
+                        type="button"
                         className="flex flex-col items-center gap-4"
                         style={{
                             maxWidth: '720px',
                             width: '100%',
                             padding: '16px',
                             borderRadius: '12px',
-                            border: '1px solid var(--border-color)',
+                            border: '1px solid var(--vapor-color-border-hint)',
                             background:
-                                'linear-gradient(90deg, var(--basic-color-blue-blue-300, rgba(35, 115, 235, 0.08)) 0%, var(--basic-color-blue-blue-800, rgba(208, 227, 254, 0.08)) 100%), var(--semantic-color-background-background-normal, #23272E)',
+                                'linear-gradient(90deg,rgba(35, 115, 235, 0.08) 0%, rgba(208, 227, 254, 0.08) 100%), var(--vapor-color-background-normal)',
                             boxShadow: '0px 4px 48px 0px rgba(115, 143, 255, 0.32)',
                         }}
                     >
-                        <TextInput size="xl" className="w-full">
-                            <TextInput.Field className="w-full" />
-                        </TextInput>
-                    </div>
+                        <div className="flex items-center w-full px-6 h-12 justify-between rounded-[var(--vapor-size-borderRadius-300)] border border-[var(--vapor-color-border-normal)] bg-[var(--vapor-color-background-normal-lighter)]">
+                            <div className="flex items-center gap-2">
+                                <SearchOutlineIcon
+                                    size={24}
+                                    color="var(--vapor-color-foreground-hint)"
+                                />
+                                <Text typography="body1" foreground="hint">
+                                    사용할 컴포넌트 이름으로 검색해 보세요
+                                </Text>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Badge color="hint" size="md" shape="square">
+                                    ⌘
+                                </Badge>
+                                <Badge
+                                    color="hint"
+                                    size="md"
+                                    shape="square"
+                                    className="h-[24px] w-[24px]"
+                                >
+                                    K
+                                </Badge>
+                            </div>
+                        </div>
+                    </button>
                 </div>
 
                 <Button size="xl" color="secondary" className={styles.gradientButton} asChild>
