@@ -29,7 +29,7 @@ export default function CardDialog({
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 bg-black/30 z-50" />
-                <Dialog.Content className="fixed w-[800px] left-1/2 top-1/2 z-50 bg-white rounded-lg shadow-[0_16px_32px_0_rgba(0,0,0,0.2)] -translate-x-1/2 -translate-y-1/2 focus:outline-none flex flex-col items-end">
+                <Dialog.Content className="fixed w-[800px] left-1/2 top-1/2 z-50 bg-[var(--vapor-color-background-normal)] rounded-[var(--vapor-size-borderRadius-300)] shadow-[0_16px_32px_0_rgba(0,0,0,0.2)] -translate-x-1/2 -translate-y-1/2 focus:outline-none flex flex-col items-end">
                     <Dialog.Title asChild>
                         <div className="w-full flex items-center justify-between px-[var(--vapor-size-space-300)] h-[var(--vapor-size-space-700)]">
                             <Text typography="heading5" foreground="normal">
@@ -43,14 +43,14 @@ export default function CardDialog({
                         </div>
                     </Dialog.Title>
 
-                    <div className="w-full px-[var(--vapor-size-space-300)] prose max-w-none mb-4 max-h-[38.65rem] overflow-y-auto">
+                    <div className="w-full px-[var(--vapor-size-space-300)] prose max-w-none max-h-[38.65rem] overflow-y-auto">
                         {description}
                     </div>
 
                     {/* Footer 영역 */}
                     {(onPrev || onNext) && (
                         <div
-                            className={`w-full flex items-center px-[var(--vapor-size-space-300)] pb-4 ${
+                            className={`w-full flex items-center py-[var(--vapor-size-space-200)] px-[var(--vapor-size-space-300)] ${
                                 onPrev && onNext
                                     ? 'justify-between'
                                     : onPrev
