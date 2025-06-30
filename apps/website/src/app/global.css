@@ -2,7 +2,6 @@
 
 @import '@vapor-ui/core/styles.css';
 @import 'tailwindcss';
-
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
@@ -26,5 +25,5 @@
 }
 
 a[data-active='true'] {
-    color: var(--primary);
+    color: var(--vapor-color-foreground-primary);
 }
