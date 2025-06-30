@@ -13,6 +13,9 @@ const inter = Inter({
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <html lang="ko" className={inter.className} suppressHydrationWarning>
+            <head>
+                <link rel="icon" href="/favicon.ico" sizes="any" />
+            </head>
             <body className="flex flex-col min-h-screen">
                 <RootProvider
                     search={{

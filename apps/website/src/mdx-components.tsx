@@ -2,6 +2,7 @@ import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import * as TabsComponents from 'fumadocs-ui/components/tabs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
+import Image from 'next/image';
 
 import AllComponentsContainer from '~/components/all-components-container';
 import ComponentsCard from '~/components/component-card/component-card';
@@ -36,6 +37,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         FoundationList,
         IconList,
         IntroPackageListCollapsible,
+        Image,
         ...components,
     } as MDXComponents;
 };
