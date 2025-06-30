@@ -1,0 +1,20 @@
+.preview {
+    padding: 2rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px 8px 0 0;
+}
+
+.editor {
+    background-color: #011627;
+    border-radius: 0 0 8px 8px;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    padding: 1rem;
+}
+
+.error {
+    background-color: #ff5555;
+    color: white;
+    padding: 1rem;
+    border-radius: 0 0 8px 8px;
+}
