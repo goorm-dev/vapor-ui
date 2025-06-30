@@ -30,7 +30,7 @@ export default function CardDialog({ open, onOpenChange, title, description }: C
                         </div>
                     </Dialog.Title>
 
-                    <div className="w-full px-[var(--vapor-size-space-300)] prose max-w-none mb-4">
+                    <div className="w-full px-[var(--vapor-size-space-300)] prose max-w-none mb-4 max-h-[38.65rem] overflow-y-auto">
                         {description}
                     </div>
                 </Dialog.Content>

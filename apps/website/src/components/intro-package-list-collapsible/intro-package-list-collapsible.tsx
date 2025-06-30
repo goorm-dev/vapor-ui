@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+import { DEV_FEATURES_MD, MINIMUM_MD, VAPOR_CORE_MD } from '../../constants/intro-md';
 import CardDialog from './CardDialog';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { Badge, Text } from '@vapor-ui/core';
@@ -12,6 +13,8 @@ import Image from 'next/image';
 export default function IntroPackageListCollapsible() {
     const [open, setOpen] = useState(true);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogOpen2, setDialogOpen2] = useState(false);
+    const [dialogOpen3, setDialogOpen3] = useState(false);
 
     return (
         <Collapsible.Root
@@ -81,7 +84,16 @@ export default function IntroPackageListCollapsible() {
                             </span>
                         </div>
                     </div>
-                    <div className="bg-white rounded-lg border border-gray-300 flex-1 min-w-0 flex flex-col overflow-hidden shadow-sm">
+                    <div
+                        className="bg-white rounded-lg border border-gray-300 flex-1 min-w-0 flex flex-col overflow-hidden shadow-sm cursor-pointer focus:outline-none"
+                        tabIndex={0}
+                        role="button"
+                        aria-label="최소한의 기능과 형태 상세 보기"
+                        onClick={() => setDialogOpen2(true)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') setDialogOpen2(true);
+                        }}
+                    >
                         <div className="w-full h-[140px] relative overflow-hidden rounded-t-lg">
                             <Image
                                 src="https://statics.goorm.io/gds/docs/guides/introduction/minimum-functionality-and-form.svg"
@@ -102,7 +114,16 @@ export default function IntroPackageListCollapsible() {
                             </span>
                         </div>
                     </div>
-                    <div className="bg-white rounded-lg border border-gray-300 flex-1 min-w-0 flex flex-col overflow-hidden shadow-sm">
+                    <div
+                        className="bg-white rounded-lg border border-gray-300 flex-1 min-w-0 flex flex-col overflow-hidden shadow-sm cursor-pointer focus:outline-none"
+                        tabIndex={0}
+                        role="button"
+                        aria-label="개발 특징 상세 보기"
+                        onClick={() => setDialogOpen3(true)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') setDialogOpen3(true);
+                        }}
+                    >
                         <div className="w-full h-[140px] relative overflow-hidden rounded-t-lg">
                             <Image
                                 src="https://statics.goorm.io/gds/docs/guides/introduction/development-characteristics.svg"
@@ -130,24 +151,27 @@ export default function IntroPackageListCollapsible() {
                     title="Vapor Core란?"
                     description={
                         <div className="prose">
-                            <ReactMarkdown>
-                                {`
-**높은 자유도**
-
-- 최소한의 기능 제약과 최대한의 형태 커스텀 가능성을 제공합니다.
-- 디자이너들이 제약 없이 설계할 수 있도록 높은 자유도를 제공합니다.
-
-**컴포넌트 사용**
-
-- Atom 단위의 컴포넌트를 정의하여 사용할 수 있습니다.
-- 예시: Button, Input
-- 단, 모든 Vapor Core 컴포넌트가 Vapor Components가 되는 것은 아닙니다. 예: DatePicker, Calendar
-
-**조합형 컴포넌트 지향**
-
-- 개별 컴포넌트는 여러 서브 컴포넌트로 구성될 수 있도록 설계합니다.
-                                `}
-                            </ReactMarkdown>
+                            <ReactMarkdown children={VAPOR_CORE_MD} />
+                        </div>
+                    }
+                />
+                <CardDialog
+                    open={dialogOpen2}
+                    onOpenChange={setDialogOpen2}
+                    title="최소한의 기능과 형태"
+                    description={
+                        <div className="prose">
+                            <ReactMarkdown children={MINIMUM_MD} />
+                        </div>
+                    }
+                />
+                <CardDialog
+                    open={dialogOpen3}
+                    onOpenChange={setDialogOpen3}
+                    title="개발 특징"
+                    description={
+                        <div className="prose">
+                            <ReactMarkdown children={DEV_FEATURES_MD} />
                         </div>
                     }
                 />
