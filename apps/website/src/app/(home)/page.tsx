@@ -101,7 +101,9 @@ export default function HomePage() {
                             width: '100%',
                             borderRadius: '12px',
                             border: '1px solid var(--vapor-color-border-hint)',
-                            boxShadow: '0px 4px 48px 0px rgba(208, 227, 254, 0.32)',
+                            background:
+                                'linear-gradient(90deg, rgba(35, 115, 235, 0.08) 0%, rgba(208, 227, 254, 0.08) 100%), #23272E',
+                            boxShadow: '0px 4px 48px 0px rgba(115, 143, 255, 0.32)',
                         }}
                     >
                         <div className="flex items-center w-full px-6 h-12 justify-between rounded-[var(--vapor-size-borderRadius-300)] border border-[var(--vapor-color-border-normal)] bg-[var(--vapor-color-background-normal-lighter)]">
