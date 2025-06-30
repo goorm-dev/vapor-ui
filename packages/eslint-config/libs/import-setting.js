@@ -3,7 +3,7 @@ import { configs } from 'eslint-plugin-import-x';
 /** @type {Record<string, unknown>} */
 export const settings = {
     'import/resolver': {
-        ...configs.typescript.settings,
+        ...configs.typescript.settings['import/resolver'],
         // import 경로 해석 설정
         typescript: {
             alwaysTryTypes: true,
