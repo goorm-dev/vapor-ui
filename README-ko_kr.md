@@ -2,7 +2,14 @@
 
 # Goorm Design System: Vapor UI
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Status: WIP](https://img.shields.io/badge/status-WIP-orange.svg)](https://github.com/goorm-dev/vapor-ui) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> 🚧 **현재 이 프로젝트는 정식 출시 전(Pre-release) 상태입니다.** 🚧
+> [!WARNING]
+> 아직 개발이 활발하게 진행 중이며, 언제든지 Breaking Changes가 발생할 수 있습니다.
+> 프로덕션 환경에서의 사용은 권장하지 않으며, 정식 릴리즈는 `v0.2.0`으로 시작될 예정입니다.
+
+<br/>
 
 **고품질의 접근성 높은 웹 앱과 디자인 시스템을 구축하기 위한 오픈소스 UI 컴포넌트 라이브러리입니다.**
 
