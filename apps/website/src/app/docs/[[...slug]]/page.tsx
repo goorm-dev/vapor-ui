@@ -6,8 +6,8 @@ import DocsDescription from '~/components/ui/docs-description';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
 
-export default async function Page({ params }: { params: { slug?: string[] } }) {
-    const { slug = [] } = params;
+export default async function Page({ params }: { params: Promise<{ slug?: string[] }> }) {
+    const { slug = [] } = await params;
     const page = source.getPage(slug);
     if (!page) notFound();
 
@@ -40,8 +40,8 @@ export async function generateStaticParams() {
     return source.generateParams();
 }
 
-export async function generateMetadata(props: { params: { slug?: string[] } }) {
-    const { slug = [] } = props.params;
+export async function generateMetadata(props: { params: Promise<{ slug?: string[] }> }) {
+    const { slug = [] } = await props.params;
     const page = source.getPage(slug);
     if (!page) notFound();
 
