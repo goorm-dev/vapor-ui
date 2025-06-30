@@ -16,7 +16,7 @@ import { source } from '~/lib/source';
 export const baseOptions: BaseLayoutProps = {
     nav: {
         title: (
-            <LogoVapor width={68} height={26} role="img" aria-label="Goorm Design System: Vapor" />
+            <LogoVapor width={68} height={24} role="img" aria-label="Goorm Design System: Vapor" />
         ),
     },
     links: [
