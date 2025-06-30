@@ -1,6 +1,7 @@
-import { IconButton, type IconButtonProps } from './icon-button';
-import { HeartIcon } from '@vapor-ui/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { HeartIcon } from '@vapor-ui/icons';
+
+import { IconButton, type IconButtonProps } from './icon-button';
 
 const meta: Meta<IconButtonProps> = {
     title: 'IconButton',
@@ -12,7 +13,7 @@ const meta: Meta<IconButtonProps> = {
             options: ['primary', 'secondary', 'success', 'warning', 'danger', 'contrast'],
         },
         variant: { control: 'inline-radio', options: ['fill', 'outline', 'ghost'] },
-        rounded: { control: 'boolean' },
+        shape: { control: 'inline-radio', options: ['square', 'circle'] },
         disabled: { control: 'boolean' },
     },
 };
