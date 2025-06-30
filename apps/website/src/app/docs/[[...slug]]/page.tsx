@@ -1,4 +1,3 @@
-import { DocPageClient } from './doc-page-client';
 import { DocsBody, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
@@ -14,25 +13,23 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     const { body: MDX, toc, lastModified } = await page.data.load();
 
     return (
-        <DocPageClient>
-            <DocsPage
-                toc={toc}
-                full={page.data.full}
-                tableOfContent={{
-                    style: 'clerk',
-                    single: false,
-                }}
-                lastUpdate={lastModified}
-            >
-                <div>
-                    <DocsTitle className="mb-2">{page.data.title}</DocsTitle>
-                    <DocsDescription>{page.data.description}</DocsDescription>
-                </div>
-                <DocsBody>
-                    <MDX components={getMDXComponents({})} />
-                </DocsBody>
-            </DocsPage>
-        </DocPageClient>
+        <DocsPage
+            toc={toc}
+            full={page.data.full}
+            tableOfContent={{
+                style: 'clerk',
+                single: false,
+            }}
+            lastUpdate={lastModified}
+        >
+            <div>
+                <DocsTitle className="mb-2">{page.data.title}</DocsTitle>
+                <DocsDescription>{page.data.description}</DocsDescription>
+            </div>
+            <DocsBody>
+                <MDX components={getMDXComponents({})} />
+            </DocsBody>
+        </DocsPage>
     );
 }
 

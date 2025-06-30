@@ -15,15 +15,26 @@ export default function Layout({ children }: { children: ReactNode }) {
     return (
         <html lang="ko" className={inter.className} suppressHydrationWarning>
             <head>
-                <ThemeScript />
+                <ThemeScript
+                    config={{
+                        appearance: 'light',
+                    }}
+                />
             </head>
             <body className="flex flex-col min-h-screen bg-[var(--vapor-color-background-normal)]">
                 <RootProvider
                     search={{
                         SearchDialog: DefaultSearchDialog,
                     }}
+                    theme={{ enabled: false }}
                 >
-                    <ThemeProvider>{children}</ThemeProvider>
+                    <ThemeProvider
+                        config={{
+                            appearance: 'light',
+                        }}
+                    >
+                        {children}
+                    </ThemeProvider>
                 </RootProvider>
             </body>
         </html>
