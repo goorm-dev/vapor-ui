@@ -21,7 +21,10 @@ import type { MergeRecipeVariants } from '~/libs/recipe';
 import type { Sprinkles } from '~/styles/sprinkles.css';
 
 type DialogVariants = MergeRecipeVariants<typeof styles.content>;
-type DialogSharedProps = DialogVariants & { scrimClickable?: boolean };
+type DialogSharedProps = DialogVariants & {
+    closeOnClickOverlay?: boolean;
+    closeOnEscape?: boolean;
+};
 type DialogContext = DialogSharedProps;
 
 const [DialogRoot, useDialogContext] = createContext<DialogContext>({
@@ -37,10 +40,10 @@ const [DialogRoot, useDialogContext] = createContext<DialogContext>({
 type DialogPrimitiveProps = ComponentPropsWithoutRef<typeof RadixDialog>;
 interface DialogProps extends DialogPrimitiveProps, DialogSharedProps {}
 
-const Root = ({ size, scrimClickable, children, ...props }: DialogProps) => {
+const Root = ({ size, closeOnClickOverlay, closeOnEscape, children, ...props }: DialogProps) => {
     return (
         <RadixDialog {...props}>
-            <DialogRoot value={{ size, scrimClickable }}>{children}</DialogRoot>
+            <DialogRoot value={{ size, closeOnClickOverlay, closeOnEscape }}>{children}</DialogRoot>
         </RadixDialog>
     );
 };
@@ -70,23 +73,28 @@ Overlay.displayName = 'Dialog.Overlay';
  * Dialog.Content
  * -----------------------------------------------------------------------------------------------*/
 
-type PointerDownOutsideEvent = CustomEvent<{
-    originalEvent: PointerEvent;
-}>;
+type PointerDownOutsideEvent = CustomEvent<{ originalEvent: PointerEvent }>;
 
 type DialogContentPrimitiveProps = ComponentPropsWithoutRef<typeof RadixContent>;
 interface DialogContentProps extends DialogContentPrimitiveProps, Sprinkles {}
 
 const Content = forwardRef<HTMLDivElement, DialogContentProps>(
-    ({ onPointerDownOutside, className, ...props }, ref) => {
-        const { size, scrimClickable = true } = useDialogContext();
+    ({ onPointerDownOutside, onEscapeKeyDown, className, ...props }, ref) => {
+        const { size, closeOnClickOverlay = true, closeOnEscape = true } = useDialogContext();
         const [sprinkles, otherProps] = splitLayoutProps(props);
 
         const handlePointerDownOutside = (event: PointerDownOutsideEvent) => {
-            if (scrimClickable) return;
+            if (closeOnClickOverlay) return;
 
             event.preventDefault();
             onPointerDownOutside?.(event);
+        };
+
+        const handleEscapeKeyDown = (event: KeyboardEvent) => {
+            if (closeOnEscape) return;
+
+            event.preventDefault();
+            onEscapeKeyDown?.(event);
         };
 
         return (
@@ -95,6 +103,7 @@ const Content = forwardRef<HTMLDivElement, DialogContentProps>(
                     ref={ref}
                     className={clsx(styles.content({ size }), className)}
                     onPointerDownOutside={handlePointerDownOutside}
+                    onEscapeKeyDown={handleEscapeKeyDown}
                     {...otherProps}
                 />
             </Box>

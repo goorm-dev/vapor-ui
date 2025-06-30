@@ -9,6 +9,8 @@ export default {
             control: 'inline-radio',
             options: ['md', 'lg', 'xl'],
         },
+        closeOnClickOverlay: { control: 'boolean' },
+        closeOnEscape: { control: 'boolean' },
     },
 };
 
@@ -18,7 +20,7 @@ export const Default: Story = {
     render: (args) => (
         <Dialog {...args}>
             <Dialog.Trigger>hihi</Dialog.Trigger>
-            <Dialog.CombinedContent padding="$500">
+            <Dialog.CombinedContent>
                 <Dialog.Header>
                     <Dialog.Title>다이얼로그입니다.</Dialog.Title>
                 </Dialog.Header>

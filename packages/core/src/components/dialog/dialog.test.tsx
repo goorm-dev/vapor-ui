@@ -89,6 +89,18 @@ describe('Dialog', () => {
         expect(content).not.toBeInTheDocument();
     });
 
+    it('should not close the content when the escape key is pressed if closeOnEscape is false', async () => {
+        const rendered = render(<DialogTest closeOnEscape={false} />);
+        const trigger = rendered.getByText(TRIGGER_TEXT);
+
+        await userEvent.click(trigger);
+        const content = rendered.getByRole('dialog');
+
+        await userEvent.keyboard('{Escape}');
+
+        expect(content).toBeInTheDocument();
+    });
+
     it('should close the content when the overlay is clicked', async () => {
         const rendered = render(<DialogTest />);
         const trigger = rendered.getByText(TRIGGER_TEXT);
@@ -101,8 +113,8 @@ describe('Dialog', () => {
         expect(rendered.queryByText(CLOSE_TEXT)).not.toBeInTheDocument();
     });
 
-    it('should not close the content when the overlay is clicked if scrimClickable is false', async () => {
-        const rendered = render(<DialogTest scrimClickable={false} />);
+    it('should not close the content when the overlay is clicked if closeOnClickOverlay is false', async () => {
+        const rendered = render(<DialogTest closeOnClickOverlay={false} />);
         const trigger = rendered.getByText(TRIGGER_TEXT);
 
         await userEvent.click(trigger);
