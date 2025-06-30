@@ -36,7 +36,7 @@ export default function HomePage() {
         <main
             className={clsx(
                 styles.main,
-                'flex flex-col items-center gap-10 self-stretch flex-1 justify-center text-center',
+                'flex flex-col items-center gap-10 self-stretch flex-1 justify-center text-center md:p-0 p-4',
             )}
         >
             <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
@@ -53,11 +53,11 @@ export default function HomePage() {
                 <div className="flex flex-col items-center gap-10 self-stretch">
                     <div className="flex flex-col items-center gap-4 self-stretch">
                         <div className="flex flex-col items-center gap-[4px] self-stretch">
-                            <Badge size="md" color="hint" shape="pill">
+                            <Badge size="lg" color="hint" shape="pill">
                                 구름 디자인 시스템 3.0
                             </Badge>
 
-                            <Text typography="heading1" foreground="normal" asChild>
+                            <Text typography="display4" foreground="normal" asChild>
                                 <h1>
                                     Kickstart your project
                                     <br />
@@ -74,7 +74,7 @@ export default function HomePage() {
                     </div>
                     <button
                         type="button"
-                        className="flex flex-col items-center gap-4"
+                        className="flex flex-col items-center gap-4 bg-[var(--vapor-color-background-normal)]"
                         onClick={() => setIsSearchOpen(true)}
                         style={{
                             maxWidth: '720px',
@@ -82,9 +82,7 @@ export default function HomePage() {
                             padding: '16px',
                             borderRadius: '12px',
                             border: '1px solid var(--vapor-color-border-hint)',
-                            background:
-                                'linear-gradient(90deg,rgba(35, 115, 235, 0.08) 0%, rgba(208, 227, 254, 0.08) 100%), var(--vapor-color-background-normal)',
-                            boxShadow: '0px 4px 48px 0px rgba(115, 143, 255, 0.32)',
+                            boxShadow: '0px 4px 48px 0px rgba(208, 227, 254, 0.32)',
                         }}
                     >
                         <div className="flex items-center w-full px-6 h-12 justify-between rounded-[var(--vapor-size-borderRadius-300)] border border-[var(--vapor-color-border-normal)] bg-[var(--vapor-color-background-normal-lighter)]">
@@ -114,7 +112,12 @@ export default function HomePage() {
                     </button>
                 </div>
 
-                <Button size="xl" color="secondary" className={styles.gradientButton} asChild>
+                <Button
+                    size="lg"
+                    color="secondary"
+                    className={clsx(styles.gradientButton, 'w-full md:w-auto')}
+                    asChild
+                >
                     <Link href="/docs">
                         Docs 보러 가기
                         <ForwardPageOutlineIcon
