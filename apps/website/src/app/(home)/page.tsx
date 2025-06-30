@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import DefaultSearchDialog from '../../components/search/search';
 import styles from './page.module.scss';
 import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
 import { ForwardPageOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
@@ -11,12 +12,26 @@ import Link from 'next/link';
 
 export default function HomePage() {
     const { setTheme } = useTheme();
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     useEffect(() => {
         setTheme({
             appearance: 'dark',
         });
     }, [setTheme]);
+
+    useEffect(() => {
+        const down = (e: KeyboardEvent) => {
+            if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                setIsSearchOpen(true);
+            }
+        };
+
+        document.addEventListener('keydown', down);
+        return () => document.removeEventListener('keydown', down);
+    }, []);
+
     return (
         <main
             className={clsx(
@@ -24,6 +39,7 @@ export default function HomePage() {
                 'flex flex-col items-center gap-10 self-stretch flex-1 justify-center text-center',
             )}
         >
+            <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
             <Image
                 className={styles.banner}
                 src="https://statics.goorm.io/gds/docs/main/vapor-index-banner.png" // TODO: 이미지 s3에 올려서 사용할 것
@@ -59,6 +75,7 @@ export default function HomePage() {
                     <button
                         type="button"
                         className="flex flex-col items-center gap-4"
+                        onClick={() => setIsSearchOpen(true)}
                         style={{
                             maxWidth: '720px',
                             width: '100%',
