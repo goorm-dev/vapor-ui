@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 
 import DefaultSearchDialog from '../../components/search/search';
-import styles from './page.module.scss';
 import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
 import { ForwardPageOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
@@ -35,13 +34,12 @@ export default function HomePage() {
     return (
         <main
             className={clsx(
-                styles.main,
                 'flex flex-col items-center gap-10 self-stretch flex-1 justify-center text-center md:p-0 p-4',
             )}
         >
             <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
             <Image
-                className={styles.banner}
+                className="select-none absolute top-0 left-0 w-full h-full object-cover opacity-50 mix-blend-soft-light pointer-events-none"
                 src="https://statics.goorm.io/gds/docs/main/vapor-index-banner.png" // TODO: 이미지 s3에 올려서 사용할 것
                 alt="" // banner와 같이 단순 시각 효과를 위한 이미지는 대체 텍스트를 사용하지 않는다.
                 width="1440"
@@ -112,12 +110,7 @@ export default function HomePage() {
                     </button>
                 </div>
 
-                <Button
-                    size="lg"
-                    color="secondary"
-                    className={clsx(styles.gradientButton, 'w-full md:w-auto')}
-                    asChild
-                >
+                <Button size="lg" color="secondary" className={'w-full md:w-auto'} asChild>
                     <Link href="/docs">
                         Docs 보러 가기
                         <ForwardPageOutlineIcon
