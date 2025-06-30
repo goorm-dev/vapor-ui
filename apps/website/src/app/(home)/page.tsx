@@ -55,7 +55,24 @@ export default function HomePage() {
                                 구름 디자인 시스템 3.0
                             </Badge>
 
-                            <Text typography="display4" foreground="normal" asChild>
+                            <Text
+                                typography="display4"
+                                foreground="normal"
+                                asChild
+                                className="hidden md:block"
+                            >
+                                <h1>
+                                    Kickstart your project
+                                    <br />
+                                    with our UI Kit.
+                                </h1>
+                            </Text>
+                            <Text
+                                typography="heading2"
+                                foreground="normal"
+                                asChild
+                                className="md:hidden"
+                            >
                                 <h1>
                                     Kickstart your project
                                     <br />
@@ -64,7 +81,12 @@ export default function HomePage() {
                             </Text>
                         </div>
 
-                        <Text typography="body1" foreground="normal">
+                        <Text typography="body1" foreground="normal" className="hidden md:block">
+                            Vapor는 디자이너와 개발자가 함께 사용할 수 있는 통일된 디자인 언어와
+                            구성 요소를 제공하여 <br />
+                            생산성을 높이고 사용자 경험을 개선하는 것을 목표로 합니다.
+                        </Text>
+                        <Text typography="body2" foreground="normal" className="md:hidden">
                             Vapor는 디자이너와 개발자가 함께 사용할 수 있는 통일된 디자인 언어와
                             구성 요소를 제공하여 <br />
                             생산성을 높이고 사용자 경험을 개선하는 것을 목표로 합니다.
@@ -72,12 +94,11 @@ export default function HomePage() {
                     </div>
                     <button
                         type="button"
-                        className="flex flex-col items-center gap-4 bg-[var(--vapor-color-background-normal)]"
+                        className="flex flex-col items-center gap-4 bg-[var(--vapor-color-background-normal)] p-3 md:p-4"
                         onClick={() => setIsSearchOpen(true)}
                         style={{
                             maxWidth: '720px',
                             width: '100%',
-                            padding: '16px',
                             borderRadius: '12px',
                             border: '1px solid var(--vapor-color-border-hint)',
                             boxShadow: '0px 4px 48px 0px rgba(208, 227, 254, 0.32)',
@@ -89,8 +110,15 @@ export default function HomePage() {
                                     size={24}
                                     color="var(--vapor-color-foreground-hint)"
                                 />
-                                <Text typography="body1" foreground="hint">
+                                <Text
+                                    typography="body1"
+                                    foreground="hint"
+                                    className="hidden md:block"
+                                >
                                     사용할 컴포넌트 이름으로 검색해 보세요
+                                </Text>
+                                <Text typography="body1" foreground="hint" className="md:hidden">
+                                    컴포넌트 이름으로 검색
                                 </Text>
                             </div>
                             <div className="flex items-center gap-2">
