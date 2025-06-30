@@ -1,13 +1,12 @@
 import { ecmaVersion } from './libs/constants.js';
 import { rules } from './libs/ts-rule.js';
-import tseslintPlugin from '@typescript-eslint/eslint-plugin';
-import * as tsselintParser from '@typescript-eslint/parser';
+import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.LanguageOptions} */
 export const languageOptions = {
     sourceType: 'module',
     ecmaVersion,
-    parser: tsselintParser,
+    parser: tseslint.parser,
     parserOptions: {
         warnOnUnsupportedTypeScriptVersion: true,
         ecmaVersion,
@@ -16,7 +15,7 @@ export const languageOptions = {
 
 /** @type {Record<string, import('eslint').ESLint.Plugin>} */
 export const plugins = {
-    '@typescript-eslint': tseslintPlugin,
+    '@typescript-eslint': tseslint.plugin,
 };
 
 export { rules };
