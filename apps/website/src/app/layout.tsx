@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <head>
                 <link rel="icon" href="/favicon.ico" sizes="any" />
             </head>
-            <body className="flex flex-col min-h-screen bg-[var(--vapor-color-background-normal)]">
+            <body className="flex flex-col min-h-screen">
                 <RootProvider
                     search={{
                         SearchDialog: DefaultSearchDialog,
