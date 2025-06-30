@@ -247,73 +247,51 @@ export const color = {
         'rgb-background-normal': '--rgb-background-normal',
         'background-normal': '--background-normal',
         'rgb-border-color': '--rgb-border-color',
-        'border-color': '--border-color',
+        'border-color': '--vapor-color-border-normal',
         'rgb-logo-normal': '--rgb-logo-normal',
         'logo-normal': '--logo-normal',
         'rgb-background-alternative-01': '--rgb-background-alternative-01',
         'background-alternative-01': '--background-alternative-01',
         'rgb-background-alternative-02': '--rgb-background-alternative-02',
         'background-alternative-02': '--background-alternative-02',
-        'rgb-foreground-primary-on-transparent':
-            '--rgb-foreground-primary-on-transparent',
-        'foreground-primary-on-transparent':
-            '--foreground-primary-on-transparent',
-        'rgb-foreground-primary-on-background':
-            '--rgb-foreground-primary-on-background',
-        'foreground-primary-on-background':
-            '--foreground-primary-on-background',
+        'rgb-foreground-primary-on-transparent': '--rgb-foreground-primary-on-transparent',
+        'foreground-primary-on-transparent': '--foreground-primary-on-transparent',
+        'rgb-foreground-primary-on-background': '--rgb-foreground-primary-on-background',
+        'foreground-primary-on-background': '--foreground-primary-on-background',
         'rgb-foreground-secondary': '--rgb-foreground-secondary',
         'foreground-secondary': '--foreground-secondary',
-        'rgb-foreground-secondary-on-transparent':
-            '--rgb-foreground-secondary-on-transparent',
-        'foreground-secondary-on-transparent':
-            '--foreground-secondary-on-transparent',
+        'rgb-foreground-secondary-on-transparent': '--rgb-foreground-secondary-on-transparent',
+        'foreground-secondary-on-transparent': '--foreground-secondary-on-transparent',
         'rgb-foreground-success': '--rgb-foreground-success',
         'foreground-success': '--foreground-success',
-        'rgb-foreground-success-on-transparent':
-            '--rgb-foreground-success-on-transparent',
-        'foreground-success-on-transparent':
-            '--foreground-success-on-transparent',
-        'rgb-foreground-success-on-background':
-            '--rgb-foreground-success-on-background',
-        'foreground-success-on-background':
-            '--foreground-success-on-background',
+        'rgb-foreground-success-on-transparent': '--rgb-foreground-success-on-transparent',
+        'foreground-success-on-transparent': '--foreground-success-on-transparent',
+        'rgb-foreground-success-on-background': '--rgb-foreground-success-on-background',
+        'foreground-success-on-background': '--foreground-success-on-background',
         'rgb-foreground-warning': '--rgb-foreground-warning',
         'foreground-warning': '--foreground-warning',
-        'rgb-foreground-warning-on-transparent':
-            '--rgb-foreground-warning-on-transparent',
-        'foreground-warning-on-transparent':
-            '--foreground-warning-on-transparent',
-        'rgb-foreground-warning-on-background':
-            '--rgb-foreground-warning-on-background',
-        'foreground-warning-on-background':
-            '--foreground-warning-on-background',
+        'rgb-foreground-warning-on-transparent': '--rgb-foreground-warning-on-transparent',
+        'foreground-warning-on-transparent': '--foreground-warning-on-transparent',
+        'rgb-foreground-warning-on-background': '--rgb-foreground-warning-on-background',
+        'foreground-warning-on-background': '--foreground-warning-on-background',
         'rgb-foreground-danger': '--rgb-foreground-danger',
         'foreground-danger': '--foreground-danger',
-        'rgb-foreground-danger-on-transparent':
-            '--rgb-foreground-danger-on-transparent',
-        'foreground-danger-on-transparent':
-            '--foreground-danger-on-transparent',
-        'rgb-foreground-danger-on-background':
-            '--rgb-foreground-danger-on-background',
+        'rgb-foreground-danger-on-transparent': '--rgb-foreground-danger-on-transparent',
+        'foreground-danger-on-transparent': '--foreground-danger-on-transparent',
+        'rgb-foreground-danger-on-background': '--rgb-foreground-danger-on-background',
         'foreground-danger-on-background': '--foreground-danger-on-background',
         'rgb-foreground-hint': '--rgb-foreground-hint',
         'foreground-hint': '--foreground-hint',
-        'rgb-foreground-hint-on-transparent':
-            '--rgb-foreground-hint-on-transparent',
+        'rgb-foreground-hint-on-transparent': '--rgb-foreground-hint-on-transparent',
         'foreground-hint-on-transparent': '--foreground-hint-on-transparent',
         'rgb-foreground-contrast': '--rgb-foreground-contrast',
         'foreground-contrast': '--foreground-contrast',
-        'rgb-foreground-contrast-on-transparent':
-            '--rgb-foreground-contrast-on-transparent',
-        'foreground-contrast-on-transparent':
-            '--foreground-contrast-on-transparent',
+        'rgb-foreground-contrast-on-transparent': '--rgb-foreground-contrast-on-transparent',
+        'foreground-contrast-on-transparent': '--foreground-contrast-on-transparent',
         'rgb-foreground-accent': '--rgb-foreground-accent',
         'foreground-accent': '--foreground-accent',
-        'rgb-foreground-accent-on-transparent':
-            '--rgb-foreground-accent-on-transparent',
-        'foreground-accent-on-transparent':
-            '--foreground-accent-on-transparent',
+        'rgb-foreground-accent-on-transparent': '--rgb-foreground-accent-on-transparent',
+        'foreground-accent-on-transparent': '--foreground-accent-on-transparent',
         'rgb-foreground-alternative': '--rgb-foreground-alternative',
         'foreground-alternative': '--foreground-alternative',
         'rgb-foreground-normal': '--rgb-foreground-normal',
