@@ -7,7 +7,7 @@ import {
     Close as RadixClose,
     Content as RadixContent,
     Description as RadixDescription,
-    Dialog as RadixDialog,
+    Root as RadixDialog,
     Overlay as RadixOverlay,
     Portal as RadixPortal,
     Title as RadixTitle,
