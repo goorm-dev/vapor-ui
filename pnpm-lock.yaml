@@ -135,10 +135,10 @@ importers:
         specifier: ^15.3.4
         version: 15.3.4(@babel/core@7.27.4)(@playwright/test@1.53.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.89.2)
       react:
-        specifier: ^18.0.0
+        specifier: ^18.3.1
         version: 18.3.1
       react-dom:
-        specifier: ^18.0.0
+        specifier: ^18
         version: 18.3.1(react@18.3.1)
       react-live:
         specifier: ^4.1.8
@@ -7359,11 +7359,11 @@ snapshots:
       - acorn
       - supports-color
 
-  '@mdx-js/react@3.1.0(@types/react@19.1.8)(react@18.3.1)':
+  '@mdx-js/react@3.1.0(@types/react@19.1.8)(react@19.1.0)':
     dependencies:
       '@types/mdx': 2.0.13
       '@types/react': 19.1.8
-      react: 18.3.1
+      react: 19.1.0
 
   '@napi-rs/wasm-runtime@0.2.11':
     dependencies:
@@ -8158,12 +8158,12 @@ snapshots:
 
   '@storybook/addon-docs@8.6.14(@types/react@19.1.8)(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
-      '@mdx-js/react': 3.1.0(@types/react@19.1.8)(react@18.3.1)
-      '@storybook/blocks': 8.6.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.5.3))
+      '@mdx-js/react': 3.1.0(@types/react@19.1.8)(react@19.1.0)
+      '@storybook/blocks': 8.6.14(react-dom@18.3.1(react@19.1.0))(react@19.1.0)(storybook@8.6.14(prettier@3.5.3))
       '@storybook/csf-plugin': 8.6.14(storybook@8.6.14(prettier@3.5.3))
-      '@storybook/react-dom-shim': 8.6.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.5.3))
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      '@storybook/react-dom-shim': 8.6.14(react-dom@18.3.1(react@19.1.0))(react@19.1.0)(storybook@8.6.14(prettier@3.5.3))
+      react: 19.1.0
+      react-dom: 18.3.1(react@19.1.0)
       storybook: 8.6.14(prettier@3.5.3)
       ts-dedent: 2.2.0
     transitivePeerDependencies:
@@ -8227,14 +8227,14 @@ snapshots:
       memoizerific: 1.11.3
       storybook: 8.6.14(prettier@3.5.3)
 
-  '@storybook/blocks@8.6.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.5.3))':
+  '@storybook/blocks@8.6.14(react-dom@18.3.1(react@19.1.0))(react@19.1.0)(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
-      '@storybook/icons': 1.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@storybook/icons': 1.4.0(react-dom@18.3.1(react@19.1.0))(react@19.1.0)
       storybook: 8.6.14(prettier@3.5.3)
       ts-dedent: 2.2.0
     optionalDependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.1.0
+      react-dom: 18.3.1(react@19.1.0)
 
   '@storybook/blocks@8.6.14(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
@@ -8289,10 +8289,10 @@ snapshots:
 
   '@storybook/global@5.0.0': {}
 
-  '@storybook/icons@1.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@storybook/icons@1.4.0(react-dom@18.3.1(react@19.1.0))(react@19.1.0)':
     dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.1.0
+      react-dom: 18.3.1(react@19.1.0)
 
   '@storybook/icons@1.4.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -8313,10 +8313,10 @@ snapshots:
     dependencies:
       storybook: 8.6.14(prettier@3.5.3)
 
-  '@storybook/react-dom-shim@8.6.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.5.3))':
+  '@storybook/react-dom-shim@8.6.14(react-dom@18.3.1(react@19.1.0))(react@19.1.0)(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.1.0
+      react-dom: 18.3.1(react@19.1.0)
       storybook: 8.6.14(prettier@3.5.3)
 
   '@storybook/react-dom-shim@8.6.14(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.14(prettier@3.5.3))':
@@ -11595,6 +11595,12 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
       react: 18.3.1
+      scheduler: 0.23.2
+
+  react-dom@18.3.1(react@19.1.0):
+    dependencies:
+      loose-envify: 1.4.0
+      react: 19.1.0
       scheduler: 0.23.2
 
   react-dom@19.1.0(react@19.1.0):
