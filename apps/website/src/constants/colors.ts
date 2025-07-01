@@ -11,7 +11,7 @@ export const BasicColorData = Object.keys(basicColorData).map((key) => {
         colorShade:
             typeof colorValue === 'object'
                 ? Object.keys(colorValue).map((shade) => ({
-                      name: `${key}-${shade}`,
+                      name: `--vapor-color-${key}-${shade}`,
                       value: colorValue[shade as keyof typeof colorValue],
                   }))
                 : [
@@ -29,7 +29,7 @@ export const SemanticColorData = Object.keys(semanticColorData).map((key) => {
     return {
         title: key,
         colorShade: Object.keys(colorValue).map((shade) => ({
-            name: `${key}-${shade}`,
+            name: `--vapor-color-${key}-${shade}`,
             value: colorValue[shade as keyof typeof colorValue],
         })),
     };

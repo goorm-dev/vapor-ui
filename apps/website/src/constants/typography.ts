@@ -6,42 +6,42 @@ import lineHeightData from '../../public/tokens/typography/line-height.json';
 import { sortByNumericKey } from '../utils/object';
 
 export const FontFamilyData = Object.keys(fontFamilyData['font-family']).map((key) => ({
-    name: `font-family-${key}`,
+    name: `--vapor-typography-fontFamily-${key}`,
     value: `${fontFamilyData['font-family'][key as keyof (typeof fontFamilyData)['font-family']]}`,
-    cssVariable: `--${key}`,
+    cssVariable: `--vapor-typography-fontFamily-${key}`,
 }));
 
 export const FontSizeData = Object.keys(fontSizeData['font-size'])
     .map((key) => ({
-        name: `font-size-${key}`,
+        name: `--vapor-typography-fontSize-${key}`,
         value: fontSizeData['font-size'][key as keyof (typeof fontSizeData)['font-size']],
-        cssVariable: `--font-size-${key}`,
+        cssVariable: `--vapor-typography-fontSize-${key}`,
     }))
     .sort(sortByNumericKey);
 
 export const FontWeightData = Object.keys(fontWeightData['font-weight'])
     .map((key) => ({
-        name: `font-weight-${key}`,
+        name: `--vapor-typography-fontWeight-${key}`,
         value: fontWeightData['font-weight'][key as keyof (typeof fontWeightData)['font-weight']],
-        cssVariable: `--font-weight-${key}`,
+        cssVariable: `--vapor-typography-fontWeight-${key}`,
     }))
     .sort(sortByNumericKey);
 
 export const LetterSpacingData = Object.keys(letterSpacingData['letter-spacing'])
     .map((key) => ({
-        name: `letter-spacing-${key}`,
+        name: `--vapor-typography-letterSpacing-${key}`,
         value: letterSpacingData['letter-spacing'][
             key as keyof (typeof letterSpacingData)['letter-spacing']
         ],
-        cssVariable: `--letter-spacing-${key}`,
+        cssVariable: `--vapor-typography-letterSpacing-${key}`,
     }))
     .sort(sortByNumericKey);
 
 export const LineHeightData = Object.keys(lineHeightData['line-height'])
     .map((key) => ({
-        name: `line-height-${key}`,
+        name: `--vapor-typography-lineHeight-${key}`,
         value: lineHeightData['line-height'][key as keyof (typeof lineHeightData)['line-height']],
-        cssVariable: `--line-height-${key}`,
+        cssVariable: `--vapor-typography-lineHeight-${key}`,
     }))
     .sort(sortByNumericKey);
 
