@@ -56,3 +56,34 @@ export const Default: StoryObj<typeof Nav> = {
         );
     },
 };
+
+export const TestBed: StoryObj<typeof Nav> = {
+    render: (args) => {
+        return (
+            <>
+                <Nav {...args} label="Main">
+                    <Nav.List>
+                        <Nav.Item>
+                            <Nav.Link disabled={args.disabled} selected href="#">
+                                Link 1
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link disabled={args.disabled} href="#">
+                                23411234
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.LinkItem disabled={args.disabled} href="#">
+                            213412341234
+                        </Nav.LinkItem>
+                        <Nav.Item>
+                            <Nav.Link disabled={args.disabled} href="#">
+                                asdf
+                            </Nav.Link>
+                        </Nav.Item>
+                    </Nav.List>
+                </Nav>
+            </>
+        );
+    },
+};

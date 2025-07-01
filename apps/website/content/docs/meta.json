@@ -1,4 +1,3 @@
 {
-    "title": "Vapor Docs",
-    "pages": ["guides", "foundation", "theme-provider", "icon", "components"]
+    "pages": ["overview", "theming", "tokens", "icons", "components"]
 }
