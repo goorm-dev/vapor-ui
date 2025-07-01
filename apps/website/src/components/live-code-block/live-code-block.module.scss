@@ -1,0 +1,26 @@
+.root {
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.preview {
+    padding: 2rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px 8px 0 0;
+}
+
+.editor {
+    background-color: #011627;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    padding: 1rem;
+    line-height: 1.6;
+}
+
+.error {
+    background-color: #ff5555;
+    color: white;
+    padding: 1rem;
+}
