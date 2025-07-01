@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import LogoVapor from '../../../public/icons/logo-vapor.svg';
 import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, Nav, Text } from '@vapor-ui/core';
 import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
@@ -10,6 +9,8 @@ import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
 
 import { navLinks } from '~/constants/site-links';
+
+import LogoVapor from '../../../public/icons/logo-vapor.svg';
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];
@@ -54,10 +55,10 @@ export const SiteNavBar = () => {
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-            <header className="flex w-full py-3 px-4 md:px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
+            <header className="flex w-full py-3 px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
                 <div className="flex items-center gap-10 relative w-full">
                     <Nav
-                        label="nav"
+                        aria-label="nav"
                         size="lg"
                         shape="ghost"
                         className="flex justify-between items-center gap-10 w-full"
@@ -103,7 +104,8 @@ export const SiteNavBar = () => {
                                                     size="lg"
                                                     color="secondary"
                                                     variant="ghost"
-                                                    asChild
+                                                    asChild={hasText(item)}
+                                                    aria-label={hasText(item) ? item.text : ''}
                                                 >
                                                     <Link href={hasUrl(item) ? item.url : '#'}>
                                                         {item.type === 'icon'
@@ -121,7 +123,13 @@ export const SiteNavBar = () => {
                     </Nav>
                 </div>
                 <Dialog.Trigger asChild>
-                    <IconButton size="md" color="secondary" variant="fill" className="md:hidden">
+                    <IconButton
+                        size="md"
+                        color="secondary"
+                        variant="fill"
+                        className="md:hidden"
+                        aria-label="menu"
+                    >
                         <MenuOutlineIcon />
                     </IconButton>
                 </Dialog.Trigger>
@@ -137,7 +145,7 @@ export const SiteNavBar = () => {
                     <Dialog.Title className="sr-only">Mobile navigation menu</Dialog.Title>
                     <header className="flex justify-end px-6 py-4">
                         <Dialog.Close asChild>
-                            <IconButton color="secondary" variant="ghost">
+                            <IconButton color="secondary" variant="ghost" aria-label="close">
                                 <CloseOutlineIcon size={20} />
                             </IconButton>
                         </Dialog.Close>
@@ -155,7 +163,12 @@ export const SiteNavBar = () => {
                                         {hasText(item) ? item.text : null}
                                     </h6>
                                 </Text>
-                                <IconButton size="md" color="secondary" variant="fill">
+                                <IconButton
+                                    size="md"
+                                    color="secondary"
+                                    variant="fill"
+                                    aria-label={hasUrl(item) ? item.url : ''}
+                                >
                                     <Link href={hasUrl(item) ? item.url : '#'}>
                                         <OpenInNewOutlineIcon />
                                     </Link>
