@@ -1,0 +1,173 @@
+---
+title: Vite에서 사용하기
+---
+
+## 개요
+
+Vite는 클라이언트 사이드 렌더링(CSR)을 기본으로 동작하기 때문에, 동적 테마를 적용할 때 서버 사이드 렌더링(SSR) 환경과는 다른 접근 방식이 필요합니다. 이 문서에서는 Vite 환경에서 `@vapor-ui/core`를 설정하고, 가장 중요한 **화면 깜빡임(FOUC) 현상**을 방지하는 방법을 안내합니다.
+
+## 왜 깜빡임(FOUC)이 발생할까요?
+
+Vite 개발 서버는 최소한의 `index.html` 파일을 브라우저에 먼저 보냅니다. 브라우저는 이 HTML과 기본 CSS를 바탕으로 첫 화면(주로 라이트 모드)을 그립니다. 그 후 React 앱의 JavaScript가 로드되고 실행되면서 `ThemeProvider`가 사용자의 저장된 테마(예: 다크 모드)를 확인하고 DOM에 적용합니다.
+
+이 시차 때문에 "라이트 모드로 그려졌다가 → 다크 모드로 바뀌는" 현상이 발생하며, 이것이 사용자에게는 '깜빡임'으로 보이게 됩니다.
+
+## 설정 방법
+
+`@vapor-ui/core`는 이 문제를 해결하기 위해 두 가지 방법을 제공합니다. **Vite 플러그인을 사용하는 것을 가장 권장합니다.**
+
+### [권장] 1. Vite 플러그인으로 자동 설정하기
+
+가장 쉽고 안정적인 방법입니다. `@vapor-ui/vite-plugin`은 FOUC 방지 스크립트를 `index.html`에 자동으로 주입해 줍니다.
+
+#### 1단계: 패키지 설치
+
+```bash
+npm install @vapor-ui/core @vapor-ui/vite-plugin
+```
+
+#### 2단계: 테마 설정 파일 생성
+
+프로젝트 어디든 `theme.config.ts`와 같은 설정 파일을 만들어 테마의 기본값을 관리합니다.
+
+```ts
+// src/lib/theme.config.ts
+import { createThemeConfig } from '@vapor-ui/core';
+
+export const themeConfig = createThemeConfig({
+    appearance: 'dark', // 'light', 'dark', or 'system'
+    radius: 'md',
+    storageKey: 'my-vite-app-theme',
+});
+```
+
+#### 3단계: `vite.config.ts`에 플러그인 추가
+
+`themeInjectorPlugin`을 `vite.config.ts`에 추가하고, 방금 생성한 `themeConfig`를 전달합니다.
+
+```ts
+// vite.config.ts
+import { themeInjectorPlugin } from '@vapor-ui/vite-plugin';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+import { themeConfig } from './src/lib/theme.config';
+
+// 설정 파일 경로
+
+export default defineConfig({
+    plugins: [
+        react(),
+        // FOUC 방지 스크립트를 자동으로 주입합니다.
+        themeInjectorPlugin({ config: themeConfig }),
+    ],
+});
+```
+
+#### 4단계: `ThemeProvider` 설정
+
+애플리케이션의 진입점(`main.tsx`)에서 `ThemeProvider`로 앱을 감싸고, 스타일 시트를 임포트합니다.
+
+```tsx
+// src/main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
+import { ThemeProvider } from '@vapor-ui/core';
+
+import App from './App.tsx';
+import { themeConfig } from './lib/theme.config';
+
+// 필수: 스타일 시트를 임포트합니다.
+import '@vapor-ui/core/dist/styles.css';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <ThemeProvider config={themeConfig}>
+            <App />
+        </ThemeProvider>
+    </React.StrictMode>,
+);
+```
+
+이제 Vite 프로젝트에서 깜빡임 없이 동적 테마를 사용할 수 있습니다!
+
+### 2. 수동으로 스크립트 추가하기
+
+플러그인을 사용하고 싶지 않다면, FOUC 방지 스크립트를 `index.html` 파일의 `<head>` 태그 안에 직접 추가할 수 있습니다.
+
+> **주의사항**
+>
+> 이 스크립트는 라이브러리 업데이트 시 함께 변경될 수 있습니다. 가급적 Vite 플러그인 사용을 권장합니다.
+
+```html
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vite App</title>
+
+        <!-- 💡 @vapor-ui/core FOUC 방지 스크립트 시작 -->
+        <script>
+            (function () {
+                const config = {
+                    storageKey: 'my-vite-app-theme', // ThemeProvider와 동일한 storageKey 사용
+                    defaultTheme: { colorTheme: 'light', radius: 'md' }, // 기본값
+                };
+
+                let theme;
+                try {
+                    theme = localStorage.getItem(config.storageKey);
+                    if (theme) {
+                        theme = JSON.parse(theme);
+                    }
+                } catch (e) {
+                    console.warn(e);
+                }
+
+                const osTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+                    ? 'dark'
+                    : 'light';
+
+                const colorTheme = theme?.colorTheme || config.defaultTheme.colorTheme;
+                const resolvedColorTheme = colorTheme === 'system' ? osTheme : colorTheme;
+
+                const radius = theme?.radius || config.defaultTheme.radius;
+
+                const doc = document.documentElement;
+                doc.classList.add(`vapor-${resolvedColorTheme}-theme`);
+                doc.classList.add(`vapor-radius-${radius}`);
+            })();
+        </script>
+        <!-- 스크립트 끝 -->
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
+</html>
+```
+
+## 컴포넌트에서 테마 사용하기
+
+설정이 완료되면 `useTheme` 훅을 사용하여 어떤 컴포넌트에서든 현재 테마 값을 읽거나 변경할 수 있습니다.
+
+```tsx
+// src/components/ThemeToggleButton.tsx
+import { useTheme } from '@vapor-ui/core';
+
+export function ThemeToggleButton() {
+    const { colorTheme, setTheme } = useTheme();
+
+    const toggleTheme = () => {
+        setTheme({
+            colorTheme: colorTheme === 'light' ? 'dark' : 'light',
+        });
+    };
+
+    return <button onClick={toggleTheme}>현재 테마: {colorTheme}</button>;
+}
+```
