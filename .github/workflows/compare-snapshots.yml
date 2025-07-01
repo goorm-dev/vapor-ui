@@ -74,6 +74,11 @@ jobs:
                   aws s3 rm s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
                   aws s3 cp './report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
 
+            - name: Set Bot Config
+              run: |
+                  git config --global user.name "Vapor UI"
+                  git config --global user.email "vapor.ui@goorm.io"
+
             - name: Post Test Result
               uses: daun/playwright-report-summary@v3
               with:
