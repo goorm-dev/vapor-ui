@@ -1,5 +1,4 @@
 ---
-url: 'https://vapor.goorm.io/vapor-core/avatar'
 title: 'Avatar'
 site_name: 'Avatar - Vapor Core'
 description: 'Avatar는 사용자가 설정한 프로필 이미지 혹은 텍스트를 UI상에 나타냅니다.'
@@ -8,8 +7,16 @@ description: 'Avatar는 사용자가 설정한 프로필 이미지 혹은 텍스
 ## Import
 
 ```js
-import { Alert } from '@goorm-dev/vapor-core';
+import { Alert } from '@vapor-ui/core';
 ```
+
+## Preview
+
+<LiveCodeBlock
+    code={`<Avatar label="Goorm" size="md" square={false}>
+    <Avatar.Image src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg" />
+</Avatar>`}
+/>
 
 ## Props
 

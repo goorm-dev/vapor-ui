@@ -71,7 +71,7 @@
                             "descriptions": [
                                 "Card.Title 컴포넌트를 이용하지 않을 시, 직접 aria-label을 넣어주어야 합니다."
                             ],
-                            "exampleCode": "import Card from '@goorm-dev/vapor-core';\n\nconst Example = () => {\n    return (\n        <Card aria-label=\"Custom Card Title\">\n            <Card.Body>\n                <p>This is the body of the card.</p>\n            </Card.Body>\n            <Card.Footer>\n                <button>Action</button>\n            </Card.Footer>\n        </Card>\n    );\n};\n\nexport default Example;",
+                            "exampleCode": "import Card from '@vapor-ui/core';\n\nconst Example = () => {\n    return (\n        <Card aria-label=\"Custom Card Title\">\n            <Card.Body>\n                <p>This is the body of the card.</p>\n            </Card.Body>\n            <Card.Footer>\n                <button>Action</button>\n            </Card.Footer>\n        </Card>\n    );\n};\n\nexport default Example;",
                             "badgeColor": "primary"
                         }
                     ]

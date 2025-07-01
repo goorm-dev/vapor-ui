@@ -2,6 +2,7 @@ import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import * as TabsComponents from 'fumadocs-ui/components/tabs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
+import Image from 'next/image';
 
 import AccessibilityTable from '~/components/accessibility-table';
 import AllComponentsContainer from '~/components/all-components-container';
@@ -13,6 +14,8 @@ import FoundationSizeTabs from '~/components/foundation-size-tabs';
 import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
 import IconList from '~/components/icon-list-tabs/icon-list-tabs';
 import InstallSelector from '~/components/install-selector/install-selector';
+import IntroPackageListCollapsible from '~/components/intro-package-list-collapsible';
+import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
 
 export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
@@ -36,8 +39,10 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         FoundationCard,
         FoundationList,
         IconList,
+        IntroPackageListCollapsible,
+        Image,
         PropsTable,
-
+        LiveCodeBlock,
         AccessibilityTable: AccessibilityTable as unknown as (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             props: any,

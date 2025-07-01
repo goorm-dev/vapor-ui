@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 
+import LogoVapor from '../../../public/icons/logo-vapor.svg';
 import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, Nav, Text } from '@vapor-ui/core';
 import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
-import Image from 'next/image';
 
 import { navLinks } from '~/constants/site-links';
 
@@ -54,7 +54,7 @@ export const SiteNavBar = () => {
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-            <header className="flex w-full py-3 px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
+            <header className="flex w-full py-3 px-4 md:px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
                 <div className="flex items-center gap-10 relative w-full">
                     <Nav
                         label="nav"
@@ -67,11 +67,11 @@ export const SiteNavBar = () => {
                                 href="/"
                                 className="inline-flex items-center gap-2.5 font-semibold w-[68px] h-[26px]"
                             >
-                                <Image
+                                <LogoVapor
                                     width={68}
-                                    height={26}
-                                    src="https://statics.goorm.io/gds/resources/brand-images/light/logo_vapor.svg"
-                                    alt="Goorm Design System: Vapor"
+                                    height={24}
+                                    role="img"
+                                    aria-label="Goorm Design System: Vapor"
                                 />
                             </Link>
                             <ul className="hidden md:flex flex-row items-center gap-2 p-0">
