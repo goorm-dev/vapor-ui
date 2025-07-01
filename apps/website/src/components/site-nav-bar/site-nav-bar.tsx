@@ -103,7 +103,8 @@ export const SiteNavBar = () => {
                                                     size="lg"
                                                     color="secondary"
                                                     variant="ghost"
-                                                    asChild
+                                                    asChild={hasText(item)}
+                                                    label={hasText(item) ? item.text : ''}
                                                 >
                                                     <Link href={hasUrl(item) ? item.url : '#'}>
                                                         {item.type === 'icon'
@@ -121,7 +122,13 @@ export const SiteNavBar = () => {
                     </Nav>
                 </div>
                 <Dialog.Trigger asChild>
-                    <IconButton size="md" color="secondary" variant="fill" className="md:hidden">
+                    <IconButton
+                        size="md"
+                        color="secondary"
+                        variant="fill"
+                        className="md:hidden"
+                        label="menu"
+                    >
                         <MenuOutlineIcon />
                     </IconButton>
                 </Dialog.Trigger>
@@ -137,7 +144,7 @@ export const SiteNavBar = () => {
                     <Dialog.Title className="sr-only">Mobile navigation menu</Dialog.Title>
                     <header className="flex justify-end px-6 py-4">
                         <Dialog.Close asChild>
-                            <IconButton color="secondary" variant="ghost">
+                            <IconButton color="secondary" variant="ghost" label="close">
                                 <CloseOutlineIcon size={20} />
                             </IconButton>
                         </Dialog.Close>
@@ -155,7 +162,12 @@ export const SiteNavBar = () => {
                                         {hasText(item) ? item.text : null}
                                     </h6>
                                 </Text>
-                                <IconButton size="md" color="secondary" variant="fill">
+                                <IconButton
+                                    size="md"
+                                    color="secondary"
+                                    variant="fill"
+                                    label={hasUrl(item) ? item.url : ''}
+                                >
                                     <Link href={hasUrl(item) ? item.url : '#'}>
                                         <OpenInNewOutlineIcon />
                                     </Link>
