@@ -1,10 +1,11 @@
-import type { IconButtonProps } from './icon-button';
-import { IconButton } from './icon-button';
 import { cleanup, render } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import { HeartIcon } from '@vapor-ui/icons';
 import type { Mock } from 'vitest';
 import { axe } from 'vitest-axe';
+
+import type { IconButtonProps } from './icon-button';
+import { IconButton } from './icon-button';
 
 const ARIA_LABEL = 'Like';
 

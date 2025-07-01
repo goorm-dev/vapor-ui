@@ -1,9 +1,10 @@
 import type { ComponentProps } from 'react';
 
-import { HStack } from '.';
 import type { StoryObj } from '@storybook/react';
 
 import { vars } from '~/styles/contract.css';
+
+import { HStack } from '.';
 
 export default {
     title: 'HStack',

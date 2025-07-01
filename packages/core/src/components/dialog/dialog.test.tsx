@@ -1,7 +1,8 @@
-import { Dialog, type DialogProps } from './dialog';
 import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
+
+import { Dialog, type DialogProps } from './dialog';
 
 describe('Dialog', () => {
     const consoleWarnMockFunction = vi.spyOn(console, 'warn').mockImplementation(vi.fn());

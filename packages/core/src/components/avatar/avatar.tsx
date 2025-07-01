@@ -1,7 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
-import * as styles from './avatar.css';
 import {
     Root as RadixAvatar,
     Fallback as RadixFallback,
@@ -14,6 +13,8 @@ import { createContext } from '~/libs/create-context';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import { vars } from '~/styles/contract.css';
 import { createSplitProps } from '~/utils/create-split-props';
+
+import * as styles from './avatar.css';
 
 type AvatarVariants = MergeRecipeVariants<typeof styles.root | typeof styles.fallback>;
 type AvatarSharedProps = AvatarVariants & {

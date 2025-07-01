@@ -1,5 +1,6 @@
-import { layers } from './layers.css';
 import { createGlobalVar, globalStyle } from '@vanilla-extract/css';
+
+import { layers } from './layers.css';
 
 globalStyle('*', {
     '@layer': {

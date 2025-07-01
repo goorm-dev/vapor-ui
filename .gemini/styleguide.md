@@ -548,8 +548,9 @@ src/
 
     ```tsx
     // button.css.ts
-    import { vars } from '../theme.css';
     import { style } from '@vanilla-extract/css';
+
+    import { vars } from '../theme.css';
 
     // 예시: 테마 변수 파일
 
@@ -565,8 +566,9 @@ src/
 
     ```tsx
     // button.css.ts
-    import { vars } from '../theme.css';
     import { RecipeVariants, recipe } from '@vanilla-extract/recipes';
+
+    import { vars } from '../theme.css';
 
     export const buttonRecipe = recipe({
         base: {
@@ -638,9 +640,10 @@ src/
     ```tsx
     // checkbox.types.ts 또는 checkbox.tsx
     // import type { MergeRecipeVariants } from '~/libs/recipe'; // 유틸리티 타입 경로
-    import * as styles from './checkbox.css';
     // styles.root, styles.control, styles.label 등이 recipe로 정의됨 가정
     import type { RecipeVariants as OriginalRecipeVariants } from '@vanilla-extract/recipes';
+
+    import * as styles from './checkbox.css';
 
     // Vanilla Extract 원본 타입
 

@@ -26,7 +26,11 @@ function ColorBox({ color, value, basicToken }: ColorBoxProps) {
                 <Text typography="subtitle1" foreground="hint">
                     {value.toUpperCase()}
                 </Text>
-                <Text typography="subtitle1" foreground="hint-darker" className={styles.description}>
+                <Text
+                    typography="subtitle1"
+                    foreground="hint-darker"
+                    className={styles.description}
+                >
                     {color}
                 </Text>
                 {basicToken && (

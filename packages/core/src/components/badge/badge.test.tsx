@@ -1,7 +1,8 @@
-import type { BadgeProps } from './badge';
-import { Badge } from './badge';
 import { cleanup, render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
+
+import type { BadgeProps } from './badge';
+import { Badge } from './badge';
 
 const BadgeTest = (props: BadgeProps) => {
     return <Badge {...props}>Badge</Badge>;

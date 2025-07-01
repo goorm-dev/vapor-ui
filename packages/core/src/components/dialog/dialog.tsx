@@ -1,8 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { Box } from '../box';
-import * as styles from './dialog.css';
 import {
     Close as RadixClose,
     Content as RadixContent,
@@ -19,6 +17,9 @@ import { createContext } from '~/libs/create-context';
 import { splitLayoutProps, vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import type { Sprinkles } from '~/styles/sprinkles.css';
+
+import { Box } from '../box';
+import * as styles from './dialog.css';
 
 type DialogVariants = MergeRecipeVariants<typeof styles.content>;
 type DialogSharedProps = DialogVariants & {

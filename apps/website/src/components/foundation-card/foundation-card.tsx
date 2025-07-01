@@ -1,10 +1,11 @@
 'use client';
 
-import styles from './foundation-card.module.scss';
 import { Card, Text } from '@vapor-ui/core';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import styles from './foundation-card.module.scss';
 
 interface FoundationCardProps {
     title: string;

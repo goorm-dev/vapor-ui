@@ -1,5 +1,6 @@
-import { Nav } from './nav';
 import type { StoryObj } from '@storybook/react';
+
+import { Nav } from './nav';
 
 export default {
     title: 'Nav',

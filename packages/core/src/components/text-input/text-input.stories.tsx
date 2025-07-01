@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
+import type { Meta, StoryObj } from '@storybook/react';
+
 import { TextInput } from '.';
 import { Grid } from '../grid';
-import type { Meta, StoryObj } from '@storybook/react';
 
 export default {
     title: 'TextInput',

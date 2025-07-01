@@ -1,7 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import * as styles from './nav.css';
 import {
     Item as RadixItem,
     Link as RadixLink,
@@ -13,6 +12,8 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
+
+import * as styles from './nav.css';
 
 type NavContextType = NavVariants;
 const [NavProvider, useNavContext] = createContext<NavContextType>({

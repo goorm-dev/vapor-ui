@@ -1,8 +1,9 @@
-import type { NavLinkProps, NavProps } from './nav';
-import { Nav } from './nav';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
+
+import type { NavLinkProps, NavProps } from './nav';
+import { Nav } from './nav';
 
 const NavTest = (props: NavProps) => {
     return (

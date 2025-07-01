@@ -1,6 +1,7 @@
+import type { StoryObj } from '@storybook/react';
+
 import { VStack } from '../v-stack';
 import { Text } from './text';
-import type { StoryObj } from '@storybook/react';
 
 export default {
     title: 'Text',

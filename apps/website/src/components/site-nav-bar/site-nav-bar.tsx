@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import LogoVapor from '../../../public/icons/logo-vapor.svg';
 import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, Nav, Text } from '@vapor-ui/core';
 import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
@@ -10,6 +9,8 @@ import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
 
 import { navLinks } from '~/constants/site-links';
+
+import LogoVapor from '../../../public/icons/logo-vapor.svg';
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];

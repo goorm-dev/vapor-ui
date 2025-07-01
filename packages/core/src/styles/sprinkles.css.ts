@@ -1,7 +1,8 @@
-import { vars } from './contract.css';
-import { layers } from './layers.css';
 import { calc } from '@vanilla-extract/css-utils';
 import { createRainbowSprinkles, defineProperties } from 'rainbow-sprinkles';
+
+import { vars } from './contract.css';
+import { layers } from './layers.css';
 
 const spaceTokens = vars.size.space;
 type SpaceKey = keyof typeof spaceTokens;

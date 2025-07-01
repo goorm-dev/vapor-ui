@@ -3,12 +3,13 @@
 import { createContext, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import { DEV_FEATURES_MD, MINIMUM_MD, VAPOR_CORE_MD } from '../../constants/intro-md';
-import CardDialog from './CardDialog';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { Badge, Text } from '@vapor-ui/core';
 import { BookIcon, ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import Image from 'next/image';
+
+import { DEV_FEATURES_MD, MINIMUM_MD, VAPOR_CORE_MD } from '../../constants/intro-md';
+import CardDialog from './CardDialog';
 
 const DIALOGS = [
     {

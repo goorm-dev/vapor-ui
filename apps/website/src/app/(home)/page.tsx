@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 
-import DefaultSearchDialog from '../../components/search/search';
 import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
 import { ForwardPageOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import DefaultSearchDialog from '../../components/search/search';
 
 export default function HomePage() {
     const { setTheme } = useTheme();

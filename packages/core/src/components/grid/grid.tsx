@@ -1,12 +1,13 @@
 import { type CSSProperties, type ComponentPropsWithoutRef, forwardRef } from 'react';
 
-import * as styles from './grid.css';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
+
+import * as styles from './grid.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Grid
