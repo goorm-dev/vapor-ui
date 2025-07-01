@@ -18,7 +18,7 @@ export function createMetadata(override: Metadata): Metadata {
                 override.openGraph?.description ??
                 'Vapor UI is a modern, flexible and accessible design system for building beautiful and accessible web applications.',
             siteName: override.openGraph?.siteName ?? 'Vapor UI',
-            url: override.openGraph?.url ?? 'https://vapor.goorm.io',
+            url: override.openGraph?.url ?? 'https://vapor-ui.goorm.io',
             images:
                 override.openGraph?.images ??
                 'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png',
@@ -40,7 +40,7 @@ export function createMetadata(override: Metadata): Metadata {
                 'application/rss+xml': [
                     {
                         title: 'Vapor UI',
-                        url: 'https://vapor.goorm.io',
+                        url: 'https://vapor-ui.goorm.io',
                     },
                 ],
             },
