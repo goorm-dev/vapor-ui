@@ -1,6 +1,7 @@
+import type { Meta, StoryObj } from '@storybook/react';
+
 import { Avatar } from '.';
 import { Flex } from '../flex';
-import type { Meta, StoryObj } from '@storybook/react';
 
 export default {
     title: 'Avatar',
@@ -18,25 +19,25 @@ export const Default: Story = {
             <Flex>
                 <Avatar.Simple
                     size="sm"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="md"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="lg"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="xl"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
@@ -86,12 +87,15 @@ export const Default: Story = {
                     {...args}
                     alt="noah.choi"
                 />
-                <Avatar.Simple
+                <Avatar.Root
                     size="xl"
                     src="https://images.unsplashd.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
                     {...args}
                     alt="noah.choi"
-                />
+                >
+                    <Avatar.Image />
+                    <Avatar.Fallback>asdf</Avatar.Fallback>
+                </Avatar.Root>
             </Flex>
         </>
     ),
@@ -103,25 +107,25 @@ export const TestBed: Story = {
             <Flex>
                 <Avatar.Simple
                     size="sm"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="md"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="lg"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="xl"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />

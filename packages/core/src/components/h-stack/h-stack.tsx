@@ -1,9 +1,9 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { Flex } from '../flex';
-
 import { createSplitProps } from '~/utils/create-split-props';
+
+import { Flex } from '../flex';
 
 type HStackVariants = { reverse?: boolean };
 type HStackPrimitiveProps = ComponentPropsWithoutRef<typeof Flex>;
@@ -19,6 +19,7 @@ const HStack = forwardRef<HTMLDivElement, HStackProps>(({ children, ...props }, 
         </Flex>
     );
 });
+HStack.displayName = 'HStack';
 
 export { HStack };
 export type { HStackProps };

@@ -1,12 +1,13 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import * as styles from './button.css';
 import clsx from 'clsx';
 
 import { vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
+
+import * as styles from './button.css';
 
 type ButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof vapor.button>, 'color'>;
 type ButtonVariants = MergeRecipeVariants<typeof styles.root>;
@@ -34,6 +35,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         );
     },
 );
+Button.displayName = 'Button';
 
 export { Button };
 export type { ButtonProps };

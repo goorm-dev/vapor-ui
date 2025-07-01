@@ -1,12 +1,13 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import * as styles from './badge.css';
 import clsx from 'clsx';
 
 import { vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
+
+import * as styles from './badge.css';
 
 type BadgePrimitiveProps = Omit<ComponentPropsWithoutRef<typeof vapor.span>, 'color'>;
 type BadgeVariants = MergeRecipeVariants<typeof styles.root>;
@@ -30,6 +31,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ..
         </vapor.span>
     );
 });
+Badge.displayName = 'Badge';
 
 export { Badge };
 export type { BadgeProps };

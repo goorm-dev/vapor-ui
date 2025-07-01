@@ -1,10 +1,10 @@
 'use client';
 
-import styles from './foundation-size-tabs.module.scss';
-import SizeTable from './size-table';
-
 import Tabs from '~/components/ui/tabs';
 import { BorderRadiusData, DimensionData, SpaceData } from '~/constants/size';
+
+import styles from './foundation-size-tabs.module.scss';
+import SizeTable from './size-table';
 
 export const FoundationSizeTabs = () => {
     return (

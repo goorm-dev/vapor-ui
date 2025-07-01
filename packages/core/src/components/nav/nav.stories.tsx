@@ -4,7 +4,7 @@ import { Nav } from './nav';
 
 export default {
     title: 'Nav',
-    component: Nav,
+    component: Nav.Root,
     argTypes: {
         size: {
             control: { type: 'inline-radio' },
@@ -27,11 +27,11 @@ export default {
     },
 };
 
-export const Default: StoryObj<typeof Nav> = {
+export const Default: StoryObj<typeof Nav.Root> = {
     render: (args) => {
         return (
             <>
-                <Nav {...args} aria-label="Main">
+                <Nav.Root {...args} aria-label="Main">
                     <Nav.List>
                         <Nav.Item>
                             <Nav.Link disabled={args.disabled} selected href="#">
@@ -52,17 +52,17 @@ export const Default: StoryObj<typeof Nav> = {
                             </Nav.Link>
                         </Nav.Item>
                     </Nav.List>
-                </Nav>
+                </Nav.Root>
             </>
         );
     },
 };
 
-export const TestBed: StoryObj<typeof Nav> = {
+export const TestBed: StoryObj<typeof Nav.Root> = {
     render: (args) => {
         return (
             <>
-                <Nav {...args} aria-label="Main">
+                <Nav.Root {...args} aria-label="Main">
                     <Nav.List>
                         <Nav.Item>
                             <Nav.Link disabled={args.disabled} selected href="#">
@@ -83,7 +83,7 @@ export const TestBed: StoryObj<typeof Nav> = {
                             </Nav.Link>
                         </Nav.Item>
                     </Nav.List>
-                </Nav>
+                </Nav.Root>
             </>
         );
     },

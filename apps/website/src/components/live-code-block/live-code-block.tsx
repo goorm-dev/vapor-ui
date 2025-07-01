@@ -2,10 +2,11 @@
 
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
 
-import styles from './live-code-block.module.scss';
 import * as VAPOR_CORE from '@vapor-ui/core';
 import * as VAPOR_ICONS from '@vapor-ui/icons';
 import clsx from 'clsx';
+
+import styles from './live-code-block.module.scss';
 
 interface LiveCodeBlockProps {
     code: string;

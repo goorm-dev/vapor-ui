@@ -1,8 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { Box } from '../box';
-import * as styles from './dialog.css';
 import {
     Close as RadixClose,
     Content as RadixContent,
@@ -19,6 +17,9 @@ import { createContext } from '~/libs/create-context';
 import { splitLayoutProps, vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import type { Sprinkles } from '~/styles/sprinkles.css';
+
+import { Box } from '../box';
+import * as styles from './dialog.css';
 
 type DialogVariants = MergeRecipeVariants<typeof styles.content>;
 type DialogSharedProps = DialogVariants & {
@@ -38,9 +39,15 @@ const [DialogRoot, useDialogContext] = createContext<DialogContext>({
  * -----------------------------------------------------------------------------------------------*/
 
 type DialogPrimitiveProps = ComponentPropsWithoutRef<typeof RadixDialog>;
-interface DialogProps extends DialogPrimitiveProps, DialogSharedProps {}
+interface DialogRootProps extends DialogPrimitiveProps, DialogSharedProps {}
 
-const Root = ({ size, closeOnClickOverlay, closeOnEscape, children, ...props }: DialogProps) => {
+const Root = ({
+    size,
+    closeOnClickOverlay,
+    closeOnEscape,
+    children,
+    ...props
+}: DialogRootProps) => {
     return (
         <RadixDialog {...props}>
             <DialogRoot value={{ size, closeOnClickOverlay, closeOnEscape }}>{children}</DialogRoot>
@@ -256,7 +263,7 @@ export const Dialog = Object.assign(Root, {
 });
 
 export type {
-    DialogProps,
+    DialogRootProps,
     DialogPortalProps,
     DialogOverlayProps,
     DialogContentProps,

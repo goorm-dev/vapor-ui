@@ -1,13 +1,14 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
-import * as styles from './text-input.css';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
+
+import * as styles from './text-input.css';
 
 type TextInputVariants = MergeRecipeVariants<
     typeof styles.root | typeof styles.label | typeof styles.field
@@ -37,14 +38,14 @@ const [TextInputProvider, useTextInputContext] = createContext<TextInputContextT
 
 type TextInputPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
 
-interface TextInputProps
+interface TextInputRootProps
     extends Omit<TextInputPrimitiveProps, keyof TextInputSharedProps>,
         TextInputSharedProps {}
 
-const Root = forwardRef<HTMLDivElement, TextInputProps>(
+const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
     ({ className, children, ...props }, ref) => {
         const textInputId = useId();
-        const [textInputProps, otherProps] = createSplitProps<TextInputSharedProps>()(props, [
+        const [textInputRootProps, otherProps] = createSplitProps<TextInputSharedProps>()(props, [
             'type',
             'value',
             'onValueChange',
@@ -57,10 +58,10 @@ const Root = forwardRef<HTMLDivElement, TextInputProps>(
             'placeholder',
         ]);
 
-        const { disabled } = textInputProps;
+        const { disabled } = textInputRootProps;
 
         return (
-            <TextInputProvider value={{ textInputId, ...textInputProps }}>
+            <TextInputProvider value={{ textInputId, ...textInputRootProps }}>
                 <vapor.div
                     ref={ref}
                     className={clsx(styles.root({ disabled }), className)}
@@ -141,6 +142,7 @@ Field.displayName = 'TextInput.Field';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const TextInput = Object.assign(Root, { Label, Field });
+export { Root as TextInputRoot, Label as TextInputLabel, Field as TextInputField };
+export type { TextInputRootProps, TextInputLabelProps, TextInputFieldProps };
 
-export type { TextInputProps, TextInputLabelProps, TextInputFieldProps };
+export const TextInput = { Root, Label, Field };

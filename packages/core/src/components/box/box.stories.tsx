@@ -1,6 +1,7 @@
+import type { Meta } from '@storybook/react';
+
 import { Button } from '../button';
 import { Box } from './box';
-import type { Meta } from '@storybook/react';
 
 export default { title: 'Box', component: Box } as Meta<typeof Box>;
 

@@ -1,7 +1,8 @@
-import { Dialog, type DialogProps } from './dialog';
 import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
+
+import { Dialog, type DialogRootProps } from './dialog';
 
 describe('Dialog', () => {
     const consoleWarnMockFunction = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -132,7 +133,7 @@ const TITLE_TEXT = 'Dialog Title';
 const DESCRIPTION_TEXT = 'This is a description of the dialog.';
 const OVERLAY_TEXT = 'Overlay';
 
-const DialogTest = (props: DialogProps) => {
+const DialogTest = (props: DialogRootProps) => {
     return (
         <Dialog {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
@@ -152,7 +153,7 @@ const DialogTest = (props: DialogProps) => {
     );
 };
 
-const NoTitleDialogTest = (props: DialogProps) => {
+const NoTitleDialogTest = (props: DialogRootProps) => {
     return (
         <Dialog {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
@@ -169,7 +170,7 @@ const NoTitleDialogTest = (props: DialogProps) => {
     );
 };
 
-const NoDescriptionDialogTest = (props: DialogProps) => {
+const NoDescriptionDialogTest = (props: DialogRootProps) => {
     return (
         <Dialog {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
@@ -186,7 +187,7 @@ const NoDescriptionDialogTest = (props: DialogProps) => {
     );
 };
 
-const UndefinedDescriptionDialogTest = (props: DialogProps) => {
+const UndefinedDescriptionDialogTest = (props: DialogRootProps) => {
     return (
         <Dialog {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>

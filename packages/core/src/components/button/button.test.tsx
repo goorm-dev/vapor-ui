@@ -1,9 +1,10 @@
-import type { ButtonProps } from './button';
-import { Button } from './button';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 import { axe } from 'vitest-axe';
+
+import type { ButtonProps } from './button';
+import { Button } from './button';
 
 const BUTTON_LABEL = 'Click Me';
 

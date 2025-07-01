@@ -1,13 +1,14 @@
 import type { ComponentProps } from 'react';
 
-import { Grid } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { vars } from '~/styles/contract.css';
 
+import { Grid } from '.';
+
 export default {
     title: 'Grid',
-    component: Grid,
+    component: Grid.Root,
     argTypes: {
         inline: { control: { type: 'boolean' } },
         justify: {
@@ -31,12 +32,12 @@ export default {
             options: ['row', 'column', 'row-dense', 'column-dense'],
         },
     },
-} as Meta<typeof Grid>;
+} as Meta<typeof Grid.Root>;
 
-export const Default: StoryObj<typeof Grid> = {
+export const Default: StoryObj<typeof Grid.Root> = {
     render: (args) => {
         return (
-            <Grid
+            <Grid.Root
                 style={{
                     width: 400,
                     backgroundColor: 'GrayText',
@@ -56,7 +57,7 @@ export const Default: StoryObj<typeof Grid> = {
                 <Box>3</Box>
                 <Box>4</Box>
                 <Box>5</Box>
-            </Grid>
+            </Grid.Root>
         );
     },
 };
@@ -64,7 +65,7 @@ export const Default: StoryObj<typeof Grid> = {
 export const TestBed: StoryObj<typeof Grid> = {
     render: (args) => {
         return (
-            <Grid
+            <Grid.Root
                 style={{
                     width: 400,
                     backgroundColor: 'GrayText',
@@ -84,7 +85,7 @@ export const TestBed: StoryObj<typeof Grid> = {
                 <Box>3</Box>
                 <Box>4</Box>
                 <Box>5</Box>
-            </Grid>
+            </Grid.Root>
         );
     },
 };

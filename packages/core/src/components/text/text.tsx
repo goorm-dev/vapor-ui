@@ -11,7 +11,7 @@ interface TextProps extends React.ComponentPropsWithoutRef<typeof vapor.span> {
     foreground?: Foreground;
 }
 
-const Root = forwardRef<HTMLSpanElement, TextProps>(
+const Text = forwardRef<HTMLSpanElement, TextProps>(
     ({ typography, foreground, children, className, ...props }, ref) => {
         return (
             <vapor.span
@@ -28,8 +28,7 @@ const Root = forwardRef<HTMLSpanElement, TextProps>(
         );
     },
 );
-Root.displayName = 'Text';
+Text.displayName = 'Text';
 
-export const Text = Object.assign(Root, {});
-
+export { Text };
 export type { TextProps };
