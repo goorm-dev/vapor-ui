@@ -36,7 +36,7 @@ export default function CardDialog({
                                 {title}
                             </Text>
                             <Dialog.Close asChild>
-                                <IconButton color="secondary" aria-label="닫기">
+                                <IconButton color="secondary" label="닫기">
                                     <CloseOutlineIcon />
                                 </IconButton>
                             </Dialog.Close>
