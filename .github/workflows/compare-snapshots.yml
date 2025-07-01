@@ -1,4 +1,4 @@
-name: 'Visual Regression Tests'
+name: 'Run Visual Regression Tests'
 
 'on':
     workflow_dispatch:
@@ -7,7 +7,7 @@ name: 'Visual Regression Tests'
             - opened
             - synchronize
         paths:
-            - packages/vapor-core/**
+            - packages/core/**
 
 permissions:
     id-token: write
@@ -18,8 +18,8 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-    REPORT_PATH:
+    github-token: ${{ secrets.PACKAGE_TOKEN }}
+    REPORT_PATH: ''
 
 jobs:
     visual-regression:
@@ -32,22 +32,20 @@ jobs:
 
             - name: Install Dependencies
               uses: ./.github/composite/install
-              with:
-                  PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
             - name: Install Playwright Browsers
               uses: ./.github/composite/browser-install
               with:
-                  working-directory: packages/vapor-core
+                  working-directory: packages/core
 
             - name: Run Snapshot Tests
-              run: pnpm core test
+              run: pnpm core test:visual
 
             - uses: actions/upload-artifact@v4
               if: '${{ !cancelled() }}'
               with:
                   name: test-results
-                  path: ./packages/vapor-core/tests/report/
+                  path: ./packages/core/__tests__/report/
 
     deploy-report:
         needs: visual-regression

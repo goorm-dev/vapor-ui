@@ -1,8 +1,9 @@
-import type { NavLinkProps, NavProps } from './nav';
-import { Nav } from './nav';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
+
+import type { NavLinkProps, NavProps } from './nav';
+import { Nav } from './nav';
 
 const NavTest = (props: NavProps) => {
     return (
@@ -20,7 +21,7 @@ describe('Nav', () => {
     afterEach(cleanup);
 
     it('should have no a11y violations', async () => {
-        const rendered = render(<NavTest label="Main" />);
+        const rendered = render(<NavTest aria-label="Main" />);
         const result = await axe(rendered.container);
 
         expect(result).toHaveNoViolations();
@@ -32,7 +33,7 @@ describe('Nav.Link', () => {
 
     const NAV_LINK = 'nav-link';
     const NavLinkTest = (linkProps: NavLinkProps) => (
-        <Nav label="Main">
+        <Nav aria-label="Main">
             <Nav.List>
                 <Nav.Item>
                     <Nav.Link data-testid={NAV_LINK} href="#" {...linkProps}>
