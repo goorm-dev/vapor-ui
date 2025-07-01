@@ -36,7 +36,7 @@ jobs:
             - name: Install Playwright Browsers
               uses: ./.github/composite/browser-install
               with:
-                  working-directory: packages/vapor-core
+                  working-directory: packages/core
 
             - name: Run Snapshot Tests
               run: pnpm core test
@@ -45,7 +45,7 @@ jobs:
               if: '${{ !cancelled() }}'
               with:
                   name: test-results
-                  path: ./packages/vapor-core/tests/report/
+                  path: ./packages/core/__tests__/report/
 
     deploy-report:
         needs: visual-regression
