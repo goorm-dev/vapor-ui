@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import {
@@ -17,28 +17,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 import * as styles from './avatar.css';
 
 type AvatarVariants = MergeRecipeVariants<typeof styles.root | typeof styles.fallback>;
-type AvatarSharedProps = AvatarVariants & {
-    /**
-     * The alternative text for the image. This is required for accessibility.
-     */
-    alt: string;
-    /**
-     * The image source.
-     */
-    src?: string;
-    /**
-     * Delay in milliseconds before showing the fallback component.
-     */
-    delayMs?: number;
-    /**
-     * Accessible label for screen readers that describes the avatar subject.
-     */
-    label?: string;
-    /**
-     * Custom fallback node to render when the image is not available.
-     */
-    fallback?: ReactNode;
-};
+type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delayMs?: number };
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     name: 'AvatarContext',
@@ -58,18 +37,15 @@ const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props
         'size',
         'shape',
         'delayMs',
-        'label',
-        'fallback',
     ]);
 
-    const { shape, size, label } = variantProps;
+    const { shape, size } = variantProps;
 
     return (
         <AvatarProvider value={variantProps}>
             <RadixAvatar
                 ref={ref}
                 className={clsx(styles.root({ shape, size }), className)}
-                aria-label={label}
                 {...otherProps}
             />
         </AvatarProvider>
@@ -107,8 +83,8 @@ type AvatarFallbackPrimitiveProps = ComponentPropsWithoutRef<typeof RadixFallbac
 interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
 
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
-    ({ className, style, ...props }, ref) => {
-        const { size, alt, delayMs, fallback } = useAvatarContext();
+    ({ className, style, children, ...props }, ref) => {
+        const { size, alt, delayMs } = useAvatarContext();
         const background = getRandomColor(alt);
 
         return (
@@ -122,7 +98,7 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
                 className={clsx(styles.fallback({ size }), className)}
                 {...props}
             >
-                {fallback ?? getAvatarInitials(alt)}
+                {children ?? getAvatarInitials(alt)}
             </RadixFallback>
         );
     },
@@ -188,6 +164,14 @@ const DEFAULT_COLORS: string[] = [
     vars.color.orange['500'],
 ];
 
+/**
+ * Returns a random color if the alternative text is an empty string.
+ * Returns a specific color by the Linear Congruential Generator algorithm if the alternative text exists.
+ *
+ * @param value Alternative text
+ * @param colors Types of colors to select from
+ * @returns Color CSS Variables
+ */
 const getRandomColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
     if (!value) return colors[getRandomNumber(colors.length)];
 

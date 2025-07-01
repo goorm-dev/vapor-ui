@@ -87,12 +87,15 @@ export const Default: Story = {
                     {...args}
                     alt="noah.choi"
                 />
-                <Avatar.Simple
+                <Avatar.Root
                     size="xl"
                     src="https://images.unsplashd.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
                     {...args}
                     alt="noah.choi"
-                />
+                >
+                    <Avatar.Image />
+                    <Avatar.Fallback>asdf</Avatar.Fallback>
+                </Avatar.Root>
             </Flex>
         </>
     ),
