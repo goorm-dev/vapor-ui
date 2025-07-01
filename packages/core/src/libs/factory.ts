@@ -32,8 +32,8 @@ type JsxElements = {
     [E in keyof JSX.IntrinsicElements]: VaporForwardRefComponent<E>;
 };
 
-const splitLayoutProps = (props: Record<string, unknown>) => {
-    return createSplitProps<Sprinkles>()(props as Sprinkles, [
+export const splitLayoutProps = <T extends Sprinkles>(props: T) => {
+    return createSplitProps<Sprinkles>()(props, [
         'position',
         'display',
         'alignItems',
