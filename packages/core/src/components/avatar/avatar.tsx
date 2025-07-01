@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import * as styles from './avatar.css';
@@ -16,7 +16,28 @@ import { vars } from '~/styles/contract.css';
 import { createSplitProps } from '~/utils/create-split-props';
 
 type AvatarVariants = MergeRecipeVariants<typeof styles.root | typeof styles.fallback>;
-type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delayMs?: number };
+type AvatarSharedProps = AvatarVariants & {
+    /**
+     * The alternative text for the image. This is required for accessibility.
+     */
+    alt: string;
+    /**
+     * The image source.
+     */
+    src?: string;
+    /**
+     * Delay in milliseconds before showing the fallback component.
+     */
+    delayMs?: number;
+    /**
+     * Accessible label for screen readers that describes the avatar subject.
+     */
+    label?: string;
+    /**
+     * Custom fallback node to render when the image is not available.
+     */
+    fallback?: ReactNode;
+};
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     name: 'AvatarContext',
@@ -27,24 +48,27 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 /* -----------------------------------------------------------------------------------------------*/
 
 type AvatarRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixAvatar>;
-interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
+interface AvatarProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
 
-const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
+const Root = forwardRef<HTMLSpanElement, AvatarProps>(({ className, ...props }, ref) => {
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
         'src',
         'alt',
         'size',
         'shape',
         'delayMs',
+        'label',
+        'fallback',
     ]);
 
-    const { shape, size } = variantProps;
+    const { shape, size, label } = variantProps;
 
     return (
         <AvatarProvider value={variantProps}>
             <RadixAvatar
                 ref={ref}
                 className={clsx(styles.root({ shape, size }), className)}
+                aria-label={label}
                 {...otherProps}
             />
         </AvatarProvider>
@@ -81,7 +105,7 @@ interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof A
 
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
     ({ className, style, ...props }, ref) => {
-        const { size, alt, delayMs } = useAvatarContext();
+        const { size, alt, delayMs, fallback } = useAvatarContext();
         const background = getRandomColor(alt);
 
         return (
@@ -95,7 +119,7 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
                 className={clsx(styles.fallback({ size }), className)}
                 {...props}
             >
-                {getAvatarInitials(alt)}
+                {fallback ?? getAvatarInitials(alt)}
             </RadixFallback>
         );
     },
@@ -104,9 +128,6 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Simple
  * -----------------------------------------------------------------------------------------------*/
-
-type AvatarSimplePrimitiveProps = ComponentPropsWithoutRef<typeof Root>;
-interface AvatarProps extends AvatarSimplePrimitiveProps {}
 
 const Simple = forwardRef<HTMLSpanElement, AvatarProps>((props, ref) => {
     return (

@@ -49,7 +49,7 @@ export default [
         dts: {
             only: true,
         },
-        outDir: 'dist/types',
+        outDir: 'dist',
         esbuildOptions(options) {
             options.outbase = './';
         },
