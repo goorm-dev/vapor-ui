@@ -1,14 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:9009';
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:9999';
 
 export default defineConfig({
-    snapshotPathTemplate: './tests/__screenshot__/{arg}-{projectName}-{platform}-{ext}',
-    outputDir: `./tests/results/`,
+    testMatch: './__tests__/visual-check.test.ts',
+    outputDir: `./__tests__/results/`,
 
     reporter: [
-        ['html', { outputFolder: './tests/report' }],
-        ['json', { outputFile: './tests/report/index.json' }],
+        ['html', { outputFolder: './__tests__/report' }],
+        ['json', { outputFile: './__tests__/report/index.json' }],
     ],
     use: { baseURL: BASE_URL, trace: 'on' },
     projects: [
@@ -27,7 +27,7 @@ export default defineConfig({
     workers: process.env.CI ? 1 : undefined,
 
     webServer: {
-        command: 'cd ../../ && pnpm storybook',
+        command: 'cd ../../ && pnpm storybook --port 9999',
         url: BASE_URL,
         reuseExistingServer: false,
     },
