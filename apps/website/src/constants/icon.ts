@@ -62,7 +62,7 @@ import {
     YoutubeIcon,
 } from '@vapor-ui/icons';
 
-export const SymbolIcons = [
+export const SYMBOL_ICONS = [
     InstagramIcon,
     BlogIcon,
     SlackIcon,
@@ -124,4 +124,4 @@ export const SymbolIcons = [
     YoutubeColorIcon,
     MysqlColorIcon,
     DiscordColorIcon,
-];
+] as const;

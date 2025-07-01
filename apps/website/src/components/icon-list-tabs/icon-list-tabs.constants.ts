@@ -1,7 +1,7 @@
 import * as allIcons from '@vapor-ui/icons';
 import type { IconType } from '@vapor-ui/icons';
 
-import { SymbolIcons } from '~/constants/icon';
+import { SYMBOL_ICONS } from '~/constants/icon';
 
 export const ICON_LIST = ['basic', 'outline', 'symbol'] as const;
 
@@ -14,7 +14,7 @@ const initialVaporIcons: {
 };
 
 // Create a Set of SymbolIcons constructor references for fast lookup
-const symbolIconSet = new Set(SymbolIcons);
+const symbolIconSet = new Set(SYMBOL_ICONS);
 
 export const VAPOR_ICONS = Object.entries(allIcons).reduce((acc, [key, value]) => {
     if (typeof value === 'function') {
