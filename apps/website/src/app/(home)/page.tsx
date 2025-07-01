@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import DefaultSearchDialog from '../../components/search/search';
+import DefaultSearchDialog from '~/components/search/search';
 
 export default function HomePage() {
     const { setTheme } = useTheme();
