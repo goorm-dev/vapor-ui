@@ -1,4 +1,4 @@
-name: 'Visual Regression Tests'
+name: 'Run Visual Regression Tests'
 
 'on':
     workflow_dispatch:
@@ -7,7 +7,7 @@ name: 'Visual Regression Tests'
             - opened
             - synchronize
         paths:
-            - packages/vapor-core/**
+            - packages/core/**
 
 permissions:
     id-token: write
@@ -39,7 +39,7 @@ jobs:
                   working-directory: packages/vapor-core
 
             - name: Run Snapshot Tests
-              run: pnpm core test
+              run: pnpm core test:visual
 
             - uses: actions/upload-artifact@v4
               if: '${{ !cancelled() }}'
