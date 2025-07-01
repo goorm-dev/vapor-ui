@@ -1,17 +1,19 @@
 'use client';
 
-import styles from './foundation-color-boxes.module.scss';
 import { Text } from '@vapor-ui/core';
 
 import Tabs from '~/components/ui/tabs';
 import { BasicColorData, SemanticColorData } from '~/constants/colors';
 
+import styles from './foundation-color-boxes.module.scss';
+
 type ColorBoxProps = {
     color: string;
     value: string;
+    basicToken?: string;
 };
 
-function ColorBox({ color, value }: ColorBoxProps) {
+function ColorBox({ color, value, basicToken }: ColorBoxProps) {
     return (
         <div className={styles.box}>
             <div
@@ -21,12 +23,17 @@ function ColorBox({ color, value }: ColorBoxProps) {
                 }}
             />
             <div className={styles.descriptions}>
-                <Text typography="subtitle1" color="text-hint">
+                <Text typography="subtitle1" foreground="hint">
                     {value.toUpperCase()}
                 </Text>
-                <Text typography="subtitle1" color="text-normal" className={styles.description}>
+                <Text typography="subtitle1" foreground="hint-darker" className={styles.description}>
                     {color}
                 </Text>
+                {basicToken && (
+                    <Text typography="subtitle1" foreground="normal" className={styles.description}>
+                        {basicToken}
+                    </Text>
+                )}
             </div>
         </div>
     );
@@ -38,10 +45,12 @@ type ColorBoxesProps = {
         colorShade: {
             name: string;
             value: string;
+            basicToken?: string; // Optional, used in semantic colors
         }[];
     }[];
 };
 const ColorBoxes = ({ tokens }: ColorBoxesProps) => {
+    console.log(tokens);
     return (
         <div className="flex flex-col gap-10">
             {tokens.map(({ title, colorShade }) => (
@@ -49,8 +58,13 @@ const ColorBoxes = ({ tokens }: ColorBoxesProps) => {
                     <Text typography="heading5">{title}</Text>
 
                     <div className={styles.boxes}>
-                        {colorShade.map(({ name, value }) => (
-                            <ColorBox key={name} color={name} value={value} />
+                        {colorShade.map(({ name, value, basicToken }) => (
+                            <ColorBox
+                                key={name}
+                                color={name}
+                                value={value}
+                                basicToken={basicToken}
+                            />
                         ))}
                     </div>
                 </section>
