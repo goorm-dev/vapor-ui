@@ -7,9 +7,10 @@ import { IconButton, Nav, Text } from '@vapor-ui/core';
 import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
-import Image from 'next/image';
 
 import { navLinks } from '~/constants/site-links';
+
+import LogoVapor from '../../../public/icons/logo-vapor.svg';
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];
@@ -67,11 +68,11 @@ export const SiteNavBar = () => {
                                 href="/"
                                 className="inline-flex items-center gap-2.5 font-semibold w-[68px] h-[26px]"
                             >
-                                <Image
+                                <LogoVapor
                                     width={68}
-                                    height={26}
-                                    src="https://statics.goorm.io/gds/resources/brand-images/light/logo_vapor.svg"
-                                    alt="Goorm Design System: Vapor"
+                                    height={24}
+                                    role="img"
+                                    aria-label="Goorm Design System: Vapor"
                                 />
                             </Link>
                             <ul className="hidden md:flex flex-row items-center gap-2 p-0">

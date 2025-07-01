@@ -21,6 +21,7 @@
     --color-fd-popover-foreground: var(--vapor-color-foreground-secondary);
     --color-fd-popover: var(--vapor-color-background-normal);
     --color-fd-primary-foreground: var(--vapor-color-foreground-primary);
+    --color-fd-foreground: var(--vapor-color-foreground-normal);
 }
 
 a[data-active='true'] {
