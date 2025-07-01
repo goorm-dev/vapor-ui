@@ -1,4 +1,4 @@
 {
-    "title": "Foundation",
-    "pages": ["..."]
+    "title": "Tokens",
+    "pages": ["index", "color", "size", "typography"]
 }
