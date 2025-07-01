@@ -1,5 +1,6 @@
-import { Card } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
+
+import { Card } from '.';
 
 export default {
     title: 'Card',
@@ -28,15 +29,5 @@ export const TestBed: StoryObj<typeof Card> = {
             <Card.Body>Body</Card.Body>
             <Card.Footer>Footer</Card.Footer>
         </Card.Root>
-    ),
-};
-
-export const TestBed: StoryObj<typeof Card> = {
-    render: () => (
-        <Card>
-            <Card.Header>Header</Card.Header>
-            <Card.Body>Body</Card.Body>
-            <Card.Footer>Footer</Card.Footer>
-        </Card>
     ),
 };
