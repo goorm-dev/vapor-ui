@@ -2,10 +2,10 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { NavLinkProps, NavProps } from './nav';
+import type { NavLinkProps, NavRootProps } from './nav';
 import { Nav } from './nav';
 
-const NavTest = (props: NavProps) => {
+const NavTest = (props: NavRootProps) => {
     return (
         <Nav.Root {...props}>
             <Nav.List>

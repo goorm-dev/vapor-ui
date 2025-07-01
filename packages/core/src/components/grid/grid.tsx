@@ -21,18 +21,18 @@ type GridVariants = MergeRecipeVariants<typeof styles.root> & {
     flow?: CSSProperties['gridAutoFlow'];
 };
 
-interface GridProps extends GridPrimitiveProps, GridVariants {}
+interface GridRootProps extends GridPrimitiveProps, GridVariants {}
 
-const Root = forwardRef<HTMLDivElement, GridProps>(
+const Root = forwardRef<HTMLDivElement, GridRootProps>(
     ({ className, style, children, ...props }, ref) => {
-        const [gridProps, otherProps] = createSplitProps<GridVariants>()(props, [
+        const [gridRootProps, otherProps] = createSplitProps<GridVariants>()(props, [
             'inline',
             'templateRows',
             'templateColumns',
             'flow',
         ]);
 
-        const { inline, templateRows, templateColumns, ...variants } = gridProps;
+        const { inline, templateRows, templateColumns, ...variants } = gridRootProps;
 
         const cssVariables = assignInlineVars({
             [styles.gridTemplateRows]: templateRows,
@@ -87,6 +87,6 @@ Item.displayName = 'Grid.Item';
 /* -----------------------------------------------------------------------------------------------*/
 
 export { Root as GridRoot, Item as GridItem };
-export type { GridProps, GridItemProps };
+export type { GridRootProps, GridItemProps };
 
 export const Grid = { Root, Item };

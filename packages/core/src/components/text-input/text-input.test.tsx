@@ -2,10 +2,10 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import { TextInput, type TextInputProps } from './text-input';
+import { TextInput, type TextInputRootProps } from './text-input';
 
 const LABEL_TEXT = 'Label';
-const TextInputTest = (props: TextInputProps) => {
+const TextInputTest = (props: TextInputRootProps) => {
     return (
         <TextInput.Root {...props}>
             <TextInput.Label>{LABEL_TEXT}</TextInput.Label>

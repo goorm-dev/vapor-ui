@@ -39,9 +39,15 @@ const [DialogRoot, useDialogContext] = createContext<DialogContext>({
  * -----------------------------------------------------------------------------------------------*/
 
 type DialogPrimitiveProps = ComponentPropsWithoutRef<typeof RadixDialog>;
-interface DialogProps extends DialogPrimitiveProps, DialogSharedProps {}
+interface DialogRootProps extends DialogPrimitiveProps, DialogSharedProps {}
 
-const Root = ({ size, closeOnClickOverlay, closeOnEscape, children, ...props }: DialogProps) => {
+const Root = ({
+    size,
+    closeOnClickOverlay,
+    closeOnEscape,
+    children,
+    ...props
+}: DialogRootProps) => {
     return (
         <RadixDialog {...props}>
             <DialogRoot value={{ size, closeOnClickOverlay, closeOnEscape }}>{children}</DialogRoot>
@@ -257,7 +263,7 @@ export const Dialog = Object.assign(Root, {
 });
 
 export type {
-    DialogProps,
+    DialogRootProps,
     DialogPortalProps,
     DialogOverlayProps,
     DialogContentProps,
