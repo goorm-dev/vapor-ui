@@ -1,4 +1,4 @@
-import type { LinkItemType } from 'fumadocs-ui/layouts/links';
+import type { IconItemType } from 'fumadocs-ui/layouts/links';
 import Image from 'next/image';
 
 export const navLinks = [
@@ -59,4 +59,4 @@ export const navLinks = [
         text: 'Playground',
         url: '/playground',
     },
-] as LinkItemType[];
+] as IconItemType[];

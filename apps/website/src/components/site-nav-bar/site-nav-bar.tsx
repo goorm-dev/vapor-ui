@@ -101,6 +101,7 @@ export const SiteNavBar = () => {
                                         return (
                                             <Nav.LinkItem key={i} className="p-0" asChild>
                                                 <IconButton
+                                                    label={item.label ?? 'link'}
                                                     size="lg"
                                                     color="secondary"
                                                     variant="ghost"
@@ -122,7 +123,13 @@ export const SiteNavBar = () => {
                     </Nav>
                 </div>
                 <Dialog.Trigger asChild>
-                    <IconButton size="md" color="secondary" variant="fill" className="md:hidden">
+                    <IconButton
+                        label="메뉴"
+                        size="md"
+                        color="secondary"
+                        variant="fill"
+                        className="md:hidden"
+                    >
                         <MenuOutlineIcon />
                     </IconButton>
                 </Dialog.Trigger>
@@ -138,7 +145,7 @@ export const SiteNavBar = () => {
                     <Dialog.Title className="sr-only">Mobile navigation menu</Dialog.Title>
                     <header className="flex justify-end px-6 py-4">
                         <Dialog.Close asChild>
-                            <IconButton color="secondary" variant="ghost">
+                            <IconButton label="닫기" color="secondary" variant="ghost">
                                 <CloseOutlineIcon size={20} />
                             </IconButton>
                         </Dialog.Close>
@@ -156,7 +163,12 @@ export const SiteNavBar = () => {
                                         {hasText(item) ? item.text : null}
                                     </h6>
                                 </Text>
-                                <IconButton size="md" color="secondary" variant="fill">
+                                <IconButton
+                                    label="링크 열기"
+                                    size="md"
+                                    color="secondary"
+                                    variant="fill"
+                                >
                                     <Link href={hasUrl(item) ? item.url : '#'}>
                                         <OpenInNewOutlineIcon />
                                     </Link>
