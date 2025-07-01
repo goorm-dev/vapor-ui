@@ -55,8 +55,4 @@ export const navLinks = [
         url: '/docs',
         active: 'nested-url',
     },
-    {
-        text: 'Playground',
-        url: '/playground',
-    },
 ] as LinkItemType[];
