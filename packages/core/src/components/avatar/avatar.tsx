@@ -48,9 +48,9 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 /* -----------------------------------------------------------------------------------------------*/
 
 type AvatarRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixAvatar>;
-interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
+interface AvatarProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
 
-const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
+const Root = forwardRef<HTMLSpanElement, AvatarProps>(({ className, ...props }, ref) => {
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
         'src',
         'alt',
@@ -128,9 +128,6 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Simple
  * -----------------------------------------------------------------------------------------------*/
-
-type AvatarSimplePrimitiveProps = ComponentPropsWithoutRef<typeof Root>;
-interface AvatarProps extends AvatarSimplePrimitiveProps {}
 
 const Simple = forwardRef<HTMLSpanElement, AvatarProps>((props, ref) => {
     return (

@@ -12,10 +12,12 @@ import { createSplitProps } from '~/utils/create-split-props';
 type IconButtonVariants = MergeRecipeVariants<typeof styles.root>;
 type IconButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Button>, 'stretch'>;
 
-interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {}
+interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {
+    label: string;
+}
 
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ label, className, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, [
             'rounded',
         ]);
@@ -25,6 +27,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         return (
             <Button
                 ref={ref}
+                aria-label={label}
                 className={clsx(styles.root(variantProps), className)}
                 {...otherProps}
                 stretch={false}
