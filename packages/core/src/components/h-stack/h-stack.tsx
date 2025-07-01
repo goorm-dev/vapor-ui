@@ -1,9 +1,9 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { Flex } from '../flex';
-
 import { createSplitProps } from '~/utils/create-split-props';
+
+import { Flex } from '../flex';
 
 type HStackVariants = { reverse?: boolean };
 type HStackPrimitiveProps = ComponentPropsWithoutRef<typeof Flex>;

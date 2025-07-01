@@ -2,8 +2,6 @@
 
 import React from 'react';
 
-import TypographyTable from './typography-table';
-
 import Tabs from '~/components/ui/tabs';
 import {
     FontFamilyData,
@@ -12,6 +10,8 @@ import {
     LetterSpacingData,
     LineHeightData,
 } from '~/constants/typography';
+
+import TypographyTable from './typography-table';
 
 export const FoundationTypographyTabs = () => {
     return (

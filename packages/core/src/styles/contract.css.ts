@@ -1,3 +1,5 @@
+import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
+
 import './global.css';
 import { layers } from './layers.css';
 import {
@@ -14,7 +16,6 @@ import {
     LINE_HEIGHT,
     SPACE,
 } from './tokens';
-import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
 
 export const LIGHT_CLASS_NAME = 'vapor-light-theme';
 

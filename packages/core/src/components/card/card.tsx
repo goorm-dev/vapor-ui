@@ -1,10 +1,11 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import * as styles from './card.css';
 import clsx from 'clsx';
 
 import { vapor } from '~/libs/factory';
+
+import * as styles from './card.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Root

@@ -7,12 +7,12 @@ import type {
 } from 'react';
 import { Children, cloneElement, createElement, forwardRef, isValidElement, memo } from 'react';
 
-import { composeRefs } from '../utils/compose-refs';
-import { mergeProps } from '../utils/merge-props';
-
 import { type Sprinkles, customPropertyMap, sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
 import { getElementRef } from '~/utils/get-element-ref';
+
+import { composeRefs } from '../utils/compose-refs';
+import { mergeProps } from '../utils/merge-props';
 
 export interface PolymorphicProps {
     /**

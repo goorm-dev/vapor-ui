@@ -1,9 +1,10 @@
-import { HStack } from '../h-stack';
-import type { ButtonProps } from './button';
-import { Button } from './button';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { upperFirst } from '~/utils/string';
+
+import { HStack } from '../h-stack';
+import type { ButtonProps } from './button';
+import { Button } from './button';
 
 export default {
     title: 'Button',

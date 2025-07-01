@@ -1,10 +1,11 @@
 'use client';
 
-import styles from './component-card.module.scss';
 import { Badge, Card, Text } from '@vapor-ui/core';
 import cn from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import styles from './component-card.module.scss';
 
 type ComponentCardType = {
     imageUrl: string;

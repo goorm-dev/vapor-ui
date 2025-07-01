@@ -1,6 +1,7 @@
+import type { StoryObj } from '@storybook/react';
+
 import { Dialog } from '.';
 import { Button } from '../button';
-import type { StoryObj } from '@storybook/react';
 
 export default {
     title: 'Dialog',
