@@ -5,8 +5,9 @@
         "baseUrl": ".",
         "paths": {
             "~/*": ["./src/*"]
-        }
+        },
+        "types": ["node", "vitest-axe/extend-expect", "vitest/globals", "@vitest/browser/context"]
     },
     "include": ["src"],
-    "exclude": ["dist", "build", "node_modules", "src/styled-system"]
+    "exclude": ["dist", "build", "node_modules"]
 }
