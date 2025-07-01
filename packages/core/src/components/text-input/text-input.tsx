@@ -35,13 +35,13 @@ const [TextInputProvider, useTextInputContext] = createContext<TextInputContextT
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveRootProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type TextInputPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
 
-interface TextInputRootProps
-    extends Omit<PrimitiveRootProps, keyof TextInputSharedProps>,
+interface TextInputProps
+    extends Omit<TextInputPrimitiveProps, keyof TextInputSharedProps>,
         TextInputSharedProps {}
 
-const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
+const Root = forwardRef<HTMLDivElement, TextInputProps>(
     ({ className, children, ...props }, ref) => {
         const textInputId = useId();
         const [textInputProps, otherProps] = createSplitProps<TextInputSharedProps>()(props, [
@@ -143,4 +143,4 @@ Field.displayName = 'TextInput.Field';
 
 export const TextInput = Object.assign(Root, { Label, Field });
 
-export type { TextInputRootProps, TextInputLabelProps, TextInputFieldProps };
+export type { TextInputProps, TextInputLabelProps, TextInputFieldProps };

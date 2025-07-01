@@ -15,15 +15,15 @@
     "type": "module",
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
-    "types": "./dist/types/index.d.ts",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "import": {
-                "types": "./dist/types/index.d.ts",
+                "types": "./dist/index.d.ts",
                 "default": "./dist/index.js"
             },
             "require": {
-                "types": "./dist/types/index.d.cts",
+                "types": "./dist/index.d.cts",
                 "default": "./dist/index.cjs"
             }
         },
@@ -35,7 +35,8 @@
         "dist"
     ],
     "sideEffects": [
-        "**/*.css"
+        "**/*.css",
+        "**/*.css.ts"
     ],
     "repository": {
         "type": "git",
@@ -52,7 +53,9 @@
         "build": "rimraf dist && tsup && npx --yes @arethetypeswrong/cli --exclude-entrypoints styles.css --pack .",
         "lint": "eslint ./src",
         "clean": "rimraf dist node_modules .turbo",
-        "test": "npx playwright test -c ./playwright.config.ts",
+        "test": "vitest",
+        "test:coverage": "vitest --coverage",
+        "test:visual": "npx playwright test -c ./playwright.config.ts",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -82,19 +85,28 @@
         "@playwright/test": "^1.50.1",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
+        "@testing-library/dom": "^10.4.0",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/react": "^16.3.0",
+        "@testing-library/user-event": "^14.6.1",
         "@types/node": "^22.15.3",
         "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "@vanilla-extract/esbuild-plugin": "^2.3.15",
         "@vanilla-extract/recipes": "^0.5.5",
+        "@vitest/browser": "^3.2.4",
+        "@vitest/coverage-v8": "^3.2.4",
         "autoprefixer": "^10.4.20",
         "eslint": "^9.0.0",
+        "happy-dom": "^18.0.1",
         "postcss": "^8.5.3",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "rimraf": "^6.0.1",
         "tsup": "^8.3.6",
-        "typescript": "^5.7.3"
+        "typescript": "^5.7.3",
+        "vitest": "^3.2.4",
+        "vitest-axe": "^1.0.0-pre.5"
     },
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
