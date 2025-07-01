@@ -18,25 +18,25 @@ export const Default: Story = {
             <Flex>
                 <Avatar.Simple
                     size="sm"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="md"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="lg"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="xl"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
@@ -103,25 +103,25 @@ export const TestBed: Story = {
             <Flex>
                 <Avatar.Simple
                     size="sm"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="md"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="lg"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
                 <Avatar.Simple
                     size="xl"
-                    src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+                    src="https://avatars.githubusercontent.com/u/217160984?v=4"
                     {...args}
                     alt="hi"
                 />
