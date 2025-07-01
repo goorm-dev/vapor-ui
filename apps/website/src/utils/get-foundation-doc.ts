@@ -12,37 +12,33 @@ import {
 
 export const getColorPrimitiveTokenDoc = () => {
     return markdownTable([
-        ['token', 'value', 'Example'],
+        ['token', 'value'],
         ...[...BasicColorData, ...SemanticColorData].flatMap(({ colorShade }) => {
-            return colorShade.map((shade) => [
-                `${shade.name}`,
-                `${shade.value}`,
-                `<Box color="${shade.name}" bg="${shade.value}" />`,
-            ]);
+            return colorShade.map((shade) => [`${shade.name}`, `${shade.value}`]);
         }),
     ]);
 };
 
 export const getSizePrimitiveTokenDoc = () => {
     return markdownTable([
-        ['token', 'value', 'Example'],
+        ['token', 'value'],
         ...[...BorderRadiusData, ...SpaceData, ...DimensionData].flatMap(({ name, value }) => {
-            return [[name, value, `<Box size="${value}"/>`]];
+            return [[name, value]];
         }),
     ]);
 };
 
 export const getTypographyPrimitiveTokenDoc = () => {
     return markdownTable([
-        ['token', 'value', 'Example'],
+        ['token', 'value'],
         ...[
             ...FontFamilyData,
             ...FontSizeData,
             ...FontWeightData,
             ...LetterSpacingData,
             ...LineHeightData,
-        ].flatMap(({ name, value, cssVariable }) => {
-            return [[cssVariable, value, `<Text typography="${name}"/>`]];
+        ].flatMap(({ value, cssVariable }) => {
+            return [[cssVariable, value]];
         }),
     ]);
 };

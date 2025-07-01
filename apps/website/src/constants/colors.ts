@@ -16,7 +16,7 @@ export const BasicColorData = Object.keys(basicColorData).map((key) => {
                   }))
                 : [
                       {
-                          name: key,
+                          name: `--vapor-color-${key}`,
                           value: colorValue,
                       },
                   ],
