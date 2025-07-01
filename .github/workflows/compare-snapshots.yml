@@ -1,4 +1,4 @@
-name: '[CI] 시각적 회귀 테스트'
+name: 'Run Visual Regression Tests'
 
 'on':
     workflow_dispatch:
@@ -7,7 +7,7 @@ name: '[CI] 시각적 회귀 테스트'
             - opened
             - synchronize
         paths:
-            - packages/vapor-core/**
+            - packages/core/**
 
 permissions:
     id-token: write
