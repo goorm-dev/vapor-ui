@@ -19,9 +19,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Install
-              uses: ./.github/composite-actions/install
-              with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+              uses: ./.github/composite/install
 
             - name: Build packages
               run: pnpm build
@@ -42,9 +40,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Install
-              uses: ./.github/composite-actions/install
-              with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+              uses: ./.github/composite/install
 
             - name: Run ESLint
               run: pnpm lint
@@ -57,9 +53,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Install
-              uses: ./.github/composite-actions/install
-              with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+              uses: ./.github/composite/install
 
             - name: Run typecheck
               run: pnpm typecheck
@@ -72,9 +66,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Install
-              uses: ./.github/composite-actions/install
-              with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+              uses: ./.github/composite/install
 
             - name: Run prettier
               run: pnpm format:check
@@ -95,9 +87,7 @@ jobs:
                   path: .
 
             - name: Install
-              uses: ./.github/composite-actions/install
-              with:
-                  github-token: ${{ secrets.FORK_GITHUB_TOKEN }}
+              uses: ./.github/composite/install
 
             - name: Run type check report
               id: type-check

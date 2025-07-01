@@ -18,8 +18,8 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-    REPORT_PATH:
+    github-token: ${{ secrets.PACKAGE_TOKEN }}
+    REPORT_PATH: ''
 
 jobs:
     visual-regression:
@@ -32,8 +32,6 @@ jobs:
 
             - name: Install Dependencies
               uses: ./.github/composite/install
-              with:
-                  PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
             - name: Install Playwright Browsers
               uses: ./.github/composite/browser-install
