@@ -1,14 +1,14 @@
-import type { AvatarProps } from './avatar';
+import type { AvatarRootProps } from './avatar';
 import { Avatar } from './avatar';
 import { cleanup, render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
-const AvatarTest = (props: AvatarProps) => {
+const AvatarTest = (props: AvatarRootProps) => {
     return (
-        <Avatar {...props}>
+        <Avatar.Root {...props}>
             <Avatar.Image />
             <Avatar.Fallback />
-        </Avatar>
+        </Avatar.Root>
     );
 };
 
@@ -108,11 +108,11 @@ describe('Avatar', () => {
     });
 });
 
-const AvatarFallbackTest = (props: AvatarProps) => {
+const AvatarFallbackTest = (props: AvatarRootProps) => {
     return (
-        <Avatar {...props}>
+        <Avatar.Root {...props}>
             <Avatar.Fallback />
-        </Avatar>
+        </Avatar.Root>
     );
 };
 

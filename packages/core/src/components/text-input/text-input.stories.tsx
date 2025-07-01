@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 export default {
     title: 'TextInput',
-    component: TextInput,
+    component: TextInput.Root,
     argTypes: {
         type: {
             control: 'inline-radio',
@@ -18,16 +18,16 @@ export default {
         readOnly: { control: 'boolean' },
         visuallyHidden: { control: 'boolean' },
     },
-} as Meta<typeof TextInput>;
+} as Meta<typeof TextInput.Root>;
 
-type Story = StoryObj<typeof TextInput>;
+type Story = StoryObj<typeof TextInput.Root>;
 
 export const Default: Story = {
     render: (args) => (
-        <TextInput placeholder="sadf" {...args}>
+        <TextInput.Root placeholder="sadf" {...args}>
             <TextInput.Label>레이블</TextInput.Label>
             <TextInput.Field />
-        </TextInput>
+        </TextInput.Root>
     ),
 };
 
@@ -38,10 +38,10 @@ export const Controlled: Story = {
         return (
             <>
                 value: {value}
-                <TextInput placeholder="sadf" value={value} onValueChange={setValue} {...args}>
+                <TextInput.Root placeholder="sadf" value={value} onValueChange={setValue} {...args}>
                     <TextInput.Label>레이블</TextInput.Label>
                     <TextInput.Field />
-                </TextInput>
+                </TextInput.Root>
             </>
         );
     },
@@ -49,41 +49,41 @@ export const Controlled: Story = {
 
 export const TestBed: Story = {
     render: (args) => (
-        <Grid templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
-            <TextInput placeholder="sadf" {...args}>
+        <Grid.Root templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
+            <TextInput.Root placeholder="sadf" {...args}>
                 <TextInput.Label>Label</TextInput.Label>
                 <TextInput.Field />
-            </TextInput>
+            </TextInput.Root>
 
-            <TextInput placeholder="sadf" {...args} disabled>
+            <TextInput.Root placeholder="sadf" {...args} disabled>
                 <TextInput.Label>Label</TextInput.Label>
                 <TextInput.Field />
-            </TextInput>
+            </TextInput.Root>
 
-            <TextInput placeholder="sadf" {...args} invalid>
+            <TextInput.Root placeholder="sadf" {...args} invalid>
                 <TextInput.Label>Label</TextInput.Label>
                 <TextInput.Field />
-            </TextInput>
+            </TextInput.Root>
 
-            <TextInput placeholder="sadf" {...args} readOnly>
+            <TextInput.Root placeholder="sadf" {...args} readOnly>
                 <TextInput.Label>Label</TextInput.Label>
                 <TextInput.Field />
-            </TextInput>
+            </TextInput.Root>
 
-            <TextInput placeholder="sadf" {...args} visuallyHidden>
+            <TextInput.Root placeholder="sadf" {...args} visuallyHidden>
                 <TextInput.Label>Label</TextInput.Label>
                 <TextInput.Field />
-            </TextInput>
+            </TextInput.Root>
 
-            <TextInput placeholder="sadf" {...args}>
+            <TextInput.Root placeholder="sadf" {...args}>
                 <TextInput.Label>Label</TextInput.Label>
                 <TextInput.Field />
-            </TextInput>
+            </TextInput.Root>
 
-            <TextInput value="value" placeholder="sadf" {...args}>
+            <TextInput.Root value="value" placeholder="sadf" {...args}>
                 <TextInput.Label>Label</TextInput.Label>
                 <TextInput.Field />
-            </TextInput>
-        </Grid>
+            </TextInput.Root>
+        </Grid.Root>
     ),
 };

@@ -140,5 +140,13 @@ LinkItem.displayName = 'Nav.LinkItem';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const Nav = Object.assign(Root, { List, Item, Link, LinkItem });
+export {
+    Root as NavRoot,
+    List as NavList,
+    Item as NavItem,
+    Link as NavLink,
+    LinkItem as NavLinkItem,
+};
 export type { NavProps, NavMenuList, NavItemProps, NavLinkProps, NavLinkItemProps };
+
+export const Nav = { Root, List, Item, Link, LinkItem };

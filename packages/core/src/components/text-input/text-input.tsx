@@ -141,6 +141,7 @@ Field.displayName = 'TextInput.Field';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const TextInput = Object.assign(Root, { Label, Field });
-
+export { Root as TextInputRoot, Label as TextInputLabel, Field as TextInputField };
 export type { TextInputProps, TextInputLabelProps, TextInputFieldProps };
+
+export const TextInput = { Root, Label, Field };

@@ -72,5 +72,7 @@ Footer.displayName = 'Card.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const Card = Object.assign(Root, { Header, Body, Footer });
+export { Root as CardRoot, Header as CardHeader, Body as CardBody, Footer as CardFooter };
 export type { CardProps, CardHeaderProps, CardBodyProps, CardFooterProps };
+
+export const Card = { Root, Header, Body, Footer };

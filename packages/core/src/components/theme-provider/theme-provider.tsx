@@ -7,18 +7,11 @@ import { RADIUS_FACTOR_VAR_NAME, SCALE_FACTOR_VAR_NAME } from '../../styles/glob
 import { THEME_CONFIG, themeInjectScript } from './theme-injector';
 import type { ColorTheme, RadiusTheme, ScaleFactor, ThemeState } from './theme-injector';
 
-/* -------------------------------------------------------------------------------------------------
- * Constants & Core Types
- * -----------------------------------------------------------------------------------------------*/
 const DEFAULT_THEME = {
     colorTheme: 'light' as ColorTheme,
     radiusTheme: 'md' as RadiusTheme,
     scaleFactor: 1 as ScaleFactor,
 };
-
-/* -------------------------------------------------------------------------------------------------
- * Theme Configuration Types & Helper
- * -----------------------------------------------------------------------------------------------*/
 
 /**
  * Unified configuration interface for ThemeProvider and ThemeScript
@@ -87,7 +80,7 @@ function validateThemeConfig(config: unknown): config is VaporThemeConfig {
 }
 
 /* -------------------------------------------------------------------------------------------------
- * ThemeContext & ThemeProvider
+ * ThemeProvider
  * -----------------------------------------------------------------------------------------------*/
 
 interface ThemeContextValue extends ThemeState {
@@ -193,6 +186,7 @@ const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
 /* -------------------------------------------------------------------------------------------------
  * ThemeScript
  * -----------------------------------------------------------------------------------------------*/
+
 interface ThemeScriptProps {
     config?: VaporThemeConfig;
 }
@@ -225,9 +219,7 @@ const ThemeScript = memo(({ config }: ThemeScriptProps) => {
 
 ThemeScript.displayName = 'ThemeScript';
 
-/* -------------------------------------------------------------------------------------------------
- * useTheme Hook
- * -----------------------------------------------------------------------------------------------*/
+/* -----------------------------------------------------------------------------------------------*/
 
 const useTheme = (): ThemeContextValue => {
     const context = useContext(ThemeContext);
@@ -237,21 +229,20 @@ const useTheme = (): ThemeContextValue => {
     return context;
 };
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export {
-    // Components
     ThemeProvider,
     ThemeScript,
-
-    // Hook
+    //
     useTheme,
-
-    // Config Helper
     createThemeConfig,
+};
 
-    // Types
-    type VaporThemeConfig,
-    type ThemeState,
-    type ColorTheme,
-    type RadiusTheme,
-    type ScaleFactor,
+export type {
+    VaporThemeConfig,
+    ThemeContextValue,
+    ResolvedThemeConfig,
+    ThemeProviderProps,
+    ThemeScriptProps,
 };

@@ -30,6 +30,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ..
         </vapor.span>
     );
 });
+Badge.displayName = 'Badge';
 
 export { Badge };
 export type { BadgeProps };

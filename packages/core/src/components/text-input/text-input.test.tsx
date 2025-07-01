@@ -6,10 +6,10 @@ import { axe } from 'vitest-axe';
 const LABEL_TEXT = 'Label';
 const TextInputTest = (props: TextInputProps) => {
     return (
-        <TextInput {...props}>
+        <TextInput.Root {...props}>
             <TextInput.Label>{LABEL_TEXT}</TextInput.Label>
             <TextInput.Field />
-        </TextInput>
+        </TextInput.Root>
     );
 };
 

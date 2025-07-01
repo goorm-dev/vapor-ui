@@ -6,13 +6,13 @@ import { axe } from 'vitest-axe';
 
 const NavTest = (props: NavProps) => {
     return (
-        <Nav {...props}>
+        <Nav.Root {...props}>
             <Nav.List>
                 <Nav.Item>
                     <Nav.Link href="#">Home</Nav.Link>
                 </Nav.Item>
             </Nav.List>
-        </Nav>
+        </Nav.Root>
     );
 };
 
@@ -32,7 +32,7 @@ describe('Nav.Link', () => {
 
     const NAV_LINK = 'nav-link';
     const NavLinkTest = (linkProps: NavLinkProps) => (
-        <Nav label="Main">
+        <Nav.Root label="Main">
             <Nav.List>
                 <Nav.Item>
                     <Nav.Link data-testid={NAV_LINK} href="#" {...linkProps}>
@@ -40,7 +40,7 @@ describe('Nav.Link', () => {
                     </Nav.Link>
                 </Nav.Item>
             </Nav.List>
-        </Nav>
+        </Nav.Root>
     );
 
     it('should render with aria-current="page" when given selected', () => {

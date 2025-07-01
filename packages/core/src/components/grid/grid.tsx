@@ -83,5 +83,9 @@ const Item = forwardRef<HTMLDivElement, GridItemProps>(
 );
 Item.displayName = 'Grid.Item';
 
-export const Grid = Object.assign(Root, { Item });
+/* -----------------------------------------------------------------------------------------------*/
+
+export { Root as GridRoot, Item as GridItem };
 export type { GridProps, GridItemProps };
+
+export const Grid = { Root, Item };

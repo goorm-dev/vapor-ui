@@ -19,6 +19,7 @@ const HStack = forwardRef<HTMLDivElement, HStackProps>(({ children, ...props }, 
         </Flex>
     );
 });
+HStack.displayName = 'HStack';
 
 export { HStack };
 export type { HStackProps };

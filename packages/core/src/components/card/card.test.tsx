@@ -5,11 +5,11 @@ import { axe } from 'vitest-axe';
 
 const CardTest = (props: CardProps) => {
     return (
-        <Card {...props}>
+        <Card.Root {...props}>
             <Card.Header>Card Header</Card.Header>
             <Card.Body>Card Body</Card.Body>
             <Card.Footer>Card Footer</Card.Footer>
-        </Card>
+        </Card.Root>
     );
 };
 
