@@ -4,8 +4,8 @@ import type { Preview } from '@storybook/react';
 const themeConfig: VaporThemeConfig = {
     defaultTheme: {
         colorTheme: 'dark',
-        radiusTheme: 'full',
-        scaleFactor: 1.5,
+        radiusTheme: 'md',
+        scaleFactor: 1,
     },
     storageKey: 'my-vapor-theme',
     enableSystemTheme: false,
@@ -70,7 +70,7 @@ const preview: Preview = {
     initialGlobals: {
         colorTheme: 'light',
         radiusTheme: 'md',
-        scaleFactor: 2.4,
+        scaleFactor: 1,
     },
 
     decorators: [
@@ -79,7 +79,7 @@ const preview: Preview = {
             const theme = { colorTheme, radiusTheme, scaleFactor };
 
             return (
-                <ThemeProvider config={themeConfig}>
+                <ThemeProvider config={{ defaultTheme: { ...themeConfig.defaultTheme, ...theme } }}>
                     <Story />
                 </ThemeProvider>
             );
