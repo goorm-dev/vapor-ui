@@ -21,6 +21,10 @@ export const LIGHT_CLASS_NAME = 'vapor-light-theme';
 
 export const DARK_CLASS_NAME = 'vapor-dark-theme';
 
+export const LIGHT_CLASS_NAME = 'vapor-light-theme';
+
+export const DARK_CLASS_NAME = 'vapor-dark-theme';
+
 const themeTokens = {
     color: {
         ...LIGHT_BASIC_COLORS,
