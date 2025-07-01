@@ -42,8 +42,6 @@ jobs:
 
             - name: Install Dependencies
               uses: ./.github/composite/install
-              with:
-                  PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
             - name: Install Playwright Browsers
               uses: ./.github/composite/browser-install
