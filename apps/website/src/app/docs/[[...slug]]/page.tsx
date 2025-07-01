@@ -56,7 +56,6 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
 
     const page = source.getPage(slug);
     if (!page) notFound();
-    console.log(slug);
     const image = 'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png';
 
     return createMetadata({
