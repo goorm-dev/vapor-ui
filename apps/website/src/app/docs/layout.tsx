@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { DocPageClient } from './doc-page-client';
+import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
 import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import { notFound } from 'next/navigation';
 
@@ -9,15 +9,24 @@ import { source } from '~/lib/source';
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
-        <DocsLayout
-            {...docsOptions}
-            nav={{
-                ...docsOptions.nav,
-                mode: 'top',
-            }}
-        >
-            <DocPageClient>{children}</DocPageClient>
-        </DocsLayout>
+        <>
+            <ThemeScript
+                config={{
+                    appearance: 'light',
+                }}
+            />
+            <ThemeProvider config={{ appearance: 'light' }}>
+                <DocsLayout
+                    {...docsOptions}
+                    nav={{
+                        ...docsOptions.nav,
+                        mode: 'top',
+                    }}
+                >
+                    {children}
+                </DocsLayout>
+            </ThemeProvider>
+        </>
     );
 }
 
