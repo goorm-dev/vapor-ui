@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { TextInput } from '.';
+import { Grid } from '../grid';
 import type { Meta, StoryObj } from '@storybook/react';
 
 export default {
@@ -44,4 +45,45 @@ export const Controlled: Story = {
             </>
         );
     },
+};
+
+export const TestBed: Story = {
+    render: (args) => (
+        <Grid templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
+            <TextInput placeholder="sadf" {...args}>
+                <TextInput.Label>Label</TextInput.Label>
+                <TextInput.Field />
+            </TextInput>
+
+            <TextInput placeholder="sadf" {...args} disabled>
+                <TextInput.Label>Label</TextInput.Label>
+                <TextInput.Field />
+            </TextInput>
+
+            <TextInput placeholder="sadf" {...args} invalid>
+                <TextInput.Label>Label</TextInput.Label>
+                <TextInput.Field />
+            </TextInput>
+
+            <TextInput placeholder="sadf" {...args} readOnly>
+                <TextInput.Label>Label</TextInput.Label>
+                <TextInput.Field />
+            </TextInput>
+
+            <TextInput placeholder="sadf" {...args} visuallyHidden>
+                <TextInput.Label>Label</TextInput.Label>
+                <TextInput.Field />
+            </TextInput>
+
+            <TextInput placeholder="sadf" {...args}>
+                <TextInput.Label>Label</TextInput.Label>
+                <TextInput.Field />
+            </TextInput>
+
+            <TextInput value="value" placeholder="sadf" {...args}>
+                <TextInput.Label>Label</TextInput.Label>
+                <TextInput.Field />
+            </TextInput>
+        </Grid>
+    ),
 };

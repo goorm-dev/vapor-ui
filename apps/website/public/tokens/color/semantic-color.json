@@ -1,41 +1,154 @@
 {
     "background": {
-        "primary": "#2a6ff3",
-        "secondary": "#e8e8ee",
-        "success": "#0a8672",
-        "warning": "#d14905",
-        "danger": "#df3337",
-        "hint": "#6c6e7e",
-        "contrast": "#3e404c",
-        "normal": "#ffffff",
-        "normal-lighter": "#f7f7fa",
-        "normal-darker": "#f0f0f5"
+        "primary": {
+            "value": "#2a6ff3",
+            "basicToken": "blue-500"
+        },
+        "secondary": {
+            "value": "#e8e8ee",
+            "basicToken": "gray-200"
+        },
+        "success": {
+            "value": "#0a8672",
+            "basicToken": "green-500"
+        },
+        "warning": {
+            "value": "#d14905",
+            "basicToken": "orange-500"
+        },
+        "danger": {
+            "value": "#df3337",
+            "basicToken": "red-500"
+        },
+        "hint": {
+            "value": "#6c6e7e",
+            "basicToken": "gray-600"
+        },
+        "contrast": {
+            "value": "#3e404c",
+            "basicToken": "gray-800"
+        },
+        "normal": {
+            "value": "#ffffff",
+            "basicToken": "gray-000"
+        },
+        "normal-lighter": {
+            "value": "#ffffff",
+            "basicToken": "gray-000"
+        },
+        "normal-darker": {
+            "value": "#f7f7fa",
+            "basicToken": "gray-050"
+        }
     },
     "foreground": {
-        "primary": "#245ecf",
-        "primary-lighter": "#2a6ff3",
-        "primary-darker": "#1d4eaa",
-        "secondary": "#3e404c",
-        "secondary-lighter": "#3e404c",
-        "secondary-darker": "#2b2d36",
-        "success": "#097261",
-        "success-lighter": "#0a8672",
-        "success-darker": "#075e50",
-        "warning": "#b23e04",
-        "warning-lighter": "#d14905",
-        "warning-darker": "#923304",
-        "danger": "#be2b2f",
-        "danger-lighter": "#df3337",
-        "danger-darker": "#9c2427",
-        "hint": "#6c6e7e",
-        "hint-lighter": "#6c6e7e",
-        "contrast": "#3e404c",
-        "contrast-lighter": "#3e404c"
+        "primary": {
+            "value": "#245ecf",
+            "basicToken": "blue-600"
+        },
+        "primary-darker": {
+            "value": "#1d4eaa",
+            "basicToken": "blue-700"
+        },
+        "secondary": {
+            "value": "#3e404c",
+            "basicToken": "gray-800"
+        },
+        "secondary-darker": {
+            "value": "#2b2d36",
+            "basicToken": "gray-900"
+        },
+        "success": {
+            "value": "#097261",
+            "basicToken": "green-600"
+        },
+        "success-darker": {
+            "value": "#075e50",
+            "basicToken": "green-700"
+        },
+        "warning": {
+            "value": "#b23e04",
+            "basicToken": "orange-600"
+        },
+        "warning-darker": {
+            "value": "#923304",
+            "basicToken": "orange-700"
+        },
+        "danger": {
+            "value": "#be2b2f",
+            "basicToken": "red-600"
+        },
+        "danger-darker": {
+            "value": "#9c2427",
+            "basicToken": "red-700"
+        },
+        "hint": {
+            "value": "#6c6e7e",
+            "basicToken": "gray-600"
+        },
+        "hint-darker": {
+            "value": "#525463",
+            "basicToken": "gray-700"
+        },
+        "contrast": {
+            "value": "#3e404c",
+            "basicToken": "gray-800"
+        },
+        "contrast-darker": {
+            "value": "#2b2d36",
+            "basicToken": "gray-900"
+        },
+        "accent": {
+            "value": "#ffffff",
+            "basicToken": "white"
+        },
+        "normal": {
+            "value": "#2b2d36",
+            "basicToken": "gray-900"
+        },
+        "normal-lighter": {
+            "value": "#525463",
+            "basicToken": "gray-700"
+        }
     },
     "border": {
-        "normal": "#e1e1e8"
+        "normal": {
+            "value": "#e1e1e8",
+            "basicToken": "gray-300"
+        },
+        "primary": {
+            "value": "#2a6ff3",
+            "basicToken": "blue-500"
+        },
+        "secondary": {
+            "value": "#e8e8ee",
+            "basicToken": "gray-200"
+        },
+        "success": {
+            "value": "#0a8672",
+            "basicToken": "green-500"
+        },
+        "warning": {
+            "value": "#d14905",
+            "basicToken": "orange-500"
+        },
+        "danger": {
+            "value": "#df3337",
+            "basicToken": "red-500"
+        },
+        "hint": {
+            "value": "#6c6e7e",
+            "basicToken": "gray-600"
+        },
+        "contrast": {
+            "value": "#3e404c",
+            "basicToken": "gray-800"
+        }
     },
     "logo": {
-        "normal": "#2b2d36"
+        "normal": {
+            "value": "#2b2d36",
+            "basicToken": "gray-900"
+        }
     }
 }

@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 
-import {
-    type Appearance,
-    type Radius,
-    type Scaling,
-    ThemeProvider,
-    type VaporThemeConfig,
-    useTheme,
-} from '../packages/core/src/components/theme-provider';
 import type { Preview } from '@storybook/react';
+
+import { ThemeProvider, useTheme } from '../packages/core/src/components/theme-provider';
+import type {
+    Appearance,
+    Radius,
+    Scaling,
+    VaporThemeConfig,
+} from '../packages/core/src/components/theme-provider';
 
 const ThemeUpdater = ({
     children,
@@ -45,7 +45,7 @@ const preview: Preview = {
     globalTypes: {
         appearance: {
             name: 'Appearance Theme',
-            description: '컴포넌트의 라이트/다크 테마를 설정합니다.',
+            description: `Set the component's light/dark theme.`,
             defaultValue: 'light',
             toolbar: {
                 title: 'Color',
@@ -56,7 +56,7 @@ const preview: Preview = {
         },
         radius: {
             name: 'Radius Theme',
-            description: '컴포넌트의 전체 border-radius를 설정합니다.',
+            description: 'Set the overall border-radius for components.',
             defaultValue: 'md',
             toolbar: {
                 title: 'Radius',
@@ -67,7 +67,7 @@ const preview: Preview = {
         },
         scaling: {
             name: 'Scale Theme',
-            description: '컴포넌트의 전체 스케일을 조절합니다.',
+            description: 'Adjust the overall scale of components',
             defaultValue: '1.0',
             toolbar: {
                 title: 'Scale',

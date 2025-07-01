@@ -22,7 +22,21 @@ export default {
     },
 };
 
-export const HStackDefault: StoryObj<typeof HStack> = {
+export const Default: StoryObj<typeof HStack> = {
+    render: (args) => {
+        return (
+            <HStack {...args}>
+                <Box size={90}>1</Box>
+                <Box size={80}>2</Box>
+                <Box size={70}>3</Box>
+                <Box size={60}>4</Box>
+                <Box size={50}>5</Box>
+            </HStack>
+        );
+    },
+};
+
+export const TestBed: StoryObj<typeof HStack> = {
     render: (args) => {
         return (
             <HStack {...args}>
