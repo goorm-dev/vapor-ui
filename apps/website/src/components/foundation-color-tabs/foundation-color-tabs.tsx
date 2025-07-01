@@ -50,7 +50,6 @@ type ColorBoxesProps = {
     }[];
 };
 const ColorBoxes = ({ tokens }: ColorBoxesProps) => {
-    console.log(tokens);
     return (
         <div className="flex flex-col gap-10">
             {tokens.map(({ title, colorShade }) => (
