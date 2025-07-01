@@ -1,7 +1,8 @@
-import type { CardProps } from './card';
-import { Card } from './card';
 import { cleanup, render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
+
+import type { CardProps } from './card';
+import { Card } from './card';
 
 const CardTest = (props: CardProps) => {
     return (

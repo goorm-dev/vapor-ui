@@ -1,5 +1,6 @@
-import { Nav } from './nav';
 import type { StoryObj } from '@storybook/react';
+
+import { Nav } from './nav';
 
 export default {
     title: 'Nav',
@@ -30,7 +31,7 @@ export const Default: StoryObj<typeof Nav.Root> = {
     render: (args) => {
         return (
             <>
-                <Nav.Root {...args} label="Main">
+                <Nav.Root {...args} aria-label="Main">
                     <Nav.List>
                         <Nav.Item>
                             <Nav.Link disabled={args.disabled} selected href="#">
@@ -61,7 +62,7 @@ export const TestBed: StoryObj<typeof Nav.Root> = {
     render: (args) => {
         return (
             <>
-                <Nav.Root {...args} label="Main">
+                <Nav.Root {...args} aria-label="Main">
                     <Nav.List>
                         <Nav.Item>
                             <Nav.Link disabled={args.disabled} selected href="#">

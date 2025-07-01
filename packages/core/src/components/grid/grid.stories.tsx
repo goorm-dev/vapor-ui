@@ -1,9 +1,10 @@
 import type { ComponentProps } from 'react';
 
-import { Grid } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { vars } from '~/styles/contract.css';
+
+import { Grid } from '.';
 
 export default {
     title: 'Grid',

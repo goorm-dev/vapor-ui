@@ -1,7 +1,8 @@
-import type { AvatarRootProps } from './avatar';
-import { Avatar } from './avatar';
 import { cleanup, render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
+
+import type { AvatarRootProps } from './avatar';
+import { Avatar } from './avatar';
 
 const AvatarTest = (props: AvatarRootProps) => {
     return (

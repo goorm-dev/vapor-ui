@@ -5,20 +5,21 @@ import { createContext, memo, useCallback, useContext, useEffect, useMemo, useSt
 
 import { RADIUS_FACTOR_VAR_NAME, SCALE_FACTOR_VAR_NAME } from '../../styles/global.css';
 import { THEME_CONFIG, themeInjectScript } from './theme-injector';
-import type { ColorTheme, RadiusTheme, ScaleFactor, ThemeState } from './theme-injector';
+import type { Appearance, Radius, Scaling, ThemeState } from './theme-injector';
 
-const DEFAULT_THEME = {
-    colorTheme: 'light' as ColorTheme,
-    radiusTheme: 'md' as RadiusTheme,
-    scaleFactor: 1 as ScaleFactor,
+/* -------------------------------------------------------------------------------------------------
+ * Constants & Core Types
+ * -----------------------------------------------------------------------------------------------*/
+const DEFAULT_THEME: ThemeState = {
+    appearance: 'light',
+    radius: 'md',
+    scaling: 1,
 };
 
 /**
  * Unified configuration interface for ThemeProvider and ThemeScript
  */
-interface VaporThemeConfig {
-    /** Default theme state */
-    defaultTheme?: Partial<ThemeState>;
+interface VaporThemeConfig extends Partial<ThemeState> {
     /** localStorage key for persistence */
     storageKey?: string;
     /** CSP nonce value */
@@ -30,8 +31,7 @@ interface VaporThemeConfig {
 /**
  * Internal resolved configuration type
  */
-interface ResolvedThemeConfig {
-    defaultTheme: ThemeState;
+interface ResolvedThemeConfig extends ThemeState {
     storageKey: string;
     nonce?: string;
     enableSystemTheme: boolean;
@@ -43,17 +43,25 @@ interface ResolvedThemeConfig {
  * @example
  * ```tsx
  * const config = createThemeConfig({
- *   defaultTheme: { colorTheme: 'dark' },
+ *   appearance: 'dark',
  *   storageKey: 'my-app-theme'
  * });
  * ```
  */
 function createThemeConfig(userConfig?: VaporThemeConfig): ResolvedThemeConfig {
+    const {
+        storageKey = THEME_CONFIG.STORAGE_KEY,
+        nonce,
+        enableSystemTheme = false,
+        ...themeProps
+    } = userConfig ?? {};
+
     return {
-        defaultTheme: { ...DEFAULT_THEME, ...userConfig?.defaultTheme },
-        storageKey: userConfig?.storageKey ?? THEME_CONFIG.STORAGE_KEY,
-        nonce: userConfig?.nonce,
-        enableSystemTheme: userConfig?.enableSystemTheme ?? false,
+        ...DEFAULT_THEME,
+        ...themeProps,
+        storageKey,
+        nonce,
+        enableSystemTheme,
     };
 }
 
@@ -66,13 +74,23 @@ function validateThemeConfig(config: unknown): config is VaporThemeConfig {
 
     const c = config as Partial<VaporThemeConfig>;
 
-    if (c.storageKey !== undefined && typeof c.storageKey !== 'string') {
-        console.warn('[@vapor-ui/core] Invalid storageKey type. Expected string.');
+    if (c.appearance !== undefined && !['light', 'dark'].includes(c.appearance as Appearance)) {
+        console.warn('[@vapor-ui/core] Invalid appearance type. Expected "light" or "dark".');
         return false;
     }
-
-    if (c.defaultTheme !== undefined && typeof c.defaultTheme !== 'object') {
-        console.warn('[@vapor-ui/core] Invalid defaultTheme type. Expected object.');
+    if (
+        c.radius !== undefined &&
+        !Object.keys(THEME_CONFIG.RADIUS_FACTOR_MAP).includes(c.radius as Radius)
+    ) {
+        console.warn('[@vapor-ui/core] Invalid radius type. Expected a valid radius key.');
+        return false;
+    }
+    if (c.scaling !== undefined && typeof c.scaling !== 'number') {
+        console.warn('[@vapor-ui/core] Invalid scaling type. Expected a number.');
+        return false;
+    }
+    if (c.storageKey !== undefined && typeof c.storageKey !== 'string') {
+        console.warn('[@vapor-ui/core] Invalid storageKey type. Expected string.');
         return false;
     }
 
@@ -105,16 +123,17 @@ const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
 
     // Initialize theme state
     const [themeState, internalSetThemeState] = useState<ThemeState>(() => {
+        const { storageKey, nonce, enableSystemTheme, ...defaultTheme } = resolvedConfig;
         if (typeof window === 'undefined') {
-            return resolvedConfig.defaultTheme;
+            return defaultTheme;
         }
         try {
             const storedItem = localStorage.getItem(resolvedConfig.storageKey);
             const storedSettings = storedItem ? JSON.parse(storedItem) : {};
-            return { ...resolvedConfig.defaultTheme, ...storedSettings };
+            return { ...defaultTheme, ...storedSettings };
         } catch (e) {
             console.error('[@vapor-ui/core] Failed to read theme from localStorage.', e);
-            return resolvedConfig.defaultTheme;
+            return defaultTheme;
         }
     });
 
@@ -158,10 +177,10 @@ const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
     // DOM updates
     useEffect(() => {
         const root = document.documentElement;
-        const { colorTheme, radiusTheme, scaleFactor } = themeState;
+        const { appearance, radius, scaling } = themeState;
 
         // 1. Color theme
-        if (colorTheme === 'dark') {
+        if (appearance === 'dark') {
             root.classList.add(THEME_CONFIG.CLASS_NAMES.dark);
             root.classList.remove(THEME_CONFIG.CLASS_NAMES.light);
         } else {
@@ -170,11 +189,11 @@ const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
         }
 
         // 2. Radius theme
-        const radiusFactor = THEME_CONFIG.RADIUS_FACTOR_MAP[radiusTheme] ?? 1;
+        const radiusFactor = THEME_CONFIG.RADIUS_FACTOR_MAP[radius] ?? 1;
         root.style.setProperty(`--${RADIUS_FACTOR_VAR_NAME}`, radiusFactor.toString());
 
         // 3. Scale theme
-        const currentScaleFactor = scaleFactor ?? 1;
+        const currentScaleFactor = scaling ?? 1;
         root.style.setProperty(`--${SCALE_FACTOR_VAR_NAME}`, currentScaleFactor.toString());
     }, [themeState]);
 
@@ -201,9 +220,11 @@ const ThemeScript = memo(({ config }: ThemeScriptProps) => {
         scaleFactor: SCALE_FACTOR_VAR_NAME,
     };
 
+    const { storageKey, nonce, enableSystemTheme, ...defaultTheme } = resolvedConfig;
+
     const scriptContent = `(${themeInjectScript.toString()})(
-        ${JSON.stringify(resolvedConfig.defaultTheme)},
-        '${resolvedConfig.storageKey}',
+        ${JSON.stringify(defaultTheme)},
+        '${storageKey}',
         ${JSON.stringify(THEME_CONFIG)},
         ${JSON.stringify(cssVarNames)}
     )`;
@@ -231,18 +252,5 @@ const useTheme = (): ThemeContextValue => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    ThemeProvider,
-    ThemeScript,
-    //
-    useTheme,
-    createThemeConfig,
-};
-
-export type {
-    VaporThemeConfig,
-    ThemeContextValue,
-    ResolvedThemeConfig,
-    ThemeProviderProps,
-    ThemeScriptProps,
-};
+export { ThemeProvider, ThemeScript, useTheme, createThemeConfig };
+export type { VaporThemeConfig, ThemeState, Appearance, Radius, Scaling };
