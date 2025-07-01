@@ -7,13 +7,14 @@ import remarkMdx from 'remark-mdx';
 import type { source } from '~/lib/source';
 import { replaceComponentDoc } from '~/utils/get-component-doc';
 import { replaceFoundationDoc } from '~/utils/get-foundation-doc';
+import { replaceIconDoc } from '~/utils/get-icon-doc';
 
 const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
 export async function getLLMText(page: InferPageType<typeof source>) {
     const processed = await processor.process({
         path: page.data._file.absolutePath,
-        value: replaceComponentDoc(replaceFoundationDoc(page.data.content ?? '')),
+        value: replaceComponentDoc(replaceFoundationDoc(replaceIconDoc(page.data.content ?? ''))),
     });
 
     return `# ${page.data.title}
