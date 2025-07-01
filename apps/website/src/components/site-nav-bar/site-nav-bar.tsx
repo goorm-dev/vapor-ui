@@ -57,7 +57,7 @@ export const SiteNavBar = () => {
             <header className="flex w-full py-3 px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
                 <div className="flex items-center gap-10 relative w-full">
                     <Nav
-                        label="nav"
+                        aria-label="nav"
                         size="lg"
                         shape="ghost"
                         className="flex justify-between items-center gap-10 w-full"
@@ -104,7 +104,7 @@ export const SiteNavBar = () => {
                                                     color="secondary"
                                                     variant="ghost"
                                                     asChild={hasText(item)}
-                                                    label={hasText(item) ? item.text : ''}
+                                                    aria-label={hasText(item) ? item.text : ''}
                                                 >
                                                     <Link href={hasUrl(item) ? item.url : '#'}>
                                                         {item.type === 'icon'
@@ -127,7 +127,7 @@ export const SiteNavBar = () => {
                         color="secondary"
                         variant="fill"
                         className="md:hidden"
-                        label="menu"
+                        aria-label="menu"
                     >
                         <MenuOutlineIcon />
                     </IconButton>
@@ -144,7 +144,7 @@ export const SiteNavBar = () => {
                     <Dialog.Title className="sr-only">Mobile navigation menu</Dialog.Title>
                     <header className="flex justify-end px-6 py-4">
                         <Dialog.Close asChild>
-                            <IconButton color="secondary" variant="ghost" label="close">
+                            <IconButton color="secondary" variant="ghost" aria-label="close">
                                 <CloseOutlineIcon size={20} />
                             </IconButton>
                         </Dialog.Close>
@@ -166,7 +166,7 @@ export const SiteNavBar = () => {
                                     size="md"
                                     color="secondary"
                                     variant="fill"
-                                    label={hasUrl(item) ? item.url : ''}
+                                    aria-label={hasUrl(item) ? item.url : ''}
                                 >
                                     <Link href={hasUrl(item) ? item.url : '#'}>
                                         <OpenInNewOutlineIcon />

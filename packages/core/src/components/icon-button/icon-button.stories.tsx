@@ -47,19 +47,19 @@ export const TestBed: Story = {
             </div>
 
             <div>
-                <IconButton label="SM Label" size="sm">
+                <IconButton aria-label="SM Label" size="sm">
                     <HeartIcon />
                 </IconButton>
-                <IconButton label="MD Label" size="md">
+                <IconButton aria-label="MD Label" size="md">
                     <HeartIcon />
                 </IconButton>
-                <IconButton label="LG Label" size="lg">
+                <IconButton aria-label="LG Label" size="lg">
                     <HeartIcon />
                 </IconButton>
-                <IconButton label="XL Label" size="xl">
+                <IconButton aria-label="XL Label" size="xl">
                     <HeartIcon />
                 </IconButton>
-                <IconButton label="Rounded Label" rounded>
+                <IconButton aria-label="Rounded Label" shape='circle'>
                     <HeartIcon />
                 </IconButton>
             </div>
@@ -85,13 +85,13 @@ const HeartIcon = () => {
 const IconButtons = ({ color, disabled }: Partial<IconButtonProps>) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <IconButton label="Button Label" color={color} disabled={disabled} variant="fill">
+            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="fill">
                 <HeartIcon />
             </IconButton>
-            <IconButton label="Button Label" color={color} disabled={disabled} variant="ghost">
+            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="ghost">
                 <HeartIcon />
             </IconButton>
-            <IconButton label="Button Label" color={color} disabled={disabled} variant="outline">
+            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="outline">
                 <HeartIcon />
             </IconButton>
         </div>
