@@ -1,33 +1,68 @@
 ---
 title: Installation
-description: 디자인 시스템 라이브러리를 사용하기 위해서는 몇 가지 기본적인 단계를 따라야 합니다. 아래 지침에 따라 설정을 완료해주세요.
+
+description: A quick guide to install Vapor UI.
 ---
 
-## Settings
-
----
-
-### Node.js
-
-라이브러리를 사용하기 위해 v16 이상의 Node.js 버전이 필요합니다.
-
-## Library Installation
+<b style={{ marginBottom: 0 }}>Requirements:</b>
+<ul style={{ marginTop: 0 }}>
+  <li>React 18 or later</li>
+  <li>Node.js 16 or later</li>
+</ul>
 
 ---
 
-#### Peer dependencies
+### 1. Install the package
 
-Vapor Core를 설치하기 전에 다음의 하위 의존성 패키지를 설치해야 합니다.
+Install Vapor UI using your preferred package manager:
 
-```json title="package.json"
-"dependencies": {
-  "react": ">=18",
-  "react-dom": ">=18",
-},
+```package-install
+npm install @vapor-ui/core
 ```
 
-#### Dependencies
+<br />
 
-애플리케이션에서 사용할 패키지를 추가합니다:
+### 2. Add styles import
 
-<InstallSelector />
+Add styles import to the root of your application:
+
+{/* prettier-ignore */}
+<Tabs items={[".jsx", ".css"]} defaultValue=".jsx">
+  <Tab value=".jsx">
+  ```tsx
+  import '@vapor-ui/core/styles.css'; 
+  ```
+  </Tab>
+  <Tab value=".css">
+  ```css
+  @import '@vapor-ui/core/styles.css'; 
+  ```
+  </Tab>
+</Tabs>
+
+<br />
+
+### 3. Assemble a component
+
+You can now start using Vapor UI components in your React application. Here's an example of how to assemble a simple component:
+
+<Demo name="assemble-component">
+```tsx
+import { Card } from "@vapor-ui/core";
+
+export default function AssembleComponent() {
+  return (
+    <Card>
+      <Card.Header>
+        <h2>Assemble Component</h2>
+      </Card.Header>
+      <Card.Body>
+        <p>This is an example of assembling a component using Vapor UI.</p>
+      </Card.Body>
+    </Card>
+  );
+}
+```
+</Demo>
+
+<br />
