@@ -3,6 +3,7 @@ import type { DocsLayoutProps as NotebookLayoutProps } from 'fumadocs-ui/layouts
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import Image from 'next/image';
 
+import { navLinks } from '~/constants/site-links';
 import { source } from '~/lib/source';
 
 export const baseOptions: BaseLayoutProps = {
@@ -16,50 +17,10 @@ export const baseOptions: BaseLayoutProps = {
             />
         ),
     },
-    links: [
-        {
-            icon: (
-                <div className="relative inline-block w-5 h-5">
-                    <Image
-                        src="/icons/figma-color.svg"
-                        alt="Figma"
-                        fill
-                        style={{ objectFit: 'contain' }}
-                    />
-                </div>
-            ),
-            text: 'Figma',
-            url: 'https://www.figma.com/community/file/1508829832204351721/vapor-design-system',
-            label: 'Vapor figma comunity file',
-            type: 'icon',
-        },
-        {
-            icon: (
-                <div className="relative inline-block w-5 h-5">
-                    <Image
-                        src="/icons/discord-color.svg"
-                        alt="Discord"
-                        fill
-                        style={{ objectFit: 'contain' }}
-                    />
-                </div>
-            ),
-            text: 'Discord',
-            url: 'https://discord.gg/7Z8Ecur63D',
-            label: 'Vapor Discord comunity',
-            type: 'icon',
-        },
-        {
-            text: 'Docs',
-            url: '/docs',
-            active: 'nested-url',
-        },
-        {
-            text: 'Playground',
-            url: '/playground',
-        },
-    ],
-    githubUrl: 'https://github.com/goorm-dev/gds',
+    links: navLinks,
+    themeSwitch: {
+        enabled: false,
+    },
 };
 
 export const docsOptions: DocsLayoutProps = {

@@ -13,7 +13,7 @@ const inter = Inter({
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <html lang="ko" className={inter.className} suppressHydrationWarning>
-            <body className="flex flex-col min-h-screen">
+            <body className="flex flex-col min-h-screen bg-[var(--vapor-color-background-normal)]">
                 <RootProvider
                     search={{
                         SearchDialog: DefaultSearchDialog,
