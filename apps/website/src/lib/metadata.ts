@@ -13,7 +13,9 @@ export function createMetadata(override: Metadata): Metadata {
                 override.description ??
                 'Vapor UI is a modern, flexible and accessible design system for building beautiful and accessible web applications.',
             siteName: 'Vapor UI',
-            images: 'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png',
+            images:
+                override.openGraph?.images ??
+                'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png',
             ...override.openGraph,
         },
         twitter: {
@@ -23,7 +25,9 @@ export function createMetadata(override: Metadata): Metadata {
             description:
                 override.description ??
                 'Vapor UI is a modern, flexible and accessible design system for building beautiful and accessible web applications.',
-            images: 'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png',
+            images:
+                override.twitter?.images ??
+                'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png',
             ...override.twitter,
         },
         alternates: {
