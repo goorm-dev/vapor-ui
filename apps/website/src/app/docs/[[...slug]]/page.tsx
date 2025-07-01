@@ -8,6 +8,12 @@ import { getMDXComponents } from '~/mdx-components';
 
 export default async function Page({ params }: { params: Promise<{ slug?: string[] }> }) {
     const { slug = [] } = await params;
+
+    // components 경로는 components 전용 페이지에서 처리하도록 제외
+    if (slug[0] === 'components') {
+        notFound();
+    }
+
     const page = source.getPage(slug);
     if (!page) notFound();
 
@@ -35,14 +41,22 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
 }
 
 export async function generateStaticParams() {
-    return source.generateParams();
+    const params = source.generateParams();
+    // components 경로는 제외
+    return params.filter((param) => param.slug?.[0] !== 'components');
 }
 
 export async function generateMetadata(props: { params: Promise<{ slug?: string[] }> }) {
     const { slug = [] } = await props.params;
+
+    // components 경로는 components 전용 페이지에서 처리하도록 제외
+    if (slug[0] === 'components') {
+        notFound();
+    }
+
     const page = source.getPage(slug);
     if (!page) notFound();
-
+    console.log(slug);
     const image = 'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png';
 
     return createMetadata({
