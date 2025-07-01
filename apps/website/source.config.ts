@@ -1,15 +1,21 @@
-import { remarkInstall } from 'fumadocs-docgen';
-import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
+import { remarkInstall, remarkDocGen, fileGenerator } from "fumadocs-docgen";
+import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 
 export const docs = defineDocs({
-    dir: 'content/docs',
-    docs: {
-        async: true,
-    },
+  dir: "content/docs",
+  docs: {
+    async: true,
+  },
 });
 
 export default defineConfig({
-    mdxOptions: {
-        remarkPlugins: [remarkInstall],
-    },
+  mdxOptions: {
+    remarkPlugins: [
+      [
+        remarkInstall,
+        { persist: { id: "package-manager" } },
+        [remarkDocGen, { generators: [fileGenerator()] }],
+      ],
+    ],
+  },
 });
