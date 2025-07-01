@@ -14,11 +14,11 @@ type IconButtonVariants = MergeRecipeVariants<typeof styles.root>;
 type IconButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Button>, 'stretch'>;
 
 interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {
-    label: string;
+    'aria-label': string;
 }
 
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ label, className, children, ...props }, ref) => {
+    ({ 'aria-label': ariaLabel, className, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, ['shape']);
 
         const IconSlot = createSlot(children);
@@ -26,7 +26,7 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         return (
             <Button
                 ref={ref}
-                aria-label={label}
+                aria-label={ariaLabel}
                 className={clsx(styles.root(variantProps), className)}
                 {...otherProps}
                 stretch={false}
