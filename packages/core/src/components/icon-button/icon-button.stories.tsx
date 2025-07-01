@@ -59,7 +59,7 @@ export const TestBed: Story = {
                 <IconButton label="XL Label" size="xl">
                     <HeartIcon />
                 </IconButton>
-                <IconButton label="Rounded Label" rounded>
+                <IconButton label="Rounded Label" shape="circle">
                     <HeartIcon />
                 </IconButton>
             </div>
