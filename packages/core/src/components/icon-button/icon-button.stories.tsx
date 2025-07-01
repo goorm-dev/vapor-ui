@@ -1,5 +1,6 @@
 import { IconButton, type IconButtonProps } from './icon-button';
 import type { Meta, StoryObj } from '@storybook/react';
+import { HeartIcon } from '@vapor-ui/icons';
 
 export default {
     title: 'IconButton',
