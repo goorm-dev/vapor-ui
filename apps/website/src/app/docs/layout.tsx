@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
 
-import { DocPageClient } from './doc-page-client';
 import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 
 import { docsOptions } from '~/app/layout.config';
+
+import { DocPageClient } from './doc-page-client';
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (

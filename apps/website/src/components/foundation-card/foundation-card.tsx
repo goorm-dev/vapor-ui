@@ -16,7 +16,7 @@ interface FoundationCardProps {
 
 const FoundationCard = ({ title, description, imageUrl, href }: FoundationCardProps) => {
     return (
-        <Card className={clsx(styles.card, 'not-prose')}>
+        <Card.Root className={clsx(styles.card, 'not-prose')}>
             <Link href={href}>
                 <Card.Header className={styles.header}>
                     <Image
@@ -33,7 +33,7 @@ const FoundationCard = ({ title, description, imageUrl, href }: FoundationCardPr
                     <Text typography="body2">{description}</Text>
                 </Card.Body>
             </Link>
-        </Card>
+        </Card.Root>
     );
 };
 
