@@ -1,9 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:9999';
+const BASE_URL = 'http://localhost:9999';
 
 export default defineConfig({
-    testMatch: './__tests__/visual-check.test.ts',
+    snapshotPathTemplate: './__tests__/screenshots/{arg}-{projectName}-{platform}-{ext}',
+    testMatch: '__tests__/visual-check.test.ts',
     outputDir: `./__tests__/results/`,
 
     reporter: [
@@ -24,10 +25,10 @@ export default defineConfig({
         },
     ],
 
-    workers: process.env.CI ? 1 : undefined,
+    workers: 1,
 
     webServer: {
-        command: 'cd ../../ && pnpm storybook --port 9999',
+        command: 'cd ../../ && pnpm build-storybook && pnpm storybook --port 9999',
         url: BASE_URL,
         reuseExistingServer: false,
     },
