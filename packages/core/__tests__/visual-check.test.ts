@@ -1,5 +1,6 @@
-import manifest from '../../../storybook-static/index.json' with { type: 'json' };
 import { expect, test } from '@playwright/test';
+
+import manifest from '../../../storybook-static/index.json' with { type: 'json' };
 
 const filterStories = (stories) => stories.filter((story) => story.name === 'Test Bed');
 

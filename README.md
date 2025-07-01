@@ -2,7 +2,14 @@
 
 # Goorm Design System: Vapor UI
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Status: WIP](https://img.shields.io/badge/status-WIP-orange.svg)](https://github.com/goorm-dev/vapor-ui) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> 🚧 **This project is currently in a pre-release state.** 🚧
+> 
+> It is under active development, and breaking changes may be introduced at any time.
+> We do not recommend using this in a production environment. The first stable release is planned for `v0.2.0`.
+
+<br/>
 
 **An open-source UI component library for building high-quality, accessible web apps and design systems.**
 
@@ -45,3 +52,9 @@ Vapor is a monorepo that efficiently manages multiple packages using pnpm Worksp
 | apps/website            | Official documentation website                                       | -                                                                                                         |
 | @repo/eslint-config     | Shared ESLint configuration                                          | -                                                                                                         |
 | @repo/typescript-config | Shared TypeScript tsconfig configuration                             | -                                                                                                         |
+
+## Community & Support
+
+- **Bugs & Feature Requests**: Use [GitHub Issues](https://github.com/goorm-dev/vapor-ui/issues) to report bugs or request new features.
+- **Discord**: Join the [Vapor UI Discord](https://discord.gg/PMqxs3xaHC) to chat with the community and team.
+- **Email**: For other inquiries, you can contact us at vapor.ui@goorm.io

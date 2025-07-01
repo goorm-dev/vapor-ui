@@ -1,15 +1,12 @@
-@import 'tailwindcss/preflight.css' layer(base);
-@import 'tailwindcss/theme.css' layer(theme);
-@import '@vapor-ui/core/styles.css' layer(vapor);
-@import 'tailwindcss/utilities.css' layer(utilities);
+@layer vapor-theme, theme, vapor-reset, base, vapor-component, components, vapor-utilities, utilities;
 
-
-
+@import '@vapor-ui/core/styles.css';
+@import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
 @theme {
-    --color-fd-background: var(--background-normal);
+    --color-fd-background: var(--vapor-color-background-normal);
     --color-fd-primary: var(--vapor-color-background-primary);
     --color-fd-border: var(--vapor-color-border-normal);
     --color-fd-accent: var(--vapor-color-background-secondary);
@@ -27,5 +24,5 @@
 }
 
 a[data-active='true'] {
-    color: var(--primary);
+    color: var(--vapor-color-foreground-primary);
 }

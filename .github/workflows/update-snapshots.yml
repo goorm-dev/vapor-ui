@@ -1,4 +1,4 @@
-name: '[CI] 스냅샷 업데이트'
+name: 'Update Visual Snapshots'
 
 on:
     workflow_dispatch:
