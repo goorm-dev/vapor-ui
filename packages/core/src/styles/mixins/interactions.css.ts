@@ -60,7 +60,7 @@ export const interaction = recipe({
                 transition: 'border-color 150ms cubic-bezier(.4,0,.2,1)',
 
                 selectors: {
-                    '&:hover': { borderColor: `rgba(${vars.color['rgb-black']}, 0.24)` },
+                    '&:hover': { borderColor: `rgba(0,0,0, 0.24)` },
                     '&:focus-visible': { borderColor: vars.color.border.primary },
                 },
             }),
