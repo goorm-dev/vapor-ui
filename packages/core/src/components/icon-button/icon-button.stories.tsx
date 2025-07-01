@@ -1,6 +1,7 @@
-import { IconButton, type IconButtonProps } from './icon-button';
 import type { Meta, StoryObj } from '@storybook/react';
 import { HeartIcon } from '@vapor-ui/icons';
+
+import { IconButton, type IconButtonProps } from './icon-button';
 
 export default {
     title: 'IconButton',
@@ -12,7 +13,7 @@ export default {
             options: ['primary', 'secondary', 'success', 'warning', 'danger', 'contrast'],
         },
         variant: { control: 'inline-radio', options: ['fill', 'outline', 'ghost'] },
-        rounded: { control: 'boolean' },
+        shape: { control: 'inline-radio', options: ['square', 'circle'] },
         disabled: { control: 'boolean' },
     },
 } satisfies Meta<IconButtonProps>;
@@ -58,7 +59,7 @@ export const TestBed: Story = {
                 <IconButton label="XL Label" size="xl">
                     <HeartIcon />
                 </IconButton>
-                <IconButton label="Rounded Label" rounded>
+                <IconButton label="Rounded Label" shape="circle">
                     <HeartIcon />
                 </IconButton>
             </div>

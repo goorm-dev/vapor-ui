@@ -9,10 +9,11 @@ export const root = recipe({
         padding: 0,
     }),
 
-    defaultVariants: { rounded: false },
+    defaultVariants: { shape: 'square' },
     variants: {
-        rounded: {
-            true: layerStyle('component', { borderRadius: '9999px' }),
+        shape: {
+            square: {},
+            circle: layerStyle('component', { borderRadius: '9999px' }),
         },
     },
 });
