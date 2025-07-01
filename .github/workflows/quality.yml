@@ -29,8 +29,10 @@ jobs:
               with:
                   name: build-artifacts
                   path: |
-                      packages/vapor-*/dist
-                      packages/vapor-*/package.json
+                      packages/*/dist
+                      !packages/*config*/dist
+                      packages/*/package.json
+                      !packages/*config*/package.json
 
     eslint:
         name: ESLint
@@ -47,6 +49,7 @@ jobs:
 
     types:
         name: TypeScript
+        needs: build
         runs-on: ubuntu-latest
         steps:
             - name: Checkout branch
