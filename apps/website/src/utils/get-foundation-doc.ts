@@ -11,24 +11,33 @@ import {
 } from '~/constants/typography';
 
 export const getColorPrimitiveTokenDoc = () => {
+    const escapePipes = (value: string | number | null | undefined) =>
+        String(value ?? '').replace(/\|/g, '\\|');
+
     return markdownTable([
         ['token', 'value'],
         ...[...BasicColorData, ...SemanticColorData].flatMap(({ colorShade }) => {
-            return colorShade.map((shade) => [`${shade.name}`, `${shade.value}`]);
+            return colorShade.map((shade) => [escapePipes(shade.name), escapePipes(shade.value)]);
         }),
     ]);
 };
 
 export const getSizePrimitiveTokenDoc = () => {
+    const escapePipes = (value: string | number | null | undefined) =>
+        String(value ?? '').replace(/\|/g, '\\|');
+
     return markdownTable([
         ['token', 'value'],
         ...[...BorderRadiusData, ...SpaceData, ...DimensionData].flatMap(({ name, value }) => {
-            return [[name, value]];
+            return [[escapePipes(name), escapePipes(value)]];
         }),
     ]);
 };
 
 export const getTypographyPrimitiveTokenDoc = () => {
+    const escapePipes = (value: string | number | null | undefined) =>
+        String(value ?? '').replace(/\|/g, '\\|');
+
     return markdownTable([
         ['token', 'value'],
         ...[
@@ -38,7 +47,7 @@ export const getTypographyPrimitiveTokenDoc = () => {
             ...LetterSpacingData,
             ...LineHeightData,
         ].flatMap(({ value, cssVariable }) => {
-            return [[cssVariable, value]];
+            return [[escapePipes(cssVariable), escapePipes(value)]];
         }),
     ]);
 };

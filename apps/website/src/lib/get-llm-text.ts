@@ -12,15 +12,29 @@ import { replaceIconDoc } from '~/utils/get-icon-doc';
 const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
 export async function getLLMText(page: InferPageType<typeof source>) {
-    const processed = await processor.process({
-        path: page.data._file.absolutePath,
-        value: replaceComponentDoc(replaceFoundationDoc(replaceIconDoc(page.data.content ?? ''))),
-    });
+    try {
+        const content = replaceComponentDoc(
+            replaceFoundationDoc(replaceIconDoc(page.data.content ?? '')),
+        );
 
-    return `# ${page.data.title}
+        const processed = await processor.process({
+            path: page.data._file.absolutePath,
+            value: content,
+        });
+
+        return `# ${page.data.title}
 URL: ${page.url}
 
 ${page.data.description}
 
 ${processed.value}`;
+    } catch (error) {
+        console.error(`Error processing page ${page.url}:`, error);
+        return `# ${page.data.title}
+URL: ${page.url}
+
+${page.data.description}
+
+> ⚠️ Error processing content: ${(error as Error).message}`;
+    }
 }

@@ -35,11 +35,14 @@ const getIconTableByCategory = (category: 'basic' | 'outline') => {
         return `> No ${category} icons found`;
     }
 
+    const escapePipes = (value: string | number | null | undefined) =>
+        String(value ?? '').replace(/\|/g, '\\|');
+
     return markdownTable([
         ['Icon Name', 'Import Statement'],
         ...iconNames.map((iconName) => [
-            `\`${iconName}\``,
-            `\`import { ${iconName} } from '@vapor-ui/icons'\``,
+            `\`${escapePipes(iconName)}\``,
+            `\`import { ${escapePipes(iconName)} } from '@vapor-ui/icons'\``,
         ]),
     ]);
 };
