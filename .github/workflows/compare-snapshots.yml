@@ -1,4 +1,4 @@
-name: '[CI] 시각적 회귀 테스트'
+name: 'Visual Regression Tests'
 
 'on':
     workflow_dispatch:

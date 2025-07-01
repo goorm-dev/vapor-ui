@@ -55,7 +55,7 @@
         "vite": "^6.1.0"
     },
     "engines": {
-        "node": "18.x"
+        "node": ">=20.x"
     },
     "packageManager": "pnpm@10.5.0"
 }

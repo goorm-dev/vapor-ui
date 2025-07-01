@@ -1,14 +1,35 @@
-import { ThemeProvider, VaporThemeConfig } from '../packages/core/src/components/theme-provider';
+import { useEffect } from 'react';
+
 import type { Preview } from '@storybook/react';
 
-const themeConfig: VaporThemeConfig = {
-    defaultTheme: {
-        colorTheme: 'light',
-        radiusTheme: 'md',
-        scaleFactor: 1,
-    },
-    storageKey: 'vapor-ui',
-    enableSystemTheme: false,
+import {
+    type Appearance,
+    type Radius,
+    type Scaling,
+    ThemeProvider,
+    type VaporThemeConfig,
+    useTheme,
+} from '../packages/core/src/components/theme-provider';
+
+const ThemeUpdater = ({
+    children,
+    themeConfig,
+}: {
+    children: React.ReactNode;
+    themeConfig: VaporThemeConfig;
+}) => {
+    const { setTheme } = useTheme();
+    const { appearance, radius, scaling } = themeConfig;
+
+    useEffect(() => {
+        setTheme({
+            appearance,
+            radius,
+            scaling,
+        });
+    }, [appearance, radius, scaling, setTheme]);
+
+    return <>{children}</>;
 };
 
 const preview: Preview = {
@@ -23,9 +44,10 @@ const preview: Preview = {
         },
     },
     globalTypes: {
-        colorTheme: {
-            name: 'Color Theme',
-            description: 'Set the overall color theme for components.',
+        appearance: {
+            name: 'Appearance Theme',
+            description: `Set the component's light/dark theme.`,
+            defaultValue: 'light',
             toolbar: {
                 title: 'Color',
                 icon: 'circlehollow',
@@ -33,9 +55,10 @@ const preview: Preview = {
                 dynamicTitle: true,
             },
         },
-        radiusTheme: {
+        radius: {
             name: 'Radius Theme',
             description: 'Set the overall border-radius for components.',
+            defaultValue: 'md',
             toolbar: {
                 title: 'Radius',
                 icon: 'star',
@@ -43,9 +66,10 @@ const preview: Preview = {
                 dynamicTitle: true,
             },
         },
-        scaleFactor: {
-            name: 'Scale Factor',
-            description: 'Adjust the overall scale of components.',
+        scaling: {
+            name: 'Scale Theme',
+            description: 'Adjust the overall scale of components',
+            defaultValue: '1.0',
             toolbar: {
                 title: 'Scale',
                 icon: 'zoom',
@@ -62,6 +86,8 @@ const preview: Preview = {
                     '1.6',
                     '1.7',
                     '1.8',
+                    '1.9',
+                    '2.0',
                 ],
                 dynamicTitle: true,
             },
@@ -70,20 +96,21 @@ const preview: Preview = {
 
     decorators: [
         (Story, context) => {
-            const { colorTheme, radiusTheme, scaleFactor } = context.globals;
-            const theme = { colorTheme, radiusTheme, scaleFactor };
-
-            const dynamicTheme = {
-                ...themeConfig,
-                defaultTheme: {
-                    ...themeConfig.defaultTheme,
-                    ...theme,
-                },
+            const themeConfig: VaporThemeConfig = {
+                storageKey: 'storybook-vapor-theme',
             };
 
             return (
-                <ThemeProvider config={dynamicTheme}>
-                    <Story />
+                <ThemeProvider config={themeConfig}>
+                    <ThemeUpdater
+                        themeConfig={{
+                            appearance: context.globals.appearance as Appearance,
+                            radius: context.globals.radius as Radius,
+                            scaling: parseFloat(context.globals.scaling) as Scaling,
+                        }}
+                    >
+                        <Story />
+                    </ThemeUpdater>
                 </ThemeProvider>
             );
         },
