@@ -7,11 +7,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
     const { slug } = await params;
     const page = source.getPage(slug.slice(0, -1));
     if (!page) notFound();
-
     return generateOGImage({
         title: page.data.title,
         description: page.data.description,
-        site: `${page.data.title} - Vapor Core`,
+        site: `${page.data.title} - Vapor UI`,
     });
 }
 

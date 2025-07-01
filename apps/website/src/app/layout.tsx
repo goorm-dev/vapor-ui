@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 
-import './global.css';
 import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { Inter } from 'next/font/google';
 
 import DefaultSearchDialog from '~/components/search/search';
+
+import './global.css';
 
 const inter = Inter({
     subsets: ['latin'],

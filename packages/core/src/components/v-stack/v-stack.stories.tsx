@@ -22,7 +22,21 @@ export default {
     },
 };
 
-export const VStackDefault: StoryObj<typeof VStack> = {
+export const Default: StoryObj<typeof VStack> = {
+    render: (args) => {
+        return (
+            <VStack {...args}>
+                <Box size={90}>1</Box>
+                <Box size={80}>2</Box>
+                <Box size={70}>3</Box>
+                <Box size={60}>4</Box>
+                <Box size={50}>5</Box>
+            </VStack>
+        );
+    },
+};
+
+export const TestBed: StoryObj<typeof VStack> = {
     render: (args) => {
         return (
             <VStack {...args}>
