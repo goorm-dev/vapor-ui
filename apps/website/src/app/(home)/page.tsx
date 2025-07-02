@@ -15,22 +15,8 @@ export default function HomePage() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     useEffect(() => {
-        setTheme({
-            appearance: 'dark',
-        });
+        setTheme({ appearance: 'dark' });
     }, [setTheme]);
-
-    useEffect(() => {
-        const down = (e: KeyboardEvent) => {
-            if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-                e.preventDefault();
-                setIsSearchOpen(true);
-            }
-        };
-
-        document.addEventListener('keydown', down);
-        return () => document.removeEventListener('keydown', down);
-    }, []);
 
     return (
         <main
@@ -39,6 +25,7 @@ export default function HomePage() {
             )}
         >
             <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
+
             <Image
                 className="select-none absolute top-0 left-0 w-full h-full object-cover opacity-50 mix-blend-soft-light pointer-events-none"
                 src="https://statics.goorm.io/gds/docs/main/vapor-index-banner.png" // TODO: 이미지 s3에 올려서 사용할 것
@@ -125,16 +112,23 @@ export default function HomePage() {
                                 </Text>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Badge color="hint" size="md" shape="square">
-                                    ⌘
+                                <Badge
+                                    asChild
+                                    color="hint"
+                                    size="md"
+                                    shape="square"
+                                    className="text-lg"
+                                >
+                                    <kbd>⌘</kbd>
                                 </Badge>
                                 <Badge
+                                    asChild
                                     color="hint"
                                     size="md"
                                     shape="square"
                                     className="h-[24px] w-[24px]"
                                 >
-                                    K
+                                    <kbd>K</kbd>
                                 </Badge>
                             </div>
                         </div>
