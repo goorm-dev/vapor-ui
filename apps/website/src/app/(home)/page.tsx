@@ -136,7 +136,7 @@ export default function HomePage() {
                 </div>
 
                 <Button size="lg" color="secondary" className={'w-full md:w-auto'} asChild>
-                    <Link href="/docs">
+                    <Link href="/docs/overview">
                         Docs 보러 가기
                         <ForwardPageOutlineIcon
                             width="24"
