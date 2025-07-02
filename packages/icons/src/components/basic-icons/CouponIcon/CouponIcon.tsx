@@ -1,4 +1,4 @@
-import IconBase, { type IconType } from '../../icon-base';
+import IconBase, { type IconType } from '~/components/icon-base';
 
 const CouponIcon: IconType = (props) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
