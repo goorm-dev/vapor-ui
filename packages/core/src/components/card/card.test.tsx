@@ -1,15 +1,16 @@
-import type { CardProps } from './card';
-import { Card } from './card';
 import { cleanup, render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
-const CardTest = (props: CardProps) => {
+import type { CardRootProps } from './card';
+import { Card } from './card';
+
+const CardTest = (props: CardRootProps) => {
     return (
-        <Card {...props}>
+        <Card.Root {...props}>
             <Card.Header>Card Header</Card.Header>
             <Card.Body>Card Body</Card.Body>
             <Card.Footer>Card Footer</Card.Footer>
-        </Card>
+        </Card.Root>
     );
 };
 

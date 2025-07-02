@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 
-import styles from './icon-list-item.module.scss';
 import { Badge, Text } from '@vapor-ui/core';
 import type { IconType } from '@vapor-ui/icons';
 import { CheckCircleIcon, CopyIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
+
+import styles from './icon-list-item.module.scss';
 
 export const getIconImportStatement = (iconName: string): string => {
     // 파일 경로와 확장자를 지정합니다.

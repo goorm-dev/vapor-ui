@@ -1,27 +1,33 @@
-import { Card } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
+
+import { Card } from '.';
 
 export default {
     title: 'Card',
-    component: Card,
-} as Meta<typeof Card>;
+    component: Card.Root,
+    subcomponents: {
+        Header: Card.Header,
+        Body: Card.Body,
+        Footer: Card.Footer,
+    },
+} as Meta<typeof Card.Root>;
 
 export const Default: StoryObj<typeof Card> = {
     render: () => (
-        <Card>
+        <Card.Root>
             <Card.Header>Header</Card.Header>
             <Card.Body>Body</Card.Body>
             <Card.Footer>Footer</Card.Footer>
-        </Card>
+        </Card.Root>
     ),
 };
 
 export const TestBed: StoryObj<typeof Card> = {
     render: () => (
-        <Card>
+        <Card.Root>
             <Card.Header>Header</Card.Header>
             <Card.Body>Body</Card.Body>
             <Card.Footer>Footer</Card.Footer>
-        </Card>
+        </Card.Root>
     ),
 };

@@ -1,12 +1,13 @@
 import { type CSSProperties, type ComponentPropsWithoutRef, forwardRef } from 'react';
 
-import * as styles from './grid.css';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
+
+import * as styles from './grid.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Grid
@@ -20,18 +21,18 @@ type GridVariants = MergeRecipeVariants<typeof styles.root> & {
     flow?: CSSProperties['gridAutoFlow'];
 };
 
-interface GridProps extends GridPrimitiveProps, GridVariants {}
+interface GridRootProps extends GridPrimitiveProps, GridVariants {}
 
-const Root = forwardRef<HTMLDivElement, GridProps>(
+const Root = forwardRef<HTMLDivElement, GridRootProps>(
     ({ className, style, children, ...props }, ref) => {
-        const [gridProps, otherProps] = createSplitProps<GridVariants>()(props, [
+        const [gridRootProps, otherProps] = createSplitProps<GridVariants>()(props, [
             'inline',
             'templateRows',
             'templateColumns',
             'flow',
         ]);
 
-        const { inline, templateRows, templateColumns, ...variants } = gridProps;
+        const { inline, templateRows, templateColumns, ...variants } = gridRootProps;
 
         const cssVariables = assignInlineVars({
             [styles.gridTemplateRows]: templateRows,
@@ -83,5 +84,9 @@ const Item = forwardRef<HTMLDivElement, GridItemProps>(
 );
 Item.displayName = 'Grid.Item';
 
-export const Grid = Object.assign(Root, { Item });
-export type { GridProps, GridItemProps };
+/* -----------------------------------------------------------------------------------------------*/
+
+export { Root as GridRoot, Item as GridItem };
+export type { GridRootProps, GridItemProps };
+
+export const Grid = { Root, Item };

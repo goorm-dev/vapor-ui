@@ -31,11 +31,11 @@ type NavVariants = MergeRecipeVariants<
 >;
 
 type NavPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
-interface NavProps extends NavPrimitiveProps, NavVariants {
+interface NavRootProps extends NavPrimitiveProps, NavVariants {
     'aria-label': string;
 }
 
-const Root = forwardRef<HTMLElement, NavProps>(({ 'aria-label': ariaLabel, ...props }, ref) => {
+const Root = forwardRef<HTMLElement, NavRootProps>(({ 'aria-label': ariaLabel, ...props }, ref) => {
     const [variantProps, otherProps] = createSplitProps<NavVariants>()(props, [
         'direction',
         'size',
@@ -141,5 +141,13 @@ LinkItem.displayName = 'Nav.LinkItem';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const Nav = Object.assign(Root, { List, Item, Link, LinkItem });
-export type { NavProps, NavMenuList, NavItemProps, NavLinkProps, NavLinkItemProps };
+export {
+    Root as NavRoot,
+    List as NavList,
+    Item as NavItem,
+    Link as NavLink,
+    LinkItem as NavLinkItem,
+};
+export type { NavRootProps, NavMenuList, NavItemProps, NavLinkProps, NavLinkItemProps };
+
+export const Nav = { Root, List, Item, Link, LinkItem };

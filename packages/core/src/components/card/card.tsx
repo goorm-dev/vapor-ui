@@ -1,18 +1,19 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import * as styles from './card.css';
 import clsx from 'clsx';
 
 import { vapor } from '~/libs/factory';
+
+import * as styles from './card.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardRootProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
 
-const Root = forwardRef<HTMLDivElement, CardProps>(({ className, children, ...props }, ref) => {
+const Root = forwardRef<HTMLDivElement, CardRootProps>(({ className, children, ...props }, ref) => {
     return (
         <vapor.div ref={ref} className={clsx(styles.root, className)} {...props}>
             {children}
@@ -72,5 +73,7 @@ Footer.displayName = 'Card.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const Card = Object.assign(Root, { Header, Body, Footer });
-export type { CardProps, CardHeaderProps, CardBodyProps, CardFooterProps };
+export { Root as CardRoot, Header as CardHeader, Body as CardBody, Footer as CardFooter };
+export type { CardRootProps, CardHeaderProps, CardBodyProps, CardFooterProps };
+
+export const Card = { Root, Header, Body, Footer };

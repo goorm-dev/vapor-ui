@@ -16,10 +16,6 @@ const DEFAULT_THEME: ThemeState = {
     scaling: 1,
 };
 
-/* -------------------------------------------------------------------------------------------------
- * Theme Configuration Types & Helper
- * -----------------------------------------------------------------------------------------------*/
-
 /**
  * Unified configuration interface for ThemeProvider and ThemeScript
  */
@@ -102,7 +98,7 @@ function validateThemeConfig(config: unknown): config is VaporThemeConfig {
 }
 
 /* -------------------------------------------------------------------------------------------------
- * ThemeContext & ThemeProvider
+ * ThemeProvider
  * -----------------------------------------------------------------------------------------------*/
 
 interface ThemeContextValue extends ThemeState {
@@ -209,6 +205,7 @@ const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
 /* -------------------------------------------------------------------------------------------------
  * ThemeScript
  * -----------------------------------------------------------------------------------------------*/
+
 interface ThemeScriptProps {
     config?: VaporThemeConfig;
 }
@@ -243,9 +240,7 @@ const ThemeScript = memo(({ config }: ThemeScriptProps) => {
 
 ThemeScript.displayName = 'ThemeScript';
 
-/* -------------------------------------------------------------------------------------------------
- * useTheme Hook
- * -----------------------------------------------------------------------------------------------*/
+/* -----------------------------------------------------------------------------------------------*/
 
 const useTheme = (): ThemeContextValue => {
     const context = useContext(ThemeContext);
@@ -255,21 +250,7 @@ const useTheme = (): ThemeContextValue => {
     return context;
 };
 
-export {
-    // Components
-    ThemeProvider,
-    ThemeScript,
+/* -----------------------------------------------------------------------------------------------*/
 
-    // Hook
-    useTheme,
-
-    // Config Helper
-    createThemeConfig,
-
-    // Types
-    type VaporThemeConfig,
-    type ThemeState,
-    type Appearance,
-    type Radius,
-    type Scaling,
-};
+export { ThemeProvider, ThemeScript, useTheme, createThemeConfig };
+export type { VaporThemeConfig, ThemeState, Appearance, Radius, Scaling };

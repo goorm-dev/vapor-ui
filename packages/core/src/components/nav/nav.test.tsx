@@ -2,18 +2,18 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { NavLinkProps, NavProps } from './nav';
+import type { NavLinkProps, NavRootProps } from './nav';
 import { Nav } from './nav';
 
-const NavTest = (props: NavProps) => {
+const NavTest = (props: NavRootProps) => {
     return (
-        <Nav {...props}>
+        <Nav.Root {...props}>
             <Nav.List>
                 <Nav.Item>
                     <Nav.Link href="#">Home</Nav.Link>
                 </Nav.Item>
             </Nav.List>
-        </Nav>
+        </Nav.Root>
     );
 };
 
@@ -33,7 +33,7 @@ describe('Nav.Link', () => {
 
     const NAV_LINK = 'nav-link';
     const NavLinkTest = (linkProps: NavLinkProps) => (
-        <Nav aria-label="Main">
+        <Nav.Root aria-label="Main">
             <Nav.List>
                 <Nav.Item>
                     <Nav.Link data-testid={NAV_LINK} href="#" {...linkProps}>
@@ -41,7 +41,7 @@ describe('Nav.Link', () => {
                     </Nav.Link>
                 </Nav.Item>
             </Nav.List>
-        </Nav>
+        </Nav.Root>
     );
 
     it('should render with aria-current="page" when given selected', () => {

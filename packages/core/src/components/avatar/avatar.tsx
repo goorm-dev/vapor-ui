@@ -1,7 +1,6 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import * as styles from './avatar.css';
 import {
     Root as RadixAvatar,
     Fallback as RadixFallback,
@@ -15,29 +14,10 @@ import type { MergeRecipeVariants } from '~/libs/recipe';
 import { vars } from '~/styles/contract.css';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import * as styles from './avatar.css';
+
 type AvatarVariants = MergeRecipeVariants<typeof styles.root | typeof styles.fallback>;
-type AvatarSharedProps = AvatarVariants & {
-    /**
-     * The alternative text for the image. This is required for accessibility.
-     */
-    alt: string;
-    /**
-     * The image source.
-     */
-    src?: string;
-    /**
-     * Delay in milliseconds before showing the fallback component.
-     */
-    delayMs?: number;
-    /**
-     * Accessible label for screen readers that describes the avatar subject.
-     */
-    label?: string;
-    /**
-     * Custom fallback node to render when the image is not available.
-     */
-    fallback?: ReactNode;
-};
+type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delayMs?: number };
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     name: 'AvatarContext',
@@ -48,32 +28,30 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 /* -----------------------------------------------------------------------------------------------*/
 
 type AvatarRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixAvatar>;
-interface AvatarProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
+interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
 
-const Root = forwardRef<HTMLSpanElement, AvatarProps>(({ className, ...props }, ref) => {
+const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
         'src',
         'alt',
         'size',
         'shape',
         'delayMs',
-        'label',
-        'fallback',
     ]);
 
-    const { shape, size, label } = variantProps;
+    const { shape, size } = variantProps;
 
     return (
         <AvatarProvider value={variantProps}>
             <RadixAvatar
                 ref={ref}
                 className={clsx(styles.root({ shape, size }), className)}
-                aria-label={label}
                 {...otherProps}
             />
         </AvatarProvider>
     );
 });
+Root.displayName = 'Avatar.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Image
@@ -95,6 +73,7 @@ const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...pr
         />
     );
 });
+Image.displayName = 'Avatar.Image';
 
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Fallback
@@ -104,8 +83,8 @@ type AvatarFallbackPrimitiveProps = ComponentPropsWithoutRef<typeof RadixFallbac
 interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
 
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
-    ({ className, style, ...props }, ref) => {
-        const { size, alt, delayMs, fallback } = useAvatarContext();
+    ({ className, style, children, ...props }, ref) => {
+        const { size, alt, delayMs } = useAvatarContext();
         const background = getRandomColor(alt);
 
         return (
@@ -119,17 +98,20 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
                 className={clsx(styles.fallback({ size }), className)}
                 {...props}
             >
-                {fallback ?? getAvatarInitials(alt)}
+                {children ?? getAvatarInitials(alt)}
             </RadixFallback>
         );
     },
 );
+Fallback.displayName = 'Avatar.Fallback';
 
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Simple
  * -----------------------------------------------------------------------------------------------*/
 
-const Simple = forwardRef<HTMLSpanElement, AvatarProps>((props, ref) => {
+interface AvatarSimpleProps extends AvatarRootProps {}
+
+const Simple = forwardRef<HTMLSpanElement, AvatarSimpleProps>((props, ref) => {
     return (
         <Root ref={ref} {...props}>
             <Fallback />
@@ -137,9 +119,7 @@ const Simple = forwardRef<HTMLSpanElement, AvatarProps>((props, ref) => {
         </Root>
     );
 });
-
-export const Avatar = Object.assign(Root, { Image, Fallback, Simple });
-export type { AvatarProps };
+Simple.displayName = 'Avatar.Simple';
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -150,18 +130,7 @@ const getAvatarInitials = (name = 'vapor') => {
 
 /**
  * Linear Congruential Generator (LCG)
- * - Recurrence relation: Xn+1 = (a * Xn + c) % m
- * - Reference: https://ko.wikipedia.org/wiki/%EC%84%A0%ED%98%95_%ED%95%A9%EB%8F%99_%EC%83%9D%EC%84%B1%EA%B8%B0
- *
- * The Linear Congruential Generator returns a unique value with the following parameters:
- * - 0 < m (modulus)
- * - 0 < a (multiplier) < m
- * - 0 <= c (increment) < m
- * - 0 <= X0 (seed) < m
- *
- * @param value Alternative text to randomize
- * @param m Number of colors to select through randomization
- * @returns Randomized value of the alternative text (0 <= number < m)
+ * @link https://ko.wikipedia.org/wiki/%EC%84%A0%ED%98%95_%ED%95%A9%EB%8F%99_%EC%83%9D%EC%84%B1%EA%B8%B0
  */
 const stringAsciiPRNG = (value: string, m: number) => {
     const charCodes = value.split('').map((letter) => letter.charCodeAt(0));
@@ -208,3 +177,15 @@ const getRandomColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
 
     return colors[stringAsciiPRNG(value, colors.length)];
 };
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export {
+    Root as AvatarRoot,
+    Image as AvatarImage,
+    Fallback as AvatarFallback,
+    Simple as AvatarSimple,
+};
+export type { AvatarRootProps, AvatarImageProps, AvatarFallbackProps, AvatarSimpleProps };
+
+export const Avatar = { Root, Image, Fallback, Simple };

@@ -3,7 +3,6 @@
 import type { ElementRef, ReactNode } from 'react';
 import { createContext, forwardRef, useContext } from 'react';
 
-import styles from './tabs.module.scss';
 import type {
     TabsListProps as RadixListProps,
     TabsProps as RadixTabsProps,
@@ -18,6 +17,8 @@ import {
 } from '@radix-ui/react-tabs';
 import { Text } from '@vapor-ui/core';
 import clsx from 'clsx';
+
+import styles from './tabs.module.scss';
 
 export type TabsSize = 'sm' | 'md' | 'lg' | 'xl';
 

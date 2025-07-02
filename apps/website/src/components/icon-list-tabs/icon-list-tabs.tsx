@@ -2,12 +2,13 @@
 
 import React from 'react';
 
-import { ICON_LIST, VAPOR_ICONS } from './icon-list-tabs.constants';
-import styles from './icon-list-tabs.module.scss';
 import clsx from 'clsx';
 
 import IconListItem from '~/components/icon-list-item';
 import Tabs from '~/components/ui/tabs';
+
+import { ICON_LIST, VAPOR_ICONS } from './icon-list-tabs.constants';
+import styles from './icon-list-tabs.module.scss';
 
 const IconList = () => {
     return (

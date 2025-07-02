@@ -1,10 +1,11 @@
 'use client';
 
-import styles from './component-card.module.scss';
 import { Badge, Card, Text } from '@vapor-ui/core';
 import cn from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import styles from './component-card.module.scss';
 
 type ComponentCardType = {
     imageUrl: string;
@@ -56,17 +57,17 @@ const ComponentsCard = (props: ComponentCardType) => {
 
     if (href) {
         return (
-            <Card className={cn(styles.card, styles.link)}>
+            <Card.Root className={cn(styles.card, styles.link)}>
                 <Link href={href}>
                     <CardWrapper {...props} />
                 </Link>
-            </Card>
+            </Card.Root>
         );
     }
     return (
-        <Card className={styles.card}>
+        <Card.Root className={styles.card}>
             <CardWrapper {...props} />
-        </Card>
+        </Card.Root>
     );
 };
 
