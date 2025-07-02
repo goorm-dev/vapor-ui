@@ -22,7 +22,7 @@ function ColorBox({ color, value }: ColorBoxProps) {
                 }}
             />
             <div className={styles.descriptions}>
-                <Text typography="subtitle1" color="text-hint">
+                <Text typography="subtitle1" foreground="hint">
                     {value.toUpperCase()}
                 </Text>
                 <Text
