@@ -1,10 +1,6 @@
 import type { FunctionComponent, SVGProps } from 'react';
 import React from 'react';
 
-import clsx from 'clsx';
-
-import * as style from './icon-base.css';
-
 export interface IconBaseProps extends SVGProps<SVGSVGElement> {
     width?: number | string;
     height?: number | string;
@@ -32,17 +28,17 @@ const isCssVariable = (value?: Size) => typeof value === 'string' && value.start
  * @returns icon component
  */
 function IconBase({
-    children,
+    color = 'currentColor',
     width = 'var(--vapor-size-dimension-200, 1rem)',
     height = 'var(--vapor-size-dimension-200, 1rem)',
     size,
-    className,
-    style: customStyle,
-    color = 'currentColor',
+    style,
+    children,
     ...props
 }: IconBaseProps) {
     const widthValue = size || width;
     const heightValue = size || height;
+
     return (
         <svg
             aria-hidden="true"
@@ -52,18 +48,22 @@ function IconBase({
             */
             {...(!isCssVariable(widthValue) && { width: widthValue })}
             {...(!isCssVariable(heightValue) && { height: heightValue })}
-            className={clsx(
-                {
-                    [style.container_width]: isCssVariable(widthValue),
-                    [style.container_height]: isCssVariable(heightValue),
-                },
-                className,
-            )}
+            // className={clsx(
+            //     {
+            //         [style.container_width]: isCssVariable(widthValue),
+            //         [style.container_height]: isCssVariable(heightValue),
+            //     },
+            //     className,
+            // )}
             style={
                 {
                     '--vapor-icon-width': widthValue,
                     '--vapor-icon-height': heightValue,
-                    ...customStyle,
+
+                    width: 'var(--vapor-icon-width)',
+                    height: 'var(--vapor-icon-height)',
+
+                    ...style,
                 } as React.CSSProperties
             }
             {...props}

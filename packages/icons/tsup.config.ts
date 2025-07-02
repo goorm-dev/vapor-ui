@@ -35,13 +35,6 @@ export default [
                 },
             }),
         ],
-        esbuildOptions(options, context) {
-            if (context.format === 'esm') {
-                options.banner = { js: 'import "./index.css";' };
-            } else {
-                options.banner = { js: 'require("./index.css");' };
-            }
-        },
     }),
 
     // TYPES
