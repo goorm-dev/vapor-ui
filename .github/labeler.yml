@@ -1,2 +1,2 @@
-dependencies:
+release:
     - head-branch: ['^changeset-release/release-test$']
