@@ -52,11 +52,7 @@ export const navLinks = [
     },
     {
         text: 'Docs',
-        url: '/docs',
+        url: '/docs/overview',
         active: 'nested-url',
-    },
-    {
-        text: 'Playground',
-        url: '/playground',
     },
 ] as LinkItemType[];

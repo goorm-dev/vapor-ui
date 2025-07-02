@@ -1,6 +1,10 @@
 import type { FunctionComponent, SVGProps } from 'react';
 import React from 'react';
 
+import clsx from 'clsx';
+
+import * as style from './icon-base.css';
+
 export interface IconBaseProps extends SVGProps<SVGSVGElement> {
     width?: number | string;
     height?: number | string;
