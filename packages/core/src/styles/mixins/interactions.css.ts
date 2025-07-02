@@ -43,7 +43,7 @@ export const interaction = recipe({
 
     variants: {
         scale: {
-            normal: layerStyle('component', { vars: { [ratio]: '0.08' } }),
+            normal: {},
             light: layerStyle('component', { vars: { [ratio]: '0.04' } }),
         },
 
