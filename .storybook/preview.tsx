@@ -2,13 +2,12 @@ import { useEffect } from 'react';
 
 import type { Preview } from '@storybook/react';
 
-import {
-    type Appearance,
-    type Radius,
-    type Scaling,
-    ThemeProvider,
-    type VaporThemeConfig,
-    useTheme,
+import { ThemeProvider, useTheme } from '../packages/core/src/components/theme-provider';
+import type {
+    Appearance,
+    Radius,
+    Scaling,
+    VaporThemeConfig,
 } from '../packages/core/src/components/theme-provider';
 
 const ThemeUpdater = ({

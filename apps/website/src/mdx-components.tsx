@@ -7,6 +7,7 @@ import Image from 'next/image';
 import AccessibilityTable from '~/components/accessibility-table';
 import AllComponentsContainer from '~/components/all-components-container';
 import ComponentsCard from '~/components/component-card/component-card';
+import { Demo } from '~/components/demo/demo';
 import FoundationCard from '~/components/foundation-card/foundation-card';
 import FoundationColorTabs from '~/components/foundation-color-tabs';
 import FoundationList from '~/components/foundation-list/foundation-list';
@@ -29,6 +30,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         ),
         CodeBlock,
         ...TabsComponents,
+        Demo,
 
         InstallSelector,
         AllComponentsContainer,
