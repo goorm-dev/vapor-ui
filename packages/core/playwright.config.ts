@@ -28,7 +28,7 @@ export default defineConfig({
     workers: 1,
 
     webServer: {
-        command: 'cd ../../ && pnpm build-storybook && pnpm storybook --port 9999',
+        command: 'cd ../../ && pnpm storybook --port 9999',
         url: BASE_URL,
         reuseExistingServer: false,
     },
