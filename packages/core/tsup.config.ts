@@ -19,7 +19,6 @@ export default [
     defineConfig({
         entry: ['src/index.ts'],
         format: ['esm', 'cjs'],
-        // Final build output is transpiled to ES6 for legacy browser compatibility
         target: 'es6',
         outDir: 'dist',
         sourcemap: true,
@@ -46,12 +45,8 @@ export default [
     defineConfig({
         entry: ['src/index.ts'],
         format: ['esm', 'cjs'],
-        dts: {
-            only: true,
-        },
+        clean: true,
+        dts: { only: true },
         outDir: 'dist',
-        esbuildOptions(options) {
-            options.outbase = './';
-        },
     }),
 ];

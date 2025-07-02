@@ -3,7 +3,7 @@ import React from 'react';
 
 import clsx from 'clsx';
 
-import * as style from './icon-base.css';
+import * as styles from './icon-base.css';
 
 export interface IconBaseProps extends SVGProps<SVGSVGElement> {
     width?: number | string;
@@ -32,17 +32,18 @@ const isCssVariable = (value?: Size) => typeof value === 'string' && value.start
  * @returns icon component
  */
 function IconBase({
-    children,
+    color = 'currentColor',
     width = 'var(--vapor-size-dimension-200, 1rem)',
     height = 'var(--vapor-size-dimension-200, 1rem)',
     size,
+    style,
     className,
-    style: customStyle,
-    color = 'currentColor',
+    children,
     ...props
 }: IconBaseProps) {
     const widthValue = size || width;
     const heightValue = size || height;
+
     return (
         <svg
             aria-hidden="true"
@@ -54,8 +55,8 @@ function IconBase({
             {...(!isCssVariable(heightValue) && { height: heightValue })}
             className={clsx(
                 {
-                    [style.container_width]: isCssVariable(widthValue),
-                    [style.container_height]: isCssVariable(heightValue),
+                    [styles.container_width]: isCssVariable(widthValue),
+                    [styles.container_height]: isCssVariable(heightValue),
                 },
                 className,
             )}
@@ -63,7 +64,11 @@ function IconBase({
                 {
                     '--vapor-icon-width': widthValue,
                     '--vapor-icon-height': heightValue,
-                    ...customStyle,
+
+                    width: 'var(--vapor-icon-width)',
+                    height: 'var(--vapor-icon-height)',
+
+                    ...style,
                 } as React.CSSProperties
             }
             {...props}
