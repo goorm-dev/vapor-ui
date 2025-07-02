@@ -104,7 +104,7 @@
                             "itemKey": "label",
                             "descriptions": [
                                 "텍스트 입력에는 명확하고 설명적인 가시적 레이블이 있어야 합니다.",
-                                "<label> 요소를 사용하여 텍스트 입력에 접근 가능한 이름을 제공해야 합니다",
+                                "<label /> 요소를 사용하여 텍스트 입력에 접근 가능한 이름을 제공해야 합니다",
                                 "추가 지침은 aria-describedby를 사용하여 프로그래밍 방식으로 입력과 연결해야 합니다",
                                 "플레이스홀더 텍스트는 레이블을 대체할 수 없습니다. 플레이스홀더 텍스트는 입력에 값이 입력되면 사라지고, 색상 대비가 낮아 접근성 요구사항을 충족하지 못할 수 있습니다"
                             ],
@@ -114,7 +114,7 @@
                         {
                             "itemKey": "id",
                             "descriptions": ["TextInput에 고유한 id 속성을 부여합니다."],
-                            "exampleCode": "<TextInput id = \"textInput\">\n    <TextInput.Label htmlFor = \"textInput\">Label</TextInput.Label>\n    <TextInput.Field />\n</TextInput>",
+                            "exampleCode": "<TextInput id=\"textInput\">\n    <TextInput.Label htmlFor=\"textInput\">Label</TextInput.Label>\n    <TextInput.Field />\n</TextInput>",
                             "badgeColor": "primary"
                         },
                         {
@@ -122,7 +122,7 @@
                             "descriptions": [
                                 "연관된 레이블 요소에 htmlFor 속성을 사용하여 TextInput의 id 를 참조"
                             ],
-                            "exampleCode": "<TextInput id = \"textInput\">\n    <TextInput.Label htmlFor = \"textInput\">Label</TextInput.Label>\n    <TextInput.Field />\n</TextInput>",
+                            "exampleCode": "<TextInput id=\"textInput\">\n    <TextInput.Label htmlFor=\"textInput\">Label</TextInput.Label>\n    <TextInput.Field />\n</TextInput>",
                             "badgeColor": "primary"
                         }
                     ]

@@ -7,7 +7,7 @@ import { sortByNumericKey } from '../utils/object';
 
 export const BorderRadiusData = Object.keys(borderRadiusData['border-radius'])
     .map((key) => ({
-        name: `border-radius-${key}`,
+        name: `--vapor-size-borderRadius-${key}`,
         value: borderRadiusData['border-radius'][
             key as keyof (typeof borderRadiusData)['border-radius']
         ],
@@ -16,14 +16,14 @@ export const BorderRadiusData = Object.keys(borderRadiusData['border-radius'])
 
 export const SpaceData = Object.keys(spaceData['space'])
     .map((key) => ({
-        name: `space-${key}`,
+        name: `--vapor-size-space-${key}`,
         value: spaceData['space'][key as keyof (typeof spaceData)['space']],
     }))
     .sort(sortByNumericKey);
 
 export const DimensionData = Object.keys(dimensionData['dimension'])
     .map((key) => ({
-        name: `dimension-${key}`,
+        name: `--vapor-size-dimension-${key}`,
         value: dimensionData['dimension'][key as keyof (typeof dimensionData)['dimension']],
     }))
     .sort(sortByNumericKey);

@@ -39,14 +39,14 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         FoundationCard,
         FoundationList,
         IconList,
-        IntroPackageListCollapsible,
-        Image,
         PropsTable,
         LiveCodeBlock,
         AccessibilityTable: AccessibilityTable as unknown as (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             props: any,
         ) => JSX.Element,
+        IntroPackageListCollapsible,
+        Image,
         ...components,
     } as MDXComponents;
 };

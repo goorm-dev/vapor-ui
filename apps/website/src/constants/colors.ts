@@ -1,61 +1,53 @@
 import basicColorData from '../../public/tokens/color/basic-color.json';
 import semanticColorData from '../../public/tokens/color/semantic-color.json';
 
+// 타입 정의
+export type BasicColor = string | Record<string, string>;
+export type BasicColorDataType = Record<string, BasicColor>;
+
+export type SemanticColorValue = {
+    value: string;
+    basicToken: string;
+};
+export type SemanticColorGroup = Record<string, SemanticColorValue>;
+export type SemanticColorDataType = Record<string, SemanticColorGroup>;
+
 // JSON 데이터를 기반으로 한 새로운 상수들
 
-const prefix = '--vapor-color';
-
-export const BasicColorData = Object.keys(basicColorData).map((key) => {
-    const colorValue = basicColorData[key as keyof typeof basicColorData];
-    const isBaseColor = key === 'black' || key === 'white';
+export const BasicColorData = Object.keys(basicColorData as BasicColorDataType).map((key) => {
+    const colorValue = (basicColorData as BasicColorDataType)[key];
 
     return {
-        title: isBaseColor ? 'base' : key,
-        colorShade: isBaseColor
-            ? [
-                  {
-                      name: `${prefix}-${key}`,
-                      value: colorValue as string,
-                  },
-              ]
-            : Object.keys(colorValue).map((shade) => ({
-                  name: `${prefix}-${key}-${shade}`,
-                  value: colorValue[shade as keyof typeof colorValue],
-              })),
+        title: key,
+        colorShade:
+            typeof colorValue === 'object'
+                ? Object.keys(colorValue).map((shade) => ({
+                      name: `--vapor-color-${key}-${shade}`,
+                      value: (colorValue as Record<string, string>)[shade],
+                  }))
+                : [
+                      {
+                          name: `--vapor-color-${key}`,
+                          value: colorValue as string,
+                      },
+                  ],
     };
 });
 
-type SemanticDataType = typeof semanticColorData;
-type CategoryType = keyof SemanticDataType;
-export interface FormattedColorGroup {
-    title: CategoryType;
-    colorShade: {
-        name: string;
-        value: string;
-        basicToken: string;
-    }[];
-}
+export const SemanticColorData = Object.keys(semanticColorData as SemanticColorDataType).map(
+    (key) => {
+        const colorValue = (semanticColorData as SemanticColorDataType)[key];
 
-export const SemanticColorData: FormattedColorGroup[] = (
-    Object.keys(semanticColorData) as CategoryType[]
-).map((category) => {
-    const innerColorObject = semanticColorData[category];
-    type InnerColorName = keyof typeof innerColorObject;
-
-    const colorShade = (Object.keys(innerColorObject) as InnerColorName[]).map((name) => {
-        const colorInfo = innerColorObject[name];
         return {
-            name: `${prefix}-${category}-${String(name)}`,
-            value: colorInfo.value,
-            basicToken: colorInfo.basicToken,
+            title: key,
+            colorShade: Object.keys(colorValue).map((shade) => ({
+                name: `--vapor-color-${key}-${shade}`,
+                value: colorValue[shade].value,
+                basicToken: colorValue[shade].basicToken,
+            })),
         };
-    });
-
-    return {
-        title: category,
-        colorShade: colorShade,
-    };
-});
+    },
+);
 
 // JSON 데이터 자체도 export
 export { basicColorData, semanticColorData };

@@ -11,38 +11,43 @@ import {
 } from '~/constants/typography';
 
 export const getColorPrimitiveTokenDoc = () => {
+    const escapePipes = (value: string | number | null | undefined) =>
+        String(value ?? '').replace(/\|/g, '\\|');
+
     return markdownTable([
-        ['token', 'value', 'Example'],
+        ['token', 'value'],
         ...[...BasicColorData, ...SemanticColorData].flatMap(({ colorShade }) => {
-            return colorShade.map((shade) => [
-                `${shade.name}`,
-                `${shade.value}`,
-                `<Box color="${shade.name}" bg="${shade.value}" />`,
-            ]);
+            return colorShade.map((shade) => [escapePipes(shade.name), escapePipes(shade.value)]);
         }),
     ]);
 };
 
 export const getSizePrimitiveTokenDoc = () => {
+    const escapePipes = (value: string | number | null | undefined) =>
+        String(value ?? '').replace(/\|/g, '\\|');
+
     return markdownTable([
-        ['token', 'value', 'Example'],
+        ['token', 'value'],
         ...[...BorderRadiusData, ...SpaceData, ...DimensionData].flatMap(({ name, value }) => {
-            return [[name, value, `<Box size="${value}"/>`]];
+            return [[escapePipes(name), escapePipes(value)]];
         }),
     ]);
 };
 
 export const getTypographyPrimitiveTokenDoc = () => {
+    const escapePipes = (value: string | number | null | undefined) =>
+        String(value ?? '').replace(/\|/g, '\\|');
+
     return markdownTable([
-        ['token', 'value', 'Example'],
+        ['token', 'value'],
         ...[
             ...FontFamilyData,
             ...FontSizeData,
             ...FontWeightData,
             ...LetterSpacingData,
             ...LineHeightData,
-        ].flatMap(({ name, value, cssVariable }) => {
-            return [[cssVariable, value, `<Text typography="${name}"/>`]];
+        ].flatMap(({ value, cssVariable }) => {
+            return [[escapePipes(cssVariable), escapePipes(value)]];
         }),
     ]);
 };
