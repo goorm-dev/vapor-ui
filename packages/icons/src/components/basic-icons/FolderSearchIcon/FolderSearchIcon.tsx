@@ -1,4 +1,4 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconType } from '../../icon-base';
 
 const FolderSearchIcon: IconType = (props) => (
     <IconBase

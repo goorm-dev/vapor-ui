@@ -1,4 +1,4 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconType } from '../../icon-base';
 
 const CorrectOutlineIcon: IconType = (props) => (
     <IconBase width="17" viewBox="0 0 17 16" xmlns="http://www.w3.org/2000/svg" {...props}>
