@@ -1,0 +1,41 @@
+---
+title: 'Avatar'
+site_name: 'Avatar - Vapor Core'
+description: 'Avatar는 사용자가 설정한 프로필 이미지 혹은 텍스트를 UI상에 나타냅니다.'
+---
+
+## Import
+
+```js
+import { Alert } from '@vapor-ui/core';
+```
+
+## Preview
+
+<LiveCodeBlock
+    code={`<Avatar label="Goorm" size="md" square={false}>
+    <Avatar.Image src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg" />
+</Avatar>`}
+/>
+
+## Props
+
+### Avatar.Root
+
+<PropsTable file="avatar" section="props" />
+
+### Avatar.Image
+
+<PropsTable file="avatar" section="imageProps" />
+
+### Avatar.Fallback
+
+<PropsTable file="avatar" section="fallbackProps" />
+
+### Avatar.Simple
+
+<PropsTable file="avatar" section="simpleProps" />
+
+## Accessibility Table
+
+<AccessibilityTable file="avatar" />

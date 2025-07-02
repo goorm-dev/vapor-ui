@@ -20,7 +20,7 @@
 저희 프로젝트는 다음의 개발 환경을 사용합니다:
 
 - **Package Manager**: `pnpm` v10+
-- **Node.js**: v18+
+- **Node.js**: v20+
 - **Linting & Formatting**: ESLint, Prettier
 
 먼저 프로젝트를 Fork 및 Clone 한 후, 아래 명령어로 의존성을 설치하고 개발 서버를 실행하세요.
@@ -37,7 +37,7 @@ pnpm install
 pnpm storybook
 ```
 
-이제 `http://localhost:6006`에서 실행 중인 Storybook을 통해 컴포넌트 개발을 시작할 수 있습니다.
+이제 `http://localhost:9009`에서 실행 중인 Storybook을 통해 컴포넌트 개발을 시작할 수 있습니다.
 
 ## Git & 버전 관리
 
@@ -61,7 +61,7 @@ git checkout main
 git pull upstream main
 
 # 새 기능 브랜치 생성
-git checkout -b feature/button-loading-state
+git checkout -b create-button-loading-state
 ```
 
 ### 2. 커밋 메시지 (Conventional Commits)

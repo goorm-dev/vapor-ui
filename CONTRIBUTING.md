@@ -20,7 +20,7 @@ There are many ways to contribute to Vapor UI:
 Our project uses the following development environment:
 
 - **Package Manager**: `pnpm` v10+
-- **Node.js**: v18+
+- **Node.js**: v20+
 - **Linting & Formatting**: ESLint, Prettier
 
 First, fork and clone the project, then install the dependencies and run the development server with the commands below:
@@ -37,7 +37,7 @@ pnpm install
 pnpm storybook
 ```
 
-Now you can start developing components by viewing the Storybook at `http://localhost:6006`.
+Now you can start developing components by viewing the Storybook at `http://localhost:9009`.
 
 ## Git & Version Management
 
@@ -61,7 +61,7 @@ git checkout main
 git pull upstream main
 
 # Create a new feature branch
-git checkout -b feature/button-loading-state
+git checkout -b create-button-loading-state
 ```
 
 ### 2. Commit Messages (Conventional Commits)

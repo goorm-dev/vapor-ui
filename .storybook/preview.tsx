@@ -1,17 +1,35 @@
-import {
-    ThemeProvider,
-    VaporThemeConfig,
-} from '../packages/vapor-core/src/components/theme-provider';
+import { useEffect } from 'react';
+
 import type { Preview } from '@storybook/react';
 
-const themeConfig: VaporThemeConfig = {
-    defaultTheme: {
-        colorTheme: 'dark',
-        radiusTheme: 'full',
-        scaleFactor: 1.5,
-    },
-    storageKey: 'my-vapor-theme',
-    enableSystemTheme: false,
+import {
+    type Appearance,
+    type Radius,
+    type Scaling,
+    ThemeProvider,
+    type VaporThemeConfig,
+    useTheme,
+} from '../packages/core/src/components/theme-provider';
+
+const ThemeUpdater = ({
+    children,
+    themeConfig,
+}: {
+    children: React.ReactNode;
+    themeConfig: VaporThemeConfig;
+}) => {
+    const { setTheme } = useTheme();
+    const { appearance, radius, scaling } = themeConfig;
+
+    useEffect(() => {
+        setTheme({
+            appearance,
+            radius,
+            scaling,
+        });
+    }, [appearance, radius, scaling, setTheme]);
+
+    return <>{children}</>;
 };
 
 const preview: Preview = {
@@ -26,19 +44,21 @@ const preview: Preview = {
         },
     },
     globalTypes: {
-        colorTheme: {
-            name: 'Color Theme',
-            description: '컴포넌트의 전체 컬러 테마를 설정합니다.',
+        appearance: {
+            name: 'Appearance Theme',
+            description: `Set the component's light/dark theme.`,
+            defaultValue: 'light',
             toolbar: {
-                title: 'Color', // 툴바 메뉴의 제목
+                title: 'Color',
                 icon: 'circlehollow',
                 items: ['light', 'dark'],
-                dynamicTitle: true, // 선택된 값으로 제목이 동적으로 변경됩니다.
+                dynamicTitle: true,
             },
         },
-        radiusTheme: {
+        radius: {
             name: 'Radius Theme',
-            description: '컴포넌트의 전체 border-radius를 설정합니다.',
+            description: 'Set the overall border-radius for components.',
+            defaultValue: 'md',
             toolbar: {
                 title: 'Radius',
                 icon: 'star',
@@ -46,9 +66,10 @@ const preview: Preview = {
                 dynamicTitle: true,
             },
         },
-        scaleFactor: {
-            name: 'Scale Factor',
-            description: '컴포넌트의 전체 스케일을 조절합니다.',
+        scaling: {
+            name: 'Scale Theme',
+            description: 'Adjust the overall scale of components',
+            defaultValue: '1.0',
             toolbar: {
                 title: 'Scale',
                 icon: 'zoom',
@@ -65,25 +86,31 @@ const preview: Preview = {
                     '1.6',
                     '1.7',
                     '1.8',
+                    '1.9',
+                    '2.0',
                 ],
                 dynamicTitle: true,
             },
         },
     },
-    initialGlobals: {
-        colorTheme: 'light',
-        radiusTheme: 'md',
-        scaleFactor: 2.4,
-    },
 
     decorators: [
         (Story, context) => {
-            const { colorTheme, radiusTheme, scaleFactor } = context.globals;
-            const theme = { colorTheme, radiusTheme, scaleFactor };
+            const themeConfig: VaporThemeConfig = {
+                storageKey: 'storybook-vapor-theme',
+            };
 
             return (
                 <ThemeProvider config={themeConfig}>
-                    <Story />
+                    <ThemeUpdater
+                        themeConfig={{
+                            appearance: context.globals.appearance as Appearance,
+                            radius: context.globals.radius as Radius,
+                            scaling: parseFloat(context.globals.scaling) as Scaling,
+                        }}
+                    >
+                        <Story />
+                    </ThemeUpdater>
                 </ThemeProvider>
             );
         },
