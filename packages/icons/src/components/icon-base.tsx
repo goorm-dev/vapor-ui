@@ -3,7 +3,7 @@ import React from 'react';
 
 import clsx from 'clsx';
 
-import * as style from './icon-base.css';
+import * as styles from './icon-base.css';
 
 export interface IconBaseProps extends SVGProps<SVGSVGElement> {
     width?: number | string;
@@ -37,6 +37,7 @@ function IconBase({
     height = 'var(--vapor-size-dimension-200, 1rem)',
     size,
     style,
+    className,
     children,
     ...props
 }: IconBaseProps) {
@@ -52,13 +53,13 @@ function IconBase({
             */
             {...(!isCssVariable(widthValue) && { width: widthValue })}
             {...(!isCssVariable(heightValue) && { height: heightValue })}
-            // className={clsx(
-            //     {
-            //         [style.container_width]: isCssVariable(widthValue),
-            //         [style.container_height]: isCssVariable(heightValue),
-            //     },
-            //     className,
-            // )}
+            className={clsx(
+                {
+                    [styles.container_width]: isCssVariable(widthValue),
+                    [styles.container_height]: isCssVariable(heightValue),
+                },
+                className,
+            )}
             style={
                 {
                     '--vapor-icon-width': widthValue,
