@@ -12,7 +12,7 @@ export const getIconImportStatement = (iconName: string): string => {
     // 파일 경로와 확장자를 지정합니다.
 
     // import 문을 생성하여 문자열로 반환합니다.
-    return `import { ${iconName} } from '@goorm-dev/vapor-icons';`;
+    return `import { ${iconName} } from '@vapor-ui/icons';`;
 };
 
 export const copyToClipboard = async (text: string) => {
