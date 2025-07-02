@@ -55,9 +55,9 @@ export const SiteNavBar = () => {
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-            <header className="flex w-full py-3 px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
+            <header className="flex w-full py-3 px-4 md:px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
                 <div className="flex items-center gap-10 relative w-full">
-                    <Nav
+                    <Nav.Root
                         aria-label="nav"
                         size="lg"
                         shape="ghost"
@@ -120,7 +120,7 @@ export const SiteNavBar = () => {
                                     })}
                             </ul>
                         </div>
-                    </Nav>
+                    </Nav.Root>
                 </div>
                 <Dialog.Trigger asChild>
                     <IconButton
