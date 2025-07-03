@@ -28,7 +28,7 @@ const IntroLinkCard = ({
                             <Text typography="heading4" foreground="normal">
                                 {title}
                             </Text>
-                            <Text typography="body1" foreground="normal">
+                            <Text typography="body1" foreground="normal" className="min-h-12">
                                 {description}
                             </Text>
                         </div>
