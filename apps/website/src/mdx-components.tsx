@@ -13,9 +13,10 @@ import FoundationSizeTabs from '~/components/foundation-size-tabs';
 import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
 import IconList from '~/components/icon-list-tabs/icon-list-tabs';
 import InstallSelector from '~/components/install-selector/install-selector';
-import IntroPackageListCollapsible from '~/components/intro-package-list-collapsible';
 import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
+
+import IntroLinkCardContainer from './components/intro-link-card-container';
 
 export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
     return {
@@ -43,8 +44,8 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             props: any,
         ) => JSX.Element,
-        IntroPackageListCollapsible,
         Image,
+        IntroLinkCardContainer,
         ...components,
     } as MDXComponents;
 };
