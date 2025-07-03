@@ -10,7 +10,7 @@ const LINK_LIST = [
         title: 'Getting Started',
         description:
             '디자인 시스템을 프로젝트에 빠르게 도입할 수 있는 설치 가이드와 기본 개념을 제공합니다.',
-        link: '/docs/getting-started',
+        link: '/docs/getting-started/overview',
     },
     {
         icon: <TokensIcon />,
@@ -29,7 +29,7 @@ const LINK_LIST = [
         icon: <ComponentsIcon />,
         title: 'Components',
         description: '디자인 시스템에서 제공하는 UI 컴포넌트와 사용 가이드를 확인할 수 있습니다.',
-        link: '/docs/components',
+        link: '/docs/getting-started/overview#components',
     },
 ];
 
