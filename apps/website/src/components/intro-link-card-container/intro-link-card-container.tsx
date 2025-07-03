@@ -33,7 +33,7 @@ const LINK_LIST = [
     },
 ];
 
-const AllComponentsContainer = () => {
+const IntroLinkCardContainer = () => {
     return (
         <div className="not-prose grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-[var(--vapor-size-space-400)] w-full">
             {LINK_LIST.map((link) => (
@@ -49,4 +49,4 @@ const AllComponentsContainer = () => {
     );
 };
 
-export default AllComponentsContainer;
+export default IntroLinkCardContainer;
