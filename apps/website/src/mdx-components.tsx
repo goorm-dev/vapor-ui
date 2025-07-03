@@ -18,6 +18,8 @@ import InstallSelector from '~/components/install-selector/install-selector';
 import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
 
+import IntroLinkCardContainer from './components/all-components-container';
+
 export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
     return {
         ...defaultMdxComponents,
@@ -47,6 +49,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
             props: any,
         ) => JSX.Element,
         Image,
+        IntroLinkCardContainer,
         ...components,
     } as MDXComponents;
 };
