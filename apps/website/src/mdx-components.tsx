@@ -18,7 +18,7 @@ import InstallSelector from '~/components/install-selector/install-selector';
 import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
 
-import IntroLinkCardContainer from './components/all-components-container';
+import IntroLinkCardContainer from './components/intro-link-card-container';
 
 export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
     return {
