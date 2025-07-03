@@ -17,8 +17,13 @@ import * as styles from './checkbox.css';
 type CheckboxVariants = MergeRecipeVariants<
     typeof styles.root | typeof styles.control | typeof styles.label
 >;
-type CheckboxSharedProps = CheckboxVariants &
-    Pick<RadixRootProps, 'checked' | 'onCheckedChange' | 'defaultChecked'>;
+
+type CheckboxSharedProps = CheckboxVariants & {
+    checked?: boolean;
+    onCheckedChange?: (checked: boolean) => void;
+    defaultChecked?: boolean;
+    indeterminate?: boolean;
+};
 
 type CheckboxContext = CheckboxSharedProps & {
     checkboxId?: string;
@@ -45,6 +50,7 @@ const Root = forwardRef<HTMLDivElement, CheckboxRootProps>(({ className, ...prop
         'checked',
         'onCheckedChange',
         'defaultChecked',
+        'indeterminate',
         'size',
         'invalid',
         'disabled',
@@ -88,25 +94,37 @@ const Label = forwardRef<HTMLLabelElement, CheckboxLabelProps>(
 );
 
 /* -------------------------------------------------------------------------------------------------
- * Checkbox.Indicator
+ * Checkbox.Control
  * -----------------------------------------------------------------------------------------------*/
 
-type RadixRootProps = ComponentPropsWithoutRef<typeof RadixRoot>;
-interface CheckboxIndicatorProps
-    extends Omit<RadixRootProps, keyof CheckboxSharedProps>,
+type ControlPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
+interface CheckboxControlProps
+    extends Omit<ControlPrimitiveProps, keyof CheckboxSharedProps>,
         Sprinkles {
     forceMount?: true;
 }
 
-const Indicator = forwardRef<HTMLButtonElement, CheckboxIndicatorProps>(
+const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
     ({ id, forceMount, className, ...props }, ref) => {
-        const { checkboxId, checked, onCheckedChange, defaultChecked, invalid, disabled, size } =
-            useCheckboxContext();
+        const {
+            checkboxId,
+            checked,
+            onCheckedChange,
+            defaultChecked,
+            indeterminate,
+            invalid,
+            disabled,
+            size,
+        } = useCheckboxContext();
 
-        const [checkedState, setCheckedState] = useControllableState({
-            prop: checked,
-            defaultProp: defaultChecked || false,
-            onChange: onCheckedChange,
+        const [checkedState, setCheckedState] = useControllableState<CheckedState>({
+            prop: indeterminate ? 'indeterminate' : checked,
+            defaultProp: indeterminate ? 'indeterminate' : defaultChecked || false,
+            onChange: (state) => {
+                if (state === 'indeterminate') return;
+
+                onCheckedChange?.(state);
+            },
         });
 
         const [layoutProps, otherProps] = splitLayoutProps(props);
@@ -132,7 +150,7 @@ const Indicator = forwardRef<HTMLButtonElement, CheckboxIndicatorProps>(
         );
     },
 );
-Indicator.displayName = 'Checkbox.Indicator';
+Control.displayName = 'Checkbox.Contrl';
 
 /* -------------------------------------------------------------------------------------------------
  * Icons
@@ -161,7 +179,7 @@ const DashIcon = (props: IconProps) => {
     );
 };
 
-export { Root as CheckboxRoot, Label as CheckboxLabel, Indicator as CheckboxIndicator };
-export type { CheckedState, CheckboxRootProps, CheckboxLabelProps, CheckboxIndicatorProps };
+export { Root as CheckboxRoot, Label as CheckboxLabel, Control as CheckboxControl };
+export type { CheckedState, CheckboxRootProps, CheckboxLabelProps, CheckboxControlProps };
 
-export const Checkbox = { Root, Label, Indicator };
+export const Checkbox = { Root, Label, Control };
