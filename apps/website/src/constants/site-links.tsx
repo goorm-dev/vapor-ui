@@ -23,9 +23,4 @@ export const navLinks = [
         label: 'Vapor Github',
         type: 'icon',
     },
-    {
-        text: 'Docs',
-        url: '/docs/overview',
-        active: 'nested-url',
-    },
 ] as LinkItemType[];
