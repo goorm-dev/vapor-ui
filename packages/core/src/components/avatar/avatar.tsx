@@ -189,3 +189,5 @@ export {
 export type { AvatarRootProps, AvatarImageProps, AvatarFallbackProps, AvatarSimpleProps };
 
 export const Avatar = { Root, Image, Fallback, Simple };
+
+// just test
