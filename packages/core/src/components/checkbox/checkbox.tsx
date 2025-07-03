@@ -150,7 +150,7 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
         );
     },
 );
-Control.displayName = 'Checkbox.Contrl';
+Control.displayName = 'Checkbox.Control';
 
 /* -------------------------------------------------------------------------------------------------
  * Icons
