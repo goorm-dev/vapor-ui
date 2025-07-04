@@ -157,18 +157,16 @@ export default function HomePage() {
                     </Button>
                 </div>
             </section>
-            <section className="min-h-screen bg-muted/20">
-                <div className="flex py-[60px] px-[var(--vapor-size-spacing-200)] flex-col items-center gap-[var(--vapor-size-spacing-500)] self-stretch">
-                    <header className="flex justify-between items-center mb-8">
-                        <h2 className="text-4xl font-bold">Component Playground</h2>
-                        <ThemeToggle />
-                    </header>
-                    <main className="space-y-8">
-                        <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center">
-                            <ChromeWindow className="w-full max-w-4xl" />
-                        </div>
-                    </main>
-                </div>
+            <section className="min-h-screen bg-muted/20 flex py-[60px] px-[var(--vapor-size-space-200)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch">
+                <header className="flex justify-between items-center ">
+                    <h2 className="text-4xl font-bold">Component Playground</h2>
+                    <ThemeToggle />
+                </header>
+                <main className="w-full">
+                    <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center">
+                        <ChromeWindow className="w-full" />
+                    </div>
+                </main>
             </section>
         </main>
     );
