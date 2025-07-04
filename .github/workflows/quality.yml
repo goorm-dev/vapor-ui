@@ -139,16 +139,13 @@ jobs:
                   # Generate table report using the renderer script
                   node "$GITHUB_WORKSPACE/scripts/type-check-renderer.js" "$GITHUB_WORKSPACE/type-check-reports" > "$GITHUB_WORKSPACE/combined-report.txt"
 
-                  echo "report<<EOF" >> $GITHUB_OUTPUT
-                  cat "$GITHUB_WORKSPACE/combined-report.txt" >> $GITHUB_OUTPUT
-                  echo "EOF" >> $GITHUB_OUTPUT
-
             - name: Comment PR
               uses: actions/github-script@v7
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   script: |
-                      const report = `${{ steps.type-check.outputs.report }}`;
+                      const fs = require('fs');
+                      const report = fs.readFileSync('${{ github.workspace }}/combined-report.txt', 'utf-8');
 
                       // Find existing type check comment
                       const comments = await github.rest.issues.listComments({
