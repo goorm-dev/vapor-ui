@@ -98,7 +98,7 @@
 .tab {
     position: relative;
 
-    color: var(--text-alternative, #525463);
+    color: var(--vapor-color-foreground-hint-darker, #525463);
     background-color: transparent;
     border: none;
 
@@ -114,20 +114,20 @@
         box-shadow 0.12s ease;
 
     &_sm {
-        height: var(--dimension-300, 1.5rem);
+        height: var(--vapor-size-dimension-300, 1.5rem);
 
         &[data-state='active'] > span {
-            letter-spacing: var(--letter-spacing-s2, 0);
+            letter-spacing: var(--vapor-size-letterSpacing-000, 0);
         }
     }
     &_md {
-        height: var(--dimension-400, 2rem);
+        height: var(--vapor-size-dimension-400, 2rem);
     }
     &_lg {
-        height: var(--dimension-500, 2.5rem);
+        height: var(--vapor-size-dimension-500, 2.5rem);
     }
     &_xl {
-        height: var(--dimension-600, 3rem);
+        height: var(--vapor-size-dimension-600, 3rem);
     }
 
     &_stretch {
@@ -136,14 +136,14 @@
 
     &:disabled {
         opacity: 0.32;
-        color: var(--text-alternative, rgba(82, 84, 99, 1));
+        color: var(--vapor-color-foreground-hint-darker, rgba(82, 84, 99, 1));
         pointer-events: none;
     }
 
     & > span::before {
         display: block;
         content: attr(title);
-        font-weight: var(--font-weight-500);
+        font-weight: var(--vapor-size-fontWeight-500);
         height: 0;
         overflow: hidden;
         visibility: hidden;
@@ -151,7 +151,7 @@
 
     &[data-state='active'] {
         & > span {
-            font-weight: var(--font-weight-500);
+            font-weight: var(--vapor-size-fontWeight-500);
         }
     }
 
@@ -165,10 +165,10 @@
         &:hover,
         &:focus-visible,
         &[data-state='active'] {
-            color: var(--text-primary, #1d6ce0);
+            color: var(--vapor-color-foreground-primary, #1d6ce0);
 
             &::after {
-                @include horizontal-effect(var(--primary, #448efe));
+                @include horizontal-effect(var(--vapor-color-foreground-primary, #448efe));
             }
         }
     }
@@ -184,10 +184,10 @@
         &:hover,
         &:focus-visible,
         &[data-state='active'] {
-            color: var(--text-primary, #1d6ce0);
+            color: var(--vapor-color-foreground-primary, #1d6ce0);
 
             &::after {
-                @include vertical-effect(var(--primary, #448efe));
+                @include vertical-effect(var(--vapor-color-foreground-primary, #448efe));
             }
         }
     }
