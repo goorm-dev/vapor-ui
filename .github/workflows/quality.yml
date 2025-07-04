@@ -116,17 +116,11 @@ jobs:
                         # Create tarball for the package
                         cd "$pkg_dir"
                         
-                        # Build the package if dist directory doesn't exist
-                        if [ ! -d "dist" ]; then
-                          echo "Building $pkg_name..."
-                          pnpm build
-                        fi
-                        
                         npm pack
                         tgz_file=$(ls | grep .tgz)
                         
                         # Run type check using the tarball
-                        npx --yes @arethetypeswrong/cli --format=auto --exclude-entrypoints styles.css --pack "$pkg_dir/$tgz_file" > "$GITHUB_WORKSPACE/type-check-reports/type-check-${pkg_name//\//-}.txt" || {
+                        npx --yes @arethetypeswrong/cli --format=auto --format json --exclude-entrypoints styles.css --pack "$pkg_dir/$tgz_file" > "$GITHUB_WORKSPACE/type-check-reports/type-check-${pkg_name//\//-}.json" || {
                           echo "Type check for $pkg_name"
                           continue
                         }
@@ -136,30 +130,16 @@ jobs:
                     fi
                   done
 
-                  # Combine all reports
-                  echo "## 📊 Type Check Reports" > "$GITHUB_WORKSPACE/combined-report.txt"
-                  echo '\`\`\`' >> "$GITHUB_WORKSPACE/combined-report.txt"
-                  for report in "$GITHUB_WORKSPACE/type-check-reports/type-check-"*.txt; do
-                    if [ -f "$report" ]; then
-                      pkg_name=${report##*/type-check-}
-                      pkg_name=${pkg_name%.txt}
-                      pkg_name=${pkg_name//-/\/}
-                      echo -e "\n Package: $pkg_name\n" >> "$GITHUB_WORKSPACE/combined-report.txt"
-                      cat "$report" >> "$GITHUB_WORKSPACE/combined-report.txt"
-                    fi
-                  done
-                  echo '\`\`\`' >> "$GITHUB_WORKSPACE/combined-report.txt"
-
-                  echo "report<<EOF" >> $GITHUB_OUTPUT
-                  cat "$GITHUB_WORKSPACE/combined-report.txt" >> $GITHUB_OUTPUT
-                  echo "EOF" >> $GITHUB_OUTPUT
+                  # Generate table report using the renderer script
+                  node "$GITHUB_WORKSPACE/scripts/type-check-renderer.js" "$GITHUB_WORKSPACE/type-check-reports" > "$GITHUB_WORKSPACE/combined-report.txt"
 
             - name: Comment PR
               uses: actions/github-script@v7
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   script: |
-                      const report = `${{ steps.type-check.outputs.report }}`;
+                      const fs = require('fs');
+                      const report = fs.readFileSync('${{ github.workspace }}/combined-report.txt', 'utf-8');
 
                       // Find existing type check comment
                       const comments = await github.rest.issues.listComments({
