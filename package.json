@@ -14,6 +14,7 @@
         "lint": "turbo run lint",
         "clean": "turbo run clean && rimraf node_modules .turbo",
         "start": "turbo run start",
+        "test": "turbo run test",
         "storybook": "storybook dev -p 9009",
         "build-storybook": "storybook build",
         "format": "prettier --write \"**/*.{ts,tsx,md}\"",

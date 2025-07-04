@@ -10,6 +10,9 @@
         "lint": {
             "outputs": []
         },
+        "test": {
+            "outputs": []
+        },
         "website#start": {
             "dependsOn": ["website#build"],
             "outputs": [".next/**", "!.next/cache/**"]
