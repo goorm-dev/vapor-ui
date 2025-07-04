@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const resolutionKinds = ['node10', 'node16-cjs', 'node16-esm', 'bundler'];
+const RESOULUTIN_KINDS = ['node10', 'node16-cjs', 'node16-esm', 'bundler'];
 
 function getTypeCheckJsons(reportsDir) {
     if (!fs.existsSync(reportsDir)) return [];
@@ -22,7 +22,7 @@ function getTypeCheckJsons(reportsDir) {
 }
 
 function renderMarkdownTable(jsons) {
-    const headers = ['패키지명', ...resolutionKinds];
+    const headers = ['패키지명', ...RESOULUTIN_KINDS];
     const headerRow = `| ${headers.join(' | ')} |`;
     const separatorRow = `| ${headers.map(() => '---').join(' | ')} |`;
 
@@ -33,7 +33,7 @@ function renderMarkdownTable(jsons) {
         const resolutions = entrypoint.resolutions;
 
         const row = [pkgName];
-        for (const kind of resolutionKinds) {
+        for (const kind of RESOULUTIN_KINDS) {
             const res = resolutions[kind];
             if (!res) {
                 row.push('-');
