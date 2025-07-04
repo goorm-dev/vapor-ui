@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, Nav, Text } from '@vapor-ui/core';
@@ -49,13 +49,36 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
 
 export const SiteNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const header = document.querySelector('header');
+            const headerHeight = header?.offsetHeight || 60;
+            const headerHalfHeight = headerHeight / 2;
+            setIsScrolled(scrollTop > headerHalfHeight);
+        };
+
+        // 초기 스크롤 위치 체크
+        handleScroll();
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const navItems = navLinks.filter((item) => ['nav', 'all'].includes(item.on ?? 'all'));
     const menuItems = navLinks.filter((item) => ['menu', 'all'].includes(item.on ?? 'all'));
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-            <header className="flex w-full py-3 px-4 md:px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
+            <header
+                className={`flex w-full py-3 px-4 md:px-8 justify-between items-center fixed top-0 transition-all duration-300 ${
+                    isScrolled
+                        ? 'bg-[var(--vapor-color-background-normal)] shadow-lg backdrop-blur-sm z-1'
+                        : 'bg-transparent'
+                }`}
+            >
                 <div className="flex items-center gap-10 relative w-full">
                     <Nav.Root
                         aria-label="nav"
@@ -138,7 +161,7 @@ export const SiteNavBar = () => {
                 <Dialog.Overlay className="fixed inset-0 bg-black/40 md:hidden" />
 
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
+                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none z-1"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >

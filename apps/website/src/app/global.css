@@ -22,6 +22,8 @@
     --color-fd-popover: var(--vapor-color-background-normal);
     --color-fd-primary-foreground: var(--vapor-color-foreground-primary);
     --color-fd-foreground: var(--vapor-color-foreground-normal);
+
+    --fd-banner-height: 62px;
 }
 
 a[data-active='true'] {
