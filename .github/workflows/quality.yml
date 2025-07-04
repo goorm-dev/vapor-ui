@@ -116,12 +116,6 @@ jobs:
                         # Create tarball for the package
                         cd "$pkg_dir"
                         
-                        # Build the package if dist directory doesn't exist
-                        if [ ! -d "dist" ]; then
-                          echo "Building $pkg_name..."
-                          pnpm build
-                        fi
-                        
                         npm pack
                         tgz_file=$(ls | grep .tgz)
                         
