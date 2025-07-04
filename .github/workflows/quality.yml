@@ -126,7 +126,7 @@ jobs:
                         tgz_file=$(ls | grep .tgz)
                         
                         # Run type check using the tarball
-                        npx --yes @arethetypeswrong/cli --format=auto --format json --exclude-entrypointsstyles.css --pack "$pkg_dir/$tgz_file" > "$GITHUB_WORKSPACE/type-check-reports/type-check-${pkg_name//\//-}.json" || {
+                        npx --yes @arethetypeswrong/cli --format=auto --format json --exclude-entrypoints styles.css --pack "$pkg_dir/$tgz_file" > "$GITHUB_WORKSPACE/type-check-reports/type-check-${pkg_name//\//-}.json" || {
                           echo "Type check for $pkg_name"
                           continue
                         }
@@ -137,7 +137,7 @@ jobs:
                   done
 
                   # Generate table report using the renderer script
-                  node scripts/type-check-renderer.js "$GITHUB_WORKSPACE/type-check-reports" > "$GITHUB_WORKSPACE/combined-report.txt"
+                  node "$GITHUB_WORKSPACE/scripts/type-check-renderer.js" "$GITHUB_WORKSPACE/type-check-reports" > "$GITHUB_WORKSPACE/combined-report.txt"
 
                   echo "report<<EOF" >> $GITHUB_OUTPUT
                   cat "$GITHUB_WORKSPACE/combined-report.txt" >> $GITHUB_OUTPUT
