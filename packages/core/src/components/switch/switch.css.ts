@@ -66,7 +66,7 @@ export const indicator = recipe({
 
         transition: 'transform 0.1s',
         willChange: 'transform',
-        borderRadius: '100%', // TODO: shadow tokens?
+        borderRadius: '100%',
 
         boxShadow: '0px 4px 10px 0px rgba(0, 0, 0, 0.20)',
         backgroundColor: 'white',
