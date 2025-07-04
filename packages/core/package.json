@@ -50,7 +50,7 @@
         "url": "https://github.com/goorm-dev/vapor-ui/issues"
     },
     "scripts": {
-        "build": "rimraf dist && tsup && npx --yes @arethetypeswrong/cli --exclude-entrypoints styles.css --pack .",
+        "build": "rimraf dist && tsup",
         "lint": "eslint ./src",
         "clean": "rimraf dist node_modules .turbo",
         "test": "vitest",
