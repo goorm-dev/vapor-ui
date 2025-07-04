@@ -64,7 +64,7 @@ const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
             onMouseLeave={handleMouseLeave}
         >
             <span className={styles.iconContainer}>
-                <Icon size="40" color="var(--foreground-normal)" />
+                <Icon size="40" color="var(--vapor-color-foreground-normal)" />
             </span>
             <Text typography="body3" color="foreground-normal" className={styles.text}>
                 {iconName}
@@ -82,10 +82,13 @@ const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
                         {isCopied ? (
                             <CheckCircleIcon
                                 size="16"
-                                color="var(--foreground-success-on-transparent"
+                                color="var(--vapor-color-foreground-success-on-transparent"
                             />
                         ) : (
-                            <CopyIcon size="16" color="var(--foreground-hint-on-transparent" />
+                            <CopyIcon
+                                size="16"
+                                color="var(--vapor-color-foreground-hint-on-transparent"
+                            />
                         )}
                         <Text
                             color={
