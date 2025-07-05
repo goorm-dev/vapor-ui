@@ -18,7 +18,6 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    github-token: ${{ secrets.PACKAGE_TOKEN }}
     REPORT_PATH: ''
 
 jobs:
@@ -75,8 +74,14 @@ jobs:
                   aws s3 cp './report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
 
             - name: Post Test Result
+              id: playwright-summary
               uses: daun/playwright-report-summary@v3
               with:
-                  github-token: ${{ secrets.PACKAGE_TOKEN }}
                   report-file: ./report/index.json
                   report-url: http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html
+                  create-comment: false
+
+            - uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  message: ${{ steps.playwright-summary.outputs.summary }}
+                  GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
