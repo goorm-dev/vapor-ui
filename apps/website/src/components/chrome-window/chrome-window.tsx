@@ -1,5 +1,7 @@
 'use client';
 
+import React, { useState } from 'react';
+
 import { Button, Card, Text, TextInput } from '@vapor-ui/core';
 import { CloseOutlineIcon, PlusOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
@@ -15,6 +17,16 @@ interface ChromeWindowProps {
 }
 
 export function ChromeWindow({ className = '' }: ChromeWindowProps) {
+    // 가격 입력 상태 및 계산
+    const [count, setCount] = useState(100);
+    const pricePerItem = 20;
+    const totalPrice = count > 0 ? count * pricePerItem : 0;
+
+    const handleCountChange = (value: string) => {
+        const numeric = value.replace(/[^0-9]/g, '');
+        setCount(numeric === '' ? 0 : parseInt(numeric, 10));
+    };
+
     return (
         <div
             className={clsx(
@@ -67,8 +79,14 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                         <Card.Body>
                             <div className="flex items-center gap-2 flex-col">
                                 <div className="w-full">
-                                    <TextInput.Root placeholder="100" className="w-full" size="xl">
-                                        <TextInput.Field className="w-full" />
+                                    <TextInput.Root
+                                        placeholder="100"
+                                        className="w-full"
+                                        size="xl"
+                                        value={count === 0 ? '' : String(count)}
+                                        onValueChange={handleCountChange}
+                                    >
+                                        <TextInput.Field className="w-full" inputMode="numeric" />
                                     </TextInput.Root>
                                     <Button size="lg" color="secondary" stretch className="mt-2">
                                         <span className="flex items-center gap-[var(--vapor-size-space-100)]">
@@ -80,7 +98,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                                 typography="subtitle1"
                                                 foreground="secondary-darker"
                                             >
-                                                100개 추가
+                                                {count}개 추가
                                             </Text>
                                         </span>
                                     </Button>
@@ -92,7 +110,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                             최종 가격
                                         </Text>
                                         <Text typography="heading6" foreground="primary">
-                                            100,000원
+                                            {totalPrice.toLocaleString()}원
                                         </Text>
                                     </div>
                                     <div className="flex items-center gap-2 w-full justify-between">
