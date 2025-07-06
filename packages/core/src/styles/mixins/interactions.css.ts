@@ -19,7 +19,7 @@ export const interaction = recipe({
                 top: 0,
                 left: 0,
 
-                transition: `opacity 150ms cubic-bezier(.4,0,.2,1)`,
+                transition: `opacity 150ms ease`,
                 opacity: 0,
                 border: 'none',
                 borderRadius: 'inherit',
