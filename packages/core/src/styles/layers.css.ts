@@ -1,5 +1,4 @@
-import type { StyleRule } from '@vanilla-extract/css';
-import { globalLayer, style } from '@vanilla-extract/css';
+import { globalLayer } from '@vanilla-extract/css';
 
 /**
  * The order of the declaration means the priority of the layer.
@@ -21,21 +20,5 @@ const theme = globalLayer('vapor-theme');
 const reset = globalLayer('vapor-reset');
 const component = globalLayer('vapor-component');
 const utilities = globalLayer('vapor-utilities');
-
-const layerMap = { reset, theme, component, utilities };
-
-export const layerStyle = (
-    layer: 'theme' | 'reset' | 'component' | 'utilities',
-    rule: StyleRule,
-    debugId?: string,
-) =>
-    style(
-        {
-            '@layer': {
-                [layerMap[layer]]: rule,
-            },
-        },
-        debugId,
-    );
 
 export const layers = { theme, reset, component, utilities };
