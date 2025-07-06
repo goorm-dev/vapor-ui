@@ -190,8 +190,8 @@ jobs:
                         });
                       }
 
-    test:
-        name: Test
+    vitest:
+        name: Vitest
         runs-on: ubuntu-latest
         steps:
             - name: Checkout branch
