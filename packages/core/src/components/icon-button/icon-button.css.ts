@@ -7,6 +7,7 @@ export const root = recipe({
     base: layerStyle('component', {
         aspectRatio: '1 / 1',
         padding: 0,
+        verticalAlign: 'top',
     }),
 
     defaultVariants: { shape: 'square' },
