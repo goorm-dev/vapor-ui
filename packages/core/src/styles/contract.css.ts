@@ -1,6 +1,5 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
 
-import './global.css';
 import { layers } from './layers.css';
 import {
     BORDER_RADIUS,

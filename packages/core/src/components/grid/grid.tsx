@@ -1,3 +1,5 @@
+'use client';
+
 import { type CSSProperties, type ComponentPropsWithoutRef, forwardRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';

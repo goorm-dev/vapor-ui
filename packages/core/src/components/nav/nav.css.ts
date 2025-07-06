@@ -1,7 +1,7 @@
 import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
+import { layerStyle } from '~/styles/layer-style';
 import { interaction } from '~/styles/mixins/interactions.css';
 
 export const list = recipe({
