@@ -13,8 +13,9 @@ import { Avatar } from '@vapor-ui/core';
 ## Preview
 
 <LiveCodeBlock
-    code={`<Avatar.Root label="Goorm" size="md" square={false}>
-    <Avatar.Image src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg" />
+    code={`<Avatar.Root size="md"> 
+    <Avatar.Image src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"/>
+    <Avatar.Fallback>goorm</Avatar.Fallback>
 </Avatar.Root>`}
 />
 
