@@ -14,6 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <ThemeProvider
             config={{
                 appearance: 'dark',
+                storageKey: `theme-home`,
             }}
         >
             <HomeLayout
