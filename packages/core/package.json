@@ -15,21 +15,19 @@
     "type": "module",
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "types": "./dist/types/index.d.ts",
     "exports": {
         ".": {
-            "import": {
-                "types": "./dist/index.d.ts",
-                "default": "./dist/index.js"
-            },
-            "require": {
-                "types": "./dist/index.d.cts",
-                "default": "./dist/index.cjs"
-            }
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
         },
-        "./styles.css": {
-            "default": "./dist/index.css"
-        }
+        "./*": {
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/components/*/index.js",
+            "require": "./dist/components/*/index.cjs"
+        },
+        "./styles.css": "./dist/styles.css"
     },
     "files": [
         "dist"
@@ -50,7 +48,7 @@
         "url": "https://github.com/goorm-dev/vapor-ui/issues"
     },
     "scripts": {
-        "build": "rimraf dist && tsup && npx --yes @arethetypeswrong/cli --exclude-entrypoints styles.css --pack .",
+        "build": "rimraf dist && tsup",
         "lint": "eslint ./src",
         "clean": "rimraf dist node_modules .turbo",
         "test": "vitest",

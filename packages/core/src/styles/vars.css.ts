@@ -1,22 +1,35 @@
-import { createGlobalThemeContract, createGlobalVar } from '@vanilla-extract/css';
+import { createGlobalThemeContract } from '@vanilla-extract/css';
 
 import {
-    INITIAL_RADIUS_FACTOR,
-    INITIAL_SCALE_FACTOR,
-    RADIUS_FACTOR_VAR_NAME,
-    SCALE_FACTOR_VAR_NAME,
-    THEME_TOKENS,
-} from './constants';
+    BORDER_RADIUS,
+    DIMENSION,
+    FONT_FAMILY,
+    FONT_SIZE,
+    FONT_WEIGHT,
+    LETTER_SPACING,
+    LIGHT_BASIC_COLORS,
+    LIGHT_SEMANTIC_COLORS,
+    LINE_HEIGHT,
+    SPACE,
+} from './tokens';
+
+const THEME_TOKENS = {
+    color: {
+        ...LIGHT_BASIC_COLORS,
+        ...LIGHT_SEMANTIC_COLORS,
+    },
+    size: {
+        borderRadius: BORDER_RADIUS,
+        dimension: DIMENSION,
+        space: SPACE,
+    },
+    typography: {
+        fontSize: FONT_SIZE,
+        lineHeight: LINE_HEIGHT,
+        letterSpacing: LETTER_SPACING,
+        fontFamily: FONT_FAMILY,
+        fontWeight: FONT_WEIGHT,
+    },
+};
 
 export const vars = createGlobalThemeContract(THEME_TOKENS, (_, path) => `vapor-${path.join('-')}`);
-
-export const scaleFactorVar = createGlobalVar(SCALE_FACTOR_VAR_NAME, {
-    syntax: '<number>',
-    inherits: true,
-    initialValue: INITIAL_SCALE_FACTOR,
-});
-export const radiusFactorVar = createGlobalVar(RADIUS_FACTOR_VAR_NAME, {
-    syntax: '<number>',
-    inherits: true,
-    initialValue: INITIAL_RADIUS_FACTOR,
-});

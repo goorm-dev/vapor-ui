@@ -1,6 +1,6 @@
 import { calc } from '@vanilla-extract/css-utils';
 
-import { scaleFactorVar } from '~/styles/vars.css';
+import { scaleFactorVar } from '~/styles/global-var.css';
 
 export const DIMENSION = {
     '025': calc.multiply(scaleFactorVar, '2px'),
