@@ -97,7 +97,7 @@ export const indicator = layerStyle('component', {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    border: `0.0625rem solid ${vars.color.border.normal}`,
+    border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.background.normal,
     width: '50%',
