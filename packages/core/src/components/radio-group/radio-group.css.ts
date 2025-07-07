@@ -8,20 +8,17 @@ import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 export const root = recipe({
     base: layerStyle('component', {
         display: 'flex',
-        gap: vars.size.space['050'],
     }),
 
     defaultVariants: { orientation: 'vertical' },
     variants: {
+        size: {
+            md: layerStyle('component', { gap: vars.size.space['050'] }),
+            lg: layerStyle('component', { gap: vars.size.space['100'] }),
+        },
         orientation: {
-            horizontal: layerStyle('component', {
-                flexDirection: 'row',
-                gap: vars.size.space['100'],
-            }),
-            vertical: layerStyle('component', {
-                flexDirection: 'column',
-                gap: vars.size.space['050'],
-            }),
+            horizontal: layerStyle('component', { flexDirection: 'row' }),
+            vertical: layerStyle('component', { flexDirection: 'column' }),
         },
     },
 });

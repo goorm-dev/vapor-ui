@@ -58,13 +58,13 @@ const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...pr
         'visuallyHidden',
     ]);
 
-    const { orientation } = sharedProps;
+    const { size, orientation } = sharedProps;
 
     return (
         <RadioGroupProvider value={sharedProps}>
             <RadixRoot
                 ref={ref}
-                className={clsx(styles.root({ orientation }), className)}
+                className={clsx(styles.root({ size, orientation }), className)}
                 {...sharedProps}
                 {...otherProps}
             />
