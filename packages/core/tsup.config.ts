@@ -5,6 +5,8 @@ import { sync } from 'glob';
 import postcss from 'postcss';
 import { defineConfig } from 'tsup';
 
+const OUT_DIR = 'dist/components';
+
 /**
  * @link https://vanilla-extract.style/documentation/integrations/esbuild/#processcss
  */
@@ -18,22 +20,33 @@ async function processCss(css: string) {
 
 const injectSideEffectImports = async (format: 'esm' | 'cjs') => {
     const isEsm = format === 'esm';
-    const outDir = `dist/${format}`;
-    const files = sync(`${outDir}/*/index.js`);
+    const files = isEsm ? sync(`${OUT_DIR}/*/index.js`) : sync(`${OUT_DIR}/*/index.cjs`);
 
     for (const file of files) {
         try {
             let content = fs.readFileSync(file, 'utf-8');
+            const componentName = isEsm
+                ? file.split(`${OUT_DIR}/`)[1].split('/index.js')[0]
+                : file.split(`${OUT_DIR}/`)[1].split('/index.cjs')[0];
+            const componentSourceFile = fs.readFileSync(
+                `src/components/${componentName}/${componentName}.tsx`,
+                'utf-8',
+            );
             const cssImport = isEsm ? `import "./index.css";` : `require("./index.css");`;
-            const useClientDirective = '"use client";';
+            const useClientDirective = `'use client';`;
+            const useStrictDirective = `"use strict";`;
 
-            if (content.startsWith(useClientDirective)) {
+            if (content.includes(useStrictDirective)) {
                 content = content.replace(
-                    useClientDirective,
-                    `${useClientDirective}\n${cssImport}`,
+                    useStrictDirective,
+                    `${useStrictDirective}\n${cssImport}`,
                 );
             } else {
                 content = `${cssImport}\n${content}`;
+            }
+
+            if (componentSourceFile.includes(useClientDirective)) {
+                content = `${useClientDirective}\n${content}`;
             }
 
             fs.writeFileSync(file, content);
@@ -47,7 +60,7 @@ export default defineConfig([
     {
         entry: ['src/components/*/index.ts'],
         format: ['esm', 'cjs'],
-        outDir: 'dist/components',
+        outDir: OUT_DIR,
         target: 'es6',
         splitting: true,
         sourcemap: true,
@@ -70,7 +83,8 @@ export default defineConfig([
         async onSuccess() {
             console.log('✅ ESM build successful. Injecting CSS imports...');
             await injectSideEffectImports('esm');
-            console.log('🚀 CSS imports injected for ESM.');
+            await injectSideEffectImports('cjs');
+            console.log('🚀 CSS imports injected');
         },
     },
 
@@ -91,7 +105,7 @@ export default defineConfig([
 
     {
         entry: {
-            styles: 'src/styles/index.css.ts',
+            styles: 'src/styles/global.css.ts',
         },
         outDir: 'dist/styles',
         esbuildPlugins: [
