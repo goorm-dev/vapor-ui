@@ -104,7 +104,6 @@ export default defineConfig([
         format: 'esm',
         dts: {
             only: true,
-            resolve: true,
         },
         esbuildOptions(options) {
             options.outbase = './';

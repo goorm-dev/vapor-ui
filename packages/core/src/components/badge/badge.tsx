@@ -1,21 +1,19 @@
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import clsx from 'clsx';
 
-import { vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
+import { type VaporComponentProps, vapor } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import { type BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
-type BadgePrimitiveProps = Omit<ComponentPropsWithoutRef<typeof vapor.span>, 'color'>;
-type BadgeVariants = MergeRecipeVariants<typeof styles.root>;
+type BadgePrimitiveProps = Omit<VaporComponentProps<'span'>, 'color'>;
 
-interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
+type BadgeProps = BadgePrimitiveProps & BadgeVariants;
 
 const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ...props }, ref) => {
-    const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(props, [
+    const [variantsProps, otherProps] = createSplitProps<NonNullable<BadgeVariants>>()(props, [
         'color',
         'size',
         'shape',
