@@ -17,7 +17,7 @@ async function processCss(css: string) {
 export default [
     // ESM, CJS
     defineConfig({
-        entry: ['src/index.ts'],
+        entry: ['src/components/*/index.ts'],
         format: ['esm', 'cjs'],
         // Final build output is transpiled to ES6 for legacy browser compatibility
         target: 'es6',
