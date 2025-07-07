@@ -6,8 +6,8 @@
     flex-direction: column;
     align-items: center;
     gap: var(--vapor-size-space-100, 0.5rem);
-    border-radius: var(--vapor-size-border-radius-300, 0.5rem);
-    border: 1px solid var(--vapor-color-border-color, #e1e1e8);
+    border-radius: var(--vapor-size-borderRadius-300, 0.5rem);
+    border: 1px solid var(--vapor-color-border-normal, #e1e1e8);
     background: var(--vapor-color-background-normal, #fff);
     position: relative;
     cursor: auto;
@@ -18,7 +18,7 @@
 }
 
 .dim {
-    border-radius: var(--vapor-size-border-radius-300, 0.5rem);
+    border-radius: var(--vapor-size-borderRadius-300, 0.5rem);
     background: rgba(var(--vapor-color-background-rgb-normal), 0.32);
     backdrop-filter: blur(0.125rem);
     width: 100%;
@@ -47,7 +47,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: var(--vapor-size-border-radius-500, 1rem);
+    border-radius: var(--vapor-size-borderRadius-500, 1rem);
     background:
         linear-gradient(
             0deg,
