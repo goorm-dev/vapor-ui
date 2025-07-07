@@ -46,27 +46,17 @@ export const content = recipe({
         flexDirection: 'column',
         alignItems: 'flex-start',
 
-        // transform: 'translate(-50%, -50%)',
-        // opacity: 0,
         borderRadius: vars.size.borderRadius[300],
 
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
         backgroundColor: vars.color.background['normal-lighter'],
 
-        transition: 'opacity, transform',
-        transitionDuration: '0.2s',
-        transitionTimingFunction: 'cubic-bezier(0.175,0.885,0.32,1.1)',
-
         selectors: {
             "&[data-state='open']": {
                 animation: `${slideUp} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
-                // opacity: 1,
-                // transform: 'translate(-50%, -50%) scale(1)',
             },
             "&[data-state='closed']": {
                 animation: `${slideDown} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
-                // opacity: 0,
-                // transform: 'translate(-50%, -50%) scale(0.96)',
             },
         },
     }),
