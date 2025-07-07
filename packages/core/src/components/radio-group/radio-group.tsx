@@ -105,7 +105,6 @@ const Item = forwardRef<HTMLDivElement, RadioGroupItemProps>(({ className, ...pr
         'visuallyHidden',
         'size',
         'invalid',
-        'disabled',
     ]);
 
     const {
@@ -160,7 +159,7 @@ const Control = forwardRef<HTMLButtonElement, RadioGroupControlProps>(
 Control.displayName = 'RadioGroup.Control';
 
 /* -------------------------------------------------------------------------------------------------
- * RadioGroup.ItemText
+ * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
 type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof vapor.label>;
