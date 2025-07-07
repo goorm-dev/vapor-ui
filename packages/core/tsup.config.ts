@@ -99,11 +99,12 @@ export default defineConfig([
         },
     },
     {
-        entry: ['src/index.ts'],
+        entry: ['src/index.ts', 'src/components/*/index.ts'],
         outDir: 'dist/types',
         format: 'esm',
         dts: {
             only: true,
+            resolve: true,
         },
         esbuildOptions(options) {
             options.outbase = './';
@@ -112,7 +113,7 @@ export default defineConfig([
     // Styles build
     {
         entry: {
-            styles: 'src/styles/index.css.ts',
+            styles: 'src/styles/index.ts',
         },
         outDir: 'dist',
         esbuildPlugins: [

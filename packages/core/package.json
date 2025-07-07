@@ -23,7 +23,7 @@
             "require": "./dist/index.cjs"
         },
         "./*": {
-            "types": "./dist/types/index.d.ts",
+            "types": "./dist/types/components/*/index.d.ts",
             "import": "./dist/components/*/index.js",
             "require": "./dist/components/*/index.cjs"
         },
