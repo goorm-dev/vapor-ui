@@ -13,4 +13,5 @@ export * from './components/text';
 export * from './components/h-stack';
 export * from './components/v-stack';
 export * from './components/dialog';
+export * from './components/switch';
 export * from './components/callout';
