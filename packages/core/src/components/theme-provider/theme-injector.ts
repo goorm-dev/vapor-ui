@@ -1,4 +1,4 @@
-import { DARK_CLASS_NAME, LIGHT_CLASS_NAME } from '~/styles/contract.css';
+import { DARK_CLASS_NAME, LIGHT_CLASS_NAME } from '~/styles/constants';
 
 const THEME_CONFIG = {
     STORAGE_KEY: 'vapor-ui-theme',
