@@ -24,7 +24,7 @@ const SemanticSizeRow = ({ sizeType = 'width', name, value }: SemanticSizeRowPro
                     style={{
                         width: isBorderRadius ? ' 5rem' : `var(--${name})`,
                         height: isBorderRadius ? ' 5rem' : `var(--${name})`,
-                        backgroundColor: 'var(--blue-100)',
+                        backgroundColor: 'var(--vapor-color-blue-100)',
                         borderRadius: isBorderRadius ? `var(--${name})` : '0',
                     }}
                 />

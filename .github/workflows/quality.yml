@@ -189,3 +189,16 @@ jobs:
                           body: report
                         });
                       }
+
+    vitest:
+        name: Vitest
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
+            - name: Run Vitest
+              run: pnpm test
