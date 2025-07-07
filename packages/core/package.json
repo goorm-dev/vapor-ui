@@ -27,7 +27,7 @@
             "import": "./dist/components/*/index.js",
             "require": "./dist/components/*/index.cjs"
         },
-        "./styles.css": "./dist/styles/styles.css"
+        "./styles.css": "./dist/styles.css"
     },
     "files": [
         "dist"

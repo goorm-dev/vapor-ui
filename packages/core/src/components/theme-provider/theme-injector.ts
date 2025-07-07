@@ -1,4 +1,5 @@
-import { DARK_CLASS_NAME, LIGHT_CLASS_NAME } from '~/styles/constants';
+const DARK_CLASS_NAME = 'vapor-dark-theme';
+const LIGHT_CLASS_NAME = 'vapor-light-theme';
 
 const THEME_CONFIG = {
     STORAGE_KEY: 'vapor-ui-theme',

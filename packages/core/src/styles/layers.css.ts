@@ -1,6 +1,11 @@
 import { globalLayer } from '@vanilla-extract/css';
 
-import { layerName } from './constants';
+export const layerName = {
+    theme: 'vapor-theme',
+    reset: 'vapor-reset',
+    component: 'vapor-component',
+    utilities: 'vapor-utilities',
+} as const;
 
 /**
  * The order of the declaration means the priority of the layer.

@@ -109,16 +109,20 @@ export default defineConfig([
             options.outbase = './';
         },
     },
+    // Styles build
     {
         entry: {
-            styles: 'src/styles/global.css.ts',
+            styles: 'src/styles/index.css.ts',
         },
-        outDir: 'dist/styles',
+        outDir: 'dist',
         esbuildPlugins: [
             vanillaExtractPlugin({
                 outputCss: true,
                 processCss,
             }),
         ],
+        async onSuccess() {
+            fs.unlinkSync('dist/styles.cjs');
+        },
     },
 ]);
