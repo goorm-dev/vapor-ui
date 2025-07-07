@@ -149,10 +149,10 @@ const Control = forwardRef<HTMLButtonElement, RadioGroupControlProps>(
                 value={value}
                 disabled={disabled}
                 aria-invalid={invalid}
-                className={clsx(styles.control({ size, invalid }))}
+                className={clsx(styles.control({ size, invalid }), className)}
                 {...props}
             >
-                <RadixIndicator className={clsx(styles.indicator, className)} />
+                <RadixIndicator className={clsx(styles.indicator)} />
             </RadixItem>
         );
     },
