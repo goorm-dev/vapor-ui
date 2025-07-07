@@ -16,6 +16,7 @@ export const root = recipe({
         border: `1px solid ${vars.color.border.normal}`,
         padding: vars.size.space['000'],
         overflow: 'hidden',
+        verticalAlign: 'top',
     }),
 
     defaultVariants: { size: 'md', shape: 'square' },
