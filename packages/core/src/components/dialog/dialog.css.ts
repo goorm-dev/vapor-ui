@@ -1,8 +1,9 @@
 import { keyframes } from '@vanilla-extract/css';
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 const fadeIn = keyframes({
     '0%': { opacity: 0 },
@@ -73,6 +74,8 @@ export const content = recipe({
         },
     },
 });
+
+export type DialogContentVariants = RecipeVariants<typeof content>;
 
 export const title = layerStyle('vapor-component', {
     lineHeight: vars.typography.lineHeight['200'],

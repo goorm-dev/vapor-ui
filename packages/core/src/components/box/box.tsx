@@ -1,9 +1,8 @@
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { vapor } from '~/libs/factory';
+import { type VaporComponentProps, vapor } from '~/libs/factory';
 
-interface BoxProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+type BoxProps = VaporComponentProps<'div'>;
 
 const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
     return <vapor.div ref={ref} {...props} />;

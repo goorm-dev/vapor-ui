@@ -1,9 +1,10 @@
 import { createVar } from '@vanilla-extract/css';
+import type { RecipeVariants} from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 const fg = createVar();
 const fgDarker = createVar();
@@ -167,3 +168,5 @@ export const root = recipe({
         stretch: { true: layerStyle('vapor-component', { width: '100%' }) },
     },
 });
+
+export type ButtonVariants = RecipeVariants<typeof root>;
