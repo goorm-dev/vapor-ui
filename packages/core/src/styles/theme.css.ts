@@ -1,7 +1,7 @@
 import { createGlobalTheme } from '@vanilla-extract/css';
 
 import { DARK_CLASS_NAME, DARK_THEME_TOKENS, THEME_TOKENS } from './constants';
-import { vars } from './contract.css';
+import { vars } from './vars.css';
 import { layers } from './layers.css';
 
 createGlobalTheme(':root', vars, { '@layer': layers.theme, ...THEME_TOKENS });

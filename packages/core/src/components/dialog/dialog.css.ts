@@ -1,8 +1,8 @@
 import { keyframes } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/utils';
+import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
 
 const fadeIn = keyframes({
     '0%': { opacity: 0 },

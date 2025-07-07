@@ -2,8 +2,8 @@ import { createVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '../contract.css';
-import { layerStyle } from '../utils';
+import { vars } from '../vars.css';
+import { layerStyle } from '../utils/layer-style.css';
 
 const ratio = createVar('opacity-ratio');
 

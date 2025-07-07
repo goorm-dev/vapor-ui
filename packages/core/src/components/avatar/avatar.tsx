@@ -11,7 +11,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import type { MergeRecipeVariants } from '~/libs/recipe';
-import { vars } from '~/styles/contract.css';
+import { vars } from '~/styles/vars.css';
 import { createSplitProps } from '~/utils/create-split-props';
 
 import * as styles from './avatar.css';

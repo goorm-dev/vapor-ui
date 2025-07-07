@@ -1,9 +1,9 @@
 import { createVar } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
+import { vars } from '~/styles/vars.css';
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils';
+import { layerStyle } from '~/styles/utils/layer-style.css';
 
 const fg = createVar();
 const fgDarker = createVar();

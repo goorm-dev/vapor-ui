@@ -1,9 +1,9 @@
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
+import { vars } from '~/styles/vars.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
-import { layerStyle } from '~/styles/utils';
+import { layerStyle } from '~/styles/utils/layer-style.css';
 
 export const root = recipe({
     base: {

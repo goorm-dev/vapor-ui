@@ -40,3 +40,9 @@ export const DARK_THEME_TOKENS = {
     ...DARK_BASIC_COLORS,
     ...DARK_SEMANTIC_COLORS,
 };
+
+export const SCALE_FACTOR_VAR_NAME = 'vapor-scale-factor';
+export const RADIUS_FACTOR_VAR_NAME = 'vapor-radius-factor';
+
+export const INITIAL_SCALE_FACTOR = '1';
+export const INITIAL_RADIUS_FACTOR = '1';
