@@ -3,7 +3,7 @@ import autoprefixer from 'autoprefixer';
 import fs from 'fs';
 import { sync } from 'glob';
 import postcss from 'postcss';
-import { defineConfig } from 'tsup';
+import { type Options, defineConfig } from 'tsup';
 
 const OUT_DIR = 'dist/components';
 
@@ -56,18 +56,29 @@ const injectSideEffectImports = async (format: 'esm' | 'cjs') => {
     }
 };
 
+const commonConfig: Options = {
+    target: 'es6',
+    sourcemap: true,
+    minify: false,
+    external: ['react', 'react-dom'],
+    dts: false,
+    format: ['esm', 'cjs'],
+};
 export default defineConfig([
     {
-        entry: ['src/components/*/index.ts'],
-        format: ['esm', 'cjs'],
-        outDir: OUT_DIR,
-        target: 'es6',
-        splitting: true,
-        sourcemap: true,
-        minify: false,
-        external: ['react', 'react-dom'],
-        dts: false,
+        ...commonConfig,
+        entry: {
+            index: 'src/index.ts',
+        },
+        outDir: 'dist',
+        external: [...(commonConfig.external || []), './components'],
         clean: true, // Clean the dist on the first build step.
+    },
+    {
+        ...commonConfig,
+        entry: ['src/components/*/index.ts'],
+        outDir: OUT_DIR,
+        splitting: true,
         esbuildPlugins: [
             vanillaExtractPlugin({
                 outputCss: true,
@@ -81,28 +92,23 @@ export default defineConfig([
             }),
         ],
         async onSuccess() {
-            console.log('✅ ESM build successful. Injecting CSS imports...');
+            console.log('✅ ESM build successful. Injecting sideEffect imports...');
             await injectSideEffectImports('esm');
             await injectSideEffectImports('cjs');
-            console.log('🚀 CSS imports injected');
+            console.log('🚀 SideEffect imports injected');
         },
     },
-
     {
         entry: ['src/index.ts'],
-        format: 'esm',
-        outDir: 'dist',
-    },
-
-    {
-        entry: ['src/index.ts', 'src/components/*/index.ts'],
         outDir: 'dist/types',
         format: 'esm',
         dts: {
             only: true,
         },
+        esbuildOptions(options) {
+            options.outbase = './';
+        },
     },
-
     {
         entry: {
             styles: 'src/styles/global.css.ts',
