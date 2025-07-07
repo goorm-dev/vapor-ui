@@ -9,7 +9,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 
 import * as styles from './button.css';
 
-type ButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof vapor.button>, 'color'>;
+type ButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<'button'>, 'color'>;
 type ButtonVariants = MergeRecipeVariants<typeof styles.root>;
 
 interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {}

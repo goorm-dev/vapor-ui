@@ -5,7 +5,7 @@ import { vapor } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
 type FlexVariants = { inline?: boolean };
-type FlexPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type FlexPrimitiveProps = ComponentPropsWithoutRef<'div'>;
 
 interface FlexProps extends FlexPrimitiveProps, FlexVariants {}
 

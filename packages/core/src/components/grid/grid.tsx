@@ -13,7 +13,7 @@ import * as styles from './grid.css';
  * Grid
  * -----------------------------------------------------------------------------------------------*/
 
-type GridPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type GridPrimitiveProps = ComponentPropsWithoutRef<'div'>;
 type GridVariants = MergeRecipeVariants<typeof styles.root> & {
     inline?: boolean;
     templateRows?: string;
@@ -58,7 +58,7 @@ Root.displayName = 'Grid';
  * Grid.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type GridItemPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type GridItemPrimitiveProps = ComponentPropsWithoutRef<'div'>;
 type GridItemVariants = { rowSpan?: string; colSpan?: string };
 
 interface GridItemProps extends GridItemPrimitiveProps, GridItemVariants {}

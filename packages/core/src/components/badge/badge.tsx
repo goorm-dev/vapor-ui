@@ -9,7 +9,7 @@ import { createSplitProps } from '~/utils/create-split-props';
 
 import * as styles from './badge.css';
 
-type BadgePrimitiveProps = Omit<ComponentPropsWithoutRef<typeof vapor.span>, 'color'>;
+type BadgePrimitiveProps = Omit<ComponentPropsWithoutRef<'span'>, 'color'>;
 type BadgeVariants = MergeRecipeVariants<typeof styles.root>;
 
 interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}

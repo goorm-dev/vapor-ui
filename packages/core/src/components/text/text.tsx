@@ -6,7 +6,7 @@ import { vapor } from '~/libs/factory';
 import { foregroundSprinkles, typographySprinkles } from '~/styles/sprinkles';
 import type { Foreground, Typography } from '~/styles/sprinkles';
 
-interface TextProps extends React.ComponentPropsWithoutRef<typeof vapor.span> {
+interface TextProps extends React.ComponentPropsWithoutRef<'span'> {
     typography?: Typography;
     foreground?: Foreground;
 }

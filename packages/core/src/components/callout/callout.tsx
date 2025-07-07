@@ -13,7 +13,7 @@ import * as styles from './callout.css';
  * Callout
  * -----------------------------------------------------------------------------------------------*/
 
-type CalloutPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type CalloutPrimitiveProps = ComponentPropsWithoutRef<'div'>;
 type CalloutVariants = MergeRecipeVariants<typeof styles.root>;
 
 interface CalloutProps extends Omit<CalloutPrimitiveProps, 'color'>, CalloutVariants {}

@@ -214,7 +214,7 @@ Description.displayName = 'Dialog.Description';
  * Dialog.Header
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveHeaderProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type PrimitiveHeaderProps = ComponentPropsWithoutRef<'div'>;
 interface DialogHeaderProps extends PrimitiveHeaderProps {}
 
 const Header = forwardRef<HTMLDivElement, DialogHeaderProps>(({ className, ...props }, ref) => {
@@ -226,7 +226,7 @@ Header.displayName = 'Dialog.Header';
  * Dialog.Body
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveBodyProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type PrimitiveBodyProps = ComponentPropsWithoutRef<'div'>;
 interface DialogBodyProps extends PrimitiveBodyProps {}
 
 const Body = forwardRef<HTMLDivElement, DialogBodyProps>(({ className, ...props }, ref) => {
@@ -238,7 +238,7 @@ Body.displayName = 'Dialog.Body';
  * Dialog.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveFooterProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type PrimitiveFooterProps = ComponentPropsWithoutRef<'div'>;
 interface DialogFooterProps extends PrimitiveFooterProps {}
 
 const Footer = forwardRef<HTMLDivElement, DialogFooterProps>(({ className, ...props }, ref) => {

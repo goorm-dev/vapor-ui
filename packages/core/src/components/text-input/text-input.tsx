@@ -36,7 +36,7 @@ const [TextInputProvider, useTextInputContext] = createContext<TextInputContextT
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type TextInputPrimitiveProps = ComponentPropsWithoutRef<'div'>;
 
 interface TextInputRootProps
     extends Omit<TextInputPrimitiveProps, keyof TextInputSharedProps>,
@@ -79,7 +79,7 @@ Root.displayName = 'TextInput.Root';
  * TextInput.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof vapor.label>;
+type PrimitiveLabelProps = ComponentPropsWithoutRef<'label'>;
 interface TextInputLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, TextInputLabelProps>(
@@ -102,7 +102,7 @@ Label.displayName = 'TextInput.Label';
  * TextInput.Field
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveInputProps = ComponentPropsWithoutRef<typeof vapor.input>;
+type PrimitiveInputProps = ComponentPropsWithoutRef<'input'>;
 interface TextInputFieldProps extends Omit<PrimitiveInputProps, keyof TextInputSharedProps> {}
 
 const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(

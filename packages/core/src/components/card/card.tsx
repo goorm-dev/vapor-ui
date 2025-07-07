@@ -11,7 +11,7 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardRootProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardRootProps extends ComponentPropsWithoutRef<'div'> {}
 
 const Root = forwardRef<HTMLDivElement, CardRootProps>(({ className, children, ...props }, ref) => {
     return (
@@ -26,7 +26,7 @@ Root.displayName = 'Card';
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardHeaderProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardHeaderProps extends ComponentPropsWithoutRef<'div'> {}
 
 const Header = forwardRef<HTMLDivElement, CardHeaderProps>(
     ({ className, children, ...props }, ref) => {
@@ -43,7 +43,7 @@ Header.displayName = 'Card.Header';
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardBodyProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardBodyProps extends ComponentPropsWithoutRef<'div'> {}
 
 const Body = forwardRef<HTMLDivElement, CardBodyProps>(({ className, children, ...props }, ref) => {
     return (
@@ -58,7 +58,7 @@ Body.displayName = 'Card.Body';
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardFooterProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardFooterProps extends ComponentPropsWithoutRef<'div'> {}
 
 const Footer = forwardRef<HTMLDivElement, CardFooterProps>(
     ({ className, children, ...props }, ref) => {
