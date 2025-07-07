@@ -1,17 +1,17 @@
 import type { StyleRule } from '@vanilla-extract/css';
 import { style } from '@vanilla-extract/css';
 
-import { layers } from '../layers.css';
+import type { layerName } from '../constants';
 
 export const layerStyle = (
-    layer: keyof typeof layers, // 'theme' | 'reset' ...
+    layer: (typeof layerName)[keyof typeof layerName], // 'vapor-theme' | 'vapor-reset' ...
     rule: StyleRule,
     debugId?: string,
 ) =>
     style(
         {
             '@layer': {
-                [layers[layer]]: rule,
+                [layer]: rule,
             },
         },
         debugId,

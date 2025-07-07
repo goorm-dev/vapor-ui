@@ -1,7 +1,7 @@
 import { vars } from '~/styles/vars.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 
-export const root = layerStyle('component', {
+export const root = layerStyle('vapor-component', {
     display: 'flex',
     flexDirection: 'column',
 
@@ -11,17 +11,17 @@ export const root = layerStyle('component', {
     backgroundColor: vars.color.background.normal,
 });
 
-export const header = layerStyle('component', {
+export const header = layerStyle('vapor-component', {
     borderBottom: `1px solid ${vars.color.border.normal}`,
 
     padding: `${vars.size.space[200]} ${vars.size.space[300]}`,
 });
 
-export const body = layerStyle('component', {
+export const body = layerStyle('vapor-component', {
     padding: vars.size.space[300],
 });
 
-export const footer = layerStyle('component', {
+export const footer = layerStyle('vapor-component', {
     borderTop: `1px solid ${vars.color.border.normal}`,
 
     padding: `${vars.size.space[200]} ${vars.size.space[300]}`,
