@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 
-import { Button, Card, Text, TextInput } from '@vapor-ui/core';
-import { CloseOutlineIcon, PlusOutlineIcon } from '@vapor-ui/icons';
+import { Badge, Button, Card, Text, TextInput } from '@vapor-ui/core';
+import { AchievementIcon, CloseOutlineIcon, PlusOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
+import Image from 'next/image';
 
 import BrowserControlsIcon from '~public/icons/browser-controls.svg';
 import DividerIcon from '~public/icons/divider.svg';
@@ -69,7 +70,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                 </div>
             </div>
             <div className="bg-[var(--vapor-color-background-normal)] flex items-center justify-center p-[var(--vapor-size-space-400)]">
-                <div>
+                <div className="flex items-center flex-col gap-[var(--vapor-size-space-400)]">
                     <Card.Root>
                         <Card.Header>
                             <Text typography="heading6" foreground="normal">
@@ -120,6 +121,64 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                     </div>
                                 </div>
                             </div>
+                        </Card.Body>
+                    </Card.Root>
+                    <Card.Root className="w-full">
+                        <Card.Body className="flex flex-col items-start gap-[var(--vapor-size-space-250)] self-stretch">
+                            <div className="flex items-center gap-[var(--vapor-size-space-200)] self-stretch">
+                                <Image
+                                    src="https://statics.goorm.io/exp/v1/svgs/light/badge_success.svg"
+                                    alt="Success badge"
+                                    width={64}
+                                    height={64}
+                                />
+
+                                <div className="flex flex-col justify-center items-start gap-[var(--vapor-size-space-100)]">
+                                    <div className="flex flex-col items-start gap-[var(--vapor-size-space-025)] self-stretch">
+                                        <Text typography="heading5">출석체크</Text>
+                                        <Text typography="body3">
+                                            출석 체크하고 포인트를 획득하세요!
+                                        </Text>
+                                    </div>
+                                    <div className="flex items-center gap-[var(--vapor-size-space-050)] self-stretch">
+                                        <Text typography="subtitle1" foreground="secondary">
+                                            4회
+                                        </Text>
+                                        <Text typography="subtitle1" foreground="hint">
+                                            /
+                                        </Text>
+                                        <Text typography="subtitle1" foreground="hint">
+                                            5회
+                                        </Text>
+                                    </div>
+                                </div>
+                            </div>
+                            <Button size="lg" stretch>
+                                <AchievementIcon size="20" />
+                                <Text typography="subtitle1">45 포인트 획득</Text>
+                            </Button>
+                        </Card.Body>
+                    </Card.Root>
+                    <Card.Root className="w-full">
+                        <Card.Header>템플릿 리스트</Card.Header>
+                        <Card.Body>
+                            <ul className="flex flex-col w-full gap-[var(--vapor-size-space-200)]">
+                                {Array.from({ length: 4 }).map((_, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex pb-[var(--vapor-size-space-100)] items-center gap-[var(--vapor-size-space-100)] self-stretch border-b border-[var(--vapor-color-border-normal)]"
+                                    >
+                                        <Text typography="subtitle1" foreground="secondary">
+                                            Template {index + 1}
+                                        </Text>
+                                        {index === 0 && (
+                                            <Badge color="primary" size="sm">
+                                                <Text typography="subtitle2">기본</Text>
+                                            </Badge>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
                         </Card.Body>
                     </Card.Root>
                 </div>
