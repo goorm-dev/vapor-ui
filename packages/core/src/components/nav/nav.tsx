@@ -13,7 +13,9 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import type { MergeRecipeVariants } from '~/libs/recipe';
+import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
+import { splitLayoutProps } from '~/utils/split-layout-props';
 
 import * as styles from './nav.css';
 
@@ -33,33 +35,37 @@ type NavVariants = MergeRecipeVariants<
 >;
 
 type NavPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
-interface NavRootProps extends NavPrimitiveProps, NavVariants {
+interface NavRootProps extends NavPrimitiveProps, NavVariants, Sprinkles {
     'aria-label': string;
 }
 
-const Root = forwardRef<HTMLElement, NavRootProps>(({ 'aria-label': ariaLabel, ...props }, ref) => {
-    const [variantProps, otherProps] = createSplitProps<NavVariants>()(props, [
-        'direction',
-        'size',
-        'shape',
-        'stretch',
-        'align',
-        'disabled',
-    ]);
+const Root = forwardRef<HTMLElement, NavRootProps>(
+    ({ 'aria-label': ariaLabel, className, ...props }, ref) => {
+        const [layoutProps, navProps] = splitLayoutProps(props);
+        const [variantProps, otherProps] = createSplitProps<NavVariants>()(navProps, [
+            'direction',
+            'size',
+            'shape',
+            'stretch',
+            'align',
+            'disabled',
+        ]);
 
-    const { direction } = variantProps;
+        const { direction } = variantProps;
 
-    return (
-        <NavProvider value={variantProps}>
-            <RadixRoot
-                ref={ref}
-                orientation={direction}
-                aria-label={ariaLabel || undefined}
-                {...otherProps}
-            />
-        </NavProvider>
-    );
-});
+        return (
+            <NavProvider value={variantProps}>
+                <RadixRoot
+                    ref={ref}
+                    orientation={direction}
+                    className={clsx(sprinkles(layoutProps), className)}
+                    aria-label={ariaLabel || undefined}
+                    {...otherProps}
+                />
+            </NavProvider>
+        );
+    },
+);
 Root.displayName = 'Nav.Root';
 
 /* -------------------------------------------------------------------------------------------------
@@ -67,16 +73,17 @@ Root.displayName = 'Nav.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 type ListPrimitiveProps = ComponentPropsWithoutRef<typeof RadixList>;
-interface NavMenuList extends ListPrimitiveProps {}
+interface NavMenuList extends ListPrimitiveProps, Sprinkles {}
 
 const List = forwardRef<HTMLUListElement, NavMenuList>(({ className, ...props }, ref) => {
     const { direction, stretch } = useNavContext();
+    const [layoutProps, otherProps] = splitLayoutProps(props);
 
     return (
         <RadixList
             ref={ref}
-            className={clsx(styles.list({ direction, stretch }), className)}
-            {...props}
+            className={clsx(styles.list({ direction, stretch }), sprinkles(layoutProps), className)}
+            {...otherProps}
         />
     );
 });
@@ -87,12 +94,19 @@ List.displayName = 'Nav.List';
  * -----------------------------------------------------------------------------------------------*/
 
 type ItemPrimitiveProps = ComponentPropsWithoutRef<typeof RadixItem>;
-interface NavItemProps extends ItemPrimitiveProps {}
+interface NavItemProps extends ItemPrimitiveProps, Sprinkles {}
 
 const Item = forwardRef<HTMLLIElement, NavItemProps>(({ className, ...props }, ref) => {
     const { stretch } = useNavContext();
+    const [layoutProps, otherProps] = splitLayoutProps(props);
 
-    return <RadixItem ref={ref} className={clsx(styles.item({ stretch }), className)} {...props} />;
+    return (
+        <RadixItem
+            ref={ref}
+            className={clsx(styles.item({ stretch }), sprinkles(layoutProps), className)}
+            {...otherProps}
+        />
+    );
 });
 Item.displayName = 'Nav.Item';
 
@@ -101,7 +115,7 @@ Item.displayName = 'Nav.Item';
  * -----------------------------------------------------------------------------------------------*/
 
 type LinkPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof RadixLink>, 'active'>;
-interface NavLinkProps extends LinkPrimitiveProps {
+interface NavLinkProps extends LinkPrimitiveProps, Sprinkles {
     selected?: boolean;
     disabled?: boolean;
 }
@@ -109,6 +123,7 @@ interface NavLinkProps extends LinkPrimitiveProps {
 const Link = forwardRef<HTMLAnchorElement, NavLinkProps>(
     ({ selected, disabled, href, className, ...props }, ref) => {
         const { shape, size, align } = useNavContext();
+        const [layoutProps, otherProps] = splitLayoutProps(props);
 
         return (
             <RadixLink
@@ -118,8 +133,12 @@ const Link = forwardRef<HTMLAnchorElement, NavLinkProps>(
                 data-active={undefined}
                 data-selected={selected ? 'true' : undefined}
                 aria-disabled={disabled ? 'true' : undefined}
-                className={clsx(styles.link({ shape, size, align, disabled }), className)}
-                {...props}
+                className={clsx(
+                    styles.link({ shape, size, align, disabled }),
+                    sprinkles(layoutProps),
+                    className,
+                )}
+                {...otherProps}
             />
         );
     },

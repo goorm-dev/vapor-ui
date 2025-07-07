@@ -5,17 +5,20 @@ import clsx from 'clsx';
 
 import { vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
+import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
+import { splitLayoutProps } from '~/utils/split-layout-props';
 
 import * as styles from './badge.css';
 
 type BadgePrimitiveProps = Omit<ComponentPropsWithoutRef<typeof vapor.span>, 'color'>;
 type BadgeVariants = MergeRecipeVariants<typeof styles.root>;
 
-interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
+interface BadgeProps extends BadgePrimitiveProps, BadgeVariants, Sprinkles {}
 
 const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ...props }, ref) => {
-    const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(props, [
+    const [layoutProps, badgeProps] = splitLayoutProps(props);
+    const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(badgeProps, [
         'color',
         'size',
         'shape',
@@ -24,7 +27,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ..
     return (
         <vapor.span
             ref={ref}
-            className={clsx(styles.root(variantsProps), className)}
+            className={clsx(styles.root(variantsProps), sprinkles(layoutProps), className)}
             {...otherProps}
         >
             {children}

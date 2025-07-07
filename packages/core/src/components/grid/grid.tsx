@@ -7,7 +7,9 @@ import clsx from 'clsx';
 
 import { vapor } from '~/libs/factory';
 import type { MergeRecipeVariants } from '~/libs/recipe';
+import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
+import { splitLayoutProps } from '~/utils/split-layout-props';
 
 import * as styles from './grid.css';
 
@@ -23,11 +25,12 @@ type GridVariants = MergeRecipeVariants<typeof styles.root> & {
     flow?: CSSProperties['gridAutoFlow'];
 };
 
-interface GridRootProps extends GridPrimitiveProps, GridVariants {}
+interface GridRootProps extends GridPrimitiveProps, GridVariants, Sprinkles {}
 
 const Root = forwardRef<HTMLDivElement, GridRootProps>(
     ({ className, style, children, ...props }, ref) => {
-        const [gridRootProps, otherProps] = createSplitProps<GridVariants>()(props, [
+        const [layoutProps, gridProps] = splitLayoutProps(props);
+        const [gridRootProps, otherProps] = createSplitProps<GridVariants>()(gridProps, [
             'inline',
             'templateRows',
             'templateColumns',
@@ -44,9 +47,12 @@ const Root = forwardRef<HTMLDivElement, GridRootProps>(
         return (
             <vapor.div
                 ref={ref}
-                display={inline ? 'inline-grid' : 'grid'}
+                className={clsx(
+                    styles.root(variants),
+                    sprinkles({ ...layoutProps, display: inline ? 'inline-grid' : 'grid' }),
+                    className,
+                )}
                 style={{ ...cssVariables, ...style }}
-                className={clsx(styles.root(variants), className)}
                 {...otherProps}
             >
                 {children}

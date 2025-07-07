@@ -14,7 +14,9 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import type { MergeRecipeVariants } from '~/libs/recipe';
 import { vars } from '~/styles/contract.css';
+import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
+import { splitLayoutProps } from '~/utils/split-layout-props';
 
 import * as styles from './avatar.css';
 
@@ -30,10 +32,11 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 /* -----------------------------------------------------------------------------------------------*/
 
 type AvatarRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixAvatar>;
-interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
+interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps, Sprinkles {}
 
 const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
-    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
+    const [layoutProps, avatarProps] = splitLayoutProps(props);
+    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(avatarProps, [
         'src',
         'alt',
         'size',
@@ -47,7 +50,7 @@ const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props
         <AvatarProvider value={variantProps}>
             <RadixAvatar
                 ref={ref}
-                className={clsx(styles.root({ shape, size }), className)}
+                className={clsx(styles.root({ shape, size }), sprinkles(layoutProps), className)}
                 {...otherProps}
             />
         </AvatarProvider>
@@ -60,18 +63,21 @@ Root.displayName = 'Avatar.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 type AvatarImagePrimitiveProps = ComponentPropsWithoutRef<typeof RadixImage>;
-interface AvatarImageProps extends Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps> {}
+interface AvatarImageProps
+    extends Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps | keyof Sprinkles>,
+        Sprinkles {}
 
 const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...props }, ref) => {
     const { src, alt } = useAvatarContext();
+    const [layoutProps, otherProps] = splitLayoutProps(props);
 
     return (
         <RadixImage
             ref={ref}
             src={src}
             alt={alt}
-            className={clsx(styles.image, className)}
-            {...props}
+            className={clsx(styles.image, sprinkles(layoutProps), className)}
+            {...otherProps}
         />
     );
 });
@@ -82,11 +88,14 @@ Image.displayName = 'Avatar.Image';
  * -----------------------------------------------------------------------------------------------*/
 
 type AvatarFallbackPrimitiveProps = ComponentPropsWithoutRef<typeof RadixFallback>;
-interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
+interface AvatarFallbackProps
+    extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps>,
+        Sprinkles {}
 
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
     ({ className, style, children, ...props }, ref) => {
         const { size, alt, delayMs } = useAvatarContext();
+        const [layoutProps, otherProps] = splitLayoutProps(props);
         const background = getRandomColor(alt);
 
         return (
@@ -97,8 +106,8 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
                     ...assignInlineVars({ [styles.fallbackBgVar]: background }),
                     ...style,
                 }}
-                className={clsx(styles.fallback({ size }), className)}
-                {...props}
+                className={clsx(styles.fallback({ size }), sprinkles(layoutProps), className)}
+                {...otherProps}
             >
                 {children ?? getAvatarInitials(alt)}
             </RadixFallback>
