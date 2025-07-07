@@ -26,12 +26,12 @@ export const overlay = layerStyle('component', {
     },
 });
 
-export const slideUp = keyframes({
+export const scaleUp = keyframes({
     '0%': { transform: 'translate(-50%, -50%) scale(0.96)', opacity: 0 },
     '100%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
 });
 
-export const slideDown = keyframes({
+export const scaleDown = keyframes({
     '0%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
     '100%': { transform: 'translate(-50%, -50%) scale(0.96)', opacity: 0 },
 });
@@ -53,10 +53,10 @@ export const content = recipe({
 
         selectors: {
             "&[data-state='open']": {
-                animation: `${slideUp} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
+                animation: `${scaleUp} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
             },
             "&[data-state='closed']": {
-                animation: `${slideDown} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
+                animation: `${scaleDown} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
             },
         },
     }),
