@@ -1,7 +1,7 @@
 import { createVar } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/layers.css';
+import { layerStyle } from '~/styles/utils';
 
 export const gridTemplateRows = createVar({ inherits: false, syntax: '*' }, 'template-rows');
 export const gridTemplateColumns = createVar({ inherits: false, syntax: '*' }, 'template-columns');

@@ -1,5 +1,5 @@
 import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
+import { layerStyle } from '~/styles/utils';
 
 export const root = layerStyle('component', {
     display: 'flex',
