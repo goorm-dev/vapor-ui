@@ -1,6 +1,6 @@
 import { calc } from '@vanilla-extract/css-utils';
 
-import { scaleFactorVar } from '~/styles/global.css';
+import { scaleFactorVar } from '~/styles/constants.css';
 
 export const SPACE = {
     '000': calc.multiply(scaleFactorVar, '0px'),

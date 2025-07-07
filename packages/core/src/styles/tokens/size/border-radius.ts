@@ -1,6 +1,6 @@
 import { calc } from '@vanilla-extract/css-utils';
 
-import { radiusFactorVar } from '~/styles/global.css';
+import { radiusFactorVar } from '~/styles/constants.css';
 
 export const BORDER_RADIUS = {
     '000': calc.multiply(radiusFactorVar, '0px'),

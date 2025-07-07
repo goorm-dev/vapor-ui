@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { createContext, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { RADIUS_FACTOR_VAR_NAME, SCALE_FACTOR_VAR_NAME } from '../../styles/global.css';
+import { RADIUS_FACTOR_VAR_NAME, SCALE_FACTOR_VAR_NAME } from '../../styles/constants.css';
 import { THEME_CONFIG, themeInjectScript } from './theme-injector';
 import type { Appearance, Radius, Scaling, ThemeState } from './theme-injector';
 
