@@ -17,3 +17,4 @@ export * from './components/radio-group';
 export * from './components/checkbox';
 export * from './components/switch';
 export * from './components/callout';
+export * from './components/create-theme-config';

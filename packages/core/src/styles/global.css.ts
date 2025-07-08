@@ -1,6 +1,7 @@
 import { globalStyle } from '@vanilla-extract/css';
 
 import { layers } from './layers.css';
+import { vars } from './vars.css';
 
 globalStyle('*', {
     '@layer': {
@@ -8,9 +9,18 @@ globalStyle('*', {
             boxSizing: 'border-box',
             margin: 0,
             padding: 0,
-            fontFamily: `Pretendard Variable, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif`,
+            fontFamily: vars.typography.fontFamily.sans,
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',
+        },
+    },
+});
+
+globalStyle('html, body', {
+    '@layer': {
+        [layers.reset]: {
+            backgroundColor: vars.color.background.normal,
+            color: vars.color.foreground.normal,
         },
     },
 });
