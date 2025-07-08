@@ -18,7 +18,7 @@ const fadeOut = keyframes({
 export const overlay = layerStyle('vapor-component', {
     position: 'fixed',
     inset: 0,
-    transition: 'opacity 0.2s ease-out',
+    transition: 'opacity 0.2s cubic-bezier(0.175,0.885,0.32,1.1)',
     backgroundColor: vars.color['black'],
 
     selectors: {
@@ -27,14 +27,14 @@ export const overlay = layerStyle('vapor-component', {
     },
 });
 
-export const slideUp = keyframes({
-    '0%': { transform: 'translate(-50%, -50%)', opacity: 0 },
-    '100%': { transform: 'translate(-50%, -55%)', opacity: 1 },
+export const scaleUp = keyframes({
+    '0%': { transform: 'translate(-50%, -50%) scale(0.96)', opacity: 0 },
+    '100%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
 });
 
-export const slideDown = keyframes({
-    '0%': { transform: 'translate(-50%, -55%)', opacity: 1 },
-    '100%': { transform: 'translate(-50%, -50%)', opacity: 0 },
+export const scaleDown = keyframes({
+    '0%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+    '100%': { transform: 'translate(-50%, -50%) scale(0.96)', opacity: 0 },
 });
 
 export const content = recipe({
@@ -47,8 +47,6 @@ export const content = recipe({
         flexDirection: 'column',
         alignItems: 'flex-start',
 
-        transform: 'translate(-50%, -50%)',
-        opacity: 0,
         borderRadius: vars.size.borderRadius[300],
 
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
@@ -56,11 +54,10 @@ export const content = recipe({
 
         selectors: {
             "&[data-state='open']": {
-                animation: `${slideUp} 0.2s ease-out forwards`,
-                animationDelay: '0.05s',
+                animation: `${scaleUp} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
             },
             "&[data-state='closed']": {
-                animation: `${slideDown} 0.2s ease-out forwards`,
+                animation: `${scaleDown} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
             },
         },
     }),

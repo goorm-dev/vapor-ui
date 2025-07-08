@@ -2,8 +2,8 @@ import { createVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '../vars.css';
 import { layerStyle } from '../utils/layer-style.css';
+import { vars } from '../vars.css';
 
 const ratio = createVar('opacity-ratio');
 
@@ -19,7 +19,7 @@ export const interaction = recipe({
                 top: 0,
                 left: 0,
 
-                transition: `opacity 150ms cubic-bezier(.4,0,.2,1)`,
+                transition: `opacity 150ms ease`,
                 opacity: 0,
                 border: 'none',
                 borderRadius: 'inherit',
@@ -43,7 +43,7 @@ export const interaction = recipe({
 
     variants: {
         scale: {
-            normal: layerStyle('vapor-component', { vars: { [ratio]: '0.08' } }),
+            normal: {},
             light: layerStyle('vapor-component', { vars: { [ratio]: '0.04' } }),
         },
 

@@ -1,3 +1,3 @@
 {
-    "pages": ["overview", "theming", "tokens", "icons", "components"]
+    "pages": ["getting-started", "tokens", "components", "icons"]
 }
