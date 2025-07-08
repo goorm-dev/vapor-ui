@@ -1,6 +1,6 @@
 import { calc } from '@vanilla-extract/css-utils';
 
-import { scaleFactorVar } from '~/styles/global.css';
+import { scaleFactorVar } from '~/styles/global-var.css';
 
 export const LETTER_SPACING = {
     '000': calc.multiply(scaleFactorVar, '0'),

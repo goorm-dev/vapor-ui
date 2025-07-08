@@ -1,6 +1,6 @@
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles';
 
-import { vars } from '~/styles/contract.css';
+import { vars } from '~/styles/vars.css';
 
 const typographies = {
     display1: {

@@ -80,115 +80,115 @@ jobs:
             - name: Run prettier
               run: pnpm format:check
 
-    type-check-report:
-        if: github.event_name == 'pull_request'
-        name: Type Check Report
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout branch
-              uses: actions/checkout@v4
+    # type-check-report:
+    #     if: github.event_name == 'pull_request'
+    #     name: Type Check Report
+    #     needs: build
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - name: Checkout branch
+    #           uses: actions/checkout@v4
 
-            - name: Download build artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  name: build-artifacts
-                  path: .
+    #         - name: Download build artifacts
+    #           uses: actions/download-artifact@v4
+    #           with:
+    #               name: build-artifacts
+    #               path: .
 
-            - name: Install
-              uses: ./.github/composite/install
+    #         - name: Install
+    #           uses: ./.github/composite/install
 
-            - name: Run type check report
-              id: type-check
-              run: |
-                  # Create reports directory
-                  mkdir -p "$GITHUB_WORKSPACE/type-check-reports"
+    #         - name: Run type check report
+    #           id: type-check
+    #           run: |
+    #               # Create reports directory
+    #               mkdir -p "$GITHUB_WORKSPACE/type-check-reports"
 
-                  # Find all package.json files in packages directory
-                  for pkg in "$GITHUB_WORKSPACE/packages"/*/package.json; do
-                    if [ -f "$pkg" ]; then
-                      pkg_name=$(jq -r '.name' "$pkg")
-                      # Only process @vapor-ui packages
-                      if [[ "$pkg_name" == "@vapor-ui"* ]]; then
-                        pkg_dir=$(dirname "$pkg")
-                        echo "Checking $pkg_name in $pkg_dir..."
-                        
-                        # Create tarball for the package
-                        cd "$pkg_dir"
-                        
-                        # Build the package if dist directory doesn't exist
-                        if [ ! -d "dist" ]; then
-                          echo "Building $pkg_name..."
-                          pnpm build
-                        fi
-                        
-                        npm pack
-                        tgz_file=$(ls | grep .tgz)
-                        
-                        # Run type check using the tarball
-                        npx --yes @arethetypeswrong/cli --format=auto --exclude-entrypoints styles.css --pack "$pkg_dir/$tgz_file" > "$GITHUB_WORKSPACE/type-check-reports/type-check-${pkg_name//\//-}.txt" || {
-                          echo "Type check for $pkg_name"
-                          continue
-                        }
-                        
-                        cd "$GITHUB_WORKSPACE"
-                      fi
-                    fi
-                  done
+    #               # Find all package.json files in packages directory
+    #               for pkg in "$GITHUB_WORKSPACE/packages"/*/package.json; do
+    #                 if [ -f "$pkg" ]; then
+    #                   pkg_name=$(jq -r '.name' "$pkg")
+    #                   # Only process @vapor-ui packages
+    #                   if [[ "$pkg_name" == "@vapor-ui"* ]]; then
+    #                     pkg_dir=$(dirname "$pkg")
+    #                     echo "Checking $pkg_name in $pkg_dir..."
 
-                  # Combine all reports
-                  echo "## 📊 Type Check Reports" > "$GITHUB_WORKSPACE/combined-report.txt"
-                  echo '\`\`\`' >> "$GITHUB_WORKSPACE/combined-report.txt"
-                  for report in "$GITHUB_WORKSPACE/type-check-reports/type-check-"*.txt; do
-                    if [ -f "$report" ]; then
-                      pkg_name=${report##*/type-check-}
-                      pkg_name=${pkg_name%.txt}
-                      pkg_name=${pkg_name//-/\/}
-                      echo -e "\n Package: $pkg_name\n" >> "$GITHUB_WORKSPACE/combined-report.txt"
-                      cat "$report" >> "$GITHUB_WORKSPACE/combined-report.txt"
-                    fi
-                  done
-                  echo '\`\`\`' >> "$GITHUB_WORKSPACE/combined-report.txt"
+    #                     # Create tarball for the package
+    #                     cd "$pkg_dir"
 
-                  echo "report<<EOF" >> $GITHUB_OUTPUT
-                  cat "$GITHUB_WORKSPACE/combined-report.txt" >> $GITHUB_OUTPUT
-                  echo "EOF" >> $GITHUB_OUTPUT
+    #                     # Build the package if dist directory doesn't exist
+    #                     if [ ! -d "dist" ]; then
+    #                       echo "Building $pkg_name..."
+    #                       pnpm build
+    #                     fi
 
-            - name: Comment PR
-              uses: actions/github-script@v7
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  script: |
-                      const report = `${{ steps.type-check.outputs.report }}`;
+    #                     npm pack
+    #                     tgz_file=$(ls | grep .tgz)
 
-                      // Find existing type check comment
-                      const comments = await github.rest.issues.listComments({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        issue_number: context.issue.number,
-                      });
+    #                     # Run type check using the tarball
+    #                     npx --yes @arethetypeswrong/cli --format=auto --exclude-entrypoints styles.css --pack "$pkg_dir/$tgz_file" > "$GITHUB_WORKSPACE/type-check-reports/type-check-${pkg_name//\//-}.txt" || {
+    #                       echo "Type check for $pkg_name"
+    #                       continue
+    #                     }
 
-                      const typeCheckComment = comments.data.find(comment => 
-                        comment.body.includes('## 📊 Type Check Reports')
-                      );
+    #                     cd "$GITHUB_WORKSPACE"
+    #                   fi
+    #                 fi
+    #               done
 
-                      if (typeCheckComment) {
-                        // Update existing comment
-                        await github.rest.issues.updateComment({
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          comment_id: typeCheckComment.id,
-                          body: report
-                        });
-                      } else {
-                        // Create new comment
-                        await github.rest.issues.createComment({
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          issue_number: context.issue.number,
-                          body: report
-                        });
-                      }
+    #               # Combine all reports
+    #               echo "## 📊 Type Check Reports" > "$GITHUB_WORKSPACE/combined-report.txt"
+    #               echo '\`\`\`' >> "$GITHUB_WORKSPACE/combined-report.txt"
+    #               for report in "$GITHUB_WORKSPACE/type-check-reports/type-check-"*.txt; do
+    #                 if [ -f "$report" ]; then
+    #                   pkg_name=${report##*/type-check-}
+    #                   pkg_name=${pkg_name%.txt}
+    #                   pkg_name=${pkg_name//-/\/}
+    #                   echo -e "\n Package: $pkg_name\n" >> "$GITHUB_WORKSPACE/combined-report.txt"
+    #                   cat "$report" >> "$GITHUB_WORKSPACE/combined-report.txt"
+    #                 fi
+    #               done
+    #               echo '\`\`\`' >> "$GITHUB_WORKSPACE/combined-report.txt"
+
+    #               echo "report<<EOF" >> $GITHUB_OUTPUT
+    #               cat "$GITHUB_WORKSPACE/combined-report.txt" >> $GITHUB_OUTPUT
+    #               echo "EOF" >> $GITHUB_OUTPUT
+
+    #         - name: Comment PR
+    #           uses: actions/github-script@v7
+    #           with:
+    #               github-token: ${{ secrets.GITHUB_TOKEN }}
+    #               script: |
+    #                   const report = `${{ steps.type-check.outputs.report }}`;
+
+    #                   // Find existing type check comment
+    #                   const comments = await github.rest.issues.listComments({
+    #                     owner: context.repo.owner,
+    #                     repo: context.repo.repo,
+    #                     issue_number: context.issue.number,
+    #                   });
+
+    #                   const typeCheckComment = comments.data.find(comment =>
+    #                     comment.body.includes('## 📊 Type Check Reports')
+    #                   );
+
+    #                   if (typeCheckComment) {
+    #                     // Update existing comment
+    #                     await github.rest.issues.updateComment({
+    #                       owner: context.repo.owner,
+    #                       repo: context.repo.repo,
+    #                       comment_id: typeCheckComment.id,
+    #                       body: report
+    #                     });
+    #                   } else {
+    #                     // Create new comment
+    #                     await github.rest.issues.createComment({
+    #                       owner: context.repo.owner,
+    #                       repo: context.repo.repo,
+    #                       issue_number: context.issue.number,
+    #                       body: report
+    #                     });
+    #                   }
 
     vitest:
         name: Vitest

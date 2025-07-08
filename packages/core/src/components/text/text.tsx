@@ -1,18 +1,24 @@
+'use client';
+
 import { forwardRef } from 'react';
 
 import clsx from 'clsx';
 
-import { vapor } from '~/libs/factory';
+import type { VaporComponentProps } from '~/libs/factory';
+import { splitLayoutProps, vapor } from '~/libs/factory';
 import { foregroundSprinkles, typographySprinkles } from '~/styles/sprinkles';
 import type { Foreground, Typography } from '~/styles/sprinkles';
+import { sprinkles } from '~/styles/sprinkles.css';
 
-interface TextProps extends React.ComponentPropsWithoutRef<typeof vapor.span> {
+type TextProps = VaporComponentProps<'span'> & {
     typography?: Typography;
     foreground?: Foreground;
-}
+};
 
 const Text = forwardRef<HTMLSpanElement, TextProps>(
     ({ typography, foreground, children, className, ...props }, ref) => {
+        const [layoutProps, otherProps] = splitLayoutProps(props);
+
         return (
             <vapor.span
                 ref={ref}
@@ -20,8 +26,9 @@ const Text = forwardRef<HTMLSpanElement, TextProps>(
                     className,
                     typographySprinkles({ typography }),
                     foregroundSprinkles({ foreground }),
+                    sprinkles(layoutProps),
                 )}
-                {...props}
+                {...otherProps}
             >
                 {children}
             </vapor.span>

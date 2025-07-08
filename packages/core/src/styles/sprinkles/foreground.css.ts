@@ -1,6 +1,6 @@
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles';
 
-import { vars } from '~/styles/contract.css';
+import { vars } from '~/styles/vars.css';
 
 const foregrounds = {
     primary: { color: vars.color.foreground.primary },

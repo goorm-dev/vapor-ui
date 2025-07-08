@@ -1,11 +1,12 @@
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
 import { interaction } from '~/styles/mixins/interactions.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const list = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         display: 'flex',
         gap: vars.size.space[100],
     }),
@@ -13,25 +14,25 @@ export const list = recipe({
     defaultVariants: { direction: 'horizontal', stretch: false },
     variants: {
         stretch: {
-            true: layerStyle('component', { display: 'flex' }),
-            false: layerStyle('component', { display: 'inline-flex' }),
+            true: layerStyle('vapor-component', { display: 'flex' }),
+            false: layerStyle('vapor-component', { display: 'inline-flex' }),
         },
         direction: {
-            horizontal: layerStyle('component', { flexDirection: 'row' }),
-            vertical: layerStyle('component', { flexDirection: 'column' }),
+            horizontal: layerStyle('vapor-component', { flexDirection: 'row' }),
+            vertical: layerStyle('vapor-component', { flexDirection: 'column' }),
         },
     },
 });
 
 export const item = recipe({
-    variants: { stretch: { true: layerStyle('component', { flex: 1 }) } },
+    variants: { stretch: { true: layerStyle('vapor-component', { flex: 1 }) } },
 });
 
 export const link = recipe({
     base: [
         interaction(),
 
-        layerStyle('component', {
+        layerStyle('vapor-component', {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -51,19 +52,19 @@ export const link = recipe({
     },
     variants: {
         disabled: {
-            true: layerStyle('component', {
+            true: layerStyle('vapor-component', {
                 pointerEvents: 'none',
                 opacity: 0.32,
             }),
         },
         align: {
-            start: layerStyle('component', { justifyContent: 'start' }),
-            center: layerStyle('component', { justifyContent: 'center' }),
-            end: layerStyle('component', { justifyContent: 'end' }),
+            start: layerStyle('vapor-component', { justifyContent: 'start' }),
+            center: layerStyle('vapor-component', { justifyContent: 'center' }),
+            end: layerStyle('vapor-component', { justifyContent: 'end' }),
         },
         shape: {
             fill: [
-                layerStyle('component', {
+                layerStyle('vapor-component', {
                     // !NOTE: `rgb-hint` is not a semantic. Consider using `rgb-secondary` or similar.
                     backgroundColor: `rgba(${vars.color.background['rgb-hint']}, 0.08)`,
                     color: vars.color.foreground['normal-lighter'],
@@ -76,7 +77,7 @@ export const link = recipe({
                     },
                 }),
             ],
-            ghost: layerStyle('component', {
+            ghost: layerStyle('vapor-component', {
                 backgroundColor: 'transparent',
                 color: vars.color.foreground['normal-lighter'],
 
@@ -88,7 +89,7 @@ export const link = recipe({
             }),
         },
         size: {
-            sm: layerStyle('component', {
+            sm: layerStyle('vapor-component', {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space[100],
                 height: vars.size.dimension['300'],
@@ -98,7 +99,7 @@ export const link = recipe({
                 fontSize: vars.typography.fontSize['050'],
                 fontWeight: vars.typography.fontWeight['500'],
             }),
-            md: layerStyle('component', {
+            md: layerStyle('vapor-component', {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space[150],
                 height: vars.size.dimension['400'],
@@ -108,7 +109,7 @@ export const link = recipe({
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight['500'],
             }),
-            lg: layerStyle('component', {
+            lg: layerStyle('vapor-component', {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space[200],
                 height: vars.size.dimension['500'],
@@ -118,7 +119,7 @@ export const link = recipe({
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight['500'],
             }),
-            xl: layerStyle('component', {
+            xl: layerStyle('vapor-component', {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space[300],
                 height: vars.size.dimension['600'],
@@ -131,3 +132,7 @@ export const link = recipe({
         },
     },
 });
+
+export type ListVariants = NonNullable<RecipeVariants<typeof list>>;
+export type ItemVariants = NonNullable<RecipeVariants<typeof item>>;
+export type LinkVariants = NonNullable<RecipeVariants<typeof link>>;
