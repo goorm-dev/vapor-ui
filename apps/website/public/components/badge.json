@@ -21,7 +21,7 @@
     ],
     "accessibility": [
         {
-            "headingDescription": "Badge WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.\nVapor Badge는 Radix 기능을 기반으로 구축되어 일부 웹 접근성은 Radix에서 제공하고 있습니다.",
+            "headingDescription": "Badge WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.",
             "sections": [
                 {
                     "title": "컴포넌트 내부적으로 준수되고 있는 접근성 기능을 명시합니다.",

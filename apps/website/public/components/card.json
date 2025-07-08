@@ -54,50 +54,5 @@
             "default": null,
             "description": "푸터에 표시할 콘텐츠입니다."
         }
-    ],
-    "accessibility": [
-        {
-            "headingDescription": "Card WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.\nVapor Card은 Radix 기능을 기반으로 구축되어 일부 웹 접근성은 Radix에서 제공하고 있습니다.",
-            "sections": [
-                {
-                    "title": "개발 시 준수해야 할 내용을 명시합니다.",
-                    "headerList": {
-                        "props": "Props",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "aria-label",
-                            "descriptions": [
-                                "Card.Title 컴포넌트를 이용하지 않을 시, 직접 aria-label을 넣어주어야 합니다."
-                            ],
-                            "exampleCode": "import Card from '@vapor-ui/core';\n\nconst Example = () => {\n    return (\n        <Card aria-label=\"Custom Card Title\">\n            <Card.Body>\n                <p>This is the body of the card.</p>\n            </Card.Body>\n            <Card.Footer>\n                <button>Action</button>\n            </Card.Footer>\n        </Card>\n    );\n};\n\nexport default Example;",
-                            "badgeColor": "primary"
-                        }
-                    ]
-                },
-                {
-                    "title": "컴포넌트 내부적으로 준수되고 있는 접근성 기능을 명시합니다.",
-                    "headerList": {
-                        "accessibility": "Accessibility",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "aria-labelledby",
-                            "descriptions": ["Card.Title 요소에 연결됩니다."],
-                            "exampleCode": "",
-                            "badgeColor": "primary"
-                        },
-                        {
-                            "itemKey": "aria-describedby",
-                            "descriptions": ["Card.Body 요소에 연결됩니다."],
-                            "exampleCode": "",
-                            "badgeColor": "primary"
-                        }
-                    ]
-                }
-            ]
-        }
     ]
 }
