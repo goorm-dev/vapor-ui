@@ -1,0 +1,44 @@
+---
+title: 'Radio Group'
+site_name: 'Radio Group - Vapor Core'
+description: 'Radio Group는 둘 또는 그 이상의 옵션 중 하나만 선택할 수 있도록 돕는 입력 컴포넌트입니다.'
+---
+
+## Import
+
+```js
+import { RadioGroup } from '@vapor-ui/core';
+```
+
+## Preview
+
+<LiveCodeBlock
+    code={`<RadioGroup.Root name="fruits">
+  <RadioGroup.Item value="apple">
+    <RadioGroup.Control />
+    <RadioGroup.Label>Apple</RadioGroup.Label>
+  </RadioGroup.Item>
+  <RadioGroup.Item value="orange">
+    <RadioGroup.Control />
+    <RadioGroup.Label>Orange</RadioGroup.Label>
+  </RadioGroup.Item>
+</RadioGroup.Root>`}
+/>
+
+## Props
+
+### RadioGroup.Root
+
+<PropsTable file="radio-group" section="props" />
+
+### RadioGroup.Item
+
+<PropsTable file="radio-group" section="itemProps" />
+
+### RadioGroup.Control
+
+<PropsTable file="radio-group" section="controlProps" />
+
+### RadioGroup.Label
+
+<PropsTable file="radio-group" section="labelProps" />
