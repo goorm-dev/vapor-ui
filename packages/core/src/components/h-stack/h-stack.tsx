@@ -2,24 +2,18 @@
 
 import { forwardRef } from 'react';
 
-import type { VaporComponentProps } from '~/libs/factory';
-import { createSplitProps } from '~/utils/create-split-props';
+import { Flex, type FlexProps } from '../flex';
 
-import { Flex } from '../flex';
+interface HStackProps extends Omit<FlexProps, 'flexDirection'> {
+    /**
+     * Reverse the horizontal alignment direction.
+     * @default false
+     */
+    reverse?: boolean;
+}
 
-type HStackVariants = { reverse?: boolean };
-type HStackPrimitiveProps = VaporComponentProps<typeof Flex>;
-
-type HStackProps = HStackPrimitiveProps & HStackVariants;
-
-const HStack = forwardRef<HTMLDivElement, HStackProps>(({ children, ...props }, ref) => {
-    const [hStackProps, otherProps] = createSplitProps<HStackVariants>()(props, ['reverse']);
-
-    return (
-        <Flex flexDirection={hStackProps.reverse ? 'row-reverse' : 'row'} ref={ref} {...otherProps}>
-            {children}
-        </Flex>
-    );
+const HStack = forwardRef<HTMLDivElement, HStackProps>(({ reverse, ...restProps }, ref) => {
+    return <Flex ref={ref} flexDirection={reverse ? 'row-reverse' : 'row'} {...restProps} />;
 });
 HStack.displayName = 'HStack';
 

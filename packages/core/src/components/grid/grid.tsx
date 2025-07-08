@@ -1,96 +1,61 @@
 'use client';
 
-import type { CSSProperties } from 'react';
 import { forwardRef } from 'react';
 
-import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
-import type { VaporComponentProps } from '~/libs/factory';
-import { vapor } from '~/libs/factory';
-import { createSplitProps } from '~/utils/create-split-props';
+import { type VaporComponentProps, vapor } from '~/libs/factory';
 
 import type { GridRootVariants } from './grid.css';
 import * as styles from './grid.css';
 
 /* -------------------------------------------------------------------------------------------------
- * Grid
+ * Grid.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type GridPrimitiveProps = VaporComponentProps<'div'>;
-type GridVariants = GridRootVariants & {
+type GridCustomVariants = {
+    /**
+     * Set `display` to `inline-grid`.
+     * @default false
+     */
     inline?: boolean;
-    templateRows?: string;
-    templateColumns?: string;
-    flow?: CSSProperties['gridAutoFlow'];
 };
 
-type GridRootProps = GridPrimitiveProps & GridVariants;
+interface GridRootProps extends VaporComponentProps<'div'>, GridRootVariants, GridCustomVariants {}
 
-const Root = forwardRef<HTMLDivElement, GridRootProps>(
-    ({ className, style, children, ...props }, ref) => {
-        const [gridRootProps, otherProps] = createSplitProps<GridVariants>()(props, [
-            'inline',
-            'templateRows',
-            'templateColumns',
-            'flow',
-        ]);
+const Root = forwardRef<HTMLDivElement, GridRootProps>((props, ref) => {
+    const { flow, inline, className } = props;
 
-        const { inline, templateRows, templateColumns, ...variants } = gridRootProps;
-
-        const cssVariables = assignInlineVars({
-            [styles.gridTemplateRows]: templateRows,
-            [styles.gridTemplateColumns]: templateColumns,
-        });
-
-        return (
-            <vapor.div
-                ref={ref}
-                display={inline ? 'inline-grid' : 'grid'}
-                style={{ ...cssVariables, ...style }}
-                className={clsx(styles.root(variants), className)}
-                {...otherProps}
-            >
-                {children}
-            </vapor.div>
-        );
-    },
-);
-Root.displayName = 'Grid';
+    return (
+        <vapor.div
+            ref={ref}
+            display={inline ? 'inline-grid' : 'grid'}
+            className={clsx(styles.root({ flow }), className)}
+            {...props}
+        />
+    );
+});
+Root.displayName = 'Grid.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Grid.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type GridItemPrimitiveProps = VaporComponentProps<'div'>;
-type GridItemVariants = { rowSpan?: string; colSpan?: string };
+interface GridItemProps extends VaporComponentProps<'div'> {}
 
-type GridItemProps = GridItemPrimitiveProps & GridItemVariants;
+const Item = forwardRef<HTMLDivElement, GridItemProps>((props, ref) => {
+    const { className } = props;
 
-const Item = forwardRef<HTMLDivElement, GridItemProps>(
-    ({ rowSpan, colSpan, className, style, children, ...props }, ref) => {
-        const cssVariables = assignInlineVars({
-            [styles.gridItemRowSpan]: rowSpan,
-            [styles.gridItemColSpan]: colSpan,
-        });
-
-        return (
-            <vapor.div
-                ref={ref}
-                style={{ ...cssVariables, ...style }}
-                className={clsx(styles.item, className)}
-                {...props}
-            >
-                {children}
-            </vapor.div>
-        );
-    },
-);
+    return <vapor.div ref={ref} className={clsx(styles.item, className)} {...props} />;
+});
 Item.displayName = 'Grid.Item';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+export const Grid = {
+    Root,
+    Item,
+};
+
 export { Root as GridRoot, Item as GridItem };
 export type { GridRootProps, GridItemProps };
-
-export const Grid = { Root, Item };

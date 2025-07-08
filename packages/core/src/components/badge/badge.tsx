@@ -11,7 +11,7 @@ import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
 type BadgePrimitiveProps = Omit<VaporComponentProps<'span'>, 'color'>;
-type BadgeProps = BadgePrimitiveProps & BadgeVariants;
+interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
 
 const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ...props }, ref) => {
     const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(props, [

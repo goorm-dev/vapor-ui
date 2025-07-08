@@ -1,24 +1,22 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import clsx from 'clsx';
 
-import { vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
+import { type VaporComponentProps, vapor } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { CalloutVariants } from './callout.css';
 import * as styles from './callout.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Callout
  * -----------------------------------------------------------------------------------------------*/
 
-type CalloutPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
-type CalloutVariants = MergeRecipeVariants<typeof styles.root>;
+type CalloutPrimitiveProps = Omit<VaporComponentProps<'div'>, 'color'>;
 
-interface CalloutProps extends Omit<CalloutPrimitiveProps, 'color'>, CalloutVariants {}
+interface CalloutProps extends CalloutPrimitiveProps, CalloutVariants {}
 
 const Callout = forwardRef<HTMLDivElement, CalloutProps>(
     ({ className, children, ...props }, ref) => {

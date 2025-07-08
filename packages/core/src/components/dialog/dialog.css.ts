@@ -72,7 +72,7 @@ export const content = recipe({
     },
 });
 
-export type DialogContentVariants = RecipeVariants<typeof content>;
+export type DialogContentVariants = NonNullable<RecipeVariants<typeof content>>;
 
 export const title = layerStyle('vapor-component', {
     lineHeight: vars.typography.lineHeight['200'],
