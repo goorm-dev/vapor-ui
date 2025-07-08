@@ -63,6 +63,11 @@ const commonConfig: Options = {
     external: ['react', 'react-dom'],
     dts: false,
     format: ['esm', 'cjs'],
+    outExtension({ format }) {
+        return {
+            js: format === 'cjs' ? '.cjs' : '.js',
+        };
+    },
 };
 export default defineConfig([
     {
@@ -101,7 +106,8 @@ export default defineConfig([
     {
         entry: ['src/index.ts', 'src/components/*/index.ts'],
         outDir: 'dist/types',
-        format: 'esm',
+        format: 'cjs',
+        splitting: true,
         dts: {
             only: true,
         },
@@ -121,8 +127,5 @@ export default defineConfig([
                 processCss,
             }),
         ],
-        async onSuccess() {
-            fs.unlinkSync('dist/styles.cjs');
-        },
     },
 ]);

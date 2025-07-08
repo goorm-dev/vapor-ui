@@ -12,7 +12,6 @@
     "author": "Vapor Team <vapor.ui@goorm.io>",
     "license": "MIT",
     "homepage": "https://github.com/goorm-dev/vapor-ui",
-    "type": "module",
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
     "types": "./dist/types/index.d.ts",
@@ -48,7 +47,7 @@
         "url": "https://github.com/goorm-dev/vapor-ui/issues"
     },
     "scripts": {
-        "build": "tsup && npx --yes @arethetypeswrong/cli --exclude-entrypoints styles.css --pack .",
+        "build": "tsup",
         "lint": "eslint ./src",
         "clean": "rimraf dist node_modules .turbo",
         "test": "vitest",
