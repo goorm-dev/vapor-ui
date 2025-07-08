@@ -69,7 +69,7 @@ Root.displayName = 'Switch.Root';
  * Switch.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchLabelPrimitiveProps = ComponentPropsWithoutRef<'label'>;
+type SwitchLabelPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.label>;
 interface SwitchLabelProps extends SwitchLabelPrimitiveProps {}
 
 const Label = forwardRef<HTMLLabelElement, SwitchLabelProps>(
