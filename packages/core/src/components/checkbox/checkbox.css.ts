@@ -1,10 +1,10 @@
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { typographySprinkles } from '~/styles/sprinkles';
+import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
     base: layerStyle('vapor-component', {

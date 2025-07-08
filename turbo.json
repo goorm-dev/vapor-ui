@@ -13,6 +13,14 @@
         "test": {
             "outputs": []
         },
+        "format": {
+            "outputs": [],
+            "cache": false
+        },
+        "format:check": {
+            "outputs": [],
+            "cache": false
+        },
         "website#start": {
             "dependsOn": ["website#build"],
             "outputs": [".next/**", "!.next/cache/**"]
