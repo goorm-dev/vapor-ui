@@ -5,17 +5,8 @@ import { createContext, memo, useCallback, useContext, useEffect, useMemo, useSt
 
 import { RADIUS_FACTOR_VAR_NAME, SCALE_FACTOR_VAR_NAME } from '~/styles/global-var.css';
 
-import { THEME_CONFIG, themeInjectScript } from './theme-injector';
+import { THEME_CONFIG, createThemeConfig, themeInjectScript } from './theme-injector';
 import type { Appearance, Radius, Scaling, ThemeState } from './theme-injector';
-
-/* -------------------------------------------------------------------------------------------------
- * Constants & Core Types
- * -----------------------------------------------------------------------------------------------*/
-const DEFAULT_THEME: ThemeState = {
-    appearance: 'light',
-    radius: 'md',
-    scaling: 1,
-};
 
 /**
  * Unified configuration interface for ThemeProvider and ThemeScript
@@ -36,34 +27,6 @@ interface ResolvedThemeConfig extends ThemeState {
     storageKey: string;
     nonce?: string;
     enableSystemTheme: boolean;
-}
-
-/**
- * Creates a complete configuration object by merging user config with defaults
- *
- * @example
- * ```tsx
- * const config = createThemeConfig({
- *   appearance: 'dark',
- *   storageKey: 'my-app-theme'
- * });
- * ```
- */
-function createThemeConfig(userConfig?: VaporThemeConfig): ResolvedThemeConfig {
-    const {
-        storageKey = THEME_CONFIG.STORAGE_KEY,
-        nonce,
-        enableSystemTheme = false,
-        ...themeProps
-    } = userConfig ?? {};
-
-    return {
-        ...DEFAULT_THEME,
-        ...themeProps,
-        storageKey,
-        nonce,
-        enableSystemTheme,
-    };
 }
 
 /**
@@ -253,5 +216,5 @@ const useTheme = (): ThemeContextValue => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { ThemeProvider, ThemeScript, useTheme, createThemeConfig };
+export { ThemeProvider, ThemeScript, useTheme };
 export type { VaporThemeConfig, ThemeState, Appearance, Radius, Scaling };

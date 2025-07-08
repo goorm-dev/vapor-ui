@@ -1,3 +1,12 @@
+/* -------------------------------------------------------------------------------------------------
+ * Constants & Core Types
+ * -----------------------------------------------------------------------------------------------*/
+const DEFAULT_THEME: ThemeState = {
+    appearance: 'light',
+    radius: 'md',
+    scaling: 1,
+};
+
 const DARK_CLASS_NAME = 'vapor-dark-theme';
 const LIGHT_CLASS_NAME = 'vapor-light-theme';
 
@@ -22,6 +31,19 @@ type Appearance = keyof typeof THEME_CONFIG.CLASS_NAMES;
 type Radius = keyof typeof THEME_CONFIG.RADIUS_FACTOR_MAP;
 type Scaling = number;
 
+interface VaporThemeConfig extends Partial<ThemeState> {
+    /** localStorage key for persistence */
+    storageKey?: string;
+    /** CSP nonce value */
+    nonce?: string;
+    /** Enable system theme detection (for future extension) */
+    enableSystemTheme?: boolean;
+}
+interface ResolvedThemeConfig extends ThemeState {
+    storageKey: string;
+    nonce?: string;
+    enableSystemTheme: boolean;
+}
 interface ThemeState {
     appearance: Appearance;
     radius: Radius;
@@ -96,9 +118,38 @@ const themeInjectScript = (
     })();
 };
 
+/**
+ * Creates a complete configuration object by merging user config with defaults
+ *
+ * @example
+ * ```tsx
+ * const config = createThemeConfig({
+ *   appearance: 'dark',
+ *   storageKey: 'my-app-theme'
+ * });
+ * ```
+ */
+const createThemeConfig = (userConfig?: VaporThemeConfig): ResolvedThemeConfig => {
+    const {
+        storageKey = THEME_CONFIG.STORAGE_KEY,
+        nonce,
+        enableSystemTheme = false,
+        ...themeProps
+    } = userConfig ?? {};
+
+    return {
+        ...DEFAULT_THEME,
+        ...themeProps,
+        storageKey,
+        nonce,
+        enableSystemTheme,
+    };
+};
+
 export {
     THEME_CONFIG,
     themeInjectScript,
+    createThemeConfig,
     type ThemeConfig,
     type Appearance,
     type Radius,
