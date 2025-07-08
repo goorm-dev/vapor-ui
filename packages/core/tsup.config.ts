@@ -83,7 +83,7 @@ export default defineConfig([
         ...commonConfig,
         entry: ['src/components/*/index.ts'],
         outDir: OUT_DIR,
-        splitting: true,
+        splitting: false,
         esbuildPlugins: [
             vanillaExtractPlugin({
                 outputCss: true,
