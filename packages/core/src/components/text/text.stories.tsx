@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { VStack } from '../v-stack';
 import { Text } from './text';
@@ -8,7 +8,7 @@ export default {
     component: Text,
     argTypes: {
         typography: {
-            control: 'inline-radio',
+            control: 'select',
             options: [
                 'display1',
                 'display2',
@@ -28,8 +28,8 @@ export default {
                 'code2',
             ],
         },
-        color: {
-            control: 'inline-radio',
+        foreground: {
+            control: 'select',
             options: [
                 'primary',
                 'primary-darker',
@@ -52,7 +52,7 @@ export default {
             ],
         },
     },
-};
+} as Meta<typeof Text>;
 
 const PANGRAM = 'Bright vixens jump; dozy fowl quack.';
 
