@@ -30,8 +30,10 @@ description: Vapor UI 테마 시스템을 설정하는 방법
 3. **Root layout.tsx에 적용**
 
     ```tsx
-    import { createThemeConfig, ThemeScript, ThemeProvider } from "@vapor-ui/core";
-    import "@vapor-ui/core/styles.css";
+    import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
+    import '@vapor-ui/core/dist/styles.css';
+
+    // createThemeConfig를 상단에 추가하거나, 별도 설정 파일에서 import합니다.
 
     export default function RootLayout({ children }) {
         return (
