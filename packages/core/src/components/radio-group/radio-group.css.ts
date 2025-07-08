@@ -1,30 +1,30 @@
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         display: 'flex',
     }),
 
     defaultVariants: { orientation: 'vertical' },
     variants: {
         size: {
-            md: layerStyle('component', { gap: vars.size.space['050'] }),
-            lg: layerStyle('component', { gap: vars.size.space['100'] }),
+            md: layerStyle('vapor-component', { gap: vars.size.space['050'] }),
+            lg: layerStyle('vapor-component', { gap: vars.size.space['100'] }),
         },
         orientation: {
-            horizontal: layerStyle('component', { flexDirection: 'row' }),
-            vertical: layerStyle('component', { flexDirection: 'column' }),
+            horizontal: layerStyle('vapor-component', { flexDirection: 'row' }),
+            vertical: layerStyle('vapor-component', { flexDirection: 'column' }),
         },
     },
 });
 
 export const item = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         display: 'flex',
         flexShrink: 0,
         alignItems: 'center',
@@ -34,14 +34,14 @@ export const item = recipe({
 
     defaultVariants: { disabled: false },
     variants: {
-        disabled: { true: layerStyle('component', { opacity: 0.32, pointerEvents: 'none' }) },
+        disabled: { true: layerStyle('vapor-component', { opacity: 0.32, pointerEvents: 'none' }) },
     },
 });
 
 export const control = recipe({
     base: [
         interaction(),
-        layerStyle('component', {
+        layerStyle('vapor-component', {
             position: 'relative',
 
             display: 'flex',
@@ -73,15 +73,15 @@ export const control = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('component', { borderColor: vars.color.background['danger'] }),
+            true: layerStyle('vapor-component', { borderColor: vars.color.background['danger'] }),
         },
 
         size: {
-            md: layerStyle('component', {
+            md: layerStyle('vapor-component', {
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
-            lg: layerStyle('component', {
+            lg: layerStyle('vapor-component', {
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
             }),
@@ -89,7 +89,7 @@ export const control = recipe({
     },
 });
 
-export const indicator = layerStyle('component', {
+export const indicator = layerStyle('vapor-component', {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -102,7 +102,7 @@ export const indicator = layerStyle('component', {
 });
 
 export const label = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         lineHeight: vars.typography.lineHeight['075'],
 
         letterSpacing: vars.typography.letterSpacing['100'],
