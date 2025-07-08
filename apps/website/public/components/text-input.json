@@ -53,12 +53,6 @@
             "type": "boolean | undefined",
             "default": "false",
             "description": "Label을 시각적으로 숨기고 스크린 리더용으로만 제공합니다."
-        },
-        {
-            "prop": "placeholder",
-            "type": "string | undefined",
-            "default": null,
-            "description": "입력 필드가 비어 있을 때 표시되는 안내 텍스트입니다."
         }
     ],
     "labelProps": [
@@ -87,6 +81,12 @@
             "type": "string | undefined",
             "default": null,
             "description": "입력 필드에 추가할 CSS 클래스를 지정합니다."
+        },
+        {
+            "prop": "placeholder",
+            "type": "string | undefined",
+            "default": null,
+            "description": "입력 필드가 비어 있을 때 표시되는 안내 텍스트입니다."
         }
     ],
     "accessibility": [

@@ -22,10 +22,10 @@ const SemanticSizeRow = ({ sizeType = 'width', name, value }: SemanticSizeRowPro
             <td>
                 <div
                     style={{
-                        width: isBorderRadius ? ' 5rem' : `var(--${name})`,
-                        height: isBorderRadius ? ' 5rem' : `var(--${name})`,
+                        width: isBorderRadius ? ' 5rem' : `var(${name})`,
+                        height: isBorderRadius ? ' 5rem' : `var(${name})`,
                         backgroundColor: 'var(--vapor-color-blue-100)',
-                        borderRadius: isBorderRadius ? `var(--${name})` : '0',
+                        borderRadius: isBorderRadius ? `var(${name})` : '0',
                     }}
                 />
             </td>
