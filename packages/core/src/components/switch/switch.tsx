@@ -3,20 +3,17 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
+import { Primitive } from '@radix-ui/react-primitive';
 import { Thumb as RadixSwitchIndicator, Root as RadixSwitchRoot } from '@radix-ui/react-switch';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { splitLayoutProps, vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
-import type { Sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { ControlVariants, LabelVariants, RootVariants } from './switch.css';
 import * as styles from './switch.css';
 
-type SwitchVariants = MergeRecipeVariants<
-    typeof styles.root | typeof styles.label | typeof styles.control
->;
+type SwitchVariants = RootVariants & ControlVariants & LabelVariants;
 
 type SwitchSharedProps = SwitchVariants & {
     checked?: boolean;
@@ -38,8 +35,7 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchContext>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchRootPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
-
+type SwitchRootPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 interface SwitchRootProps
     extends Omit<SwitchRootPrimitiveProps, keyof SwitchSharedProps>,
         SwitchSharedProps {}
@@ -59,7 +55,7 @@ const Root = forwardRef<HTMLDivElement, SwitchRootProps>(({ className, ...props 
 
     return (
         <SwitchProvider value={{ switchId, ...switchProps }}>
-            <vapor.div
+            <Primitive.div
                 ref={ref}
                 className={clsx(styles.root({ disabled }), className)}
                 {...otherProps}
@@ -73,8 +69,7 @@ Root.displayName = 'Switch.Root';
  * Switch.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchLabelPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.label>;
-
+type SwitchLabelPrimitiveProps = ComponentPropsWithoutRef<'label'>;
 interface SwitchLabelProps extends SwitchLabelPrimitiveProps {}
 
 const Label = forwardRef<HTMLLabelElement, SwitchLabelProps>(
@@ -82,7 +77,7 @@ const Label = forwardRef<HTMLLabelElement, SwitchLabelProps>(
         const { switchId, visuallyHidden } = useSwitchContext();
 
         return (
-            <vapor.label
+            <Primitive.label
                 ref={ref}
                 htmlFor={htmlFor || switchId}
                 className={clsx(styles.label({ visuallyHidden }), className)}
@@ -98,32 +93,26 @@ Label.displayName = 'Switch.Label';
  * -----------------------------------------------------------------------------------------------*/
 
 type SwitchControlPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSwitchRoot>;
-interface SwitchControlProps
-    extends Omit<SwitchControlPrimitiveProps, keyof SwitchSharedProps>,
-        Sprinkles {}
+interface SwitchControlProps extends Omit<SwitchControlPrimitiveProps, keyof SwitchSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, SwitchControlProps>(
     ({ id, className, ...props }, ref) => {
         const { switchId, checked, onCheckedChange, defaultChecked, disabled, size } =
             useSwitchContext();
 
-        const [layoutProps, otherProps] = splitLayoutProps(props);
-
         return (
-            <vapor.button asChild {...layoutProps}>
-                <RadixSwitchRoot
-                    ref={ref}
-                    id={id || switchId}
-                    checked={checked}
-                    defaultChecked={defaultChecked}
-                    onCheckedChange={onCheckedChange}
-                    disabled={disabled}
-                    className={clsx(styles.control({ size }), className)}
-                    {...otherProps}
-                >
-                    <RadixSwitchIndicator className={styles.indicator({ size })} />
-                </RadixSwitchRoot>
-            </vapor.button>
+            <RadixSwitchRoot
+                ref={ref}
+                id={id || switchId}
+                checked={checked}
+                defaultChecked={defaultChecked}
+                onCheckedChange={onCheckedChange}
+                disabled={disabled}
+                className={clsx(styles.control({ size }), className)}
+                {...props}
+            >
+                <RadixSwitchIndicator className={styles.indicator({ size })} />
+            </RadixSwitchRoot>
         );
     },
 );

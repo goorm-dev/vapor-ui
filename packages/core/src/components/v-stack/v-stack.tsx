@@ -1,24 +1,24 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import type { VaporComponentProps } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
 import { Flex } from '../flex';
 
 type VStackVariants = { reverse?: boolean };
-type VStackPrimitiveProps = VaporComponentProps<typeof Flex>;
+type VStackPrimitiveProps = ComponentPropsWithoutRef<typeof Flex>;
 
-type VStackProps = VStackPrimitiveProps & VStackVariants;
+interface VStackProps extends VStackPrimitiveProps, VStackVariants {}
 
-const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...props }, ref) => {
+const VStack = forwardRef<HTMLDivElement, VStackProps>(({ style, children, ...props }, ref) => {
     const [vStackProps, otherProps] = createSplitProps<VStackVariants>()(props, ['reverse']);
 
     return (
         <Flex
-            flexDirection={vStackProps.reverse ? 'column-reverse' : 'column'}
             ref={ref}
+            style={{ flexDirection: vStackProps.reverse ? 'column-reverse' : 'column', ...style }}
             {...otherProps}
         >
             {children}

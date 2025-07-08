@@ -50,7 +50,13 @@ export const Controlled: Story = {
 
 export const TestBed: Story = {
     render: (args) => (
-        <Grid.Root templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
+        <Grid.Root
+            templateRows="repeat(3, 1fr)"
+            templateColumns="repeat(3, 1fr)"
+            style={{
+                gap: 'var(--vapor-size-dimension-300)',
+            }}
+        >
             <TextInput.Root placeholder="sadf" {...args}>
                 <TextInput.Label>Label</TextInput.Label>
                 <TextInput.Field />

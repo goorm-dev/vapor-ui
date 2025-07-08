@@ -1,22 +1,26 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import type { VaporComponentProps } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
 import { Flex } from '../flex';
 
 type HStackVariants = { reverse?: boolean };
-type HStackPrimitiveProps = VaporComponentProps<typeof Flex>;
+type HStackPrimitiveProps = ComponentPropsWithoutRef<typeof Flex>;
 
-type HStackProps = HStackPrimitiveProps & HStackVariants;
+interface HStackProps extends HStackPrimitiveProps, HStackVariants {}
 
-const HStack = forwardRef<HTMLDivElement, HStackProps>(({ children, ...props }, ref) => {
+const HStack = forwardRef<HTMLDivElement, HStackProps>(({ style, children, ...props }, ref) => {
     const [hStackProps, otherProps] = createSplitProps<HStackVariants>()(props, ['reverse']);
 
     return (
-        <Flex flexDirection={hStackProps.reverse ? 'row-reverse' : 'row'} ref={ref} {...otherProps}>
+        <Flex
+            style={{ flexDirection: hStackProps.reverse ? 'row-reverse' : 'row', ...style }}
+            ref={ref}
+            {...otherProps}
+        >
             {children}
         </Flex>
     );

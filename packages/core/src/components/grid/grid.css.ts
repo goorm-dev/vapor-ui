@@ -32,4 +32,4 @@ export const item = layerStyle('vapor-component', {
     gridColumn: gridItemColSpan,
 });
 
-export type GridRootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

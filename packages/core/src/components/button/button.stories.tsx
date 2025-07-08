@@ -24,10 +24,11 @@ type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
     render: (args) => (
-        <HStack gap="$200">
+        // <HStack gap="$200">
+        <HStack style={{ gap: 'var(--vapor-size-dimension-200)' }}>
             <Button {...args}>Button</Button>
             <Button {...args} asChild>
-                <a href="https://vapor.goorm.io">Link Button(Polymorphic)</a>
+                <a href="https://Primitive.goorm.io">Link Button(Polymorphic)</a>
             </Button>
         </HStack>
     ),
@@ -65,7 +66,12 @@ export const TestBed: Story = {
 const Buttons = ({ color, disabled }: ButtonProps) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Button color={color} disabled={disabled} variant="fill" gap="050">
+            <Button
+                color={color}
+                disabled={disabled}
+                variant="fill"
+                style={{ gap: 'var(--vapor-size-dimension-050)' }}
+            >
                 {upperFirst(`${color}`)}
             </Button>
             <Button color={color} disabled={disabled} variant="ghost">

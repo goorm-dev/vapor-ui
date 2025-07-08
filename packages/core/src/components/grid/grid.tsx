@@ -1,31 +1,30 @@
 'use client';
 
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
-import type { VaporComponentProps } from '~/libs/factory';
-import { vapor } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
-import type { GridRootVariants } from './grid.css';
+import { Box } from '../box';
+import type { RootVariants } from './grid.css';
 import * as styles from './grid.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Grid
  * -----------------------------------------------------------------------------------------------*/
 
-type GridPrimitiveProps = VaporComponentProps<'div'>;
-type GridVariants = GridRootVariants & {
+type GridPrimitiveProps = ComponentPropsWithoutRef<typeof Box>;
+type GridVariants = RootVariants & {
     inline?: boolean;
     templateRows?: string;
     templateColumns?: string;
     flow?: CSSProperties['gridAutoFlow'];
 };
 
-type GridRootProps = GridPrimitiveProps & GridVariants;
+interface GridRootProps extends GridPrimitiveProps, GridVariants {}
 
 const Root = forwardRef<HTMLDivElement, GridRootProps>(
     ({ className, style, children, ...props }, ref) => {
@@ -44,15 +43,14 @@ const Root = forwardRef<HTMLDivElement, GridRootProps>(
         });
 
         return (
-            <vapor.div
+            <Box
                 ref={ref}
-                display={inline ? 'inline-grid' : 'grid'}
-                style={{ ...cssVariables, ...style }}
+                style={{ display: inline ? 'inline-grid' : 'grid', ...cssVariables, ...style }}
                 className={clsx(styles.root(variants), className)}
                 {...otherProps}
             >
                 {children}
-            </vapor.div>
+            </Box>
         );
     },
 );
@@ -62,10 +60,10 @@ Root.displayName = 'Grid';
  * Grid.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type GridItemPrimitiveProps = VaporComponentProps<'div'>;
+type GridItemPrimitiveProps = ComponentPropsWithoutRef<typeof Box>;
 type GridItemVariants = { rowSpan?: string; colSpan?: string };
 
-type GridItemProps = GridItemPrimitiveProps & GridItemVariants;
+interface GridItemProps extends GridItemPrimitiveProps, GridItemVariants {}
 
 const Item = forwardRef<HTMLDivElement, GridItemProps>(
     ({ rowSpan, colSpan, className, style, children, ...props }, ref) => {
@@ -75,14 +73,14 @@ const Item = forwardRef<HTMLDivElement, GridItemProps>(
         });
 
         return (
-            <vapor.div
+            <Box
                 ref={ref}
                 style={{ ...cssVariables, ...style }}
                 className={clsx(styles.item, className)}
                 {...props}
             >
                 {children}
-            </vapor.div>
+            </Box>
         );
     },
 );
