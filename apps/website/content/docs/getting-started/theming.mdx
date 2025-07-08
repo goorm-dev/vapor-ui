@@ -9,8 +9,8 @@ description: Vapor UI 테마 시스템을 설정하는 방법
 
 1. **패키지 설치**
 
-    ```bash
-    npm install @vapor-ui/core
+    ```package-install
+    npm install @vapor-ui/core@latest
     ```
 
 2. **테마 설정 파일 생성**  
@@ -53,13 +53,13 @@ description: Vapor UI 테마 시스템을 설정하는 방법
 
 ## 2. Vite
 
-1. **패키지 설치**
+1.  **패키지 설치**
 
-    ```bash
-    npm install @vapor-ui/core
-    ```
-{/* 
-2. **index.html에 FOUC 방지 스크립트 추가**
+```package-install
+npm install @vapor-ui/core@latest
+```
+
+2.  **index.html에 FOUC 방지 스크립트 추가**
 
     ```html
     <!-- public/index.html -->
@@ -88,9 +88,9 @@ description: Vapor UI 테마 시스템을 설정하는 방법
             root.style.setProperty('--vapor-scale-factor', scaleFactor.toString());
         })();
     </script>
-    ``` */}
+    ```
 
-2. **ThemeProvider 설정**
+3.  **ThemeProvider 설정**
 
     ```tsx
     // src/main.tsx
