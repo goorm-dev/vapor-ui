@@ -1,8 +1,8 @@
 import { calc } from '@vanilla-extract/css-utils';
 import { createRainbowSprinkles, defineProperties } from 'rainbow-sprinkles';
 
-import { vars } from './vars.css';
 import { layers } from './layers.css';
+import { vars } from './vars.css';
 
 const spaceTokens = vars.size.space;
 type SpaceKey = keyof typeof spaceTokens;

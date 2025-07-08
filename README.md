@@ -44,14 +44,14 @@ For detailed usage instructions, please refer to the [official documentation](ht
 
 Vapor is a monorepo that efficiently manages multiple packages using pnpm Workspace and Turborepo.
 
-| Package                 | Description                                                          | NPM                                                                                                       |
-| ----------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| @vapor-ui/core          | Core UI component library                                            | [![npm](https://img.shields.io/npm/v/@vapor-ui/core.svg)](https://www.npmjs.com/package/@vapor-ui/core)   |
+| Package                 | Description                                                           | NPM                                                                                                       |
+| ----------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| @vapor-ui/core          | Core UI component library                                             | [![npm](https://img.shields.io/npm/v/@vapor-ui/core.svg)](https://www.npmjs.com/package/@vapor-ui/core)   |
 | @vapor-ui/icons         | A set of SVG icon React components used in the Vapor UI design system | [![npm](https://img.shields.io/npm/v/@vapor-ui/icons.svg)](https://www.npmjs.com/package/@vapor-ui/icons) |
 | @vapor-ui/hooks         | A collection of reusable React hooks for the Vapor UI design system   | [![npm](https://img.shields.io/npm/v/@vapor-ui/hooks.svg)](https://www.npmjs.com/package/@vapor-ui/hooks) |
-| apps/website            | Official documentation website                                       | -                                                                                                         |
-| @repo/eslint-config     | Shared ESLint configuration                                          | -                                                                                                         |
-| @repo/typescript-config | Shared TypeScript tsconfig configuration                             | -                                                                                                         |
+| apps/website            | Official documentation website                                        | -                                                                                                         |
+| @repo/eslint-config     | Shared ESLint configuration                                           | -                                                                                                         |
+| @repo/typescript-config | Shared TypeScript tsconfig configuration                              | -                                                                                                         |
 
 ## Community & Support
 

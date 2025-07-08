@@ -44,11 +44,11 @@ npm i @vapor-ui/core @vapor-ui/icons @vapor-ui/hooks
 
 Vapor는 pnpm Workspace와 Turborepo를 사용하여 여러 패키지를 효율적으로 관리하는 모노레포입니다.
 
-| 패키지                  | 설명                                                              | NPM                                                                                                       |
-| ----------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| @vapor-ui/core          | 핵심 UI 컴포넌트 라이브러리                                       | [![npm](https://img.shields.io/npm/v/@vapor-ui/core.svg)](https://www.npmjs.com/package/@vapor-ui/core)   |
+| 패키지                  | 설명                                                               | NPM                                                                                                       |
+| ----------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| @vapor-ui/core          | 핵심 UI 컴포넌트 라이브러리                                        | [![npm](https://img.shields.io/npm/v/@vapor-ui/core.svg)](https://www.npmjs.com/package/@vapor-ui/core)   |
 | @vapor-ui/icons         | Vapor UI 디자인 시스템에서 사용하는 SVG 아이콘 React 컴포넌트 세트 | [![npm](https://img.shields.io/npm/v/@vapor-ui/icons.svg)](https://www.npmjs.com/package/@vapor-ui/icons) |
 | @vapor-ui/hooks         | Vapor UI 디자인 시스템을 위한 재사용 가능한 React 훅 모음          | [![npm](https://img.shields.io/npm/v/@vapor-ui/hooks.svg)](https://www.npmjs.com/package/@vapor-ui/hooks) |
-| apps/website            | 공식 문서 웹사이트                                                | -                                                                                                         |
-| @repo/eslint-config     | 공유 ESLint 설정                                                  | -                                                                                                         |
-| @repo/typescript-config | 공유 TypeScript tsconfig 설정                                     | -                                                                                                         |
+| apps/website            | 공식 문서 웹사이트                                                 | -                                                                                                         |
+| @repo/eslint-config     | 공유 ESLint 설정                                                   | -                                                                                                         |
+| @repo/typescript-config | 공유 TypeScript tsconfig 설정                                      | -                                                                                                         |

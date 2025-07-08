@@ -72,7 +72,6 @@ All commits must follow the **Conventional Commits specification**. This is esse
 `<type>(<scope>): <subject>`
 
 - **Main Types and Their Effect on Versioning**:
-
     - `feat`: Used for adding a new feature. **(Results in a MINOR version bump)**
         - `feat(Avatar): add new Avatar component`
     - `fix`: Used for bug fixes. **(Results in a PATCH version bump)**
@@ -81,7 +80,6 @@ All commits must follow the **Conventional Commits specification**. This is esse
         - `feat(Button)!: change 'kind' prop to 'variant' for clarity`
 
 - **Other Types**:
-
     - `docs`, `style`, `refactor`, `test`, `perf`, `chore`, etc. These types generally do not affect the version number.
 
 - **Scope**: Specifies the part of the codebase affected, written in lowercase (e.g., `modal`, `hooks`).

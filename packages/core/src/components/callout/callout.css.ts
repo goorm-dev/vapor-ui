@@ -1,7 +1,7 @@
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
     base: layerStyle('vapor-component', {
