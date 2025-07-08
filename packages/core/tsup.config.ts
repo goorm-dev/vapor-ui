@@ -5,7 +5,8 @@ import { sync } from 'glob';
 import postcss from 'postcss';
 import { type Options, defineConfig } from 'tsup';
 
-const OUT_DIR = 'dist/components';
+const COMPONENT_DIR = 'dist/components';
+const DIR = 'dist';
 
 /**
  * @link https://vanilla-extract.style/documentation/integrations/esbuild/#processcss
@@ -20,29 +21,38 @@ async function processCss(css: string) {
 
 const injectSideEffectImports = async (format: 'esm' | 'cjs') => {
     const isEsm = format === 'esm';
-    const files = isEsm ? sync(`${OUT_DIR}/*/index.js`) : sync(`${OUT_DIR}/*/index.cjs`);
+    const files = isEsm
+        ? sync(`${COMPONENT_DIR}/*/index.js`)
+        : sync(`${COMPONENT_DIR}/*/index.cjs`);
 
     for (const file of files) {
         try {
             let content = fs.readFileSync(file, 'utf-8');
             const componentName = isEsm
-                ? file.split(`${OUT_DIR}/`)[1].split('/index.js')[0]
-                : file.split(`${OUT_DIR}/`)[1].split('/index.cjs')[0];
+                ? file.split(`${COMPONENT_DIR}/`)[1].split('/index.js')[0]
+                : file.split(`${COMPONENT_DIR}/`)[1].split('/index.cjs')[0];
             const componentSourceFile = fs.readFileSync(
                 `src/components/${componentName}/${componentName}.tsx`,
                 'utf-8',
             );
-            const cssImport = isEsm ? `import "./index.css";` : `require("./index.css");`;
+
+            const cssFilePath = `src/components/${componentName}/${componentName}.css.ts`;
+            const cssFileExists = fs.existsSync(cssFilePath);
+
             const useClientDirective = `'use client';`;
             const useStrictDirective = `"use strict";`;
 
-            if (content.includes(useStrictDirective)) {
-                content = content.replace(
-                    useStrictDirective,
-                    `${useStrictDirective}\n${cssImport}`,
-                );
-            } else {
-                content = `${cssImport}\n${content}`;
+            if (cssFileExists) {
+                const cssImport = isEsm ? `import "./index.css";` : `require("./index.css");`;
+
+                if (content.includes(useStrictDirective)) {
+                    content = content.replace(
+                        useStrictDirective,
+                        `${useStrictDirective}\n${cssImport}`,
+                    );
+                } else {
+                    content = `${cssImport}\n${content}`;
+                }
             }
 
             if (componentSourceFile.includes(useClientDirective)) {
@@ -69,20 +79,19 @@ const commonConfig: Options = {
         };
     },
 };
+
 export default defineConfig([
     {
         ...commonConfig,
-        entry: {
-            index: 'src/index.ts',
-        },
-        outDir: 'dist',
+        entry: { index: 'src/index.ts' },
+        outDir: DIR,
         external: [...(commonConfig.external || []), './components'],
         clean: true, // Clean the dist on the first build step.
     },
     {
         ...commonConfig,
         entry: ['src/components/*/index.ts'],
-        outDir: OUT_DIR,
+        outDir: COMPONENT_DIR,
         splitting: false,
         esbuildPlugins: [
             vanillaExtractPlugin({
@@ -105,12 +114,10 @@ export default defineConfig([
     },
     {
         entry: ['src/index.ts', 'src/components/*/index.ts'],
-        outDir: 'dist/types',
+        outDir: 'dist',
         format: 'cjs',
         splitting: true,
-        dts: {
-            only: true,
-        },
+        dts: { only: true },
         esbuildOptions(options) {
             options.outbase = './';
         },
@@ -120,7 +127,7 @@ export default defineConfig([
         entry: {
             styles: 'src/styles/index.ts',
         },
-        outDir: 'dist',
+        outDir: DIR,
         esbuildPlugins: [
             vanillaExtractPlugin({
                 outputCss: true,
