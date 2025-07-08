@@ -1,6 +1,6 @@
 ---
-'@vapor-ui/core': minor
-'website': minor
+'@vapor-ui/core': patch
+'website': patch
 ---
 
-feat(createThemeConfig): support RSC
+fix(createThemeConfig): support RSC
