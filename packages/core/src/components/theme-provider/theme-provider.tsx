@@ -5,7 +5,8 @@ import { createContext, memo, useCallback, useContext, useEffect, useMemo, useSt
 
 import { RADIUS_FACTOR_VAR_NAME, SCALE_FACTOR_VAR_NAME } from '~/styles/global-var.css';
 
-import { THEME_CONFIG, createThemeConfig, themeInjectScript } from './theme-injector';
+import { createThemeConfig } from '../create-theme-config';
+import { THEME_CONFIG, themeInjectScript } from './theme-injector';
 import type { Appearance, Radius, Scaling, ThemeState } from './theme-injector';
 
 /**

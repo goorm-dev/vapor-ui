@@ -8,7 +8,7 @@ export const root = layerStyle('vapor-component', {
     border: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius[300],
 
-    backgroundColor: vars.color.background.normal,
+    backgroundColor: vars.color.background['normal-lighter'],
 });
 
 export const header = layerStyle('vapor-component', {
