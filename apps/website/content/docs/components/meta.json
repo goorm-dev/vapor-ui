@@ -1,4 +1,14 @@
 {
     "title": "Components",
-    "pages": ["avatar", "badge", "button", "card", "icon-button", "nav", "text-input", "text"]
+    "pages": [
+        "avatar",
+        "badge",
+        "button",
+        "card",
+        "callout",
+        "icon-button",
+        "nav",
+        "text-input",
+        "text"
+    ]
 }

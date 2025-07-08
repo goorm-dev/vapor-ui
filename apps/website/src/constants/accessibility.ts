@@ -1,6 +1,7 @@
 import avatarData from '../../public/components/avatar.json';
 import badgeData from '../../public/components/badge.json';
 import buttonData from '../../public/components/button.json';
+import calloutData from '../../public/components/callout.json';
 import cardData from '../../public/components/card.json';
 import iconButtonData from '../../public/components/icon-button.json';
 import navData from '../../public/components/nav.json';
@@ -12,7 +13,6 @@ export const ComponentAccessibilityDataMap: Record<string, unknown> = {
     avatar: avatarData.accessibility,
     badge: badgeData.accessibility,
     button: buttonData.accessibility,
-    card: cardData.accessibility,
     'icon-button': iconButtonData.accessibility,
     nav: navData.accessibility,
     text: textData.accessibility,
@@ -24,6 +24,7 @@ export {
     avatarData,
     badgeData,
     buttonData,
+    calloutData,
     cardData,
     iconButtonData,
     navData,
