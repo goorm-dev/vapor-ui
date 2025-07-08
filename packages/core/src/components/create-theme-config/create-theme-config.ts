@@ -1,4 +1,5 @@
-import { THEME_CONFIG, type ThemeState } from '../theme-provider';
+import { THEME_CONFIG } from '../theme-inject/theme-injector';
+import { type ThemeState } from '../theme-provider';
 
 /* -------------------------------------------------------------------------------------------------
  * Constants & Core Types
