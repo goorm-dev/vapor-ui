@@ -2,29 +2,20 @@
 
 import { forwardRef } from 'react';
 
-import type { VaporComponentProps } from '~/libs/factory';
-import { createSplitProps } from '~/utils/create-split-props';
+import { Flex, type FlexProps } from '../flex';
 
-import { Flex } from '../flex';
+interface VStackProps extends Omit<FlexProps, 'flexDirection'> {
+    /**
+     * Reverse the vertical alignment direction.
+     * @default false
+     */
+    reverse?: boolean;
+}
 
-type VStackVariants = { reverse?: boolean };
-type VStackPrimitiveProps = VaporComponentProps<typeof Flex>;
-
-type VStackProps = VStackPrimitiveProps & VStackVariants;
-
-const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...props }, ref) => {
-    const [vStackProps, otherProps] = createSplitProps<VStackVariants>()(props, ['reverse']);
-
-    return (
-        <Flex
-            flexDirection={vStackProps.reverse ? 'column-reverse' : 'column'}
-            ref={ref}
-            {...otherProps}
-        >
-            {children}
-        </Flex>
-    );
+const VStack = forwardRef<HTMLDivElement, VStackProps>(({ reverse, ...restProps }, ref) => {
+    return <Flex ref={ref} flexDirection={reverse ? 'column-reverse' : 'column'} {...restProps} />;
 });
+VStack.displayName = 'VStack';
 
 export { VStack };
 export type { VStackProps };
