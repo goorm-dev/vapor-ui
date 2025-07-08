@@ -1,7 +1,7 @@
 {
     "name": "@vapor-ui/core",
     "description": "An open-source component library for building high-quality, accessible web applications. Features easy customization and AI-friendly components. Maintained by @goorm-dev.",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "keywords": [
         "react",
         "react-components",
