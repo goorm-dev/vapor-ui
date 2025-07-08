@@ -1,4 +1,4 @@
-import { createGlobalVar, globalStyle } from '@vanilla-extract/css';
+import { globalStyle } from '@vanilla-extract/css';
 
 import { layers } from './layers.css';
 
@@ -75,40 +75,6 @@ globalStyle('button, a', {
     '@layer': {
         [layers.reset]: {
             cursor: 'pointer',
-        },
-    },
-});
-
-export const SCALE_FACTOR_VAR_NAME = 'vapor-scale-factor';
-export const RADIUS_FACTOR_VAR_NAME = 'vapor-radius-factor';
-
-const INITIAL_SCALE_FACTOR = '1';
-const INITIAL_RADIUS_FACTOR = '1';
-
-/**
- * For Modern browsers
- */
-export const scaleFactorVar = createGlobalVar(SCALE_FACTOR_VAR_NAME, {
-    syntax: '<number>',
-    inherits: true,
-    initialValue: INITIAL_SCALE_FACTOR,
-});
-export const radiusFactorVar = createGlobalVar(RADIUS_FACTOR_VAR_NAME, {
-    syntax: '<number>',
-    inherits: true,
-    initialValue: INITIAL_RADIUS_FACTOR,
-});
-
-/**
- * For Legacy browsers
- */
-globalStyle(':root', {
-    '@layer': {
-        [layers.reset]: {
-            vars: {
-                [scaleFactorVar]: INITIAL_SCALE_FACTOR,
-                [radiusFactorVar]: INITIAL_RADIUS_FACTOR,
-            },
         },
     },
 });

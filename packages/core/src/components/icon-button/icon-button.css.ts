@@ -1,10 +1,11 @@
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         aspectRatio: '1 / 1',
         padding: 0,
         verticalAlign: 'top',
@@ -14,7 +15,7 @@ export const root = recipe({
     variants: {
         shape: {
             square: {},
-            circle: layerStyle('component', { borderRadius: '9999px' }),
+            circle: layerStyle('vapor-component', { borderRadius: '9999px' }),
         },
     },
 });
@@ -22,22 +23,24 @@ export const root = recipe({
 export const icon = recipe({
     variants: {
         size: {
-            sm: layerStyle('component', {
+            sm: layerStyle('vapor-component', {
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
-            md: layerStyle('component', {
+            md: layerStyle('vapor-component', {
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
-            lg: layerStyle('component', {
+            lg: layerStyle('vapor-component', {
                 width: vars.size.dimension[250],
                 height: vars.size.dimension[250],
             }),
-            xl: layerStyle('component', {
+            xl: layerStyle('vapor-component', {
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
             }),
         },
     },
 });
+
+export type IconButtonVariants = NonNullable<RecipeVariants<typeof root>>;

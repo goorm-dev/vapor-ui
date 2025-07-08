@@ -145,3 +145,6 @@ export const jsxFactory = () => {
 };
 
 export const vapor = jsxFactory();
+export type VaporComponentProps<T extends React.ElementType> = ComponentPropsWithoutRef<T> &
+    PolymorphicProps &
+    Sprinkles;

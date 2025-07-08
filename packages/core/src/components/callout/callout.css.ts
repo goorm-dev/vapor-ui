@@ -1,10 +1,10 @@
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
+import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
 
 export const root = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         borderRadius: vars.size.borderRadius[300],
         padding: `${vars.size.space[150]} ${vars.size.space[200]}`,
         width: '100%',
@@ -19,32 +19,32 @@ export const root = recipe({
     defaultVariants: { color: 'primary' },
     variants: {
         color: {
-            primary: layerStyle('component', {
+            primary: layerStyle('vapor-component', {
                 border: `.0625rem solid ${vars.color.background.primary}`,
                 backgroundColor: `rgba(${vars.color.background['rgb-primary']}, 0.08)`,
                 color: vars.color.foreground['primary-darker'],
             }),
-            success: layerStyle('component', {
+            success: layerStyle('vapor-component', {
                 border: `.0625rem solid ${vars.color.background['success']}`,
                 backgroundColor: `rgba(${vars.color.background['rgb-success']}, 0.08)`,
                 color: vars.color.foreground['success-darker'],
             }),
-            warning: layerStyle('component', {
+            warning: layerStyle('vapor-component', {
                 border: `.0625rem solid ${vars.color.background['warning']}`,
                 backgroundColor: `rgba(${vars.color.background['rgb-warning']}, 0.08)`,
                 color: vars.color.foreground['warning-darker'],
             }),
-            danger: layerStyle('component', {
+            danger: layerStyle('vapor-component', {
                 border: `.0625rem solid ${vars.color.background['danger']}`,
                 backgroundColor: `rgba(${vars.color.background['rgb-danger']}, 0.08)`,
                 color: vars.color.foreground['danger-darker'],
             }),
-            hint: layerStyle('component', {
+            hint: layerStyle('vapor-component', {
                 border: `.0625rem solid ${vars.color.background['hint']}`,
                 backgroundColor: `rgba(${vars.color.background['rgb-hint']}, 0.08)`,
                 color: vars.color.foreground['hint-darker'],
             }),
-            contrast: layerStyle('component', {
+            contrast: layerStyle('vapor-component', {
                 border: `.0625rem solid ${vars.color.background['contrast']}`,
                 backgroundColor: `rgba(${vars.color.background['rgb-contrast']}, 0.08)`,
                 color: vars.color.foreground['contrast-darker'],

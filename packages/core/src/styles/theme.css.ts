@@ -1,6 +1,5 @@
-import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css';
+import { createGlobalTheme } from '@vanilla-extract/css';
 
-import './global.css';
 import { layers } from './layers.css';
 import {
     BORDER_RADIUS,
@@ -16,12 +15,11 @@ import {
     LINE_HEIGHT,
     SPACE,
 } from './tokens';
+import { vars } from './vars.css';
 
-export const LIGHT_CLASS_NAME = 'vapor-light-theme';
+const DARK_CLASS_NAME = 'vapor-dark-theme';
 
-export const DARK_CLASS_NAME = 'vapor-dark-theme';
-
-const themeTokens = {
+const THEME_TOKENS = {
     color: {
         ...LIGHT_BASIC_COLORS,
         ...LIGHT_SEMANTIC_COLORS,
@@ -40,12 +38,14 @@ const themeTokens = {
     },
 };
 
-export const vars = createGlobalThemeContract(themeTokens, (_, path) => `vapor-${path.join('-')}`);
+const DARK_THEME_TOKENS = {
+    ...DARK_BASIC_COLORS,
+    ...DARK_SEMANTIC_COLORS,
+};
 
-createGlobalTheme(':root', vars, { '@layer': layers.theme, ...themeTokens });
+createGlobalTheme(':root', vars, { '@layer': layers.theme, ...THEME_TOKENS });
 
 createGlobalTheme(`:root.${DARK_CLASS_NAME}`, vars.color, {
     '@layer': layers.theme,
-    ...DARK_BASIC_COLORS,
-    ...DARK_SEMANTIC_COLORS,
+    ...DARK_THEME_TOKENS,
 });

@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 
 import type { StoryObj } from '@storybook/react';
 
-import { vars } from '~/styles/contract.css';
+import { vars } from '~/styles/vars.css';
 
 import { HStack } from '.';
 
