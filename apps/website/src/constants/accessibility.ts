@@ -4,6 +4,7 @@ import buttonData from '../../public/components/button.json';
 import calloutData from '../../public/components/callout.json';
 import cardData from '../../public/components/card.json';
 import checkboxData from '../../public/components/checkbox.json';
+import dialogData from '../../public/components/dialog.json';
 import iconButtonData from '../../public/components/icon-button.json';
 import navData from '../../public/components/nav.json';
 import textInputData from '../../public/components/text-input.json';
@@ -19,6 +20,7 @@ export const ComponentAccessibilityDataMap: Record<string, unknown> = {
     nav: navData.accessibility,
     text: textData.accessibility,
     'text-input': textInputData.accessibility,
+    dialog: dialogData.accessibility,
 };
 
 // Also re-export raw JSON documents in case consumers need full metadata.
@@ -33,4 +35,5 @@ export {
     navData,
     textData,
     textInputData,
+    dialogData,
 };

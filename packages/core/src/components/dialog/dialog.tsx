@@ -248,19 +248,20 @@ Footer.displayName = 'Dialog.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const Dialog = Object.assign(Root, {
-    Overlay,
-    Content,
-    CombinedContent,
-    Portal,
-    Trigger,
-    Close,
-    Title,
-    Description,
-    Header,
-    Body,
-    Footer,
-});
+export {
+    Root as DialogRoot,
+    Portal as DialogPortal,
+    Overlay as DialogOverlay,
+    Content as DialogContent,
+    CombinedContent as DialogCombinedContent,
+    Trigger as DialogTrigger,
+    Close as DialogClose,
+    Title as DialogTitle,
+    Description as DialogDescription,
+    Header as DialogHeader,
+    Body as DialogBody,
+    Footer as DialogFooter,
+};
 
 export type {
     DialogRootProps,
@@ -275,4 +276,19 @@ export type {
     DialogHeaderProps,
     DialogBodyProps,
     DialogFooterProps,
+};
+
+export const Dialog = {
+    Root,
+    Overlay,
+    Content,
+    CombinedContent,
+    Portal,
+    Trigger,
+    Close,
+    Title,
+    Description,
+    Header,
+    Body,
+    Footer,
 };

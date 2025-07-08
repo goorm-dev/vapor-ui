@@ -5,6 +5,7 @@ import {
     calloutData,
     cardData,
     checkboxData,
+    dialogData,
     iconButtonData,
     navData,
     textData,
@@ -23,4 +24,5 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     nav: navData,
     text: textData,
     'text-input': textInputData,
+    dialog: dialogData,
 };

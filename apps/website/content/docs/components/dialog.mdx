@@ -1,0 +1,51 @@
+---
+title: 'Dialog'
+site_name: 'Dialog - Vapor Core'
+description: 'Dialog는 페이지 위에 모달 형태로 정보를 표시하거나 작업을 수행하도록 하는 컴포넌트입니다.'
+---
+
+## Import
+
+```js
+import { Dialog } from '@vapor-ui/core';
+```
+
+## Preview
+
+<LiveCodeBlock
+    code={`<Dialog.Root>
+        <Dialog.Trigger asChild>
+            <Button>클릭</Button>
+        </Dialog.Trigger>
+        <Dialog.CombinedContent>
+            <Dialog.Header>
+                <Dialog.Title>알림</Dialog.Title>
+                <Dialog.Close aria-label="Close" />
+            </Dialog.Header>
+            <Dialog.Body>
+                <Dialog.Description>여기에 다이얼로그 본문 내용이 들어갑니다.</Dialog.Description>
+            </Dialog.Body>
+            <Dialog.Footer style={{ marginLeft: 'auto' }}>
+                <button style={{ padding: '0.5rem 1rem' }}>확인</button>
+            </Dialog.Footer>
+        </Dialog.CombinedContent>
+    </Dialog.Root>`}
+/>
+
+## Props
+
+### Dialog.Root
+
+<PropsTable file="dialog" section="props" />
+
+### Dialog.Trigger
+
+<PropsTable file="dialog" section="triggerProps" />
+
+### Dialog.Content
+
+<PropsTable file="dialog" section="contentProps" />
+
+## Accessibility Table
+
+<AccessibilityTable file="dialog" />
