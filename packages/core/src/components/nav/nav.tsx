@@ -1,4 +1,3 @@
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import {
@@ -10,9 +9,11 @@ import {
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import type { MergeRecipeVariants } from '~/libs/recipe';
+import { type VaporComponentProps, splitLayoutProps } from '~/libs/factory';
+import { sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { ItemVariants, LinkVariants, ListVariants } from './nav.css';
 import * as styles from './nav.css';
 
 type NavContextType = NavVariants;
@@ -26,55 +27,59 @@ const [NavProvider, useNavContext] = createContext<NavContextType>({
  * Nav.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type NavVariants = MergeRecipeVariants<
-    typeof styles.list | typeof styles.item | typeof styles.link
->;
+type NavVariants = ListVariants & ItemVariants & LinkVariants;
+type NavPrimitiveProps = VaporComponentProps<typeof RadixRoot>;
 
-type NavPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
-interface NavRootProps extends NavPrimitiveProps, NavVariants {
-    'aria-label': string;
-}
+type NavRootProps = NavPrimitiveProps &
+    NavVariants & {
+        'aria-label': string;
+    };
 
-const Root = forwardRef<HTMLElement, NavRootProps>(({ 'aria-label': ariaLabel, ...props }, ref) => {
-    const [variantProps, otherProps] = createSplitProps<NavVariants>()(props, [
-        'direction',
-        'size',
-        'shape',
-        'stretch',
-        'align',
-        'disabled',
-    ]);
+const Root = forwardRef<HTMLElement, NavRootProps>(
+    ({ 'aria-label': ariaLabel, className, ...props }, ref) => {
+        const [layoutProps, navProps] = splitLayoutProps(props);
+        const [variantProps, otherProps] = createSplitProps<NavVariants>()(navProps, [
+            'direction',
+            'size',
+            'shape',
+            'stretch',
+            'align',
+            'disabled',
+        ]);
 
-    const { direction } = variantProps;
+        const { direction } = variantProps;
 
-    return (
-        <NavProvider value={variantProps}>
-            <RadixRoot
-                ref={ref}
-                orientation={direction}
-                aria-label={ariaLabel || undefined}
-                {...otherProps}
-            />
-        </NavProvider>
-    );
-});
+        return (
+            <NavProvider value={variantProps}>
+                <RadixRoot
+                    ref={ref}
+                    orientation={direction}
+                    aria-label={ariaLabel || undefined}
+                    className={clsx(sprinkles(layoutProps), className)}
+                    {...otherProps}
+                />
+            </NavProvider>
+        );
+    },
+);
 Root.displayName = 'Nav.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Nav.List
  * -----------------------------------------------------------------------------------------------*/
 
-type ListPrimitiveProps = ComponentPropsWithoutRef<typeof RadixList>;
-interface NavMenuList extends ListPrimitiveProps {}
+type ListPrimitiveProps = VaporComponentProps<typeof RadixList>;
+type NavMenuList = ListPrimitiveProps;
 
 const List = forwardRef<HTMLUListElement, NavMenuList>(({ className, ...props }, ref) => {
     const { direction, stretch } = useNavContext();
+    const [layoutProps, otherProps] = splitLayoutProps(props);
 
     return (
         <RadixList
             ref={ref}
-            className={clsx(styles.list({ direction, stretch }), className)}
-            {...props}
+            className={clsx(styles.list({ direction, stretch }), sprinkles(layoutProps), className)}
+            {...otherProps}
         />
     );
 });
@@ -84,13 +89,20 @@ List.displayName = 'Nav.List';
  * Nav.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemPrimitiveProps = ComponentPropsWithoutRef<typeof RadixItem>;
-interface NavItemProps extends ItemPrimitiveProps {}
+type ItemPrimitiveProps = VaporComponentProps<typeof RadixItem>;
+type NavItemProps = ItemPrimitiveProps;
 
 const Item = forwardRef<HTMLLIElement, NavItemProps>(({ className, ...props }, ref) => {
     const { stretch } = useNavContext();
+    const [layoutProps, otherProps] = splitLayoutProps(props);
 
-    return <RadixItem ref={ref} className={clsx(styles.item({ stretch }), className)} {...props} />;
+    return (
+        <RadixItem
+            ref={ref}
+            className={clsx(styles.item({ stretch }), sprinkles(layoutProps), className)}
+            {...otherProps}
+        />
+    );
 });
 Item.displayName = 'Nav.Item';
 
@@ -98,15 +110,16 @@ Item.displayName = 'Nav.Item';
  * Nav.Link
  * -----------------------------------------------------------------------------------------------*/
 
-type LinkPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof RadixLink>, 'active'>;
-interface NavLinkProps extends LinkPrimitiveProps {
+type LinkPrimitiveProps = Omit<VaporComponentProps<typeof RadixLink>, 'active'>;
+type NavLinkProps = LinkPrimitiveProps & {
     selected?: boolean;
     disabled?: boolean;
-}
+};
 
 const Link = forwardRef<HTMLAnchorElement, NavLinkProps>(
     ({ selected, disabled, href, className, ...props }, ref) => {
         const { shape, size, align } = useNavContext();
+        const [layoutProps, otherProps] = splitLayoutProps(props);
 
         return (
             <RadixLink
@@ -116,8 +129,12 @@ const Link = forwardRef<HTMLAnchorElement, NavLinkProps>(
                 data-active={undefined}
                 data-selected={selected ? 'true' : undefined}
                 aria-disabled={disabled ? 'true' : undefined}
-                className={clsx(styles.link({ shape, size, align, disabled }), className)}
-                {...props}
+                className={clsx(
+                    styles.link({ shape, size, align, disabled }),
+                    sprinkles(layoutProps),
+                    className,
+                )}
+                {...otherProps}
             />
         );
     },
@@ -128,7 +145,7 @@ Link.displayName = 'Nav.Link';
  * Nav.LinkItem
  * -----------------------------------------------------------------------------------------------*/
 
-interface NavLinkItemProps extends ComponentPropsWithoutRef<typeof RadixLink> {}
+type NavLinkItemProps = VaporComponentProps<typeof RadixLink>;
 
 const LinkItem = forwardRef<HTMLAnchorElement, NavLinkProps>((props, ref) => {
     return (

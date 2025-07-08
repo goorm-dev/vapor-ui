@@ -1,8 +1,9 @@
 import { createVar } from '@vanilla-extract/css';
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 const radii = createVar('avatar-border-radius');
 
@@ -100,3 +101,6 @@ export const image = layerStyle('vapor-component', {
     width: '100%',
     height: '100%',
 });
+
+export type AvatarRootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type AvatarFallbackVariants = NonNullable<RecipeVariants<typeof fallback>>;

@@ -1,18 +1,20 @@
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import type { VaporComponentProps } from '~/libs/factory';
 import { vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type {
+    TextInputFieldVariants,
+    TextInputLabelVariants,
+    TextInputRootVariants,
+} from './text-input.css';
 import * as styles from './text-input.css';
 
-type TextInputVariants = MergeRecipeVariants<
-    typeof styles.root | typeof styles.label | typeof styles.field
->;
+type TextInputVariants = TextInputRootVariants & TextInputLabelVariants & TextInputFieldVariants;
 type TextInputSharedProps = TextInputVariants & {
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     value?: string;
@@ -36,11 +38,9 @@ const [TextInputProvider, useTextInputContext] = createContext<TextInputContextT
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
-
-interface TextInputRootProps
-    extends Omit<TextInputPrimitiveProps, keyof TextInputSharedProps>,
-        TextInputSharedProps {}
+type TextInputPrimitiveProps = VaporComponentProps<'div'>;
+type TextInputRootProps = Omit<TextInputPrimitiveProps, keyof TextInputSharedProps> &
+    TextInputSharedProps;
 
 const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
     ({ className, children, ...props }, ref) => {
@@ -79,8 +79,8 @@ Root.displayName = 'TextInput.Root';
  * TextInput.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof vapor.label>;
-interface TextInputLabelProps extends PrimitiveLabelProps {}
+type PrimitiveLabelProps = VaporComponentProps<'label'>;
+type TextInputLabelProps = PrimitiveLabelProps;
 
 const Label = forwardRef<HTMLLabelElement, TextInputLabelProps>(
     ({ htmlFor, className, ...props }, ref) => {
@@ -102,8 +102,8 @@ Label.displayName = 'TextInput.Label';
  * TextInput.Field
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveInputProps = ComponentPropsWithoutRef<typeof vapor.input>;
-interface TextInputFieldProps extends Omit<PrimitiveInputProps, keyof TextInputSharedProps> {}
+type PrimitiveInputProps = VaporComponentProps<'input'>;
+type TextInputFieldProps = Omit<PrimitiveInputProps, keyof TextInputSharedProps>;
 
 const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
     ({ id, className, ...props }, ref) => {

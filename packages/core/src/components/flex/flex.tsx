@@ -1,13 +1,13 @@
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
+import type { VaporComponentProps } from '~/libs/factory';
 import { vapor } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
 type FlexVariants = { inline?: boolean };
-type FlexPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type FlexPrimitiveProps = VaporComponentProps<'div'>;
 
-interface FlexProps extends FlexPrimitiveProps, FlexVariants {}
+type FlexProps = FlexPrimitiveProps & FlexVariants;
 
 const Flex = forwardRef<HTMLDivElement, FlexProps>(({ className, ...props }, ref) => {
     const [flexVariants, otherProps] = createSplitProps<FlexVariants>()(props, ['inline']);

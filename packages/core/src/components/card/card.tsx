@@ -2,7 +2,8 @@ import { forwardRef } from 'react';
 
 import clsx from 'clsx';
 
-import { type VaporComponentProps, vapor } from '~/libs/factory';
+import type { VaporComponentProps } from '~/libs/factory';
+import { vapor } from '~/libs/factory';
 
 import * as styles from './card.css';
 

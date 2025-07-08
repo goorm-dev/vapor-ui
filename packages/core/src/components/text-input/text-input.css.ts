@@ -1,9 +1,10 @@
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
     base: {
@@ -97,3 +98,7 @@ export const field = recipe({
         },
     },
 });
+
+export type TextInputRootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type TextInputLabelVariants = NonNullable<RecipeVariants<typeof label>>;
+export type TextInputFieldVariants = NonNullable<RecipeVariants<typeof field>>;

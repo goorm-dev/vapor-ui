@@ -1,5 +1,5 @@
 import { createVar } from '@vanilla-extract/css';
-import type { RecipeVariants} from '@vanilla-extract/recipes';
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
@@ -169,4 +169,4 @@ export const root = recipe({
     },
 });
 
-export type ButtonVariants = RecipeVariants<typeof root>;
+export type ButtonVariants = NonNullable<RecipeVariants<typeof root>>;

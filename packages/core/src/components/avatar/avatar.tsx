@@ -1,6 +1,5 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import {
@@ -12,13 +11,15 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import type { MergeRecipeVariants } from '~/libs/recipe';
+import { type VaporComponentProps, splitLayoutProps } from '~/libs/factory';
+import { sprinkles } from '~/styles/sprinkles.css';
 import { vars } from '~/styles/vars.css';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { AvatarFallbackVariants, AvatarRootVariants } from './avatar.css';
 import * as styles from './avatar.css';
 
-type AvatarVariants = MergeRecipeVariants<typeof styles.root | typeof styles.fallback>;
+type AvatarVariants = AvatarRootVariants & AvatarFallbackVariants;
 type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delayMs?: number };
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
@@ -29,11 +30,12 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type AvatarRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixAvatar>;
-interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
+type AvatarRootPrimitiveProps = VaporComponentProps<typeof RadixAvatar>;
+type AvatarRootProps = AvatarRootPrimitiveProps & AvatarSharedProps;
 
 const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
-    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
+    const [layoutProps, avatarProps] = splitLayoutProps(props);
+    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(avatarProps, [
         'src',
         'alt',
         'size',
@@ -47,7 +49,7 @@ const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props
         <AvatarProvider value={variantProps}>
             <RadixAvatar
                 ref={ref}
-                className={clsx(styles.root({ shape, size }), className)}
+                className={clsx(styles.root({ shape, size }), sprinkles(layoutProps), className)}
                 {...otherProps}
             />
         </AvatarProvider>
@@ -59,19 +61,20 @@ Root.displayName = 'Avatar.Root';
  * Avatar.Image
  * -----------------------------------------------------------------------------------------------*/
 
-type AvatarImagePrimitiveProps = ComponentPropsWithoutRef<typeof RadixImage>;
-interface AvatarImageProps extends Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps> {}
+type AvatarImagePrimitiveProps = VaporComponentProps<typeof RadixImage>;
+type AvatarImageProps = Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps>;
 
 const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...props }, ref) => {
     const { src, alt } = useAvatarContext();
+    const [layoutProps, otherProps] = splitLayoutProps(props);
 
     return (
         <RadixImage
             ref={ref}
             src={src}
             alt={alt}
-            className={clsx(styles.image, className)}
-            {...props}
+            className={clsx(styles.image, sprinkles(layoutProps), className)}
+            {...otherProps}
         />
     );
 });
@@ -81,12 +84,13 @@ Image.displayName = 'Avatar.Image';
  * Avatar.Fallback
  * -----------------------------------------------------------------------------------------------*/
 
-type AvatarFallbackPrimitiveProps = ComponentPropsWithoutRef<typeof RadixFallback>;
-interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
+type AvatarFallbackPrimitiveProps = VaporComponentProps<typeof RadixFallback>;
+type AvatarFallbackProps = Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps>;
 
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
     ({ className, style, children, ...props }, ref) => {
         const { size, alt, delayMs } = useAvatarContext();
+        const [layoutProps, otherProps] = splitLayoutProps(props);
         const background = getRandomColor(alt);
 
         return (
@@ -97,8 +101,8 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
                     ...assignInlineVars({ [styles.fallbackBgVar]: background }),
                     ...style,
                 }}
-                className={clsx(styles.fallback({ size }), className)}
-                {...props}
+                className={clsx(styles.fallback({ size }), sprinkles(layoutProps), className)}
+                {...otherProps}
             >
                 {children ?? getAvatarInitials(alt)}
             </RadixFallback>
@@ -111,7 +115,7 @@ Fallback.displayName = 'Avatar.Fallback';
  * Avatar.Simple
  * -----------------------------------------------------------------------------------------------*/
 
-interface AvatarSimpleProps extends AvatarRootProps {}
+type AvatarSimpleProps = AvatarRootProps;
 
 const Simple = forwardRef<HTMLSpanElement, AvatarSimpleProps>((props, ref) => {
     return (

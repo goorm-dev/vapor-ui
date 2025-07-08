@@ -1,27 +1,29 @@
-import { type CSSProperties, type ComponentPropsWithoutRef, forwardRef } from 'react';
+import type { CSSProperties } from 'react';
+import { forwardRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
+import type { VaporComponentProps } from '~/libs/factory';
 import { vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { GridRootVariants } from './grid.css';
 import * as styles from './grid.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Grid
  * -----------------------------------------------------------------------------------------------*/
 
-type GridPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
-type GridVariants = MergeRecipeVariants<typeof styles.root> & {
+type GridPrimitiveProps = VaporComponentProps<'div'>;
+type GridVariants = GridRootVariants & {
     inline?: boolean;
     templateRows?: string;
     templateColumns?: string;
     flow?: CSSProperties['gridAutoFlow'];
 };
 
-interface GridRootProps extends GridPrimitiveProps, GridVariants {}
+type GridRootProps = GridPrimitiveProps & GridVariants;
 
 const Root = forwardRef<HTMLDivElement, GridRootProps>(
     ({ className, style, children, ...props }, ref) => {
@@ -58,10 +60,10 @@ Root.displayName = 'Grid';
  * Grid.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type GridItemPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type GridItemPrimitiveProps = VaporComponentProps<'div'>;
 type GridItemVariants = { rowSpan?: string; colSpan?: string };
 
-interface GridItemProps extends GridItemPrimitiveProps, GridItemVariants {}
+type GridItemProps = GridItemPrimitiveProps & GridItemVariants;
 
 const Item = forwardRef<HTMLDivElement, GridItemProps>(
     ({ rowSpan, colSpan, className, style, children, ...props }, ref) => {

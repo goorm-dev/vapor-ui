@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import type { Preview } from '@storybook/react';
 
+import '../packages/core/dist/styles.css';
 import { ThemeProvider, useTheme } from '../packages/core/src/components/theme-provider';
 import type {
     Appearance,

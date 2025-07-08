@@ -1,4 +1,5 @@
 import { createVar } from '@vanilla-extract/css';
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { layerStyle } from '~/styles/utils/layer-style.css';
@@ -30,3 +31,5 @@ export const item = layerStyle('vapor-component', {
     gridRow: gridItemRowSpan,
     gridColumn: gridItemColSpan,
 });
+
+export type GridRootVariants = NonNullable<RecipeVariants<typeof root>>;

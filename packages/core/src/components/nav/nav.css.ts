@@ -1,8 +1,9 @@
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const list = recipe({
     base: layerStyle('vapor-component', {
@@ -131,3 +132,7 @@ export const link = recipe({
         },
     },
 });
+
+export type ListVariants = NonNullable<RecipeVariants<typeof list>>;
+export type ItemVariants = NonNullable<RecipeVariants<typeof item>>;
+export type LinkVariants = NonNullable<RecipeVariants<typeof link>>;
