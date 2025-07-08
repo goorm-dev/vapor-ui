@@ -22,9 +22,9 @@ const Text = forwardRef<HTMLSpanElement, TextProps>(
             <Primitive.span
                 ref={ref}
                 className={clsx(
-                    className,
                     typography({ style: typographyStyle }),
                     foregrounds({ color: foreground }),
+                    className,
                 )}
                 {...props}
             >
