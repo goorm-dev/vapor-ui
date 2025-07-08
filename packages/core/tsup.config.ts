@@ -1,7 +1,11 @@
 import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
 import autoprefixer from 'autoprefixer';
+import fs from 'fs';
+import { sync } from 'glob';
 import postcss from 'postcss';
-import { defineConfig } from 'tsup';
+import { type Options, defineConfig } from 'tsup';
+
+const OUT_DIR = 'dist/components';
 
 /**
  * @link https://vanilla-extract.style/documentation/integrations/esbuild/#processcss
@@ -14,44 +18,114 @@ async function processCss(css: string) {
     return result.css;
 }
 
-export default [
-    // ESM, CJS
-    defineConfig({
-        entry: ['src/index.ts'],
-        format: ['esm', 'cjs'],
-        // Final build output is transpiled to ES6 for legacy browser compatibility
-        target: 'es6',
-        outDir: 'dist',
-        sourcemap: true,
-        clean: true,
-        minify: true,
-        banner: {
-            js: '"use client";',
-            css: '@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");',
+const injectSideEffectImports = async (format: 'esm' | 'cjs') => {
+    const isEsm = format === 'esm';
+    const files = isEsm ? sync(`${OUT_DIR}/*/index.js`) : sync(`${OUT_DIR}/*/index.cjs`);
+
+    for (const file of files) {
+        try {
+            let content = fs.readFileSync(file, 'utf-8');
+            const componentName = isEsm
+                ? file.split(`${OUT_DIR}/`)[1].split('/index.js')[0]
+                : file.split(`${OUT_DIR}/`)[1].split('/index.cjs')[0];
+            const componentSourceFile = fs.readFileSync(
+                `src/components/${componentName}/${componentName}.tsx`,
+                'utf-8',
+            );
+            const cssImport = isEsm ? `import "./index.css";` : `require("./index.css");`;
+            const useClientDirective = `'use client';`;
+            const useStrictDirective = `"use strict";`;
+
+            if (content.includes(useStrictDirective)) {
+                content = content.replace(
+                    useStrictDirective,
+                    `${useStrictDirective}\n${cssImport}`,
+                );
+            } else {
+                content = `${cssImport}\n${content}`;
+            }
+
+            if (componentSourceFile.includes(useClientDirective)) {
+                content = `${useClientDirective}\n${content}`;
+            }
+
+            fs.writeFileSync(file, content);
+        } catch (error) {
+            console.error(`❌ Failed to inject CSS import for ${file}:`, error);
+        }
+    }
+};
+
+const commonConfig: Options = {
+    target: 'es6',
+    sourcemap: true,
+    minify: false,
+    external: ['react', 'react-dom'],
+    dts: false,
+    format: ['esm', 'cjs'],
+    outExtension({ format }) {
+        return {
+            js: format === 'cjs' ? '.cjs' : '.js',
+        };
+    },
+};
+export default defineConfig([
+    {
+        ...commonConfig,
+        entry: {
+            index: 'src/index.ts',
         },
+        outDir: 'dist',
+        external: [...(commonConfig.external || []), './components'],
+        clean: true, // Clean the dist on the first build step.
+    },
+    {
+        ...commonConfig,
+        entry: ['src/components/*/index.ts'],
+        outDir: OUT_DIR,
+        splitting: true,
         esbuildPlugins: [
             vanillaExtractPlugin({
+                outputCss: true,
                 processCss,
+
                 identifiers: ({ hash, filePath, debugId }) => {
                     /** debugId: human readable prefixes like variants, sprinkles properties, etc. */
                     const componentName = filePath.split('/').pop()?.replace('.css.ts', '');
-
-                    return `${componentName}${debugId ? `-${debugId}` : ''}-${hash}`;
+                    return `${componentName}${debugId ? `-${debugId}` : ''}__${hash}`;
                 },
             }),
         ],
-    }),
-
-    // TYPES
-    defineConfig({
-        entry: ['src/index.ts'],
-        format: ['esm', 'cjs'],
+        async onSuccess() {
+            console.log('✅ ESM build successful. Injecting sideEffect imports...');
+            await injectSideEffectImports('esm');
+            await injectSideEffectImports('cjs');
+            console.log('🚀 SideEffect imports injected');
+        },
+    },
+    {
+        entry: ['src/index.ts', 'src/components/*/index.ts'],
+        outDir: 'dist/types',
+        format: 'cjs',
+        splitting: true,
         dts: {
             only: true,
         },
-        outDir: 'dist',
         esbuildOptions(options) {
             options.outbase = './';
         },
-    }),
-];
+    },
+    // Styles build
+    {
+        entry: {
+            styles: 'src/styles/index.ts',
+        },
+        outDir: 'dist',
+        esbuildPlugins: [
+            vanillaExtractPlugin({
+                outputCss: true,
+                processCss,
+            }),
+        ],
+    },
+]);

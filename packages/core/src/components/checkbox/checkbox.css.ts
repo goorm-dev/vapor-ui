@@ -1,13 +1,13 @@
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
+import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { typographySprinkles } from '~/styles/sprinkles';
 
 export const root = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         display: 'inline-flex',
         alignItems: 'center',
         gap: vars.size.space[100],
@@ -17,7 +17,7 @@ export const root = recipe({
     defaultVariants: { disabled: false },
     variants: {
         disabled: {
-            true: layerStyle('component', { opacity: 0.32, pointerEvents: 'none' }),
+            true: layerStyle('vapor-component', { opacity: 0.32, pointerEvents: 'none' }),
         },
     },
 });
@@ -25,7 +25,7 @@ export const root = recipe({
 export const label = recipe({
     base: [
         typographySprinkles({ typography: 'body2' }),
-        layerStyle('component', { color: vars.color.foreground.normal }),
+        layerStyle('vapor-component', { color: vars.color.foreground.normal }),
     ],
 
     defaultVariants: { visuallyHidden: false },
@@ -39,7 +39,7 @@ export const label = recipe({
 export const control = recipe({
     base: [
         interaction(),
-        layerStyle('component', {
+        layerStyle('vapor-component', {
             position: 'relative',
 
             display: 'flex',
@@ -69,16 +69,16 @@ export const control = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('component', { borderColor: vars.color.border.danger }),
+            true: layerStyle('vapor-component', { borderColor: vars.color.border.danger }),
         },
 
         size: {
-            md: layerStyle('component', {
+            md: layerStyle('vapor-component', {
                 borderRadius: vars.size.borderRadius[100],
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
-            lg: layerStyle('component', {
+            lg: layerStyle('vapor-component', {
                 borderRadius: vars.size.borderRadius[200],
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
@@ -88,7 +88,7 @@ export const control = recipe({
 });
 
 export const indicator = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -98,11 +98,11 @@ export const indicator = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('component', {
+            md: layerStyle('vapor-component', {
                 width: vars.size.dimension[100],
                 height: vars.size.dimension[100],
             }),
-            lg: layerStyle('component', {
+            lg: layerStyle('vapor-component', {
                 width: vars.size.dimension[150],
                 height: vars.size.dimension[150],
             }),
