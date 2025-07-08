@@ -1,6 +1,5 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import {
@@ -18,48 +17,51 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { type VaporComponentProps, splitLayoutProps, vapor } from '~/libs/factory';
 import { sprinkles } from '~/styles/sprinkles.css';
+import { createSplitProps } from '~/utils/create-split-props';
 
 import * as styles from './dialog.css';
 import type { DialogContentVariants } from './dialog.css';
 
-type DialogSharedProps = DialogContentVariants & {
+type DialogVariants = DialogContentVariants;
+type DialogSharedProps = DialogVariants & {
     closeOnClickOverlay?: boolean;
     closeOnEscape?: boolean;
 };
-type DialogContext = DialogSharedProps;
 
-const [DialogRoot, useDialogContext] = createContext<DialogContext>({
-    name: 'Dialog',
-    hookName: 'useDialogContext',
+const [DialogProvider, useDialogContext] = createContext<DialogSharedProps>({
+    name: 'DialogContext',
     providerName: 'DialogProvider',
+    hookName: 'useDialogContext',
 });
 
 /* -------------------------------------------------------------------------------------------------
- * Dialog
+ * Dialog.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type DialogPrimitiveProps = ComponentPropsWithoutRef<typeof RadixDialog>;
-type DialogRootProps = DialogPrimitiveProps & DialogSharedProps;
+type DialogRootPrimitiveProps = VaporComponentProps<typeof RadixDialog>;
+type DialogRootProps = DialogRootPrimitiveProps & DialogSharedProps;
 
-const Root = ({
-    size,
-    closeOnClickOverlay,
-    closeOnEscape,
-    children,
-    ...props
-}: DialogRootProps) => {
+// TODO: Dialog Root ref 지원 논의
+const Root = forwardRef<HTMLDivElement, DialogRootProps>(({ children, ...props }, _) => {
+    const [variantProps, otherProps] = createSplitProps<DialogSharedProps>()(props, [
+        'size',
+        'closeOnClickOverlay',
+        'closeOnEscape',
+    ]);
+
     return (
-        <RadixDialog {...props}>
-            <DialogRoot value={{ size, closeOnClickOverlay, closeOnEscape }}>{children}</DialogRoot>
-        </RadixDialog>
+        <DialogProvider value={variantProps}>
+            <RadixDialog {...otherProps}>{children}</RadixDialog>
+        </DialogProvider>
     );
-};
+});
+Root.displayName = 'Dialog.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-type DialogPortalProps = ComponentPropsWithoutRef<typeof RadixPortal>;
+type DialogPortalProps = VaporComponentProps<typeof RadixPortal>;
 
 const Portal = RadixPortal;
 Portal.displayName = 'Dialog.Portal';
@@ -71,15 +73,7 @@ Portal.displayName = 'Dialog.Portal';
 type DialogOverlayProps = VaporComponentProps<typeof RadixOverlay>;
 
 const Overlay = forwardRef<HTMLDivElement, DialogOverlayProps>(({ className, ...props }, ref) => {
-    const [layoutProps, otherProps] = splitLayoutProps(props);
-
-    return (
-        <RadixOverlay
-            ref={ref}
-            className={clsx(styles.overlay, sprinkles(layoutProps), className)}
-            {...otherProps}
-        />
-    );
+    return <RadixOverlay ref={ref} className={clsx(styles.overlay, className)} {...props} />;
 });
 Overlay.displayName = 'Dialog.Overlay';
 
@@ -96,14 +90,16 @@ const Content = forwardRef<HTMLDivElement, DialogContentProps>(
         const [layoutProps, otherProps] = splitLayoutProps(props);
 
         const handlePointerDownOutside = (event: PointerDownOutsideEvent) => {
-            if (closeOnClickOverlay) return;
-            event.preventDefault();
+            if (!closeOnClickOverlay) {
+                event.preventDefault();
+            }
             onPointerDownOutside?.(event);
         };
 
         const handleEscapeKeyDown = (event: KeyboardEvent) => {
-            if (closeOnEscape) return;
-            event.preventDefault();
+            if (!closeOnEscape) {
+                event.preventDefault();
+            }
             onEscapeKeyDown?.(event);
         };
 
@@ -128,10 +124,10 @@ type DialogCombinedContentProps = DialogContentProps;
 
 const CombinedContent = forwardRef<HTMLDivElement, DialogCombinedContentProps>((props, ref) => {
     return (
-        <RadixPortal>
+        <Portal>
             <Overlay />
             <Content ref={ref} {...props} />
-        </RadixPortal>
+        </Portal>
     );
 });
 CombinedContent.displayName = 'Dialog.CombinedContent';
@@ -200,7 +196,6 @@ type DialogDescriptionProps = VaporComponentProps<typeof RadixDescription>;
 const Description = forwardRef<HTMLParagraphElement, DialogDescriptionProps>(
     ({ className, ...props }, ref) => {
         const [layoutProps, otherProps] = splitLayoutProps(props);
-
         return (
             <RadixDescription
                 ref={ref}
@@ -249,10 +244,10 @@ Footer.displayName = 'Dialog.Footer';
 
 export {
     Root as DialogRoot,
-    Portal as DialogPortal,
     Overlay as DialogOverlay,
     Content as DialogContent,
     CombinedContent as DialogCombinedContent,
+    Portal as DialogPortal,
     Trigger as DialogTrigger,
     Close as DialogClose,
     Title as DialogTitle,
