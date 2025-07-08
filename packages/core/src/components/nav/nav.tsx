@@ -130,7 +130,7 @@ Link.displayName = 'Nav.Link';
 
 interface NavLinkItemProps extends ComponentPropsWithoutRef<typeof RadixLink> {}
 
-const LinkItem = forwardRef<HTMLAnchorElement, NavLinkProps>((props, ref) => {
+const LinkItem = forwardRef<HTMLAnchorElement, NavLinkItemProps>((props, ref) => {
     return (
         <Nav.Item>
             <Nav.Link ref={ref} {...props} />
