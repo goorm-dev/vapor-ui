@@ -59,7 +59,7 @@ const PANGRAM = 'Bright vixens jump; dozy fowl quack.';
 export const Default: StoryObj<typeof Text> = {
     render: (args) => {
         return (
-            <VStack style={{ gap: 'var(--vapor-size-dimension-300)' }}>
+            <VStack gap="$300">
                 <Text typography="code2" {...args}>
                     {PANGRAM}
                 </Text>
@@ -116,7 +116,7 @@ export const Default: StoryObj<typeof Text> = {
 export const TestBed: StoryObj<typeof Text> = {
     render: () => {
         return (
-            <VStack style={{ gap: 'var(--vapor-size-dimension-050)' }}>
+            <VStack gap="$050">
                 <Text typography="code2">{PANGRAM}</Text>
                 <Text typography="code1">{PANGRAM}</Text>
 

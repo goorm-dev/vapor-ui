@@ -29,7 +29,7 @@ export const Default: Story = {
 export const TestBed: Story = {
     render: () => {
         return (
-            <VStack style={{ gap: 'var(--vapor-size-dimension-150)' }}>
+            <VStack gap="$150">
                 <Switch.Root size="sm">
                     <Switch.Control />
                     <Switch.Label>Test Bed</Switch.Label>

@@ -12,16 +12,10 @@ type FlexPrimitiveProps = ComponentPropsWithoutRef<typeof Box>;
 
 interface FlexProps extends FlexPrimitiveProps, FlexVariants {}
 
-const Flex = forwardRef<HTMLDivElement, FlexProps>(({ style, className, ...props }, ref) => {
-    const [flexVariants, otherProps] = createSplitProps<FlexVariants>()(props, ['inline']);
+const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {
+    const [variantProps, otherProps] = createSplitProps<FlexVariants>()(props, ['inline']);
 
-    return (
-        <Box
-            style={{ display: flexVariants.inline ? 'inline-flex' : 'flex', ...style }}
-            ref={ref}
-            {...otherProps}
-        />
-    );
+    return <Box ref={ref} display={variantProps.inline ? 'inline-flex' : 'flex'} {...otherProps} />;
 });
 Flex.displayName = 'Flex';
 
