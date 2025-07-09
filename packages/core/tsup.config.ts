@@ -114,7 +114,7 @@ export default defineConfig([
     },
     {
         entry: ['src/index.ts', 'src/components/*/index.ts'],
-        outDir: 'dist',
+        outDir: DIR,
         format: 'cjs',
         splitting: true,
         dts: { only: true },
