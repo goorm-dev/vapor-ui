@@ -111,6 +111,9 @@ export default defineConfig([
             await injectSideEffectImports('cjs');
             console.log('🚀 SideEffect imports injected');
         },
+        banner: {
+            css: '@layer vapor-theme, vapor-reset, vapor-component, vapor-utilities;',
+        },
     },
     {
         entry: ['src/index.ts', 'src/components/*/index.ts'],
