@@ -16,27 +16,28 @@ description: Vapor UI 테마 시스템을 설정하는 방법
 2. **테마 설정 파일 생성**  
    (예시: `lib/theme.config.ts`)
 
-    ```ts
+    ```tsx
     import { createThemeConfig } from '@vapor-ui/core';
 
     export const themeConfig = createThemeConfig({
-        appearance: 'system', // 'light', 'dark', 'system'
+        appearance: 'light',
         radius: 'full',
         scaling: 1.0,
-        storageKey: 'my-next-app-theme',
+        storageKey: 'my-vapor-theme',
     });
     ```
 
 3. **Root layout.tsx에 적용**
 
     ```tsx
-    import { themeConfig } from '@/lib/theme.config';
     import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
     import '@vapor-ui/core/dist/styles.css';
 
+    // createThemeConfig를 상단에 추가하거나, 별도 설정 파일에서 import합니다.
+
     export default function RootLayout({ children }) {
         return (
-            <html lang="en" suppressHydrationWarning>
+            <html suppressHydrationWarning>
                 <head>
                     <ThemeScript config={themeConfig} />
                 </head>
@@ -57,7 +58,7 @@ description: Vapor UI 테마 시스템을 설정하는 방법
     ```bash
     npm install @vapor-ui/core
     ```
-
+{/* 
 2. **index.html에 FOUC 방지 스크립트 추가**
 
     ```html
@@ -87,9 +88,9 @@ description: Vapor UI 테마 시스템을 설정하는 방법
             root.style.setProperty('--vapor-scale-factor', scaleFactor.toString());
         })();
     </script>
-    ```
+    ``` */}
 
-3. **ThemeProvider 설정**
+2. **ThemeProvider 설정**
 
     ```tsx
     // src/main.tsx
@@ -98,9 +99,9 @@ description: Vapor UI 테마 시스템을 설정하는 방법
 
     const themeConfig = createThemeConfig({
         appearance: 'light',
-        radius: 'md',
+        radius: 'full',
         scaling: 1.0,
-        storageKey: 'my-vite-app-theme',
+        storageKey: 'my-vapor-theme',
     });
 
     ReactDOM.createRoot(document.getElementById('root')!).render(
