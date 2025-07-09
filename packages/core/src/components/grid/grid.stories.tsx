@@ -41,9 +41,9 @@ export const Default: StoryObj<typeof Grid.Root> = {
                 style={{
                     width: 400,
                     backgroundColor: 'GrayText',
-                    justifyContent: 'center',
-                    alignItems: 'center',
                 }}
+                justifyContent="center"
+                alignItems="center"
                 templateRows="repeat(3, minmax(40px, auto))"
                 templateColumns="1fr 1fr 1fr"
                 {...args}
@@ -69,9 +69,9 @@ export const TestBed: StoryObj<typeof Grid> = {
                 style={{
                     width: 400,
                     backgroundColor: 'GrayText',
-                    justifyContent: 'center',
-                    alignItems: 'center',
                 }}
+                justifyContent="center"
+                alignItems="center"
                 templateRows="repeat(3, minmax(40px, auto))"
                 templateColumns="1fr 1fr 1fr"
                 {...args}

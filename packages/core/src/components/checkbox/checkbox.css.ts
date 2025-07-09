@@ -2,8 +2,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
+import { typography } from '~/styles/mixins/typography.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
-import { typographySprinkles } from '~/styles/sprinkles';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
@@ -25,7 +25,7 @@ export const root = recipe({
 
 export const label = recipe({
     base: [
-        typographySprinkles({ typography: 'body2' }),
+        typography({ style: 'body2' }),
         layerStyle('vapor-component', { color: vars.color.foreground.normal }),
     ],
 

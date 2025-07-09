@@ -19,13 +19,11 @@ export default {
         stretch: { control: 'boolean' },
     },
 } as Meta<typeof Button>;
-
 type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
     render: (args) => (
-        // <HStack gap="$200">
-        <HStack style={{ gap: 'var(--vapor-size-dimension-200)' }}>
+        <HStack gap="$200">
             <Button {...args}>Button</Button>
             <Button {...args} asChild>
                 <a href="https://vapor-ui.goorm.io">Link Button(Polymorphic)</a>
@@ -66,12 +64,7 @@ export const TestBed: Story = {
 const Buttons = ({ color, disabled }: ButtonProps) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Button
-                color={color}
-                disabled={disabled}
-                variant="fill"
-                style={{ gap: 'var(--vapor-size-dimension-050)' }}
-            >
+            <Button color={color} disabled={disabled} variant="fill">
                 {upperFirst(`${color}`)}
             </Button>
             <Button color={color} disabled={disabled} variant="ghost">

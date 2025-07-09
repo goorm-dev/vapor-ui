@@ -12,13 +12,13 @@ type VStackPrimitiveProps = ComponentPropsWithoutRef<typeof Flex>;
 
 interface VStackProps extends VStackPrimitiveProps, VStackVariants {}
 
-const VStack = forwardRef<HTMLDivElement, VStackProps>(({ style, children, ...props }, ref) => {
+const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...props }, ref) => {
     const [vStackProps, otherProps] = createSplitProps<VStackVariants>()(props, ['reverse']);
 
     return (
         <Flex
             ref={ref}
-            style={{ flexDirection: vStackProps.reverse ? 'column-reverse' : 'column', ...style }}
+            flexDirection={vStackProps.reverse ? 'column-reverse' : 'column'}
             {...otherProps}
         >
             {children}
