@@ -12,15 +12,11 @@ type HStackPrimitiveProps = ComponentPropsWithoutRef<typeof Flex>;
 
 interface HStackProps extends HStackPrimitiveProps, HStackVariants {}
 
-const HStack = forwardRef<HTMLDivElement, HStackProps>(({ style, children, ...props }, ref) => {
+const HStack = forwardRef<HTMLDivElement, HStackProps>(({ children, ...props }, ref) => {
     const [hStackProps, otherProps] = createSplitProps<HStackVariants>()(props, ['reverse']);
 
     return (
-        <Flex
-            style={{ flexDirection: hStackProps.reverse ? 'row-reverse' : 'row', ...style }}
-            ref={ref}
-            {...otherProps}
-        >
+        <Flex flexDirection={hStackProps.reverse ? 'row-reverse' : 'row'} ref={ref} {...otherProps}>
             {children}
         </Flex>
     );

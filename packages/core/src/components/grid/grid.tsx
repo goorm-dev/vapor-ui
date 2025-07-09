@@ -28,14 +28,14 @@ interface GridRootProps extends GridPrimitiveProps, GridVariants {}
 
 const Root = forwardRef<HTMLDivElement, GridRootProps>(
     ({ className, style, children, ...props }, ref) => {
-        const [gridRootProps, otherProps] = createSplitProps<GridVariants>()(props, [
+        const [variantProps, otherProps] = createSplitProps<GridVariants>()(props, [
             'inline',
             'templateRows',
             'templateColumns',
             'flow',
         ]);
 
-        const { inline, templateRows, templateColumns, ...variants } = gridRootProps;
+        const { inline, templateRows, templateColumns, ...variants } = variantProps;
 
         const cssVariables = assignInlineVars({
             [styles.gridTemplateRows]: templateRows,
@@ -45,7 +45,8 @@ const Root = forwardRef<HTMLDivElement, GridRootProps>(
         return (
             <Box
                 ref={ref}
-                style={{ display: inline ? 'inline-grid' : 'grid', ...cssVariables, ...style }}
+                display={inline ? 'inline-grid' : 'grid'}
+                style={{ ...cssVariables, ...style }}
                 className={clsx(styles.root(variants), className)}
                 {...otherProps}
             >
