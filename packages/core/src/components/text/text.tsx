@@ -1,37 +1,33 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
+import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
-import type { VaporComponentProps } from '~/libs/factory';
-import { splitLayoutProps, vapor } from '~/libs/factory';
 import { foregroundSprinkles, typographySprinkles } from '~/styles/sprinkles';
 import type { Foreground, Typography } from '~/styles/sprinkles';
-import { sprinkles } from '~/styles/sprinkles.css';
 
-type TextProps = VaporComponentProps<'span'> & {
+interface TextProps extends ComponentPropsWithoutRef<typeof Primitive.span> {
     typography?: Typography;
     foreground?: Foreground;
-};
+}
 
 const Text = forwardRef<HTMLSpanElement, TextProps>(
-    ({ typography, foreground, children, className, ...props }, ref) => {
-        const [layoutProps, otherProps] = splitLayoutProps(props);
-
+    ({ typography, foreground, className, children, ...props }, ref) => {
         return (
-            <vapor.span
+            <Primitive.span
                 ref={ref}
                 className={clsx(
                     className,
                     typographySprinkles({ typography }),
                     foregroundSprinkles({ foreground }),
-                    sprinkles(layoutProps),
                 )}
-                {...otherProps}
+                {...props}
             >
                 {children}
-            </vapor.span>
+            </Primitive.span>
         );
     },
 );

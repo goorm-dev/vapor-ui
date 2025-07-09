@@ -5,21 +5,17 @@ import { forwardRef, useId } from 'react';
 
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { Indicator as RadixIndicator, Root as RadixRoot } from '@radix-ui/react-checkbox';
+import { Primitive } from '@radix-ui/react-primitive';
 import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { splitLayoutProps, vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
-import type { Sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { ControlVariants, LabelVariants, RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
 
-type CheckboxVariants = MergeRecipeVariants<
-    typeof styles.root | typeof styles.control | typeof styles.label
->;
-
+type CheckboxVariants = RootVariants & ControlVariants & LabelVariants;
 type CheckboxSharedProps = CheckboxVariants & {
     checked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
@@ -41,7 +37,7 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxContext>({
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveRootProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type PrimitiveRootProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 interface CheckboxRootProps
     extends Omit<PrimitiveRootProps, keyof CheckboxSharedProps>,
         CheckboxSharedProps {}
@@ -63,7 +59,7 @@ const Root = forwardRef<HTMLDivElement, CheckboxRootProps>(({ className, ...prop
 
     return (
         <CheckboxProvider value={{ checkboxId, ...checkboxProps }}>
-            <vapor.div
+            <Primitive.div
                 ref={ref}
                 className={clsx(styles.root({ disabled }), className)}
                 {...otherProps}
@@ -77,7 +73,7 @@ Root.displayName = 'Checkbox.Root';
  * Checkbox.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof vapor.label>;
+type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof Primitive.label>;
 interface CheckboxLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, CheckboxLabelProps>(
@@ -85,7 +81,7 @@ const Label = forwardRef<HTMLLabelElement, CheckboxLabelProps>(
         const { checkboxId, visuallyHidden } = useCheckboxContext();
 
         return (
-            <vapor.label
+            <Primitive.label
                 ref={ref}
                 htmlFor={htmlFor || checkboxId}
                 className={clsx(styles.label({ visuallyHidden }), className)}
@@ -95,19 +91,15 @@ const Label = forwardRef<HTMLLabelElement, CheckboxLabelProps>(
     },
 );
 
-/* -------------------------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------------------------
  * Checkbox.Control
  * -----------------------------------------------------------------------------------------------*/
 
 type ControlPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
-interface CheckboxControlProps
-    extends Omit<ControlPrimitiveProps, keyof CheckboxSharedProps>,
-        Sprinkles {
-    forceMount?: true;
-}
+interface CheckboxControlProps extends Omit<ControlPrimitiveProps, keyof CheckboxSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
-    ({ id, forceMount, className, ...props }, ref) => {
+    ({ id, className, ...props }, ref) => {
         const {
             checkboxId,
             checked,
@@ -129,26 +121,22 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
             },
         });
 
-        const [layoutProps, otherProps] = splitLayoutProps(props);
-
         return (
-            <vapor.button asChild {...layoutProps}>
-                <RadixRoot
-                    ref={ref}
-                    id={checkboxId || id}
-                    checked={checkedState}
-                    onCheckedChange={setCheckedState}
-                    disabled={disabled}
-                    aria-invalid={invalid}
-                    className={clsx(styles.control({ invalid, size }), className)}
-                    {...otherProps}
-                >
-                    <RadixIndicator forceMount={forceMount} className={styles.indicator({ size })}>
-                        {checkedState === 'indeterminate' && <DashIcon />}
-                        {checkedState === true && <CheckIcon />}
-                    </RadixIndicator>
-                </RadixRoot>
-            </vapor.button>
+            <RadixRoot
+                ref={ref}
+                id={checkboxId || id}
+                checked={checkedState}
+                onCheckedChange={setCheckedState}
+                disabled={disabled}
+                aria-invalid={invalid}
+                className={clsx(styles.control({ invalid, size }), className)}
+                {...props}
+            >
+                <RadixIndicator className={styles.indicator({ size })}>
+                    {checkedState === 'indeterminate' && <DashIcon />}
+                    {checkedState === true && <CheckIcon />}
+                </RadixIndicator>
+            </RadixRoot>
         );
     },
 );
@@ -180,6 +168,8 @@ const DashIcon = (props: IconProps) => {
         </svg>
     );
 };
+
+/* -----------------------------------------------------------------------------------------------*/
 
 export { Root as CheckboxRoot, Label as CheckboxLabel, Control as CheckboxControl };
 export type { CheckedState, CheckboxRootProps, CheckboxLabelProps, CheckboxControlProps };

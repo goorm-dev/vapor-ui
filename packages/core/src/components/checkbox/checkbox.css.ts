@@ -1,3 +1,4 @@
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
@@ -109,3 +110,7 @@ export const indicator = recipe({
         },
     },
 });
+
+export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type ControlVariants = NonNullable<RecipeVariants<typeof control>>;
+export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;

@@ -103,5 +103,5 @@ export const image = layerStyle('vapor-component', {
     height: '100%',
 });
 
-export type AvatarRootVariants = NonNullable<RecipeVariants<typeof root>>;
-export type AvatarFallbackVariants = NonNullable<RecipeVariants<typeof fallback>>;
+export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type FallbackVariants = NonNullable<RecipeVariants<typeof fallback>>;

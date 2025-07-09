@@ -1,14 +1,14 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import type { VaporComponentProps } from '~/libs/factory';
-import { vapor } from '~/libs/factory';
+import { Primitive } from '@radix-ui/react-primitive';
 
-interface BoxProps extends VaporComponentProps<'div'> {}
+interface BoxProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
 
 const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
-    return <vapor.div ref={ref} {...props} />;
+    return <Primitive.div ref={ref} {...props} />;
 });
 Box.displayName = 'Box';
 
