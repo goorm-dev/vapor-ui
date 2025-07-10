@@ -1,5 +1,14 @@
 # website
 
+## 0.0.5
+
+### Patch Changes
+
+- 973fa2d: Text Input: move placeholder prop from field to root
+- ca267e9: feat: Added primary color custom functionality
+- Updated dependencies [ca267e9]
+    - @vapor-ui/core@0.3.1
+
 ## 0.0.4
 
 ### Patch Changes

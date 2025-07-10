@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 0.3.1
+
+### Patch Changes
+
+- ca267e9: feat: Added primary color custom functionality
+
 ## 0.3.0
 
 ### Minor Changes
