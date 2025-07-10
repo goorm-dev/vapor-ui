@@ -115,6 +115,8 @@ export default defineConfig([
             css: '@layer vapor-theme, vapor-reset, vapor-component, vapor-utilities;',
         },
     },
+
+    // Types build
     {
         entry: ['src/index.ts', 'src/components/*/index.ts'],
         outDir: DIR,
@@ -129,6 +131,7 @@ export default defineConfig([
     {
         entry: {
             styles: 'src/styles/index.ts',
+            tailwind: 'src/styles/tailwind-preset.css.ts',
         },
         outDir: DIR,
         esbuildPlugins: [
