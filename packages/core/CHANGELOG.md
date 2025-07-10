@@ -1,5 +1,22 @@
 # @vapor-ui/core
 
+## 0.3.0
+
+### Minor Changes
+
+- e139a7f: remove sprinkles on each components
+
+### Patch Changes
+
+- 03655b1: fix(tsup): Correct CSS Layer Priority for vapor-components
+- 488c614: refactor: replace text sprinkles into mixins
+
+## 0.2.1
+
+### Patch Changes
+
+- 6749d80: fix(createThemeConfig): support RSC
+
 ## 0.2.0
 
 ### Minor Changes

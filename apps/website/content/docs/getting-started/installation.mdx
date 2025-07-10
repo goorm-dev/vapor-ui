@@ -15,8 +15,9 @@ description: Vapor UI 설치를 위한 가이드.
 
 Vapor UI를 설치하세요:
 
+{/* prettier-ignore */}
 ```package-install
-npm install @vapor-ui/core
+npm install @vapor-ui/core@latest
 ```
 
 <br />
@@ -25,9 +26,11 @@ npm install @vapor-ui/core
 
 애플리케이션 루트에 스타일을 추가하세요:
 
+> Next.js의 경우, `layout.tsx` 파일에 스타일을 추가해야 합니다.
+
 {/* prettier-ignore */}
-<Tabs items={[".jsx", ".css"]} defaultValue=".jsx">
-  <Tab value=".jsx">
+<Tabs items={[".tsx", ".css"]} defaultValue=".tsx">
+  <Tab value=".tsx">
   ```tsx
   import '@vapor-ui/core/styles.css'; 
   ```

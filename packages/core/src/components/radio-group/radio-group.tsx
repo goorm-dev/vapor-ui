@@ -3,6 +3,7 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
+import { Primitive } from '@radix-ui/react-primitive';
 import {
     Indicator as RadixIndicator,
     Item as RadixItem,
@@ -11,10 +12,9 @@ import {
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { ControlVariants, LabelVariants, RootVariants } from './radio-group.css';
 import * as styles from './radio-group.css';
 
 type RadixRootProps = ComponentPropsWithoutRef<typeof RadixRoot>;
@@ -23,9 +23,7 @@ type PrimitiveRootProps = Pick<
     'name' | 'dir' | 'loop' | 'value' | 'onValueChange' | 'defaultValue' | 'required' | 'disabled'
 >;
 
-type RadioGroupVariants = MergeRecipeVariants<
-    typeof styles.root | typeof styles.label | typeof styles.control
->;
+type RadioGroupVariants = RootVariants & ControlVariants & LabelVariants;
 type RadioGroupSharedProps = RadioGroupVariants & PrimitiveRootProps;
 type RadioGroupContext = RadioGroupSharedProps;
 
@@ -39,7 +37,7 @@ const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupConte
  * RadioGroup.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioGroupRootPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type RadioGroupRootPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 interface RadioGroupRootProps
     extends Omit<RadioGroupRootPrimitiveProps, keyof PrimitiveRootProps>,
         PrimitiveRootProps {}
@@ -79,9 +77,9 @@ Root.displayName = 'RadioGroup.Root';
  * RadioGroup.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioGroupItemPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
+type RadioGroupItemPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 
-type RadioGroupItemVariants = MergeRecipeVariants<typeof styles.control | typeof styles.label>;
+type RadioGroupItemVariants = ControlVariants & LabelVariants;
 type RadioGroupItemSharedProps = RadioGroupItemVariants &
     Pick<RadioGroupControlPrimitiveProps, 'value' | 'disabled'>;
 
@@ -119,7 +117,7 @@ const Item = forwardRef<HTMLDivElement, RadioGroupItemProps>(({ className, ...pr
         <RadioGroupItemProvider
             value={{ ...itemProps, radioGroupItemId, disabled, invalid, visuallyHidden }}
         >
-            <vapor.div
+            <Primitive.div
                 ref={ref}
                 className={clsx(styles.item({ disabled }), className)}
                 {...otherProps}
@@ -164,7 +162,7 @@ Control.displayName = 'RadioGroup.Control';
  * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof vapor.label>;
+type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof Primitive.label>;
 interface RadioGroupLabelProps extends Omit<PrimitiveLabelProps, keyof RadioGroupItemSharedProps> {}
 
 const Label = forwardRef<HTMLLabelElement, RadioGroupLabelProps>(
@@ -172,7 +170,7 @@ const Label = forwardRef<HTMLLabelElement, RadioGroupLabelProps>(
         const { radioGroupItemId, visuallyHidden } = useRadioGroupItemContext();
 
         return (
-            <vapor.label
+            <Primitive.label
                 ref={ref}
                 htmlFor={htmlFor || radioGroupItemId}
                 className={clsx(styles.label({ visuallyHidden }), className)}

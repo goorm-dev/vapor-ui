@@ -1,26 +1,21 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import type { VaporComponentProps } from '~/libs/factory';
-import { vapor } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import { Box } from '../box';
+
 type FlexVariants = { inline?: boolean };
-type FlexPrimitiveProps = VaporComponentProps<'div'>;
+type FlexPrimitiveProps = ComponentPropsWithoutRef<typeof Box>;
 
-type FlexProps = FlexPrimitiveProps & FlexVariants;
+interface FlexProps extends FlexPrimitiveProps, FlexVariants {}
 
-const Flex = forwardRef<HTMLDivElement, FlexProps>(({ className, ...props }, ref) => {
-    const [flexVariants, otherProps] = createSplitProps<FlexVariants>()(props, ['inline']);
+const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {
+    const [variantProps, otherProps] = createSplitProps<FlexVariants>()(props, ['inline']);
 
-    return (
-        <vapor.div
-            ref={ref}
-            display={flexVariants.inline ? 'inline-flex' : 'flex'}
-            {...otherProps}
-        />
-    );
+    return <Box ref={ref} display={variantProps.inline ? 'inline-flex' : 'flex'} {...otherProps} />;
 });
 Flex.displayName = 'Flex';
 
