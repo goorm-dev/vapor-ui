@@ -12,12 +12,25 @@ import { Avatar } from '@vapor-ui/core';
 
 ## Preview
 
-<LiveCodeBlock
-    code={`<Avatar.Root size="md"> 
-    <Avatar.Image src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"/>
-    <Avatar.Fallback>goorm</Avatar.Fallback>
-</Avatar.Root>`}
-/>
+<Demo name="default-avatar">
+```tsx
+import { Avatar } from '@vapor-ui/core';
+
+export default function DefaultAvatar() {
+    return (
+        <Avatar.Root
+            size="md"
+            alt="goorm"
+            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
+        >
+            <Avatar.Image />
+            <Avatar.Fallback>goorm</Avatar.Fallback>
+        </Avatar.Root>
+    );
+}
+
+```
+</Demo>
 
 ## Props
 
@@ -40,3 +53,4 @@ import { Avatar } from '@vapor-ui/core';
 ## Accessibility Table
 
 <AccessibilityTable file="avatar" />
+```

@@ -12,17 +12,25 @@ import { Card } from '@vapor-ui/core';
 
 ## Preview
 
-<LiveCodeBlock
-    code={`<Card.Root>
-    <Card.Header>
-        Basic Template
-    </Card.Header>
-    <Card.Body>This is a Basic Template</Card.Body>
-    <Card.Footer style={{ display: 'flex', justifyContent: 'center' }}>
-        Footer
-    </Card.Footer>
-</Card.Root>`}
-/>
+<Demo name="default-card">
+```tsx
+import { Card } from '@vapor-ui/core';
+
+export default function DefaultCard() {
+    return (
+        <Card.Root>
+            <Card.Header>
+                Basic Template
+            </Card.Header>
+            <Card.Body>This is a Basic Template</Card.Body>
+            <Card.Footer style={{ display: 'flex', justifyContent: 'center' }}>
+                Footer
+            </Card.Footer>
+        </Card.Root>
+    );
+}
+```
+</Demo>
 
 ## Props
 

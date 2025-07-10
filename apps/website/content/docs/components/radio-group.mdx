@@ -6,24 +6,32 @@ description: 'Radio Group는 둘 또는 그 이상의 옵션 중 하나만 선�
 
 ## Import
 
-```js
+```jsx
 import { RadioGroup } from '@vapor-ui/core';
 ```
 
 ## Preview
 
-<LiveCodeBlock
-    code={`<RadioGroup.Root name="fruits">
-  <RadioGroup.Item value="apple">
-    <RadioGroup.Control />
-    <RadioGroup.Label>Apple</RadioGroup.Label>
-  </RadioGroup.Item>
-  <RadioGroup.Item value="orange">
-    <RadioGroup.Control />
-    <RadioGroup.Label>Orange</RadioGroup.Label>
-  </RadioGroup.Item>
-</RadioGroup.Root>`}
-/>
+<Demo name="default-radio-group">
+```tsx
+import { RadioGroup } from '@vapor-ui/core';
+
+export default function DefaultRadioGroup() {
+    return (
+        <RadioGroup.Root name="fruits">
+            <RadioGroup.Item value="apple">
+                <RadioGroup.Control />
+                <RadioGroup.Label>Apple</RadioGroup.Label>
+            </RadioGroup.Item>
+            <RadioGroup.Item value="orange">
+                <RadioGroup.Control />
+                <RadioGroup.Label>Orange</RadioGroup.Label>
+            </RadioGroup.Item>
+        </RadioGroup.Root>
+    );
+}
+```
+</Demo>
 
 ## Props
 
