@@ -1,5 +1,5 @@
 import { DiscordColorIcon, FigmaColorIcon, GithubIcon } from '@vapor-ui/icons';
-import type { LinkItemType } from 'fumadocs-ui/layouts/links';
+import type { IconItemType } from 'fumadocs-ui/layouts/links';
 
 export const navLinks = [
     {
@@ -23,4 +23,4 @@ export const navLinks = [
         label: 'Vapor Github',
         type: 'icon',
     },
-] as LinkItemType[];
+] satisfies IconItemType[];
