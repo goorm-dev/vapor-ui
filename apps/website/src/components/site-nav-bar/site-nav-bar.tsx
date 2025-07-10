@@ -70,8 +70,8 @@ export const SiteNavBar = () => {
                             </Link>
 
                             <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem className="text-sm" href="/docs">
-                                    Docs
+                                <Nav.LinkItem className="text-sm" href="/docs" asChild>
+                                    <Link>Docs</Link>
                                 </Nav.LinkItem>
                             </Nav.List>
                         </div>
