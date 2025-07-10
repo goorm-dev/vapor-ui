@@ -1,0 +1,21 @@
+.textInput_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-050);
+}
+
+.textInput_innerWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-100);
+
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+}
+
+.applyButton {
+    flex-shrink: 0;
+}
