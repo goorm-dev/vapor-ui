@@ -8,6 +8,8 @@ import {
     dialogData,
     iconButtonData,
     navData,
+    radioGroupData,
+    switchData,
     textData,
     textInputData,
 } from './accessibility';
@@ -25,4 +27,6 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     text: textData,
     'text-input': textInputData,
     dialog: dialogData,
+    switch: switchData,
+    'radio-group': radioGroupData,
 };

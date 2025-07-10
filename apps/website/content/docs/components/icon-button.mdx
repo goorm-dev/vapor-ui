@@ -12,11 +12,20 @@ import { IconButton } from '@vapor-ui/core';
 
 ## Preview
 
-<LiveCodeBlock
-    code={`<IconButton>
-    <HeartIcon />
-</IconButton>`}
-/>
+<Demo name="default-icon-button">
+```tsx
+import { IconButton } from '@vapor-ui/core';
+import { HeartIcon } from '@vapor-ui/icons';
+
+export default function DefaultIconButton() {
+    return (
+        <IconButton>
+            <HeartIcon />
+        </IconButton>
+    );
+}
+```
+</Demo>
 
 ## Props
 
