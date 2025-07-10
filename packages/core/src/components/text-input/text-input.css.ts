@@ -99,6 +99,6 @@ export const field = recipe({
     },
 });
 
-export type TextInputRootVariants = NonNullable<RecipeVariants<typeof root>>;
-export type TextInputLabelVariants = NonNullable<RecipeVariants<typeof label>>;
-export type TextInputFieldVariants = NonNullable<RecipeVariants<typeof field>>;
+export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;
+export type FieldVariants = NonNullable<RecipeVariants<typeof field>>;

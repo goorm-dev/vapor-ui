@@ -14,7 +14,7 @@ Next.js의 App Router에서 서버 사이드 렌더링(SSR)과 스트리밍 기�
 #### 1단계: 패키지 설치
 
 ```bash
-npm install @vapor-ui/core
+npm install @vapor-ui/core@latest
 ```
 
 #### 2단계: 테마 설정 파일 생성 (선택사항이지만 권장)
@@ -41,12 +41,11 @@ export const themeConfig = createThemeConfig({
 // app/layout.tsx
 import { themeConfig } from '@/lib/theme.config';
 import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
-import type { Metadata } from 'next';
-
 // 설정 파일 경로
 
 // 필수: 스타일 시트를 임포트합니다.
 import '@vapor-ui/core/dist/styles.css';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -94,6 +93,8 @@ export default function RootLayout({
 import { useEffect, useState } from 'react';
 
 import { useTheme } from '@vapor-ui/core';
+
+// components/ThemeToggleButton.tsx
 
 // components/ThemeToggleButton.tsx
 

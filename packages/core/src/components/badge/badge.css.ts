@@ -82,4 +82,5 @@ export const root = recipe({
         },
     },
 });
+
 export type BadgeVariants = NonNullable<RecipeVariants<typeof root>>;
