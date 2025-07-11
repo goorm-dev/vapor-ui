@@ -19,13 +19,14 @@ const ThemeUpdater = ({
     themeConfig: VaporThemeConfig;
 }) => {
     const { setTheme } = useTheme();
-    const { appearance, radius, scaling } = themeConfig;
+    const { appearance, radius, scaling, primaryColor } = themeConfig;
 
     useEffect(() => {
         setTheme({
             appearance,
             radius,
             scaling,
+            primaryColor,
         });
     }, [appearance, radius, scaling, setTheme]);
 
@@ -92,6 +93,23 @@ const preview: Preview = {
                 dynamicTitle: true,
             },
         },
+        primaryColor: {
+            name: 'Primary Color',
+            description: 'Set the primary color for components.',
+            defaultValue: undefined,
+            toolbar: {
+                title: 'Primary Color',
+                icon: 'paintbrush',
+                items: [
+                    '#007bff', // blue
+                    '#28a745', // green
+                    '#dc3545', // red
+                    '#ffc107', // yellow
+                    '#6c757d', // gray
+                ],
+                dynamicTitle: true,
+            },
+        },
     },
 
     decorators: [
@@ -107,6 +125,7 @@ const preview: Preview = {
                             appearance: context.globals.appearance as Appearance,
                             radius: context.globals.radius as Radius,
                             scaling: parseFloat(context.globals.scaling) as Scaling,
+                            primaryColor: context.globals.primaryColor,
                         }}
                     >
                         <Story />

@@ -26,7 +26,7 @@ export const Default: Story = {
         <HStack gap="$200">
             <Button {...args}>Button</Button>
             <Button {...args} asChild>
-                <a href="https://vapor.goorm.io">Link Button(Polymorphic)</a>
+                <a href="https://vapor-ui.goorm.io">Link Button(Polymorphic)</a>
             </Button>
         </HStack>
     ),

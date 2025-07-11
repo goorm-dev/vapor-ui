@@ -2,6 +2,7 @@ import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
 import autoprefixer from 'autoprefixer';
 import fs from 'fs';
 import { sync } from 'glob';
+import path from 'path';
 import postcss from 'postcss';
 import { type Options, defineConfig } from 'tsup';
 
@@ -31,19 +32,13 @@ const injectSideEffectImports = async (format: 'esm' | 'cjs') => {
             const componentName = isEsm
                 ? file.split(`${COMPONENT_DIR}/`)[1].split('/index.js')[0]
                 : file.split(`${COMPONENT_DIR}/`)[1].split('/index.cjs')[0];
-            const componentSourceFile = fs.readFileSync(
-                `src/components/${componentName}/${componentName}.tsx`,
-                'utf-8',
-            );
 
-            const cssFilePath = `src/components/${componentName}/${componentName}.css.ts`;
-            const cssFileExists = fs.existsSync(cssFilePath);
+            // --- CSS Import Injection Logic ---
+            const cssFilePath = path.join(path.dirname(file), 'index.css');
 
-            const useClientDirective = `'use client';`;
-            const useStrictDirective = `"use strict";`;
-
-            if (cssFileExists) {
+            if (fs.existsSync(cssFilePath)) {
                 const cssImport = isEsm ? `import "./index.css";` : `require("./index.css");`;
+                const useStrictDirective = `"use strict";`;
 
                 if (content.includes(useStrictDirective)) {
                     content = content.replace(
@@ -55,13 +50,28 @@ const injectSideEffectImports = async (format: 'esm' | 'cjs') => {
                 }
             }
 
-            if (componentSourceFile.includes(useClientDirective)) {
-                content = `${useClientDirective}\n${content}`;
+            // --- 'use client' Directive Injection Logic ---
+            const tsxSourcePath = `src/components/${componentName}/${componentName}.tsx`;
+            const tsSourcePath = `src/components/${componentName}/${componentName}.ts`;
+
+            let componentSourcePath = '';
+            if (fs.existsSync(tsxSourcePath)) {
+                componentSourcePath = tsxSourcePath;
+            } else if (fs.existsSync(tsSourcePath)) {
+                componentSourcePath = tsSourcePath;
+            }
+
+            if (componentSourcePath) {
+                const componentSourceFile = fs.readFileSync(componentSourcePath, 'utf-8');
+                const useClientDirective = `'use client';`;
+                if (componentSourceFile.includes(useClientDirective)) {
+                    content = `${useClientDirective}\n${content}`;
+                }
             }
 
             fs.writeFileSync(file, content);
         } catch (error) {
-            console.error(`❌ Failed to inject CSS import for ${file}:`, error);
+            console.error(`❌ Failed to inject side-effects for ${file}:`, error);
         }
     }
 };
@@ -111,10 +121,13 @@ export default defineConfig([
             await injectSideEffectImports('cjs');
             console.log('🚀 SideEffect imports injected');
         },
+        banner: {
+            css: '@layer vapor-theme, vapor-reset, vapor-component, vapor-utilities;',
+        },
     },
     {
         entry: ['src/index.ts', 'src/components/*/index.ts'],
-        outDir: 'dist',
+        outDir: DIR,
         format: 'cjs',
         splitting: true,
         dts: { only: true },

@@ -10,6 +10,8 @@
         "dialog",
         "icon-button",
         "nav",
+        "radio-group",
+        "switch",
         "text-input",
         "text"
     ]

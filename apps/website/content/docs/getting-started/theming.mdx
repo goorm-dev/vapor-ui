@@ -5,38 +5,48 @@ description: Vapor UI 테마 시스템을 설정하는 방법
 
 # Vapor UI 테마 시스템 설정 가이드
 
+다음과 같은 테마 옵션을 손쉽게 커스텀할 수 있습니다.
+
+1. **대표 색상 (`primaryColor`)** : Hex 코드로 UI의 주요 색상을 지정합니다.
+2. **디자인 모드 (`appearance`)** : 'light' 또는 'dark'로 테마를 설정합니다.
+3. **둥글기 (`radius`)** : 컴포넌트 모서리의 둥근 정도를 단계별로 조절합니다.
+4. **크기 (`scaling`)** : UI 요소의 전체적인 크기 배율을 설정합니다.
+
+
 ## 1. Next.js (App Router)
 
 1. **패키지 설치**
 
-    ```bash
-    npm install @vapor-ui/core
+    ```package-install
+    npm install @vapor-ui/core@latest
     ```
 
 2. **테마 설정 파일 생성**  
    (예시: `lib/theme.config.ts`)
 
-    ```ts
+    ```tsx
     import { createThemeConfig } from '@vapor-ui/core';
 
     export const themeConfig = createThemeConfig({
-        appearance: 'system', // 'light', 'dark', 'system'
+        appearance: 'light',
         radius: 'full',
         scaling: 1.0,
-        storageKey: 'my-next-app-theme',
+        storageKey: 'my-vapor-theme',
+        primaryColor: '#ffc107', // hex code로 설정
     });
     ```
 
 3. **Root layout.tsx에 적용**
 
     ```tsx
-    import { themeConfig } from '@/lib/theme.config';
     import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
     import '@vapor-ui/core/dist/styles.css';
 
+    // createThemeConfig를 상단에 추가하거나, 별도 설정 파일에서 import합니다.
+
     export default function RootLayout({ children }) {
         return (
-            <html lang="en" suppressHydrationWarning>
+            <html suppressHydrationWarning>
                 <head>
                     <ThemeScript config={themeConfig} />
                 </head>
@@ -52,13 +62,13 @@ description: Vapor UI 테마 시스템을 설정하는 방법
 
 ## 2. Vite
 
-1. **패키지 설치**
+1.  **패키지 설치**
 
-    ```bash
-    npm install @vapor-ui/core
-    ```
+```package-install
+npm install @vapor-ui/core@latest
+```
 
-2. **index.html에 FOUC 방지 스크립트 추가**
+2.  **index.html에 FOUC 방지 스크립트 추가**
 
     ```html
     <!-- public/index.html -->
@@ -89,7 +99,7 @@ description: Vapor UI 테마 시스템을 설정하는 방법
     </script>
     ```
 
-3. **ThemeProvider 설정**
+3.  **ThemeProvider 설정**
 
     ```tsx
     // src/main.tsx
@@ -98,9 +108,10 @@ description: Vapor UI 테마 시스템을 설정하는 방법
 
     const themeConfig = createThemeConfig({
         appearance: 'light',
-        radius: 'md',
+        radius: 'full',
         scaling: 1.0,
-        storageKey: 'my-vite-app-theme',
+        primaryColor: '#ffc107', // hex code로 설정
+        storageKey: 'my-vapor-theme',
     });
 
     ReactDOM.createRoot(document.getElementById('root')!).render(
