@@ -1,0 +1,352 @@
+@theme {
+	/* Color Scales - 자동으로 bg-*, text-*, border-* 유틸리티 생성 */
+	/* Gray scale */
+	--color-v-gray-50: var(--vapor-color-gray-050);
+	--color-v-gray-100: var(--vapor-color-gray-100);
+	--color-v-gray-200: var(--vapor-color-gray-200);
+	--color-v-gray-300: var(--vapor-color-gray-300);
+	--color-v-gray-400: var(--vapor-color-gray-400);
+	--color-v-gray-500: var(--vapor-color-gray-500);
+	--color-v-gray-600: var(--vapor-color-gray-600);
+	--color-v-gray-700: var(--vapor-color-gray-700);
+	--color-v-gray-800: var(--vapor-color-gray-800);
+	--color-v-gray-900: var(--vapor-color-gray-900);
+	--color-v-gray-950: var(--vapor-color-gray-950);
+
+	/* Color scales for all colors */
+	--color-v-red-50: var(--vapor-color-red-050);
+	--color-v-red-100: var(--vapor-color-red-100);
+	--color-v-red-200: var(--vapor-color-red-200);
+	--color-v-red-300: var(--vapor-color-red-300);
+	--color-v-red-400: var(--vapor-color-red-400);
+	--color-v-red-500: var(--vapor-color-red-500);
+	--color-v-red-600: var(--vapor-color-red-600);
+	--color-v-red-700: var(--vapor-color-red-700);
+	--color-v-red-800: var(--vapor-color-red-800);
+	--color-v-red-900: var(--vapor-color-red-900);
+
+	--color-v-pink-50: var(--vapor-color-pink-050);
+	--color-v-pink-100: var(--vapor-color-pink-100);
+	--color-v-pink-200: var(--vapor-color-pink-200);
+	--color-v-pink-300: var(--vapor-color-pink-300);
+	--color-v-pink-400: var(--vapor-color-pink-400);
+	--color-v-pink-500: var(--vapor-color-pink-500);
+	--color-v-pink-600: var(--vapor-color-pink-600);
+	--color-v-pink-700: var(--vapor-color-pink-700);
+	--color-v-pink-800: var(--vapor-color-pink-800);
+	--color-v-pink-900: var(--vapor-color-pink-900);
+
+	--color-v-grape-50: var(--vapor-color-grape-050);
+	--color-v-grape-100: var(--vapor-color-grape-100);
+	--color-v-grape-200: var(--vapor-color-grape-200);
+	--color-v-grape-300: var(--vapor-color-grape-300);
+	--color-v-grape-400: var(--vapor-color-grape-400);
+	--color-v-grape-500: var(--vapor-color-grape-500);
+	--color-v-grape-600: var(--vapor-color-grape-600);
+	--color-v-grape-700: var(--vapor-color-grape-700);
+	--color-v-grape-800: var(--vapor-color-grape-800);
+	--color-v-grape-900: var(--vapor-color-grape-900);
+
+	--color-v-violet-50: var(--vapor-color-violet-050);
+	--color-v-violet-100: var(--vapor-color-violet-100);
+	--color-v-violet-200: var(--vapor-color-violet-200);
+	--color-v-violet-300: var(--vapor-color-violet-300);
+	--color-v-violet-400: var(--vapor-color-violet-400);
+	--color-v-violet-500: var(--vapor-color-violet-500);
+	--color-v-violet-600: var(--vapor-color-violet-600);
+	--color-v-violet-700: var(--vapor-color-violet-700);
+	--color-v-violet-800: var(--vapor-color-violet-800);
+	--color-v-violet-900: var(--vapor-color-violet-900);
+
+	--color-v-blue-50: var(--vapor-color-blue-050);
+	--color-v-blue-100: var(--vapor-color-blue-100);
+	--color-v-blue-200: var(--vapor-color-blue-200);
+	--color-v-blue-300: var(--vapor-color-blue-300);
+	--color-v-blue-400: var(--vapor-color-blue-400);
+	--color-v-blue-500: var(--vapor-color-blue-500);
+	--color-v-blue-600: var(--vapor-color-blue-600);
+	--color-v-blue-700: var(--vapor-color-blue-700);
+	--color-v-blue-800: var(--vapor-color-blue-800);
+	--color-v-blue-900: var(--vapor-color-blue-900);
+
+	--color-v-cyan-50: var(--vapor-color-cyan-050);
+	--color-v-cyan-100: var(--vapor-color-cyan-100);
+	--color-v-cyan-200: var(--vapor-color-cyan-200);
+	--color-v-cyan-300: var(--vapor-color-cyan-300);
+	--color-v-cyan-400: var(--vapor-color-cyan-400);
+	--color-v-cyan-500: var(--vapor-color-cyan-500);
+	--color-v-cyan-600: var(--vapor-color-cyan-600);
+	--color-v-cyan-700: var(--vapor-color-cyan-700);
+	--color-v-cyan-800: var(--vapor-color-cyan-800);
+	--color-v-cyan-900: var(--vapor-color-cyan-900);
+
+	--color-v-green-50: var(--vapor-color-green-050);
+	--color-v-green-100: var(--vapor-color-green-100);
+	--color-v-green-200: var(--vapor-color-green-200);
+	--color-v-green-300: var(--vapor-color-green-300);
+	--color-v-green-400: var(--vapor-color-green-400);
+	--color-v-green-500: var(--vapor-color-green-500);
+	--color-v-green-600: var(--vapor-color-green-600);
+	--color-v-green-700: var(--vapor-color-green-700);
+	--color-v-green-800: var(--vapor-color-green-800);
+	--color-v-green-900: var(--vapor-color-green-900);
+
+	--color-v-lime-50: var(--vapor-color-lime-050);
+	--color-v-lime-100: var(--vapor-color-lime-100);
+	--color-v-lime-200: var(--vapor-color-lime-200);
+	--color-v-lime-300: var(--vapor-color-lime-300);
+	--color-v-lime-400: var(--vapor-color-lime-400);
+	--color-v-lime-500: var(--vapor-color-lime-500);
+	--color-v-lime-600: var(--vapor-color-lime-600);
+	--color-v-lime-700: var(--vapor-color-lime-700);
+	--color-v-lime-800: var(--vapor-color-lime-800);
+	--color-v-lime-900: var(--vapor-color-lime-900);
+
+	--color-v-yellow-50: var(--vapor-color-yellow-050);
+	--color-v-yellow-100: var(--vapor-color-yellow-100);
+	--color-v-yellow-200: var(--vapor-color-yellow-200);
+	--color-v-yellow-300: var(--vapor-color-yellow-300);
+	--color-v-yellow-400: var(--vapor-color-yellow-400);
+	--color-v-yellow-500: var(--vapor-color-yellow-500);
+	--color-v-yellow-600: var(--vapor-color-yellow-600);
+	--color-v-yellow-700: var(--vapor-color-yellow-700);
+	--color-v-yellow-800: var(--vapor-color-yellow-800);
+	--color-v-yellow-900: var(--vapor-color-yellow-900);
+
+	--color-v-orange-50: var(--vapor-color-orange-050);
+	--color-v-orange-100: var(--vapor-color-orange-100);
+	--color-v-orange-200: var(--vapor-color-orange-200);
+	--color-v-orange-300: var(--vapor-color-orange-300);
+	--color-v-orange-400: var(--vapor-color-orange-400);
+	--color-v-orange-500: var(--vapor-color-orange-500);
+	--color-v-orange-600: var(--vapor-color-orange-600);
+	--color-v-orange-700: var(--vapor-color-orange-700);
+	--color-v-orange-800: var(--vapor-color-orange-800);
+	--color-v-orange-900: var(--vapor-color-orange-900);
+
+	/* Base colors */
+	--color-v-black: var(--vapor-color-black);
+	--color-v-white: var(--vapor-color-white);
+
+	/* Spacing Mapping - Vapor 숫자 스케일 사용 */
+	--spacing-v-0: var(--vapor-size-space-000);
+	--spacing-v-25: var(--vapor-size-space-025);
+	--spacing-v-50: var(--vapor-size-space-050);
+	--spacing-v-75: var(--vapor-size-space-075);
+	--spacing-v-100: var(--vapor-size-space-100);
+	--spacing-v-150: var(--vapor-size-space-150);
+	--spacing-v-175: var(--vapor-size-space-175);
+	--spacing-v-200: var(--vapor-size-space-200);
+	--spacing-v-225: var(--vapor-size-space-225);
+	--spacing-v-250: var(--vapor-size-space-250);
+	--spacing-v-300: var(--vapor-size-space-300);
+	--spacing-v-400: var(--vapor-size-space-400);
+	--spacing-v-500: var(--vapor-size-space-500);
+	--spacing-v-600: var(--vapor-size-space-600);
+	--spacing-v-700: var(--vapor-size-space-700);
+	--spacing-v-800: var(--vapor-size-space-800);
+	--spacing-v-900: var(--vapor-size-space-900);
+
+	/* Border Radius Mapping - Vapor 숫자 스케일 사용 */
+	--radius-v-0: var(--vapor-size-borderRadius-000);
+	--radius-v-50: var(--vapor-size-borderRadius-050);
+	--radius-v-100: var(--vapor-size-borderRadius-100);
+	--radius-v-200: var(--vapor-size-borderRadius-200);
+	--radius-v-300: var(--vapor-size-borderRadius-300);
+	--radius-v-400: var(--vapor-size-borderRadius-400);
+	--radius-v-500: var(--vapor-size-borderRadius-500);
+	--radius-v-600: var(--vapor-size-borderRadius-600);
+	--radius-v-700: var(--vapor-size-borderRadius-700);
+	--radius-v-800: var(--vapor-size-borderRadius-800);
+	--radius-v-900: var(--vapor-size-borderRadius-900);
+
+	/* Typography - Font Family */
+	--font-v-sans: var(--vapor-typography-fontFamily-sans);
+	--font-v-code: var(--vapor-typography-fontFamily-code);
+
+	/* Typography - Font Size - Vapor 숫자 스케일 사용 */
+	--text-v-25: var(--vapor-typography-fontSize-025);
+	--text-v-50: var(--vapor-typography-fontSize-050);
+	--text-v-75: var(--vapor-typography-fontSize-075);
+	--text-v-100: var(--vapor-typography-fontSize-100);
+	--text-v-200: var(--vapor-typography-fontSize-200);
+	--text-v-300: var(--vapor-typography-fontSize-300);
+	--text-v-400: var(--vapor-typography-fontSize-400);
+	--text-v-500: var(--vapor-typography-fontSize-500);
+	--text-v-600: var(--vapor-typography-fontSize-600);
+	--text-v-700: var(--vapor-typography-fontSize-700);
+	--text-v-800: var(--vapor-typography-fontSize-800);
+	--text-v-900: var(--vapor-typography-fontSize-900);
+	--text-v-1000: var(--vapor-typography-fontSize-1000);
+
+	/* Typography - Font Weight - Vapor 숫자 스케일 사용 */
+	--font-weight-v-400: var(--vapor-typography-fontWeight-400);
+	--font-weight-v-500: var(--vapor-typography-fontWeight-500);
+	--font-weight-v-700: var(--vapor-typography-fontWeight-700);
+	--font-weight-v-800: var(--vapor-typography-fontWeight-800);
+
+	/* Typography - Line Height - Vapor 숫자 스케일 사용 */
+	--leading-v-25: var(--vapor-typography-lineHeight-025);
+	--leading-v-50: var(--vapor-typography-lineHeight-050);
+	--leading-v-75: var(--vapor-typography-lineHeight-075);
+	--leading-v-100: var(--vapor-typography-lineHeight-100);
+	--leading-v-200: var(--vapor-typography-lineHeight-200);
+	--leading-v-300: var(--vapor-typography-lineHeight-300);
+	--leading-v-400: var(--vapor-typography-lineHeight-400);
+	--leading-v-500: var(--vapor-typography-lineHeight-500);
+	--leading-v-600: var(--vapor-typography-lineHeight-600);
+	--leading-v-700: var(--vapor-typography-lineHeight-700);
+	--leading-v-800: var(--vapor-typography-lineHeight-800);
+	--leading-v-900: var(--vapor-typography-lineHeight-900);
+	--leading-v-1000: var(--vapor-typography-lineHeight-1000);
+
+	/* Typography - Letter Spacing - Vapor 숫자 스케일 사용 */
+	--tracking-v-0: var(--vapor-typography-letterSpacing-000);
+	--tracking-v-100: var(--vapor-typography-letterSpacing-100);
+	--tracking-v-200: var(--vapor-typography-letterSpacing-200);
+	--tracking-v-300: var(--vapor-typography-letterSpacing-300);
+	--tracking-v-400: var(--vapor-typography-letterSpacing-400);
+}
+
+/* ====================================
+   Semantic Color Utilities
+   ==================================== */
+
+/* Background semantic colors */
+@utility bg-v-primary {
+	background-color: var(--vapor-color-background-primary);
+}
+
+@utility bg-v-secondary {
+	background-color: var(--vapor-color-background-secondary);
+}
+
+@utility bg-v-success {
+	background-color: var(--vapor-color-background-success);
+}
+
+@utility bg-v-warning {
+	background-color: var(--vapor-color-background-warning);
+}
+
+@utility bg-v-danger {
+	background-color: var(--vapor-color-background-danger);
+}
+
+@utility bg-v-hint {
+	background-color: var(--vapor-color-background-hint);
+}
+
+@utility bg-v-contrast {
+	background-color: var(--vapor-color-background-contrast);
+}
+
+@utility bg-v-normal {
+	background-color: var(--vapor-color-background-normal);
+}
+
+/* Background semantic colors (Lighter/Darker) */
+@utility bg-v-normal-lighter {
+	background-color: var(--vapor-color-background-normal-lighter);
+}
+@utility bg-v-normal-darker {
+	background-color: var(--vapor-color-background-normal-darker);
+}
+
+/* Text semantic colors */
+@utility text-v-primary {
+	color: var(--vapor-color-foreground-primary);
+}
+
+@utility text-v-secondary {
+	color: var(--vapor-color-foreground-secondary);
+}
+
+@utility text-v-success {
+	color: var(--vapor-color-foreground-success);
+}
+
+@utility text-v-warning {
+	color: var(--vapor-color-foreground-warning);
+}
+
+@utility text-v-danger {
+	color: var(--vapor-color-foreground-danger);
+}
+
+@utility text-v-hint {
+	color: var(--vapor-color-foreground-hint);
+}
+
+@utility text-v-contrast {
+	color: var(--vapor-color-foreground-contrast);
+}
+
+@utility text-v-normal {
+	color: var(--vapor-color-foreground-normal);
+}
+
+@utility text-v-accent {
+	color: var(--vapor-color-foreground-accent);
+}
+
+/* Text semantic colors (Darker) */
+@utility text-v-primary-darker {
+	color: var(--vapor-color-foreground-primary-darker);
+}
+@utility text-v-secondary-darker {
+	color: var(--vapor-color-foreground-secondary-darker);
+}
+@utility text-v-success-darker {
+	color: var(--vapor-color-foreground-success-darker);
+}
+@utility text-v-warning-darker {
+	color: var(--vapor-color-foreground-warning-darker);
+}
+@utility text-v-danger-darker {
+	color: var(--vapor-color-foreground-danger-darker);
+}
+@utility text-v-hint-darker {
+	color: var(--vapor-color-foreground-hint-darker);
+}
+@utility text-v-contrast-darker {
+	color: var(--vapor-color-foreground-contrast-darker);
+}
+
+/* Border semantic colors */
+@utility border-v-primary {
+	border-color: var(--vapor-color-border-primary);
+}
+
+@utility border-v-secondary {
+	border-color: var(--vapor-color-border-secondary);
+}
+
+@utility border-v-success {
+	border-color: var(--vapor-color-border-success);
+}
+
+@utility border-v-warning {
+	border-color: var(--vapor-color-border-warning);
+}
+
+@utility border-v-danger {
+	border-color: var(--vapor-color-border-danger);
+}
+
+@utility border-v-hint {
+	border-color: var(--vapor-color-border-hint);
+}
+
+@utility border-v-contrast {
+	border-color: var(--vapor-color-border-contrast);
+}
+
+@utility border-v-normal {
+	border-color: var(--vapor-color-border-normal);
+}
+
+/* Logo color utility */
+@utility text-v-logo {
+	color: var(--vapor-color-logo-normal);
+}
