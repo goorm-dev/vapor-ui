@@ -13,18 +13,15 @@ import {
     Title as RadixTitle,
     Trigger as RadixTrigger,
 } from '@radix-ui/react-dialog';
+import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
-import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
-import { splitLayoutProps } from '~/utils/split-layout-props';
 
 import * as styles from './dialog.css';
+import type { DialogContentVariants } from './dialog.css';
 
-type DialogVariants = MergeRecipeVariants<typeof styles.content>;
-type DialogSharedProps = DialogVariants & {
+type DialogSharedProps = DialogContentVariants & {
     closeOnClickOverlay?: boolean;
     closeOnEscape?: boolean;
 };
@@ -70,19 +67,10 @@ Portal.displayName = 'Dialog.Portal';
  * Dialog.Overlay
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveOverlayProps = ComponentPropsWithoutRef<typeof RadixOverlay>;
-interface DialogOverlayProps extends PrimitiveOverlayProps, Sprinkles {}
+interface DialogOverlayProps extends ComponentPropsWithoutRef<typeof RadixOverlay> {}
 
 const Overlay = forwardRef<HTMLDivElement, DialogOverlayProps>(({ className, ...props }, ref) => {
-    const [layoutProps, otherProps] = splitLayoutProps(props);
-
-    return (
-        <RadixOverlay
-            ref={ref}
-            className={clsx(styles.overlay, sprinkles(layoutProps), className)}
-            {...otherProps}
-        />
-    );
+    return <RadixOverlay ref={ref} className={clsx(styles.overlay, className)} {...props} />;
 });
 Overlay.displayName = 'Dialog.Overlay';
 
@@ -91,25 +79,20 @@ Overlay.displayName = 'Dialog.Overlay';
  * -----------------------------------------------------------------------------------------------*/
 
 type PointerDownOutsideEvent = CustomEvent<{ originalEvent: PointerEvent }>;
-
-type DialogContentPrimitiveProps = ComponentPropsWithoutRef<typeof RadixContent>;
-interface DialogContentProps extends DialogContentPrimitiveProps, Sprinkles {}
+interface DialogContentProps extends ComponentPropsWithoutRef<typeof RadixContent> {}
 
 const Content = forwardRef<HTMLDivElement, DialogContentProps>(
     ({ onPointerDownOutside, onEscapeKeyDown, className, ...props }, ref) => {
         const { size, closeOnClickOverlay = true, closeOnEscape = true } = useDialogContext();
-        const [layoutProps, otherProps] = splitLayoutProps(props);
 
         const handlePointerDownOutside = (event: PointerDownOutsideEvent) => {
             if (closeOnClickOverlay) return;
-
             event.preventDefault();
             onPointerDownOutside?.(event);
         };
 
         const handleEscapeKeyDown = (event: KeyboardEvent) => {
             if (closeOnEscape) return;
-
             event.preventDefault();
             onEscapeKeyDown?.(event);
         };
@@ -117,10 +100,10 @@ const Content = forwardRef<HTMLDivElement, DialogContentProps>(
         return (
             <RadixContent
                 ref={ref}
-                className={clsx(styles.content({ size }), sprinkles(layoutProps), className)}
+                className={clsx(styles.content({ size }), className)}
                 onPointerDownOutside={handlePointerDownOutside}
                 onEscapeKeyDown={handleEscapeKeyDown}
-                {...otherProps}
+                {...props}
             />
         );
     },
@@ -131,8 +114,7 @@ Content.displayName = 'Dialog.Content';
  * Dialog.CombinedContent
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveCombinedContentProps = ComponentPropsWithoutRef<typeof Content>;
-interface DialogCombinedContentProps extends PrimitiveCombinedContentProps {}
+interface DialogCombinedContentProps extends DialogContentProps {}
 
 const CombinedContent = forwardRef<HTMLDivElement, DialogCombinedContentProps>((props, ref) => {
     return (
@@ -148,37 +130,21 @@ CombinedContent.displayName = 'Dialog.CombinedContent';
  * Dialog.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof RadixTrigger>;
-interface DialogTriggerProps extends TriggerPrimitiveProps, Sprinkles {}
+interface DialogTriggerProps extends ComponentPropsWithoutRef<typeof RadixTrigger> {}
 
-const Trigger = forwardRef<HTMLButtonElement, DialogTriggerProps>(
-    ({ className, ...props }, ref) => {
-        const [layoutProps, otherProps] = splitLayoutProps(props);
-
-        return (
-            <RadixTrigger
-                ref={ref}
-                className={clsx(sprinkles(layoutProps), className)}
-                {...otherProps}
-            />
-        );
-    },
-);
+const Trigger = forwardRef<HTMLButtonElement, DialogTriggerProps>((props, ref) => {
+    return <RadixTrigger ref={ref} {...props} />;
+});
 Trigger.displayName = 'Dialog.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog.Close
  * -----------------------------------------------------------------------------------------------*/
 
-type ClosePrimitiveProps = ComponentPropsWithoutRef<typeof RadixClose>;
-interface DialogCloseProps extends ClosePrimitiveProps, Sprinkles {}
+interface DialogCloseProps extends ComponentPropsWithoutRef<typeof RadixClose> {}
 
-const Close = forwardRef<HTMLButtonElement, DialogCloseProps>(({ className, ...props }, ref) => {
-    const [layoutProps, otherProps] = splitLayoutProps(props);
-
-    return (
-        <RadixClose ref={ref} className={clsx(sprinkles(layoutProps), className)} {...otherProps} />
-    );
+const Close = forwardRef<HTMLButtonElement, DialogCloseProps>((props, ref) => {
+    return <RadixClose ref={ref} {...props} />;
 });
 Close.displayName = 'Dialog.Close';
 
@@ -186,19 +152,10 @@ Close.displayName = 'Dialog.Close';
  * Dialog.Title
  * -----------------------------------------------------------------------------------------------*/
 
-type TitlePrimitiveProps = ComponentPropsWithoutRef<typeof RadixTitle>;
-interface DialogTitleProps extends TitlePrimitiveProps, Sprinkles {}
+interface DialogTitleProps extends ComponentPropsWithoutRef<typeof RadixTitle> {}
 
 const Title = forwardRef<HTMLHeadingElement, DialogTitleProps>(({ className, ...props }, ref) => {
-    const [layoutProps, otherProps] = splitLayoutProps(props);
-
-    return (
-        <RadixTitle
-            ref={ref}
-            className={clsx(styles.title, sprinkles(layoutProps), className)}
-            {...otherProps}
-        />
-    );
+    return <RadixTitle ref={ref} className={clsx(styles.title, className)} {...props} />;
 });
 Title.displayName = 'Dialog.Title';
 
@@ -206,18 +163,15 @@ Title.displayName = 'Dialog.Title';
  * Dialog.Description
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveDescriptionProps = ComponentPropsWithoutRef<typeof RadixDescription>;
-interface DialogDescriptionProps extends PrimitiveDescriptionProps, Sprinkles {}
+interface DialogDescriptionProps extends ComponentPropsWithoutRef<typeof RadixDescription> {}
 
 const Description = forwardRef<HTMLParagraphElement, DialogDescriptionProps>(
     ({ className, ...props }, ref) => {
-        const [layoutProps, otherProps] = splitLayoutProps(props);
-
         return (
             <RadixDescription
                 ref={ref}
-                className={clsx(styles.description, sprinkles(layoutProps), className)}
-                {...otherProps}
+                className={clsx(styles.description, className)}
+                {...props}
             />
         );
     },
@@ -228,19 +182,10 @@ Description.displayName = 'Dialog.Description';
  * Dialog.Header
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveHeaderProps = ComponentPropsWithoutRef<typeof vapor.div>;
-interface DialogHeaderProps extends PrimitiveHeaderProps, Sprinkles {}
+interface DialogHeaderProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
 
 const Header = forwardRef<HTMLDivElement, DialogHeaderProps>(({ className, ...props }, ref) => {
-    const [layoutProps, otherProps] = splitLayoutProps(props);
-
-    return (
-        <vapor.div
-            ref={ref}
-            className={clsx(styles.header, sprinkles(layoutProps), className)}
-            {...otherProps}
-        />
-    );
+    return <Primitive.div ref={ref} className={clsx(styles.header, className)} {...props} />;
 });
 Header.displayName = 'Dialog.Header';
 
@@ -248,19 +193,10 @@ Header.displayName = 'Dialog.Header';
  * Dialog.Body
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveBodyProps = ComponentPropsWithoutRef<typeof vapor.div>;
-interface DialogBodyProps extends PrimitiveBodyProps, Sprinkles {}
+interface DialogBodyProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
 
 const Body = forwardRef<HTMLDivElement, DialogBodyProps>(({ className, ...props }, ref) => {
-    const [layoutProps, otherProps] = splitLayoutProps(props);
-
-    return (
-        <vapor.div
-            ref={ref}
-            className={clsx(styles.body, sprinkles(layoutProps), className)}
-            {...otherProps}
-        />
-    );
+    return <Primitive.div ref={ref} className={clsx(styles.body, className)} {...props} />;
 });
 Body.displayName = 'Dialog.Body';
 
@@ -268,19 +204,10 @@ Body.displayName = 'Dialog.Body';
  * Dialog.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveFooterProps = ComponentPropsWithoutRef<typeof vapor.div>;
-interface DialogFooterProps extends PrimitiveFooterProps, Sprinkles {}
+interface DialogFooterProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
 
 const Footer = forwardRef<HTMLDivElement, DialogFooterProps>(({ className, ...props }, ref) => {
-    const [layoutProps, otherProps] = splitLayoutProps(props);
-
-    return (
-        <vapor.div
-            ref={ref}
-            className={clsx(styles.footer, sprinkles(layoutProps), className)}
-            {...otherProps}
-        />
-    );
+    return <Primitive.div ref={ref} className={clsx(styles.footer, className)} {...props} />;
 });
 Footer.displayName = 'Dialog.Footer';
 

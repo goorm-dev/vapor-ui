@@ -72,7 +72,6 @@ git checkout -b create-button-loading-state
 `<type>(<scope>): <subject>`
 
 - **주요 Type과 버전 영향**:
-
     - `feat`: 새로운 기능 추가 시 사용합니다. **(MINOR 버전 상승)**
         - `feat(Avatar): add new Avatar component`
     - `fix`: 버그 수정 시 사용합니다. **(PATCH 버전 상승)**
@@ -81,7 +80,6 @@ git checkout -b create-button-loading-state
         - `feat(Button)!: change 'kind' prop to 'variant' for clarity`
 
 - **기타 Type**:
-
     - `docs`, `style`, `refactor`, `test`, `perf`, `chore` 등이 있습니다. 이 타입들은 일반적으로 버전 상승에 영향을 주지 않습니다.
 
 - **Scope**: 변경된 컴포넌트나 패키지명을 소문자로 작성합니다. (예: `modal`, `hooks`)

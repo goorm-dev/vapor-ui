@@ -8,16 +8,15 @@ import AccessibilityTable from '~/components/accessibility-table';
 import AllComponentsContainer from '~/components/all-components-container';
 import ComponentsCard from '~/components/component-card/component-card';
 import { Demo } from '~/components/demo/demo';
-import FoundationCard from '~/components/foundation-card/foundation-card';
 import FoundationColorTabs from '~/components/foundation-color-tabs';
-import FoundationList from '~/components/foundation-list/foundation-list';
 import FoundationSizeTabs from '~/components/foundation-size-tabs';
 import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
 import IconList from '~/components/icon-list-tabs/icon-list-tabs';
 import InstallSelector from '~/components/install-selector/install-selector';
-import IntroPackageListCollapsible from '~/components/intro-package-list-collapsible';
 import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
+
+import IntroLinkCardContainer from './components/intro-link-card-container';
 
 export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
     return {
@@ -38,8 +37,6 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         FoundationColorTabs,
         FoundationSizeTabs,
         FoundationTypographyTabs,
-        FoundationCard,
-        FoundationList,
         IconList,
         PropsTable,
         LiveCodeBlock,
@@ -47,8 +44,8 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             props: any,
         ) => JSX.Element,
-        IntroPackageListCollapsible,
         Image,
+        IntroLinkCardContainer,
         ...components,
     } as MDXComponents;
 };

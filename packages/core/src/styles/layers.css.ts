@@ -1,5 +1,12 @@
 import { globalLayer } from '@vanilla-extract/css';
 
+export const layerName = {
+    theme: 'vapor-theme',
+    reset: 'vapor-reset',
+    component: 'vapor-component',
+    utilities: 'vapor-utilities',
+} as const;
+
 /**
  * The order of the declaration means the priority of the layer.
  *
@@ -16,9 +23,10 @@ import { globalLayer } from '@vanilla-extract/css';
  * @layer vapor-theme, theme, vapor-reset, base, vapor-component, components, vapor-utilities, utilities;
  *
  */
-const theme = globalLayer('vapor-theme');
-const reset = globalLayer('vapor-reset');
-const component = globalLayer('vapor-component');
-const utilities = globalLayer('vapor-utilities');
+
+const theme = globalLayer(layerName.theme);
+const reset = globalLayer(layerName.reset);
+const component = globalLayer(layerName.component);
+const utilities = globalLayer(layerName.utilities);
 
 export const layers = { theme, reset, component, utilities };

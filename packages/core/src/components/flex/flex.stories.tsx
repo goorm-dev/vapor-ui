@@ -19,7 +19,6 @@ export const Default = {
                         />
                     </Flex>
                 </div>
-
                 <div>
                     <p>2. Inline Flex / column direction / gap 300</p>
                     <Flex
@@ -31,6 +30,7 @@ export const Default = {
                     >
                         <div style={{ backgroundColor: 'red', width: '100px', height: '100px' }} />
                         <div style={{ backgroundColor: 'blue', width: '100px', height: '100px' }} />
+
                         <div
                             style={{ backgroundColor: 'green', width: '100px', height: '100px' }}
                         />
@@ -55,7 +55,6 @@ export const TestBed = {
                         />
                     </Flex>
                 </div>
-
                 <div>
                     <p>2. Inline Flex / column direction / gap 300</p>
                     <Flex
@@ -67,6 +66,7 @@ export const TestBed = {
                     >
                         <div style={{ backgroundColor: 'red', width: '100px', height: '100px' }} />
                         <div style={{ backgroundColor: 'blue', width: '100px', height: '100px' }} />
+
                         <div
                             style={{ backgroundColor: 'green', width: '100px', height: '100px' }}
                         />

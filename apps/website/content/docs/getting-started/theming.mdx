@@ -1,0 +1,134 @@
+---
+title: Theming
+description: Vapor UI 테마 시스템을 설정하는 방법
+---
+
+# Vapor UI 테마 시스템 설정 가이드
+
+다음과 같은 테마 옵션을 손쉽게 커스텀할 수 있습니다.
+
+1. **대표 색상 (`primaryColor`)** : Hex 코드로 UI의 주요 색상을 지정합니다.
+2. **디자인 모드 (`appearance`)** : 'light' 또는 'dark'로 테마를 설정합니다.
+3. **둥글기 (`radius`)** : 컴포넌트 모서리의 둥근 정도를 단계별로 조절합니다.
+4. **크기 (`scaling`)** : UI 요소의 전체적인 크기 배율을 설정합니다.
+
+
+## 1. Next.js (App Router)
+
+1. **패키지 설치**
+
+    ```package-install
+    npm install @vapor-ui/core@latest
+    ```
+
+2. **테마 설정 파일 생성**  
+   (예시: `lib/theme.config.ts`)
+
+    ```tsx
+    import { createThemeConfig } from '@vapor-ui/core';
+
+    export const themeConfig = createThemeConfig({
+        appearance: 'light',
+        radius: 'full',
+        scaling: 1.0,
+        storageKey: 'my-vapor-theme',
+        primaryColor: '#ffc107', // hex code로 설정
+    });
+    ```
+
+3. **Root layout.tsx에 적용**
+
+    ```tsx
+    import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
+    import '@vapor-ui/core/dist/styles.css';
+
+    // createThemeConfig를 상단에 추가하거나, 별도 설정 파일에서 import합니다.
+
+    export default function RootLayout({ children }) {
+        return (
+            <html suppressHydrationWarning>
+                <head>
+                    <ThemeScript config={themeConfig} />
+                </head>
+                <body>
+                    <ThemeProvider config={themeConfig}>{children}</ThemeProvider>
+                </body>
+            </html>
+        );
+    }
+    ```
+
+---
+
+## 2. Vite
+
+1.  **패키지 설치**
+
+```package-install
+npm install @vapor-ui/core@latest
+```
+
+2.  **index.html에 FOUC 방지 스크립트 추가**
+
+    ```html
+    <!-- public/index.html -->
+    <script>
+        (function () {
+            const defaultConfig = { appearance: 'light', radius: 'md', scaling: 1.0 };
+            const storageKey = 'my-vite-app-theme';
+            const root = document.documentElement;
+            let currentThemes = defaultConfig;
+            try {
+                const storedItem = localStorage.getItem(storageKey);
+                if (storedItem) {
+                    const storedSettings = JSON.parse(storedItem);
+                    currentThemes = Object.assign({}, defaultConfig, storedSettings);
+                }
+            } catch (e) {}
+            if (currentThemes.appearance === 'dark') {
+                root.classList.add('vapor-dark-theme');
+            } else {
+                root.classList.add('vapor-light-theme');
+            }
+            const radiusMap = { none: 0, sm: 0.5, md: 1, lg: 1.5, xl: 2, full: 3 };
+            const radiusFactor = radiusMap[currentThemes.radius] ?? 1;
+            root.style.setProperty('--vapor-radius-factor', radiusFactor.toString());
+            const scaleFactor = currentThemes.scaling ?? 1;
+            root.style.setProperty('--vapor-scale-factor', scaleFactor.toString());
+        })();
+    </script>
+    ```
+
+3.  **ThemeProvider 설정**
+
+    ```tsx
+    // src/main.tsx
+    import { ThemeProvider, createThemeConfig } from '@vapor-ui/core';
+    import '@vapor-ui/core/styles.css';
+
+    const themeConfig = createThemeConfig({
+        appearance: 'light',
+        radius: 'full',
+        scaling: 1.0,
+        primaryColor: '#ffc107', // hex code로 설정
+        storageKey: 'my-vapor-theme',
+    });
+
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+        <React.StrictMode>
+            <ThemeProvider config={themeConfig}>
+                <App />
+            </ThemeProvider>
+        </React.StrictMode>,
+    );
+    ```
+
+---
+
+## 3. Tailwind CSS
+
+- Tailwind CSS와 Vapor UI의 CSS 변수를 통합하는 방법, Tailwind의 `dark:` variant와 Vapor UI 다크 모드 연동법 등은 **추후 문서로 제공될 예정**입니다.
+
+---
+
+이렇게 환경별로 설정만 빠르게 적용하면 Vapor UI의 테마 시스템을 사용할 수 있습니다.

@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     if (!page) notFound();
 
     const { body: MDX, toc, lastModified } = await page.data.load();
-
+    const isRoot = slug.length === 0;
     return (
         <DocsPage
             toc={toc}
@@ -28,6 +28,9 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
                 single: false,
             }}
             lastUpdate={lastModified}
+            article={{
+                className: isRoot ? 'gap-[var(--vapor-size-space-800)]' : '',
+            }}
         >
             <div>
                 <DocsTitle className="mb-2">{page.data.title}</DocsTitle>

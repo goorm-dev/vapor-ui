@@ -22,6 +22,9 @@ export const baseOptions: BaseLayoutProps = {
 export const docsOptions: DocsLayoutProps = {
     ...baseOptions,
     tree: source.pageTree,
+    sidebar: {
+        className: 'md:bg-[var(--vapor-color-background-normal)]',
+    },
 };
 
 export const playgroundOptions: NotebookLayoutProps = {

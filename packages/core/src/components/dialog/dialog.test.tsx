@@ -135,7 +135,7 @@ const OVERLAY_TEXT = 'Overlay';
 
 const DialogTest = (props: DialogRootProps) => {
     return (
-        <Dialog {...props}>
+        <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
             <Dialog.Overlay data-testid={OVERLAY_TEXT} />
             <Dialog.Content>
@@ -149,13 +149,13 @@ const DialogTest = (props: DialogRootProps) => {
                     <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                 </Dialog.Footer>
             </Dialog.Content>
-        </Dialog>
+        </Dialog.Root>
     );
 };
 
 const NoTitleDialogTest = (props: DialogRootProps) => {
     return (
-        <Dialog {...props}>
+        <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
             <Dialog.Overlay />
             <Dialog.Content>
@@ -166,13 +166,13 @@ const NoTitleDialogTest = (props: DialogRootProps) => {
                     <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                 </Dialog.Footer>
             </Dialog.Content>
-        </Dialog>
+        </Dialog.Root>
     );
 };
 
 const NoDescriptionDialogTest = (props: DialogRootProps) => {
     return (
-        <Dialog {...props}>
+        <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
             <Dialog.Overlay />
             <Dialog.Content>
@@ -183,13 +183,13 @@ const NoDescriptionDialogTest = (props: DialogRootProps) => {
                     <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                 </Dialog.Footer>
             </Dialog.Content>
-        </Dialog>
+        </Dialog.Root>
     );
 };
 
 const UndefinedDescriptionDialogTest = (props: DialogRootProps) => {
     return (
-        <Dialog {...props}>
+        <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
             <Dialog.Overlay />
             <Dialog.Content aria-describedby={undefined}>
@@ -201,6 +201,6 @@ const UndefinedDescriptionDialogTest = (props: DialogRootProps) => {
                     <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                 </Dialog.Footer>
             </Dialog.Content>
-        </Dialog>
+        </Dialog.Root>
     );
 };

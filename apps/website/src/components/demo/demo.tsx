@@ -1,36 +1,37 @@
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-import * as React from "react";
+import * as React from 'react';
 
-import { Preview } from "./preview";
-import ErrorBoundary from "./error-boundary";
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+import ErrorBoundary from './error-boundary';
+import { Preview } from './preview';
 
 interface DemoProps {
-  name: string;
+    name: string;
 
-  children?: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 export function Demo(props: DemoProps) {
-  const { name, children } = props;
+    const { name, children } = props;
 
-  if (!children) {
+    if (!children) {
+        return (
+            <React.Suspense fallback={null}>
+                <Preview name={name} />
+            </React.Suspense>
+        );
+    }
+
     return (
-      <React.Suspense fallback={null}>
-        <Preview name={name} />
-      </React.Suspense>
+        <ErrorBoundary>
+            <Tabs items={['preview', 'code']} defaultValue="preview">
+                <Tab value="preview" className="rounded-t-none">
+                    <Preview name={name} />
+                </Tab>
+                <Tab value="code" className="rounded-t-none [&>figure]:bg-inherit">
+                    {children}
+                </Tab>
+            </Tabs>
+        </ErrorBoundary>
     );
-  }
-
-  return (
-    <ErrorBoundary>
-      <Tabs items={["preview", "code"]} defaultValue="preview">
-        <Tab value="preview" className="rounded-t-none">
-          <Preview name={name} />
-        </Tab>
-        <Tab value="code" className="rounded-t-none [&>figure]:bg-inherit">
-          {children}
-        </Tab>
-      </Tabs>
-    </ErrorBoundary>
-  );
 }

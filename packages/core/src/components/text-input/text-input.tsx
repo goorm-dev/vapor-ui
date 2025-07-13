@@ -3,20 +3,16 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
+import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
-import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
 import { createSplitProps } from '~/utils/create-split-props';
-import { splitLayoutProps } from '~/utils/split-layout-props';
 
+import type { FieldVariants, LabelVariants, RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
 
-type TextInputVariants = MergeRecipeVariants<
-    typeof styles.root | typeof styles.label | typeof styles.field
->;
+type TextInputVariants = RootVariants & LabelVariants & FieldVariants;
 type TextInputSharedProps = TextInputVariants & {
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     value?: string;
@@ -40,44 +36,38 @@ const [TextInputProvider, useTextInputContext] = createContext<TextInputContextT
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
-
+type TextInputPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 interface TextInputRootProps
     extends Omit<TextInputPrimitiveProps, keyof TextInputSharedProps>,
-        TextInputSharedProps,
-        Sprinkles {}
+        TextInputSharedProps {}
 
 const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
     ({ className, children, ...props }, ref) => {
         const textInputId = useId();
-        const [layoutProps, textInputProps] = splitLayoutProps(props);
-        const [textInputRootProps, otherProps] = createSplitProps<TextInputSharedProps>()(
-            textInputProps,
-            [
-                'type',
-                'value',
-                'onValueChange',
-                'defaultValue',
-                'size',
-                'disabled',
-                'invalid',
-                'readOnly',
-                'visuallyHidden',
-                'placeholder',
-            ],
-        );
+        const [textInputRootProps, otherProps] = createSplitProps<TextInputSharedProps>()(props, [
+            'type',
+            'value',
+            'onValueChange',
+            'defaultValue',
+            'size',
+            'disabled',
+            'invalid',
+            'readOnly',
+            'visuallyHidden',
+            'placeholder',
+        ]);
 
         const { disabled } = textInputRootProps;
 
         return (
             <TextInputProvider value={{ textInputId, ...textInputRootProps }}>
-                <vapor.div
+                <Primitive.div
                     ref={ref}
-                    className={clsx(styles.root({ disabled }), sprinkles(layoutProps), className)}
+                    className={clsx(styles.root({ disabled }), className)}
                     {...otherProps}
                 >
                     {children}
-                </vapor.div>
+                </Primitive.div>
             </TextInputProvider>
         );
     },
@@ -88,24 +78,19 @@ Root.displayName = 'TextInput.Root';
  * TextInput.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof vapor.label>;
-interface TextInputLabelProps extends PrimitiveLabelProps, Sprinkles {}
+type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof Primitive.label>;
+interface TextInputLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, TextInputLabelProps>(
     ({ htmlFor, className, ...props }, ref) => {
         const { textInputId = htmlFor, visuallyHidden } = useTextInputContext();
-        const [layoutProps, otherProps] = splitLayoutProps(props);
 
         return (
-            <vapor.label
+            <Primitive.label
                 ref={ref}
                 htmlFor={textInputId}
-                className={clsx(
-                    styles.label({ visuallyHidden }),
-                    sprinkles(layoutProps),
-                    className,
-                )}
-                {...otherProps}
+                className={clsx(styles.label({ visuallyHidden }), className)}
+                {...props}
             />
         );
     },
@@ -116,10 +101,8 @@ Label.displayName = 'TextInput.Label';
  * TextInput.Field
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveInputProps = ComponentPropsWithoutRef<typeof vapor.input>;
-interface TextInputFieldProps
-    extends Omit<PrimitiveInputProps, keyof TextInputSharedProps>,
-        Omit<PrimitiveInputProps, keyof Sprinkles> {}
+type PrimitiveInputProps = ComponentPropsWithoutRef<typeof Primitive.input>;
+interface TextInputFieldProps extends Omit<PrimitiveInputProps, keyof TextInputSharedProps> {}
 
 const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
     ({ id, className, ...props }, ref) => {
@@ -135,10 +118,9 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
             size,
             placeholder,
         } = useTextInputContext();
-        const [layoutProps, otherProps] = splitLayoutProps(props);
 
         return (
-            <vapor.input
+            <Primitive.input
                 ref={ref}
                 id={textInputId}
                 type={type}
@@ -149,8 +131,8 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
                 aria-invalid={invalid}
                 readOnly={readOnly}
                 placeholder={placeholder}
-                className={clsx(styles.field({ invalid, size }), sprinkles(layoutProps), className)}
-                {...otherProps}
+                className={clsx(styles.field({ invalid, size }), className)}
+                {...props}
             />
         );
     },
