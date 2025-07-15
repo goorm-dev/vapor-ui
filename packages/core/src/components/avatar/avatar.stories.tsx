@@ -18,7 +18,6 @@ const IMAGE_URL = 'https://avatars.githubusercontent.com/u/217160984?v=4';
 export const Default: Story = {
     render: (args) => (
         <>
-            {/* test */}
             <Flex>
                 <Avatar.Simple size="sm" src={IMAGE_URL} {...args} alt="hi" />
                 <Avatar.Simple size="md" src={IMAGE_URL} {...args} alt="hi" />
