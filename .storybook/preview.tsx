@@ -10,6 +10,8 @@ import type {
     VaporThemeConfig,
 } from '../packages/core/src/components/theme-provider';
 import '../packages/core/src/styles';
+import '../packages/core/src/styles/global-var.css';
+import '../packages/core/src/styles/global.css';
 import '../packages/core/src/styles/theme.css';
 
 const ThemeUpdater = ({
