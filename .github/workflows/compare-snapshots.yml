@@ -37,9 +37,6 @@ jobs:
               with:
                   working-directory: packages/core
 
-            - name: Build Core Package
-              run: pnpm core build
-
             - name: Build Storybook
               run: pnpm build-storybook
 
