@@ -2,8 +2,8 @@
     "props": [
         {
             "prop": "color",
-            "type": "'primary' | 'success' | 'warning' | 'danger' | 'hint' | 'contrast'",
-            "default": "'primary'",
+            "type": "primary | success | warning | danger | hint | contrast",
+            "default": "primary",
             "description": "Callout의 색상을 설정합니다."
         }
     ]
