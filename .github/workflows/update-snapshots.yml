@@ -20,9 +20,6 @@ jobs:
               with:
                   working-directory: packages/core
 
-            - name: Build Storybook
-              run: pnpm build-storybook
-
             - name: Take a snapshot
               run: |
                   pnpm core test:visual --update-snapshots

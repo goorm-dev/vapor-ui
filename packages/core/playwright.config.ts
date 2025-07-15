@@ -29,7 +29,7 @@ export default defineConfig({
 
     webServer: {
         // command: 'cd ../../ && pnpm build-storybook && pnpm storybook --port 9999',
-        command: 'cd ../../ && npx http-server -p 9999 ./storybook-static',
+        command: 'cd ../../ && pnpm build-storybook && npx http-server -p 9999 ./storybook-static',
         url: BASE_URL,
         reuseExistingServer: false,
     },
