@@ -83,5 +83,10 @@ jobs:
 
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
-                  message: ${{ steps.playwright-summary.outputs.summary }}
+                  message: |
+                      ${{ steps.playwright-summary.outputs.summary }}
+
+                      --
+                      ${{ needs.visual-regression.result == 'failure' && 'click [here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) to update the snapshots' || '' }}
+
                   GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
