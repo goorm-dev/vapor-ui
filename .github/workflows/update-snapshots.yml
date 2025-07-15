@@ -20,16 +20,19 @@ jobs:
               with:
                   working-directory: packages/core
 
+            - name: Build Storybook
+              run: pnpm build-storybook
+
+            - name: Take a snapshot
+              run: |
+                  pnpm core test:visual --update-snapshots
+                  git add packages/core/__tests__/screenshots
+                  git commit -m 'ci: update snapshots'
+
             - name: Configure Git
               run: |
                   git config user.name "$(git log -n 1 --pretty=format:%an)"
                   git config user.email "$(git log -n 1 --pretty=format:%ae)"
-
-            - name: Take a snapshot
-              run: |
-                  pnpm core exec playwright test --update-snapshots
-                  git add packages/core/__tests__/screenshots
-                  git commit -m 'ci: update snapshots'
 
             - name: Update Snapshots
               uses: ad-m/github-push-action@master
