@@ -1,0 +1,43 @@
+---
+title: Tailwind v4
+description: Vapor UI를 Tailwind CSS v4와 함께 사용하는 방법을 안내합니다.
+---
+
+## 1. Vite
+
+### 1.1 필요한 패키지 설치
+
+```bash
+npm install -D @vapor-ui/plugin-vite
+```
+
+### 1.2 Vite 설정
+
+`@vapor-ui/plugin-vite`는 Tailwind CSS의 레이어와 Vapor UI의 레이어까지 포함하여 전체 레이어 순서를 주입하는 역할을 담당해야 합니다.
+
+```ts
+// vite.config.ts
+import tailwindcss from '@tailwindcss/vite';
+import { vaporTailwindPlugin } from '@vapor-ui/plugin-vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [react(), tailwindcss(), vaporTailwindPlugin()],
+});
+```
+
+커스텀 레이어 순서 설정이 필요한 경우, `vaporTailwindPlugin`에 `layerOrder` 옵션을 추가할 수 있습니다.
+
+```ts
+// vite.config.ts
+
+export default defineConfig({
+    plugins: [
+        vaporTailwindPlugin({
+            layerOrder:
+                '@layer tw-theme, theme, tw-base, reset, component, utilities, tw-utilities;',
+        }),
+    ],
+});
+```
