@@ -1,0 +1,43 @@
+{
+    "name": "@vapor-ui/plugin-postcss",
+    "description": "PostCSS plugin for Vapor UI",
+    "version": "0.0.0",
+    "author": "Vapor Team <vapor.ui@goorm.io>",
+    "license": "MIT",
+    "homepage": "https://github.com/goorm-dev/vapor-ui",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "directory": "packages/plugin-postcss"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "bugs": {
+        "url": "https://github.com/goorm-dev/vapor-ui/issues"
+    },
+    "scripts": {
+        "build": "rimraf dist && tsup"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "rimraf": "^6.0.1",
+        "tsup": "^8.3.6"
+    },
+    "peerDependencies": {
+        "postcss": ">=8"
+    }
+}

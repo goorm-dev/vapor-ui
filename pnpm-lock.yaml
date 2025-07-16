@@ -489,6 +489,25 @@ importers:
         specifier: ^5.7.3
         version: 5.8.3
 
+  packages/plugin-postcss:
+    dependencies:
+      postcss:
+        specifier: '>=8'
+        version: 8.5.6
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
+      tsup:
+        specifier: ^8.3.6
+        version: 8.5.0(@swc/core@1.12.9)(jiti@2.4.2)(postcss@8.5.6)(typescript@5.8.3)
+
   packages/typescript-config: {}
 
 packages:
