@@ -97,7 +97,16 @@ jobs:
                   TOTAL=$((PASSED + FAILED))
 
                   # Extract duration
-                  DURATION=$(echo "$SUMMARY" | grep -oE '[0-9]+ minute[s]?, [0-9]+ second[s]?' | head -1 || echo "Unknown")
+                  DURATION_RAW=$(echo "$SUMMARY" | grep -oE '[0-9]+ minute[s]?, [0-9]+ second[s]?' | head -1 || echo "Unknown")
+
+                  # Format duration
+                  if [[ "$DURATION_RAW" != "Unknown" ]]; then
+                      MINUTES=$(echo "$DURATION_RAW" | grep -oE '[0-9]+' | head -1)
+                      SECONDS=$(echo "$DURATION_RAW" | grep -oE '[0-9]+' | tail -1)
+                      DURATION="${MINUTES}m ${SECONDS}s"
+                  else
+                      DURATION="Unknown"
+                  fi
 
                   echo "passed=$PASSED" >> $GITHUB_OUTPUT
                   echo "failed=$FAILED" >> $GITHUB_OUTPUT
@@ -107,12 +116,10 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      **The latest test results on your projects**.
+                      ${{ needs.visual-regression.result == 'failure' && '⚠️ **${{ steps.parse-results.outputs.failed }} tests failed!** Click [here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) to update snapshots.' || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
-                      | ----- | ------ | ------ | -------- | ------ |
+                      | :---- | :----- | :----- | :------- | :----- |
                       | ${{ steps.parse-results.outputs.total }} | ${{ steps.parse-results.outputs.passed }} | ${{ steps.parse-results.outputs.failed }} | ${{ steps.parse-results.outputs.duration }} | [Open report ↗︎](http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html) |
-
-                      ${{ needs.visual-regression.result == 'failure' && 'If you want to update snapshots, click [here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml).' || '' }}
 
                   GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
