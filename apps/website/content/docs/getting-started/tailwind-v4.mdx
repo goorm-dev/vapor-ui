@@ -38,8 +38,7 @@ export default defineConfig({
         react(),
         tailwindcss(),
         vaporTailwindPlugin({
-            layerOrder:
-                '@layer tw-theme, theme, tw-base, reset, component, utilities, tw-utilities;',
+            layerOrder: '@layer theme, reset, component, utilities, my-layer;',
         }),
     ],
 });
