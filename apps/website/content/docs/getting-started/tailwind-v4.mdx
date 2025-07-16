@@ -1,19 +1,19 @@
 ---
 title: Tailwind v4
-description: Vapor UI를 Tailwind CSS v4와 함께 사용하는 방법을 안내합니다.
+description: Vite와 Next.js 환경에서 Vapor UI를 Tailwind CSS v4와 함께 사용하는 방법을 안내합니다.
 ---
 
-## 1. Vite
+## Vite 환경 설정
 
-### 1.1 필요한 패키지 설치
+### 패키지 설치
 
-```bash
+```package-install
 npm install -D @vapor-ui/plugin-vite
 ```
 
-### 1.2 Vite 설정
+### Vite 설정
 
-`@vapor-ui/plugin-vite`는 Tailwind CSS의 레이어와 Vapor UI의 레이어까지 포함하여 전체 레이어 순서를 주입하는 역할을 담당해야 합니다.
+`@vapor-ui/plugin-vite`는 Tailwind CSS와 Vapor UI의 모든 레이어를 포함한 전체 레이어 순서를 자동으로 주입합니다.
 
 ```ts
 // vite.config.ts
@@ -27,13 +27,16 @@ export default defineConfig({
 });
 ```
 
-커스텀 레이어 순서 설정이 필요한 경우, `vaporTailwindPlugin`에 `layerOrder` 옵션을 추가할 수 있습니다.
+**커스텀 레이어 순서 설정**
+
+필요에 따라 레이어 순서를 커스터마이징할 수 있습니다.
 
 ```ts
 // vite.config.ts
-
 export default defineConfig({
     plugins: [
+        react(),
+        tailwindcss(),
         vaporTailwindPlugin({
             layerOrder:
                 '@layer tw-theme, theme, tw-base, reset, component, utilities, tw-utilities;',
@@ -41,3 +44,103 @@ export default defineConfig({
     ],
 });
 ```
+
+### CSS 설정
+
+```css
+/* global.css */
+
+/* Tailwind 테마 및 유틸리티 */
+@import 'tailwindcss/theme.css' layer(tw-theme);
+@import 'tailwindcss/utilities.css' layer(tw-utilities);
+
+/* Vapor UI 기본 스타일 */
+@import '@vapor-ui/core/styles.css';
+
+/* Vapor UI Tailwind preset */
+@import '@vapor-ui/core/tailwind.css';
+```
+
+---
+
+## Next.js 환경 설정
+
+### CSS 레이어 순서 정의
+
+Next.js에서는 CSS Layer 순서를 수동으로 정의해야 합니다.
+
+```css
+/* global.css */
+
+/* CSS Layer 순서 정의 */
+@layer tw-theme, theme, reset, component, utilities, tw-utilities;
+
+/* Tailwind 테마 및 유틸리티 */
+@import 'tailwindcss/theme.css' layer(tw-theme);
+@import 'tailwindcss/utilities.css' layer(tw-utilities);
+
+/* Vapor UI 기본 스타일 */
+@import '@vapor-ui/core/styles.css';
+
+/* Vapor UI Tailwind preset */
+@import '@vapor-ui/core/tailwind.css';
+```
+
+### CSS Import
+
+App Router에서 제공하는 layout.tsx 최상단에 CSS 파일을 import합니다.
+
+```tsx
+// app/layout.tsx
+import './global.css';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="ko">
+            <body>{children}</body>
+        </html>
+    );
+}
+```
+
+---
+
+## CSS Layer 우선순위 체계
+
+### Vapor UI 제공 Layer
+
+Vapor UI는 다음과 같은 CSS Layer를 제공합니다:
+
+- **`@layer reset`**: 브라우저 기본 스타일 초기화
+- **`@layer theme`**: Vapor UI의 디자인 토큰 및 테마 변수
+- **`@layer component`**: Vapor UI 컴포넌트의 기본 스타일
+- **`@layer utilities`**: Vapor UI의 유틸리티 클래스
+
+### 전체 Layer 우선순위
+
+스타일 적용 우선순위는 다음과 같습니다 (낮음 → 높음):
+
+1. **`tw-theme`** - Tailwind 테마 변수
+2. **`theme`** - Vapor UI 테마 변수
+3. **`reset`** - 브라우저 초기화 스타일
+4. **`component`** - Vapor UI 컴포넌트 스타일
+5. **`utilities`** - Vapor UI 유틸리티 클래스
+6. **`tw-utilities`** - Tailwind 유틸리티 클래스 **(최우선)**
+
+---
+
+## 주의사항 및 권장사항
+
+### CSS Reset 관련
+
+- **권장하지 않음**: Tailwind의 `preflight.css` 사용 ([Tailwind Preflight](https://tailwindcss.com/docs/preflight))
+- **권장**: Vapor UI의 `@layer reset` 사용
+
+```css
+/* 사용하지 않는 것을 권장 */
+@import 'tailwindcss/preflight.css' layer(base);
+```
+
+Vapor UI는 자체적으로 필요한 reset 스타일을 `@layer reset`에 포함하고 있어 별도의 CSS reset이 필요하지 않습니다.
+
+<br />
