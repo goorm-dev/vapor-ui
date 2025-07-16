@@ -116,10 +116,12 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ needs.visual-regression.result == 'failure' && format('⚠️ **{0} tests failed!** Click [here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) to update snapshots.', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ needs.visual-regression.result == 'failure' && format('⚠️ **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |
                       | ${{ steps.parse-results.outputs.total }} | ${{ steps.parse-results.outputs.passed }} | ${{ steps.parse-results.outputs.failed }} | ${{ steps.parse-results.outputs.duration }} | [Open report ↗︎](http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html) |
+
+                      [Click here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) if you need to update snapshots.
 
                   GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
