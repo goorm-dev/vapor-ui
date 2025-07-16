@@ -23,6 +23,7 @@
         "hooks": "pnpm --filter @vapor-ui/hooks",
         "icons": "pnpm --filter @vapor-ui/icons",
         "plugin-postcss": "pnpm --filter @vapor-ui/plugin-postcss",
+        "plugin-vite": "pnpm --filter @vapor-ui/plugin-vite",
         "website": "pnpm --filter website",
         "dev": "turbo dev",
         "prepare": "husky",
