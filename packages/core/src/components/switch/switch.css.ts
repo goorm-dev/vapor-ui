@@ -7,7 +7,7 @@ import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('component', {
         display: 'inline-flex',
         alignItems: 'center',
         gap: vars.size.space['100'],
@@ -16,7 +16,7 @@ export const root = recipe({
     defaultVariants: { disabled: false },
     variants: {
         disabled: {
-            true: layerStyle('vapor-component', { opacity: 0.32, pointerEvents: 'none' }),
+            true: layerStyle('component', { opacity: 0.32, pointerEvents: 'none' }),
         },
     },
 });
@@ -24,7 +24,7 @@ export const root = recipe({
 export const control = recipe({
     base: [
         interaction(),
-        layerStyle('vapor-component', {
+        layerStyle('component', {
             position: 'relative',
             border: 'none',
             borderRadius: '9999px',
@@ -42,17 +42,17 @@ export const control = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            sm: layerStyle('vapor-component', {
+            sm: layerStyle('component', {
                 padding: vars.size.space['025'],
                 width: vars.size.dimension['400'],
                 height: vars.size.dimension['225'],
             }),
-            md: layerStyle('vapor-component', {
+            md: layerStyle('component', {
                 padding: vars.size.space['050'],
                 width: vars.size.dimension['500'],
                 height: vars.size.dimension['300'],
             }),
-            lg: layerStyle('vapor-component', {
+            lg: layerStyle('component', {
                 padding: vars.size.space['050'],
                 width: vars.size.dimension['700'],
                 height: vars.size.dimension['400'],
@@ -62,7 +62,7 @@ export const control = recipe({
 });
 
 export const indicator = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('component', {
         display: 'block',
 
         transition: 'transform 0.1s',
@@ -80,15 +80,15 @@ export const indicator = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            sm: layerStyle('vapor-component', {
+            sm: layerStyle('component', {
                 width: vars.size.dimension['175'],
                 height: vars.size.dimension['175'],
             }),
-            md: layerStyle('vapor-component', {
+            md: layerStyle('component', {
                 width: vars.size.dimension['200'],
                 height: vars.size.dimension['200'],
             }),
-            lg: layerStyle('vapor-component', {
+            lg: layerStyle('component', {
                 width: vars.size.dimension['300'],
                 height: vars.size.dimension['300'],
             }),
@@ -97,7 +97,7 @@ export const indicator = recipe({
 });
 
 export const label = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('component', {
         lineHeight: vars.typography.lineHeight['075'],
         letterSpacing: vars.typography.letterSpacing['100'],
         color: vars.color.foreground['normal'],

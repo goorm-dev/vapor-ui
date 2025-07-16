@@ -112,7 +112,7 @@ export default defineConfig([
             console.log('🚀 SideEffect imports injected');
         },
         banner: {
-            css: '@layer vapor-theme, vapor-reset, vapor-component, vapor-utilities;',
+            css: '@layer theme, reset, component, utilities;',
         },
     },
 

@@ -9,109 +9,109 @@ export const typography = recipe({
     defaultVariants: { style: 'body1' },
     variants: {
         style: {
-            display1: layerStyle('vapor-component', {
+            display1: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['1000'],
                 letterSpacing: vars.typography.letterSpacing['400'],
                 fontSize: vars.typography.fontSize['1000'],
                 fontWeight: vars.typography.fontWeight[800],
             }),
-            display2: layerStyle('vapor-component', {
+            display2: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['900'],
                 letterSpacing: vars.typography.letterSpacing['400'],
                 fontSize: vars.typography.fontSize['900'],
                 fontWeight: vars.typography.fontWeight[800],
             }),
-            display3: layerStyle('vapor-component', {
+            display3: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['800'],
                 letterSpacing: vars.typography.letterSpacing['400'],
                 fontSize: vars.typography.fontSize['800'],
                 fontWeight: vars.typography.fontWeight[800],
             }),
-            display4: layerStyle('vapor-component', {
+            display4: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['700'],
                 letterSpacing: vars.typography.letterSpacing['400'],
                 fontSize: vars.typography.fontSize['700'],
                 fontWeight: vars.typography.fontWeight[800],
             }),
-            heading1: layerStyle('vapor-component', {
+            heading1: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['600'],
                 letterSpacing: vars.typography.letterSpacing['400'],
                 fontSize: vars.typography.fontSize['600'],
                 fontWeight: vars.typography.fontWeight[700],
             }),
-            heading2: layerStyle('vapor-component', {
+            heading2: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['500'],
                 letterSpacing: vars.typography.letterSpacing['400'],
                 fontSize: vars.typography.fontSize['500'],
                 fontWeight: vars.typography.fontWeight[700],
             }),
-            heading3: layerStyle('vapor-component', {
+            heading3: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['400'],
                 letterSpacing: vars.typography.letterSpacing['300'],
                 fontSize: vars.typography.fontSize['400'],
                 fontWeight: vars.typography.fontWeight[700],
             }),
-            heading4: layerStyle('vapor-component', {
+            heading4: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['300'],
                 letterSpacing: vars.typography.letterSpacing['200'],
                 fontSize: vars.typography.fontSize['300'],
                 fontWeight: vars.typography.fontWeight[700],
             }),
-            heading5: layerStyle('vapor-component', {
+            heading5: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['200'],
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['200'],
                 fontWeight: vars.typography.fontWeight[700],
             }),
-            heading6: layerStyle('vapor-component', {
+            heading6: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['100'],
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['100'],
                 fontWeight: vars.typography.fontWeight[500],
             }),
-            subtitle1: layerStyle('vapor-component', {
+            subtitle1: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['075'],
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight[500],
             }),
-            subtitle2: layerStyle('vapor-component', {
+            subtitle2: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['050'],
                 letterSpacing: vars.typography.letterSpacing['000'],
                 fontSize: vars.typography.fontSize['050'],
                 fontWeight: vars.typography.fontWeight[500],
             }),
-            body1: layerStyle('vapor-component', {
+            body1: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['100'],
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['100'],
                 fontWeight: vars.typography.fontWeight[400],
             }),
-            body2: layerStyle('vapor-component', {
+            body2: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['075'],
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight[400],
             }),
-            body3: layerStyle('vapor-component', {
+            body3: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['050'],
                 letterSpacing: vars.typography.letterSpacing['100'],
                 fontSize: vars.typography.fontSize['050'],
                 fontWeight: vars.typography.fontWeight[400],
             }),
-            body4: layerStyle('vapor-component', {
+            body4: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['025'],
                 letterSpacing: vars.typography.letterSpacing['000'],
                 fontSize: vars.typography.fontSize['025'],
                 fontWeight: vars.typography.fontWeight[400],
             }),
-            code1: layerStyle('vapor-component', {
+            code1: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['075'],
                 letterSpacing: vars.typography.letterSpacing['000'],
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight[400],
             }),
-            code2: layerStyle('vapor-component', {
+            code2: layerStyle('component', {
                 lineHeight: vars.typography.lineHeight['050'],
                 letterSpacing: vars.typography.letterSpacing['000'],
                 fontSize: vars.typography.fontSize['050'],

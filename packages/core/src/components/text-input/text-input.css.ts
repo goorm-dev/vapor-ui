@@ -28,7 +28,7 @@ export const root = recipe({
 });
 
 export const label = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('component', {
         lineHeight: vars.typography.lineHeight['050'],
 
         letterSpacing: vars.typography.letterSpacing['000'],
@@ -47,7 +47,7 @@ export const field = recipe({
     base: [
         interaction({ type: 'form' }),
 
-        layerStyle('vapor-component', {
+        layerStyle('component', {
             outline: 0,
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
