@@ -116,7 +116,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ needs.visual-regression.result == 'failure' && '⚠️ **${{ steps.parse-results.outputs.failed }} tests failed!** Click [here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) to update snapshots.' || '✅ **All tests passed!**' }}
+                      ${{ needs.visual-regression.result == 'failure' && format('⚠️ **{0} tests failed!** Click [here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) to update snapshots.', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |
