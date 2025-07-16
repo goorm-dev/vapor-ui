@@ -1,4 +1,4 @@
-// @ts-check
-import { configs as typescript } from '@repo/eslint-config/typescript';
+import { configs as base } from '@repo/eslint-config/base';
+import { config as imports } from '@repo/eslint-config/import';
 
-export default [...typescript];
+export default [...base, imports];

@@ -30,10 +30,10 @@
     "scripts": {
         "build": "rimraf dist && tsup"
     },
-    "dependencies": {},
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
+        "@types/node": "^22.15.3",
         "rimraf": "^6.0.1",
         "tsup": "^8.3.6"
     },

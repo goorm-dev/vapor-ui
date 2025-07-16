@@ -5,7 +5,7 @@ interface PluginOptions {
 }
 
 const DEFAULT_LAYER_ORDER =
-    '@layer tw-theme, vapor-theme, vapor-reset, vapor-component, vapor-utilities, tw-utilities;';
+    '@layer tw-theme, theme, tw-base, reset, component, utilities, tw-utilities;';
 
 const plugin: PluginCreator<PluginOptions> = (opts) => {
     const options = opts && typeof opts === 'object' ? opts : {};
@@ -24,4 +24,4 @@ const plugin: PluginCreator<PluginOptions> = (opts) => {
 };
 plugin.postcss = true;
 
-module.exports = plugin;
+export default plugin;
