@@ -18,29 +18,12 @@ npm install -D @vapor-ui/plugin-vite
 ```ts
 // vite.config.ts
 import tailwindcss from '@tailwindcss/vite';
-import { vaporTailwindPlugin } from '@vapor-ui/plugin-vite';
+import { tailwindcssLayer } from '@vapor-ui/plugin-vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    plugins: [react(), tailwindcss(), vaporTailwindPlugin()],
-});
-```
-
-**커스텀 레이어 순서 설정**
-
-필요에 따라 레이어 순서를 커스터마이징할 수 있습니다.
-
-```ts
-// vite.config.ts
-export default defineConfig({
-    plugins: [
-        react(),
-        tailwindcss(),
-        vaporTailwindPlugin({
-            layerOrder: '@layer theme, reset, component, utilities, my-layer;',
-        }),
-    ],
+    plugins: [react(), tailwindcss(), tailwindcssLayer()],
 });
 ```
 
@@ -137,9 +120,29 @@ Vapor UI는 다음과 같은 CSS Layer를 제공합니다:
 
 ```css
 /* 사용하지 않는 것을 권장 */
-@import 'tailwindcss/preflight.css' layer(base);
+
+@import 'tailwindcss/preflight.css' layer(tw-base);
 ```
 
 Vapor UI는 자체적으로 필요한 reset 스타일을 `@layer reset`에 포함하고 있어 별도의 CSS reset이 필요하지 않습니다.
+
+### Tailwind CSS Preflight 사용
+
+만약 사용해야되는 겅우, 커스텀 레이어 순서를 직접 제어합니다.
+
+**커스텀 레이어 순서 설정**
+
+```ts
+// vite.config.ts
+export default defineConfig({
+    plugins: [
+        react(),
+        tailwindcss(),
+        tailwindcssLayer({
+            order: '@layer tw-theme, theme, tw-base, reset, component, utilities, tw-utilities;',
+        }),
+    ],
+});
+```
 
 <br />
