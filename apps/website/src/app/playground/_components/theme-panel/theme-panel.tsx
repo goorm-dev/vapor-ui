@@ -5,10 +5,10 @@ import { Badge, Button, Card, Text } from '@vapor-ui/core';
 import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 import cn from 'classnames';
 
-import Scaling from '../scaling';
 import ColorBoard from '../color-board';
 import Mode from '../mode';
 import Radius from '../radius';
+import Scaling from '../scaling';
 import styles from './theme-panel.module.scss';
 
 // import Section from '../section';
@@ -55,9 +55,7 @@ const ThemePanel = () => {
             data-vapor-scaling="1"
         >
             <Card.Header className={styles.panel_header}>
-                <Text as="h4" typography="heading5">
-                    Theme Setting
-                </Text>
+                <Text typography="heading5">Theme Setting</Text>
 
                 <div className={styles['panel_hot-key']}>
                     <Badge color="hint">V</Badge>

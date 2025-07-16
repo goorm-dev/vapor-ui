@@ -1,7 +1,18 @@
 'use client';
 
-import { Avatar, Badge, Button, Card, Checkbox, Dialog, IconButton, Text } from '@vapor-ui/core';
-import { EditIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
+import {
+    AvatarSimple,
+    Badge,
+    Button,
+    Card,
+    Checkbox,
+    Dialog,
+    IconButton,
+    Switch,
+    Text,
+    TextInput,
+} from '@vapor-ui/core';
+import { HeartIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'next/link';
 
 import PageWrapper from './_components/page-wrapper';
@@ -22,48 +33,52 @@ const Page = () => {
             <section>
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="Avatar" />
-                    <RenderingTemplate.Component isGrid>
-                        <Avatar.Simple
-                            size="xl"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <Avatar.Simple
-                            size="lg"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <Avatar.Simple
-                            size="md"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <Avatar.Simple
+                    <RenderingTemplate.Component cols={4} rows={2} gap="1.5rem">
+                        <AvatarSimple
+                            shape="circle"
                             size="sm"
                             src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
                             alt="vapor-ui"
                         />
-                        <Avatar.Simple
-                            shape="square"
-                            size="xl"
+                        <AvatarSimple
+                            shape="circle"
+                            size="md"
                             src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
                             alt="vapor-ui"
                         />
-                        <Avatar.Simple
-                            shape="square"
+                        <AvatarSimple
+                            shape="circle"
                             size="lg"
                             src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
                             alt="vapor-ui"
                         />
-                        <Avatar.Simple
+                        <AvatarSimple
+                            shape="circle"
+                            size="xl"
+                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
+                            alt="vapor-ui"
+                        />
+                        <AvatarSimple
+                            shape="square"
+                            size="sm"
+                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
+                            alt="vapor-ui"
+                        />
+                        <AvatarSimple
                             shape="square"
                             size="md"
                             src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
                             alt="vapor-ui"
                         />
-                        <Avatar.Simple
+                        <AvatarSimple
                             shape="square"
-                            size="sm"
+                            size="lg"
+                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
+                            alt="vapor-ui"
+                        />
+                        <AvatarSimple
+                            shape="square"
+                            size="xl"
                             src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
                             alt="vapor-ui"
                         />
@@ -72,15 +87,281 @@ const Page = () => {
 
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="Badge" />
-                    <RenderingTemplate.Component>
-                        <Badge>Badge</Badge>
+                    <RenderingTemplate.Component cols={6} rows={3} gap="1.5rem">
+                        <Badge shape="square" size="sm" color="primary">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="square" size="sm" color="hint">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="square" size="sm" color="danger">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="square" size="sm" color="success">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="square" size="sm" color="warning">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="square" size="sm" color="contrast">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="sm" color="primary">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="sm" color="hint">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="sm" color="danger">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="sm" color="success">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="sm" color="warning">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="sm" color="contrast">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="square" size="md" color="primary">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="md" color="hint">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="md" color="danger">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="md" color="success">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="md" color="warning">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="md" color="contrast">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="pill" size="md" color="primary">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="md" color="hint">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="md" color="danger">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="md" color="success">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="md" color="warning">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="md" color="contrast">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="square" size="lg" color="primary">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="lg" color="hint">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="lg" color="danger">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="lg" color="success">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="lg" color="warning">
+                            Badge
+                        </Badge>
+                        <Badge shape="square" size="lg" color="contrast">
+                            Badge
+                        </Badge>
+
+                        <Badge shape="pill" size="lg" color="primary">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="lg" color="hint">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="lg" color="danger">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="lg" color="success">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="lg" color="warning">
+                            Badge
+                        </Badge>
+                        <Badge shape="pill" size="lg" color="contrast">
+                            Badge
+                        </Badge>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="Button" />
-                    <RenderingTemplate.Component>
-                        <Button>BUTTON</Button>
+                    <RenderingTemplate.Component cols={6} rows={4} gap="1.5rem">
+                        <Button size="sm" color="primary">
+                            Button
+                        </Button>
+                        <Button size="sm" color="secondary">
+                            Button
+                        </Button>
+                        <Button size="sm" color="danger">
+                            Button
+                        </Button>
+                        <Button size="sm" color="success">
+                            Button
+                        </Button>
+                        <Button size="sm" color="warning">
+                            Button
+                        </Button>
+                        <Button size="sm" color="contrast">
+                            Button
+                        </Button>
+
+                        <Button variant="outline" size="sm" color="primary">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="sm" color="secondary">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="sm" color="danger">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="sm" color="success">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="sm" color="warning">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="sm" color="contrast">
+                            Button
+                        </Button>
+
+                        <Button size="md" color="primary">
+                            Button
+                        </Button>
+                        <Button size="md" color="secondary">
+                            Button
+                        </Button>
+                        <Button size="md" color="danger">
+                            Button
+                        </Button>
+                        <Button size="md" color="success">
+                            Button
+                        </Button>
+                        <Button size="md" color="warning">
+                            Button
+                        </Button>
+                        <Button size="md" color="contrast">
+                            Button
+                        </Button>
+
+                        <Button variant="outline" size="md" color="primary">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="md" color="secondary">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="md" color="danger">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="md" color="success">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="md" color="warning">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="md" color="contrast">
+                            Button
+                        </Button>
+
+                        <Button size="lg" color="primary">
+                            Button
+                        </Button>
+                        <Button size="lg" color="secondary">
+                            Button
+                        </Button>
+                        <Button size="lg" color="danger">
+                            Button
+                        </Button>
+                        <Button size="lg" color="success">
+                            Button
+                        </Button>
+                        <Button size="lg" color="warning">
+                            Button
+                        </Button>
+                        <Button size="lg" color="contrast">
+                            Button
+                        </Button>
+
+                        <Button variant="outline" size="lg" color="primary">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="lg" color="secondary">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="lg" color="danger">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="lg" color="success">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="lg" color="warning">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="lg" color="contrast">
+                            Button
+                        </Button>
+
+                        <Button size="xl" color="primary">
+                            Button
+                        </Button>
+                        <Button size="xl" color="secondary">
+                            Button
+                        </Button>
+                        <Button size="xl" color="danger">
+                            Button
+                        </Button>
+                        <Button size="xl" color="success">
+                            Button
+                        </Button>
+                        <Button size="xl" color="warning">
+                            Button
+                        </Button>
+                        <Button size="xl" color="contrast">
+                            Button
+                        </Button>
+
+                        <Button variant="outline" size="xl" color="primary">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="xl" color="secondary">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="xl" color="danger">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="xl" color="success">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="xl" color="warning">
+                            Button
+                        </Button>
+                        <Button variant="outline" size="xl" color="contrast">
+                            Button
+                        </Button>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
@@ -88,24 +369,22 @@ const Page = () => {
                     <RenderingTemplate.Title title="Card" />
                     <RenderingTemplate.Component>
                         <Card.Root>
-                            <Card.Header>Basic Template</Card.Header>
-                            <Card.Body>This is a Basic Template</Card.Body>
-                            <Card.Footer>
-                                <Button size="lg" color="secondary">
-                                    BUTTON
-                                </Button>
-                                <Button size="lg" color="primary">
-                                    BUTTON
-                                </Button>
-                            </Card.Footer>
+                            <Card.Header>Card Header</Card.Header>
+                            <Card.Body>Card Body</Card.Body>
+                            <Card.Footer>Card Footer</Card.Footer>
                         </Card.Root>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="Checkbox" />
-                    <RenderingTemplate.Component>
-                        <Checkbox.Root id="checkbox">
+                    <RenderingTemplate.Component rows={2} gap="1rem">
+                        <Checkbox.Root id="checkbox" defaultChecked>
+                            <Checkbox.Control />
+                            <Checkbox.Label htmlFor="checkbox">Checkbox</Checkbox.Label>
+                        </Checkbox.Root>
+
+                        <Checkbox.Root id="checkbox" defaultChecked size="lg">
                             <Checkbox.Control />
                             <Checkbox.Label htmlFor="checkbox">Checkbox</Checkbox.Label>
                         </Checkbox.Root>
@@ -133,38 +412,326 @@ const Page = () => {
 
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="IconButton" />
-                    <RenderingTemplate.Component>
-                        <IconButton aria-label="아이콘 버튼" icon={EditIcon} />
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                    <RenderingTemplate.Component cols={6} rows={4} gap="1.5rem">
+                        <IconButton aria-label="icon-button" size="sm" color="primary">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="sm" color="secondary">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="sm" color="danger">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="sm" color="success">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="sm" color="warning">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="sm" color="contrast">
+                            <HeartIcon />
+                        </IconButton>
 
-                {/* <RenderingTemplate>
-                    <RenderingTemplate.Title title="Label" />
-                    <RenderingTemplate.Component>
-                        <Label>라벨입니다.</Label>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="sm"
+                            color="primary"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="sm"
+                            color="secondary"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="sm"
+                            color="danger"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="sm"
+                            color="success"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="sm"
+                            color="warning"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="sm"
+                            color="contrast"
+                        >
+                            <HeartIcon />
+                        </IconButton>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="SearchInput" />
-                    <RenderingTemplate.Component>
-                        <SearchInput>
-                            <SearchInput.Label htmlFor="vapor">Label</SearchInput.Label>
-                            <SearchInput.Field id="vapor" placeholder="안녕하세요." />
-                        </SearchInput>
+                        <IconButton aria-label="icon-button" size="md" color="primary">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="md" color="secondary">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="md" color="danger">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="md" color="success">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="md" color="warning">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="md" color="contrast">
+                            <HeartIcon />
+                        </IconButton>
+
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="md"
+                            color="primary"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="md"
+                            color="secondary"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="md"
+                            color="danger"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="md"
+                            color="success"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="md"
+                            color="warning"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="md"
+                            color="contrast"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+
+                        <IconButton aria-label="icon-button" size="lg" color="primary">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="lg" color="secondary">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="lg" color="danger">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="lg" color="success">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="lg" color="warning">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="lg" color="contrast">
+                            <HeartIcon />
+                        </IconButton>
+
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="lg"
+                            color="primary"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="lg"
+                            color="secondary"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="lg"
+                            color="danger"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="lg"
+                            color="success"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="lg"
+                            color="warning"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="lg"
+                            color="contrast"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+
+                        <IconButton aria-label="icon-button" size="xl" color="primary">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="xl" color="secondary">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="xl" color="danger">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="xl" color="success">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="xl" color="warning">
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton aria-label="icon-button" size="xl" color="contrast">
+                            <HeartIcon />
+                        </IconButton>
+
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="xl"
+                            color="primary"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="xl"
+                            color="secondary"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="xl"
+                            color="danger"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="xl"
+                            color="success"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="xl"
+                            color="warning"
+                        >
+                            <HeartIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="icon-button"
+                            variant="outline"
+                            size="xl"
+                            color="contrast"
+                        >
+                            <HeartIcon />
+                        </IconButton>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="Switch" />
-                    <RenderingTemplate.Component>
-                        <Switch>
-                            <Switch.Indicator />
-                        </Switch>
+                    <RenderingTemplate.Component cols={3} rows={6} gap="1.5rem">
+                        <Switch.Root size="sm">
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
+                        <Switch.Root size="sm" defaultChecked>
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
+                        <Switch.Root size="sm" disabled>
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
+
+                        <Switch.Root size="md">
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
+                        <Switch.Root size="md" defaultChecked>
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
+                        <Switch.Root size="md" disabled>
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
+
+                        <Switch.Root size="lg">
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
+                        <Switch.Root size="lg" defaultChecked>
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
+                        <Switch.Root size="lg" disabled>
+                            <Switch.Label>Airplane mode</Switch.Label>
+                            <Switch.Control />
+                        </Switch.Root>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
-                <RenderingTemplate>
+                {/*    <RenderingTemplate>
                     <RenderingTemplate.Title title="Tabs" />
                     <RenderingTemplate.Component>
                         <Tabs>
@@ -185,64 +752,75 @@ const Page = () => {
                 </RenderingTemplate> */}
 
                 <RenderingTemplate>
-                    <RenderingTemplate.Title title="Text" />
-                    <RenderingTemplate.Component>
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '0.25rem',
-                            }}
-                        >
-                            <Text typography="heading1">heading1</Text>
-                            <Text typography="heading2">heading2</Text>
-                            <Text typography="heading3">heading3</Text>
-                            <Text typography="heading4">heading4</Text>
-                            <Text typography="heading5">heading5</Text>
-                            <Text typography="heading6">heading6</Text>
-                            <Text typography="body1">body1</Text>
-                            <Text typography="body2">body2</Text>
-                            <Text typography="body3">body3</Text>
-                            <Text typography="body4">body4</Text>
-                            <Text typography="subtitle1">subtitle1</Text>
-                            <Text typography="subtitle2">subtitle2</Text>
-                        </div>
+                    <RenderingTemplate.Title title="TextInput" />
+                    <RenderingTemplate.Component cols={2} gap="1.5rem">
+                        <TextInput.Root size="sm" type="text">
+                            <TextInput.Label>type text 입니다.</TextInput.Label>
+                            <TextInput.Field />
+                        </TextInput.Root>
+                        <TextInput.Root size="sm" type="password">
+                            <TextInput.Label>type password 입니다.</TextInput.Label>
+                            <TextInput.Field />
+                        </TextInput.Root>
+
+                        <TextInput.Root size="md" type="text">
+                            <TextInput.Label>type text 입니다.</TextInput.Label>
+                            <TextInput.Field />
+                        </TextInput.Root>
+                        <TextInput.Root size="md" type="password">
+                            <TextInput.Label>type password 입니다.</TextInput.Label>
+                            <TextInput.Field />
+                        </TextInput.Root>
+
+                        <TextInput.Root size="lg" type="text">
+                            <TextInput.Label>type text 입니다.</TextInput.Label>
+                            <TextInput.Field />
+                        </TextInput.Root>
+                        <TextInput.Root size="lg" type="password">
+                            <TextInput.Label>type password 입니다.</TextInput.Label>
+                            <TextInput.Field />
+                        </TextInput.Root>
+
+                        <TextInput.Root size="xl" type="text">
+                            <TextInput.Label>type text 입니다.</TextInput.Label>
+                            <TextInput.Field />
+                        </TextInput.Root>
+                        <TextInput.Root size="xl" type="password">
+                            <TextInput.Label>type password 입니다.</TextInput.Label>
+                            <TextInput.Field />
+                        </TextInput.Root>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
-                {/* <RenderingTemplate>
-                    <RenderingTemplate.Title title="TextInput" />
-                    <RenderingTemplate.Component>
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '0.5rem',
-                            }}
-                        >
-                            <TextInput type="text">
-                                <TextInput.Label>type text 입니다.</TextInput.Label>
-                                <TextInput.Field />
-                            </TextInput>
-                            <TextInput type="email">
-                                <TextInput.Label>type email 입니다.</TextInput.Label>
-                                <TextInput.Field />
-                            </TextInput>
-                            <TextInput type="password">
-                                <TextInput.Label>type password 입니다.</TextInput.Label>
-                                <TextInput.Field />
-                            </TextInput>
-                            <TextInput type="tel">
-                                <TextInput.Label>type tel 입니다.</TextInput.Label>
-                                <TextInput.Field />
-                            </TextInput>
-                            <TextInput type="url">
-                                <TextInput.Label>type url 입니다.</TextInput.Label>
-                                <TextInput.Field />
-                            </TextInput>
-                        </div>
+                <RenderingTemplate>
+                    <RenderingTemplate.Title title="Text - heading" />
+                    <RenderingTemplate.Component rows={6} gap="0.5rem">
+                        <Text typography="heading1">heading1</Text>
+                        <Text typography="heading2">heading2</Text>
+                        <Text typography="heading3">heading3</Text>
+                        <Text typography="heading4">heading4</Text>
+                        <Text typography="heading5">heading5</Text>
+                        <Text typography="heading6">heading6</Text>
                     </RenderingTemplate.Component>
-                </RenderingTemplate> */}
+                </RenderingTemplate>
+
+                <RenderingTemplate>
+                    <RenderingTemplate.Title title="Text - body" />
+                    <RenderingTemplate.Component rows={6} gap="0.5rem">
+                        <Text typography="body1">body1</Text>
+                        <Text typography="body2">body2</Text>
+                        <Text typography="body3">body3</Text>
+                        <Text typography="body4">body4</Text>
+                    </RenderingTemplate.Component>
+                </RenderingTemplate>
+
+                <RenderingTemplate>
+                    <RenderingTemplate.Title title="Text - subtitle" />
+                    <RenderingTemplate.Component rows={6} gap="0.5rem">
+                        <Text typography="subtitle1">subtitle1</Text>
+                        <Text typography="subtitle2">subtitle2</Text>
+                    </RenderingTemplate.Component>
+                </RenderingTemplate>
             </section>
         </PageWrapper>
     );
