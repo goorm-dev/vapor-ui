@@ -7,6 +7,8 @@ import checkboxData from '../../public/components/checkbox.json';
 import dialogData from '../../public/components/dialog.json';
 import iconButtonData from '../../public/components/icon-button.json';
 import navData from '../../public/components/nav.json';
+import radioGroupData from '../../public/components/radio-group.json';
+import switchData from '../../public/components/switch.json';
 import textInputData from '../../public/components/text-input.json';
 import textData from '../../public/components/text.json';
 
@@ -31,9 +33,11 @@ export {
     calloutData,
     cardData,
     checkboxData,
+    dialogData,
     iconButtonData,
     navData,
+    switchData,
     textData,
     textInputData,
-    dialogData,
+    radioGroupData,
 };

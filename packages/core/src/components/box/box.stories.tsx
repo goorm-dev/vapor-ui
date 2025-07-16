@@ -14,7 +14,7 @@ export const Default = {
                 flexDirection="column"
                 gap="$500"
                 padding="$800"
-                background="$gray-500"
+                backgroundColor="$gray-500"
             >
                 <Box style={{ backgroundColor: 'red' }} asChild>
                     <Button>sadfasdf</Button>
@@ -80,7 +80,7 @@ export const TestBed = {
                 flexDirection="column"
                 gap="$200"
                 padding="$500"
-                background="$gray-500"
+                backgroundColor="$gray-500"
             >
                 <Box style={{ backgroundColor: 'red' }} asChild>
                     <Button>I'm Button</Button>

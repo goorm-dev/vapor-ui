@@ -16,10 +16,10 @@ const COLOR_FOREGROUND_ACCENT_VAR_NAME = 'vapor-color-foreground-accent';
 const COLOR_BACKGROUND_RGB_PRIMARY_VAR_NAME = 'vapor-color-background-rgb-primary';
 
 interface PrimaryColorSet {
-    'color-background-primary': string;
-    'color-border-primary': string;
-    'color-foreground-primary': string;
-    'color-foreground-primary-darker': string;
+    'vapor-color-background-primary': string;
+    'vapor-color-border-primary': string;
+    'vapor-color-foreground-primary': string;
+    'vapor-color-foreground-primary-darker': string;
     'vapor-color-foreground-accent': string;
     'vapor-color-background-rgb-primary': string;
 }
@@ -149,20 +149,20 @@ const calculatePrimaryColorSet = (
         };
 
         return {
-            'color-background-primary': baseColorHex,
-            'color-border-primary': baseColorHex,
-            'color-foreground-primary': hslToHex(foregroundHsl),
-            'color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
+            'vapor-color-background-primary': baseColorHex,
+            'vapor-color-border-primary': baseColorHex,
+            'vapor-color-foreground-primary': hslToHex(foregroundHsl),
+            'vapor-color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
             ...commonColors,
         };
     } else {
         const foregroundDarkerHsl: HSL = { ...baseHsl, l: Math.min(1, baseHsl.l + 0.08) };
 
         return {
-            'color-background-primary': baseColorHex,
-            'color-border-primary': baseColorHex,
-            'color-foreground-primary': baseColorHex,
-            'color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
+            'vapor-color-background-primary': baseColorHex,
+            'vapor-color-border-primary': baseColorHex,
+            'vapor-color-foreground-primary': baseColorHex,
+            'vapor-color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
             ...commonColors,
         };
     }
@@ -325,19 +325,19 @@ const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
 
             root.style.setProperty(
                 `--${COLOR_BACKGROUND_PRIMARY_VAR_NAME}`,
-                colorSet['color-background-primary'],
+                colorSet['vapor-color-background-primary'],
             );
             root.style.setProperty(
                 `--${COLOR_BORDER_PRIMARY_VAR_NAME}`,
-                colorSet['color-border-primary'],
+                colorSet['vapor-color-border-primary'],
             );
             root.style.setProperty(
                 `--${COLOR_FOREGROUND_PRIMARY_VAR_NAME}`,
-                colorSet['color-foreground-primary'],
+                colorSet['vapor-color-foreground-primary'],
             );
             root.style.setProperty(
                 `--${COLOR_FOREGROUND_PRIMARY_DARKER_VAR_NAME}`,
-                colorSet['color-foreground-primary-darker'],
+                colorSet['vapor-color-foreground-primary-darker'],
             );
             root.style.setProperty(
                 `--${COLOR_FOREGROUND_ACCENT_VAR_NAME}`,

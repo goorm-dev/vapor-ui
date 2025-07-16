@@ -18,10 +18,10 @@ const THEME_CONFIG = {
 } as const;
 
 interface PrimaryColorSet {
-    'color-background-primary': string;
-    'color-border-primary': string;
-    'color-foreground-primary': string;
-    'color-foreground-primary-darker': string;
+    'vapor-color-background-primary': string;
+    'vapor-color-border-primary': string;
+    'vapor-color-foreground-primary': string;
+    'vapor-color-foreground-primary-darker': string;
     'vapor-color-foreground-accent': string;
     'vapor-color-background-rgb-primary': string;
 }
@@ -71,8 +71,6 @@ const themeInjectScript = (
     cssVarNames: CssVarNames,
 ) => {
     (function () {
-        console.log('cssVarNames', cssVarNames);
-
         const calculatePrimaryColorSet = (
             baseColorHex: string,
             mode: 'light' | 'dark',
@@ -185,10 +183,10 @@ const themeInjectScript = (
 
                 return Object.assign(
                     {
-                        'color-background-primary': baseColorHex,
-                        'color-border-primary': baseColorHex,
-                        'color-foreground-primary': hslToHex(foregroundHsl),
-                        'color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
+                        'vapor-color-background-primary': baseColorHex,
+                        'vapor-color-border-primary': baseColorHex,
+                        'vapor-color-foreground-primary': hslToHex(foregroundHsl),
+                        'vapor-color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
                     },
                     commonColors,
                 );
@@ -199,10 +197,10 @@ const themeInjectScript = (
 
                 return Object.assign(
                     {
-                        'color-background-primary': baseColorHex,
-                        'color-border-primary': baseColorHex,
-                        'color-foreground-primary': baseColorHex,
-                        'color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
+                        'vapor-color-background-primary': baseColorHex,
+                        'vapor-color-border-primary': baseColorHex,
+                        'vapor-color-foreground-primary': baseColorHex,
+                        'vapor-color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
                     },
                     commonColors,
                 );
@@ -243,9 +241,6 @@ const themeInjectScript = (
             const scaleFactor = currentThemes.scaling ?? 1;
             root.style.setProperty(`--${cssVarNames.scaleFactor}`, scaleFactor.toString());
 
-            console.log('currentThemes.', currentThemes);
-            console.log('currentThemes.primaryColor', calculatePrimaryColorSet('#0d9488', 'light'));
-
             // 4. Apply primary color variables
             if (currentThemes.primaryColor) {
                 const colorSet = calculatePrimaryColorSet(
@@ -253,23 +248,21 @@ const themeInjectScript = (
                     currentThemes.appearance,
                 );
 
-                console.log('colorSet', colorSet);
-
                 root.style.setProperty(
                     `--${cssVarNames.colorBackgroundPrimary}`,
-                    colorSet['color-background-primary'],
+                    colorSet['vapor-color-background-primary'],
                 );
                 root.style.setProperty(
                     `--${cssVarNames.colorBorderPrimary}`,
-                    colorSet['color-border-primary'],
+                    colorSet['vapor-color-border-primary'],
                 );
                 root.style.setProperty(
                     `--${cssVarNames.colorForegroundPrimary}`,
-                    colorSet['color-foreground-primary'],
+                    colorSet['vapor-color-foreground-primary'],
                 );
                 root.style.setProperty(
                     `--${cssVarNames.colorForegroundPrimaryDarker}`,
-                    colorSet['color-foreground-primary-darker'],
+                    colorSet['vapor-color-foreground-primary-darker'],
                 );
                 root.style.setProperty(
                     `--${cssVarNames.colorForegroundAccent}`,
