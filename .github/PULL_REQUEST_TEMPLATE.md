@@ -1,4 +1,8 @@
-<!-- PR 제목은 conventional commit 규칙을 따라주세요. (예: feat(component): Add Button component) -->
+<!-- Please follow the Conventional Commits specification for the PR title. (e.g., feat(component): Add Button component)
+
+All sections in this template are optional.
+Feel free to remove sections that are not relevant to your pull request.
+-->
 
 ## 🔗Related Issues
 
