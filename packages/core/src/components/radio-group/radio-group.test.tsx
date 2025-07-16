@@ -131,14 +131,7 @@ describe('RadioGroup', () => {
                     e.preventDefault();
 
                     const formData = new FormData(e.currentTarget);
-                    const formDataObject = Object.fromEntries(
-                        [...formData.entries()].map(([key, value]) => [
-                            key,
-                            typeof value === 'string' ? value : value.name,
-                        ]),
-                    );
-
-                    stringifiedFormData = new URLSearchParams(formDataObject).toString();
+                    stringifiedFormData = new URLSearchParams(formData as never).toString();
                 }}
             >
                 <RadioGroup.Root name="radio-group-test">
