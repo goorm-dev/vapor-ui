@@ -17,7 +17,7 @@ export const root = recipe({
     base: [
         interaction(),
 
-        layerStyle('vapor-component', {
+        layerStyle('component', {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -42,7 +42,7 @@ export const root = recipe({
 
     variants: {
         size: {
-            sm: layerStyle('vapor-component', {
+            sm: layerStyle('component', {
                 gap: vars.size.space['050'],
                 paddingInline: vars.size.space['050'],
                 height: vars.size.dimension['300'],
@@ -52,7 +52,7 @@ export const root = recipe({
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight['500'],
             }),
-            md: layerStyle('vapor-component', {
+            md: layerStyle('component', {
                 gap: vars.size.space['075'],
                 paddingInline: vars.size.space['150'],
                 height: vars.size.dimension['400'],
@@ -62,7 +62,7 @@ export const root = recipe({
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight[500],
             }),
-            lg: layerStyle('vapor-component', {
+            lg: layerStyle('component', {
                 gap: vars.size.space['100'],
                 paddingInline: vars.size.space['200'],
                 height: vars.size.dimension['500'],
@@ -72,7 +72,7 @@ export const root = recipe({
                 fontSize: vars.typography.fontSize['075'],
                 fontWeight: vars.typography.fontWeight[500],
             }),
-            xl: layerStyle('vapor-component', {
+            xl: layerStyle('component', {
                 gap: vars.size.space['100'],
                 paddingInline: vars.size.space['300'],
                 height: vars.size.dimension['600'],
@@ -85,7 +85,7 @@ export const root = recipe({
         },
 
         color: {
-            primary: layerStyle('vapor-component', {
+            primary: layerStyle('component', {
                 vars: {
                     [fg]: vars.color.foreground.primary,
                     [fgDarker]: vars.color.foreground['primary-darker'],
@@ -95,7 +95,7 @@ export const root = recipe({
                     [accent]: vars.color.foreground.accent,
                 },
             }),
-            secondary: layerStyle('vapor-component', {
+            secondary: layerStyle('component', {
                 vars: {
                     [fg]: vars.color.foreground.secondary,
                     [fgDarker]: vars.color.foreground['secondary-darker'],
@@ -105,7 +105,7 @@ export const root = recipe({
                     [accent]: vars.color.foreground['secondary-darker'],
                 },
             }),
-            success: layerStyle('vapor-component', {
+            success: layerStyle('component', {
                 vars: {
                     [fg]: vars.color.foreground.success,
                     [fgDarker]: vars.color.foreground['success-darker'],
@@ -115,7 +115,7 @@ export const root = recipe({
                     [accent]: vars.color.foreground.accent,
                 },
             }),
-            warning: layerStyle('vapor-component', {
+            warning: layerStyle('component', {
                 vars: {
                     [fg]: vars.color.foreground.warning,
                     [fgDarker]: vars.color.foreground['warning-darker'],
@@ -125,7 +125,7 @@ export const root = recipe({
                     [accent]: vars.color.foreground.accent,
                 },
             }),
-            danger: layerStyle('vapor-component', {
+            danger: layerStyle('component', {
                 vars: {
                     [fg]: vars.color.foreground.danger,
                     [fgDarker]: vars.color.foreground['danger-darker'],
@@ -135,7 +135,7 @@ export const root = recipe({
                     [accent]: vars.color.foreground.accent,
                 },
             }),
-            contrast: layerStyle('vapor-component', {
+            contrast: layerStyle('component', {
                 vars: {
                     [fg]: vars.color.foreground.contrast,
                     [fgDarker]: vars.color.foreground['contrast-darker'],
@@ -148,24 +148,24 @@ export const root = recipe({
         },
 
         variant: {
-            fill: layerStyle('vapor-component', {
+            fill: layerStyle('component', {
                 backgroundColor: main,
                 color: accent,
             }),
-            outline: layerStyle('vapor-component', {
+            outline: layerStyle('component', {
                 boxShadow: `inset 0 0 0 1px ${main}`,
                 backgroundColor: opacity08,
                 color: fgDarker,
             }),
             ghost: [
-                layerStyle('vapor-component', {
+                layerStyle('component', {
                     backgroundColor: 'transparent',
                     color: fg,
                 }),
             ],
         },
 
-        stretch: { true: layerStyle('vapor-component', { width: '100%' }) },
+        stretch: { true: layerStyle('component', { width: '100%' }) },
     },
 });
 

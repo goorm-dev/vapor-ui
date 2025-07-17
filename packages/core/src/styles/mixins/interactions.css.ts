@@ -8,7 +8,7 @@ import { vars } from '../vars.css';
 const ratio = createVar('opacity-ratio');
 
 export const interaction = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('component', {
         position: 'relative',
 
         vars: { [ratio]: '0.08' },
@@ -44,11 +44,11 @@ export const interaction = recipe({
     variants: {
         scale: {
             normal: {},
-            light: layerStyle('vapor-component', { vars: { [ratio]: '0.04' } }),
+            light: layerStyle('component', { vars: { [ratio]: '0.04' } }),
         },
 
         type: {
-            default: layerStyle('vapor-component', {
+            default: layerStyle('component', {
                 selectors: {
                     '&:hover::before': { opacity: calc.multiply(ratio, 1) },
                     '&:active::before': { opacity: calc.multiply(ratio, 2) },
@@ -57,7 +57,7 @@ export const interaction = recipe({
                     },
                 },
             }),
-            form: layerStyle('vapor-component', {
+            form: layerStyle('component', {
                 transition: 'border-color 150ms cubic-bezier(.4,0,.2,1)',
 
                 selectors: {

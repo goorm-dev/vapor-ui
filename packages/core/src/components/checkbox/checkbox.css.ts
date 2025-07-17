@@ -8,7 +8,7 @@ import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('component', {
         display: 'inline-flex',
         alignItems: 'center',
         gap: vars.size.space[100],
@@ -18,7 +18,7 @@ export const root = recipe({
     defaultVariants: { disabled: false },
     variants: {
         disabled: {
-            true: layerStyle('vapor-component', { opacity: 0.32, pointerEvents: 'none' }),
+            true: layerStyle('component', { opacity: 0.32, pointerEvents: 'none' }),
         },
     },
 });
@@ -26,7 +26,7 @@ export const root = recipe({
 export const label = recipe({
     base: [
         typography({ style: 'body2' }),
-        layerStyle('vapor-component', { color: vars.color.foreground.normal }),
+        layerStyle('component', { color: vars.color.foreground.normal }),
     ],
 
     defaultVariants: { visuallyHidden: false },
@@ -40,7 +40,7 @@ export const label = recipe({
 export const control = recipe({
     base: [
         interaction(),
-        layerStyle('vapor-component', {
+        layerStyle('component', {
             position: 'relative',
 
             display: 'flex',
@@ -70,16 +70,16 @@ export const control = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('vapor-component', { borderColor: vars.color.border.danger }),
+            true: layerStyle('component', { borderColor: vars.color.border.danger }),
         },
 
         size: {
-            md: layerStyle('vapor-component', {
+            md: layerStyle('component', {
                 borderRadius: vars.size.borderRadius[100],
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
-            lg: layerStyle('vapor-component', {
+            lg: layerStyle('component', {
                 borderRadius: vars.size.borderRadius[200],
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
@@ -89,7 +89,7 @@ export const control = recipe({
 });
 
 export const indicator = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('component', {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -99,11 +99,11 @@ export const indicator = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('vapor-component', {
+            md: layerStyle('component', {
                 width: vars.size.dimension[100],
                 height: vars.size.dimension[100],
             }),
-            lg: layerStyle('vapor-component', {
+            lg: layerStyle('component', {
                 width: vars.size.dimension[150],
                 height: vars.size.dimension[150],
             }),

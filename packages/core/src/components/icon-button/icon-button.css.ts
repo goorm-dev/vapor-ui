@@ -5,7 +5,7 @@ import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('component', {
         aspectRatio: '1 / 1',
         padding: 0,
         verticalAlign: 'top',
@@ -15,7 +15,7 @@ export const root = recipe({
     variants: {
         shape: {
             square: {},
-            circle: layerStyle('vapor-component', { borderRadius: '9999px' }),
+            circle: layerStyle('component', { borderRadius: '9999px' }),
         },
     },
 });
@@ -23,19 +23,19 @@ export const root = recipe({
 export const icon = recipe({
     variants: {
         size: {
-            sm: layerStyle('vapor-component', {
+            sm: layerStyle('component', {
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
-            md: layerStyle('vapor-component', {
+            md: layerStyle('component', {
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
-            lg: layerStyle('vapor-component', {
+            lg: layerStyle('component', {
                 width: vars.size.dimension[250],
                 height: vars.size.dimension[250],
             }),
-            xl: layerStyle('vapor-component', {
+            xl: layerStyle('component', {
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
             }),
