@@ -3,7 +3,12 @@
 import React, { useState } from 'react';
 
 import { Badge, Button, Card, Text, TextInput } from '@vapor-ui/core';
-import { AchievementIcon, CloseOutlineIcon, PlusOutlineIcon } from '@vapor-ui/icons';
+import {
+    AchievementIcon,
+    CloseOutlineIcon,
+    PlusOutlineIcon,
+    SearchOutlineIcon,
+} from '@vapor-ui/icons';
 import clsx from 'clsx';
 import Image from 'next/image';
 
@@ -11,6 +16,8 @@ import BrowserControlsIcon from '~public/icons/browser-controls.svg';
 import SecureIcon from '~public/icons/secure.svg';
 import TabLeftCurvedIcon from '~public/icons/tab-left-curved.svg';
 import TabRightCurvedIcon from '~public/icons/tab-right-curved.svg';
+
+import { UserList } from './user-list';
 
 interface ChromeWindowProps {
     className?: string;
@@ -26,6 +33,25 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
         const numeric = value.replace(/[^0-9]/g, '');
         setCount(numeric === '' ? 0 : parseInt(numeric, 10));
     };
+
+    // 컴포넌트 내에서 사용할 users 예시 데이터 추가
+    const activeUsers = [
+        { name: '박서현', badge: '나', online: true, avatarAlt: '박서현' },
+        {
+            name: '윤서진',
+            badge: '강의자',
+            online: true,
+            avatarAlt: '윤서진',
+        },
+        { name: '최하은', online: true, avatarAlt: '최하은' },
+        { name: '신도윤', online: true, avatarAlt: '신도윤' },
+        { name: '윤하린', online: true, avatarAlt: '윤하린' },
+    ];
+
+    const unActiveUsers = [
+        { name: '김서윤', lastActiveDaysAgo: 10, online: false, avatarAlt: '김서윤' },
+        { name: '한유진', lastActiveDaysAgo: 5, online: false, avatarAlt: '한유진' },
+    ];
 
     return (
         <div
@@ -144,8 +170,10 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
 
                                     <div className="flex flex-col justify-center items-start gap-[var(--vapor-size-space-100)]">
                                         <div className="flex flex-col items-start gap-[var(--vapor-size-space-025)] self-stretch">
-                                            <Text typography="heading5">출석체크</Text>
-                                            <Text typography="body3">
+                                            <Text typography="heading5" foreground="accent">
+                                                출석체크
+                                            </Text>
+                                            <Text typography="body3" foreground="hint-darker">
                                                 출석 체크하고 포인트를 획득하세요!
                                             </Text>
                                         </div>
@@ -164,7 +192,9 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                 </div>
                                 <Button size="lg" stretch>
                                     <AchievementIcon size="20" />
-                                    <Text typography="subtitle1">45 포인트 획득</Text>
+                                    <Text typography="subtitle1" foreground="accent">
+                                        45 포인트 획득
+                                    </Text>
                                 </Button>
                             </Card.Body>
                         </Card.Root>
@@ -194,9 +224,45 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
 
                     {/* 우측 사이드 패널 */}
                     <div className="flex w-[371px] h-[848px] p-[var(--vapor-size-space-300)] flex-col items-end flex-shrink-0 bg-[var(--vapor-color-background-normal)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)]">
-                        <Text typography="heading5" foreground="normal">
-                            사이드 패널
-                        </Text>
+                        <div className="w-full flex flex-col gap-[var(--vapor-size-space-300)]">
+                            <TextInput.Root
+                                className="w-full relative"
+                                size="lg"
+                                placeholder="이름, 이메일로 검색"
+                            >
+                                {/* Since the text input does not belong to any layer, remove !important once it is assigned to a layer. */}
+                                <div className="absolute z-[1] h-full flex items-center justify-center ml-[var(--vapor-size-space-200)]">
+                                    <SearchOutlineIcon
+                                        size="20"
+                                        color="var(--vapor-color-foreground-hint)"
+                                    />
+                                </div>
+                                <TextInput.Field className="w-full !pl-[var(--vapor-size-space-500)]" />
+                            </TextInput.Root>
+
+                            <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
+                                <div className="flex items-start gap-[var(--vapor-size-space-050)]">
+                                    <Text typography="subtitle2" foreground="hint-darker">
+                                        접속 중
+                                    </Text>
+                                    <Text typography="subtitle2" foreground="hint-darker">
+                                        {activeUsers.filter((u) => u.online).length}
+                                    </Text>
+                                </div>
+                                <UserList users={activeUsers} />
+                            </div>
+                            <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
+                                <div className="w-full flex items-start gap-[var(--vapor-size-space-050)]">
+                                    <Text typography="subtitle2" foreground="hint-darker">
+                                        미접속
+                                    </Text>
+                                    <Text typography="subtitle2" foreground="hint-darker">
+                                        {unActiveUsers.filter((u) => u.online).length}
+                                    </Text>
+                                </div>
+                                <UserList users={unActiveUsers} />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
