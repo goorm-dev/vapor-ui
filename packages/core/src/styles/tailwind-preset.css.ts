@@ -1,4 +1,3 @@
-import type { GlobalStyleRule } from '@vanilla-extract/css';
 import { globalStyle } from '@vanilla-extract/css';
 
 import {
@@ -15,7 +14,7 @@ import {
 import { vars } from './vars.css';
 
 /**
- * Tailwind CSS가 지원하는 테마 변수 네임스페이스를 타입으로 정의합니다.
+ * Define the theme variable namespace supported by Tailwind CSS as a type.
  * @see https://tailwindcss.com/docs/theme#theme-variable-namespaces
  */
 type TailwindThemeNamespace =
@@ -27,10 +26,6 @@ type TailwindThemeNamespace =
     | 'font-weight'
     | 'leading'
     | 'tracking';
-
-interface GlobalStyleRuleWithTheme extends GlobalStyleRule {
-    '@theme'?: Record<string, string>;
-}
 
 /* -------------------------------------------------------------------------------------------------
  * @theme layer
@@ -115,15 +110,10 @@ const otherThemeMaps = themeMappings.reduce<Record<string, string>>(
     {},
 );
 
-const themeStyle: GlobalStyleRuleWithTheme = {
-    '@theme': {
-        ...colorThemeMap,
-        ...otherThemeMaps,
-    },
-};
-
-globalStyle(':root', themeStyle);
-
+globalStyle('@theme', {
+    ...colorThemeMap,
+    ...otherThemeMaps,
+});
 /* -------------------------------------------------------------------------------------------------
  * @utility layer
  * -----------------------------------------------------------------------------------------------*/
