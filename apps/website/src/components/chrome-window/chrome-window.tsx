@@ -29,6 +29,9 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     const pricePerItem = 20;
     const totalPrice = count > 0 ? count * pricePerItem : 0;
 
+    // 사용자 검색 상태
+    const [searchQuery, setSearchQuery] = useState('');
+
     const handleCountChange = (value: string) => {
         const numeric = value.replace(/[^0-9]/g, '');
         setCount(numeric === '' ? 0 : parseInt(numeric, 10));
@@ -52,6 +55,17 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
         { name: '김서윤', lastActiveDaysAgo: 10, online: false, avatarAlt: '김서윤' },
         { name: '한유진', lastActiveDaysAgo: 5, online: false, avatarAlt: '한유진' },
     ];
+
+    // 검색 필터링 로직
+    const filterUsers = (users: typeof activeUsers) => {
+        if (!searchQuery.trim()) return users;
+        return users.filter(user => 
+            user.name?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    };
+
+    const filteredActiveUsers = filterUsers(activeUsers);
+    const filteredUnActiveUsers = filterUsers(unActiveUsers);
 
     return (
         <div
@@ -170,7 +184,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
 
                                     <div className="flex flex-col justify-center items-start gap-[var(--vapor-size-space-100)]">
                                         <div className="flex flex-col items-start gap-[var(--vapor-size-space-025)] self-stretch">
-                                            <Text typography="heading5" foreground="accent">
+                                            <Text typography="heading5" foreground="normal">
                                                 출석체크
                                             </Text>
                                             <Text typography="body3" foreground="hint-darker">
@@ -229,6 +243,8 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                 className="w-full relative"
                                 size="lg"
                                 placeholder="이름, 이메일로 검색"
+                                value={searchQuery}
+                                onValueChange={setSearchQuery}
                             >
                                 {/* Since the text input does not belong to any layer, remove !important once it is assigned to a layer. */}
                                 <div className="absolute z-[1] h-full flex items-center justify-center ml-[var(--vapor-size-space-200)]">
@@ -246,10 +262,10 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                         접속 중
                                     </Text>
                                     <Text typography="subtitle2" foreground="hint-darker">
-                                        {activeUsers.filter((u) => u.online).length}
+                                        {filteredActiveUsers.filter((u) => u.online).length}
                                     </Text>
                                 </div>
-                                <UserList users={activeUsers} />
+                                <UserList users={filteredActiveUsers} />
                             </div>
                             <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
                                 <div className="w-full flex items-start gap-[var(--vapor-size-space-050)]">
@@ -257,10 +273,10 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                         미접속
                                     </Text>
                                     <Text typography="subtitle2" foreground="hint-darker">
-                                        {unActiveUsers.filter((u) => u.online).length}
+                                        {filteredUnActiveUsers.length}
                                     </Text>
                                 </div>
-                                <UserList users={unActiveUsers} />
+                                <UserList users={filteredUnActiveUsers} />
                             </div>
                         </div>
                     </div>
