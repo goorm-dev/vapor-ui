@@ -40,31 +40,39 @@ const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupConte
 type RadioGroupRootPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 interface RadioGroupRootProps
     extends Omit<RadioGroupRootPrimitiveProps, keyof PrimitiveRootProps>,
-        PrimitiveRootProps {}
+        PrimitiveRootProps,
+        RadioGroupVariants {}
 
 const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...props }, ref) => {
-    const [sharedProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(props, [
+    const [sharedProps, _otherProps] = createSplitProps<PrimitiveRootProps>()(props, [
         'name',
-        'required',
-        'disabled',
         'value',
         'onValueChange',
         'defaultValue',
+        'disabled',
+        'required',
         'dir',
         'loop',
-        'orientation',
-        'invalid',
-        'size',
-        'visuallyHidden',
     ]);
 
-    const { size, orientation } = sharedProps;
+    const [variantProps, otherProps] = createSplitProps<RadioGroupVariants>()(_otherProps, [
+        'size',
+        'visuallyHidden',
+        'orientation',
+        'invalid',
+    ]);
+
+    const { disabled } = sharedProps;
+    const { size, orientation, invalid } = variantProps;
 
     return (
-        <RadioGroupProvider value={sharedProps}>
+        <RadioGroupProvider value={{ ...sharedProps, ...variantProps }}>
             <RadixRoot
                 ref={ref}
                 className={clsx(styles.root({ size, orientation }), className)}
+                aria-invalid={invalid}
+                aria-disabled={disabled}
+                orientation={orientation}
                 {...sharedProps}
                 {...otherProps}
             />
