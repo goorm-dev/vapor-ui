@@ -1,9 +1,10 @@
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
     base: {
@@ -27,7 +28,7 @@ export const root = recipe({
 });
 
 export const label = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         lineHeight: vars.typography.lineHeight['050'],
 
         letterSpacing: vars.typography.letterSpacing['000'],
@@ -46,7 +47,7 @@ export const field = recipe({
     base: [
         interaction({ type: 'form' }),
 
-        layerStyle('component', {
+        layerStyle('vapor-component', {
             outline: 0,
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
@@ -97,3 +98,7 @@ export const field = recipe({
         },
     },
 });
+
+export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;
+export type FieldVariants = NonNullable<RecipeVariants<typeof field>>;

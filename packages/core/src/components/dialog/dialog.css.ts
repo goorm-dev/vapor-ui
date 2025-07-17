@@ -1,8 +1,9 @@
 import { keyframes } from '@vanilla-extract/css';
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 const fadeIn = keyframes({
     '0%': { opacity: 0 },
@@ -14,10 +15,10 @@ const fadeOut = keyframes({
     '100%': { opacity: 0 },
 });
 
-export const overlay = layerStyle('component', {
+export const overlay = layerStyle('vapor-component', {
     position: 'fixed',
     inset: 0,
-    transition: 'opacity 0.2s ease-out',
+    transition: 'opacity 0.2s cubic-bezier(0.175,0.885,0.32,1.1)',
     backgroundColor: vars.color['black'],
 
     selectors: {
@@ -26,18 +27,18 @@ export const overlay = layerStyle('component', {
     },
 });
 
-export const slideUp = keyframes({
-    '0%': { transform: 'translate(-50%, -50%)', opacity: 0 },
-    '100%': { transform: 'translate(-50%, -55%)', opacity: 1 },
+export const scaleUp = keyframes({
+    '0%': { transform: 'translate(-50%, -50%) scale(0.96)', opacity: 0 },
+    '100%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
 });
 
-export const slideDown = keyframes({
-    '0%': { transform: 'translate(-50%, -55%)', opacity: 1 },
-    '100%': { transform: 'translate(-50%, -50%)', opacity: 0 },
+export const scaleDown = keyframes({
+    '0%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+    '100%': { transform: 'translate(-50%, -50%) scale(0.96)', opacity: 0 },
 });
 
 export const content = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         position: 'fixed',
         top: '50%',
         left: '50%',
@@ -46,8 +47,6 @@ export const content = recipe({
         flexDirection: 'column',
         alignItems: 'flex-start',
 
-        transform: 'translate(-50%, -50%)',
-        opacity: 0,
         borderRadius: vars.size.borderRadius[300],
 
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
@@ -55,11 +54,10 @@ export const content = recipe({
 
         selectors: {
             "&[data-state='open']": {
-                animation: `${slideUp} 0.2s ease-out forwards`,
-                animationDelay: '0.05s',
+                animation: `${scaleUp} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
             },
             "&[data-state='closed']": {
-                animation: `${slideDown} 0.2s ease-out forwards`,
+                animation: `${scaleDown} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
             },
         },
     }),
@@ -67,14 +65,16 @@ export const content = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('component', { width: '31.25rem' }),
-            lg: layerStyle('component', { width: '50rem' }),
-            xl: layerStyle('component', { width: '71.25rem' }),
+            md: layerStyle('vapor-component', { width: '31.25rem' }),
+            lg: layerStyle('vapor-component', { width: '50rem' }),
+            xl: layerStyle('vapor-component', { width: '71.25rem' }),
         },
     },
 });
 
-export const title = layerStyle('component', {
+export type DialogContentVariants = RecipeVariants<typeof content>;
+
+export const title = layerStyle('vapor-component', {
     lineHeight: vars.typography.lineHeight['200'],
     letterSpacing: vars.typography.letterSpacing['100'],
     color: vars.color.foreground['normal'],
@@ -82,7 +82,7 @@ export const title = layerStyle('component', {
     fontWeight: vars.typography.fontWeight['700'],
 });
 
-export const description = layerStyle('component', {
+export const description = layerStyle('vapor-component', {
     lineHeight: vars.typography.lineHeight['075'],
     letterSpacing: vars.typography.letterSpacing['100'],
     color: vars.color.foreground['normal'],
@@ -90,7 +90,7 @@ export const description = layerStyle('component', {
     fontWeight: vars.typography.fontWeight['400'],
 });
 
-export const header = layerStyle('component', {
+export const header = layerStyle('vapor-component', {
     display: 'flex',
     alignItems: 'center',
     gap: vars.size.space['150'],
@@ -100,14 +100,14 @@ export const header = layerStyle('component', {
     height: vars.size.dimension['700'],
 });
 
-export const body = layerStyle('component', {
+export const body = layerStyle('vapor-component', {
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
 });
 
-export const footer = layerStyle('component', {
+export const footer = layerStyle('vapor-component', {
     display: 'flex',
     alignItems: 'center',
     paddingBlock: vars.size.space['200'],

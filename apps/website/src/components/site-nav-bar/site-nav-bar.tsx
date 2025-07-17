@@ -67,7 +67,6 @@ export const SiteNavBar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navItems = navLinks.filter((item) => ['nav', 'all'].includes(item.on ?? 'all'));
     const menuItems = navLinks.filter((item) => ['menu', 'all'].includes(item.on ?? 'all'));
 
     return (
@@ -99,21 +98,9 @@ export const SiteNavBar = () => {
                                 />
                             </Link>
                             <ul className="hidden md:flex flex-row items-center gap-2 p-0">
-                                {navItems
-                                    .filter((item) => !isSecondary(item))
-                                    .map((item, i) => (
-                                        <Nav.LinkItem
-                                            key={i}
-                                            className="text-sm"
-                                            href={hasUrl(item) ? item.url : '#'}
-                                        >
-                                            {item.type === 'icon'
-                                                ? item.icon
-                                                : hasText(item)
-                                                  ? item.text
-                                                  : null}
-                                        </Nav.LinkItem>
-                                    ))}
+                                <Nav.LinkItem className="text-sm" href="/docs">
+                                    Docs
+                                </Nav.LinkItem>
                             </ul>
                         </div>
                         <div className="flex items-center gap-10">

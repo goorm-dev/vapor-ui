@@ -1,3 +1,5 @@
+'use client';
+
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
@@ -15,8 +17,8 @@ const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...props }, 
 
     return (
         <Flex
-            flexDirection={vStackProps.reverse ? 'column-reverse' : 'column'}
             ref={ref}
+            flexDirection={vStackProps.reverse ? 'column-reverse' : 'column'}
             {...otherProps}
         >
             {children}

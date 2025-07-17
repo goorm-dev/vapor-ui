@@ -1,10 +1,11 @@
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/contract.css';
-import { layerStyle } from '~/styles/layers.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('component', {
+    base: layerStyle('vapor-component', {
         display: 'inline-flex',
         alignItems: 'center',
     }),
@@ -12,43 +13,43 @@ export const root = recipe({
     defaultVariants: { color: 'primary', size: 'md', shape: 'square' },
     variants: {
         color: {
-            primary: layerStyle('component', {
+            primary: layerStyle('vapor-component', {
                 color: vars.color.foreground['primary-darker'],
                 backgroundColor: `rgba(${vars.color.background['rgb-primary']}, 0.16)`,
             }),
-            hint: layerStyle('component', {
+            hint: layerStyle('vapor-component', {
                 color: vars.color.foreground['hint-darker'],
                 backgroundColor: `rgba(${vars.color.background['rgb-hint']}, 0.16)`,
             }),
-            danger: layerStyle('component', {
+            danger: layerStyle('vapor-component', {
                 color: vars.color.foreground['danger-darker'],
                 backgroundColor: `rgba(${vars.color.background['rgb-danger']}, 0.16)`,
             }),
-            success: layerStyle('component', {
+            success: layerStyle('vapor-component', {
                 color: vars.color.foreground['success-darker'],
                 backgroundColor: `rgba(${vars.color.background['rgb-success']}, 0.16)`,
             }),
-            warning: layerStyle('component', {
+            warning: layerStyle('vapor-component', {
                 color: vars.color.foreground['warning-darker'],
                 backgroundColor: `rgba(${vars.color.background['rgb-warning']}, 0.16)`,
             }),
-            contrast: layerStyle('component', {
+            contrast: layerStyle('vapor-component', {
                 color: vars.color.foreground['contrast-darker'],
                 backgroundColor: `rgba(${vars.color.background['rgb-contrast']}, 0.16)`,
             }),
         },
 
         shape: {
-            square: layerStyle('component', {
+            square: layerStyle('vapor-component', {
                 borderRadius: vars.size.borderRadius['300'],
             }),
-            pill: layerStyle('component', {
+            pill: layerStyle('vapor-component', {
                 borderRadius: '9999px',
             }),
         },
 
         size: {
-            sm: layerStyle('component', {
+            sm: layerStyle('vapor-component', {
                 gap: vars.size.space['025'],
                 padding: `0 ${vars.size.space['075']}`,
                 height: vars.size.dimension[250],
@@ -58,7 +59,7 @@ export const root = recipe({
                 fontSize: vars.typography.fontSize['050'],
                 fontWeight: vars.typography.fontWeight['500'],
             }),
-            md: layerStyle('component', {
+            md: layerStyle('vapor-component', {
                 gap: vars.size.space['050'],
                 padding: `0 ${vars.size.space['100']}`,
                 height: vars.size.dimension[300],
@@ -68,7 +69,7 @@ export const root = recipe({
                 fontSize: vars.typography.fontSize['050'],
                 fontWeight: vars.typography.fontWeight['500'],
             }),
-            lg: layerStyle('component', {
+            lg: layerStyle('vapor-component', {
                 gap: vars.size.space['075'],
                 padding: `0 ${vars.size.space['150']}`,
                 height: vars.size.dimension[400],
@@ -81,3 +82,5 @@ export const root = recipe({
         },
     },
 });
+
+export type BadgeVariants = NonNullable<RecipeVariants<typeof root>>;

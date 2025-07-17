@@ -37,7 +37,6 @@
 ### **2.2.1. 주요 Commit Types & SemVer 영향:**
 
 - **`feat`**: 새로운 기능 추가 (컴포넌트, prop 등). **`MINOR` 버전 상승.**
-
     - 예시:
 
         ```bash
@@ -50,7 +49,6 @@
         ```
 
 - **`fix`**: 버그 수정. **`PATCH` 버전 상승.**
-
     - 예시:
 
         ```bash
@@ -63,7 +61,6 @@
         ```
 
 - **`BREAKING CHANGE`**: API 호환성이 깨지는 변경. `type` 뒤에 `!`를 붙이거나, 푸터에 `BREAKING CHANGE:` 명시. **`MAJOR` 버전 상승.**
-
     - 예시:
       (v1.4.2 -> v2.0.0)
 
@@ -370,7 +367,6 @@ src/
     - `React.ComponentPropsWithoutRef<ElementType>` 또는
     - `React.ComponentPropsWithRef<ElementType>`를 활용하여 HTML 표준 속성을 지원합니다.
 - **Radix UI 컴포넌트 Props**:
-
     - 개별 Props 타입을 일일이 import 하는 대신, `React.ComponentPropsWithoutRef<typeof RadixComponent>`와 같은 유틸리티 타입을 사용하여 추출합니다.
     - 이는 타입 선언을 간결하게 하고, Radix UI 업데이트 시 Props 변경에 유연하게 대응할 수 있도록 합니다.
     - **예시 (`Dialog` 컴포넌트에서 Radix Props 사용):**
@@ -422,7 +418,6 @@ src/
 컴파운드 컴포넌트 사용 시 `Dialog.Trigger`와 같이 직관적인 API를 제공하기 위해, 주 컴포넌트 객체에 하위 컴포넌트들을 할당하여 export 합니다.
 
 1. **컴포넌트 구현 파일 (`[componentName].tsx`)**:
-
     - 주 컴포넌트(Root)와 하위 컴포넌트들을 각각 선언합니다 (선언부에서 `export` 사용 안 함).
     - 주 컴포넌트 변수에 `Object.assign`을 사용하여 하위 컴포넌트들을 속성으로 할당합니다.
     - 최종적으로 할당된 주 컴포넌트 객체와 필요한 타입들을 `export` 합니다.

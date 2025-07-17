@@ -1,3 +1,5 @@
+'use client';
+
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
@@ -10,9 +12,9 @@ import {
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { ItemVariants, LinkVariants, ListVariants } from './nav.css';
 import * as styles from './nav.css';
 
 type NavContextType = NavVariants;
@@ -26,11 +28,9 @@ const [NavProvider, useNavContext] = createContext<NavContextType>({
  * Nav.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type NavVariants = MergeRecipeVariants<
-    typeof styles.list | typeof styles.item | typeof styles.link
->;
-
+type NavVariants = ListVariants & ItemVariants & LinkVariants;
 type NavPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
+
 interface NavRootProps extends NavPrimitiveProps, NavVariants {
     'aria-label': string;
 }
@@ -128,9 +128,9 @@ Link.displayName = 'Nav.Link';
  * Nav.LinkItem
  * -----------------------------------------------------------------------------------------------*/
 
-interface NavLinkItemProps extends ComponentPropsWithoutRef<typeof RadixLink> {}
+interface NavLinkItemProps extends ComponentPropsWithoutRef<typeof Link> {}
 
-const LinkItem = forwardRef<HTMLAnchorElement, NavLinkProps>((props, ref) => {
+const LinkItem = forwardRef<HTMLAnchorElement, NavLinkItemProps>((props, ref) => {
     return (
         <Nav.Item>
             <Nav.Link ref={ref} {...props} />

@@ -1,2 +1,2 @@
 release:
-    - head-branch: ['^changeset-release/release-test$']
+    - head-branch: ['^changeset-release/main$']

@@ -1,4 +1,4 @@
-[![Vapor UI Logo](vapor-ui.png)](https://radix-ui.com/primitives)
+[![Vapor UI Logo](vapor-ui.png)](https://vapor.goorm.io)
 
 # Goorm Design System: Vapor UI
 
@@ -19,9 +19,9 @@ Vapor is a React-based UI library designed with a focus on accessibility, custom
 
 ## Documentation
 
-- **[Usage](https://vapor.goorm.io/guides/installation)**: Learn how to install and configure the library.
-- **[Contributing](https://vapor.goorm.io/guides/contributing)**: Guidelines for contributing to the project and local setup instructions.
-- **[Releases](https://vapor.goorm.io/guides/changelog)**: View changes for each version.
+- **[Usage](https://vapor.goorm.io/docs/overview/installation)**: Learn how to install and configure the library.
+- **[Contributing](https://github.com/goorm-dev/vapor-ui/blob/main/CONTRIBUTING.md)**: Guidelines for contributing to the project and local setup instructions.
+- **[Releases](https://github.com/goorm-dev/vapor-ui/releases)**: View changes for each version.
 
 ## Getting Started
 
@@ -31,7 +31,7 @@ To install Vapor UI in your project, use the following command:
 npm i @vapor-ui/core @vapor-ui/icons @vapor-ui/hooks
 ```
 
-For detailed usage instructions, please refer to the [official documentation](https://vapor.goorm.io/guides/installation).
+For detailed usage instructions, please refer to the [official documentation](https://vapor.goorm.io/docs/overview/installation).
 
 ## Core Principles
 
@@ -44,14 +44,14 @@ For detailed usage instructions, please refer to the [official documentation](ht
 
 Vapor is a monorepo that efficiently manages multiple packages using pnpm Workspace and Turborepo.
 
-| Package                 | Description                                                          | NPM                                                                                                       |
-| ----------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| @vapor-ui/core          | Core UI component library                                            | [![npm](https://img.shields.io/npm/v/@vapor-ui/core.svg)](https://www.npmjs.com/package/@vapor-ui/core)   |
-| @vapor-ui/icons         | A set of SVG icon React components used in the VaporUI design system | [![npm](https://img.shields.io/npm/v/@vapor-ui/icons.svg)](https://www.npmjs.com/package/@vapor-ui/icons) |
-| @vapor-ui/hooks         | A collection of reusable React hooks for the VaporUI design system   | [![npm](https://img.shields.io/npm/v/@vapor-ui/hooks.svg)](https://www.npmjs.com/package/@vapor-ui/hooks) |
-| apps/website            | Official documentation website                                       | -                                                                                                         |
-| @repo/eslint-config     | Shared ESLint configuration                                          | -                                                                                                         |
-| @repo/typescript-config | Shared TypeScript tsconfig configuration                             | -                                                                                                         |
+| Package                 | Description                                                           | NPM                                                                                                       |
+| ----------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| @vapor-ui/core          | Core UI component library                                             | [![npm](https://img.shields.io/npm/v/@vapor-ui/core.svg)](https://www.npmjs.com/package/@vapor-ui/core)   |
+| @vapor-ui/icons         | A set of SVG icon React components used in the Vapor UI design system | [![npm](https://img.shields.io/npm/v/@vapor-ui/icons.svg)](https://www.npmjs.com/package/@vapor-ui/icons) |
+| @vapor-ui/hooks         | A collection of reusable React hooks for the Vapor UI design system   | [![npm](https://img.shields.io/npm/v/@vapor-ui/hooks.svg)](https://www.npmjs.com/package/@vapor-ui/hooks) |
+| apps/website            | Official documentation website                                        | -                                                                                                         |
+| @repo/eslint-config     | Shared ESLint configuration                                           | -                                                                                                         |
+| @repo/typescript-config | Shared TypeScript tsconfig configuration                              | -                                                                                                         |
 
 ## Community & Support
 

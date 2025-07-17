@@ -1,24 +1,29 @@
+'use client';
+
+import './global.css';
+
 import type { ReactNode } from 'react';
 
 import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { Inter } from 'next/font/google';
+import { usePathname } from 'next/navigation';
 
 import DefaultSearchDialog from '~/components/search/search';
-
-import './global.css';
 
 const inter = Inter({
     subsets: ['latin'],
 });
 
 export default function Layout({ children }: { children: ReactNode }) {
+    const pathname = usePathname();
     return (
         <html lang="ko" className={inter.className} suppressHydrationWarning>
             <head>
                 <ThemeScript
                     config={{
                         appearance: 'light',
+                        storageKey: pathname === '/' ? 'theme-home' : `theme-index`,
                     }}
                 />
                 <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -33,6 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     <ThemeProvider
                         config={{
                             appearance: 'light',
+                            storageKey: `theme-index`,
                         }}
                     >
                         {children}

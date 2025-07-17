@@ -13,3 +13,8 @@ export * from './components/text';
 export * from './components/h-stack';
 export * from './components/v-stack';
 export * from './components/dialog';
+export * from './components/radio-group';
+export * from './components/checkbox';
+export * from './components/switch';
+export * from './components/callout';
+export * from './components/create-theme-config';
