@@ -1,0 +1,14 @@
+.customButton {
+    margin-top: var(--vapor-size-space-200);
+}
+.colorBoard_radio_group {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: var(--vapor-size-space-100);
+}
+
+.colorBoard_column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vapor-size-space-075);
+}
