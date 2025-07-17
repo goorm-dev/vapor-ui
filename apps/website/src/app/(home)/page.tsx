@@ -158,8 +158,10 @@ export default function HomePage() {
                 </div>
             </section>
             <section className="min-h-screen bg-muted/20 flex py-[60px] px-[var(--vapor-size-space-200)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch">
-                <header className="flex justify-between items-center ">
-                    <h2 className="text-4xl font-bold">Component Playground</h2>
+                <header className="flex justify-between items-center flex-col gap-[var(--vapor-size-space-200)]">
+                    <Text foreground="normal" typography="heading6" asChild>
+                        <h6>FOUNDATION</h6>
+                    </Text>
                     <ThemeToggle />
                 </header>
                 <main className="w-full">

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 import { Badge, Button, Card, Text, TextInput } from '@vapor-ui/core';
 import {
@@ -18,6 +18,23 @@ import TabLeftCurvedIcon from '~public/icons/tab-left-curved.svg';
 import TabRightCurvedIcon from '~public/icons/tab-right-curved.svg';
 
 import { UserList } from './user-list';
+
+type LocalTheme = 'light' | 'dark';
+
+interface LocalThemeContextType {
+    theme: LocalTheme;
+    setTheme: (theme: LocalTheme) => void;
+}
+
+const LocalThemeContext = createContext<LocalThemeContextType | undefined>(undefined);
+
+export const useLocalTheme = () => {
+    const context = useContext(LocalThemeContext);
+    if (!context) {
+        throw new Error('useLocalTheme must be used within LocalThemeProvider');
+    }
+    return context;
+};
 
 interface ChromeWindowProps {
     className?: string;
@@ -59,9 +76,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     // 검색 필터링 로직
     const filterUsers = (users: typeof activeUsers) => {
         if (!searchQuery.trim()) return users;
-        return users.filter(user => 
-            user.name?.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        return users.filter((user) => user.name?.toLowerCase().includes(searchQuery.toLowerCase()));
     };
 
     const filteredActiveUsers = filterUsers(activeUsers);
