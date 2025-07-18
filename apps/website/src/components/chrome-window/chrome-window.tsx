@@ -123,10 +123,10 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                     </div>
                 </div>
             </div>
-            <div className="bg-[var(--vapor-color-background-normal)] flex items-center justify-center p-[var(--vapor-size-space-400)]">
+            <div className="bg-[var(--vapor-color-background-normal)] flex items-center justify-center">
                 <div className="flex items-start gap-[var(--vapor-size-space-400)] w-full">
                     {/* 좌측 영역 - 기존 내용 */}
-                    <div className="flex items-center flex-col gap-[var(--vapor-size-space-400)] flex-1">
+                    <div className="flex items-center flex-col gap-[var(--vapor-size-space-400)] flex-1 pt-[var(--vapor-size-space-400)] pl-[var(--vapor-size-space-400)] max-[991px]:p-[var(--vapor-size-space-400)]">
                         <Card.Root className="w-full">
                             <Card.Header>
                                 <Text typography="heading6" foreground="normal">
@@ -252,7 +252,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                     </div>
 
                     {/* 우측 사이드 패널 */}
-                    <div className="flex w-[371px] h-[848px] p-[var(--vapor-size-space-300)] flex-col items-end flex-shrink-0 bg-[var(--vapor-color-background-normal)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)]">
+                    <div className="flex w-[371px] h-[848px] p-[var(--vapor-size-space-300)] flex-col items-end flex-shrink-0 bg-[var(--vapor-color-background-normal)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
                         <div className="w-full flex flex-col gap-[var(--vapor-size-space-300)]">
                             <TextInput.Root
                                 className="w-full relative"
