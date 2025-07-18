@@ -96,7 +96,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                 </div>
                 <div className="relative bottom-[-4px]">
                     <span className="absolute left-[-6px] bottom-0">
-                        <TabLeftCurvedIcon />
+                        <TabLeftCurvedIcon color="var(--vapor-color-background-secondary" />
                     </span>
                     <div className="flex items-center gap-[9px] p-[var(--vapor-size-space-100)] pl-[var(--vapor-size-space-200)] min-w-0 flex-shrink-0 relative bg-[var(--vapor-color-background-secondary)] rounded-t-[var(--vapor-size-borderRadius-300)]">
                         <div className="flex gap-[9px]">
@@ -107,7 +107,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                         </div>
                     </div>
                     <span className="absolute right-[-6px] bottom-0">
-                        <TabRightCurvedIcon />
+                        <TabRightCurvedIcon color="var(--vapor-color-background-secondary)" />
                     </span>
                 </div>
             </div>
