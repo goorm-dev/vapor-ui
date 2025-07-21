@@ -8,8 +8,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { ChromeWindow } from '~/components/chrome-window';
-import { ThemeToggle } from '~/components/playground';
 import DefaultSearchDialog from '~/components/search/search';
+import { ThemeToggle } from '~/components/theme-toggle';
 
 export default function HomePage() {
     const { setTheme } = useTheme();
