@@ -24,7 +24,6 @@ interface VaporThemeConfig extends Partial<ThemeState> {
     /** Enable system theme detection (for future extension). */
     enableSystemTheme?: boolean;
 }
-
 interface ResolvedThemeConfig extends ThemeState {
     storageKey: string;
     nonce?: string;
@@ -46,8 +45,8 @@ interface ThemeProviderProps {
 
 const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
     const resolvedConfig = useMemo<ResolvedThemeConfig>(() => {
-        if (config && !validateThemeConfig(config)) {
-            console.error('[@vapor-ui/core] Invalid theme configuration provided to ThemeProvider');
+        if (config) {
+            validateThemeConfig(config);
         }
         return createThemeConfig(config);
     }, [config]);
