@@ -21,7 +21,7 @@ export default function HomePage() {
     }, [setTheme]);
 
     return (
-        <main className="relative" style={{ top: 'calc(-1 * var(--fd-banner-height))' }}>
+        <main className="relative -top-[calc(var(--fd-banner-height))]">
             <section className="relative flex flex-col items-center gap-10 self-stretch justify-center text-center md:p-0 p-4 min-h-screen -top-[64px]">
                 <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
 
