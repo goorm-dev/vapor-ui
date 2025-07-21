@@ -7,7 +7,13 @@ import { RADIUS_FACTOR_VAR_NAME, SCALE_FACTOR_VAR_NAME } from '~/styles/global-v
 
 import { createThemeConfig } from '../create-theme-config';
 import { THEME_CONFIG, themeInjectScript } from '../theme-inject/theme-injector';
-import { createThemeController, type Appearance, type Radius, type Scaling, type ThemeState } from './theme-core';
+import {
+    type Appearance,
+    type Radius,
+    type Scaling,
+    type ThemeState,
+    createThemeController,
+} from './theme-core';
 
 interface VaporThemeConfig extends Partial<ThemeState> {
     /** localStorage key for persistence. */
@@ -42,21 +48,25 @@ const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
     }, [config]);
 
     // Create theme controller with global configuration
-    const controller = useMemo(() => createThemeController({
-        target: 'global',
-        persistence: true,
-        storageKey: resolvedConfig.storageKey,
-        enableSystemTheme: resolvedConfig.enableSystemTheme,
-    }), [resolvedConfig.storageKey, resolvedConfig.enableSystemTheme]);
+    const controller = useMemo(
+        () =>
+            createThemeController({
+                target: 'global',
+                persistence: true,
+                storageKey: resolvedConfig.storageKey,
+                enableSystemTheme: resolvedConfig.enableSystemTheme,
+            }),
+        [resolvedConfig.storageKey, resolvedConfig.enableSystemTheme],
+    );
 
     const [themeState, internalSetThemeState] = useState<ThemeState>(() => {
         const { storageKey, nonce, enableSystemTheme, ...defaultTheme } = resolvedConfig;
         const defaultState = controller.getDefaultTheme(defaultTheme);
-        
+
         if (typeof window === 'undefined') {
             return defaultState;
         }
-        
+
         try {
             const storedItem = localStorage.getItem(resolvedConfig.storageKey);
             const storedSettings = storedItem ? JSON.parse(storedItem) : {};
@@ -72,7 +82,7 @@ const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
             if (config && !controller.validateConfig({ ...config, ...newThemePartial })) {
                 return;
             }
-            
+
             internalSetThemeState((prevState) => {
                 const updatedState = { ...prevState, ...newThemePartial };
 
@@ -119,7 +129,7 @@ const ThemeScript = memo(({ config }: ThemeScriptProps) => {
     }, [config]);
 
     const controller = createThemeController({ target: 'global', persistence: false });
-    
+
     const cssVarNames = {
         radiusFactor: RADIUS_FACTOR_VAR_NAME,
         scaleFactor: SCALE_FACTOR_VAR_NAME,

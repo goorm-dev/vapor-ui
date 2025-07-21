@@ -15,7 +15,13 @@ import clsx from 'clsx';
 
 import { darkThemeClass, lightThemeClass } from '~/styles/local-theme.css';
 
-import { createThemeController, type Appearance, type Radius, type Scaling, type ThemeState } from '../theme-provider/theme-core';
+import {
+    type Appearance,
+    type Radius,
+    type Scaling,
+    type ThemeState,
+    createThemeController,
+} from '../theme-provider/theme-core';
 
 interface LocalThemeState {
     appearance: Appearance;
@@ -42,21 +48,28 @@ const LocalThemeProvider = ({ children, config, className = '' }: LocalThemeProv
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Create theme controller with local configuration
-    const controller = useMemo(() => createThemeController({
-        target: 'local',
-        persistence: false, // No localStorage for local themes
-    }), []);
-
-    const [themeState, setThemeState] = useState<LocalThemeState>(() => 
-        controller.getDefaultTheme(config) as LocalThemeState
+    const controller = useMemo(
+        () =>
+            createThemeController({
+                target: 'local',
+                persistence: false, // No localStorage for local themes
+            }),
+        [],
     );
 
-    const setTheme = useCallback((newThemePartial: Partial<LocalThemeState>) => {
-        if (config && !controller.validateConfig({ ...config, ...newThemePartial })) {
-            return;
-        }
-        setThemeState((prevState) => ({ ...prevState, ...newThemePartial }));
-    }, [controller, config]);
+    const [themeState, setThemeState] = useState<LocalThemeState>(
+        () => controller.getDefaultTheme(config) as LocalThemeState,
+    );
+
+    const setTheme = useCallback(
+        (newThemePartial: Partial<LocalThemeState>) => {
+            if (config && !controller.validateConfig({ ...config, ...newThemePartial })) {
+                return;
+            }
+            setThemeState((prevState) => ({ ...prevState, ...newThemePartial }));
+        },
+        [controller, config],
+    );
 
     // Update theme state when config prop changes
     useEffect(() => {
