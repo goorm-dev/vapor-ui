@@ -1,0 +1,64 @@
+{
+    "name": "@vapor-ui/tailwindcss",
+    "description": "Tailwind CSS for Vapor UI",
+    "version": "0.0.0",
+    "author": "Vapor Team <vapor.ui@goorm.io>",
+    "license": "MIT",
+    "homepage": "https://github.com/goorm-dev/vapor-ui",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./postcss": {
+            "types": "./dist/postcss/index.d.ts",
+            "import": "./dist/postcss/index.js",
+            "require": "./dist/postcss/index.cjs"
+        },
+        "./vite": {
+            "types": "./dist/vite/index.d.ts",
+            "import": "./dist/vite/index.js",
+            "require": "./dist/vite/index.cjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "directory": "packages/tailwindcss"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "bugs": {
+        "url": "https://github.com/goorm-dev/vapor-ui/issues"
+    },
+    "scripts": {
+        "build": "rimraf dist && tsup"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/node": "^22.15.3",
+        "rimraf": "^6.0.1",
+        "tsup": "^8.3.6"
+    },
+    "peerDependencies": {
+        "vite": "^6.1.0",
+        "postcss": ">=8"
+    },
+    "peerDependenciesMeta": {
+        "vite": {
+            "optional": true
+        },
+        "postcss": {
+            "optional": true
+        }
+    }
+}

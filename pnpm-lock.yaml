@@ -532,6 +532,31 @@ importers:
         specifier: ^6.1.0
         version: 6.3.5(@types/node@22.16.0)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.89.2)
 
+  packages/tailwindcss:
+    dependencies:
+      postcss:
+        specifier: '>=8'
+        version: 8.5.6
+      vite:
+        specifier: ^6.1.0
+        version: 6.3.5(@types/node@22.16.0)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.89.2)
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.16.0
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
+      tsup:
+        specifier: ^8.3.6
+        version: 8.5.0(@swc/core@1.12.9)(jiti@2.4.2)(postcss@8.5.6)(typescript@5.8.3)
+
   packages/typescript-config: {}
 
 packages:
