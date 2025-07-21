@@ -1,16 +1,24 @@
 'use client';
 
-import { useTheme } from '@vapor-ui/core';
+import { useState } from 'react';
+
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';
 
 import { ButtonToggleGroup } from '../button-toggle-group';
 
-export function ThemeToggle() {
-    const { appearance, setTheme } = useTheme();
+interface ThemeToggleProps {
+    onThemeChange?: (theme: 'light' | 'dark') => void;
+    defaultTheme?: 'light' | 'dark';
+}
+
+export function ThemeToggle({ onThemeChange, defaultTheme = 'dark' }: ThemeToggleProps) {
+    const [appearance, setAppearance] = useState<'light' | 'dark'>(defaultTheme);
 
     const handleThemeChange = (index: number) => {
-        const themes = ['light', 'dark'];
-        setTheme({ appearance: themes[index] as 'light' | 'dark' });
+        const themes = ['light', 'dark'] as const;
+        const newTheme = themes[index];
+        setAppearance(newTheme);
+        onThemeChange?.(newTheme);
     };
 
     const activeIndex = appearance === 'light' ? 0 : 1;

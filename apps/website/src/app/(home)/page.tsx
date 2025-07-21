@@ -14,6 +14,7 @@ import DefaultSearchDialog from '~/components/search/search';
 export default function HomePage() {
     const { setTheme } = useTheme();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [chromeTheme, setChromeTheme] = useState<'light' | 'dark'>('dark');
 
     useEffect(() => {
         setTheme({ appearance: 'dark' });
@@ -157,16 +158,16 @@ export default function HomePage() {
                     </Button>
                 </div>
             </section>
-            <section className="min-h-screen bg-muted/20 flex py-[60px] px-[var(--vapor-size-space-200)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch">
+            <section className="min-h-screen bg-muted/20 flex py-[60px] px-[var(--vapor-size-space-200)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch">
                 <header className="flex justify-between items-center flex-col gap-[var(--vapor-size-space-200)]">
                     <Text foreground="normal" typography="heading6" asChild>
                         <h6>FOUNDATION</h6>
                     </Text>
-                    <ThemeToggle />
+                    <ThemeToggle onThemeChange={setChromeTheme} defaultTheme={chromeTheme} />
                 </header>
                 <main className="w-full">
                     <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center">
-                        <ChromeWindow className="w-full" />
+                        <ChromeWindow className="w-full" theme={chromeTheme} />
                     </div>
                 </main>
             </section>
