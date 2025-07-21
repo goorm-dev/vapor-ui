@@ -192,8 +192,8 @@ const calculatePrimaryColorSet = (
     }
 };
 
-function validateThemeConfig(config: unknown): config is Partial<ThemeState> {
-    if (!config || typeof config !== 'object') return true;
+export function validateThemeConfig(config: unknown): config is Partial<ThemeState> {
+    if (!config || typeof config !== 'object') return false;
 
     const c = config as Partial<ThemeState>;
 

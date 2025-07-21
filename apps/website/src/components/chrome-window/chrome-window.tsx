@@ -84,7 +84,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
     const filteredUnActiveUsers = filterUsers(unActiveUsers);
 
     return (
-        <LocalThemeProvider config={{ appearance: theme, scaling: 2 }} className="w-full">
+        <LocalThemeProvider config={{ appearance: theme, scaling: 1.2 }} className="w-full">
             <div
                 className={clsx(
                     'bg-[var(--vapor-color-background-normal)] rounded-[var(--vapor-size-borderRadius-500)] shadow-lg overflow-hidden w-full border border-[var(--vapor-color-border-normal)]',

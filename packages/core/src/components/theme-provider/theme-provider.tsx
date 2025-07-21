@@ -13,6 +13,7 @@ import {
     type Scaling,
     type ThemeState,
     createThemeController,
+    validateThemeConfig,
 } from './theme-core';
 
 interface VaporThemeConfig extends Partial<ThemeState> {
@@ -44,6 +45,9 @@ interface ThemeProviderProps {
 
 const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
     const resolvedConfig = useMemo<ResolvedThemeConfig>(() => {
+        if (config) {
+            validateThemeConfig(config);
+        }
         return createThemeConfig(config);
     }, [config]);
 
@@ -125,6 +129,10 @@ interface ThemeScriptProps {
 
 const ThemeScript = memo(({ config }: ThemeScriptProps) => {
     const resolvedConfig = useMemo<ResolvedThemeConfig>(() => {
+        if (config) {
+            validateThemeConfig(config);
+        }
+
         return createThemeConfig(config);
     }, [config]);
 
