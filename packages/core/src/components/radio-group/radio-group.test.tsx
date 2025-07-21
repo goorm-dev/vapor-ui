@@ -12,12 +12,12 @@ const RadioGroupTest = (props: RadioGroupRootProps) => {
     return (
         <RadioGroup.Root {...props}>
             <RadioGroup.Item value="option1" data-testid="option1-item">
-                <RadioGroup.Label data-testid="option1-label">{OPTION_1}</RadioGroup.Label>
                 <RadioGroup.Control data-testid="option1-control" />
+                <RadioGroup.Label data-testid="option1-label">{OPTION_1}</RadioGroup.Label>
             </RadioGroup.Item>
             <RadioGroup.Item value="option2" data-testid="option2-item">
-                <RadioGroup.Label data-testid="option2-label">{OPTION_2}</RadioGroup.Label>
                 <RadioGroup.Control data-testid="option2-control" />
+                <RadioGroup.Label data-testid="option2-label">{OPTION_2}</RadioGroup.Label>
             </RadioGroup.Item>
         </RadioGroup.Root>
     );
@@ -117,7 +117,7 @@ describe('RadioGroup', () => {
         });
     });
 
-    it('should include the radio value in the form', async ({ skip }) => {
+    it('should include the radio value in the form submission', async ({ skip }) => {
         if (isJSDOM) {
             // FormData is not available in JSDOM
             skip();
@@ -162,6 +162,68 @@ describe('RadioGroup', () => {
         await userEvent.click(submitButton);
 
         expect(stringifiedFormData).toBe('radio-group-test=a');
+    });
+
+    it('should automatically select radio upon navigation', async () => {
+        const rendered = render(<RadioGroupTest />);
+        const [firstItem, secondItem] = rendered.getAllByRole('radio');
+
+        firstItem.focus();
+
+        expect(firstItem).toHaveFocus();
+        expect(firstItem).not.toBeChecked();
+        expect(secondItem).not.toBeChecked();
+
+        await userEvent.keyboard('[ArrowDown]');
+
+        expect(secondItem).toHaveFocus();
+
+        /**
+         * Note:
+         * - When userEvent.keyboard([ArrowDown]) is input in the test environment, the checked state does not automatically change.
+         * - Therefore, userEvent.keyboard([Space]) has been temporarily added to manually toggle the state.
+         *
+         * @link https://github.com/radix-ui/primitives/issues/3076
+         */
+        await userEvent.keyboard('[Space]');
+
+        expect(firstItem).not.toBeChecked();
+        expect(secondItem).toBeChecked();
+    });
+
+    it('does not forward `value` prop', async () => {
+        const rendered = render(
+            <RadioGroup.Root value="test" data-testid="radio-group">
+                <RadioGroup.Item value="">
+                    <RadioGroup.Control />
+                </RadioGroup.Item>
+            </RadioGroup.Root>,
+        );
+
+        const root = rendered.getByTestId('radio-group');
+
+        expect(root).not.toHaveAttribute('value');
+    });
+
+    it('sets tabIndex=0 to the correct element when focused', async () => {
+        const rendered = render(
+            <RadioGroup.Root defaultValue="b">
+                <RadioGroup.Item value="a">
+                    <RadioGroup.Control data-testid="radio-a" />
+                </RadioGroup.Item>
+                <RadioGroup.Item value="b">
+                    <RadioGroup.Control data-testid="radio-b" />
+                </RadioGroup.Item>
+            </RadioGroup.Root>,
+        );
+
+        const radioA = rendered.getByTestId('radio-a');
+        const radioB = rendered.getByTestId('radio-b');
+
+        await userEvent.tab();
+
+        expect(radioA).toHaveAttribute('tabindex', '-1');
+        expect(radioB).toHaveAttribute('tabindex', '0');
     });
 });
 
