@@ -37,7 +37,7 @@ export default function HomePage() {
                 <div className="flex flex-col items-center gap-4 self-stretch">
                     <div className="flex flex-col items-center gap-10 self-stretch">
                         <div className="flex flex-col items-center gap-4 self-stretch">
-                            <div className="flex flex-col items-center gap-[4px] self-stretch">
+                            <div className="flex flex-col items-center gap-[var(--vapor-size-space-050)] self-stretch">
                                 <Badge size="lg" color="hint" shape="pill">
                                     구름 디자인 시스템 3.0
                                 </Badge>
