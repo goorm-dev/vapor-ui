@@ -72,7 +72,7 @@ export const SiteNavBar = () => {
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
             <header
-                className={`flex w-full py-3 px-4 md:px-8 justify-between items-center fixed top-0 transition-all duration-300 ${
+                className={`z-10 flex w-full py-3 px-4 md:px-8 justify-between items-center fixed top-0 transition-all duration-300 ${
                     isScrolled
                         ? 'bg-[var(--vapor-color-background-normal)] shadow-lg backdrop-blur-sm z-20'
                         : 'bg-transparent'
