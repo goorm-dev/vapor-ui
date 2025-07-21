@@ -23,7 +23,7 @@
     --color-fd-primary-foreground: var(--vapor-color-foreground-primary);
     --color-fd-foreground: var(--vapor-color-foreground-normal);
 
-    --fd-banner-height: 62px;
+    --fd-banner-height: 0px;
 }
 
 a[data-active='true'] {

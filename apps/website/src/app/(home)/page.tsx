@@ -21,16 +21,12 @@ export default function HomePage() {
     }, [setTheme]);
 
     return (
-        <main
-            className="min-h-screen relative"
-            style={{ top: 'calc(-1 * var(--fd-banner-height))' }}
-        >
-            {/* Header Section */}
-            <section className="relative flex flex-col items-center gap-10 self-stretch justify-center text-center md:p-0 p-4 min-h-screen">
+        <main className="relative" style={{ top: 'calc(-1 * var(--fd-banner-height))' }}>
+            <section className="relative flex flex-col items-center gap-10 self-stretch justify-center text-center md:p-0 p-4 min-h-screen -top-[64px]">
                 <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
 
                 <Image
-                    className="select-none absolute left-0 w-full h-full object-cover opacity-50 mix-blend-soft-light pointer-events-none"
+                    className="select-none absolute left-0 w-full h-full object-cover opacity-50 mix-blend-soft-light pointer-events-none "
                     src="https://statics.goorm.io/gds/docs/main/vapor-index-banner.png"
                     alt=""
                     width="1440"
