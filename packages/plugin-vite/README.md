@@ -1,5 +1,0 @@
-# Vapor UI
-
-## License
-
-MIT
