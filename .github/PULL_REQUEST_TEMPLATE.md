@@ -7,28 +7,21 @@ Feel free to remove sections that are not relevant to your pull request.
 ## 🔗Related Issues
 
 <!-- Please add any related issue numbers or links. -->
-
-- (e.g., Fixes #123)
-
-- (e.g., Notion: Design System Meeting Notes)
+<!-- e.g., Fixes #123 -->
+<!-- e.g., Notion: Design System Meeting Notes -->
 
 ## 📝 Description of Changes
 
 <!-- Please provide a brief summary of the changes in this PR. -->
-
-- (e.g., Added new Avatar component)
-
-- (e.g., Updated Color tokens to support dark mode)
-
-- (e.g., Fixed styles for the disabled state in the Input component)
+<!-- e.g., Added new Avatar component -->
+<!-- e.g., Updated Color tokens to support dark mode -->
+<!-- e.g., Fixed styles for the disabled state in the Input component -->
 
 ## 📸 Screenshots
 
-<!-- If there are any UI changes, please attach "before" and "after" screenshots. -->
-
-### Before
-
-### After
+<!-- If there are any UI changes, please attach screenshots. -->
+<!-- For modifications, include "Before" and "After" comparisons. -->
+<!-- For new features, show the new functionality. -->
 
 ## ✅ Checklist
 
@@ -40,6 +33,8 @@ Before submitting the PR, please make sure you have checked all of the following
 
 [ ] I have updated the Storybook or relevant documentation.
 
+[ ] I have added a changeset for this change (if applicable).
+
 [ ] I have performed a self-code review.
 
-[ ] I have read and followed the [Vapor Ground Rules](https://github.com/goorm-dev/vapor-ui/blob/main/.gemini/styleguide.md).
+[ ]I have followed the project's [coding conventions](https://github.com/goorm-dev/vapor-ui/blob/main/.gemini/styleguide.md) and component patterns.
