@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 0.4.0
+
+### Minor Changes
+
+- f5e6651: feat: Add Tailwind CSS v4 Preset
+
 ## 0.3.1
 
 ### Patch Changes
