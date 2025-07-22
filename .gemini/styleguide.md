@@ -698,7 +698,7 @@ src/
 - `Docs`: storybook `autodocs` 로 자동 생성됨
 - `Test Bed`: 시각적 회귀 테스트 용도
 
-## 9.2 Vapor Docs
+## 9.2 Vapor Docs(apps/website)
 
 - `use case` : 서브컴포넌트 컴포넌트들의 조합 / 특정 variant의 나열
 - 타이틀에는 이모지를 사용하지 않는다.
