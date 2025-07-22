@@ -38,7 +38,7 @@
         },
         {
             "prop": "dir",
-            "type": "'ltr' | 'rtl' | undefined",
+            "type": "ltr | rtl | undefined",
             "default": null,
             "description": "텍스트 방향을 설정합니다."
         },
@@ -50,14 +50,14 @@
         },
         {
             "prop": "orientation",
-            "type": "'horizontal' | 'vertical' | undefined",
-            "default": "'vertical'",
+            "type": "horizontal | vertical | undefined",
+            "default": "vertical",
             "description": "Item 배치를 가로 또는 세로 방향으로 설정합니다."
         },
         {
             "prop": "size",
-            "type": "'md' | 'lg'",
-            "default": "'md'",
+            "type": "md | lg",
+            "default": "md",
             "description": "RadioGroup.Item 간의 간격 및 Control 크기를 조정합니다."
         },
         {
@@ -94,8 +94,8 @@
         },
         {
             "prop": "size",
-            "type": "'md' | 'lg'",
-            "default": "'md'",
+            "type": "md | lg",
+            "default": "md",
             "description": "해당 항목의 Control 크기를 조정합니다."
         },
         {
