@@ -71,3 +71,55 @@ export const Default: Story = {
         );
     },
 };
+
+export const TestBed: Story = {
+    render: (args) => {
+        return (
+            <>
+                <Breadcrumb.Root {...args}>
+                    <Breadcrumb.List>
+                        <Breadcrumb.Item>
+                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                        </Breadcrumb.Item>
+
+                        <Breadcrumb.Separator />
+
+                        <Breadcrumb.Item>
+                            <Dialog.Root>
+                                <Dialog.Trigger>
+                                    <Breadcrumb.Ellipsis />
+                                </Dialog.Trigger>
+
+                                <Dialog.Portal>
+                                    <Dialog.Overlay />
+                                    <Dialog.Content>
+                                        <Dialog.Header></Dialog.Header>
+                                    </Dialog.Content>
+                                </Dialog.Portal>
+                            </Dialog.Root>
+                        </Breadcrumb.Item>
+
+                        <Breadcrumb.Separator />
+
+                        <Breadcrumb.Item>
+                            <Breadcrumb.Link href="#">Products</Breadcrumb.Link>
+                        </Breadcrumb.Item>
+
+                        <Breadcrumb.Separator />
+                        <Breadcrumb.Item>
+                            <Breadcrumb.Link href="#">Electronics</Breadcrumb.Link>
+                        </Breadcrumb.Item>
+
+                        <Breadcrumb.Separator />
+
+                        <Breadcrumb.Item>
+                            <Breadcrumb.Link href="#" current>
+                                Laptops
+                            </Breadcrumb.Link>
+                        </Breadcrumb.Item>
+                    </Breadcrumb.List>
+                </Breadcrumb.Root>
+            </>
+        );
+    },
+};
