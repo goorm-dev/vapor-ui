@@ -2,7 +2,7 @@
 
 Vapor UI icon components library.
 
-[View documentation](https://vapor.goorm.io/vapor-icons)
+[View documentation](https://vapor-ui.goorm.io/vapor-icons)
 
 ## Installation
 

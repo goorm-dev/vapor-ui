@@ -41,11 +41,11 @@ To learn more about the technologies used in this project:
 
 - [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API
 - [Fumadocs Documentation](https://fumadocs.vercel.app) - Learn about Fumadocs features and configuration
-- [Vapor UI Documentation](https://vapor.goorm.io) - Learn about Vapor UI components and patterns
+- [Vapor UI Documentation](https://vapor-ui.goorm.io) - Learn about Vapor UI components and patterns
 
 ## Contributing
 
-Please refer to the [contributing guide](https://vapor.goorm.io/guides/contributing) for information on how to contribute to the documentation.
+Please refer to the [contributing guide](https://vapor-ui.goorm.io/guides/contributing) for information on how to contribute to the documentation.
 
 ## Deploy
 
