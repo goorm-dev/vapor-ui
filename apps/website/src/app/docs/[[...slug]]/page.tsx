@@ -1,6 +1,7 @@
 import { DocsBody, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
+import CopyButton from '~/components/copy-button/copy-button';
 import DocsDescription from '~/components/ui/docs-description';
 import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
@@ -35,6 +36,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
             <div>
                 <DocsTitle className="mb-2">{page.data.title}</DocsTitle>
                 <DocsDescription>{page.data.description}</DocsDescription>
+                <CopyButton markdownUrl={`${page.url}.mdx`} />
             </div>
             <DocsBody>
                 <MDX components={getMDXComponents({})} />
