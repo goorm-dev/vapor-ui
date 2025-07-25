@@ -57,15 +57,16 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
                             <code>{prop}</code>
                         </td>
                         <td>
-                            {type.split('|').map((segment, index, arr) => {
-                                const value = segment.trim();
-                                return (
-                                    <span key={index}>
-                                        <code>{value}</code>
-                                        {index < arr.length - 1 && ' | '}
-                                    </span>
-                                );
-                            })}
+                            <div className="flex gap-[var(--vapor-size-space-100)]">
+                                {type.split('|').map((segment, index) => {
+                                    const value = segment.trim();
+                                    return (
+                                        <span key={index}>
+                                            <code>{value}</code>
+                                        </span>
+                                    );
+                                })}
+                            </div>
                         </td>
                         <td>
                             <code>{defaultValue !== null ? String(defaultValue) : '-'}</code>

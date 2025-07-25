@@ -19,10 +19,10 @@
             "description": "버튼의 스타일 변형을 선택합니다."
         },
         {
-            "prop": "rounded",
-            "type": "boolean",
-            "default": "false",
-            "description": "true일 경우 버튼이 완전히 원형이 됩니다."
+            "prop": "shape",
+            "type": "'square' | 'circle",
+            "default": "'square'",
+            "description": "circle 경우 버튼이 완전히 원형이 됩니다."
         },
         {
             "prop": "disabled",
@@ -39,7 +39,7 @@
     ],
     "accessibility": [
         {
-            "headingDescription": "IconButton WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.\nVapor IconButton은 Radix 기능을 기반으로 구축되어 일부 웹 접근성은 Radix에서 제공하고 있습니다.",
+            "headingDescription": "IconButton WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.",
             "sections": [
                 {
                     "title": "개발 시 준수해야 할 내용을 명시합니다.",

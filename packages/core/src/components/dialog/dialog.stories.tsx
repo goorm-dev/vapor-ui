@@ -15,11 +15,11 @@ export default {
     },
 };
 
-type Story = StoryObj<typeof Dialog>;
+type Story = StoryObj<typeof Dialog.Root>;
 
 export const Default: Story = {
     render: (args) => (
-        <Dialog {...args}>
+        <Dialog.Root {...args}>
             <Dialog.Trigger>hihi</Dialog.Trigger>
             <Dialog.CombinedContent>
                 <Dialog.Header>
@@ -34,6 +34,6 @@ export const Default: Story = {
                     </Dialog.Close>
                 </Dialog.Footer>
             </Dialog.CombinedContent>
-        </Dialog>
+        </Dialog.Root>
     ),
 };

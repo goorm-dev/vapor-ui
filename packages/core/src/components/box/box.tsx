@@ -1,12 +1,26 @@
+'use client';
+
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { vapor } from '~/libs/factory';
+import { Primitive } from '@radix-ui/react-primitive';
+import clsx from 'clsx';
 
-interface BoxProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
 
-const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
-    return <vapor.div ref={ref} {...props} />;
+interface BoxProps extends ComponentPropsWithoutRef<typeof Primitive.div>, Sprinkles {}
+
+const Box = forwardRef<HTMLDivElement, BoxProps>(({ className, style, ...props }, ref) => {
+    const { className: layoutClassName, style: layoutStyle, otherProps } = sprinkles(props);
+
+    return (
+        <Primitive.div
+            ref={ref}
+            className={clsx(layoutClassName, className)}
+            style={{ ...layoutStyle, ...style }}
+            {...otherProps}
+        />
+    );
 });
 Box.displayName = 'Box';
 

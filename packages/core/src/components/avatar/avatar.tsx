@@ -1,3 +1,5 @@
+'use client';
+
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
@@ -10,13 +12,13 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import type { MergeRecipeVariants } from '~/libs/recipe';
-import { vars } from '~/styles/contract.css';
+import { vars } from '~/styles/vars.css';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
 
-type AvatarVariants = MergeRecipeVariants<typeof styles.root | typeof styles.fallback>;
+type AvatarVariants = RootVariants & FallbackVariants;
 type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delayMs?: number };
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({

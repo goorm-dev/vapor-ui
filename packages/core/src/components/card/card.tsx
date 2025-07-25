@@ -1,9 +1,10 @@
+'use client';
+
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
+import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
-
-import { vapor } from '~/libs/factory';
 
 import * as styles from './card.css';
 
@@ -11,13 +12,13 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardRootProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardRootProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
 
 const Root = forwardRef<HTMLDivElement, CardRootProps>(({ className, children, ...props }, ref) => {
     return (
-        <vapor.div ref={ref} className={clsx(styles.root, className)} {...props}>
+        <Primitive.div ref={ref} className={clsx(styles.root, className)} {...props}>
             {children}
-        </vapor.div>
+        </Primitive.div>
     );
 });
 Root.displayName = 'Card';
@@ -26,14 +27,14 @@ Root.displayName = 'Card';
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardHeaderProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardHeaderProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
 
 const Header = forwardRef<HTMLDivElement, CardHeaderProps>(
     ({ className, children, ...props }, ref) => {
         return (
-            <vapor.div ref={ref} className={clsx(styles.header, className)} {...props}>
+            <Primitive.div ref={ref} className={clsx(styles.header, className)} {...props}>
                 {children}
-            </vapor.div>
+            </Primitive.div>
         );
     },
 );
@@ -43,13 +44,13 @@ Header.displayName = 'Card.Header';
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardBodyProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardBodyProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
 
 const Body = forwardRef<HTMLDivElement, CardBodyProps>(({ className, children, ...props }, ref) => {
     return (
-        <vapor.div ref={ref} className={clsx(styles.body, className)} {...props}>
+        <Primitive.div ref={ref} className={clsx(styles.body, className)} {...props}>
             {children}
-        </vapor.div>
+        </Primitive.div>
     );
 });
 Body.displayName = 'Card.Body';
@@ -58,14 +59,14 @@ Body.displayName = 'Card.Body';
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardFooterProps extends ComponentPropsWithoutRef<typeof vapor.div> {}
+interface CardFooterProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
 
 const Footer = forwardRef<HTMLDivElement, CardFooterProps>(
     ({ className, children, ...props }, ref) => {
         return (
-            <vapor.div ref={ref} className={clsx(styles.footer, className)} {...props}>
+            <Primitive.div ref={ref} className={clsx(styles.footer, className)} {...props}>
                 {children}
-            </vapor.div>
+            </Primitive.div>
         );
     },
 );

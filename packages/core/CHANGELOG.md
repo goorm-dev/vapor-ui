@@ -1,5 +1,45 @@
 # @vapor-ui/core
 
+## 0.3.1
+
+### Patch Changes
+
+- ca267e9: feat: Added primary color custom functionality
+
+## 0.3.0
+
+### Minor Changes
+
+- e139a7f: remove sprinkles on each components
+
+### Patch Changes
+
+- 03655b1: fix(tsup): Correct CSS Layer Priority for vapor-components
+- 488c614: refactor: replace text sprinkles into mixins
+
+## 0.2.1
+
+### Patch Changes
+
+- 6749d80: fix(createThemeConfig): support RSC
+
+## 0.2.0
+
+### Minor Changes
+
+- 55f2f42: Callout: added new callout component
+- 4725a73: RadioGroup: add new component
+- 9f96e2c: Checkbox: Add New `Checkbox` Component
+- b59dd77: Switch: add new Switch component
+- 267a998: IconButton: remove @vapor-ui/icons for resolving storybook build error
+- d7c2714: fix: resolve circular dependency in vanilla-extract and improve tsup build
+
+### Patch Changes
+
+- c5cd0fc: edit dialog & interaction animation functions
+- a0c1ff0: chore: tsup spliting disable
+- d7c2714: build(tsup): Optimize build system with per-component bundling
+
 ## 0.1.0
 
 ### Minor Changes

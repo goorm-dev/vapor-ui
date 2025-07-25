@@ -1,6 +1,7 @@
-import { createGlobalVar, globalStyle } from '@vanilla-extract/css';
+import { globalStyle } from '@vanilla-extract/css';
 
 import { layers } from './layers.css';
+import { vars } from './vars.css';
 
 globalStyle('*', {
     '@layer': {
@@ -8,9 +9,18 @@ globalStyle('*', {
             boxSizing: 'border-box',
             margin: 0,
             padding: 0,
-            fontFamily: `Pretendard Variable, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif`,
+            fontFamily: vars.typography.fontFamily.sans,
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',
+        },
+    },
+});
+
+globalStyle('html, body', {
+    '@layer': {
+        [layers.reset]: {
+            backgroundColor: vars.color.background.normal,
+            color: vars.color.foreground.normal,
         },
     },
 });
@@ -75,40 +85,6 @@ globalStyle('button, a', {
     '@layer': {
         [layers.reset]: {
             cursor: 'pointer',
-        },
-    },
-});
-
-export const SCALE_FACTOR_VAR_NAME = 'vapor-scale-factor';
-export const RADIUS_FACTOR_VAR_NAME = 'vapor-radius-factor';
-
-const INITIAL_SCALE_FACTOR = '1';
-const INITIAL_RADIUS_FACTOR = '1';
-
-/**
- * For Modern browsers
- */
-export const scaleFactorVar = createGlobalVar(SCALE_FACTOR_VAR_NAME, {
-    syntax: '<number>',
-    inherits: true,
-    initialValue: INITIAL_SCALE_FACTOR,
-});
-export const radiusFactorVar = createGlobalVar(RADIUS_FACTOR_VAR_NAME, {
-    syntax: '<number>',
-    inherits: true,
-    initialValue: INITIAL_RADIUS_FACTOR,
-});
-
-/**
- * For Legacy browsers
- */
-globalStyle(':root', {
-    '@layer': {
-        [layers.reset]: {
-            vars: {
-                [scaleFactorVar]: INITIAL_SCALE_FACTOR,
-                [radiusFactorVar]: INITIAL_RADIUS_FACTOR,
-            },
         },
     },
 });
