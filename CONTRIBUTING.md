@@ -1,163 +1,96 @@
-# Thanks for contributing to Vapor UI!
+# Contributing to Vapor UI
 
-Hello! Thank you for your interest in contributing to the Vapor UI open-source design system project. Your contributions are invaluable in making our project richer and more robust.
+[한국어](CONTRIBUTING.ko.md)
 
-This document guides you through setting up your development environment, our branching strategy, coding style, Pull Request process, and more. Please read this guide carefully before you start contributing.
+Thanks for your interest in contributing to Vapor UI! Your contributions help make our design system better.
 
-## How Can I Contribute?
+## Code of Conduct
+
+We've adopted the [Contributor Covenant](https://www.contributor-covenant.org/) as our Code of Conduct. Please read [the full text](./CODE_OF_CONDUCT.md) to understand what actions will and will not be tolerated.
+
+## Design Principles
+
+- **User Experience First**: Every component should prioritize the best possible user experience
+- **Accessibility by Default**: Every component should be accessible and follow WCAG guidelines
+- **Composable & Flexible**: Components should be easily composable and customizable
+- **Consistent API**: Components should follow similar patterns for predictable usage
+
+## Questions
+
+If you have questions about Vapor UI, check out our [documentation](https://vapor-ui.dev) where we have examples and detailed API references. You can also:
+
+- Open a [GitHub Discussion](https://github.com/goorm-dev/vapor-ui/discussions) for general questions
+- Join our [Discord community](https://discord.gg/PMqxs3xaHC) for real-time discussions
+
+## How to Contribute
 
 There are many ways to contribute to Vapor UI:
 
-- **Bug Reports:** If you find something wrong, please don't hesitate to open an [Issue](https://github.com/goorm-dev/vapor-ui/issues).
-- **Feature Requests:** Have a new idea? Suggest it through an [Issue](https://github.com/goorm-dev/vapor-ui/issues).
-- **Documentation:** We welcome all contributions, such as fixing typos, improving unclear sections, or adding new examples.
-- **Code Contributions:** Fixing bugs in existing components or improving test code are core contributions to the project.
+- **Bug Reports**: If you find something wrong, please don't hesitate to open an [Issue](https://github.com/goorm-dev/vapor-ui/issues).
+- **Feature Requests**: If you have a new idea, suggest it through an [Issue](https://github.com/goorm-dev/vapor-ui/issues).
+- **Documentation**: We welcome all contributions, such as fixing typos, improving unclear sections, or adding new examples.
+- **Code Contributions**: We appreciate fixing bugs in existing components or improving test code as core contributions to the project.
 
-## Getting Started
+## Preparing a Pull Request
 
-### 1. Development Environment
+Before working on a large change, please open an issue first to discuss it with maintainers. A good PR is small, focused, and clearly communicates the problem it solves.
 
-Our project uses the following development environment:
-
-- **Package Manager**: `pnpm` v10+
-- **Node.js**: v20+
-- **Linting & Formatting**: ESLint, Prettier
-
-First, fork and clone the project, then install the dependencies and run the development server with the commands below:
+1. Fork and clone the repository:
 
 ```bash
-# Clone the project
-git clone [https://github.com/](https://github.com/)<YOUR_USERNAME>/vapor-ui.git
+git clone https://github.com/<YOUR_USERNAME>/vapor-ui.git
 cd vapor-ui
+git remote add upstream https://github.com/goorm-dev/vapor-ui.git
+```
 
-# Install dependencies with PNPM
+2. Ensure your Node version matches the [.nvmrc](../.nvmrc):
+
+```bash
+node -v
+```
+
+3. Install dependencies:
+
+```bash
 pnpm install
+```
 
-# Run the Storybook development server
+4. Start the development server:
+
+```bash
 pnpm storybook
 ```
 
-Now you can start developing components by viewing the Storybook at `http://localhost:9009`.
+Now you can view components at `http://localhost:9009`.
 
-## Git & Version Management
+## Development Setup
 
-We follow clear rules to keep the project's commit history clean and to automate version management.
-
-### 1. Branching Strategy (GitHub Flow)
-
-We follow the **GitHub Flow** strategy. The goal is to always keep the `main` branch in a deployable state.
-
-- **`main` Branch:** This is the core branch of the project. All changes are ultimately merged into the `main` branch.
-- **Workflow:**
-    1.  Create a new branch from `main` for new features or bug fixes. The branch name should clearly describe the work being done.
-    2.  Complete your work and make commits on the new branch.
-    3.  When the work is done, open a Pull Request (PR) targeting the `main` branch.
-    4.  Once the PR passes code reviews and CI tests, it is merged into the `main` branch.
-    5.  After the merge, delete the feature branch.
+1. Create a new branch from `main`:
 
 ```bash
-# Update the main branch to the latest version
 git checkout main
 git pull upstream main
-
-# Create a new feature branch
-git checkout -b create-button-loading-state
+git checkout -b fix/button-loading-state
 ```
 
-### 2. Commit Messages (Conventional Commits)
+2. Make your changes and test them in Storybook
 
-All commits must follow the **Conventional Commits specification**. This is essential for automating SemVer-based versioning and change tracking.
+3. Write tests for your changes and Run the test suite:
 
-**Commit Format:**
-`<type>(<scope>): <subject>`
+```bash
+pnpm test
+```
 
-- **Main Types and Their Effect on Versioning**:
-    - `feat`: Used for adding a new feature. **(Results in a MINOR version bump)**
-        - `feat(Avatar): add new Avatar component`
-    - `fix`: Used for bug fixes. **(Results in a PATCH version bump)**
-        - `fix(Input): correct placeholder color in disabled state`
-    - `feat!`, `fix!`, or adding `BREAKING CHANGE:` in the footer: Used for significant changes that are not backward-compatible. **(Results in a MAJOR version bump)**
-        - `feat(Button)!: change 'kind' prop to 'variant' for clarity`
-
-- **Other Types**:
-    - `docs`, `style`, `refactor`, `test`, `perf`, `chore`, etc. These types generally do not affect the version number.
-
-- **Scope**: Specifies the part of the codebase affected, written in lowercase (e.g., `modal`, `hooks`).
-- **Subject**: A concise description of the change in the present tense, imperative mood, under 50 characters. (e.g., `add support for dark mode`)
-
-## Managing Changes with Changesets
-
-If your changes affect users (e.g., adding a feature, fixing a bug), you **must add a changeset.** Along with commit messages, changesets are used for version management and release note generation.
+5. Add a changeset if your changes affect users:
 
 ```bash
 pnpm changeset
 ```
 
-Run the command above and follow the prompts to specify which packages have changed, the version level (Major, Minor, Patch), and a detailed description of the changes in Markdown format.
+6. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/):
 
-## Coding Style and Conventions
+```bash
+git commit -m "fix(Button): correct loading state styling"
+```
 
-We follow the style guide defined in `.gemini/styleguide.md`. When you create a Pull Request, **Gemini Code Assist** will automatically review your code based on this style guide, so please familiarize yourself with it before contributing.
-
-Key conventions include:
-
-### 1. File and Folder Structure
-
-- **Naming**: All files and directories use `kebab-case` (e.g., `text-input.tsx`).
-- **Component Structure (Colocation)**: All related files for a component—implementation (`*.tsx`), styles (`*.css.ts`), stories (`*.stories.tsx`), and tests (`*.test.tsx`)—are located within the same component folder.
-    ```bash
-    src/components/text-input/
-    ├── index.ts
-    ├── text-input.tsx
-    ├── text-input.css.ts
-    ├── text-input.stories.tsx
-    └── text-input.test.tsx
-    ```
-- **Entry Point (`index.ts`)**: Clearly defines and exports the public API (components, types, etc.) of a component. We use a strategy of exporting namespaces and types separately.
-
-### 2. TypeScript & React
-
-- **Avoid `React.FC`**: Define components using arrow functions with explicit prop types.
-- **Type vs. Interface**: Use `interface` for extensible object structures like component props, and `type` for complex types like unions/intersections.
-- **Use `as const`**: We recommend using `as const` for constants instead of `enum` to benefit from tree-shaking and clearer type inference.
-- **Prop Types**: Inherit standard HTML attributes using `React.ComponentPropsWithoutRef` and define only the component-specific props to minimize redundancy.
-- **Compound Components**: Use `Object.assign` to export sub-components on the main component, allowing for an intuitive API like `Dialog.Trigger`.
-
-### 3. Styling (Vanilla Extract)
-
-- **`recipe` function**: Use this to define styles for different states of a component, such as `variant` or `size`.
-- **CSS Variables**: All design tokens (colors, spacing, font sizes, etc.) must be used via predefined CSS variables (`vars`). Avoid hardcoding values.
-- **`classnames`**: Use the `classnames` library for conditionally combining class names.
-
-## Testing and Documentation
-
-- **Testing**: All new features and fixes must be accompanied by tests. Test files are located within the respective component folder.
-- **Documentation (Storybook)**: Visual tests and usage documentation for components are managed through Storybook.
-    - When adding a new component or feature, you must write stories that cover its various `variants` and `use cases`.
-
-## Pull Request (PR) Process
-
-1.  After completing your work on a `feature` branch, create a PR targeting the `main` branch.
-2.  Fill out all sections of the PR template, including a description of changes, testing details, and any related issues.
-3.  When you open a PR, **[Gemini Code Assist](https://github.com/apps/gemini-code-assist)** will automatically review your code for compliance with our style guide. Please address all requested changes.
-4.  You must receive an **`approve`** from at least two code reviewers.
-5.  Once all conditions are met, the PR will be merged into `main` using the **Squash and merge** method.
-
-## Release Process
-
-Vapor UI uses **`changesets`** and **GitHub Actions** to automate the release process.
-
-1.  A PR with a changeset file is merged into the `main` branch.
-2.  A push to the `main` branch triggers the `.github/workflows/release.yml` workflow.
-3.  The `changesets/action` detects changes and automatically creates a **Release Pull Request** that bumps the versions of the relevant packages and updates their `CHANGELOG.md` files.
-4.  Once this **Release Pull Request** is merged into `main`, the workflow executes the `pnpm run release` script to build the changed packages, publish the new versions to NPM, and create a GitHub Release.
-
-## Community
-
-If you have questions or want to connect with other contributors, please join our Discord channel!
-
-- **[Join the Vapor UI Discord Channel](https://discord.gg/PMqxs3xaHC)**
-
----
-
-Thank you again for contributing to Vapor UI. Your participation helps make our community healthier and more vibrant. If you have any questions, feel free to ask them in an Issue.
+7. Push and create a Pull Request
