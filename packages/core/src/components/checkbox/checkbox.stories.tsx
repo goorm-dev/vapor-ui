@@ -23,8 +23,9 @@ export const Default: Story = {
     render: (args) => {
         const [checked, setChecked] = useState(evaluateNextCheckedState(false));
 
-        const allChecked = Object.values(checked).every(Boolean);
-        const indeterminate = Object.values(checked).some(Boolean) && !allChecked;
+        const allChecked = Object.values(checked).every((value) => value);
+        const allUnchecked = Object.values(checked).every((value) => !value);
+        const indeterminate = !allChecked && !allUnchecked;
 
         const handleAllCheckedChange = (checked: boolean) => {
             const newValue = !!checked;
@@ -49,10 +50,10 @@ export const Default: Story = {
 
                 <Text typography="heading3">Controlled</Text>
                 <Checkbox.Root
+                    {...args}
                     checked={allChecked}
                     indeterminate={indeterminate}
                     onCheckedChange={handleAllCheckedChange}
-                    {...args}
                 >
                     <Checkbox.Control />
                     <Checkbox.Label>하루 세끼 식사하기</Checkbox.Label>
@@ -61,11 +62,11 @@ export const Default: Story = {
                 {checkboxItems.map((item) => (
                     <Checkbox.Root
                         key={item.key}
+                        {...args}
                         checked={checked[item.key]}
                         onCheckedChange={(checkedState) =>
                             handleCheckedChange(item.key, checkedState)
                         }
-                        {...args}
                     >
                         <Checkbox.Control />
                         <Checkbox.Label>{item.label}</Checkbox.Label>
