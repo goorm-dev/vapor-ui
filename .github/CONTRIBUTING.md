@@ -81,16 +81,16 @@ git checkout -b fix/button-loading-state
 pnpm test
 ```
 
-5. Add a changeset if your changes affect users:
+4. Add a changeset if your changes affect users:
 
 ```bash
 pnpm changeset
 ```
 
-6. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/):
+5. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```bash
 git commit -m "fix(Button): correct loading state styling"
 ```
 
-7. Push and create a Pull Request
+6. Push and create a Pull Request
