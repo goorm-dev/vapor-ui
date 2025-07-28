@@ -133,7 +133,7 @@ CombinedContent.displayName = 'Dialog.CombinedContent';
 interface DialogTriggerProps extends ComponentPropsWithoutRef<typeof RadixTrigger> {}
 
 const Trigger = forwardRef<HTMLButtonElement, DialogTriggerProps>((props, ref) => {
-    return <RadixTrigger ref={ref} {...props} />;
+    return <RadixTrigger ref={ref} aria-controls={undefined} {...props} />;
 });
 Trigger.displayName = 'Dialog.Trigger';
 

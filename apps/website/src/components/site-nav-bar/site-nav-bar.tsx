@@ -35,10 +35,6 @@ export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkIt
     return result;
 }
 
-function isSecondary(item: LinkItemType): boolean {
-    return ('secondary' in item && item.secondary === true) || item.type === 'icon';
-}
-
 function hasText(item: LinkItemType): item is LinkItemType & { text: string } {
     return 'text' in item && typeof (item as { text?: unknown }).text === 'string';
 }
@@ -67,8 +63,6 @@ export const SiteNavBar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const menuItems = navLinks.filter((item) => ['menu', 'all'].includes(item.on ?? 'all'));
-
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
             <header
@@ -80,7 +74,7 @@ export const SiteNavBar = () => {
             >
                 <div className="flex items-center gap-10 relative w-full">
                     <Nav.Root
-                        aria-label="nav"
+                        aria-label="Main"
                         size="lg"
                         shape="ghost"
                         className="flex justify-between items-center gap-10 w-full"
@@ -88,7 +82,7 @@ export const SiteNavBar = () => {
                         <div className="flex items-center gap-10">
                             <Link
                                 href="/"
-                                className="inline-flex items-center gap-2.5 font-semibold w-[68px] h-[26px]"
+                                className="inline-flex items-center gap-2.5 font-semibold text-[var(--vapor-color-logo-normal)]"
                             >
                                 <LogoVapor
                                     width={68}
@@ -97,38 +91,33 @@ export const SiteNavBar = () => {
                                     aria-label="Goorm Design System: Vapor"
                                 />
                             </Link>
-                            <ul className="hidden md:flex flex-row items-center gap-2 p-0">
-                                <Nav.LinkItem className="text-sm" href="/docs">
-                                    Docs
+
+                            <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
+                                <Nav.LinkItem className="text-sm" href="/docs" asChild>
+                                    <Link>Docs</Link>
                                 </Nav.LinkItem>
-                            </ul>
+                            </Nav.List>
                         </div>
                         <div className="flex items-center gap-10">
-                            <ul className="hidden md:flex flex-row items-center">
-                                {menuItems
-                                    .filter((item) => isSecondary(item))
-                                    .map((item, i) => {
-                                        return (
-                                            <Nav.LinkItem key={i} className="p-0" asChild>
-                                                <IconButton
-                                                    size="lg"
-                                                    color="secondary"
-                                                    variant="ghost"
-                                                    asChild={hasText(item)}
-                                                    aria-label={hasText(item) ? item.text : ''}
-                                                >
-                                                    <Link href={hasUrl(item) ? item.url : '#'}>
-                                                        {item.type === 'icon'
-                                                            ? item.icon
-                                                            : hasText(item)
-                                                              ? item.text
-                                                              : null}
-                                                    </Link>
-                                                </IconButton>
-                                            </Nav.LinkItem>
-                                        );
-                                    })}
-                            </ul>
+                            <Nav.List className="hidden md:flex flex-row items-center gap-0">
+                                {navLinks.map((item) => {
+                                    return (
+                                        <Nav.Item key={item.text}>
+                                            <IconButton
+                                                asChild
+                                                size="lg"
+                                                color="secondary"
+                                                variant="ghost"
+                                                aria-label={item.text}
+                                            >
+                                                <Nav.Link asChild className="p-0">
+                                                    <Link href={item.url}>{item.icon}</Link>
+                                                </Nav.Link>
+                                            </IconButton>
+                                        </Nav.Item>
+                                    );
+                                })}
+                            </Nav.List>
                         </div>
                     </Nav.Root>
                 </div>
