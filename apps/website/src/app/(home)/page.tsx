@@ -31,7 +31,7 @@ export default function HomePage() {
                 priority
             />
             <main className="relative -top-[calc(var(--fd-banner-height))]">
-                <section className="relative flex flex-col items-center gap-10 self-stretch justify-center text-center md:p-0 p-4 min-h-[70vh] -top-[64px]">
+                <section className="relative flex flex-col items-center gap-10 self-stretch justify-center text-center md:p-0 p-4 mt-[90px]">
                     <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
 
                     <div className="flex flex-col items-center gap-4 self-stretch">
@@ -154,7 +154,7 @@ export default function HomePage() {
                         </Button>
                     </div>
                 </section>
-                <section className="min-h-[100vh] bg-muted/20 flex pb-[60px] px-[var(--vapor-size-space-200)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch">
+                <section className="min-h-[100vh] bg-muted/20 flex pt-[140px] pb-[60px] px-[var(--vapor-size-space-200)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch">
                     <header className="flex justify-between items-center flex-col gap-[var(--vapor-size-space-200)]">
                         <Text foreground="normal" typography="heading6" asChild>
                             <h6>FOUNDATION</h6>
