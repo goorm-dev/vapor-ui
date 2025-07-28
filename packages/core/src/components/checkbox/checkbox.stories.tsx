@@ -50,23 +50,23 @@ export const Default: Story = {
 
                 <Text typography="heading3">Controlled</Text>
                 <Checkbox.Root
-                    {...args}
                     checked={allChecked}
                     indeterminate={indeterminate}
                     onCheckedChange={handleAllCheckedChange}
+                    {...args}
                 >
                     <Checkbox.Control />
-                    <Checkbox.Label>하루 세끼 식사하기</Checkbox.Label>
+                    <Checkbox.Label>three meals a day</Checkbox.Label>
                 </Checkbox.Root>
 
                 {checkboxItems.map((item) => (
                     <Checkbox.Root
                         key={item.key}
-                        {...args}
                         checked={checked[item.key]}
                         onCheckedChange={(checkedState) =>
                             handleCheckedChange(item.key, checkedState)
                         }
+                        {...args}
                     >
                         <Checkbox.Control />
                         <Checkbox.Label>{item.label}</Checkbox.Label>
@@ -150,9 +150,9 @@ export const TestBed: Story = {
 type CheckboxItems = Record<string, boolean>;
 
 const checkboxItems = [
-    { key: 'morning', label: '아침' },
-    { key: 'lunch', label: '점심' },
-    { key: 'dinner', label: '저녁' },
+    { key: 'morning', label: 'breakfast' },
+    { key: 'lunch', label: 'lunch' },
+    { key: 'dinner', label: 'dinner' },
 ];
 
 const evaluateNextCheckedState = (checked: boolean) => {
