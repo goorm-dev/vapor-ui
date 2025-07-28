@@ -2,13 +2,17 @@
 
 import React, { useState } from 'react';
 
-import { Button } from '@vapor-ui/core';
+import { Button, type ButtonProps } from '@vapor-ui/core';
 import { CheckCircleIcon, CopyIcon } from '@vapor-ui/icons';
 import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 
 const cache = new Map<string, string>();
 
-const CopyButton = ({ markdownUrl }: { markdownUrl: string }) => {
+interface CopyButtonProps extends Omit<ButtonProps, 'onClick' | 'disabled'> {
+    markdownUrl: string;
+}
+
+const CopyButton = ({ markdownUrl, ...props }: CopyButtonProps) => {
     const [isLoading, setLoading] = useState(false);
     const [checked, onClick] = useCopyButton(async () => {
         const cached = cache.get(markdownUrl);
@@ -33,9 +37,15 @@ const CopyButton = ({ markdownUrl }: { markdownUrl: string }) => {
     });
 
     return (
-        <Button color="secondary" variant="outline" disabled={isLoading} onClick={onClick}>
+        <Button
+            color="secondary"
+            variant="outline"
+            disabled={isLoading}
+            onClick={onClick}
+            {...props}
+        >
             {checked ? <CheckCircleIcon /> : <CopyIcon />}
-            Copy Markdown
+            Copy as Markdown
         </Button>
     );
 };
