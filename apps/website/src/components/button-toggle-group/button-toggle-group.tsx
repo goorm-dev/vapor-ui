@@ -44,7 +44,7 @@ export function ButtonToggleItem({
             type="button"
             className={clsx(
                 'relative z-10 px-[var(--vapor-size-space-300)] py-2 text-sm font-medium transition-colors rounded-md',
-                'hover:text-gray-900 dark:hover:[var(--vapor-color-foreground-normal)]',
+                'hover:text-[var(--vapor-color-foreground-normal)]',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
                 'disabled:opacity-50 disabled:cursor-not-allowed',
                 className,

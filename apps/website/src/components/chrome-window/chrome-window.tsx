@@ -139,7 +139,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                     </Text>
                                 </Card.Header>
                                 <Card.Body>
-                                    <div className="flex items-center gap-2 flex-col">
+                                    <div className="flex items-center gap-[var(--vapor-size-space-400)] flex-col">
                                         <div className="w-full">
                                             <TextInput.Root
                                                 placeholder="100"
