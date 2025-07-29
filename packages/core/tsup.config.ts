@@ -28,7 +28,9 @@ async function prependUseClientDirective() {
     for (const file of outputFiles) {
         try {
             let content = fs.readFileSync(file, 'utf-8');
-            const componentName = path.basename(path.dirname(file));
+            const componentName = isEsm
+                ? file.split(`${COMPONENT_DIR}/`)[1].split('/index.js')[0]
+                : file.split(`${COMPONENT_DIR}/`)[1].split('/index.cjs')[0];
 
             const tsxSourcePath = path.join(
                 'src/components',
@@ -47,8 +49,7 @@ async function prependUseClientDirective() {
             if (componentSourcePath) {
                 const componentSource = fs.readFileSync(componentSourcePath, 'utf-8');
                 const useClientDirective = `'use client';`;
-
-                if (componentSource.startsWith(useClientDirective)) {
+                if (componentSourceFile.includes(useClientDirective)) {
                     content = `${useClientDirective}\n${content}`;
                     fs.writeFileSync(file, content);
                 }
