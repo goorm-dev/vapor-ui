@@ -395,7 +395,7 @@ const Page = () => {
                     <RenderingTemplate.Title title="Dialog" />
                     <RenderingTemplate.Component>
                         <Dialog.Root>
-                            <Dialog.Trigger>
+                            <Dialog.Trigger asChild>
                                 <Button>트리거</Button>
                             </Dialog.Trigger>
                             <Dialog.Portal>
@@ -730,7 +730,7 @@ const Page = () => {
                         </Switch.Root>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
-                
+
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="TextInput" />
                     <RenderingTemplate.Component cols={2} gap="1.5rem">
