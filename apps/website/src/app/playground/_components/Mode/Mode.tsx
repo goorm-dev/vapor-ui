@@ -1,13 +1,9 @@
-import { useState } from 'react';
-
 import { type Appearance, useTheme } from '@vapor-ui/core';
 import type { IconType } from '@vapor-ui/icons';
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';
 
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
-
-const APPEARANCES = ['light', 'dark'] as const satisfies readonly Appearance[];
 
 const APPEARANCE_CONFIG = {
     light: {
@@ -18,35 +14,27 @@ const APPEARANCE_CONFIG = {
         icon: DarkIcon,
         label: 'Dark',
     },
-} as const satisfies Record<Appearance, { icon: IconType; label: string }>;
+} satisfies Record<Appearance, { icon: IconType; label: string }>;
 
-interface ModeProps {
-    defaultAppearance?: Appearance;
-}
+function Mode() {
+    const { setTheme, appearance } = useTheme();
 
-function Mode({ defaultAppearance = 'light' }: ModeProps = {}) {
-    const [selectedAppearance, setSelectedAppearance] = useState<Appearance>(defaultAppearance);
-    const { setTheme } = useTheme();
-
-    const handleAppearanceChange = (appearance: string) => {
-        if (isAppearance(appearance)) {
-            setSelectedAppearance(appearance);
-            setTheme({ appearance });
-        }
+    const handleAppearanceChange = (appearance: Appearance) => {
+        console.log('Appearance changed to:', appearance);
+        setTheme({ appearance });
     };
 
     return (
         <Section title="Appearance">
-            <RadioButtonGroup value={selectedAppearance} onValueChange={handleAppearanceChange}>
-                {APPEARANCES.map((appearance) => {
-                    const { icon: Icon, label } = APPEARANCE_CONFIG[appearance];
-
+            <RadioButtonGroup value={appearance} onValueChange={handleAppearanceChange}>
+                {(Object.keys(APPEARANCE_CONFIG) as Appearance[]).map((appearanceKey) => {
+                    const { icon: Icon, label } = APPEARANCE_CONFIG[appearanceKey];
                     return (
                         <RadioButtonGroup.Button
                             data-theme-category="mode"
-                            key={appearance}
-                            value={appearance}
-                            color={appearance === selectedAppearance ? 'primary' : 'secondary'}
+                            key={appearanceKey}
+                            value={appearanceKey}
+                            color={appearanceKey === appearance ? 'primary' : 'secondary'}
                         >
                             <Icon />
                             <span>{label}</span>
@@ -56,10 +44,6 @@ function Mode({ defaultAppearance = 'light' }: ModeProps = {}) {
             </RadioButtonGroup>
         </Section>
     );
-}
-
-function isAppearance(value: string): value is Appearance {
-    return (APPEARANCES as readonly string[]).includes(value);
 }
 
 export default Mode;

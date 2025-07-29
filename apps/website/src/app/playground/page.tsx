@@ -18,6 +18,149 @@ import Link from 'next/link';
 import PageWrapper from './_components/page-wrapper';
 import RenderingTemplate from './_components/rendering-template';
 
+const AVATAR_PROPS = {
+    src: 'https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg',
+    alt: 'vapor-ui',
+};
+
+const SIZES = ['sm', 'md', 'lg', 'xl'] as const;
+const COLORS = ['primary', 'secondary', 'danger', 'success', 'warning', 'contrast'] as const;
+const BADGE_COLORS = ['primary', 'hint', 'danger', 'success', 'warning', 'contrast'] as const;
+const AVATAR_SHAPES = ['circle', 'square'] as const;
+const BADGE_SHAPES = ['square', 'pill'] as const;
+const BUTTON_VARIANTS = ['solid', 'outline'] as const;
+const TEXT_HEADINGS = [
+    'heading1',
+    'heading2',
+    'heading3',
+    'heading4',
+    'heading5',
+    'heading6',
+] as const;
+const TEXT_BODIES = ['body1', 'body2', 'body3', 'body4'] as const;
+const TEXT_SUBTITLES = ['subtitle1', 'subtitle2'] as const;
+
+const renderAvatars = () => {
+    return AVATAR_SHAPES.flatMap((shape) =>
+        SIZES.map((size) => (
+            <AvatarSimple key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
+        )),
+    );
+};
+
+const renderBadges = () => {
+    const badgeSizes = SIZES.slice(0, 3) as Array<'sm' | 'md' | 'lg'>;
+    return BADGE_SHAPES.flatMap((shape) =>
+        badgeSizes.flatMap((size) =>
+            BADGE_COLORS.map((color) => (
+                <Badge key={`${shape}-${size}-${color}`} shape={shape} size={size} color={color}>
+                    Badge
+                </Badge>
+            )),
+        ),
+    );
+};
+
+const renderButtons = () => {
+    return BUTTON_VARIANTS.flatMap((variant) =>
+        SIZES.flatMap((size) =>
+            COLORS.map((color) => (
+                <Button
+                    key={`${variant}-${size}-${color}`}
+                    variant={variant === 'solid' ? undefined : variant}
+                    size={size}
+                    color={color}
+                >
+                    Button
+                </Button>
+            )),
+        ),
+    );
+};
+
+const renderIconButtons = () => {
+    return BUTTON_VARIANTS.flatMap((variant) =>
+        SIZES.flatMap((size) =>
+            COLORS.map((color) => (
+                <IconButton
+                    key={`${variant}-${size}-${color}`}
+                    aria-label="icon-button"
+                    variant={variant === 'solid' ? undefined : variant}
+                    size={size}
+                    color={color}
+                >
+                    <HeartIcon />
+                </IconButton>
+            )),
+        ),
+    );
+};
+
+const renderSwitches = () => {
+    const switchStates = [
+        { defaultChecked: false, disabled: false },
+        { defaultChecked: true, disabled: false },
+        { defaultChecked: false, disabled: true },
+    ];
+    const switchSizes = SIZES.slice(0, 3) as Array<'sm' | 'md' | 'lg'>;
+
+    return switchSizes.flatMap((size) =>
+        switchStates.map((state, index) => (
+            <Switch.Root
+                key={`${size}-${index}`}
+                size={size}
+                defaultChecked={state.defaultChecked}
+                disabled={state.disabled}
+            >
+                <Switch.Label>Airplane mode</Switch.Label>
+                <Switch.Control />
+            </Switch.Root>
+        )),
+    );
+};
+
+const renderTextInputs = () => {
+    const inputTypes = ['text', 'password'] as const;
+    return SIZES.flatMap((size) =>
+        inputTypes.map((type) => (
+            <TextInput.Root key={`${size}-${type}`} size={size} type={type}>
+                <TextInput.Label>type {type} 입니다.</TextInput.Label>
+                <TextInput.Field />
+            </TextInput.Root>
+        )),
+    );
+};
+
+const renderTextElements = (typographies: readonly string[], title: string) => (
+    <RenderingTemplate>
+        <RenderingTemplate.Title title={title} />
+        <RenderingTemplate.Component rows={typographies.length} gap="0.5rem">
+            {typographies.map((typography) => (
+                <Text
+                    key={typography}
+                    typography={
+                        typography as
+                            | 'heading1'
+                            | 'heading2'
+                            | 'heading3'
+                            | 'heading4'
+                            | 'heading5'
+                            | 'heading6'
+                            | 'body1'
+                            | 'body2'
+                            | 'body3'
+                            | 'body4'
+                            | 'subtitle1'
+                            | 'subtitle2'
+                    }
+                >
+                    {typography}
+                </Text>
+            ))}
+        </RenderingTemplate.Component>
+    </RenderingTemplate>
+);
+
 const Page = () => {
     return (
         <PageWrapper>
@@ -32,362 +175,70 @@ const Page = () => {
             </header>
             <section>
                 <RenderingTemplate>
-                    <RenderingTemplate.Title title="Avatar" />
-                    <RenderingTemplate.Component cols={4} rows={2} gap="1.5rem">
-                        <AvatarSimple
-                            shape="circle"
-                            size="sm"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <AvatarSimple
-                            shape="circle"
-                            size="md"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <AvatarSimple
-                            shape="circle"
-                            size="lg"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <AvatarSimple
-                            shape="circle"
-                            size="xl"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <AvatarSimple
-                            shape="square"
-                            size="sm"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <AvatarSimple
-                            shape="square"
-                            size="md"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <AvatarSimple
-                            shape="square"
-                            size="lg"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                        <AvatarSimple
-                            shape="square"
-                            size="xl"
-                            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
-                            alt="vapor-ui"
-                        />
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
-
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Badge" />
-                    <RenderingTemplate.Component cols={6} rows={3} gap="1.5rem">
-                        <Badge shape="square" size="sm" color="primary">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="square" size="sm" color="hint">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="square" size="sm" color="danger">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="square" size="sm" color="success">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="square" size="sm" color="warning">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="square" size="sm" color="contrast">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="sm" color="primary">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="sm" color="hint">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="sm" color="danger">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="sm" color="success">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="sm" color="warning">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="sm" color="contrast">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="square" size="md" color="primary">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="md" color="hint">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="md" color="danger">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="md" color="success">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="md" color="warning">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="md" color="contrast">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="pill" size="md" color="primary">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="md" color="hint">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="md" color="danger">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="md" color="success">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="md" color="warning">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="md" color="contrast">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="square" size="lg" color="primary">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="lg" color="hint">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="lg" color="danger">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="lg" color="success">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="lg" color="warning">
-                            Badge
-                        </Badge>
-                        <Badge shape="square" size="lg" color="contrast">
-                            Badge
-                        </Badge>
-
-                        <Badge shape="pill" size="lg" color="primary">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="lg" color="hint">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="lg" color="danger">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="lg" color="success">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="lg" color="warning">
-                            Badge
-                        </Badge>
-                        <Badge shape="pill" size="lg" color="contrast">
-                            Badge
-                        </Badge>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
-
-                <RenderingTemplate>
                     <RenderingTemplate.Title title="Button" />
-                    <RenderingTemplate.Component cols={6} rows={4} gap="1.5rem">
-                        <Button size="sm" color="primary">
-                            Button
-                        </Button>
-                        <Button size="sm" color="secondary">
-                            Button
-                        </Button>
-                        <Button size="sm" color="danger">
-                            Button
-                        </Button>
-                        <Button size="sm" color="success">
-                            Button
-                        </Button>
-                        <Button size="sm" color="warning">
-                            Button
-                        </Button>
-                        <Button size="sm" color="contrast">
-                            Button
-                        </Button>
-
-                        <Button variant="outline" size="sm" color="primary">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="sm" color="secondary">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="sm" color="danger">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="sm" color="success">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="sm" color="warning">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="sm" color="contrast">
-                            Button
-                        </Button>
-
-                        <Button size="md" color="primary">
-                            Button
-                        </Button>
-                        <Button size="md" color="secondary">
-                            Button
-                        </Button>
-                        <Button size="md" color="danger">
-                            Button
-                        </Button>
-                        <Button size="md" color="success">
-                            Button
-                        </Button>
-                        <Button size="md" color="warning">
-                            Button
-                        </Button>
-                        <Button size="md" color="contrast">
-                            Button
-                        </Button>
-
-                        <Button variant="outline" size="md" color="primary">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="md" color="secondary">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="md" color="danger">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="md" color="success">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="md" color="warning">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="md" color="contrast">
-                            Button
-                        </Button>
-
-                        <Button size="lg" color="primary">
-                            Button
-                        </Button>
-                        <Button size="lg" color="secondary">
-                            Button
-                        </Button>
-                        <Button size="lg" color="danger">
-                            Button
-                        </Button>
-                        <Button size="lg" color="success">
-                            Button
-                        </Button>
-                        <Button size="lg" color="warning">
-                            Button
-                        </Button>
-                        <Button size="lg" color="contrast">
-                            Button
-                        </Button>
-
-                        <Button variant="outline" size="lg" color="primary">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="lg" color="secondary">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="lg" color="danger">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="lg" color="success">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="lg" color="warning">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="lg" color="contrast">
-                            Button
-                        </Button>
-
-                        <Button size="xl" color="primary">
-                            Button
-                        </Button>
-                        <Button size="xl" color="secondary">
-                            Button
-                        </Button>
-                        <Button size="xl" color="danger">
-                            Button
-                        </Button>
-                        <Button size="xl" color="success">
-                            Button
-                        </Button>
-                        <Button size="xl" color="warning">
-                            Button
-                        </Button>
-                        <Button size="xl" color="contrast">
-                            Button
-                        </Button>
-
-                        <Button variant="outline" size="xl" color="primary">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="xl" color="secondary">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="xl" color="danger">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="xl" color="success">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="xl" color="warning">
-                            Button
-                        </Button>
-                        <Button variant="outline" size="xl" color="contrast">
-                            Button
-                        </Button>
+                    <RenderingTemplate.Component cols={6} rows={8} gap="1.5rem">
+                        {renderButtons()}
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
                 <RenderingTemplate>
-                    <RenderingTemplate.Title title="Card" />
-                    <RenderingTemplate.Component>
-                        <Card.Root>
-                            <Card.Header>Card Header</Card.Header>
-                            <Card.Body>Card Body</Card.Body>
-                            <Card.Footer>Card Footer</Card.Footer>
-                        </Card.Root>
+                    <RenderingTemplate.Title title="IconButton" />
+                    <RenderingTemplate.Component cols={6} rows={8} gap="1.5rem">
+                        {renderIconButtons()}
+                    </RenderingTemplate.Component>
+                </RenderingTemplate>
+
+                <RenderingTemplate>
+                    <RenderingTemplate.Title title="Switch" />
+                    <RenderingTemplate.Component cols={3} rows={3} gap="1.5rem">
+                        {renderSwitches()}
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="Checkbox" />
                     <RenderingTemplate.Component rows={2} gap="1rem">
-                        <Checkbox.Root id="checkbox" defaultChecked>
+                        <Checkbox.Root id="checkbox-md" defaultChecked>
                             <Checkbox.Control />
-                            <Checkbox.Label htmlFor="checkbox">Checkbox</Checkbox.Label>
+                            <Checkbox.Label htmlFor="checkbox-md">Checkbox</Checkbox.Label>
                         </Checkbox.Root>
 
-                        <Checkbox.Root id="checkbox" defaultChecked size="lg">
+                        <Checkbox.Root id="checkbox-lg" defaultChecked size="lg">
                             <Checkbox.Control />
-                            <Checkbox.Label htmlFor="checkbox">Checkbox</Checkbox.Label>
+                            <Checkbox.Label htmlFor="checkbox-lg">Checkbox</Checkbox.Label>
                         </Checkbox.Root>
+                    </RenderingTemplate.Component>
+                </RenderingTemplate>
+
+                <RenderingTemplate>
+                    <RenderingTemplate.Title title="TextInput" />
+                    <RenderingTemplate.Component cols={2} rows={4} gap="1.5rem">
+                        {renderTextInputs()}
+                    </RenderingTemplate.Component>
+                </RenderingTemplate>
+
+                <RenderingTemplate>
+                    <RenderingTemplate.Title title="Avatar" />
+                    <RenderingTemplate.Component cols={4} rows={2} gap="1.5rem">
+                        {renderAvatars()}
+                    </RenderingTemplate.Component>
+                </RenderingTemplate>
+
+                <RenderingTemplate>
+                    <RenderingTemplate.Title title="Badge" />
+                    <RenderingTemplate.Component cols={6} rows={6} gap="1.5rem">
+                        {renderBadges()}
+                    </RenderingTemplate.Component>
+                </RenderingTemplate>
+
+                <RenderingTemplate>
+                    <RenderingTemplate.Title title="Card" />
+                    <RenderingTemplate.Component>
+                        <Card.Root style={{ maxWidth: '400px' }}>
+                            <Card.Header>Card Header</Card.Header>
+                            <Card.Body>Card Body</Card.Body>
+                            <Card.Footer>Card Footer</Card.Footer>
+                        </Card.Root>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
@@ -410,397 +261,11 @@ const Page = () => {
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="IconButton" />
-                    <RenderingTemplate.Component cols={6} rows={4} gap="1.5rem">
-                        <IconButton aria-label="icon-button" size="sm" color="primary">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="sm" color="secondary">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="sm" color="danger">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="sm" color="success">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="sm" color="warning">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="sm" color="contrast">
-                            <HeartIcon />
-                        </IconButton>
+                {renderTextElements(TEXT_HEADINGS, 'Text - heading')}
 
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="sm"
-                            color="primary"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="sm"
-                            color="secondary"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="sm"
-                            color="danger"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="sm"
-                            color="success"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="sm"
-                            color="warning"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="sm"
-                            color="contrast"
-                        >
-                            <HeartIcon />
-                        </IconButton>
+                {renderTextElements(TEXT_BODIES, 'Text - body')}
 
-                        <IconButton aria-label="icon-button" size="md" color="primary">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="md" color="secondary">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="md" color="danger">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="md" color="success">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="md" color="warning">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="md" color="contrast">
-                            <HeartIcon />
-                        </IconButton>
-
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="md"
-                            color="primary"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="md"
-                            color="secondary"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="md"
-                            color="danger"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="md"
-                            color="success"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="md"
-                            color="warning"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="md"
-                            color="contrast"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-
-                        <IconButton aria-label="icon-button" size="lg" color="primary">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="lg" color="secondary">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="lg" color="danger">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="lg" color="success">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="lg" color="warning">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="lg" color="contrast">
-                            <HeartIcon />
-                        </IconButton>
-
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="lg"
-                            color="primary"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="lg"
-                            color="secondary"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="lg"
-                            color="danger"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="lg"
-                            color="success"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="lg"
-                            color="warning"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="lg"
-                            color="contrast"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-
-                        <IconButton aria-label="icon-button" size="xl" color="primary">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="xl" color="secondary">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="xl" color="danger">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="xl" color="success">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="xl" color="warning">
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton aria-label="icon-button" size="xl" color="contrast">
-                            <HeartIcon />
-                        </IconButton>
-
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="xl"
-                            color="primary"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="xl"
-                            color="secondary"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="xl"
-                            color="danger"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="xl"
-                            color="success"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="xl"
-                            color="warning"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="icon-button"
-                            variant="outline"
-                            size="xl"
-                            color="contrast"
-                        >
-                            <HeartIcon />
-                        </IconButton>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
-
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Switch" />
-                    <RenderingTemplate.Component cols={3} rows={6} gap="1.5rem">
-                        <Switch.Root size="sm">
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-                        <Switch.Root size="sm" defaultChecked>
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-                        <Switch.Root size="sm" disabled>
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-
-                        <Switch.Root size="md">
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-                        <Switch.Root size="md" defaultChecked>
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-                        <Switch.Root size="md" disabled>
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-
-                        <Switch.Root size="lg">
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-                        <Switch.Root size="lg" defaultChecked>
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-                        <Switch.Root size="lg" disabled>
-                            <Switch.Label>Airplane mode</Switch.Label>
-                            <Switch.Control />
-                        </Switch.Root>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
-
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="TextInput" />
-                    <RenderingTemplate.Component cols={2} gap="1.5rem">
-                        <TextInput.Root size="sm" type="text">
-                            <TextInput.Label>type text 입니다.</TextInput.Label>
-                            <TextInput.Field />
-                        </TextInput.Root>
-                        <TextInput.Root size="sm" type="password">
-                            <TextInput.Label>type password 입니다.</TextInput.Label>
-                            <TextInput.Field />
-                        </TextInput.Root>
-
-                        <TextInput.Root size="md" type="text">
-                            <TextInput.Label>type text 입니다.</TextInput.Label>
-                            <TextInput.Field />
-                        </TextInput.Root>
-                        <TextInput.Root size="md" type="password">
-                            <TextInput.Label>type password 입니다.</TextInput.Label>
-                            <TextInput.Field />
-                        </TextInput.Root>
-
-                        <TextInput.Root size="lg" type="text">
-                            <TextInput.Label>type text 입니다.</TextInput.Label>
-                            <TextInput.Field />
-                        </TextInput.Root>
-                        <TextInput.Root size="lg" type="password">
-                            <TextInput.Label>type password 입니다.</TextInput.Label>
-                            <TextInput.Field />
-                        </TextInput.Root>
-
-                        <TextInput.Root size="xl" type="text">
-                            <TextInput.Label>type text 입니다.</TextInput.Label>
-                            <TextInput.Field />
-                        </TextInput.Root>
-                        <TextInput.Root size="xl" type="password">
-                            <TextInput.Label>type password 입니다.</TextInput.Label>
-                            <TextInput.Field />
-                        </TextInput.Root>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
-
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Text - heading" />
-                    <RenderingTemplate.Component rows={6} gap="0.5rem">
-                        <Text typography="heading1">heading1</Text>
-                        <Text typography="heading2">heading2</Text>
-                        <Text typography="heading3">heading3</Text>
-                        <Text typography="heading4">heading4</Text>
-                        <Text typography="heading5">heading5</Text>
-                        <Text typography="heading6">heading6</Text>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
-
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Text - body" />
-                    <RenderingTemplate.Component rows={6} gap="0.5rem">
-                        <Text typography="body1">body1</Text>
-                        <Text typography="body2">body2</Text>
-                        <Text typography="body3">body3</Text>
-                        <Text typography="body4">body4</Text>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
-
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Text - subtitle" />
-                    <RenderingTemplate.Component rows={6} gap="0.5rem">
-                        <Text typography="subtitle1">subtitle1</Text>
-                        <Text typography="subtitle2">subtitle2</Text>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                {renderTextElements(TEXT_SUBTITLES, 'Text - subtitle')}
             </section>
         </PageWrapper>
     );
