@@ -10,18 +10,6 @@ import { type Options, defineConfig } from 'tsup';
 const DIST_DIR = 'dist';
 const COMPONENTS_DIR = path.join(DIST_DIR, 'components');
 
-// --- Build Order Synchronization ---
-const componentBuildManager = {
-    promise: Promise.resolve(),
-    resolve: () => {},
-    reset() {
-        this.promise = new Promise((resolve) => {
-            this.resolve = resolve;
-        });
-    },
-};
-componentBuildManager.reset();
-
 // --- Helper Functions ---
 
 /**
@@ -33,20 +21,6 @@ async function processCss(css: string) {
     });
 
     return result.css;
-}
-async function aggregateComponentStyles() {
-    const mainCssPath = path.join(DIST_DIR, 'styles.css');
-    const cssFiles = globSync(path.join(COMPONENTS_DIR, '*/index.css'));
-    const existingContent = fs.readFileSync(mainCssPath, 'utf-8');
-
-    const cssImports = cssFiles
-        .map((cssFile) => {
-            const relativePath = path.relative(DIST_DIR, cssFile);
-            return `@import './${relativePath.replace(/\\/g, '/')}';`;
-        })
-        .join('\n');
-
-    fs.writeFileSync(mainCssPath, `${existingContent}\n${cssImports}`);
 }
 async function prependUseClientDirective() {
     const outputFiles = globSync(path.join(COMPONENTS_DIR, '*/index.{js,cjs}'));
@@ -133,8 +107,6 @@ export default defineConfig([
             console.log('⌛ Components build successful. Post-processing output...');
             await prependUseClientDirective();
             console.log('🚀 "use client" directives added to components.');
-
-            componentBuildManager.resolve();
         },
     },
 
@@ -156,14 +128,5 @@ export default defineConfig([
         },
         outDir: DIST_DIR,
         esbuildPlugins: [vanillaExtractPlugin(vanillaExtractConfig)],
-        async onSuccess() {
-            await componentBuildManager.promise;
-
-            console.log('⌛ Styles build successful. Aggregating component styles...');
-            await aggregateComponentStyles();
-            console.log('🚀 Component styles aggregated into main stylesheet.');
-
-            componentBuildManager.reset();
-        },
     },
 ]);
