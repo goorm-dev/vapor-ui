@@ -82,18 +82,41 @@ jobs:
                     echo "✅ No changes detected in ${{ matrix.icon_type }} icons"
                   fi
 
-            - name: Commit and push changes
+            - name: Create branch and commit changes
               if: steps.check_type.outputs.should_sync == 'true' && steps.check_changes.outputs.has_changes == 'true'
               run: |
+                  BRANCH_NAME="sync-${{ matrix.icon_type }}-icons-$(date +%Y%m%d-%H%M%S)"
+                  echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+                  
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
+                  git checkout -b $BRANCH_NAME
                   git add packages/icons/src/components/${{ matrix.icon_type }}-icons/ 
                   git commit -m "feat: sync ${{ matrix.icon_type }} icons from Figma
 
                   🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
                   Co-Authored-By: GitHub Action <action@github.com>"
-                  git push
+                  git push -u origin $BRANCH_NAME
+
+            - name: Create Pull Request
+              if: steps.check_type.outputs.should_sync == 'true' && steps.check_changes.outputs.has_changes == 'true'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  gh pr create \
+                    --title "feat: sync ${{ matrix.icon_type }} icons from Figma" \
+                    --body "🤖 Automated sync of ${{ matrix.icon_type }} icons from Figma
+
+                  **Changes:**
+                  - Updated ${{ matrix.icon_type }} icons from Figma
+                  - Generated components and stories
+
+                  **Workflow:** [View run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                  
+                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
+                    --base main \
+                    --head ${{ env.branch_name }}
 
     notify-slack-on-completion:
         runs-on: ubuntu-latest
