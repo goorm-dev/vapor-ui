@@ -1,0 +1,163 @@
+name: '[CI] Sync Figma Icons'
+
+on:
+    pull_request:
+        branches: [main]
+
+    workflow_dispatch:
+        inputs:
+            icon_types:
+                description: 'Icon types to sync (comma-separated)'
+                required: true
+                default: 'basic,symbol'
+                type: string
+    schedule:
+        # Run every Monday at 9 AM KST (00:00 UTC)
+        - cron: '0 0 * * 1'
+
+jobs:
+    sync-figma-icons:
+        runs-on: ubuntu-latest
+        if: github.repository == 'goorm-dev/vapor-ui'
+        strategy:
+            matrix:
+                icon_type: [basic, symbol]
+            fail-fast: false
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  submodules: true
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  registry-url: 'https://npm.pkg.github.com'
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: '10.5.0'
+
+            - name: Install Dependencies
+              run: pnpm install
+
+            - name: Check if icon type should be synced
+              id: check_type
+              run: |
+                  REQUESTED_TYPES="${{ github.event.inputs.icon_types || 'basic,symbol' }}"
+                  CURRENT_TYPE="${{ matrix.icon_type }}"
+
+                  if [[ "$REQUESTED_TYPES" == *"$CURRENT_TYPE"* ]]; then
+                    echo "should_sync=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "should_sync=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Sync ${{ matrix.icon_type }} Icons from Figma
+              if: steps.check_type.outputs.should_sync == 'true'
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  TYPE: ${{ matrix.icon_type }}
+              run: |
+                  echo "🚀 Syncing ${{ matrix.icon_type }} icons from Figma..."
+                  TYPE=${{matrix.icon_type}} node ./scripts/syncFigmaIcons.js && pnpm run format
+
+            - name: Format generated files
+              if: steps.check_type.outputs.should_sync == 'true'
+              run: |
+                  pnpm format
+
+            - name: Check for changes
+              if: steps.check_type.outputs.should_sync == 'true'
+              id: check_changes
+              run: |
+                  if [[ -n $(git status --porcelain) ]]; then
+                    echo "has_changes=true" >> $GITHUB_OUTPUT
+                    echo "📝 Changes detected in ${{ matrix.icon_type }} icons"
+                  else
+                    echo "has_changes=false" >> $GITHUB_OUTPUT
+                    echo "✅ No changes detected in ${{ matrix.icon_type }} icons"
+                  fi
+
+            - name: Create branch and commit changes
+              if: steps.check_type.outputs.should_sync == 'true' && steps.check_changes.outputs.has_changes == 'true'
+              run: |
+                  BRANCH_NAME="sync-${{ matrix.icon_type }}-icons-$(date +%Y%m%d-%H%M%S)"
+                  echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+                  
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  git checkout -b $BRANCH_NAME
+                  git add packages/icons/src/components/${{ matrix.icon_type }}-icons/ 
+                  git commit -m "feat: sync ${{ matrix.icon_type }} icons from Figma
+
+                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+                  Co-Authored-By: GitHub Action <action@github.com>"
+                  git push -u origin $BRANCH_NAME
+
+            - name: Create Pull Request
+              if: steps.check_type.outputs.should_sync == 'true' && steps.check_changes.outputs.has_changes == 'true'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  gh pr create \
+                    --title "feat: sync ${{ matrix.icon_type }} icons from Figma" \
+                    --body "🤖 Automated sync of ${{ matrix.icon_type }} icons from Figma
+
+                  **Changes:**
+                  - Updated ${{ matrix.icon_type }} icons from Figma
+                  - Generated components and stories
+
+                  **Workflow:** [View run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                  
+                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
+                    --base main \
+                    --head ${{ env.branch_name }}
+
+    notify-slack-on-completion:
+        runs-on: ubuntu-latest
+        needs: sync-figma-icons
+        if: always() && github.repository == 'goorm-dev/vapor-ui'
+        steps:
+            - name: Send Slack notification
+              run: |
+                  if [[ "${{ needs.sync-figma-icons.result }}" == "success" ]]; then
+                    COLOR="#36c936"
+                    EMOJI=":white_check_mark:"
+                    MESSAGE="Figma 아이콘 동기화가 성공적으로 완료되었습니다"
+                  else
+                    COLOR="#ff5c5c" 
+                    EMOJI=":x:"
+                    MESSAGE="Figma 아이콘 동기화가 실패했습니다"
+                  fi
+
+                  curl -X POST \
+                  -H 'Content-type: application/json' \
+                  --data "{
+                    \"username\": \"GDS-bot\",
+                    \"attachments\": [{
+                      \"pretext\": \"*@vapor-alarm* $MESSAGE $EMOJI\",
+                      \"color\": \"$COLOR\",
+                      \"fields\": [{
+                        \"title\": \"Repository\",
+                        \"value\": \"<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>\",
+                        \"short\": false
+                      }, {
+                        \"title\": \"Branch\",
+                        \"value\": \"${{ github.ref_name }}\",
+                        \"short\": true
+                      }, {
+                        \"title\": \"Workflow\",
+                        \"value\": \"<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Sync Figma Icons>\",
+                        \"short\": true
+                      }, {
+                        \"title\": \"Triggered by\",
+                        \"value\": \"${{ github.event_name == 'schedule' && 'Scheduled' || github.actor }}\",
+                        \"short\": true
+                      }]
+                    }]
+                  }" "${{ secrets.SLACK_WEB_HOOK_ALARM }}"
