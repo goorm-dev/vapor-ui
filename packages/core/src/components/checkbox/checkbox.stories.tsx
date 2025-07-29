@@ -23,9 +23,9 @@ export const Default: Story = {
     render: (args) => {
         const [checked, setChecked] = useState(evaluateNextCheckedState(false));
 
-        const allChecked = Object.values(checked).every((value) => value);
-        const allUnchecked = Object.values(checked).every((value) => !value);
-        const indeterminate = !allChecked && !allUnchecked;
+        const values = Object.values(checked);
+        const allChecked = values.every(Boolean);
+        const indeterminate = allChecked ? false : values.some(Boolean);
 
         const handleAllCheckedChange = (checked: boolean) => {
             const newValue = !!checked;
