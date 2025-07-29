@@ -23,7 +23,7 @@ export const Default: Story = {
 
 export const TestBed: Story = {
     render: () => (
-        <Flex flexDirection="column" gap="$150">
+        <Flex style={{ flexDirection: 'column', gap: 'var(--vapor-size-dimension-150)' }}>
             <Callout color="primary">Anyone can develop</Callout>
             <Callout color="success">Anyone can develop</Callout>
             <Callout color="warning">Anyone can develop</Callout>

@@ -1,18 +1,18 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
+import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
-import type { VaporComponentProps } from '~/libs/factory';
-import { vapor } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
-type ButtonPrimitiveProps = Omit<VaporComponentProps<'button'>, 'color'>;
-type ButtonProps = ButtonPrimitiveProps & ButtonVariants;
+type ButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Primitive.button>, 'color'>;
+interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {}
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ({ className, children, ...props }, ref) => {
@@ -24,14 +24,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ]);
 
         return (
-            <vapor.button
+            <Primitive.button
                 ref={ref}
                 className={clsx(styles.root(variantsProps), className)}
                 data-disabled={otherProps.disabled}
                 {...otherProps}
             >
                 {children}
-            </vapor.button>
+            </Primitive.button>
         );
     },
 );

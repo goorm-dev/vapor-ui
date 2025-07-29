@@ -1,17 +1,18 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
+import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
-import { type VaporComponentProps, vapor } from '~/libs/factory';
 import { createSplitProps } from '~/utils/create-split-props';
 
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
-type BadgePrimitiveProps = Omit<VaporComponentProps<'span'>, 'color'>;
-type BadgeProps = BadgePrimitiveProps & BadgeVariants;
+type BadgePrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Primitive.span>, 'color'>;
+interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
 
 const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ...props }, ref) => {
     const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(props, [
@@ -21,13 +22,13 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ..
     ]);
 
     return (
-        <vapor.span
+        <Primitive.span
             ref={ref}
             className={clsx(styles.root(variantsProps), className)}
             {...otherProps}
         >
             {children}
-        </vapor.span>
+        </Primitive.span>
     );
 });
 Badge.displayName = 'Badge';

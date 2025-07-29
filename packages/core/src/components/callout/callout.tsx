@@ -3,21 +3,19 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
+import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
-import { vapor } from '~/libs/factory';
-import type { MergeRecipeVariants } from '~/libs/recipe';
 import { createSplitProps } from '~/utils/create-split-props';
 
+import type { CalloutVariants } from './callout.css';
 import * as styles from './callout.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Callout
  * -----------------------------------------------------------------------------------------------*/
 
-type CalloutPrimitiveProps = ComponentPropsWithoutRef<typeof vapor.div>;
-type CalloutVariants = MergeRecipeVariants<typeof styles.root>;
-
+type CalloutPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 interface CalloutProps extends Omit<CalloutPrimitiveProps, 'color'>, CalloutVariants {}
 
 const Callout = forwardRef<HTMLDivElement, CalloutProps>(
@@ -25,13 +23,13 @@ const Callout = forwardRef<HTMLDivElement, CalloutProps>(
         const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(props, ['color']);
 
         return (
-            <vapor.div
+            <Primitive.div
                 ref={ref}
                 className={clsx(styles.root(variantProps), className)}
                 {...otherProps}
             >
                 {children}
-            </vapor.div>
+            </Primitive.div>
         );
     },
 );
