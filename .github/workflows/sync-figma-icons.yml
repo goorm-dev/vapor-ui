@@ -20,6 +20,9 @@ jobs:
         runs-on: ubuntu-latest
         if: github.repository == 'goorm-dev/vapor-ui'
         steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
             - name: Install
               uses: ./.github/composite/install
 
@@ -155,47 +158,3 @@ jobs:
                     --body "$PR_BODY" \
                     --base main \
                     --head ${{ env.branch_name }}
-
-    notify-slack-on-completion:
-        runs-on: ubuntu-latest
-        needs: sync-figma-icons
-        if: always() && github.repository == 'goorm-dev/vapor-ui'
-        steps:
-            - name: Send Slack notification
-              run: |
-                  if [[ "${{ needs.sync-figma-icons.result }}" == "success" ]]; then
-                    COLOR="#36c936"
-                    EMOJI=":white_check_mark:"
-                    MESSAGE="Figma 아이콘 동기화가 성공적으로 완료되었습니다"
-                  else
-                    COLOR="#ff5c5c" 
-                    EMOJI=":x:"
-                    MESSAGE="Figma 아이콘 동기화가 실패했습니다"
-                  fi
-
-                  curl -X POST \
-                  -H 'Content-type: application/json' \
-                  --data "{
-                    \"username\": \"GDS-bot\",
-                    \"attachments\": [{
-                      \"pretext\": \"*@vapor-alarm* $MESSAGE $EMOJI\",
-                      \"color\": \"$COLOR\",
-                      \"fields\": [{
-                        \"title\": \"Repository\",
-                        \"value\": \"<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>\",
-                        \"short\": false
-                      }, {
-                        \"title\": \"Branch\",
-                        \"value\": \"${{ github.ref_name }}\",
-                        \"short\": true
-                      }, {
-                        \"title\": \"Workflow\",
-                        \"value\": \"<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Sync Figma Icons>\",
-                        \"short\": true
-                      }, {
-                        \"title\": \"Triggered by\",
-                        \"value\": \"${{ github.event_name == 'schedule' && 'Scheduled' || github.actor }}\",
-                        \"short\": true
-                      }]
-                    }]
-                  }" "${{ secrets.SLACK_WEB_HOOK_ALARM }}"
