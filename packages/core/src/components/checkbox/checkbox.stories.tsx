@@ -50,10 +50,10 @@ export const Default: Story = {
 
                 <Text typography="heading3">Controlled</Text>
                 <Checkbox.Root
+                    {...args}
                     checked={allChecked}
                     indeterminate={indeterminate}
                     onCheckedChange={handleAllCheckedChange}
-                    {...args}
                 >
                     <Checkbox.Control />
                     <Checkbox.Label>three meals a day</Checkbox.Label>
@@ -61,12 +61,12 @@ export const Default: Story = {
 
                 {checkboxItems.map((item) => (
                     <Checkbox.Root
+                        {...args}
                         key={item.key}
                         checked={checked[item.key]}
                         onCheckedChange={(checkedState) =>
                             handleCheckedChange(item.key, checkedState)
                         }
-                        {...args}
                     >
                         <Checkbox.Control />
                         <Checkbox.Label>{item.label}</Checkbox.Label>
