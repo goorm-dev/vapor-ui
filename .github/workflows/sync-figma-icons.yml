@@ -101,7 +101,14 @@ jobs:
 
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
-                  git checkout -b $BRANCH_NAME origin/main
+                  
+                  # Ensure we have the latest main branch
+                  git fetch origin main
+                  git checkout main
+                  git pull origin main
+                  
+                  # Create new branch from main
+                  git checkout -b $BRANCH_NAME
 
                   # Create changeset with details about updated icons
                   CHANGESET_FILE=".changeset/sync-icons-$(date +%Y%m%d%H%M%S).md"
