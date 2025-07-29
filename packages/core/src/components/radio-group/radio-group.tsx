@@ -67,10 +67,10 @@ const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...pr
         <RadioGroupProvider value={{ ...sharedProps, ...variantProps }}>
             <RadixRoot
                 ref={ref}
-                className={clsx(styles.root({ size, orientation }), className)}
                 aria-invalid={invalid}
                 aria-disabled={disabled}
                 orientation={orientation}
+                className={clsx(styles.root({ size, orientation }), className)}
                 {...sharedProps}
                 {...otherProps}
             />
@@ -84,10 +84,10 @@ Root.displayName = 'RadioGroup.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 type RadioGroupItemPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
+type RadioGroupItemBaseProps = Pick<RadioGroupControlPrimitiveProps, 'value' | 'disabled'>;
 
 type RadioGroupItemVariants = ControlVariants & LabelVariants;
-type RadioGroupItemSharedProps = RadioGroupItemVariants &
-    Pick<RadioGroupControlPrimitiveProps, 'value' | 'disabled'>;
+type RadioGroupItemSharedProps = RadioGroupItemVariants & RadioGroupItemBaseProps;
 
 type RadioGroupItemContext = RadioGroupItemSharedProps & {
     radioGroupItemId?: string;
