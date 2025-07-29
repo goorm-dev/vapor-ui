@@ -17,7 +17,7 @@ Vapor UI에 기여해주셔서 감사합니다! 여러분의 기여는 우리의
 
 ## 질문하기
 
-Vapor UI에 대한 질문이 있으시면 [해당 문서](https://vapor-ui.dev)를 확인해주세요. 또한 다음과 같은 방법도 이용할 수 있습니다:
+Vapor UI에 대한 질문이 있으시면 [해당 문서](https://vapor-ui.goorm.io)를 확인해주세요. 또한 다음과 같은 방법도 이용할 수 있습니다:
 
 - 일반적인 질문은 [GitHub Discussion](https://github.com/goorm-dev/vapor-ui/discussions)을 활용하세요.
 - 실시간 토론을 위해 [Discord 커뮤니티](https://discord.gg/PMqxs3xaHC)에 참여하세요.
