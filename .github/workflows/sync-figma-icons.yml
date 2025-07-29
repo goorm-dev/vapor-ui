@@ -21,9 +21,7 @@ jobs:
         if: github.repository == 'goorm-dev/vapor-ui'
         steps:
             - name: Install
-              uses: ./.github/composite/install/action.yml
-              with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
+              uses: ./.github/composite/install
 
             - name: Parse icon types to sync
               id: parse_types
