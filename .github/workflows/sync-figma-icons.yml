@@ -12,87 +12,116 @@ on:
                 default: 'basic,symbol'
                 type: string
     schedule:
-        # Run every Monday at 9 AM KST (00:00 UTC)
-        - cron: '0 0 * * 1'
+        # Run every Thursday at 4 PM KST (07:00 UTC)
+        - cron: '0 7 * * 4'
 
 jobs:
     sync-figma-icons:
         runs-on: ubuntu-latest
         if: github.repository == 'goorm-dev/vapor-ui'
-        strategy:
-            matrix:
-                icon_type: [basic, symbol]
-            fail-fast: false
         steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+            - name: Install
+              uses: ./.github/composite/install
               with:
-                  submodules: true
                   token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version-file: '.nvmrc'
-                  registry-url: 'https://npm.pkg.github.com'
-
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: '10.5.0'
-
-            - name: Install Dependencies
-              run: pnpm install
-
-            - name: Check if icon type should be synced
-              id: check_type
+            - name: Parse icon types to sync
+              id: parse_types
               run: |
                   REQUESTED_TYPES="${{ github.event.inputs.icon_types || 'basic,symbol' }}"
-                  CURRENT_TYPE="${{ matrix.icon_type }}"
+                  echo "types=$REQUESTED_TYPES" >> $GITHUB_OUTPUT
+                  echo "🔍 Icon types to sync: $REQUESTED_TYPES"
 
-                  if [[ "$REQUESTED_TYPES" == *"$CURRENT_TYPE"* ]]; then
-                    echo "should_sync=true" >> $GITHUB_OUTPUT
-                  else
-                    echo "should_sync=false" >> $GITHUB_OUTPUT
-                  fi
-
-            - name: Sync ${{ matrix.icon_type }} Icons from Figma
-              if: steps.check_type.outputs.should_sync == 'true'
+            - name: Sync Basic Icons from Figma
+              if: contains(steps.parse_types.outputs.types, 'basic')
               env:
                   FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
-                  TYPE: ${{ matrix.icon_type }}
+                  TYPE: basic
               run: |
-                  echo "🚀 Syncing ${{ matrix.icon_type }} icons from Figma..."
-                  TYPE=${{matrix.icon_type}} node ./scripts/syncFigmaIcons.js && pnpm run format
+                  echo "🚀 Syncing basic icons from Figma..."
+                  TYPE=basic node ./scripts/syncFigmaIcons.js
+
+            - name: Sync Symbol Icons from Figma
+              if: contains(steps.parse_types.outputs.types, 'symbol')
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  TYPE: symbol
+              run: |
+                  echo "🚀 Syncing symbol icons from Figma..."
+                  TYPE=symbol node ./scripts/syncFigmaIcons.js
 
             - name: Format generated files
-              if: steps.check_type.outputs.should_sync == 'true'
               run: |
                   pnpm format
 
             - name: Check for changes
-              if: steps.check_type.outputs.should_sync == 'true'
               id: check_changes
               run: |
                   if [[ -n $(git status --porcelain) ]]; then
                     echo "has_changes=true" >> $GITHUB_OUTPUT
-                    echo "📝 Changes detected in ${{ matrix.icon_type }} icons"
+                    echo "📝 Changes detected in icons"
+                    
+                    # Count changed files
+                    changed_count=$(git status --porcelain | wc -l)
+                    echo "changed_files=$changed_count" >> $GITHUB_OUTPUT
+                    
+                    # Get list of changed icon files
+                    changed_icons=$(git status --porcelain | grep -E '\.(tsx?|js)$' | grep -E '(basic|symbol)-icons' | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//' | sort | uniq)
+                    
+                    # Format as markdown list
+                    if [[ -n "$changed_icons" ]]; then
+                      icon_list=""
+                      while IFS= read -r icon; do
+                        if [[ -n "$icon" ]]; then
+                          icon_list="${icon_list}- \`${icon}\`"$'\n'
+                        fi
+                      done <<< "$changed_icons"
+                      
+                      # Remove trailing newline and save to multiline output
+                      {
+                        echo 'changed_icons<<EOF'
+                        echo -n "$icon_list"
+                        echo 'EOF'
+                      } >> $GITHUB_OUTPUT
+                    else
+                      echo 'changed_icons=' >> $GITHUB_OUTPUT
+                    fi
                   else
                     echo "has_changes=false" >> $GITHUB_OUTPUT
-                    echo "✅ No changes detected in ${{ matrix.icon_type }} icons"
+                    echo "✅ No changes detected in icons"
+                    echo 'changed_icons=' >> $GITHUB_OUTPUT
                   fi
 
             - name: Create branch and commit changes
-              if: steps.check_type.outputs.should_sync == 'true' && steps.check_changes.outputs.has_changes == 'true'
+              if: steps.check_changes.outputs.has_changes == 'true'
               run: |
-                  BRANCH_NAME="sync-${{ matrix.icon_type }}-icons-$(date +%Y%m%d-%H%M%S)"
+                  BRANCH_NAME="sync-figma-icons-$(date +%Y%m%d-%H%M%S)"
                   echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
-                  
+
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
-                  git checkout -b $BRANCH_NAME
-                  git add packages/icons/src/components/${{ matrix.icon_type }}-icons/ 
-                  git commit -m "feat: sync ${{ matrix.icon_type }} icons from Figma
+                  git checkout -b $BRANCH_NAME origin/main
+                  
+                  # Create changeset with details about updated icons
+                  CHANGESET_FILE=".changeset/sync-icons-$(date +%Y%m%d%H%M%S).md"
+                  
+                  # Create changeset content
+                  echo "---" > "$CHANGESET_FILE"
+                  echo "\"@goorm-dev/vapor-icons\": minor" >> "$CHANGESET_FILE"
+                  echo "---" >> "$CHANGESET_FILE"
+                  echo "" >> "$CHANGESET_FILE"
+                  echo "Sync icons from Figma" >> "$CHANGESET_FILE"
+                  echo "" >> "$CHANGESET_FILE"
+                  echo "**New/Updated Icons:**" >> "$CHANGESET_FILE"
+                  echo "${{ steps.check_changes.outputs.changed_icons }}" >> "$CHANGESET_FILE"
+                  echo "" >> "$CHANGESET_FILE"
+                  echo "- Synced ${{ steps.parse_types.outputs.types }} icon types from Figma" >> "$CHANGESET_FILE"
+                  echo "- Updated icon components and stories" >> "$CHANGESET_FILE"
+                  echo "- Applied consistent formatting and code generation" >> "$CHANGESET_FILE"
+                  
+                  # Add all changes including the changeset
+                  git add packages/icons/src/components/ stories/foundation/icons/ .changeset/
+                  git commit -m "feat: sync icons from Figma
 
                   🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
@@ -100,21 +129,32 @@ jobs:
                   git push -u origin $BRANCH_NAME
 
             - name: Create Pull Request
-              if: steps.check_type.outputs.should_sync == 'true' && steps.check_changes.outputs.has_changes == 'true'
+              if: steps.check_changes.outputs.has_changes == 'true'
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  gh pr create \
-                    --title "feat: sync ${{ matrix.icon_type }} icons from Figma" \
-                    --body "🤖 Automated sync of ${{ matrix.icon_type }} icons from Figma
+                  # Prepare PR body with icon list
+                  PR_BODY="🤖 Automated sync of icons from Figma
+
+                  **Icon Types:** ${{ steps.parse_types.outputs.types }}
+                  **Files Modified:** ${{ steps.check_changes.outputs.changed_files }}
+
+                  **Changed Icons:**
+                  ${{ steps.check_changes.outputs.changed_icons }}
 
                   **Changes:**
-                  - Updated ${{ matrix.icon_type }} icons from Figma
+                  - Updated icons from Figma
                   - Generated components and stories
+                  - Formatted generated files
+                  - Created changeset for version bump
 
                   **Workflow:** [View run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
                   
-                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
+                  gh pr create \
+                    --title "feat: sync icons from Figma" \
+                    --body "$PR_BODY" \
                     --base main \
                     --head ${{ env.branch_name }}
 
