@@ -21,7 +21,7 @@ jobs:
         if: github.repository == 'goorm-dev/vapor-ui'
         steps:
             - name: Install
-              uses: ./.github/composite/install
+              uses: ./.github/composite/install/action.yml
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -101,10 +101,10 @@ jobs:
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
                   git checkout -b $BRANCH_NAME origin/main
-                  
+
                   # Create changeset with details about updated icons
                   CHANGESET_FILE=".changeset/sync-icons-$(date +%Y%m%d%H%M%S).md"
-                  
+
                   # Create changeset content
                   echo "---" > "$CHANGESET_FILE"
                   echo "\"@goorm-dev/vapor-icons\": minor" >> "$CHANGESET_FILE"
@@ -118,7 +118,7 @@ jobs:
                   echo "- Synced ${{ steps.parse_types.outputs.types }} icon types from Figma" >> "$CHANGESET_FILE"
                   echo "- Updated icon components and stories" >> "$CHANGESET_FILE"
                   echo "- Applied consistent formatting and code generation" >> "$CHANGESET_FILE"
-                  
+
                   # Add all changes including the changeset
                   git add packages/icons/src/components/ stories/foundation/icons/ .changeset/
                   git commit -m "feat: sync icons from Figma
@@ -151,7 +151,7 @@ jobs:
                   **Workflow:** [View run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
                   🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-                  
+
                   gh pr create \
                     --title "feat: sync icons from Figma" \
                     --body "$PR_BODY" \
