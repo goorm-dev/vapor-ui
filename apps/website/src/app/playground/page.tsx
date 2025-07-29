@@ -730,27 +730,7 @@ const Page = () => {
                         </Switch.Root>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
-
-                {/*    <RenderingTemplate>
-                    <RenderingTemplate.Title title="Tabs" />
-                    <RenderingTemplate.Component>
-                        <Tabs>
-                            <Tabs.List>
-                                <Tabs.Button value="Apple">Apple</Tabs.Button>
-                                <Tabs.Button value="Grape">Grape</Tabs.Button>
-                                <Tabs.Button value="Kiwi">Kiwi</Tabs.Button>
-                                <Tabs.Button value="onion" disabled>
-                                    onion
-                                </Tabs.Button>
-                            </Tabs.List>
-                            <Tabs.Panel value="Apple">사과입니다.</Tabs.Panel>
-                            <Tabs.Panel value="Grape">포도입니다.</Tabs.Panel>
-                            <Tabs.Panel value="Kiwi">키위입니다.</Tabs.Panel>
-                            <Tabs.Panel value="onion">양파입니다.</Tabs.Panel>
-                        </Tabs>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate> */}
-
+                
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="TextInput" />
                     <RenderingTemplate.Component cols={2} gap="1.5rem">

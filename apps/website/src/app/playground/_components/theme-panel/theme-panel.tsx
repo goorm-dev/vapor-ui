@@ -11,8 +11,6 @@ import Radius from '../radius';
 import Scaling from '../scaling';
 import styles from './theme-panel.module.scss';
 
-// import Section from '../section';
-// import FontInput from '../FontInput/FontInput';
 
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
@@ -71,9 +69,6 @@ const ThemePanel = () => {
                     <Mode />
                     <Radius />
                     <Scaling />
-                    {/*<Section title="Font">
-                        <FontInput />
-                    </Section> */}
                 </form>
             </Card.Body>
 
