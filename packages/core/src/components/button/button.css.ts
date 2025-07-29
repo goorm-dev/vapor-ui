@@ -24,6 +24,8 @@ export const root = recipe({
             border: 'none',
             borderRadius: vars.size.borderRadius['300'],
             whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
             selectors: {
                 '&:is(:disabled, [data-disabled="true"])': {
                     opacity: 0.32,
