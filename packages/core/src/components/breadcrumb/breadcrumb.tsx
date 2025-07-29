@@ -59,7 +59,7 @@ const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
 );
 
 /* -------------------------------------------------------------------------------------------------
- * Breadcrumb.Item2
+ * Breadcrumb.Item
  * -----------------------------------------------------------------------------------------------*/
 
 interface BreadcrumbItemProps extends ComponentPropsWithoutRef<typeof Primitive.li> {}
