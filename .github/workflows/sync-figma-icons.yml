@@ -87,7 +87,7 @@ jobs:
               run: |
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
-                  git add packages/vapor-icons/src/components/${{ matrix.icon_type }}-icons/ stories/foundation/icons/
+                  git add packages/icons/src/components/${{ matrix.icon_type }}-icons/ 
                   git commit -m "feat: sync ${{ matrix.icon_type }} icons from Figma
 
                   🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
