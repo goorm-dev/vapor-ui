@@ -67,7 +67,7 @@ jobs:
                     echo "changed_files=$changed_count" >> $GITHUB_OUTPUT
                     
                     # Get list of changed icon files
-                    changed_icons=$(git status --porcelain | grep -E '\.(tsx?|js)$' | grep -E '(basic|symbol)-icons' | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//' | grep -v '^$' | sort | uniq)
+                    changed_icons=$(git status --porcelain | grep -E '\.(tsx?|js)$' | grep -E '(basic|symbol)-icons' | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//' | grep -v '^$' | sort | uniq | grep -vE '^(index)$')
                     
                     # Format as markdown list
                     if [[ -n "$changed_icons" ]]; then
@@ -159,7 +159,7 @@ jobs:
                   </summary>
 
                   EOF
-                  
+
                   # Check if basic icons were synced
                   if [[ "${{ steps.parse_types.outputs.types }}" == *"basic"* ]]; then
                     echo "### \`basic\` Icons" >> pr_body.txt
@@ -171,7 +171,7 @@ jobs:
                     fi
                     echo "" >> pr_body.txt
                   fi
-                  
+
                   # Check if symbol icons were synced
                   if [[ "${{ steps.parse_types.outputs.types }}" == *"symbol"* ]]; then
                     echo "### \`symbol\` Icons" >> pr_body.txt
@@ -182,7 +182,7 @@ jobs:
                       echo "- No symbol icons changed" >> pr_body.txt
                     fi
                   fi
-                  
+
                   cat >> pr_body.txt << 'EOF'
 
                   </details>
