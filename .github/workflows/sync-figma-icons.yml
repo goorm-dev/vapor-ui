@@ -118,7 +118,7 @@ jobs:
                   echo "Sync icons from Figma" >> "$CHANGESET_FILE"
                   echo "" >> "$CHANGESET_FILE"
                   echo "**New/Updated Icons:**" >> "$CHANGESET_FILE"
-                  printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" >> "$CHANGESET_FILE"
+                  echo "${{ steps.check_changes.outputs.changed_icons }}" >> "$CHANGESET_FILE"
                   echo "" >> "$CHANGESET_FILE"
                   echo "- Synced ${{ steps.parse_types.outputs.types }} icon types from Figma" >> "$CHANGESET_FILE"
                   echo "- Updated icon components and stories" >> "$CHANGESET_FILE"
@@ -165,7 +165,7 @@ jobs:
                     echo "### \`basic\` Icons" >> pr_body.txt
                     # Show all changed icons for basic (since we can't easily separate them)
                     if [[ -n "${{ steps.check_changes.outputs.changed_icons }}" ]]; then
-                      printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt
+                      echo "${{ steps.check_changes.outputs.changed_icons }}" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt
                     else
                       echo "- No basic icons changed" >> pr_body.txt
                     fi
@@ -177,7 +177,7 @@ jobs:
                     echo "### \`symbol\` Icons" >> pr_body.txt
                     # Show all changed icons for symbol (since we can't easily separate them)
                     if [[ -n "${{ steps.check_changes.outputs.changed_icons }}" ]]; then
-                      printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt
+                      echo "${{ steps.check_changes.outputs.changed_icons }}" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt
                     else
                       echo "- No symbol icons changed" >> pr_body.txt
                     fi
