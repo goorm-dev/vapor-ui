@@ -158,19 +158,30 @@ jobs:
                     <strong>View Changed Icon Details</strong>
                   </summary>
 
-                  ### `basic` Icons
                   EOF
                   
-                  # Get basic icons (filter for basic type)
-                  printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" | grep -E "(basic|Basic)" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt || echo "- No basic icons changed" >> pr_body.txt
+                  # Check if basic icons were synced
+                  if [[ "${{ steps.parse_types.outputs.types }}" == *"basic"* ]]; then
+                    echo "### \`basic\` Icons" >> pr_body.txt
+                    # Show all changed icons for basic (since we can't easily separate them)
+                    if [[ -n "${{ steps.check_changes.outputs.changed_icons }}" ]]; then
+                      printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt
+                    else
+                      echo "- No basic icons changed" >> pr_body.txt
+                    fi
+                    echo "" >> pr_body.txt
+                  fi
                   
-                  cat >> pr_body.txt << 'EOF'
-
-                  ### `symbol` Icons
-                  EOF
-                  
-                  # Get symbol icons (filter for symbol type)
-                  printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" | grep -E "(symbol|Symbol)" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt || echo "- No symbol icons changed" >> pr_body.txt
+                  # Check if symbol icons were synced
+                  if [[ "${{ steps.parse_types.outputs.types }}" == *"symbol"* ]]; then
+                    echo "### \`symbol\` Icons" >> pr_body.txt
+                    # Show all changed icons for symbol (since we can't easily separate them)
+                    if [[ -n "${{ steps.check_changes.outputs.changed_icons }}" ]]; then
+                      printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt
+                    else
+                      echo "- No symbol icons changed" >> pr_body.txt
+                    fi
+                  fi
                   
                   cat >> pr_body.txt << 'EOF'
 
