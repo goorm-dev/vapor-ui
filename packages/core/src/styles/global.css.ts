@@ -50,13 +50,8 @@ globalStyle('input, button, select, optgroup, textarea', {
             border: 'none',
             borderRadius: 0,
             backgroundColor: '#0000',
-            lineHeight: 'inherit',
-
-            letterSpacing: 'inherit',
             color: 'inherit',
             font: 'inherit',
-            fontFamily: 'inherit',
-            fontSize: 'inherit',
             fontFeatureSettings: 'inherit',
             fontVariationSettings: 'inherit',
         },
