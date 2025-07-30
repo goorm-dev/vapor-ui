@@ -8,7 +8,6 @@ export const root = recipe({
     base: layerStyle('vapor-component', {
         display: 'inline-flex',
         alignItems: 'center',
-        justifyContent: 'center',
     }),
 
     defaultVariants: { color: 'primary', size: 'md', shape: 'square' },
