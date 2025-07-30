@@ -33,7 +33,7 @@ Before submitting the PR, please make sure you have checked all of the following
 
 [ ] I have updated the Storybook or relevant documentation.
 
-[ ] I have added a changeset for this change (if applicable).
+[ ] I have added a changeset for this change. (e.g., for any changes that affect users, such as component prop changes or new features).
 
 [ ] I have performed a self-code review.
 
