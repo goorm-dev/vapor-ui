@@ -20,6 +20,7 @@ export const overlay = layerStyle('vapor-component', {
     inset: 0,
     transition: 'opacity 0.2s cubic-bezier(0.175,0.885,0.32,1.1)',
     backgroundColor: vars.color['black'],
+    zIndex: 50, // TODO: Use constant z-index value
 
     selectors: {
         "&[data-state='open']": { animation: `${fadeIn} 0.2s ease-out forwards` },
@@ -51,6 +52,7 @@ export const content = recipe({
 
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
         backgroundColor: vars.color.background['normal-lighter'],
+        zIndex: 50, // TODO: Use constant z-index value
 
         selectors: {
             "&[data-state='open']": {
