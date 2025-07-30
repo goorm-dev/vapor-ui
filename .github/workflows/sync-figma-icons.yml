@@ -140,12 +140,31 @@ jobs:
               run: |
                   # Create temporary file for PR body to avoid shell interpretation
                   cat > pr_body.txt << 'EOF'
-                  🤖 Automated sync of icons from Figma
+                  ## 🤖 Automated Icon Sync from Figma
 
-                  **Icon Types:** ${{ steps.parse_types.outputs.types }}
-                  **Files Modified:** ${{ steps.check_changes.outputs.changed_files }}
+                  This PR automatically updates the project's icons based on the latest changes in Figma.
 
-                  **Changed Icons:**
+                  ### Sync Summary
+                  | Category         | Details                          |
+                  | ---------------- | -------------------------------- |
+                  | **Icon Types**   | ${{ steps.parse_types.outputs.types }} |
+                  | **Files Modified** | ${{ steps.check_changes.outputs.changed_files }} |
+                  | **Workflow Run** | [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+
+                  ### Changes Included:
+                  - Fetched and updated icons from the Figma library.
+                  - Generated new icon components and Storybook stories.
+                  - Applied formatting to all generated files.
+                  - Prepared a changeset for the next version release.
+
+                  ---
+
+                  <details>
+                  <summary>
+                    <strong>View Changed Icons</strong>
+                  </summary>
+
+                  ### 🔄 Changed Icons
                   EOF
                   
                   # Safely append the changed icons without shell interpretation
@@ -153,13 +172,7 @@ jobs:
                   
                   cat >> pr_body.txt << 'EOF'
 
-                  **Changes:**
-                  - Updated icons from Figma
-                  - Generated components and stories
-                  - Formatted generated files
-                  - Created changeset for version bump
-
-                  **Workflow:** [View run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                  </details>
 
                   🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
                   EOF
