@@ -8,7 +8,7 @@ export const gridTemplateRows = createVar({ inherits: false, syntax: '*' }, 'tem
 export const gridTemplateColumns = createVar({ inherits: false, syntax: '*' }, 'template-columns');
 
 export const root = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('components', {
         gridTemplateRows: gridTemplateRows,
         gridTemplateColumns: gridTemplateColumns,
     }),
@@ -16,10 +16,10 @@ export const root = recipe({
     defaultVariants: { flow: 'row' },
     variants: {
         flow: {
-            row: layerStyle('vapor-component', { gridAutoFlow: 'row' }),
-            column: layerStyle('vapor-component', { gridAutoFlow: 'column' }),
-            'row-dense': layerStyle('vapor-component', { gridAutoFlow: 'row dense' }),
-            'column-dense': layerStyle('vapor-component', { gridAutoFlow: 'column dense' }),
+            row: layerStyle('components', { gridAutoFlow: 'row' }),
+            column: layerStyle('components', { gridAutoFlow: 'column' }),
+            'row-dense': layerStyle('components', { gridAutoFlow: 'row dense' }),
+            'column-dense': layerStyle('components', { gridAutoFlow: 'column dense' }),
         },
     },
 });
@@ -27,7 +27,7 @@ export const root = recipe({
 export const gridItemRowSpan = createVar({ inherits: false, syntax: '*' }, 'item-row-span');
 export const gridItemColSpan = createVar({ inherits: false, syntax: '*' }, 'item-col-span');
 
-export const item = layerStyle('vapor-component', {
+export const item = layerStyle('components', {
     gridRow: gridItemRowSpan,
     gridColumn: gridItemColSpan,
 });

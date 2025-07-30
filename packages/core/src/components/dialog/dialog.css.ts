@@ -15,7 +15,7 @@ const fadeOut = keyframes({
     '100%': { opacity: 0 },
 });
 
-export const overlay = layerStyle('vapor-component', {
+export const overlay = layerStyle('components', {
     position: 'fixed',
     inset: 0,
     transition: 'opacity 0.2s cubic-bezier(0.175,0.885,0.32,1.1)',
@@ -38,7 +38,7 @@ export const scaleDown = keyframes({
 });
 
 export const content = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('components', {
         position: 'fixed',
         top: '50%',
         left: '50%',
@@ -65,16 +65,16 @@ export const content = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('vapor-component', { width: '31.25rem' }),
-            lg: layerStyle('vapor-component', { width: '50rem' }),
-            xl: layerStyle('vapor-component', { width: '71.25rem' }),
+            md: layerStyle('components', { width: '31.25rem' }),
+            lg: layerStyle('components', { width: '50rem' }),
+            xl: layerStyle('components', { width: '71.25rem' }),
         },
     },
 });
 
 export type DialogContentVariants = RecipeVariants<typeof content>;
 
-export const title = layerStyle('vapor-component', {
+export const title = layerStyle('components', {
     lineHeight: vars.typography.lineHeight['200'],
     letterSpacing: vars.typography.letterSpacing['100'],
     color: vars.color.foreground['normal'],
@@ -82,7 +82,7 @@ export const title = layerStyle('vapor-component', {
     fontWeight: vars.typography.fontWeight['700'],
 });
 
-export const description = layerStyle('vapor-component', {
+export const description = layerStyle('components', {
     lineHeight: vars.typography.lineHeight['075'],
     letterSpacing: vars.typography.letterSpacing['100'],
     color: vars.color.foreground['normal'],
@@ -90,7 +90,7 @@ export const description = layerStyle('vapor-component', {
     fontWeight: vars.typography.fontWeight['400'],
 });
 
-export const header = layerStyle('vapor-component', {
+export const header = layerStyle('components', {
     display: 'flex',
     alignItems: 'center',
     gap: vars.size.space['150'],
@@ -100,14 +100,14 @@ export const header = layerStyle('vapor-component', {
     height: vars.size.dimension['700'],
 });
 
-export const body = layerStyle('vapor-component', {
+export const body = layerStyle('components', {
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
     overflowY: 'auto',
 });
 
-export const footer = layerStyle('vapor-component', {
+export const footer = layerStyle('components', {
     display: 'flex',
     alignItems: 'center',
     paddingBlock: vars.size.space['200'],
