@@ -15,6 +15,7 @@ import {
 import { HeartIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'next/link';
 
+import { getCartesianProduct } from '../../utils/array';
 import PageWrapper from './_components/page-wrapper';
 import RenderingTemplate from './_components/rendering-template';
 
@@ -41,59 +42,53 @@ const TEXT_BODIES = ['body1', 'body2', 'body3', 'body4'] as const;
 const TEXT_SUBTITLES = ['subtitle1', 'subtitle2'] as const;
 
 const renderAvatars = () => {
-    return AVATAR_SHAPES.flatMap((shape) =>
-        SIZES.map((size) => (
-            <AvatarSimple key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
-        )),
-    );
+    const combinations = getCartesianProduct(AVATAR_SHAPES, SIZES);
+
+    return combinations.map(([shape, size]) => (
+        <AvatarSimple key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
+    ));
 };
 
 const renderBadges = () => {
     const badgeSizes = SIZES.slice(0, 3) as Array<'sm' | 'md' | 'lg'>;
-    return BADGE_SHAPES.flatMap((shape) =>
-        badgeSizes.flatMap((size) =>
-            BADGE_COLORS.map((color) => (
-                <Badge key={`${shape}-${size}-${color}`} shape={shape} size={size} color={color}>
-                    Badge
-                </Badge>
-            )),
-        ),
-    );
+    const combinations = getCartesianProduct(BADGE_SHAPES, badgeSizes, BADGE_COLORS);
+
+    return combinations.map(([shape, size, color]) => (
+        <Badge key={`${shape}-${size}-${color}`} shape={shape} size={size} color={color}>
+            Badge
+        </Badge>
+    ));
 };
 
 const renderButtons = () => {
-    return BUTTON_VARIANTS.flatMap((variant) =>
-        SIZES.flatMap((size) =>
-            COLORS.map((color) => (
-                <Button
-                    key={`${variant}-${size}-${color}`}
-                    variant={variant === 'solid' ? undefined : variant}
-                    size={size}
-                    color={color}
-                >
-                    Button
-                </Button>
-            )),
-        ),
-    );
+    const combinations = getCartesianProduct(BUTTON_VARIANTS, SIZES, COLORS);
+
+    return combinations.map(([variant, size, color]) => (
+        <Button
+            key={`${variant}-${size}-${color}`}
+            variant={variant === 'solid' ? undefined : variant}
+            size={size}
+            color={color}
+        >
+            Button
+        </Button>
+    ));
 };
 
 const renderIconButtons = () => {
-    return BUTTON_VARIANTS.flatMap((variant) =>
-        SIZES.flatMap((size) =>
-            COLORS.map((color) => (
-                <IconButton
-                    key={`${variant}-${size}-${color}`}
-                    aria-label="icon-button"
-                    variant={variant === 'solid' ? undefined : variant}
-                    size={size}
-                    color={color}
-                >
-                    <HeartIcon />
-                </IconButton>
-            )),
-        ),
-    );
+    const combinations = getCartesianProduct(BUTTON_VARIANTS, SIZES, COLORS);
+
+    return combinations.map(([variant, size, color]) => (
+        <IconButton
+            key={`${variant}-${size}-${color}`}
+            aria-label="icon-button"
+            variant={variant === 'solid' ? undefined : variant}
+            size={size}
+            color={color}
+        >
+            <HeartIcon />
+        </IconButton>
+    ));
 };
 
 const renderSwitches = () => {
@@ -103,32 +98,31 @@ const renderSwitches = () => {
         { defaultChecked: false, disabled: true },
     ];
     const switchSizes = SIZES.slice(0, 3) as Array<'sm' | 'md' | 'lg'>;
+    const combinations = getCartesianProduct(switchSizes, switchStates);
 
-    return switchSizes.flatMap((size) =>
-        switchStates.map((state, index) => (
-            <Switch.Root
-                key={`${size}-${index}`}
-                size={size}
-                defaultChecked={state.defaultChecked}
-                disabled={state.disabled}
-            >
-                <Switch.Label>Airplane mode</Switch.Label>
-                <Switch.Control />
-            </Switch.Root>
-        )),
-    );
+    return combinations.map(([size, state], index) => (
+        <Switch.Root
+            key={`${size}-${index}`}
+            size={size}
+            defaultChecked={state.defaultChecked}
+            disabled={state.disabled}
+        >
+            <Switch.Label>Airplane mode</Switch.Label>
+            <Switch.Control />
+        </Switch.Root>
+    ));
 };
 
 const renderTextInputs = () => {
     const inputTypes = ['text', 'password'] as const;
-    return SIZES.flatMap((size) =>
-        inputTypes.map((type) => (
-            <TextInput.Root key={`${size}-${type}`} size={size} type={type}>
-                <TextInput.Label>type {type} 입니다.</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-        )),
-    );
+    const combinations = getCartesianProduct(SIZES, inputTypes);
+
+    return combinations.map(([size, type]) => (
+        <TextInput.Root key={`${size}-${type}`} size={size} type={type}>
+            <TextInput.Label>type {type} 입니다.</TextInput.Label>
+            <TextInput.Field />
+        </TextInput.Root>
+    ));
 };
 
 const renderTextElements = (typographies: readonly string[], title: string) => (
