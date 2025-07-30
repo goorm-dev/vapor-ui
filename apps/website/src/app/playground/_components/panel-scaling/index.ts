@@ -1,3 +1,3 @@
-import Scaling from './scaling';
+import Scaling from './panel-scaling';
 
 export default Scaling;

@@ -1,3 +1,3 @@
-import Mode from './mode';
+import Mode from './panel-mode';
 
 export default Mode;
