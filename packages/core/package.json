@@ -13,33 +13,33 @@
     "license": "MIT",
     "homepage": "https://github.com/goorm-dev/vapor-ui",
     "type": "module",
-    "main": "./dist/cjs/index.cjs",
-    "module": "./dist/esm/index.js",
-    "types": "./dist/types/index.d.ts",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "import": {
-                "types": "./dist/types/index.d.ts",
-                "default": "./dist/esm/index.js"
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
             },
             "require": {
-                "types": "./dist/types/index.d.ts",
-                "default": "./dist/cjs/index.cjs"
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.cjs"
             }
         },
         "./*": {
             "dev": "./src/components/*/index.ts",
             "import": {
-                "types": "./dist/types/components/*/index.d.ts",
-                "default": "./dist/esm/components/*/index.js"
+                "types": "./dist/components/*/index.d.ts",
+                "default": "./dist/components/*/index.js"
             },
             "require": {
-                "types": "./dist/types/components/*/index.d.ts",
-                "default": "./dist/cjs/components/*/index.cjs"
+                "types": "./dist/components/*/index.d.ts",
+                "default": "./dist/components/*/index.cjs"
             }
         },
         "./package.json": "./package.json",
-        "./styles.css": "./dist/styles.css",
+        "./styles.css": "./dist/index.css",
         "./tailwind.css": "./dist/tailwind.css"
     },
     "files": [
@@ -61,7 +61,10 @@
         "url": "https://github.com/goorm-dev/vapor-ui/issues"
     },
     "scripts": {
-        "build": "rimraf dist && rollup -c rollup.config.mjs && npx --yes @arethetypeswrong/cli --exclude-entrypoints styles.css --pack .",
+        "build": "rimraf dist && tsup",
+        "build:rollup": "rimraf dist && rollup -c rollup.config.mjs",
+        "build:tsup": "rimraf dist && tsup",
+        "build:tsup2": "rimraf dist && tsup --config tsup2.config.ts",
         "lint": "eslint ./src",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",

@@ -8,7 +8,7 @@ import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
 import depsExternal from 'rollup-plugin-node-externals';
 import { preserveDirectives } from 'rollup-plugin-preserve-directives';
-import ts from 'typescript';
+import { parseJsonConfigFileContent, readConfigFile, sys } from 'typescript';
 
 /**
  * TypeScript 컴파일러 옵션 로드
@@ -18,8 +18,8 @@ import ts from 'typescript';
 function loadCompilerOptions(tsconfig) {
     if (!tsconfig) return {};
 
-    const configFile = ts.readConfigFile(tsconfig, ts.sys.readFile);
-    const { options } = ts.parseJsonConfigFileContent(configFile.config, ts.sys, './');
+    const configFile = readConfigFile(tsconfig, sys.readFile);
+    const { options } = parseJsonConfigFileContent(configFile.config, sys, './');
 
     return options;
 }
@@ -51,7 +51,7 @@ function getComponentEntries() {
 const emittedCSSFiles = new Set();
 
 function processAssetFileName(assetInfo) {
-    const assetPath = assetInfo.name.replace(/^src\//, 'assets/');
+    const assetPath = assetInfo.name.replace(/^src\//, '');
     if (assetPath.match(/\.css$/)) {
         emittedCSSFiles.add(assetPath);
     }
@@ -92,13 +92,13 @@ const bundleCssEmits = () => ({
     },
 
     generateBundle() {
+        const cssFiles = Array.from(emittedCSSFiles);
+        const sortedFiles = cssFiles.sort((a) => (a.match(/styles\/layers/) ? -1 : 1));
+
         this.emitFile({
             type: 'asset',
             name: 'src/index.css',
-            source:
-                Array.from(emittedCSSFiles)
-                    .map((name) => `@import "${name.replace(/^assets\//, './')}";`)
-                    .join('\n') + '\n',
+            source: sortedFiles.map((name) => `@import "./${name}";`).join('\n') + '\n',
         });
     },
 });
@@ -145,13 +145,13 @@ const commonPlugins = [
 const esmBuild = {
     input: componentEntries,
     plugins: [...commonPlugins, bundleCssEmits()],
-    output: [createOutput('dist/esm', 'esm', 'js')],
+    output: [createOutput('dist/', 'esm', 'js')],
 };
 
 const cjsBuild = {
     input: componentEntries,
-    plugins: [...commonPlugins, bundleCssEmits()],
-    output: [createOutput('dist/cjs', 'cjs', 'cjs')],
+    plugins: [...commonPlugins],
+    output: [createOutput('dist/', 'cjs', 'cjs')],
 };
 
 const compilerOptions = loadCompilerOptions('tsconfig.json');
@@ -171,7 +171,7 @@ const dtsBuild = {
     input: componentEntries,
     plugins: [...commonPlugins.slice(0, 3), getDtsPlugins(compilerOptions)],
     output: [
-        createOutput('dist/types', ['esm', 'cjs'], 'd.ts', {
+        createOutput('dist/', ['esm'], 'd.ts', {
             preserveModulesRoot: 'src',
             assetFileNames: undefined,
             exports: undefined, // TypeScript 선언 파일은 exports 옵션 불필요
