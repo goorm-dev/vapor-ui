@@ -58,36 +58,27 @@ jobs:
             - name: Check for changes
               id: check_changes
               run: |
-                  if [[ -n $(git status --porcelain) ]]; then
+                  # Check if there are changes in the icons directory
+                  if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
                     echo "has_changes=true" >> $GITHUB_OUTPUT
                     echo "📝 Changes detected in icons"
                     
                     # Count changed files
-                    changed_count=$(git status --porcelain | wc -l)
+                    changed_count=$(git status --porcelain packages/icons/src/ | wc -l)
                     echo "changed_files=$changed_count" >> $GITHUB_OUTPUT
                     
-                    # Get list of changed icon files
-                    changed_icons=$(git status --porcelain | grep -E '\.(tsx?|js)$' | grep -E '(basic|symbol)-icons' | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//' | grep -v '^$' | sort | uniq | grep -vE '^(index)$')
+                    # Get list of changed icon names as comma-separated list
+                    changed_icons=$(git status --porcelain packages/icons/src/ | grep -E '\.(tsx?|js)$' | grep -E '(basic|symbol)-icons' | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//' | grep -v '^$' | sort | uniq | grep -vE '^(index)$' | tr '\n' ',' | sed 's/,$//')
                     
-                    # Format as markdown list
                     if [[ -n "$changed_icons" ]]; then
-                      # Save to multiline output with proper escaping
-                      {
-                        echo 'changed_icons<<EOF'
-                        while IFS= read -r icon; do
-                          if [[ -n "$icon" && "$icon" != "" ]]; then
-                            printf -- "- \`%s\`\n" "$icon"
-                          fi
-                        done <<< "$changed_icons"
-                        echo 'EOF'
-                      } >> $GITHUB_OUTPUT
+                      echo "changed_icons=$changed_icons" >> $GITHUB_OUTPUT
                     else
-                      echo 'changed_icons=' >> $GITHUB_OUTPUT
+                      echo "changed_icons=" >> $GITHUB_OUTPUT
                     fi
                   else
                     echo "has_changes=false" >> $GITHUB_OUTPUT
                     echo "✅ No changes detected in icons"
-                    echo 'changed_icons=' >> $GITHUB_OUTPUT
+                    echo "changed_icons=" >> $GITHUB_OUTPUT
                   fi
 
             - name: Create branch and commit changes
@@ -117,8 +108,7 @@ jobs:
                   echo "" >> "$CHANGESET_FILE"
                   echo "Sync icons from Figma" >> "$CHANGESET_FILE"
                   echo "" >> "$CHANGESET_FILE"
-                  echo "**New/Updated Icons:**" >> "$CHANGESET_FILE"
-                  echo "${{ steps.check_changes.outputs.changed_icons }}" >> "$CHANGESET_FILE"
+                  echo "**New/Updated Icons:** ${{ steps.check_changes.outputs.changed_icons }}" >> "$CHANGESET_FILE"
                   echo "" >> "$CHANGESET_FILE"
                   echo "- Synced ${{ steps.parse_types.outputs.types }} icon types from Figma" >> "$CHANGESET_FILE"
                   echo "- Updated icon components and stories" >> "$CHANGESET_FILE"
@@ -160,26 +150,13 @@ jobs:
 
                   EOF
 
-                  # Check if basic icons were synced
-                  if [[ "${{ steps.parse_types.outputs.types }}" == *"basic"* ]]; then
-                    echo "### \`basic\` Icons" >> pr_body.txt
-                    # Show all changed icons for basic (since we can't easily separate them)
+                  # Show changed icons for the synced types
+                  if [[ "${{ steps.parse_types.outputs.types }}" == *"basic"* ]] || [[ "${{ steps.parse_types.outputs.types }}" == *"symbol"* ]]; then
+                    echo "### 🔄 Changed Icons" >> pr_body.txt
                     if [[ -n "${{ steps.check_changes.outputs.changed_icons }}" ]]; then
-                      echo "${{ steps.check_changes.outputs.changed_icons }}" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt
+                      echo "**Updated icons:** ${{ steps.check_changes.outputs.changed_icons }}" >> pr_body.txt
                     else
-                      echo "- No basic icons changed" >> pr_body.txt
-                    fi
-                    echo "" >> pr_body.txt
-                  fi
-
-                  # Check if symbol icons were synced
-                  if [[ "${{ steps.parse_types.outputs.types }}" == *"symbol"* ]]; then
-                    echo "### \`symbol\` Icons" >> pr_body.txt
-                    # Show all changed icons for symbol (since we can't easily separate them)
-                    if [[ -n "${{ steps.check_changes.outputs.changed_icons }}" ]]; then
-                      echo "${{ steps.check_changes.outputs.changed_icons }}" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt
-                    else
-                      echo "- No symbol icons changed" >> pr_body.txt
+                      echo "No icon names could be determined" >> pr_body.txt
                     fi
                   fi
 
@@ -193,3 +170,6 @@ jobs:
                     --body-file pr_body.txt \
                     --base main \
                     --head ${{ env.branch_name }}
+
+                  # Clean up temporary file
+                  rm -f pr_body.txt
