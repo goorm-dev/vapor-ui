@@ -60,54 +60,52 @@ jobs:
               run: |
                   # Check if there are changes in the icons directory
                   if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
-                    echo "has_changes=true" >> $GITHUB_OUTPUT
-                    echo "📝 Changes detected in icons"
-                    
-                    # Count changed files
-                    changed_count=$(git status --porcelain packages/icons/src/ | wc -l)
-                    echo "changed_files=$changed_count" >> $GITHUB_OUTPUT
-                    
-                    # Get list of new and updated icon names with correct git status handling
-                    new_icons_formatted=""
-                    updated_icons_formatted=""
-                    
-                    # Process all files in a single loop with proper status code handling
-                    while IFS= read -r line; do
-                      if [[ -n "$line" ]] && [[ "$line" =~ \.(tsx?|js)$ ]] && [[ "$line" =~ (basic|symbol)-icons ]] && [[ ! "$line" =~ /index\.(tsx?|js)$ ]]; then
-                        # Extract status code (first 2 characters) and file path
-                        status="${line:0:2}"
-                        file_path="${line:3}"
-                        
-                        # Extract icon name from file path
-                        icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
-                        
-                        if [[ -n "$icon_name" ]]; then
-                          # Check if it's a new icon (untracked ?? or added A )
+                  echo "has_changes=true" >> $GITHUB_OUTPUT
+                  echo "📝 Changes detected in icons"
+
+                  # Count changed files
+                  changed_count=$(git status --porcelain packages/icons/src/ | wc -l)
+                  echo "changed_files=$changed_count" >> $GITHUB_OUTPUT
+
+                  # Get list of new and updated icon names
+                  new_icons_formatted=""
+                  updated_icons_formatted=""
+
+                  # Process all files in a single loop
+                  while IFS= read -r line; do
+                      # ⬇️⬇️⬇️ 이 라인이 수정되었습니다 ⬇️⬇️⬇️
+                      if [[ -n "$line" ]] && [[ "$line" =~ \.(ts|tsx|js)$ ]] && [[ "$line" =~ (basic|symbol)-icons ]] && [[ ! "$line" =~ /index\.(ts|tsx|js)$ ]]; then
+                      status="${line:0:2}"
+                      file_path="${line:3}"
+                      icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
+                      
+                      if [[ -n "$icon_name" ]]; then
+                          # New icons: untracked (??) or added (A)
                           if [[ "$status" == "??" ]] || [[ "$status" =~ ^A ]]; then
-                            if [[ -z "$new_icons_formatted" ]]; then
+                          if [[ -z "$new_icons_formatted" ]]; then
                               new_icons_formatted="\\\`$icon_name\\\`"
-                            else
+                          else
                               new_icons_formatted="$new_icons_formatted,\\\`$icon_name\\\`"
-                            fi
-                          # Check if it's an updated icon (modified M )
-                          elif [[ "$status" =~ ^M ]] || [[ "$status" =~ ^\ M ]]; then
-                            if [[ -z "$updated_icons_formatted" ]]; then
-                              updated_icons_formatted="\\\`$icon_name\\\`"
-                            else
-                              updated_icons_formatted="$updated_icons_formatted,\\\`$icon_name\\\`"
-                            fi
                           fi
-                        fi
+                          # Updated icons: modified (M)
+                          elif [[ "$status" =~ M ]]; then
+                          if [[ -z "$updated_icons_formatted" ]]; then
+                              updated_icons_formatted="\\\`$icon_name\\\`"
+                          else
+                              updated_icons_formatted="$updated_icons_formatted,\\\`$icon_name\\\`"
+                          fi
+                          fi
                       fi
-                    done <<< "$(git status --porcelain packages/icons/src/ 2>/dev/null || echo '')"
-                    
-                    echo "new_icons=$new_icons_formatted" >> $GITHUB_OUTPUT
-                    echo "updated_icons=$updated_icons_formatted" >> $GITHUB_OUTPUT
+                      fi
+                  done <<< "$(git status --porcelain packages/icons/src/ 2>/dev/null || echo '')"
+
+                  echo "new_icons=$new_icons_formatted" >> $GITHUB_OUTPUT
+                  echo "updated_icons=$updated_icons_formatted" >> $GITHUB_OUTPUT
                   else
-                    echo "has_changes=false" >> $GITHUB_OUTPUT
-                    echo "✅ No changes detected in icons"
-                    echo "new_icons=" >> $GITHUB_OUTPUT
-                    echo "updated_icons=" >> $GITHUB_OUTPUT
+                  echo "has_changes=false" >> $GITHUB_OUTPUT
+                  echo "✅ No changes detected in icons"
+                  echo "new_icons=" >> $GITHUB_OUTPUT
+                  echo "updated_icons=" >> $GITHUB_OUTPUT
                   fi
 
             - name: Create branch and commit changes
