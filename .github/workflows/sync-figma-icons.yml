@@ -67,7 +67,7 @@ jobs:
                     echo "changed_files=$changed_count" >> $GITHUB_OUTPUT
                     
                     # Get list of changed icon files
-                    changed_icons=$(git status --porcelain | grep -E '\.(tsx?|js)$' | grep -E '(basic|symbol)-icons' | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//' | sort | uniq)
+                    changed_icons=$(git status --porcelain | grep -E '\.(tsx?|js)$' | grep -E '(basic|symbol)-icons' | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//' | grep -v '^$' | sort | uniq)
                     
                     # Format as markdown list
                     if [[ -n "$changed_icons" ]]; then
@@ -75,7 +75,7 @@ jobs:
                       {
                         echo 'changed_icons<<EOF'
                         while IFS= read -r icon; do
-                          if [[ -n "$icon" ]]; then
+                          if [[ -n "$icon" && "$icon" != "" ]]; then
                             printf -- "- \`%s\`\n" "$icon"
                           fi
                         done <<< "$changed_icons"
