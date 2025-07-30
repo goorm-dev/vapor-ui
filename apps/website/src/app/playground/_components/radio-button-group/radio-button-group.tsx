@@ -4,7 +4,7 @@ import { createContext, forwardRef, useContext } from 'react';
 import type { RadioGroupItemProps, RadioGroupProps } from '@radix-ui/react-radio-group';
 import { RadioGroup, RadioGroupItem } from '@radix-ui/react-radio-group';
 import { Button } from '@vapor-ui/core';
-import cn from 'classnames';
+import cx from 'clsx';
 
 import styles from './radio-button-group.module.scss';
 
@@ -33,7 +33,7 @@ type RadioButtonGroupProps = RadioGroupProps & ComponentProps<'div'>;
 const Root = forwardRef<HTMLDivElement, RadioButtonGroupProps>(
     ({ className, children, ...props }, ref) => {
         return (
-            <RadioGroup ref={ref} className={cn(styles.radioButtonGroup, className)} {...props}>
+            <RadioGroup ref={ref} className={cx(styles.radioButtonGroup, className)} {...props}>
                 {children}
             </RadioGroup>
         );

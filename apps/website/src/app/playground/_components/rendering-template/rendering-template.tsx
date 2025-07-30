@@ -1,5 +1,5 @@
 import { Text } from '@vapor-ui/core';
-import cn from 'classnames';
+import cx from 'clsx';
 
 import styles from './rendering-template.module.scss';
 
@@ -31,7 +31,7 @@ const RenderingTemplateComponent = ({
     };
 
     return (
-        <div className={cn((cols || rows) && styles.grid)} style={customStyle}>
+        <div className={cx((cols || rows) && styles.grid)} style={customStyle}>
             {children}
         </div>
     );

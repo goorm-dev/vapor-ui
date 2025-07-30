@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { Badge, Button, Card, Text } from '@vapor-ui/core';
 import { ConfirmOutlineIcon } from '@vapor-ui/icons';
-import cn from 'classnames';
+import cx from 'clsx';
 
 import ColorBoard from '../color-board';
 import Mode from '../panel-mode';
@@ -47,7 +47,7 @@ const ThemePanel = () => {
 
     return (
         <Card.Root
-            className={cn(styles.panel, 'vapor-core', {
+            className={cx(styles.panel, 'vapor-core', {
                 [styles.panel_open]: open,
             })}
             data-vapor-scaling="1"
