@@ -142,7 +142,7 @@ jobs:
                   cat > pr_body.txt << 'EOF'
                   ## 🤖 Automated Icon Sync from Figma
 
-                  This PR automatically updates the project's icons based on the latest changes in Figma.
+                  This PR automatically updates `basic` and `symbol` icons based on the latest changes in Figma.
 
                   ### Sync Summary
                   | Category         | Details                          |
@@ -151,30 +151,30 @@ jobs:
                   | **Files Modified** | ${{ steps.check_changes.outputs.changed_files }} |
                   | **Workflow Run** | [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
 
-                  ### Changes Included:
-                  - Fetched and updated icons from the Figma library.
-                  - Generated new icon components and Storybook stories.
-                  - Applied formatting to all generated files.
-                  - Prepared a changeset for the next version release.
-
                   ---
 
                   <details>
                   <summary>
-                    <strong>View Changed Icons</strong>
+                    <strong>View Changed Icon Details</strong>
                   </summary>
 
-                  ### 🔄 Changed Icons
+                  ### `basic` Icons
                   EOF
                   
-                  # Safely append the changed icons without shell interpretation
-                  printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" >> pr_body.txt
+                  # Get basic icons (filter for basic type)
+                  printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" | grep -E "(basic|Basic)" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt || echo "- No basic icons changed" >> pr_body.txt
+                  
+                  cat >> pr_body.txt << 'EOF'
+
+                  ### `symbol` Icons
+                  EOF
+                  
+                  # Get symbol icons (filter for symbol type)
+                  printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" | grep -E "(symbol|Symbol)" | sed 's/^- `/- **🔄 Updated:** `/' >> pr_body.txt || echo "- No symbol icons changed" >> pr_body.txt
                   
                   cat >> pr_body.txt << 'EOF'
 
                   </details>
-
-                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
                   EOF
 
                   gh pr create \
