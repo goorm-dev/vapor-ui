@@ -26,8 +26,8 @@
         },
         {
             "prop": "size",
-            "type": "'md' | 'lg'",
-            "default": "'md'",
+            "type": "md | lg",
+            "default": "md",
             "description": "체크박스의 크기를 설정합니다."
         },
         {
