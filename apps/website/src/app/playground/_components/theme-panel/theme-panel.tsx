@@ -6,9 +6,9 @@ import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 import cn from 'classnames';
 
 import ColorBoard from '../color-board';
-import Mode from '../mode';
-import Radius from '../radius';
-import Scaling from '../scaling';
+import Mode from '../panel-mode';
+import Radius from '../panel-radius';
+import Scaling from '../panel-scaling';
 import styles from './theme-panel.module.scss';
 
 
