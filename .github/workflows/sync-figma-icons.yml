@@ -67,33 +67,35 @@ jobs:
                     changed_count=$(git status --porcelain packages/icons/src/ | wc -l)
                     echo "changed_files=$changed_count" >> $GITHUB_OUTPUT
                     
-                    # Get list of new and updated icon names (safer approach)
+                    # Get list of new and updated icon names with correct git status handling
                     new_icons_formatted=""
                     updated_icons_formatted=""
                     
-                    # Process new icons (untracked files)
+                    # Process all files in a single loop with proper status code handling
                     while IFS= read -r line; do
-                      if [[ "$line" =~ ^\?\?.*\.(tsx?|js)$ ]] && [[ "$line" =~ (basic|symbol)-icons ]] && [[ ! "$line" =~ /index\.(tsx?|js)$ ]]; then
-                        icon_name=$(echo "$line" | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//')
+                      if [[ -n "$line" ]] && [[ "$line" =~ \.(tsx?|js)$ ]] && [[ "$line" =~ (basic|symbol)-icons ]] && [[ ! "$line" =~ /index\.(tsx?|js)$ ]]; then
+                        # Extract status code (first 2 characters) and file path
+                        status="${line:0:2}"
+                        file_path="${line:3}"
+                        
+                        # Extract icon name from file path
+                        icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
+                        
                         if [[ -n "$icon_name" ]]; then
-                          if [[ -z "$new_icons_formatted" ]]; then
-                            new_icons_formatted="\\\`$icon_name\\\`"
-                          else
-                            new_icons_formatted="$new_icons_formatted,\\\`$icon_name\\\`"
-                          fi
-                        fi
-                      fi
-                    done <<< "$(git status --porcelain packages/icons/src/ 2>/dev/null || echo '')"
-                    
-                    # Process updated icons (modified files)
-                    while IFS= read -r line; do
-                      if [[ "$line" =~ ^[^?].*\.(tsx?|js)$ ]] && [[ "$line" =~ (basic|symbol)-icons ]] && [[ ! "$line" =~ /index\.(tsx?|js)$ ]]; then
-                        icon_name=$(echo "$line" | sed 's/^...//g' | sed 's|.*/||' | sed 's/\.[^.]*$//')
-                        if [[ -n "$icon_name" ]]; then
-                          if [[ -z "$updated_icons_formatted" ]]; then
-                            updated_icons_formatted="\\\`$icon_name\\\`"
-                          else
-                            updated_icons_formatted="$updated_icons_formatted,\\\`$icon_name\\\`"
+                          # Check if it's a new icon (untracked ?? or added A )
+                          if [[ "$status" =~ ^\?\? ]] || [[ "$status" =~ ^A ]]; then
+                            if [[ -z "$new_icons_formatted" ]]; then
+                              new_icons_formatted="\\\`$icon_name\\\`"
+                            else
+                              new_icons_formatted="$new_icons_formatted,\\\`$icon_name\\\`"
+                            fi
+                          # Check if it's an updated icon (modified M )
+                          elif [[ "$status" =~ ^M ]] || [[ "$status" =~ ^ M ]]; then
+                            if [[ -z "$updated_icons_formatted" ]]; then
+                              updated_icons_formatted="\\\`$icon_name\\\`"
+                            else
+                              updated_icons_formatted="$updated_icons_formatted,\\\`$icon_name\\\`"
+                            fi
                           fi
                         fi
                       fi
