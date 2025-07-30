@@ -98,12 +98,12 @@ jobs:
 
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
-                  
+
                   # Ensure we have the latest main branch
                   git fetch origin main
                   git checkout main
                   git pull origin main
-                  
+
                   # Create new branch from main
                   git checkout -b $BRANCH_NAME
 
@@ -112,7 +112,7 @@ jobs:
 
                   # Create changeset content
                   echo "---" > "$CHANGESET_FILE"
-                  echo "\"@goorm-dev/vapor-icons\": minor" >> "$CHANGESET_FILE"
+                  echo "\"@vapor-ui/icons\": minor" >> "$CHANGESET_FILE"
                   echo "---" >> "$CHANGESET_FILE"
                   echo "" >> "$CHANGESET_FILE"
                   echo "Sync icons from Figma" >> "$CHANGESET_FILE"
