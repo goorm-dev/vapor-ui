@@ -1,7 +1,7 @@
 import { DiscordColorIcon, FigmaColorIcon, GithubIcon } from '@vapor-ui/icons';
 import type { IconItemType } from 'fumadocs-ui/layouts/links';
 
-const externalLinks = [
+export const externalLinks = [
     {
         icon: <FigmaColorIcon size={20} />,
         text: 'Figma',
