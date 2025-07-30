@@ -2,20 +2,20 @@
     "props": [
         {
             "prop": "color",
-            "type": "'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'contrast'",
-            "default": "'primary'",
+            "type": "primary | secondary | success | warning | danger | contrast",
+            "default": "primary",
             "description": "버튼의 주 색상(의미)을 설정합니다."
         },
         {
             "prop": "size",
-            "type": "'sm' | 'md' | 'lg' | 'xl'",
-            "default": "'md'",
+            "type": "sm | md | lg | xl",
+            "default": "md",
             "description": "버튼의 크기를 설정합니다."
         },
         {
             "prop": "variant",
-            "type": "'fill' | 'outline' | 'ghost'",
-            "default": "'fill'",
+            "type": "fill | outline | ghost",
+            "default": "fill",
             "description": "버튼의 스타일 변형을 선택합니다."
         },
         {
