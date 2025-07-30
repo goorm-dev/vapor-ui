@@ -71,17 +71,14 @@ jobs:
                     
                     # Format as markdown list
                     if [[ -n "$changed_icons" ]]; then
-                      icon_list=""
-                      while IFS= read -r icon; do
-                        if [[ -n "$icon" ]]; then
-                          icon_list="${icon_list}- \`${icon}\`"$'\n'
-                        fi
-                      done <<< "$changed_icons"
-                      
-                      # Remove trailing newline and save to multiline output
+                      # Save to multiline output with proper escaping
                       {
                         echo 'changed_icons<<EOF'
-                        echo -n "$icon_list"
+                        while IFS= read -r icon; do
+                          if [[ -n "$icon" ]]; then
+                            printf -- "- \`%s\`\n" "$icon"
+                          fi
+                        done <<< "$changed_icons"
                         echo 'EOF'
                       } >> $GITHUB_OUTPUT
                     else
