@@ -125,7 +125,7 @@ jobs:
                   echo "- Applied consistent formatting and code generation" >> "$CHANGESET_FILE"
 
                   # Add all changes including the changeset
-                  git add packages/icons/src/components/ stories/foundation/icons/ .changeset/
+                  git add packages/icons/src/components/ .changeset/
                   git commit -m "feat: sync icons from Figma
 
                   🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
