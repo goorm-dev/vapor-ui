@@ -83,14 +83,14 @@ jobs:
                         
                         if [[ -n "$icon_name" ]]; then
                           # Check if it's a new icon (untracked ?? or added A )
-                          if [[ "$status" =~ ^\?\? ]] || [[ "$status" =~ ^A ]]; then
+                          if [[ "$status" == "??" ]] || [[ "$status" =~ ^A ]]; then
                             if [[ -z "$new_icons_formatted" ]]; then
                               new_icons_formatted="\\\`$icon_name\\\`"
                             else
                               new_icons_formatted="$new_icons_formatted,\\\`$icon_name\\\`"
                             fi
                           # Check if it's an updated icon (modified M )
-                          elif [[ "$status" =~ ^M ]] || [[ "$status" =~ ^ M ]]; then
+                          elif [[ "$status" =~ ^M ]] || [[ "$status" =~ ^\ M ]]; then
                             if [[ -z "$updated_icons_formatted" ]]; then
                               updated_icons_formatted="\\\`$icon_name\\\`"
                             else
