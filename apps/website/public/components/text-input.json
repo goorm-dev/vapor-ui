@@ -2,8 +2,8 @@
     "props": [
         {
             "prop": "type",
-            "type": "'text' | 'email' | 'password' | 'url' | 'tel' | 'search'",
-            "default": "'text'",
+            "type": "text | email | password | url | tel | search",
+            "default": "text",
             "description": "입력 필드의 HTML 타입을 지정합니다."
         },
         {
@@ -32,8 +32,8 @@
         },
         {
             "prop": "size",
-            "type": "'sm' | 'md' | 'lg' | 'xl'",
-            "default": "'md'",
+            "type": "sm | md | lg | xl",
+            "default": "md",
             "description": "입력 필드의 크기를 설정합니다."
         },
         {

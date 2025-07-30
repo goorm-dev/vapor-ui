@@ -39,7 +39,8 @@
             }
         },
         "./package.json": "./package.json",
-        "./styles.css": "./dist/esm/assets/index.css"
+        "./styles.css": "./dist/styles.css",
+        "./tailwind.css": "./dist/tailwind.css"
     },
     "files": [
         "dist"

@@ -698,6 +698,11 @@ src/
 - `Docs`: storybook `autodocs` 로 자동 생성됨
 - `Test Bed`: 시각적 회귀 테스트 용도
 
-## 9.2 Vapor Docs
+## 9.2 Vapor Docs(apps/website)
 
 - `use case` : 서브컴포넌트 컴포넌트들의 조합 / 특정 variant의 나열
+- 타이틀에는 이모지를 사용하지 않는다.
+- 단일 문자열 값 표기 시 ‘ 작은따옴표는 생략한다.  
+  예: `string` → ✅ `string` / ❌ `'string'`
+- Union Type 표기 시 `a` `b` `c` 식으로 공백 구분으로 작성한다.  
+  예: `small` `medium` `large`

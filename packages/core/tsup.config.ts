@@ -1,142 +1,132 @@
 import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
+import autoprefixer from 'autoprefixer';
 import fs from 'fs';
-import { glob } from 'glob';
+import { sync as globSync } from 'glob';
 import path from 'path';
-import { defineConfig } from 'tsup';
+import postcss from 'postcss';
+import { type Options, defineConfig } from 'tsup';
+
+// --- Constants ---
+const DIST_DIR = 'dist';
+const COMPONENTS_DIR = path.join(DIST_DIR, 'components');
+
+// --- Helper Functions ---
 
 /**
- * 컴포넌트 엔트리 포인트들을 가져옵니다
+ * @link https://vanilla-extract.style/documentation/integrations/esbuild/#processcss
  */
-function getComponentEntries() {
-    const componentsDir = 'src/components';
-    const entries: Record<string, string> = {
-        index: 'src/index.ts',
-    };
+async function processCss(css: string) {
+    const result = await postcss([autoprefixer]).process(css, {
+        from: undefined,
+    });
 
-    if (fs.existsSync(componentsDir)) {
-        const componentFolders = fs
-            .readdirSync(componentsDir, { withFileTypes: true })
-            .filter((dirent) => dirent.isDirectory())
-            .map((dirent) => dirent.name);
-
-        componentFolders.forEach((folder) => {
-            const indexPath = `${componentsDir}/${folder}/index.ts`;
-            if (fs.existsSync(indexPath)) {
-                entries[`components/${folder}/index`] = indexPath;
-            }
-        });
-    }
-
-    return entries;
+    return result.css;
 }
+async function prependUseClientDirective() {
+    const outputFiles = globSync(path.join(COMPONENTS_DIR, '*/index.{js,cjs}'));
 
-/**
- * CSS 파일들을 수집하고 번들링하는 플러그인
- */
-function createCssBundlePlugin() {
-    return {
-        name: 'css-bundle',
-        buildEnd: async () => {
-            // ESM과 CJS 각각에 대해 CSS 번들 생성
-            const formats = ['esm', 'cjs'];
+    for (const file of outputFiles) {
+        try {
+            let content = fs.readFileSync(file, 'utf-8');
+            const componentName = path.basename(path.dirname(file));
 
-            for (const format of formats) {
-                const formatDir = `dist/${format}`;
-                if (!fs.existsSync(formatDir)) continue;
+            const tsxSourcePath = path.join(
+                'src/components',
+                componentName,
+                `${componentName}.tsx`,
+            );
+            const tsSourcePath = path.join('src/components', componentName, `${componentName}.ts`);
 
-                const cssFiles = await glob(`${formatDir}/**/*.css`, {
-                    ignore: [`${formatDir}/index.css`],
-                });
+            let componentSourcePath = '';
+            if (fs.existsSync(tsxSourcePath)) {
+                componentSourcePath = tsxSourcePath;
+            } else if (fs.existsSync(tsSourcePath)) {
+                componentSourcePath = tsSourcePath;
+            }
 
-                if (cssFiles.length > 0) {
-                    const cssImports = cssFiles
-                        .map((file) => {
-                            const relativePath = path.relative(formatDir, file);
-                            return `@import "./${relativePath}";`;
-                        })
-                        .join('\n');
+            if (componentSourcePath) {
+                const componentSource = fs.readFileSync(componentSourcePath, 'utf-8');
+                const useClientDirective = `'use client';`;
 
-                    fs.writeFileSync(path.join(formatDir, 'index.css'), cssImports + '\n');
+                if (componentSource.startsWith(useClientDirective)) {
+                    content = `${useClientDirective}\n${content}`;
+                    fs.writeFileSync(file, content);
                 }
             }
-        },
-    };
+        } catch (error) {
+            console.error(`❌ Failed to process 'use client' directive for ${file}:`, error);
+        }
+    }
 }
 
-const componentEntries = getComponentEntries();
+// --- tsup Configurations ---
+const commonConfig: Options = {
+    target: 'es6',
+    sourcemap: true,
+    minify: false,
+    external: ['react', 'react-dom'],
+    dts: false,
+    format: ['esm', 'cjs'],
+    outExtension({ format }) {
+        return {
+            js: format === 'cjs' ? '.cjs' : '.js',
+        };
+    },
+};
+const vanillaExtractConfig = {
+    outputCss: true,
+    processCss,
+};
 
 export default defineConfig([
-    // ESM 빌드
+    // Main Entry Build (index.ts)
     {
-        entry: componentEntries,
-        format: ['esm'],
-        outDir: 'dist/esm',
-        dts: false,
-        sourcemap: false,
-        clean: false,
-        splitting: false,
-        treeshake: true,
-        keepNames: true,
-        external: ['react', 'react-dom', '@radix-ui/react-primitive', 'clsx'],
-        esbuildPlugins: [vanillaExtractPlugin()],
-        esbuildOptions: (options) => {
-            options.preserveSymlinks = false;
-            options.alias = {
-                '~': path.resolve('./src'),
-            };
-            options.jsx = 'preserve';
-        },
-        outExtension: () => ({
-            js: '.js',
-        }),
-        banner: {
-            js: `"use client";`,
-        },
-        plugins: [createCssBundlePlugin()],
+        ...commonConfig,
+        entry: { index: 'src/index.ts' },
+        outDir: DIST_DIR,
+        external: [...(commonConfig.external || []), './components'],
+        clean: true, // Clean the dist on the first build step.
     },
-    // CJS 빌드
+
+    // Components Build
     {
-        entry: componentEntries,
-        format: ['cjs'],
-        outDir: 'dist/cjs',
-        dts: false,
-        sourcemap: false,
-        clean: false,
+        ...commonConfig,
+        entry: ['src/components/*/index.ts'],
+        outDir: COMPONENTS_DIR,
         splitting: false,
-        treeshake: true,
-        keepNames: true,
-        external: ['react', 'react-dom', '@radix-ui/react-primitive', 'clsx'],
-        esbuildPlugins: [vanillaExtractPlugin()],
-        esbuildOptions: (options) => {
-            options.preserveSymlinks = false;
-            options.alias = {
-                '~': path.resolve('./src'),
-            };
-            options.jsx = 'preserve';
-        },
-        outExtension: () => ({
-            js: '.cjs',
-        }),
-        banner: {
-            js: `"use client";`,
+        esbuildPlugins: [
+            vanillaExtractPlugin({
+                ...vanillaExtractConfig,
+                identifiers: ({ hash, filePath, debugId }) => {
+                    const componentName = path.basename(filePath, '.css.ts');
+                    return `${componentName}${debugId ? `-${debugId}` : ''}__${hash}`;
+                },
+            }),
+        ],
+        async onSuccess() {
+            console.log('⌛ Components build successful. Post-processing output...');
+            await prependUseClientDirective();
+            console.log('🚀 "use client" directives added to components.');
         },
     },
-    // TypeScript 선언 파일 빌드
+
+    // Types build
     {
-        entry: componentEntries,
-        format: ['esm'],
-        outDir: 'dist/types',
-        dts: {
-            only: true,
+        entry: ['src/index.ts', 'src/components/*/index.ts'],
+        outDir: DIST_DIR,
+        dts: { only: true },
+        esbuildOptions(options) {
+            options.outbase = './'; // This preserves the directory structure for the generated .d.ts files.
         },
-        sourcemap: false,
-        clean: false,
-        splitting: false,
-        external: ['react', 'react-dom', '@radix-ui/react-primitive', 'clsx'],
-        esbuildOptions: (options) => {
-            options.alias = {
-                '~': path.resolve('./src'),
-            };
+    },
+
+    // Styles build
+    {
+        entry: {
+            styles: 'src/styles/index.ts',
+            tailwind: 'src/styles/tailwind-preset.css.ts',
         },
+        outDir: DIST_DIR,
+        esbuildPlugins: [vanillaExtractPlugin(vanillaExtractConfig)],
     },
 ]);

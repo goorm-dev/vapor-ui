@@ -7,38 +7,10 @@ jobs:
     update-snapshots:
         runs-on: macos-latest
         steps:
-            - uses: actions/checkout@v4
-
-            - name: Setup node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 18
-                  check-latest: true
-
-            - name: Setup corepack
-              run: |
-                  npm i -g corepack@0.31
-                  corepack enable
-
-            - uses: actions/checkout@v4
+            - name: Git clone the repository
+              uses: actions/checkout@v4
               with:
                   fetch-depth: 0
-
-            - id: get-store-path
-              run: echo STORE_PATH=$(pnpm store path) >> $GITHUB_OUTPUT
-
-            - uses: actions/cache@v4
-              timeout-minutes: 5
-              id: cache-pnpm-store
-              with:
-                  path: ${{ steps.get-store-path.outputs.STORE_PATH }}
-                  key: pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-                  restore-keys: |
-                      pnpm-store-
-                      pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-
-            - name: Set npm config
-              run: npm config set @goorm-dev:registry=https://npm.pkg.github.com/ && npm config set //npm.pkg.github.com/:_authToken ${{ secrets.PACKAGE_TOKEN }}
 
             - name: Install Dependencies
               uses: ./.github/composite/install
@@ -46,20 +18,21 @@ jobs:
             - name: Install Playwright Browsers
               uses: ./.github/composite/browser-install
               with:
-                  working-directory: packages/vapor-core
+                  working-directory: packages/core
 
-            - run: |
+            - name: Configure Git
+              run: |
                   git config user.name "$(git log -n 1 --pretty=format:%an)"
                   git config user.email "$(git log -n 1 --pretty=format:%ae)"
 
             - name: Take a snapshot
               run: |
-                  pnpm core exec playwright test --update-snapshots
-                  git add packages/vapor-core/tests/__screenshot__
-                  git commit -m 'ci: update snapshots'
+                  pnpm core test:visual --update-snapshots
+                  git add packages/core/__tests__/screenshots
+                  git diff --exit-code || git commit -m 'ci: update snapshots'
 
             - name: Update Snapshots
               uses: ad-m/github-push-action@master
               with:
-                  github_token: ${{ secrets.PACKAGE_TOKEN }}
-                  branch: ${{ github.head_ref }}
+                  github_token: ${{ secrets.VAPOR_BOT_TOKEN }}
+                  branch: ${{ github.ref_name }}

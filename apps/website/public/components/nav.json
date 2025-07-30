@@ -8,20 +8,20 @@
         },
         {
             "prop": "direction",
-            "type": "'horizontal' | 'vertical'",
-            "default": "'horizontal'",
+            "type": "horizontal | vertical",
+            "default": "horizontal",
             "description": "네비게이션 메뉴가 가로 또는 세로 방향으로 배치될지 결정합니다."
         },
         {
             "prop": "size",
-            "type": "'sm' | 'md' | 'lg' | 'xl'",
-            "default": "'md'",
+            "type": "sm | md | lg | xl",
+            "default": "md",
             "description": "Nav.Link 의 높이·타이포그래피 크기 등을 제어합니다."
         },
         {
             "prop": "shape",
-            "type": "'fill' | 'ghost'",
-            "default": "'fill'",
+            "type": "fill | ghost",
+            "default": "fill",
             "description": "Nav.Link 의 배경 스타일을 설정합니다."
         },
         {
@@ -32,8 +32,8 @@
         },
         {
             "prop": "align",
-            "type": "'start' | 'center' | 'end'",
-            "default": "'center'",
+            "type": "start | center | end",
+            "default": "center",
             "description": "Nav.Link 내부 컨텐츠(아이콘+텍스트 등)의 정렬 위치를 지정합니다."
         },
         {
