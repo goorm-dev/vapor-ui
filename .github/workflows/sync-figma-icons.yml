@@ -1,0 +1,223 @@
+name: '[CI] Sync Figma Icons'
+
+on:
+    pull_request:
+        branches: [main]
+
+    workflow_dispatch:
+        inputs:
+            icon_types:
+                description: 'Icon types to sync (comma-separated)'
+                required: true
+                default: 'basic,symbol'
+                type: string
+    schedule:
+        # Run every Thursday at 4 PM KST (07:00 UTC)
+        - cron: '0 7 * * 4'
+
+jobs:
+    sync-figma-icons:
+        runs-on: ubuntu-latest
+        if: github.repository == 'goorm-dev/vapor-ui'
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
+            - name: Parse icon types to sync
+              id: parse_types
+              run: |
+                  REQUESTED_TYPES="${{ github.event.inputs.icon_types || 'basic,symbol' }}"
+                  echo "types=$REQUESTED_TYPES" >> $GITHUB_OUTPUT
+                  echo "🔍 Icon types to sync: $REQUESTED_TYPES"
+
+            - name: Sync Basic Icons from Figma
+              if: contains(steps.parse_types.outputs.types, 'basic')
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  TYPE: basic
+              run: |
+                  echo "🚀 Syncing basic icons from Figma..."
+                  TYPE=basic node ./scripts/syncFigmaIcons.js
+
+            - name: Sync Symbol Icons from Figma
+              if: contains(steps.parse_types.outputs.types, 'symbol')
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  TYPE: symbol
+              run: |
+                  echo "🚀 Syncing symbol icons from Figma..."
+                  TYPE=symbol node ./scripts/syncFigmaIcons.js
+
+            - name: Format generated files
+              run: |
+                  pnpm format
+
+            - name: Check for changes
+              id: check_changes
+              run: |
+                  # Check if there are changes in the icons directory
+                  if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
+                  echo "has_changes=true" >> $GITHUB_OUTPUT
+                  echo "📝 Changes detected in icons"
+
+                  # Count changed files
+                  changed_count=$(git status --porcelain packages/icons/src/ | wc -l)
+                  echo "changed_files=$changed_count" >> $GITHUB_OUTPUT
+
+                  # Get list of new and updated icon names
+                  new_icons_formatted=""
+                  updated_icons_formatted=""
+
+                  # Process all files in a single loop
+                  while IFS= read -r line; do
+                      # ⬇️⬇️⬇️ 이 라인이 수정되었습니다 ⬇️⬇️⬇️
+                      if [[ -n "$line" ]] && [[ "$line" =~ \.(ts|tsx|js)$ ]] && [[ "$line" =~ (basic|symbol)-icons ]] && [[ ! "$line" =~ /index\.(ts|tsx|js)$ ]]; then
+                      status="${line:0:2}"
+                      file_path="${line:3}"
+                      icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
+                      
+                      if [[ -n "$icon_name" ]]; then
+                          # New icons: untracked (??) or added (A)
+                          if [[ "$status" == "??" ]] || [[ "$status" =~ ^A ]]; then
+                          if [[ -z "$new_icons_formatted" ]]; then
+                              new_icons_formatted="\\\`$icon_name\\\`"
+                          else
+                              new_icons_formatted="$new_icons_formatted,\\\`$icon_name\\\`"
+                          fi
+                          # Updated icons: modified (M)
+                          elif [[ "$status" =~ M ]]; then
+                          if [[ -z "$updated_icons_formatted" ]]; then
+                              updated_icons_formatted="\\\`$icon_name\\\`"
+                          else
+                              updated_icons_formatted="$updated_icons_formatted,\\\`$icon_name\\\`"
+                          fi
+                          fi
+                      fi
+                      fi
+                  done <<< "$(git status --porcelain packages/icons/src/ 2>/dev/null || echo '')"
+
+                  echo "new_icons=$new_icons_formatted" >> $GITHUB_OUTPUT
+                  echo "updated_icons=$updated_icons_formatted" >> $GITHUB_OUTPUT
+                  else
+                  echo "has_changes=false" >> $GITHUB_OUTPUT
+                  echo "✅ No changes detected in icons"
+                  echo "new_icons=" >> $GITHUB_OUTPUT
+                  echo "updated_icons=" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Create branch and commit changes
+              if: steps.check_changes.outputs.has_changes == 'true'
+              run: |
+                  BRANCH_NAME="sync-figma-icons-$(date +%Y%m%d-%H%M%S)"
+                  echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+
+                  # Ensure we have the latest main branch
+                  git fetch origin main
+                  git checkout main
+                  git pull origin main
+
+                  # Create new branch from main
+                  git checkout -b $BRANCH_NAME
+
+                  # Create changeset with details about updated icons
+                  CHANGESET_FILE=".changeset/sync-icons-$(date +%Y%m%d%H%M%S).md"
+
+                  # Create changeset content
+                  echo "---" > "$CHANGESET_FILE"
+                  echo "\"@vapor-ui/icons\": minor" >> "$CHANGESET_FILE"
+                  echo "---" >> "$CHANGESET_FILE"
+                  echo "" >> "$CHANGESET_FILE"
+                  echo "Sync icons from Figma" >> "$CHANGESET_FILE"
+                  echo "" >> "$CHANGESET_FILE"
+                  # Add new icons section
+                  if [[ -n "${{ steps.check_changes.outputs.new_icons }}" ]]; then
+                    echo "**New Icons:** ${{ steps.check_changes.outputs.new_icons }}" >> "$CHANGESET_FILE"
+                  fi
+
+                  # Add updated icons section  
+                  if [[ -n "${{ steps.check_changes.outputs.updated_icons }}" ]]; then
+                    echo "**Updated Icons:** ${{ steps.check_changes.outputs.updated_icons }}" >> "$CHANGESET_FILE"
+                  fi
+
+                  echo "" >> "$CHANGESET_FILE"
+                  echo "- Synced ${{ steps.parse_types.outputs.types }} icon types from Figma" >> "$CHANGESET_FILE"
+                  echo "- Updated icon components and stories" >> "$CHANGESET_FILE"
+                  echo "- Applied consistent formatting and code generation" >> "$CHANGESET_FILE"
+
+                  # Add all changes including the changeset
+                  git add packages/icons/src/components/ .changeset/
+                  git commit -m "feat: sync icons from Figma
+
+                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+                  Co-Authored-By: GitHub Action <action@github.com>"
+                  git push -u origin $BRANCH_NAME
+
+            # - name: Create Pull Request
+            #   if: steps.check_changes.outputs.has_changes == 'true'
+            #   env:
+            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   run: |
+            #       # Create temporary file for PR body to avoid shell interpretation
+            #       cat > pr_body.txt << 'EOF'
+            #       ## 🤖 Automated Icon Sync from Figma
+
+            #       This PR automatically updates `basic` and `symbol` icons based on the latest changes in Figma.
+
+            #       ### Sync Summary
+            #       | Category         | Details                          |
+            #       | ---------------- | -------------------------------- |
+            #       | **Icon Types**   | ${{ steps.parse_types.outputs.types }} |
+            #       | **Files Modified** | ${{ steps.check_changes.outputs.changed_files }} |
+            #       | **Workflow Run** | [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+
+            #       ---
+
+            #       <details>
+            #       <summary>
+            #         <strong>View Changed Icon Details</strong>
+            #       </summary>
+
+            #       EOF
+
+            #       # Show new and updated icons for the synced types
+            #       if [[ "${{ steps.parse_types.outputs.types }}" == *"basic"* ]] || [[ "${{ steps.parse_types.outputs.types }}" == *"symbol"* ]]; then
+            #         echo "### 📦 Icon Changes" >> pr_body.txt
+
+            #         # Show new icons
+            #         if [[ -n "${{ steps.check_changes.outputs.new_icons }}" ]]; then
+            #           echo "**✨ New Icons:** ${{ steps.check_changes.outputs.new_icons }}" >> pr_body.txt
+            #           echo "" >> pr_body.txt
+            #         fi
+
+            #         # Show updated icons
+            #         if [[ -n "${{ steps.check_changes.outputs.updated_icons }}" ]]; then
+            #           echo "**🔄 Updated Icons:** ${{ steps.check_changes.outputs.updated_icons }}" >> pr_body.txt
+            #           echo "" >> pr_body.txt
+            #         fi
+
+            #         # Show message if no icons could be determined
+            #         if [[ -z "${{ steps.check_changes.outputs.new_icons }}" && -z "${{ steps.check_changes.outputs.updated_icons }}" ]]; then
+            #           echo "No icon names could be determined" >> pr_body.txt
+            #         fi
+            #       fi
+
+            #       cat >> pr_body.txt << 'EOF'
+
+            #       </details>
+            #       EOF
+
+            #       gh pr create \
+            #         --title "feat: sync icons from Figma" \
+            #         --body-file pr_body.txt \
+            #         --base main \
+            #         --head ${{ env.branch_name }}
+
+            #       # Clean up temporary file
+            #       rm -f pr_body.txt
