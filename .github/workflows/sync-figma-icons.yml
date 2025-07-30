@@ -118,7 +118,7 @@ jobs:
                   echo "Sync icons from Figma" >> "$CHANGESET_FILE"
                   echo "" >> "$CHANGESET_FILE"
                   echo "**New/Updated Icons:**" >> "$CHANGESET_FILE"
-                  echo "${{ steps.check_changes.outputs.changed_icons }}" >> "$CHANGESET_FILE"
+                  printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" >> "$CHANGESET_FILE"
                   echo "" >> "$CHANGESET_FILE"
                   echo "- Synced ${{ steps.parse_types.outputs.types }} icon types from Figma" >> "$CHANGESET_FILE"
                   echo "- Updated icon components and stories" >> "$CHANGESET_FILE"
@@ -138,14 +138,20 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  # Prepare PR body with icon list
-                  PR_BODY="🤖 Automated sync of icons from Figma
+                  # Create temporary file for PR body to avoid shell interpretation
+                  cat > pr_body.txt << 'EOF'
+                  🤖 Automated sync of icons from Figma
 
                   **Icon Types:** ${{ steps.parse_types.outputs.types }}
                   **Files Modified:** ${{ steps.check_changes.outputs.changed_files }}
 
                   **Changed Icons:**
-                  ${{ steps.check_changes.outputs.changed_icons }}
+                  EOF
+                  
+                  # Safely append the changed icons without shell interpretation
+                  printf '%s\n' "${{ steps.check_changes.outputs.changed_icons }}" >> pr_body.txt
+                  
+                  cat >> pr_body.txt << 'EOF'
 
                   **Changes:**
                   - Updated icons from Figma
@@ -155,10 +161,11 @@ jobs:
 
                   **Workflow:** [View run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
-                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                  EOF
 
                   gh pr create \
                     --title "feat: sync icons from Figma" \
-                    --body "$PR_BODY" \
+                    --body-file pr_body.txt \
                     --base main \
                     --head ${{ env.branch_name }}
