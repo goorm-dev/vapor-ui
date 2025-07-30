@@ -1,5 +1,7 @@
 'use client';
 
+import { Badge, Text } from '@vapor-ui/core';
+
 import { ComponentDocsMap } from '~/constants/components';
 
 interface PropItem {
@@ -54,22 +56,31 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
                 {items.map(({ prop, type, default: defaultValue, description }) => (
                     <tr key={prop}>
                         <td>
-                            <code>{prop}</code>
+                            <Text typography="body2" foreground="normal">
+                                {prop}
+                            </Text>
                         </td>
                         <td>
-                            <div className="flex gap-[var(--vapor-size-space-100)]">
+                            <div className="flex flex-col gap-[var(--vapor-size-space-100)]">
                                 {type.split('|').map((segment, index) => {
                                     const value = segment.trim();
                                     return (
-                                        <span key={index}>
-                                            <code>{value}</code>
-                                        </span>
+                                        <Badge
+                                            key={index}
+                                            color="hint"
+                                            shape="square"
+                                            className="w-max"
+                                        >
+                                            {value}
+                                        </Badge>
                                     );
                                 })}
                             </div>
                         </td>
                         <td>
-                            <code>{defaultValue !== null ? String(defaultValue) : '-'}</code>
+                            <Badge color="hint" shape="square" className="w-max">
+                                {defaultValue !== null ? String(defaultValue) : '-'}
+                            </Badge>
                         </td>
                         <td>{description}</td>
                     </tr>
