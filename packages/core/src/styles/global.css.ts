@@ -49,7 +49,7 @@ globalStyle('input, button, select, optgroup, textarea', {
         [layers.reset]: {
             border: 'none',
             borderRadius: 0,
-            backgroundColor: '#0000',
+            backgroundColor: 'transparent',
             color: 'inherit',
             font: 'inherit',
             fontFeatureSettings: 'inherit',
