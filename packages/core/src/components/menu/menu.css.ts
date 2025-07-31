@@ -1,0 +1,112 @@
+import { createVar, style } from '@vanilla-extract/css';
+import type { RecipeVariants } from '@vanilla-extract/recipes';
+import { recipe } from '@vanilla-extract/recipes';
+
+import { foregrounds } from '~/styles/mixins/foreground.css';
+import { interaction } from '~/styles/mixins/interactions.css';
+import { typography } from '~/styles/mixins/typography.css';
+import { vars } from '~/styles/vars.css';
+
+const contentWidth = createVar({ inherits: false, syntax: '*' }, 'menu-content-width');
+const contentHeight = createVar({ inherits: false, syntax: '*' }, 'menu-content-height');
+
+export const contents = style({
+    display: 'flex',
+
+    flexDirection: 'column',
+    border: `0.0625rem solid ${vars.color.border.normal}`,
+
+    borderRadius: vars.size.borderRadius['300'],
+    boxShadow: vars.color.shadow.md,
+
+    backgroundColor: vars.color.background.normal,
+    paddingBlock: vars.size.space['050'],
+    paddingInline: 0,
+    minWidth: contentWidth,
+
+    overflowY: 'auto',
+    vars: {
+        [contentWidth]: 'var(--radix-dropdown-menu-trigger-width)',
+    },
+});
+
+export const item = recipe({
+    base: [
+        interaction({ type: 'roving' }),
+        typography({ style: 'body2' }),
+        foregrounds({ color: 'normal' }),
+        {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: vars.size.space['100'],
+            alignSelf: 'stretch',
+            margin: `0 ${vars.size.space['050']}`,
+            border: 'none',
+            borderRadius: vars.size.borderRadius['300'],
+            cursor: 'pointer',
+            padding: `${vars.size.space['050']} ${vars.size.space['150']}`,
+            width: `calc(100% - ${vars.size.space['050']} * 2)`,
+            height: vars.size.dimension['400'],
+        },
+    ],
+
+    variants: {
+        disabled: {
+            true: { opacity: 0.32, pointerEvents: 'none' },
+        },
+    },
+});
+
+export const separator = style({
+    flexShrink: 0,
+    margin: `${vars.size.space['050']} 0`,
+    backgroundColor: vars.color.border.normal,
+    height: '0.0625rem',
+});
+
+export const subContents = style({
+    display: 'flex',
+    flexDirection: 'column',
+
+    border: `1px solid ${vars.color.border.normal}`,
+    borderRadius: vars.size.borderRadius['300'],
+    boxShadow: vars.color.shadow.md,
+
+    backgroundColor: vars.color.background.normal,
+    paddingBlock: vars.size.space['050'],
+    paddingInline: 0,
+
+    minWidth: contentWidth,
+    maxHeight: contentHeight,
+    overflowY: 'auto',
+
+    vars: {
+        [contentWidth]: 'var(--radix-dropdown-menu-trigger-width)',
+        [contentHeight]: 'var(--radix-dropdown-menu-content-available-height)',
+    },
+});
+
+export const subTrigger = item;
+
+export const groupLabel = style([
+    typography({ style: 'subtitle2' }),
+    foregrounds({ color: 'hint' }),
+    {
+        marginBlock: 0,
+        marginInline: vars.size.space['050'],
+        paddingBlock: vars.size.space['050'],
+        paddingInline: vars.size.space['150'],
+    },
+]);
+
+export const indicator = style({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: vars.size.dimension['200'],
+    height: vars.size.dimension['200'],
+    color: vars.color.black,
+});
+
+export type MenuItemVariants = NonNullable<RecipeVariants<typeof item>>;
