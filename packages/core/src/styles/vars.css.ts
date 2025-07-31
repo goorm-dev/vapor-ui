@@ -8,6 +8,7 @@ import {
     FONT_WEIGHT,
     LETTER_SPACING,
     LIGHT_BASIC_COLORS,
+    LIGHT_BOX_SHADOW,
     LIGHT_SEMANTIC_COLORS,
     LINE_HEIGHT,
     SPACE,
@@ -17,6 +18,7 @@ const THEME_TOKENS = {
     color: {
         ...LIGHT_BASIC_COLORS,
         ...LIGHT_SEMANTIC_COLORS,
+        ...LIGHT_BOX_SHADOW,
     },
     size: {
         borderRadius: BORDER_RADIUS,
