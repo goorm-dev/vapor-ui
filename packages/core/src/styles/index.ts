@@ -7,6 +7,7 @@ import './global.css';
 import './layers.css';
 // 5. Utility styles
 import './sprinkles.css';
+import './mixins/foreground.css';
 // 4. Assign theme values (after the contract is created)
 import './theme.css';
 import './local-theme.css';
