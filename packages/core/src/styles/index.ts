@@ -5,6 +5,7 @@ import './global-var.css';
 // 2. Global reset styles
 import './global.css';
 import './layers.css';
+import './mixins/foreground.css';
 // 5. Utility styles
 import './sprinkles.css';
 // 4. Assign theme values (after the contract is created)
