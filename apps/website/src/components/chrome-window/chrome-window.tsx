@@ -273,7 +273,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                 </Card.Body>
                             </Card.Root>
                         </div>
-                        <div className="flex flex-col items-start gap-6 flex-1 pt-[var(--vapor-size-space-400)] ">
+                        <div className="flex flex-col items-start gap-6 flex-1 pt-[var(--vapor-size-space-400)] max-[1199px]:hidden">
                             <Card.Root className="w-full">
                                 <Card.Body>
                                     <RadioGroup.Root
