@@ -256,7 +256,7 @@ describe('RadioGroup', () => {
         expect(secondItem).toHaveFocus();
 
         /**
-         * Note:
+         * NOTE
          * - When userEvent.keyboard([ArrowDown]) is input in the test environment, the checked state does not automatically change.
          * - Therefore, userEvent.keyboard([Space]) has been temporarily added to manually toggle the state.
          *
