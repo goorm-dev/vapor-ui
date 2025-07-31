@@ -10,7 +10,7 @@
 
 ### Patch Changes
 
-- 51899f9: fix: remove incorrectly injected props
+- 0c6d39c: fix(RadioGroup): remove incorrectly injected props
 - a813633: fix(Text): Add foreground mixin to style entry point
 - 242d1e8: style(Badge): add center alignment
 - Updated dependencies [30ebcde]
