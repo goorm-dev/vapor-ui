@@ -11,13 +11,13 @@ const OPTION_2 = 'Option 2';
 const RadioGroupTest = (props: RadioGroupRootProps) => {
     return (
         <RadioGroup.Root {...props}>
-            <RadioGroup.Item value="option1" data-testid="option1-item">
-                <RadioGroup.Control data-testid="option1-control" />
-                <RadioGroup.Label data-testid="option1-label">{OPTION_1}</RadioGroup.Label>
+            <RadioGroup.Item value="option1">
+                <RadioGroup.Control />
+                <RadioGroup.Label>{OPTION_1}</RadioGroup.Label>
             </RadioGroup.Item>
-            <RadioGroup.Item value="option2" data-testid="option2-item">
-                <RadioGroup.Control data-testid="option2-control" />
-                <RadioGroup.Label data-testid="option2-label">{OPTION_2}</RadioGroup.Label>
+            <RadioGroup.Item value="option2">
+                <RadioGroup.Control />
+                <RadioGroup.Label>{OPTION_2}</RadioGroup.Label>
             </RadioGroup.Item>
         </RadioGroup.Root>
     );
@@ -45,7 +45,7 @@ describe('RadioGroup', () => {
     it('should invoke onValueChange when an label is clicked', async () => {
         const onValueChange = vi.fn();
         const rendered = render(<RadioGroupTest onValueChange={onValueChange} />);
-        const item = rendered.getByTestId('option1-label');
+        const item = rendered.getByText(OPTION_1);
 
         await userEvent.click(item);
 
@@ -145,14 +145,12 @@ describe('RadioGroup', () => {
                     </RadioGroup.Item>
                 </RadioGroup.Root>
 
-                <button type="submit" data-testid="submit">
-                    Submit
-                </button>
+                <button type="submit">Submit</button>
             </form>,
         );
 
         const [radioA] = rendered.getAllByRole('radio');
-        const submitButton = rendered.getByTestId('submit');
+        const submitButton = rendered.getByRole('button', { name: 'Submit' });
 
         await userEvent.click(submitButton);
 
@@ -209,16 +207,15 @@ describe('RadioGroup', () => {
         const rendered = render(
             <RadioGroup.Root defaultValue="b">
                 <RadioGroup.Item value="a">
-                    <RadioGroup.Control data-testid="radio-a" />
+                    <RadioGroup.Control />
                 </RadioGroup.Item>
                 <RadioGroup.Item value="b">
-                    <RadioGroup.Control data-testid="radio-b" />
+                    <RadioGroup.Control />
                 </RadioGroup.Item>
             </RadioGroup.Root>,
         );
 
-        const radioA = rendered.getByTestId('radio-a');
-        const radioB = rendered.getByTestId('radio-b');
+        const [radioA, radioB] = rendered.getAllByRole('radio');
 
         await userEvent.tab();
 
