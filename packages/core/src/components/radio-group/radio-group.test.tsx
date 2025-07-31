@@ -162,6 +162,85 @@ describe('RadioGroup', () => {
         expect(stringifiedFormData).toBe('radio-group-test=a');
     });
 
+    it('should change the checked state using the arrow keys', async () => {
+        const rendered = render(
+            <RadioGroup.Root>
+                <RadioGroup.Item value="option1">
+                    <RadioGroup.Control />
+                    <RadioGroup.Label>option1</RadioGroup.Label>
+                </RadioGroup.Item>
+                <RadioGroup.Item value="option2">
+                    <RadioGroup.Control />
+                    <RadioGroup.Label>option2</RadioGroup.Label>
+                </RadioGroup.Item>
+                <RadioGroup.Item value="option3">
+                    <RadioGroup.Control />
+                    <RadioGroup.Label>option3</RadioGroup.Label>
+                </RadioGroup.Item>
+            </RadioGroup.Root>,
+        );
+        const [option1, option2, option3] = rendered.getAllByRole('radio');
+
+        option1.focus();
+        await userEvent.keyboard('[Space]');
+
+        expect(option1).toHaveFocus();
+        expect(option1).toBeChecked();
+
+        await userEvent.keyboard('[ArrowDown]');
+        await userEvent.keyboard('[Space]');
+
+        expect(option2).toHaveFocus();
+        expect(option2).toBeChecked();
+
+        await userEvent.keyboard('[ArrowDown]');
+        await userEvent.keyboard('[Space]');
+
+        expect(option3).toHaveFocus();
+        expect(option3).toBeChecked();
+
+        await userEvent.keyboard('[ArrowUp]');
+        await userEvent.keyboard('[Space]');
+    });
+
+    it('should not include disabled items during keyboard navigation', async () => {
+        const rendered = render(
+            <RadioGroup.Root>
+                <RadioGroup.Item value="option1">
+                    <RadioGroup.Control />
+                    <RadioGroup.Label>option1</RadioGroup.Label>
+                </RadioGroup.Item>
+                <RadioGroup.Item value="option2" disabled>
+                    <RadioGroup.Control />
+                    <RadioGroup.Label>option2</RadioGroup.Label>
+                </RadioGroup.Item>
+                <RadioGroup.Item value="option3">
+                    <RadioGroup.Control />
+                    <RadioGroup.Label>option3</RadioGroup.Label>
+                </RadioGroup.Item>
+            </RadioGroup.Root>,
+        );
+        const [option1, _option2, option3] = rendered.getAllByRole('radio');
+
+        option1.focus();
+        await userEvent.keyboard('[Space]');
+
+        expect(option1).toHaveFocus();
+        expect(option1).toBeChecked();
+
+        await userEvent.keyboard('[ArrowDown]');
+        await userEvent.keyboard('[Space]');
+
+        expect(option3).toHaveFocus();
+        expect(option3).toBeChecked();
+
+        await userEvent.keyboard('[ArrowUp]');
+        await userEvent.keyboard('[Space]');
+
+        expect(option1).toHaveFocus();
+        expect(option1).toBeChecked();
+    });
+
     it('should automatically select radio upon navigation', async () => {
         const rendered = render(<RadioGroupTest />);
         const [firstItem, secondItem] = rendered.getAllByRole('radio');
