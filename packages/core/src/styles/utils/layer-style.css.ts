@@ -4,7 +4,7 @@ import { style } from '@vanilla-extract/css';
 import type { layerName } from '../layers.css';
 
 export const layerStyle = (
-    layer: (typeof layerName)[keyof typeof layerName], // 'vapor-theme' | 'vapor-reset' ...
+    layer: (typeof layerName)[keyof typeof layerName], // 'theme' | 'reset' ...
     rule: StyleRule,
     debugId?: string,
 ) =>

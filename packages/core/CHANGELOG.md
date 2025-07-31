@@ -1,5 +1,21 @@
 # @vapor-ui/core
 
+## 0.4.0
+
+### Minor Changes
+
+- 2ce16a6: refactor(build): Improve DX by Overhauling CSS Bundling Strategy
+- 482e447: feat: The CSS layer names have been changed to “theme,” “reset,” “components,” and “utilities.”
+- f5e6651: feat: Add Tailwind CSS v4 Preset
+
+### Patch Changes
+
+- 0c6d39c: fix(RadioGroup): remove incorrectly injected props
+- a813633: fix(Text): Add foreground mixin to style entry point
+- 242d1e8: style(Badge): add center alignment
+- Updated dependencies [30ebcde]
+    - @vapor-ui/icons@0.2.0
+
 ## 0.3.1
 
 ### Patch Changes

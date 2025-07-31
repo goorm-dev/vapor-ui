@@ -8,7 +8,7 @@ import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-
 import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
 
-import { navLinks } from '~/constants/site-links';
+import { externalLinks } from '~/constants/site-links';
 
 import LogoVapor from '../../../public/icons/logo-vapor.svg';
 
@@ -73,11 +73,14 @@ export const SiteNavBar = () => {
                                 <Nav.LinkItem className="text-sm" href="/docs" asChild>
                                     <Link>Docs</Link>
                                 </Nav.LinkItem>
+                                <Nav.LinkItem className="text-sm" href="/playground" asChild>
+                                    <Link>Theme Playground</Link>
+                                </Nav.LinkItem>
                             </Nav.List>
                         </div>
                         <div className="flex items-center gap-10">
                             <Nav.List className="hidden md:flex flex-row items-center gap-0">
-                                {navLinks.map((item) => {
+                                {externalLinks.map((item) => {
                                     return (
                                         <Nav.Item key={item.text}>
                                             <IconButton
@@ -127,7 +130,7 @@ export const SiteNavBar = () => {
                         </Dialog.Close>
                     </header>
                     <ul className="flex flex-col gap-4 p-6">
-                        {navLinks.map((item, i) => (
+                        {externalLinks.map((item, i) => (
                             <li key={i} className="flex h-10 px-6 items-center justify-between">
                                 <Text
                                     className="flex items-center gap-2 text-base"
