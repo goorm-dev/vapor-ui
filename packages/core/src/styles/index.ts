@@ -9,6 +9,7 @@ import './layers.css';
 import './sprinkles.css';
 // 4. Assign theme values (after the contract is created)
 import './theme.css';
+import './local-theme.css';
 // 3. Create CSS variable contract
 import './vars.css';
 
