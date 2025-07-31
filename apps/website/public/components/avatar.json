@@ -20,15 +20,15 @@
         },
         {
             "prop": "size",
-            "type": "'sm' | 'md' | 'lg' | 'xl'",
-            "default": "'md'",
+            "type": "sm | md | lg | xl",
+            "default": "md",
             "description": "아바타의 전체 크기를 제어합니다."
         },
         {
             "prop": "shape",
-            "type": "'square' | 'circle'",
-            "default": "'square'",
-            "description": "아바타의 모서리 둥글기를 설정합니다. 'square'는 둥근 사각형, 'circle'은 완전한 원형입니다."
+            "type": "square | circle",
+            "default": "square",
+            "description": "아바타의 모서리 둥글기를 설정합니다. square는 둥근 사각형, circle은 완전한 원형입니다."
         }
     ],
     "imageProps": [
@@ -74,15 +74,15 @@
         },
         {
             "prop": "size",
-            "type": "'sm' | 'md' | 'lg' | 'xl'",
-            "default": "'md'",
+            "type": "sm | md | lg | xl",
+            "default": "md",
             "description": "아바타의 전체 크기를 제어합니다."
         },
         {
             "prop": "shape",
-            "type": "'square' | 'circle'",
-            "default": "'square'",
-            "description": "아바타의 모서리 둥글기를 설정합니다. 'square'는 둥근 사각형, 'circle'은 완전한 원형입니다."
+            "type": "square | circle",
+            "default": "square",
+            "description": "아바타의 모서리 둥글기를 설정합니다. square는 둥근 사각형, circle은 완전한 원형입니다."
         }
     ],
     "accessibility": [
