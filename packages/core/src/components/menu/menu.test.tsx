@@ -304,58 +304,104 @@ describe('<Menu.Root />', () => {
         });
     });
 
-    describe('nested menus', () => {
-        (
-            [
-                ['ltr', 'ArrowRight', 'ArrowLeft'],
-                ['rtl', 'ArrowLeft', 'ArrowRight'],
-            ] as const
-        ).forEach(([direction, openKey, closeKey]) => {
-            it.skipIf(isJSDOM)(
-                `should open a nested menu of a ${direction.toUpperCase()} menu with ${openKey} key and close it with ${closeKey}`,
-                async () => {
-                    const rendered = render(
-                        <Menu.Root dir={direction} open>
-                            <Menu.Content>
-                                <Menu.SubmenuRoot>
-                                    <Menu.SubmenuTriggerItem>
-                                        Submenu Trigger
-                                    </Menu.SubmenuTriggerItem>
-                                    <Menu.SubmenuContent>
-                                        <Menu.Item>Item 1</Menu.Item>
-                                        <Menu.Item>Item 1</Menu.Item>
-                                    </Menu.SubmenuContent>
-                                </Menu.SubmenuRoot>
-                            </Menu.Content>
-                        </Menu.Root>,
-                    );
+    describe('group label', () => {
+        const Test = ({ id }: { id?: string }) => (
+            <Menu.Root defaultOpen>
+                <Menu.Content>
+                    <Menu.Group>
+                        <Menu.GroupLabel id={id || undefined}>Group Label</Menu.GroupLabel>
+                        <Menu.Item>Item 1</Menu.Item>
+                        <Menu.Item>Item 2</Menu.Item>
+                    </Menu.Group>
+                    <Menu.Separator />
+                </Menu.Content>
+            </Menu.Root>
+        );
 
-                    const trigger = rendered.getByRole('menuitem', {
-                        name: 'Submenu Trigger',
-                    });
+        it('should have no a11y violations', async () => {
+            const rendered = render(<Test />);
+            const result = await axe(rendered.container);
 
-                    act(() => trigger.focus());
-
-                    await userEvent.keyboard(`[${openKey}]`);
-
-                    const [_, submenuContent] = rendered.getAllByRole('menu');
-                    const submenuItem = submenuContent.querySelector('[role="menuitem"]');
-
-                    expect(submenuItem).toBeInTheDocument();
-                    expect(submenuItem).toHaveAttribute('data-highlighted');
-
-                    await userEvent.keyboard(`[${closeKey}]`);
-
-                    expect(submenuItem).not.toHaveAttribute('data-highlighted');
-                    expect(submenuContent).not.toBeInTheDocument();
-                    expect(trigger).toHaveFocus();
-                },
-            );
+            expect(result).toHaveNoViolations();
         });
 
+        it('should reference the generated id in the group label', () => {
+            const rendered = render(<Test />);
+            const group = rendered.getByRole('group');
+            const groupLabel = rendered.getByText('Group Label');
+
+            expect(group).toHaveAttribute('aria-labelledby', groupLabel.id);
+        });
+
+        it('should reference the provided id in the group label', () => {
+            const id = 'custom-group-label-id';
+            const rendered = render(<Test id={id} />);
+
+            const group = rendered.getByRole('group');
+            const groupLabel = rendered.getByText('Group Label');
+
+            expect(groupLabel.id).toBe(id);
+            expect(group).toHaveAttribute('aria-labelledby', id);
+        });
+    });
+});
+
+describe('<Menu.SubmenuRoot />', () => {
+    (
+        [
+            ['ltr', 'ArrowRight', 'ArrowLeft'],
+            ['rtl', 'ArrowLeft', 'ArrowRight'],
+        ] as const
+    ).forEach(([direction, openKey, closeKey]) => {
+        it.skipIf(isJSDOM)(
+            `should open a nested menu of a ${direction.toUpperCase()} menu with ${openKey} key and close it with ${closeKey}`,
+            async () => {
+                const rendered = render(
+                    <Menu.Root dir={direction} open>
+                        <Menu.Content>
+                            <Menu.SubmenuRoot>
+                                <Menu.SubmenuTriggerItem>Submenu Trigger</Menu.SubmenuTriggerItem>
+                                <Menu.SubmenuContent>
+                                    <Menu.Item>Item 1</Menu.Item>
+                                    <Menu.Item>Item 1</Menu.Item>
+                                </Menu.SubmenuContent>
+                            </Menu.SubmenuRoot>
+                        </Menu.Content>
+                    </Menu.Root>,
+                );
+
+                const trigger = rendered.getByRole('menuitem', {
+                    name: 'Submenu Trigger',
+                });
+
+                act(() => trigger.focus());
+
+                await userEvent.keyboard(`[${openKey}]`);
+
+                const [_, submenuContent] = rendered.getAllByRole('menu');
+                const submenuItem = submenuContent.querySelector('[role="menuitem"]');
+
+                expect(submenuItem).toBeInTheDocument();
+                expect(submenuItem).toHaveAttribute('data-highlighted');
+
+                await userEvent.keyboard(`[${closeKey}]`);
+
+                expect(submenuItem).not.toHaveAttribute('data-highlighted');
+                expect(submenuContent).not.toBeInTheDocument();
+                expect(trigger).toHaveFocus();
+            },
+        );
+    });
+
+    (
+        [
+            ['ltr', 'ArrowRight'],
+            ['rtl', 'ArrowLeft'],
+        ] as const
+    ).forEach(([direction, openKey]) => {
         it.skipIf(isJSDOM)('should close a nested menu with Escape key', async () => {
             const rendered = render(
-                <Menu.Root defaultOpen>
+                <Menu.Root dir={direction} defaultOpen>
                     <Menu.Content>
                         <Menu.SubmenuRoot defaultOpen>
                             <Menu.SubmenuTriggerItem>Submenu Trigger</Menu.SubmenuTriggerItem>
@@ -371,7 +417,7 @@ describe('<Menu.Root />', () => {
             const trigger = rendered.getByRole('menuitem', { name: 'Submenu Trigger' });
 
             act(() => trigger.focus());
-            await userEvent.keyboard('[ArrowRight]');
+            await userEvent.keyboard(`[${openKey}]`);
 
             const [content, submenuContent] = rendered.getAllByRole('menu');
             expect(submenuContent).toBeInTheDocument();
@@ -382,36 +428,582 @@ describe('<Menu.Root />', () => {
             expect(content).toBeInTheDocument();
             expect(trigger).toHaveFocus();
         });
+    });
 
-        it('should invoke onEscapeKeyDown when Escape key is pressed', async () => {
-            const onEscapeKeyDown = vi.fn();
+    it('should invoke onEscapeKeyDown when Escape key is pressed', async () => {
+        const onEscapeKeyDown = vi.fn();
+        const rendered = render(
+            <Menu.Root defaultOpen>
+                <Menu.Content>
+                    <Menu.SubmenuRoot>
+                        <Menu.SubmenuTriggerItem>Submenu Trigger</Menu.SubmenuTriggerItem>
+                        <Menu.SubmenuContent onEscapeKeyDown={onEscapeKeyDown}>
+                            <Menu.Item>Item 1</Menu.Item>
+                            <Menu.Item>Item 2</Menu.Item>
+                        </Menu.SubmenuContent>
+                    </Menu.SubmenuRoot>
+                </Menu.Content>
+            </Menu.Root>,
+        );
+
+        const trigger = rendered.getByRole('menuitem', { name: 'Submenu Trigger' });
+
+        act(() => trigger.focus());
+        await userEvent.keyboard('[ArrowRight]');
+
+        const [_, submenuContent] = rendered.getAllByRole('menu');
+        expect(submenuContent).toBeInTheDocument();
+
+        await userEvent.keyboard('[Escape]');
+
+        expect(submenuContent).not.toBeInTheDocument();
+        expect(trigger).toHaveFocus();
+        expect(onEscapeKeyDown).toHaveBeenCalledOnce();
+    });
+});
+
+describe('<Menu.CheckboxItem>', () => {
+    const Test = () => (
+        <Menu.Root defaultOpen>
+            <Menu.Content>
+                <Menu.CheckboxItem>Checkbox Item 1</Menu.CheckboxItem>
+                <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                <Menu.CheckboxItem>Checkbox Item 3</Menu.CheckboxItem>
+            </Menu.Content>
+        </Menu.Root>
+    );
+
+    it('should have no a11y violations', async () => {
+        const rendered = render(<Test />);
+        const result = await axe(rendered.container);
+
+        expect(result).toHaveNoViolations();
+    });
+
+    it('should add the correct ARIA attributes when clicked', async () => {
+        const rendered = render(<Test />);
+        const [check1, check2, check3] = rendered.getAllByRole('menuitemcheckbox');
+
+        expect(check1).toHaveAttribute('aria-checked', 'false');
+        expect(check2).toHaveAttribute('aria-checked', 'false');
+        expect(check3).toHaveAttribute('aria-checked', 'false');
+
+        await userEvent.click(check1);
+        expect(check1).toHaveAttribute('aria-checked', 'true');
+
+        await userEvent.click(check2);
+        expect(check2).toHaveAttribute('aria-checked', 'true');
+
+        await userEvent.click(check3);
+        expect(check3).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('should toggle the checked state when clicked', async () => {
+        const rendered = render(<Test />);
+        const [checkitem] = rendered.getAllByRole('menuitemcheckbox');
+
+        expect(checkitem).toHaveAttribute('aria-checked', 'false');
+
+        await userEvent.click(checkitem);
+        expect(checkitem).toHaveAttribute('aria-checked', 'true');
+
+        await userEvent.click(checkitem);
+        expect(checkitem).toHaveAttribute('aria-checked', 'false');
+    });
+
+    describe('keyboard navigation', () => {
+        it('should toggle the checked state when Space is pressed', async () => {
+            const rendered = render(<Test />);
+            const [checkitem] = rendered.getAllByRole('menuitemcheckbox');
+
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+
+            act(() => checkitem.focus());
+
+            await userEvent.keyboard('[Space]');
+            expect(checkitem).toHaveAttribute('aria-checked', 'true');
+
+            await userEvent.keyboard('[Space]');
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+        });
+
+        it('should toggle the checked state when Enter is pressed', async () => {
+            const rendered = render(<Test />);
+            const [checkitem] = rendered.getAllByRole('menuitemcheckbox');
+
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+
+            act(() => checkitem.focus());
+
+            await userEvent.keyboard('[Enter]');
+            expect(checkitem).toHaveAttribute('aria-checked', 'true');
+
+            await userEvent.keyboard('[Enter]');
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+        });
+
+        it('should invoke `onCheckedChange` when the checked state changes', async () => {
+            const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
                     <Menu.Content>
-                        <Menu.SubmenuRoot>
-                            <Menu.SubmenuTriggerItem>Submenu Trigger</Menu.SubmenuTriggerItem>
-                            <Menu.SubmenuContent onEscapeKeyDown={onEscapeKeyDown}>
-                                <Menu.Item>Item 1</Menu.Item>
-                                <Menu.Item>Item 2</Menu.Item>
-                            </Menu.SubmenuContent>
-                        </Menu.SubmenuRoot>
+                        <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
+                            Checkbox Item
+                        </Menu.CheckboxItem>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const checkitem = rendered.getByRole('menuitemcheckbox');
+
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+
+            await userEvent.click(checkitem);
+            expect(handleCheckedChange).toHaveBeenCalledTimes(1);
+            expect(handleCheckedChange).toHaveBeenCalledWith(true);
+
+            await userEvent.click(checkitem);
+            expect(handleCheckedChange).toHaveBeenCalledTimes(2);
+            expect(handleCheckedChange).toHaveBeenCalledWith(false);
+        });
+
+        // it('should keep the state when closed and reopened', async () => {});
+    });
+
+    describe('prop: closeOnClick', () => {
+        it('should close the menu when clicked', async () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.CheckboxItem closeOnClick>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem closeOnClick>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
+
+            expect(check1).toHaveAttribute('aria-checked', 'false');
+            expect(check2).toHaveAttribute('aria-checked', 'false');
+
+            await userEvent.click(check1);
+            expect(check1).toHaveAttribute('aria-checked', 'true');
+
+            const content = rendered.queryByRole('menu');
+            expect(content).not.toBeInTheDocument();
+        });
+
+        it('should not close the menu when clicked by default', async () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Trigger />
+                    <Menu.Content>
+                        <Menu.CheckboxItem defaultChecked>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [check1] = rendered.getAllByRole('menuitemcheckbox');
+
+            expect(check1).toHaveAttribute('aria-checked', 'true');
+
+            await userEvent.click(check1);
+            expect(check1).toHaveAttribute('aria-checked', 'false');
+
+            const content = rendered.getByRole('menu');
+            expect(content).toBeInTheDocument();
+        });
+    });
+
+    describe('prop: disabled', () => {
+        it('should not toggle the checked state when clicked', async () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Trigger>메뉴 열기</Menu.Trigger>
+                    <Menu.Content>
+                        <Menu.CheckboxItem disabled>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [checkitem] = rendered.getAllByRole('menuitemcheckbox');
+
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+            expect(checkitem).toHaveAttribute('aria-disabled', 'true');
+
+            await userEvent.click(checkitem);
+
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+        });
+
+        it('should not toggle the checked state when Space is pressed', async () => {
+            const rendered = render(
+                <Menu.Root>
+                    <Menu.Trigger />
+                    <Menu.Content>
+                        <Menu.CheckboxItem disabled>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
                     </Menu.Content>
                 </Menu.Root>,
             );
 
-            const trigger = rendered.getByRole('menuitem', { name: 'Submenu Trigger' });
+            const trigger = rendered.getByRole('button');
 
-            act(() => trigger.focus());
-            await userEvent.keyboard('[ArrowRight]');
+            await userEvent.click(trigger);
 
-            const [_, submenuContent] = rendered.getAllByRole('menu');
-            expect(submenuContent).toBeInTheDocument();
+            const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
 
-            await userEvent.keyboard('[Escape]');
+            await userEvent.keyboard('[ArrowDown]');
+            await userEvent.keyboard('[Space]');
 
-            expect(submenuContent).not.toBeInTheDocument();
-            expect(trigger).toHaveFocus();
-            expect(onEscapeKeyDown).toHaveBeenCalledOnce();
+            expect(check1).toHaveAttribute('aria-checked', 'false');
+            expect(check1).toHaveAttribute('aria-disabled', 'true');
+            expect(check2).toHaveAttribute('aria-checked', 'true');
+        });
+    });
+
+    describe('prop: defaultChecked', () => {
+        it('should set the initial checked state', () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.CheckboxItem defaultChecked>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
+
+            expect(check1).toHaveAttribute('aria-checked', 'true');
+            expect(check2).toHaveAttribute('aria-checked', 'false');
+        });
+    });
+
+    describe('prop: checked', () => {
+        it('should set the checked state when controlled', () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.CheckboxItem checked>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
+
+            expect(check1).toHaveAttribute('aria-checked', 'true');
+            expect(check2).toHaveAttribute('aria-checked', 'false');
+        });
+    });
+
+    describe('prop: onCheckedChange', () => {
+        it('should call onCheckedChange when the checked state changes', async () => {
+            const handleCheckedChange = vi.fn();
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
+                            Checkbox Item
+                        </Menu.CheckboxItem>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const checkitem = rendered.getByRole('menuitemcheckbox');
+
+            await userEvent.click(checkitem);
+            expect(handleCheckedChange).toHaveBeenCalledWith(true);
+
+            await userEvent.click(checkitem);
+            expect(handleCheckedChange).toHaveBeenCalledWith(false);
+        });
+    });
+});
+
+describe('<Menu.RadioGroupItem>', () => {
+    const Test = () => (
+        <Menu.Root defaultOpen>
+            <Menu.Content>
+                <Menu.RadioGroup>
+                    <Menu.RadioItem value="item1">Checkbox Item 1</Menu.RadioItem>
+                    <Menu.RadioItem value="item2">Checkbox Item 2</Menu.RadioItem>
+                    <Menu.RadioItem value="item3">Checkbox Item 3</Menu.RadioItem>
+                </Menu.RadioGroup>
+            </Menu.Content>
+        </Menu.Root>
+    );
+
+    it('should have no a11y violations', async () => {
+        const rendered = render(<Test />);
+        const result = await axe(rendered.container);
+
+        expect(result).toHaveNoViolations();
+    });
+
+    it('should add the correct ARIA attributes when clicked', async () => {
+        const rendered = render(<Test />);
+        const [radio1, radio2, radio3] = rendered.getAllByRole('menuitemradio');
+
+        expect(radio1).toHaveAttribute('aria-checked', 'false');
+        expect(radio2).toHaveAttribute('aria-checked', 'false');
+        expect(radio3).toHaveAttribute('aria-checked', 'false');
+
+        await userEvent.click(radio1);
+        expect(radio1).toHaveAttribute('aria-checked', 'true');
+        expect(radio2).toHaveAttribute('aria-checked', 'false');
+        expect(radio3).toHaveAttribute('aria-checked', 'false');
+
+        await userEvent.click(radio2);
+        expect(radio1).toHaveAttribute('aria-checked', 'false');
+        expect(radio2).toHaveAttribute('aria-checked', 'true');
+        expect(radio3).toHaveAttribute('aria-checked', 'false');
+    });
+
+    it('should not toggle the checked state when clicked', async () => {
+        const rendered = render(<Test />);
+        const [radio] = rendered.getAllByRole('menuitemradio');
+
+        expect(radio).toHaveAttribute('aria-checked', 'false');
+
+        await userEvent.click(radio);
+        expect(radio).toHaveAttribute('aria-checked', 'true');
+
+        await userEvent.click(radio);
+        expect(radio).toHaveAttribute('aria-checked', 'true');
+    });
+
+    describe('keyboard navigation', () => {
+        it('should toggle the checked state when Space is pressed', async () => {
+            const rendered = render(<Test />);
+            const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
+
+            act(() => radio1.focus());
+
+            await userEvent.keyboard('[Space]');
+            expect(radio1).toHaveAttribute('aria-checked', 'true');
+
+            await userEvent.keyboard('[ArrowDown]');
+            await userEvent.keyboard('[Space]');
+
+            expect(radio1).toHaveAttribute('aria-checked', 'false');
+            expect(radio2).toHaveAttribute('aria-checked', 'true');
+        });
+
+        it('should toggle the checked state when Enter is pressed', async () => {
+            const rendered = render(<Test />);
+            const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
+
+            act(() => radio1.focus());
+
+            await userEvent.keyboard('[Enter]');
+            expect(radio1).toHaveAttribute('aria-checked', 'true');
+
+            await userEvent.keyboard('[ArrowDown]');
+            await userEvent.keyboard('[Enter]');
+
+            expect(radio1).toHaveAttribute('aria-checked', 'false');
+            expect(radio2).toHaveAttribute('aria-checked', 'true');
+        });
+
+        it('should invoke `onCheckedChange` when the checked state changes', async () => {
+            const handleCheckedChange = vi.fn();
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
+                            Checkbox Item
+                        </Menu.CheckboxItem>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const checkitem = rendered.getByRole('menuitemcheckbox');
+
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+
+            await userEvent.click(checkitem);
+            expect(handleCheckedChange).toHaveBeenCalledTimes(1);
+            expect(handleCheckedChange).toHaveBeenCalledWith(true);
+
+            await userEvent.click(checkitem);
+            expect(handleCheckedChange).toHaveBeenCalledTimes(2);
+            expect(handleCheckedChange).toHaveBeenCalledWith(false);
+        });
+
+        // it('should keep the state when closed and reopened', async () => {});
+    });
+
+    describe('prop: closeOnClick', () => {
+        it('should close the menu when clicked', async () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.RadioGroup>
+                            <Menu.RadioItem value="item1" closeOnClick>
+                                Radio Item 1
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item2" closeOnClick>
+                                Radio Item 2
+                            </Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
+
+            expect(radio1).toHaveAttribute('aria-checked', 'false');
+            expect(radio2).toHaveAttribute('aria-checked', 'false');
+
+            await userEvent.click(radio1);
+            expect(radio1).toHaveAttribute('aria-checked', 'true');
+
+            const content = rendered.queryByRole('menu');
+            expect(content).not.toBeInTheDocument();
+        });
+
+        it('should not close the menu when clicked by default', async () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Trigger />
+                    <Menu.Content>
+                        <Menu.RadioGroup defaultValue="item1">
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [radio1] = rendered.getAllByRole('menuitemradio');
+
+            expect(radio1).toHaveAttribute('aria-checked', 'true');
+
+            await userEvent.click(radio1);
+            expect(radio1).toHaveAttribute('aria-checked', 'true');
+
+            const content = rendered.getByRole('menu');
+            expect(content).toBeInTheDocument();
+        });
+    });
+
+    describe('prop: disabled', () => {
+        it('should not toggle the checked state when clicked', async () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Trigger>메뉴 열기</Menu.Trigger>
+                    <Menu.Content>
+                        <Menu.RadioGroup>
+                            <Menu.RadioItem disabled value="item1">
+                                Radio Item 1
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [checkitem] = rendered.getAllByRole('menuitemradio');
+
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+            expect(checkitem).toHaveAttribute('aria-disabled', 'true');
+
+            await userEvent.click(checkitem);
+
+            expect(checkitem).toHaveAttribute('aria-checked', 'false');
+        });
+
+        it('should not toggle the checked state when Space is pressed', async () => {
+            const rendered = render(
+                <Menu.Root>
+                    <Menu.Trigger />
+                    <Menu.Content>
+                        <Menu.RadioGroup>
+                            <Menu.RadioItem disabled value="item1">
+                                Radio Item 1
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+
+            const trigger = rendered.getByRole('button');
+
+            await userEvent.click(trigger);
+
+            const [check1, check2] = rendered.getAllByRole('menuitemradio');
+
+            await userEvent.keyboard('[ArrowDown]');
+            await userEvent.keyboard('[Space]');
+
+            expect(check1).toHaveAttribute('aria-checked', 'false');
+            expect(check1).toHaveAttribute('aria-disabled', 'true');
+            expect(check2).toHaveAttribute('aria-checked', 'true');
+        });
+    });
+
+    describe('prop: defaultValue', () => {
+        it('should set the initial value state', async () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.RadioGroup defaultValue="item1">
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
+
+            expect(radio1).toHaveAttribute('aria-checked', 'true');
+            expect(radio2).toHaveAttribute('aria-checked', 'false');
+
+            await userEvent.click(radio2);
+
+            expect(radio1).toHaveAttribute('aria-checked', 'false');
+            expect(radio2).toHaveAttribute('aria-checked', 'true');
+        });
+    });
+
+    describe('prop: value', () => {
+        it('should set the value state when controlled', async () => {
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.RadioGroup value="item1">
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
+
+            expect(radio1).toHaveAttribute('aria-checked', 'true');
+            expect(radio2).toHaveAttribute('aria-checked', 'false');
+
+            await userEvent.click(radio2);
+
+            expect(radio1).toHaveAttribute('aria-checked', 'true');
+            expect(radio2).toHaveAttribute('aria-checked', 'false');
+        });
+    });
+
+    describe('prop: onValueChange', () => {
+        it('should call onValueChange when the checked state changes', async () => {
+            const handleCheckedChange = vi.fn();
+            const rendered = render(
+                <Menu.Root defaultOpen>
+                    <Menu.Content>
+                        <Menu.RadioGroup onValueChange={handleCheckedChange}>
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
+                </Menu.Root>,
+            );
+            const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
+
+            await userEvent.click(radio1);
+            expect(handleCheckedChange).toHaveBeenCalledWith('item1');
+
+            await userEvent.click(radio2);
+            expect(handleCheckedChange).toHaveBeenCalledWith('item2');
         });
     });
 });
