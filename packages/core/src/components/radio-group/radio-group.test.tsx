@@ -1,4 +1,6 @@
-import { render, waitFor } from '@testing-library/react';
+import { act } from 'react';
+
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
@@ -181,7 +183,7 @@ describe('RadioGroup', () => {
         );
         const [option1, option2, option3] = rendered.getAllByRole('radio');
 
-        waitFor(() => option1.focus());
+        act(() => option1.focus());
         await userEvent.keyboard('[Space]');
 
         expect(option1).toHaveFocus();
@@ -222,7 +224,7 @@ describe('RadioGroup', () => {
         );
         const [option1, _option2, option3] = rendered.getAllByRole('radio');
 
-        option1.focus();
+        act(() => option1.focus());
         await userEvent.keyboard('[Space]');
 
         expect(option1).toHaveFocus();
@@ -245,7 +247,7 @@ describe('RadioGroup', () => {
         const rendered = render(<RadioGroupTest />);
         const [firstItem, secondItem] = rendered.getAllByRole('radio');
 
-        firstItem.focus();
+        act(() => firstItem.focus());
 
         expect(firstItem).toHaveFocus();
         expect(firstItem).not.toBeChecked();
