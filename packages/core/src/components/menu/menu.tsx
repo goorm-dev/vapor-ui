@@ -35,7 +35,7 @@ import type { MenuItemVariants } from './menu.css';
 type MenuVariants = MenuItemVariants;
 type MenuSharedProps = MenuVariants & PositionerProps;
 
-type MenuContext = MenuSharedProps;
+type MenuContext = MenuSharedProps & { dir?: 'ltr' | 'rtl' };
 
 const [MenuProvider, useMenuContext] = createContext<MenuContext>({
     name: 'Menu',
@@ -60,7 +60,7 @@ const Root = ({ ...props }: MenuRootProps) => {
     ]);
 
     return (
-        <MenuProvider value={sharedProps}>
+        <MenuProvider value={{ dir: otherProps.dir, ...sharedProps }}>
             <RadixRoot {...otherProps} />
         </MenuProvider>
     );
@@ -267,17 +267,40 @@ type SubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSubmenu
 interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {}
 
 const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
-    ({ className, ...props }, ref) => {
+    ({ className, onEscapeKeyDown, ...props }, ref) => {
+        const { dir } = useMenuContext();
+        const closeKey = dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+
+        const handleEscapeKeyDown = (event: KeyboardEvent) => {
+            event.preventDefault();
+
+            dispatchSubmenuClose(event, closeKey);
+            onEscapeKeyDown?.(event);
+        };
+
         return (
             <RadixSubmenuContent
                 ref={ref}
                 className={clsx(styles.subContents, className)}
+                onEscapeKeyDown={handleEscapeKeyDown}
                 {...props}
             />
         );
     },
 );
 SubmenuContent.displayName = 'Menu.SubmenuContent';
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const dispatchSubmenuClose = (event: KeyboardEvent, closeKey: string) => {
+    const leftArrowEvent = new KeyboardEvent('keydown', {
+        key: closeKey,
+        bubbles: true,
+        cancelable: true,
+    });
+
+    event.target?.dispatchEvent(leftArrowEvent);
+};
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.CombinedSubmenuContent
@@ -389,7 +412,7 @@ const CheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>(
                 {children}
 
                 <RadixItemIndicator className={styles.indicator}>
-                    <ConfirmOutlineIcon />
+                    <ConfirmOutlineIcon width="inherit" height="inherit" />
                 </RadixItemIndicator>
             </RadixCheckboxItem>
         );
