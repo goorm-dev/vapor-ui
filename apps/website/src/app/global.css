@@ -1,11 +1,9 @@
-@layer tw-theme, theme, tw-base, reset, components, utilities, tw-utilities;
-
-@import 'tailwindcss/theme.css' layer(tw-theme);
-@import 'tailwindcss/preflight.css' layer(tw-base);
-@import 'tailwindcss/utilities.css' layer(tw-utilities);
+@layer reset, tw-base, tw-theme, theme, component, utilities, tw-utilities;
 
 @import '@vapor-ui/core/styles.css';
-@import '@vapor-ui/core/tailwind.css';
+@import 'tailwindcss/preflight' layer(tw-base);
+@import 'tailwindcss/theme' layer(tw-theme);
+@import 'tailwindcss/utilities' layer(tw-utilities);
 
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';

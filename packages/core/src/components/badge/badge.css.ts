@@ -8,6 +8,7 @@ export const root = recipe({
     base: layerStyle('components', {
         display: 'inline-flex',
         alignItems: 'center',
+        justifyContent: 'center',
     }),
 
     defaultVariants: { color: 'primary', size: 'md', shape: 'square' },

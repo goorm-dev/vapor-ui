@@ -17,14 +17,14 @@ import { createSplitProps } from '~/utils/create-split-props';
 import type { ControlVariants, LabelVariants, RootVariants } from './radio-group.css';
 import * as styles from './radio-group.css';
 
-type RadixRootProps = ComponentPropsWithoutRef<typeof RadixRoot>;
-type PrimitiveRootProps = Pick<
-    RadixRootProps,
+type RadioGroupRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
+type RadioGroupBaseProps = Pick<
+    RadioGroupRootPrimitiveProps,
     'name' | 'dir' | 'loop' | 'value' | 'onValueChange' | 'defaultValue' | 'required' | 'disabled'
 >;
 
 type RadioGroupVariants = RootVariants & ControlVariants & LabelVariants;
-type RadioGroupSharedProps = RadioGroupVariants & PrimitiveRootProps;
+type RadioGroupSharedProps = RadioGroupVariants & RadioGroupBaseProps;
 type RadioGroupContext = RadioGroupSharedProps;
 
 const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupContext>({
@@ -37,33 +37,39 @@ const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupConte
  * RadioGroup.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioGroupRootPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
 interface RadioGroupRootProps
-    extends Omit<RadioGroupRootPrimitiveProps, keyof PrimitiveRootProps>,
-        PrimitiveRootProps {}
+    extends Omit<RadioGroupRootPrimitiveProps, keyof RadioGroupBaseProps>,
+        RadioGroupSharedProps {}
 
 const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...props }, ref) => {
-    const [sharedProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(props, [
+    const [sharedProps, _otherProps] = createSplitProps<RadioGroupBaseProps>()(props, [
         'name',
-        'required',
-        'disabled',
         'value',
         'onValueChange',
         'defaultValue',
+        'disabled',
+        'required',
         'dir',
         'loop',
-        'orientation',
-        'invalid',
-        'size',
-        'visuallyHidden',
     ]);
 
-    const { size, orientation } = sharedProps;
+    const [variantProps, otherProps] = createSplitProps<RadioGroupVariants>()(_otherProps, [
+        'size',
+        'visuallyHidden',
+        'orientation',
+        'invalid',
+    ]);
+
+    const { disabled } = sharedProps;
+    const { size, orientation, invalid } = variantProps;
 
     return (
-        <RadioGroupProvider value={sharedProps}>
+        <RadioGroupProvider value={{ ...sharedProps, ...variantProps }}>
             <RadixRoot
                 ref={ref}
+                aria-invalid={invalid}
+                aria-disabled={disabled}
+                orientation={orientation}
                 className={clsx(styles.root({ size, orientation }), className)}
                 {...sharedProps}
                 {...otherProps}
@@ -78,10 +84,10 @@ Root.displayName = 'RadioGroup.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 type RadioGroupItemPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
+type RadioGroupItemBaseProps = Pick<RadioGroupControlPrimitiveProps, 'value' | 'disabled'>;
 
 type RadioGroupItemVariants = ControlVariants & LabelVariants;
-type RadioGroupItemSharedProps = RadioGroupItemVariants &
-    Pick<RadioGroupControlPrimitiveProps, 'value' | 'disabled'>;
+type RadioGroupItemSharedProps = RadioGroupItemVariants & RadioGroupItemBaseProps;
 
 type RadioGroupItemContext = RadioGroupItemSharedProps & {
     radioGroupItemId?: string;
