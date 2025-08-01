@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
@@ -181,7 +181,7 @@ describe('RadioGroup', () => {
         );
         const [option1, option2, option3] = rendered.getAllByRole('radio');
 
-        option1.focus();
+        waitFor(() => option1.focus());
         await userEvent.keyboard('[Space]');
 
         expect(option1).toHaveFocus();
