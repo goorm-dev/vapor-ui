@@ -142,8 +142,8 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                         </div>
                     </div>
                 </div>
-                <div className="bg-[var(--vapor-color-background-normal)] flex items-center justify-center max-[767px]:px-0">
-                    <div className="flex items-start gap-[var(--vapor-size-space-400)] w-full">
+                <div className="bg-[var(--vapor-color-background-normal)] flex items-center justify-center max-[767px]:px-0 h-[900px]">
+                    <div className="flex items-start gap-[var(--vapor-size-space-400)] w-full h-full">
                         <div className="flex items-center flex-col gap-[var(--vapor-size-space-400)] flex-1 pt-[var(--vapor-size-space-400)] pl-[var(--vapor-size-space-400)] max-[991px]:p-[var(--vapor-size-space-400)] max-[767px]:px-0 max-[767px]:py-[var(--vapor-size-space-400)]">
                             <Card.Root className="w-full max-[767px]:border-l-0 max-[767px]:border-r-0 max-[767px]:rounded-none">
                                 <Card.Header>
@@ -286,7 +286,10 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                             <RadioGroup.Control />
                                             <RadioGroup.Label>
                                                 <div className="flex items-center gap-[var(--vapor-size-space-050)]">
-                                                    <CreditCardIcon size="16" color="var(--vapor-color-foreground-normal)" />
+                                                    <CreditCardIcon
+                                                        size="16"
+                                                        color="var(--vapor-color-foreground-normal)"
+                                                    />
                                                     <Text typography="body2" foreground="normal">
                                                         체크/신용 카드
                                                     </Text>
@@ -343,11 +346,11 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                 </thead>
                                 <tbody>
                                     <tr className="h-[53px]">
-                                        <td className="w-[101px] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="w-[101px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                             <div className="flex p-[var(--vapor-size-space-300)] items-center gap-[var(--vapor-size-space-100)] flex-1 self-stretch">
                                                 <DragIndicatorIcon
                                                     size="20"
-                                                    color="var(--vapor-color-black)"
+                                                    color="var(--vapor-color-foreground-hint)"
                                                 />
                                                 <Text
                                                     typography="body2"
@@ -357,7 +360,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                                 </Text>
                                             </div>
                                         </td>
-                                        <td className="p-[var(--vapor-size-space-200)] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="h-[53px] p-[var(--vapor-size-space-200)] border-b border-[var(--vapor-color-border-normal)]">
                                             <div className="flex flex-col items-start flex-1">
                                                 <Text typography="body2" foreground="normal">
                                                     구름 조각 모아보기
@@ -367,7 +370,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                                 </Text>
                                             </div>
                                         </td>
-                                        <td className="w-[84px] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="w-[84px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                             <div
                                                 className="flex h-[54px] px-6 items-center gap-2 self-stretch"
                                                 style={{ padding: '10px 24px 11px 24px' }}
@@ -384,11 +387,11 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                         </td>
                                     </tr>
                                     <tr className="h-[53px]">
-                                        <td className="w-[101px] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="w-[101px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                             <div className="flex p-[var(--vapor-size-space-300)] items-center gap-[var(--vapor-size-space-100)] flex-1 self-stretch">
                                                 <DragIndicatorIcon
                                                     size="20"
-                                                    color="var(--vapor-color-black)"
+                                                    color="var(--vapor-color-foreground-hint)"
                                                 />
                                                 <Text
                                                     typography="body2"
@@ -398,7 +401,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                                 </Text>
                                             </div>
                                         </td>
-                                        <td className="p-[var(--vapor-size-space-200)] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="h-[53px] p-[var(--vapor-size-space-200)] border-b border-[var(--vapor-color-border-normal)]">
                                             <div className="flex flex-col items-start flex-1">
                                                 <Text
                                                     typography="body2"
@@ -412,7 +415,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                                 </Text>
                                             </div>
                                         </td>
-                                        <td className="w-[84px] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="w-[84px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                             <div
                                                 className="flex h-[54px] px-6 items-center gap-2 self-stretch"
                                                 style={{ padding: '10px 24px 11px 24px' }}
@@ -429,11 +432,11 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                         </td>
                                     </tr>
                                     <tr className="h-[53px]">
-                                        <td className="w-[101px] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="w-[101px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                             <div className="flex p-[var(--vapor-size-space-300)] items-center gap-[var(--vapor-size-space-100)] flex-1 self-stretch">
                                                 <DragIndicatorIcon
                                                     size="20"
-                                                    color="var(--vapor-color-black)"
+                                                    color="var(--vapor-color-foreground-hint)"
                                                 />
                                                 <Text
                                                     typography="body2"
@@ -443,7 +446,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                                 </Text>
                                             </div>
                                         </td>
-                                        <td className="p-[var(--vapor-size-space-200)] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="h-[53px] p-[var(--vapor-size-space-200)] border-b border-[var(--vapor-color-border-normal)]">
                                             <div className="flex flex-col items-start flex-1">
                                                 <Text
                                                     typography="body2"
@@ -457,7 +460,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                                 </Text>
                                             </div>
                                         </td>
-                                        <td className="w-[84px] border-b border-[var(--vapor-color-border-normal)]">
+                                        <td className="w-[84px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                             <div
                                                 className="flex h-[54px] px-6 items-center gap-2 self-stretch"
                                                 style={{ padding: '10px 24px 11px 24px' }}
@@ -486,7 +489,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                 {/* Body/Contents */}
                                 <div className="flex  flex-col items-center gap-[var(--vapor-size-space-200)] self-stretch">
                                     <div className="flex px-[var(--vapor-size-space-300)] py-0 flex-col items-start self-stretch">
-                                        <div className="flex pb-[var(--vapor-size-space-150)] flex-col items-center gap-[var(--vapor-size-space-200)] self-stretch">
+                                        <div className="flex flex-col items-center gap-[var(--vapor-size-space-200)] self-stretch">
                                             <NoticeCircleIcon
                                                 size="100"
                                                 color="var(--vapor-color-foreground-primary)"
@@ -515,8 +518,9 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                                 >
                                                     Public으로 설정 시 이런게 바뀌어요
                                                 </Text>
-                                                <ul className="flex flex-col gap-[var(--vapor-size-space-050)] list-disc list-inside">
-                                                    <li>
+                                                <ul className="flex flex-col gap-[var(--vapor-size-space-050)]">
+                                                    <li className="flex items-center gap-2 leading-[18px]">
+                                                        <div className="w-[2.5px] h-[2.5px] rounded-full bg-[var(--vapor-color-foreground-hint-darker)] flex-shrink-0"></div>
                                                         <Text
                                                             typography="body3"
                                                             foreground="secondary"
@@ -525,7 +529,8 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                                             있습니다.
                                                         </Text>
                                                     </li>
-                                                    <li>
+                                                    <li className="flex items-center gap-2 leading-[18px]">
+                                                        <div className="w-[2.5px] h-[2.5px] rounded-full bg-[var(--vapor-color-foreground-hint-darker)] flex-shrink-0"></div>
                                                         <Text
                                                             typography="body3"
                                                             foreground="secondary"
@@ -553,8 +558,8 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                 </div>
                             </div>
                         </div>
-                        <div className="flex w-[371px] h-[848px] p-[var(--vapor-size-space-300)] flex-col items-end flex-shrink-0 bg-[var(--vapor-color-background-normal)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
-                            <div className="w-full flex flex-col gap-[var(--vapor-size-space-300)]">
+                        <div className="flex w-[371px] h-full p-[var(--vapor-size-space-300)] flex-col items-end flex-shrink-0 bg-[var(--vapor-color-background-normal)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
+                            <div className="w-full h-full flex flex-col gap-[var(--vapor-size-space-300)]">
                                 <TextInput.Root
                                     className="w-full relative"
                                     size="lg"
@@ -583,7 +588,7 @@ export function ChromeWindow({ className = '', theme = 'light' }: ChromeWindowPr
                                     </div>
                                     <UserList users={filteredActiveUsers} />
                                 </div>
-                                <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
+                                <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch flex-1">
                                     <div className="w-full flex items-start gap-[var(--vapor-size-space-050)]">
                                         <Text typography="subtitle2" foreground="hint-darker">
                                             미접속
