@@ -22,6 +22,7 @@ export const contents = style({
     backgroundColor: vars.color.background.normal,
     paddingBlock: vars.size.space['050'],
     paddingInline: 0,
+    width: '12.5rem',
     minWidth: contentWidth,
 
     overflowY: 'auto',
@@ -36,16 +37,23 @@ export const item = recipe({
         typography({ style: 'body2' }),
         foregrounds({ color: 'normal' }),
         {
+            position: 'relative',
+
             display: 'flex',
             alignItems: 'center',
+            alignSelf: 'stretch',
             justifyContent: 'space-between',
             gap: vars.size.space['100'],
-            alignSelf: 'stretch',
+
             margin: `0 ${vars.size.space['050']}`,
             border: 'none',
+
             borderRadius: vars.size.borderRadius['300'],
             cursor: 'pointer',
-            padding: `${vars.size.space['050']} ${vars.size.space['150']}`,
+            paddingRight: vars.size.space['050'],
+            paddingLeft: vars.size.space['250'],
+            paddingBlock: vars.size.space['050'],
+
             width: `calc(100% - ${vars.size.space['050']} * 2)`,
             height: vars.size.dimension['400'],
         },
@@ -95,17 +103,23 @@ export const groupLabel = style([
     {
         marginBlock: 0,
         marginInline: vars.size.space['050'],
-        paddingBlock: vars.size.space['050'],
-        paddingInline: vars.size.space['150'],
+        paddingTop: vars.size.space['100'],
+        paddingRight: vars.size.space['050'],
+        paddingBottom: vars.size.space['050'],
+        paddingLeft: vars.size.space['250'],
     },
 ]);
 
 export const indicator = style({
+    position: 'absolute',
+    top: '50%',
+    left: vars.size.space['050'],
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: vars.size.dimension['200'],
-    height: vars.size.dimension['200'],
+    transform: 'translateY(-50%)',
+    width: vars.size.dimension['150'],
+    height: vars.size.dimension['150'],
     color: vars.color.black,
 });
 
