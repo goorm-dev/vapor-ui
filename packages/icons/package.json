@@ -1,7 +1,7 @@
 {
     "name": "@vapor-ui/icons",
     "description": "A set of React components for icons in the Vapor Design System.",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "author": "Vapor Team <vapor.ui@goorm.io>",
     "type": "module",
     "keywords": [
