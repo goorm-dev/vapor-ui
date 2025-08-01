@@ -116,6 +116,8 @@ function createOutput(dir, format, extension, options = {}) {
         },
         assetFileNames: processAssetFileName,
         exports: 'named',
+        sourcemap: 'external',
+        sourcemapExcludeSources: false,
         ...options,
     };
 }
@@ -175,6 +177,7 @@ const dtsBuild = {
             preserveModulesRoot: 'src',
             assetFileNames: undefined,
             exports: undefined, // TypeScript 선언 파일은 exports 옵션 불필요
+            sourcemap: false,
         }),
     ],
 };
