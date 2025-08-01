@@ -240,6 +240,7 @@ const GroupLabel = forwardRef<HTMLDivElement, MenuGroupLabelProps>(
             <RadixLabel
                 ref={ref}
                 id={id}
+                role="presentation"
                 className={clsx(styles.groupLabel, className)}
                 {...props}
             />
@@ -394,7 +395,7 @@ const CheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>(
         const handleClick = (event: MouseEvent<HTMLDivElement>) => {
             onClick?.(event);
 
-            if (event.isDefaultPrevented()) return;
+            if (event.isDefaultPrevented() || isDisabled) return;
             if (!closeOnClick) event.preventDefault();
             setCheckedState((prev) => !prev);
         };
@@ -403,7 +404,6 @@ const CheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>(
             <RadixCheckboxItem
                 ref={ref}
                 checked={checkedState}
-                onCheckedChange={setCheckedState}
                 disabled={isDisabled}
                 className={clsx(styles.item({ disabled: isDisabled }), className)}
                 onClick={handleClick}
@@ -496,7 +496,7 @@ const RadioItem = forwardRef<HTMLDivElement, MenuRadioItemProps>(
         const handleClick = (event: MouseEvent<HTMLDivElement>) => {
             onClick?.(event);
 
-            if (event.isDefaultPrevented()) return;
+            if (event.isDefaultPrevented() || isDisabled) return;
             if (!closeOnClick) event.preventDefault();
 
             handleValueChange(props.value);
@@ -513,7 +513,7 @@ const RadioItem = forwardRef<HTMLDivElement, MenuRadioItemProps>(
                 {children}
 
                 <RadixItemIndicator className={styles.indicator}>
-                    <ConfirmOutlineIcon />
+                    <ConfirmOutlineIcon width="inherit" height="inherit" />
                 </RadixItemIndicator>
             </RadixRadioItem>
         );
