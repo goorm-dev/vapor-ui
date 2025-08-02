@@ -2,7 +2,7 @@
 
 Vapor UI React hooks library.
 
-[View documentation](https://vapor.goorm.io/vapor-hooks)
+[View documentation](https://vapor-ui.goorm.io/vapor-hooks)
 
 ## Installation
 
