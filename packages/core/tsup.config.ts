@@ -127,6 +127,14 @@ export default defineConfig([
             tailwind: 'src/styles/tailwind-preset.css.ts',
         },
         outDir: DIST_DIR,
-        esbuildPlugins: [vanillaExtractPlugin(vanillaExtractConfig)],
+        esbuildPlugins: [
+            vanillaExtractPlugin({
+                ...vanillaExtractConfig,
+                identifiers: ({ hash, filePath, debugId }) => {
+                    const componentName = path.basename(filePath, '.css.ts');
+                    return `${componentName}${debugId ? `-${debugId}` : ''}__${hash}`;
+                },
+            }),
+        ],
     },
 ]);
