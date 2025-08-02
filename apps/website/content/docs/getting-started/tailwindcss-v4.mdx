@@ -25,47 +25,47 @@ description: Vapor UI를 Tailwind CSS v4 환경에 통합하는 방법을 안내
 
 ## Styling with Vapor Utility Classes
 
-`@vapor-ui/core/tailwind.css` 프리셋을 추가하면 Vapor UI의 디자인 시스템에 맞는 다양한 유틸리티 클래스를 사용할 수 있습니다.
-이 클래스들은 크게 **테마 토큰 클래스**와 **시맨틱 유틸리티 클래스** 두 종류로 나뉩니다.
+`@vapor-ui/core/tailwind.css`를 추가하면 Vapor UI의 디자인 토큰을 활용하는 다양한 유틸리티 클래스를 사용할 수 있습니다.
+모든 클래스는 `v-` 접두사를 가집니다.
 
 #### 테마 토큰 클래스
 
-Vapor UI의 모든 디자인 토큰(색상, 간격, 폰트 등)은 `v-` 접두사와 함께 Tailwind CSS 클래스로 직접 사용할 수 있습니다.
+Vapor UI의 디자인 토큰은 `@theme` 규칙을 통해 Tailwind CSS의 네이티브 테마 시스템에 통합됩니다.
+각 토큰은 `color`, `spacing`, `radius` 등과 같은 네임스페이스로 그룹화되어 있습니다.
 
-- **색상 (Colors):** `bg-v-gray-100`, `text-v-blue-500`, `border-v-red-300`
-- **간격 (Spacing):** `p-v-100`, `m-v-200`, `gap-v-300`
-- **테두리 둥글기 (Radius):** `rounded-v-200`
-- **타이포그래피 (Typography):** `font-v-sans`, `text-v-300`, `font-v-700`
+사용법은 각 네임스페이스에 속한 토큰 이름에 `v-` 접두사를 붙여 Tailwind의 표준 유틸리티 클래스와 조합하면 됩니다.
 
-```html
-<!-- 테마 토큰을 직접 사용하는 예시 -->
-<div class="p-v-300 bg-v-gray-100 rounded-v-200">
-    <p class="font-v-sans text-v-500 font-v-700">Vapor UI 테마 토큰을 사용한 스타일링</p>
-</div>
-```
+- **color 네임스페이스**
+    - 토큰 예시: `--color-v-blue-500, --color-v-red-300, --color-v-gray-900, ...
+    - 사용 예시: `bg-v-blue-500`, `text-v-red-300`, `border-v-gray-900`, ...
+- **spacing 네임스페이스**
+    - 토큰 예시: `--spacing-v-100`, `--spacing-v-200`, `--spacing-v-400`, ...
+    - 사용 예시: `p-v-100`, `m-v-200`, `gap-v-400`, `w-v-400`, ...`
+- **radius 네임스페이스**
+    - 토큰 예시: `--radius-v-200`, `--radius-v-400`, ...
+    - 사용 예시: `rounded-v-200`, `rounded-t-v-400`, ...
+- **font-weight 네임스페이스**
+    - 토큰 예시: `--font-weight-v-400`, `--font-weight-v-700`, ...
+    - 사용 예시: `font-v-400`, `font-v-700`, ...
+
+각 네임스페이스와 조합할 수 있는 전체 유틸리티 클래스 목록(예: `bg-`, `p-`, `w-`, `h-`, `border-` 등)은 [Tailwind CSS 공식 문서](https://tailwindcss.com/docs/theme#theme-variable-namespaces) 에서 확인하실 수 있습니다.
 
 #### 시맨틱 유틸리티 클래스
 
-시맨틱 클래스는 '성공', '위험', '주요 배경'과 같이 스타일의 목적과 의미를 나타냅니다.
-이 클래스들은 내부적으로 Vapor UI의 테마에 연결되어 있어, 다크 모드 등 테마가 변경되면 스타일에 일관성 있게 반영됩니다.
+'주요 배경색', '위험 상태 텍스트' 등 의미에 기반한 고유한 유틸리티 클래스도 제공합니다.
+이 클래스들은 Vapor UI에만 존재하므로 아래 리스트를 통해 확인할 수 있습니다.
 
-- **배경색 (Background):** `bg-v-primary, bg-v-secondary, bg-v-success, bg-v-danger`
-- **글자색 (Text):** `text-v-primary, text-v-secondary, text-v-success, text-v-danger`
-- **테두리색 (Border):** `border-v-primary, border-v-normal, border-v-danger`
+**배경색 (Background Colors)**
 
-```html
-<!-- 시맨틱 클래스를 사용하는 예시 -->
-<div class="p-4 border border-v-primary bg-v-secondary">
-    <p class="text-v-primary">주요 콘텐츠</p>
-    <p class="text-v-danger">이 작업은 되돌릴 수 없습니다.</p>
-</div>
-```
+`bg-v-primary`, `bg-v-secondary`, `bg-v-success`, `bg-v-warning`, `bg-v-danger`, `bg-v-hint`, `bg-v-contrast`, `bg-v-normal`, `bg-v-normal-lighter`, `bg-v-normal-darker`
 
-이러한 클래스들은 일반적인 Tailwind CSS 클래스와 자유롭게 함께 사용할 수 있습니다.
+**글자색 (Text Colors)**
+`text-v-primary`, `text-v-primary-darker`, `text-v-secondary`, `text-v-secondary-darker`, `text-v-success`, `text-v-success-darker`, `text-v-warning`, `text-v-warning-darker`, `text-v-danger`, `text-v-danger-darker`, `text-v-hint`, `text-v-hint-darker`, `text-v-contrast`, `text-v-contrast-darker`, `text-v-accent`, `text-v-normal`, `text-v-normal-lighter`, `text-v-logo`
+
+**테두리색 (Border Colors)**
+`border-v-primary`, `border-v-secondary`, `border-v-normal`, `border-v-success`, `border-v-warning`, `border-v-danger`, `border-v-hint`, `border-v-contrast`
 
 ## Core Concepts
-
-'Quick Start'에서 적용한 설정이 어떻게 동작하는지, 그리고 더 나아가 알아두면 유용한 핵심 개념과 정책을 안내합니다.
 
 #### CSS Layer와 우선순위
 
