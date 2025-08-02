@@ -10,6 +10,9 @@ export default defineConfig({
             '~': path.resolve(__dirname, 'src'),
         },
     },
+    ssr: {
+        noExternal: ['@vapor-ui/icons'],
+    },
     test: {
         setupFiles: ['./__tests__/setup-tests.ts'],
         environment: 'happy-dom',
