@@ -4,7 +4,7 @@ All sections in this template are optional.
 Feel free to remove sections that are not relevant to your pull request.
 -->
 
-## 🔗Related Issues
+## 🔗 Related Issues
 
 <!-- Please add any related issue numbers or links. -->
 <!-- e.g., Fixes #123 -->
