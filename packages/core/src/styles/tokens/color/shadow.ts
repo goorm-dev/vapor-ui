@@ -1,14 +1,19 @@
-export const boxShadow = {
-    name: {
-        sm: '--box-shadow-sm',
-        md: '--box-shadow-md',
-        lg: '--box-shadow-lg',
-        xl: '--box-shadow-xl',
+import { DARK_BASIC_COLORS, LIGHT_BASIC_COLORS } from './basic-color';
+
+export const LIGHT_BOX_SHADOW = {
+    shadow: {
+        sm: `0 0.0625rem 0.1875rem color-mix(in srgb, ${LIGHT_BASIC_COLORS.black} 20%, transparent)`,
+        md: `0 0.125rem 0.625rem color-mix(in srgb, ${LIGHT_BASIC_COLORS.black} 20%, transparent)`,
+        lg: `0 0.25rem 1rem color-mix(in srgb, ${LIGHT_BASIC_COLORS.black} 20%, transparent)`,
+        xl: `0 1rem 2rem color-mix(in srgb, ${LIGHT_BASIC_COLORS.black} 20%, transparent)`,
     },
-    value: {
-        sm: '0 0.0625rem 0.1875rem rgb(0 0 0 / 20%)',
-        md: '0 0.125rem 0.625rem rgb(0 0 0 / 20%)',
-        lg: '0 0.25rem 1rem rgb(0 0 0 / 20%)',
-        xl: '0 1rem 2rem rgb(0 0 0 / 20%)',
+};
+
+export const DARK_BOX_SHADOW = {
+    shadow: {
+        sm: `0 0.0625rem 0.1875rem color-mix(in srgb, ${DARK_BASIC_COLORS.black} 20%, transparent)`,
+        md: `0 0.125rem 0.625rem color-mix(in srgb, ${DARK_BASIC_COLORS.black} 20%, transparent)`,
+        lg: `0 0.25rem 1rem color-mix(in srgb, ${DARK_BASIC_COLORS.black} 20%, transparent)`,
+        xl: `0 1rem 2rem color-mix(in srgb, ${DARK_BASIC_COLORS.black} 20%, transparent)`,
     },
 };
