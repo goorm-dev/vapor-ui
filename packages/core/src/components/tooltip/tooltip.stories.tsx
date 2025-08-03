@@ -1,0 +1,54 @@
+import { Tooltip } from '.';
+import { Button } from '../button';
+
+export default {
+    title: 'Tooltip',
+    component: Tooltip,
+};
+
+export const Default = () => (
+    <div
+        style={{
+            margin: '100px',
+            display: 'flex',
+            gap: '20px',
+            justifyContent: 'center',
+            alignItems: 'center',
+        }}
+    >
+        <Tooltip.Provider>
+            <Tooltip.Root>
+                <Tooltip.Trigger render={<Button>Left Tooltip</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Positioner side="left">
+                        <Tooltip.Content>Tooltip content</Tooltip.Content>
+                    </Tooltip.Positioner>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+            <Tooltip.Root>
+                <Tooltip.Trigger render={<Button>Top Tooltip</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Positioner side="top">
+                        <Tooltip.Content>Tooltip content</Tooltip.Content>
+                    </Tooltip.Positioner>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+            <Tooltip.Root>
+                <Tooltip.Trigger render={<Button>Bottom Tooltip</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Positioner side="bottom">
+                        <Tooltip.Content>Tooltip content</Tooltip.Content>
+                    </Tooltip.Positioner>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+            <Tooltip.Root>
+                <Tooltip.Trigger render={<Button>Right Tooltip</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Positioner side="right">
+                        <Tooltip.Content>Tooltip content</Tooltip.Content>
+                    </Tooltip.Positioner>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+        </Tooltip.Provider>
+    </div>
+);
