@@ -1,7 +1,7 @@
 import { DocsBody, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
-import DocsDescription from '~/components/ui/docs-description';
+import DocsDescription from '~/components/docs-description';
 import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
