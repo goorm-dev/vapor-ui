@@ -19,7 +19,6 @@ We've adopted the [Contributor Covenant](https://www.contributor-covenant.org/) 
 
 If you have questions about Vapor UI, check out our [documentation](https://vapor-ui.goorm.io) where we have examples and detailed API references. You can also:
 
-- Open a [GitHub Discussion](https://github.com/goorm-dev/vapor-ui/discussions) for general questions
 - Join our [Discord community](https://discord.gg/PMqxs3xaHC) for real-time discussions
 
 ## How to Contribute
