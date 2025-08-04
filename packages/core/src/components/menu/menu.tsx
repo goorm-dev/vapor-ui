@@ -293,6 +293,11 @@ SubmenuContent.displayName = 'Menu.SubmenuContent';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * NOTE
+ * - This function dispatches a keyboard event to close the submenu when the escape key is pressed.
+ * - This is necessary because Radix UI does not provide a built-in way to close submenus with the escape key, and we need to manually trigger the close behavior.
+ */
 const dispatchSubmenuClose = (event: KeyboardEvent, closeKey: string) => {
     const leftArrowEvent = new KeyboardEvent('keydown', {
         key: closeKey,
