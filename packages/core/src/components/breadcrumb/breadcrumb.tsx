@@ -135,13 +135,7 @@ const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
         const Icon = createSlot(children || <MoreCommonOutlineIcon />);
 
         return (
-            <Primitive.span
-                ref={ref}
-                role="presentation"
-                aria-label="More"
-                aria-hidden="true"
-                {...props}
-            >
+            <Primitive.span ref={ref} role="presentation" aria-hidden="true" {...props}>
                 <Icon className={styles.icon} />
             </Primitive.span>
         );
