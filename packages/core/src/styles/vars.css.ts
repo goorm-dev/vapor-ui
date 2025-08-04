@@ -2,13 +2,13 @@ import { createGlobalThemeContract } from '@vanilla-extract/css';
 
 import {
     BORDER_RADIUS,
+    BOX_SHADOW,
     DIMENSION,
     FONT_FAMILY,
     FONT_SIZE,
     FONT_WEIGHT,
     LETTER_SPACING,
     LIGHT_BASIC_COLORS,
-    LIGHT_BOX_SHADOW,
     LIGHT_SEMANTIC_COLORS,
     LINE_HEIGHT,
     SPACE,
@@ -18,8 +18,8 @@ const THEME_TOKENS = {
     color: {
         ...LIGHT_BASIC_COLORS,
         ...LIGHT_SEMANTIC_COLORS,
-        ...LIGHT_BOX_SHADOW,
     },
+    shadow: BOX_SHADOW,
     size: {
         borderRadius: BORDER_RADIUS,
         dimension: DIMENSION,
