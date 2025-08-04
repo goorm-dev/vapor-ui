@@ -147,7 +147,7 @@ const generateAccessibilityMarkdown = (file: string): string => {
 export const replaceComponentDoc = (text: string) => {
     // Replace PropsTable tags
     let result = text.replace(
-        /<PropsTable\s+file="([^"]+)"(?:\s+section="([^"]+)")?\s*\/>/g,
+        /<ComponentPropsTable\s+file="([^"]+)"(?:\s+section="([^"]+)")?\s*\/>/g,
         (_, file: string, section: string | undefined) => {
             try {
                 const jsonPath = path.join(process.cwd(), 'public', 'components', `${file}.json`);

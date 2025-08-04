@@ -78,11 +78,6 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                                 Default
                             </Text>
                         </th>
-                        <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left ">
-                            <Text typography="subtitle1" foreground="normal-lighter">
-                                Types
-                            </Text>
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,13 +99,30 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                             <td
                                 className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${index === tableProps.length - 1 ? 'border-b-0' : ''}`}
                             >
-                                <div className="flex flex-wrap gap-[var(--vapor-size-space-100)]">
-                                    {prop.type.map((typeValue) => (
-                                        <Badge key={typeValue} color="hint" size="md">
-                                            {typeValue}
+                                {prop.type.length > 5 ? (
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                        <Badge color="hint" size="md">
+                                            enum
                                         </Badge>
-                                    ))}
-                                </div>
+                                        <Info>
+                                            <div className="flex flex-wrap gap-1">
+                                                {prop.type.map((typeValue) => (
+                                                    <Badge key={typeValue} color="hint" size="sm">
+                                                        {typeValue}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </Info>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-wrap gap-[var(--vapor-size-space-100)]">
+                                        {prop.type.map((typeValue) => (
+                                            <Badge key={typeValue} color="hint" size="md">
+                                                {typeValue}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                )}
                             </td>
                             <td
                                 className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${index === tableProps.length - 1 ? 'rounded-br-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
@@ -121,21 +133,6 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                                     </Badge>
                                 ) : prop.isOptional ? (
                                     '-'
-                                ) : (
-                                    '-'
-                                )}
-                            </td>
-                            <td
-                                className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${index === tableProps.length - 1 ? 'border-b-0' : ''}`}
-                            >
-                                {prop.allowedValues && prop.allowedValues.length > 0 ? (
-                                    <div className="flex flex-wrap gap-[var(--vapor-size-space-100)]">
-                                        {prop.allowedValues.map((value) => (
-                                            <Badge color="hint" size="md" key={value}>
-                                                {value}
-                                            </Badge>
-                                        ))}
-                                    </div>
                                 ) : (
                                     '-'
                                 )}
