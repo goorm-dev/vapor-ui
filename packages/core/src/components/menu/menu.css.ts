@@ -77,7 +77,7 @@ export const subContents = style({
     display: 'flex',
     flexDirection: 'column',
 
-    border: `1px solid ${vars.color.border.normal}`,
+    border: `0.0625rem solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.color.shadow.md,
 
