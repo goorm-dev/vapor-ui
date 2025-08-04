@@ -15,6 +15,7 @@ export const content = [
 
 export const arrow = layerStyle('components', {
     display: 'flex',
+    color: vars.color.background.normal,
 
     selectors: {
         '&[data-side="top"]': {
