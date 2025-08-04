@@ -27,15 +27,15 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
 type BreadcrumbPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.nav>;
 interface BreadcrumbRootProps extends BreadcrumbPrimitiveProps, BreadcrumbVariants {}
 
-const Root = forwardRef<HTMLDivElement, BreadcrumbRootProps>(
+const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
     ({ className, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(props, ['size']);
 
         return (
             <BreadcrumbProvider value={variantProps}>
-                <nav ref={ref} aria-label="Breadcrumb" {...otherProps}>
+                <Primitive.nav ref={ref} aria-label="Breadcrumb" {...otherProps}>
                     {children}
-                </nav>
+                </Primitive.nav>
             </BreadcrumbProvider>
         );
     },
