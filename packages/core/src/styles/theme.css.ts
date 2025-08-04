@@ -3,6 +3,7 @@ import { createGlobalTheme } from '@vanilla-extract/css';
 import { layers } from './layers.css';
 import {
     BORDER_RADIUS,
+    BOX_SHADOW,
     DARK_BASIC_COLORS,
     DARK_SEMANTIC_COLORS,
     DIMENSION,
@@ -11,7 +12,6 @@ import {
     FONT_WEIGHT,
     LETTER_SPACING,
     LIGHT_BASIC_COLORS,
-    LIGHT_BOX_SHADOW,
     LIGHT_SEMANTIC_COLORS,
     LINE_HEIGHT,
     SPACE,
@@ -25,7 +25,7 @@ const THEME_TOKENS = {
         ...LIGHT_BASIC_COLORS,
         ...LIGHT_SEMANTIC_COLORS,
     },
-    shadow: LIGHT_BOX_SHADOW,
+    shadow: BOX_SHADOW,
     size: {
         borderRadius: BORDER_RADIUS,
         dimension: DIMENSION,
