@@ -16,10 +16,6 @@ export const item = layerStyle('components', {
 });
 
 export const link = recipe({
-    base: layerStyle('components', {
-        transition: 'text-decoration 0.2s ease-in-out',
-    }),
-
     defaultVariants: { size: 'md', current: false },
     variants: {
         size: {
@@ -30,14 +26,26 @@ export const link = recipe({
         },
 
         current: {
-            false: layerStyle('components', {
-                color: vars.color.foreground.hint,
+            false: [
+                layerStyle('components', {
+                    transition: 'text-decoration-color 0.2s ease-in-out',
+                    color: vars.color.foreground.hint,
 
-                ':hover': {
-                    textDecoration: 'underline',
-                    textUnderlineOffset: 2,
-                },
-            }),
+                    // NOTE: When the link interaction style is declared multiple times, consider separating it.
+                    ':hover': {
+                        textDecoration: 'underline',
+                    },
+                    ':focus-visible': {
+                        outline: 'none',
+                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
+                    },
+                    ':active': {
+                        // color: vars.color.foreground.primary,
+                        textDecoration: 'underline',
+                        textDecorationColor: vars.color.foreground.primary,
+                    },
+                }),
+            ],
             true: layerStyle('components', {
                 color: vars.color.foreground.primary,
             }),
