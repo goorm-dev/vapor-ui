@@ -5,18 +5,18 @@ import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
-export const list = layerStyle('vapor-component', {
+export const list = layerStyle('components', {
     display: 'inline-flex',
     alignItems: 'center',
 });
 
-export const item = layerStyle('vapor-component', {
+export const item = layerStyle('components', {
     display: 'inline-flex',
     alignItems: 'center',
 });
 
 export const link = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('components', {
         transition: 'text-decoration 0.2s ease-in-out',
     }),
 
@@ -30,7 +30,7 @@ export const link = recipe({
         },
 
         current: {
-            false: layerStyle('vapor-component', {
+            false: layerStyle('components', {
                 color: vars.color.foreground.hint,
 
                 ':hover': {
@@ -38,14 +38,14 @@ export const link = recipe({
                     textUnderlineOffset: 2,
                 },
             }),
-            true: layerStyle('vapor-component', {
+            true: layerStyle('components', {
                 color: vars.color.foreground.primary,
             }),
         },
     },
 });
 
-export const icon = layerStyle('vapor-component', {
+export const icon = layerStyle('components', {
     color: vars.color.foreground.hint,
     display: 'block',
 });
