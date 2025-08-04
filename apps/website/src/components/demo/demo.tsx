@@ -24,7 +24,7 @@ export function Demo(props: DemoProps) {
 
     return (
         <ErrorBoundary>
-            <Tabs items={['preview', 'code']} defaultValue="preview">
+            <Tabs items={['Preview', 'Code']} defaultValue="preview">
                 <Tab value="preview" className="rounded-t-none">
                     <Preview name={name} />
                 </Tab>
