@@ -4,8 +4,6 @@ site_name: 'Avatar - Vapor Core'
 description: 'Avatar는 사용자가 설정한 프로필 이미지 혹은 텍스트를 UI상에 나타냅니다.'
 ---
 
-## Preview
-
 <Demo name="default-avatar">
 ```tsx
 import { Avatar } from '@vapor-ui/core';
@@ -29,129 +27,16 @@ export default function DefaultAvatar() {
 
 ### Avatar.Root
 
-<ComponentPropsTable
-    props={[
-        {
-            name: 'size',
-            type: 'string',
-            allowedValues: ['sm', 'md', 'lg', 'xl'],
-            defaultValue: 'md',
-            description: 'Controls the size of the avatar component',
-            isOptional: true,
-        },
-        {
-            name: 'alt',
-            type: 'string',
-            description: 'Alternative text for the avatar image for accessibility',
-            isOptional: false,
-        },
-        {
-            name: 'src',
-            type: 'string',
-            description: 'The source URL of the avatar image',
-            isOptional: true,
-        },
-        {
-            name: 'children',
-            type: 'React.ReactNode',
-            description: 'Child components (Avatar.Image, Avatar.Fallback)',
-            isOptional: false,
-        },
-        {
-            name: 'className',
-            type: 'string',
-            description: 'Additional CSS classes to apply to the avatar root',
-            isOptional: true,
-        },
-    ]}
-/>
+<ComponentPropsTable file="avatar" section="props" />
 
 ### Avatar.Image
 
-<ComponentPropsTable
-    props={[
-        {
-            name: 'src',
-            type: 'string',
-            description: 'The source URL of the image to display',
-            isOptional: true,
-        },
-        {
-            name: 'alt',
-            type: 'string',
-            description: 'Alternative text for the image',
-            isOptional: true,
-        },
-        {
-            name: 'onLoad',
-            type: '() => void',
-            description: 'Callback fired when the image loads successfully',
-            isOptional: true,
-        },
-        {
-            name: 'onError',
-            type: '() => void',
-            description: 'Callback fired when the image fails to load',
-            isOptional: true,
-        },
-    ]}
-/>
+<ComponentPropsTable file="avatar" section="imageProps" />
 
 ### Avatar.Fallback
 
-<ComponentPropsTable
-    props={[
-        {
-            name: 'children',
-            type: 'React.ReactNode',
-            description:
-                'Content to display when the image fails to load (usually initials or an icon)',
-            isOptional: false,
-        },
-        {
-            name: 'delayMs',
-            type: 'number',
-            description: 'Delay in milliseconds before showing the fallback',
-            isOptional: true,
-        },
-    ]}
-/>
+<ComponentPropsTable file="avatar" section="fallbackProps" />
 
 ### Avatar.Simple
 
-<ComponentPropsTable
-    props={[
-        {
-            name: 'size',
-            type: 'string',
-            allowedValues: ["'xs'", "'sm'", "'md'", "'lg'", "'xl'"],
-            defaultValue: "'md'",
-            description: 'Controls the size of the avatar component',
-            isOptional: true,
-        },
-        {
-            name: 'src',
-            type: 'string',
-            description: 'The source URL of the avatar image',
-            isOptional: true,
-        },
-        {
-            name: 'alt',
-            type: 'string',
-            description: 'Alternative text for the avatar image',
-            isOptional: false,
-        },
-        {
-            name: 'fallback',
-            type: 'React.ReactNode',
-            description: 'Content to show when image fails to load',
-            isOptional: true,
-        },
-        {
-            name: 'className',
-            type: 'string',
-            description: 'Additional CSS classes to apply',
-            isOptional: true,
-        },
-    ]}
-/>
+<ComponentPropsTable file="avatar" section="simpleProps" />
