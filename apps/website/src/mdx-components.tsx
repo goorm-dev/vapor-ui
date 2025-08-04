@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 import AccessibilityTable from '~/components/accessibility-table';
 import AllComponentsContainer from '~/components/all-components-container';
+import ComponentPropsTable from '~/components/component-props-table';
 import ComponentsCard from '~/components/component-card/component-card';
 import { Demo } from '~/components/demo/demo';
 import FoundationColorTabs from '~/components/foundation-color-tabs';
@@ -33,6 +34,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
 
         InstallSelector,
         AllComponentsContainer,
+        ComponentPropsTable,
         ComponentsCard,
         FoundationColorTabs,
         FoundationSizeTabs,
