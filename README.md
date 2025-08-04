@@ -19,7 +19,7 @@ Vapor is a React-based UI library designed with a focus on accessibility, custom
 
 ## Documentation
 
-- **[Usage](https://vapor.goorm.io/docs/overview/installation)**: Learn how to install and configure the library.
+- **[Usage](https://vapor-ui.goorm.io/docs/getting-started/installation)**: Learn how to install and configure the library.
 - **[Contributing](https://github.com/goorm-dev/vapor-ui/blob/main/CONTRIBUTING.md)**: Guidelines for contributing to the project and local setup instructions.
 - **[Releases](https://github.com/goorm-dev/vapor-ui/releases)**: View changes for each version.
 
@@ -31,7 +31,7 @@ To install Vapor UI in your project, use the following command:
 npm i @vapor-ui/core @vapor-ui/icons @vapor-ui/hooks
 ```
 
-For detailed usage instructions, please refer to the [official documentation](https://vapor.goorm.io/docs/overview/installation).
+For detailed usage instructions, please refer to the [official documentation](https://vapor-ui.goorm.io/docs/getting-started/installation).
 
 ## Core Principles
 
