@@ -45,6 +45,9 @@ const config: StorybookConfig = {
                     '~': path.resolve(__dirname, '../packages/core/src'),
                 },
             },
+            ssr: {
+                noExternal: ['@vapor-ui/icons'],
+            },
             plugins: [vanillaExtractPlugin(), reactDocgenTypescript()],
         });
 
