@@ -21,5 +21,10 @@ export default defineConfig({
             include: ['src/components/**/*.tsx'],
             exclude: ['src/**/*.stories.tsx', 'src/styles/*'],
         },
+        deps: {
+            optimizer: {
+                ssr: { include: ['@vapor-ui/icons'] },
+            },
+        },
     },
 });
