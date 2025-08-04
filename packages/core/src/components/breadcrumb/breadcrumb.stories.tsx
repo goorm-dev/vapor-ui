@@ -34,7 +34,7 @@ export const Default: Story = {
 
                         <Breadcrumb.Item>
                             <Dialog.Root>
-                                <Dialog.Trigger>
+                                <Dialog.Trigger aria-label="More">
                                     <Breadcrumb.Ellipsis />
                                 </Dialog.Trigger>
 
