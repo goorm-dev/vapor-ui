@@ -97,7 +97,7 @@ export const indicator = layerStyle('components', {
     transform: 'translate(-50%, -50%)',
     border: 'none',
     borderRadius: '9999px',
-    backgroundColor: vars.color.background.normal,
+    backgroundColor: vars.color.white,
     width: '50%',
     height: '50%',
 });
