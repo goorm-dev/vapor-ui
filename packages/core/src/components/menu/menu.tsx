@@ -417,7 +417,7 @@ const CheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>(
                 {children}
 
                 <RadixItemIndicator className={styles.indicator}>
-                    <ConfirmOutlineIcon width="inherit" height="inherit" />
+                    <ConfirmOutlineIcon size="100%" />
                 </RadixItemIndicator>
             </RadixCheckboxItem>
         );
@@ -518,7 +518,7 @@ const RadioItem = forwardRef<HTMLDivElement, MenuRadioItemProps>(
                 {children}
 
                 <RadixItemIndicator className={styles.indicator}>
-                    <ConfirmOutlineIcon width="inherit" height="inherit" />
+                    <ConfirmOutlineIcon size="100%" />
                 </RadixItemIndicator>
             </RadixRadioItem>
         );
