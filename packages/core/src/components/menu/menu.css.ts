@@ -18,7 +18,7 @@ export const contents = layerStyle('components', {
     border: `0.0625rem solid ${vars.color.border.normal}`,
 
     borderRadius: vars.size.borderRadius['300'],
-    boxShadow: vars.color.shadow.md,
+    boxShadow: vars.shadow.md,
 
     backgroundColor: vars.color.background.normal,
     paddingBlock: vars.size.space['050'],
@@ -80,7 +80,7 @@ export const subContents = layerStyle('components', {
 
     border: `0.0625rem solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
-    boxShadow: vars.color.shadow.md,
+    boxShadow: vars.shadow.md,
 
     backgroundColor: vars.color.background.normal,
     paddingBlock: vars.size.space['050'],
