@@ -56,9 +56,11 @@ const Portal = (props: TooltipPortalProps) => {
 type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Positioner>;
 interface TooltipPositionerProps extends PositionerPrimitiveProps {}
 
-const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>((props, ref) => {
-    return <BaseTooltip.Positioner ref={ref} sideOffset={8} {...props} />;
-});
+const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(
+    ({ sideOffset = 8, ...props }, ref) => {
+        return <BaseTooltip.Positioner ref={ref} sideOffset={sideOffset} {...props} />;
+    },
+);
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Content
