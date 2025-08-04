@@ -110,17 +110,19 @@ export const groupLabel = style([
     },
 ]);
 
-export const indicator = style({
-    position: 'absolute',
-    top: '50%',
-    left: vars.size.space['050'],
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transform: 'translateY(-50%)',
-    width: vars.size.dimension['150'],
-    height: vars.size.dimension['150'],
-    color: vars.color.black,
-});
+export const indicator = style([
+    foregrounds({ color: 'normal' }),
+    {
+        position: 'absolute',
+        top: '50%',
+        left: vars.size.space['050'],
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transform: 'translateY(-50%)',
+        width: vars.size.dimension['150'],
+        height: vars.size.dimension['150'],
+    },
+]);
 
 export type MenuItemVariants = NonNullable<RecipeVariants<typeof item>>;
