@@ -18,8 +18,8 @@ const THEME_TOKENS = {
     color: {
         ...LIGHT_BASIC_COLORS,
         ...LIGHT_SEMANTIC_COLORS,
-        ...LIGHT_BOX_SHADOW,
     },
+    shadow: LIGHT_BOX_SHADOW,
     size: {
         borderRadius: BORDER_RADIUS,
         dimension: DIMENSION,

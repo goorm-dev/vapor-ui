@@ -1,4 +1,4 @@
-import { DARK_BASIC_COLORS, LIGHT_BASIC_COLORS } from './basic-color';
+import { DARK_BASIC_COLORS, LIGHT_BASIC_COLORS } from '../color/basic-color';
 
 export const LIGHT_BOX_SHADOW = {
     shadow: {
