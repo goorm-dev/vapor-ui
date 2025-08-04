@@ -14,6 +14,35 @@ export default function DefaultBadge() {
 ```
 </Demo>
 
+## Property
+
+<SectionTitleDescription
+    description="Badge 색상은 primary, success, warning, danger, contrast, hint 로 제공합니다."
+>
+
+### Color
+
+</SectionTitleDescription>
+
+<Demo name="badge-color">
+```tsx
+import { Badge } from '@vapor-ui/core';
+
+export default function BadgeColor() {
+    return (
+        <div className="flex flex-wrap gap-2">
+            <Badge color="primary">Primary</Badge>
+            <Badge color="hint">Hint</Badge>
+            <Badge color="danger">Danger</Badge>
+            <Badge color="success">Success</Badge>
+            <Badge color="warning">Warning</Badge>
+            <Badge color="contrast">Contrast</Badge>
+        </div>
+    );
+}
+```
+</Demo>
+
 ## Props Table
 
 ### Badge

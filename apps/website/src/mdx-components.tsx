@@ -6,8 +6,8 @@ import Image from 'next/image';
 
 import AccessibilityTable from '~/components/accessibility-table';
 import AllComponentsContainer from '~/components/all-components-container';
-import ComponentPropsTable from '~/components/component-props-table';
 import ComponentsCard from '~/components/component-card/component-card';
+import ComponentPropsTable from '~/components/component-props-table';
 import { Demo } from '~/components/demo/demo';
 import FoundationColorTabs from '~/components/foundation-color-tabs';
 import FoundationSizeTabs from '~/components/foundation-size-tabs';
@@ -16,6 +16,7 @@ import IconList from '~/components/icon-list-tabs/icon-list-tabs';
 import InstallSelector from '~/components/install-selector/install-selector';
 import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
+import SectionTitleDescription from '~/components/section-title-description';
 
 import IntroLinkCardContainer from './components/intro-link-card-container';
 
@@ -48,6 +49,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         ) => JSX.Element,
         Image,
         IntroLinkCardContainer,
+        SectionTitleDescription,
         ...components,
     } as MDXComponents;
 };
