@@ -2,11 +2,11 @@ import { Text } from '@vapor-ui/core';
 
 import { CopyButton } from '~/components/copy-button/copy-button';
 
-interface DocsPageHeaderProps {
+type DocsPageHeaderProps = {
     title: string;
     description?: string;
     markdownUrl?: string;
-}
+};
 
 const DocsPageHeader = ({ title, description, markdownUrl }: DocsPageHeaderProps) => {
     return (
