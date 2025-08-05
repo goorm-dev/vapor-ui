@@ -28,7 +28,6 @@ export const link = recipe({
         current: {
             false: [
                 layerStyle('components', {
-                    transition: 'text-decoration-color 0.2s ease-in-out',
                     color: vars.color.foreground.hint,
 
                     // NOTE: When the link interaction style is declared multiple times, consider separating it.
@@ -62,6 +61,7 @@ export const icon = recipe({
         justifyContent: 'center',
     }),
 
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },
