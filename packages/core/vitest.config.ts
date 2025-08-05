@@ -25,7 +25,4 @@ export default defineConfig({
             exclude: ['src/**/*.stories.tsx', 'src/styles/*'],
         },
     },
-    ssr: {
-        noExternal: ['@vapor-ui/icons'],
-    },
 });
