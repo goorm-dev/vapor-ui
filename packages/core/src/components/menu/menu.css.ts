@@ -21,8 +21,7 @@ export const contents = layerStyle('components', {
     boxShadow: vars.shadow.md,
 
     backgroundColor: vars.color.background.normal,
-    paddingBlock: vars.size.space['050'],
-    paddingInline: 0,
+    padding: vars.size.space['050'],
     width: '12.5rem',
     minWidth: contentWidth,
 
@@ -46,16 +45,14 @@ export const item = recipe({
             justifyContent: 'space-between',
             gap: vars.size.space['100'],
 
-            margin: `0 ${vars.size.space['050']}`,
             border: 'none',
 
             borderRadius: vars.size.borderRadius['300'],
             cursor: 'pointer',
-            paddingRight: vars.size.space['050'],
+            paddingRight: vars.size.space['075'],
             paddingLeft: vars.size.space['250'],
             paddingBlock: vars.size.space['050'],
 
-            width: `calc(100% - ${vars.size.space['050']} * 2)`,
             height: vars.size.dimension['400'],
         }),
     ],
@@ -69,7 +66,7 @@ export const item = recipe({
 
 export const separator = layerStyle('components', {
     flexShrink: 0,
-    margin: `${vars.size.space['050']} 0`,
+    marginBlock: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
     height: '0.0625rem',
 });
@@ -83,8 +80,7 @@ export const subContents = layerStyle('components', {
     boxShadow: vars.shadow.md,
 
     backgroundColor: vars.color.background.normal,
-    paddingBlock: vars.size.space['050'],
-    paddingInline: 0,
+    padding: vars.size.space['050'],
 
     minWidth: contentWidth,
     maxHeight: contentHeight,
@@ -102,8 +98,6 @@ export const groupLabel = style([
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'hint' }),
     layerStyle('components', {
-        marginBlock: 0,
-        marginInline: vars.size.space['050'],
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],
         paddingBottom: vars.size.space['050'],
