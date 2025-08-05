@@ -6,9 +6,9 @@ import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 
 const cache = new Map<string, string>();
 
-interface CopyButtonProps extends Omit<ButtonProps, 'onClick' | 'disabled'> {
+type CopyButtonProps = Omit<ButtonProps, 'onClick' | 'disabled'> & {
     markdownUrl: string;
-}
+};
 
 const CopyButton = ({ markdownUrl, ...props }: CopyButtonProps) => {
     const [checked, onClick] = useCopyButton(async () => {
