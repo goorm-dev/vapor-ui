@@ -32,6 +32,9 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
             article={{
                 className: 'gap-[var(--vapor-size-space-500)]',
             }}
+            breadcrumb={{
+                enabled: false,
+            }}
         >
             <div className="flex flex-col items-start gap-[var(--vapor-size-space-250)]">
                 <div className="flex flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch">
