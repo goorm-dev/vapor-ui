@@ -1,6 +1,6 @@
 import { Text } from '@vapor-ui/core';
 
-import CopyButton from '~/components/copy-button/copy-button';
+import { CopyButton } from '~/components/copy-button/copy-button';
 
 interface DocsPageHeaderProps {
     title: string;

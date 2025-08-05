@@ -10,22 +10,24 @@ type CopyButtonProps = Omit<ButtonProps, 'onClick' | 'disabled'> & {
     markdownUrl: string;
 };
 
-const CopyButton = ({ markdownUrl, ...props }: CopyButtonProps) => {
-    const [checked, onClick] = useCopyButton(async () => {
-        const cached = cache.get(markdownUrl);
+export const CopyButton = ({ markdownUrl, ...props }: CopyButtonProps) => {
+    const handleCopyContent = async (url: string) => {
+        const cached = cache.get(url);
         if (cached) return navigator.clipboard.writeText(cached);
 
         await navigator.clipboard.write([
             new ClipboardItem({
-                'text/plain': fetch(markdownUrl).then(async (res) => {
+                'text/plain': fetch(url).then(async (res) => {
                     const content = await res.text();
-                    cache.set(markdownUrl, content);
+                    cache.set(url, content);
 
                     return content;
                 }),
             }),
         ]);
-    });
+    };
+
+    const [checked, onClick] = useCopyButton(() => handleCopyContent(markdownUrl));
 
     return (
         <Button color="secondary" variant="outline" onClick={onClick} {...props}>
@@ -34,5 +36,3 @@ const CopyButton = ({ markdownUrl, ...props }: CopyButtonProps) => {
         </Button>
     );
 };
-
-export default CopyButton;
