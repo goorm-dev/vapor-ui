@@ -3,7 +3,11 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
 import clsx from 'clsx';
 
+import { createContext } from '~/libs/create-context';
+import { type PositionerProps, splitPositionerProps } from '~/utils/split-positioner-props';
+
 import * as styles from './tooltip.css';
+import type { TooltipArrowVariants } from './tooltip.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Provider
@@ -16,15 +20,33 @@ const Provider = (props: TooltipProviderProps) => {
     return <BaseTooltip.Provider {...props} />;
 };
 
+/* -----------------------------------------------------------------------------------------------*/
+
+type TooltipVariants = TooltipArrowVariants;
+type TooltipSharedProps = TooltipVariants & PositionerProps;
+type TooltipContext = TooltipSharedProps;
+
+const [TooltipProvider, useTooltipContext] = createContext<TooltipContext>({
+    name: 'Tooltip',
+    hookName: 'useTooltipContext',
+    providerName: 'TooltipProvider',
+});
+
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
 
 type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Root>;
-interface TooltipRootProps extends RootPrimitiveProps {}
+interface TooltipRootProps extends RootPrimitiveProps, TooltipSharedProps {}
 
 const Root = (props: TooltipRootProps) => {
-    return <BaseTooltip.Root {...props} />;
+    const [sharedProps, otherProps] = splitPositionerProps<TooltipSharedProps>(props);
+
+    return (
+        <TooltipProvider value={sharedProps}>
+            <BaseTooltip.Root {...otherProps} />
+        </TooltipProvider>
+    );
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -54,13 +76,22 @@ const Portal = (props: TooltipPortalProps) => {
  * -----------------------------------------------------------------------------------------------*/
 
 type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Positioner>;
-interface TooltipPositionerProps extends PositionerPrimitiveProps {}
+interface TooltipPositionerProps extends Omit<PositionerPrimitiveProps, keyof TooltipSharedProps> {}
 
-const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(
-    ({ sideOffset = 8, ...props }, ref) => {
-        return <BaseTooltip.Positioner ref={ref} sideOffset={sideOffset} {...props} />;
-    },
-);
+const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(({ ...props }, ref) => {
+    const { side, align, sideOffset = 8, alignOffset } = useTooltipContext();
+
+    return (
+        <BaseTooltip.Positioner
+            ref={ref}
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            alignOffset={alignOffset}
+            {...props}
+        />
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Content
@@ -71,9 +102,11 @@ interface TooltipContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
     ({ className, children, ...props }, ref) => {
+        const { side } = useTooltipContext();
+
         return (
             <BaseTooltip.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                <BaseTooltip.Arrow className={styles.arrow}>
+                <BaseTooltip.Arrow className={styles.arrow({ side })}>
                     <ArrowIcon />
                 </BaseTooltip.Arrow>
 
