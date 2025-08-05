@@ -24,15 +24,15 @@ jobs:
             - name: Build packages
               run: pnpm build
 
-            # - name: Upload build artifacts
-            #   uses: actions/upload-artifact@v4
-            #   with:
-            #       name: build-artifacts
-            #       path: |
-            #           packages/*/dist
-            #           !packages/*config*/dist
-            #           packages/*/package.json
-            #           !packages/*config*/package.json
+            - name: Upload build artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build-artifacts
+                  path: |
+                      packages/*/dist
+                      !packages/*config*/dist
+                      packages/*/package.json
+                      !packages/*config*/package.json
 
     eslint:
         name: ESLint
@@ -58,11 +58,11 @@ jobs:
             - name: Install
               uses: ./.github/composite/install
 
-            # - name: Download build artifacts
-            #   uses: actions/download-artifact@v4
-            #   with:
-            #       name: build-artifacts
-            #       path: .
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-artifacts
+                  path: .
 
             - name: Run typecheck
               run: pnpm typecheck
@@ -91,11 +91,11 @@ jobs:
             - name: Install
               uses: ./.github/composite/install
 
-            # - name: Download build artifacts
-            #   uses: actions/download-artifact@v4
-            #   with:
-            #       name: build-artifacts
-            #       path: .
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-artifacts
+                  path: .
 
             - name: Run Vitest
               run: pnpm test
