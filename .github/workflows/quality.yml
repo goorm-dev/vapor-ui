@@ -29,10 +29,9 @@ jobs:
               with:
                   name: build-artifacts
                   path: |
-                      packages/*/dist
-                      !packages/*config*/dist
-                      packages/*/package.json
-                      !packages/*config*/package.json
+                      packages/icons/dist/**
+                      packages/core/dist/**
+                      packages/hooks/dist/**
 
     eslint:
         name: ESLint
@@ -63,6 +62,13 @@ jobs:
               with:
                   name: build-artifacts
                   path: .
+
+            - name: Debug - Check downloaded files
+              run: |
+                  echo "Current directory structure:"
+                  find . -name "dist" -type d
+                  echo "Icons dist contents:"
+                  ls -la packages/icons/dist/ || echo "Icons dist not found"
 
             - name: Run typecheck
               run: pnpm typecheck
