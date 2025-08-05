@@ -37,11 +37,6 @@ jobs:
               with:
                   working-directory: packages/core
 
-            - name: Debug
-              run: |
-                  echo "Current directory path:"
-                  pwd
-
             - name: Build Icons
               run: pnpm icons build
 
