@@ -40,11 +40,8 @@ jobs:
             - name: Build Icons
               run: pnpm icons build
 
-            - name: Build Storybook
-              run: pnpm build-storybook
-
             - name: Run Snapshot Tests
-              run: pnpm test:regression
+              run: pnpm core test:visual
 
             - uses: actions/upload-artifact@v4
               if: '${{ !cancelled() }}'

@@ -56,7 +56,7 @@
         "test": "pnpm test:units",
         "test:units": "vitest",
         "test:coverage": "vitest --coverage",
-        "test:regression": "npx playwright test -c ./playwright.config.ts",
+        "test:visual": "npx playwright test -c ./playwright.config.ts",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {

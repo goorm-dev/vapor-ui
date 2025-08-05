@@ -14,9 +14,6 @@
             "dependsOn": ["^test"],
             "outputs": []
         },
-        "test:units": {
-            "dependsOn": ["@vapor-ui/icons#build"]
-        },
         "format": {
             "outputs": [],
             "cache": false
