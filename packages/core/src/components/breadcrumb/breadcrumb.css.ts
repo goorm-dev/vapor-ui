@@ -42,6 +42,7 @@ export const link = recipe({
                     ':active': {
                         // color: vars.color.foreground.primary,
                         textDecoration: 'underline',
+
                         textDecorationColor: vars.color.foreground.primary,
                     },
                 }),
@@ -53,9 +54,22 @@ export const link = recipe({
     },
 });
 
-export const icon = layerStyle('components', {
-    color: vars.color.foreground.hint,
-    display: 'block',
+export const icon = recipe({
+    base: layerStyle('components', {
+        color: vars.color.foreground.hint,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }),
+
+    variants: {
+        size: {
+            sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },
+            md: { width: vars.size.dimension[200], height: vars.size.dimension[200] },
+            lg: { width: vars.size.dimension[200], height: vars.size.dimension[200] },
+            xl: { width: vars.size.dimension[250], height: vars.size.dimension[250] },
+        },
+    },
 });
 
 export type BreadcrumbItemVariants = NonNullable<RecipeVariants<typeof link>>;

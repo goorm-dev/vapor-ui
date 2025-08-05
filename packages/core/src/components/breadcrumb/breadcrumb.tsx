@@ -113,11 +113,18 @@ interface BreadcrumbSeparatorProps extends ComponentPropsWithoutRef<typeof Primi
 
 const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
     ({ className, children, ...props }, ref) => {
-        const Icon = createSlot(children || <SlashOutlineIcon />);
+        const { size } = useBreadcrumbContext();
+        const Icon = createSlot(children || <SlashOutlineIcon size="auto" />);
 
         return (
-            <Primitive.li ref={ref} role="presentation" aria-hidden="true" {...props}>
-                <Icon className={styles.icon} />
+            <Primitive.li
+                ref={ref}
+                role="presentation"
+                aria-hidden="true"
+                className={clsx(styles.icon({ size }), className)}
+                {...props}
+            >
+                <Icon />
             </Primitive.li>
         );
     },
@@ -131,12 +138,19 @@ type BreadcrumbEllipsisPrimitiveProps = ComponentPropsWithoutRef<typeof Primitiv
 interface BreadcrumbEllipsisProps extends BreadcrumbEllipsisPrimitiveProps {}
 
 const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
-    ({ children, ...props }, ref) => {
-        const Icon = createSlot(children || <MoreCommonOutlineIcon />);
+    ({ className, children, ...props }, ref) => {
+        const { size } = useBreadcrumbContext();
+        const Icon = createSlot(children || <MoreCommonOutlineIcon size="auto" />);
 
         return (
-            <Primitive.span ref={ref} role="presentation" aria-hidden="true" {...props}>
-                <Icon className={styles.icon} />
+            <Primitive.span
+                ref={ref}
+                role="presentation"
+                aria-hidden="true"
+                className={clsx(styles.icon({ size }), className)}
+                {...props}
+            >
+                <Icon />
             </Primitive.span>
         );
     },
