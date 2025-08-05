@@ -14,7 +14,6 @@ import textData from '../../public/components/text.json';
 
 // Map component key -> its accessibility documentation segment.
 export const ComponentAccessibilityDataMap: Record<string, unknown> = {
-    avatar: avatarData.accessibility,
     badge: badgeData.accessibility,
     button: buttonData.accessibility,
     checkbox: checkboxData.accessibility,
