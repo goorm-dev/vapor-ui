@@ -11,7 +11,6 @@
             "outputs": []
         },
         "test": {
-            "dependsOn": ["@vapor-ui/icons#build"],
             "outputs": []
         },
         "format": {
@@ -31,7 +30,7 @@
             "outputs": ["dist/**"]
         },
         "typecheck": {
-            "dependsOn": ["@vapor-ui/icons#build", "^typecheck"]
+            "dependsOn": ["^typecheck"]
         },
         "clean": {
             "cache": false
