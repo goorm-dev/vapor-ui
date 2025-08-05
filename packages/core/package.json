@@ -53,9 +53,10 @@
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
         "clean": "rimraf dist node_modules .turbo",
-        "test": "vitest",
+        "test": "pnpm test:units",
+        "test:units": "vitest",
         "test:coverage": "vitest --coverage",
-        "test:visual": "npx playwright test -c ./playwright.config.ts",
+        "test:regression": "npx playwright test -c ./playwright.config.ts",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
