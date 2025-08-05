@@ -16,7 +16,7 @@
         "start": "turbo run start",
         "test": "pnpm run test:units",
         "test:units": "turbo run test:units",
-        "test:regression": "turbo run test:regression --filter=./packages/core",
+        "test:regression": "turbo run test:regression",
         "storybook": "storybook dev -p 9009",
         "build-storybook": "storybook build",
         "format": "turbo run format",

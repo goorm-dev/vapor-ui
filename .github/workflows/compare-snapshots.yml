@@ -37,14 +37,14 @@ jobs:
               with:
                   working-directory: packages/core
 
-            - name: Build Icons
-              run: pnpm icons build
-
-            - name: Storybook Build
-              run: pnpm build-storybook
+            - name: Debug
+              run: |
+                  echo "Current directory path:"
+                  pwd
 
             - name: Run Snapshot Tests
-              run: pnpm core test:regression
+              run: pnpm test:regression
+              working-directory: ./
 
             - uses: actions/upload-artifact@v4
               if: '${{ !cancelled() }}'
