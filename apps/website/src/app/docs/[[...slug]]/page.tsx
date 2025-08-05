@@ -1,7 +1,7 @@
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
-import DocsPageHeader from '~/components/docs-page-header';
+import { DocsPageHeader } from '~/components/docs-page-header';
 import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';

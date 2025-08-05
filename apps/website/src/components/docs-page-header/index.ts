@@ -1,1 +1,1 @@
-export { default } from './docs-page-header';
+export * from './docs-page-header';
