@@ -3,8 +3,8 @@
 import React from 'react';
 
 import { Badge, Text } from '@vapor-ui/core';
-import { Info } from 'fumadocs-ui/components/type-table';
 
+import { Info } from '~/components/Info';
 import { ComponentDocsMap } from '~/constants/components';
 
 interface PropDefinition {
@@ -60,15 +60,18 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
     }
     return (
         <div className="w-full not-prose overflow-auto flex flex-col items-start gap-0 self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
-            <table className="w-full border-separate border-spacing-0 overflow-hidden border border-[var(--vapor-color-border-normal)] rounded-[var(--vapor-size-borderRadius-300)]">
+            <table
+                className="w-full border-separate border-spacing-0 overflow-hidden border border-[var(--vapor-color-border-normal)] rounded-[var(--vapor-size-borderRadius-300)]"
+                style={{ tableLayout: 'auto' }}
+            >
                 <thead className="flex, items-start self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
                     <tr className="bg-[var(--vapor-color-background-normal-darker)] border-b border-b-[var(--vapor-color-border-normal)]">
-                        <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left rounded-tl-[var(--vapor-size-borderRadius-300)] min-w-[160px]">
+                        <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left rounded-tl-[var(--vapor-size-borderRadius-300)] min-w-[140px] w-px">
                             <Text typography="subtitle1" foreground="normal-lighter">
                                 Prop
                             </Text>
                         </th>
-                        <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left min-w-[120px]">
+                        <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left min-w-[100px] w-px">
                             <Text typography="subtitle1" foreground="normal-lighter">
                                 Default
                             </Text>
@@ -84,9 +87,9 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                     {tableProps.map((prop, index) => (
                         <tr key={prop.name} className="">
                             <td
-                                className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[160px] ${index === tableProps.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
+                                className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${index === tableProps.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
                             >
-                                <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                <div className="flex items-center gap-[var(--vapor-size-space-100)] w-fit">
                                     <Text typography="body2" foreground="normal">
                                         <span>
                                             {prop.name}
@@ -97,7 +100,7 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                                 </div>
                             </td>
                             <td
-                                className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[120px] ${index === tableProps.length - 1 ? 'border-b-0' : ''}`}
+                                className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[100px] w-px ${index === tableProps.length - 1 ? 'border-b-0' : ''}`}
                             >
                                 {prop.defaultValue ? (
                                     <Badge color="hint" size="md">
