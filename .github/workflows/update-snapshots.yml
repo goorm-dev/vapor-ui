@@ -25,6 +25,12 @@ jobs:
                   git config user.name "$(git log -n 1 --pretty=format:%an)"
                   git config user.email "$(git log -n 1 --pretty=format:%ae)"
 
+            - name: Build Icons
+              run: pnpm icons build
+
+            - name: Build Storybook
+              run: pnpm build-storybook
+
             - name: Take a snapshot
               run: |
                   pnpm core test:visual --update-snapshots

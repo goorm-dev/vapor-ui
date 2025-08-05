@@ -45,6 +45,7 @@ const config: StorybookConfig = {
                     '~': path.resolve(__dirname, '../packages/core/src'),
                 },
             },
+
             plugins: [vanillaExtractPlugin(), reactDocgenTypescript()],
         });
 
