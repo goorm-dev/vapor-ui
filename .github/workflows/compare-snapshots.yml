@@ -42,6 +42,9 @@ jobs:
                   echo "Current directory path:"
                   pwd
 
+            - name: Build Icons
+              run: pnpm icons build
+
             - name: Run Snapshot Tests
               run: pnpm test:regression
 

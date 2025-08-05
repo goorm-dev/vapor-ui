@@ -17,9 +17,7 @@
         "test:units": {
             "dependsOn": ["@vapor-ui/icons#build"]
         },
-        "test:regression": {
-            "dependsOn": ["@vapor-ui/icons#build"]
-        },
+        "test:regression": {},
         "format": {
             "outputs": [],
             "cache": false
