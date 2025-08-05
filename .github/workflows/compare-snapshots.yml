@@ -37,6 +37,9 @@ jobs:
               with:
                   working-directory: packages/core
 
+            - name: Storybook Build
+              run: pnpm build-storybook
+
             - name: Run Snapshot Tests
               run: pnpm test:regression
 
