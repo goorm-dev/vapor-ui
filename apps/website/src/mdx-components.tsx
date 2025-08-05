@@ -1,4 +1,3 @@
-import { Box, Text } from '@vapor-ui/core';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import * as TabsComponents from 'fumadocs-ui/components/tabs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
@@ -48,8 +47,6 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         ) => JSX.Element,
         Image,
         IntroLinkCardContainer,
-        Box,
-        Text,
         ...components,
     } as MDXComponents;
 };
