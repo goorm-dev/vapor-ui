@@ -29,6 +29,9 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
             footer={{
                 enabled: false,
             }}
+            article={{
+                className: 'gap-[var(--vapor-size-space-500)]',
+            }}
         >
             <div className="flex flex-col items-start gap-[var(--vapor-size-space-250)]">
                 <div className="flex flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch">
@@ -41,7 +44,7 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
                     Copy as Markdown
                 </Button>
             </div>
-            <DocsBody className="px-0">
+            <DocsBody className="px-0 flex flex-col">
                 <MDX components={getMDXComponents({})} />
             </DocsBody>
         </DocsPage>

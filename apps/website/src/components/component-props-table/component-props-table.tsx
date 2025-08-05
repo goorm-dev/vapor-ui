@@ -59,7 +59,7 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
         return <p>표시할 데이터가 없습니다.</p>;
     }
     return (
-        <div className="not-prose overflow-auto flex flex-col items-start gap-0 self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
+        <div className="w-full not-prose overflow-auto flex flex-col items-start gap-0 self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
             <table className="w-full border-separate border-spacing-0 overflow-hidden border border-[var(--vapor-color-border-normal)] rounded-[var(--vapor-size-borderRadius-300)]">
                 <thead className="flex, items-start self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
                     <tr className="bg-[var(--vapor-color-background-normal-darker)] border-b border-b-[var(--vapor-color-border-normal)]">

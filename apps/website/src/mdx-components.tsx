@@ -1,3 +1,4 @@
+import { Box, Text } from '@vapor-ui/core';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import * as TabsComponents from 'fumadocs-ui/components/tabs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
@@ -16,7 +17,6 @@ import IconList from '~/components/icon-list-tabs/icon-list-tabs';
 import InstallSelector from '~/components/install-selector/install-selector';
 import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
-import SectionTitleDescription from '~/components/section-title-description';
 
 import IntroLinkCardContainer from './components/intro-link-card-container';
 
@@ -32,7 +32,6 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         CodeBlock,
         ...TabsComponents,
         Demo,
-
         InstallSelector,
         AllComponentsContainer,
         ComponentPropsTable,
@@ -49,7 +48,8 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         ) => JSX.Element,
         Image,
         IntroLinkCardContainer,
-        SectionTitleDescription,
+        Box,
+        Text,
         ...components,
     } as MDXComponents;
 };
