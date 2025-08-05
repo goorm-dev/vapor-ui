@@ -40,6 +40,9 @@ jobs:
             - name: Build Icons
               run: pnpm icons build
 
+            - name: Build Storybook
+              run: pnpm build-storybook
+
             - name: Run Snapshot Tests
               run: pnpm core test:visual
 

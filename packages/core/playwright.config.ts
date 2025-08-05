@@ -28,7 +28,7 @@ export default defineConfig({
     workers: 1,
 
     webServer: {
-        command: 'cd ../../ && pnpm build-storybook && npx http-server -p 9999 ./storybook-static',
+        command: 'cd ../../ && npx http-server -p 9999 ./storybook-static',
         url: BASE_URL,
         reuseExistingServer: false,
     },
