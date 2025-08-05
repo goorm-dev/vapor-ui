@@ -8,14 +8,15 @@ export const content = [
         paddingBlock: vars.size.space['075'],
         paddingInline: vars.size.space['100'],
         borderRadius: vars.size.borderRadius['300'],
-        backgroundColor: vars.color.background.normal,
-        boxShadow: `0 4px 10px 0 rgba(0, 0, 0, 0.20)`,
+        backgroundColor: vars.color.background.contrast,
+        color: vars.color.white,
+        boxShadow: vars.shadow.md,
     }),
 ];
 
 export const arrow = layerStyle('components', {
     display: 'flex',
-    color: vars.color.background.normal,
+    color: vars.color.background.contrast,
 
     selectors: {
         '&[data-side="top"]': {
