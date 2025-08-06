@@ -24,19 +24,19 @@ export const arrow = layerStyle('components', {
     selectors: {
         '&[data-side="top"]': {
             bottom: 0,
-            transform: 'translateY(60%) rotate(90deg)',
+            transform: 'translateY(50%) rotate(90deg)',
         },
         '&[data-side="right"]': {
             left: 0,
-            transform: 'translateX(-60%) rotate(180deg)',
+            transform: 'translateX(-50%) rotate(180deg)',
         },
         '&[data-side="bottom"]': {
             top: 0,
-            transform: 'translateY(-60%) rotate(-90deg)',
+            transform: 'translateY(-50%) rotate(-90deg)',
         },
         '&[data-side="left"]': {
             right: 0,
-            transform: 'translateX(60%) rotate(0deg)',
+            transform: 'translateX(50%) rotate(0deg)',
         },
     },
 });
