@@ -7,7 +7,6 @@ import { createContext } from '~/libs/create-context';
 import { type PositionerProps, splitPositionerProps } from '~/utils/split-positioner-props';
 
 import * as styles from './tooltip.css';
-import type { TooltipArrowVariants } from './tooltip.css';
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Provider
@@ -22,8 +21,7 @@ const Provider = (props: TooltipProviderProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type TooltipVariants = TooltipArrowVariants;
-type TooltipSharedProps = TooltipVariants & PositionerProps;
+type TooltipSharedProps = PositionerProps;
 type TooltipContext = TooltipSharedProps;
 
 const [TooltipProvider, useTooltipContext] = createContext<TooltipContext>({
@@ -102,11 +100,9 @@ interface TooltipContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
     ({ className, children, ...props }, ref) => {
-        const { side } = useTooltipContext();
-
         return (
             <BaseTooltip.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                <BaseTooltip.Arrow className={styles.arrow({ side })}>
+                <BaseTooltip.Arrow className={styles.arrow}>
                     <ArrowIcon />
                 </BaseTooltip.Arrow>
 
