@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
@@ -100,9 +101,12 @@ interface TooltipContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
     ({ className, children, ...props }, ref) => {
+        const { side, align } = useTooltipContext();
+        const position = getArrowPosition({ side, align });
+
         return (
             <BaseTooltip.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                <BaseTooltip.Arrow className={styles.arrow}>
+                <BaseTooltip.Arrow style={position} className={styles.arrow}>
                     <ArrowIcon />
                 </BaseTooltip.Arrow>
 
@@ -111,6 +115,30 @@ const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
         );
     },
 );
+
+/* -----------------------------------------------------------------------------------------------*/
+
+type ArrowPositionProps = Pick<PositionerProps, 'side' | 'align'> & { offset?: number };
+
+const getArrowPosition = ({
+    side = 'top',
+    align = 'center',
+    offset = 12,
+}: ArrowPositionProps): CSSProperties => {
+    const positionMap = {
+        'top-start': { left: offset, right: 'unset' },
+        'top-end': { left: 'unset', right: offset },
+        'bottom-start': { left: offset, right: 'unset' },
+        'bottom-end': { left: 'unset', right: offset },
+        'left-start': { top: 'unset', bottom: offset },
+        'left-end': { top: offset, bottom: 'unset' },
+        'right-start': { top: 'unset', bottom: offset },
+        'right-end': { top: offset, bottom: 'unset' },
+    };
+
+    const key = `${side}-${align}` as keyof typeof positionMap;
+    return positionMap[key] || {};
+};
 
 /* -----------------------------------------------------------------------------------------------*/
 
