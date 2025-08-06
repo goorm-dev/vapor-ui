@@ -71,7 +71,6 @@ const buttonBase = style([
 
         selectors: {
             '&[data-selected]': { color: vars.color.foreground.primary },
-            '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
 
             '&::before': {
                 position: 'absolute',
