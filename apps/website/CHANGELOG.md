@@ -1,5 +1,13 @@
 # website
 
+## 0.0.7-change-export.0
+
+### Patch Changes
+
+- Updated dependencies [b498ae2]
+- Updated dependencies [9188b0e]
+    - @vapor-ui/core@0.4.1-change-export.0
+
 ## 0.0.6
 
 ### Patch Changes

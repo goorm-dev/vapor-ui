@@ -1,5 +1,12 @@
 # @vapor-ui/core
 
+## 0.4.1-change-export.0
+
+### Patch Changes
+
+- b498ae2: Fix RadioGroup indicator color to use white background instead of theme-dependent background normal
+- 9188b0e: Enhance vanillaExtractPlugin identifiers for better debugging
+
 ## 0.4.0
 
 ### Minor Changes

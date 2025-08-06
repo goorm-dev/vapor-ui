@@ -1,0 +1,16 @@
+{
+  "mode": "pre",
+  "tag": "change-export",
+  "initialVersions": {
+    "website": "0.0.6",
+    "@vapor-ui/core": "0.4.0",
+    "@repo/eslint-config": "0.0.0",
+    "@vapor-ui/hooks": "0.1.0",
+    "@vapor-ui/icons": "0.2.0",
+    "@repo/typescript-config": "0.0.0"
+  },
+  "changesets": [
+    "fluffy-monkeys-design",
+    "swift-bobcats-bet"
+  ]
+}

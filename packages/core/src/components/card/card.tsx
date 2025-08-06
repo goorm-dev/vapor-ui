@@ -74,7 +74,5 @@ Footer.displayName = 'Card.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as CardRoot, Header as CardHeader, Body as CardBody, Footer as CardFooter };
+export { Root, Header, Body, Footer };
 export type { CardRootProps, CardHeaderProps, CardBodyProps, CardFooterProps };
-
-export const Card = { Root, Header, Body, Footer };
