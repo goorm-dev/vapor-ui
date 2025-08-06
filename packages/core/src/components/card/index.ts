@@ -1,1 +1,1 @@
-export * as Card from './card';
+export * as Card from './card.parts';
