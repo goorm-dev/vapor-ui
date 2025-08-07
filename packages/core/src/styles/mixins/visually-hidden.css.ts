@@ -1,6 +1,6 @@
 import { layerStyle } from '../utils/layer-style.css';
 
-export const visuallyHidden = layerStyle('vapor-component', {
+export const visuallyHidden = layerStyle('components', {
     position: 'absolute',
     margin: -1,
     border: 0,
