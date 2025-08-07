@@ -130,10 +130,10 @@ const getArrowPosition = ({
         'top-end': { left: 'unset', right: offset },
         'bottom-start': { left: offset, right: 'unset' },
         'bottom-end': { left: 'unset', right: offset },
-        'left-start': { top: 'unset', bottom: offset },
-        'left-end': { top: offset, bottom: 'unset' },
-        'right-start': { top: 'unset', bottom: offset },
-        'right-end': { top: offset, bottom: 'unset' },
+        'left-start': { top: offset, bottom: 'unset' },
+        'left-end': { top: 'unset', bottom: offset },
+        'right-start': { top: offset, bottom: 'unset' },
+        'right-end': { top: 'unset', bottom: offset },
     };
 
     const key = `${side}-${align}` as keyof typeof positionMap;
