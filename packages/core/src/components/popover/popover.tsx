@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 
 import { Popover as BasePopover } from '@base-ui-components/react/popover';
@@ -78,9 +79,12 @@ interface PopoverContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
     ({ className, children, ...props }, ref) => {
+        const { side, align } = usePopoverContext();
+        const position = getArrowPosition({ side, align });
+
         return (
             <BasePopover.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                <BasePopover.Arrow className={styles.arrow}>
+                <BasePopover.Arrow style={position} className={styles.arrow}>
                     <ArrowIcon />
                 </BasePopover.Arrow>
 
@@ -119,6 +123,30 @@ const Description = forwardRef<HTMLParagraphElement, PopoverDescriptionProps>(
         );
     },
 );
+
+/* -----------------------------------------------------------------------------------------------*/
+
+type ArrowPositionProps = Pick<PositionerProps, 'side' | 'align'> & { offset?: number };
+
+const getArrowPosition = ({
+    side = 'top',
+    align = 'center',
+    offset = 12,
+}: ArrowPositionProps): CSSProperties => {
+    const positionMap = {
+        'top-start': { left: offset, right: 'unset' },
+        'top-end': { left: 'unset', right: offset },
+        'bottom-start': { left: offset, right: 'unset' },
+        'bottom-end': { left: 'unset', right: offset },
+        'left-start': { top: 'unset', bottom: offset },
+        'left-end': { top: offset, bottom: 'unset' },
+        'right-start': { top: 'unset', bottom: offset },
+        'right-end': { top: offset, bottom: 'unset' },
+    };
+
+    const key = `${side}-${align}` as keyof typeof positionMap;
+    return positionMap[key] || {};
+};
 
 /* -----------------------------------------------------------------------------------------------*/
 
