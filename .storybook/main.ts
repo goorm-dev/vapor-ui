@@ -55,7 +55,6 @@ const config: StorybookConfig = {
                         return `${prefix}${debugId ? `-${debugId}` : ''}-${hash}`;
                     },
                 }),
-                ,
                 reactDocgenTypescript(),
             ],
         });
