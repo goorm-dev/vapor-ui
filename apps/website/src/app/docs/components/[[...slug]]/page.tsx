@@ -1,7 +1,7 @@
-import { DocsBody, DocsPage, DocsTitle } from 'fumadocs-ui/page';
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
-import DocsDescription from '~/components/ui/docs-description';
+import { DocsPageHeader } from '~/components/docs-page-header';
 import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
@@ -27,10 +27,11 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
                 enabled: false,
             }}
         >
-            <div>
-                <DocsTitle className="mb-2">{page.data.title}</DocsTitle>
-                <DocsDescription>{page.data.description}</DocsDescription>
-            </div>
+            <DocsPageHeader
+                title={page.data.title}
+                description={page.data.description}
+                markdownUrl={`${page.url}.mdx`}
+            />
             <DocsBody className="px-0">
                 <MDX components={getMDXComponents({})} />
             </DocsBody>

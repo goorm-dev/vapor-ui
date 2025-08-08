@@ -24,6 +24,7 @@ export async function getLLMText(page: InferPageType<typeof source>) {
 
         return `# ${page.data.title}
 URL: ${page.url}
+Source: https://raw.githubusercontent.com/goorm-dev/vapor-ui/refs/heads/main/apps/website/content/docs/${page.path}
 
 ${page.data.description}
 
@@ -32,6 +33,7 @@ ${processed.value}`;
         console.error(`Error processing page ${page.url}:`, error);
         return `# ${page.data.title}
 URL: ${page.url}
+Source: https://raw.githubusercontent.com/goorm-dev/vapor-ui/refs/heads/main/apps/website/content/docs/${page.path}
 
 ${page.data.description}
 
