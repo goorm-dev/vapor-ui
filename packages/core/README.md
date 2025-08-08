@@ -2,7 +2,7 @@
 
 Vapor UI core components library.
 
-[View documentation](https://vapor.goorm.io/vapor-core)
+[View documentation](https://vapor-ui.goorm.io/vapor-core)
 
 ## Installation
 

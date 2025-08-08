@@ -1,10 +1,7 @@
-import { Button } from '@vapor-ui/core';
-import { CopyAsMarkdownOutlineIcon } from '@vapor-ui/icons';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
-import DocsDescription from '~/components/docs-description';
-import DocsTitle from '~/components/docs-title';
+import { DocsPageHeader } from '~/components/docs-page-header';
 import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
@@ -36,17 +33,11 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
                 enabled: false,
             }}
         >
-            <div className="flex flex-col items-start gap-[var(--vapor-size-space-250)]">
-                <div className="flex flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch">
-                    <DocsTitle>{page.data.title}</DocsTitle>
-                    <DocsDescription>{page.data.description}</DocsDescription>
-                </div>
-                {/* TODO : Change this button when copy markdown component is ready */}
-                <Button variant="outline" color="secondary" size="lg">
-                    <CopyAsMarkdownOutlineIcon />
-                    Copy as Markdown
-                </Button>
-            </div>
+            <DocsPageHeader
+                title={page.data.title}
+                description={page.data.description}
+                markdownUrl={`${page.url}.mdx`}
+            />
             <DocsBody className="px-0 flex flex-col">
                 <MDX components={getMDXComponents({})} />
             </DocsBody>
