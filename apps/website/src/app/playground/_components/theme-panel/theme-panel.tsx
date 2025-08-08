@@ -11,7 +11,6 @@ import Radius from '../panel-radius';
 import Scaling from '../panel-scaling';
 import styles from './theme-panel.module.scss';
 
-
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
     const [isCopied, setIsCopied] = useState(false);
