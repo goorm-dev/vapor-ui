@@ -1,8 +1,10 @@
 #!/usr/bin/env node
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const RELEASES_FILE = path.join(
     __dirname,
@@ -11,8 +13,7 @@ const RELEASES_FILE = path.join(
 const PACKAGES_DIR = path.join(__dirname, '../packages');
 
 function getPackageChangelogs() {
-    const packages = fs
-        .readdirSync(PACKAGES_DIR, { withFileTypes: true })
+    const packages = readdirSync(PACKAGES_DIR, { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name);
 
@@ -22,9 +23,9 @@ function getPackageChangelogs() {
         const changelogPath = path.join(PACKAGES_DIR, pkg, 'CHANGELOG.md');
         const packageJsonPath = path.join(PACKAGES_DIR, pkg, 'package.json');
 
-        if (fs.existsSync(changelogPath) && fs.existsSync(packageJsonPath)) {
-            const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-            const changelog = fs.readFileSync(changelogPath, 'utf8');
+        if (existsSync(changelogPath) && existsSync(packageJsonPath)) {
+            const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
+            const changelog = readFileSync(changelogPath, 'utf8');
 
             changelogs.push({
                 name: packageJson.name,
@@ -37,10 +38,7 @@ function getPackageChangelogs() {
     return changelogs.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/**
- * Parse a Changesets-style CHANGELOG.md into a map of version -> content (string[])
- * The content for each version excludes the "## {version}" heading line.
- */
+// Parse a Changesets-style CHANGELOG.md into a map of version -> content (string[])
 function parseChangelogByVersion(markdown) {
     const lines = markdown.split('\n');
     const versionToContent = new Map();
@@ -67,7 +65,6 @@ function parseChangelogByVersion(markdown) {
             index += 1;
         }
 
-        // Trim trailing blank lines
         while (contentLines.length > 0 && contentLines[contentLines.length - 1].trim() === '') {
             contentLines.pop();
         }
@@ -79,7 +76,6 @@ function parseChangelogByVersion(markdown) {
 }
 
 function compareSemverDesc(a, b) {
-    // Compare b vs a for descending order
     const pa = a.split(/[.-]/).map(Number);
     const pb = b.split(/[.-]/).map(Number);
     for (let i = 0; i < Math.max(pa.length, pb.length); i += 1) {
@@ -90,63 +86,86 @@ function compareSemverDesc(a, b) {
     return 0;
 }
 
-function updateReleasesFile() {
+// Remove empty fenced code blocks (``` ... ``` containing only whitespace)
+function stripEmptyCodeFences(lines) {
+    const result = [];
+    let i = 0;
+    while (i < lines.length) {
+        const line = lines[i];
+        if (/^\s*```/.test(line)) {
+            let j = i + 1;
+            let hasContent = false;
+            while (j < lines.length) {
+                if (/^\s*```\s*$/.test(lines[j])) {
+                    break;
+                }
+                if (lines[j].trim() !== '') {
+                    hasContent = true;
+                }
+                j += 1;
+            }
+            if (j < lines.length && !hasContent) {
+                i = j + 1;
+                continue;
+            }
+        }
+        result.push(line);
+        i += 1;
+    }
+    return result;
+}
+
+export function updateReleasesFile() {
     const changelogs = getPackageChangelogs();
-    // Build an index of version -> [{ packageName, contentLines }]
     const versionIndex = new Map();
 
     for (const changelog of changelogs) {
         const versionMap = parseChangelogByVersion(changelog.content);
         for (const [version, contentLines] of versionMap.entries()) {
             if (!versionIndex.has(version)) versionIndex.set(version, []);
-            versionIndex.get(version).push({
-                packageName: changelog.name,
-                contentLines,
-            });
+            versionIndex.get(version).push({ packageName: changelog.name, contentLines });
         }
     }
 
-    // Sort versions in descending semver order
     const versions = Array.from(versionIndex.keys()).sort(compareSemverDesc);
 
-    let content = `---
-title: Releases
-description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
----
-
-`;
+    let content =
+        `---\n` +
+        `title: Releases\n` +
+        `description: 각 Vapor UI 릴리스의 Chanagelogs입니다.\n` +
+        `---\n\n`;
 
     for (const version of versions) {
         content += `## ${version}\n\n`;
-
-        // Sort packages by name for stable output
         const entries = versionIndex
             .get(version)
             .sort((a, b) => a.packageName.localeCompare(b.packageName));
         for (const { packageName, contentLines } of entries) {
             content += `### ${packageName}\n\n`;
-            // Demote any H3 headings inside package content to H4 to keep hierarchy under package
-            const transformed = contentLines
-                .map((line) => (line.startsWith('### ') ? line.replace(/^### /, '#### ') : line))
-                .join('\n');
-            content += transformed.trimEnd() + '\n\n';
+            const demoted = contentLines.map((line) =>
+                line.startsWith('### ') ? line.replace(/^### /, '#### ') : line,
+            );
+            const cleaned = stripEmptyCodeFences(demoted);
+            content += cleaned.join('\n').trimEnd() + '\n\n';
         }
-
         content += '---\n\n';
     }
 
-    fs.writeFileSync(RELEASES_FILE, content);
+    writeFileSync(RELEASES_FILE, content);
+    // eslint-disable-next-line no-console
     console.log(`✅ Updated releases.md grouped by version with ${versions.length} releases`);
 }
 
-// Check if running as main script
-if (require.main === module) {
+// Execute when run directly
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) {
     try {
         updateReleasesFile();
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('❌ Error updating releases.md:', error.message);
         process.exit(1);
     }
 }
 
-module.exports = { updateReleasesFile, getPackageChangelogs };
+export default updateReleasesFile;
