@@ -48,6 +48,8 @@ export default function CheckboxSize() {
 
 ### Disabled
 
+비활성화된 상태의 Checkbox입니다. 사용자가 상호작용할 수 없습니다.
+
 <Demo name="checkbox-disabled">
 ```tsx
 import { Checkbox } from '@vapor-ui/core';
@@ -70,6 +72,8 @@ export default function CheckboxDisabled() {
 </Demo>
 
 ### Invalid
+
+유효하지 않은 상태의 Checkbox입니다. 폼 검증 실패 시 사용됩니다.
 
 <Demo name="checkbox-invalid">
 ```tsx
@@ -94,6 +98,8 @@ export default function CheckboxInvalid() {
 
 ### Indeterminate
 
+부분적으로 선택된 상태의 Checkbox입니다. 하위 항목 중 일부만 선택되었을 때 사용됩니다.
+
 <Demo name="checkbox-indeterminate">
 ```tsx
 import { Checkbox } from '@vapor-ui/core';
@@ -112,6 +118,8 @@ export default function CheckboxIndeterminate() {
 </Demo>
 
 ### Visually Hidden
+
+시각적으로 숨겨진 Checkbox입니다. 스크린 리더 등 접근성 도구에서는 인식되지만 화면에는 표시되지 않습니다.
 
 <Demo name="checkbox-visually-hidden">
 ```tsx
@@ -132,16 +140,20 @@ export default function CheckboxVisuallyHidden() {
 
 ## Props Table
 
-이 컴포넌트는 `div`/`label`/`button` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
-
 ### Checkbox.Root
+
+Checkbox의 메인 컨테이너 컴포넌트입니다. size, disabled, invalid 등의 속성을 제공하며, 모든 하위 컴포넌트에서 공통으로 사용할 수 있도록 컨텍스트를 제공합니다.
 
 <ComponentPropsTable file="checkbox" section="props" />
 
 ### Checkbox.Control
 
+실제 체크박스의 시각적 표현을 담당하는 컴포넌트입니다. 체크, 미체크, 불확정 상태를 시각적으로 나타냅니다.
+
 <ComponentPropsTable file="checkbox" section="controlProps" />
 
 ### Checkbox.Label
+
+체크박스와 연결된 레이블 텍스트를 표시하는 컴포넌트입니다. 클릭 시 체크박스 상태를 토글할 수 있습니다.
 
 <ComponentPropsTable file="checkbox" section="labelProps" />
