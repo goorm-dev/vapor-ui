@@ -4,14 +4,6 @@ site_name: 'Callout - Vapor Core'
 description: 'Callout은 중요한 정보를 시각적으로 강조하여 사용자에게 전달하는 메시지 컴포넌트입니다.'
 ---
 
-## Import
-
-```js
-import { Callout } from '@vapor-ui/core';
-```
-
-## Preview
-
 <Demo name="default-callout">
 ```tsx
 import { Callout } from '@vapor-ui/core';
@@ -22,8 +14,33 @@ export default function DefaultCallout() {
 ```
 </Demo>
 
-## Props
+## Property
 
-### Callout
+### Color
 
-<PropsTable file="callout" section="props" />
+Callout 색상은 primary, success, warning, danger, hint, contrast 로 제공합니다.
+
+<Demo name="callout-color">
+```tsx
+import { Callout } from '@vapor-ui/core';
+
+export default function CalloutColor() {
+    return (
+        <div className="flex w-full max-w-xl flex-col gap-2">
+            <Callout color="primary">Anyone can develop</Callout>
+            <Callout color="success">Anyone can develop</Callout>
+            <Callout color="warning">Anyone can develop</Callout>
+            <Callout color="danger">Anyone can develop</Callout>
+            <Callout color="hint">Anyone can develop</Callout>
+            <Callout color="contrast">Anyone can develop</Callout>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Props Table
+
+이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
+
+<ComponentPropsTable file="callout" section="props" />

@@ -10,42 +10,44 @@ description: 'Card는 이미지와 텍스트, 일부 기능 버튼을 포함한 
 import { Card } from '@vapor-ui/core';
 ```
 
-## Preview
-
-<Demo name="default-card">
+<Demo name="card-basic">
 ```tsx
 import { Card } from '@vapor-ui/core';
 
-export default function DefaultCard() {
+export default function CardBasic() {
     return (
-        <Card.Root>
-            <Card.Header>
-                Basic Template
-            </Card.Header>
+        <Card.Root className="max-w-md">
+            <Card.Header>Basic Template</Card.Header>
             <Card.Body>This is a Basic Template</Card.Body>
-            <Card.Footer style={{ display: 'flex', justifyContent: 'center' }}>
-                Footer
-            </Card.Footer>
+            <Card.Footer className="flex justify-center">Footer</Card.Footer>
         </Card.Root>
     );
 }
 ```
 </Demo>
 
-## Props
+## Props Table
 
 ### Card.Root
 
-<PropsTable file="card" section="props" />
+카드의 최상위 컨테이너 영역입니다. 레이아웃과 시각적 경계를 제공합니다.
+
+<ComponentPropsTable file="card" section="props" />
 
 ### Card.Header
 
-<PropsTable file="card" section="headerProps" />
+카드 상단 영역입니다. 제목이나 보조 정보를 배치합니다.
+
+<ComponentPropsTable file="card" section="headerProps" />
 
 ### Card.Body
 
-<PropsTable file="card" section="bodyProps" />
+카드의 본문 영역입니다. 주요 콘텐츠를 배치합니다.
+
+<ComponentPropsTable file="card" section="bodyProps" />
 
 ### Card.Footer
 
-<PropsTable file="card" section="footerProps" />
+카드 하단 영역입니다. 액션 버튼 등 보조 동작을 배치합니다.
+
+<ComponentPropsTable file="card" section="footerProps" />
