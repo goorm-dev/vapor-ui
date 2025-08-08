@@ -1,9 +1,10 @@
 import type { CSSProperties } from 'react';
-import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import { type ComponentPropsWithoutRef, forwardRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui-components/react/popover';
 import clsx from 'clsx';
 
+import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { createContext } from '~/libs/create-context';
 import { type PositionerProps, splitPositionerProps } from '~/utils/split-positioner-props';
 
@@ -74,17 +75,40 @@ const Portal = (props: PopoverPortalProps) => {
  * Popover.Content
  * -----------------------------------------------------------------------------------------------*/
 
+const dataSide = 'data-side';
+const dataAlign = 'data-align';
+
 type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Popup>;
 interface PopoverContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
     ({ className, children, ...props }, ref) => {
-        const { side, align } = usePopoverContext();
+        const { side: rootSide, align: rootAlign } = usePopoverContext();
+
+        const [side, setSide] = useState(rootSide);
+        const [align, setAlign] = useState(rootAlign);
+
         const position = getArrowPosition({ side, align });
+
+        const arrowRef = useMutationObserver<HTMLDivElement>({
+            callback: (mutations) => {
+                mutations.forEach((mutation) => {
+                    const { attributeName, target: mutationTarget } = mutation;
+
+                    const dataset = (mutationTarget as HTMLElement).dataset;
+                    const nextSide = dataset.side as PositionerProps['side'];
+                    const nextAlign = dataset.align as PositionerProps['align'];
+
+                    if (attributeName === dataSide && nextSide) setSide(nextSide);
+                    if (attributeName === dataAlign && nextAlign) setAlign(nextAlign);
+                });
+            },
+            options: { attributes: true, attributeFilter: [dataSide, dataAlign] },
+        });
 
         return (
             <BasePopover.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                <BasePopover.Arrow style={position} className={styles.arrow}>
+                <BasePopover.Arrow ref={arrowRef} style={position} className={styles.arrow}>
                     <ArrowIcon />
                 </BasePopover.Arrow>
 
