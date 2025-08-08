@@ -57,7 +57,15 @@ interface PopoverPositionerProps extends Omit<PositionerPrimitiveProps, keyof Sh
 const Positioner = forwardRef<HTMLDivElement, PopoverPositionerProps>((props, ref) => {
     const { sideOffset = 8, ...context } = usePopoverContext();
 
-    return <BasePopover.Positioner ref={ref} sideOffset={sideOffset} {...context} {...props} />;
+    return (
+        <BasePopover.Positioner
+            ref={ref}
+            sideOffset={sideOffset}
+            collisionAvoidance={{ align: 'none' }}
+            {...context}
+            {...props}
+        />
+    );
 });
 
 /* -------------------------------------------------------------------------------------------------
