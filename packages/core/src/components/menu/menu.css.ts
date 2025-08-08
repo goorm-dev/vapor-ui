@@ -11,7 +11,7 @@ import { vars } from '~/styles/vars.css';
 const contentWidth = createVar({ inherits: false, syntax: '*' }, 'menu-content-width');
 const contentHeight = createVar({ inherits: false, syntax: '*' }, 'menu-content-height');
 
-export const contents = layerStyle('components', {
+export const content = layerStyle('components', {
     display: 'flex',
 
     flexDirection: 'column',
