@@ -16,10 +16,6 @@
     - Minor coordinate adjustments for better visual consistency
     - Enhanced clipPath definitions where needed
 
-    ```
-
-    ```
-
 ## 0.1.0
 
 ### Minor Changes
