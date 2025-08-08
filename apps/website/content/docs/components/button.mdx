@@ -4,14 +4,6 @@ site_name: 'Button - Vapor Core'
 description: 'Button은 사용자가 주요 작업을 수행하도록 돕는 핵심 상호작용 요소입니다.'
 ---
 
-## Import
-
-```js
-import { Button } from '@vapor-ui/core';
-```
-
-## Preview
-
 <Demo name="default-button">
 ```tsx
 import { Button } from '@vapor-ui/core';
@@ -22,12 +14,93 @@ export default function DefaultButton() {
 ```
 </Demo>
 
-## Props
+## Property
 
-### Button
+### Color
 
-<PropsTable file="button" section="props" />
+Button 색상은 primary, secondary, success, warning, danger, contrast 로 제공합니다.
 
-## Accessibility Table
+<Demo name="button-color">
+```tsx
+import { Button } from '@vapor-ui/core';
 
-<AccessibilityTable file="button" />
+export default function ButtonColor() {
+    return (
+        <div className="flex flex-wrap gap-2">
+            <Button color="primary">Primary</Button>
+            <Button color="secondary">Secondary</Button>
+            <Button color="success">Success</Button>
+            <Button color="warning">Warning</Button>
+            <Button color="danger">Danger</Button>
+            <Button color="contrast">Contrast</Button>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Size
+
+Button 사이즈는 sm, md, lg, xl 로 제공합니다.
+
+<Demo name="button-size">
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function ButtonSize() {
+    return (
+        <div className="flex items-center gap-2">
+            <Button size="sm">SM</Button>
+            <Button size="md">MD</Button>
+            <Button size="lg">LG</Button>
+            <Button size="xl">XL</Button>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Variant
+
+Button 스타일은 fill, outline, ghost 로 제공합니다.
+
+<Demo name="button-variant">
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function ButtonVariant() {
+    return (
+        <div className="flex items-center gap-2">
+            <Button variant="fill">Fill</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Stretch
+
+`stretch`가 true일 경우 버튼이 컨테이너의 전체 너비를 차지합니다.
+
+<Demo name="button-stretch">
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function ButtonStretch() {
+    return (
+        <div className="flex w-full max-w-md flex-col gap-2">
+            <Button stretch>Stretch</Button>
+            <Button>Normal</Button>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Props Table
+
+이 컴포넌트는 `button` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
+
+<ComponentPropsTable file="button" section="props" />
