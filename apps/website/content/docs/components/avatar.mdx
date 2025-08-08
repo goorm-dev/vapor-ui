@@ -124,6 +124,7 @@ export default function AvatarSimple() {
         <div className="flex gap-4">
             <Avatar.Simple
                 size="md"
+                shape="circle"
                 alt="Vapor UI"
                 src="/icons/vapor-logo.png"
             />
@@ -187,6 +188,9 @@ export default function AvatarFallbackOnly() {
             </Avatar.Root>
             <Avatar.Root size="md" alt="Vapor Icons">
                 <Avatar.Fallback>🎨</Avatar.Fallback>
+            </Avatar.Root>
+            <Avatar.Root size="md" alt="Vapor Delay">
+                <Avatar.Fallback delayMs={600}>VD</Avatar.Fallback>
             </Avatar.Root>
         </div>
     );

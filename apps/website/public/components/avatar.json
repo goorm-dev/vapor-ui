@@ -74,9 +74,15 @@
     "simpleProps": [
         {
             "prop": "size",
-            "type": ["xs", "sm", "md", "lg", "xl"],
+            "type": ["sm", "md", "lg", "xl"],
             "default": "md",
             "description": "아바타 컴포넌트의 크기를 조절합니다."
+        },
+        {
+            "prop": "shape",
+            "type": ["circle", "square"],
+            "default": "square",
+            "description": "아바타 컴포넌트의 모양을 조절합니다."
         },
         {
             "prop": "src",
