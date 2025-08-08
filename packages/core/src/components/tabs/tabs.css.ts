@@ -3,6 +3,7 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
+import { interaction } from '~/styles/mixins/interactions.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
@@ -62,31 +63,17 @@ export const list = recipe({
 
 const buttonBase = style([
     foregrounds({ color: 'normal' }),
+    interaction({ scale: 'light' }),
     layerStyle('components', {
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: vars.size.space['075'],
+        borderRadius: vars.size.borderRadius['300'],
 
         selectors: {
             '&[data-selected]': { color: vars.color.foreground.primary },
-
-            '&::before': {
-                position: 'absolute',
-                backgroundColor: 'transparent',
-                content: '',
-            },
-            '&:hover::before': {
-                backgroundColor: vars.color.border.hint,
-            },
-            '&:active::before': {
-                backgroundColor: vars.color.border.primary,
-            },
-            '&:focus-visible': {
-                outline: 'none',
-                boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
-            },
         },
     }),
 ]);
@@ -122,24 +109,8 @@ export const button = recipe({
         orientation: {
             horizontal: layerStyle('components', {
                 paddingInline: vars.size.space['050'],
-                selectors: {
-                    '&::before': {
-                        right: 0,
-                        bottom: -1,
-                        left: 0,
-                        height: '2px',
-                    },
-                },
             }),
             vertical: layerStyle('components', {
-                selectors: {
-                    '&::before': {
-                        top: 0,
-                        right: -1,
-                        bottom: 0,
-                        width: '2px',
-                    },
-                },
                 paddingInline: vars.size.space[200],
             }),
         },
