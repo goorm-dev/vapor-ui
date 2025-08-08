@@ -22,7 +22,7 @@ export const DocsPageHeader = ({ title, description, markdownUrl }: DocsPageHead
                 )}
             </div>
             {markdownUrl && (
-                <div className="w-full border-b pb-[var(--vapor-size-space-400)]">
+                <div className="w-full">
                     <CopyButton markdownUrl={markdownUrl} />
                 </div>
             )}
