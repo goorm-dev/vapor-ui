@@ -27,7 +27,8 @@
         "prepare": "husky",
         "typecheck": "turbo typecheck",
         "release": "turbo run build --filter=./packages/* && changeset publish",
-        "version": "changeset version && pnpm install --lockfile-only"
+        "version": "changeset version && pnpm install --lockfile-only",
+        "update-releases": "node scripts/update-releases.js"
     },
     "devDependencies": {
         "@changesets/cli": "^2.28.1",

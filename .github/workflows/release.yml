@@ -45,6 +45,17 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+            - name: Update releases documentation
+              run: node scripts/update-releases.js
+
+            - name: Commit updated releases documentation
+              run: |
+                  if [[ -n $(git status --porcelain) ]]; then
+                      git add apps/website/content/docs/getting-started/releases.md
+                      git commit -m "docs: update releases.md with latest changelogs"
+                      git push
+                  fi
+
             - name: Create Release Pull Request or Publish to npm
               id: changesets
               uses: changesets/action@v1
