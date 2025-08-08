@@ -6,12 +6,15 @@ import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
 export const content = style({
+    outline: 'none',
+    border: `1px solid ${vars.color.border.normal}`,
+
     borderRadius: vars.size.borderRadius[300],
-
     boxShadow: vars.shadow.md,
-    backgroundColor: vars.color.background['normal-lighter'],
 
+    backgroundColor: vars.color.background['normal-lighter'],
     paddingBlock: vars.size.space[150],
+
     paddingInline: vars.size.space[200],
 
     width: '12.5rem',
@@ -21,22 +24,25 @@ export const arrow = layerStyle('components', {
     display: 'flex',
     color: vars.color.background['normal-lighter'],
 
+    transform: 'rotate(180deg)',
+    zIndex: 1,
+
     selectors: {
         '&[data-side="top"]': {
-            bottom: 0,
-            transform: 'translateY(50%) rotate(90deg)',
+            bottom: '-11px',
+            transform: 'rotate(-90deg)',
         },
         '&[data-side="right"]': {
-            left: 0,
-            transform: 'translateX(-50%) rotate(180deg)',
+            left: '-7px',
+            transform: 'rotate(0deg)',
         },
         '&[data-side="bottom"]': {
-            top: 0,
-            transform: 'translateY(-50%) rotate(-90deg)',
+            top: '-11px',
+            transform: 'rotate(90deg)',
         },
         '&[data-side="left"]': {
-            right: 0,
-            transform: 'translateX(50%) rotate(0deg)',
+            right: '-7px',
+            transform: 'rotate(180deg)',
         },
     },
 });

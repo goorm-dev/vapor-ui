@@ -19,7 +19,7 @@ export default {
 export const Default: StoryObj<typeof Popover.Root> = {
     render: (args) => (
         <Flex gap="$400" marginTop="200px" justifyContent="center" alignItems="center">
-            <Popover.Root {...args}>
+            <Popover.Root {...args} open>
                 <Popover.Trigger render={<Button>Open Popover</Button>} />
                 <Popover.Portal>
                     <Popover.Positioner>
