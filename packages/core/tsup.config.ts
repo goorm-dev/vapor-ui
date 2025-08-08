@@ -99,7 +99,9 @@ export default defineConfig([
                 ...vanillaExtractConfig,
                 identifiers: ({ hash, filePath, debugId }) => {
                     const componentName = path.basename(filePath, '.css.ts');
-                    return `${componentName}${debugId ? `-${debugId}` : ''}__${hash}`;
+                    const prefix = componentName === 'sprinkles' ? 'v' : componentName;
+
+                    return `${prefix}${debugId ? `-${debugId}` : ''}-${hash}`;
                 },
             }),
         ],
@@ -132,7 +134,9 @@ export default defineConfig([
                 ...vanillaExtractConfig,
                 identifiers: ({ hash, filePath, debugId }) => {
                     const componentName = path.basename(filePath, '.css.ts');
-                    return `${componentName}${debugId ? `-${debugId}` : ''}__${hash}`;
+                    const prefix = componentName === 'sprinkles' ? 'v' : componentName;
+
+                    return `${prefix}${debugId ? `-${debugId}` : ''}-${hash}`;
                 },
             }),
         ],
