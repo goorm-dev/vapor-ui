@@ -9,6 +9,7 @@ export default {
     title: 'Popover',
     component: Popover.Root,
     argTypes: {
+        open: { control: 'boolean' },
         side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
         sideOffset: { control: 'number' },
         align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
@@ -19,7 +20,7 @@ export default {
 export const Default: StoryObj<typeof Popover.Root> = {
     render: (args) => (
         <Flex gap="$400" marginTop="200px" justifyContent="center" alignItems="center">
-            <Popover.Root {...args} open>
+            <Popover.Root {...args}>
                 <Popover.Trigger render={<Button>Open Popover</Button>} />
                 <Popover.Portal>
                     <Popover.Positioner>
