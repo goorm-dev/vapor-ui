@@ -119,7 +119,7 @@ const Content = forwardRef<HTMLDivElement, MenuContentProps>(
         return (
             <RadixContent
                 ref={ref}
-                className={clsx(styles.contents, className)}
+                className={clsx(styles.content, className)}
                 {...positionerProps}
                 {...props}
             />
