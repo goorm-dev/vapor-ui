@@ -42,87 +42,47 @@ jobs:
             - name: Check for changes
               id: check_changes
               run: |
-                  # Check if there are changes in the icons directory
-                  echo "🔍 DEBUG: Checking for changes in packages/icons/src/"
-                  echo "🔍 DEBUG: Git status output:"
-                  git status --porcelain packages/icons/src/
-
                   if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
                       echo "has_changes=true" >> $GITHUB_OUTPUT
                       echo "📝 Changes detected in icons"
                       
-                      echo "🔍 DEBUG: Filtering for new icons..."
-                      echo "🔍 DEBUG: All untracked files (using git ls-files):"
-                      git ls-files --others --exclude-standard packages/icons/src/
+                      # 변경된 파일 목록을 순회하며 새로운 아이콘을 찾고, 그 수와 이름을 저장합니다.
+                      new_icons_count=0
+                      new_icon_names=""
                       
-                      echo "🔍 DEBUG: Step 1 - Untracked files with ts/tsx/js extension:"
-                      git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$"
-                      
-                      echo "🔍 DEBUG: Step 2 - Files in basic/symbol-icons directories:"
-                      git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons"
-                      
-                      echo "🔍 DEBUG: Step 3 - Excluding index files:"
-                      git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$"
-                      
-                      # Check for new icons using git ls-files for untracked files
-                      new_icons_untracked=$(git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$" | wc -l)
-                      echo "🔍 DEBUG: New untracked icons count: $new_icons_untracked"
-                      
-                      # Total new icons
-                      new_icons=$(new_icons_untracked)
-                      echo "🔍 DEBUG: New icons count: $new_icons"
-                      
-                      if [[ $new_icons -gt 0 ]]; then
-                          echo "has_new_icons=true" >> $GITHUB_OUTPUT
-                          echo "version_type=minor" >> $GITHUB_OUTPUT
-                          echo "🆕 New icons detected - will use minor version bump"
+                      while IFS= read -r line; do
+                      if [[ "$line" =~ ^(\?\?|A\ ) ]] && \
+                          [[ "$line" =~ \.(ts|tsx|js)$ ]] && \
+                          [[ "$line" =~ (basic|symbol)-icons ]] && \
+                          ! [[ "$line" =~ /index\.(ts|tsx|js)$ ]]; then
                           
-                          # Get list of new icon names
-                          new_icon_names=""
-                          echo "🔍 DEBUG: Processing individual files for icon names..."
+                          # 새 아이콘 카운터를 1 증가시킵니다.
+                          new_icons_count=$((new_icons_count + 1))
                           
-                          # Process untracked files
-                          while IFS= read -r file_path; do
-                              echo "🔍 DEBUG: Processing untracked file: '$file_path'"
-                              if [[ "$file_path" =~ \.(ts|tsx|js)$ ]] && [[ "$file_path" =~ (basic|symbol)-icons ]] && [[ ! "$file_path" =~ /index\.(ts|tsx|js)$ ]]; then
-                                  icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
-                                  echo "🔍 DEBUG: Extracted icon name from untracked: '$icon_name'"
-                                  if [[ -n "$icon_name" ]]; then
-                                      if [[ -z "$new_icon_names" ]]; then
-                                          new_icon_names="\`$icon_name\`"
-                                      else
-                                          new_icon_names="$new_icon_names, \`$icon_name\`"
-                                      fi
-                                  fi
-                              fi
-                          done <<< "$(git ls-files --others --exclude-standard packages/icons/src/ | grep -E '\.(ts|tsx|js)$' | grep -E '(basic|symbol)-icons' | grep -v '/index\.(ts|tsx|js)$')"
+                          # 파일 경로에서 순수한 아이콘 이름만 추출합니다.
+                          file_path="${line:3}"
+                          icon_name=$(basename "$file_path" | sed 's/\.[^.]*$//')
                           
-                          # Process staged files
-                          while IFS= read -r line; do
-                              echo "🔍 DEBUG: Processing staged line: '$line'"
-                              if [[ "$line" =~ ^A\  ]]; then
-                                  file_path="${line:3}"
-                                  echo "🔍 DEBUG: Staged file path: '$file_path'"
-                                  if [[ "$file_path" =~ \.(ts|tsx|js)$ ]] && [[ "$file_path" =~ (basic|symbol)-icons ]] && [[ ! "$file_path" =~ /index\.(ts|tsx|js)$ ]]; then
-                                      icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
-                                      echo "🔍 DEBUG: Extracted icon name from staged: '$icon_name'"
-                                      if [[ -n "$icon_name" ]]; then
-                                          if [[ -z "$new_icon_names" ]]; then
-                                              new_icon_names="\`$icon_name\`"
-                                          else
-                                              new_icon_names="$new_icon_names, \`$icon_name\`"
-                                          fi
-                                      fi
-                                  fi
-                              fi
-                          done <<< "$(git status --porcelain packages/icons/src/ | grep -E '^A ')"
-                          echo "🔍 DEBUG: Final new_icon_names: '$new_icon_names'"
-                          echo "new_icon_names=$new_icon_names" >> $GITHUB_OUTPUT
+                          # new_icon_names 문자열에 추가합니다.
+                          if [[ -z "$new_icon_names" ]]; then
+                          new_icon_names="\`$icon_name\`"
+                          else
+                          new_icon_names="$new_icon_names, \`$icon_name\`"
+                          fi
+                      fi
+                      done <<< "$(git status --porcelain packages/icons/src/)"
+                      
+                      if [[ $new_icons_count -gt 0 ]]; then
+                      echo "has_new_icons=true" >> $GITHUB_OUTPUT
+                      echo "version_type=minor" >> $GITHUB_OUTPUT
+                      echo "new_icon_names=$new_icon_names" >> $GITHUB_OUTPUT
+                      echo "🆕 New icons detected ($new_icons_count) - will use minor version bump"
+                      echo "Added: $new_icon_names"
                       else
-                          echo "has_new_icons=false" >> $GITHUB_OUTPUT
-                          echo "version_type=patch" >> $GITHUB_OUTPUT
-                          echo "🔄 Only updated icons detected - will use patch version bump"
-                          echo "new_icon_names=" >> $GITHUB_OUTPUT
+                      echo "has_new_icons=false" >> $GITHUB_OUTPUT
+                      echo "version_type=patch" >> $GITHUB_OUTPUT
+                      echo "new_icon_names=" >> $GITHUB_OUTPUT
+                      echo "🔄 Only updated or deleted icons detected - will use patch version bump"
                       fi
                   else
                       echo "has_changes=false" >> $GITHUB_OUTPUT
