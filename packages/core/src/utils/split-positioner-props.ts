@@ -1,10 +1,11 @@
+import type { Offset } from './create-offsets';
 import { createSplitProps } from './create-split-props';
 
 export type PositionerProps = {
     side?: 'top' | 'bottom' | 'left' | 'right';
     align?: 'start' | 'center' | 'end';
-    sideOffset?: number;
-    alignOffset?: number;
+    sideOffset?: Offset | number;
+    alignOffset?: Offset | number;
 };
 
 export const splitPositionerProps = <T extends PositionerProps>(props: T) => {
