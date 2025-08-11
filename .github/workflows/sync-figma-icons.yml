@@ -68,14 +68,8 @@ jobs:
                       new_icons_untracked=$(git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$" | wc -l)
                       echo "🔍 DEBUG: New untracked icons count: $new_icons_untracked"
                       
-                      # Also check for staged new files
-                      echo "🔍 DEBUG: Staged new files:"
-                      git status --porcelain packages/icons/src/ | grep -E "^A " | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$"
-                      new_icons_staged=$(git status --porcelain packages/icons/src/ | grep -E "^A " | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$" | wc -l)
-                      echo "🔍 DEBUG: New staged icons count: $new_icons_staged"
-                      
                       # Total new icons
-                      new_icons=$((new_icons_untracked + new_icons_staged))
+                      new_icons=$(new_icons_untracked)
                       echo "🔍 DEBUG: New icons count: $new_icons"
                       
                       if [[ $new_icons -gt 0 ]]; then
