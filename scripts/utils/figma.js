@@ -3,8 +3,7 @@ import { camelCase } from 'lodash-es';
 const svgToIconComponent = (svgDom) =>
     svgDom
         .toString()
-        .replace(`width="16"`, '')
-        .replace(`height="16"`, '')
+        .replace(/(?<=<svg[^>]*)\s+(width|height)="[^"]*"/g, '')
         .replace(/^\<svg/gm, '<IconBase')
         .replace(/\<\/svg\>/gm, '</IconBase>')
         .replace(/\s\w*:\w*="/gm, (w) => ' ' + camelCase(w) + '="')
@@ -33,8 +32,4 @@ const remakeMaskStyle = (IconComponent) => {
 const makeFlexibleColorIcon = (IconComponent) =>
     IconComponent.replace(/fill="black"/g, '').replace(/fill="none"/g, '');
 
-export {
-    svgToIconComponent,
-    remakeMaskStyle,
-    makeFlexibleColorIcon,
-};
+export { svgToIconComponent, remakeMaskStyle, makeFlexibleColorIcon };
