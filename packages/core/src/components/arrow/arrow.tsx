@@ -72,17 +72,6 @@ const Arrow = forwardRef<HTMLDivElement, ArrowProps>(
                 ...props,
             },
         });
-
-        // return (
-        //     <div
-        //         ref={composedRef}
-        //         style={position}
-        //         className={clsx(styles.arrow, className)}
-        //         {...props}
-        //     >
-        //         {children || <ArrowIcon />}
-        //     </div>
-        // );
     },
 );
 Arrow.displayName = 'Arrow';
@@ -114,24 +103,6 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
                 fill="currentColor"
             />
         </svg>
-        // <svg
-        //     xmlns="http://www.w3.org/2000/svg"
-        //     width="6"
-        //     height="16"
-        //     viewBox="0 0 6 16"
-        //     fill="none"
-        //     {...props}
-        // >
-        //     <path
-        //         d="M4.82031 8.93457C5.37971 8.43733 5.37971 7.56267 4.82031 7.06543L-1.25 1.66992L-1.25 14.3301L4.82031 8.93457Z"
-        //         stroke={vars.color.border.normal}
-        //         strokeWidth="1"
-        //     />
-        //     <path
-        //         d="M4.1142 7.24074C4.57981 7.63984 4.57981 8.36016 4.1142 8.75926L-2 14L-2 2L4.1142 7.24074Z"
-        //         fill="currentColor"
-        //     />
-        // </svg>
     );
 };
 
