@@ -1,4 +1,4 @@
-[![Vapor UI Logo](vapor-ui.png)](https://vapor.goorm.io)
+[![Vapor UI Logo](vapor-ui.png)](https://vapor-ui.goorm.io)
 
 # Goorm Design System: Vapor UI
 
