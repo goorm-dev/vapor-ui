@@ -21,30 +21,7 @@ export const content = style({
 });
 
 export const arrow = layerStyle('components', {
-    display: 'flex',
     color: vars.color.background['normal-lighter'],
-
-    transform: 'rotate(180deg)',
-    zIndex: 1,
-
-    selectors: {
-        '&[data-side="top"]': {
-            bottom: '-11px',
-            transform: 'rotate(-90deg)',
-        },
-        '&[data-side="right"]': {
-            left: '-7px',
-            transform: 'rotate(0deg)',
-        },
-        '&[data-side="bottom"]': {
-            top: '-11px',
-            transform: 'rotate(90deg)',
-        },
-        '&[data-side="left"]': {
-            right: '-7px',
-            transform: 'rotate(180deg)',
-        },
-    },
 });
 
 export const title = style([typography({ style: 'heading5' }), foregrounds({ color: 'normal' })]);

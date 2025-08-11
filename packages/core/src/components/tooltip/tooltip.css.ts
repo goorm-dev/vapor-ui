@@ -11,29 +11,11 @@ export const content = [
         backgroundColor: vars.color.background.contrast,
         color: vars.color.white,
         boxShadow: vars.shadow.md,
+
+        border: `1px solid ${vars.color.border.normal}`,
     }),
 ];
 
 export const arrow = layerStyle('components', {
-    display: 'flex',
     color: vars.color.background.contrast,
-
-    selectors: {
-        '&[data-side="top"]': {
-            bottom: 0,
-            transform: 'translateY(50%) rotate(90deg)',
-        },
-        '&[data-side="right"]': {
-            left: 0,
-            transform: 'translateX(-50%) rotate(180deg)',
-        },
-        '&[data-side="bottom"]': {
-            top: 0,
-            transform: 'translateY(-50%) rotate(-90deg)',
-        },
-        '&[data-side="left"]': {
-            right: 0,
-            transform: 'translateX(50%) rotate(0deg)',
-        },
-    },
 });
