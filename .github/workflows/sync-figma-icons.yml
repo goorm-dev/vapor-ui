@@ -18,7 +18,6 @@ on:
 jobs:
     sync-figma-icons:
         runs-on: ubuntu-latest
-        if: github.repository == 'goorm-dev/vapor-ui'
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
