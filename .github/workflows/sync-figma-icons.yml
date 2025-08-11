@@ -2,7 +2,7 @@ name: '[CI] Sync Figma Icons'
 
 on:
     pull_request:
-        branches: [main]
+        branches: [add-icons-sync-workflow]
 
     workflow_dispatch:
         inputs:
@@ -108,56 +108,56 @@ jobs:
                   echo "updated_icons=" >> $GITHUB_OUTPUT
                   fi
 
-            - name: Create branch and commit changes
-              if: steps.check_changes.outputs.has_changes == 'true'
-              run: |
-                  BRANCH_NAME="sync-figma-icons-$(date +%Y%m%d-%H%M%S)"
-                  echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+            # - name: Create branch and commit changes
+            #   if: steps.check_changes.outputs.has_changes == 'true'
+            #   run: |
+            #       BRANCH_NAME="sync-figma-icons-$(date +%Y%m%d-%H%M%S)"
+            #       echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
 
-                  git config --local user.email "action@github.com"
-                  git config --local user.name "GitHub Action"
+            #       git config --local user.email "action@github.com"
+            #       git config --local user.name "GitHub Action"
 
-                  # Ensure we have the latest main branch
-                  git fetch origin main
-                  git checkout main
-                  git pull origin main
+            #       # Ensure we have the latest main branch
+            #       git fetch origin main
+            #       git checkout main
+            #       git pull origin main
 
-                  # Create new branch from main
-                  git checkout -b $BRANCH_NAME
+            #       # Create new branch from main
+            #       git checkout -b $BRANCH_NAME
 
-                  # Create changeset with details about updated icons
-                  CHANGESET_FILE=".changeset/sync-icons-$(date +%Y%m%d%H%M%S).md"
+            #       # Create changeset with details about updated icons
+            #       CHANGESET_FILE=".changeset/sync-icons-$(date +%Y%m%d%H%M%S).md"
 
-                  # Create changeset content
-                  echo "---" > "$CHANGESET_FILE"
-                  echo "\"@vapor-ui/icons\": minor" >> "$CHANGESET_FILE"
-                  echo "---" >> "$CHANGESET_FILE"
-                  echo "" >> "$CHANGESET_FILE"
-                  echo "Sync icons from Figma" >> "$CHANGESET_FILE"
-                  echo "" >> "$CHANGESET_FILE"
-                  # Add new icons section
-                  if [[ -n "${{ steps.check_changes.outputs.new_icons }}" ]]; then
-                    echo "**New Icons:** ${{ steps.check_changes.outputs.new_icons }}" >> "$CHANGESET_FILE"
-                  fi
+            #       # Create changeset content
+            #       echo "---" > "$CHANGESET_FILE"
+            #       echo "\"@vapor-ui/icons\": minor" >> "$CHANGESET_FILE"
+            #       echo "---" >> "$CHANGESET_FILE"
+            #       echo "" >> "$CHANGESET_FILE"
+            #       echo "Sync icons from Figma" >> "$CHANGESET_FILE"
+            #       echo "" >> "$CHANGESET_FILE"
+            #       # Add new icons section
+            #       if [[ -n "${{ steps.check_changes.outputs.new_icons }}" ]]; then
+            #         echo "**New Icons:** ${{ steps.check_changes.outputs.new_icons }}" >> "$CHANGESET_FILE"
+            #       fi
 
-                  # Add updated icons section  
-                  if [[ -n "${{ steps.check_changes.outputs.updated_icons }}" ]]; then
-                    echo "**Updated Icons:** ${{ steps.check_changes.outputs.updated_icons }}" >> "$CHANGESET_FILE"
-                  fi
+            #       # Add updated icons section
+            #       if [[ -n "${{ steps.check_changes.outputs.updated_icons }}" ]]; then
+            #         echo "**Updated Icons:** ${{ steps.check_changes.outputs.updated_icons }}" >> "$CHANGESET_FILE"
+            #       fi
 
-                  echo "" >> "$CHANGESET_FILE"
-                  echo "- Synced ${{ steps.parse_types.outputs.types }} icon types from Figma" >> "$CHANGESET_FILE"
-                  echo "- Updated icon components and stories" >> "$CHANGESET_FILE"
-                  echo "- Applied consistent formatting and code generation" >> "$CHANGESET_FILE"
+            #       echo "" >> "$CHANGESET_FILE"
+            #       echo "- Synced ${{ steps.parse_types.outputs.types }} icon types from Figma" >> "$CHANGESET_FILE"
+            #       echo "- Updated icon components and stories" >> "$CHANGESET_FILE"
+            #       echo "- Applied consistent formatting and code generation" >> "$CHANGESET_FILE"
 
-                  # Add all changes including the changeset
-                  git add packages/icons/src/components/ .changeset/
-                  git commit -m "feat: sync icons from Figma
+            #       # Add all changes including the changeset
+            #       git add packages/icons/src/components/ .changeset/
+            #       git commit -m "feat: sync icons from Figma
 
-                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            #       🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
-                  Co-Authored-By: GitHub Action <action@github.com>"
-                  git push -u origin $BRANCH_NAME
+            #       Co-Authored-By: GitHub Action <action@github.com>"
+            #       git push -u origin $BRANCH_NAME
 
             # - name: Create Pull Request
             #   if: steps.check_changes.outputs.has_changes == 'true'
