@@ -4,6 +4,8 @@ description: 'Sets up Node.js and runs install'
 runs:
     using: composite
     steps:
+        - uses: actions/checkout@v4
+
         - uses: pnpm/action-setup@v4
           with:
               run_install: false
@@ -16,4 +18,4 @@ runs:
 
         - name: Install Dependencies
           shell: bash
-          run: pnpm i --no-frozen-lockfile
+          run: pnpm i --frozen-lockfile
