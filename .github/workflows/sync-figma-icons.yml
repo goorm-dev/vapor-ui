@@ -43,12 +43,30 @@ jobs:
               id: check_changes
               run: |
                   # Check if there are changes in the icons directory
+                  echo "🔍 DEBUG: Checking for changes in packages/icons/src/"
+                  echo "🔍 DEBUG: Git status output:"
+                  git status --porcelain packages/icons/src/
+
                   if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
                       echo "has_changes=true" >> $GITHUB_OUTPUT
                       echo "📝 Changes detected in icons"
                       
+                      echo "🔍 DEBUG: Filtering for new icons..."
+                      echo "🔍 DEBUG: Step 1 - Files with ?? or A status:"
+                      git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )"
+                      
+                      echo "🔍 DEBUG: Step 2 - Files with ts/tsx/js extension:"
+                      git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$"
+                      
+                      echo "🔍 DEBUG: Step 3 - Files in basic/symbol-icons directories:"
+                      git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons"
+                      
+                      echo "🔍 DEBUG: Step 4 - Excluding index files:"
+                      git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$"
+                      
                       # Check for new icons (added files - both untracked and staged)
                       new_icons=$(git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$" | wc -l)
+                      echo "🔍 DEBUG: New icons count: $new_icons"
                       
                       if [[ $new_icons -gt 0 ]]; then
                           echo "has_new_icons=true" >> $GITHUB_OUTPUT
@@ -57,11 +75,15 @@ jobs:
                           
                           # Get list of new icon names
                           new_icon_names=""
+                          echo "🔍 DEBUG: Processing individual files for icon names..."
                           while IFS= read -r line; do
+                              echo "🔍 DEBUG: Processing line: '$line'"
                               if [[ "$line" =~ ^(\?\?|A\ ) ]]; then
                                   file_path="${line:3}"
+                                  echo "🔍 DEBUG: File path: '$file_path'"
                                   if [[ "$file_path" =~ \.(ts|tsx|js)$ ]] && [[ "$file_path" =~ (basic|symbol)-icons ]] && [[ ! "$file_path" =~ /index\.(ts|tsx|js)$ ]]; then
                                       icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
+                                      echo "🔍 DEBUG: Extracted icon name: '$icon_name'"
                                       if [[ -n "$icon_name" ]]; then
                                           if [[ -z "$new_icon_names" ]]; then
                                               new_icon_names="\`$icon_name\`"
@@ -72,6 +94,7 @@ jobs:
                                   fi
                               fi
                           done <<< "$(git status --porcelain packages/icons/src/)"
+                          echo "🔍 DEBUG: Final new_icon_names: '$new_icon_names'"
                           echo "new_icon_names=$new_icon_names" >> $GITHUB_OUTPUT
                       else
                           echo "has_new_icons=false" >> $GITHUB_OUTPUT
@@ -172,11 +195,11 @@ jobs:
                   EOF
                   fi
 
-                  gh pr create \
-                    --title "feat: sync icons from Figma" \
-                    --body-file pr_body.txt \
-                    --base main \
-                    --head ${{ env.branch_name }}
-
-                  # Clean up temporary file
                   rm -f pr_body.txt
+              #   gh pr create \
+              #     --title "feat: sync icons from Figma" \
+              #     --body-file pr_body.txt \
+              #     --base main \
+              #     --head ${{ env.branch_name }}
+
+              # Clean up temporary file
