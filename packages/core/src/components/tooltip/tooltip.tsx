@@ -6,23 +6,16 @@ import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { createContext } from '~/libs/create-context';
-import type { PositionerProps } from '~/utils/split-positioner-props';
-import { splitPositionerProps } from '~/utils/split-positioner-props';
+import { createSplitProps } from '~/utils/create-split-props';
+import type { OnlyPositionerProps } from '~/utils/split-positioner-props';
+
+// import { splitPositionerProps } from '~/utils/split-positioner-props';
 
 import * as styles from './tooltip.css';
 
-/* -------------------------------------------------------------------------------------------------
- * Tooltip.Provider
- * -----------------------------------------------------------------------------------------------*/
-
-type ProviderPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Provider>;
-interface TooltipProviderProps extends ProviderPrimitiveProps {}
-
-const Provider = (props: TooltipProviderProps) => {
-    return <BaseTooltip.Provider {...props} />;
-};
-
 /* -----------------------------------------------------------------------------------------------*/
+
+type PositionerProps = OnlyPositionerProps<typeof BaseTooltip.Positioner>;
 
 type TooltipSharedProps = PositionerProps;
 type TooltipContext = TooltipSharedProps;
@@ -41,7 +34,20 @@ type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Root>;
 interface TooltipRootProps extends RootPrimitiveProps, TooltipSharedProps {}
 
 const Root = (props: TooltipRootProps) => {
-    const [sharedProps, otherProps] = splitPositionerProps<TooltipSharedProps>(props);
+    const [sharedProps, otherProps] = createSplitProps<PositionerProps>()(props, [
+        'align',
+        'alignOffset',
+        'side',
+        'sideOffset',
+        'anchor',
+        'arrowPadding',
+        'collisionAvoidance',
+        'collisionBoundary',
+        'collisionPadding',
+        'positionMethod',
+        'sticky',
+        'trackAnchor',
+    ]);
 
     return (
         <TooltipProvider value={sharedProps}>
@@ -129,13 +135,15 @@ const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
         });
 
         return (
-            <BaseTooltip.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
-                    <ArrowIcon />
-                </BaseTooltip.Arrow>
+            <Positioner>
+                <BaseTooltip.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
+                    <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                        <ArrowIcon />
+                    </BaseTooltip.Arrow>
 
-                {children}
-            </BaseTooltip.Popup>
+                    {children}
+                </BaseTooltip.Popup>
+            </Positioner>
         );
     },
 );
@@ -187,28 +195,17 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export {
-    Provider as TooltipProvider,
     Root as TooltipRoot,
     Trigger as TooltipTrigger,
     Portal as TooltipPortal,
-    Positioner as TooltipPositioner,
     Content as TooltipContent,
 };
 
-export type {
-    TooltipProviderProps,
-    TooltipRootProps,
-    TooltipTriggerProps,
-    TooltipPortalProps,
-    TooltipPositionerProps,
-    TooltipContentProps,
-};
+export type { TooltipRootProps, TooltipTriggerProps, TooltipPortalProps, TooltipContentProps };
 
 export const Tooltip = {
-    Provider,
     Root,
     Trigger,
     Portal,
-    Positioner,
     Content,
 };
