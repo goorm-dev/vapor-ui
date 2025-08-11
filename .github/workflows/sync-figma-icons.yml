@@ -118,7 +118,7 @@ jobs:
                   if [[ "${{ steps.check_changes.outputs.has_new_icons }}" == "true" ]]; then
                       echo "Add new icons from Figma" >> "$CHANGESET_FILE"
                       echo "" >> "$CHANGESET_FILE"
-                      echo "**New Icons:** ${{ steps.check_changes.outputs.new_icon_names }}" >> "$CHANGESET_FILE"
+                      echo '**New Icons:** ${{ steps.check_changes.outputs.new_icon_names }}' >> "$CHANGESET_FILE"
                   else
                       echo "Update icons from Figma" >> "$CHANGESET_FILE"
                       echo "" >> "$CHANGESET_FILE"
@@ -155,7 +155,7 @@ jobs:
 
                   ### ✨ New Icons Added
                   EOF
-                      echo "${{ steps.check_changes.outputs.new_icon_names }}" >> pr_body.txt
+                      echo '**New Icons:** ${{ steps.check_changes.outputs.new_icon_names }}' >> pr_body.txt
                   else
                       # PR for updated icons (patch version)
                       cat > pr_body.txt << 'EOF'
