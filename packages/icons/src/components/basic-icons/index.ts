@@ -541,3 +541,4 @@ export { default as ContainerShareOutlineIcon } from './ContainerShareOutlineIco
 export { default as CpuOutlineIcon } from './CpuOutlineIcon';
 export { default as CreateBranchOutlineIcon } from './CreateBranchOutlineIcon';
 export { default as ContainerStopOutlineIcon } from './ContainerStopOutlineIcon';
+export { default as LinearScaleOutlineIcon } from './LinearScaleOutlineIcon';
