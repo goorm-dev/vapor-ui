@@ -1,9 +1,6 @@
 name: '[CI] Sync Figma Icons'
 
 on:
-    pull_request:
-        branches: [add-icons-sync-workflow]
-
     workflow_dispatch:
         inputs:
             icon_types:
