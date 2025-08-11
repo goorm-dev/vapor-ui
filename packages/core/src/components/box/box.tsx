@@ -10,18 +10,24 @@ import type { VComponentProps } from '~/utils/types';
 
 interface BoxProps extends VComponentProps<typeof Primitive.div>, Sprinkles {}
 
-const Box = forwardRef<HTMLDivElement, BoxProps>(({ className, style, ...props }, ref) => {
-    const { className: layoutClassName, style: layoutStyle, otherProps } = sprinkles(props);
+const Box = forwardRef<HTMLDivElement, BoxProps>(
+    ({ foregroundColor: color, className, style, ...props }, ref) => {
+        const {
+            className: layoutClassName,
+            style: layoutStyle,
+            otherProps,
+        } = sprinkles({ color, ...props });
 
-    return (
-        <Primitive.div
-            ref={ref}
-            className={clsx(layoutClassName, className)}
-            style={{ ...layoutStyle, ...style }}
-            {...otherProps}
-        />
-    );
-});
+        return (
+            <Primitive.div
+                ref={ref}
+                className={clsx(layoutClassName, className)}
+                style={{ ...layoutStyle, ...style }}
+                {...otherProps}
+            />
+        );
+    },
+);
 Box.displayName = 'Box';
 
 export { Box };
