@@ -1,9 +1,6 @@
 name: '[CI] Sync Icons'
 
 on:
-    pull_request:
-        branches:
-            - main
     workflow_dispatch:
     schedule:
         # Run every Thursday at 4 PM KST (07:00 UTC)
