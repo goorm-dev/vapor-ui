@@ -42,10 +42,7 @@ jobs:
             - name: Check for changes
               id: check_changes
               run: |
-                  echo "--- [로그 1] 전체 변경 사항 확인 ---"
-                  git status --porcelain packages/icons/src/
-                  echo "------------------------------------"
-
+                  # Check if there are changes in the icons directory
                   if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
                       echo "has_changes=true" >> $GITHUB_OUTPUT
                       echo "📝 Changes detected in icons"
@@ -53,55 +50,44 @@ jobs:
                       new_icons_count=0
                       new_icon_names=""
                       
-                      # Untracked(추적 안 됨 '??') 파일과 Staged(추가됨 'A ') 파일을 모두 찾습니다.
-                      # --exclude-standard 옵션은 .gitignore에 명시된 파일을 제외합니다.
+                      # Find both untracked and staged files
                       changed_files=$(git ls-files --others --exclude-standard packages/icons/src/ && git diff --name-only --cached --diff-filter=A packages/icons/src/)
                       
                       for file in $changed_files; do
-                      echo "  [로그 2] 처리 중인 파일: '$file'"
-                      
-                      # 파일 확장자, 경로, 이름 조건을 확인합니다.
-                      if [[ "$file" =~ \.(ts|tsx|js)$ ]] && \
-                          [[ "$file" =~ (basic|symbol)-icons ]] && \
-                          ! [[ "$file" =~ /index\.(ts|tsx|js)$ ]]; then
-                          
-                          echo "    [로그 3] ✅ 새 아이콘으로 감지됨!"
-                          
-                          new_icons_count=$((new_icons_count + 1))
-                          icon_name=$(basename "$file" | sed 's/\.[^.]*$//')
-                          
-                          if [[ -z "$new_icon_names" ]]; then
-                          new_icon_names="\`$icon_name\`"
-                          else
-                          new_icon_names="$new_icon_names, \`$icon_name\`"
+                          # Check file extension, path, and name conditions
+                          if [[ "$file" =~ \.(ts|tsx|js)$ ]] && \
+                              [[ "$file" =~ (basic|symbol)-icons ]] && \
+                              ! [[ "$file" =~ /index\.(ts|tsx|js)$ ]]; then
+                              
+                              new_icons_count=$((new_icons_count + 1))
+                              icon_name=$(basename "$file" | sed 's/\.[^.]*$//')
+                              
+                              if [[ -z "$new_icon_names" ]]; then
+                                  new_icon_names="\`$icon_name\`"
+                              else
+                                  new_icon_names="$new_icon_names, \`$icon_name\`"
+                              fi
                           fi
-                      fi
                       done
                       
-                      echo "--- [로그 4] 최종 결과 확인 ---"
-                      echo "  [로그 4] 최종 카운트: $new_icons_count"
-                      echo "  [로그 4] 최종 아이콘 이름: $new_icon_names"
-                      echo "--------------------------------"
-                      
                       if [[ $new_icons_count -gt 0 ]]; then
-                      echo "has_new_icons=true" >> $GITHUB_OUTPUT
-                      echo "version_type=minor" >> $GITHUB_OUTPUT
-                      echo "new_icon_names=$new_icon_names" >> $GITHUB_OUTPUT
-                      echo "🆕 New icons detected ($new_icons_count) - will use minor version bump"
-                      echo "Added: $new_icon_names"
+                          echo "has_new_icons=true" >> $GITHUB_OUTPUT
+                          echo "version_type=minor" >> $GITHUB_OUTPUT
+                          echo "new_icon_names=$new_icon_names" >> $GITHUB_OUTPUT
+                          echo "🆕 New icons detected ($new_icons_count) - will use minor version bump"
                       else
-                        echo "has_new_icons=false" >> $GITHUB_OUTPUT
-                        echo "version_type=patch" >> $GITHUB_OUTPUT
-                        echo "new_icon_names=" >> $GITHUB_OUTPUT
-                        echo "🔄 Only updated or deleted icons detected - will use patch version bump"
-                        fi
-                    else
-                        echo "has_changes=false" >> $GITHUB_OUTPUT
-                        echo "has_new_icons=false" >> $GITHUB_OUTPUT
-                        echo "version_type=" >> $GITHUB_OUTPUT
-                        echo "new_icon_names=" >> $GITHUB_OUTPUT
-                        echo "✅ No changes detected in icons - workflow finished"
-                    fi
+                          echo "has_new_icons=false" >> $GITHUB_OUTPUT
+                          echo "version_type=patch" >> $GITHUB_OUTPUT
+                          echo "new_icon_names=" >> $GITHUB_OUTPUT
+                          echo "🔄 Only updated icons detected - will use patch version bump"
+                      fi
+                  else
+                      echo "has_changes=false" >> $GITHUB_OUTPUT
+                      echo "has_new_icons=false" >> $GITHUB_OUTPUT
+                      echo "version_type=" >> $GITHUB_OUTPUT
+                      echo "new_icon_names=" >> $GITHUB_OUTPUT
+                      echo "✅ No changes detected in icons - workflow finished"
+                  fi
 
             - name: Create branch and commit changes
               if: steps.check_changes.outputs.has_changes == 'true'
@@ -188,11 +174,11 @@ jobs:
                   EOF
                   fi
 
-                  rm -f pr_body.txt
-              #   gh pr create \
-              #     --title "feat: sync icons from Figma" \
-              #     --body-file pr_body.txt \
-              #     --base main \
-              #     --head ${{ env.branch_name }}
+                  gh pr create \
+                  --title "feat: sync icons from Figma" \
+                  --body-file pr_body.txt \
+                  --base main \
+                  --head ${{ env.branch_name }}
 
-              # Clean up temporary file
+                  # Clean up temporary file
+                  rm -f pr_body.txt
