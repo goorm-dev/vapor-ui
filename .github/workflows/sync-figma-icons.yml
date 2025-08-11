@@ -47,8 +47,8 @@ jobs:
                       echo "has_changes=true" >> $GITHUB_OUTPUT
                       echo "📝 Changes detected in icons"
                       
-                      # Check for new icons (untracked files)
-                      new_icons=$(git status --porcelain packages/icons/src/ | grep "^??" | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\." | wc -l)
+                      # Check for new icons (added files - both untracked and staged)
+                      new_icons=$(git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$" | wc -l)
                       
                       if [[ $new_icons -gt 0 ]]; then
                           echo "has_new_icons=true" >> $GITHUB_OUTPUT
@@ -58,7 +58,7 @@ jobs:
                           # Get list of new icon names
                           new_icon_names=""
                           while IFS= read -r line; do
-                              if [[ "$line" =~ ^\?\? ]]; then
+                              if [[ "$line" =~ ^(\?\?|A\ ) ]]; then
                                   file_path="${line:3}"
                                   if [[ "$file_path" =~ \.(ts|tsx|js)$ ]] && [[ "$file_path" =~ (basic|symbol)-icons ]] && [[ ! "$file_path" =~ /index\.(ts|tsx|js)$ ]]; then
                                       icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
