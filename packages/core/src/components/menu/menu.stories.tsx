@@ -25,7 +25,7 @@ export const Default = {
                 </Menu.SubmenuRoot>
                 <Menu.Separator />
                 <Menu.Group>
-                    <Menu.GroupLabel id="asdfasdf">그룹 레이블</Menu.GroupLabel>
+                    <Menu.GroupLabel id="group-label">그룹 레이블</Menu.GroupLabel>
                     <Menu.Item>그룹 항목 1</Menu.Item>
                     <Menu.Item>그룹 항목 2</Menu.Item>
                 </Menu.Group>
@@ -66,7 +66,7 @@ export const TestBed = {
                 </Menu.SubmenuRoot>
                 <Menu.Separator />
                 <Menu.Group>
-                    <Menu.GroupLabel id="asdfasdf">그룹 레이블</Menu.GroupLabel>
+                    <Menu.GroupLabel id="group-label">그룹 레이블</Menu.GroupLabel>
                     <Menu.Item>그룹 항목 1</Menu.Item>
                     <Menu.Item>그룹 항목 2</Menu.Item>
                     <Menu.CheckboxItem checked>미선택</Menu.CheckboxItem>
