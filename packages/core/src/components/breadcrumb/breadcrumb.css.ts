@@ -39,7 +39,6 @@ export const link = recipe({
                         boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
                     },
                     ':active': {
-                        // color: vars.color.foreground.primary,
                         textDecoration: 'underline',
 
                         textDecorationColor: vars.color.foreground.primary,
