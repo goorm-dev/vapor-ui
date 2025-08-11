@@ -86,14 +86,32 @@ jobs:
                           # Get list of new icon names
                           new_icon_names=""
                           echo "🔍 DEBUG: Processing individual files for icon names..."
+                          
+                          # Process untracked files
+                          while IFS= read -r file_path; do
+                              echo "🔍 DEBUG: Processing untracked file: '$file_path'"
+                              if [[ "$file_path" =~ \.(ts|tsx|js)$ ]] && [[ "$file_path" =~ (basic|symbol)-icons ]] && [[ ! "$file_path" =~ /index\.(ts|tsx|js)$ ]]; then
+                                  icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
+                                  echo "🔍 DEBUG: Extracted icon name from untracked: '$icon_name'"
+                                  if [[ -n "$icon_name" ]]; then
+                                      if [[ -z "$new_icon_names" ]]; then
+                                          new_icon_names="\`$icon_name\`"
+                                      else
+                                          new_icon_names="$new_icon_names, \`$icon_name\`"
+                                      fi
+                                  fi
+                              fi
+                          done <<< "$(git ls-files --others --exclude-standard packages/icons/src/ | grep -E '\.(ts|tsx|js)$' | grep -E '(basic|symbol)-icons' | grep -v '/index\.(ts|tsx|js)$')"
+                          
+                          # Process staged files
                           while IFS= read -r line; do
-                              echo "🔍 DEBUG: Processing line: '$line'"
-                              if [[ "$line" =~ ^(\?\?|A\ ) ]]; then
+                              echo "🔍 DEBUG: Processing staged line: '$line'"
+                              if [[ "$line" =~ ^A\  ]]; then
                                   file_path="${line:3}"
-                                  echo "🔍 DEBUG: File path: '$file_path'"
+                                  echo "🔍 DEBUG: Staged file path: '$file_path'"
                                   if [[ "$file_path" =~ \.(ts|tsx|js)$ ]] && [[ "$file_path" =~ (basic|symbol)-icons ]] && [[ ! "$file_path" =~ /index\.(ts|tsx|js)$ ]]; then
                                       icon_name=$(echo "$file_path" | sed 's|.*/||' | sed 's/\.[^.]*$//')
-                                      echo "🔍 DEBUG: Extracted icon name: '$icon_name'"
+                                      echo "🔍 DEBUG: Extracted icon name from staged: '$icon_name'"
                                       if [[ -n "$icon_name" ]]; then
                                           if [[ -z "$new_icon_names" ]]; then
                                               new_icon_names="\`$icon_name\`"
@@ -103,7 +121,7 @@ jobs:
                                       fi
                                   fi
                               fi
-                          done <<< "$(git status --porcelain packages/icons/src/)"
+                          done <<< "$(git status --porcelain packages/icons/src/ | grep -E '^A ')"
                           echo "🔍 DEBUG: Final new_icon_names: '$new_icon_names'"
                           echo "new_icon_names=$new_icon_names" >> $GITHUB_OUTPUT
                       else
