@@ -42,28 +42,34 @@ jobs:
             - name: Check for changes
               id: check_changes
               run: |
+                  echo "--- [로그 1] 전체 변경 사항 확인 ---"
+                  git status --porcelain packages/icons/src/
+                  echo "------------------------------------"
+
                   if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
                       echo "has_changes=true" >> $GITHUB_OUTPUT
                       echo "📝 Changes detected in icons"
                       
-                      # 변경된 파일 목록을 순회하며 새로운 아이콘을 찾고, 그 수와 이름을 저장합니다.
                       new_icons_count=0
                       new_icon_names=""
                       
                       while IFS= read -r line; do
+                      # [로그 2] 루프에서 처리 중인 각 라인을 출력합니다.
+                      echo "  [로그 2] 처리 중인 라인: '$line'"
+                      
                       if [[ "$line" =~ ^(\?\?|A\ ) ]] && \
                           [[ "$line" =~ \.(ts|tsx|js)$ ]] && \
                           [[ "$line" =~ (basic|symbol)-icons ]] && \
                           ! [[ "$line" =~ /index\.(ts|tsx|js)$ ]]; then
                           
-                          # 새 아이콘 카운터를 1 증가시킵니다.
+                          # [로그 3] 모든 조건에 일치했을 때만 이 메시지가 출력됩니다.
+                          echo "    [로그 3] ✅ 새 아이콘으로 감지됨!"
+                          
                           new_icons_count=$((new_icons_count + 1))
                           
-                          # 파일 경로에서 순수한 아이콘 이름만 추출합니다.
                           file_path="${line:3}"
                           icon_name=$(basename "$file_path" | sed 's/\.[^.]*$//')
                           
-                          # new_icon_names 문자열에 추가합니다.
                           if [[ -z "$new_icon_names" ]]; then
                           new_icon_names="\`$icon_name\`"
                           else
@@ -71,6 +77,11 @@ jobs:
                           fi
                       fi
                       done <<< "$(git status --porcelain packages/icons/src/)"
+                      
+                      echo "--- [로그 4] 최종 결과 확인 ---"
+                      echo "  [로그 4] 최종 카운트: $new_icons_count"
+                      echo "  [로그 4] 최종 아이콘 이름: $new_icon_names"
+                      echo "--------------------------------"
                       
                       if [[ $new_icons_count -gt 0 ]]; then
                       echo "has_new_icons=true" >> $GITHUB_OUTPUT
