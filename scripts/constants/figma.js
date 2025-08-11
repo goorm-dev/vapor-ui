@@ -17,19 +17,17 @@ const FIGMA_NODE_TYPES = {
     /**
      * @link https://www.figma.com/developers/api#node-types
      */
-    DOCUMENT: 'DOCUMENT',
-    CANVAS: 'CANVAS',
-    FRAME: 'FRAME',
-    COMPONENT: 'COMPONENT',
-    COMPONENT_SET: 'COMPONENT_SET',
+    Document: 'DOCUMENT',
+    Canvas: 'CANVAS',
+    Frame: 'FRAME',
+    Component: 'COMPONENT',
+    ComponentSet: 'COMPONENT_SET',
 };
 
 export {
     FIGMA_ICONS_FILE_KEY,
-
     FIGMA_ICONS_BASIC_NODE_IDS,
     FIGMA_ICONS_SYMBOL_COLOR_NODE_ID,
     FIGMA_ICONS_SYMBOL_DEFAULT_NODE_ID,
-
     FIGMA_NODE_TYPES,
 };

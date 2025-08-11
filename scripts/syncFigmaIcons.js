@@ -1,21 +1,20 @@
-import path from 'path';
 import fs from 'fs';
-import { promisify } from 'util';
 import { camelCase, startCase } from 'lodash-es';
+import path from 'path';
+import { promisify } from 'util';
 
+import {
+    FIGMA_ICONS_FILE_KEY,
+    FIGMA_ICONS_SYMBOL_COLOR_NODE_ID,
+    FIGMA_NODE_TYPES,
+} from './constants/figma.js';
+import { ICON_TYPES } from './constants/index.js';
+import { filterDocumentByNodeType, getIconJsx, getNodesWithUrl } from './libs/figma.js';
 import getIconComponent from './templates/icon/IconComponent.js';
 import getIconComponentIndex from './templates/icon/iconComponentIndex.js';
 import getIconsIndex from './templates/icon/iconsIndex.js';
 
-import { filterDocumentByNodeType, getNodesWithUrl, getIconJsx } from './libs/figma.js';
-
 const writeFile = promisify(fs.writeFile);
-import {
-    FIGMA_ICONS_FILE_KEY,
-    FIGMA_NODE_TYPES,
-    FIGMA_ICONS_SYMBOL_COLOR_NODE_ID,
-} from './constants/figma.js';
-import { ICON_TYPES } from './constants/index.js';
 
 const TYPE = process.env.TYPE;
 const CURRENT_DIRECTORY = process.cwd();
@@ -34,7 +33,7 @@ const main = async () => {
             // basic 아이콘은 2개의 프레임으로 구성되어 있어서 nodeIds가 배열 형태임
             for (const nodeId of nodeIds) {
                 const nodeComponents = await filterDocumentByNodeType({
-                    nodeType: FIGMA_NODE_TYPES.COMPONENT,
+                    nodeType: FIGMA_NODE_TYPES.Component,
                     fileKey: FILE_KEY,
                     nodeIds: nodeId,
                     depth: 1,
@@ -43,7 +42,7 @@ const main = async () => {
             }
         } else {
             components = await filterDocumentByNodeType({
-                nodeType: FIGMA_NODE_TYPES.COMPONENT,
+                nodeType: FIGMA_NODE_TYPES.Component,
                 fileKey: FILE_KEY,
                 nodeIds,
                 depth: 1,
