@@ -52,20 +52,30 @@ jobs:
                       echo "📝 Changes detected in icons"
                       
                       echo "🔍 DEBUG: Filtering for new icons..."
-                      echo "🔍 DEBUG: Step 1 - Files with ?? or A status:"
-                      git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )"
+                      echo "🔍 DEBUG: All untracked files (using git ls-files):"
+                      git ls-files --others --exclude-standard packages/icons/src/
                       
-                      echo "🔍 DEBUG: Step 2 - Files with ts/tsx/js extension:"
-                      git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$"
+                      echo "🔍 DEBUG: Step 1 - Untracked files with ts/tsx/js extension:"
+                      git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$"
                       
-                      echo "🔍 DEBUG: Step 3 - Files in basic/symbol-icons directories:"
-                      git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons"
+                      echo "🔍 DEBUG: Step 2 - Files in basic/symbol-icons directories:"
+                      git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons"
                       
-                      echo "🔍 DEBUG: Step 4 - Excluding index files:"
-                      git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$"
+                      echo "🔍 DEBUG: Step 3 - Excluding index files:"
+                      git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$"
                       
-                      # Check for new icons (added files - both untracked and staged)
-                      new_icons=$(git status --porcelain packages/icons/src/ | grep -E "^(\?\?|A )" | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$" | wc -l)
+                      # Check for new icons using git ls-files for untracked files
+                      new_icons_untracked=$(git ls-files --others --exclude-standard packages/icons/src/ | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$" | wc -l)
+                      echo "🔍 DEBUG: New untracked icons count: $new_icons_untracked"
+                      
+                      # Also check for staged new files
+                      echo "🔍 DEBUG: Staged new files:"
+                      git status --porcelain packages/icons/src/ | grep -E "^A " | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$"
+                      new_icons_staged=$(git status --porcelain packages/icons/src/ | grep -E "^A " | grep -E "\.(ts|tsx|js)$" | grep -E "(basic|symbol)-icons" | grep -v "/index\.(ts|tsx|js)$" | wc -l)
+                      echo "🔍 DEBUG: New staged icons count: $new_icons_staged"
+                      
+                      # Total new icons
+                      new_icons=$((new_icons_untracked + new_icons_staged))
                       echo "🔍 DEBUG: New icons count: $new_icons"
                       
                       if [[ $new_icons -gt 0 ]]; then
