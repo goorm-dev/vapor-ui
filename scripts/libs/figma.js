@@ -8,7 +8,7 @@ import {
 } from '../utils/figma.js';
 
 /**
- * Figma에서 가져온 Document를 특정 Node Type으로 필터링한다.
+ * Filter documents from Figma by specific Node Type.
  */
 const filterDocumentByNodeType = async ({
     nodeType,
@@ -42,7 +42,7 @@ const filterDocumentByNodeType = async ({
 };
 
 /**
- * Figma에서 받아온 node들의 id를 통해, 이미지 URL을 가져온다.
+ * Get image URLs through the IDs of nodes received from Figma.
  */
 const getNodesWithUrl = async ({ nodes, fileKey }) => {
     const nodeIds = nodes.map((node) => node.id).join(',');
@@ -59,7 +59,7 @@ const getNodesWithUrl = async ({ nodes, fileKey }) => {
 };
 
 /**
- * Figma에서 가져온 svg 파일을 React 컴포넌트로 변환한다.
+ * Convert svg files from Figma to React components.
  */
 const getIconJsx = async ({ url, isColorIcon }) => {
     const { data: svgDom } = await axios.get(url);

@@ -1,41 +1,41 @@
 import fs from 'fs';
 import path from 'path';
 
-// 처리할 디렉터리 경로
+// Directory path to process
 const directoryPath = 'stories/foundation/icons/';
 
 try {
-    // 디렉터리 내 모든 파일을 읽어옴
+    // Read all files in the directory
     const files = fs.readdirSync(directoryPath);
 
     files.forEach((file) => {
         const filePath = path.join(directoryPath, file);
 
-        // 파일인지 확인 (디렉터리 제외)
+        // Check if it's a file (exclude directories)
         if (fs.statSync(filePath).isFile() && filePath.endsWith('.jsx')) {
             let content = fs.readFileSync(filePath, 'utf8');
 
-            // 중복된 import 문을 찾아 제거하는 정규 표현식
+            // Regular expression to find and remove duplicate import statements
             const regex =
                 /^import\s+(\w+)\s+from\s+['"]([^'"]+)['"]\s*;?\s*$/gm;
             const imports = new Map();
 
-            // 중복된 import 제거
+            // Remove duplicate imports
             content = content.replace(
                 regex,
                 (match, importName, importPath) => {
                     if (imports.has(importName)) {
-                        return ''; // 중복된 import 제거
+                        return ''; // Remove duplicate import
                     }
                     imports.set(importName, importPath);
                     return match;
                 },
             );
 
-            // 연속된 빈 줄을 하나로 압축
+            // Compress consecutive empty lines into one
             content = content.replace(/(\r?\n){2,}/g, '\n\n');
 
-            // 파일 덮어쓰기
+            // Overwrite file
             fs.writeFileSync(filePath, content, 'utf8');
 
             console.log(`Processed: ${filePath}`);

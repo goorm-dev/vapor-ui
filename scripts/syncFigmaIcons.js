@@ -26,11 +26,11 @@ const main = async () => {
         const { nodeIds, targetPath } = ICON_TYPES[TYPE];
         let FILE_KEY = FIGMA_ICONS_FILE_KEY;
 
-        // 파일 내에 COMPONENT로 설정된 node(아이콘)들을 가져온다.
+        // Get nodes (icons) set as COMPONENT in the file.
         let components = [];
         if (TYPE === 'basic') {
             FILE_KEY = FIGMA_ICONS_FILE_KEY;
-            // basic 아이콘은 2개의 프레임으로 구성되어 있어서 nodeIds가 배열 형태임
+            // Basic icons are composed of 2 frames, so nodeIds are in array form
             for (const nodeId of nodeIds) {
                 const nodeComponents = await filterDocumentByNodeType({
                     nodeType: FIGMA_NODE_TYPES.Component,
@@ -54,19 +54,19 @@ const main = async () => {
             nameArr: components.map(({ name }) => startCase(camelCase(name)).replace(/ /g, '')),
         };
         console.log(
-            `\x1b[33m GDS FIGMA EXPORT: \x1b[0m ${componentsInfo.total}개 아이콘 추출 완료`,
+            `\x1b[33m GDS FIGMA EXPORT: \x1b[0m ${componentsInfo.total} icons extraction complete`,
         );
 
-        // 추출된 아이콘들의 id를 콤마로 구분하여, 한번에 svg 이미지들의 URL를 가져온다.
-        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m svg 파일 불러오는 중...`);
+        // Separate the IDs of extracted icons with commas and get URLs of svg images at once.
+        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Loading svg files...`);
         const componentsWithUrl = await getNodesWithUrl({
             nodes: components,
             fileKey: FILE_KEY,
         });
-        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m svg 파일 불러오기 완료 !`);
+        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m svg file loading complete!`);
 
-        // 이미지 URL을 통해 svg 코드를 React 컴포넌트로 변환 후, 로컬에 저장한다.
-        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m React 컴포넌트로 변환 중...`);
+        // Convert svg code to React components through image URLs and save locally.
+        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Converting to React components...`);
         const parentIconPath = path.join(CURRENT_DIRECTORY, targetPath);
         const newIconNameArr = [];
         const promiseCreateIcons = componentsWithUrl.map(async ({ name, url, parentId }) => {
@@ -96,10 +96,10 @@ const main = async () => {
             await Promise.all([writeIconComponent, writeIconIndex]);
         });
         await Promise.all(promiseCreateIcons);
-        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m React 컴포넌트로 변환 완료 !`);
+        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m React component conversion complete!`);
 
-        // // entry 파일에 export
-        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m entry 파일에 export 중...`);
+        // // export to entry file
+        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Exporting to entry file...`);
         const iconsIndex = getIconsIndex(componentsInfo.nameArr);
         await writeFile(path.join(CURRENT_DIRECTORY, targetPath, 'index.ts'), iconsIndex, {
             encoding: 'utf8',

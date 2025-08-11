@@ -5,7 +5,7 @@ import { promisify } from 'util';
 const writeFile = promisify(fs.writeFile);
 
 /**
- * 폴더 내의 모든 파일들의 이름들을 가져와 배열을 반환한다.
+ * Gets the names of all files in a folder and returns an array.
  */
 const getFilesInFolder = (folderPath) => {
     const files = [];
@@ -27,7 +27,7 @@ const getFilesInFolder = (folderPath) => {
 };
 
 /**
- * 폴더 내의 모든 폴더들의 이름들을 가져와 배열을 반환한다.
+ * Gets the names of all folders in a folder and returns an array.
  * @example getSubfolders('packages/icons/src') // ['basic', 'extension', ...]
  */
 const getSubfolders = async (parentFolder) => {

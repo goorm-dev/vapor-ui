@@ -5,7 +5,7 @@ import {
 } from './figma.js';
 
 /**
- * npm script별 script 정보
+ * Script information by npm script
  */
 const ICON_TYPES = {
     basic: {
