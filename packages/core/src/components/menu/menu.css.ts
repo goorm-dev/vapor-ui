@@ -8,8 +8,10 @@ import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
-const contentWidth = createVar({ inherits: false, syntax: '*' }, 'menu-content-width');
-const contentHeight = createVar({ inherits: false, syntax: '*' }, 'menu-content-height');
+const contentWidth = createVar(
+    { inherits: false, syntax: '*', initialValue: '12.5rem' },
+    'menu-content-width',
+);
 
 export const content = layerStyle('components', {
     display: 'flex',
@@ -26,9 +28,6 @@ export const content = layerStyle('components', {
     minWidth: contentWidth,
 
     overflowY: 'auto',
-    vars: {
-        [contentWidth]: 'var(--radix-dropdown-menu-trigger-width)',
-    },
 });
 
 export const item = recipe({
@@ -83,13 +82,7 @@ export const subContents = layerStyle('components', {
     padding: vars.size.space['050'],
 
     minWidth: contentWidth,
-    maxHeight: contentHeight,
     overflowY: 'auto',
-
-    vars: {
-        [contentWidth]: 'var(--radix-dropdown-menu-trigger-width)',
-        [contentHeight]: 'var(--radix-dropdown-menu-content-available-height)',
-    },
 });
 
 export const subTrigger = item;
