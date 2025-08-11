@@ -1,14 +1,14 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import { Flex } from '../flex';
 
 type HStackVariants = { reverse?: boolean };
-type HStackPrimitiveProps = ComponentPropsWithoutRef<typeof Flex>;
+type HStackPrimitiveProps = VComponentProps<typeof Flex>;
 
 interface HStackProps extends HStackPrimitiveProps, HStackVariants {}
 

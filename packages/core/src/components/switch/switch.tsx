@@ -1,6 +1,5 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
 import { Primitive } from '@radix-ui/react-primitive';
@@ -9,6 +8,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { ControlVariants, LabelVariants, RootVariants } from './switch.css';
 import * as styles from './switch.css';
@@ -35,10 +35,8 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchContext>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchRootPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
-interface SwitchRootProps
-    extends Omit<SwitchRootPrimitiveProps, keyof SwitchSharedProps>,
-        SwitchSharedProps {}
+type SwitchRootPrimitiveProps = VComponentProps<typeof Primitive.div>;
+interface SwitchRootProps extends SwitchRootPrimitiveProps, SwitchSharedProps {}
 
 const Root = forwardRef<HTMLDivElement, SwitchRootProps>(({ className, ...props }, ref) => {
     const switchId = useId();
@@ -69,7 +67,7 @@ Root.displayName = 'Switch.Root';
  * Switch.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchLabelPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.label>;
+type SwitchLabelPrimitiveProps = VComponentProps<typeof Primitive.label>;
 interface SwitchLabelProps extends SwitchLabelPrimitiveProps {}
 
 const Label = forwardRef<HTMLLabelElement, SwitchLabelProps>(
@@ -92,7 +90,7 @@ Label.displayName = 'Switch.Label';
  * Switch.Control
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchControlPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSwitchRoot>;
+type SwitchControlPrimitiveProps = VComponentProps<typeof RadixSwitchRoot>;
 interface SwitchControlProps extends Omit<SwitchControlPrimitiveProps, keyof SwitchSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, SwitchControlProps>(

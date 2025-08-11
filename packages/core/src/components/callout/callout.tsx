@@ -1,12 +1,12 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { CalloutVariants } from './callout.css';
 import * as styles from './callout.css';
@@ -15,8 +15,8 @@ import * as styles from './callout.css';
  * Callout
  * -----------------------------------------------------------------------------------------------*/
 
-type CalloutPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
-interface CalloutProps extends Omit<CalloutPrimitiveProps, 'color'>, CalloutVariants {}
+type CalloutPrimitiveProps = VComponentProps<typeof Primitive.div>;
+interface CalloutProps extends CalloutPrimitiveProps, CalloutVariants {}
 
 const Callout = forwardRef<HTMLDivElement, CalloutProps>(
     ({ className, children, ...props }, ref) => {

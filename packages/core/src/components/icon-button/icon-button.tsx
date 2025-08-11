@@ -1,18 +1,18 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import clsx from 'clsx';
 
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
-type IconButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Button>, 'stretch'>;
+type IconButtonPrimitiveProps = Omit<VComponentProps<typeof Button>, 'stretch'>;
 interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {
     'aria-label': string;
 }
