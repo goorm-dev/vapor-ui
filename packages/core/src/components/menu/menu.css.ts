@@ -15,20 +15,20 @@ const contentWidth = createVar(
 
 export const content = layerStyle('components', {
     display: 'flex',
-
     flexDirection: 'column',
-    border: `0.0625rem solid ${vars.color.border.normal}`,
 
+    border: `0.0625rem solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.shadow.md,
 
     backgroundColor: vars.color.background.normal,
     padding: vars.size.space['050'],
-    width: '12.5rem',
     minWidth: contentWidth,
 
     overflowY: 'auto',
 });
+
+export const subContents = content;
 
 export const item = recipe({
     base: [
@@ -68,21 +68,6 @@ export const separator = layerStyle('components', {
     marginBlock: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
     height: '0.0625rem',
-});
-
-export const subContents = layerStyle('components', {
-    display: 'flex',
-    flexDirection: 'column',
-
-    border: `0.0625rem solid ${vars.color.border.normal}`,
-    borderRadius: vars.size.borderRadius['300'],
-    boxShadow: vars.shadow.md,
-
-    backgroundColor: vars.color.background.normal,
-    padding: vars.size.space['050'],
-
-    minWidth: contentWidth,
-    overflowY: 'auto',
 });
 
 export const subTrigger = item;
