@@ -1,11 +1,11 @@
-const axios = require('axios');
+import axios from 'axios';
 
-const { getFileNodes, getImage } = require('../apis/figma');
-const {
+import { getFileNodes, getImage } from '../apis/figma.js';
+import {
     svgToIconComponent,
     remakeMaskStyle,
     makeFlexibleColorIcon,
-} = require('../utils/figma');
+} from '../utils/figma.js';
 
 /**
  * Figma에서 가져온 Document를 특정 Node Type으로 필터링한다.
@@ -73,7 +73,7 @@ const getIconJsx = async ({ url, isColorIcon }) => {
     }
 };
 
-module.exports = {
+export {
     filterDocumentByNodeType,
     getNodesWithUrl,
     getIconJsx,

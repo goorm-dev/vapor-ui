@@ -1,5 +1,7 @@
-const axios = require('axios');
-require('dotenv').config();
+import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const headers = {
     'X-FIGMA-TOKEN': process.env.FIGMA_TOKEN,
@@ -34,7 +36,7 @@ const getImage = async ({ fileKey, nodeIds, format = 'svg' }) => {
     return data;
 };
 
-module.exports = {
+export {
     getFileNodes,
     getImage,
 };

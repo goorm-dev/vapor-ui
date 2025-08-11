@@ -1,23 +1,21 @@
-const path = require('path');
-const fs = require('fs');
-const Promise = require('bluebird');
-const { camelCase, startCase } = require('lodash-es');
+import path from 'path';
+import fs from 'fs';
+import { promisify } from 'util';
+import { camelCase, startCase } from 'lodash-es';
 
-const getIconComponent = require('./templates/icon/IconComponent');
-const getIconComponentIndex = require('./templates/icon/iconComponentIndex');
-const getIconsIndex = require('./templates/icon/iconsIndex');
+import getIconComponent from './templates/icon/IconComponent.js';
+import getIconComponentIndex from './templates/icon/iconComponentIndex.js';
+import getIconsIndex from './templates/icon/iconsIndex.js';
 
-const { filterDocumentByNodeType, getNodesWithUrl, getIconJsx } = require('./libs/figma');
+import { filterDocumentByNodeType, getNodesWithUrl, getIconJsx } from './libs/figma.js';
 
-const writeFile = Promise.promisify(fs.writeFile);
-const {
+const writeFile = promisify(fs.writeFile);
+import {
     FIGMA_ICONS_FILE_KEY,
     FIGMA_NODE_TYPES,
     FIGMA_ICONS_SYMBOL_COLOR_NODE_ID,
-    FIGMA_ICONS_STACK_COLOR_NODE_ID,
-    FIGMA_ICONS_RENEWAL_BRANCH_KEY,
-} = require('./constants/figma');
-const { ICON_TYPES } = require('./constants');
+} from './constants/figma.js';
+import { ICON_TYPES } from './constants/index.js';
 
 const TYPE = process.env.TYPE;
 const CURRENT_DIRECTORY = process.cwd();
@@ -32,7 +30,7 @@ const main = async () => {
         // 파일 내에 COMPONENT로 설정된 node(아이콘)들을 가져온다.
         let components = [];
         if (TYPE === 'basic') {
-            FILE_KEY = FIGMA_ICONS_RENEWAL_BRANCH_KEY || FIGMA_ICONS_FILE_KEY;
+            FILE_KEY = FIGMA_ICONS_FILE_KEY;
             // basic 아이콘은 2개의 프레임으로 구성되어 있어서 nodeIds가 배열 형태임
             for (const nodeId of nodeIds) {
                 const nodeComponents = await filterDocumentByNodeType({
@@ -81,9 +79,7 @@ const main = async () => {
                 newIconNameArr.push(iconName);
             }
 
-            const isColorIcon =
-                parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID) ||
-                parentId === decodeURIComponent(FIGMA_ICONS_STACK_COLOR_NODE_ID);
+            const isColorIcon = parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID);
 
             const iconJsx = await getIconJsx({ url, isColorIcon });
             const IconComponent = getIconComponent(iconName, iconJsx);

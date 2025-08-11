@@ -1,4 +1,4 @@
-const { camelCase } = require('lodash-es');
+import { camelCase } from 'lodash-es';
 
 const svgToIconComponent = (svgDom) =>
     svgDom
@@ -33,7 +33,7 @@ const remakeMaskStyle = (IconComponent) => {
 const makeFlexibleColorIcon = (IconComponent) =>
     IconComponent.replace(/fill="black"/g, '').replace(/fill="none"/g, '');
 
-module.exports = {
+export {
     svgToIconComponent,
     remakeMaskStyle,
     makeFlexibleColorIcon,

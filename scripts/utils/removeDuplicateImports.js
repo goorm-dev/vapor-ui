@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // 처리할 디렉터리 경로
 const directoryPath = 'stories/foundation/icons/';

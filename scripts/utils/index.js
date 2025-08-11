@@ -1,8 +1,8 @@
-const fs = require('fs');
-const Promise = require('bluebird');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { promisify } from 'util';
 
-const writeFile = Promise.promisify(fs.writeFile);
+const writeFile = promisify(fs.writeFile);
 
 /**
  * 폴더 내의 모든 파일들의 이름들을 가져와 배열을 반환한다.
@@ -32,7 +32,7 @@ const getFilesInFolder = (folderPath) => {
  */
 const getSubfolders = async (parentFolder) => {
     try {
-        const subfolders = await Promise.promisify(fs.readdir)(parentFolder);
+        const subfolders = await promisify(fs.readdir)(parentFolder);
 
         return subfolders.filter((folder) => {
             const folderPath = path.join(parentFolder, folder);
@@ -44,7 +44,7 @@ const getSubfolders = async (parentFolder) => {
     }
 };
 
-module.exports = {
+export {
     writeFile,
     getFilesInFolder,
     getSubfolders,
