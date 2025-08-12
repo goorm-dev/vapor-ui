@@ -8,9 +8,7 @@ import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/vars.css';
 import { createSplitProps } from '~/utils/create-split-props';
-import type { OnlyPositionerProps } from '~/utils/split-positioner-props';
-
-// import { splitPositionerProps } from '~/utils/split-positioner-props';
+import type { OnlyPositionerProps } from '~/utils/positioner-props';
 
 import * as styles from './tooltip.css';
 
@@ -80,27 +78,6 @@ const Portal = (props: TooltipPortalProps) => {
 };
 
 /* -------------------------------------------------------------------------------------------------
- * Tooltip.Positioner
- * -----------------------------------------------------------------------------------------------*/
-
-type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Positioner>;
-interface TooltipPositionerProps extends Omit<PositionerPrimitiveProps, keyof TooltipSharedProps> {}
-
-const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(({ ...props }, ref) => {
-    const { sideOffset = 6, ...context } = useTooltipContext();
-
-    return (
-        <BaseTooltip.Positioner
-            ref={ref}
-            sideOffset={sideOffset}
-            collisionAvoidance={{ align: 'none' }}
-            {...context}
-            {...props}
-        />
-    );
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Tooltip.Content
  * -----------------------------------------------------------------------------------------------*/
 
@@ -112,10 +89,10 @@ interface TooltipContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
     ({ className, children, ...props }, ref) => {
-        const { side: rootSide, align: rootAlign } = useTooltipContext();
+        const { sideOffset = 6, ...context } = useTooltipContext();
 
-        const [side, setSide] = useState(rootSide);
-        const [align, setAlign] = useState(rootAlign);
+        const [side, setSide] = useState(context.side);
+        const [align, setAlign] = useState(context.align);
 
         const position = getArrowPosition({ side, align, offset: 6 });
 
@@ -136,7 +113,11 @@ const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
         });
 
         return (
-            <Positioner>
+            <BaseTooltip.Positioner
+                sideOffset={sideOffset}
+                collisionAvoidance={{ align: 'none' }}
+                {...context}
+            >
                 <BaseTooltip.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
                     <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
                         <ArrowIcon />
@@ -144,7 +125,7 @@ const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
 
                     {children}
                 </BaseTooltip.Popup>
-            </Positioner>
+            </BaseTooltip.Positioner>
         );
     },
 );
