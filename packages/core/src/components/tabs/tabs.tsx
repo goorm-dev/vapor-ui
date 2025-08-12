@@ -10,8 +10,8 @@ import * as styles from './tabs.css';
 import type { ButtonVariants, ListVariants } from './tabs.css';
 
 type TabsVariants = ListVariants & ButtonVariants;
-type SharedProps = TabsVariants & { activateOnFocus?: boolean; loop?: boolean };
-type TabsContext = SharedProps;
+type TabsSharedProps = TabsVariants & { activateOnFocus?: boolean; loop?: boolean };
+type TabsContext = TabsSharedProps;
 
 const [TabsProvider, useTabsContext] = createContext<TabsContext>({
     name: 'TabsContext',
@@ -24,10 +24,10 @@ const [TabsProvider, useTabsContext] = createContext<TabsContext>({
  * -----------------------------------------------------------------------------------------------*/
 
 type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Root>;
-interface TabsRootProps extends RootPrimitiveProps, SharedProps {}
+interface TabsRootProps extends RootPrimitiveProps, TabsSharedProps {}
 
 const Root = forwardRef<HTMLDivElement, TabsRootProps>(({ className, ...props }, ref) => {
-    const [sharedProps, otherProps] = createSplitProps<SharedProps>()(props, [
+    const [sharedProps, otherProps] = createSplitProps<TabsSharedProps>()(props, [
         'activateOnFocus',
         'loop',
         'variant',
@@ -55,7 +55,7 @@ const Root = forwardRef<HTMLDivElement, TabsRootProps>(({ className, ...props },
  * -----------------------------------------------------------------------------------------------*/
 
 type ListPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.List>;
-interface TabsListProps extends Omit<ListPrimitiveProps, keyof SharedProps> {}
+interface TabsListProps extends Omit<ListPrimitiveProps, keyof TabsSharedProps> {}
 
 const List = forwardRef<HTMLDivElement, TabsListProps>(({ className, ...props }, ref) => {
     const { activateOnFocus, loop, variant, orientation } = useTabsContext();
