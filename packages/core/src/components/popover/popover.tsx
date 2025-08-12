@@ -200,7 +200,7 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
             />
             <path
                 d="M1.8858 7.24074C1.42019 7.63984 1.42019 8.36016 1.8858 8.75926L8 14L8 2L1.8858 7.24074Z"
-                fill="white"
+                fill="currentColor"
             />
         </svg>
     );
