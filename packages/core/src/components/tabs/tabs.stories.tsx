@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Tabs } from '.';
+import { HStack } from '../h-stack';
+import { VStack } from '../v-stack';
 
 export default {
     title: 'Tabs',
@@ -41,6 +43,133 @@ export const Default: StoryObj<typeof Tabs.Root> = {
                     <Tabs.Panel value="tab8">Content for Tab 8</Tabs.Panel>
                 </Tabs.Root>
             </>
+        );
+    },
+};
+
+export const TestBed: StoryObj<typeof Tabs.Root> = {
+    render: (args) => {
+        return (
+            <VStack gap="$300">
+                <HStack>
+                    <Tabs.Root
+                        variant="plain"
+                        defaultValue={'tab1'}
+                        activateOnFocus={false}
+                        {...args}
+                    >
+                        <Tabs.List>
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                            <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                        <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
+                        <Tabs.Panel value="tab3">Content for Tab 3</Tabs.Panel>
+                    </Tabs.Root>
+
+                    <Tabs.Root
+                        variant="line"
+                        defaultValue={'tab2'}
+                        activateOnFocus={false}
+                        {...args}
+                    >
+                        <Tabs.List>
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                            <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                        <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
+                        <Tabs.Panel value="tab3">Content for Tab 3</Tabs.Panel>
+                    </Tabs.Root>
+                </HStack>
+
+                <HStack gap="$200">
+                    <Tabs.Root size="sm" defaultValue={'tab1'} activateOnFocus={false} {...args}>
+                        <Tabs.List>
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                    </Tabs.Root>
+
+                    <Tabs.Root size="md" defaultValue={'tab1'} activateOnFocus={false} {...args}>
+                        <Tabs.List>
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                    </Tabs.Root>
+
+                    <Tabs.Root size="lg" defaultValue={'tab1'} activateOnFocus={false} {...args}>
+                        <Tabs.List>
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                    </Tabs.Root>
+
+                    <Tabs.Root size="xl" defaultValue={'tab1'} activateOnFocus={false} {...args}>
+                        <Tabs.List>
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                    </Tabs.Root>
+                </HStack>
+
+                <Tabs.Root disabled defaultValue={'tab2'} activateOnFocus={false} {...args}>
+                    <Tabs.List>
+                        <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                        <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                        <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                        <Tabs.Indicator />
+                    </Tabs.List>
+                    <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                    <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
+                    <Tabs.Panel value="tab3">Content for Tab 3</Tabs.Panel>
+                </Tabs.Root>
+
+                <HStack gap="$200">
+                    <Tabs.Root
+                        orientation="vertical"
+                        defaultValue={'tab2'}
+                        activateOnFocus={false}
+                        {...args}
+                    >
+                        <Tabs.List>
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                            <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                        <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
+                        <Tabs.Panel value="tab3">Content for Tab 3</Tabs.Panel>
+                    </Tabs.Root>
+
+                    <Tabs.Root
+                        orientation="vertical"
+                        variant="plain"
+                        defaultValue={'tab2'}
+                        activateOnFocus={false}
+                        {...args}
+                    >
+                        <Tabs.List>
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                            <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
+                        <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
+                        <Tabs.Panel value="tab3">Content for Tab 3</Tabs.Panel>
+                    </Tabs.Root>
+                </HStack>
+            </VStack>
         );
     },
 };
