@@ -24,11 +24,11 @@ export function Demo(props: DemoProps) {
 
     return (
         <ErrorBoundary>
-            <Tabs items={['Preview', 'Code']} defaultValue="preview" className="my-0 w-full">
-                <Tab value="preview" className="rounded-t-none">
+            <Tabs items={['Preview', 'Code']} defaultIndex={0} className="my-0 w-full">
+                <Tab value="Preview" className="rounded-t-none">
                     <Preview name={name} />
                 </Tab>
-                <Tab value="code" className="rounded-t-none [&>figure]:bg-inherit">
+                <Tab value="Code" className="rounded-t-none [&>figure]:bg-inherit">
                     {children}
                 </Tab>
             </Tabs>

@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Badge, Text } from '@vapor-ui/core';
 
-import { Info } from '~/components/Info';
+import { InfoPopover } from '~/components/Info';
 import { ComponentDocsMap } from '~/constants/components';
 
 interface PropDefinition {
@@ -96,7 +96,7 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                                             {prop.isOptional && '?'}
                                         </span>
                                     </Text>
-                                    <Info>{prop.description}</Info>
+                                    <InfoPopover>{prop.description}</InfoPopover>
                                 </div>
                             </td>
                             <td
