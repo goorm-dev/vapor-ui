@@ -1,3 +1,4 @@
+// NOTE: The import order is crucial to avoid circular dependencies between CSS files.
 import './global-var.css';
 import './global.css';
 import './layers.css';
