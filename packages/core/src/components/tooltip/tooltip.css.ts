@@ -21,20 +21,20 @@ export const arrow = layerStyle('components', {
 
     selectors: {
         '&[data-side="top"]': {
-            bottom: 0,
-            transform: 'translateY(50%) rotate(90deg)',
+            bottom: '-11px',
+            transform: 'rotate(-90deg)',
         },
         '&[data-side="right"]': {
-            left: 0,
-            transform: 'translateX(-50%) rotate(180deg)',
+            left: '-7px',
+            transform: 'rotate(0deg)',
         },
         '&[data-side="bottom"]': {
-            top: 0,
-            transform: 'translateY(-50%) rotate(-90deg)',
+            top: '-11px',
+            transform: 'rotate(90deg)',
         },
         '&[data-side="left"]': {
-            right: 0,
-            transform: 'translateX(50%) rotate(0deg)',
+            right: '-7px',
+            transform: 'rotate(180deg)',
         },
     },
 });
