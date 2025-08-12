@@ -1,4 +1,4 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -7,11 +7,6 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
-
-const contentWidth = createVar(
-    { inherits: false, syntax: '*', initialValue: '12.5rem' },
-    'menu-content-width',
-);
 
 export const content = layerStyle('components', {
     display: 'flex',
@@ -23,7 +18,7 @@ export const content = layerStyle('components', {
 
     backgroundColor: vars.color.background.normal,
     padding: vars.size.space['050'],
-    minWidth: contentWidth,
+    minWidth: '12.5rem',
 
     overflowY: 'auto',
 });
