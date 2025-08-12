@@ -11,10 +11,10 @@ import { type PositionerProps, splitPositionerProps } from '~/utils/split-positi
 
 import * as styles from './popover.css';
 
-type SharedProps = PositionerProps;
-type ContextProps = SharedProps;
+type PopoverSharedProps = PositionerProps;
+type PopoverContext = PopoverSharedProps;
 
-const [PopoverProvider, usePopoverContext] = createContext<ContextProps>({
+const [PopoverProvider, usePopoverContext] = createContext<PopoverContext>({
     name: 'Popover',
     hookName: 'usePopoverContext',
     providerName: 'PopoverProvider',
@@ -25,10 +25,10 @@ const [PopoverProvider, usePopoverContext] = createContext<ContextProps>({
  * -----------------------------------------------------------------------------------------------*/
 
 type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Root>;
-interface PopoverRootProps extends RootPrimitiveProps, SharedProps {}
+interface PopoverRootProps extends RootPrimitiveProps, PopoverSharedProps {}
 
 const Root = (props: PopoverRootProps) => {
-    const [sharedProps, otherProps] = splitPositionerProps<SharedProps>(props);
+    const [sharedProps, otherProps] = splitPositionerProps<PopoverSharedProps>(props);
 
     return (
         <PopoverProvider value={sharedProps}>
@@ -53,7 +53,7 @@ const Trigger = forwardRef<HTMLButtonElement, PopoverTriggerProps>((props, ref) 
  * -----------------------------------------------------------------------------------------------*/
 
 type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Positioner>;
-interface PopoverPositionerProps extends Omit<PositionerPrimitiveProps, keyof SharedProps> {}
+interface PopoverPositionerProps extends Omit<PositionerPrimitiveProps, keyof PopoverSharedProps> {}
 
 const Positioner = forwardRef<HTMLDivElement, PopoverPositionerProps>((props, ref) => {
     const { sideOffset = 8, ...context } = usePopoverContext();
