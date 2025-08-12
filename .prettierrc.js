@@ -6,7 +6,8 @@ module.exports = {
     printWidth: 100,
 
     plugins: ['@trivago/prettier-plugin-sort-imports'],
-    importOrder: ['./global.css', '^react(.*)', '<THIRD_PARTY_MODULES>', '^[~/]', '^[./]'],
+    importOrder: ['<BUILTIN_MODULES>', '^react(.*)', '<THIRD_PARTY_MODULES>', '^[~/]', '^[./]'],
+    importOrderSideEffects: false,
     importOrderSeparation: true,
     importOrderSortSpecifiers: true,
 };
