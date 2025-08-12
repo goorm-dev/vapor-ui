@@ -25,7 +25,6 @@ import clsx from 'clsx';
 import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
-import { calculateOffset } from '~/utils/create-offsets';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { PositionerProps } from '~/utils/split-positioner-props';
 import { splitPositionerProps } from '~/utils/split-positioner-props';
@@ -115,15 +114,11 @@ interface MenuContentProps extends Omit<ContentPrimitiveProps, keyof PositionerP
 const Content = forwardRef<HTMLDivElement, MenuContentProps>(
     ({ className, ...props }: MenuContentProps, ref) => {
         const context = useMenuContext();
-        const [_positionerProps] = splitPositionerProps(context);
-
-        const { alignOffset, sideOffset, ...positionerProps } = _positionerProps;
+        const [positionerProps] = splitPositionerProps(context);
 
         return (
             <RadixContent
                 ref={ref}
-                sideOffset={calculateOffset(sideOffset)}
-                alignOffset={calculateOffset(alignOffset)}
                 className={clsx(styles.content, className)}
                 {...positionerProps}
                 {...props}
