@@ -4,14 +4,6 @@ site_name: 'Switch - Vapor Core'
 description: 'Switch는 사용자가 설정을 on/off로 전환할 수 있게 돕는 토글 컴포넌트입니다.'
 ---
 
-## Import
-
-```js
-import { Switch } from '@vapor-ui/core';
-```
-
-## Preview
-
 <Demo name="default-switch">
 ```tsx
 import { Switch } from '@vapor-ui/core';
@@ -27,16 +19,127 @@ export default function DefaultSwitch() {
 ```
 </Demo>
 
-## Props
+## Property
+
+### Size
+
+Switch 크기는 sm, md, lg 로 제공합니다.
+
+<Demo name="switch-size">
+```tsx
+import { Switch } from '@vapor-ui/core';
+
+export default function SwitchSize() {
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <Switch.Label>Small</Switch.Label>
+                <Switch.Root size="sm">
+                    <Switch.Control />
+                </Switch.Root>
+            </div>
+            <div className="flex items-center justify-between">
+                <Switch.Label>Medium (Default)</Switch.Label>
+                <Switch.Root size="md">
+                    <Switch.Control />
+                </Switch.Root>
+            </div>
+            <div className="flex items-center justify-between">
+                <Switch.Label>Large</Switch.Label>
+                <Switch.Root size="lg">
+                    <Switch.Control />
+                </Switch.Root>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Examples
+
+### States
+
+Switch의 다양한 상태를 보여줍니다.
+
+<Demo name="switch-states">
+```tsx
+import { Switch } from '@vapor-ui/core';
+
+export default function SwitchStates() {
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <Switch.Label>Default</Switch.Label>
+                <Switch.Root>
+                    <Switch.Control />
+                </Switch.Root>
+            </div>
+            <div className="flex items-center justify-between">
+                <Switch.Label>Default Checked</Switch.Label>
+                <Switch.Root defaultChecked>
+                    <Switch.Control />
+                </Switch.Root>
+            </div>
+            <div className="flex items-center justify-between">
+                <Switch.Label>Disabled</Switch.Label>
+                <Switch.Root disabled>
+                    <Switch.Control />
+                </Switch.Root>
+            </div>
+            <div className="flex items-center justify-between">
+                <Switch.Label>Disabled Checked</Switch.Label>
+                <Switch.Root disabled defaultChecked>
+                    <Switch.Control />
+                </Switch.Root>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Controlled
+
+제어되는 Switch 컴포넌트의 사용 예시입니다.
+
+<Demo name="switch-controlled">
+```tsx
+import { Switch } from '@vapor-ui/core';
+import { useState } from 'react';
+
+export default function SwitchControlled() {
+    const [checked, setChecked] = useState(false);
+    
+    return (
+        <div className="space-y-4">
+            <Switch.Root checked={checked} onCheckedChange={setChecked}>
+                <Switch.Label>Controlled Switch</Switch.Label>
+                <Switch.Control />
+            </Switch.Root>
+            <p>Current state: {checked ? 'On' : 'Off'}</p>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Props Table
 
 ### Switch.Root
 
-<PropsTable file="switch" section="props" />
+Switch의 루트 컴포넌트로 공유 상태와 설정을 제공합니다.
 
-### Switch.Control
-
-<PropsTable file="switch" section="controlProps" />
+<ComponentPropsTable file="switch" section="props" />
 
 ### Switch.Label
 
-<PropsTable file="switch" section="labelProps" />
+Switch의 레이블 컴포넌트로 접근성을 위한 라벨을 제공합니다.
+
+<ComponentPropsTable file="switch" section="labelProps" />
+
+### Switch.Control
+
+Switch의 컸트롤 컴포넌트로 실제 토글 인터랙션을 처리합니다.
+
+<ComponentPropsTable file="switch" section="controlProps" />
