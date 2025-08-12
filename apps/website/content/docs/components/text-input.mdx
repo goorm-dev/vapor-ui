@@ -4,14 +4,6 @@ site_name: 'TextInput - Vapor Core'
 description: 'TextInput은 사용자가 데이터를 입력할 수 있도록 텍스트, 숫자 등 다양한 형식의 입력 필드를 제공합니다.'
 ---
 
-## Import
-
-```js
-import { TextInput } from '@vapor-ui/core';
-```
-
-## Preview
-
 <Demo name="default-text-input">
 ```tsx
 import { TextInput } from '@vapor-ui/core';
@@ -27,20 +19,121 @@ export default function DefaultTextInput() {
 ```
 </Demo>
 
-## Props
+## Property
+
+### Size
+
+TextInput 크기는 sm, md, lg, xl 로 제공합니다.
+
+<Demo name="text-input-size">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputSize() {
+    return (
+        <div className="space-y-4">
+            <TextInput.Root size="sm">
+                <TextInput.Label>Small</TextInput.Label>
+                <TextInput.Field placeholder="Small size" />
+            </TextInput.Root>
+            <TextInput.Root size="md">
+                <TextInput.Label>Medium</TextInput.Label>
+                <TextInput.Field placeholder="Medium size" />
+            </TextInput.Root>
+            <TextInput.Root size="lg">
+                <TextInput.Label>Large</TextInput.Label>
+                <TextInput.Field placeholder="Large size" />
+            </TextInput.Root>
+            <TextInput.Root size="xl">
+                <TextInput.Label>Extra Large</TextInput.Label>
+                <TextInput.Field placeholder="Extra large size" />
+            </TextInput.Root>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Type
+
+TextInput 타입은 text, email, password, url, tel, search 로 제공합니다.
+
+<Demo name="text-input-type">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputType() {
+    return (
+        <div className="space-y-4">
+            <TextInput.Root type="text">
+                <TextInput.Label>Text</TextInput.Label>
+                <TextInput.Field placeholder="Enter text" />
+            </TextInput.Root>
+            <TextInput.Root type="email">
+                <TextInput.Label>Email</TextInput.Label>
+                <TextInput.Field placeholder="Enter email" />
+            </TextInput.Root>
+            <TextInput.Root type="password">
+                <TextInput.Label>Password</TextInput.Label>
+                <TextInput.Field placeholder="Enter password" />
+            </TextInput.Root>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Examples
+
+### States
+
+TextInput의 다양한 상태를 보여줍니다.
+
+<Demo name="text-input-states">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputStates() {
+    return (
+        <div className="space-y-4">
+            <TextInput.Root>
+                <TextInput.Label>Default</TextInput.Label>
+                <TextInput.Field placeholder="Default state" />
+            </TextInput.Root>
+            <TextInput.Root disabled>
+                <TextInput.Label>Disabled</TextInput.Label>
+                <TextInput.Field placeholder="Disabled state" />
+            </TextInput.Root>
+            <TextInput.Root invalid>
+                <TextInput.Label>Invalid</TextInput.Label>
+                <TextInput.Field placeholder="Invalid state" />
+            </TextInput.Root>
+            <TextInput.Root readOnly>
+                <TextInput.Label>Read Only</TextInput.Label>
+                <TextInput.Field value="Read only value" />
+            </TextInput.Root>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Props Table
 
 ### TextInput.Root
 
-<PropsTable file="text-input" section="props" />
+TextInput의 루트 컴포넌트로 공유 상태와 기본 설정을 제공합니다.
+
+<ComponentPropsTable file="text-input" section="props" />
 
 ### TextInput.Label
 
-<PropsTable file="text-input" section="labelProps" />
+TextInput의 레이블 컴포넌트로 접근성을 위한 라벨을 제공합니다.
+
+<ComponentPropsTable file="text-input" section="labelProps" />
 
 ### TextInput.Field
 
-<PropsTable file="text-input" section="fieldProps" />
+TextInput의 입력 필드 컴포넌트로 실제 입력을 받는 요소입니다.
 
-## Accessibility Table
-
-<AccessibilityTable file="text-input" />
+<ComponentPropsTable file="text-input" section="fieldProps" />
