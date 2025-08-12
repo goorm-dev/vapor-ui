@@ -24,6 +24,9 @@ export const arrow = layerStyle('components', {
     display: 'flex',
     color: vars.color.background['normal-lighter'],
 
+    width: vars.size.dimension[100],
+    height: vars.size.dimension[200],
+
     transform: 'rotate(180deg)',
     zIndex: 1,
 
