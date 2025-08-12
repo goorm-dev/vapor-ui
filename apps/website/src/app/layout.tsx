@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import DefaultSearchDialog from '~/components/search/search';
 
 import './global.css';
+import './global.css';
 
 const inter = Inter({
     subsets: ['latin'],

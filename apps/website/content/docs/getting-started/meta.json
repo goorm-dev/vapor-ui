@@ -1,4 +1,4 @@
 {
     "title": "Getting Started",
-    "pages": ["overview", "installation", "llms-txt", "theming"]
+    "pages": ["overview", "installation", "llms-txt", "theming", "tailwindcss-v4"]
 }

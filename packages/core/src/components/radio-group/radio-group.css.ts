@@ -7,25 +7,25 @@ import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('components', {
         display: 'flex',
     }),
 
     defaultVariants: { orientation: 'vertical' },
     variants: {
         size: {
-            md: layerStyle('vapor-component', { gap: vars.size.space['050'] }),
-            lg: layerStyle('vapor-component', { gap: vars.size.space['100'] }),
+            md: layerStyle('components', { gap: vars.size.space['050'] }),
+            lg: layerStyle('components', { gap: vars.size.space['100'] }),
         },
         orientation: {
-            horizontal: layerStyle('vapor-component', { flexDirection: 'row' }),
-            vertical: layerStyle('vapor-component', { flexDirection: 'column' }),
+            horizontal: layerStyle('components', { flexDirection: 'row' }),
+            vertical: layerStyle('components', { flexDirection: 'column' }),
         },
     },
 });
 
 export const item = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('components', {
         display: 'flex',
         flexShrink: 0,
         alignItems: 'center',
@@ -35,14 +35,14 @@ export const item = recipe({
 
     defaultVariants: { disabled: false },
     variants: {
-        disabled: { true: layerStyle('vapor-component', { opacity: 0.32, pointerEvents: 'none' }) },
+        disabled: { true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }) },
     },
 });
 
 export const control = recipe({
     base: [
         interaction(),
-        layerStyle('vapor-component', {
+        layerStyle('components', {
             position: 'relative',
 
             display: 'flex',
@@ -74,15 +74,15 @@ export const control = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('vapor-component', { borderColor: vars.color.background['danger'] }),
+            true: layerStyle('components', { borderColor: vars.color.background['danger'] }),
         },
 
         size: {
-            md: layerStyle('vapor-component', {
+            md: layerStyle('components', {
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
-            lg: layerStyle('vapor-component', {
+            lg: layerStyle('components', {
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
             }),
@@ -90,20 +90,20 @@ export const control = recipe({
     },
 });
 
-export const indicator = layerStyle('vapor-component', {
+export const indicator = layerStyle('components', {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     border: 'none',
     borderRadius: '9999px',
-    backgroundColor: vars.color.background.normal,
+    backgroundColor: vars.color.white,
     width: '50%',
     height: '50%',
 });
 
 export const label = recipe({
-    base: layerStyle('vapor-component', {
+    base: layerStyle('components', {
         lineHeight: vars.typography.lineHeight['075'],
 
         letterSpacing: vars.typography.letterSpacing['100'],

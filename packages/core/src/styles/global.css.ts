@@ -48,10 +48,12 @@ globalStyle('input, button, select, optgroup, textarea', {
     '@layer': {
         [layers.reset]: {
             border: 'none',
-            lineHeight: 'inherit',
+            borderRadius: 0,
+            backgroundColor: 'transparent',
             color: 'inherit',
-            fontFamily: 'inherit',
-            fontSize: 'inherit',
+            font: 'inherit',
+            fontFeatureSettings: 'inherit',
+            fontVariationSettings: 'inherit',
         },
     },
 });
