@@ -79,6 +79,12 @@ export const interaction = recipe({
                     '&:focus-visible': { borderColor: vars.color.border.primary },
                 },
             }),
+            roving: {
+                selectors: {
+                    '&[data-highlighted]::before': { opacity: 0.08 },
+                    '&[data-highlighted]:active::before': { opacity: 0.16 },
+                },
+            },
         },
     },
 });
