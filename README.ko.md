@@ -1,6 +1,8 @@
-[![Vapor UI Logo](vapor-ui.png)](https://vapor.goorm.io)
+[![Vapor UI Logo](vapor-ui.png)](https://vapor-ui.goorm.io)
 
 # Goorm Design System: Vapor UI
+
+[English](README.md)
 
 [![Status: WIP](https://img.shields.io/badge/status-WIP-orange.svg)](https://github.com/goorm-dev/vapor-ui) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -19,7 +21,7 @@ Vapor는 React 기반의 UI 라이브러리로, 접근성, 커스터마이징, �
 
 ## 문서
 
-- **[사용법](https://vapor.goorm.io/docs/overview/installation)**: 라이브러리 설치 및 설정 방법을 안내합니다.
+- **[사용법](https://vapor-ui.goorm.io/docs/overview/installation)**: 라이브러리 설치 및 설정 방법을 안내합니다.
 - **[기여하기](https://github.com/goorm-dev/vapor-ui/blob/main/CONTRIBUTING.md)**: 프로젝트 기여 가이드라인과 로컬 설정 방법을 안내합니다.
 - **[릴리즈](https://github.com/goorm-dev/vapor-ui/releases)**: 각 버전의 변경 사항을 확인할 수 있습니다.
 
@@ -31,7 +33,7 @@ Vapor는 React 기반의 UI 라이브러리로, 접근성, 커스터마이징, �
 npm i @vapor-ui/core @vapor-ui/icons @vapor-ui/hooks
 ```
 
-자세한 사용법은 [공식 문서](https://vapor.goorm.io/docs/overview/installation)를 참고하세요.
+자세한 사용법은 [공식 문서](https://vapor-ui.goorm.io/docs/overview/installation)를 참고하세요.
 
 ## 핵심 원칙
 
