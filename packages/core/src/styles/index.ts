@@ -6,7 +6,6 @@ import './global-var.css';
 // 2. Global reset styles
 import './global.css';
 import './layers.css';
-
 // 3. Create CSS variable contract
 import './vars.css';
 
