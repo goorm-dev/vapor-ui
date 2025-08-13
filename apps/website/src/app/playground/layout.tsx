@@ -1,7 +1,8 @@
+import '@vapor-ui/core/styles.css';
+
 import type { ReactNode } from 'react';
 
 import { ThemeProvider, ThemeScript, createThemeConfig } from '@vapor-ui/core';
-import '@vapor-ui/core/styles.css';
 import type { Metadata } from 'next';
 
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
