@@ -21,6 +21,8 @@ export const content = layerStyle('components', {
     minWidth: '12.5rem',
 
     overflowY: 'auto',
+
+    ':focus-visible': { outline: 'none' },
 });
 
 export const subContents = content;
