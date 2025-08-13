@@ -11,7 +11,7 @@ import type { VComponentProps } from '~/utils/types';
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
-type BadgePrimitiveProps = Omit<VComponentProps<typeof Primitive.span>, 'color'>;
+type BadgePrimitiveProps = VComponentProps<typeof Primitive.span>;
 interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
 
 const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ...props }, ref) => {
