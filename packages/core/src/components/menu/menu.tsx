@@ -1,41 +1,24 @@
-import type { ComponentPropsWithoutRef, MouseEvent } from 'react';
-import { forwardRef, useMemo, useState } from 'react';
+import type { ComponentPropsWithoutRef, RefObject } from 'react';
+import { forwardRef, useRef } from 'react';
 
-import {
-    DropdownMenuCheckboxItem as RadixCheckboxItem,
-    DropdownMenuContent as RadixContent,
-    DropdownMenuGroup as RadixGroup,
-    DropdownMenuItem as RadixItem,
-    DropdownMenuItemIndicator as RadixItemIndicator,
-    DropdownMenuLabel as RadixLabel,
-    DropdownMenuPortal as RadixPortal,
-    DropdownMenuRadioGroup as RadixRadioGroup,
-    DropdownMenuRadioItem as RadixRadioItem,
-    DropdownMenu as RadixRoot,
-    DropdownMenuSeparator as RadixSeparator,
-    DropdownMenuSubContent as RadixSubmenuContent,
-    DropdownMenuSub as RadixSubmenuRoot,
-    DropdownMenuSubTrigger as RadixSubmenuTriggerItem,
-    DropdownMenuTrigger as RadixTrigger,
-} from '@radix-ui/react-dropdown-menu';
-import { useControllableState } from '@radix-ui/react-use-controllable-state';
+import { Menu as BaseMenu } from '@base-ui-components/react';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
-import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
-import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
+import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
-import type { PositionerProps } from '~/utils/split-positioner-props';
-import { splitPositionerProps } from '~/utils/split-positioner-props';
+import type { OnlyPositionerProps } from '~/utils/positioner-props';
 
 import * as styles from './menu.css';
 import type { MenuItemVariants } from './menu.css';
 
+type PositionerProps = OnlyPositionerProps<typeof BaseMenu.Positioner>;
+
 type MenuVariants = MenuItemVariants;
 type MenuSharedProps = MenuVariants & PositionerProps;
 
-type MenuContext = MenuSharedProps & { dir?: 'ltr' | 'rtl' };
+type MenuContext = MenuSharedProps;
 
 const [MenuProvider, useMenuContext] = createContext<MenuContext>({
     name: 'Menu',
@@ -47,21 +30,32 @@ const [MenuProvider, useMenuContext] = createContext<MenuContext>({
  * Menu.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
+type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Root>;
 interface MenuRootProps extends RootPrimitiveProps, MenuSharedProps {}
 
 const Root = ({ ...props }: MenuRootProps) => {
     const [sharedProps, otherProps] = createSplitProps<MenuSharedProps>()(props, [
         'disabled',
-        'side',
         'align',
-        'sideOffset',
         'alignOffset',
+        'side',
+        'sideOffset',
+        'anchor',
+        'arrowPadding',
+        'collisionAvoidance',
+        'collisionBoundary',
+        'collisionPadding',
+        'positionMethod',
+        'sticky',
+        'trackAnchor',
     ]);
 
+    const { disabled } = sharedProps;
+
     return (
-        <MenuProvider value={{ dir: otherProps.dir, ...sharedProps }}>
-            <RadixRoot {...otherProps} />
+        // TODO:
+        <MenuProvider value={sharedProps}>
+            <BaseMenu.Root disabled={disabled} {...otherProps} />
         </MenuProvider>
     );
 };
@@ -71,24 +65,24 @@ Root.displayName = 'Menu.Root';
  * Menu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof RadixTrigger>;
+type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Trigger>;
 interface MenuTriggerProps extends TriggerPrimitiveProps {}
 
 const Trigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
-    ({ disabled, className, children, ...props }, ref) => {
-        const context = useMenuContext();
-        const isDisabled = disabled || context.disabled;
+    ({ disabled: disabledProp, className, children, ...props }, ref) => {
+        const { disabled: contextDisabled } = useMenuContext();
+
+        const disabled = disabledProp || contextDisabled;
 
         return (
-            <RadixTrigger
+            <BaseMenu.Trigger
                 ref={ref}
-                disabled={isDisabled}
-                data-disabled={isDisabled}
-                aria-controls={undefined}
+                disabled={disabled}
+                // data-disabled={disabled}
                 {...props}
             >
                 {children}
-            </RadixTrigger>
+            </BaseMenu.Trigger>
         );
     },
 );
@@ -98,79 +92,48 @@ Trigger.displayName = 'Menu.Trigger';
  * Menu.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-type PortalPrimitiveProps = ComponentPropsWithoutRef<typeof RadixPortal>;
+type PortalPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Portal>;
 interface MenuPortalProps extends PortalPrimitiveProps {}
 
-const Portal = RadixPortal;
-Portal.displayName = 'Menu.Portal';
+const Portal = BaseMenu.Portal;
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Content
  * -----------------------------------------------------------------------------------------------*/
 
-type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof RadixContent>;
-interface MenuContentProps extends Omit<ContentPrimitiveProps, keyof PositionerProps> {}
+type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
+interface MenuContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, MenuContentProps>(
     ({ className, ...props }: MenuContentProps, ref) => {
-        const context = useMenuContext();
-        const [positionerProps] = splitPositionerProps(context);
+        const { ...context } = useMenuContext();
 
         return (
-            <RadixContent
-                ref={ref}
-                className={clsx(styles.content, className)}
-                {...positionerProps}
-                {...props}
-            />
+            <BaseMenu.Positioner {...context}>
+                <BaseMenu.Popup ref={ref} className={clsx(styles.content, className)} {...props} />
+            </BaseMenu.Positioner>
         );
     },
 );
 Content.displayName = 'Menu.Content';
 
 /* -------------------------------------------------------------------------------------------------
- * Menu.CombinedContent
- * -----------------------------------------------------------------------------------------------*/
-
-type Container = Pick<MenuPortalProps, 'container'>;
-interface MenuCombinedContentProps extends Container, MenuContentProps {}
-
-const CombinedContent = forwardRef<HTMLDivElement, MenuCombinedContentProps>((props, ref) => {
-    const [containerProps, otherProps] = createSplitProps<Container>()(props, ['container']);
-
-    return (
-        <Portal {...containerProps}>
-            <Content ref={ref} {...otherProps} />
-        </Portal>
-    );
-});
-CombinedContent.displayName = 'Menu.CombinedContent';
-
-/* -------------------------------------------------------------------------------------------------
  * Menu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof RadixItem>, 'onSelect'>;
-interface MenuItemProps extends ItemPrimitiveProps {
-    closeOnClick?: boolean;
-}
+type ItemPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Item>;
+interface MenuItemProps extends ItemPrimitiveProps {}
 
 const Item = forwardRef<HTMLDivElement, MenuItemProps>(
-    ({ disabled, closeOnClick = true, onClick, className, ...props }, ref) => {
-        const context = useMenuContext();
-        const isDisabled = disabled || context.disabled;
-
-        const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-            if (!closeOnClick) event.preventDefault();
-            onClick?.(event);
-        };
+    ({ disabled: disabledProp, className, ...props }, ref) => {
+        const { disabled: contextDisabled } = useMenuContext();
+        const disabled = disabledProp || contextDisabled;
 
         return (
-            <RadixItem
+            <BaseMenu.Item
                 ref={ref}
-                disabled={isDisabled}
-                className={clsx(styles.item({ disabled: isDisabled }), className)}
-                onClick={handleClick}
+                disabled={disabled}
+                className={clsx(styles.item({ disabled }), className)}
                 {...props}
             />
         );
@@ -182,11 +145,13 @@ Item.displayName = 'Menu.Item';
  * Menu.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-type SeparatorPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSeparator>;
+type SeparatorPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Separator>;
 interface MenuSeparatorProps extends SeparatorPrimitiveProps {}
 
 const Separator = forwardRef<HTMLDivElement, MenuSeparatorProps>(({ className, ...props }, ref) => {
-    return <RadixSeparator ref={ref} className={clsx(styles.separator, className)} {...props} />;
+    return (
+        <BaseMenu.Separator ref={ref} className={clsx(styles.separator, className)} {...props} />
+    );
 });
 Separator.displayName = 'Menu.Separator';
 
@@ -194,27 +159,11 @@ Separator.displayName = 'Menu.Separator';
  * Menu.Group
  * -----------------------------------------------------------------------------------------------*/
 
-type GroupContext = { setLabelId: (id: string | undefined) => void };
-
-const [MenuGroupProvider, useMenuGroupContext] = createContext<GroupContext>({
-    name: 'MenuGroup',
-    hookName: 'useMenuGroupContext',
-    providerName: 'MenuGroupProvider',
-});
-
-type GroupPrimitiveProps = ComponentPropsWithoutRef<typeof RadixGroup>;
+type GroupPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Group>;
 interface MenuGroupProps extends GroupPrimitiveProps {}
 
 const Group = forwardRef<HTMLDivElement, MenuGroupProps>((props, ref) => {
-    const [labelId, setLabelId] = useState<string | undefined>(undefined);
-
-    const context = useMemo(() => ({ setLabelId }), [setLabelId]);
-
-    return (
-        <MenuGroupProvider value={context}>
-            <RadixGroup ref={ref} aria-labelledby={labelId} {...props} />
-        </MenuGroupProvider>
-    );
+    return <BaseMenu.Group ref={ref} {...props} />;
 });
 Group.displayName = 'Menu.Group';
 
@@ -222,25 +171,14 @@ Group.displayName = 'Menu.Group';
  * Menu.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
-type GroupLabelPrimitiveProps = ComponentPropsWithoutRef<typeof RadixLabel>;
+type GroupLabelPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.GroupLabel>;
 interface MenuGroupLabelProps extends GroupLabelPrimitiveProps {}
 
 const GroupLabel = forwardRef<HTMLDivElement, MenuGroupLabelProps>(
-    ({ id: idProp, className, ...props }, ref) => {
-        const id = useVaporId(idProp);
-        const { setLabelId } = useMenuGroupContext();
-
-        useIsoLayoutEffect(() => {
-            setLabelId(id);
-
-            return () => setLabelId(undefined);
-        }, [id, setLabelId]);
-
+    ({ className, ...props }, ref) => {
         return (
-            <RadixLabel
+            <BaseMenu.GroupLabel
                 ref={ref}
-                id={id}
-                role="presentation"
                 className={clsx(styles.groupLabel, className)}
                 {...props}
             />
@@ -249,14 +187,31 @@ const GroupLabel = forwardRef<HTMLDivElement, MenuGroupLabelProps>(
 );
 
 /* -------------------------------------------------------------------------------------------------
- * Menu.Submenu
+ * Menu.SubmenuRoot
  * -----------------------------------------------------------------------------------------------*/
 
-type SubmenuRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSubmenuRoot>;
+type SubmenuContext = {
+    triggerRef?: RefObject<HTMLElement>;
+    disabled?: boolean;
+};
+
+const [SubmenuProvider, useSubmenuContext] = createContext<SubmenuContext>({});
+
+type SubmenuRootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.SubmenuRoot>;
 interface MenuSubmenuRootProps extends SubmenuRootPrimitiveProps {}
 
-const SubmenuRoot = ({ ...props }: MenuSubmenuRootProps) => {
-    return <RadixSubmenuRoot {...props} />;
+const SubmenuRoot = ({ closeParentOnEsc = false, disabled, ...props }: MenuSubmenuRootProps) => {
+    const triggerRef = useRef<HTMLElement>(null);
+
+    return (
+        <SubmenuProvider value={{ triggerRef, disabled }}>
+            <BaseMenu.SubmenuRoot
+                disabled={disabled}
+                closeParentOnEsc={closeParentOnEsc}
+                {...props}
+            />
+        </SubmenuProvider>
+    );
 };
 SubmenuRoot.displayName = 'Menu.SubmenuRoot';
 
@@ -264,97 +219,50 @@ SubmenuRoot.displayName = 'Menu.SubmenuRoot';
  * Menu.SubmenuContent
  * -----------------------------------------------------------------------------------------------*/
 
-type SubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSubmenuContent>;
+type SubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
 interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {}
 
 const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
-    ({ className, onEscapeKeyDown, ...props }, ref) => {
-        const { dir } = useMenuContext();
-        const closeKey = dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
-
-        const handleEscapeKeyDown = (event: KeyboardEvent) => {
-            event.preventDefault();
-
-            dispatchSubmenuClose(event, closeKey);
-            onEscapeKeyDown?.(event);
-        };
+    ({ className, ...props }, ref) => {
+        const { triggerRef } = useSubmenuContext();
 
         return (
-            <RadixSubmenuContent
-                ref={ref}
-                className={clsx(styles.subContents, className)}
-                onEscapeKeyDown={handleEscapeKeyDown}
-                {...props}
-            />
+            <BaseMenu.Positioner>
+                <BaseMenu.Popup
+                    ref={ref}
+                    finalFocus={triggerRef}
+                    className={clsx(styles.subContents, className)}
+                    {...props}
+                />
+            </BaseMenu.Positioner>
         );
     },
 );
 SubmenuContent.displayName = 'Menu.SubmenuContent';
 
-/* -----------------------------------------------------------------------------------------------*/
-
-/**
- * NOTE
- * - This function dispatches a keyboard event to close the submenu when the escape key is pressed.
- * - This is necessary because Radix UI does not provide a built-in way to close submenus with the escape key, and we need to manually trigger the close behavior.
- */
-const dispatchSubmenuClose = (event: KeyboardEvent, closeKey: string) => {
-    const leftArrowEvent = new KeyboardEvent('keydown', {
-        key: closeKey,
-        bubbles: true,
-        cancelable: true,
-    });
-
-    event.target?.dispatchEvent(leftArrowEvent);
-};
-
-/* -------------------------------------------------------------------------------------------------
- * Menu.CombinedSubmenuContent
- * -----------------------------------------------------------------------------------------------*/
-
-type CombinedSubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSubmenuContent>;
-interface MenuCombinedSubmenuContentProps extends Container, CombinedSubmenuContentPrimitiveProps {}
-
-const CombinedSubmenuContent = forwardRef<HTMLDivElement, MenuCombinedSubmenuContentProps>(
-    ({ className, ...props }, ref) => {
-        const [containerProps, otherProps] = createSplitProps<Container>()(props, ['container']);
-
-        return (
-            <RadixPortal {...containerProps}>
-                <SubmenuContent
-                    ref={ref}
-                    className={clsx(styles.subContents, className)}
-                    {...otherProps}
-                />
-            </RadixPortal>
-        );
-    },
-);
-CombinedSubmenuContent.displayName = 'Menu.CombinedSubmenuContent';
-
 /* -------------------------------------------------------------------------------------------------
  * Menu.SubmenuTriggerItem
  * -----------------------------------------------------------------------------------------------*/
 
-type SubmenuTriggerItemPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSubmenuTriggerItem>;
+type SubmenuTriggerItemPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.SubmenuTrigger>;
 interface MenuSubmenuTriggerItemProps extends SubmenuTriggerItemPrimitiveProps {}
 
 const SubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItemProps>(
-    ({ disabled, className, children, ...props }, ref) => {
-        const context = useMenuContext();
-        const isDisabled = disabled || context.disabled;
+    ({ className, children, ...props }, ref) => {
+        const { triggerRef, disabled } = useSubmenuContext();
+        const composedRef = composeRefs(triggerRef, ref);
 
         return (
-            <RadixSubmenuTriggerItem
-                ref={ref}
-                className={clsx(styles.subTrigger({ disabled: isDisabled }), className)}
-                disabled={isDisabled}
+            <BaseMenu.SubmenuTrigger
+                ref={composedRef}
+                // TODO: adjust Submenu disabled
+                className={clsx(styles.subTrigger({ disabled }), className)}
                 {...props}
             >
                 {children}
 
                 <ChevronRightOutlineIcon />
-            </RadixSubmenuTriggerItem>
+            </BaseMenu.SubmenuTrigger>
         );
     },
 );
@@ -364,62 +272,27 @@ SubmenuTriggerItem.displayName = 'Menu.SubmenuTriggerItem';
  * Menu.Checkbox
  * -----------------------------------------------------------------------------------------------*/
 
-type CheckedProps = {
-    checked?: boolean;
-    onCheckedChange?: (checked: boolean) => void;
-    defaultChecked?: boolean;
-};
-
-type CheckboxPrimitiveProps = Omit<
-    ComponentPropsWithoutRef<typeof RadixCheckboxItem>,
-    keyof CheckedProps | 'onSelect'
->;
-
-interface MenuCheckboxItemProps extends CheckboxPrimitiveProps, CheckedProps {
-    closeOnClick?: boolean;
-}
+type CheckboxPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.CheckboxItem>;
+interface MenuCheckboxItemProps extends CheckboxPrimitiveProps {}
 
 const CheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>(
-    ({ disabled, closeOnClick = false, onClick, className, children, ...props }, ref) => {
-        const [checkedProps, otherProps] = createSplitProps<CheckedProps>()(props, [
-            'checked',
-            'defaultChecked',
-            'onCheckedChange',
-        ]);
-
-        const { checked, onCheckedChange, defaultChecked } = checkedProps;
-        const [checkedState, setCheckedState] = useControllableState({
-            prop: checked,
-            defaultProp: defaultChecked || false,
-            onChange: onCheckedChange,
-        });
-
-        const context = useMenuContext();
-        const isDisabled = disabled || context.disabled;
-
-        const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-            onClick?.(event);
-
-            if (event.isDefaultPrevented() || isDisabled) return;
-            if (!closeOnClick) event.preventDefault();
-            setCheckedState((prev) => !prev);
-        };
+    ({ disabled: disabledProp, className, children, ...props }, ref) => {
+        const { disabled: contextDisabled } = useMenuContext();
+        const disabled = disabledProp || contextDisabled;
 
         return (
-            <RadixCheckboxItem
+            <BaseMenu.CheckboxItem
                 ref={ref}
-                checked={checkedState}
-                disabled={isDisabled}
-                className={clsx(styles.item({ disabled: isDisabled }), className)}
-                onClick={handleClick}
-                {...otherProps}
+                disabled={disabled}
+                className={clsx(styles.item({ disabled }), className)}
+                {...props}
             >
                 {children}
 
-                <RadixItemIndicator className={styles.indicator}>
+                <BaseMenu.CheckboxItemIndicator className={styles.indicator}>
                     <ConfirmOutlineIcon size="100%" />
-                </RadixItemIndicator>
-            </RadixCheckboxItem>
+                </BaseMenu.CheckboxItemIndicator>
+            </BaseMenu.CheckboxItem>
         );
     },
 );
@@ -429,57 +302,11 @@ CheckboxItem.displayName = 'Menu.CheckboxItem';
  * Menu.RadioGroup
  * -----------------------------------------------------------------------------------------------*/
 
-type ValueProps = {
-    value?: string;
-    onValueChange?: (value: string) => void;
-    defaultValue?: string;
-};
-
-type RadioGroupPrimitiveProps = Omit<
-    ComponentPropsWithoutRef<typeof RadixRadioGroup>,
-    keyof ValueProps
->;
-
-type MenuRadioGroupContext = {
-    handleValueChange: (value: string) => void;
-};
-
-const [MenuRadioGroupProvider, useMenuRadioGroupContext] = createContext<MenuRadioGroupContext>({
-    name: 'MenuRadioGroup',
-    hookName: 'useMenuRadioGroupContext',
-    providerName: 'MenuRadioGroupProvider',
-});
-
-interface MenuRadioGroupProps extends RadioGroupPrimitiveProps, ValueProps {}
+type RadioGroupPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.RadioGroup>;
+interface MenuRadioGroupProps extends RadioGroupPrimitiveProps {}
 
 const RadioGroup = forwardRef<HTMLDivElement, MenuRadioGroupProps>((props, ref) => {
-    const [valueProps, otherProps] = createSplitProps<ValueProps>()(props, [
-        'value',
-        'defaultValue',
-        'onValueChange',
-    ]);
-
-    const { value, onValueChange, defaultValue } = valueProps;
-    const [valueState, setValueState] = useControllableState({
-        prop: value,
-        defaultProp: defaultValue || '',
-        onChange: onValueChange,
-    });
-
-    const handleValueChange = (newValue: string) => {
-        setValueState(newValue);
-    };
-
-    return (
-        <MenuRadioGroupProvider value={{ handleValueChange }}>
-            <RadixRadioGroup
-                ref={ref}
-                value={valueState}
-                onValueChange={setValueState}
-                {...otherProps}
-            />
-        </MenuRadioGroupProvider>
-    );
+    return <BaseMenu.RadioGroup ref={ref} {...props} />;
 });
 RadioGroup.displayName = 'Menu.RadioGroup';
 
@@ -487,40 +314,29 @@ RadioGroup.displayName = 'Menu.RadioGroup';
  * Menu.RadioItem
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioItemPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof RadixRadioItem>, 'onSelect'>;
+type RadioItemPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.RadioItem>;
 interface MenuRadioItemProps extends RadioItemPrimitiveProps {
     closeOnClick?: boolean;
 }
 
 const RadioItem = forwardRef<HTMLDivElement, MenuRadioItemProps>(
-    ({ disabled, closeOnClick = false, onClick, className, children, ...props }, ref) => {
-        const context = useMenuContext();
-        const { handleValueChange } = useMenuRadioGroupContext();
-        const isDisabled = disabled || context.disabled;
-
-        const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-            onClick?.(event);
-
-            if (event.isDefaultPrevented() || isDisabled) return;
-            if (!closeOnClick) event.preventDefault();
-
-            handleValueChange(props.value);
-        };
+    ({ disabled: disabledProp, className, children, ...props }, ref) => {
+        const { disabled: contextDisabled } = useMenuContext();
+        const disabled = disabledProp || contextDisabled;
 
         return (
-            <RadixRadioItem
+            <BaseMenu.RadioItem
                 ref={ref}
-                disabled={isDisabled}
-                className={clsx(styles.item({ disabled: isDisabled }), className)}
-                onClick={handleClick}
+                disabled={disabled}
+                className={clsx(styles.item({ disabled }), className)}
                 {...props}
             >
                 {children}
 
-                <RadixItemIndicator className={styles.indicator}>
+                <BaseMenu.RadioItemIndicator className={styles.indicator}>
                     <ConfirmOutlineIcon size="100%" />
-                </RadixItemIndicator>
-            </RadixRadioItem>
+                </BaseMenu.RadioItemIndicator>
+            </BaseMenu.RadioItem>
         );
     },
 );
@@ -533,14 +349,12 @@ export {
     Trigger as MenuTrigger,
     Portal as MenuPortal,
     Content as MenuContent,
-    CombinedContent as MenuCombinedContent,
     Item as MenuItem,
     Separator as MenuSeparator,
     Group as MenuGroup,
     GroupLabel as MenuGroupLabel,
     SubmenuRoot as MenuSubmenuRoot,
     SubmenuContent as MenuSubmenuContent,
-    CombinedSubmenuContent as MenuCombinedSubmenuContent,
     SubmenuTriggerItem as MenuSubmenuTriggerItem,
     CheckboxItem as MenuCheckboxItem,
     RadioGroup as MenuRadioGroup,
@@ -552,14 +366,12 @@ export type {
     MenuTriggerProps,
     MenuPortalProps,
     MenuContentProps,
-    MenuCombinedContentProps,
     MenuItemProps,
     MenuSeparatorProps,
     MenuGroupProps,
     MenuGroupLabelProps,
     MenuSubmenuRootProps,
     MenuSubmenuContentProps,
-    MenuCombinedSubmenuContentProps,
     MenuSubmenuTriggerItemProps,
     MenuCheckboxItemProps,
     MenuRadioGroupProps,
@@ -571,14 +383,12 @@ export const Menu = {
     Trigger,
     Portal,
     Content,
-    CombinedContent,
     Item,
     Separator,
     Group,
     GroupLabel,
     SubmenuRoot,
     SubmenuContent,
-    CombinedSubmenuContent,
     SubmenuTriggerItem,
     CheckboxItem,
     RadioGroup,
