@@ -1,5 +1,15 @@
 # @vapor-ui/core
 
+## 0.4.1
+
+### Patch Changes
+
+- b498ae2: Fix RadioGroup indicator color to use white background instead of theme-dependent background normal
+- 7b1b889: remove hover state when used touchscreen
+- 3611d89: style(Button): add no-wrap
+- 9188b0e: Enhance vanillaExtractPlugin identifiers for better debugging
+- 96c0f7a: add box-shadow tokens
+
 ## 0.4.0
 
 ### Minor Changes
