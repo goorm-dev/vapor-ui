@@ -75,12 +75,7 @@ const Trigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
         const disabled = disabledProp || contextDisabled;
 
         return (
-            <BaseMenu.Trigger
-                ref={ref}
-                disabled={disabled}
-                // data-disabled={disabled}
-                {...props}
-            >
+            <BaseMenu.Trigger ref={ref} disabled={disabled} {...props}>
                 {children}
             </BaseMenu.Trigger>
         );
@@ -106,10 +101,24 @@ interface MenuContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, MenuContentProps>(
     ({ className, ...props }: MenuContentProps, ref) => {
-        const { ...context } = useMenuContext();
+        const context = useMenuContext();
+        const [positionerProps] = createSplitProps<PositionerProps>()(context, [
+            'align',
+            'alignOffset',
+            'side',
+            'sideOffset',
+            'anchor',
+            'arrowPadding',
+            'collisionAvoidance',
+            'collisionBoundary',
+            'collisionPadding',
+            'positionMethod',
+            'sticky',
+            'trackAnchor',
+        ]);
 
         return (
-            <BaseMenu.Positioner {...context}>
+            <BaseMenu.Positioner {...positionerProps}>
                 <BaseMenu.Popup ref={ref} className={clsx(styles.content, className)} {...props} />
             </BaseMenu.Positioner>
         );
