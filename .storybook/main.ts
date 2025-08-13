@@ -46,7 +46,17 @@ const config: StorybookConfig = {
                 },
             },
 
-            plugins: [vanillaExtractPlugin(), reactDocgenTypescript()],
+            plugins: [
+                vanillaExtractPlugin({
+                    identifiers: ({ hash, filePath, debugId }) => {
+                        const componentName = path.basename(filePath, '.css.ts');
+                        const prefix = componentName === 'sprinkles' ? 'v' : componentName;
+
+                        return `${prefix}${debugId ? `-${debugId}` : ''}-${hash}`;
+                    },
+                }),
+                reactDocgenTypescript(),
+            ],
         });
 
         return mergedConfig;

@@ -22,6 +22,20 @@ async function processCss(css: string) {
 
     return result.css;
 }
+
+interface IdentifiersParams {
+    hash: string;
+    filePath: string;
+    debugId?: string;
+}
+
+const identifiers = ({ hash, filePath, debugId }: IdentifiersParams) => {
+    const componentName = path.basename(filePath, '.css.ts');
+    const prefix = componentName === 'sprinkles' ? 'v' : componentName;
+
+    return `${prefix}${debugId ? `-${debugId}` : ''}-${hash}`;
+};
+
 async function prependUseClientDirective() {
     const outputFiles = globSync(path.join(COMPONENTS_DIR, '*/index.{js,cjs}'));
 
@@ -97,10 +111,7 @@ export default defineConfig([
         esbuildPlugins: [
             vanillaExtractPlugin({
                 ...vanillaExtractConfig,
-                identifiers: ({ hash, filePath, debugId }) => {
-                    const componentName = path.basename(filePath, '.css.ts');
-                    return `${componentName}${debugId ? `-${debugId}` : ''}__${hash}`;
-                },
+                identifiers,
             }),
         ],
         async onSuccess() {
@@ -130,9 +141,11 @@ export default defineConfig([
         esbuildPlugins: [
             vanillaExtractPlugin({
                 ...vanillaExtractConfig,
-                identifiers: ({ hash, filePath, debugId }) => {
+                identifiers: ({ hash, filePath, debugId }: IdentifiersParams) => {
                     const componentName = path.basename(filePath, '.css.ts');
-                    return `${componentName}${debugId ? `-${debugId}` : ''}__${hash}`;
+                    const prefix = componentName === 'sprinkles' ? 'v' : componentName;
+
+                    return `${prefix}${debugId ? `-${debugId}` : ''}-${hash}`;
                 },
             }),
         ],
