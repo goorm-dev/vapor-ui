@@ -47,7 +47,9 @@ type ButtonProps = ComponentProps<typeof Button> & RadioGroupItemProps;
 const RadioButton = forwardRef<ButtonRef, ButtonProps>(({ value, children, ...props }, ref) => {
     return (
         <RadioGroupItem asChild ref={ref} value={value} {...props}>
-            <Button variant="outline" stretch>{children}</Button>
+            <Button variant="outline" stretch>
+                {children}
+            </Button>
         </RadioGroupItem>
     );
 });
