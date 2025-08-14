@@ -1,0 +1,181 @@
+name: '[CI] Sync Icons'
+
+on:
+    workflow_dispatch:
+    schedule:
+        # Run every Thursday at 4 PM KST (07:00 UTC)
+        - cron: '0 7 * * 4'
+
+jobs:
+    sync-figma-icons:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
+            - name: Sync Basic Icons
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  TYPE: basic
+              run: |
+                  echo "🚀 Syncing basic icons"
+                  TYPE=basic node ./scripts/syncFigmaIcons.js
+
+            - name: Sync Symbol Icons
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  TYPE: symbol
+              run: |
+                  echo "🚀 Syncing symbol icons"
+                  TYPE=symbol node ./scripts/syncFigmaIcons.js
+
+            - name: Format generated files
+              run: |
+                  pnpm format
+
+            - name: Check for changes
+              id: check_changes
+              run: |
+                  # Check if there are changes in the icons directory
+                  if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
+                      echo "has_changes=true" >> $GITHUB_OUTPUT
+                      echo "📝 Changes detected in icons"
+                      
+                      new_icons_count=0
+                      new_icon_names=""
+                      
+                      # Find both untracked and staged files
+                      changed_files=$(git ls-files --others --exclude-standard packages/icons/src/ && git diff --name-only --cached --diff-filter=A packages/icons/src/)
+                      
+                      for file in $changed_files; do
+                          # Check file extension, path, and name conditions
+                          if [[ "$file" =~ \.(ts|tsx|js)$ ]] && \
+                              [[ "$file" =~ (basic|symbol)-icons ]] && \
+                              ! [[ "$file" =~ /index\.(ts|tsx|js)$ ]]; then
+                              
+                              new_icons_count=$((new_icons_count + 1))
+                              icon_name=$(basename "$file" | sed 's/\.[^.]*$//')
+                              
+                              if [[ -z "$new_icon_names" ]]; then
+                                  new_icon_names="\`$icon_name\`"
+                              else
+                                  new_icon_names="$new_icon_names, \`$icon_name\`"
+                              fi
+                          fi
+                      done
+                      
+                      if [[ $new_icons_count -gt 0 ]]; then
+                          echo "has_new_icons=true" >> $GITHUB_OUTPUT
+                          echo "version_type=minor" >> $GITHUB_OUTPUT
+                          echo "new_icon_names=$new_icon_names" >> $GITHUB_OUTPUT
+                          echo "🆕 New icons detected ($new_icons_count) - will use minor version bump"
+                      else
+                          echo "has_new_icons=false" >> $GITHUB_OUTPUT
+                          echo "version_type=patch" >> $GITHUB_OUTPUT
+                          echo "new_icon_names=" >> $GITHUB_OUTPUT
+                          echo "🔄 Only updated icons detected - will use patch version bump"
+                      fi
+                  else
+                      echo "has_changes=false" >> $GITHUB_OUTPUT
+                      echo "has_new_icons=false" >> $GITHUB_OUTPUT
+                      echo "version_type=" >> $GITHUB_OUTPUT
+                      echo "new_icon_names=" >> $GITHUB_OUTPUT
+                      echo "✅ No changes detected in icons - workflow finished"
+                  fi
+
+            - name: Create branch and commit changes
+              if: steps.check_changes.outputs.has_changes == 'true'
+              run: |
+                  BRANCH_NAME="sync-figma-icons-$(date +%Y%m%d-%H%M%S)"
+                  echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+
+                  # Ensure we have the latest main branch
+                  git fetch origin main
+                  git checkout main
+                  git pull origin main
+
+                  # Create new branch from main
+                  git switch -c $BRANCH_NAME
+
+                  # Create changeset with details about updated icons
+                  CHANGESET_FILE=".changeset/sync-icons-$(date +%Y%m%d%H%M%S).md"
+
+                  # Create changeset content
+                  echo "---" > "$CHANGESET_FILE"
+                  echo "\"@vapor-ui/icons\": ${{ steps.check_changes.outputs.version_type }}" >> "$CHANGESET_FILE"
+                  echo "---" >> "$CHANGESET_FILE"
+                  echo "" >> "$CHANGESET_FILE"
+
+                  if [[ "${{ steps.check_changes.outputs.has_new_icons }}" == "true" ]]; then
+                      echo "Add new icons from Figma" >> "$CHANGESET_FILE"
+                      echo "" >> "$CHANGESET_FILE"
+                      echo '**New Icons:** ${{ steps.check_changes.outputs.new_icon_names }}' >> "$CHANGESET_FILE"
+                  else
+                      echo "Update icons from Figma" >> "$CHANGESET_FILE"
+                      echo "" >> "$CHANGESET_FILE"
+                      echo "Some icons have been updated with the latest changes from Figma." >> "$CHANGESET_FILE"
+                  fi
+
+                  # Add all changes including the changeset
+                  git add packages/icons/src/ .changeset/
+                  git commit -m "feat: sync icons from Figma
+
+                  🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+                  Co-Authored-By: GitHub Action <action@github.com>"
+                  git push -u origin $BRANCH_NAME
+
+            - name: Create Pull Request
+              if: steps.check_changes.outputs.has_changes == 'true'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  # Create temporary file for PR body to avoid shell interpretation
+                  if [[ "${{ steps.check_changes.outputs.has_new_icons }}" == "true" ]]; then
+                      # PR for new icons (minor version)
+                      cat > pr_body.txt << 'EOF'
+                  ## 🤖 Automated Icon Sync from Figma
+
+                  This PR adds new icons
+
+                  ### Sync Summary
+                  | Category         | Details                          |
+                  | ---------------- | -------------------------------- |
+                  | **Version Bump** | Minor (new icons) |
+                  | **Workflow Run** | [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+
+                  ### ✨ New Icons Added
+                  EOF
+                      echo '**New Icons:** ${{ steps.check_changes.outputs.new_icon_names }}' >> pr_body.txt
+                  else
+                      # PR for updated icons (patch version)
+                      cat > pr_body.txt << 'EOF'
+                  ## 🤖 Automated Icon Sync from Figma
+
+                  This PR updates existing icons based on the latest changes in Figma.
+
+                  ### Sync Summary
+                  | Category         | Details                          |
+                  | ---------------- | -------------------------------- |
+                  | **Version Bump** | Patch (updated icons) |
+                  | **Workflow Run** | [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+
+                  ### 🔄 Changes
+                  Some icons have been updated with the latest changes from Figma.
+                  EOF
+                  fi
+
+                  gh pr create \
+                  --title "feat: sync icons from Figma" \
+                  --body-file pr_body.txt \
+                  --base main \
+                  --head ${{ env.branch_name }}
+
+                  # Clean up temporary file
+                  rm -f pr_body.txt
