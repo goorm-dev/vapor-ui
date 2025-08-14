@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { vars } from '~/styles/vars.css';
 import { composeRefs } from '~/utils/compose-refs';
-import type { PositionerProps } from '~/utils/split-positioner-props';
+import type { Align, Side } from '~/utils/positioner-props';
 
 import * as styles from './arrow.css';
 
@@ -20,7 +20,11 @@ import * as styles from './arrow.css';
 const dataSide = 'data-side';
 const dataAlign = 'data-align';
 
-type ArrowPositionProps = Pick<PositionerProps, 'side' | 'align'> & { offset?: number };
+type ArrowPositionProps = {
+    side?: Side;
+    align?: Align;
+    offset?: number;
+};
 
 interface ArrowProps extends useRender.ComponentProps<'div'>, ArrowPositionProps {
     offset?: number;
