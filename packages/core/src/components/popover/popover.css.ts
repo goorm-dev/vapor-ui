@@ -17,7 +17,7 @@ export const content = style({
 
     paddingInline: vars.size.space[200],
 
-    width: '12.5rem',
+    minWidth: '12.5rem',
 });
 
 export const arrow = layerStyle('components', {

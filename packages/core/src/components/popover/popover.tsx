@@ -5,14 +5,17 @@ import clsx from 'clsx';
 
 import { Arrow } from '~/components/arrow';
 import { createContext } from '~/libs/create-context';
-import { type PositionerProps, splitPositionerProps } from '~/utils/split-positioner-props';
+import { createSplitProps } from '~/utils/create-split-props';
+import type { OnlyPositionerProps } from '~/utils/positioner-props';
 
 import * as styles from './popover.css';
 
-type SharedProps = PositionerProps;
-type ContextProps = SharedProps;
+type PositionerProps = OnlyPositionerProps<typeof BasePopover.Positioner>;
 
-const [PopoverProvider, usePopoverContext] = createContext<ContextProps>({
+type PopoverSharedProps = PositionerProps;
+type PopoverContext = PopoverSharedProps;
+
+const [PopoverProvider, usePopoverContext] = createContext<PopoverContext>({
     name: 'Popover',
     hookName: 'usePopoverContext',
     providerName: 'PopoverProvider',
@@ -23,10 +26,23 @@ const [PopoverProvider, usePopoverContext] = createContext<ContextProps>({
  * -----------------------------------------------------------------------------------------------*/
 
 type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Root>;
-interface PopoverRootProps extends RootPrimitiveProps, SharedProps {}
+interface PopoverRootProps extends RootPrimitiveProps, PopoverSharedProps {}
 
 const Root = (props: PopoverRootProps) => {
-    const [sharedProps, otherProps] = splitPositionerProps<SharedProps>(props);
+    const [sharedProps, otherProps] = createSplitProps<PositionerProps>()(props, [
+        'align',
+        'alignOffset',
+        'side',
+        'sideOffset',
+        'anchor',
+        'arrowPadding',
+        'collisionAvoidance',
+        'collisionBoundary',
+        'collisionPadding',
+        'positionMethod',
+        'sticky',
+        'trackAnchor',
+    ]);
 
     return (
         <PopoverProvider value={sharedProps}>
@@ -44,27 +60,6 @@ interface PopoverTriggerProps extends TriggerPrimitiveProps {}
 
 const Trigger = forwardRef<HTMLButtonElement, PopoverTriggerProps>((props, ref) => {
     return <BasePopover.Trigger ref={ref} {...props} />;
-});
-
-/* -------------------------------------------------------------------------------------------------
- * Popover.Positioner
- * -----------------------------------------------------------------------------------------------*/
-
-type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Positioner>;
-interface PopoverPositionerProps extends Omit<PositionerPrimitiveProps, keyof SharedProps> {}
-
-const Positioner = forwardRef<HTMLDivElement, PopoverPositionerProps>((props, ref) => {
-    const { sideOffset = 8, ...context } = usePopoverContext();
-
-    return (
-        <BasePopover.Positioner
-            ref={ref}
-            sideOffset={sideOffset}
-            collisionAvoidance={{ align: 'none' }}
-            {...context}
-            {...props}
-        />
-    );
 });
 
 /* -------------------------------------------------------------------------------------------------
@@ -87,20 +82,26 @@ interface PopoverContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
     ({ className, children, ...props }, ref) => {
-        const { side, align } = usePopoverContext();
+        const { sideOffset = 8, ...context } = usePopoverContext();
 
         return (
-            <BasePopover.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                <Arrow
-                    render={<BasePopover.Arrow />}
-                    side={side}
-                    align={align}
-                    offset={12}
-                    className={styles.arrow}
-                />
+            <BasePopover.Positioner
+                sideOffset={sideOffset}
+                collisionAvoidance={{ align: 'none' }}
+                {...context}
+            >
+                <BasePopover.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
+                    <Arrow
+                        render={<BasePopover.Arrow />}
+                        side={context.side}
+                        align={context.align}
+                        offset={12}
+                        className={styles.arrow}
+                    />
 
-                {children}
-            </BasePopover.Popup>
+                    {children}
+                </BasePopover.Popup>
+            </BasePopover.Positioner>
         );
     },
 );
@@ -166,7 +167,6 @@ export {
     Root as PopoverRoot,
     Trigger as PopoverTrigger,
     Portal as PopoverPortal,
-    Positioner as PopoverPositioner,
     Content as PopoverContent,
     Title as PopoverTitle,
     Description as PopoverDescription,
@@ -176,7 +176,6 @@ export type {
     PopoverRootProps,
     PopoverTriggerProps,
     PopoverPortalProps,
-    PopoverPositionerProps,
     PopoverContentProps,
     PopoverTitleProps,
     PopoverDescriptionProps,
@@ -186,7 +185,6 @@ export const Popover = {
     Root,
     Trigger,
     Portal,
-    Positioner,
     Content,
     Title,
     Description,
