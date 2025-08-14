@@ -106,6 +106,7 @@ export const body = layerStyle('components', {
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
+    maxHeight: '80svh',
     overflowY: 'auto',
 });
 
