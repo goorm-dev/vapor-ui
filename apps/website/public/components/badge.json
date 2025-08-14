@@ -2,19 +2,19 @@
     "props": [
         {
             "prop": "color",
-            "type": "primary | hint | danger | success | warning | contrast",
+            "type": ["primary", "hint", "danger", "success", "warning", "contrast"],
             "default": "primary",
             "description": "배지의 색상(의미)을 설정합니다. 예컨대 success는 성공 상태를, danger는 오류 상태를 나타냅니다."
         },
         {
             "prop": "size",
-            "type": "sm | md | lg",
+            "type": ["sm", "md", "lg"],
             "default": "md",
             "description": "배지의 크기를 설정합니다. sm은 작은 크기, lg는 큰 크기를 의미합니다."
         },
         {
             "prop": "shape",
-            "type": "square | pill",
+            "type": ["square", "pill"],
             "default": "square",
             "description": "배지의 모양을 설정합니다. square는 둥근 사각형, pill은 완전히 둥근 알약 형태입니다."
         }
