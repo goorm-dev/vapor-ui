@@ -27,40 +27,30 @@ export const Default: StoryObj<typeof Tooltip.Root> = {
                 alignItems: 'center',
             }}
         >
-            <Tooltip.Provider>
-                <Tooltip.Root side="left" {...args}>
-                    <Tooltip.Trigger render={<Button>Left Tooltip</Button>} />
-                    <Tooltip.Portal>
-                        <Tooltip.Positioner>
-                            <Tooltip.Content>Tooltip content</Tooltip.Content>
-                        </Tooltip.Positioner>
-                    </Tooltip.Portal>
-                </Tooltip.Root>
-                <Tooltip.Root side="top" {...args}>
-                    <Tooltip.Trigger render={<Button>Top Tooltip</Button>} />
-                    <Tooltip.Portal>
-                        <Tooltip.Positioner>
-                            <Tooltip.Content>Tooltip content</Tooltip.Content>
-                        </Tooltip.Positioner>
-                    </Tooltip.Portal>
-                </Tooltip.Root>
-                <Tooltip.Root side="bottom" {...args}>
-                    <Tooltip.Trigger render={<Button>Bottom Tooltip</Button>} />
-                    <Tooltip.Portal>
-                        <Tooltip.Positioner>
-                            <Tooltip.Content>Tooltip content</Tooltip.Content>
-                        </Tooltip.Positioner>
-                    </Tooltip.Portal>
-                </Tooltip.Root>
-                <Tooltip.Root side="right" {...args}>
-                    <Tooltip.Trigger render={<Button>Right Tooltip</Button>} />
-                    <Tooltip.Portal>
-                        <Tooltip.Positioner>
-                            <Tooltip.Content>Tooltip content</Tooltip.Content>
-                        </Tooltip.Positioner>
-                    </Tooltip.Portal>
-                </Tooltip.Root>
-            </Tooltip.Provider>
+            <Tooltip.Root side="left" {...args}>
+                <Tooltip.Trigger render={<Button>Left Tooltip</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>Tooltip content</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+            <Tooltip.Root side="top" {...args}>
+                <Tooltip.Trigger render={<Button>Top Tooltip</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>Tooltip content</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+            <Tooltip.Root side="bottom" {...args}>
+                <Tooltip.Trigger render={<Button>Bottom Tooltip</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>Tooltip content</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+            <Tooltip.Root side="right" {...args}>
+                <Tooltip.Trigger render={<Button>Right Tooltip</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>Tooltip content</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
         </div>
     ),
 };
@@ -76,40 +66,30 @@ export const TestBed = () => {
                 border="1px solid"
             >
                 <HStack margin="$800" gap="$400" justifyContent="center" alignItems="center">
-                    <Tooltip.Provider>
-                        <Tooltip.Root open side="left">
-                            <Tooltip.Trigger render={<Button>Left Tooltip</Button>} />
-                            <Tooltip.Portal>
-                                <Tooltip.Positioner>
-                                    <Tooltip.Content>Tooltip content</Tooltip.Content>
-                                </Tooltip.Positioner>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                        <Tooltip.Root open side="top">
-                            <Tooltip.Trigger render={<Button>Top Tooltip</Button>} />
-                            <Tooltip.Portal>
-                                <Tooltip.Positioner>
-                                    <Tooltip.Content>Tooltip content</Tooltip.Content>
-                                </Tooltip.Positioner>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                        <Tooltip.Root open side="bottom">
-                            <Tooltip.Trigger render={<Button>Bottom Tooltip</Button>} />
-                            <Tooltip.Portal>
-                                <Tooltip.Positioner>
-                                    <Tooltip.Content>Tooltip content</Tooltip.Content>
-                                </Tooltip.Positioner>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                        <Tooltip.Root open side="right">
-                            <Tooltip.Trigger render={<Button>Right Tooltip</Button>} />
-                            <Tooltip.Portal>
-                                <Tooltip.Positioner>
-                                    <Tooltip.Content>Tooltip content</Tooltip.Content>
-                                </Tooltip.Positioner>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                    </Tooltip.Provider>
+                    <Tooltip.Root open side="left">
+                        <Tooltip.Trigger render={<Button>Left Tooltip</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>Tooltip content</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                    <Tooltip.Root open side="top">
+                        <Tooltip.Trigger render={<Button>Top Tooltip</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>Tooltip content</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                    <Tooltip.Root open side="bottom">
+                        <Tooltip.Trigger render={<Button>Bottom Tooltip</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>Tooltip content</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                    <Tooltip.Root open side="right">
+                        <Tooltip.Trigger render={<Button>Right Tooltip</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>Tooltip content</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
                 </HStack>
             </VStack>
 
@@ -121,32 +101,24 @@ export const TestBed = () => {
                 border="1px solid"
             >
                 <HStack margin="$800" gap="$400" justifyContent="center" alignItems="center">
-                    <Tooltip.Provider>
-                        <Tooltip.Root open align="start">
-                            <Tooltip.Trigger render={<Button>Align Start Tooltip</Button>} />
-                            <Tooltip.Portal>
-                                <Tooltip.Positioner>
-                                    <Tooltip.Content>Tooltip content</Tooltip.Content>
-                                </Tooltip.Positioner>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                        <Tooltip.Root open align="center">
-                            <Tooltip.Trigger render={<Button>Align Center Tooltip</Button>} />
-                            <Tooltip.Portal>
-                                <Tooltip.Positioner>
-                                    <Tooltip.Content>Tooltip content</Tooltip.Content>
-                                </Tooltip.Positioner>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                        <Tooltip.Root open align="end">
-                            <Tooltip.Trigger render={<Button>Align End Tooltip</Button>} />
-                            <Tooltip.Portal>
-                                <Tooltip.Positioner>
-                                    <Tooltip.Content>Tooltip content</Tooltip.Content>
-                                </Tooltip.Positioner>
-                            </Tooltip.Portal>
-                        </Tooltip.Root>
-                    </Tooltip.Provider>
+                    <Tooltip.Root open align="start">
+                        <Tooltip.Trigger render={<Button>Align Start Tooltip</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>Tooltip content</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                    <Tooltip.Root open align="center">
+                        <Tooltip.Trigger render={<Button>Align Center Tooltip</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>Tooltip content</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                    <Tooltip.Root open align="end">
+                        <Tooltip.Trigger render={<Button>Align End Tooltip</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>Tooltip content</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
                 </HStack>
             </VStack>
 
@@ -154,11 +126,9 @@ export const TestBed = () => {
                 <Tooltip.Root open side="left">
                     <Tooltip.Trigger render={<Button>Left Collision</Button>} />
                     <Tooltip.Portal>
-                        <Tooltip.Positioner>
-                            <Tooltip.Content>
-                                Should flip to right when hitting container boundary
-                            </Tooltip.Content>
-                        </Tooltip.Positioner>
+                        <Tooltip.Content>
+                            Should flip to right when hitting container boundary
+                        </Tooltip.Content>
                     </Tooltip.Portal>
                 </Tooltip.Root>
             </HStack>

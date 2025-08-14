@@ -9,10 +9,9 @@ export const content = [
         paddingInline: vars.size.space['100'],
         borderRadius: vars.size.borderRadius['300'],
         backgroundColor: vars.color.background.contrast,
+        border: `0.0625rem solid ${vars.color.border.normal}`,
         color: vars.color.white,
         boxShadow: vars.shadow.md,
-
-        border: `1px solid ${vars.color.border.normal}`,
     }),
 ];
 
