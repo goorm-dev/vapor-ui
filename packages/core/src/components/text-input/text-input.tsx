@@ -1,6 +1,5 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
 import { Primitive } from '@radix-ui/react-primitive';
@@ -8,6 +7,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { FieldVariants, LabelVariants, RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
@@ -36,10 +36,8 @@ const [TextInputProvider, useTextInputContext] = createContext<TextInputContextT
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
-interface TextInputRootProps
-    extends Omit<TextInputPrimitiveProps, keyof TextInputSharedProps>,
-        TextInputSharedProps {}
+type TextInputPrimitiveProps = VComponentProps<typeof Primitive.div>;
+interface TextInputRootProps extends TextInputPrimitiveProps, TextInputSharedProps {}
 
 const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
     ({ className, children, ...props }, ref) => {
@@ -78,7 +76,7 @@ Root.displayName = 'TextInput.Root';
  * TextInput.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof Primitive.label>;
+type PrimitiveLabelProps = VComponentProps<typeof Primitive.label>;
 interface TextInputLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, TextInputLabelProps>(
@@ -101,7 +99,7 @@ Label.displayName = 'TextInput.Label';
  * TextInput.Field
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveInputProps = ComponentPropsWithoutRef<typeof Primitive.input>;
+type PrimitiveInputProps = VComponentProps<typeof Primitive.input>;
 interface TextInputFieldProps extends Omit<PrimitiveInputProps, keyof TextInputSharedProps> {}
 
 const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(

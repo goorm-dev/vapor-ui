@@ -13,13 +13,13 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { ControlVariants, LabelVariants, RootVariants } from './radio-group.css';
 import * as styles from './radio-group.css';
 
-type RadioGroupRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
 type RadioGroupBaseProps = Pick<
-    RadioGroupRootPrimitiveProps,
+    ComponentPropsWithoutRef<typeof RadixRoot>,
     'name' | 'dir' | 'loop' | 'value' | 'onValueChange' | 'defaultValue' | 'required' | 'disabled'
 >;
 
@@ -37,9 +37,8 @@ const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupConte
  * RadioGroup.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface RadioGroupRootProps
-    extends Omit<RadioGroupRootPrimitiveProps, keyof RadioGroupBaseProps>,
-        RadioGroupSharedProps {}
+type RadioGroupRootPrimitiveProps = VComponentProps<typeof Primitive.div>;
+interface RadioGroupRootProps extends RadioGroupRootPrimitiveProps, RadioGroupSharedProps {}
 
 const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...props }, ref) => {
     const [sharedProps, _otherProps] = createSplitProps<RadioGroupBaseProps>()(props, [
@@ -83,7 +82,7 @@ Root.displayName = 'RadioGroup.Root';
  * RadioGroup.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioGroupItemPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
+type RadioGroupItemPrimitiveProps = VComponentProps<typeof Primitive.div>;
 type RadioGroupItemBaseProps = Pick<RadioGroupControlPrimitiveProps, 'value' | 'disabled'>;
 
 type RadioGroupItemVariants = ControlVariants & LabelVariants;
@@ -137,8 +136,7 @@ Item.displayName = 'RadioGroup.Item';
  * RadioGroup.Control
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioGroupControlPrimitiveProps = ComponentPropsWithoutRef<typeof RadixItem>;
-
+type RadioGroupControlPrimitiveProps = VComponentProps<typeof RadixItem>;
 interface RadioGroupControlProps
     extends Omit<RadioGroupControlPrimitiveProps, keyof RadioGroupItemSharedProps> {}
 
@@ -168,7 +166,7 @@ Control.displayName = 'RadioGroup.Control';
  * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof Primitive.label>;
+type PrimitiveLabelProps = VComponentProps<typeof Primitive.label>;
 interface RadioGroupLabelProps extends Omit<PrimitiveLabelProps, keyof RadioGroupItemSharedProps> {}
 
 const Label = forwardRef<HTMLLabelElement, RadioGroupLabelProps>(

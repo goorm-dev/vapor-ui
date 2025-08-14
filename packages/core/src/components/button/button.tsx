@@ -1,15 +1,15 @@
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
-type ButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Primitive.button>, 'color'>;
+type ButtonPrimitiveProps = VComponentProps<typeof Primitive.button>;
 interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {}
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(

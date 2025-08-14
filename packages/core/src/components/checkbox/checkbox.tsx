@@ -1,6 +1,5 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
 import type { CheckedState } from '@radix-ui/react-checkbox';
@@ -11,6 +10,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { ControlVariants, LabelVariants, RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
@@ -37,10 +37,8 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxContext>({
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveRootProps = ComponentPropsWithoutRef<typeof Primitive.div>;
-interface CheckboxRootProps
-    extends Omit<PrimitiveRootProps, keyof CheckboxSharedProps>,
-        CheckboxSharedProps {}
+type PrimitiveRootProps = VComponentProps<typeof Primitive.div>;
+interface CheckboxRootProps extends PrimitiveRootProps, CheckboxSharedProps {}
 
 const Root = forwardRef<HTMLDivElement, CheckboxRootProps>(({ className, ...props }, ref) => {
     const checkboxId = useId();
@@ -73,7 +71,7 @@ Root.displayName = 'Checkbox.Root';
  * Checkbox.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof Primitive.label>;
+type PrimitiveLabelProps = VComponentProps<typeof Primitive.label>;
 interface CheckboxLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, CheckboxLabelProps>(
@@ -95,7 +93,7 @@ const Label = forwardRef<HTMLLabelElement, CheckboxLabelProps>(
  * Checkbox.Control
  * -----------------------------------------------------------------------------------------------*/
 
-type ControlPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
+type ControlPrimitiveProps = VComponentProps<typeof RadixRoot>;
 interface CheckboxControlProps extends Omit<ControlPrimitiveProps, keyof CheckboxSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
@@ -146,7 +144,7 @@ Control.displayName = 'Checkbox.Control';
  * Icons
  * -----------------------------------------------------------------------------------------------*/
 
-interface IconProps extends ComponentPropsWithoutRef<'svg'> {}
+interface IconProps extends VComponentProps<'svg'> {}
 
 const CheckIcon = (props: IconProps) => {
     return (
