@@ -1,4 +1,4 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -8,28 +8,24 @@ import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
-const contentWidth = createVar({ inherits: false, syntax: '*' }, 'menu-content-width');
-const contentHeight = createVar({ inherits: false, syntax: '*' }, 'menu-content-height');
-
 export const content = layerStyle('components', {
     display: 'flex',
-
     flexDirection: 'column',
-    border: `0.0625rem solid ${vars.color.border.normal}`,
 
+    border: `0.0625rem solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.shadow.md,
 
     backgroundColor: vars.color.background.normal,
     padding: vars.size.space['050'],
-    width: '12.5rem',
-    minWidth: contentWidth,
+    minWidth: '12.5rem',
 
     overflowY: 'auto',
-    vars: {
-        [contentWidth]: 'var(--radix-dropdown-menu-trigger-width)',
-    },
+
+    ':focus-visible': { outline: 'none' },
 });
+
+export const subContents = content;
 
 export const item = recipe({
     base: [
@@ -69,27 +65,6 @@ export const separator = layerStyle('components', {
     marginBlock: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
     height: '0.0625rem',
-});
-
-export const subContents = layerStyle('components', {
-    display: 'flex',
-    flexDirection: 'column',
-
-    border: `0.0625rem solid ${vars.color.border.normal}`,
-    borderRadius: vars.size.borderRadius['300'],
-    boxShadow: vars.shadow.md,
-
-    backgroundColor: vars.color.background.normal,
-    padding: vars.size.space['050'],
-
-    minWidth: contentWidth,
-    maxHeight: contentHeight,
-    overflowY: 'auto',
-
-    vars: {
-        [contentWidth]: 'var(--radix-dropdown-menu-trigger-width)',
-        [contentHeight]: 'var(--radix-dropdown-menu-content-available-height)',
-    },
 });
 
 export const subTrigger = item;
