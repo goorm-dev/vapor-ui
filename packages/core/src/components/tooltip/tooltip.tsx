@@ -7,15 +7,13 @@ import clsx from 'clsx';
 import { Arrow } from '~/components/arrow';
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
-import type { OnlyPositionerProps } from '~/utils/positioner-props';
+import { type DefaultPositionerProps, defaultPositionerProps } from '~/utils/positioner-props';
 
 import * as styles from './tooltip.css';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type PositionerProps = OnlyPositionerProps<typeof BaseTooltip.Positioner>;
-
-type TooltipSharedProps = PositionerProps;
+type TooltipSharedProps = DefaultPositionerProps;
 type TooltipContext = TooltipSharedProps;
 
 const [TooltipProvider, useTooltipContext] = createContext<TooltipContext>({
@@ -32,7 +30,7 @@ type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Root>;
 interface TooltipRootProps extends RootPrimitiveProps, TooltipSharedProps {}
 
 const Root = (props: TooltipRootProps) => {
-    const [sharedProps, otherProps] = createSplitProps<PositionerProps>()(props, [
+    const [sharedProps, otherProps] = createSplitProps<DefaultPositionerProps>()(props, [
         'align',
         'alignOffset',
         'side',
@@ -90,7 +88,7 @@ const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
         return (
             <BaseTooltip.Positioner
                 sideOffset={sideOffset}
-                collisionAvoidance={{ align: 'none' }}
+                {...defaultPositionerProps}
                 {...context}
             >
                 <BaseTooltip.Popup ref={ref} className={clsx(styles.content, className)} {...props}>

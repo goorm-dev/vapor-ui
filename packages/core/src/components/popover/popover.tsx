@@ -6,13 +6,11 @@ import clsx from 'clsx';
 import { Arrow } from '~/components/arrow';
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
-import type { OnlyPositionerProps } from '~/utils/positioner-props';
+import { type DefaultPositionerProps, defaultPositionerProps } from '~/utils/positioner-props';
 
 import * as styles from './popover.css';
 
-type PositionerProps = OnlyPositionerProps<typeof BasePopover.Positioner>;
-
-type PopoverSharedProps = PositionerProps;
+type PopoverSharedProps = DefaultPositionerProps;
 type PopoverContext = PopoverSharedProps;
 
 const [PopoverProvider, usePopoverContext] = createContext<PopoverContext>({
@@ -29,7 +27,7 @@ type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Root>;
 interface PopoverRootProps extends RootPrimitiveProps, PopoverSharedProps {}
 
 const Root = (props: PopoverRootProps) => {
-    const [sharedProps, otherProps] = createSplitProps<PositionerProps>()(props, [
+    const [sharedProps, otherProps] = createSplitProps<DefaultPositionerProps>()(props, [
         'align',
         'alignOffset',
         'side',
@@ -87,7 +85,7 @@ const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
         return (
             <BasePopover.Positioner
                 sideOffset={sideOffset}
-                collisionAvoidance={{ align: 'none' }}
+                {...defaultPositionerProps}
                 {...context}
             >
                 <BasePopover.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
