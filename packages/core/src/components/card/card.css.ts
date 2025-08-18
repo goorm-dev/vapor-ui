@@ -12,9 +12,13 @@ export const root = layerStyle('components', {
 });
 
 export const header = layerStyle('components', {
-    borderBottom: `1px solid ${vars.color.border.normal}`,
-
     padding: `${vars.size.space[200]} ${vars.size.space[300]}`,
+
+    selectors: {
+        '&:not(:last-child)': {
+            borderBottom: `1px solid ${vars.color.border.normal}`,
+        },
+    },
 });
 
 export const body = layerStyle('components', {
@@ -22,7 +26,11 @@ export const body = layerStyle('components', {
 });
 
 export const footer = layerStyle('components', {
-    borderTop: `1px solid ${vars.color.border.normal}`,
-
     padding: `${vars.size.space[200]} ${vars.size.space[300]}`,
+
+    selectors: {
+        '&:not(:first-child)': {
+            borderTop: `1px solid ${vars.color.border.normal}`,
+        },
+    },
 });
