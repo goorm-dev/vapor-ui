@@ -1,4 +1,4 @@
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogComposition() {
     return (
@@ -13,8 +13,7 @@ export default function DialogComposition() {
                 </Dialog.Header>
                 <Dialog.Body>
                     <Dialog.Description>
-                        이 작업을 진행하시겠습니까? 
-                        이 작업은 되돌릴 수 없습니다.
+                        이 작업을 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.
                     </Dialog.Description>
                 </Dialog.Body>
                 <Dialog.Footer>
@@ -22,7 +21,7 @@ export default function DialogComposition() {
                         <Button variant="ghost">취소</Button>
                     </Dialog.Close>
                     <Dialog.Close asChild>
-                        <Button variant="danger">삭제</Button>
+                        <Button color="danger">삭제</Button>
                     </Dialog.Close>
                 </Dialog.Footer>
             </Dialog.CombinedContent>

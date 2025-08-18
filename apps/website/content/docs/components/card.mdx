@@ -19,7 +19,27 @@ export default function DefaultCard() {
 ```
 </Demo>
 
-## Property
+## Examples
+
+### Simple Usage
+
+기본적인 Card 사용법입니다.
+
+<Demo name="card-basic">
+```tsx
+import { Card } from '@vapor-ui/core';
+
+export default function CardBasic() {
+    return (
+        <Card.Root>
+            <Card.Header>Simple Card</Card.Header>
+            <Card.Body>This is a simple card with header and body content.</Card.Body>
+            <Card.Footer>Footer content</Card.Footer>
+        </Card.Root>
+    );
+}
+```
+</Demo>
 
 ### Layout
 
