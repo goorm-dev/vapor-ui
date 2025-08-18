@@ -1,11 +1,11 @@
-import type { ComponentPropsWithoutRef, ElementType } from 'react';
+// FIXME: Request a public API for useAnchorPositioning so that we can import it without referencing node_modules directly.
+import type { useAnchorPositioning } from 'node_modules/@base-ui-components/react/esm/utils/useAnchorPositioning';
 
-export type Side = 'bottom' | 'left' | 'right' | 'top';
-export type Align = 'start' | 'end' | 'center';
+export type DefaultPositionerProps = useAnchorPositioning.SharedParameters;
 
-type PrimitiveProps = ComponentPropsWithoutRef<'div'>;
+export type Side = DefaultPositionerProps['side'];
+export type Align = DefaultPositionerProps['align'];
 
-export type OnlyPositionerProps<T extends ElementType> = Omit<
-    ComponentPropsWithoutRef<T>,
-    keyof PrimitiveProps | 'render'
-> & { side?: Side; align?: Align };
+export const defaultPositionerProps: DefaultPositionerProps = {
+    collisionAvoidance: { align: 'none' },
+};
