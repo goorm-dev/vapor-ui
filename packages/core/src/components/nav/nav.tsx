@@ -1,6 +1,5 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import {
@@ -13,6 +12,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { ItemVariants, LinkVariants, ListVariants } from './nav.css';
 import * as styles from './nav.css';
@@ -29,7 +29,7 @@ const [NavProvider, useNavContext] = createContext<NavContextType>({
  * -----------------------------------------------------------------------------------------------*/
 
 type NavVariants = ListVariants & ItemVariants & LinkVariants;
-type NavPrimitiveProps = ComponentPropsWithoutRef<typeof RadixRoot>;
+type NavPrimitiveProps = VComponentProps<typeof RadixRoot>;
 
 interface NavRootProps extends NavPrimitiveProps, NavVariants {
     'aria-label': string;
@@ -64,7 +64,7 @@ Root.displayName = 'Nav.Root';
  * Nav.List
  * -----------------------------------------------------------------------------------------------*/
 
-type ListPrimitiveProps = ComponentPropsWithoutRef<typeof RadixList>;
+type ListPrimitiveProps = VComponentProps<typeof RadixList>;
 interface NavMenuList extends ListPrimitiveProps {}
 
 const List = forwardRef<HTMLUListElement, NavMenuList>(({ className, ...props }, ref) => {
@@ -84,7 +84,7 @@ List.displayName = 'Nav.List';
  * Nav.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemPrimitiveProps = ComponentPropsWithoutRef<typeof RadixItem>;
+type ItemPrimitiveProps = VComponentProps<typeof RadixItem>;
 interface NavItemProps extends ItemPrimitiveProps {}
 
 const Item = forwardRef<HTMLLIElement, NavItemProps>(({ className, ...props }, ref) => {
@@ -98,7 +98,7 @@ Item.displayName = 'Nav.Item';
  * Nav.Link
  * -----------------------------------------------------------------------------------------------*/
 
-type LinkPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof RadixLink>, 'active'>;
+type LinkPrimitiveProps = Omit<VComponentProps<typeof RadixLink>, 'active'>;
 interface NavLinkProps extends LinkPrimitiveProps {
     selected?: boolean;
     disabled?: boolean;
@@ -128,7 +128,7 @@ Link.displayName = 'Nav.Link';
  * Nav.LinkItem
  * -----------------------------------------------------------------------------------------------*/
 
-interface NavLinkItemProps extends ComponentPropsWithoutRef<typeof Link> {}
+interface NavLinkItemProps extends VComponentProps<typeof Link> {}
 
 const LinkItem = forwardRef<HTMLAnchorElement, NavLinkItemProps>((props, ref) => {
     return (
