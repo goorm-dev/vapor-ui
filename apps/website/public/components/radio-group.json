@@ -2,73 +2,73 @@
     "props": [
         {
             "prop": "name",
-            "type": "string | undefined",
+            "type": ["string", "undefined"],
             "default": null,
             "description": "HTML 폼 제출 시 그룹을 구분하는 name 속성입니다."
         },
         {
             "prop": "value",
-            "type": "string | undefined",
+            "type": ["string", "undefined"],
             "default": null,
             "description": "제어형 모드에서 현재 선택된 항목의 value입니다."
         },
         {
             "prop": "defaultValue",
-            "type": "string | undefined",
+            "type": ["string", "undefined"],
             "default": null,
             "description": "언컨트롤드 모드에서 초기 선택 값을 지정합니다."
         },
         {
             "prop": "onValueChange",
-            "type": "(value: string) => void",
+            "type": ["(value: string) => void"],
             "default": null,
             "description": "선택 값이 변경될 때 호출되는 콜백 함수입니다."
         },
         {
             "prop": "required",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "폼 유효성 검증을 위해 반드시 값을 선택해야 함을 명시합니다."
         },
         {
             "prop": "disabled",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "라디오 그룹 내 모든 항목을 비활성화합니다."
         },
         {
             "prop": "dir",
-            "type": "ltr | rtl | undefined",
+            "type": ["ltr", "rtl", "undefined"],
             "default": null,
             "description": "텍스트 방향을 설정합니다."
         },
         {
             "prop": "loop",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "키보드 탐색 시 마지막 항목 이후 첫 항목으로 순환하도록 설정합니다."
         },
         {
             "prop": "orientation",
-            "type": "horizontal | vertical | undefined",
+            "type": ["horizontal", "vertical", "undefined"],
             "default": "vertical",
             "description": "Item 배치를 가로 또는 세로 방향으로 설정합니다."
         },
         {
             "prop": "size",
-            "type": "md | lg",
+            "type": ["sm", "md", "lg"],
             "default": "md",
             "description": "RadioGroup.Item 간의 간격 및 Control 크기를 조정합니다."
         },
         {
             "prop": "invalid",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "폼 유효성 검증 실패 등의 상태를 나타냅니다."
         },
         {
             "prop": "visuallyHidden",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "Item의 레이블을 시각적으로 숨기지만 스크린리더에는 읽히도록 합니다."
         }
@@ -76,31 +76,31 @@
     "itemProps": [
         {
             "prop": "value",
-            "type": "string",
+            "type": ["string"],
             "default": null,
             "description": "RadioGroup.Item을 식별하는 고유 값입니다."
         },
         {
             "prop": "disabled",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "해당 항목만 비활성화합니다."
         },
         {
             "prop": "invalid",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "해당 항목 단독으로 유효성 오류 상태를 표시합니다."
         },
         {
             "prop": "size",
-            "type": "md | lg",
+            "type": ["sm", "md", "lg"],
             "default": "md",
             "description": "해당 항목의 Control 크기를 조정합니다."
         },
         {
             "prop": "visuallyHidden",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "레이블을 시각적으로 숨기지만 스크린리더에는 읽히도록 합니다."
         }
@@ -108,7 +108,7 @@
     "controlProps": [
         {
             "prop": "id",
-            "type": "string | undefined",
+            "type": ["string", "undefined"],
             "default": null,
             "description": "Control 요소의 id를 지정합니다. 생략하면 RadioGroup.Item 내부에서 자동으로 생성된 id가 사용됩니다."
         }
@@ -116,13 +116,13 @@
     "labelProps": [
         {
             "prop": "htmlFor",
-            "type": "string | undefined",
+            "type": ["string", "undefined"],
             "default": null,
             "description": "레이블이 연결될 Control 요소의 id입니다."
         },
         {
             "prop": "children",
-            "type": "React.ReactNode",
+            "type": ["React.ReactNode"],
             "default": null,
             "description": "레이블에 표시할 텍스트나 노드입니다."
         }

@@ -18,29 +18,5 @@
             "default": "square",
             "description": "배지의 모양을 설정합니다. square는 둥근 사각형, pill은 완전히 둥근 알약 형태입니다."
         }
-    ],
-    "accessibility": [
-        {
-            "headingDescription": "Badge WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.",
-            "sections": [
-                {
-                    "title": "컴포넌트 내부적으로 준수되고 있는 접근성 기능을 명시합니다.",
-                    "headerList": {
-                        "accessibility": "Accessibility",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "WCAG",
-                            "descriptions": [
-                                "WCAG 2.x criterion 1.4.3 (level AA)를 준수하고 있습니다."
-                            ],
-                            "exampleCode": "",
-                            "badgeColor": "primary"
-                        }
-                    ]
-                }
-            ]
-        }
     ]
 }

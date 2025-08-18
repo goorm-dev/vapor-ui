@@ -70,55 +70,5 @@
             "default": null,
             "description": "레이블에 표시할 텍스트나 노드입니다."
         }
-    ],
-    "accessibility": [
-        {
-            "headingDescription": "Checkbox WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다. Vapor Checkbox는 Radix 기능을 기반으로 구축되어 일부 웹 접근성은 Radix에서 제공하고 있습니다.",
-            "sections": [
-                {
-                    "title": "개발 시 준수해야 할 내용을 명시합니다.",
-                    "headerList": {
-                        "props": "Props",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "label",
-                            "descriptions": [
-                                "각 체크박스는 시각적으로도 명확한 레이블(Label)과 연관되어야 합니다.",
-                                "Label 컴포넌트를 사용하거나 `htmlFor` 속성을 통해 컨트롤과 연결해야 합니다."
-                            ],
-                            "exampleCode": "<Checkbox.Root>\n  <Checkbox.Control id=\"terms\" />\n  <Checkbox.Label htmlFor=\"terms\">이용약관에 동의</Checkbox.Label>\n</Checkbox.Root>",
-                            "badgeColor": "primary"
-                        },
-                        {
-                            "itemKey": "indeterminate",
-                            "descriptions": [
-                                "indeterminate 상태는 혼합(mixed) 상태를 의미하며, 보조 기술에 올바르게 전달됩니다.",
-                                "부분 선택을 나타낼 때 이 상태를 사용하세요."
-                            ],
-                            "exampleCode": "<Checkbox.Root indeterminate>\n  <Checkbox.Control />\n  <Checkbox.Label>부분 선택</Checkbox.Label>\n</Checkbox.Root>",
-                            "badgeColor": "primary"
-                        }
-                    ]
-                },
-                {
-                    "title": "Keyboard Interactions",
-                    "headerList": {
-                        "interaction": "Interaction",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "Space",
-                            "descriptions": [
-                                "체크박스에 포커스가 있을 때 space 키를 누르면 체크/해제됩니다."
-                            ],
-                            "badgeColor": "hint"
-                        }
-                    ]
-                }
-            ]
-        }
     ]
 }

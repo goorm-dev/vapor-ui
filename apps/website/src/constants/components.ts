@@ -1,18 +1,16 @@
-import {
-    avatarData,
-    badgeData,
-    buttonData,
-    calloutData,
-    cardData,
-    checkboxData,
-    dialogData,
-    iconButtonData,
-    navData,
-    radioGroupData,
-    switchData,
-    textData,
-    textInputData,
-} from './accessibility';
+import avatarData from '../../public/components/avatar.json';
+import badgeData from '../../public/components/badge.json';
+import buttonData from '../../public/components/button.json';
+import calloutData from '../../public/components/callout.json';
+import cardData from '../../public/components/card.json';
+import checkboxData from '../../public/components/checkbox.json';
+import dialogData from '../../public/components/dialog.json';
+import iconButtonData from '../../public/components/icon-button.json';
+import navData from '../../public/components/nav.json';
+import radioGroupData from '../../public/components/radio-group.json';
+import switchData from '../../public/components/switch.json';
+import textInputData from '../../public/components/text-input.json';
+import textData from '../../public/components/text.json';
 
 // Map of component key -> entire JSON documentation object
 export const ComponentDocsMap: Record<string, Record<string, unknown>> = {

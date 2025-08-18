@@ -2,43 +2,43 @@
     "props": [
         {
             "prop": "closeOnClickOverlay",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": true,
             "description": "Overlay(배경)를 클릭했을 때 다이얼로그가 닫히도록 할지 여부를 결정합니다. false로 설정하면 배경 클릭 시에도 닫히지 않습니다."
         },
         {
             "prop": "closeOnEscape",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": true,
             "description": "Escape 키 입력 시 다이얼로그를 닫을지 여부입니다. false로 설정하면 ESC 키를 눌러도 닫히지 않습니다."
         },
         {
             "prop": "size",
-            "type": "md | lg | xl | undefined",
+            "type": ["md", "lg", "xl", "undefined"],
             "default": "md",
             "description": "다이얼로그 Content 의 가로 폭을 제어합니다. Root 에 설정하면 모든 Content 에 기본값으로 전달됩니다."
         },
         {
             "prop": "open",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": null,
             "description": "제어 컴포넌트로서 다이얼로그의 열림 상태를 지정합니다. true 이면 항상 열려 있고, false 이면 닫힌 상태로 유지됩니다."
         },
         {
             "prop": "defaultOpen",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": false,
             "description": "언컨트롤드 모드에서 다이얼로그의 초기 열림 상태를 설정합니다."
         },
         {
             "prop": "onOpenChange",
-            "type": "(open: boolean) => void | undefined",
+            "type": ["(open: boolean) => void", "undefined"],
             "default": null,
             "description": "open 값이 변경될 때 호출되는 콜백 함수입니다."
         },
         {
             "prop": "modal",
-            "type": "boolean | undefined",
+            "type": ["boolean", "undefined"],
             "default": true,
             "description": "true 일 때 모달(dialog) 모드로 포커스가 다이얼로그 바깥으로 이동하지 않습니다. false 로 설정하면 non-modal 상태로 동작합니다."
         }
@@ -46,7 +46,7 @@
     "triggerProps": [
         {
             "prop": "children",
-            "type": "React.ReactNode",
+            "type": ["React.ReactNode"],
             "default": null,
             "description": "다이얼로그를 여는 트리거(버튼) 요소입니다."
         }
@@ -54,71 +54,15 @@
     "contentProps": [
         {
             "prop": "onPointerDownOutside",
-            "type": "PointerDownOutsideEvent | undefined",
+            "type": ["PointerDownOutsideEvent", "undefined"],
             "default": null,
             "description": "다이얼로그 외부를 클릭했을 때 호출되는 콜백 함수입니다."
         },
         {
             "prop": "onEscapeKeyDown",
-            "type": "KeyboardEvent | undefined",
+            "type": ["KeyboardEvent", "undefined"],
             "default": null,
             "description": "Escape 키를 눌렀을 때 호출되는 콜백 함수입니다."
-        }
-    ],
-    "accessibility": [
-        {
-            "headingDescription": "Dialog 는 WAI-ARIA Authoring Practices 의 Modal Dialog 패턴을 준수합니다.",
-            "sections": [
-                {
-                    "title": "개발 시 준수해야 할 내용을 명시합니다.",
-                    "headerList": {
-                        "props": "Props",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "aria-labelledby / aria-describedby",
-                            "descriptions": [
-                                "Dialog.Title 컴포넌트는 자동으로 role=dialog 요소에 aria-labelledby 를 연결합니다.",
-                                "Dialog.Description 사용 시 aria-describedby 로 연결되어 스크린리더가 내용을 읽을 수 있습니다."
-                            ],
-                            "exampleCode": "<Dialog.Root>\n  <Dialog.Trigger>Open</Dialog.Trigger>\n  <Dialog.CombinedContent>\n    <Dialog.Header>\n      <Dialog.Title>제목</Dialog.Title>\n    </Dialog.Header>\n    <Dialog.Body>\n      <Dialog.Description>세부 설명</Dialog.Description>\n    </Dialog.Body>\n  </Dialog.CombinedContent>\n</Dialog.Root>",
-                            "badgeColor": "primary"
-                        },
-                        {
-                            "itemKey": "Focus Management",
-                            "descriptions": [
-                                "다이얼로그가 열리면 최초 포커스는 다이얼로그 컨텐츠로 이동하고, 닫히면 트리거로 되돌아갑니다."
-                            ],
-                            "exampleCode": "// 기능은 Radix Dialog 에 의해 자동 처리됩니다.",
-                            "badgeColor": "hint"
-                        }
-                    ]
-                },
-                {
-                    "title": "Keyboard Interactions",
-                    "headerList": {
-                        "interaction": "Interaction",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "Escape",
-                            "descriptions": [
-                                "포커스가 다이얼로그 안에 있을 때 ESC 키를 누르면 다이얼로그가 닫힙니다. (closeOnEscape=false 인 경우 제외)"
-                            ],
-                            "badgeColor": "hint"
-                        },
-                        {
-                            "itemKey": "Tab",
-                            "descriptions": [
-                                "다이얼로그 내부 요소 사이를 순환합니다. 다이얼로그 밖으로 포커스가 벗어나지 않습니다."
-                            ],
-                            "badgeColor": "hint"
-                        }
-                    ]
-                }
-            ]
         }
     ]
 }
