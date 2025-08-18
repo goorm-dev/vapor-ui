@@ -43,12 +43,38 @@
             "description": "true 일 때 모달(dialog) 모드로 포커스가 다이얼로그 바깥으로 이동하지 않습니다. false 로 설정하면 non-modal 상태로 동작합니다."
         }
     ],
-    "triggerProps": [
+    "portalProps": [
         {
-            "prop": "children",
-            "type": ["React.ReactNode"],
+            "prop": "container",
+            "type": ["HTMLElement", "undefined"],
             "default": null,
-            "description": "다이얼로그를 여는 트리거(버튼) 요소입니다."
+            "description": "다이얼로그가 렌더링될 DOM 컨테이너를 지정합니다. 기본적으로 document.body에 렌더링됩니다."
+        },
+        {
+            "prop": "forceMount",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "다이얼로그가 닫혀 있어도 강제로 DOM에 마운트할지 여부입니다. 애니메이션 등의 이유로 필요할 때 사용합니다."
+        }
+    ],
+    "overlayProps": [
+        {
+            "prop": "forceMount",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "다이얼로그가 닫혀 있어도 오버레이를 강제로 DOM에 마운트할지 여부입니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "오버레이 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "style",
+            "type": ["React.CSSProperties", "undefined"],
+            "default": null,
+            "description": "오버레이 요소에 적용할 인라인 스타일입니다."
         }
     ],
     "contentProps": [
@@ -63,6 +89,250 @@
             "type": ["KeyboardEvent", "undefined"],
             "default": null,
             "description": "Escape 키를 눌렀을 때 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "onOpenAutoFocus",
+            "type": ["Event", "undefined"],
+            "default": null,
+            "description": "다이얼로그가 열릴 때 자동 포커스가 적용되기 전에 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "onCloseAutoFocus",
+            "type": ["Event", "undefined"],
+            "default": null,
+            "description": "다이얼로그가 닫힐 때 자동 포커스가 적용되기 전에 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "forceMount",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "다이얼로그가 닫혀 있어도 콘텐츠를 강제로 DOM에 마운트할지 여부입니다."
+        }
+    ],
+    "combinedContentProps": [
+        {
+            "prop": "onPointerDownOutside",
+            "type": ["PointerDownOutsideEvent", "undefined"],
+            "default": null,
+            "description": "다이얼로그 외부를 클릭했을 때 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "onEscapeKeyDown",
+            "type": ["KeyboardEvent", "undefined"],
+            "default": null,
+            "description": "Escape 키를 눌렀을 때 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "onOpenAutoFocus",
+            "type": ["Event", "undefined"],
+            "default": null,
+            "description": "다이얼로그가 열릴 때 자동 포커스가 적용되기 전에 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "onCloseAutoFocus",
+            "type": ["Event", "undefined"],
+            "default": null,
+            "description": "다이얼로그가 닫힐 때 자동 포커스가 적용되기 전에 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "forceMount",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "다이얼로그가 닫혀 있어도 콘텐츠를 강제로 DOM에 마운트할지 여부입니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "CombinedContent 요소에 적용할 추가 CSS 클래스입니다."  
+        },
+        {
+            "prop": "style",
+            "type": ["React.CSSProperties", "undefined"],
+            "default": null,
+            "description": "CombinedContent 요소에 적용할 인라인 스타일입니다."
+        }
+    ],
+    "triggerProps": [
+        {
+            "prop": "asChild",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "true일 때 자식 요소를 트리거로 사용합니다. 기본 버튼 대신 커스텀 요소를 트리거로 만들 때 사용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": null,
+            "description": "다이얼로그를 여는 트리거 요소의 내용입니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "트리거 버튼에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "트리거 버튼을 비활성화할지 여부입니다."
+        }
+    ],
+    "closeProps": [
+        {
+            "prop": "asChild",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "true일 때 자식 요소를 닫기 버튼으로 사용합니다. 기본 버튼 대신 커스텀 요소를 닫기 버튼으로 만들 때 사용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": null,
+            "description": "다이얼로그를 닫는 버튼의 내용입니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "닫기 버튼에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "aria-label",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "닫기 버튼의 접근성 레이블입니다. 스크린 리더 사용자를 위해 권장됩니다."
+        }
+    ],
+    "titleProps": [
+        {
+            "prop": "asChild",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "true일 때 자식 요소를 제목으로 사용합니다. 커스텀 제목 요소를 만들 때 사용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": null,
+            "description": "다이얼로그 제목의 내용입니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "제목 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "id",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "제목 요소의 고유 ID입니다. 자동으로 생성되지만 커스텀 ID가 필요한 경우 지정할 수 있습니다."
+        }
+    ],
+    "descriptionProps": [
+        {
+            "prop": "asChild",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "true일 때 자식 요소를 설명으로 사용합니다. 커스텀 설명 요소를 만들 때 사용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": null,
+            "description": "다이얼로그 설명의 내용입니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "설명 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "id",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "설명 요소의 고유 ID입니다. 자동으로 생성되지만 커스텀 ID가 필요한 경우 지정할 수 있습니다."
+        }
+    ],
+    "headerProps": [
+        {
+            "prop": "asChild",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "true일 때 자식 요소를 헤더로 사용합니다. 커스텀 헤더 요소를 만들 때 사용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": null,
+            "description": "다이얼로그 헤더의 내용입니다. 일반적으로 Title과 Close 버튼을 포함합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "헤더 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "style",
+            "type": ["React.CSSProperties", "undefined"],
+            "default": null,
+            "description": "헤더 요소에 적용할 인라인 스타일입니다."
+        }
+    ],
+    "bodyProps": [
+        {
+            "prop": "asChild",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "true일 때 자식 요소를 바디로 사용합니다. 커스텀 바디 요소를 만들 때 사용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": null,
+            "description": "다이얼로그 바디의 내용입니다. 주요 콘텐츠와 Description을 포함합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "바디 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "style",
+            "type": ["React.CSSProperties", "undefined"],
+            "default": null,
+            "description": "바디 요소에 적용할 인라인 스타일입니다."
+        }
+    ],
+    "footerProps": [
+        {
+            "prop": "asChild",
+            "type": ["boolean", "undefined"],
+            "default": false,
+            "description": "true일 때 자식 요소를 푸터로 사용합니다. 커스텀 푸터 요소를 만들 때 사용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": null,
+            "description": "다이얼로그 푸터의 내용입니다. 일반적으로 액션 버튼들을 포함합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "default": null,
+            "description": "푸터 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "style",
+            "type": ["React.CSSProperties", "undefined"],
+            "default": null,
+            "description": "푸터 요소에 적용할 인라인 스타일입니다."
         }
     ]
 }

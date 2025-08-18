@@ -313,19 +313,73 @@ export default function DialogVariants() {
 
 ### Dialog.Root
 
-Dialog의 메인 컨테이너 컴포넌트입니다. 다이얼로그의 크기, 모달 동작, 열림/닫힘 상태 등의 속성을 제공하며, 모든 하위 컴포넌트에서 공통으로 사용할 수 있도록 컨텍스트를 제공합니다.
+Dialog의 최상위 Container입니다. Size, Modal 동작, Open/Close 상태를 관리합니다.
 
 <ComponentPropsTable file="dialog" section="props" />
 
-### Dialog.Trigger
+### Dialog.Portal
 
-Dialog를 열기 위한 트리거 컴포넌트입니다. 일반적으로 버튼으로 사용되며, asChild prop을 통해 다른 컴포넌트를 트리거로 사용할 수 있습니다.
+Dialog를 document.body나 지정된 Container에 Rendering합니다.
 
-<ComponentPropsTable file="dialog" section="triggerProps" />
+<ComponentPropsTable file="dialog" section="portalProps" />
+
+### Dialog.Overlay
+
+Dialog 배경을 어둡게 처리하고 외부 Click을 감지합니다.
+
+<ComponentPropsTable file="dialog" section="overlayProps" />
 
 ### Dialog.Content
 
-Dialog의 콘텐츠 컨테이너 컴포넌트입니다. 다이얼로그 외부 클릭이나 키보드 이벤트 등의 세부적인 동작을 제어할 수 있습니다.
+Dialog의 기본 Content 영역입니다. Portal과 Overlay를 별도로 구성해야 합니다.
 
 <ComponentPropsTable file="dialog" section="contentProps" />
+
+### Dialog.CombinedContent
+
+Portal, Overlay, Content가 통합된 편의 Component입니다. 대부분의 경우 이걸 사용하세요.
+
+<ComponentPropsTable file="dialog" section="combinedContentProps" />
+
+### Dialog.Trigger
+
+Dialog를 여는 Button입니다. asChild로 Custom Trigger를 만들 수 있습니다.
+
+<ComponentPropsTable file="dialog" section="triggerProps" />
+
+### Dialog.Close
+
+Dialog를 닫는 Button입니다. 어디든 배치 가능하며, asChild로 Custom 요소도 사용 가능합니다.
+
+<ComponentPropsTable file="dialog" section="closeProps" />
+
+### Dialog.Title
+
+Dialog Title입니다. Accessibility를 위해 필수로 포함해야 합니다.
+
+<ComponentPropsTable file="dialog" section="titleProps" />
+
+### Dialog.Description
+
+Dialog 설명 Text입니다. Screen Reader 사용자를 위해 추가하는 것을 권장합니다.
+
+<ComponentPropsTable file="dialog" section="descriptionProps" />
+
+### Dialog.Header
+
+Dialog 상단 영역입니다. 보통 Title과 Close Button을 배치합니다.
+
+<ComponentPropsTable file="dialog" section="headerProps" />
+
+### Dialog.Body
+
+Dialog 중앙 Content 영역입니다. Description과 주요 내용을 배치합니다.
+
+<ComponentPropsTable file="dialog" section="bodyProps" />
+
+### Dialog.Footer
+
+Dialog 하단 영역입니다. 확인, 취소 등의 Action Button을 배치합니다.
+
+<ComponentPropsTable file="dialog" section="footerProps" />
 
