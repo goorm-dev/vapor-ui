@@ -199,21 +199,43 @@ const GroupLabel = forwardRef<HTMLDivElement, MenuGroupLabelProps>(
  * Menu.SubmenuRoot
  * -----------------------------------------------------------------------------------------------*/
 
-type SubmenuContext = {
+type SubmenuContext = PositionerProps & {
     triggerRef?: RefObject<HTMLElement>;
     disabled?: boolean;
 };
 
-const [SubmenuProvider, useSubmenuContext] = createContext<SubmenuContext>({});
+const [SubmenuProvider, useSubmenuContext] = createContext<SubmenuContext>();
 
 type SubmenuRootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.SubmenuRoot>;
-interface MenuSubmenuRootProps extends SubmenuRootPrimitiveProps {}
+interface MenuSubmenuRootProps extends SubmenuRootPrimitiveProps, PositionerProps {}
 
-const SubmenuRoot = ({ closeParentOnEsc = false, disabled, ...props }: MenuSubmenuRootProps) => {
+const SubmenuRoot = ({
+    closeParentOnEsc = false,
+    disabled: disabledProp,
+    ...props
+}: MenuSubmenuRootProps) => {
     const triggerRef = useRef<HTMLElement>(null);
 
+    const { disabled: disabledRoot } = useMenuContext();
+    const disabled = disabledProp || disabledRoot;
+
+    const [positionerProps] = createSplitProps<PositionerProps>()(props, [
+        'align',
+        'alignOffset',
+        'side',
+        'sideOffset',
+        'anchor',
+        'arrowPadding',
+        'collisionAvoidance',
+        'collisionBoundary',
+        'collisionPadding',
+        'positionMethod',
+        'sticky',
+        'trackAnchor',
+    ]);
+
     return (
-        <SubmenuProvider value={{ triggerRef, disabled }}>
+        <SubmenuProvider value={{ triggerRef, disabled, ...positionerProps }}>
             <BaseMenu.SubmenuRoot
                 disabled={disabled}
                 closeParentOnEsc={closeParentOnEsc}
@@ -223,31 +245,6 @@ const SubmenuRoot = ({ closeParentOnEsc = false, disabled, ...props }: MenuSubme
     );
 };
 SubmenuRoot.displayName = 'Menu.SubmenuRoot';
-
-/* -------------------------------------------------------------------------------------------------
- * Menu.SubmenuContent
- * -----------------------------------------------------------------------------------------------*/
-
-type SubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
-interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {}
-
-const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
-    ({ className, ...props }, ref) => {
-        const { triggerRef } = useSubmenuContext();
-
-        return (
-            <BaseMenu.Positioner>
-                <BaseMenu.Popup
-                    ref={ref}
-                    finalFocus={triggerRef}
-                    className={clsx(styles.subContents, className)}
-                    {...props}
-                />
-            </BaseMenu.Positioner>
-        );
-    },
-);
-SubmenuContent.displayName = 'Menu.SubmenuContent';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.SubmenuTriggerItem
@@ -264,7 +261,6 @@ const SubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItemProp
         return (
             <BaseMenu.SubmenuTrigger
                 ref={composedRef}
-                // TODO: adjust Submenu disabled
                 className={clsx(styles.subTrigger({ disabled }), className)}
                 {...props}
             >
@@ -276,6 +272,45 @@ const SubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItemProp
     },
 );
 SubmenuTriggerItem.displayName = 'Menu.SubmenuTriggerItem';
+
+/* -------------------------------------------------------------------------------------------------
+ * Menu.SubmenuContent
+ * -----------------------------------------------------------------------------------------------*/
+
+type SubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
+interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {}
+
+const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
+    ({ className, ...props }, ref) => {
+        const { triggerRef, ...context } = useSubmenuContext();
+        const [positionerProps] = createSplitProps<PositionerProps>()(context, [
+            'align',
+            'alignOffset',
+            'side',
+            'sideOffset',
+            'anchor',
+            'arrowPadding',
+            'collisionAvoidance',
+            'collisionBoundary',
+            'collisionPadding',
+            'positionMethod',
+            'sticky',
+            'trackAnchor',
+        ]);
+
+        return (
+            <BaseMenu.Positioner {...positionerProps}>
+                <BaseMenu.Popup
+                    ref={ref}
+                    finalFocus={triggerRef}
+                    className={clsx(styles.subContents, className)}
+                    {...props}
+                />
+            </BaseMenu.Positioner>
+        );
+    },
+);
+SubmenuContent.displayName = 'Menu.SubmenuContent';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Checkbox
