@@ -3,21 +3,21 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputStates() {
     return (
         <div className="space-y-4">
-            <TextInput.Root>
+            <TextInput.Root placeholder="Default state">
                 <TextInput.Label>Default</TextInput.Label>
-                <TextInput.Field placeholder="Default state" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root disabled>
+            <TextInput.Root disabled placeholder="Disabled state">
                 <TextInput.Label>Disabled</TextInput.Label>
-                <TextInput.Field placeholder="Disabled state" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root invalid>
+            <TextInput.Root invalid placeholder="Invalid state">
                 <TextInput.Label>Invalid</TextInput.Label>
-                <TextInput.Field placeholder="Invalid state" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root readOnly>
+            <TextInput.Root readOnly value="Read only value">
                 <TextInput.Label>Read Only</TextInput.Label>
-                <TextInput.Field value="Read only value" />
+                <TextInput.Field />
             </TextInput.Root>
         </div>
     );

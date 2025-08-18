@@ -32,21 +32,21 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputSize() {
     return (
         <div className="space-y-4">
-            <TextInput.Root size="sm">
+            <TextInput.Root size="sm" placeholder="Small size">
                 <TextInput.Label>Small</TextInput.Label>
-                <TextInput.Field placeholder="Small size" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root size="md">
+            <TextInput.Root size="md" placeholder="Medium size">
                 <TextInput.Label>Medium</TextInput.Label>
-                <TextInput.Field placeholder="Medium size" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root size="lg">
+            <TextInput.Root size="lg" placeholder="Large size">
                 <TextInput.Label>Large</TextInput.Label>
-                <TextInput.Field placeholder="Large size" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root size="xl">
+            <TextInput.Root size="xl" placeholder="Extra large size">
                 <TextInput.Label>Extra Large</TextInput.Label>
-                <TextInput.Field placeholder="Extra large size" />
+                <TextInput.Field />
             </TextInput.Root>
         </div>
     );
@@ -65,22 +65,23 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputType() {
     return (
         <div className="space-y-4">
-            <TextInput.Root type="text">
+            <TextInput.Root type="text" placeholder="Enter text">
                 <TextInput.Label>Text</TextInput.Label>
-                <TextInput.Field placeholder="Enter text" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root type="email">
+            <TextInput.Root type="email" placeholder="Enter email">
                 <TextInput.Label>Email</TextInput.Label>
-                <TextInput.Field placeholder="Enter email" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root type="password">
+            <TextInput.Root type="password" placeholder="Enter password">
                 <TextInput.Label>Password</TextInput.Label>
-                <TextInput.Field placeholder="Enter password" />
+                <TextInput.Field />
             </TextInput.Root>
         </div>
     );
 }
-```
+```;
+
 </Demo>
 
 ## Examples
@@ -96,21 +97,21 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputStates() {
     return (
         <div className="space-y-4">
-            <TextInput.Root>
+            <TextInput.Root placeholder="Default state">
                 <TextInput.Label>Default</TextInput.Label>
-                <TextInput.Field placeholder="Default state" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root disabled>
+            <TextInput.Root disabled placeholder="Disabled state">
                 <TextInput.Label>Disabled</TextInput.Label>
-                <TextInput.Field placeholder="Disabled state" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root invalid>
+            <TextInput.Root invalid placeholder="Invalid state">
                 <TextInput.Label>Invalid</TextInput.Label>
-                <TextInput.Field placeholder="Invalid state" />
+                <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root readOnly>
+            <TextInput.Root readOnly value="Read only value">
                 <TextInput.Label>Read Only</TextInput.Label>
-                <TextInput.Field value="Read only value" />
+                <TextInput.Field />
             </TextInput.Root>
         </div>
     );

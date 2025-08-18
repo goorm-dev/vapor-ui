@@ -17,7 +17,6 @@ export const ComponentAccessibilityDataMap: Record<string, unknown> = {
     badge: badgeData.accessibility,
     button: buttonData.accessibility,
     checkbox: checkboxData.accessibility,
-    'icon-button': iconButtonData.accessibility,
     nav: navData.accessibility,
     text: textData.accessibility,
     'text-input': textInputData.accessibility,
