@@ -17,12 +17,14 @@ export const Default = {
                     <Menu.Item>항목 2</Menu.Item>
                     <Menu.Item>항목 3</Menu.Item>
                     <Menu.Separator />
-                    <Menu.SubmenuRoot disabled>
+                    <Menu.SubmenuRoot>
                         <Menu.SubmenuTriggerItem>서브 메뉴</Menu.SubmenuTriggerItem>
-                        <Menu.SubmenuContent>
-                            <Menu.Item disabled>서브 항목 1</Menu.Item>
-                            <Menu.Item>서브 항목 2</Menu.Item>
-                        </Menu.SubmenuContent>
+                        <Menu.Portal>
+                            <Menu.SubmenuContent>
+                                <Menu.Item disabled>서브 항목 1</Menu.Item>
+                                <Menu.Item>서브 항목 2</Menu.Item>
+                            </Menu.SubmenuContent>
+                        </Menu.Portal>
                     </Menu.SubmenuRoot>
                     <Menu.Separator />
                     <Menu.Group>
