@@ -1,3 +1,5 @@
+import { globalStyle } from '@vanilla-extract/css';
+
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
@@ -13,12 +15,6 @@ export const root = layerStyle('components', {
 
 export const header = layerStyle('components', {
     padding: `${vars.size.space[200]} ${vars.size.space[300]}`,
-
-    selectors: {
-        '&:not(:last-child)': {
-            borderBottom: `1px solid ${vars.color.border.normal}`,
-        },
-    },
 });
 
 export const body = layerStyle('components', {
@@ -27,10 +23,9 @@ export const body = layerStyle('components', {
 
 export const footer = layerStyle('components', {
     padding: `${vars.size.space[200]} ${vars.size.space[300]}`,
+});
 
-    selectors: {
-        '&:not(:first-child)': {
-            borderTop: `1px solid ${vars.color.border.normal}`,
-        },
-    },
+// Apply lobotomized owl pattern using globalStyle
+globalStyle(`${root} > * + *`, {
+    borderTop: `1px solid ${vars.color.border.normal}`,
 });
