@@ -30,54 +30,51 @@ interface ArrowProps extends useRender.ComponentProps<'div'>, ArrowPositionProps
     offset?: number;
 }
 
-const Arrow = forwardRef<HTMLDivElement, ArrowProps>(
-    (
-        {
-            render = <div />,
-            side: rootSide,
-            align: rootAlign,
-            offset = 12,
-            className,
-            children,
-            ...props
+const Arrow = forwardRef<HTMLDivElement, ArrowProps>((componentProps, ref) => {
+    const {
+        render = <div />,
+        side: rootSide,
+        align: rootAlign,
+        offset = 12,
+        className,
+        children,
+        ...props
+    } = componentProps;
+
+    const [side, setSide] = useState(rootSide);
+    const [align, setAlign] = useState(rootAlign);
+
+    const position = getArrowPosition({ side, align, offset });
+
+    const arrowRef = useMutationObserver<HTMLDivElement>({
+        callback: (mutations) => {
+            mutations.forEach((mutation) => {
+                const { attributeName, target: mutationTarget } = mutation;
+
+                const dataset = (mutationTarget as HTMLElement).dataset;
+                const nextSide = dataset.side as ArrowPositionProps['side'];
+                const nextAlign = dataset.align as ArrowPositionProps['align'];
+
+                if (attributeName === dataSide && nextSide) setSide(nextSide);
+                if (attributeName === dataAlign && nextAlign) setAlign(nextAlign);
+            });
         },
-        ref,
-    ) => {
-        const [side, setSide] = useState(rootSide);
-        const [align, setAlign] = useState(rootAlign);
+        options: { attributes: true, attributeFilter: [dataSide, dataAlign] },
+    });
 
-        const position = getArrowPosition({ side, align, offset });
+    const composedRef = composeRefs(arrowRef, ref);
 
-        const arrowRef = useMutationObserver<HTMLDivElement>({
-            callback: (mutations) => {
-                mutations.forEach((mutation) => {
-                    const { attributeName, target: mutationTarget } = mutation;
-
-                    const dataset = (mutationTarget as HTMLElement).dataset;
-                    const nextSide = dataset.side as ArrowPositionProps['side'];
-                    const nextAlign = dataset.align as ArrowPositionProps['align'];
-
-                    if (attributeName === dataSide && nextSide) setSide(nextSide);
-                    if (attributeName === dataAlign && nextAlign) setAlign(nextAlign);
-                });
-            },
-            options: { attributes: true, attributeFilter: [dataSide, dataAlign] },
-        });
-
-        const composedRef = composeRefs(arrowRef, ref);
-
-        return useRender({
-            render,
-            ref: composedRef,
-            props: {
-                style: position,
-                className: clsx(styles.arrow, className),
-                children: children || <ArrowIcon />,
-                ...props,
-            },
-        });
-    },
-);
+    return useRender({
+        render,
+        ref: composedRef,
+        props: {
+            style: position,
+            className: clsx(styles.arrow, className),
+            children: children || <ArrowIcon />,
+            ...props,
+        },
+    });
+});
 Arrow.displayName = 'Arrow';
 
 export { Arrow };
