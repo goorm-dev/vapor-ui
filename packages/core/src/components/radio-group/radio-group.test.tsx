@@ -41,7 +41,7 @@ describe('RadioGroup', () => {
         await userEvent.click(firstItem);
 
         expect(onValueChange).toHaveBeenCalledOnce();
-        expect(onValueChange).toHaveBeenCalledWith('option1');
+        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Event));
     });
 
     it('should invoke onValueChange when an label is clicked', async () => {
@@ -52,7 +52,7 @@ describe('RadioGroup', () => {
         await userEvent.click(item);
 
         expect(onValueChange).toHaveBeenCalledOnce();
-        expect(onValueChange).toHaveBeenCalledWith('option1');
+        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Event));
     });
 
     describe('prop: disabled', () => {
@@ -105,18 +105,11 @@ describe('RadioGroup', () => {
 
     it('should propagate the name attribute to the input', () => {
         const name = 'test-radio-group';
-        const rendered = render(
-            <form>
-                <RadioGroupTest name={name} />
-            </form>,
-        );
+        const rendered = render(<RadioGroupTest name={name} />);
 
         const group = rendered.getByRole('radiogroup');
-        const inputs = group.querySelectorAll<HTMLInputElement>('input[type="radio"]');
 
-        inputs.forEach((input) => {
-            expect(input).toHaveAttribute('name', name);
-        });
+        expect(group.nextElementSibling).toHaveAttribute('name', name);
     });
 
     it('should include the radio value in the form submission', async ({ skip }) => {
@@ -156,7 +149,7 @@ describe('RadioGroup', () => {
 
         await userEvent.click(submitButton);
 
-        expect(stringifiedFormData).toBe('');
+        expect(stringifiedFormData).toBe('radio-group-test=');
 
         await userEvent.click(radioA);
         await userEvent.click(submitButton);

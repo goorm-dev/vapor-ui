@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
+import { useRender } from '@base-ui-components/react/use-render';
+import type { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
 import type { Foregrounds } from '~/styles/mixins/foreground.css';
@@ -15,20 +16,19 @@ interface TextProps extends TextPrimitiveProps {
 }
 
 const Text = forwardRef<HTMLSpanElement, TextProps>(
-    ({ typography: typographyStyle, foreground, className, children, ...props }, ref) => {
-        return (
-            <Primitive.span
-                ref={ref}
-                className={clsx(
+    ({ render, typography: typographyStyle, foreground, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <span />,
+            props: {
+                className: clsx(
                     typography({ style: typographyStyle }),
                     foregrounds({ color: foreground }),
                     className,
-                )}
-                {...props}
-            >
-                {children}
-            </Primitive.span>
-        );
+                ),
+                ...props,
+            },
+        });
     },
 );
 Text.displayName = 'Text';

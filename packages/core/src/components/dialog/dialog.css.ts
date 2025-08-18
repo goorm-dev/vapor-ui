@@ -19,7 +19,7 @@ export const overlay = layerStyle('components', {
     position: 'fixed',
     inset: 0,
     transition: 'opacity 0.2s cubic-bezier(0.175,0.885,0.32,1.1)',
-    backgroundColor: vars.color['black'],
+    backgroundColor: `color-mix(in srgb, ${vars.color['black']} 20%, transparent)`,
     zIndex: 50, // TODO: Use constant z-index value
 
     selectors: {
@@ -74,8 +74,6 @@ export const content = recipe({
     },
 });
 
-export type DialogContentVariants = RecipeVariants<typeof content>;
-
 export const title = layerStyle('components', {
     lineHeight: vars.typography.lineHeight['200'],
     letterSpacing: vars.typography.letterSpacing['100'],
@@ -116,3 +114,5 @@ export const footer = layerStyle('components', {
     paddingInline: vars.size.space['300'],
     width: '100%',
 });
+
+export type DialogContentVariants = NonNullable<RecipeVariants<typeof content>>;

@@ -48,12 +48,8 @@ export const Default: StoryObj<typeof Grid.Root> = {
                 templateColumns="1fr 1fr 1fr"
                 {...args}
             >
-                <Grid.Item asChild colSpan="1 / 3">
-                    <Box>1</Box>
-                </Grid.Item>
-                <Grid.Item asChild colSpan="1 / 3">
-                    <Box>2</Box>
-                </Grid.Item>
+                <Grid.Item render={<Box>1</Box>} colSpan="1 / 3" />
+                <Grid.Item render={<Box>2</Box>} colSpan="1 / 3" />
                 <Box>3</Box>
                 <Box>4</Box>
                 <Box>5</Box>
@@ -76,12 +72,8 @@ export const TestBed: StoryObj<typeof Grid> = {
                 templateColumns="1fr 1fr 1fr"
                 {...args}
             >
-                <Grid.Item asChild colSpan="1 / 3">
-                    <Box>1</Box>
-                </Grid.Item>
-                <Grid.Item asChild colSpan="1 / 3">
-                    <Box>2</Box>
-                </Grid.Item>
+                <Grid.Item render={<Box>1</Box>} colSpan="1 / 3" />
+                <Grid.Item render={<Box>2</Box>} colSpan="1 / 3" />
                 <Box>3</Box>
                 <Box>4</Box>
                 <Box>5</Box>
