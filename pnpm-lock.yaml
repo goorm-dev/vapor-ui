@@ -211,6 +211,15 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  packages/color-generator:
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+
   packages/core:
     dependencies:
       '@radix-ui/react-avatar':
