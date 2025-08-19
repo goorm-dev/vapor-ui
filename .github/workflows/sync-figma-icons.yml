@@ -155,16 +155,23 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  # Check if there are changes and a branch was created
-                  if [[ -n $(git status --porcelain packages/icons/src/) ]] && [[ -n "${{ env.branch_name }}" ]]; then
+                  # Check if a branch was created (indicates changes were found)
+                  if [[ -n "${branch_name:-}" ]]; then
                       # Prepare icon lists for PR body
                       NEW_BASIC_ICONS="${{ steps.sync_basic.outputs.new_icons }}"
                       NEW_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.new_icons }}"
                       UPDATED_BASIC_ICONS="${{ steps.sync_basic.outputs.updated_icons }}"
                       UPDATED_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.updated_icons }}"
 
+                      # Determine version bump type for PR body
+                      if [[ -n "$NEW_BASIC_ICONS" || -n "$NEW_SYMBOL_ICONS" ]]; then
+                          VERSION_BUMP="Minor"
+                      else
+                          VERSION_BUMP="Patch"
+                      fi
+
                       # Create PR body
-                      cat > pr_body.txt << 'EOF'
+                      cat > pr_body.txt << EOF
                   ## 🤖 Automated Icon Sync from Figma
 
                   This PR syncs icons from Figma.
@@ -172,7 +179,7 @@ jobs:
                   ### Sync Summary
                   | Category         | Details                          |
                   | ---------------- | -------------------------------- |
-                  | **Version Bump** | Patch |
+                  | **Version Bump** | $VERSION_BUMP |
                   | **Workflow Run** | [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
 
                   ### Changes
@@ -198,7 +205,7 @@ jobs:
                       --title "feat: sync icons from Figma" \
                       --body-file pr_body.txt \
                       --base main \
-                      --head ${{ env.branch_name }}
+                      --head "${branch_name}"
 
                       # Clean up temporary file
                       rm -f pr_body.txt
