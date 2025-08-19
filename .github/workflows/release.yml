@@ -58,7 +58,11 @@ jobs:
 
             - name: Update releases documentation
               if: steps.changesets.outputs.published == 'false'
-              run: node scripts/update-releases.js
+              run: node scripts/update-releases.mjs
+
+            - name: Format releases documentation
+              if: steps.changesets.outputs.published == 'false'
+              run: pnpm prettier --write apps/website/content/docs/getting-started/releases.md
 
             - name: Commit updated releases documentation
               if: steps.changesets.outputs.published == 'false'
