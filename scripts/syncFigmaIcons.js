@@ -2,6 +2,7 @@ import fs from 'fs';
 import { camelCase, startCase } from 'lodash-es';
 import path from 'path';
 import { promisify } from 'util';
+import prettier from 'prettier';
 
 import {
     FIGMA_ICONS_FILE_KEY,
@@ -28,7 +29,7 @@ const main = async () => {
 
         // Get nodes (icons) set as COMPONENT in the file.
         let components = [];
-        if (TYPE === 'basic') {
+        if (TYPE === 'basic' || 'symbol') {
             FILE_KEY = FIGMA_ICONS_FILE_KEY;
             // Basic icons are composed of 2 frames, so nodeIds are in array form
             for (const nodeId of nodeIds) {
@@ -69,26 +70,52 @@ const main = async () => {
         console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Converting to React components...`);
         const parentIconPath = path.join(CURRENT_DIRECTORY, targetPath);
         const newIconNameArr = [];
+        const updatedIconNameArr = [];
         const promiseCreateIcons = componentsWithUrl.map(async ({ name, url, parentId }) => {
             const iconName = startCase(camelCase(name)).replace(/ /g, '');
             const saveTargetPath = path.join(parentIconPath, iconName);
+            const iconFilePath = path.resolve(saveTargetPath, `${iconName}.tsx`);
 
-            if (!fs.existsSync(saveTargetPath)) {
-                fs.mkdirSync(saveTargetPath);
-                newIconNameArr.push(iconName);
-            }
-
+            const isNewIcon = !fs.existsSync(saveTargetPath);
             const isColorIcon = parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID);
 
+            // Fetch icon JSX once
             const iconJsx = await getIconJsx({ url, isColorIcon });
             const IconComponent = getIconComponent(iconName, iconJsx);
+
+            if (isNewIcon) {
+                fs.mkdirSync(saveTargetPath);
+                newIconNameArr.push(iconName);
+            } else {
+                // Check if existing icon content will be updated
+                if (fs.existsSync(iconFilePath)) {
+                    const existingContent = fs.readFileSync(iconFilePath, 'utf8');
+                    
+                    // Format both existing and new content for accurate comparison
+                    const formattedNew = await prettier.format(IconComponent, {
+                        parser: 'typescript',
+                        tabWidth: 4,
+                        semi: true,
+                        singleQuote: true,
+                        printWidth: 100,
+                    });
+                    const formattedExisting = await prettier.format(existingContent, {
+                        parser: 'typescript',
+                        tabWidth: 4,
+                        semi: true,
+                        singleQuote: true,
+                        printWidth: 100,
+                    });
+                    
+                    if (formattedExisting !== formattedNew) {
+                        updatedIconNameArr.push(iconName);
+                    }
+                }
+            }
+
             const iconIndex = getIconComponentIndex(iconName);
 
-            const writeIconComponent = writeFile(
-                path.resolve(saveTargetPath, `${iconName}.tsx`),
-                IconComponent,
-                { encoding: 'utf8' },
-            );
+            const writeIconComponent = writeFile(iconFilePath, IconComponent, { encoding: 'utf8' });
             const writeIconIndex = writeFile(path.resolve(saveTargetPath, `index.ts`), iconIndex, {
                 encoding: 'utf8',
             });
@@ -104,6 +131,18 @@ const main = async () => {
         await writeFile(path.join(CURRENT_DIRECTORY, targetPath, 'index.ts'), iconsIndex, {
             encoding: 'utf8',
         });
+
+        // Output results for workflow capture
+        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Sync complete for ${TYPE} icons`);
+        if (newIconNameArr.length > 0) {
+            console.log(`FIGMA_SYNC_NEW_ICONS_${TYPE.toUpperCase()}=${newIconNameArr.join(',')}`);
+        }
+        if (updatedIconNameArr.length > 0) {
+            console.log(
+                `FIGMA_SYNC_UPDATED_ICONS_${TYPE.toUpperCase()}=${updatedIconNameArr.join(',')}`,
+            );
+        }
+        console.log(`FIGMA_SYNC_TOTAL_${TYPE.toUpperCase()}=${componentsInfo.total}`);
     } catch (err) {
         console.error('Unhandled rejection', err);
     }

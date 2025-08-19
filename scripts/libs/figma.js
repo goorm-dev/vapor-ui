@@ -1,21 +1,12 @@
 import axios from 'axios';
 
 import { getFileNodes, getImage } from '../apis/figma.js';
-import {
-    svgToIconComponent,
-    remakeMaskStyle,
-    makeFlexibleColorIcon,
-} from '../utils/figma.js';
+import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from '../utils/figma.js';
 
 /**
  * Filter documents from Figma by specific Node Type.
  */
-const filterDocumentByNodeType = async ({
-    nodeType,
-    fileKey,
-    nodeIds,
-    depth,
-}) => {
+const filterDocumentByNodeType = async ({ nodeType, fileKey, nodeIds, depth }) => {
     const { nodes } = await getFileNodes({
         fileKey,
         nodeIds,
@@ -73,8 +64,4 @@ const getIconJsx = async ({ url, isColorIcon }) => {
     }
 };
 
-export {
-    filterDocumentByNodeType,
-    getNodesWithUrl,
-    getIconJsx,
-};
+export { filterDocumentByNodeType, getNodesWithUrl, getIconJsx };
