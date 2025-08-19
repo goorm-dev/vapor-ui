@@ -1,13 +1,7 @@
 import IconBase, { type IconType } from '~/components/icon-base';
 
 const RstudioColorIcon: IconType = (props) => (
-    <IconBase
-        width="17"
-        viewBox="0 0 17 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-    >
+    <IconBase viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             d="M8 16C12.4183 16 16.0092 12.4183 16.0206 8C16.0319 3.58172 12.4594 0 8.04114 0C3.62286 0 0.0319291 3.58172 0.0205698 8C0.00921045 12.4183 3.58172 16 8 16Z"
             fill="#75AADB"
