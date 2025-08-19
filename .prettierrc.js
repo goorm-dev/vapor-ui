@@ -1,5 +1,8 @@
-/** @type {import("prettier").Config} */
-module.exports = {
+/**
+ * @see https://prettier.io/docs/configuration
+ * @type {import("prettier").Config}
+ */
+const config = {
     tabWidth: 4,
     semi: true,
     singleQuote: true,
@@ -11,3 +14,5 @@ module.exports = {
     importOrderSeparation: true,
     importOrderSortSpecifiers: true,
 };
+
+export default config;
