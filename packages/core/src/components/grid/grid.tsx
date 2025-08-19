@@ -1,12 +1,13 @@
 'use client';
 
-import type { CSSProperties, ComponentPropsWithoutRef } from 'react';
+import type { CSSProperties } from 'react';
 import { forwardRef } from 'react';
 
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import { Box } from '../box';
 import type { RootVariants } from './grid.css';
@@ -16,7 +17,7 @@ import * as styles from './grid.css';
  * Grid
  * -----------------------------------------------------------------------------------------------*/
 
-type GridPrimitiveProps = ComponentPropsWithoutRef<typeof Box>;
+type GridPrimitiveProps = VComponentProps<typeof Box>;
 type GridVariants = RootVariants & {
     inline?: boolean;
     templateRows?: string;
@@ -61,7 +62,7 @@ Root.displayName = 'Grid';
  * Grid.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type GridItemPrimitiveProps = ComponentPropsWithoutRef<typeof Box>;
+type GridItemPrimitiveProps = VComponentProps<typeof Box>;
 type GridItemVariants = { rowSpan?: string; colSpan?: string };
 
 interface GridItemProps extends GridItemPrimitiveProps, GridItemVariants {}

@@ -1,10 +1,11 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
+
+import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './card.css';
 
@@ -12,7 +13,7 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardRootProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
+interface CardRootProps extends VComponentProps<typeof Primitive.div> {}
 
 const Root = forwardRef<HTMLDivElement, CardRootProps>(({ className, children, ...props }, ref) => {
     return (
@@ -27,7 +28,7 @@ Root.displayName = 'Card';
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardHeaderProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
+interface CardHeaderProps extends VComponentProps<typeof Primitive.div> {}
 
 const Header = forwardRef<HTMLDivElement, CardHeaderProps>(
     ({ className, children, ...props }, ref) => {
@@ -44,7 +45,7 @@ Header.displayName = 'Card.Header';
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardBodyProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
+interface CardBodyProps extends VComponentProps<typeof Primitive.div> {}
 
 const Body = forwardRef<HTMLDivElement, CardBodyProps>(({ className, children, ...props }, ref) => {
     return (
@@ -59,7 +60,7 @@ Body.displayName = 'Card.Body';
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardFooterProps extends ComponentPropsWithoutRef<typeof Primitive.div> {}
+interface CardFooterProps extends VComponentProps<typeof Primitive.div> {}
 
 const Footer = forwardRef<HTMLDivElement, CardFooterProps>(
     ({ className, children, ...props }, ref) => {
