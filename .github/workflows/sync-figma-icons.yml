@@ -10,6 +10,10 @@ on:
         # Run every Thursday at 4 PM KST (07:00 UTC)
         - cron: '0 7 * * 4'
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
     sync-figma-icons:
         runs-on: ubuntu-latest
