@@ -1,4 +1,4 @@
-import type { CSSProperties, ComponentPropsWithoutRef } from 'react';
+import type { CSSProperties } from 'react';
 import { forwardRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
@@ -9,6 +9,7 @@ import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/vars.css';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { OnlyPositionerProps } from '~/utils/positioner-props';
+import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './tooltip.css';
 
@@ -29,7 +30,7 @@ const [TooltipProvider, useTooltipContext] = createContext<TooltipContext>({
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Root>;
+type RootPrimitiveProps = VComponentProps<typeof BaseTooltip.Root>;
 interface TooltipRootProps extends RootPrimitiveProps, TooltipSharedProps {}
 
 const Root = (props: TooltipRootProps) => {
@@ -59,7 +60,7 @@ const Root = (props: TooltipRootProps) => {
  * Tooltip.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Trigger>;
+type TriggerPrimitiveProps = VComponentProps<typeof BaseTooltip.Trigger>;
 interface TooltipTriggerProps extends TriggerPrimitiveProps {}
 
 const Trigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>((props, ref) => {
@@ -70,7 +71,7 @@ const Trigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>((props, ref) 
  * Tooltip.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-type PortalPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Portal>;
+type PortalPrimitiveProps = VComponentProps<typeof BaseTooltip.Portal>;
 interface TooltipPortalProps extends PortalPrimitiveProps {}
 
 const Portal = (props: TooltipPortalProps) => {
@@ -84,7 +85,7 @@ const Portal = (props: TooltipPortalProps) => {
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Popup>;
+type ContentPrimitiveProps = VComponentProps<typeof BaseTooltip.Popup>;
 interface TooltipContentProps extends ContentPrimitiveProps {}
 
 const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
@@ -156,7 +157,7 @@ const getArrowPosition = ({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
+const ArrowIcon = (props: VComponentProps<'svg'>) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
