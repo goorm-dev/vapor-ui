@@ -1,0 +1,3 @@
+import IntelliSenseTypeParameterOutlineIcon from './IntelliSenseTypeParameterOutlineIcon';
+
+export default IntelliSenseTypeParameterOutlineIcon;
