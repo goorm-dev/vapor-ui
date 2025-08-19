@@ -53,7 +53,6 @@ const Root = ({ ...props }: MenuRootProps) => {
     const { disabled } = sharedProps;
 
     return (
-        // TODO:
         <MenuProvider value={sharedProps}>
             <BaseMenu.Root disabled={disabled} {...otherProps} />
         </MenuProvider>
