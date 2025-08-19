@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { readdir, readFile, writeFile, access } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import semver from 'semver';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,8 +13,8 @@ const RELEASES_FILE = path.join(
 );
 const PACKAGES_DIR = path.join(__dirname, '../packages');
 
-function getPackageChangelogs() {
-    const packages = readdirSync(PACKAGES_DIR, { withFileTypes: true })
+async function getPackageChangelogs() {
+    const packages = (await readdir(PACKAGES_DIR, { withFileTypes: true }))
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name);
 
@@ -23,15 +24,26 @@ function getPackageChangelogs() {
         const changelogPath = path.join(PACKAGES_DIR, pkg, 'CHANGELOG.md');
         const packageJsonPath = path.join(PACKAGES_DIR, pkg, 'package.json');
 
-        if (existsSync(changelogPath) && existsSync(packageJsonPath)) {
-            const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
-            const changelog = readFileSync(changelogPath, 'utf8');
+        try {
+            // Check if both files exist
+            await access(changelogPath);
+            await access(packageJsonPath);
+
+            const [packageJsonContent, changelogContent] = await Promise.all([
+                readFile(packageJsonPath, 'utf8'),
+                readFile(changelogPath, 'utf8'),
+            ]);
+
+            const packageJson = JSON.parse(packageJsonContent);
 
             changelogs.push({
                 name: packageJson.name,
                 path: `packages/${pkg}/CHANGELOG.md`,
-                content: changelog,
+                content: changelogContent,
             });
+        } catch {
+            // Skip packages that don't have both files
+            continue;
         }
     }
 
@@ -76,14 +88,10 @@ function parseChangelogByVersion(markdown) {
 }
 
 function compareSemverDesc(a, b) {
-    const pa = a.split(/[.-]/).map(Number);
-    const pb = b.split(/[.-]/).map(Number);
-    for (let i = 0; i < Math.max(pa.length, pb.length); i += 1) {
-        const na = Number.isFinite(pa[i]) ? pa[i] : 0;
-        const nb = Number.isFinite(pb[i]) ? pb[i] : 0;
-        if (na !== nb) return nb - na;
-    }
-    return 0;
+    // Use semver.compare for proper semantic version comparison
+    // Returns negative if a < b, 0 if a === b, positive if a > b
+    // We want descending order, so reverse the comparison
+    return semver.compare(b, a);
 }
 
 // Remove empty fenced code blocks (``` ... ``` containing only whitespace)
@@ -115,8 +123,8 @@ function stripEmptyCodeFences(lines) {
     return result;
 }
 
-export function updateReleasesFile() {
-    const changelogs = getPackageChangelogs();
+export async function updateReleasesFile() {
+    const changelogs = await getPackageChangelogs();
     const versionIndex = new Map();
 
     for (const changelog of changelogs) {
@@ -151,7 +159,7 @@ export function updateReleasesFile() {
         content += '---\n\n';
     }
 
-    writeFileSync(RELEASES_FILE, content);
+    await writeFile(RELEASES_FILE, content);
     // eslint-disable-next-line no-console
     console.log(`✅ Updated releases.md grouped by version with ${versions.length} releases`);
 }
@@ -160,7 +168,7 @@ export function updateReleasesFile() {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
     try {
-        updateReleasesFile();
+        await updateReleasesFile();
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error('❌ Error updating releases.md:', error.message);

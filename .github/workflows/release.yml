@@ -29,7 +29,6 @@ jobs:
 
             - name: Install Dependencies
               run: |
-                  pnpm install --no-frozen-lockfile
                   pnpm install --frozen-lockfile
 
             - name: Create .npmrc file
@@ -58,9 +57,11 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Update releases documentation
+              if: steps.changesets.outputs.published == 'false'
               run: node scripts/update-releases.js
 
             - name: Commit updated releases documentation
+              if: steps.changesets.outputs.published == 'false'
               run: |
                   if [[ -n $(git status --porcelain) ]]; then
                       git add apps/website/content/docs/getting-started/releases.md
