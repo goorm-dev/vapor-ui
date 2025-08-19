@@ -6,6 +6,7 @@ import clsx from 'clsx';
 
 import { Arrow } from '~/components/arrow';
 import { createContext } from '~/libs/create-context';
+import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { type DefaultPositionerProps, defaultPositionerProps } from '~/utils/positioner-props';
 
@@ -79,30 +80,38 @@ const Portal = (props: TooltipPortalProps) => {
  * -----------------------------------------------------------------------------------------------*/
 
 type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTooltip.Popup>;
-interface TooltipContentProps extends ContentPrimitiveProps {}
+interface TooltipContentProps extends ContentPrimitiveProps {
+    portal?: React.ReactElement;
+    positioner?: React.ReactElement;
+}
 
 const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ positioner, portal, className, children, ...props }, ref) => {
         const { sideOffset = 8, ...context } = useTooltipContext();
 
-        return (
-            <BaseTooltip.Positioner
-                sideOffset={sideOffset}
-                {...defaultPositionerProps}
-                {...context}
-            >
-                <BaseTooltip.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                    <Arrow
-                        render={<BaseTooltip.Arrow />}
-                        side={context.side}
-                        align={context.align}
-                        offset={6}
-                        className={styles.arrow}
-                    />
+        const Portal = createSlot(portal || <BaseTooltip.Portal />);
+        const Positioner = createSlot(positioner || <BaseTooltip.Positioner />);
 
-                    {children}
-                </BaseTooltip.Popup>
-            </BaseTooltip.Positioner>
+        return (
+            <Portal>
+                <Positioner sideOffset={sideOffset} {...defaultPositionerProps} {...context}>
+                    <BaseTooltip.Popup
+                        ref={ref}
+                        className={clsx(styles.content, className)}
+                        {...props}
+                    >
+                        <Arrow
+                            render={<BaseTooltip.Arrow />}
+                            side={context.side}
+                            align={context.align}
+                            offset={6}
+                            className={styles.arrow}
+                        />
+
+                        {children}
+                    </BaseTooltip.Popup>
+                </Positioner>
+            </Portal>
         );
     },
 );

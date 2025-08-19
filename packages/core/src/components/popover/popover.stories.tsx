@@ -11,25 +11,21 @@ export default {
     argTypes: {
         open: { control: 'boolean' },
         side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
-        sideOffset: { control: 'number' },
         align: { control: 'inline-radio', options: ['start', 'center', 'end'] },
-        alignOffset: { control: 'number' },
     },
 } satisfies Meta<typeof Popover.Root>;
 
 export const Default: StoryObj<typeof Popover.Root> = {
-    render: (args) => (
+    render: ({ side, align, ...args }) => (
         <Flex gap="$400" marginTop="200px" justifyContent="center" alignItems="center">
             <Popover.Root {...args}>
                 <Popover.Trigger render={<Button>Open Popover</Button>} />
-                <Popover.Portal>
-                    <Popover.Content>
-                        <Popover.Title>Notifications</Popover.Title>
-                        <Popover.Description>
-                            You have 3 new messages and 1 new notification.
-                        </Popover.Description>
-                    </Popover.Content>
-                </Popover.Portal>
+                <Popover.Content positioner={<Popover.Positioner side={side} align={align} />}>
+                    <Popover.Title>Notifications</Popover.Title>
+                    <Popover.Description>
+                        You have 3 new messages and 1 new notification.
+                    </Popover.Description>
+                </Popover.Content>
             </Popover.Root>
         </Flex>
     ),

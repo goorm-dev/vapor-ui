@@ -5,6 +5,7 @@ import clsx from 'clsx';
 
 import { Arrow } from '~/components/arrow';
 import { createContext } from '~/libs/create-context';
+import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { type DefaultPositionerProps, defaultPositionerProps } from '~/utils/positioner-props';
 
@@ -76,30 +77,38 @@ const Portal = (props: PopoverPortalProps) => {
  * -----------------------------------------------------------------------------------------------*/
 
 type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Popup>;
-interface PopoverContentProps extends ContentPrimitiveProps {}
+interface PopoverContentProps extends ContentPrimitiveProps {
+    portal?: React.ReactElement;
+    positioner?: React.ReactElement;
+}
 
 const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ portal, positioner, className, children, ...props }, ref) => {
         const { sideOffset = 8, ...context } = usePopoverContext();
 
-        return (
-            <BasePopover.Positioner
-                sideOffset={sideOffset}
-                {...defaultPositionerProps}
-                {...context}
-            >
-                <BasePopover.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                    <Arrow
-                        render={<BasePopover.Arrow />}
-                        side={context.side}
-                        align={context.align}
-                        offset={12}
-                        className={styles.arrow}
-                    />
+        const Portal = createSlot(portal || <BasePopover.Portal />);
+        const Positioner = createSlot(positioner || <BasePopover.Positioner />);
 
-                    {children}
-                </BasePopover.Popup>
-            </BasePopover.Positioner>
+        return (
+            <Portal>
+                <Positioner sideOffset={sideOffset} {...defaultPositionerProps} {...context}>
+                    <BasePopover.Popup
+                        ref={ref}
+                        className={clsx(styles.content, className)}
+                        {...props}
+                    >
+                        <Arrow
+                            render={<BasePopover.Arrow />}
+                            side={context.side}
+                            align={context.align}
+                            offset={12}
+                            className={styles.arrow}
+                        />
+
+                        {children}
+                    </BasePopover.Popup>
+                </Positioner>
+            </Portal>
         );
     },
 );
@@ -161,11 +170,14 @@ const Description = forwardRef<HTMLParagraphElement, PopoverDescriptionProps>(
 
 /* -----------------------------------------------------------------------------------------------*/
 
+const Positioner = BasePopover.Positioner;
+
 export {
     Root as PopoverRoot,
     Trigger as PopoverTrigger,
     Portal as PopoverPortal,
     Content as PopoverContent,
+    Positioner as PopoverPositioner,
     Title as PopoverTitle,
     Description as PopoverDescription,
 };
@@ -184,6 +196,7 @@ export const Popover = {
     Trigger,
     Portal,
     Content,
+    Positioner,
     Title,
     Description,
 };

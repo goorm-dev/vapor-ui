@@ -6,6 +6,7 @@ import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { createSlot } from '~/libs/create-slot';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { DefaultPositionerProps } from '~/utils/positioner-props';
@@ -96,10 +97,13 @@ const Portal = BaseMenu.Portal;
  * -----------------------------------------------------------------------------------------------*/
 
 type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
-interface MenuContentProps extends ContentPrimitiveProps {}
+interface MenuContentProps extends ContentPrimitiveProps {
+    portal?: React.ReactElement;
+    positioner?: React.ReactElement;
+}
 
 const Content = forwardRef<HTMLDivElement, MenuContentProps>(
-    ({ className, ...props }: MenuContentProps, ref) => {
+    ({ portal, positioner, className, ...props }: MenuContentProps, ref) => {
         const context = useMenuContext();
         const [positionerProps] = createSplitProps<DefaultPositionerProps>()(context, [
             'align',
@@ -116,10 +120,19 @@ const Content = forwardRef<HTMLDivElement, MenuContentProps>(
             'trackAnchor',
         ]);
 
+        const Portal = createSlot(portal || <BaseMenu.Portal />);
+        const Positioner = createSlot(positioner || <BaseMenu.Positioner />);
+
         return (
-            <BaseMenu.Positioner {...defaultPositionerProps} {...positionerProps}>
-                <BaseMenu.Popup ref={ref} className={clsx(styles.content, className)} {...props} />
-            </BaseMenu.Positioner>
+            <Portal>
+                <Positioner {...defaultPositionerProps} {...positionerProps}>
+                    <BaseMenu.Popup
+                        ref={ref}
+                        className={clsx(styles.content, className)}
+                        {...props}
+                    />
+                </Positioner>
+            </Portal>
         );
     },
 );
@@ -277,10 +290,13 @@ SubmenuTriggerItem.displayName = 'Menu.SubmenuTriggerItem';
  * -----------------------------------------------------------------------------------------------*/
 
 type SubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
-interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {}
+interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {
+    portal?: React.ReactElement;
+    positioner?: React.ReactElement;
+}
 
 const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
-    ({ className, ...props }, ref) => {
+    ({ portal, positioner, className, ...props }, ref) => {
         const { triggerRef, ...context } = useSubmenuContext();
         const [positionerProps] = createSplitProps<DefaultPositionerProps>()(context, [
             'align',
@@ -297,15 +313,20 @@ const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
             'trackAnchor',
         ]);
 
+        const Portal = createSlot(portal || <BaseMenu.Portal />);
+        const Positioner = createSlot(positioner || <BaseMenu.Positioner />);
+
         return (
-            <BaseMenu.Positioner {...defaultPositionerProps} {...positionerProps}>
-                <BaseMenu.Popup
-                    ref={ref}
-                    finalFocus={triggerRef}
-                    className={clsx(styles.subContents, className)}
-                    {...props}
-                />
-            </BaseMenu.Positioner>
+            <Portal>
+                <Positioner {...defaultPositionerProps} {...positionerProps}>
+                    <BaseMenu.Popup
+                        ref={ref}
+                        finalFocus={triggerRef}
+                        className={clsx(styles.subContents, className)}
+                        {...props}
+                    />
+                </Positioner>
+            </Portal>
         );
     },
 );
