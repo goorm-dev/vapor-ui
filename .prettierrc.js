@@ -2,7 +2,7 @@
  * @see https://prettier.io/docs/configuration
  * @type {import("prettier").Config}
  */
-const config = 
+const config = {
     tabWidth: 4,
     semi: true,
     singleQuote: true,
