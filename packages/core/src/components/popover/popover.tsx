@@ -79,8 +79,8 @@ const Portal = (props: PopoverPortalProps) => {
  * Popover.Content
  * -----------------------------------------------------------------------------------------------*/
 
-const dataSide = 'data-side';
-const dataAlign = 'data-align';
+const DATA_SIDE = 'data-side';
+const DATA_ALIGN = 'data-align';
 
 type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Popup>;
 interface PopoverContentProps extends ContentPrimitiveProps {}
@@ -103,11 +103,11 @@ const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
                     const nextSide = dataset.side as PositionerProps['side'];
                     const nextAlign = dataset.align as PositionerProps['align'];
 
-                    if (attributeName === dataSide && nextSide) setSide(nextSide);
-                    if (attributeName === dataAlign && nextAlign) setAlign(nextAlign);
+                    if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
+                    if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
                 });
             },
-            options: { attributes: true, attributeFilter: [dataSide, dataAlign] },
+            options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
         });
 
         return (
