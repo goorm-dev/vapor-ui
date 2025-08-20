@@ -104,6 +104,12 @@ export const body = layerStyle('components', {
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
+    '@supports': {
+        '(max-height: 80svh)': {
+            maxHeight: '80svh',
+        },
+    },
+    maxHeight: '80vh',
     overflowY: 'auto',
 });
 

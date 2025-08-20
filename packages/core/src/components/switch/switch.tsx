@@ -4,7 +4,6 @@ import { forwardRef, useId } from 'react';
 
 import { Switch as BaseSwitch } from '@base-ui-components/react';
 import { useRender } from '@base-ui-components/react';
-import type { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
@@ -71,7 +70,7 @@ Root.displayName = 'Switch.Root';
  * Switch.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = VComponentProps<typeof Primitive.label>;
+type PrimitiveLabelProps = VComponentProps<'label'>;
 interface SwitchLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, SwitchLabelProps>(
