@@ -19,12 +19,12 @@ export const overlay = layerStyle('components', {
     position: 'fixed',
     inset: 0,
     transition: 'opacity 0.2s cubic-bezier(0.175,0.885,0.32,1.1)',
-    backgroundColor: `color-mix(in srgb, ${vars.color['black']} 20%, transparent)`,
+    backgroundColor: `color-mix(in srgb, ${vars.color['black']} 80%, transparent)`,
     zIndex: 50, // TODO: Use constant z-index value
 
     selectors: {
-        "&[data-state='open']": { animation: `${fadeIn} 0.2s ease-out forwards` },
-        "&[data-state='closed']": { animation: `${fadeOut} 0.2s ease-out forwards` },
+        '&[data-open]': { animation: `${fadeIn} 0.2s ease-out forwards` },
+        '&[data-closed]': { animation: `${fadeOut} 0.2s ease-out forwards` },
     },
 });
 
@@ -55,10 +55,10 @@ export const content = recipe({
         zIndex: 50, // TODO: Use constant z-index value
 
         selectors: {
-            "&[data-state='open']": {
+            '&[data-open]': {
                 animation: `${scaleUp} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
             },
-            "&[data-state='closed']": {
+            '&[data-closed]': {
                 animation: `${scaleDown} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
             },
         },
