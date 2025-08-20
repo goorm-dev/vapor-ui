@@ -1,12 +1,79 @@
+import { useState } from 'react';
 import { Checkbox } from '@vapor-ui/core';
 
 export default function CheckboxIndeterminate() {
+    const [checkedItems, setCheckedItems] = useState({
+        apple: false,
+        banana: false,
+        orange: false,
+    });
+
+    const allChecked = Object.values(checkedItems).every(Boolean);
+    const isIndeterminate = Object.values(checkedItems).some(Boolean) && !allChecked;
+
+    const handleSelectAll = (checked: boolean) => {
+        setCheckedItems({
+            apple: checked,
+            banana: checked,
+            orange: checked,
+        });
+    };
+
+    const handleItemChange = (item: keyof typeof checkedItems, checked: boolean) => {
+        setCheckedItems(prev => ({
+            ...prev,
+            [item]: checked,
+        }));
+    };
+
     return (
-        <div className="flex items-center gap-4">
-            <Checkbox.Root indeterminate>
+        <div className="space-y-3">
+            <Checkbox.Root 
+                checked={allChecked}
+                indeterminate={isIndeterminate}
+                onCheckedChange={handleSelectAll}
+                className="flex items-center gap-3"
+            >
                 <Checkbox.Control />
-                <Checkbox.Label>Indeterminate</Checkbox.Label>
+                <Checkbox.Label className="font-medium cursor-pointer">
+                    Select All Fruits
+                </Checkbox.Label>
             </Checkbox.Root>
+            
+            <div className="ml-6 space-y-2">
+                <Checkbox.Root 
+                    checked={checkedItems.apple}
+                    onCheckedChange={(checked) => handleItemChange('apple', checked)}
+                    className="flex items-center gap-3"
+                >
+                    <Checkbox.Control />
+                    <Checkbox.Label className="cursor-pointer">
+                        Apple
+                    </Checkbox.Label>
+                </Checkbox.Root>
+                
+                <Checkbox.Root 
+                    checked={checkedItems.banana}
+                    onCheckedChange={(checked) => handleItemChange('banana', checked)}
+                    className="flex items-center gap-3"
+                >
+                    <Checkbox.Control />
+                    <Checkbox.Label className="cursor-pointer">
+                        Banana
+                    </Checkbox.Label>
+                </Checkbox.Root>
+                
+                <Checkbox.Root 
+                    checked={checkedItems.orange}
+                    onCheckedChange={(checked) => handleItemChange('orange', checked)}
+                    className="flex items-center gap-3"
+                >
+                    <Checkbox.Control />
+                    <Checkbox.Label className="cursor-pointer">
+                        Orange
+                    </Checkbox.Label>
+                </Checkbox.Root>
+            </div>
         </div>
     );
 }
