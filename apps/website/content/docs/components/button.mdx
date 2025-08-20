@@ -99,6 +99,53 @@ export default function ButtonStretch() {
 ```
 </Demo>
 
+### Disabled
+
+`disabled` 속성을 사용하여 버튼을 비활성화할 수 있습니다.
+
+<Demo name="button-disabled">
+```tsx
+import { Button } from '@vapor-ui/core';
+
+export default function ButtonDisabled() {
+    return (
+        <div className="flex items-center gap-2">
+            <Button disabled>Disabled</Button>
+            <Button>Enabled</Button>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Examples
+
+### Button with Icon
+
+아이콘과 함께 사용하는 버튼 예제입니다.
+
+<Demo name="button-with-icon">
+```tsx
+import { Button } from '@vapor-ui/core';
+import { CheckCircleIcon, ChevronRightOutlineIcon } from '@vapor-ui/icons';
+
+export default function ButtonWithIcon() {
+    return (
+        <div className="flex items-center gap-2">
+            <Button>
+                <CheckCircleIcon />
+                Complete
+            </Button>
+            <Button variant="outline">
+                Next
+                <ChevronRightOutlineIcon />
+            </Button>
+        </div>
+    );
+}
+```
+</Demo>
+
 ## Props Table
 
 이 컴포넌트는 `button` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.

@@ -171,7 +171,7 @@ export default function AvatarComposition() {
 
 ### Fallback Only
 
-이미지 없이 Fallback만 사용하는 패턴입니다.
+이미지 로드 실패 시 표시되는 Fallback 텍스트나 이니셜을 사용하는 패턴입니다.
 
 <Demo name="avatar-fallback-only">
 ```tsx
@@ -187,7 +187,7 @@ export default function AvatarFallbackOnly() {
                 <Avatar.Fallback>VT</Avatar.Fallback>
             </Avatar.Root>
             <Avatar.Root size="md" alt="Vapor Icons">
-                <Avatar.Fallback>🎨</Avatar.Fallback>
+                <Avatar.Fallback>V</Avatar.Fallback>
             </Avatar.Root>
             <Avatar.Root size="md" alt="Vapor Delay">
                 <Avatar.Fallback delayMs={600}>VD</Avatar.Fallback>

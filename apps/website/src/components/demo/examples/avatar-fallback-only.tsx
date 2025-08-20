@@ -10,7 +10,7 @@ export default function AvatarFallbackOnly() {
                 <Avatar.Fallback>VT</Avatar.Fallback>
             </Avatar.Root>
             <Avatar.Root size="md" alt="Vapor Icons">
-                <Avatar.Fallback>🎨</Avatar.Fallback>
+                <Avatar.Fallback>V</Avatar.Fallback>
             </Avatar.Root>
         </div>
     );

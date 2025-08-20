@@ -23,6 +23,12 @@
             "type": ["boolean"],
             "default": false,
             "description": "true일 경우 버튼이 컨테이너의 전체 너비를 차지합니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": false,
+            "description": "버튼을 비활성화 상태로 만듭니다."
         }
     ]
 }
