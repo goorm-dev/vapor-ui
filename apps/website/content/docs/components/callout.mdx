@@ -39,6 +39,38 @@ export default function CalloutColor() {
 ```
 </Demo>
 
+## Examples
+
+### Callout with Icon
+
+아이콘과 함께 사용하는 Callout 예제입니다.
+
+<Demo name="callout-with-icon">
+```tsx
+import { Callout } from '@vapor-ui/core';
+import { CheckCircleIcon, InfoCircleOutlineIcon, HeartIcon } from '@vapor-ui/icons';
+
+export default function CalloutWithIcon() {
+    return (
+        <div className="flex w-full max-w-xl flex-col gap-2">
+            <Callout color="success">
+                <CheckCircleIcon />
+                Task completed successfully
+            </Callout>
+            <Callout color="warning">
+                <InfoCircleOutlineIcon />
+                Please review your settings
+            </Callout>
+            <Callout color="primary">
+                <HeartIcon />
+                New notification available
+            </Callout>
+        </div>
+    );
+}
+```
+</Demo>
+
 ## Props Table
 
 이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
