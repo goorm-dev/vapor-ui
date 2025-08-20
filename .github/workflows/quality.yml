@@ -21,14 +21,6 @@ jobs:
             - name: Checkout branch
               uses: actions/checkout@v4
 
-            - name: Cache turbo build setup
-              uses: actions/cache@v4
-              with:
-                  path: .turbo
-                  key: ${{ runner.os }}-turbo-${{ github.sha }}
-                  restore-keys: |
-                      ${{ runner.os }}-turbo-
-
             - name: Install
               uses: ./.github/composite/install
 
@@ -47,17 +39,12 @@ jobs:
     eslint:
         name: ESLint
         runs-on: ubuntu-latest
+        env:
+            TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+            TURBO_TEAM: ${{ vars.TURBO_TEAM }}
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
-
-            - name: Cache turbo build setup
-              uses: actions/cache@v4
-              with:
-                  path: .turbo
-                  key: ${{ runner.os }}-turbo-${{ github.sha }}
-                  restore-keys: |
-                      ${{ runner.os }}-turbo-
 
             - name: Install
               uses: ./.github/composite/install
@@ -69,17 +56,12 @@ jobs:
         name: TypeScript
         needs: build
         runs-on: ubuntu-latest
+        env:
+            TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+            TURBO_TEAM: ${{ vars.TURBO_TEAM }}
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
-
-            - name: Cache turbo build setup
-              uses: actions/cache@v4
-              with:
-                  path: .turbo
-                  key: ${{ runner.os }}-turbo-${{ github.sha }}
-                  restore-keys: |
-                      ${{ runner.os }}-turbo-
 
             - name: Install
               uses: ./.github/composite/install
@@ -96,17 +78,12 @@ jobs:
     prettier:
         name: Prettier
         runs-on: ubuntu-latest
+        env:
+            TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+            TURBO_TEAM: ${{ vars.TURBO_TEAM }}
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
-
-            - name: Cache turbo build setup
-              uses: actions/cache@v4
-              with:
-                  path: .turbo
-                  key: ${{ runner.os }}-turbo-${{ github.sha }}
-                  restore-keys: |
-                      ${{ runner.os }}-turbo-
 
             - name: Install
               uses: ./.github/composite/install
@@ -118,17 +95,12 @@ jobs:
         name: Vitest
         needs: build
         runs-on: ubuntu-latest
+        env:
+            TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+            TURBO_TEAM: ${{ vars.TURBO_TEAM }}
         steps:
             - name: Checkout branch
               uses: actions/checkout@v4
-
-            - name: Cache turbo build setup
-              uses: actions/cache@v4
-              with:
-                  path: .turbo
-                  key: ${{ runner.os }}-turbo-${{ github.sha }}
-                  restore-keys: |
-                      ${{ runner.os }}-turbo-
 
             - name: Install
               uses: ./.github/composite/install
