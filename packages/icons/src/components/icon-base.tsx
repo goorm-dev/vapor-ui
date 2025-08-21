@@ -33,8 +33,8 @@ const isCssVariable = (value?: Size) => typeof value === 'string' && value.start
  */
 function IconBase({
     children,
-    width = 'var(--vapor-size-dimension-200, 1rem)',
-    height = 'var(--vapor-size-dimension-200, 1rem)',
+    width = 16,
+    height = 16,
     size,
     className,
     style: customStyle,
@@ -61,8 +61,8 @@ function IconBase({
             )}
             style={
                 {
-                    '--vapor-icon-width': widthValue,
-                    '--vapor-icon-height': heightValue,
+                    ...(isCssVariable(widthValue) && { '--vapor-icon-width': widthValue }),
+                    ...(isCssVariable(heightValue) && { '--vapor-icon-height': heightValue }),
                     ...customStyle,
                 } as React.CSSProperties
             }
