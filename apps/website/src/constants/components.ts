@@ -5,6 +5,9 @@ import breadcrumbData from '../../public/components/breadcrumb.json';
 import buttonData from '../../public/components/button.json';
 import calloutData from '../../public/components/callout.json';
 import flexData from '../../public/components/flex.json';
+import gridData from '../../public/components/grid.json';
+import hStackData from '../../public/components/h-stack.json';
+import vStackData from '../../public/components/v-stack.json';
 import cardData from '../../public/components/card.json';
 import checkboxData from '../../public/components/checkbox.json';
 import dialogData from '../../public/components/dialog.json';
@@ -25,6 +28,9 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     card: cardData,
     callout: calloutData,
     flex: flexData,
+    grid: gridData,
+    'h-stack': hStackData,
+    'v-stack': vStackData,
     checkbox: checkboxData,
     'icon-button': iconButtonData,
     nav: navData,
