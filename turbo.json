@@ -18,8 +18,7 @@
             "cache": false
         },
         "format:check": {
-            "outputs": [],
-            "cache": false
+            "outputs": []
         },
         "website#start": {
             "dependsOn": ["website#build"],
