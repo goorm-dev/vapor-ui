@@ -1,0 +1,169 @@
+---
+title: 'Flex'
+site_name: 'Flex - Vapor Core'
+description: '플렉스박스 레이아웃을 쉽게 구현할 수 있는 컨테이너 컴포넌트입니다. Box 컴포넌트를 확장하여 플렉스 관련 기능을 제공합니다.'
+---
+
+<Demo name="default-flex">
+```tsx
+import { Flex } from '@vapor-ui/core';
+
+export default function DefaultFlex() {
+    return (
+        <Flex gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+            <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>
+                Item 1
+            </div>
+            <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>
+                Item 2
+            </div>
+            <div style={{ padding: '8px', backgroundColor: '#f59e0b', borderRadius: '4px', color: 'white' }}>
+                Item 3
+            </div>
+        </Flex>
+    );
+}
+```
+</Demo>
+
+## Examples
+
+### Direction
+
+플렉스 컨테이너의 주축 방향을 설정하여 항목들의 배치 방향을 제어할 수 있습니다.
+
+<Demo name="flex-direction">
+```tsx
+import { Flex } from '@vapor-ui/core';
+
+export default function FlexDirection() {
+    return (
+        <div className="flex flex-col gap-6">
+            <div>
+                <h4 className="mb-2 text-sm font-medium">Row (가로 방향)</h4>
+                <Flex flexDirection="row" gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+                    <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>1</div>
+                    <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>2</div>
+                    <div style={{ padding: '8px', backgroundColor: '#f59e0b', borderRadius: '4px', color: 'white' }}>3</div>
+                </Flex>
+            </div>
+
+            <div>
+                <h4 className="mb-2 text-sm font-medium">Column (세로 방향)</h4>
+                <Flex flexDirection="column" gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+                    <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>1</div>
+                    <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>2</div>
+                    <div style={{ padding: '8px', backgroundColor: '#f59e0b', borderRadius: '4px', color: 'white' }}>3</div>
+                </Flex>
+            </div>
+
+            <div>
+                <h4 className="mb-2 text-sm font-medium">Row Reverse (가로 역순)</h4>
+                <Flex flexDirection="row-reverse" gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+                    <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>1</div>
+                    <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>2</div>
+                    <div style={{ padding: '8px', backgroundColor: '#f59e0b', borderRadius: '4px', color: 'white' }}>3</div>
+                </Flex>
+            </div>
+        </div>
+    );
+
+}
+
+````
+</Demo>
+
+### Justify Content
+
+주축을 따라 항목들의 정렬 방식을 설정할 수 있습니다.
+
+<Demo name="flex-justify">
+```tsx
+import { Flex } from '@vapor-ui/core';
+
+export default function FlexJustify() {
+    return (
+        <div className="flex flex-col gap-4">
+            <div>
+                <h4 className="mb-2 text-sm font-medium">Flex Start</h4>
+                <Flex justifyContent="flex-start" gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+                    <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>A</div>
+                    <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>B</div>
+                </Flex>
+            </div>
+
+            <div>
+                <h4 className="mb-2 text-sm font-medium">Center</h4>
+                <Flex justifyContent="center" gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+                    <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>A</div>
+                    <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>B</div>
+                </Flex>
+            </div>
+
+            <div>
+                <h4 className="mb-2 text-sm font-medium">Flex End</h4>
+                <Flex justifyContent="flex-end" gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+                    <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>A</div>
+                    <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>B</div>
+                </Flex>
+            </div>
+
+            <div>
+                <h4 className="mb-2 text-sm font-medium">Space Between</h4>
+                <Flex justifyContent="space-between" gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+                    <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>A</div>
+                    <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>B</div>
+                    <div style={{ padding: '8px', backgroundColor: '#f59e0b', borderRadius: '4px', color: 'white' }}>C</div>
+                </Flex>
+            </div>
+        </div>
+    );
+}
+````
+
+</Demo>
+
+### Inline Flex
+
+인라인 플렉스를 사용하면 다른 요소들과 같은 줄에 배치할 수 있습니다.
+
+<Demo name="flex-inline">
+```tsx
+import { Flex } from '@vapor-ui/core';
+
+export default function FlexInline() {
+    return (
+        <div>
+            <p className="mb-4 text-sm text-gray-600">
+                인라인 플렉스는 다른 요소들과 같은 줄에 배치됩니다.
+            </p>
+            <div>
+                This text is before the flex container.{' '}
+                <Flex inline gap="$100" padding="$200" backgroundColor="blue-100" borderRadius="$200">
+                    <span style={{ padding: '4px', backgroundColor: '#3b82f6', borderRadius: '2px', color: 'white', fontSize: '12px' }}>
+                        Inline
+                    </span>
+                    <span style={{ padding: '4px', backgroundColor: '#10b981', borderRadius: '2px', color: 'white', fontSize: '12px' }}>
+                        Flex
+                    </span>
+                </Flex>{' '}
+                This text is after the flex container.
+            </div>
+            <div className="mt-4">
+                <p className="mb-2 text-sm font-medium">Regular Flex (Block Level)</p>
+                <Flex gap="$200" padding="$300" backgroundColor="gray-100" borderRadius="$200">
+                    <div style={{ padding: '8px', backgroundColor: '#3b82f6', borderRadius: '4px', color: 'white' }}>Block</div>
+                    <div style={{ padding: '8px', backgroundColor: '#10b981', borderRadius: '4px', color: 'white' }}>Flex</div>
+                </Flex>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Props Table
+
+Flex 컴포넌트는 Box 컴포넌트를 확장하므로 Box의 모든 Sprinkles 속성을 상속받습니다. 추가로 플렉스 관련 기능을 제공합니다.
+
+<ComponentPropsTable file="flex" section="props" />

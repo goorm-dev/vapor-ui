@@ -18,3 +18,4 @@ export * from './components/checkbox';
 export * from './components/switch';
 export * from './components/callout';
 export * from './components/create-theme-config';
+export * from './components/breadcrumb';
