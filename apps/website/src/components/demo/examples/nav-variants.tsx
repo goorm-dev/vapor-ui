@@ -2,7 +2,7 @@ import { Nav } from '@vapor-ui/core';
 
 export default function NavVariants() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 w-full">
             <div>
                 <h4 className="text-sm font-medium mb-2">Stretch 변형</h4>
                 <Nav.Root stretch aria-label="Stretched navigation">

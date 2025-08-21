@@ -127,6 +127,114 @@ export default function RadioGroupDirection() {
 ```
 </Demo>
 
+### Disabled
+
+사용자가 상호작용할 수 없는 상태입니다. 액션을 수행하기 위한 특정 조건을 충족하지 않았거나 일시적으로 기능을 제한하려는 상황에서 사용합니다.
+
+<Demo name="radio-group-disabled">
+```tsx
+import { RadioGroup } from '@vapor-ui/core';
+
+export default function RadioGroupDisabled() {
+    return (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-medium mb-2">개별 아이템 비활성화</h4>
+                <RadioGroup.Root name="disabled-items" defaultValue="option1">
+                    <RadioGroup.Item value="option1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>활성 옵션 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="option2" disabled>
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>비활성 옵션 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="option3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>활성 옵션 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="option4" disabled>
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>비활성 옵션 4</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+            
+            <div>
+                <h4 className="text-sm font-medium mb-2">전체 그룹 비활성화</h4>
+                <RadioGroup.Root name="disabled-group" disabled defaultValue="group1">
+                    <RadioGroup.Item value="group1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>그룹 옵션 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="group2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>그룹 옵션 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="group3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>그룹 옵션 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Visually Hidden
+
+라벨을 제거한 형태로 사용할 수 있습니다. 이 때 화면에 Label이 시각적으로 표시되지 않지만, 여전히 화면 읽기 도구(Screen readers)에서는 읽을 수 있도록 처리합니다.
+
+<Demo name="radio-group-visually-hidden">
+```tsx
+import { RadioGroup } from '@vapor-ui/core';
+
+export default function RadioGroupVisuallyHidden() {
+    return (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-medium mb-2">기본 라벨</h4>
+                <RadioGroup.Root name="normal-labels" defaultValue="visible1">
+                    <RadioGroup.Item value="visible1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>보이는 라벨 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="visible2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>보이는 라벨 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="visible3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>보이는 라벨 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+            
+            <div>
+                <h4 className="text-sm font-medium mb-2">시각적으로 숨겨진 라벨</h4>
+                <RadioGroup.Root name="hidden-labels" defaultValue="hidden2" visuallyHidden>
+                    <RadioGroup.Item value="hidden1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>숨겨진 라벨 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="hidden2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>숨겨진 라벨 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="hidden3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>숨겨진 라벨 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
 ## Examples
 
 ### Simple Usage
@@ -158,84 +266,6 @@ export default function RadioGroupSimple() {
 ```
 </Demo>
 
-### Composition Pattern
-
-RadioGroup.Root, RadioGroup.Item, RadioGroup.Control, RadioGroup.Label을 조합한 패턴입니다.
-
-<Demo name="radio-group-composition">
-```tsx
-import { RadioGroup } from '@vapor-ui/core';
-
-export default function RadioGroupComposition() {
-    return (
-        <RadioGroup.Root name="composition" size="md" defaultValue="react">
-            <RadioGroup.Item value="react">
-                <RadioGroup.Control />
-                <RadioGroup.Label>React</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="vue">
-                <RadioGroup.Control />
-                <RadioGroup.Label>Vue.js</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="angular">
-                <RadioGroup.Control />
-                <RadioGroup.Label>Angular</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="svelte" disabled>
-                <RadioGroup.Control />
-                <RadioGroup.Label>Svelte (준비 중)</RadioGroup.Label>
-            </RadioGroup.Item>
-        </RadioGroup.Root>
-    );
-}
-```
-</Demo>
-
-### Size & Orientation Variants
-
-다양한 크기와 방향을 조합한 예시입니다.
-
-<Demo name="radio-group-variants">
-```tsx
-import { RadioGroup } from '@vapor-ui/core';
-
-export default function RadioGroupVariants() {
-    return (
-        <div className="space-y-6">
-            <RadioGroup.Root name="variant1" size="md" orientation="vertical" defaultValue="md2">
-                <RadioGroup.Item value="md1">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>Medium Vertical 1</RadioGroup.Label>
-                </RadioGroup.Item>
-                <RadioGroup.Item value="md2">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>Medium Vertical 2</RadioGroup.Label>
-                </RadioGroup.Item>
-                <RadioGroup.Item value="md3" disabled>
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>Medium Vertical 3 (비활성화)</RadioGroup.Label>
-                </RadioGroup.Item>
-            </RadioGroup.Root>
-            
-            <RadioGroup.Root name="variant3" size="lg" orientation="horizontal" defaultValue="lg3">
-                <RadioGroup.Item value="lg1">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>Large H1</RadioGroup.Label>
-                </RadioGroup.Item>
-                <RadioGroup.Item value="lg2">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>Large H2</RadioGroup.Label>
-                </RadioGroup.Item>
-                <RadioGroup.Item value="lg3">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>Large H3</RadioGroup.Label>
-                </RadioGroup.Item>
-            </RadioGroup.Root>
-        </div>
-    );
-}
-```
-</Demo>
 
 ## Props Table
 

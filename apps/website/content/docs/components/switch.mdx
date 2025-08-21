@@ -32,21 +32,96 @@ import { Switch } from '@vapor-ui/core';
 export default function SwitchSize() {
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <Switch.Root size="sm">
                 <Switch.Label>Small</Switch.Label>
-                <Switch.Root size="sm">
-                    <Switch.Control />
-                </Switch.Root>
-            </div>
-            <div className="flex items-center justify-between">
+                <Switch.Control />
+            </Switch.Root>
+            <Switch.Root size="md">
                 <Switch.Label>Medium (Default)</Switch.Label>
-                <Switch.Root size="md">
+                <Switch.Control />
+            </Switch.Root>
+            <Switch.Root size="lg">
+                <Switch.Label>Large</Switch.Label>
+                <Switch.Control />
+            </Switch.Root>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Checked
+
+기능이 활성화된 상태를 의미합니다.
+
+<Demo name="switch-checked">
+```tsx
+import { Switch } from '@vapor-ui/core';
+
+export default function SwitchChecked() {
+    return (
+        <div className="space-y-3">
+            <Switch.Root>
+                <Switch.Label>체크되지 않음</Switch.Label>
+                <Switch.Control />
+            </Switch.Root>
+            <Switch.Root defaultChecked>
+                <Switch.Label>체크됨</Switch.Label>
+                <Switch.Control />
+            </Switch.Root>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Disabled
+
+사용자가 상호작용할 수 없는 상태입니다. 액션을 수행하기 위한 특정 조건을 충족하지 않았거나 일시적으로 기능을 제한하려는 상황에서 사용합니다.
+
+<Demo name="switch-disabled">
+```tsx
+import { Switch } from '@vapor-ui/core';
+
+export default function SwitchDisabled() {
+    return (
+        <div className="space-y-3">
+            <Switch.Root disabled>
+                <Switch.Label>비활성화 - Off</Switch.Label>
+                <Switch.Control />
+            </Switch.Root>
+            <Switch.Root disabled defaultChecked>
+                <Switch.Label>비활성화 - On</Switch.Label>
+                <Switch.Control />
+            </Switch.Root>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Visually Hidden
+
+라벨을 제거한 형태로 사용할 수 있습니다. 이 때 화면에 Label이 시각적으로 표시되진 않지만, 여전히 화면 읽기 도구(Screen readers)에서는 읽을 수 있도록 처리합니다.
+
+<Demo name="switch-visually-hidden">
+```tsx
+import { Switch } from '@vapor-ui/core';
+
+export default function SwitchVisuallyHidden() {
+    return (
+        <div className="space-y-4">
+            <div>
+                <h4 className="text-sm font-medium mb-2">기본 라벨</h4>
+                <Switch.Root>
+                    <Switch.Label>보이는 라벨</Switch.Label>
                     <Switch.Control />
                 </Switch.Root>
             </div>
-            <div className="flex items-center justify-between">
-                <Switch.Label>Large</Switch.Label>
-                <Switch.Root size="lg">
+            
+            <div>
+                <h4 className="text-sm font-medium mb-2">시각적으로 숨겨진 라벨</h4>
+                <Switch.Root visuallyHidden aria-label="숨겨진 스위치">
                     <Switch.Control />
                 </Switch.Root>
             </div>
@@ -69,30 +144,22 @@ import { Switch } from '@vapor-ui/core';
 export default function SwitchStates() {
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <Switch.Root>
                 <Switch.Label>Default</Switch.Label>
-                <Switch.Root>
-                    <Switch.Control />
-                </Switch.Root>
-            </div>
-            <div className="flex items-center justify-between">
+                <Switch.Control />
+            </Switch.Root>
+            <Switch.Root defaultChecked>
                 <Switch.Label>Default Checked</Switch.Label>
-                <Switch.Root defaultChecked>
-                    <Switch.Control />
-                </Switch.Root>
-            </div>
-            <div className="flex items-center justify-between">
+                <Switch.Control />
+            </Switch.Root>
+            <Switch.Root disabled>
                 <Switch.Label>Disabled</Switch.Label>
-                <Switch.Root disabled>
-                    <Switch.Control />
-                </Switch.Root>
-            </div>
-            <div className="flex items-center justify-between">
+                <Switch.Control />
+            </Switch.Root>
+            <Switch.Root disabled defaultChecked>
                 <Switch.Label>Disabled Checked</Switch.Label>
-                <Switch.Root disabled defaultChecked>
-                    <Switch.Control />
-                </Switch.Root>
-            </div>
+                <Switch.Control />
+            </Switch.Root>
         </div>
     );
 }
