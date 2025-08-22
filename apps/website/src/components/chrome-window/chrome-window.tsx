@@ -7,7 +7,6 @@ import {
     AchievementIcon,
     CloseOutlineIcon,
     CreditCardIcon,
-    DragIndicatorIcon,
     NoticeCircleIcon,
     PlusOutlineIcon,
     SearchOutlineIcon,
@@ -116,8 +115,8 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                     </div>
                 </div>
             </div>
-            <div className="bg-[var(--vapor-color-background-normal)] flex items-center justify-center max-[767px]:px-0 h-[900px]">
-                <div className="flex items-start gap-[var(--vapor-size-space-400)] w-full h-full">
+            <div className="bg-[var(--vapor-color-background-normal)] flex items-center justify-center max-[767px]:px-0 pb-[var(--vapor-size-space-400)]">
+                <div className="flex gap-[var(--vapor-size-space-400)] w-full items-stretch">
                     <div className="flex items-center flex-col gap-[var(--vapor-size-space-400)] flex-1 pt-[var(--vapor-size-space-400)] pl-[var(--vapor-size-space-400)] max-[991px]:p-[var(--vapor-size-space-400)] max-[767px]:px-0 max-[767px]:py-[var(--vapor-size-space-400)]">
                         <Card.Root className="w-full max-[767px]:border-l-0 max-[767px]:border-r-0 max-[767px]:rounded-none">
                             <Card.Header>
@@ -146,6 +145,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                             stretch
                                             variant="outline"
                                             className="mt-2"
+                                            onClick={() => setCount((prev) => prev + 100)}
                                         >
                                             <span className="flex items-center gap-[var(--vapor-size-space-100)]">
                                                 <PlusOutlineIcon
@@ -156,7 +156,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                                     typography="subtitle1"
                                                     foreground="secondary-darker"
                                                 >
-                                                    {count}개 추가
+                                                    100개 추가
                                                 </Text>
                                             </span>
                                         </Button>
@@ -212,11 +212,9 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                         </div>
                                     </div>
                                 </div>
-                                <Button size="lg" stretch>
+                                <Button size="lg" stretch className="text-white">
                                     <AchievementIcon size="20" />
-                                    <Text typography="subtitle1" foreground="accent">
-                                        45 포인트 획득
-                                    </Text>
+                                    45 포인트 획득
                                 </Button>
                             </Card.Body>
                         </Card.Root>
@@ -313,10 +311,6 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                 <tr className="h-[53px]">
                                     <td className="w-[101px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                         <div className="flex p-[var(--vapor-size-space-300)] items-center gap-[var(--vapor-size-space-100)] flex-1 self-stretch">
-                                            <DragIndicatorIcon
-                                                size="20"
-                                                color="var(--vapor-color-foreground-hint)"
-                                            />
                                             <Text typography="body2" foreground="normal-lighter">
                                                 1
                                             </Text>
@@ -351,10 +345,6 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                 <tr className="h-[53px]">
                                     <td className="w-[101px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                         <div className="flex p-[var(--vapor-size-space-300)] items-center gap-[var(--vapor-size-space-100)] flex-1 self-stretch">
-                                            <DragIndicatorIcon
-                                                size="20"
-                                                color="var(--vapor-color-foreground-hint)"
-                                            />
                                             <Text typography="body2" foreground="normal-lighter">
                                                 2
                                             </Text>
@@ -393,10 +383,6 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                 <tr className="h-[53px]">
                                     <td className="w-[101px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
                                         <div className="flex p-[var(--vapor-size-space-300)] items-center gap-[var(--vapor-size-space-100)] flex-1 self-stretch">
-                                            <DragIndicatorIcon
-                                                size="20"
-                                                color="var(--vapor-color-foreground-hint)"
-                                            />
                                             <Text typography="body2" foreground="normal-lighter">
                                                 3
                                             </Text>
@@ -496,7 +482,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                                     <Button size="lg" color="secondary">
                                         취소
                                     </Button>
-                                    <Button size="lg" color="primary">
+                                    <Button size="lg" color="primary" className="text-white">
                                         <SwitchIcon />
                                         Public으로 변경
                                     </Button>
@@ -504,7 +490,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                             </div>
                         </div>
                     </div>
-                    <div className="flex w-[371px] h-full p-[var(--vapor-size-space-300)] flex-col items-end flex-shrink-0 bg-[var(--vapor-color-background-normal)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
+                    <div className="flex w-[371px] p-[var(--vapor-size-space-300)] items-end bg-[var(--vapor-color-background-normal)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
                         <div className="w-full h-full flex flex-col gap-[var(--vapor-size-space-300)]">
                             <TextInput.Root
                                 className="w-full relative"

@@ -23,7 +23,7 @@ export function ThemeToggle({ onThemeChange, defaultTheme = 'dark' }: ThemeToggl
             <Button
                 size="md"
                 color={appearance === 'light' ? 'primary' : 'secondary'}
-                variant={appearance === 'light' ? 'solid' : 'ghost'}
+                variant={appearance === 'light' ? 'fill' : 'ghost'}
                 onClick={() => handleThemeChange('light')}
                 className="flex items-center gap-1"
             >
@@ -33,7 +33,7 @@ export function ThemeToggle({ onThemeChange, defaultTheme = 'dark' }: ThemeToggl
             <Button
                 size="md"
                 color={appearance === 'dark' ? 'primary' : 'secondary'}
-                variant={appearance === 'dark' ? 'solid' : 'ghost'}
+                variant={appearance === 'dark' ? 'fill' : 'ghost'}
                 onClick={() => handleThemeChange('dark')}
                 className="flex items-center gap-1"
             >

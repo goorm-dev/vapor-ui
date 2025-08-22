@@ -3,8 +3,14 @@
 import { useEffect, useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { IconButton, Nav, Text } from '@vapor-ui/core';
-import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
+import { IconButton, Nav, Text, useTheme } from '@vapor-ui/core';
+import {
+    CloseOutlineIcon,
+    DarkIcon,
+    LightIcon,
+    MenuOutlineIcon,
+    OpenInNewOutlineIcon,
+} from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
 
@@ -46,6 +52,11 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
 export const SiteNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const { appearance, setTheme } = useTheme();
+
+    const toggleTheme = () => {
+        setTheme({ appearance: appearance === 'light' ? 'dark' : 'light' });
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -120,6 +131,27 @@ export const SiteNavBar = () => {
                                         </Nav.Item>
                                     );
                                 })}
+                                <div
+                                    style={{
+                                        strokeWidth: '1px',
+                                        stroke: 'var(--vapor-color-border-normal, #E1E1E8)',
+                                        width: '0',
+                                        height: 'var(--vapor-size-dimension-400, 32px)',
+                                    }}
+                                    className="border-l mx-2"
+                                />
+                                <Nav.Item>
+                                    <IconButton
+                                        suppressHydrationWarning
+                                        size="lg"
+                                        color="secondary"
+                                        variant="ghost"
+                                        aria-label={`Switch to ${appearance} mode`}
+                                        onClick={toggleTheme}
+                                    >
+                                        {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                    </IconButton>
+                                </Nav.Item>
                             </Nav.List>
                         </div>
                     </Nav.Root>
@@ -177,6 +209,45 @@ export const SiteNavBar = () => {
                                 </IconButton>
                             </li>
                         ))}
+                        <li>
+                            <div
+                                style={{
+                                    strokeWidth: '1px',
+                                    stroke: 'var(--vapor-color-border-normal, #E1E1E8)',
+                                    width: '0',
+                                    height: 'var(--vapor-size-dimension-400, 32px)',
+                                }}
+                                className="border-t w-full my-2"
+                            />
+                        </li>
+                        <li
+                            className="flex h-10 px-6 items-center justify-between"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 'var(--vapor-size-space-100, 8px)',
+                            }}
+                        >
+                            <Text className="flex items-center gap-2 text-base" asChild>
+                                <h6>
+                                    {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                    {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                                </h6>
+                            </Text>
+                            <IconButton
+                                size="md"
+                                color="secondary"
+                                variant="fill"
+                                aria-label={
+                                    appearance
+                                        ? `Switch to ${appearance === 'light' ? 'dark' : 'light'} mode`
+                                        : 'Toggle theme'
+                                }
+                                onClick={toggleTheme}
+                            >
+                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                            </IconButton>
+                        </li>
                     </ul>
                 </Dialog.Content>
             </Dialog.Portal>
