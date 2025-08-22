@@ -4,7 +4,6 @@
 
 @import 'tailwindcss/preflight' layer(tw-base);
 @import 'tailwindcss/theme' layer(tw-theme);
-@import 'tailwindcss/preflight' layer(tw-base);
 @import 'tailwindcss/utilities' layer(tw-utilities);
 
 @import 'fumadocs-ui/css/neutral.css';

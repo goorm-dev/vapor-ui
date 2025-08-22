@@ -22,7 +22,7 @@ export function UserListItem({
             <Avatar.Simple alt={avatarAlt || name || 'User'} shape="circle" size="md" />
             <div className="flex flex-col items-start gap-[var(--vapor-size-space-000)] flex-1 basis-0 grow">
                 <div className="flex items-center gap-[var(--vapor-size-space-050)] self-stretch">
-                    <Text typography="subtitle1" color="hint-darker">
+                    <Text typography="subtitle1" foreground="hint-darker">
                         {name || '이름 없음'}
                     </Text>
                     {badge && (

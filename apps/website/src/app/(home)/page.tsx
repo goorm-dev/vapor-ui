@@ -2,19 +2,17 @@
 
 import { useEffect, useState } from 'react';
 
-import { Badge, Button, LocalThemeProvider, Text, useTheme } from '@vapor-ui/core';
+import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
 import { ForwardPageOutlineIcon, SearchOutlineIcon } from '@vapor-ui/icons';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { ChromeWindow } from '~/components/chrome-window';
 import DefaultSearchDialog from '~/components/search/search';
-import { ThemeToggle } from '~/components/theme-toggle';
 
 export default function HomePage() {
     const { setTheme } = useTheme();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
-    const [chromeTheme, setChromeTheme] = useState<'light' | 'dark'>('dark');
 
     useEffect(() => {
         setTheme({ appearance: 'dark' });
@@ -154,26 +152,19 @@ export default function HomePage() {
                         </Button>
                     </div>
                 </section>
-                <LocalThemeProvider config={{ appearance: chromeTheme }}>
-                    <section 
-                        className="min-h-[100vh] flex pt-[60px] pb-[60px] px-[var(--vapor-size-space-200)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch"
-                        style={{
-                            background: 'linear-gradient(180deg, var(--vapor-color-gray-050) 0%, var(--vapor-color-background-normal) 100%)'
-                        }}
-                    >
-                        <header className="flex justify-between items-center flex-col gap-[var(--vapor-size-space-200)]">
-                            <Text foreground="normal" typography="heading6" asChild>
-                                <h6>FOUNDATION</h6>
-                            </Text>
-                            <ThemeToggle onThemeChange={setChromeTheme} defaultTheme={chromeTheme} />
-                        </header>
-                        <main className="w-full">
-                            <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center">
-                                <ChromeWindow className="w-full" theme={chromeTheme} />
-                            </div>
-                        </main>
-                    </section>
-                </LocalThemeProvider>
+                <section
+                    className="min-h-[100vh] flex pt-[60px] pb-[60px] px-[var(--vapor-size-space-200)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch"
+                    style={{
+                        background:
+                            'linear-gradient(180deg, var(--vapor-color-gray-050) 0%, var(--vapor-color-background-normal) 100%)',
+                    }}
+                >
+                    <main className="w-full">
+                        <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center">
+                            <ChromeWindow className="w-full" />
+                        </div>
+                    </main>
+                </section>
             </main>
         </>
     );
