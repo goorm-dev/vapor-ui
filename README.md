@@ -1,6 +1,8 @@
-[![Vapor UI Logo](vapor-ui.png)](https://vapor.goorm.io)
+[![Vapor UI Logo](vapor-ui.png)](https://vapor-ui.goorm.io)
 
 # Goorm Design System: Vapor UI
+
+[한국어](README.ko.md)
 
 [![Status: WIP](https://img.shields.io/badge/status-WIP-orange.svg)](https://github.com/goorm-dev/vapor-ui) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 

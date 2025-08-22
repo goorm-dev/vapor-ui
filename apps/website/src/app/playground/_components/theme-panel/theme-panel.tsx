@@ -11,7 +11,6 @@ import Radius from '../panel-radius';
 import Scaling from '../panel-scaling';
 import styles from './theme-panel.module.scss';
 
-
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
     const [isCopied, setIsCopied] = useState(false);
@@ -57,7 +56,7 @@ const ThemePanel = () => {
 
                 <div className={styles['panel_hot-key']}>
                     <Badge color="hint">V</Badge>
-                    <Text typography="subtitle2" color="foreground-hint">
+                    <Text typography="subtitle2" foreground="hint">
                         로 열기/닫기
                     </Text>
                 </div>

@@ -1,17 +1,15 @@
-'use client';
-
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
 import { Primitive } from '@radix-ui/react-primitive';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
-type BadgePrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Primitive.span>, 'color'>;
+type BadgePrimitiveProps = VComponentProps<typeof Primitive.span>;
 interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
 
 const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ...props }, ref) => {
