@@ -1,0 +1,48 @@
+{
+  "props": [
+    {
+      "prop": "disabled",
+      "type": ["boolean"],
+      "default": "false",
+      "description": "메뉴 전체를 비활성화할지 여부를 설정합니다."
+    },
+    {
+      "prop": "side",
+      "type": ["top", "right", "bottom", "left"],
+      "default": "bottom",
+      "description": "메뉴가 표시될 위치를 설정합니다."
+    },
+    {
+      "prop": "align",
+      "type": ["start", "center", "end"],
+      "default": "center", 
+      "description": "메뉴의 정렬을 설정합니다."
+    },
+    {
+      "prop": "sideOffset",
+      "type": ["number"],
+      "default": "0",
+      "description": "트리거와 메뉴 사이의 거리를 설정합니다."
+    },
+    {
+      "prop": "alignOffset",
+      "type": ["number"], 
+      "default": "0",
+      "description": "정렬 축에서의 오프셋을 설정합니다."
+    }
+  ],
+  "subComponentProps": [
+    {
+      "prop": "disabled",
+      "type": ["boolean"],
+      "default": "false",
+      "description": "개별 메뉴 아이템을 비활성화할지 여부를 설정합니다."
+    },
+    {
+      "prop": "closeOnClick",
+      "type": ["boolean"],
+      "default": "true",
+      "description": "클릭 시 메뉴를 닫을지 여부를 설정합니다."
+    }
+  ]
+}

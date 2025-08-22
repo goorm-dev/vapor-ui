@@ -19,3 +19,5 @@ export * from './components/switch';
 export * from './components/callout';
 export * from './components/create-theme-config';
 export * from './components/breadcrumb';
+export * from './components/menu';
+export * from './components/tooltip';
