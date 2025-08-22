@@ -6,12 +6,12 @@ export default function CardLayout() {
             <Card.Root>
                 <Card.Body>Body Only</Card.Body>
             </Card.Root>
-            
+
             <Card.Root>
                 <Card.Body>Body</Card.Body>
                 <Card.Footer>Footer</Card.Footer>
             </Card.Root>
-            
+
             <Card.Root>
                 <Card.Header>Header</Card.Header>
                 <Card.Body>Body</Card.Body>

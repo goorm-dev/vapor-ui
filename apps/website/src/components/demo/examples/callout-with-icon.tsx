@@ -1,5 +1,5 @@
 import { Callout } from '@vapor-ui/core';
-import { CheckCircleIcon, InfoCircleOutlineIcon, HeartIcon } from '@vapor-ui/icons';
+import { CheckCircleIcon, HeartIcon, InfoCircleOutlineIcon } from '@vapor-ui/icons';
 
 export default function CalloutWithIcon() {
     return (

@@ -1,7 +1,8 @@
-"use client";
+'use client';
+
+import { useState } from 'react';
 
 import { Button, Menu } from '@vapor-ui/core';
-import { useState } from 'react';
 
 export default function MenuCheckbox() {
     const [showToolbar, setShowToolbar] = useState(true);
@@ -15,16 +16,10 @@ export default function MenuCheckbox() {
                 <Menu.Content>
                     <Menu.Group>
                         <Menu.GroupLabel>보기 옵션</Menu.GroupLabel>
-                        <Menu.CheckboxItem
-                            checked={showToolbar}
-                            onCheckedChange={setShowToolbar}
-                        >
+                        <Menu.CheckboxItem checked={showToolbar} onCheckedChange={setShowToolbar}>
                             툴바 표시
                         </Menu.CheckboxItem>
-                        <Menu.CheckboxItem
-                            checked={showSidebar}
-                            onCheckedChange={setShowSidebar}
-                        >
+                        <Menu.CheckboxItem checked={showSidebar} onCheckedChange={setShowSidebar}>
                             사이드바 표시
                         </Menu.CheckboxItem>
                         <Menu.CheckboxItem

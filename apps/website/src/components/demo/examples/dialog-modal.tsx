@@ -1,4 +1,4 @@
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogModal() {
     return (
@@ -13,7 +13,9 @@ export default function DialogModal() {
                         <Dialog.Close aria-label="Close" />
                     </Dialog.Header>
                     <Dialog.Body>
-                        <Dialog.Description>포커스가 다이얼로그 내부에 제한됩니다.</Dialog.Description>
+                        <Dialog.Description>
+                            포커스가 다이얼로그 내부에 제한됩니다.
+                        </Dialog.Description>
                     </Dialog.Body>
                     <Dialog.Footer>
                         <Dialog.Close asChild>
@@ -22,7 +24,7 @@ export default function DialogModal() {
                     </Dialog.Footer>
                 </Dialog.CombinedContent>
             </Dialog.Root>
-            
+
             <Dialog.Root modal={false}>
                 <Dialog.Trigger asChild>
                     <Button>Non-Modal Dialog</Button>
@@ -33,7 +35,9 @@ export default function DialogModal() {
                         <Dialog.Close aria-label="Close" />
                     </Dialog.Header>
                     <Dialog.Body>
-                        <Dialog.Description>배경의 다른 요소들과 상호작용할 수 있습니다.</Dialog.Description>
+                        <Dialog.Description>
+                            배경의 다른 요소들과 상호작용할 수 있습니다.
+                        </Dialog.Description>
                     </Dialog.Body>
                     <Dialog.Footer>
                         <Dialog.Close asChild>

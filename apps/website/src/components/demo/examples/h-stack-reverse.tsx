@@ -11,7 +11,7 @@ export default function HStackReverse() {
                     <div className="bg-green-300 p-3 rounded text-center">Third</div>
                 </HStack>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Reverse Stack</h4>
                 <HStack reverse gap="3">

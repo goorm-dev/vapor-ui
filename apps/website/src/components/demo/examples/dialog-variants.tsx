@@ -1,4 +1,4 @@
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogVariants() {
     return (
@@ -23,7 +23,7 @@ export default function DialogVariants() {
                         </Dialog.Footer>
                     </Dialog.CombinedContent>
                 </Dialog.Root>
-                
+
                 <Dialog.Root size="xl" modal={false}>
                     <Dialog.Trigger asChild>
                         <Button>XL + Non-Modal</Button>
@@ -35,8 +35,8 @@ export default function DialogVariants() {
                         </Dialog.Header>
                         <Dialog.Body>
                             <Dialog.Description>
-                                매우 큰 크기의 non-modal 다이얼로그입니다.
-                                배경과 상호작용이 가능합니다.
+                                매우 큰 크기의 non-modal 다이얼로그입니다. 배경과 상호작용이
+                                가능합니다.
                             </Dialog.Description>
                         </Dialog.Body>
                         <Dialog.Footer>

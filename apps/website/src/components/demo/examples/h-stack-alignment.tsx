@@ -11,7 +11,7 @@ export default function HStackAlignment() {
                     <div className="bg-blue-300 p-1 rounded text-sm">Tiny</div>
                 </HStack>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Align Center</h4>
                 <HStack gap="2" alignItems="center" className="h-20 bg-gray-50 p-2 rounded">
@@ -20,7 +20,7 @@ export default function HStackAlignment() {
                     <div className="bg-green-300 p-1 rounded text-sm">Tiny</div>
                 </HStack>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Align End</h4>
                 <HStack gap="2" alignItems="end" className="h-20 bg-gray-50 p-2 rounded">

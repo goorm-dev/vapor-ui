@@ -11,7 +11,7 @@ export default function VStackSpacing() {
                     <div className="bg-red-100 p-2 rounded text-sm">C</div>
                 </VStack>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Gap $400</h4>
                 <VStack gap="$400">
@@ -20,7 +20,7 @@ export default function VStackSpacing() {
                     <div className="bg-orange-100 p-2 rounded text-sm">C</div>
                 </VStack>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Gap $800</h4>
                 <VStack gap="$800">

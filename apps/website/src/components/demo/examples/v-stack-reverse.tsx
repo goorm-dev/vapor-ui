@@ -11,7 +11,7 @@ export default function VStackReverse() {
                     <div className="bg-green-300 p-3 rounded text-center">Third</div>
                 </VStack>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Reverse Stack</h4>
                 <VStack reverse gap="3">

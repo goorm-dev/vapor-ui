@@ -12,7 +12,9 @@ export default function BreadcrumbSize() {
                         </Breadcrumb.Item>
                         <Breadcrumb.Separator />
                         <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>Current</Breadcrumb.Link>
+                            <Breadcrumb.Link href="#" current>
+                                Current
+                            </Breadcrumb.Link>
                         </Breadcrumb.Item>
                     </Breadcrumb.List>
                 </Breadcrumb.Root>
@@ -27,7 +29,9 @@ export default function BreadcrumbSize() {
                         </Breadcrumb.Item>
                         <Breadcrumb.Separator />
                         <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>Current</Breadcrumb.Link>
+                            <Breadcrumb.Link href="#" current>
+                                Current
+                            </Breadcrumb.Link>
                         </Breadcrumb.Item>
                     </Breadcrumb.List>
                 </Breadcrumb.Root>
@@ -42,7 +46,9 @@ export default function BreadcrumbSize() {
                         </Breadcrumb.Item>
                         <Breadcrumb.Separator />
                         <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>Current</Breadcrumb.Link>
+                            <Breadcrumb.Link href="#" current>
+                                Current
+                            </Breadcrumb.Link>
                         </Breadcrumb.Item>
                     </Breadcrumb.List>
                 </Breadcrumb.Root>
@@ -57,7 +63,9 @@ export default function BreadcrumbSize() {
                         </Breadcrumb.Item>
                         <Breadcrumb.Separator />
                         <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>Current</Breadcrumb.Link>
+                            <Breadcrumb.Link href="#" current>
+                                Current
+                            </Breadcrumb.Link>
                         </Breadcrumb.Item>
                     </Breadcrumb.List>
                 </Breadcrumb.Root>

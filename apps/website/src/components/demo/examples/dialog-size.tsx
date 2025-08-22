@@ -1,4 +1,4 @@
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogSize() {
     return (
@@ -23,7 +23,7 @@ export default function DialogSize() {
                     </Dialog.Footer>
                 </Dialog.CombinedContent>
             </Dialog.Root>
-            
+
             <Dialog.Root size="lg">
                 <Dialog.Trigger asChild>
                     <Button>Large Dialog</Button>
@@ -44,7 +44,7 @@ export default function DialogSize() {
                     </Dialog.Footer>
                 </Dialog.CombinedContent>
             </Dialog.Root>
-            
+
             <Dialog.Root size="xl">
                 <Dialog.Trigger asChild>
                     <Button>Extra Large Dialog</Button>
@@ -55,7 +55,9 @@ export default function DialogSize() {
                         <Dialog.Close aria-label="Close" />
                     </Dialog.Header>
                     <Dialog.Body>
-                        <Dialog.Description>Extra Large 크기의 다이얼로그입니다.</Dialog.Description>
+                        <Dialog.Description>
+                            Extra Large 크기의 다이얼로그입니다.
+                        </Dialog.Description>
                     </Dialog.Body>
                     <Dialog.Footer>
                         <Dialog.Close asChild>

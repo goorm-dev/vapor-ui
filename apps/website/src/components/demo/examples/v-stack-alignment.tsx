@@ -11,7 +11,7 @@ export default function VStackAlignment() {
                     <div className="bg-blue-300 p-2 rounded text-sm">Tiny</div>
                 </VStack>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Align Center</h4>
                 <VStack gap="2" alignItems="center" className="w-32 bg-gray-50 p-2 rounded">
@@ -20,7 +20,7 @@ export default function VStackAlignment() {
                     <div className="bg-green-300 p-2 rounded text-sm">Tiny</div>
                 </VStack>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Align End</h4>
                 <VStack gap="2" alignItems="end" className="w-32 bg-gray-50 p-2 rounded">

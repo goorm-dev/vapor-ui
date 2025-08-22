@@ -1,4 +1,4 @@
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogSimple() {
     return (
@@ -13,8 +13,8 @@ export default function DialogSimple() {
                 </Dialog.Header>
                 <Dialog.Body>
                     <Dialog.Description>
-                        이것은 기본적인 다이얼로그입니다. 
-                        Escape 키나 배경 클릭으로 닫을 수 있습니다.
+                        이것은 기본적인 다이얼로그입니다. Escape 키나 배경 클릭으로 닫을 수
+                        있습니다.
                     </Dialog.Description>
                 </Dialog.Body>
                 <Dialog.Footer>

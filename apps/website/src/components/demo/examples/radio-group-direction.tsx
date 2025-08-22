@@ -20,7 +20,7 @@ export default function RadioGroupDirection() {
                     </RadioGroup.Item>
                 </RadioGroup.Root>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Horizontal</h4>
                 <RadioGroup.Root name="orientation-horizontal" orientation="horizontal">

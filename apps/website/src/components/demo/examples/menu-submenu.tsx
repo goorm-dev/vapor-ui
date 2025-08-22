@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Button, Menu } from '@vapor-ui/core';
 
@@ -11,11 +11,9 @@ export default function MenuSubmenu() {
                     <Menu.Item>새 파일</Menu.Item>
                     <Menu.Item>파일 열기</Menu.Item>
                     <Menu.Separator />
-                    
+
                     <Menu.SubmenuRoot>
-                        <Menu.SubmenuTriggerItem>
-                            최근 파일
-                        </Menu.SubmenuTriggerItem>
+                        <Menu.SubmenuTriggerItem>최근 파일</Menu.SubmenuTriggerItem>
                         <Menu.Portal>
                             <Menu.SubmenuContent>
                                 <Menu.Item>document.txt</Menu.Item>
@@ -28,9 +26,7 @@ export default function MenuSubmenu() {
                     </Menu.SubmenuRoot>
 
                     <Menu.SubmenuRoot>
-                        <Menu.SubmenuTriggerItem>
-                            내보내기
-                        </Menu.SubmenuTriggerItem>
+                        <Menu.SubmenuTriggerItem>내보내기</Menu.SubmenuTriggerItem>
                         <Menu.Portal>
                             <Menu.SubmenuContent>
                                 <Menu.Item>PDF로 내보내기</Menu.Item>
@@ -39,7 +35,7 @@ export default function MenuSubmenu() {
                             </Menu.SubmenuContent>
                         </Menu.Portal>
                     </Menu.SubmenuRoot>
-                    
+
                     <Menu.Separator />
                     <Menu.Item>종료</Menu.Item>
                 </Menu.Content>

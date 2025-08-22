@@ -10,7 +10,7 @@ export default function SwitchVisuallyHidden() {
                     <Switch.Control />
                 </Switch.Root>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">시각적으로 숨겨진 라벨</h4>
                 <Switch.Root visuallyHidden aria-label="숨겨진 스위치">

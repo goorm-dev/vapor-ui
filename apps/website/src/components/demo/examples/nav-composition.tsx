@@ -11,7 +11,9 @@ export default function NavComposition() {
                             <Nav.Link href="/">홈</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link href="/products" selected>제품</Nav.Link>
+                            <Nav.Link href="/products" selected>
+                                제품
+                            </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link href="/about">회사소개</Nav.Link>
@@ -22,7 +24,7 @@ export default function NavComposition() {
                     </Nav.List>
                 </Nav.Root>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">LinkItem 패턴 (편의 컴포넌트)</h4>
                 <Nav.Root aria-label="LinkItem pattern navigation">

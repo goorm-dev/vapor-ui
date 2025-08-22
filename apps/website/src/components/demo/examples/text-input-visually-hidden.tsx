@@ -10,10 +10,14 @@ export default function TextInputVisuallyHidden() {
                     <TextInput.Field />
                 </TextInput.Root>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">시각적으로 숨겨진 라벨</h4>
-                <TextInput.Root visuallyHidden placeholder="이름을 입력하세요" aria-label="사용자 이름">
+                <TextInput.Root
+                    visuallyHidden
+                    placeholder="이름을 입력하세요"
+                    aria-label="사용자 이름"
+                >
                     <TextInput.Field />
                 </TextInput.Root>
             </div>

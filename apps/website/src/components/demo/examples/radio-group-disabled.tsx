@@ -24,7 +24,7 @@ export default function RadioGroupDisabled() {
                     </RadioGroup.Item>
                 </RadioGroup.Root>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">전체 그룹 비활성화</h4>
                 <RadioGroup.Root name="disabled-group" disabled defaultValue="group1">

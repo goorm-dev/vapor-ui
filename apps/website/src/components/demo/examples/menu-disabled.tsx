@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Button, Menu } from '@vapor-ui/core';
 
