@@ -21,6 +21,8 @@ export default function DefaultCheckbox() {
 
 ## Property
 
+---
+
 ### Size
 
 Checkbox 사이즈는 md, lg 로 제공합니다.
@@ -132,7 +134,7 @@ export default function CheckboxIndeterminate() {
 
     return (
         <div className="space-y-3">
-            <Checkbox.Root 
+            <Checkbox.Root
                 checked={allChecked}
                 indeterminate={isIndeterminate}
                 onCheckedChange={handleSelectAll}
@@ -143,9 +145,9 @@ export default function CheckboxIndeterminate() {
                     Select All Fruits
                 </Checkbox.Label>
             </Checkbox.Root>
-            
+
             <div className="ml-6 space-y-2">
-                <Checkbox.Root 
+                <Checkbox.Root
                     checked={checkedItems.apple}
                     onCheckedChange={(checked) => handleItemChange('apple', checked)}
                     className="flex items-center gap-3"
@@ -155,8 +157,8 @@ export default function CheckboxIndeterminate() {
                         Apple
                     </Checkbox.Label>
                 </Checkbox.Root>
-                
-                <Checkbox.Root 
+
+                <Checkbox.Root
                     checked={checkedItems.banana}
                     onCheckedChange={(checked) => handleItemChange('banana', checked)}
                     className="flex items-center gap-3"
@@ -166,8 +168,8 @@ export default function CheckboxIndeterminate() {
                         Banana
                     </Checkbox.Label>
                 </Checkbox.Root>
-                
-                <Checkbox.Root 
+
+                <Checkbox.Root
                     checked={checkedItems.orange}
                     onCheckedChange={(checked) => handleItemChange('orange', checked)}
                     className="flex items-center gap-3"
@@ -180,8 +182,10 @@ export default function CheckboxIndeterminate() {
             </div>
         </div>
     );
+
 }
-```
+
+````
 </Demo>
 
 ### Visually Hidden
@@ -202,10 +206,13 @@ export default function CheckboxVisuallyHidden() {
         </div>
     );
 }
-```
+````
+
 </Demo>
 
 ## Props Table
+
+---
 
 ### Checkbox.Root
 
