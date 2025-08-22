@@ -7,9 +7,9 @@ export default function TextInputReadOnly() {
                 <TextInput.Label>읽기 전용</TextInput.Label>
                 <TextInput.Field />
             </TextInput.Root>
-            <TextInput.Root readOnly defaultValue="user@example.com">
+            <TextInput.Root type="email" readOnly defaultValue="user@example.com">
                 <TextInput.Label>사용자 이메일</TextInput.Label>
-                <TextInput.Field type="email" />
+                <TextInput.Field />
             </TextInput.Root>
         </div>
     );

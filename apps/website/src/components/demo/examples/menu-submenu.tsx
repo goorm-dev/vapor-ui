@@ -5,9 +5,7 @@ import { Button, Menu } from '@vapor-ui/core';
 export default function MenuSubmenu() {
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>서브메뉴</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>서브메뉴</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Item>새 파일</Menu.Item>

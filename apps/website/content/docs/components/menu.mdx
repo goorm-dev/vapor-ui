@@ -11,9 +11,7 @@ import { Button, Menu } from '@vapor-ui/core';
 export default function DefaultMenu() {
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>메뉴 열기</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>메뉴 열기</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Item>새 파일</Menu.Item>
@@ -45,9 +43,7 @@ export default function MenuPositioning() {
     return (
         <div className="flex flex-wrap gap-4">
             <Menu.Root side="top">
-                <Menu.Trigger>
-                    <Button>상단 메뉴</Button>
-                </Menu.Trigger>
+                <Menu.Trigger render={<Button>상단 메뉴</Button>} />
                 <Menu.Portal>
                     <Menu.Content>
                         <Menu.Item>상단 아이템 1</Menu.Item>
@@ -58,9 +54,7 @@ export default function MenuPositioning() {
             </Menu.Root>
 
             <Menu.Root side="right">
-                <Menu.Trigger>
-                    <Button>우측 메뉴</Button>
-                </Menu.Trigger>
+                <Menu.Trigger render={<Button>우측 메뉴</Button>} />
                 <Menu.Portal>
                     <Menu.Content>
                         <Menu.Item>우측 아이템 1</Menu.Item>
@@ -71,9 +65,7 @@ export default function MenuPositioning() {
             </Menu.Root>
 
             <Menu.Root side="bottom">
-                <Menu.Trigger>
-                    <Button>하단 메뉴</Button>
-                </Menu.Trigger>
+                <Menu.Trigger render={<Button>하단 메뉴</Button>} />
                 <Menu.Portal>
                     <Menu.Content>
                         <Menu.Item>하단 아이템 1</Menu.Item>
@@ -84,9 +76,7 @@ export default function MenuPositioning() {
             </Menu.Root>
 
             <Menu.Root side="left">
-                <Menu.Trigger>
-                    <Button>좌측 메뉴</Button>
-                </Menu.Trigger>
+                <Menu.Trigger render={<Button>좌측 메뉴</Button>} />
                 <Menu.Portal>
                     <Menu.Content>
                         <Menu.Item>좌측 아이템 1</Menu.Item>
@@ -112,9 +102,7 @@ import { Button, Menu } from '@vapor-ui/core';
 export default function MenuGroups() {
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>그룹 메뉴</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>그룹 메뉴</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Group>
@@ -156,9 +144,7 @@ export default function MenuDisabled() {
     return (
         <div className="flex flex-wrap gap-4">
             <Menu.Root>
-                <Menu.Trigger>
-                    <Button>일반 메뉴</Button>
-                </Menu.Trigger>
+                <Menu.Trigger render={<Button>일반 메뉴</Button>} />
                 <Menu.Portal>
                     <Menu.Content>
                         <Menu.Item>활성 아이템 1</Menu.Item>
@@ -172,9 +158,7 @@ export default function MenuDisabled() {
             </Menu.Root>
 
             <Menu.Root disabled>
-                <Menu.Trigger>
-                    <Button>비활성 메뉴</Button>
-                </Menu.Trigger>
+                <Menu.Trigger render={<Button>비활성 메뉴</Button>} />
                 <Menu.Portal>
                     <Menu.Content>
                         <Menu.Item>아이템 1</Menu.Item>
@@ -207,9 +191,7 @@ export default function MenuCheckbox() {
 
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>보기 설정</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>보기 설정</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Group>
@@ -255,9 +237,7 @@ export default function MenuRadio() {
 
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>글꼴 크기</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>글꼴 크기</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Group>
@@ -296,9 +276,7 @@ import { Button, Menu } from '@vapor-ui/core';
 export default function MenuSubmenu() {
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>서브메뉴</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>서브메뉴</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Item>새 파일</Menu.Item>
@@ -347,12 +325,84 @@ export default function MenuSubmenu() {
 
 ### Menu.Root
 
-Menu의 루트 컨테이너 컴포넌트입니다.
+Menu의 루트 컨테이너 컴포넌트입니다. 위치 관련 props와 Base UI Menu.Root의 모든 props를 지원합니다.
 
 <ComponentPropsTable file="menu" section="props" />
+
+### Menu.Trigger
+
+Menu를 트리거하는 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="triggerProps" />
+
+### Menu.Portal
+
+Menu 콘텐츠를 DOM 트리의 다른 위치로 렌더링하는 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="portalProps" />
+
+### Menu.Content
+
+Menu의 실제 콘텐츠를 포함하는 컴포넌트입니다. 내장된 Positioner, Popup을 포함하며, 자동으로 위치가 조정됩니다.
+
+<ComponentPropsTable file="menu" section="contentProps" />
 
 ### Menu.Item
 
 개별 메뉴 아이템 컴포넌트입니다.
 
-<ComponentPropsTable file="menu" section="subComponentProps" />
+<ComponentPropsTable file="menu" section="itemProps" />
+
+### Menu.Separator
+
+메뉴 아이템들 사이의 구분선을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="separatorProps" />
+
+### Menu.Group
+
+메뉴 아이템들을 그룹화하는 컨테이너 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="groupProps" />
+
+### Menu.GroupLabel
+
+메뉴 그룹의 라벨을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="groupLabelProps" />
+
+### Menu.SubmenuRoot
+
+서브메뉴의 루트 컨테이너 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="submenuRootProps" />
+
+### Menu.SubmenuContent
+
+서브메뉴의 실제 콘텐츠를 포함하는 컴포넌트입니다. finalFocus가 자동으로 설정되어 서브메뉴가 닫힐 때 트리거로 포커스가 돌아갑니다.
+
+<ComponentPropsTable file="menu" section="submenuContentProps" />
+
+### Menu.SubmenuTriggerItem
+
+서브메뉴를 트리거하는 메뉴 아이템 컴포넌트입니다. ChevronRightOutlineIcon이 자동으로 추가됩니다.
+
+<ComponentPropsTable file="menu" section="submenuTriggerItemProps" />
+
+### Menu.CheckboxItem
+
+체크박스 형태의 메뉴 아이템 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="checkboxItemProps" />
+
+### Menu.RadioGroup
+
+라디오 그룹 메뉴 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="radioGroupProps" />
+
+### Menu.RadioItem
+
+라디오 아이템 메뉴 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="radioItemProps" />

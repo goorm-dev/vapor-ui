@@ -10,9 +10,7 @@ export default function MenuCheckbox() {
 
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>보기 설정</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>보기 설정</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Group>

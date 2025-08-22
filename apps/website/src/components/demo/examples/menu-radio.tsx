@@ -8,9 +8,7 @@ export default function MenuRadio() {
 
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>글꼴 크기</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>글꼴 크기</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Group>

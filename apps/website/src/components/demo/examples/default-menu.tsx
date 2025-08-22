@@ -1,13 +1,11 @@
-"use client";
+'use client';
 
 import { Button, Menu } from '@vapor-ui/core';
 
 export default function DefaultMenu() {
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>메뉴 열기</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>메뉴 열기</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Item>새 파일</Menu.Item>

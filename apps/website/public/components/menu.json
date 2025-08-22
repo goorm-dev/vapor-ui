@@ -1,48 +1,450 @@
 {
-  "props": [
-    {
-      "prop": "disabled",
-      "type": ["boolean"],
-      "default": "false",
-      "description": "메뉴 전체를 비활성화할지 여부를 설정합니다."
-    },
-    {
-      "prop": "side",
-      "type": ["top", "right", "bottom", "left"],
-      "default": "bottom",
-      "description": "메뉴가 표시될 위치를 설정합니다."
-    },
-    {
-      "prop": "align",
-      "type": ["start", "center", "end"],
-      "default": "center", 
-      "description": "메뉴의 정렬을 설정합니다."
-    },
-    {
-      "prop": "sideOffset",
-      "type": ["number"],
-      "default": "0",
-      "description": "트리거와 메뉴 사이의 거리를 설정합니다."
-    },
-    {
-      "prop": "alignOffset",
-      "type": ["number"], 
-      "default": "0",
-      "description": "정렬 축에서의 오프셋을 설정합니다."
-    }
-  ],
-  "subComponentProps": [
-    {
-      "prop": "disabled",
-      "type": ["boolean"],
-      "default": "false",
-      "description": "개별 메뉴 아이템을 비활성화할지 여부를 설정합니다."
-    },
-    {
-      "prop": "closeOnClick",
-      "type": ["boolean"],
-      "default": "true",
-      "description": "클릭 시 메뉴를 닫을지 여부를 설정합니다."
-    }
-  ]
+    "props": [
+        {
+            "prop": "open",
+            "type": ["boolean"],
+            "default": "-",
+            "description": "메뉴의 열림 상태를 제어합니다 (제어 모드)."
+        },
+        {
+            "prop": "defaultOpen",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "메뉴의 초기 열림 상태를 설정합니다."
+        },
+        {
+            "prop": "onOpenChange",
+            "type": ["function"],
+            "default": "-",
+            "description": "메뉴의 열림 상태가 변경될 때 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "메뉴 전체를 비활성화할지 여부를 설정합니다."
+        },
+        {
+            "prop": "openOnHover",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "호버 시 메뉴를 열지 여부를 설정합니다."
+        },
+        {
+            "prop": "delay",
+            "type": ["number"],
+            "default": "0",
+            "description": "메뉴가 열리기 전 지연 시간을 밀리초 단위로 설정합니다."
+        },
+        {
+            "prop": "closeDelay",
+            "type": ["number"],
+            "default": "0",
+            "description": "메뉴가 닫히기 전 지연 시간을 밀리초 단위로 설정합니다."
+        },
+        {
+            "prop": "side",
+            "type": ["top", "right", "bottom", "left"],
+            "default": "bottom",
+            "description": "메뉴가 표시될 위치를 설정합니다."
+        },
+        {
+            "prop": "align",
+            "type": ["start", "center", "end"],
+            "default": "center", 
+            "description": "메뉴의 정렬을 설정합니다."
+        },
+        {
+            "prop": "sideOffset",
+            "type": ["number"],
+            "default": "0",
+            "description": "트리거와 메뉴 사이의 거리를 설정합니다."
+        },
+        {
+            "prop": "alignOffset",
+            "type": ["number"], 
+            "default": "0",
+            "description": "정렬 축에서의 오프셋을 설정합니다."
+        },
+        {
+            "prop": "anchor",
+            "type": ["Element", "VirtualElement", "null"],
+            "default": "null",
+            "description": "메뉴의 위치를 계산할 기준 앵커 요소를 설정합니다."
+        },
+        {
+            "prop": "arrowPadding",
+            "type": ["number"],
+            "default": "4",
+            "description": "화살표와 콘텐츠 사이의 패딩을 설정합니다."
+        },
+        {
+            "prop": "collisionAvoidance",
+            "type": ["boolean", "object"],
+            "default": "{ align: 'none' }",
+            "description": "충돌 회피 동작을 설정합니다."
+        },
+        {
+            "prop": "collisionBoundary",
+            "type": ["Element", "Array<Element>", "string"],
+            "default": "clippingAncestors",
+            "description": "충돌 감지를 위한 경계 요소를 설정합니다."
+        },
+        {
+            "prop": "collisionPadding",
+            "type": ["number", "object"],
+            "default": "0",
+            "description": "충돌 경계와의 패딩을 설정합니다."
+        },
+        {
+            "prop": "positionMethod",
+            "type": ["absolute", "fixed"],
+            "default": "absolute",
+            "description": "메뉴의 CSS 위치 지정 방법을 설정합니다."
+        },
+        {
+            "prop": "sticky",
+            "type": ["partial", "always"],
+            "default": "partial",
+            "description": "앵커 요소에 대한 메뉴의 고정 동작을 설정합니다."
+        },
+        {
+            "prop": "trackAnchor",
+            "type": ["boolean"],
+            "default": "true",
+            "description": "앵커 요소의 움직임을 추적할지 여부를 설정합니다."
+        }
+    ],
+    "triggerProps": [
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "-",
+            "description": "트리거를 비활성화할지 여부를 설정합니다. Root의 disabled 상태를 상속받습니다."
+        },
+        {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "-",
+            "description": "커스텀 렌더링을 위한 요소나 함수를 설정합니다."
+        }
+    ],
+    "portalProps": [
+        {
+            "prop": "container",
+            "type": ["Element", "function"],
+            "default": "document.body",
+            "description": "포털이 렌더링될 컨테이너 요소를 설정합니다."
+        },
+        {
+            "prop": "keepMounted",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "닫힌 상태에서도 DOM에 마운트된 상태를 유지할지 여부를 설정합니다."
+        }
+    ],
+    "contentProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "콘텐츠에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "메뉴 내부에 표시될 콘텐츠입니다."
+        },
+        {
+            "prop": "style",
+            "type": ["CSSProperties"],
+            "default": "-",
+            "description": "콘텐츠에 적용할 인라인 스타일입니다."
+        },
+        {
+            "prop": "onPointerEnter",
+            "type": ["function"],
+            "default": "-",
+            "description": "포인터가 콘텐츠 영역에 진입할 때 호출되는 함수입니다."
+        },
+        {
+            "prop": "onPointerLeave",
+            "type": ["function"],
+            "default": "-",
+            "description": "포인터가 콘텐츠 영역에서 벗어날 때 호출되는 함수입니다."
+        },
+        {
+            "prop": "onEscapeKeyDown",
+            "type": ["function"],
+            "default": "-",
+            "description": "ESC 키를 눌렀을 때 호출되는 함수입니다."
+        },
+        {
+            "prop": "onInteractOutside",
+            "type": ["function"],
+            "default": "-",
+            "description": "메뉴 외부에서 상호작용할 때 호출되는 함수입니다."
+        }
+    ],
+    "itemProps": [
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "개별 메뉴 아이템을 비활성화할지 여부를 설정합니다. Root의 disabled 상태를 상속받습니다."
+        },
+        {
+            "prop": "closeOnClick",
+            "type": ["boolean"],
+            "default": "true",
+            "description": "클릭 시 메뉴를 닫을지 여부를 설정합니다."
+        },
+        {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "-",
+            "description": "커스텀 렌더링을 위한 요소나 함수를 설정합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "아이템에 적용할 추가 CSS 클래스입니다."
+        }
+    ],
+    "separatorProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "구분선에 적용할 추가 CSS 클래스입니다."
+        }
+    ],
+    "groupProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "그룹에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "그룹 내부에 포함될 콘텐츠입니다."
+        }
+    ],
+    "groupLabelProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "그룹 라벨에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "그룹 라벨 텍스트입니다."
+        }
+    ],
+    "checkboxItemProps": [
+        {
+            "prop": "checked",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "체크박스 아이템의 체크 상태를 설정합니다."
+        },
+        {
+            "prop": "defaultChecked",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "체크박스 아이템의 초기 체크 상태를 설정합니다."
+        },
+        {
+            "prop": "onCheckedChange",
+            "type": ["function"],
+            "default": "-",
+            "description": "체크 상태가 변경될 때 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "체크박스 아이템을 비활성화할지 여부를 설정합니다. Root의 disabled 상태를 상속받습니다."
+        },
+        {
+            "prop": "closeOnClick",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "클릭 시 메뉴를 닫을지 여부를 설정합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "체크박스 아이템에 적용할 추가 CSS 클래스입니다."
+        }
+    ],
+    "radioGroupProps": [
+        {
+            "prop": "value",
+            "type": ["string"],
+            "default": "-",
+            "description": "선택된 라디오 아이템의 값을 설정합니다."
+        },
+        {
+            "prop": "defaultValue",
+            "type": ["string"],
+            "default": "-",
+            "description": "초기 선택된 라디오 아이템의 값을 설정합니다."
+        },
+        {
+            "prop": "onValueChange",
+            "type": ["function"],
+            "default": "-",
+            "description": "선택된 값이 변경될 때 호출되는 콜백 함수입니다."
+        }
+    ],
+    "radioItemProps": [
+        {
+            "prop": "value",
+            "type": ["string"],
+            "default": "-",
+            "description": "라디오 아이템의 값을 설정합니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "라디오 아이템을 비활성화할지 여부를 설정합니다. Root의 disabled 상태를 상속받습니다."
+        },
+        {
+            "prop": "closeOnClick",
+            "type": ["boolean"],
+            "default": "true",
+            "description": "클릭 시 메뉴를 닫을지 여부를 설정합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "라디오 아이템에 적용할 추가 CSS 클래스입니다."
+        }
+    ],
+    "submenuRootProps": [
+        {
+            "prop": "open",
+            "type": ["boolean"],
+            "default": "-",
+            "description": "서브메뉴의 열림 상태를 제어합니다 (제어 모드)."
+        },
+        {
+            "prop": "defaultOpen",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "서브메뉴의 초기 열림 상태를 설정합니다."
+        },
+        {
+            "prop": "onOpenChange",
+            "type": ["function"],
+            "default": "-",
+            "description": "서브메뉴의 열림 상태가 변경될 때 호출되는 콜백 함수입니다."
+        },
+        {
+            "prop": "openOnHover",
+            "type": ["boolean"],
+            "default": "true",
+            "description": "호버 시 서브메뉴를 열지 여부를 설정합니다."
+        },
+        {
+            "prop": "delay",
+            "type": ["number"],
+            "default": "0",
+            "description": "서브메뉴가 열리기 전 지연 시간을 밀리초 단위로 설정합니다."
+        },
+        {
+            "prop": "closeDelay",
+            "type": ["number"],
+            "default": "0",
+            "description": "서브메뉴가 닫히기 전 지연 시간을 밀리초 단위로 설정합니다."
+        },
+        {
+            "prop": "closeParentOnEsc",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "ESC 키를 눌렀을 때 부모 메뉴도 함께 닫을지 여부를 설정합니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "서브메뉴를 비활성화할지 여부를 설정합니다. Root의 disabled 상태를 상속받습니다."
+        },
+        {
+            "prop": "side",
+            "type": ["top", "right", "bottom", "left"],
+            "default": "right",
+            "description": "서브메뉴가 표시될 위치를 설정합니다."
+        },
+        {
+            "prop": "align",
+            "type": ["start", "center", "end"],
+            "default": "start",
+            "description": "서브메뉴의 정렬을 설정합니다."
+        },
+        {
+            "prop": "sideOffset",
+            "type": ["number"],
+            "default": "0",
+            "description": "트리거와 서브메뉴 사이의 거리를 설정합니다."
+        },
+        {
+            "prop": "alignOffset",
+            "type": ["number"],
+            "default": "0",
+            "description": "정렬 축에서의 오프셋을 설정합니다."
+        }
+    ],
+    "submenuTriggerItemProps": [
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "서브메뉴 트리거 아이템을 비활성화할지 여부를 설정합니다. SubmenuRoot의 disabled 상태를 상속받습니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "서브메뉴 트리거 아이템에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "서브메뉴 트리거 아이템의 콘텐츠입니다. ChevronRightOutlineIcon이 자동으로 추가됩니다."
+        }
+    ],
+    "submenuContentProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "서브메뉴 콘텐츠에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "서브메뉴 내부에 표시될 콘텐츠입니다."
+        },
+        {
+            "prop": "style",
+            "type": ["CSSProperties"],
+            "default": "-",
+            "description": "서브메뉴 콘텐츠에 적용할 인라인 스타일입니다."
+        }
+    ]
 }

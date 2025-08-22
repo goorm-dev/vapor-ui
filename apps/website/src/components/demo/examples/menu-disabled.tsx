@@ -6,9 +6,7 @@ export default function MenuDisabled() {
     return (
         <div className="flex flex-wrap gap-4">
             <Menu.Root>
-                <Menu.Trigger>
-                    <Button>일반 메뉴</Button>
-                </Menu.Trigger>
+                <Menu.Trigger render={<Button>일반 메뉴</Button>} />
                 <Menu.Portal>
                     <Menu.Content>
                         <Menu.Item>활성 아이템 1</Menu.Item>
@@ -22,9 +20,7 @@ export default function MenuDisabled() {
             </Menu.Root>
 
             <Menu.Root disabled>
-                <Menu.Trigger>
-                    <Button>비활성 메뉴</Button>
-                </Menu.Trigger>
+                <Menu.Trigger render={<Button>비활성 메뉴</Button>} />
                 <Menu.Portal>
                     <Menu.Content>
                         <Menu.Item>아이템 1</Menu.Item>

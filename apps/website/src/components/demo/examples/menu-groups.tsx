@@ -5,9 +5,7 @@ import { Button, Menu } from '@vapor-ui/core';
 export default function MenuGroups() {
     return (
         <Menu.Root>
-            <Menu.Trigger>
-                <Button>그룹 메뉴</Button>
-            </Menu.Trigger>
+            <Menu.Trigger render={<Button>그룹 메뉴</Button>} />
             <Menu.Portal>
                 <Menu.Content>
                     <Menu.Group>

@@ -6,7 +6,7 @@ export default function TooltipOffset() {
             <div>
                 <h4 className="text-sm font-medium mb-4">Side Offset (거리 조정)</h4>
                 <div className="flex gap-4">
-                    <Tooltip.Root sideOffset={0} t>
+                    <Tooltip.Root sideOffset={0}>
                         <Tooltip.Trigger render={<Button>0px</Button>} />
                         <Tooltip.Portal>
                             <Tooltip.Content>거리 0px</Tooltip.Content>
