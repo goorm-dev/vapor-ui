@@ -173,17 +173,7 @@ export default function HomePage() {
                             </button>
                         </div>
 
-                        <Button 
-                            size="lg" 
-                            color="secondary" 
-                            className={'w-full md:w-auto'} 
-                            onClick={() => setTheme({
-                                primaryColor: '#3B82F6', // blue-500
-                                radius: 'md',
-                                scaling: 1.0, // 100%
-                            })}
-                            asChild
-                        >
+                        <Button size="lg" color="secondary" className={'w-full md:w-auto'} asChild>
                             <Link href="/docs">
                                 Docs 보러 가기
                                 <ForwardPageOutlineIcon
