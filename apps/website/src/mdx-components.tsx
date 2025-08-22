@@ -4,7 +4,6 @@ import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 import Image from 'next/image';
 
-import AccessibilityTable from '~/components/accessibility-table';
 import AllComponentsContainer from '~/components/all-components-container';
 import ComponentsCard from '~/components/component-card/component-card';
 import ComponentPropsTable from '~/components/component-props-table';
@@ -41,10 +40,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         IconList,
         PropsTable,
         LiveCodeBlock,
-        AccessibilityTable: AccessibilityTable as unknown as (
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            props: any,
-        ) => JSX.Element,
+
         Image,
         IntroLinkCardContainer,
         ...components,

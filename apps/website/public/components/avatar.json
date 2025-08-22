@@ -1,74 +1,110 @@
 {
     "props": [
         {
+            "prop": "asChild",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+        },
+        {
             "prop": "size",
             "type": ["sm", "md", "lg", "xl"],
             "default": "md",
             "description": "아바타 컴포넌트의 크기를 조절합니다."
         },
         {
+            "prop": "shape",
+            "type": ["circle", "square"],
+            "default": "square",
+            "description": "아바타 컴포넌트의 모양을 조절합니다."
+        },
+        {
             "prop": "alt",
             "type": ["string"],
-            "default": null,
+            "default": "-",
             "description": "웹 접근성을 위한 아바타 이미지의 대체 텍스트입니다."
         },
         {
             "prop": "src",
-            "type": ["string", "undefined"],
-            "default": null,
+            "type": ["string"],
+            "default": "-",
             "description": "아바타 이미지의 소스 URL입니다."
         },
         {
+            "prop": "delayMs",
+            "type": ["number"],
+            "default": "-",
+            "description": "폴백을 표시하기 전의 지연 시간(밀리초)입니다."
+        },
+        {
             "prop": "children",
-            "type": ["React.ReactNode"],
-            "default": null,
+            "type": ["ReactNode"],
+            "default": "-",
             "description": "자식 컴포넌트(Avatar.Image, Avatar.Fallback)입니다."
         },
         {
             "prop": "className",
-            "type": ["string", "undefined"],
-            "default": null,
+            "type": ["string"],
+            "default": "-",
             "description": "아바타의 최상위 요소에 적용할 추가 CSS 클래스입니다."
         }
     ],
     "imageProps": [
         {
+            "prop": "asChild",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+        },
+        {
             "prop": "src",
-            "type": ["string", "undefined"],
-            "default": null,
-            "description": "표시할 이미지의 소스 URL입니다."
+            "type": ["string"],
+            "default": "-",
+            "description": "표시할 이미지의 소스 URL입니다. Root에서 상속받습니다."
         },
         {
             "prop": "alt",
-            "type": ["string", "undefined"],
-            "default": null,
-            "description": "이미지의 대체 텍스트입니다."
+            "type": ["string"],
+            "default": "-",
+            "description": "이미지의 대체 텍스트입니다. Root에서 상속받습니다."
         },
         {
-            "prop": "onLoad",
-            "type": ["() => void"],
-            "default": null,
-            "description": "이미지 로딩에 성공했을 때 실행되는 콜백 함수입니다."
+            "prop": "onLoadingStatusChange",
+            "type": ["function"],
+            "default": "-",
+            "description": "이미지 로딩 상태에 대한 정보를 제공하는 콜백입니다. 이미지 로딩을 더 정밀하게 제어하고 싶을 때 유용합니다."
         },
         {
-            "prop": "onError",
-            "type": ["() => void"],
-            "default": null,
-            "description": "이미지 로딩에 실패했을 때 실행되는 콜백 함수입니다."
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "이미지에 적용할 추가 CSS 클래스입니다."
         }
     ],
     "fallbackProps": [
         {
-            "prop": "children",
-            "type": ["React.ReactNode"],
-            "default": null,
-            "description": "이미지 로딩 실패 시 표시할 콘텐츠입니다 (주로 이니셜 또는 아이콘)."
+            "prop": "asChild",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
         },
         {
             "prop": "delayMs",
-            "type": ["number", "undefined"],
-            "default": null,
-            "description": "폴백을 표시하기 전의 지연 시간(밀리초)입니다."
+            "type": ["number"],
+            "default": "-",
+            "description": "폴백을 표시하기 전의 지연 시간(밀리초)입니다. 느린 연결에서만 표시되도록 지연시키는데 유용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "이미지 로딩 실패 시 표시할 콘텐츠입니다. 기본적으로 alt에서 이니셜을 자동 생성합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "폴백에 적용할 추가 CSS 클래스입니다."
         }
     ],
     "simpleProps": [
@@ -86,26 +122,26 @@
         },
         {
             "prop": "src",
-            "type": ["string", "undefined"],
-            "default": null,
+            "type": ["string"],
+            "default": "-",
             "description": "아바타 이미지의 소스 URL입니다."
         },
         {
             "prop": "alt",
             "type": ["string"],
-            "default": null,
+            "default": "-",
             "description": "아바타 이미지의 대체 텍스트입니다."
         },
         {
-            "prop": "fallback",
-            "type": ["React.ReactNode"],
-            "default": null,
-            "description": "이미지 로딩 실패 시 표시할 콘텐츠입니다."
+            "prop": "delayMs",
+            "type": ["number"],
+            "default": "-",
+            "description": "폴백을 표시하기 전의 지연 시간(밀리초)입니다."
         },
         {
             "prop": "className",
-            "type": ["string", "undefined"],
-            "default": null,
+            "type": ["string"],
+            "default": "-",
             "description": "적용할 추가 CSS 클래스입니다."
         }
     ]

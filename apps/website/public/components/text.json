@@ -2,69 +2,67 @@
     "props": [
         {
             "prop": "typography",
-            "type": "display1 | display2 | display3 | display4 | heading1 | heading2 | heading3 | heading4 | heading5 | heading6 | subtitle1 | subtitle2 | body1 | body2 | body3 | body4 | code1 | code2 | undefined",
-            "default": null,
+            "type": [
+                "display1",
+                "display2",
+                "display3",
+                "display4",
+                "heading1",
+                "heading2",
+                "heading3",
+                "heading4",
+                "heading5",
+                "heading6",
+                "subtitle1",
+                "subtitle2",
+                "body1",
+                "body2",
+                "body3",
+                "body4",
+                "code1",
+                "code2",
+                "undefined"
+            ],
+            "default": "body1",
             "description": "적용할 타이포그래피 스타일 토큰입니다."
         },
         {
             "prop": "foreground",
-            "type": "primary | primary-darker | secondary | secondary-darker | success | success-darker | warning | warning-darker | danger | danger-darker | hint | hint-darker | contrast | contrast-darker | normal | normal-lighter | accent | accent-darker | undefined",
-            "default": null,
+            "type": [
+                "primary",
+                "primary-darker",
+                "secondary",
+                "secondary-darker",
+                "success",
+                "success-darker",
+                "warning",
+                "warning-darker",
+                "danger",
+                "danger-darker",
+                "hint",
+                "hint-darker",
+                "contrast",
+                "contrast-darker",
+                "normal",
+                "normal-lighter",
+                "accent",
+                "accent-darker",
+                "undefined"
+            ],
+            "default": "normal",
             "description": "텍스트 색상을 지정하는 전경색 토큰입니다."
         },
         {
             "prop": "asChild",
-            "type": "boolean",
+            "type": ["boolean"],
             "default": "false",
             "description": "HTML 시멘틱 태그를 변경하기 위해 사용합니다. 예: p, strong, h1 등."
         },
         {
             "prop": "children",
-            "type": "React.ReactNode",
-            "default": null,
+            "type": ["React.ReactNode"],
+            "default": "null",
             "description": "텍스트 내용입니다."
-        }
-    ],
-    "accessibility": [
-        {
-            "headingDescription": "Text WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.\nVapor Text는 Radix 기능을 기반으로 구축되어 일부 웹 접근성은 Radix에서 제공하고 있습니다.",
-            "sections": [
-                {
-                    "title": "개발 시 준수해야 할 내용을 명시합니다.",
-                    "headerList": {
-                        "props": "Props",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "asChild",
-                            "descriptions": [
-                                "asChild 속성을 사용하여 컴포넌트의 기본 태그를 변경할 수 있습니다. 기본값은 span 태그입니다.",
-                                "해당 prop은 시맨틱 마크업을 준수하기 위해 다양한 HTML 요소를 사용할 수 있도록 합니다."
-                            ],
-                            "exampleCode": "<Text asChild typography=\"heading1\">\n  <h1>h1 태그를 사용합니다.</h1>\n</Text>\n\n<Text asChild typography=\"body1\">\n  <p>p태그를 사용합니다.</p>\n</Text>",
-                            "badgeColor": "primary"
-                        }
-                    ]
-                },
-                {
-                    "title": "컴포넌트 내부적으로 준수되고 있는 접근성 기능을 명시합니다.",
-                    "headerList": {
-                        "accessibility": "Accessibility",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "ref",
-                            "descriptions": [
-                                "ref 속성을 사용하여 컴포넌트에 대한 참조를 전달할 수 있습니다. 이는 포커스 관리, 텍스트 조작 및 기타 접근성 기능 구현에 유용합니다."
-                            ],
-                            "exampleCode": "const textRef = useRef(null);\n\nreturn (\n    <Text ref={textRef} typography=\"body1\">\n        접근성을 위해 참조를 사용하는 텍스트\n    </Text>\n);",
-                            "badgeColor": "primary"
-                        }
-                    ]
-                }
-            ]
         }
     ]
 }

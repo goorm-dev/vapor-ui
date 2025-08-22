@@ -1,0 +1,345 @@
+---
+title: 'Tooltip'
+site_name: 'Tooltip - Vapor Core'
+description: '요소에 대한 추가 정보를 제공하는 툴팁 컴포넌트입니다'
+---
+
+<Demo name="default-tooltip">
+```tsx
+import { Button, Tooltip } from '@vapor-ui/core';
+
+export default function DefaultTooltip() {
+    return (
+        <Tooltip.Root>
+            <Tooltip.Trigger render={<Button>툴팁 보기</Button>} />
+            <Tooltip.Portal>
+                <Tooltip.Content>유용한 정보를 제공하는 툴팁입니다.</Tooltip.Content>
+            </Tooltip.Portal>
+        </Tooltip.Root>
+    );
+}
+
+````
+</Demo>
+
+## Property
+
+### Positioning
+
+Tooltip의 표시 위치를 설정할 수 있습니다.
+
+<Demo name="tooltip-positioning">
+```tsx
+import { Button, Tooltip } from '@vapor-ui/core';
+
+export default function TooltipPositioning() {
+    return (
+        <div className="flex flex-wrap gap-4">
+            <Tooltip.Root side="top">
+                <Tooltip.Trigger render={<Button>상단</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>상단에 표시되는 툴팁</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root side="right">
+                <Tooltip.Trigger render={<Button>우측</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>우측에 표시되는 툴팁</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root side="bottom">
+                <Tooltip.Trigger render={<Button>하단</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>하단에 표시되는 툴팁</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root side="left">
+                <Tooltip.Trigger render={<Button>좌측</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>좌측에 표시되는 툴팁</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+        </div>
+    );
+}
+````
+
+</Demo>
+
+### Alignment
+
+Tooltip의 정렬 위치를 조정할 수 있습니다.
+
+<Demo name="tooltip-alignment">
+```tsx
+import { Button, Tooltip } from '@vapor-ui/core';
+
+export default function TooltipAlignment() {
+    return (
+        <div className="space-y-8">
+            <div>
+                <h4 className="text-sm font-medium mb-4">하단 정렬</h4>
+                <div className="flex gap-4">
+                    <Tooltip.Root side="bottom" align="start">
+                        <Tooltip.Trigger render={<Button>시작</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>시작 위치에 정렬된 툴팁</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+
+                    <Tooltip.Root side="bottom" align="center">
+                        <Tooltip.Trigger render={<Button>중앙</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>중앙에 정렬된 툴팁</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+
+                    <Tooltip.Root side="bottom" align="end">
+                        <Tooltip.Trigger render={<Button>끝</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>끝 위치에 정렬된 툴팁</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                </div>
+            </div>
+
+            <div>
+                <h4 className="text-sm font-medium mb-4">우측 정렬</h4>
+                <div className="flex flex-col gap-4">
+                    <Tooltip.Root side="right" align="start">
+                        <Tooltip.Trigger render={<Button>시작</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>상단 시작 위치</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+
+                    <Tooltip.Root side="right" align="center">
+                        <Tooltip.Trigger render={<Button>중앙</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>중앙 위치</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+
+                    <Tooltip.Root side="right" align="end">
+                        <Tooltip.Trigger render={<Button>끝</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>하단 끝 위치</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                </div>
+            </div>
+        </div>
+    );
+
+}
+
+````
+</Demo>
+
+### Delay
+
+Tooltip이 표시되는 지연 시간을 조정할 수 있습니다.
+
+<Demo name="tooltip-delay">
+```tsx
+import { Button, Tooltip } from '@vapor-ui/core';
+
+export default function TooltipDelay() {
+    return (
+        <div className="flex gap-4">
+            <Tooltip.Root delay={0}>
+                <Tooltip.Trigger render={<Button>즉시 표시</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>지연 없이 바로 표시되는 툴팁</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root delay={500}>
+                <Tooltip.Trigger render={<Button>0.5초 지연</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>0.5초 후에 표시되는 툴팁</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root delay={1000}>
+                <Tooltip.Trigger render={<Button>1초 지연</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>1초 후에 표시되는 툴팁</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root delay={2000}>
+                <Tooltip.Trigger render={<Button>2초 지연</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>2초 후에 표시되는 툴팁</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+        </div>
+    );
+}
+````
+
+</Demo>
+
+### Offset
+
+Tooltip의 거리와 정렬 오프셋을 조정할 수 있습니다.
+
+<Demo name="tooltip-offset">
+```tsx
+import { Button, Tooltip } from '@vapor-ui/core';
+
+export default function TooltipOffset() {
+    return (
+        <div className="space-y-8">
+            <div>
+                <h4 className="text-sm font-medium mb-4">Side Offset (거리 조정)</h4>
+                <div className="flex gap-4">
+                    <Tooltip.Root sideOffset={0}>
+                        <Tooltip.Trigger render={<Button>0px</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>거리 0px</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+
+                    <Tooltip.Root sideOffset={10}>
+                        <Tooltip.Trigger render={<Button>10px</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>거리 10px</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+
+                    <Tooltip.Root sideOffset={20}>
+                        <Tooltip.Trigger render={<Button>20px</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>거리 20px</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                </div>
+            </div>
+
+            <div>
+                <h4 className="text-sm font-medium mb-4">Align Offset (정렬 오프셋)</h4>
+                <div className="flex gap-4">
+                    <Tooltip.Root alignOffset={-20}>
+                        <Tooltip.Trigger render={<Button>-20px</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>정렬 오프셋 -20px</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+
+                    <Tooltip.Root alignOffset={0}>
+                        <Tooltip.Trigger render={<Button>0px</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>정렬 오프셋 0px</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+
+                    <Tooltip.Root alignOffset={20}>
+                        <Tooltip.Trigger render={<Button>+20px</Button>} />
+                        <Tooltip.Portal>
+                            <Tooltip.Content>정렬 오프셋 +20px</Tooltip.Content>
+                        </Tooltip.Portal>
+                    </Tooltip.Root>
+                </div>
+            </div>
+        </div>
+    );
+
+}
+
+````
+</Demo>
+
+## Examples
+
+### Content Variations
+
+다양한 형태의 툴팁 내용을 표시할 수 있습니다.
+
+<Demo name="tooltip-content">
+```tsx
+'use client';
+
+import { Button, Tooltip } from '@vapor-ui/core';
+
+export default function TooltipContent() {
+    return (
+        <div className="flex flex-wrap gap-4">
+            <Tooltip.Root>
+                <Tooltip.Trigger render={<Button>간단한 텍스트</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>간단한 툴팁 메시지</Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root>
+                <Tooltip.Trigger render={<Button>긴 텍스트</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>
+                        이것은 더 긴 툴팁 메시지입니다. 여러 줄에 걸쳐 표시될 수 있으며 유용한
+                        정보를 제공합니다.
+                    </Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root>
+                <Tooltip.Trigger render={<Button>포맷된 텍스트</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>
+                        <div className="space-y-1">
+                            <div className="font-bold">제목</div>
+                            <div className="text-sm">설명 텍스트가 여기에 있습니다.</div>
+                            <div className="text-xs text-gray-600">추가 정보</div>
+                        </div>
+                    </Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+
+            <Tooltip.Root>
+                <Tooltip.Trigger render={<Button>키보드 단축키</Button>} />
+                <Tooltip.Portal>
+                    <Tooltip.Content>
+                        <div className="flex items-center gap-2">
+                            <span>저장하기</span>
+                            <kbd className="px-1.5 py-0.5 text-xs bg-gray-200 rounded">Ctrl+S</kbd>
+                        </div>
+                    </Tooltip.Content>
+                </Tooltip.Portal>
+            </Tooltip.Root>
+        </div>
+    );
+}
+
+````
+
+</Demo>
+
+## Props Table
+
+### Tooltip.Root
+
+Tooltip의 루트 컨테이너 컴포넌트입니다. 위치 관련 props와 Base UI Tooltip.Root의 모든 props를 지원합니다.
+
+<ComponentPropsTable file="tooltip" section="props" />
+
+### Tooltip.Trigger
+
+Tooltip을 트리거하는 컴포넌트입니다.
+
+<ComponentPropsTable file="tooltip" section="triggerProps" />
+
+### Tooltip.Portal
+
+Tooltip 콘텐츠를 DOM 트리의 다른 위치로 렌더링하는 컴포넌트입니다.
+
+<ComponentPropsTable file="tooltip" section="portalProps" />
+
+### Tooltip.Content
+
+Tooltip의 실제 콘텐츠를 포함하는 컴포넌트입니다. 내장된 Positioner, Popup, Arrow를 포함하며, 자동으로 화살표가 포함되어 위치에 따라 화살표 방향이 조정됩니다.
+
+<ComponentPropsTable file="tooltip" section="contentProps" />

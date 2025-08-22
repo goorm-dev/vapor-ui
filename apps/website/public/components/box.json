@@ -1,0 +1,118 @@
+{
+    "props": [
+        {
+            "prop": "display",
+            "type": ["block", "inline", "flex", "grid", "none"],
+            "default": "block",
+            "description": "요소의 디스플레이 유형을 설정합니다."
+        },
+        {
+            "prop": "flexDirection", 
+            "type": ["row", "column", "row-reverse", "column-reverse"],
+            "default": "row",
+            "description": "플렉스 컨테이너의 주축 방향을 설정합니다."
+        },
+        {
+            "prop": "justifyContent",
+            "type": ["flex-start", "center", "flex-end", "space-between", "space-around", "space-evenly"],
+            "default": "flex-start", 
+            "description": "플렉스 컨테이너의 주축 정렬 방식을 설정합니다."
+        },
+        {
+            "prop": "alignItems",
+            "type": ["flex-start", "center", "flex-end", "stretch", "baseline"],
+            "default": "stretch",
+            "description": "플렉스 컨테이너의 교차축 정렬 방식을 설정합니다."
+        },
+        {
+            "prop": "gap",
+            "type": ["000", "025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000",
+            "description": "플렉스/그리드 컨테이너의 간격을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "padding",
+            "type": ["000", "025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000",
+            "description": "요소의 내부 여백을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "paddingX",
+            "type": ["000", "025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000",
+            "description": "요소의 좌우 내부 여백을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "paddingY", 
+            "type": ["000", "025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000",
+            "description": "요소의 상하 내부 여백을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "margin",
+            "type": ["000", "025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000",
+            "description": "요소의 외부 여백을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "marginX",
+            "type": ["000", "025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000", 
+            "description": "요소의 좌우 외부 여백을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "marginY",
+            "type": ["000", "025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000",
+            "description": "요소의 상하 외부 여백을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "width",
+            "type": ["025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800"],
+            "default": "auto",
+            "description": "요소의 너비를 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "height", 
+            "type": ["025", "050", "075", "100", "150", "175", "200", "225", "250", "300", "400", "500", "600", "700", "800"],
+            "default": "auto",
+            "description": "요소의 높이를 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "backgroundColor",
+            "type": ["primary", "secondary", "success", "warning", "danger", "gray-100", "gray-200", "blue-300", "green-500"],
+            "default": "transparent",
+            "description": "요소의 배경색을 설정합니다. 시맨틱 색상 또는 팔레트 색상을 사용할 수 있습니다."
+        },
+        {
+            "prop": "foregroundColor",
+            "type": ["$primary", "$secondary", "$success", "$warning", "$danger", "$contrast", "$normal"],
+            "default": "inherit",
+            "description": "요소의 텍스트 색상을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "borderRadius",
+            "type": ["000", "050", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000",
+            "description": "요소의 모서리 둥글기를 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "opacity",
+            "type": ["0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"],
+            "default": "1",
+            "description": "요소의 투명도를 설정합니다."
+        },
+        {
+            "prop": "textAlign",
+            "type": ["left", "center", "right", "justify"],
+            "default": "left", 
+            "description": "텍스트 정렬 방식을 설정합니다."
+        },
+        {
+            "prop": "overflow",
+            "type": ["visible", "hidden", "scroll", "auto"],
+            "default": "visible",
+            "description": "콘텐츠 오버플로우 처리 방식을 설정합니다."
+        }
+    ]
+}

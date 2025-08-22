@@ -1,0 +1,104 @@
+{
+    "props": [
+        {
+            "prop": "inline",
+            "type": ["boolean"],
+            "default": false,
+            "description": "true일 경우 inline-flex로 렌더링되어 다른 요소들과 같은 줄에 배치됩니다."
+        },
+        {
+            "prop": "flexDirection",
+            "type": ["row", "column", "row-reverse", "column-reverse"],
+            "default": "row",
+            "description": "플렉스 컨테이너의 주축 방향을 설정합니다."
+        },
+        {
+            "prop": "justifyContent",
+            "type": [
+                "flex-start",
+                "center",
+                "flex-end",
+                "space-between",
+                "space-around",
+                "space-evenly"
+            ],
+            "default": "flex-start",
+            "description": "플렉스 컨테이너의 주축을 따라 항목들의 정렬 방식을 설정합니다."
+        },
+        {
+            "prop": "alignItems",
+            "type": ["flex-start", "center", "flex-end", "stretch", "baseline"],
+            "default": "stretch",
+            "description": "플렉스 컨테이너의 교차축을 따라 항목들의 정렬 방식을 설정합니다."
+        },
+        {
+            "prop": "gap",
+            "type": [
+                "000",
+                "025",
+                "050",
+                "075",
+                "100",
+                "150",
+                "175",
+                "200",
+                "225",
+                "250",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800",
+                "900"
+            ],
+            "default": "000",
+            "description": "플렉스 항목들 사이의 간격을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "padding",
+            "type": [
+                "000",
+                "025",
+                "050",
+                "075",
+                "100",
+                "150",
+                "175",
+                "200",
+                "225",
+                "250",
+                "300",
+                "400",
+                "500",
+                "600",
+                "700",
+                "800",
+                "900"
+            ],
+            "default": "000",
+            "description": "컨테이너의 내부 여백을 설정합니다. $ 접두어와 함께 사용합니다."
+        },
+        {
+            "prop": "backgroundColor",
+            "type": [
+                "primary",
+                "secondary",
+                "success",
+                "warning",
+                "danger",
+                "gray-100",
+                "gray-200",
+                "blue-300"
+            ],
+            "default": "transparent",
+            "description": "배경색을 설정합니다. 시맨틱 색상 또는 팔레트 색상을 사용할 수 있습니다."
+        },
+        {
+            "prop": "borderRadius",
+            "type": ["000", "050", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+            "default": "000",
+            "description": "모서리 둥글기를 설정합니다. $ 접두어와 함께 사용합니다."
+        }
+    ]
+}
