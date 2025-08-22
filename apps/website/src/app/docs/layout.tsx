@@ -4,6 +4,8 @@ import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 
 import { docsOptions } from '~/app/layout.config';
 
+import { DocPageClient } from './doc-page-client';
+
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <DocsLayout
@@ -13,7 +15,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 mode: 'top',
             }}
         >
-            {children}
+            <DocPageClient>{children}</DocPageClient>
         </DocsLayout>
     );
 }
