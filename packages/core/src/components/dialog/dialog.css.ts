@@ -20,6 +20,7 @@ export const overlay = layerStyle('components', {
     inset: 0,
     transition: 'opacity 0.2s cubic-bezier(0.175,0.885,0.32,1.1)',
     backgroundColor: vars.color['black'],
+    zIndex: 50, // TODO: Use constant z-index value
 
     selectors: {
         "&[data-state='open']": { animation: `${fadeIn} 0.2s ease-out forwards` },
@@ -51,6 +52,7 @@ export const content = recipe({
 
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
         backgroundColor: vars.color.background['normal-lighter'],
+        zIndex: 50, // TODO: Use constant z-index value
 
         selectors: {
             "&[data-state='open']": {
@@ -104,6 +106,12 @@ export const body = layerStyle('components', {
     paddingBlock: 0,
     paddingInline: vars.size.space['300'],
     width: '100%',
+    '@supports': {
+        '(max-height: 80svh)': {
+            maxHeight: '80svh',
+        },
+    },
+    maxHeight: '80vh',
     overflowY: 'auto',
 });
 

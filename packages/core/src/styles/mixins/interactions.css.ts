@@ -49,8 +49,15 @@ export const interaction = recipe({
 
         type: {
             default: layerStyle('components', {
+                '@media': {
+                    '(hover: hover)': {
+                        selectors: {
+                            '&:hover::before': { opacity: calc.multiply(ratio, 1) },
+                        },
+                    },
+                },
+
                 selectors: {
-                    '&:hover::before': { opacity: calc.multiply(ratio, 1) },
                     '&:active::before': { opacity: calc.multiply(ratio, 2) },
                     '&:focus-visible': {
                         boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
@@ -60,11 +67,24 @@ export const interaction = recipe({
             form: layerStyle('components', {
                 transition: 'border-color 150ms cubic-bezier(.4,0,.2,1)',
 
+                '@media': {
+                    '(hover: hover)': {
+                        selectors: {
+                            '&:hover': { borderColor: `rgba(0,0,0, 0.24)` },
+                        },
+                    },
+                },
+
                 selectors: {
-                    '&:hover': { borderColor: `rgba(0,0,0, 0.24)` },
                     '&:focus-visible': { borderColor: vars.color.border.primary },
                 },
             }),
+            roving: {
+                selectors: {
+                    '&[data-highlighted]::before': { opacity: 0.08 },
+                    '&[data-highlighted]:active::before': { opacity: 0.16 },
+                },
+            },
         },
     },
 });

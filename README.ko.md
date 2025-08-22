@@ -2,6 +2,8 @@
 
 # Goorm Design System: Vapor UI
 
+[English](README.md)
+
 [![Status: WIP](https://img.shields.io/badge/status-WIP-orange.svg)](https://github.com/goorm-dev/vapor-ui) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > 🚧 **현재 이 프로젝트는 정식 출시 전(Pre-release) 상태입니다.** 🚧
