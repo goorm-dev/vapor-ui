@@ -27,19 +27,27 @@ const horizontalStyle = { width: '18.75rem', height: '100%' };
 
 const sideConfig = {
     top: {
-        ...{ top: 0, left: 0, ...verticalStyle },
+        top: 0,
+        left: 0,
+        ...verticalStyle,
         vars: { [transformVar]: 'translateY(-100%)' },
     },
     bottom: {
-        ...{ left: 0, bottom: 0, ...verticalStyle },
+        left: 0,
+        bottom: 0,
+        ...verticalStyle,
         vars: { [transformVar]: 'translateY(100%)' },
     },
     right: {
-        ...{ top: 0, right: 0, ...horizontalStyle },
+        top: 0,
+        right: 0,
+        ...horizontalStyle,
         vars: { [transformVar]: 'translateX(100%)' },
     },
     left: {
-        ...{ top: 0, left: 0, ...horizontalStyle },
+        top: 0,
+        left: 0,
+        ...horizontalStyle,
         vars: { [transformVar]: 'translateX(-100%)' },
     },
 };
