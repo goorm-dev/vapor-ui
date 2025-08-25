@@ -188,10 +188,20 @@ export default function HomePage() {
                 <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-background-normal)]">
                     <div className="w-full justify-center flex flex-col items-center gap-[var(--vapor-size-space-200)] ">
                         <div className="flex flex-col items-center gap-[var(--vapor-size-space-100)] text-center">
-                            <Text typography="heading2" foreground="normal" asChild className="max-[575px]:hidden">
+                            <Text
+                                typography="heading2"
+                                foreground="normal"
+                                asChild
+                                className="max-[575px]:hidden"
+                            >
                                 <h2>Instantly customize your theme</h2>
                             </Text>
-                            <Text typography="heading3" foreground="normal" asChild className="hidden max-[575px]:block">
+                            <Text
+                                typography="heading3"
+                                foreground="normal"
+                                asChild
+                                className="hidden max-[575px]:block"
+                            >
                                 <h3>Instantly customize your theme</h3>
                             </Text>
                             <Text typography="body1" foreground="normal">
