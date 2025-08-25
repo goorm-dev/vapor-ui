@@ -11,12 +11,7 @@ export const metadata = createMetadata({});
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
-        <ThemeProvider
-            config={{
-                appearance: 'dark',
-                storageKey: `theme-home`,
-            }}
-        >
+        <ThemeProvider>
             <HomeLayout
                 {...baseOptions}
                 nav={{
