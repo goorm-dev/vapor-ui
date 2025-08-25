@@ -1,6 +1,5 @@
 {
     "name": "@vapor-ui/color-generator",
-    "description": "",
     "version": "0.0.0",
     "keywords": [
         "color",
@@ -11,10 +10,6 @@
     "author": "Vapor Team <vapor.ui@goorm.io>",
     "license": "MIT",
     "homepage": "https://github.com/goorm-dev/vapor-ui",
-    "main": "",
-    "module": "",
-    "types": "",
-    "exports": {},
     "files": [
         "dist"
     ],
@@ -29,17 +24,26 @@
     "bugs": {
         "url": "https://github.com/goorm-dev/vapor-ui/issues"
     },
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "type": "module",
     "scripts": {
         "build": "rimraf dist && tsup",
         "lint": "eslint ./src",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
-        "clean": "rimraf dist node_modules .turbo",
-        "typecheck": "tsc --noEmit"
+        "clean": "rimraf dist node_modules .turbo"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@adobe/leonardo-contrast-colors": "^1.0.0",
+        "culori": "^4.0.1"
+    },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*"
+        "@repo/typescript-config": "workspace:*",
+        "@types/culori": "^4.0.0",
+        "tsup": "^8.0.2",
+        "tsx": "^4.19.2",
+        "typescript": "^5.4.5"
     }
 }
