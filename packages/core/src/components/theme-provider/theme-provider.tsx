@@ -228,8 +228,6 @@ function validateThemeConfig(config: unknown): config is VaporThemeConfig {
 
 interface ThemeContextValue extends ThemeState {
     setTheme: (newTheme: Partial<ThemeState>) => void;
-    mounted?: boolean;
-    resolvedAppearance?: Appearance;
 }
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
@@ -401,37 +399,12 @@ ThemeScript.displayName = 'ThemeScript';
 
 // --- Hooks -------------------------------------------------------------------------
 
-const useTheme = (defaultValues?: Partial<ThemeState>): ThemeContextValue => {
+const useTheme = (): ThemeContextValue => {
     const context = useContext(ThemeContext);
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
     if (context === undefined) {
         throw new Error('`useTheme` must be used within a `ThemeProvider`.');
     }
-
-    // Use user-provided defaults or fallback to default Vapor theme values
-    const defaults = {
-        appearance: 'light' as Appearance,
-        radius: 'md' as Radius,
-        scaling: 1.0,
-        primaryColor: '#3B82F6',
-        ...defaultValues,
-    };
-
-    // Return default values during SSR to prevent hydration mismatch
-    return {
-        ...context,
-        appearance: mounted ? context.appearance : defaults.appearance,
-        radius: mounted ? context.radius : defaults.radius,
-        scaling: mounted ? context.scaling : defaults.scaling,
-        primaryColor: mounted ? context.primaryColor : defaults.primaryColor,
-        resolvedAppearance: mounted ? context.appearance : defaults.appearance,
-        mounted,
-    };
+    return context;
 };
 
 // --- Exports -----------------------------------------------------------------------

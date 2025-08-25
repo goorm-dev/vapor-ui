@@ -22,13 +22,17 @@ import {
 import DefaultSearchDialog from '~/components/search/search';
 
 export default function HomePage() {
-    const { appearance, setTheme } = useTheme({
-        primaryColor: '#3B82F6', // blue-500
-        radius: 'md',
-        scaling: 1.0, // 100%
-    });
+    const [mounted, setMounted] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
-    useEffect(() => {});
+
+    const { appearance, setTheme } = useTheme();
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return null;
+    }
 
     const handleTabChange = (value: string) => {
         switch (value) {

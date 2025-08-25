@@ -50,6 +50,7 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
 }
 
 export const SiteNavBar = () => {
+    const [mounted, setMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const { appearance, setTheme } = useTheme();
@@ -57,6 +58,10 @@ export const SiteNavBar = () => {
     const toggleTheme = () => {
         setTheme({ appearance: appearance === 'light' ? 'dark' : 'light' });
     };
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -73,6 +78,10 @@ export const SiteNavBar = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    if (!mounted) {
+        return null;
+    }
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
