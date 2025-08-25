@@ -13,6 +13,8 @@ export interface IconType extends FunctionComponent<Omit<IconBaseProps, 'childre
 
 function IconBase({
     size = 16,
+    width,
+    height,
     className,
     style: customStyle,
     children,
@@ -23,8 +25,8 @@ function IconBase({
         <svg
             aria-hidden="true"
             className={className}
-            width={size}
-            height={size}
+            width={size || width}
+            height={size || height}
             fill={color}
             {...props}
         >
