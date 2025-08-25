@@ -64,7 +64,7 @@ const sideSelectors = Object.entries(sideConfig).reduce(
 
 export const content = style({
     position: 'fixed',
-    zIndex: 50,
+    zIndex: 50, // TODO: Use constant z-index value
 
     display: 'flex',
     flexDirection: 'column',
@@ -88,7 +88,7 @@ export const content = style({
     paddingInline: vars.size.space[150],
 
     width: '18.75rem',
-    height: '100%', // TODO: Use constant z-index value
+    height: '100%',
 
     selectors: {
         ...sideSelectors,
