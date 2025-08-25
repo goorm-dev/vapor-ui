@@ -27,7 +27,12 @@ interface LocalTabsContentProps {
 
 const LocalTabs = ({ children, value, defaultValue, onValueChange }: LocalTabsProps) => {
     return (
-        <Tabs.Root defaultValue={defaultValue} value={value} onValueChange={onValueChange}>
+        <Tabs.Root
+            defaultValue={defaultValue}
+            value={value}
+            onValueChange={onValueChange}
+            className="w-full flex flex-col gap-[var(--vapor-size-space-150)] items-center"
+        >
             {children}
         </Tabs.Root>
     );
@@ -52,7 +57,7 @@ const LocalTabsList = forwardRef<HTMLDivElement, LocalTabsListProps>(({ children
     return (
         <Tabs.List
             ref={ref}
-            className="relative flex w-[600px] h-[var(--vapor-size-dimension-500)] px-[var(--vapor-size-space-000)] py-0 items-start gap-[var(--vapor-size-space-100)] border-b border-[var(--vapor-color-border-normal)]"
+            className="relative justify-center flex w-[600px] max-[991px]:w-full h-[var(--vapor-size-dimension-500)] px-[var(--vapor-size-space-000)] py-0 items-start gap-[var(--vapor-size-space-100)] border-b border-[var(--vapor-color-border-normal)]"
         >
             {children}
             <LocalTabsIndicator />

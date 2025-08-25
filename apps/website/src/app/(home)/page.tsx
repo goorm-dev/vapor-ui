@@ -125,7 +125,7 @@ export default function HomePage() {
                             </div>
                             <button
                                 type="button"
-                                className="max-w-[720px] w-full rounded-[var(--vapor-size-borderRadius-400)] flex flex-col items-center gap-4 bg-[var(--vapor-color-background-normal)] p-3 md:p-4"
+                                className="max-w-[720px] w-full rounded-[var(--vapor-size-borderRadius-400)] flex flex-col items-center gap-4 bg-[rgba(0,0,0,0.16)] border border-[var(--vapor-color-border-normal)] shadow-[var(--vapor-shadow-100)] p-3 md:p-4"
                                 onClick={() => setIsSearchOpen(true)}
                             >
                                 <div className="flex items-center w-full px-6 h-12 justify-between rounded-[var(--vapor-size-borderRadius-300)] border border-[var(--vapor-color-border-normal)] bg-[var(--vapor-color-background-normal-lighter)]">
@@ -185,84 +185,89 @@ export default function HomePage() {
                         </Button>
                     </div>
                 </section>
-                <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-500)] self-stretch bg-[var(--vapor-color-background-normal)]">
-                    <div className="flex flex-col items-center gap-[var(--vapor-size-space-100)] text-center">
-                        <Text typography="heading2" foreground="normal" asChild>
-                            <h2>Instantly customize your theme</h2>
-                        </Text>
-                        <Text typography="body1" foreground="normal">
-                            샘플 테마를 통해 Vapor가 어떻게 변화하는지 확인하고,
-                            <br />
-                            나만의 테마를 완성해보세요
-                        </Text>
+                <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-background-normal)]">
+                    <div className="w-full justify-center flex flex-col items-center gap-[var(--vapor-size-space-200)] ">
+                        <div className="flex flex-col items-center gap-[var(--vapor-size-space-100)] text-center">
+                            <Text typography="heading2" foreground="normal" asChild className="max-[575px]:hidden">
+                                <h2>Instantly customize your theme</h2>
+                            </Text>
+                            <Text typography="heading3" foreground="normal" asChild className="hidden max-[575px]:block">
+                                <h3>Instantly customize your theme</h3>
+                            </Text>
+                            <Text typography="body1" foreground="normal">
+                                샘플 테마를 통해 Vapor가 어떻게 변화하는지 확인하고,
+                                <br />
+                                나만의 테마를 완성해보세요
+                            </Text>
+                        </div>
+                        <LocalTabs defaultValue="tab1" onValueChange={handleTabChange}>
+                            <LocalTabsList>
+                                <LocalTab value="tab1">
+                                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                                        <RemoteIcon />
+                                        <Text typography="subtitle1" foreground="normal-lighter">
+                                            Vapor
+                                        </Text>
+                                    </div>
+                                </LocalTab>
+                                <LocalTab value="tab2">
+                                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                                        <AiSmartieIcon />
+                                        <Text typography="subtitle1" foreground="normal-lighter">
+                                            Aurora
+                                        </Text>
+                                    </div>
+                                </LocalTab>
+                                <LocalTab value="tab3">
+                                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                                        <StarIcon />
+                                        <Text typography="subtitle1" foreground="normal-lighter">
+                                            Pop
+                                        </Text>
+                                    </div>
+                                </LocalTab>
+                            </LocalTabsList>
+                            <LocalTabsContent value="tab1">
+                                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                                    <Text foreground="normal" typography="subtitle1">
+                                        Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌
+                                        디자인을 제공합니다
+                                    </Text>
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                        <Badge color="hint">Primary: blue-500</Badge>
+                                        <Badge color="hint">Border-radius: md</Badge>
+                                        <Badge color="hint">Scaling: 100%</Badge>
+                                    </div>
+                                </div>
+                            </LocalTabsContent>
+                            <LocalTabsContent value="tab2">
+                                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                                    <Text foreground="normal" typography="subtitle1">
+                                        Aurora 테마는 신비롭고 미래적인 분위기로,혁신적이고 실험적인
+                                        서비스에 적합합니다
+                                    </Text>
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                        <Badge color="hint">Primary: violet-500</Badge>
+                                        <Badge color="hint">Border-radius: lg</Badge>
+                                        <Badge color="hint">Scaling: 100%</Badge>
+                                    </div>
+                                </div>
+                            </LocalTabsContent>
+                            <LocalTabsContent value="tab3">
+                                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                                    <Text foreground="normal" typography="subtitle1">
+                                        Pop 테마는 활기차고 생동감 있는 디자인으로, 창의적이고
+                                        역동적인 서비스에 적합합니다
+                                    </Text>
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                        <Badge color="hint">Primary: pink-500</Badge>
+                                        <Badge color="hint">Border-radius: full</Badge>
+                                        <Badge color="hint">Scaling: 120%</Badge>
+                                    </div>
+                                </div>
+                            </LocalTabsContent>
+                        </LocalTabs>
                     </div>
-                    <LocalTabs defaultValue="tab1" onValueChange={handleTabChange}>
-                        <LocalTabsList>
-                            <LocalTab value="tab1">
-                                <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
-                                    <RemoteIcon />
-                                    <Text typography="subtitle1" foreground="normal-lighter">
-                                        Vapor
-                                    </Text>
-                                </div>
-                            </LocalTab>
-                            <LocalTab value="tab2">
-                                <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
-                                    <AiSmartieIcon />
-                                    <Text typography="subtitle1" foreground="normal-lighter">
-                                        Aurora
-                                    </Text>
-                                </div>
-                            </LocalTab>
-                            <LocalTab value="tab3">
-                                <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
-                                    <StarIcon />
-                                    <Text typography="subtitle1" foreground="normal-lighter">
-                                        Pop
-                                    </Text>
-                                </div>
-                            </LocalTab>
-                        </LocalTabsList>
-                        <LocalTabsContent value="tab1">
-                            <div className="p-5 flex flex-col gap-4 items-center">
-                                <Text foreground="normal" typography="subtitle1">
-                                    Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌
-                                    디자인을 제공합니다
-                                </Text>
-                                <div className="flex items-center gap-[var(--vapor-size-space-100)]">
-                                    <Badge color="hint">Primary: blue-500</Badge>
-                                    <Badge color="hint">Border-radius: md</Badge>
-                                    <Badge color="hint">Scaling: 100%</Badge>
-                                </div>
-                            </div>
-                        </LocalTabsContent>
-                        <LocalTabsContent value="tab2">
-                            <div className="p-5 flex flex-col gap-4 items-center">
-                                <Text foreground="normal" typography="subtitle1">
-                                    Aurora 테마는 신비롭고 미래적인 분위기로,혁신적이고 실험적인
-                                    서비스에 적합합니다
-                                </Text>
-                                <div className="flex items-center gap-[var(--vapor-size-space-100)]">
-                                    <Badge color="hint">Primary: violet-500</Badge>
-                                    <Badge color="hint">Border-radius: lg</Badge>
-                                    <Badge color="hint">Scaling: 100%</Badge>
-                                </div>
-                            </div>
-                        </LocalTabsContent>
-                        <LocalTabsContent value="tab3">
-                            <div className="p-5 flex flex-col gap-4 items-center">
-                                <Text foreground="normal" typography="subtitle1">
-                                    Pop 테마는 활기차고 생동감 있는 디자인으로, 창의적이고 역동적인
-                                    서비스에 적합합니다
-                                </Text>
-                                <div className="flex items-center gap-[var(--vapor-size-space-100)]">
-                                    <Badge color="hint">Primary: pink-500</Badge>
-                                    <Badge color="hint">Border-radius: full</Badge>
-                                    <Badge color="hint">Scaling: 120%</Badge>
-                                </div>
-                            </div>
-                        </LocalTabsContent>
-                    </LocalTabs>
                     <main className="w-full">
                         <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center">
                             <ChromeWindow className="w-full" />
