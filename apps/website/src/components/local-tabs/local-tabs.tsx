@@ -65,7 +65,7 @@ const LocalTab = forwardRef<HTMLButtonElement, LocalTabProps>(({ children, value
         <Tabs.Tab
             ref={ref}
             value={value}
-            className="flex px-[var(--vapor-size-space-000)] py-0 justify-center items-center gap-[var(--space-075)] flex-1 self-stretch bg-transparent border-none cursor-pointer text-[var(--vapor-color-foreground-hint)] text-sm font-normal transition-all duration-200 ease-in-out data-[selected]:text-[var(--vapor-color-foreground-primary)] data-[selected]:font-medium"
+            className="flex px-[var(--vapor-size-space-000)] py-0 justify-center items-center gap-[var(--space-075)] flex-1 self-stretch bg-transparent border-none cursor-pointer text-[var(--vapor-color-foreground-hint)] text-sm font-normal transition-all duration-200 ease-in-out data-[selected]:text-[var(--vapor-color-foreground-primary)] data-[selected]:font-medium [&[data-selected]_span]:!text-[var(--vapor-color-foreground-primary)]"
         >
             {children}
         </Tabs.Tab>

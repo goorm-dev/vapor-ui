@@ -190,9 +190,10 @@ export default function HomePage() {
                         <Text typography="heading2" foreground="normal" asChild>
                             <h2>Instantly customize your theme</h2>
                         </Text>
-                        <Text typography="body2" foreground="normal">
-                            샘플 테마를 통해 Vapor가 어떻게 변화하는지 확인하고, 나만의 테마를
-                            완성해보세요
+                        <Text typography="body1" foreground="normal">
+                            샘플 테마를 통해 Vapor가 어떻게 변화하는지 확인하고,
+                            <br />
+                            나만의 테마를 완성해보세요
                         </Text>
                     </div>
                     <LocalTabs defaultValue="tab1" onValueChange={handleTabChange}>
