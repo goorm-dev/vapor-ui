@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
 import {
@@ -22,8 +22,13 @@ import {
 import DefaultSearchDialog from '~/components/search/search';
 
 export default function HomePage() {
-    const { appearance, setTheme } = useTheme();
+    const { appearance, setTheme } = useTheme({
+        primaryColor: '#3B82F6', // blue-500
+        radius: 'md',
+        scaling: 1.0, // 100%
+    });
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    useEffect(() => {});
 
     const handleTabChange = (value: string) => {
         switch (value) {
