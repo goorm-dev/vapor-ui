@@ -103,13 +103,17 @@ describe('RadioGroup', () => {
         });
     });
 
-    it('should propagate the name attribute to the input', () => {
+    it('should propagate the name attribute to the input', async () => {
         const name = 'test-radio-group';
         const rendered = render(<RadioGroupTest name={name} />);
 
-        const group = rendered.getByRole('radiogroup');
+        const input = rendered.container.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+        expect(input).toBeInTheDocument();
 
-        expect(group.nextElementSibling).toHaveAttribute('name', name);
+        const [_, radio2] = rendered.getAllByRole('radio');
+        await userEvent.click(radio2);
+
+        expect(input).toHaveValue('option2');
     });
 
     it('should include the radio value in the form submission', async ({ skip }) => {
