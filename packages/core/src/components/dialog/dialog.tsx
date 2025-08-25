@@ -17,7 +17,7 @@ type DialogSharedProps = DialogVariants;
 
 type DialogContext = DialogSharedProps;
 
-const [DialogRoot, useDialogContext] = createContext<DialogContext>({
+const [DialogProvider, useDialogContext] = createContext<DialogContext>({
     name: 'Dialog',
     hookName: 'useDialogContext',
     providerName: 'DialogProvider',
@@ -37,9 +37,11 @@ interface DialogRootProps extends DialogPrimitiveProps, DialogSharedProps {
 
 const Root = ({ size, closeOnClickOverlay, children, ...props }: DialogRootProps) => {
     return (
-        <BaseDialog.Root dismissible={closeOnClickOverlay} {...props}>
-            <DialogRoot value={{ size }}>{children}</DialogRoot>
-        </BaseDialog.Root>
+        <DialogProvider value={{ size }}>
+            <BaseDialog.Root dismissible={closeOnClickOverlay} {...props}>
+                {children}
+            </BaseDialog.Root>
+        </DialogProvider>
     );
 };
 

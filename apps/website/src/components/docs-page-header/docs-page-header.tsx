@@ -12,8 +12,8 @@ export const DocsPageHeader = ({ title, description, markdownUrl }: DocsPageHead
     return (
         <div className="flex flex-col items-start gap-[var(--vapor-size-space-250)] self-stretch">
             <div className="flex flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch">
-                <Text asChild typography="heading1" foreground="normal">
-                    <h1>{title}</h1>
+                <Text render={<h1 />} typography="heading1" foreground="normal">
+                    {title}
                 </Text>
                 {description && (
                     <Text typography="body1" foreground="normal">

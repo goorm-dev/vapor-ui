@@ -8,7 +8,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
-import type { VComponentProps } from '~/utils/types';
+import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { FieldVariants, LabelVariants, RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
@@ -38,7 +38,7 @@ const [TextInputProvider, useTextInputContext] = createContext<TextInputContextT
  * -----------------------------------------------------------------------------------------------*/
 
 type TextInputPrimitiveProps = VComponentProps<'div'>;
-interface TextInputRootProps extends TextInputPrimitiveProps, TextInputSharedProps {}
+interface TextInputRootProps extends Assign<TextInputPrimitiveProps, TextInputSharedProps> {}
 
 const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
     ({ render, className, ...props }, ref) => {
