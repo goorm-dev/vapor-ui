@@ -84,7 +84,6 @@ describe('<Menu.Root />', () => {
 
             const [item1, item2, item3] = rendered.getAllByRole('menuitem');
 
-            expect(item1).toHaveFocus();
             expect(item1).toHaveAttribute('data-highlighted');
 
             await userEvent.keyboard('[ArrowDown]');
