@@ -82,6 +82,7 @@ const Content = forwardRef<HTMLDivElement, SheetContentProps>(({ className, ...p
         />
     );
 });
+Content.displayName = 'Sheet.Content';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Header
@@ -92,6 +93,7 @@ interface SheetHeaderProps extends VComponentProps<typeof Dialog.Header> {}
 const Header = forwardRef<HTMLDivElement, SheetHeaderProps>(({ className, ...props }, ref) => {
     return <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...props} />;
 });
+Header.displayName = 'Sheet.Header';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Body
@@ -102,6 +104,7 @@ interface SheetBodyProps extends VComponentProps<typeof Dialog.Body> {}
 const Body = forwardRef<HTMLDivElement, SheetBodyProps>(({ className, ...props }, ref) => {
     return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...props} />;
 });
+Body.displayName = 'Sheet.Body';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Footer
@@ -112,6 +115,7 @@ interface SheetFooterProps extends VComponentProps<typeof Dialog.Footer> {}
 const Footer = forwardRef<HTMLDivElement, SheetFooterProps>(({ className, ...props }, ref) => {
     return <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...props} />;
 });
+Footer.displayName = 'Sheet.Footer';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Title
