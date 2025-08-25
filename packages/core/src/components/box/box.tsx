@@ -8,19 +8,21 @@ import type { VComponentProps } from '~/utils/types';
 
 interface BoxProps extends VComponentProps<'div'>, Sprinkles {}
 
-const Box = forwardRef<HTMLDivElement, BoxProps>(({ render, className, style, ...props }, ref) => {
-    const { className: layoutClassName, style: layoutStyle, otherProps } = sprinkles(props);
+const Box = forwardRef<HTMLDivElement, BoxProps>(
+    ({ render, foregroundColor: color, className, style, ...props }, ref) => {
+        const layout = sprinkles({ color, ...props });
 
-    return useRender({
-        ref,
-        render: render || <div />,
-        props: {
-            className: clsx(layoutClassName, className),
-            style: { ...layoutStyle, ...style },
-            ...otherProps,
-        },
-    });
-});
+        return useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(layout.className, className),
+                style: { ...layout.style, ...style },
+                ...layout.otherProps,
+            },
+        });
+    },
+);
 Box.displayName = 'Box';
 
 export { Box };
