@@ -1,0 +1,69 @@
+'use client';
+
+import { Badge, Text } from '@vapor-ui/core';
+
+import ComponentsCard from '~/components/component-card/component-card';
+import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
+
+const blocks = [
+    {
+        id: 'nav-bar',
+        name: 'Navbar',
+        description: 'NavBar는 사이트 상단에 위치하는 전역 내비게이션 컴포넌트입니다.',
+        href: '/blocks/nav-bar',
+        imageUrl: 'https://statics.goorm.io/gds/docs/blocks/nav-bar.svg',
+    },
+    {
+        id: 'side-bar',
+        name: 'Sidebar',
+        description: '사용자의 액션에 대한 피드백 혹은 서비스에 대한 메시지를 제공합니다.',
+        href: '/blocks/side-bar',
+        imageUrl: 'https://statics.goorm.io/gds/docs/blocks/side-bar.svg', // placeholder
+    },
+];
+
+export default function BlocksPage() {
+    return (
+        <div>
+            <SiteNavBar />
+            <main className="pt-[62px]">
+                <div className="flex flex-col py-[100px] px-[146px] gap-[100px] max-[1440px]:py-[100px] max-[1440px]:px-[var(--size-size-space-400,32px)] max-[1440px]:gap-[80px]">
+                    <div className="mb-8">
+                        <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start">
+                            <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start w-full">
+                                <Badge color="hint" shape="pill" size="lg">
+                                    UI Blocks
+                                </Badge>
+                            </div>
+                            <div className="flex flex-col gap-[var(--vapor-size-space-200)] items-start">
+                                <Text typography="display4">
+                                    Build pages faster
+                                    <br />
+                                    with ready-to-use UI blocks
+                                </Text>
+                                <Text typography="body1" foreground="normal">
+                                    UI 블록은 불필요한 과정을 줄이고 협업을 원활하게 하여,
+                                    <br />
+                                    누구나 빠르고 쉽게 완성도 높은 경험을 제공할 수 있도록 돕습니다
+                                </Text>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 min-[1440px]:[&>*]:h-[263px]">
+                        {blocks.map((block) => (
+                            <ComponentsCard
+                                key={block.id}
+                                imageUrl={block.imageUrl}
+                                alt={block.name}
+                                name={block.name}
+                                description={block.description}
+                                href={block.href}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}

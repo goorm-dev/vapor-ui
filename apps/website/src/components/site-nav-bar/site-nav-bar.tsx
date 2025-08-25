@@ -70,11 +70,26 @@ export const SiteNavBar = () => {
                             </Link>
 
                             <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem className="text-sm" href="/docs" asChild>
-                                    <Link>Docs</Link>
+                                <Nav.LinkItem href="/docs" asChild>
+                                    <Link>
+                                        <Text typography="subtitle1" foreground="secondary">
+                                            Docs
+                                        </Text>
+                                    </Link>
                                 </Nav.LinkItem>
-                                <Nav.LinkItem className="text-sm" href="/playground" asChild>
-                                    <Link>Theme Playground</Link>
+                                <Nav.LinkItem href="/playground" asChild>
+                                    <Link>
+                                        <Text typography="subtitle1" foreground="secondary">
+                                            Playground
+                                        </Text>
+                                    </Link>
+                                </Nav.LinkItem>
+                                <Nav.LinkItem href="/blocks" asChild>
+                                    <Link>
+                                        <Text typography="subtitle1" foreground="primary">
+                                            UI Blocks
+                                        </Text>
+                                    </Link>
                                 </Nav.LinkItem>
                             </Nav.List>
                         </div>
