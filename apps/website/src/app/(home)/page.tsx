@@ -46,26 +46,22 @@ export default function HomePage() {
                             <Text
                                 typography="display4"
                                 foreground="normal"
-                                asChild
+                                render={<h1 />}
                                 className="hidden md:block"
                             >
-                                <h1>
-                                    Kickstart your project
-                                    <br />
-                                    with our UI Kit.
-                                </h1>
+                                Kickstart your project
+                                <br />
+                                with our UI Kit.
                             </Text>
                             <Text
                                 typography="heading2"
                                 foreground="normal"
-                                asChild
+                                render={<h1 />}
                                 className="md:hidden"
                             >
-                                <h1>
-                                    Kickstart your project
-                                    <br />
-                                    with our UI Kit.
-                                </h1>
+                                Kickstart your project
+                                <br />
+                                with our UI Kit.
                             </Text>
                         </div>
 
@@ -113,38 +109,43 @@ export default function HomePage() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Badge
-                                    asChild
+                                    render={<kbd />}
                                     color="hint"
                                     size="md"
                                     shape="square"
                                     className="text-lg"
                                 >
-                                    <kbd>⌘</kbd>
+                                    ⌘
                                 </Badge>
                                 <Badge
-                                    asChild
+                                    render={<kbd />}
                                     color="hint"
                                     size="md"
                                     shape="square"
                                     className="h-[24px] w-[24px]"
                                 >
-                                    <kbd>K</kbd>
+                                    K
                                 </Badge>
                             </div>
                         </div>
                     </button>
                 </div>
 
-                <Button size="lg" color="secondary" className={'w-full md:w-auto'} asChild>
-                    <Link href="/docs">
-                        Docs 보러 가기
-                        <ForwardPageOutlineIcon
-                            width="24"
-                            height="24"
-                            color="var(--vapor-color-foreground-secondary)"
-                        />
-                    </Link>
-                </Button>
+                <Button
+                    size="lg"
+                    color="secondary"
+                    className={'w-full md:w-auto'}
+                    render={
+                        <Link href="/docs">
+                            Docs 보러 가기
+                            <ForwardPageOutlineIcon
+                                width="24"
+                                height="24"
+                                color="var(--vapor-color-foreground-secondary)"
+                            />
+                        </Link>
+                    }
+                />
             </div>
         </main>
     );

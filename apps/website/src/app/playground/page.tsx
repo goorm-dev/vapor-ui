@@ -240,9 +240,8 @@ const Page = () => {
                     <RenderingTemplate.Title title="Dialog" />
                     <RenderingTemplate.Component>
                         <Dialog.Root>
-                            <Dialog.Trigger asChild>
-                                <Button>트리거</Button>
-                            </Dialog.Trigger>
+                            <Dialog.Trigger render={<Button>트리거</Button>} />
+
                             <Dialog.Portal>
                                 <Dialog.Overlay />
                                 <Dialog.Content>
