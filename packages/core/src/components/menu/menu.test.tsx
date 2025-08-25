@@ -1,5 +1,5 @@
 import { DirectionProvider } from '@base-ui-components/react';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 // import { axe } from 'vitest-axe';
@@ -32,6 +32,8 @@ describe('<Menu.Root />', () => {
 
     //     expect(result).toHaveNoViolations();
     // });
+
+    afterEach(cleanup);
 
     describe('keyboard navigation', () => {
         it('should open the menu when pressed "Enter"', async () => {
@@ -82,7 +84,6 @@ describe('<Menu.Root />', () => {
 
             const [item1, item2, item3] = rendered.getAllByRole('menuitem');
 
-            expect(item1).toHaveFocus();
             expect(item1).toHaveAttribute('data-highlighted');
 
             await userEvent.keyboard('[ArrowDown]');

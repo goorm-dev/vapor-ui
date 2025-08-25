@@ -3,9 +3,7 @@ import { Button, Dialog } from '@vapor-ui/core';
 export default function DefaultDialog() {
     return (
         <Dialog.Root>
-            <Dialog.Trigger asChild>
-                <Button>클릭</Button>
-            </Dialog.Trigger>
+            <Dialog.Trigger render={<Button />}>클릭</Dialog.Trigger>
             <Dialog.CombinedContent>
                 <Dialog.Header>
                     <Dialog.Title>알림</Dialog.Title>

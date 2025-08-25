@@ -125,11 +125,11 @@ describe('Avatar.Fallback', () => {
         expect(fallback).toBeInTheDocument();
     });
 
-    // delayMs만큼 기다린 후에 fallback이 렌더링되는지 확인하는 테스트
+    // delay만큼 기다린 후에 fallback이 렌더링되는지 확인하는 테스트
     it('should render the fallback after a delay', async () => {
         const alt = 'Avatar Image';
-        const delayMs = 300;
-        const rendered = render(<AvatarFallbackTest alt={alt} delayMs={delayMs} />);
+        const delay = 300;
+        const rendered = render(<AvatarFallbackTest alt={alt} delay={delay} />);
         let fallback: HTMLElement | null;
 
         fallback = rendered.queryByText(alt.charAt(0).toUpperCase());
