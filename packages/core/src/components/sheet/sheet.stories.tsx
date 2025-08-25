@@ -72,10 +72,10 @@ export const TestBed: StoryObj<typeof Sheet.Root> = {
                                 <CloseOutlineIcon />
                             </Box>
                             <Sheet.Header>
-                                <h2>Sheet Title</h2>
+                                <Sheet.Title>Sheet Title</Sheet.Title>
                             </Sheet.Header>
                             <Sheet.Body>
-                                <p>Sheet content goes here.</p>
+                                <Sheet.Description>Sheet content goes here.</Sheet.Description>
                             </Sheet.Body>
                             <Sheet.Footer>
                                 <Sheet.Close>Close</Sheet.Close>
