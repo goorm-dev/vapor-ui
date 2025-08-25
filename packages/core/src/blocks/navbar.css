@@ -1,0 +1,19 @@
+.navbar-desktop {
+    display: inherit;
+
+    @media (max-width: 767px) {
+        display: none;
+    }
+}
+
+.navbar-mobile {
+    display: none;
+
+    @media (max-width: 767px) {
+        display: inherit;
+    }
+}
+
+.logo {
+    flex-shrink: 0;
+}
