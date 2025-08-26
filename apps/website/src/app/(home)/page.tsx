@@ -28,7 +28,13 @@ export default function HomePage() {
     const { appearance, setTheme } = useTheme();
     useEffect(() => {
         setMounted(true);
-    }, []);
+        // Reset to default tab1 theme on page load
+        setTheme({
+            primaryColor: '#3B82F6', // blue-500
+            radius: 'md',
+            scaling: 1.0, // 100%
+        });
+    }, [setTheme]);
 
     if (!mounted) {
         return null;
