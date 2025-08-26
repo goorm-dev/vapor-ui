@@ -14,19 +14,6 @@ const MAIN_BACKGROUND_LIGHTNESS = {
     dark: 14, // 대비비 계산 기준
 } as const;
 
-/**
- * Semantic Background Mapping (layer1, layer2용)
- */
-const SEMANTIC_BACKGROUND_MAPPING = {
-    light: {
-        layer1: 'gray-50', // #efefef
-        layer2: 'gray-100', // #e1e1e1
-    },
-    dark: {
-        layer1: 'gray-800', // 어두운 배경
-        layer2: 'gray-700', // 조금 더 밝음
-    },
-} as const;
 
 // 기존 설정들
 const PRIMITIVE_COLORS = {
@@ -47,7 +34,7 @@ const CONTRAST_RATIOS = {
     '100': 1.3,
     '200': 1.7,
     '300': 2.5,
-    '400': 3.2,
+    '400': 3.0,
     '500': 4.5,
     '600': 6.5,
     '700': 8.5,
@@ -130,98 +117,97 @@ const createTheme = (themeType: ThemeType): Theme => {
 };
 
 // ============================================================================
-// CSS 생성
+// Figma Variable Collection Structure
 // ============================================================================
 
-interface PrimitiveToken {
-    name: string;
-    hexValue: string;
-    oklchValue: string;
+interface ColorToken {
+    hex: string;
+    oklch: string;
 }
 
-interface SemanticToken {
-    name: string;
-    reference: string;
+interface ThemeTokens {
+    background: {
+        canvas: ColorToken;
+    };
+    [colorName: string]: {
+        [shade: string]: ColorToken;
+    };
 }
 
-function generatePrimitiveTokens(themeType: ThemeType): PrimitiveToken[] {
+interface FigmaVariableCollection {
+    base: {
+        white: ColorToken;
+        black: ColorToken;
+    };
+    light: ThemeTokens;
+    dark: ThemeTokens;
+}
+
+function generateThemeTokens(themeType: ThemeType): ThemeTokens {
     const theme = createTheme(themeType);
     const [backgroundObj, ...colors] = theme.contrastColors;
 
-    const primitives: PrimitiveToken[] = [];
+    const result: ThemeTokens = {
+        background: {
+            canvas: { hex: '', oklch: '' }
+        }
+    };
 
-    // background-main primitive 추가
+    // vapor-background-canvas 추가
     if ('background' in backgroundObj) {
         const oklchColor = oklch(backgroundObj.background);
         const oklchValue = formatCss(oklchColor);
 
         if (oklchValue) {
-            primitives.push({
-                name: '--vapor-color-background-main',
-                hexValue: backgroundObj.background,
-                oklchValue: oklchValue,
-            });
+            result.background.canvas = {
+                hex: backgroundObj.background,
+                oklch: oklchValue
+            };
         }
     }
 
     // 색상 팔레트들 (gray 포함)
     colors.forEach((color) => {
         if ('name' in color && 'values' in color) {
+            result[color.name] = {};
             color.values.forEach((instance) => {
                 const oklchColor = oklch(instance.value);
                 const oklchValue = formatCss(oklchColor);
 
                 if (oklchValue) {
-                    primitives.push({
-                        name: `--vapor-color-${color.name}-${instance.name}`,
-                        hexValue: instance.value,
-                        oklchValue: oklchValue,
-                    });
+                    result[color.name][instance.name] = {
+                        hex: instance.value,
+                        oklch: oklchValue
+                    };
                 }
             });
         }
     });
 
-    return primitives;
+    return result;
 }
 
-function generateSemanticTokens(themeType: ThemeType): SemanticToken[] {
-    const mapping = SEMANTIC_BACKGROUND_MAPPING[themeType];
-
-    return Object.entries(mapping).map(([semanticName, primitiveRef]) => ({
-        name: `--vapor-color-background-${semanticName}`,
-        reference: `var(--vapor-color-${primitiveRef})`,
-    }));
-}
-
-function generateSimplifiedCssVariables(themeType: ThemeType): string {
-    const lines: string[] = [`:root[data-theme="${themeType}"] {`];
-
-    // Primitive Tokens
-    lines.push('  /* === Primitive Tokens === */');
-    const primitives = generatePrimitiveTokens(themeType);
-    primitives.forEach(({ name, hexValue, oklchValue }) => {
-        lines.push(`  ${name}: ${oklchValue};`);
-        lines.push(`  ${name}: ${hexValue};`);
-    });
-
-    // Semantic Tokens
-    lines.push('');
-    lines.push('  /* === Semantic Tokens === */');
-    const semantics = generateSemanticTokens(themeType);
-    semantics.forEach(({ name, reference }) => {
-        lines.push(`  ${name}: ${reference};`);
-    });
-
-    lines.push('}');
-    return lines.join('\n');
+function generateFigmaVariableCollection(): FigmaVariableCollection {
+    return {
+        base: {
+            white: {
+                hex: '#ffffff',
+                oklch: formatCss(oklch('#ffffff'))!
+            },
+            black: {
+                hex: '#000000',
+                oklch: formatCss(oklch('#000000'))!
+            }
+        },
+        light: generateThemeTokens('light'),
+        dark: generateThemeTokens('dark')
+    };
 }
 
 // ============================================================================
 // Export
 // ============================================================================
 
-export const lightThemeCss = generateSimplifiedCssVariables('light');
-export const darkThemeCss = generateSimplifiedCssVariables('dark');
+export const figmaVariables = generateFigmaVariableCollection();
 
-export type { ThemeType };
+export type { ThemeType, ColorToken, FigmaVariableCollection };
