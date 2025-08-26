@@ -19,11 +19,7 @@ export function UserListItem({
 }: UserListItemProps) {
     return (
         <div className="w-full flex h-[var(--vapor-size-dimension-500)] items-center gap-[var(--vapor-size-space-100)] self-stretch">
-            <Avatar.Root
-                alt={avatarAlt || name || 'User'}
-                shape="circle"
-                size="md"
-            >
+            <Avatar.Root alt={avatarAlt || name || 'User'} shape="circle" size="md">
                 <Avatar.Fallback className="!text-[var(--vapor-color-white)]" />
                 <Avatar.Image />
             </Avatar.Root>

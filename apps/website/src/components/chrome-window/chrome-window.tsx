@@ -31,7 +31,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     // ================================
     // STATE MANAGEMENT
     // ================================
-    
+
     // Credit purchase state
     const [count, setCount] = useState(100);
     const pricePerItem = 20;
@@ -46,7 +46,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     // ================================
     // EVENT HANDLERS
     // ================================
-    
+
     const handleCountChange = (value: string) => {
         const numeric = value.replace(/[^0-9]/g, '');
         setCount(numeric === '' ? 0 : parseInt(numeric, 10));
@@ -55,7 +55,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     // ================================
     // DATA
     // ================================
-    
+
     const activeUsers = [
         { name: '박서현', badge: '나', online: true, avatarAlt: '박서현' },
         { name: '윤서진', badge: '강의자', online: true, avatarAlt: '윤서진' },
@@ -72,7 +72,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     // ================================
     // COMPUTED VALUES
     // ================================
-    
+
     const filterUsers = (users: typeof activeUsers) => {
         if (!searchQuery.trim()) return users;
         return users.filter((user) => user.name?.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -84,7 +84,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     // ================================
     // JSX COMPONENTS
     // ================================
-    
+
     const BrowserHeader = () => (
         <>
             {/* Window Controls */}
@@ -144,10 +144,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                             value={count === 0 ? '' : String(count)}
                             onValueChange={handleCountChange}
                         >
-                            <TextInput.Field
-                                className="w-full"
-                                inputMode="numeric"
-                            />
+                            <TextInput.Field className="w-full" inputMode="numeric" />
                         </TextInput.Root>
                         <Button
                             size="lg"
@@ -209,9 +206,15 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                             </Text>
                         </div>
                         <div className="flex items-center gap-[var(--vapor-size-space-050)] self-stretch">
-                            <Text typography="subtitle1" foreground="secondary">4회</Text>
-                            <Text typography="subtitle1" foreground="hint">/</Text>
-                            <Text typography="subtitle1" foreground="hint">5회</Text>
+                            <Text typography="subtitle1" foreground="secondary">
+                                4회
+                            </Text>
+                            <Text typography="subtitle1" foreground="hint">
+                                /
+                            </Text>
+                            <Text typography="subtitle1" foreground="hint">
+                                5회
+                            </Text>
                         </div>
                     </div>
                 </div>
@@ -301,21 +304,45 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
             <thead>
                 <tr className="h-[var(--vapor-size-dimension-500)] bg-[var(--vapor-color-background-normal-darker)] border-b border-[var(--vapor-color-border-normal)]">
                     <th className="w-[101px] px-[var(--vapor-size-space-300)] text-left align-middle">
-                        <Text typography="subtitle1" foreground="normal-lighter">순서</Text>
+                        <Text typography="subtitle1" foreground="normal-lighter">
+                            순서
+                        </Text>
                     </th>
                     <th className="px-[var(--vapor-size-space-300)] text-left align-middle">
-                        <Text typography="subtitle1" foreground="normal-lighter">제목</Text>
+                        <Text typography="subtitle1" foreground="normal-lighter">
+                            제목
+                        </Text>
                     </th>
                     <th className="w-[84px] px-[var(--vapor-size-space-300)] text-left align-middle">
-                        <Text typography="subtitle1" foreground="normal-lighter">난이도</Text>
+                        <Text typography="subtitle1" foreground="normal-lighter">
+                            난이도
+                        </Text>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 {[
-                    { id: 1, title: '구름 조각 모아보기', type: 'O/X 유형', difficulty: '쉬움', color: 'lime' },
-                    { id: 2, title: 'World wide web', type: '객관식 유형', difficulty: '어려움', color: 'pink' },
-                    { id: 3, title: 'World wide web', type: '서술형 유형', difficulty: '보통', color: 'cyan' }
+                    {
+                        id: 1,
+                        title: '구름 조각 모아보기',
+                        type: 'O/X 유형',
+                        difficulty: '쉬움',
+                        color: 'lime',
+                    },
+                    {
+                        id: 2,
+                        title: 'World wide web',
+                        type: '객관식 유형',
+                        difficulty: '어려움',
+                        color: 'pink',
+                    },
+                    {
+                        id: 3,
+                        title: 'World wide web',
+                        type: '서술형 유형',
+                        difficulty: '보통',
+                        color: 'cyan',
+                    },
                 ].map((problem) => (
                     <tr key={problem.id} className="h-[53px]">
                         <td className="w-[101px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
@@ -327,7 +354,11 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                         </td>
                         <td className="h-[53px] p-[var(--vapor-size-space-200)] border-b border-[var(--vapor-color-border-normal)]">
                             <div className="flex flex-col items-start flex-1">
-                                <Text typography="body2" foreground="normal" className="truncate max-w-full">
+                                <Text
+                                    typography="body2"
+                                    foreground="normal"
+                                    className="truncate max-w-full"
+                                >
                                     {problem.title}
                                 </Text>
                                 <Text typography="body3" foreground="hint">
@@ -336,12 +367,19 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                             </div>
                         </td>
                         <td className="w-[84px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
-                            <div className="flex h-[54px] px-6 items-center gap-2 self-stretch" style={{ padding: '10px 24px 11px 24px' }}>
-                                <div className={`inline-flex items-center px-2 py-1 rounded-[16px] ${
-                                    problem.color === 'lime' ? 'bg-[rgba(143,211,39,0.16)]' :
-                                    problem.color === 'pink' ? 'bg-[rgba(218,47,116,0.16)]' :
-                                    'bg-[rgba(14,129,160,0.16)]'
-                                } whitespace-nowrap`}>
+                            <div
+                                className="flex h-[54px] px-6 items-center gap-2 self-stretch"
+                                style={{ padding: '10px 24px 11px 24px' }}
+                            >
+                                <div
+                                    className={`inline-flex items-center px-2 py-1 rounded-[16px] ${
+                                        problem.color === 'lime'
+                                            ? 'bg-[rgba(143,211,39,0.16)]'
+                                            : problem.color === 'pink'
+                                              ? 'bg-[rgba(218,47,116,0.16)]'
+                                              : 'bg-[rgba(14,129,160,0.16)]'
+                                    } whitespace-nowrap`}
+                                >
                                     <Text
                                         typography="subtitle2"
                                         className={`text-[var(--vapor-color-${problem.color}-700)]`}
@@ -438,17 +476,16 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                     onValueChange={setSearchQuery}
                 >
                     <div className="absolute z-[1] h-full flex items-center justify-center ml-[var(--vapor-size-space-200)]">
-                        <SearchOutlineIcon
-                            size="20"
-                            color="var(--vapor-color-foreground-hint)"
-                        />
+                        <SearchOutlineIcon size="20" color="var(--vapor-color-foreground-hint)" />
                     </div>
                     <TextInput.Field className="w-full !pl-[var(--vapor-size-space-500)]" />
                 </TextInput.Root>
 
                 <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
                     <div className="flex items-start gap-[var(--vapor-size-space-050)]">
-                        <Text typography="subtitle2" foreground="hint-darker">접속 중</Text>
+                        <Text typography="subtitle2" foreground="hint-darker">
+                            접속 중
+                        </Text>
                         <Text typography="subtitle2" foreground="hint-darker">
                             {filteredActiveUsers.filter((u) => u.online).length}
                         </Text>
@@ -457,7 +494,9 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                 </div>
                 <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch flex-1">
                     <div className="w-full flex items-start gap-[var(--vapor-size-space-050)]">
-                        <Text typography="subtitle2" foreground="hint-darker">미접속</Text>
+                        <Text typography="subtitle2" foreground="hint-darker">
+                            미접속
+                        </Text>
                         <Text typography="subtitle2" foreground="hint-darker">
                             {filteredUnActiveUsers.length}
                         </Text>
@@ -471,7 +510,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     // ================================
     // MAIN RENDER
     // ================================
-    
+
     return (
         <div
             className={clsx(
@@ -485,21 +524,20 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
             {/* Main Content Area */}
             <div className="bg-[var(--vapor-color-background-normal)] flex items-center justify-center max-[767px]:px-0 pb-[var(--vapor-size-space-400)]">
                 <div className="flex gap-[var(--vapor-size-space-400)] w-full items-stretch">
-                    
                     {/* Left Column - Cards */}
                     <div className="flex items-center flex-col gap-[var(--vapor-size-space-400)] flex-1 pt-[var(--vapor-size-space-400)] pl-[var(--vapor-size-space-400)] max-[991px]:p-[var(--vapor-size-space-400)] max-[767px]:px-0 max-[767px]:py-[var(--vapor-size-space-400)]">
                         <CreditPurchaseCard />
                         <AttendanceCard />
                         <TemplateListCard />
                     </div>
-                    
+
                     {/* Middle Column - Payment & Table & Dialog */}
                     <div className="flex flex-col items-start gap-6 flex-1 pt-[var(--vapor-size-space-400)] max-[1199px]:hidden">
                         <PaymentMethodCard />
                         <ProblemTable />
                         <PublicDialogCard />
                     </div>
-                    
+
                     {/* Right Column - User Sidebar */}
                     <UserSidebar />
                 </div>
