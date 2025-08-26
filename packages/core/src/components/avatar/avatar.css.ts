@@ -5,7 +5,7 @@ import { recipe } from '@vanilla-extract/recipes';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
-const radii = createVar('avatar-border-radius');
+const radii = createVar('border-radius');
 
 export const root = recipe({
     base: layerStyle('components', {
