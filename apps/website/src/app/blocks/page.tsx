@@ -27,7 +27,7 @@ export default function BlocksPage() {
         <div>
             <SiteNavBar />
             <main className="pt-[62px]">
-                <div className="flex flex-col py-[100px] px-[146px] gap-[100px] max-[1440px]:py-[100px] max-[1440px]:px-[var(--size-size-space-400,32px)] max-[1440px]:gap-[80px]">
+                <div className="flex flex-col py-[100px] px-[146px] gap-[100px] max-[1440px]:py-[100px] max-[1440px]:px-[var(--size-size-space-400,32px)] max-[1440px]:gap-[80px] max-[1200px]:py-[var(--vapor-size-space-900)] max-[768px]:py-[var(--vapor-size-space-800)] max-[768px]:gap-[var(--vapor-size-space-400)]">
                     <div className="mb-8">
                         <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start">
                             <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start w-full">
@@ -36,10 +36,53 @@ export default function BlocksPage() {
                                 </Badge>
                             </div>
                             <div className="flex flex-col gap-[var(--vapor-size-space-200)] items-start">
-                                <Text typography="display4">
-                                    Build pages faster
-                                    <br />
-                                    with ready-to-use UI blocks
+                                {/* Desktop (≥1200px) */}
+                                <Text
+                                    typography="display4"
+                                    asChild
+                                    className="min-[1200px]:block hidden"
+                                >
+                                    <h1>
+                                        Build pages faster
+                                        <br />
+                                        with ready-to-use UI blocks
+                                    </h1>
+                                </Text>
+                                {/* Tablet (992px-1199px) */}
+                                <Text
+                                    typography="heading1"
+                                    asChild
+                                    className="min-[992px]:max-[1199px]:block hidden"
+                                >
+                                    <h1>
+                                        Build pages faster
+                                        <br />
+                                        with ready-to-use UI blocks
+                                    </h1>
+                                </Text>
+                                {/* Mobile Large (768px-991px) */}
+                                <Text
+                                    typography="heading2"
+                                    asChild
+                                    className="min-[768px]:max-[991px]:block hidden"
+                                >
+                                    <h1>
+                                        Build pages faster
+                                        <br />
+                                        with ready-to-use UI blocks
+                                    </h1>
+                                </Text>
+                                {/* Mobile Small (<768px) */}
+                                <Text
+                                    typography="heading3"
+                                    asChild
+                                    className="max-[767px]:block hidden"
+                                >
+                                    <h1>
+                                        Build pages faster
+                                        <br />
+                                        with ready-to-use UI blocks
+                                    </h1>
                                 </Text>
                                 <Text typography="body1" foreground="normal">
                                     UI 블록은 불필요한 과정을 줄이고 협업을 원활하게 하여,
@@ -50,7 +93,7 @@ export default function BlocksPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 min-[1440px]:[&>*]:h-[263px]">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--vapor-size-space-400)] min-[1440px]:[&>*]:h-[263px] max-[992px]:gap-[var(--vapor-size-space-300)] max-[768px]:gap-[var(--vapor-size-space-400)]">
                         {blocks.map((block) => (
                             <ComponentsCard
                                 key={block.id}
