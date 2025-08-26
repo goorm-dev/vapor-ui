@@ -72,7 +72,7 @@ export const SiteNavBar = () => {
                             </Link>
 
                             <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem href="/docs" active={pathname.includes('/docs')}>
+                                <Nav.LinkItem href="/docs" selected={pathname.includes('/docs')}>
                                     <Text
                                         typography="subtitle1"
                                         foreground={
@@ -84,7 +84,7 @@ export const SiteNavBar = () => {
                                 </Nav.LinkItem>
                                 <Nav.LinkItem
                                     href="/playground"
-                                    active={pathname.includes('/playground')}
+                                    selected={pathname.includes('/playground')}
                                 >
                                     <Text
                                         typography="subtitle1"
@@ -97,7 +97,10 @@ export const SiteNavBar = () => {
                                         Playground
                                     </Text>
                                 </Nav.LinkItem>
-                                <Nav.LinkItem href="/blocks" active={pathname.includes('/blocks')}>
+                                <Nav.LinkItem
+                                    href="/blocks"
+                                    selected={pathname.includes('/blocks')}
+                                >
                                     <Text
                                         typography="subtitle1"
                                         foreground={
