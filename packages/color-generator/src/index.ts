@@ -2,20 +2,14 @@ import { BackgroundColor, Color, CssColor, Theme } from '@adobe/leonardo-contras
 import { formatCss, formatHex, oklch } from 'culori';
 
 // ============================================================================
-// Configuration (완전 단순화)
+// Configuration
 // ============================================================================
 
-/**
- * ✨ 완전 단순화: 중첩 객체 제거
- * main만 있으니까 굳이 객체로 감쌀 이유 없음
- */
 const MAIN_BACKGROUND_LIGHTNESS = {
-    light: 100, // 대비비 계산 기준
-    dark: 14, // 대비비 계산 기준
+    light: 100,
+    dark: 14,
 } as const;
 
-
-// 기존 설정들
 const PRIMITIVE_COLORS = {
     red: '#DF3337',
     pink: '#DA2F74',
@@ -27,7 +21,7 @@ const PRIMITIVE_COLORS = {
     lime: '#8FD327',
     yellow: '#FABB00',
     orange: '#D14905',
-};
+} as const;
 
 const CONTRAST_RATIOS = {
     '50': 1.15,
@@ -40,10 +34,10 @@ const CONTRAST_RATIOS = {
     '700': 8.5,
     '800': 11.5,
     '900': 15.0,
-};
+} as const;
 
 // ============================================================================
-// 타입 정의 (단순화됨)
+// Type Definitions
 // ============================================================================
 
 type ThemeType = 'light' | 'dark';
@@ -56,7 +50,7 @@ interface OklchColor {
 }
 
 // ============================================================================
-// 색상 생성 로직 (기존과 동일)
+// Color Generation Logic
 // ============================================================================
 
 const createColorDefinition = ({
@@ -90,12 +84,12 @@ const createColorDefinition = ({
     });
 };
 
-const vaporColorDefinitions = Object.entries(PRIMITIVE_COLORS)
+const VAPOR_COLOR_DEFINITIONS = Object.entries(PRIMITIVE_COLORS)
     .map(([name, colorHex]) => createColorDefinition({ name, colorHex }))
     .filter((c): c is Color => c !== null);
 
 // ============================================================================
-// 테마 생성
+// Theme Generation
 // ============================================================================
 
 const createTheme = (themeType: ThemeType): Theme => {
@@ -109,7 +103,7 @@ const createTheme = (themeType: ThemeType): Theme => {
     });
 
     return new Theme({
-        colors: [...vaporColorDefinitions, background],
+        colors: [...VAPOR_COLOR_DEFINITIONS, background],
         backgroundColor: background,
         lightness,
         output: 'HEX',
@@ -149,11 +143,10 @@ function generateThemeTokens(themeType: ThemeType): ThemeTokens {
 
     const result: ThemeTokens = {
         background: {
-            canvas: { hex: '', oklch: '' }
-        }
+            canvas: { hex: '', oklch: '' },
+        },
     };
 
-    // vapor-background-canvas 추가
     if ('background' in backgroundObj) {
         const oklchColor = oklch(backgroundObj.background);
         const oklchValue = formatCss(oklchColor);
@@ -161,12 +154,11 @@ function generateThemeTokens(themeType: ThemeType): ThemeTokens {
         if (oklchValue) {
             result.background.canvas = {
                 hex: backgroundObj.background,
-                oklch: oklchValue
+                oklch: oklchValue,
             };
         }
     }
 
-    // 색상 팔레트들 (gray 포함)
     colors.forEach((color) => {
         if ('name' in color && 'values' in color) {
             result[color.name] = {};
@@ -177,7 +169,7 @@ function generateThemeTokens(themeType: ThemeType): ThemeTokens {
                 if (oklchValue) {
                     result[color.name][instance.name] = {
                         hex: instance.value,
-                        oklch: oklchValue
+                        oklch: oklchValue,
                     };
                 }
             });
@@ -192,15 +184,15 @@ function generateFigmaVariableCollection(): FigmaVariableCollection {
         base: {
             white: {
                 hex: '#ffffff',
-                oklch: formatCss(oklch('#ffffff'))!
+                oklch: formatCss(oklch('#ffffff'))!,
             },
             black: {
                 hex: '#000000',
-                oklch: formatCss(oklch('#000000'))!
-            }
+                oklch: formatCss(oklch('#000000'))!,
+            },
         },
         light: generateThemeTokens('light'),
-        dark: generateThemeTokens('dark')
+        dark: generateThemeTokens('dark'),
     };
 }
 
