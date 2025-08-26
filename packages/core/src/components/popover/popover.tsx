@@ -50,23 +50,20 @@ const Portal = (props: PopoverPortalProps) => {
 type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Positioner>;
 interface PopoverPositionerProps extends PositionerPrimitiveProps {}
 
-const Positioner = ({
-    side = 'bottom',
-    align = 'center',
-    sideOffset = 8,
-    collisionAvoidance,
-    ...props
-}: PopoverPositionerProps) => {
-    return (
-        <BasePopover.Positioner
-            side={side}
-            align={align}
-            sideOffset={sideOffset}
-            collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
-            {...props}
-        />
-    );
-};
+const Positioner = forwardRef<HTMLDivElement, PopoverPositionerProps>(
+    ({ side = 'bottom', align = 'center', sideOffset = 8, collisionAvoidance, ...props }, ref) => {
+        return (
+            <BasePopover.Positioner
+                ref={ref}
+                side={side}
+                align={align}
+                sideOffset={sideOffset}
+                collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
+                {...props}
+            />
+        );
+    },
+);
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Popup
