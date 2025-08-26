@@ -5,7 +5,7 @@ import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
-export const content = style({
+export const popup = style({
     outline: 'none',
     border: `1px solid ${vars.color.border.normal}`,
 

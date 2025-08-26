@@ -1,56 +1,24 @@
-import type { CSSProperties } from 'react';
-import { type ComponentPropsWithoutRef, forwardRef, useState } from 'react';
+import type { CSSProperties, ComponentPropsWithoutRef } from 'react';
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Popover as BasePopover } from '@base-ui-components/react/popover';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
-import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/vars.css';
-import { createSplitProps } from '~/utils/create-split-props';
-import type { OnlyPositionerProps } from '~/utils/positioner-props';
+import { composeRefs } from '~/utils/compose-refs';
 
 import * as styles from './popover.css';
-
-type PositionerProps = OnlyPositionerProps<typeof BasePopover.Positioner>;
-
-type PopoverSharedProps = PositionerProps;
-type PopoverContext = PopoverSharedProps;
-
-const [PopoverProvider, usePopoverContext] = createContext<PopoverContext>({
-    name: 'Popover',
-    hookName: 'usePopoverContext',
-    providerName: 'PopoverProvider',
-});
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Root
  * -----------------------------------------------------------------------------------------------*/
 
 type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Root>;
-interface PopoverRootProps extends RootPrimitiveProps, PopoverSharedProps {}
+interface PopoverRootProps extends RootPrimitiveProps {}
 
 const Root = (props: PopoverRootProps) => {
-    const [sharedProps, otherProps] = createSplitProps<PositionerProps>()(props, [
-        'align',
-        'alignOffset',
-        'side',
-        'sideOffset',
-        'anchor',
-        'arrowPadding',
-        'collisionAvoidance',
-        'collisionBoundary',
-        'collisionPadding',
-        'positionMethod',
-        'sticky',
-        'trackAnchor',
-    ]);
-
-    return (
-        <PopoverProvider value={sharedProps}>
-            <BasePopover.Root {...otherProps} />
-        </PopoverProvider>
-    );
+    return <BasePopover.Root {...props} />;
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -76,23 +44,60 @@ const Portal = (props: PopoverPortalProps) => {
 };
 
 /* -------------------------------------------------------------------------------------------------
- * Popover.Content
+ * Popover.Positioner
+ * -----------------------------------------------------------------------------------------------*/
+
+type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Positioner>;
+interface PopoverPositionerProps extends PositionerPrimitiveProps {}
+
+const Positioner = ({
+    side = 'bottom',
+    align = 'center',
+    sideOffset = 8,
+    collisionAvoidance,
+    ...props
+}: PopoverPositionerProps) => {
+    return (
+        <BasePopover.Positioner
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
+            {...props}
+        />
+    );
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Popover.Popup
  * -----------------------------------------------------------------------------------------------*/
 
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Popup>;
-interface PopoverContentProps extends ContentPrimitiveProps {}
+type PopupPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Popup>;
+interface PopoverPopupProps extends PopupPrimitiveProps {}
 
-const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
+const Popup = forwardRef<HTMLDivElement, PopoverPopupProps>(
     ({ className, children, ...props }, ref) => {
-        const { sideOffset = 8, ...context } = usePopoverContext();
+        const [side, setSide] = useState<PositionerPrimitiveProps['side']>('bottom');
+        const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('start');
 
-        const [side, setSide] = useState(context.side);
-        const [align, setAlign] = useState(context.align);
+        // arrow position을 메모이제이션
+        const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
 
-        const position = getArrowPosition({ side, align });
+        const popupRef = useRef<HTMLDivElement>(null);
+        const composedRef = composeRefs(popupRef, ref);
+
+        useEffect(() => {
+            if (!popupRef.current) return;
+
+            const dataset = popupRef.current.dataset;
+            const { side: initialSide, align: initialAlign } = extractPositions(dataset);
+
+            if (initialSide) setSide(initialSide);
+            if (initialAlign) setAlign(initialAlign);
+        }, []);
 
         const arrowRef = useMutationObserver<HTMLDivElement>({
             callback: (mutations) => {
@@ -100,8 +105,7 @@ const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
                     const { attributeName, target: mutationTarget } = mutation;
 
                     const dataset = (mutationTarget as HTMLElement).dataset;
-                    const nextSide = dataset.side as PositionerProps['side'];
-                    const nextAlign = dataset.align as PositionerProps['align'];
+                    const { side: nextSide, align: nextAlign } = extractPositions(dataset);
 
                     if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
                     if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
@@ -111,22 +115,43 @@ const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
         });
 
         return (
-            <BasePopover.Positioner
-                sideOffset={sideOffset}
-                collisionAvoidance={{ align: 'none' }}
-                {...context}
+            <BasePopover.Popup
+                ref={composedRef}
+                className={clsx(styles.popup, className)}
+                {...props}
             >
-                <BasePopover.Popup ref={ref} className={clsx(styles.content, className)} {...props}>
-                    <BasePopover.Arrow ref={arrowRef} style={position} className={styles.arrow}>
-                        <ArrowIcon />
-                    </BasePopover.Arrow>
+                <BasePopover.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                    <ArrowIcon />
+                </BasePopover.Arrow>
 
-                    {children}
-                </BasePopover.Popup>
-            </BasePopover.Positioner>
+                {children}
+            </BasePopover.Popup>
         );
     },
 );
+
+const extractPositions = (dataset: DOMStringMap) => {
+    const currentSide = dataset.side as PositionerPrimitiveProps['side'];
+    const currentAlign = dataset.align as PositionerPrimitiveProps['align'];
+    return { side: currentSide, align: currentAlign };
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Popover.Content
+ * -----------------------------------------------------------------------------------------------*/
+
+interface PopoverContentProps extends ComponentPropsWithoutRef<typeof Popup> {}
+
+const Content = forwardRef<HTMLDivElement, PopoverContentProps>((props, ref) => {
+    return (
+        <Portal>
+            <Positioner>
+                <Popup ref={ref} {...props} />
+            </Positioner>
+        </Portal>
+    );
+});
+Content.displayName = 'Popover.Content';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Title
@@ -160,7 +185,7 @@ const Description = forwardRef<HTMLParagraphElement, PopoverDescriptionProps>(
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type ArrowPositionProps = Pick<PositionerProps, 'side' | 'align'> & { offset?: number };
+type ArrowPositionProps = Pick<PositionerPrimitiveProps, 'side' | 'align'> & { offset?: number };
 
 const getArrowPosition = ({
     side = 'top',
@@ -206,6 +231,8 @@ export {
     Root as PopoverRoot,
     Trigger as PopoverTrigger,
     Portal as PopoverPortal,
+    Positioner as PopoverPositioner,
+    Popup as PopoverPopup,
     Content as PopoverContent,
     Title as PopoverTitle,
     Description as PopoverDescription,
@@ -215,6 +242,8 @@ export type {
     PopoverRootProps,
     PopoverTriggerProps,
     PopoverPortalProps,
+    PopoverPositionerProps,
+    PopoverPopupProps,
     PopoverContentProps,
     PopoverTitleProps,
     PopoverDescriptionProps,
@@ -224,6 +253,8 @@ export const Popover = {
     Root,
     Trigger,
     Portal,
+    Positioner,
+    Popup,
     Content,
     Title,
     Description,
