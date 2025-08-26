@@ -1,9 +1,10 @@
 import type { CSSProperties } from '@vanilla-extract/css';
-import { createGlobalVar, style } from '@vanilla-extract/css';
+import { createGlobalVar } from '@vanilla-extract/css';
 
+import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
-export const overlay = style({
+export const overlay = layerStyle('components', {
     position: 'fixed',
     zIndex: 50, // TODO: Use constant z-index value
     inset: 0,
@@ -62,7 +63,7 @@ const sideSelectors = Object.entries(sideConfig).reduce(
     {} as Record<string, CSSProperties>,
 );
 
-export const content = style({
+export const content = layerStyle('components', {
     position: 'fixed',
     zIndex: 50, // TODO: Use constant z-index value
 
@@ -105,17 +106,17 @@ export const content = style({
     },
 });
 
-export const header = style({
+export const header = layerStyle('components', {
     padding: 'unset',
     height: 'unset',
 });
 
-export const body = style({
+export const body = layerStyle('components', {
     flex: 1,
     padding: 'unset',
     maxHeight: 'unset',
 });
 
-export const footer = style({
+export const footer = layerStyle('components', {
     padding: 'unset',
 });
