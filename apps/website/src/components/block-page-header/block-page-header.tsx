@@ -13,7 +13,7 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
     return (
         <div className="flex gap-8 items-start justify-between w-full max-[1200px]:flex-col">
             {/* Header Section */}
-            <div className="flex flex-col gap-[var(--vapor-size-space-250)] items-start justify-start min-w-[424px]">
+            <div className="flex  flex-col gap-[var(--vapor-size-space-250)] items-start justify-start min-w-[424px]">
                 <div className="flex flex-col gap-[var(--vapor-size-space-100)] items-start justify-start w-full">
                     <Text asChild typography="heading1" foreground="normal">
                         <h1 className="text-[38px] leading-[56px] tracking-[-0.4px] font-bold">
