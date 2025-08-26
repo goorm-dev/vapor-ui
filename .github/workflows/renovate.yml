@@ -4,8 +4,6 @@ on:
   schedule:
     # Run every Thursday at 9 AM KST (0 AM UTC on Thursday)
     - cron: '0 0 * * 4'
-    # Check for security vulnerabilities daily at 2 AM KST (17 PM UTC previous day)
-    - cron: '0 17 * * *'
   workflow_dispatch:
     inputs:
       logLevel:
@@ -33,33 +31,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Determine run type
-        id: run-type
-        run: |
-          if [ "${{ github.event.schedule }}" = "0 17 * * *" ]; then
-            echo "type=security" >> $GITHUB_OUTPUT
-          else
-            echo "type=full" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Self-hosted Renovate (Full Update)
-        if: steps.run-type.outputs.type == 'full'
+      - name: Self-hosted Renovate
         uses: renovatebot/github-action@v43.0.8
         with:
-          configurationFile: .github/renovate-config.js
+          configurationFile: .github/renovate.json
           token: ${{ secrets.RENOVATE_TOKEN }}
         env:
           LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
-          RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{"schedule":null}' || '' }}
-          RENOVATE_DRY_RUN: ${{ inputs.testMode && 'full' || '' }}
-
-      - name: Self-hosted Renovate (Security Only)
-        if: steps.run-type.outputs.type == 'security'
-        uses: renovatebot/github-action@v43.0.8
-        with:
-          configurationFile: .github/renovate-config.js
-          token: ${{ secrets.RENOVATE_TOKEN }}
-        env:
-          LOG_LEVEL: info
-          RENOVATE_FORCE: '{"vulnerabilityAlertsOnly":true}'
+          RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{\"schedule\":null}' || '' }}
           RENOVATE_DRY_RUN: ${{ inputs.testMode && 'full' || '' }}

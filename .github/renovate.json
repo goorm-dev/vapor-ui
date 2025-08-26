@@ -1,0 +1,46 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended", "group:monorepos"],
+    "baseBranches": ["main"],
+    "rebaseWhen": "conflicted",
+    "labels": ["dependencies"],
+    "automergeStrategy": "merge-commit",
+    "prHourlyLimit": 2,
+    "prNotPendingHours": 48,
+    "groupName": "all",
+    "vulnerabilityAlerts": {
+        "enabled": true,
+        "labels": ["security", "priority:high"],
+        "automerge": false,
+        "assignees": ["@team"]
+    },
+    "packageRules": [
+        {
+            "description": "Auto-merge only patch updates",
+            "matchUpdateTypes": ["patch"],
+            "automerge": true,
+            "automergeType": "branch"
+        },
+        {
+            "description": "Manual review required for minor and major updates",
+            "matchUpdateTypes": ["minor", "major"],
+            "automerge": false,
+            "dependencyDashboardApproval": true
+        },
+        {
+            "description": "Auto-merge lockfile maintenance",
+            "matchUpdateTypes": ["lockFileMaintenance"],
+            "automerge": true,
+            "automergeType": "branch"
+        },
+        {
+            "description": "Security updates require manual review with alerts",
+            "matchPackagePatterns": ["*"],
+            "isVulnerabilityAlert": true,
+            "automerge": false,
+            "labels": ["security", "urgent"],
+            "assignees": ["@team"],
+            "reviewers": ["@security-team"]
+        }
+    ]
+}
