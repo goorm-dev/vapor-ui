@@ -20,7 +20,7 @@ import PageWrapper from './_components/page-wrapper';
 import RenderingTemplate from './_components/rendering-template';
 
 const AVATAR_PROPS = {
-    src: '/icons/vapor-logo.png',
+    src: 'https://statics.goorm.io/gds/docs/images/vapor-log.svg',
     alt: 'vapor-ui',
 };
 
