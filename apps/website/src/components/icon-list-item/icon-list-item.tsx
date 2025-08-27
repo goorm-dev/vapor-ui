@@ -66,7 +66,7 @@ const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
             <span className={styles.iconContainer}>
                 <Icon size="40" color="var(--vapor-color-foreground-secondary-darker)" />
             </span>
-            <Text typography="body3" color="foreground-normal" className={styles.text}>
+            <Text typography="body3" foreground="normal" className={styles.text}>
                 {iconName}
             </Text>
             {isHovered && <div className={styles.dim}></div>}
