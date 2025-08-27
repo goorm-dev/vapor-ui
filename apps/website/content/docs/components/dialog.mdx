@@ -6,7 +6,7 @@ description: 'Dialog는 페이지 위에 모달 형태로 정보를 표시하거
 
 <Demo name="default-dialog">
 ```tsx
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DefaultDialog() {
     return (
@@ -23,7 +23,7 @@ export default function DefaultDialog() {
                     <Dialog.Description>여기에 다이얼로그 본문 내용이 들어갑니다.</Dialog.Description>
                 </Dialog.Body>
                 <Dialog.Footer style={{ marginLeft: 'auto' }}>
-                    <button style={{ padding: '0.5rem 1rem' }}>확인</button>
+                    <Button color="primary">확인</Button>
                 </Dialog.Footer>
             </Dialog.CombinedContent>
         </Dialog.Root>
@@ -42,7 +42,7 @@ Dialog 사이즈는 md, lg, xl로 제공합니다.
 
 <Demo name="dialog-size">
 ```tsx
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogSize() {
     return (
@@ -121,7 +121,7 @@ Dialog의 모달 동작을 제어할 수 있습니다.
 
 <Demo name="dialog-modal">
 ```tsx
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogModal() {
     return (
@@ -181,7 +181,7 @@ export default function DialogModal() {
 
 <Demo name="dialog-simple">
 ```tsx
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogSimple() {
     return (
@@ -218,7 +218,7 @@ Dialog.Root, Dialog.Trigger, Dialog.CombinedContent, Dialog.Header, Dialog.Body,
 
 <Demo name="dialog-composition">
 ```tsx
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogComposition() {
     return (
@@ -258,7 +258,7 @@ export default function DialogComposition() {
 
 <Demo name="dialog-variants">
 ```tsx
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogVariants() {
     return (
@@ -343,8 +343,6 @@ Dialog의 기본 Content 영역입니다. Portal과 Overlay를 별도로 구성�
 
 <ComponentPropsTable file="dialog" section="contentProps" />
 
-<<<<<<< HEAD
-
 ### Dialog.CombinedContent
 
 Portal, Overlay, Content가 통합된 편의 Component입니다. 대부분의 경우 이걸 사용하세요.
@@ -391,9 +389,4 @@ Dialog 중앙 Content 영역입니다. Description과 주요 내용을 배치합
 
 Dialog 하단 영역입니다. 확인, 취소 등의 Action Button을 배치합니다.
 
-# <ComponentPropsTable file="dialog" section="footerProps" />
-
----
-
-<AccessibilityTable file="dialog" />
->>>>>>> fc5fbaa1761d753294ca09aefa328cc87bf49ddc
+<ComponentPropsTable file="dialog" section="footerProps" />
