@@ -61,7 +61,7 @@ describe('<Tooltip.Root />', () => {
         expect(rendered.queryByText('Tooltip content')).toBeNull();
     });
 
-    it('should open when the trigger is focused', async () => {
+    it('should open immediately when the trigger is focused', async () => {
         const rendered = render(<TooltipTest delay={OPEN_DELAY} />);
         const trigger = rendered.getByRole('button', { name: 'Hover me' });
 
@@ -86,11 +86,6 @@ describe('<Tooltip.Root />', () => {
     });
 
     describe('prop: keepMounted', () => {
-        beforeEach(() => {
-            vi.useFakeTimers({ shouldAdvanceTime: true });
-            userEvent.setup({ advanceTimers: (ms) => vi.advanceTimersByTime(ms) });
-        });
-
         it('should not close when provided keepMounted and closed', async () => {
             const rendered = render(
                 <Tooltip.Root delay={0}>
@@ -107,7 +102,6 @@ describe('<Tooltip.Root />', () => {
 
             await userEvent.hover(trigger);
 
-            act(() => vi.advanceTimersByTime(OPEN_DELAY));
             expect(rendered.getByText('Tooltip content')).not.toBeNull();
 
             await userEvent.unhover(trigger);
@@ -120,9 +114,6 @@ describe('<Tooltip.Root />', () => {
         it('should open after delay', async () => {
             const rendered = render(<TooltipTest delay={OPEN_DELAY} />);
             const trigger = rendered.getByRole('button', { name: 'Hover me' });
-
-            vi.useFakeTimers({ shouldAdvanceTime: true });
-            userEvent.setup({ advanceTimers: (ms) => vi.advanceTimersByTime(ms) });
 
             await userEvent.hover(trigger);
 
