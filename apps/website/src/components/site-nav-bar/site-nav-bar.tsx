@@ -7,10 +7,17 @@ import { IconButton, Nav, Text } from '@vapor-ui/core';
 import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
+import { usePathname } from 'next/navigation';
 
 import { externalLinks } from '~/constants/site-links';
 
 import LogoVapor from '../../../public/icons/logo-vapor.svg';
+
+const NAVIGATION_LINKS = [
+    { href: '/docs', label: 'Docs' },
+    { href: '/playground', label: 'Playground' },
+    { href: '/blocks', label: 'UI Blocks' },
+];
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];
@@ -45,10 +52,11 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
 
 export const SiteNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname();
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-            <header className="flex w-full py-3 px-4 md:px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
+            <header className="flex z-10 w-full py-3 px-4 md:px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
                 <div className="flex items-center gap-10 relative w-full">
                     <Nav.Root
                         aria-label="Main"
@@ -70,12 +78,15 @@ export const SiteNavBar = () => {
                             </Link>
 
                             <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem className="text-sm" href="/docs" asChild>
-                                    <Link>Docs</Link>
-                                </Nav.LinkItem>
-                                <Nav.LinkItem className="text-sm" href="/playground" asChild>
-                                    <Link>Theme Playground</Link>
-                                </Nav.LinkItem>
+                                {NAVIGATION_LINKS.map((item) => (
+                                    <Nav.LinkItem
+                                        key={item.href}
+                                        href={item.href}
+                                        selected={pathname.includes(item.href)}
+                                    >
+                                        {item.label}
+                                    </Nav.LinkItem>
+                                ))}
                             </Nav.List>
                         </div>
                         <div className="flex items-center gap-10">
@@ -114,10 +125,10 @@ export const SiteNavBar = () => {
                 </Dialog.Trigger>
             </header>
             <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 bg-black/40 md:hidden" />
+                <Dialog.Overlay className="fixed z-10 inset-0 bg-black/40 md:hidden" />
 
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
+                    className="fixed z-10 inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >

@@ -9,6 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import DefaultSearchDialog from '~/components/search/search';
+import { VAPOR_BANNER_URL } from '~/constants/image-urls';
 
 export default function HomePage() {
     const { setTheme } = useTheme();
@@ -28,7 +29,7 @@ export default function HomePage() {
 
             <Image
                 className="select-none absolute top-0 left-0 w-full h-full object-cover opacity-50 mix-blend-soft-light pointer-events-none"
-                src="https://statics.goorm.io/gds/docs/main/vapor-index-banner.png" // TODO: 이미지 s3에 올려서 사용할 것
+                src={VAPOR_BANNER_URL} // TODO: 이미지 s3에 올려서 사용할 것
                 alt="" // banner와 같이 단순 시각 효과를 위한 이미지는 대체 텍스트를 사용하지 않는다.
                 width="1440"
                 height="572"

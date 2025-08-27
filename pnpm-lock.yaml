@@ -174,7 +174,7 @@ importers:
         specifier: ^1.89.2
         version: 1.89.2
       zod:
-        specifier: ^3.25.67
+        specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
       '@fumadocs/mdx-remote':
