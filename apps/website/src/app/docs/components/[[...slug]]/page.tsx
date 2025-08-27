@@ -2,6 +2,7 @@ import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
+import { getComponentOgImageUrl } from '~/constants/image-urls';
 import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
@@ -47,7 +48,7 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
     if (!page) notFound();
 
     // NOTE: 이미지 경로 수정 필요
-    const image = `https://statics.goorm.io/gds/docs/og-image/components/core/${slug[slug.length - 1]}.png`;
+    const image = getComponentOgImageUrl(slug[slug.length - 1]);
 
     return createMetadata({
         title: `${page.data.title} - Vapor UI`,

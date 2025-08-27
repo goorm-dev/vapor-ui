@@ -15,12 +15,14 @@ import {
 import { HeartIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'next/link';
 
+import { GOORM_FAVICON_URL } from '~/constants/image-urls';
+
 import { getCartesianProduct } from '../../utils/array';
 import PageWrapper from './_components/page-wrapper';
 import RenderingTemplate from './_components/rendering-template';
 
 const AVATAR_PROPS = {
-    src: 'https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg',
+    src: GOORM_FAVICON_URL,
     alt: 'vapor-ui',
 };
 

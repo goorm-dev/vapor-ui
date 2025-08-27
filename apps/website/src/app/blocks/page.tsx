@@ -4,6 +4,7 @@ import { Badge, Text } from '@vapor-ui/core';
 
 import ComponentsCard from '~/components/component-card/component-card';
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
+import { NAVBAR_BLOCK_URL, SIDEBAR_BLOCK_URL } from '~/constants/image-urls';
 
 const blocks = [
     {
@@ -11,14 +12,14 @@ const blocks = [
         name: 'Navbar',
         description: 'NavBar는 사이트 상단에 위치하는 전역 내비게이션 컴포넌트입니다.',
         href: '/blocks/nav-bar',
-        imageUrl: 'https://statics.goorm.io/gds/docs/blocks/nav-bar.svg',
+        imageUrl: NAVBAR_BLOCK_URL,
     },
     {
         id: 'side-bar',
         name: 'Sidebar',
         description: '화면의 좌측 또는 우측에 위치하는 네비게이션 컴포넌트입니다.',
         href: '/blocks/side-bar',
-        imageUrl: 'https://statics.goorm.io/gds/docs/blocks/side-bar.svg', // placeholder
+        imageUrl: SIDEBAR_BLOCK_URL, // placeholder
     },
 ];
 

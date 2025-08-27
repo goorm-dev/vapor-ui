@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+
+import { OG_IMAGE_URL } from '~/constants/image-urls';
 
 export function createMetadata(override: Metadata): Metadata {
     return {
@@ -19,9 +22,7 @@ export function createMetadata(override: Metadata): Metadata {
                 'Vapor UI is a modern, flexible and accessible design system for building beautiful and accessible web applications.',
             siteName: override.openGraph?.siteName ?? 'Vapor UI',
             url: override.openGraph?.url ?? 'https://vapor-ui.goorm.io',
-            images:
-                override.openGraph?.images ??
-                'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png',
+            images: override.openGraph?.images ?? OG_IMAGE_URL,
         },
         twitter: {
             ...override.twitter,
@@ -31,9 +32,7 @@ export function createMetadata(override: Metadata): Metadata {
                 override.description ??
                 override.twitter?.description ??
                 'Vapor UI is a modern, flexible and accessible design system for building beautiful and accessible web applications.',
-            images:
-                override.twitter?.images ??
-                'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png',
+            images: override.twitter?.images ?? OG_IMAGE_URL,
         },
         alternates: {
             types: {
@@ -47,4 +46,25 @@ export function createMetadata(override: Metadata): Metadata {
             ...override.alternates,
         },
     };
+}
+
+export function generatePageMetadata(
+    page: { data: { title: string; description?: string } } | null,
+    title: string = 'Vapor UI',
+): Metadata {
+    if (!page) notFound();
+
+    const image = OG_IMAGE_URL;
+
+    return createMetadata({
+        title: `${page.data.title} - ${title}`,
+        description: page.data.description,
+        openGraph: {
+            images: image,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            images: image,
+        },
+    });
 }
