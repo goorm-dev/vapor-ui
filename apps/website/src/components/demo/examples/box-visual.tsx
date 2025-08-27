@@ -6,18 +6,18 @@ export default function BoxVisual() {
             <div>
                 <h4 className="mb-2 text-sm font-medium">Border Radius</h4>
                 <div className="flex items-center gap-4">
-                    <Box padding="$400" backgroundColor="blue-200" borderRadius="$100">
+                    <Box padding="$400" backgroundColor="$blue-200" borderRadius="$100">
                         Small Radius
                     </Box>
-                    <Box padding="$400" backgroundColor="blue-300" borderRadius="$300">
+                    <Box padding="$400" backgroundColor="$blue-300" borderRadius="$300">
                         Medium Radius
                     </Box>
-                    <Box padding="$400" backgroundColor="blue-400" borderRadius="$600">
+                    <Box padding="$400" backgroundColor="$blue-400" borderRadius="$600">
                         Large Radius
                     </Box>
                     <Box
                         padding="$400"
-                        backgroundColor="blue-500"
+                        backgroundColor="$blue-500"
                         borderRadius="$900"
                         foregroundColor="$contrast"
                     >
@@ -31,7 +31,7 @@ export default function BoxVisual() {
                 <div className="flex items-center gap-4">
                     <Box
                         padding="$400"
-                        backgroundColor="green-500"
+                        backgroundColor="$green-500"
                         opacity="0.3"
                         borderRadius="$200"
                     >
@@ -39,7 +39,7 @@ export default function BoxVisual() {
                     </Box>
                     <Box
                         padding="$400"
-                        backgroundColor="green-500"
+                        backgroundColor="$green-500"
                         opacity="0.6"
                         borderRadius="$200"
                     >
@@ -47,13 +47,13 @@ export default function BoxVisual() {
                     </Box>
                     <Box
                         padding="$400"
-                        backgroundColor="green-500"
+                        backgroundColor="$green-500"
                         opacity="0.9"
                         borderRadius="$200"
                     >
                         90% Opacity
                     </Box>
-                    <Box padding="$400" backgroundColor="green-500" borderRadius="$200">
+                    <Box padding="$400" backgroundColor="$green-500" borderRadius="$200">
                         Full Opacity
                     </Box>
                 </div>
@@ -64,28 +64,25 @@ export default function BoxVisual() {
                 <div className="flex flex-col gap-2">
                     <Box
                         padding="$400"
-                        backgroundColor="purple-100"
+                        backgroundColor="$grape-100"
                         borderRadius="$200"
                         textAlign="left"
-                        width="$600"
                     >
                         Left aligned text content
                     </Box>
                     <Box
                         padding="$400"
-                        backgroundColor="purple-200"
+                        backgroundColor="$grape-200"
                         borderRadius="$200"
                         textAlign="center"
-                        width="$600"
                     >
                         Center aligned text content
                     </Box>
                     <Box
                         padding="$400"
-                        backgroundColor="purple-300"
+                        backgroundColor="$grape-300"
                         borderRadius="$200"
                         textAlign="right"
-                        width="$600"
                     >
                         Right aligned text content
                     </Box>
@@ -94,12 +91,11 @@ export default function BoxVisual() {
 
             <div>
                 <h4 className="mb-2 text-sm font-medium">Overflow Behavior</h4>
-                <div className="flex gap-4">
+                <div className="flex flex-col gap-4">
                     <Box
-                        width="$400"
-                        height="$300"
+                        height="$800"
                         padding="$300"
-                        backgroundColor="orange-200"
+                        backgroundColor="$orange-200"
                         borderRadius="$200"
                         overflow="hidden"
                     >
@@ -107,10 +103,9 @@ export default function BoxVisual() {
                         bounds because overflow is set to hidden.
                     </Box>
                     <Box
-                        width="$400"
                         height="$300"
                         padding="$300"
-                        backgroundColor="orange-300"
+                        backgroundColor="$orange-300"
                         borderRadius="$200"
                         overflow="scroll"
                     >

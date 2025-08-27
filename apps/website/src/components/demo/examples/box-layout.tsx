@@ -11,16 +11,16 @@ export default function BoxLayout() {
                         flexDirection="row"
                         gap="$200"
                         padding="$300"
-                        backgroundColor="gray-100"
+                        backgroundColor="$gray-100"
                         borderRadius="$200"
                     >
-                        <Box padding="$200" backgroundColor="blue-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
                             1
                         </Box>
-                        <Box padding="$200" backgroundColor="blue-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
                             2
                         </Box>
-                        <Box padding="$200" backgroundColor="blue-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
                             3
                         </Box>
                     </Box>
@@ -29,16 +29,16 @@ export default function BoxLayout() {
                         flexDirection="column"
                         gap="$200"
                         padding="$300"
-                        backgroundColor="gray-100"
+                        backgroundColor="$gray-100"
                         borderRadius="$200"
                     >
-                        <Box padding="$200" backgroundColor="green-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
                             A
                         </Box>
-                        <Box padding="$200" backgroundColor="green-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
                             B
                         </Box>
-                        <Box padding="$200" backgroundColor="green-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
                             C
                         </Box>
                     </Box>
@@ -53,13 +53,13 @@ export default function BoxLayout() {
                         justifyContent="flex-start"
                         gap="$200"
                         padding="$300"
-                        backgroundColor="gray-100"
+                        backgroundColor="$gray-100"
                         borderRadius="$200"
                     >
-                        <Box padding="$200" backgroundColor="purple-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
                             Start
                         </Box>
-                        <Box padding="$200" backgroundColor="purple-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
                             Items
                         </Box>
                     </Box>
@@ -68,13 +68,13 @@ export default function BoxLayout() {
                         justifyContent="center"
                         gap="$200"
                         padding="$300"
-                        backgroundColor="gray-100"
+                        backgroundColor="$gray-100"
                         borderRadius="$200"
                     >
-                        <Box padding="$200" backgroundColor="purple-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
                             Center
                         </Box>
-                        <Box padding="$200" backgroundColor="purple-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
                             Items
                         </Box>
                     </Box>
@@ -83,13 +83,13 @@ export default function BoxLayout() {
                         justifyContent="space-between"
                         gap="$200"
                         padding="$300"
-                        backgroundColor="gray-100"
+                        backgroundColor="$gray-100"
                         borderRadius="$200"
                     >
-                        <Box padding="$200" backgroundColor="purple-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
                             Space
                         </Box>
-                        <Box padding="$200" backgroundColor="purple-300" borderRadius="$100">
+                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
                             Between
                         </Box>
                     </Box>
@@ -104,31 +104,31 @@ export default function BoxLayout() {
                     justifyContent="space-around"
                     gap="$200"
                     padding="$300"
-                    backgroundColor="gray-100"
+                    backgroundColor="$gray-100"
                     borderRadius="$200"
-                    height="$600"
+                    height="$800"
                 >
                     <Box
                         padding="$200"
-                        backgroundColor="orange-300"
+                        backgroundColor="$orange-300"
                         borderRadius="$100"
-                        height="$200"
+                        height="$500"
                     >
                         Small
                     </Box>
                     <Box
                         padding="$200"
-                        backgroundColor="orange-300"
+                        backgroundColor="$orange-300"
                         borderRadius="$100"
-                        height="$400"
+                        height="$600"
                     >
                         Medium
                     </Box>
                     <Box
                         padding="$200"
-                        backgroundColor="orange-300"
+                        backgroundColor="$orange-300"
                         borderRadius="$100"
-                        height="$300"
+                        height="$700"
                     >
                         Aligned
                     </Box>
