@@ -290,7 +290,7 @@ const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
         return (
             <Portal>
                 <Positioner side="right" align="start">
-                    <BaseMenu.Popup
+                    <Popup
                         ref={ref}
                         finalFocus={triggerRef}
                         className={clsx(styles.subPopup, className)}
