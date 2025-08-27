@@ -6,7 +6,11 @@ export default function AvatarExamples() {
             <div className="flex flex-col gap-2">
                 <h4 className="text-sm font-medium">Avatar.Simple</h4>
                 <div className="flex gap-4">
-                    <Avatar.Simple size="md" alt="John Doe" src="/icons/vapor-logo.png" />
+                    <Avatar.Simple
+                        size="md"
+                        alt="John Doe"
+                        src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
+                    />
                     <Avatar.Simple size="md" alt="Jane Smith" src="/invalid-image.jpg" />
                     <Avatar.Simple size="md" alt="Mike Johnson" />
                 </div>
@@ -17,7 +21,11 @@ export default function AvatarExamples() {
                     Avatar.Root + Avatar.Image + Avatar.Fallback
                 </h4>
                 <div className="flex gap-4">
-                    <Avatar.Root size="md" alt="Alice Brown" src="/icons/vapor-logo.png">
+                    <Avatar.Root
+                        size="md"
+                        alt="Alice Brown"
+                        src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
+                    >
                         <Avatar.Image />
                         <Avatar.Fallback />
                     </Avatar.Root>
@@ -54,25 +62,25 @@ export default function AvatarExamples() {
                         size="sm"
                         shape="circle"
                         alt="Grace Lee"
-                        src="/icons/vapor-logo.png"
+                        src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
                     />
                     <Avatar.Simple
                         size="md"
                         shape="square"
                         alt="Henry Kim"
-                        src="/icons/vapor-logo.png"
+                        src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
                     />
                     <Avatar.Simple
                         size="lg"
                         shape="circle"
                         alt="Iris Chen"
-                        src="/icons/vapor-logo.png"
+                        src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
                     />
                     <Avatar.Simple
                         size="xl"
                         shape="square"
                         alt="Jack Wong"
-                        src="/icons/vapor-logo.png"
+                        src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
                     />
                 </div>
             </div>

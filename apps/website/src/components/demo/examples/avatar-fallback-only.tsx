@@ -6,11 +6,11 @@ export default function AvatarFallbackOnly() {
             <Avatar.Root size="md" alt="Vapor Library">
                 <Avatar.Fallback />
             </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Tokens">
+            <Avatar.Root size="md" alt="Vapor tokens">
                 <Avatar.Fallback>VT</Avatar.Fallback>
             </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Icons">
-                <Avatar.Fallback>🎨</Avatar.Fallback>
+            <Avatar.Root size="md" alt="Vapor Delay" delayMs={600}>
+                <Avatar.Fallback>VD</Avatar.Fallback>
             </Avatar.Root>
         </div>
     );
