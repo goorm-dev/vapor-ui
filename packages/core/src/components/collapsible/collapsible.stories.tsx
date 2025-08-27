@@ -33,8 +33,15 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
         const [open3, setOpen3] = useState(true);
 
         return (
-            <Grid.Root height="100px" templateColumns="repeat(3, 14rem)" gap="$100">
-                <Grid.Item>
+            <Grid.Root height="100px" templateRows="1fr 1fr" templateColumns="repeat(3, 14rem)">
+                <Grid.Item
+                    padding="$200"
+                    style={{
+                        borderBottom: '1px solid',
+                        borderRight: '1px solid',
+                        borderColor: '#e1e1e1',
+                    }}
+                >
                     <Collapsible.Root open={open1} onOpenChange={setOpen1} {...args}>
                         <HStack justifyContent={'space-between'} alignItems={'center'}>
                             <Collapsible.Trigger render={<Button />}>
@@ -62,9 +69,16 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                     </Collapsible.Root>
                 </Grid.Item>
 
-                <Grid.Item>
+                <Grid.Item
+                    padding="$200"
+                    style={{
+                        borderBottom: '1px solid',
+                        borderRight: '1px solid',
+                        borderColor: '#e1e1e1',
+                    }}
+                >
                     <Collapsible.Root
-                        render={<VStack width="14rem" />}
+                        render={<VStack />}
                         open={open2}
                         onOpenChange={setOpen2}
                         {...args}
@@ -96,7 +110,13 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                     </Collapsible.Root>
                 </Grid.Item>
 
-                <Grid.Item>
+                <Grid.Item
+                    padding="$200"
+                    style={{
+                        borderBottom: '1px solid',
+                        borderColor: '#e1e1e1',
+                    }}
+                >
                     <Collapsible.Root
                         open={open3}
                         onOpenChange={setOpen3}
@@ -133,7 +153,13 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                     </Collapsible.Root>
                 </Grid.Item>
 
-                <Grid.Item>
+                <Grid.Item
+                    padding="$200"
+                    style={{
+                        borderRight: '1px solid',
+                        borderColor: '#e1e1e1',
+                    }}
+                >
                     <Collapsible.Root {...args}>
                         <Collapsible.Trigger disabled render={<Button />}>
                             Disabled Toggle
