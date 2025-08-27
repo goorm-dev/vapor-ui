@@ -32,4 +32,3 @@ export async function generateStaticParams() {
     // components 경로는 제외
     return params;
 }
-
