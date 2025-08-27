@@ -258,7 +258,7 @@ export default function HomePage() {
                                         Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌
                                         디자인을 제공합니다
                                     </Text>
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
                                         <Badge color="hint">Primary: blue-500</Badge>
                                         <Badge color="hint">Border-radius: md</Badge>
                                         <Badge color="hint">Scaling: 100%</Badge>
@@ -271,7 +271,7 @@ export default function HomePage() {
                                         Aurora 테마는 신비롭고 미래적인 분위기로,혁신적이고 실험적인
                                         서비스에 적합합니다
                                     </Text>
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
                                         <Badge color="hint">Primary: violet-500</Badge>
                                         <Badge color="hint">Border-radius: lg</Badge>
                                         <Badge color="hint">Scaling: 100%</Badge>
@@ -284,7 +284,7 @@ export default function HomePage() {
                                         Pop 테마는 활기차고 생동감 있는 디자인으로, 창의적이고
                                         역동적인 서비스에 적합합니다
                                     </Text>
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
                                         <Badge color="hint">Primary: pink-500</Badge>
                                         <Badge color="hint">Border-radius: full</Badge>
                                         <Badge color="hint">Scaling: 120%</Badge>
