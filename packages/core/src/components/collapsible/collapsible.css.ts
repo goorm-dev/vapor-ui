@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-export const content = style({
+export const panel = style({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-end',

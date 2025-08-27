@@ -21,7 +21,7 @@ export const Default: StoryObj<typeof Collapsible.Root> = {
     render: (args) => (
         <Collapsible.Root {...args}>
             <Collapsible.Trigger>Toggle</Collapsible.Trigger>
-            <Collapsible.Content>Content</Collapsible.Content>
+            <Collapsible.Panel keepMounted>Panel</Collapsible.Panel>
         </Collapsible.Root>
     ),
 };
@@ -48,7 +48,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                             </Collapsible.Trigger>
                         </HStack>
 
-                        <Collapsible.Content>
+                        <Collapsible.Panel>
                             <Flex
                                 marginTop={'$100'}
                                 border="1px solid #e1e1e1"
@@ -56,9 +56,9 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                                 paddingX="$200"
                                 paddingY="$100"
                             >
-                                Content
+                                Panel
                             </Flex>
-                        </Collapsible.Content>
+                        </Collapsible.Panel>
                     </Collapsible.Root>
                 </Grid.Item>
 
@@ -82,7 +82,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                             }
                         />
 
-                        <Collapsible.Content>
+                        <Collapsible.Panel>
                             <Flex
                                 marginTop={'$100'}
                                 borderRadius={'$300'}
@@ -90,9 +90,9 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                                 paddingY="$100"
                                 backgroundColor={'$secondary'}
                             >
-                                Content
+                                Panel
                             </Flex>
-                        </Collapsible.Content>
+                        </Collapsible.Panel>
                     </Collapsible.Root>
                 </Grid.Item>
 
@@ -107,7 +107,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                                 border="1px solid #e1e1e1"
                                 paddingY="$150"
                                 paddingX="$200"
-                                height="fit-content"
+                                height="fit-Panel"
                             />
                         }
                         {...args}
@@ -127,9 +127,21 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                             />
                         </HStack>
 
-                        <Collapsible.Content>
-                            <Box>Content</Box>
-                        </Collapsible.Content>
+                        <Collapsible.Panel>
+                            <Box>Panel</Box>
+                        </Collapsible.Panel>
+                    </Collapsible.Root>
+                </Grid.Item>
+
+                <Grid.Item>
+                    <Collapsible.Root {...args}>
+                        <Collapsible.Trigger disabled render={<Button />}>
+                            Disabled Toggle
+                        </Collapsible.Trigger>
+
+                        <Collapsible.Panel>
+                            <Box>Panel</Box>
+                        </Collapsible.Panel>
                     </Collapsible.Root>
                 </Grid.Item>
             </Grid.Root>

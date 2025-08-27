@@ -28,31 +28,23 @@ const Trigger = forwardRef<HTMLButtonElement, CollapsibleTriggerProps>((props, r
 });
 
 /* -------------------------------------------------------------------------------------------------
- * Collapsible.Content
+ * Collapsible.Panel
  * -----------------------------------------------------------------------------------------------*/
 
-interface CollapsibleContentProps extends VComponentProps<typeof BaseCollapsible.Panel> {}
+interface CollapsiblePanelProps extends VComponentProps<typeof BaseCollapsible.Panel> {}
 
-const Content = forwardRef<HTMLDivElement, CollapsibleContentProps>(
-    ({ className, ...props }, ref) => {
-        return (
-            <BaseCollapsible.Panel
-                ref={ref}
-                className={clsx(styles.content, className)}
-                {...props}
-            />
-        );
-    },
-);
+const Panel = forwardRef<HTMLDivElement, CollapsiblePanelProps>(({ className, ...props }, ref) => {
+    return <BaseCollapsible.Panel ref={ref} className={clsx(styles.panel, className)} {...props} />;
+});
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as CollapsibleRoot, Trigger as CollapsibleTrigger, Content as CollapsibleContent };
+export { Root as CollapsibleRoot, Trigger as CollapsibleTrigger, Panel as CollapsiblePanel };
 
-export type { CollapsibleRootProps, CollapsibleTriggerProps, CollapsibleContentProps };
+export type { CollapsibleRootProps, CollapsibleTriggerProps, CollapsiblePanelProps };
 
 export const Collapsible = {
     Root,
     Trigger,
-    Content,
+    Panel,
 };
