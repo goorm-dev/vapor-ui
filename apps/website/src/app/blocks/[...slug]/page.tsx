@@ -12,13 +12,17 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
 
     if (!page) notFound();
 
-    const { body: MDX, toc } = await page.data.load();
+    const {
+        data: { title, description, previewImageUrl, load },
+    } = page;
+
+    const { body: MDX, toc } = await load();
     return (
         <>
             <BlockPageHeader
-                title={page.data.title}
-                description={page.data.description}
-                previewImageUrl={page.data.previewImageUrl}
+                title={title}
+                description={description}
+                previewImageUrl={previewImageUrl}
             />
             <BlockPageBody toc={toc}>
                 <MDX components={getMDXComponents({})} />
@@ -28,7 +32,5 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
 }
 
 export async function generateStaticParams() {
-    const params = blockSource.generateParams();
-    // components 경로는 제외
-    return params;
+    return blockSource.generateParams();
 }

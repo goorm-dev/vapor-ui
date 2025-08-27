@@ -28,7 +28,7 @@ export default function BlocksPage() {
         <div>
             <SiteNavBar />
             <main className="pt-[62px]">
-                <div className="flex flex-col py-[100px] px-[146px] gap-[100px] max-[1440px]:py-[100px] max-[1440px]:px-[var(--size-size-space-400,32px)] max-lg:gap-[var(--vapor-size-space-900)] max-[1200px]:py-[var(--vapor-size-space-900)] max-[768px]:py-[var(--vapor-size-space-800)] max-[768px]:gap-[var(--vapor-size-space-400)]">
+                <div className="flex flex-col py-[100px] px-[146px] gap-[100px] max-lg:pt-[var(--vapor-size-space-900)] max-lg:px-[var(--vapor-size-space-400)] max-lg:gap-[var(--vapor-size-space-900)] max-sm:py-[var(--vapor-size-space-800)] max-sm:gap-[var(--vapor-size-space-400)]">
                     <div>
                         <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start">
                             <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start w-full">
@@ -90,7 +90,7 @@ export default function BlocksPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[var(--vapor-size-space-400)] min-[1440px]:[&>*]:h-[263px] max-[992px]:gap-[var(--vapor-size-space-300)] max-[768px]:gap-[var(--vapor-size-space-400)]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[var(--vapor-size-space-400)] min-[1440px]:[&>*]:h-[263px] max-md:gap-[var(--vapor-size-space-300)] max-sm:gap-[var(--vapor-size-space-400)]">
                         {blocks.map((block) => (
                             <ComponentsCard
                                 key={block.id}

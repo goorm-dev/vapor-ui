@@ -11,7 +11,7 @@ interface BlockPageHeaderProps {
 
 export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPageHeaderProps) => {
     return (
-        <div className="flex gap-8 items-start justify-between w-full max-[1200px]:flex-col">
+        <div className="flex gap-[var(--vapor-size-space-400)] items-start justify-between w-full max-[1200px]:flex-col">
             {/* Header Section */}
             <div className="flex  flex-col gap-[var(--vapor-size-space-250)] items-start justify-start min-w-[424px]">
                 <div className="flex flex-col gap-[var(--vapor-size-space-100)] items-start justify-start w-full">
@@ -23,7 +23,7 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
 
                     {description && (
                         <Text asChild typography="body1" foreground="normal">
-                            <div className="text-[16px] leading-[24px] tracking-[-0.1px] w-full">
+                            <div className="w-full">
                                 {description.split('\n').map((line, index) => (
                                     <p key={index} className={index === 0 ? 'mb-0' : ''}>
                                         {line}

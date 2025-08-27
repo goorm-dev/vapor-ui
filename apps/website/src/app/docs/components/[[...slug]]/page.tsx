@@ -47,7 +47,6 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
     const page = source.getPage(['components', ...slug]);
     if (!page) notFound();
 
-    // NOTE: 이미지 경로 수정 필요
     const image = getComponentOgImageUrl(slug[slug.length - 1]);
 
     return createMetadata({
