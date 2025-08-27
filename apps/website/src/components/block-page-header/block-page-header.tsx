@@ -3,11 +3,11 @@ import Image from 'next/image';
 
 import { CopyButton } from '../copy-button';
 
-type BlockPageHeaderProps = {
+interface BlockPageHeaderProps {
     title: string;
     description?: string;
     previewImageUrl?: string;
-};
+}
 
 export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPageHeaderProps) => {
     return (
@@ -43,7 +43,7 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
                     <div className="flex flex-col items-center justify-center overflow-hidden rounded-[8px] w-full">
                         <Image
                             src={previewImageUrl}
-                            alt="Navbar Preview"
+                            alt={`${title} preview`}
                             width={590}
                             height={335}
                             className="object-cover"

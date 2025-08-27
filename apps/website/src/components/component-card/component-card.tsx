@@ -45,12 +45,9 @@ const CardWrapper = ({
                         </Badge>
                     )}
                 </div>
-                <Text
-                    typography="body2"
-                    foreground="secondary"
-                    className={styles.description}
-                    dangerouslySetInnerHTML={{ __html: description }}
-                />
+                <Text typography="body2" foreground="secondary" className={styles.description}>
+                    {description}
+                </Text>
             </Card.Body>
         </>
     );

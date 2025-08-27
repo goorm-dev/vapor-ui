@@ -13,6 +13,12 @@ import { externalLinks } from '~/constants/site-links';
 
 import LogoVapor from '../../../public/icons/logo-vapor.svg';
 
+const NAVIGATION_LINKS = [
+    { href: '/docs', label: 'Docs' },
+    { href: '/playground', label: 'Playground' },
+    { href: '/blocks', label: 'UI Blocks' },
+];
+
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];
 
@@ -72,44 +78,15 @@ export const SiteNavBar = () => {
                             </Link>
 
                             <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem href="/docs" selected={pathname.includes('/docs')}>
-                                    <Text
-                                        typography="subtitle1"
-                                        foreground={
-                                            pathname.includes('/docs') ? 'primary' : 'secondary'
-                                        }
+                                {NAVIGATION_LINKS.map((item) => (
+                                    <Nav.LinkItem
+                                        key={item.href}
+                                        href={item.href}
+                                        selected={pathname.includes(item.href)}
                                     >
-                                        Docs
-                                    </Text>
-                                </Nav.LinkItem>
-                                <Nav.LinkItem
-                                    href="/playground"
-                                    selected={pathname.includes('/playground')}
-                                >
-                                    <Text
-                                        typography="subtitle1"
-                                        foreground={
-                                            pathname.includes('/playground')
-                                                ? 'primary'
-                                                : 'secondary'
-                                        }
-                                    >
-                                        Playground
-                                    </Text>
-                                </Nav.LinkItem>
-                                <Nav.LinkItem
-                                    href="/blocks"
-                                    selected={pathname.includes('/blocks')}
-                                >
-                                    <Text
-                                        typography="subtitle1"
-                                        foreground={
-                                            pathname.includes('/blocks') ? 'primary' : 'secondary'
-                                        }
-                                    >
-                                        UI Blocks
-                                    </Text>
-                                </Nav.LinkItem>
+                                        {item.label}
+                                    </Nav.LinkItem>
+                                ))}
                             </Nav.List>
                         </div>
                         <div className="flex items-center gap-10">

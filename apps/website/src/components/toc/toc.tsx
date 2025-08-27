@@ -7,11 +7,17 @@ import clsx from 'clsx';
 import type { TableOfContents } from 'fumadocs-core/server';
 import * as Base from 'fumadocs-core/toc';
 
-type TOCProps = {
+const TOC_CONSTANTS = {
+    MIN_DEPTH: 3,
+    INDENT_SIZE: 20,
+    BASE_PADDING: 12,
+} as const;
+
+interface TOCProps {
     toc: TableOfContents;
     containerRef: RefObject<HTMLElement>;
     className?: string;
-};
+}
 
 export const TOC = ({ toc, containerRef, className }: TOCProps) => {
     if (!toc || toc.length === 0) {
@@ -34,7 +40,7 @@ export const TOC = ({ toc, containerRef, className }: TOCProps) => {
                                             href={item.url}
                                             className="block h-[var(--vapor-size-dimension-400)] leading-[var(--vapor-size-dimension-400)] hover:text-gray-900 data-[active=true]:text-[var(--vapor-color-foreground-primary)] data-[active=true]:font-medium transition-colors"
                                             style={{
-                                                paddingLeft: `${(item.depth - 3) * 20 + 12}px`,
+                                                paddingLeft: `${(item.depth - TOC_CONSTANTS.MIN_DEPTH) * TOC_CONSTANTS.INDENT_SIZE + TOC_CONSTANTS.BASE_PADDING}px`,
                                             }}
                                         >
                                             {item.title}

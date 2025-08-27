@@ -6,10 +6,10 @@ import type { TableOfContents } from 'fumadocs-core/server';
 
 import { TOC } from '../toc';
 
-type BlockPageBodyProps = {
+interface BlockPageBodyProps {
     children: ReactNode;
     toc?: TableOfContents;
-};
+}
 
 export const BlockPageBody = ({ children, toc }: BlockPageBodyProps) => {
     const containerRef = useRef<HTMLDivElement>(null);

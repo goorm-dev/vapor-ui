@@ -4,9 +4,9 @@ import { type ReactNode } from 'react';
 
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
 
-type BlockPageLayoutProps = {
+interface BlockPageLayoutProps {
     children: ReactNode;
-};
+}
 
 export const BlockPageLayout = ({ children }: BlockPageLayoutProps) => {
     return (
