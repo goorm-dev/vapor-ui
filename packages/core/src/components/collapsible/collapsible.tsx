@@ -13,9 +13,9 @@ import * as styles from './collapsible.css';
 
 interface CollapsibleRootProps extends VComponentProps<typeof BaseCollapsible.Root> {}
 
-const Root = (props: CollapsibleRootProps) => {
-    return <BaseCollapsible.Root {...props} />;
-};
+const Root = forwardRef<HTMLDivElement, CollapsibleRootProps>((props, ref) => {
+    return <BaseCollapsible.Root ref={ref} {...props} />;
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Collapsible.Trigger
