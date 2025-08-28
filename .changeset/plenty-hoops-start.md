@@ -2,4 +2,4 @@
 '@vapor-ui/core': minor
 ---
 
-add new `collapsible` component
+add new `Collapsible` component
