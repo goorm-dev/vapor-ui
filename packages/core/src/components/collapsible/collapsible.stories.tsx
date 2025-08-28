@@ -127,7 +127,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                                 border="1px solid #e1e1e1"
                                 paddingY="$150"
                                 paddingX="$200"
-                                height="fit-Panel"
+                                height="fit-content"
                             />
                         }
                         {...args}
