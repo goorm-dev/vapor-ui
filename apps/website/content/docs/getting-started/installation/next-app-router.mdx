@@ -1,0 +1,79 @@
+---
+title: Next.js - App Router
+description: Next.js 프로젝트에 Vapor UI 컴포넌트 설치하고 사용하기
+---
+
+이 가이드는 최신 프레임워크 환경에서 `@vapor-ui/core`를 시작하는 데 필요한 단계별 지침을 제공합니다. Next.js와 Vite를 위한 스타터 킷과 설정 방법을 확인하고, 여러분의 프로젝트에 바로 적용해 보세요.
+
+## Next.js - App Router
+
+App Router는 Next.js의 최신 라우팅 시스템으로, 서버 컴포넌트와 같은 새로운 기능을 활용합니다. `@vapor-ui/core`의 **Tree-shaking을 최적화**하기 위해 간단한 설정이 필요합니다.
+
+<Steps>
+<Step>
+
+### 1단계: 프로젝트 생성
+
+먼저, TypeScript를 사용하는 새로운 Next.js 프로젝트를 생성합니다.
+
+```bash
+npx create-next-app@latest
+```
+
+</Step>
+
+<Step>
+
+### 2단계: 라이브러리 설치
+
+프로젝트 디렉토리로 이동하여 `@vapor-ui/core`를 설치합니다.
+
+```bash
+cd your-project-name
+```
+
+```package-install
+npm install @vapor-ui/core @vapor-ui/icons
+```
+
+</Step>
+
+<Step>
+
+### 3단계: `next.config.js` 설정
+
+프로젝트의 루트 디렉토리에 있는 `next.config.js` 파일을 열고, `optimizePackageImports` 옵션을 추가합니다. 이 설정은 `@vapor-ui/core` 라이브러리에서 사용하는 부분만 빌드에 포함시켜 **최종 번들 사이즈를 줄여줍니다.**
+
+```js title="next.config.js"
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    // @vapor-ui/core의 Tree-shaking 최적화를 위해 추가
+    optimizePackageImports: ['@vapor-ui/core'],
+};
+
+export default nextConfig;
+```
+
+</Step>
+
+<Step>
+
+### 4단계: 컴포넌트 사용
+
+이제 `app/page.tsx` 파일에서 `@vapor-ui/core` 컴포넌트를 가져와 사용할 수 있습니다.
+
+```tsx title="app/page.tsx"
+import { Button } from '@vapor-ui/core';
+
+export default function Home() {
+    return (
+        <main>
+            <h1>Next.js App Router with @vapor-ui/core</h1>
+            <Button>Hello, World!</Button>
+        </main>
+    );
+}
+```
+
+</Step>
+</Steps>

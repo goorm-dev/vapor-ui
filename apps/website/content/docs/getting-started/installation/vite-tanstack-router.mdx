@@ -1,0 +1,79 @@
+---
+title: Vite - TanStack Router
+description: Vite TanStack Router 프로젝트에 Vapor UI 컴포넌트 설치하고 사용하기
+---
+
+## Vite - TanStack Router
+
+TanStack Router는 타입 안정성을 극대화한 최신 라우터입니다. Vite와 함께 사용할 때 `@vapor-ui/core`를 위한 별도 설정은 기본적으로 필요하지 않으며, Tree-shaking도 잘 지원됩니다.
+
+<Steps>
+<Step>
+
+### 1단계: 프로젝트 생성 및 설치
+
+Vite React 프로젝트를 생성하고 TanStack Router와 `@vapor-ui/core`를 설치합니다.
+
+```bash
+# 1. 프로젝트 생성
+npm create vite@latest your-tanstack-project -- --template react-ts
+cd your-tanstack-project
+npm install
+```
+
+```package-install
+# 2. 라이브러리 설치
+npm install @vapor-ui/core @vapor-ui/icons @tanstack/react-router
+```
+
+</Step>
+
+<Step>
+
+### 2단계: `vite.config.ts` 설정 (SSR 고려 시)
+
+CSR 환경에서는 별도 설정이 필요 없습니다. 만약 **SSR**을 구현한다면, React Router와 마찬가지로 `ssr.noExternal` 옵션을 추가해주는 것이 좋습니다.
+
+```ts title="vite.config.ts"
+// vite.config.ts
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [react()],
+    ssr: {
+        // SSR을 사용하는 경우에만 필요
+        noExternal: ['@vapor-ui/core'],
+    },
+});
+```
+
+</Step>
+
+<Step>
+
+### 3단계: 라우터 설정 및 컴포넌트 사용
+
+TanStack Router의 파일 기반 라우팅 또는 코드 기반 라우팅을 설정하고 컴포넌트를 사용합니다.
+
+```tsx title="src/routes/index.lazy.tsx"
+// src/routes/index.lazy.tsx 예시 (파일 기반 라우팅)
+import { createLazyFileRoute } from '@tanstack/react-router';
+import { Button } from '@vapor-ui/core';
+
+export const Route = createLazyFileRoute('/')({
+    component: Index,
+});
+
+function Index() {
+    return (
+        <div>
+            <h3>Vite + TanStack Router</h3>
+            <Button>Hello from TanStack Router!</Button>
+        </div>
+    );
+}
+```
+
+</Step>
+</Steps>

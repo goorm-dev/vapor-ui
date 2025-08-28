@@ -1,0 +1,10 @@
+{
+    "title": "Installation",
+    "pages": [
+        "next-app-router",
+        "next-page-router",
+        "vite-react",
+        "vite-react-router",
+        "vite-tanstack-router"
+    ]
+}

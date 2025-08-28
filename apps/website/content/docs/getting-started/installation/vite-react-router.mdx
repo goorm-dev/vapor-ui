@@ -1,0 +1,89 @@
+---
+title: Vite - React Router
+description: Vite React Router 프로젝트에 Vapor UI 컴포넌트 설치하고 사용하기
+---
+
+## Vite - React Router
+
+Vite 환경에서 React Router를 함께 사용할 경우, 특히 **SSR(서버 사이드 렌더링)**을 고려한다면 `vite.config.ts` 파일에 몇 가지 설정이 필요합니다.
+
+<Steps>
+<Step>
+
+### 1단계: 프로젝트 생성 및 설치
+
+먼저 Vite React 프로젝트를 생성하고, 필요한 라이브러리들을 설치합니다.
+
+```bash
+# 1. 프로젝트 생성
+npx create vite@latest your-router-project -- --template react-ts
+cd your-router-project
+```
+
+```package-install
+npm install @vapor-ui/core @vapor-ui/icons
+npm install -D @react-router/dev @tailwindcss/vite vite-tsconfig-paths
+```
+
+</Step>
+
+<Step>
+
+### 2단계: `vite.config.ts` 설정
+
+Vite 설정 파일에 React Router, Tailwind CSS, TSConfig 경로 및 SSR을 위한 플러그인과 설정을 추가합니다.
+
+```ts title="vite.config.ts"
+// vite.config.ts
+import { reactRouter } from '@react-router/dev/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
+
+export default defineConfig({
+    plugins: [reactRouter(), tailwindcss(), tsconfigPaths()],
+    ssr: {
+        // SSR 시 @vapor-ui/core가 외부 모듈로 처리되지 않도록 설정
+        noExternal: ['@vapor-ui/core'],
+    },
+});
+```
+
+</Step>
+
+<Step>
+
+### 3단계: 컴포넌트 및 라우터 설정
+
+라우터를 설정하고 페이지에서 `@vapor-ui/core` 컴포넌트를 사용합니다.
+
+```tsx title="src/main.tsx"
+// src/main.tsx 예시
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import { Button } from '@vapor-ui/core';
+
+function HomePage() {
+    return (
+        <div>
+            <h1>Vite + React Router</h1>
+            <Button>Go to About</Button>
+        </div>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+            </Routes>
+        </BrowserRouter>
+    </React.StrictMode>,
+);
+```
+
+</Step>
+</Steps>

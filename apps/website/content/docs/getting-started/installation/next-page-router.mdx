@@ -1,0 +1,81 @@
+---
+title: Next.js - Pages Router
+description: Next.js Pages Router 프로젝트에 Vapor UI 컴포넌트 설치하고 사용하기
+---
+
+## Next.js - Pages Router
+
+Pages Router는 안정적이고 널리 사용되는 Next.js의 기존 라우팅 방식입니다. `@vapor-ui/core` 라이브러리를 올바르게 **트랜스파일(transpile)** 하기 위한 설정이 필요합니다.
+
+<Steps>
+<Step>
+
+### 1단계: 프로젝트 생성
+
+새로운 Next.js 프로젝트를 생성하고, 설치 과정에서 **Pages Router** 사용을 선택합니다.
+
+```bash
+npx create-next-app@latest --typescript
+```
+
+</Step>
+
+<Step>
+
+### 2단계: 라이브러리 설치
+
+프로젝트 디렉토리로 이동하여 `@vapor-ui/core`를 설치합니다.
+
+```bash
+cd your-project-name
+```
+
+```package-install
+npm install @vapor-ui/core @vapor-ui/icons
+```
+
+</Step>
+
+<Step>
+
+### 3단계: `next.config.js` 설정
+
+프로젝트 루트의 `next.config.js` 파일에 `transpilePackages` 옵션을 추가합니다. 이 설정은 **라이브러리 코드를 프로젝트와 호환되는 형식으로 변환**하여 안정적인 동작을 보장합니다.
+
+```js title="next.config.js"
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    reactStrictMode: true,
+    // @vapor-ui/core를 사용하기 위해 transpilePackages 설정 추가
+    transpilePackages: ['@vapor-ui/core'],
+};
+
+module.exports = nextConfig;
+```
+
+</Step>
+
+<Step>
+
+### 4단계: 컴포넌트 사용
+
+`pages/index.tsx` 파일에서 컴포넌트를 가져와 사용합니다.
+
+```tsx title="pages/index.tsx"
+import { Button } from '@vapor-ui/core';
+import type { NextPage } from 'next';
+
+const Home: NextPage = () => {
+    return (
+        <div>
+            <h1>Next.js Pages Router with @vapor-ui/core</h1>
+            <Button>Hello, World!</Button>
+        </div>
+    );
+};
+
+export default Home;
+```
+
+</Step>
+</Steps>
