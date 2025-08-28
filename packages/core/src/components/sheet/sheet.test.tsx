@@ -133,6 +133,28 @@ describe('Sheet', () => {
 
         expect(rendered.queryByText(CLOSE_TEXT)).toBeInTheDocument();
     });
+
+    it('should not close when provided keepMounted and closed', async () => {
+        const rendered = render(
+            <Sheet.Root>
+                <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
+                <Sheet.Portal keepMounted>
+                    <Sheet.Overlay />
+                    <Sheet.Positioner>
+                        <Sheet.Popup data-testid="sheet-popup">
+                            <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
+                            <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
+                        </Sheet.Popup>
+                    </Sheet.Positioner>
+                </Sheet.Portal>
+            </Sheet.Root>,
+        );
+
+        const popup = rendered.getByTestId('sheet-popup');
+
+        expect(popup).toBeInTheDocument();
+        expect(popup).not.toBeVisible();
+    });
 });
 
 const TRIGGER_TEXT = 'Trigger';
@@ -147,17 +169,19 @@ const SheetTest = (props: SheetRootProps) => {
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
             <Sheet.Portal>
                 <Sheet.Overlay data-testid={OVERLAY_TEXT} />
-                <Sheet.Content>
-                    <Sheet.Header>
-                        <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
-                    </Sheet.Header>
-                    <Sheet.Body>
-                        <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
-                    </Sheet.Body>
-                    <Sheet.Footer>
-                        <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
-                    </Sheet.Footer>
-                </Sheet.Content>
+                <Sheet.Positioner>
+                    <Sheet.Popup>
+                        <Sheet.Header>
+                            <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
+                        </Sheet.Header>
+                        <Sheet.Body>
+                            <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
+                        </Sheet.Body>
+                        <Sheet.Footer>
+                            <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
+                        </Sheet.Footer>
+                    </Sheet.Popup>
+                </Sheet.Positioner>
             </Sheet.Portal>
         </Sheet.Root>
     );
@@ -207,15 +231,17 @@ const UndefinedDescriptionSheetTest = (props: SheetRootProps) => {
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
             <Sheet.Portal>
                 <Sheet.Overlay />
-                <Sheet.Content aria-describedby={undefined}>
-                    <Sheet.Header>
-                        <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
-                    </Sheet.Header>
+                <Sheet.Positioner>
+                    <Sheet.Popup aria-describedby={undefined}>
+                        <Sheet.Header>
+                            <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
+                        </Sheet.Header>
 
-                    <Sheet.Footer>
-                        <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
-                    </Sheet.Footer>
-                </Sheet.Content>
+                        <Sheet.Footer>
+                            <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
+                        </Sheet.Footer>
+                    </Sheet.Popup>
+                </Sheet.Positioner>
             </Sheet.Portal>
         </Sheet.Root>
     );

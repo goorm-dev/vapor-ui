@@ -63,7 +63,7 @@ const sideSelectors = Object.entries(sideConfig).reduce(
     {} as Record<string, CSSProperties>,
 );
 
-export const content = layerStyle('components', {
+export const popup = layerStyle('components', {
     position: 'fixed',
     zIndex: 50, // TODO: Use constant z-index value
 

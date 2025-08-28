@@ -1,38 +1,87 @@
-import { forwardRef } from 'react';
+import type { RefObject } from 'react';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 
-import { Dialog as BaseDialog } from '@base-ui-components/react';
+import { Dialog as BaseDialog, useRender } from '@base-ui-components/react';
+import { useControlled } from '@base-ui-components/utils/useControlled';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import clsx from 'clsx';
 
+import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
+import type { TransitionStatus } from '~/hooks/use-transition-status';
+import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { createContext } from '~/libs/create-context';
+import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import type { VComponentProps } from '~/utils/types';
 
 import { Dialog } from '../dialog';
 import * as styles from './sheet.css';
 
-type SheetPositionerProps = { side?: 'top' | 'right' | 'bottom' | 'left' };
-type SheetContext = SheetPositionerProps;
-
-const [SheetProvider, useSheetContext] = createContext<SheetContext>({
-    name: 'SheetContext',
-    providerName: 'SheetProvider',
-    hookName: 'useSheetContext',
-});
-
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
-interface SheetRootProps extends RootPrimitiveProps, SheetPositionerProps {}
+type RootContext = {
+    open?: boolean;
+    mounted: boolean;
+    setMounted: React.Dispatch<React.SetStateAction<boolean>>;
+    transitionStatus: TransitionStatus;
+    popupRef: RefObject<HTMLDivElement | null>;
+};
 
-const Root = ({ closeOnClickOverlay, ...props }: SheetRootProps) => {
-    const [variantProps, otherProps] = createSplitProps<SheetPositionerProps>()(props, ['side']);
+const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
+    name: 'SheetRoot',
+    providerName: 'SheetRootProvider',
+    hookName: 'useSheetRootContext',
+});
+
+/* -----------------------------------------------------------------------------------------------*/
+
+type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
+interface SheetRootProps extends RootPrimitiveProps {}
+
+const Root = ({ open: openProp, defaultOpen, onOpenChange, ...props }: SheetRootProps) => {
+    const [open, setOpen] = useControlled({
+        controlled: openProp,
+        default: defaultOpen || false,
+        name: 'SheetRoot',
+        state: 'open',
+    });
+
+    const popupRef = useRef<HTMLDivElement | null>(null);
+
+    const { mounted, setMounted, transitionStatus } = useTransitionStatus(open);
+    const handleUnmount = useEventCallback(() => {
+        setMounted(false);
+    });
+
+    useOpenChangeComplete({
+        enabled: !props.actionsRef,
+        open,
+        ref: popupRef,
+        onComplete() {
+            if (!open) {
+                handleUnmount();
+            }
+        },
+    });
+
+    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
+
+    const handleOpenChange = (
+        ...params: Parameters<NonNullable<RootPrimitiveProps['onOpenChange']>>
+    ) => {
+        const [nextOpen] = params;
+
+        setOpen(nextOpen);
+        onOpenChange?.(...params);
+    };
 
     return (
-        <SheetProvider value={variantProps}>
-            <BaseDialog.Root dismissible={closeOnClickOverlay} {...otherProps} />
-        </SheetProvider>
+        <SheetRootProvider value={{ open, mounted, setMounted, transitionStatus, popupRef }}>
+            <Dialog.Root open={open} onOpenChange={handleOpenChange} {...props} />
+        </SheetRootProvider>
     );
 };
 
@@ -62,7 +111,75 @@ const Overlay = Dialog.Overlay;
  * -----------------------------------------------------------------------------------------------*/
 
 interface SheetPortalProps extends VComponentProps<typeof Dialog.Portal> {}
-const Portal = Dialog.Portal;
+
+const Portal = (props: SheetPortalProps) => {
+    return <Dialog.Portal {...props} />;
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Sheet.Positioner
+ * -----------------------------------------------------------------------------------------------*/
+
+type PositionerType = { side?: 'top' | 'right' | 'bottom' | 'left' };
+
+const [SheetPositionerProvider, useSheetPositionerContext] = createContext<PositionerType>({
+    name: 'SheetPositioner',
+    providerName: 'SheetPositionerProvider',
+    hookName: 'useSheetPositionerContext',
+});
+
+interface SheetPositionerProps extends VComponentProps<'div'>, PositionerType {}
+
+const Positioner = forwardRef<HTMLDivElement, SheetPositionerProps>(({ render, ...props }, ref) => {
+    const [positionerProps, otherProps] = createSplitProps<PositionerType>()(props, ['side']);
+    const { side = 'right' } = positionerProps;
+
+    const { open: contextOpen = false, mounted } = useSheetRootContext();
+
+    const dataAttr = createDataAttributes({
+        open: contextOpen,
+        closed: !contextOpen,
+        side: side,
+    });
+
+    const element = useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            role: 'presentation',
+            hidden: !mounted,
+            ...dataAttr,
+            ...otherProps,
+        },
+    });
+
+    return <SheetPositionerProvider value={positionerProps}>{element}</SheetPositionerProvider>;
+});
+
+/* -------------------------------------------------------------------------------------------------
+ * Sheet.Popup
+ * -----------------------------------------------------------------------------------------------*/
+
+interface SheetPopupProps extends VComponentProps<typeof BaseDialog.Popup> {}
+
+const Popup = forwardRef<HTMLDivElement, SheetPopupProps>(({ className, ...props }, ref) => {
+    const { popupRef } = useSheetRootContext();
+    const { side = 'right' } = useSheetPositionerContext();
+
+    const composedRef = composeRefs(popupRef, ref);
+
+    const dataAttr = createDataAttributes({ side: side });
+
+    return (
+        <BaseDialog.Popup
+            ref={composedRef}
+            className={clsx(styles.popup, className)}
+            {...dataAttr}
+            {...props}
+        />
+    );
+});
+Popup.displayName = 'Sheet.Popup';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Content
@@ -71,15 +188,13 @@ const Portal = Dialog.Portal;
 interface SheetContentProps extends VComponentProps<typeof BaseDialog.Popup> {}
 
 const Content = forwardRef<HTMLDivElement, SheetContentProps>(({ className, ...props }, ref) => {
-    const { side = 'right' } = useSheetContext();
-
     return (
-        <BaseDialog.Popup
-            ref={ref}
-            data-side={side}
-            className={clsx(styles.content, className)}
-            {...props}
-        />
+        <Portal>
+            <Overlay />
+            <Positioner side="right">
+                <Popup ref={ref} {...props} />
+            </Positioner>
+        </Portal>
     );
 });
 Content.displayName = 'Sheet.Content';
@@ -139,6 +254,8 @@ export {
     Close as SheetClose,
     Overlay as SheetOverlay,
     Portal as SheetPortal,
+    Positioner as SheetPositioner,
+    Popup as SheetPopup,
     Content as SheetContent,
     Header as SheetHeader,
     Body as SheetBody,
@@ -153,6 +270,8 @@ export type {
     SheetCloseProps,
     SheetOverlayProps,
     SheetPortalProps,
+    SheetPositionerProps,
+    SheetPopupProps,
     SheetContentProps,
     SheetHeaderProps,
     SheetBodyProps,
@@ -167,6 +286,8 @@ export const Sheet = {
     Close,
     Overlay,
     Portal,
+    Popup,
+    Positioner,
     Content,
     Header,
     Body,
