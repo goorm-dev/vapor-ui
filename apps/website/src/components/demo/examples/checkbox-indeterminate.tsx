@@ -40,7 +40,6 @@ export default function CheckboxIndeterminate() {
                     Select All Fruits
                 </Checkbox.Label>
             </Checkbox.Root>
-
             <div className="ml-6 space-y-2">
                 <Checkbox.Root
                     checked={checkedItems.apple}
@@ -50,7 +49,6 @@ export default function CheckboxIndeterminate() {
                     <Checkbox.Control />
                     <Checkbox.Label className="cursor-pointer">Apple</Checkbox.Label>
                 </Checkbox.Root>
-
                 <Checkbox.Root
                     checked={checkedItems.banana}
                     onCheckedChange={(checked) => handleItemChange('banana', checked)}
@@ -59,7 +57,6 @@ export default function CheckboxIndeterminate() {
                     <Checkbox.Control />
                     <Checkbox.Label className="cursor-pointer">Banana</Checkbox.Label>
                 </Checkbox.Root>
-
                 <Checkbox.Root
                     checked={checkedItems.orange}
                     onCheckedChange={(checked) => handleItemChange('orange', checked)}

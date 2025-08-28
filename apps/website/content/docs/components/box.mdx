@@ -48,7 +48,6 @@ export default function BoxDisplay() {
                         Block element takes full width
                     </Box>
                 </div>
-
                 <div>
                     <Text>Inline</Text>
                     <Box
@@ -69,7 +68,6 @@ export default function BoxDisplay() {
                         like this
                     </Box>
                 </div>
-
                 <div>
                     <Text>Flex Container</Text>
                     <Box
@@ -105,7 +103,6 @@ export default function BoxDisplay() {
                         </Box>
                     </Box>
                 </div>
-
                 <div>
                     <Text>Grid Container</Text>
                     <Box
@@ -145,10 +142,8 @@ export default function BoxDisplay() {
             </div>
         </div>
     );
-
 }
-
-````
+```
 </Demo>
 
 ### Background Color
@@ -189,8 +184,7 @@ export default function BoxBackground() {
         </div>
     );
 }
-````
-
+```
 </Demo>
 
 ### Spacing
@@ -209,13 +203,11 @@ export default function BoxSpacing() {
                     Padding
                 </Box>
             </div>
-
             <div className="flex items-center gap-4">
                 <Box margin="$400" padding="$300" backgroundColor="$green-200" borderRadius="$200">
                     Margin
                 </Box>
             </div>
-
             <div className="flex items-center gap-4">
                 <Box
                     paddingX="$500"
@@ -237,10 +229,8 @@ export default function BoxSpacing() {
             </div>
         </div>
     );
-
 }
-
-````
+```
 </Demo>
 
 ### Layout
@@ -295,7 +285,6 @@ export default function BoxLayout() {
                     </Box>
                 </div>
             </div>
-
             <div>
                 <h4 className="mb-2 text-sm font-medium">Justify Content</h4>
                 <div className="flex flex-col gap-2">
@@ -346,7 +335,6 @@ export default function BoxLayout() {
                     </Box>
                 </div>
             </div>
-
             <div>
                 <h4 className="mb-2 text-sm font-medium">Align Items</h4>
                 <Box
@@ -387,9 +375,8 @@ export default function BoxLayout() {
             </div>
         </div>
     );
-
 }
-````
+```
 
 </Demo>
 
@@ -459,7 +446,6 @@ export default function BoxVisual() {
                     </Box>
                 </div>
             </div>
-
             <div>
                 <h4 className="mb-2 text-sm font-medium">Opacity Levels</h4>
                 <div className="flex items-center gap-4">
@@ -492,7 +478,6 @@ export default function BoxVisual() {
                     </Box>
                 </div>
             </div>
-
             <div>
                 <h4 className="mb-2 text-sm font-medium">Text Alignment</h4>
                 <div className="flex flex-col gap-2">
@@ -522,7 +507,6 @@ export default function BoxVisual() {
                     </Box>
                 </div>
             </div>
-
             <div>
                 <h4 className="mb-2 text-sm font-medium">Overflow Behavior</h4>
                 <div className="flex flex-col gap-4">
@@ -551,9 +535,7 @@ export default function BoxVisual() {
             </div>
         </div>
     );
-
 }
-
 ```
 </Demo>
 
@@ -566,4 +548,3 @@ export default function BoxVisual() {
 Box 컴포넌트는 `div` HTML 요소를 기반으로 하며, Sprinkles 시스템을 통해 디자인 토큰 기반의 스타일링 속성을 제공합니다. 모든 표준 HTML `div` 속성도 지원합니다.
 
 <ComponentPropsTable file="box" section="props" />
-```

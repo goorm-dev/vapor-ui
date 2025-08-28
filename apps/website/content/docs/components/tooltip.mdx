@@ -20,6 +20,7 @@ export default function DefaultTooltip() {
         </Tooltip.Root>
     );
 }
+```
 </Demo>
 
 ## Property
@@ -43,21 +44,18 @@ export default function TooltipPositioning() {
                     <Tooltip.Content>상단에 표시되는 툴팁</Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root side="right">
                 <Tooltip.Trigger render={<Button>우측</Button>} />
                 <Tooltip.Portal>
                     <Tooltip.Content>우측에 표시되는 툴팁</Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root side="bottom">
                 <Tooltip.Trigger render={<Button>하단</Button>} />
                 <Tooltip.Portal>
                     <Tooltip.Content>하단에 표시되는 툴팁</Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root side="left">
                 <Tooltip.Trigger render={<Button>좌측</Button>} />
                 <Tooltip.Portal>
@@ -67,7 +65,7 @@ export default function TooltipPositioning() {
         </div>
     );
 }
-````
+```
 
 </Demo>
 
@@ -91,14 +89,12 @@ export default function TooltipAlignment() {
                             <Tooltip.Content>시작 위치에 정렬된 툴팁</Tooltip.Content>
                         </Tooltip.Portal>
                     </Tooltip.Root>
-
                     <Tooltip.Root side="bottom" align="center">
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
                         <Tooltip.Portal>
                             <Tooltip.Content>중앙에 정렬된 툴팁</Tooltip.Content>
                         </Tooltip.Portal>
                     </Tooltip.Root>
-
                     <Tooltip.Root side="bottom" align="end">
                         <Tooltip.Trigger render={<Button>끝</Button>} />
                         <Tooltip.Portal>
@@ -107,7 +103,6 @@ export default function TooltipAlignment() {
                     </Tooltip.Root>
                 </div>
             </div>
-
             <div>
                 <h4 className="text-sm font-medium mb-4">우측 정렬</h4>
                 <div className="flex flex-col gap-4">
@@ -117,14 +112,12 @@ export default function TooltipAlignment() {
                             <Tooltip.Content>상단 시작 위치</Tooltip.Content>
                         </Tooltip.Portal>
                     </Tooltip.Root>
-
                     <Tooltip.Root side="right" align="center">
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
                         <Tooltip.Portal>
                             <Tooltip.Content>중앙 위치</Tooltip.Content>
                         </Tooltip.Portal>
                     </Tooltip.Root>
-
                     <Tooltip.Root side="right" align="end">
                         <Tooltip.Trigger render={<Button>끝</Button>} />
                         <Tooltip.Portal>
@@ -135,10 +128,8 @@ export default function TooltipAlignment() {
             </div>
         </div>
     );
-
-}
-
-````
+};
+```
 </Demo>
 
 ### Delay
@@ -158,21 +149,18 @@ export default function TooltipDelay() {
                     <Tooltip.Content>지연 없이 바로 표시되는 툴팁</Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root delay={500}>
                 <Tooltip.Trigger render={<Button>0.5초 지연</Button>} />
                 <Tooltip.Portal>
                     <Tooltip.Content>0.5초 후에 표시되는 툴팁</Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root delay={1000}>
                 <Tooltip.Trigger render={<Button>1초 지연</Button>} />
                 <Tooltip.Portal>
                     <Tooltip.Content>1초 후에 표시되는 툴팁</Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root delay={2000}>
                 <Tooltip.Trigger render={<Button>2초 지연</Button>} />
                 <Tooltip.Portal>
@@ -181,8 +169,8 @@ export default function TooltipDelay() {
             </Tooltip.Root>
         </div>
     );
-}
-````
+};
+```
 
 </Demo>
 
@@ -206,14 +194,12 @@ export default function TooltipOffset() {
                             <Tooltip.Content>거리 0px</Tooltip.Content>
                         </Tooltip.Portal>
                     </Tooltip.Root>
-
                     <Tooltip.Root sideOffset={10}>
                         <Tooltip.Trigger render={<Button>10px</Button>} />
                         <Tooltip.Portal>
                             <Tooltip.Content>거리 10px</Tooltip.Content>
                         </Tooltip.Portal>
                     </Tooltip.Root>
-
                     <Tooltip.Root sideOffset={20}>
                         <Tooltip.Trigger render={<Button>20px</Button>} />
                         <Tooltip.Portal>
@@ -222,7 +208,6 @@ export default function TooltipOffset() {
                     </Tooltip.Root>
                 </div>
             </div>
-
             <div>
                 <h4 className="text-sm font-medium mb-4">Align Offset (정렬 오프셋)</h4>
                 <div className="flex gap-4">
@@ -232,14 +217,12 @@ export default function TooltipOffset() {
                             <Tooltip.Content>정렬 오프셋 -20px</Tooltip.Content>
                         </Tooltip.Portal>
                     </Tooltip.Root>
-
                     <Tooltip.Root alignOffset={0}>
                         <Tooltip.Trigger render={<Button>0px</Button>} />
                         <Tooltip.Portal>
                             <Tooltip.Content>정렬 오프셋 0px</Tooltip.Content>
                         </Tooltip.Portal>
                     </Tooltip.Root>
-
                     <Tooltip.Root alignOffset={20}>
                         <Tooltip.Trigger render={<Button>+20px</Button>} />
                         <Tooltip.Portal>
@@ -250,10 +233,9 @@ export default function TooltipOffset() {
             </div>
         </div>
     );
+};
+```
 
-}
-
-````
 </Demo>
 
 ## Examples
@@ -279,7 +261,6 @@ export default function TooltipContent() {
                     <Tooltip.Content>간단한 툴팁 메시지</Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root>
                 <Tooltip.Trigger render={<Button>긴 텍스트</Button>} />
                 <Tooltip.Portal>
@@ -289,7 +270,6 @@ export default function TooltipContent() {
                     </Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root>
                 <Tooltip.Trigger render={<Button>포맷된 텍스트</Button>} />
                 <Tooltip.Portal>
@@ -302,7 +282,6 @@ export default function TooltipContent() {
                     </Tooltip.Content>
                 </Tooltip.Portal>
             </Tooltip.Root>
-
             <Tooltip.Root>
                 <Tooltip.Trigger render={<Button>키보드 단축키</Button>} />
                 <Tooltip.Portal>
@@ -316,9 +295,8 @@ export default function TooltipContent() {
             </Tooltip.Root>
         </div>
     );
-}
-
-````
+};
+```
 
 </Demo>
 
