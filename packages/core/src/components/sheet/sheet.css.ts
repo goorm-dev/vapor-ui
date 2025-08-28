@@ -88,9 +88,6 @@ export const popup = layerStyle('components', {
     paddingBottom: vars.size.space[100],
     paddingInline: vars.size.space[150],
 
-    width: '18.75rem',
-    height: '100%',
-
     selectors: {
         ...sideSelectors,
 
