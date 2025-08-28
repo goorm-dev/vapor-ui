@@ -16,6 +16,7 @@ interface CollapsibleRootProps extends VComponentProps<typeof BaseCollapsible.Ro
 const Root = forwardRef<HTMLDivElement, CollapsibleRootProps>((props, ref) => {
     return <BaseCollapsible.Root ref={ref} {...props} />;
 });
+Root.displayName = 'Collapsible.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Collapsible.Trigger
@@ -26,6 +27,7 @@ interface CollapsibleTriggerProps extends VComponentProps<typeof BaseCollapsible
 const Trigger = forwardRef<HTMLButtonElement, CollapsibleTriggerProps>((props, ref) => {
     return <BaseCollapsible.Trigger ref={ref} {...props} />;
 });
+Trigger.displayName = 'Collapsible.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Collapsible.Panel
@@ -36,6 +38,7 @@ interface CollapsiblePanelProps extends VComponentProps<typeof BaseCollapsible.P
 const Panel = forwardRef<HTMLDivElement, CollapsiblePanelProps>(({ className, ...props }, ref) => {
     return <BaseCollapsible.Panel ref={ref} className={clsx(styles.panel, className)} {...props} />;
 });
+Panel.displayName = 'Collapsible.Panel';
 
 /* -----------------------------------------------------------------------------------------------*/
 
