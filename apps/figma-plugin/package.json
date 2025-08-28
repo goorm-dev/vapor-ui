@@ -4,8 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "vite --config vite.config.ui.ts",
+    "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts",
+    "build:ui": "vite build --config vite.config.ui.ts",
+    "build:plugin": "vite build --config vite.config.plugin.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@figma/plugin-typings": "^1.117.0",
     "@tailwindcss/vite": "^4.1.12",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
@@ -26,6 +29,7 @@
     "tailwindcss": "^4.1.5",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
-    "vite": "^7.1.2"
+    "vite": "^7.1.2",
+    "vite-plugin-singlefile": "^2.3.0"
   }
 }
