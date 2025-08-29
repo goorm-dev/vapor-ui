@@ -5,7 +5,7 @@ export default function DefaultAvatar() {
         <Avatar.Root
             size="md"
             alt="goorm"
-            src="https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg"
+            src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
         >
             <Avatar.Image />
             <Avatar.Fallback>goorm</Avatar.Fallback>

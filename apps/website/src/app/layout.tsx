@@ -1,5 +1,7 @@
 'use client';
 
+import './global.css';
+
 import type { ReactNode } from 'react';
 
 import { ThemeProvider, ThemeScript } from '@vapor-ui/core';
@@ -8,9 +10,6 @@ import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
 
 import DefaultSearchDialog from '~/components/search/search';
-
-import './global.css';
-import './global.css';
 
 const inter = Inter({
     subsets: ['latin'],

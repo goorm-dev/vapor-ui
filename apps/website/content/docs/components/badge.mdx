@@ -4,14 +4,6 @@ site_name: 'Badge - Vapor Core'
 description: 'Badge는 이미지, 컨텐츠 등의 상태 또는 분류를 시각적으로 표시합니다.'
 ---
 
-## Import
-
-```js
-import { Badge } from '@vapor-ui/core';
-```
-
-## Preview
-
 <Demo name="default-badge">
 ```tsx
 import { Badge } from '@vapor-ui/core';
@@ -22,12 +14,76 @@ export default function DefaultBadge() {
 ```
 </Demo>
 
-## Props
+## Property
 
-### Badge
+---
 
-<PropsTable file="badge" section="props" />
+### Color
 
-## Accessibility Table
+Badge 색상은 primary, success, warning, danger, contrast, hint 로 제공합니다.
 
-<AccessibilityTable file="badge" />
+<Demo name="badge-color">
+```tsx
+import { Badge } from '@vapor-ui/core';
+
+export default function BadgeColor() {
+    return (
+        <div className="flex flex-wrap gap-2">
+            <Badge color="primary">Primary</Badge>
+            <Badge color="hint">Hint</Badge>
+            <Badge color="danger">Danger</Badge>
+            <Badge color="success">Success</Badge>
+            <Badge color="warning">Warning</Badge>
+            <Badge color="contrast">Contrast</Badge>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Shape
+
+Badge의 모서리를 알약 형태처럼 둥글게 사용할 수 있습니다.
+
+<Demo name="badge-shape">
+```tsx
+import { Badge } from '@vapor-ui/core';
+
+export default function BadgeShape() {
+    return (
+        <div className="flex flex-wrap gap-2">
+            <Badge shape="square">Rectangle</Badge>
+            <Badge shape="pill">Pill</Badge>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Size
+
+Badge 사이즈는 sm, md, lg 로 제공합니다.
+
+<Demo name="badge-size">
+```tsx
+import { Badge } from '@vapor-ui/core';
+
+export default function BadgeSize() {
+    return (
+        <>
+            <Badge size="sm">Small</Badge>
+            <Badge size="md">Medium</Badge>
+            <Badge size="lg">Large</Badge>
+        </>
+    );
+}
+```
+</Demo>
+
+## Props Table
+
+---
+
+이 컴포넌트는 `span` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
+
+<ComponentPropsTable file="badge" section="props" />
