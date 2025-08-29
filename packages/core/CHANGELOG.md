@@ -1,5 +1,27 @@
 # @vapor-ui/core
 
+## 0.5.0
+
+### Minor Changes
+
+- df2dbc4: add new `Tooltip` component
+- fdbf49d: enhance token structure
+- 263874c: add new `Menu` component
+- 66a0032: add new `Breadcrumb` component
+
+### Patch Changes
+
+- b498ae2: Fix RadioGroup indicator color to use white background instead of theme-dependent background normal
+- fe0d153: Align CSS variable naming with new build identifiers config
+- 7b1b889: remove hover state when used touchscreen
+- 74b7c97: add VComponentProps
+- 3611d89: style(Button): add no-wrap
+- 9188b0e: Enhance vanillaExtractPlugin identifiers for better debugging
+- 96c0f7a: add box-shadow tokens
+- Updated dependencies [c4d0e8e]
+- Updated dependencies [a156f82]
+    - @vapor-ui/icons@0.3.0
+
 ## 0.4.0
 
 ### Minor Changes

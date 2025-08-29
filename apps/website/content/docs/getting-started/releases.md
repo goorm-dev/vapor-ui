@@ -3,6 +3,32 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
 ---
 
+## 0.5.0
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- df2dbc4: add new `Tooltip` component
+- fdbf49d: enhance token structure
+- 263874c: add new `Menu` component
+- 66a0032: add new `Breadcrumb` component
+
+#### Patch Changes
+
+- b498ae2: Fix RadioGroup indicator color to use white background instead of theme-dependent background normal
+- fe0d153: Align CSS variable naming with new build identifiers config
+- 7b1b889: remove hover state when used touchscreen
+- 74b7c97: add VComponentProps
+- 3611d89: style(Button): add no-wrap
+- 9188b0e: Enhance vanillaExtractPlugin identifiers for better debugging
+- 96c0f7a: add box-shadow tokens
+- Updated dependencies [c4d0e8e]
+- Updated dependencies [a156f82]
+    - @vapor-ui/icons@0.3.0
+
+---
+
 ## 0.4.0
 
 ### @vapor-ui/core
@@ -45,6 +71,23 @@ description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
 
 - 03655b1: fix(tsup): Correct CSS Layer Priority for vapor-components
 - 488c614: refactor: replace text sprinkles into mixins
+
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- c4d0e8e: Add new icons from Figma
+
+    **New Basic Icons:** `LinearScaleOutlineIcon`
+
+    **Also Updated:**
+
+    - Basic Icons: `PlayIcon`, `ReplaceIcon`, `ClassIcon`, `ArrowUpOutlineIcon`, `ArrowDownOutlineIcon`, `TerminalOutlineIcon`, `ViewShrinkOutlineIcon`, `FolderSearchIcon`, `StarOutlineIcon`, `PriceOutlineIcon`, `HistoryOutlineIcon`, `CardsOutlineIcon`, `ZoomOutOutlineIcon`, `IntelliSensePropertyOutlineIcon`, `CorrectOutlineIcon`, `ChevronDoubleRightOutlineIcon`, `AutoCodeOutlineIcon`, `ChapterOutlineIcon`
+    - Symbol Icons: `RstudioColorIcon`
+
+- a156f82: Add new icons from Figma
+
+    **New Basic Icons:** `SidenavIcon`
 
 ---
 
