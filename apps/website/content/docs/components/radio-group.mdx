@@ -4,25 +4,13 @@ site_name: 'Radio Group - Vapor Core'
 description: 'Radio Group는 둘 또는 그 이상의 옵션 중 하나만 선택할 수 있도록 돕는 입력 컴포넌트입니다.'
 ---
 
-## Import
-
----
-
-```jsx
-import { RadioGroup } from '@vapor-ui/core';
-```
-
-## Preview
-
----
-
 <Demo name="default-radio-group">
 ```tsx
 import { RadioGroup } from '@vapor-ui/core';
 
 export default function DefaultRadioGroup() {
     return (
-        <RadioGroup.Root name="fruits">
+        <RadioGroup.Root name="fruits" size="md">
             <RadioGroup.Item value="apple">
                 <RadioGroup.Control />
                 <RadioGroup.Label>Apple</RadioGroup.Label>
@@ -31,28 +19,281 @@ export default function DefaultRadioGroup() {
                 <RadioGroup.Control />
                 <RadioGroup.Label>Orange</RadioGroup.Label>
             </RadioGroup.Item>
+            <RadioGroup.Item value="banana" disabled>
+                <RadioGroup.Control />
+                <RadioGroup.Label>Banana</RadioGroup.Label>
+            </RadioGroup.Item>
         </RadioGroup.Root>
     );
 }
 ```
 </Demo>
 
-## Props
+## Property
+
+---
+
+### Size
+
+RadioGroup 사이즈는 md, lg로 제공합니다.
+
+<Demo name="radio-group-size">
+```tsx
+import { RadioGroup } from '@vapor-ui/core';
+
+export default function RadioGroupSize() {
+    return (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-medium mb-2">Medium</h4>
+                <RadioGroup.Root name="size-md" size="md">
+                    <RadioGroup.Item value="md1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Medium Option 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="md2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Medium Option 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+            
+            <div>
+                <h4 className="text-sm font-medium mb-2">Large</h4>
+                <RadioGroup.Root name="size-lg" size="lg">
+                    <RadioGroup.Item value="lg1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Large Option 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="lg2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Large Option 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Orientation
+
+RadioGroup 방향은 vertical, horizontal로 제공합니다.
+
+<Demo name="radio-group-direction">
+```tsx
+import { RadioGroup } from '@vapor-ui/core';
+
+export default function RadioGroupDirection() {
+    return (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-medium mb-2">Vertical (기본값)</h4>
+                <RadioGroup.Root name="orientation-vertical" orientation="vertical">
+                    <RadioGroup.Item value="v1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Vertical Option 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="v2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Vertical Option 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="v3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Vertical Option 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+            
+            <div>
+                <h4 className="text-sm font-medium mb-2">Horizontal</h4>
+                <RadioGroup.Root name="orientation-horizontal" orientation="horizontal">
+                    <RadioGroup.Item value="h1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Option 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="h2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Option 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="h3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>Option 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Disabled
+
+사용자가 상호작용할 수 없는 상태입니다. 액션을 수행하기 위한 특정 조건을 충족하지 않았거나 일시적으로 기능을 제한하려는 상황에서 사용합니다.
+
+<Demo name="radio-group-disabled">
+```tsx
+import { RadioGroup } from '@vapor-ui/core';
+
+export default function RadioGroupDisabled() {
+    return (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-medium mb-2">개별 아이템 비활성화</h4>
+                <RadioGroup.Root name="disabled-items" defaultValue="option1">
+                    <RadioGroup.Item value="option1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>활성 옵션 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="option2" disabled>
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>비활성 옵션 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="option3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>활성 옵션 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="option4" disabled>
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>비활성 옵션 4</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+            
+            <div>
+                <h4 className="text-sm font-medium mb-2">전체 그룹 비활성화</h4>
+                <RadioGroup.Root name="disabled-group" disabled defaultValue="group1">
+                    <RadioGroup.Item value="group1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>그룹 옵션 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="group2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>그룹 옵션 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="group3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>그룹 옵션 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Visually Hidden
+
+라벨을 제거한 형태로 사용할 수 있습니다. 이 때 화면에 Label이 시각적으로 표시되지 않지만, 여전히 화면 읽기 도구(Screen readers)에서는 읽을 수 있도록 처리합니다.
+
+<Demo name="radio-group-visually-hidden">
+```tsx
+import { RadioGroup } from '@vapor-ui/core';
+
+export default function RadioGroupVisuallyHidden() {
+    return (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-medium mb-2">기본 라벨</h4>
+                <RadioGroup.Root name="normal-labels" defaultValue="visible1">
+                    <RadioGroup.Item value="visible1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>보이는 라벨 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="visible2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>보이는 라벨 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="visible3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>보이는 라벨 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+            
+            <div>
+                <h4 className="text-sm font-medium mb-2">시각적으로 숨겨진 라벨</h4>
+                <RadioGroup.Root name="hidden-labels" defaultValue="hidden2" visuallyHidden>
+                    <RadioGroup.Item value="hidden1">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>숨겨진 라벨 1</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="hidden2">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>숨겨진 라벨 2</RadioGroup.Label>
+                    </RadioGroup.Item>
+                    <RadioGroup.Item value="hidden3">
+                        <RadioGroup.Control />
+                        <RadioGroup.Label>숨겨진 라벨 3</RadioGroup.Label>
+                    </RadioGroup.Item>
+                </RadioGroup.Root>
+            </div>
+        </div>
+    );
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### Simple Usage
+
+기본적인 RadioGroup 사용법입니다.
+
+<Demo name="radio-group-simple">
+```tsx
+import { RadioGroup } from '@vapor-ui/core';
+
+export default function RadioGroupSimple() {
+    return (
+        <RadioGroup.Root name="simple" defaultValue="option1">
+            <RadioGroup.Item value="option1">
+                <RadioGroup.Control />
+                <RadioGroup.Label>첫 번째 옵션</RadioGroup.Label>
+            </RadioGroup.Item>
+            <RadioGroup.Item value="option2">
+                <RadioGroup.Control />
+                <RadioGroup.Label>두 번째 옵션</RadioGroup.Label>
+            </RadioGroup.Item>
+            <RadioGroup.Item value="option3">
+                <RadioGroup.Control />
+                <RadioGroup.Label>세 번째 옵션</RadioGroup.Label>
+            </RadioGroup.Item>
+        </RadioGroup.Root>
+    );
+}
+```
+</Demo>
+
+## Props Table
 
 ---
 
 ### RadioGroup.Root
 
-<PropsTable file="radio-group" section="props" />
+RadioGroup의 메인 컨테이너 컴포넌트입니다. 라디오 버튼 그룹의 크기, 방향, 상태 등의 속성을 제공하며, 모든 하위 컴포넌트에서 공통으로 사용할 수 있도록 컨텍스트를 제공합니다.
+
+<ComponentPropsTable file="radio-group" section="props" />
 
 ### RadioGroup.Item
 
-<PropsTable file="radio-group" section="itemProps" />
+RadioGroup의 개별 아이템 컨테이너 컴포넌트입니다. 각각의 라디오 버튼과 레이블을 감싸는 역할을 하며, 아이템별 상태 관리를 담당합니다.
+
+<ComponentPropsTable file="radio-group" section="itemProps" />
 
 ### RadioGroup.Control
 
-<PropsTable file="radio-group" section="controlProps" />
+RadioGroup의 실제 라디오 버튼 컴포넌트입니다. 사용자가 클릭할 수 있는 원형 버튼을 표시하며, 선택 상태에 따라 시각적 피드백을 제공합니다.
+
+<ComponentPropsTable file="radio-group" section="controlProps" />
 
 ### RadioGroup.Label
 
-<PropsTable file="radio-group" section="labelProps" />
+RadioGroup의 레이블 컴포넌트입니다. 각 라디오 버튼 옵션의 설명 텍스트를 표시하며, 접근성을 위해 해당 Control과 자동으로 연결됩니다.
+
+<ComponentPropsTable file="radio-group" section="labelProps" />

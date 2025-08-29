@@ -43,7 +43,7 @@ export default function BadgeColor() {
 
 ### Shape
 
-Badge의 모서리를 알약 형태처럼 둥글게 사용할 수 있습니다.
+Badge 모양은 square, pill 로 제공합니다.
 
 <Demo name="badge-shape">
 ```tsx
@@ -70,11 +70,11 @@ import { Badge } from '@vapor-ui/core';
 
 export default function BadgeSize() {
     return (
-        <>
+        <div className="flex flex-wrap items-center gap-2">
             <Badge size="sm">Small</Badge>
             <Badge size="md">Medium</Badge>
             <Badge size="lg">Large</Badge>
-        </>
+        </div>
     );
 }
 ```

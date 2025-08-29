@@ -4,18 +4,6 @@ site_name: 'Checkbox - Vapor Core'
 description: 'Checkbox는 여러 항목 중 복수 선택을 가능하게 하는 입력 컴포넌트입니다.'
 ---
 
-## Import
-
----
-
-```js
-import { Checkbox } from '@vapor-ui/core';
-```
-
-## Preview
-
----
-
 <Demo name="default-checkbox">
 ```tsx
 import { Checkbox } from '@vapor-ui/core';
@@ -31,24 +19,199 @@ export default function DefaultCheckbox() {
 ```
 </Demo>
 
-## Props
+## Property
+
+---
+
+### Size
+
+Checkbox 사이즈는 md, lg 로 제공합니다.
+
+<Demo name="checkbox-size">
+```tsx
+import { Checkbox } from '@vapor-ui/core';
+
+export default function CheckboxSize() {
+    return (
+        <div className="flex items-center gap-4">
+            <Checkbox.Root size="md">
+                <Checkbox.Control />
+                <Checkbox.Label>MD</Checkbox.Label>
+            </Checkbox.Root>
+            <Checkbox.Root size="lg">
+                <Checkbox.Control />
+                <Checkbox.Label>LG</Checkbox.Label>
+            </Checkbox.Root>
+        </div>
+    );
+}
+```
+</Demo>
+
+### Disabled
+
+비활성화된 상태의 Checkbox입니다. 사용자가 상호작용할 수 없습니다.
+
+<Demo name="checkbox-disabled">
+```tsx
+import { Checkbox } from '@vapor-ui/core';
+
+export default function CheckboxDisabled() {
+    return (
+        <div className="flex items-center gap-4">
+            <Checkbox.Root disabled>
+                <Checkbox.Control />
+                <Checkbox.Label>Disabled</Checkbox.Label>
+            </Checkbox.Root>
+            <Checkbox.Root disabled checked>
+                <Checkbox.Control />
+                <Checkbox.Label>Disabled Checked</Checkbox.Label>
+            </Checkbox.Root>
+        </div>
+    );
+};
+```
+</Demo>
+
+### Invalid
+
+유효하지 않은 상태의 Checkbox입니다. 폼 검증 실패 시 사용됩니다.
+
+<Demo name="checkbox-invalid">
+```tsx
+import { Checkbox } from '@vapor-ui/core';
+
+export default function CheckboxInvalid() {
+    return (
+        <div className="flex items-center gap-4">
+            <Checkbox.Root invalid>
+                <Checkbox.Control />
+                <Checkbox.Label>Invalid</Checkbox.Label>
+            </Checkbox.Root>
+            <Checkbox.Root invalid checked>
+                <Checkbox.Control />
+                <Checkbox.Label>Invalid Checked</Checkbox.Label>
+            </Checkbox.Root>
+        </div>
+    );
+};
+```
+</Demo>
+
+### Indeterminate
+
+부분적으로 선택된 상태의 Checkbox입니다. 하위 항목 중 일부만 선택되었을 때 사용됩니다.
+
+<Demo name="checkbox-indeterminate">
+```tsx
+import { useState } from 'react';
+import { Checkbox } from '@vapor-ui/core';
+
+export default function CheckboxIndeterminate() {
+    const [checkedItems, setCheckedItems] = useState({
+        apple: false,
+        banana: false,
+        orange: false,
+    });
+    const allChecked = Object.values(checkedItems).every(Boolean);
+    const isIndeterminate = Object.values(checkedItems).some(Boolean) && !allChecked;
+    const handleSelectAll = (checked: boolean) => {
+        setCheckedItems({
+            apple: checked,
+            banana: checked,
+            orange: checked,
+        });
+    };
+    const handleItemChange = (item: keyof typeof checkedItems, checked: boolean) => {
+        setCheckedItems((prev) => ({
+            ...prev,
+            [item]: checked,
+        }));
+    };
+    return (
+        <div className="space-y-3">
+            <Checkbox.Root
+                checked={allChecked}
+                indeterminate={isIndeterminate}
+                onCheckedChange={handleSelectAll}
+                className="flex items-center gap-3"
+            >
+                <Checkbox.Control />
+                <Checkbox.Label className="font-medium cursor-pointer">
+                    Select All Fruits
+                </Checkbox.Label>
+            </Checkbox.Root>
+            <div className="ml-6 space-y-2">
+                <Checkbox.Root
+                    checked={checkedItems.apple}
+                    onCheckedChange={(checked) => handleItemChange('apple', checked)}
+                    className="flex items-center gap-3"
+                >
+                    <Checkbox.Control />
+                    <Checkbox.Label className="cursor-pointer">Apple</Checkbox.Label>
+                </Checkbox.Root>
+                <Checkbox.Root
+                    checked={checkedItems.banana}
+                    onCheckedChange={(checked) => handleItemChange('banana', checked)}
+                    className="flex items-center gap-3"
+                >
+                    <Checkbox.Control />
+                    <Checkbox.Label className="cursor-pointer">Banana</Checkbox.Label>
+                </Checkbox.Root>
+                <Checkbox.Root
+                    checked={checkedItems.orange}
+                    onCheckedChange={(checked) => handleItemChange('orange', checked)}
+                    className="flex items-center gap-3"
+                >
+                    <Checkbox.Control />
+                    <Checkbox.Label className="cursor-pointer">Orange</Checkbox.Label>
+                </Checkbox.Root>
+            </div>
+        </div>
+    );
+};
+```
+</Demo>
+
+### Visually Hidden
+
+시각적으로 숨겨진 Checkbox입니다. 스크린 리더 등 접근성 도구에서는 인식되지만 화면에는 표시되지 않습니다.
+
+<Demo name="checkbox-visually-hidden">
+```tsx
+import { Checkbox } from '@vapor-ui/core';
+export default function CheckboxVisuallyHidden() {
+    return (
+        <div className="flex items-center gap-4">
+            <Checkbox.Root visuallyHidden>
+                <Checkbox.Control />
+                <Checkbox.Label>Visually Hidden</Checkbox.Label>
+            </Checkbox.Root>
+        </div>
+    );
+};
+```
+
+</Demo>
+
+## Props Table
 
 ---
 
 ### Checkbox.Root
 
-<PropsTable file="checkbox" section="props" />
+Checkbox의 메인 컨테이너 컴포넌트입니다. size, disabled, invalid 등의 속성을 제공하며, 모든 하위 컴포넌트에서 공통으로 사용할 수 있도록 컨텍스트를 제공합니다.
+
+<ComponentPropsTable file="checkbox" section="props" />
 
 ### Checkbox.Control
 
-<PropsTable file="checkbox" section="controlProps" />
+실제 체크박스의 시각적 표현을 담당하는 컴포넌트입니다. 체크, 미체크, 불확정 상태를 시각적으로 나타냅니다.
+
+<ComponentPropsTable file="checkbox" section="controlProps" />
 
 ### Checkbox.Label
 
-<PropsTable file="checkbox" section="labelProps" />
+체크박스와 연결된 레이블 텍스트를 표시하는 컴포넌트입니다. 클릭 시 체크박스 상태를 토글할 수 있습니다.
 
-## Accessibility Table
-
----
-
-<AccessibilityTable file="checkbox" />
+<ComponentPropsTable file="checkbox" section="labelProps" />
