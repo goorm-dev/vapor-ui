@@ -6,6 +6,9 @@ import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
     base: layerStyle('components', {
+        display: 'flex',
+        alignItems: 'center',
+        gap: vars.size.space['075'],
         borderRadius: vars.size.borderRadius[300],
         padding: `${vars.size.space[150]} ${vars.size.space[200]}`,
         width: '100%',
