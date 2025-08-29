@@ -1,32 +1,35 @@
 {
-  "name": "figma-plugin",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --config vite.config.ui.ts",
-    "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts",
-    "build:ui": "vite build --config vite.config.ui.ts",
-    "build:plugin": "vite build --config vite.config.plugin.ts",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
-  },
-  "devDependencies": {
-    "@figma/plugin-typings": "^1.117.0",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@tailwindcss/vite": "^4.1.12",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
-    "@vitejs/plugin-react": "^5.0.0",
-    "eslint": "^9.33.0",
-    "tailwindcss": "^4.1.5",
-    "typescript": "~5.8.3",
-    "vite": "^7.1.2",
-    "vite-plugin-singlefile": "^2.3.0"
-  }
+    "name": "figma-plugin",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --config vite.config.ui.ts",
+        "dev:figma": "concurrently \"vite build --config vite.config.ui.ts --watch\" \"vite build --config vite.config.plugin.ts --watch\"",
+        "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts",
+        "build:ui": "vite build --config vite.config.ui.ts",
+        "build:plugin": "vite build --config vite.config.plugin.ts",
+        "lint": "eslint .",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1",
+        "@vapor-ui/color-generator": "workspace:*"
+    },
+    "devDependencies": {
+        "@figma/plugin-typings": "^1.117.0",
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@tailwindcss/vite": "^4.1.12",
+        "@types/react": "^19.1.10",
+        "@types/react-dom": "^19.1.7",
+        "@vitejs/plugin-react": "^5.0.0",
+        "concurrently": "^8.2.2",
+        "eslint": "^9.33.0",
+        "tailwindcss": "^4.1.5",
+        "typescript": "~5.8.3",
+        "vite": "^7.1.2",
+        "vite-plugin-singlefile": "^2.3.0"
+    }
 }

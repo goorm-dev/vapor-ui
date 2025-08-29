@@ -6,7 +6,11 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  plugins: [react(), tailwindcss(), viteSingleFile()],
+  plugins: [
+    react(), 
+    tailwindcss(), 
+    ...(mode === 'production' ? [viteSingleFile()] : [])
+  ],
   build: {
     minify: mode === "production",
     cssMinify: mode === "production",
