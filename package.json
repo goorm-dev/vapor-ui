@@ -4,7 +4,6 @@
     "private": true,
     "type": "module",
     "version": "0.0.0",
-    "type": "module",
     "author": "Vapor Team <vapor.ui@goorm.io>",
     "license": "MIT",
     "repository": {

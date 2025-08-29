@@ -70,5 +70,5 @@ jobs:
                   if [[ -n $(git status --porcelain) ]]; then
                       git add apps/website/content/docs/getting-started/releases.md
                       git commit -m "docs: update releases.md with latest changelogs"
-                      git push
+                      git push --set-upstream origin changeset-release/main
                   fi
