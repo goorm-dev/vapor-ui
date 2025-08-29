@@ -1,9 +1,12 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
+
+export const vaporIconWidth = createVar();
+export const vaporIconHeight = createVar();
 
 export const container_width = style({
-    width: 'var(--vapor-icon-width, 1rem)',
+    width: vaporIconWidth,
 });
 
 export const container_height = style({
-    height: 'var(--vapor-icon-height, 1rem)',
+    height: vaporIconHeight,
 });
