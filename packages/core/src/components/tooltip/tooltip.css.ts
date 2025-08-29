@@ -2,7 +2,7 @@ import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
-export const content = [
+export const popup = [
     typography({ style: 'body3' }),
     layerStyle('components', {
         paddingBlock: vars.size.space['075'],
