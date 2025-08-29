@@ -48,3 +48,30 @@ export const Default: Story = {
         </RadioGroup.Root>
     ),
 };
+
+export const TestBed: Story = {
+    render: (args) => (
+        <RadioGroup.Root {...args} defaultValue="3">
+            <RadioGroup.Item value="1">
+                <RadioGroup.Control />
+                <RadioGroup.Label>Item 1</RadioGroup.Label>
+            </RadioGroup.Item>
+            <RadioGroup.Item value="2">
+                <RadioGroup.Control />
+                <RadioGroup.Label>Item 2</RadioGroup.Label>
+            </RadioGroup.Item>
+            <RadioGroup.Item value="3">
+                <RadioGroup.Control />
+                <RadioGroup.Label>Item 3</RadioGroup.Label>
+            </RadioGroup.Item>
+            <RadioGroup.Item value="4" invalid>
+                <RadioGroup.Control />
+                <RadioGroup.Label>Item 4 (Each Invalid)</RadioGroup.Label>
+            </RadioGroup.Item>
+            <RadioGroup.Item value="5" disabled>
+                <RadioGroup.Control />
+                <RadioGroup.Label>Item 5 (Each Disabled)</RadioGroup.Label>
+            </RadioGroup.Item>
+        </RadioGroup.Root>
+    ),
+};

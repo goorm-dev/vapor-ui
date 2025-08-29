@@ -1,129 +1,165 @@
 {
     "props": [
         {
-            "prop": "name",
-            "type": "string | undefined",
-            "default": null,
-            "description": "HTML 폼 제출 시 그룹을 구분하는 name 속성입니다."
-        },
-        {
-            "prop": "value",
-            "type": "string | undefined",
-            "default": null,
-            "description": "제어형 모드에서 현재 선택된 항목의 value입니다."
+            "prop": "asChild",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
         },
         {
             "prop": "defaultValue",
-            "type": "string | undefined",
-            "default": null,
-            "description": "언컨트롤드 모드에서 초기 선택 값을 지정합니다."
+            "type": ["string"],
+            "default": "-",
+            "description": "초기 렌더링 시 체크되어야 하는 라디오 아이템의 값입니다. 라디오 아이템의 상태를 제어할 필요가 없을 때 사용합니다."
+        },
+        {
+            "prop": "value",
+            "type": ["string"],
+            "default": "-",
+            "description": "체크할 라디오 아이템의 제어된 값입니다. onValueChange와 함께 사용해야 합니다."
         },
         {
             "prop": "onValueChange",
-            "type": "(value: string) => void",
-            "default": null,
-            "description": "선택 값이 변경될 때 호출되는 콜백 함수입니다."
-        },
-        {
-            "prop": "required",
-            "type": "boolean | undefined",
-            "default": false,
-            "description": "폼 유효성 검증을 위해 반드시 값을 선택해야 함을 명시합니다."
+            "type": ["function"],
+            "default": "-",
+            "description": "값이 변경될 때 호출되는 이벤트 핸들러입니다."
         },
         {
             "prop": "disabled",
-            "type": "boolean | undefined",
-            "default": false,
-            "description": "라디오 그룹 내 모든 항목을 비활성화합니다."
+            "type": ["boolean"],
+            "default": "-",
+            "description": "true일 때 사용자가 라디오 아이템과 상호작용하는 것을 방지합니다."
         },
         {
-            "prop": "dir",
-            "type": "ltr | rtl | undefined",
-            "default": null,
-            "description": "텍스트 방향을 설정합니다."
+            "prop": "name",
+            "type": ["string"],
+            "default": "-",
+            "description": "그룹의 이름입니다. 소유하는 폼과 함께 name/value 쌍의 일부로 제출됩니다."
         },
         {
-            "prop": "loop",
-            "type": "boolean | undefined",
-            "default": false,
-            "description": "키보드 탐색 시 마지막 항목 이후 첫 항목으로 순환하도록 설정합니다."
+            "prop": "required",
+            "type": ["boolean"],
+            "default": "-",
+            "description": "true일 때 소유하는 폼이 제출되기 전에 사용자가 라디오 아이템을 체크해야 함을 나타냅니다."
         },
         {
             "prop": "orientation",
-            "type": "horizontal | vertical | undefined",
-            "default": "vertical",
-            "description": "Item 배치를 가로 또는 세로 방향으로 설정합니다."
+            "type": ["horizontal", "vertical"],
+            "default": "-",
+            "description": "컴포넌트의 방향입니다."
+        },
+        {
+            "prop": "dir",
+            "type": ["ltr", "rtl"],
+            "default": "-",
+            "description": "라디오 그룹의 읽기 방향입니다. 생략하면 DirectionProvider에서 전역적으로 상속받거나 LTR(왼쪽에서 오른쪽) 읽기 모드로 가정합니다."
+        },
+        {
+            "prop": "loop",
+            "type": ["boolean"],
+            "default": "true",
+            "description": "true일 때 키보드 탐색이 마지막 아이템에서 첫 번째 아이템으로, 그 반대로도 순환합니다."
         },
         {
             "prop": "size",
-            "type": "md | lg",
+            "type": ["md", "lg"],
             "default": "md",
             "description": "RadioGroup.Item 간의 간격 및 Control 크기를 조정합니다."
         },
         {
             "prop": "invalid",
-            "type": "boolean | undefined",
-            "default": false,
+            "type": ["boolean"],
+            "default": "false",
             "description": "폼 유효성 검증 실패 등의 상태를 나타냅니다."
         },
         {
             "prop": "visuallyHidden",
-            "type": "boolean | undefined",
-            "default": false,
+            "type": ["boolean"],
+            "default": "false",
             "description": "Item의 레이블을 시각적으로 숨기지만 스크린리더에는 읽히도록 합니다."
         }
     ],
     "itemProps": [
         {
+            "prop": "asChild",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+        },
+        {
             "prop": "value",
-            "type": "string",
-            "default": null,
-            "description": "RadioGroup.Item을 식별하는 고유 값입니다."
+            "type": ["string"],
+            "default": "-",
+            "description": "name과 함께 제출될 때 데이터로 주어지는 값입니다."
         },
         {
             "prop": "disabled",
-            "type": "boolean | undefined",
-            "default": false,
-            "description": "해당 항목만 비활성화합니다."
+            "type": ["boolean"],
+            "default": "-",
+            "description": "true일 때 사용자가 라디오 아이템과 상호작용하는 것을 방지합니다."
+        },
+        {
+            "prop": "required",
+            "type": ["boolean"],
+            "default": "-",
+            "description": "true일 때 소유하는 폼이 제출되기 전에 사용자가 라디오 아이템을 체크해야 함을 나타냅니다."
         },
         {
             "prop": "invalid",
-            "type": "boolean | undefined",
-            "default": false,
+            "type": ["boolean"],
+            "default": "false",
             "description": "해당 항목 단독으로 유효성 오류 상태를 표시합니다."
         },
         {
             "prop": "size",
-            "type": "md | lg",
+            "type": ["md", "lg"],
             "default": "md",
             "description": "해당 항목의 Control 크기를 조정합니다."
         },
         {
             "prop": "visuallyHidden",
-            "type": "boolean | undefined",
-            "default": false,
+            "type": ["boolean"],
+            "default": "false",
             "description": "레이블을 시각적으로 숨기지만 스크린리더에는 읽히도록 합니다."
         }
     ],
     "controlProps": [
         {
+            "prop": "asChild",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+        },
+        {
+            "prop": "forceMount",
+            "type": ["boolean"],
+            "default": "-",
+            "description": "더 정밀한 제어가 필요할 때 강제로 마운트하는 데 사용됩니다. React 애니메이션 라이브러리로 애니메이션을 제어할 때 유용합니다."
+        },
+        {
             "prop": "id",
-            "type": "string | undefined",
-            "default": null,
+            "type": ["string"],
+            "default": "-",
             "description": "Control 요소의 id를 지정합니다. 생략하면 RadioGroup.Item 내부에서 자동으로 생성된 id가 사용됩니다."
         }
     ],
     "labelProps": [
         {
+            "prop": "asChild",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+        },
+        {
             "prop": "htmlFor",
-            "type": "string | undefined",
-            "default": null,
+            "type": ["string"],
+            "default": "-",
             "description": "레이블이 연결될 Control 요소의 id입니다."
         },
         {
             "prop": "children",
-            "type": "React.ReactNode",
-            "default": null,
+            "type": ["ReactNode"],
+            "default": "-",
             "description": "레이블에 표시할 텍스트나 노드입니다."
         }
     ]
