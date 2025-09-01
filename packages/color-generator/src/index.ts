@@ -19,7 +19,7 @@ const DEFAULT_PRIMITIVE_COLORS = {
     cyan: '#0E81A0',
     green: '#0A8672',
     lime: '#8FD327',
-    yellow: '#FABB00',
+    yellow: '#E6B800',
     orange: '#D14905',
 } as const;
 
@@ -34,6 +34,13 @@ const DEFAULT_CONTRAST_RATIOS = {
     '700': 8.5,
     '800': 11.5,
     '900': 15.0,
+} as const;
+
+const ADAPTIVE_COLOR_GENERATION = {
+    LIGHTNESS_THRESHOLD: 0.5,
+    DARK_LIGHTNESS_FACTOR: 0.55,
+    LIGHT_LIGHTNESS_FACTOR: 0.85,
+    CHROMA_REDUCTION_FACTOR: 0.85,
 } as const;
 
 // ============================================================================
@@ -102,22 +109,57 @@ const createColorDefinition = ({
         return null;
     }
 
-    const adaptiveL = brandColorOklch.l * Math.max(0.35, 0.25);
-    const adaptiveC = brandColorOklch.c * 0.85;
-
-    const darkerKeyOklch: OklchColor = {
-        ...brandColorOklch,
-        mode: 'oklch',
-        l: adaptiveL,
-        c: adaptiveC,
-    };
+    const { lightKey, darkKey } = createAdaptiveColorKeys(brandColorOklch, colorHex);
 
     return new Color({
         name,
-        colorKeys: [colorHex as CssColor, formatHex(darkerKeyOklch) as CssColor],
+        colorKeys: [lightKey, darkKey],
         colorspace: 'OKLCH',
         ratios: contrastRatios,
     });
+};
+
+/**
+ * 입력 색상의 명도를 분석하여 최적의 Light/Dark Key 쌍을 생성합니다.
+ * - 밝은 색상 (L > 0.5): 어두운 Key를 생성하여 duoKey 구성
+ * - 어두운 색상 (L ≤ 0.5): 밝은 Key를 생성하여 duoKey 구성
+ */
+const createAdaptiveColorKeys = (
+    brandColorOklch: OklchColor,
+    originalHex: string
+): { lightKey: CssColor; darkKey: CssColor } => {
+    const isLightColor = brandColorOklch.l > ADAPTIVE_COLOR_GENERATION.LIGHTNESS_THRESHOLD;
+
+    if (isLightColor) {
+        // 밝은 색상: 어두운 Key 생성
+        const darkerKeyOklch: OklchColor = {
+            ...brandColorOklch,
+            mode: 'oklch',
+            l: brandColorOklch.l * ADAPTIVE_COLOR_GENERATION.DARK_LIGHTNESS_FACTOR,
+            c: brandColorOklch.c * ADAPTIVE_COLOR_GENERATION.CHROMA_REDUCTION_FACTOR,
+        };
+
+        return {
+            lightKey: originalHex as CssColor,
+            darkKey: formatHex(darkerKeyOklch) as CssColor,
+        };
+    } else {
+        // 어두운 색상: 밝은 Key 생성
+        const lighterKeyOklch: OklchColor = {
+            ...brandColorOklch,
+            mode: 'oklch',
+            l: Math.min(
+                brandColorOklch.l / ADAPTIVE_COLOR_GENERATION.DARK_LIGHTNESS_FACTOR,
+                ADAPTIVE_COLOR_GENERATION.LIGHT_LIGHTNESS_FACTOR
+            ),
+            c: brandColorOklch.c * ADAPTIVE_COLOR_GENERATION.CHROMA_REDUCTION_FACTOR,
+        };
+
+        return {
+            lightKey: formatHex(lighterKeyOklch) as CssColor,
+            darkKey: originalHex as CssColor,
+        };
+    }
 };
 
 function createVaporColorDefinitions(

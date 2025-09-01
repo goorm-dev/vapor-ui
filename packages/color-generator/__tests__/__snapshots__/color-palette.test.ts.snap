@@ -21,20 +21,20 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "blue": {
       "050": {
-        "hex": "#002086",
-        "oklch": "oklch(0.316 0.171 263.6)",
+        "hex": "#001d88",
+        "oklch": "oklch(0.313 0.176 263.9)",
       },
       "100": {
-        "hex": "#012992",
-        "oklch": "oklch(0.345 0.176 263.3)",
+        "hex": "#012894",
+        "oklch": "oklch(0.346 0.179 263.5)",
       },
       "200": {
-        "hex": "#0a3dad",
-        "oklch": "oklch(0.412 0.186 262.8)",
+        "hex": "#0a3cae",
+        "oklch": "oklch(0.411 0.188 263.0)",
       },
       "300": {
-        "hex": "#1b57d2",
-        "oklch": "oklch(0.499 0.199 262.3)",
+        "hex": "#1b57d3",
+        "oklch": "oklch(0.500 0.201 262.4)",
       },
       "400": {
         "hex": "#2364e4",
@@ -63,24 +63,24 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "cyan": {
       "050": {
-        "hex": "#03314b",
-        "oklch": "oklch(0.299 0.066 240.2)",
+        "hex": "#003147",
+        "oklch": "oklch(0.295 0.062 234.6)",
       },
       "100": {
-        "hex": "#043a56",
-        "oklch": "oklch(0.331 0.071 238.6)",
+        "hex": "#003b53",
+        "oklch": "oklch(0.331 0.068 233.0)",
       },
       "200": {
-        "hex": "#074d6a",
-        "oklch": "oklch(0.396 0.079 233.2)",
+        "hex": "#034d68",
+        "oklch": "oklch(0.394 0.078 230.7)",
       },
       "300": {
-        "hex": "#0b6887",
-        "oklch": "oklch(0.484 0.091 228.0)",
+        "hex": "#096886",
+        "oklch": "oklch(0.483 0.091 227.0)",
       },
       "400": {
-        "hex": "#0d7595",
-        "oklch": "oklch(0.525 0.097 226.1)",
+        "hex": "#0c7594",
+        "oklch": "oklch(0.524 0.097 225.3)",
       },
       "500": {
         "hex": "#4393ae",
@@ -105,24 +105,24 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "grape": {
       "050": {
-        "hex": "#4e046b",
-        "oklch": "oklch(0.324 0.157 312.5)",
+        "hex": "#50006b",
+        "oklch": "oklch(0.324 0.161 314.0)",
       },
       "100": {
-        "hex": "#5a0979",
-        "oklch": "oklch(0.358 0.169 313.1)",
+        "hex": "#5e007a",
+        "oklch": "oklch(0.360 0.177 315.2)",
       },
       "200": {
-        "hex": "#741396",
-        "oklch": "oklch(0.426 0.196 314.5)",
+        "hex": "#770b96",
+        "oklch": "oklch(0.426 0.201 316.1)",
       },
       "300": {
-        "hex": "#9a21be",
-        "oklch": "oklch(0.519 0.231 316.6)",
+        "hex": "#9c1ebe",
+        "oklch": "oklch(0.521 0.234 317.4)",
       },
       "400": {
-        "hex": "#ae27d2",
-        "oklch": "oklch(0.566 0.249 317.6)",
+        "hex": "#ae26d2",
+        "oklch": "oklch(0.565 0.250 317.7)",
       },
       "500": {
         "hex": "#c957e8",
@@ -189,24 +189,24 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "green": {
       "050": {
-        "hex": "#023527",
-        "oklch": "oklch(0.293 0.057 168.9)",
+        "hex": "#003528",
+        "oklch": "oklch(0.293 0.057 170.8)",
       },
       "100": {
-        "hex": "#033e2e",
-        "oklch": "oklch(0.324 0.063 168.7)",
+        "hex": "#003f31",
+        "oklch": "oklch(0.328 0.063 172.1)",
       },
       "200": {
-        "hex": "#065241",
-        "oklch": "oklch(0.392 0.073 172.1)",
+        "hex": "#025242",
+        "oklch": "oklch(0.392 0.074 173.6)",
       },
       "300": {
-        "hex": "#096d5a",
-        "oklch": "oklch(0.478 0.088 174.7)",
+        "hex": "#066d5b",
+        "oklch": "oklch(0.478 0.088 175.8)",
       },
       "400": {
-        "hex": "#0a7a67",
-        "oklch": "oklch(0.519 0.094 176.5)",
+        "hex": "#087a67",
+        "oklch": "oklch(0.519 0.095 176.5)",
       },
       "500": {
         "hex": "#449785",
@@ -231,32 +231,32 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "lime": {
       "050": {
-        "hex": "#033600",
-        "oklch": "oklch(0.289 0.097 141.8)",
+        "hex": "#023700",
+        "oklch": "oklch(0.292 0.098 142.0)",
       },
       "100": {
-        "hex": "#0b4002",
-        "oklch": "oklch(0.325 0.104 141.0)",
+        "hex": "#0d4000",
+        "oklch": "oklch(0.325 0.105 140.1)",
       },
       "200": {
-        "hex": "#1c5308",
-        "oklch": "oklch(0.390 0.117 139.4)",
+        "hex": "#205200",
+        "oklch": "oklch(0.389 0.118 137.3)",
       },
       "300": {
-        "hex": "#326d11",
-        "oklch": "oklch(0.477 0.135 137.3)",
+        "hex": "#386d04",
+        "oklch": "oklch(0.479 0.137 134.8)",
       },
       "400": {
-        "hex": "#3d7a15",
-        "oklch": "oklch(0.518 0.144 136.3)",
+        "hex": "#437a09",
+        "oklch": "oklch(0.521 0.146 134.0)",
       },
       "500": {
-        "hex": "#58991d",
-        "oklch": "oklch(0.616 0.165 134.1)",
+        "hex": "#5c9915",
+        "oklch": "oklch(0.618 0.166 132.7)",
       },
       "600": {
-        "hex": "#75b823",
-        "oklch": "oklch(0.711 0.184 131.8)",
+        "hex": "#78b920",
+        "oklch": "oklch(0.715 0.185 131.1)",
       },
       "700": {
         "hex": "#8ed127",
@@ -273,24 +273,24 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "orange": {
       "050": {
-        "hex": "#600b02",
-        "oklch": "oklch(0.315 0.118 31.2)",
+        "hex": "#630000",
+        "oklch": "oklch(0.314 0.129 29.2)",
       },
       "100": {
-        "hex": "#6d1303",
-        "oklch": "oklch(0.349 0.126 32.5)",
+        "hex": "#720400",
+        "oklch": "oklch(0.349 0.140 30.0)",
       },
       "200": {
-        "hex": "#882206",
-        "oklch": "oklch(0.416 0.142 34.7)",
+        "hex": "#8d1a03",
+        "oklch": "oklch(0.418 0.153 32.6)",
       },
       "300": {
-        "hex": "#af3608",
-        "oklch": "oklch(0.508 0.164 37.3)",
+        "hex": "#b13306",
+        "oklch": "oklch(0.508 0.169 36.4)",
       },
       "400": {
-        "hex": "#c14007",
-        "oklch": "oklch(0.550 0.174 38.7)",
+        "hex": "#c23f06",
+        "oklch": "oklch(0.551 0.176 38.4)",
       },
       "500": {
         "hex": "#db673d",
@@ -315,24 +315,24 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "pink": {
       "050": {
-        "hex": "#61041e",
-        "oklch": "oklch(0.316 0.122 14.2)",
+        "hex": "#620021",
+        "oklch": "oklch(0.317 0.127 11.4)",
       },
       "100": {
-        "hex": "#6f0826",
-        "oklch": "oklch(0.350 0.133 13.0)",
+        "hex": "#71002c",
+        "oklch": "oklch(0.351 0.141 8.4)",
       },
       "200": {
-        "hex": "#8d133a",
-        "oklch": "oklch(0.421 0.155 9.7)",
+        "hex": "#8e0d3f",
+        "oklch": "oklch(0.421 0.161 6.4)",
       },
       "300": {
-        "hex": "#b62257",
-        "oklch": "oklch(0.514 0.184 6.0)",
+        "hex": "#b6205a",
+        "oklch": "oklch(0.514 0.187 4.3)",
       },
       "400": {
-        "hex": "#ca2967",
-        "oklch": "oklch(0.559 0.199 3.8)",
+        "hex": "#ca2868",
+        "oklch": "oklch(0.558 0.200 3.3)",
       },
       "500": {
         "hex": "#e45787",
@@ -357,24 +357,24 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "red": {
       "050": {
-        "hex": "#630504",
-        "oklch": "oklch(0.318 0.125 28.7)",
+        "hex": "#650000",
+        "oklch": "oklch(0.318 0.131 29.2)",
       },
       "100": {
-        "hex": "#710a09",
-        "oklch": "oklch(0.351 0.135 28.2)",
+        "hex": "#750000",
+        "oklch": "oklch(0.353 0.145 29.2)",
       },
       "200": {
-        "hex": "#8e1615",
-        "oklch": "oklch(0.418 0.155 27.5)",
+        "hex": "#910f0e",
+        "oklch": "oklch(0.419 0.162 28.2)",
       },
       "300": {
-        "hex": "#b92527",
-        "oklch": "oklch(0.512 0.184 26.1)",
+        "hex": "#ba2324",
+        "oklch": "oklch(0.513 0.186 26.6)",
       },
       "400": {
-        "hex": "#cd2d2f",
-        "oklch": "oklch(0.556 0.196 25.9)",
+        "hex": "#ce2b2e",
+        "oklch": "oklch(0.556 0.198 25.8)",
       },
       "500": {
         "hex": "#e85a55",
@@ -399,24 +399,24 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "violet": {
       "050": {
-        "hex": "#351180",
-        "oklch": "oklch(0.321 0.165 287.5)",
+        "hex": "#3b0087",
+        "oklch": "oklch(0.324 0.183 290.6)",
       },
       "100": {
-        "hex": "#3e1a8f",
-        "oklch": "oklch(0.355 0.174 287.9)",
+        "hex": "#450b97",
+        "oklch": "oklch(0.360 0.193 291.1)",
       },
       "200": {
-        "hex": "#512bac",
-        "oklch": "oklch(0.423 0.190 289.0)",
+        "hex": "#5623b1",
+        "oklch": "oklch(0.424 0.204 291.3)",
       },
       "300": {
-        "hex": "#6d41d4",
-        "oklch": "oklch(0.513 0.212 290.7)",
+        "hex": "#703ed7",
+        "oklch": "oklch(0.515 0.218 291.8)",
       },
       "400": {
-        "hex": "#7b4be8",
-        "oklch": "oklch(0.556 0.223 291.5)",
+        "hex": "#7c4ae9",
+        "oklch": "oklch(0.557 0.225 291.8)",
       },
       "500": {
         "hex": "#9570fc",
@@ -441,44 +441,44 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
     },
     "yellow": {
       "050": {
-        "hex": "#4f2000",
-        "oklch": "oklch(0.307 0.082 49.4)",
+        "hex": "#472500",
+        "oklch": "oklch(0.303 0.070 61.8)",
       },
       "100": {
-        "hex": "#5a2801",
-        "oklch": "oklch(0.341 0.087 51.6)",
+        "hex": "#512f00",
+        "oklch": "oklch(0.340 0.075 67.5)",
       },
       "200": {
-        "hex": "#713901",
-        "oklch": "oklch(0.409 0.099 56.4)",
+        "hex": "#644000",
+        "oklch": "oklch(0.403 0.086 73.3)",
       },
       "300": {
-        "hex": "#8f5101",
-        "oklch": "oklch(0.497 0.114 62.3)",
+        "hex": "#805900",
+        "oklch": "oklch(0.493 0.102 79.0)",
       },
       "400": {
-        "hex": "#9e5d00",
-        "oklch": "oklch(0.540 0.121 64.7)",
+        "hex": "#8e6500",
+        "oklch": "oklch(0.535 0.111 80.7)",
       },
       "500": {
-        "hex": "#be7b00",
-        "oklch": "oklch(0.638 0.137 71.5)",
+        "hex": "#af8200",
+        "oklch": "oklch(0.634 0.130 84.1)",
       },
       "600": {
-        "hex": "#dd9a00",
-        "oklch": "oklch(0.733 0.153 77.6)",
+        "hex": "#cfa000",
+        "oklch": "oklch(0.729 0.149 87.4)",
       },
       "700": {
-        "hex": "#f4b400",
-        "oklch": "oklch(0.808 0.166 82.7)",
+        "hex": "#e7b918",
+        "oklch": "oklch(0.804 0.160 90.0)",
       },
       "800": {
-        "hex": "#fdd88d",
-        "oklch": "oklch(0.897 0.102 84.2)",
+        "hex": "#f2db9a",
+        "oklch": "oklch(0.895 0.087 90.8)",
       },
       "900": {
-        "hex": "#fff9ef",
-        "oklch": "oklch(0.984 0.015 80.7)",
+        "hex": "#fdf9f0",
+        "oklch": "oklch(0.983 0.013 86.8)",
       },
     },
   },
@@ -515,20 +515,20 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.577 0.210 261.7)",
       },
       "600": {
-        "hex": "#1955ce",
-        "oklch": "oklch(0.492 0.197 262.2)",
+        "hex": "#1955cf",
+        "oklch": "oklch(0.492 0.198 262.3)",
       },
       "700": {
-        "hex": "#0d42b5",
-        "oklch": "oklch(0.430 0.190 262.8)",
+        "hex": "#0d42b6",
+        "oklch": "oklch(0.430 0.191 262.8)",
       },
       "800": {
-        "hex": "#022d97",
-        "oklch": "oklch(0.358 0.177 263.2)",
+        "hex": "#032c99",
+        "oklch": "oklch(0.359 0.181 263.5)",
       },
       "900": {
-        "hex": "#00167b",
-        "oklch": "oklch(0.287 0.167 264.0)",
+        "hex": "#00137f",
+        "oklch": "oklch(0.288 0.175 264.1)",
       },
     },
     "cyan": {
@@ -557,20 +557,20 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.561 0.101 223.3)",
       },
       "600": {
-        "hex": "#0b6585",
-        "oklch": "oklch(0.475 0.091 229.5)",
+        "hex": "#086682",
+        "oklch": "oklch(0.476 0.088 225.7)",
       },
       "700": {
-        "hex": "#085271",
-        "oklch": "oklch(0.414 0.083 233.6)",
+        "hex": "#04536e",
+        "oklch": "oklch(0.414 0.080 229.1)",
       },
       "800": {
-        "hex": "#053d59",
-        "oklch": "oklch(0.342 0.072 237.6)",
+        "hex": "#013e56",
+        "oklch": "oklch(0.342 0.069 232.2)",
       },
       "900": {
-        "hex": "#022942",
-        "oklch": "oklch(0.270 0.062 242.6)",
+        "hex": "#002940",
+        "oklch": "oklch(0.268 0.061 239.4)",
       },
     },
     "grape": {
@@ -599,20 +599,20 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.603 0.262 318.3)",
       },
       "600": {
-        "hex": "#971fbb",
-        "oklch": "oklch(0.512 0.229 316.4)",
+        "hex": "#991cba",
+        "oklch": "oklch(0.512 0.231 317.5)",
       },
       "700": {
-        "hex": "#7c169e",
-        "oklch": "oklch(0.446 0.203 315.2)",
+        "hex": "#7f109e",
+        "oklch": "oklch(0.447 0.208 316.6)",
       },
       "800": {
-        "hex": "#5e0b7e",
-        "oklch": "oklch(0.369 0.174 313.1)",
+        "hex": "#62017e",
+        "oklch": "oklch(0.370 0.181 315.6)",
       },
       "900": {
-        "hex": "#42015e",
-        "oklch": "oklch(0.291 0.145 311.3)",
+        "hex": "#43005e",
+        "oklch": "oklch(0.292 0.146 312.1)",
       },
     },
     "gray": {
@@ -683,20 +683,20 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.556 0.100 177.0)",
       },
       "600": {
-        "hex": "#086a57",
-        "oklch": "oklch(0.469 0.087 174.3)",
+        "hex": "#066b58",
+        "oklch": "oklch(0.472 0.088 174.5)",
       },
       "700": {
-        "hex": "#065746",
-        "oklch": "oklch(0.408 0.076 173.1)",
+        "hex": "#035747",
+        "oklch": "oklch(0.408 0.076 174.4)",
       },
       "800": {
-        "hex": "#034132",
-        "oklch": "oklch(0.335 0.064 170.8)",
+        "hex": "#014133",
+        "oklch": "oklch(0.335 0.064 172.4)",
       },
       "900": {
-        "hex": "#012d20",
-        "oklch": "oklch(0.264 0.053 167.9)",
+        "hex": "#002e20",
+        "oklch": "oklch(0.267 0.055 167.0)",
       },
     },
     "lime": {
@@ -713,28 +713,28 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.813 0.182 129.9)",
       },
       "300": {
-        "hex": "#72b523",
-        "oklch": "oklch(0.702 0.182 132.1)",
+        "hex": "#75b51f",
+        "oklch": "oklch(0.703 0.183 131.2)",
       },
       "400": {
-        "hex": "#63a620",
-        "oklch": "oklch(0.656 0.173 133.4)",
+        "hex": "#67a519",
+        "oklch": "oklch(0.655 0.173 131.9)",
       },
       "500": {
-        "hex": "#478618",
-        "oklch": "oklch(0.556 0.152 135.5)",
+        "hex": "#4c850e",
+        "oklch": "oklch(0.556 0.153 133.5)",
       },
       "600": {
-        "hex": "#2f6a10",
-        "oklch": "oklch(0.467 0.133 137.6)",
+        "hex": "#366a03",
+        "oklch": "oklch(0.469 0.135 134.8)",
       },
       "700": {
-        "hex": "#20580a",
-        "oklch": "oklch(0.407 0.121 139.1)",
+        "hex": "#265700",
+        "oklch": "oklch(0.406 0.121 136.3)",
       },
       "800": {
-        "hex": "#0f4303",
-        "oklch": "oklch(0.336 0.106 140.5)",
+        "hex": "#114300",
+        "oklch": "oklch(0.336 0.107 139.5)",
       },
       "900": {
         "hex": "#002e00",
@@ -767,20 +767,20 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.588 0.183 39.9)",
       },
       "600": {
-        "hex": "#ab3408",
-        "oklch": "oklch(0.499 0.162 37.0)",
+        "hex": "#ad3106",
+        "oklch": "oklch(0.499 0.167 36.1)",
       },
       "700": {
-        "hex": "#902607",
-        "oklch": "oklch(0.435 0.146 35.1)",
+        "hex": "#942004",
+        "oklch": "oklch(0.437 0.155 33.5)",
       },
       "800": {
-        "hex": "#721504",
-        "oklch": "oklch(0.360 0.129 32.5)",
+        "hex": "#770901",
+        "oklch": "oklch(0.362 0.142 30.4)",
       },
       "900": {
-        "hex": "#540501",
-        "oklch": "oklch(0.284 0.111 30.3)",
+        "hex": "#560000",
+        "oklch": "oklch(0.285 0.117 29.2)",
       },
     },
     "pink": {
@@ -809,20 +809,20 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.595 0.209 2.4)",
       },
       "600": {
-        "hex": "#b22055",
-        "oklch": "oklch(0.505 0.182 5.8)",
+        "hex": "#b21e58",
+        "oklch": "oklch(0.505 0.184 4.2)",
       },
       "700": {
-        "hex": "#951640",
-        "oklch": "oklch(0.439 0.161 8.7)",
+        "hex": "#961145",
+        "oklch": "oklch(0.440 0.166 5.6)",
       },
       "800": {
-        "hex": "#750a2a",
-        "oklch": "oklch(0.364 0.137 12.3)",
+        "hex": "#770230",
+        "oklch": "oklch(0.366 0.145 7.9)",
       },
       "900": {
-        "hex": "#550217",
-        "oklch": "oklch(0.287 0.112 15.6)",
+        "hex": "#550017",
+        "oklch": "oklch(0.286 0.114 15.0)",
       },
     },
     "red": {
@@ -851,20 +851,20 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.593 0.208 25.3)",
       },
       "600": {
-        "hex": "#b42425",
-        "oklch": "oklch(0.502 0.180 26.4)",
+        "hex": "#b62122",
+        "oklch": "oklch(0.504 0.184 26.7)",
       },
       "700": {
-        "hex": "#971919",
-        "oklch": "oklch(0.438 0.161 27.1)",
+        "hex": "#991313",
+        "oklch": "oklch(0.438 0.167 27.7)",
       },
       "800": {
-        "hex": "#750c0b",
-        "oklch": "oklch(0.361 0.138 28.0)",
+        "hex": "#790201",
+        "oklch": "oklch(0.363 0.147 29.3)",
       },
       "900": {
-        "hex": "#550201",
-        "oklch": "oklch(0.284 0.114 29.3)",
+        "hex": "#560000",
+        "oklch": "oklch(0.285 0.117 29.2)",
       },
     },
     "violet": {
@@ -893,62 +893,62 @@ exports[`Color Generator > colorPalette > should generate consistent color palet
         "oklch": "oklch(0.593 0.232 292.0)",
       },
       "600": {
-        "hex": "#6a3ed0",
-        "oklch": "oklch(0.503 0.211 290.6)",
+        "hex": "#6d3bd4",
+        "oklch": "oklch(0.506 0.218 291.5)",
       },
       "700": {
-        "hex": "#572fb4",
-        "oklch": "oklch(0.441 0.195 289.7)",
+        "hex": "#5b29b9",
+        "oklch": "oklch(0.443 0.207 291.3)",
       },
       "800": {
-        "hex": "#411d93",
-        "oklch": "oklch(0.366 0.176 288.2)",
+        "hex": "#48109b",
+        "oklch": "oklch(0.370 0.194 291.3)",
       },
       "900": {
-        "hex": "#2d0874",
-        "oklch": "oklch(0.291 0.159 286.6)",
+        "hex": "#300078",
+        "oklch": "oklch(0.293 0.168 288.2)",
       },
     },
     "yellow": {
       "050": {
-        "hex": "#feecc7",
-        "oklch": "oklch(0.948 0.052 85.1)",
+        "hex": "#f9edce",
+        "oklch": "oklch(0.948 0.043 89.4)",
       },
       "100": {
-        "hex": "#fdde9f",
-        "oklch": "oklch(0.912 0.087 84.6)",
+        "hex": "#f4e0aa",
+        "oklch": "oklch(0.910 0.073 90.1)",
       },
       "200": {
-        "hex": "#fabc18",
-        "oklch": "oklch(0.830 0.167 83.8)",
+        "hex": "#e9c24a",
+        "oklch": "oklch(0.827 0.142 90.7)",
       },
       "300": {
-        "hex": "#da9700",
-        "oklch": "oklch(0.724 0.151 77.1)",
+        "hex": "#cb9d00",
+        "oklch": "oklch(0.719 0.147 87.5)",
       },
       "400": {
-        "hex": "#cb8700",
-        "oklch": "oklch(0.676 0.144 73.6)",
+        "hex": "#bb8e00",
+        "oklch": "oklch(0.671 0.137 86.0)",
       },
       "500": {
-        "hex": "#aa6700",
-        "oklch": "oklch(0.575 0.127 66.6)",
+        "hex": "#9a6f00",
+        "oklch": "oklch(0.570 0.118 81.6)",
       },
       "600": {
-        "hex": "#8d4f01",
-        "oklch": "oklch(0.491 0.113 61.6)",
+        "hex": "#7d5600",
+        "oklch": "oklch(0.483 0.101 78.2)",
       },
       "700": {
-        "hex": "#773d02",
-        "oklch": "oklch(0.425 0.102 56.7)",
+        "hex": "#694600",
+        "oklch": "oklch(0.423 0.089 76.3)",
       },
       "800": {
-        "hex": "#5e2b01",
-        "oklch": "oklch(0.353 0.089 52.6)",
+        "hex": "#543100",
+        "oklch": "oklch(0.349 0.077 67.6)",
       },
       "900": {
-        "hex": "#461900",
-        "oklch": "oklch(0.279 0.078 46.4)",
+        "hex": "#3f1e00",
+        "oklch": "oklch(0.276 0.066 58.2)",
       },
     },
   },
