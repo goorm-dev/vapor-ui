@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
-import { figmaVariables } from '@vapor-ui/color-generator';
+import { colorPalette } from '@vapor-ui/color-generator';
+
+import { postMessage } from './figma-messages';
 
 function App() {
     const [brandColor, setBrandColor] = useState('#2A6FF3');
@@ -10,7 +12,12 @@ function App() {
 
     const handleGeneratePalette = () => {
         try {
-            console.log('Generated palette:', figmaVariables);
+            console.log('Generating palette with colorPalette:', colorPalette);
+
+            postMessage({
+                type: 'create-palette-sections',
+                data: { generatedPalette: colorPalette },
+            });
         } catch (error) {
             console.error('Error generating palette:', error);
         }
@@ -97,13 +104,15 @@ function App() {
                 {/* Divider */}
                 <div className="border-t border-gray-300 mb-4"></div>
 
-                {/* Generate Button */}
-                <button
-                    onClick={handleGeneratePalette}
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded transition-colors"
-                >
-                    Generate Palette
-                </button>
+                {/* Button */}
+                <div>
+                    <button
+                        onClick={handleGeneratePalette}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded transition-colors"
+                    >
+                        Generate Palette
+                    </button>
+                </div>
             </div>
         </main>
     );
