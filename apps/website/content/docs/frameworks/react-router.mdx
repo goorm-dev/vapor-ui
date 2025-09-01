@@ -117,7 +117,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <ThemeScript />
             </head>
             <body>
-                <ThemeProvider>
+                <ThemeProvider config={theme}>
                     {children}
                     <ScrollRestoration />
                     <Scripts />
