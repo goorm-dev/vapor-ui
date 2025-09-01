@@ -45,15 +45,15 @@ npm install @vapor-ui/core @vapor-ui/icons
 Vite 설정 파일에서 Vapor UI 패키지가 SSR에서 올바르게 작동하도록 구성합니다.
 
 ```typescript title="vite.config.ts"
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [react()],
-  ssr: {
-    noExternal: ["@vapor-ui/core", "@vapor-ui/icons"],
-  },
-})
+    plugins: [react()],
+    ssr: {
+        noExternal: ['@vapor-ui/core', '@vapor-ui/icons'],
+    },
+});
 ```
 
 </Step>
@@ -99,7 +99,7 @@ export const theme = createThemeConfig({
 
 <Step>
 
-### 루트 앱 설정
+### 루트 설정
 
 `ThemeProvider`로 앱을 래핑하고 React Router를 설정합니다.
 
@@ -133,8 +133,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 <Step>
 
 ### 컴포넌트 사용 예시
-
-이제 페이지에서 Vapor UI 컴포넌트와 테마 전환 기능을 사용할 수 있습니다.
 
 ```tsx title="pages/index.tsx"
 import { Card, Text } from '@vapor-ui/core';
