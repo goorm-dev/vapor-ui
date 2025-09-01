@@ -6,7 +6,7 @@ import { handleCreatePaletteSections } from './handlers/create-palette-sections'
 // ============================================================================
 
 figma.showUI(__html__);
-figma.ui.resize(400, 400);
+figma.ui.resize(400, 600);
 
 // ============================================================================
 // Message Handler
