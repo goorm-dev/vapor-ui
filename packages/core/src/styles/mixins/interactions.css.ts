@@ -49,34 +49,39 @@ export const interaction = recipe({
 
         type: {
             default: layerStyle('components', {
-                '@media': {
-                    '(hover: hover)': {
-                        selectors: {
-                            '&:hover::before': { opacity: calc.multiply(ratio, 1) },
-                        },
-                    },
-                },
-
                 selectors: {
                     '&:active::before': { opacity: calc.multiply(ratio, 2) },
                     '&:focus-visible': {
                         boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
                     },
                 },
+
+                '@media': {
+                    '(hover: hover)': {
+                        selectors: {
+                            '&:hover::before': { opacity: calc.multiply(ratio, 1) },
+                            '&:active::before': { opacity: calc.multiply(ratio, 2) },
+                            '&:focus-visible': {
+                                boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
+                            },
+                        },
+                    },
+                },
             }),
             form: layerStyle('components', {
                 transition: 'border-color 150ms cubic-bezier(.4,0,.2,1)',
+
+                selectors: {
+                    '&:focus': { borderColor: vars.color.border.primary },
+                },
 
                 '@media': {
                     '(hover: hover)': {
                         selectors: {
                             '&:hover': { borderColor: `rgba(0,0,0, 0.24)` },
+                            '&:focus': { borderColor: vars.color.border.primary },
                         },
                     },
-                },
-
-                selectors: {
-                    '&:focus-visible': { borderColor: vars.color.border.primary },
                 },
             }),
             roving: {
