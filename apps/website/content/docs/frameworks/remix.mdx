@@ -1,0 +1,204 @@
+---
+title: 'Remix'
+description: 'Vapor UI 컴포넌트를 Remix에서 사용하는 방법'
+---
+
+## Remix
+
+Remix는 풀스택 웹 프레임워크로 서버사이드 렌더링과 중첩된 라우팅을 통해 뛰어난 사용자 경험을 제공합니다.
+
+<Steps>
+<Step>
+
+### 프로젝트 생성
+
+Remix 프로젝트를 생성하고 기본 의존성을 설치합니다.
+
+```bash
+# Remix 프로젝트 생성 (TypeScript 템플릿)
+npx create-remix@latest my-vapor-remix-app --template remix-run/remix/templates/remix
+
+# 프로젝트 폴더로 이동
+cd my-vapor-remix-app
+
+# 기본 의존성 설치
+npm install
+```
+
+</Step>
+
+<Step>
+
+### 라이브러리 설치
+
+Vapor UI 패키지를 설치합니다.
+
+```package-install
+npm install @vapor-ui/core @vapor-ui/icons
+```
+
+</Step>
+
+<Step>
+
+### Vite 설정
+
+Remix의 Vite 설정을 구성합니다.
+
+```typescript title="vite.config.ts"
+import { vitePlugin as remix } from '@remix-run/dev';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
+
+export default defineConfig({
+    plugins: [
+        remix({
+            future: {
+                v3_fetcherPersist: true,
+                v3_relativeSplatPath: true,
+                v3_throwAbortReason: true,
+            },
+        }),
+        tsconfigPaths(),
+    ],
+});
+```
+
+</Step>
+
+<Step>
+
+### 테마 설정
+
+중앙에서 테마를 관리하기 위해 설정 파일을 만듭니다.
+
+```typescript title="app/lib/theme.config.ts"
+import { createThemeConfig } from '@vapor-ui/core';
+
+export const theme = createThemeConfig({
+    appearance: 'light',
+    primaryColor: '#2A6FF3',
+    scaling: 1,
+    radius: 'md',
+});
+```
+
+</Step>
+
+<Step>
+
+### 루트 레이아웃 설정
+
+`ThemeProvider`로 앱을 래핑하고 스타일을 가져옵니다.
+
+```tsx title="app/root.tsx"
+import type { LinksFunction } from '@remix-run/node';
+import {
+    Links,
+    Meta,
+    Outlet,
+    Scripts,
+    ScrollRestoration,
+} from '@remix-run/react';
+
+import { ThemeProvider } from '@vapor-ui/core';
+
+import { theme } from './lib/theme.config';
+
+// Vapor UI 스타일 import
+import vaporStyles from '@vapor-ui/core/styles.css?url';
+
+export const links: LinksFunction = () => [
+    { rel: 'stylesheet', href: vaporStyles },
+];
+
+export function Layout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="ko">
+            <head>
+                <meta charSet="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <Meta />
+                <Links />
+
+                {/* FOUC 방지를 위한 테마 초기화 스크립트 */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            (function () {
+                                const defaultConfig = { appearance: 'light', radius: 'md', scaling: 1.0 };
+                                const storageKey = 'my-remix-app-theme';
+                                const root = document.documentElement;
+                                let currentThemes = defaultConfig;
+                                try {
+                                    const storedItem = localStorage.getItem(storageKey);
+                                    if (storedItem) {
+                                        const storedSettings = JSON.parse(storedItem);
+                                        currentThemes = Object.assign({}, defaultConfig, storedSettings);
+                                    }
+                                } catch (e) {}
+                                if (currentThemes.appearance === 'dark') {
+                                    root.classList.add('vapor-dark-theme');
+                                } else {
+                                    root.classList.add('vapor-light-theme');
+                                }
+                                const radiusMap = { none: 0, sm: 0.5, md: 1, lg: 1.5, xl: 2, full: 3 };
+                                const radiusFactor = radiusMap[currentThemes.radius] ?? 1;
+                                root.style.setProperty('--vapor-radius-factor', radiusFactor.toString());
+                                const scaleFactor = currentThemes.scaling ?? 1;
+                                root.style.setProperty('--vapor-scale-factor', scaleFactor.toString());
+                            })();
+                        `,
+                    }}
+                />
+            </head>
+            <body>
+                <ThemeProvider config={theme}>
+                    {children}
+                </ThemeProvider>
+                <ScrollRestoration />
+                <Scripts />
+            </body>
+        </html>
+    );
+}
+
+export default function App() {
+    return <Outlet />;
+}
+```
+
+</Step>
+
+<Step>
+
+### 컴포넌트 사용 예시
+
+이제 Vapor UI 컴포넌트와 테마 전환 기능을 사용할 수 있습니다.
+
+```tsx title="app/routes/_index.tsx"
+import { Card, Text } from '@vapor-ui/core';
+
+export default function Index() {
+    return (
+        <main className="flex min-h-screen flex-col items-center justify-center p-24">
+            <Card.Root className="max-w-md">
+                <Card.Body>
+                    <div className="flex flex-col gap-4">
+                        <Text asChild typography="heading1" foreground="normal">
+                            <h1>Welcome to Vapor UI!</h1>
+                        </Text>
+                        <Text>
+                            이것은 Remix와 함께 Vapor UI 컴포넌트를 사용하는
+                            예시입니다.
+                        </Text>
+                    </div>
+                </Card.Body>
+            </Card.Root>
+        </main>
+    );
+}
+```
+
+</Step>
+</Steps>

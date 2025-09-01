@@ -1,0 +1,5 @@
+{
+    "title": "Frameworks",
+    "pages": ["next-js-app", "next-js-pages", "vite-react", "remix"],
+    "defaultOpen": true
+}

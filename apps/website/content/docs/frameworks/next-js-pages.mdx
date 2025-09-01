@@ -1,0 +1,180 @@
+---
+title: 'Next.js - Pages Router'
+description: 'Vapor UI 컴포넌트를 Nextjs Pages Router와 사용하는 방법'
+---
+
+## Next.js - Pages Router
+
+Next.js Pages Router는 전통적인 파일 시스템 기반 라우팅을 사용합니다. Vapor UI 컴포넌트는 Pages Router 환경에서도 완벽하게 작동합니다.
+
+<Steps>
+<Step>
+
+### 프로젝트 생성
+
+먼저, Next.js 프로젝트를 생성합니다. Pages Router를 사용하도록 설정해주세요.
+
+```bash
+npx create-next-app@latest
+```
+
+</Step>
+
+<Step>
+
+### 라이브러리 설치
+
+프로젝트 디렉토리로 이동하여 Vapor UI를 설치합니다.
+
+```bash
+cd your-project-name
+```
+
+```package-install
+npm install @vapor-ui/core @vapor-ui/icons
+```
+
+</Step>
+
+<Step>
+
+### `next.config.ts` 설정
+
+Pages Router에서는 `transpilePackages` 옵션을 사용하여 라이브러리를 트랜스파일합니다.
+
+```typescript title="next.config.ts"
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+    reactStrictMode: true,
+    transpilePackages: ['@vapor-ui/core', '@vapor-ui/icons'],
+};
+
+export default nextConfig;
+```
+
+</Step>
+
+<Step>
+
+### CSS 아키텍처 설정
+
+Tailwind의 유틸리티 클래스가 Vapor UI 컴포넌트 스타일을 덮어쓸 수 있도록 CSS 레이어(layer) 순서를 정의해야 합니다.
+
+```css title="styles/globals.css"
+/* CSS 레이어 우선순위 정의 */
+@layer reset, tw-base, base, tw-theme, theme, components, utilities, tw-utilities;
+
+@import '@vapor-ui/core/styles.css';
+
+@import 'tailwindcss/preflight' layer(tw-base);
+@import 'tailwindcss/theme' layer(tw-theme);
+@import 'tailwindcss/utilities' layer(tw-utilities);
+```
+
+</Step>
+
+<Step>
+
+### 테마 설정
+
+중앙에서 테마를 관리하기 위해 설정 파일을 만듭니다.
+
+```typescript title="lib/theme.config.ts"
+import { createThemeConfig } from '@vapor-ui/core';
+
+export const theme = createThemeConfig({
+    appearance: 'light',
+    primaryColor: '#2A6FF3',
+    scaling: 1,
+    radius: 'md',
+});
+```
+
+</Step>
+
+<Step>
+
+### 글로벌 앱 설정 (\_app.tsx)
+
+Pages Router의 핵심인 `_app.tsx`에서 `ThemeProvider`로 앱 전체를 감쌉니다.
+
+```tsx title="pages/_app.tsx"
+import { ThemeProvider } from '@vapor-ui/core';
+import type { AppProps } from 'next/app';
+
+import { theme } from '../lib/theme.config';
+
+import '../styles/globals.css';
+
+export default function App({ Component, pageProps }: AppProps) {
+    return (
+        <ThemeProvider config={theme}>
+            <Component {...pageProps} />
+        </ThemeProvider>
+    );
+}
+```
+
+</Step>
+
+<Step>
+
+### 문서 구조 설정 (\_document.tsx)
+
+FOUC 방지를 위한 `ThemeScript`를 `<head>`에 추가합니다.
+
+```tsx title="pages/_document.tsx"
+import { ThemeScript } from '@vapor-ui/core';
+import { Head, Html, Main, NextScript } from 'next/document';
+
+export default function Document() {
+    return (
+        <Html lang="ko">
+            <Head>
+                {/* FOUC 방지를 위한 스크립트 */}
+                <ThemeScript />
+            </Head>
+            <body>
+                <Main />
+                <NextScript />
+            </body>
+        </Html>
+    );
+}
+```
+
+</Step>
+
+<Step>
+
+### 컴포넌트 사용 예시
+
+이제 페이지에서 Vapor UI 컴포넌트와 테마 전환 기능을 사용할 수 있습니다.
+
+```tsx title="pages/index.tsx"
+import { Card, Text } from '@vapor-ui/core';
+
+export default function HomePage() {
+    return (
+        <main className="flex min-h-screen flex-col items-center justify-center p-24">
+            <Card.Root className="max-w-md">
+                <Card.Body>
+                    <div className="flex flex-col gap-4">
+                        <Text asChild typography="heading1" foreground="normal">
+                            <h1>Welcome to Vapor UI!</h1>
+                        </Text>
+                        <Text>
+                            이것은 Next.js Pages Router와 함께 Vapor UI 컴포넌트를 사용하는
+                            예시입니다.
+                        </Text>
+                    </div>
+                </Card.Body>
+            </Card.Root>
+        </main>
+    );
+}
+```
+
+</Step>
+</Steps>
