@@ -11,16 +11,16 @@ const DEFAULT_MAIN_BACKGROUND_LIGHTNESS = {
 } as const;
 
 const DEFAULT_PRIMITIVE_COLORS = {
-    red: '#DF3337',
-    pink: '#DA2F74',
-    grape: '#BE2CE2',
-    violet: '#8754F9',
-    blue: '#2A6FF3',
-    cyan: '#0E81A0',
-    green: '#0A8672',
-    lime: '#8FD327',
-    yellow: '#E6B800',
-    orange: '#D14905',
+    red: '#F5535E',
+    pink: '#F26394',
+    grape: '#CC5DE8',
+    violet: '#8662F3',
+    blue: '#448EFE',
+    cyan: '#1EBAD2',
+    green: '#04A37E',
+    lime: '#1EBAD2',
+    yellow: '#FFC107',
+    orange: '#ED670C',
 } as const;
 
 const DEFAULT_CONTRAST_RATIOS = {
@@ -76,7 +76,7 @@ const formatOklchForWeb = (oklchString: string): string => {
         const [, l, c, h] = match;
         const roundedL = parseFloat(l).toFixed(3);
         const roundedC = parseFloat(c).toFixed(3);
-        
+
         // Handle 'none' values and round hue
         let roundedH: string;
         if (h === 'none' || isNaN(parseFloat(h))) {
@@ -84,7 +84,7 @@ const formatOklchForWeb = (oklchString: string): string => {
         } else {
             roundedH = parseFloat(h).toFixed(1);
         }
-        
+
         return `oklch(${roundedL} ${roundedC} ${roundedH})`;
     }
     return oklchString;
@@ -126,7 +126,7 @@ const createColorDefinition = ({
  */
 const createAdaptiveColorKeys = (
     brandColorOklch: OklchColor,
-    originalHex: string
+    originalHex: string,
 ): { lightKey: CssColor; darkKey: CssColor } => {
     const isLightColor = brandColorOklch.l > ADAPTIVE_COLOR_GENERATION.LIGHTNESS_THRESHOLD;
 
@@ -150,7 +150,7 @@ const createAdaptiveColorKeys = (
             mode: 'oklch',
             l: Math.min(
                 brandColorOklch.l / ADAPTIVE_COLOR_GENERATION.DARK_LIGHTNESS_FACTOR,
-                ADAPTIVE_COLOR_GENERATION.LIGHT_LIGHTNESS_FACTOR
+                ADAPTIVE_COLOR_GENERATION.LIGHT_LIGHTNESS_FACTOR,
             ),
             c: brandColorOklch.c * ADAPTIVE_COLOR_GENERATION.CHROMA_REDUCTION_FACTOR,
         };
@@ -164,7 +164,7 @@ const createAdaptiveColorKeys = (
 
 function createVaporColorDefinitions(
     primitiveColors: Record<string, string>,
-    contrastRatios: Record<string, number>
+    contrastRatios: Record<string, number>,
 ): Color[] {
     return Object.entries(primitiveColors)
         .map(([name, colorHex]) => createColorDefinition({ name, colorHex, contrastRatios }))
@@ -175,14 +175,11 @@ function createVaporColorDefinitions(
 // Theme Generation
 // ============================================================================
 
-const createTheme = (
-    themeType: ThemeType,
-    config: ColorGeneratorConfig
-): Theme => {
+const createTheme = (themeType: ThemeType, config: ColorGeneratorConfig): Theme => {
     const backgroundLightness = config.backgroundLightness || DEFAULT_MAIN_BACKGROUND_LIGHTNESS;
     const primitiveColors = config.primitiveColors || DEFAULT_PRIMITIVE_COLORS;
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
-    
+
     const lightness = backgroundLightness[themeType];
     const colorKey = (themeType === 'light' ? '#FFFFFF' : '#000000') as CssColor;
 
