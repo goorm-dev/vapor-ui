@@ -24,7 +24,7 @@ const DEFAULT_PRIMITIVE_COLORS = {
 } as const;
 
 const DEFAULT_CONTRAST_RATIOS = {
-    '50': 1.15,
+    '050': 1.15,
     '100': 1.3,
     '200': 1.7,
     '300': 2.5,
@@ -57,6 +57,31 @@ interface ColorGeneratorConfig {
         dark: number;
     };
 }
+
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+const formatOklchForWeb = (oklchString: string): string => {
+    // Parse oklch(l c h) format and round to 3 decimal places for web compatibility
+    const match = oklchString.match(/oklch\(([^\s]+)\s+([^\s]+)\s+([^\)]+)\)/);
+    if (match) {
+        const [, l, c, h] = match;
+        const roundedL = parseFloat(l).toFixed(3);
+        const roundedC = parseFloat(c).toFixed(3);
+        
+        // Handle 'none' values and round hue
+        let roundedH: string;
+        if (h === 'none' || isNaN(parseFloat(h))) {
+            roundedH = '0.0';
+        } else {
+            roundedH = parseFloat(h).toFixed(1);
+        }
+        
+        return `oklch(${roundedL} ${roundedC} ${roundedH})`;
+    }
+    return oklchString;
+};
 
 // ============================================================================
 // Color Generation Logic
@@ -136,7 +161,7 @@ const createTheme = (
 };
 
 // ============================================================================
-// Figma Variable Collection Structure
+// Color Palette Collection Structure
 // ============================================================================
 
 interface ColorToken {
@@ -153,7 +178,7 @@ interface ThemeTokens {
     };
 }
 
-interface FigmaVariableCollection {
+interface ColorPaletteCollection {
     base: {
         white: ColorToken;
         black: ColorToken;
@@ -179,7 +204,7 @@ function generateThemeTokens(themeType: ThemeType, config: ColorGeneratorConfig)
         if (oklchValue) {
             result.background.canvas = {
                 hex: backgroundObj.background,
-                oklch: oklchValue,
+                oklch: formatOklchForWeb(oklchValue),
             };
         }
     }
@@ -194,7 +219,7 @@ function generateThemeTokens(themeType: ThemeType, config: ColorGeneratorConfig)
                 if (oklchValue) {
                     result[color.name][instance.name] = {
                         hex: instance.value,
-                        oklch: oklchValue,
+                        oklch: formatOklchForWeb(oklchValue),
                     };
                 }
             });
@@ -204,16 +229,16 @@ function generateThemeTokens(themeType: ThemeType, config: ColorGeneratorConfig)
     return result;
 }
 
-function generateFigmaVariableCollection(config: ColorGeneratorConfig = {}): FigmaVariableCollection {
+function generateColorPalette(config: ColorGeneratorConfig = {}): ColorPaletteCollection {
     return {
         base: {
             white: {
                 hex: '#ffffff',
-                oklch: formatCss(oklch('#ffffff'))!,
+                oklch: formatOklchForWeb(formatCss(oklch('#ffffff'))!),
             },
             black: {
                 hex: '#000000',
-                oklch: formatCss(oklch('#000000'))!,
+                oklch: formatOklchForWeb(formatCss(oklch('#000000'))!),
             },
         },
         light: generateThemeTokens('light', config),
@@ -225,13 +250,13 @@ function generateFigmaVariableCollection(config: ColorGeneratorConfig = {}): Fig
 // Export
 // ============================================================================
 
-export const figmaVariables = generateFigmaVariableCollection();
+export const colorPalette = generateColorPalette();
 
 export {
-    generateFigmaVariableCollection,
+    generateColorPalette,
     DEFAULT_PRIMITIVE_COLORS,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
 };
 
-export type { ThemeType, ColorToken, FigmaVariableCollection, ColorGeneratorConfig };
+export type { ThemeType, ColorToken, ColorPaletteCollection, ColorGeneratorConfig };
