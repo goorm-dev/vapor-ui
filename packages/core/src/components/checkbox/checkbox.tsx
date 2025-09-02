@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useId } from 'react';
+import { forwardRef } from 'react';
 
 import type { CheckedState } from '@radix-ui/react-checkbox';
 import { Indicator as RadixIndicator, Root as RadixRoot } from '@radix-ui/react-checkbox';
@@ -12,10 +12,10 @@ import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { VComponentProps } from '~/utils/types';
 
-import type { ControlVariants, LabelVariants, RootVariants } from './checkbox.css';
+import type { ControlVariants, RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
 
-type CheckboxVariants = RootVariants & ControlVariants & LabelVariants;
+type CheckboxVariants = RootVariants & ControlVariants;
 type CheckboxSharedProps = CheckboxVariants & {
     checked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
@@ -23,9 +23,7 @@ type CheckboxSharedProps = CheckboxVariants & {
     indeterminate?: boolean;
 };
 
-type CheckboxContext = CheckboxSharedProps & {
-    checkboxId?: string;
-};
+type CheckboxContext = CheckboxSharedProps;
 
 const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxContext>({
     name: 'Checkbox',
@@ -37,11 +35,10 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxContext>({
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveRootProps = VComponentProps<typeof Primitive.div>;
+type PrimitiveRootProps = VComponentProps<typeof Primitive.label>;
 interface CheckboxRootProps extends PrimitiveRootProps, CheckboxSharedProps {}
 
-const Root = forwardRef<HTMLDivElement, CheckboxRootProps>(({ className, ...props }, ref) => {
-    const checkboxId = useId();
+const Root = forwardRef<HTMLLabelElement, CheckboxRootProps>(({ className, ...props }, ref) => {
     const [checkboxProps, otherProps] = createSplitProps<CheckboxSharedProps>()(props, [
         'checked',
         'onCheckedChange',
@@ -50,14 +47,13 @@ const Root = forwardRef<HTMLDivElement, CheckboxRootProps>(({ className, ...prop
         'size',
         'invalid',
         'disabled',
-        'visuallyHidden',
     ]);
 
     const { disabled } = checkboxProps;
 
     return (
-        <CheckboxProvider value={{ checkboxId, ...checkboxProps }}>
-            <Primitive.div
+        <CheckboxProvider value={{ ...checkboxProps }}>
+            <Primitive.label
                 ref={ref}
                 className={clsx(styles.root({ disabled }), className)}
                 {...otherProps}
@@ -67,28 +63,6 @@ const Root = forwardRef<HTMLDivElement, CheckboxRootProps>(({ className, ...prop
 });
 Root.displayName = 'Checkbox.Root';
 
-/* -------------------------------------------------------------------------------------------------
- * Checkbox.Label
- * -----------------------------------------------------------------------------------------------*/
-
-type PrimitiveLabelProps = VComponentProps<typeof Primitive.label>;
-interface CheckboxLabelProps extends PrimitiveLabelProps {}
-
-const Label = forwardRef<HTMLLabelElement, CheckboxLabelProps>(
-    ({ htmlFor, className, ...props }, ref) => {
-        const { checkboxId, visuallyHidden } = useCheckboxContext();
-
-        return (
-            <Primitive.label
-                ref={ref}
-                htmlFor={htmlFor || checkboxId}
-                className={clsx(styles.label({ visuallyHidden }), className)}
-                {...props}
-            />
-        );
-    },
-);
-
 /* ------------------------------------------------------------------------------------------------
  * Checkbox.Control
  * -----------------------------------------------------------------------------------------------*/
@@ -97,17 +71,9 @@ type ControlPrimitiveProps = VComponentProps<typeof RadixRoot>;
 interface CheckboxControlProps extends Omit<ControlPrimitiveProps, keyof CheckboxSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
-    ({ id, className, ...props }, ref) => {
-        const {
-            checkboxId,
-            checked,
-            onCheckedChange,
-            defaultChecked,
-            indeterminate,
-            invalid,
-            disabled,
-            size,
-        } = useCheckboxContext();
+    ({ className, ...props }, ref) => {
+        const { checked, onCheckedChange, defaultChecked, indeterminate, invalid, disabled, size } =
+            useCheckboxContext();
 
         const [checkedState, setCheckedState] = useControllableState<CheckedState>({
             prop: indeterminate ? 'indeterminate' : checked,
@@ -122,7 +88,6 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
         return (
             <RadixRoot
                 ref={ref}
-                id={checkboxId || id}
                 checked={checkedState}
                 onCheckedChange={setCheckedState}
                 disabled={disabled}
@@ -169,7 +134,7 @@ const DashIcon = (props: IconProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as CheckboxRoot, Label as CheckboxLabel, Control as CheckboxControl };
-export type { CheckedState, CheckboxRootProps, CheckboxLabelProps, CheckboxControlProps };
+export { Root as CheckboxRoot, Control as CheckboxControl };
+export type { CheckedState, CheckboxRootProps, CheckboxControlProps };
 
-export const Checkbox = { Root, Label, Control };
+export const Checkbox = { Root, Control };

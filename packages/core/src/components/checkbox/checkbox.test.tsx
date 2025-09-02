@@ -21,15 +21,17 @@ describe('Checkbox', () => {
         });
 
         it('should have no a11y violations', async () => {
-            const rendered = render(<CheckboxTest />);
             const result = await axe(rendered.container);
 
             expect(result).toHaveNoViolations();
         });
 
-        it('should associate the label with the input field', () => {
-            const label = rendered.getByText(LABEL_TEXT) as HTMLLabelElement;
-            expect(label.htmlFor).toBe(checkbox.id);
+        it('should associate the label with the input field', async () => {
+            const label = rendered.getByLabelText(LABEL_TEXT);
+
+            await userEvent.click(label);
+
+            expect(checkbox).toHaveFocus();
         });
 
         it('should toggle checked state when clicked', async () => {
@@ -49,7 +51,7 @@ describe('Checkbox', () => {
         });
 
         it('should toggle checked state when label is clicked', async () => {
-            const label = rendered.getByText(LABEL_TEXT) as HTMLLabelElement;
+            const label = rendered.getByText(LABEL_TEXT);
             expect(checkbox).not.toBeChecked();
 
             await userEvent.click(label);
@@ -255,7 +257,7 @@ const LABEL_TEXT = 'Checkbox Label';
 const CheckboxTest = (props: CheckboxRootProps) => (
     <Checkbox.Root {...props}>
         <Checkbox.Control />
-        <Checkbox.Label>{LABEL_TEXT}</Checkbox.Label>
+        {LABEL_TEXT}
     </Checkbox.Root>
 );
 
@@ -274,7 +276,7 @@ const ControlledCheckboxTest = (props: CheckboxRootProps) => {
         <div>
             <Checkbox.Root {...props} checked={checkbox} onCheckedChange={handleCheckedChange}>
                 <Checkbox.Control />
-                <Checkbox.Label>{LABEL_TEXT} </Checkbox.Label>
+                {LABEL_TEXT}
             </Checkbox.Root>
 
             <button onClick={() => setBlocker((prev) => !prev)}>Blocker Controller</button>

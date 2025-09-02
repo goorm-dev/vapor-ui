@@ -2,7 +2,6 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
@@ -24,22 +23,6 @@ export const root = recipe({
                 pointerEvents: 'none',
             },
         },
-    },
-});
-
-export const label = recipe({
-    base: layerStyle('components', {
-        lineHeight: vars.typography.lineHeight['050'],
-
-        letterSpacing: vars.typography.letterSpacing['000'],
-        color: vars.color.foreground['normal-lighter'],
-        fontSize: vars.typography.fontSize['050'],
-        fontWeight: vars.typography.fontWeight[500],
-    }),
-
-    defaultVariants: { visuallyHidden: false },
-    variants: {
-        visuallyHidden: { true: visuallyHidden },
     },
 });
 
@@ -100,5 +83,4 @@ export const field = recipe({
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
-export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;
 export type FieldVariants = NonNullable<RecipeVariants<typeof field>>;

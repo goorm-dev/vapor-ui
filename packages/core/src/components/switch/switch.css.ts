@@ -2,7 +2,6 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
@@ -96,23 +95,5 @@ export const indicator = recipe({
     },
 });
 
-export const label = recipe({
-    base: layerStyle('components', {
-        lineHeight: vars.typography.lineHeight['075'],
-        letterSpacing: vars.typography.letterSpacing['100'],
-        color: vars.color.foreground['normal'],
-        fontSize: vars.typography.fontSize['075'],
-        fontWeight: vars.typography.fontWeight['400'],
-    }),
-
-    defaultVariants: { visuallyHidden: false },
-    variants: {
-        visuallyHidden: {
-            true: visuallyHidden,
-        },
-    },
-});
-
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
 export type ControlVariants = NonNullable<RecipeVariants<typeof control>>;
-export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;

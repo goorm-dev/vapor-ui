@@ -15,11 +15,11 @@ const RadioGroupTest = (props: RadioGroupRootProps) => {
         <RadioGroup.Root {...props}>
             <RadioGroup.Item value="option1">
                 <RadioGroup.Control />
-                <RadioGroup.Label>{OPTION_1}</RadioGroup.Label>
+                {OPTION_1}
             </RadioGroup.Item>
             <RadioGroup.Item value="option2">
                 <RadioGroup.Control />
-                <RadioGroup.Label>{OPTION_2}</RadioGroup.Label>
+                {OPTION_2}
             </RadioGroup.Item>
         </RadioGroup.Root>
     );
@@ -138,11 +138,11 @@ describe('RadioGroup', () => {
             >
                 <RadioGroup.Root name="radio-group-test">
                     <RadioGroup.Item value="a">
-                        <RadioGroup.Label>a</RadioGroup.Label>
+                        a
                         <RadioGroup.Control />
                     </RadioGroup.Item>
                     <RadioGroup.Item value="b">
-                        <RadioGroup.Label>b</RadioGroup.Label>
+                        b
                         <RadioGroup.Control />
                     </RadioGroup.Item>
                 </RadioGroup.Root>
@@ -169,15 +169,15 @@ describe('RadioGroup', () => {
             <RadioGroup.Root>
                 <RadioGroup.Item value="option1">
                     <RadioGroup.Control />
-                    <RadioGroup.Label>option1</RadioGroup.Label>
+                    option1
                 </RadioGroup.Item>
                 <RadioGroup.Item value="option2">
                     <RadioGroup.Control />
-                    <RadioGroup.Label>option2</RadioGroup.Label>
+                    option2
                 </RadioGroup.Item>
                 <RadioGroup.Item value="option3">
                     <RadioGroup.Control />
-                    <RadioGroup.Label>option3</RadioGroup.Label>
+                    option3
                 </RadioGroup.Item>
             </RadioGroup.Root>,
         );
@@ -210,15 +210,15 @@ describe('RadioGroup', () => {
             <RadioGroup.Root>
                 <RadioGroup.Item value="option1">
                     <RadioGroup.Control />
-                    <RadioGroup.Label>option1</RadioGroup.Label>
+                    option1
                 </RadioGroup.Item>
                 <RadioGroup.Item value="option2" disabled>
                     <RadioGroup.Control />
-                    <RadioGroup.Label>option2</RadioGroup.Label>
+                    option2
                 </RadioGroup.Item>
                 <RadioGroup.Item value="option3">
                     <RadioGroup.Control />
-                    <RadioGroup.Label>option3</RadioGroup.Label>
+                    option3
                 </RadioGroup.Item>
             </RadioGroup.Root>,
         );

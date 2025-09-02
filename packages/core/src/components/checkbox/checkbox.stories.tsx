@@ -43,7 +43,7 @@ export const Default: Story = {
                 <Text typography="heading3">Uncontrolled</Text>
                 <Checkbox.Root {...args}>
                     <Checkbox.Control />
-                    <Checkbox.Label>Default</Checkbox.Label>
+                    Default
                 </Checkbox.Root>
 
                 <br />
@@ -56,7 +56,7 @@ export const Default: Story = {
                     onCheckedChange={handleAllCheckedChange}
                 >
                     <Checkbox.Control />
-                    <Checkbox.Label>three meals a day</Checkbox.Label>
+                    three meals a day
                 </Checkbox.Root>
 
                 {checkboxItems.map((item) => (
@@ -69,7 +69,7 @@ export const Default: Story = {
                         }
                     >
                         <Checkbox.Control />
-                        <Checkbox.Label>{item.label}</Checkbox.Label>
+                        {item.label}
                     </Checkbox.Root>
                 ))}
             </Flex>
@@ -83,61 +83,56 @@ export const TestBed: Story = {
             <Flex style={{ gap: 'var(--vapor-size-dimension-100)', flexDirection: 'column' }}>
                 <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
                     <Checkbox.Root>
-                        <Checkbox.Label>Default</Checkbox.Label>
+                        Default
                         <Checkbox.Control />
                     </Checkbox.Root>
                     <Checkbox.Root checked>
-                        <Checkbox.Label>Default checked</Checkbox.Label>
+                        Default checked
                         <Checkbox.Control />
                     </Checkbox.Root>
                     <Checkbox.Root indeterminate>
-                        <Checkbox.Label>Default Indeterminate</Checkbox.Label>
+                        Default Indeterminate
                         <Checkbox.Control />
                     </Checkbox.Root>
                 </Flex>
 
                 <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
                     <Checkbox.Root disabled>
-                        <Checkbox.Label>Disabled</Checkbox.Label>
+                        Disabled
                         <Checkbox.Control />
                     </Checkbox.Root>
                     <Checkbox.Root checked disabled>
-                        <Checkbox.Label>Disabled Checked</Checkbox.Label>
+                        Disabled Checked
                         <Checkbox.Control />
                     </Checkbox.Root>
                     <Checkbox.Root indeterminate disabled>
-                        <Checkbox.Label>Disabled Indeterminate</Checkbox.Label>
+                        Disabled Indeterminate
                         <Checkbox.Control />
                     </Checkbox.Root>
                 </Flex>
 
                 <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
                     <Checkbox.Root invalid>
-                        <Checkbox.Label>Invalid</Checkbox.Label>
+                        Invalid
                         <Checkbox.Control />
                     </Checkbox.Root>
                     <Checkbox.Root checked invalid>
-                        <Checkbox.Label>Invalid Checked</Checkbox.Label>
+                        Invalid Checked
                         <Checkbox.Control />
                     </Checkbox.Root>
                     <Checkbox.Root indeterminate invalid>
-                        <Checkbox.Label>Invalid Indeterminate</Checkbox.Label>
+                        Invalid Indeterminate
                         <Checkbox.Control />
                     </Checkbox.Root>
                 </Flex>
 
                 <Checkbox.Root size="md">
-                    <Checkbox.Label>MD</Checkbox.Label>
+                    MD
                     <Checkbox.Control />
                 </Checkbox.Root>
 
                 <Checkbox.Root size="lg">
-                    <Checkbox.Label>LG</Checkbox.Label>
-                    <Checkbox.Control />
-                </Checkbox.Root>
-
-                <Checkbox.Root visuallyHidden>
-                    <Checkbox.Label>Visually Hidden</Checkbox.Label>
+                    LG
                     <Checkbox.Control />
                 </Checkbox.Root>
             </Flex>

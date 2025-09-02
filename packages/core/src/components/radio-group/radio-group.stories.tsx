@@ -27,23 +27,23 @@ export const Default: Story = {
         <RadioGroup.Root {...args}>
             <RadioGroup.Item value="1">
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 1</RadioGroup.Label>
+                Item 1
             </RadioGroup.Item>
             <RadioGroup.Item value="2">
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 2</RadioGroup.Label>
+                Item 2
             </RadioGroup.Item>
             <RadioGroup.Item value="3">
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 3</RadioGroup.Label>
+                Item 3
             </RadioGroup.Item>
             <RadioGroup.Item value="4" invalid>
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 4 (Each Invalid)</RadioGroup.Label>
+                Item 4 (Each Invalid)
             </RadioGroup.Item>
             <RadioGroup.Item value="5" disabled>
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 5 (Each Disabled)</RadioGroup.Label>
+                Item 5 (Each Disabled)
             </RadioGroup.Item>
         </RadioGroup.Root>
     ),
@@ -54,23 +54,23 @@ export const TestBed: Story = {
         <RadioGroup.Root {...args} defaultValue="3">
             <RadioGroup.Item value="1">
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 1</RadioGroup.Label>
+                Item 1
             </RadioGroup.Item>
             <RadioGroup.Item value="2">
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 2</RadioGroup.Label>
+                Item 2
             </RadioGroup.Item>
             <RadioGroup.Item value="3">
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 3</RadioGroup.Label>
+                Item 3
             </RadioGroup.Item>
             <RadioGroup.Item value="4" invalid>
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 4 (Each Invalid)</RadioGroup.Label>
+                Item 4 (Each Invalid)
             </RadioGroup.Item>
             <RadioGroup.Item value="5" disabled>
                 <RadioGroup.Control />
-                <RadioGroup.Label>Item 5 (Each Disabled)</RadioGroup.Label>
+                Item 5 (Each Disabled)
             </RadioGroup.Item>
         </RadioGroup.Root>
     ),

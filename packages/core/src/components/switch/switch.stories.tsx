@@ -20,7 +20,7 @@ export const Default: Story = {
         return (
             <Switch.Root {...args}>
                 <Switch.Control />
-                <Switch.Label>Default</Switch.Label>
+                Default
             </Switch.Root>
         );
     },
@@ -32,20 +32,15 @@ export const TestBed: Story = {
             <VStack gap="$150">
                 <Switch.Root size="sm">
                     <Switch.Control />
-                    <Switch.Label>Test Bed</Switch.Label>
+                    Test Bed
                 </Switch.Root>
                 <Switch.Root size="md">
                     <Switch.Control />
-                    <Switch.Label>Test Bed</Switch.Label>
+                    Test Bed
                 </Switch.Root>
                 <Switch.Root size="lg">
                     <Switch.Control />
-                    <Switch.Label>Test Bed</Switch.Label>
-                </Switch.Root>
-
-                <Switch.Root visuallyHidden>
-                    <Switch.Control />
-                    <Switch.Label>Test Bed</Switch.Label>
+                    Test Bed
                 </Switch.Root>
             </VStack>
         );

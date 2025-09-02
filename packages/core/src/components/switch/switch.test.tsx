@@ -14,12 +14,12 @@ describe('Switch', () => {
     describe('given a default Switch', () => {
         let rendered: RenderResult;
         let control: HTMLElement;
-        let label: HTMLLabelElement;
+        let label: HTMLElement;
 
         beforeEach(() => {
             rendered = render(<SwitchTest />);
             control = rendered.getByRole('switch');
-            label = rendered.getByText(LABEL_TEXT) as HTMLLabelElement;
+            label = rendered.getByText(LABEL_TEXT);
         });
 
         it('should have no a11y violations', async () => {
@@ -28,8 +28,12 @@ describe('Switch', () => {
             expect(result).toHaveNoViolations();
         });
 
-        it('should associate the label with the switch control', () => {
-            expect(label.htmlFor).toBe(control.id);
+        it('should associate the label with the switch control', async () => {
+            const label = rendered.getByLabelText(LABEL_TEXT);
+
+            await userEvent.click(label);
+
+            expect(control).toHaveFocus();
         });
 
         it('should toggle checked state when clicked', async () => {
@@ -191,7 +195,7 @@ const LABEL_TEXT = 'Test Switch';
 const SwitchTest = (props: SwitchRootProps) => (
     <Switch.Root {...props}>
         <Switch.Control />
-        <Switch.Label>{LABEL_TEXT}</Switch.Label>
+        {LABEL_TEXT}
     </Switch.Root>
 );
 
@@ -210,7 +214,7 @@ const ControlledSwitchTest = (props: SwitchRootProps) => {
         <>
             <Switch.Root {...props} checked={checked} onCheckedChange={handleCheckedChange}>
                 <Switch.Control />
-                <Switch.Label>{LABEL_TEXT}</Switch.Label>
+                {LABEL_TEXT}
             </Switch.Root>
 
             <button onClick={() => setBlocker((prev) => !prev)}>Blocker Controller</button>
