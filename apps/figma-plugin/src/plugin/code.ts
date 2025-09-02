@@ -1,4 +1,5 @@
 import type { UIMessage } from '../figma-messages';
+import { handleCreateFigmaVariables } from './handlers/create-figma-variables';
 import { handleCreatePaletteSections } from './handlers/create-palette-sections';
 
 // ============================================================================
@@ -17,11 +18,10 @@ figma.ui.onmessage = async (msg: UIMessage) => {
         case 'create-palette-sections':
             handleCreatePaletteSections(msg.data.generatedPalette);
             break;
-        // case 'update-primary-color':
-        //     handleUpdatePrimaryColor(msg.data.color);
-        //     break;
+        case 'create-figma-variables':
+            await handleCreateFigmaVariables(msg.data.generatedPalette, msg.data.collectionName);
+            break;
         default:
             console.warn('Unknown message type:', msg);
     }
 };
-

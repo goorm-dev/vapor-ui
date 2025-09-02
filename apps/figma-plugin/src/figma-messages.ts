@@ -9,13 +9,12 @@ type CreatePaletteSectionsMessage = {
     data: { generatedPalette: Pick<ColorPaletteCollection, 'light' | 'dark'> };
 };
 
-// 새로운 메시지 타입 예시
-type UpdatePrimaryColorMessage = {
-    type: 'update-primary-color';
-    data: { color: string };
+type CreateFigmaVariablesMessage = {
+    type: 'create-figma-variables';
+    data: { generatedPalette: ColorPaletteCollection; collectionName: string };
 };
 
-export type UIMessage = CreatePaletteSectionsMessage | UpdatePrimaryColorMessage;
+export type UIMessage = CreatePaletteSectionsMessage | CreateFigmaVariablesMessage;
 
 // ============================================================================
 // Message  Utilities
