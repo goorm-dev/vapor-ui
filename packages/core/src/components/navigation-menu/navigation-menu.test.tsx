@@ -2,18 +2,18 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { NavLinkProps, NavRootProps } from './nav';
-import { Nav } from './nav';
+import type { NavigationMenuLinkProps, NavigationMenuRootProps } from './navigation-menu';
+import { NavigationMenu } from './navigation-menu';
 
-const NavTest = (props: NavRootProps) => {
+const NavTest = (props: NavigationMenuRootProps) => {
     return (
-        <Nav.Root {...props} aria-label="Breadcrumbs">
-            <Nav.List>
-                <Nav.Item>
-                    <Nav.Link href="#">Home</Nav.Link>
-                </Nav.Item>
-            </Nav.List>
-        </Nav.Root>
+        <NavigationMenu.Root {...props} aria-label="Breadcrumbs">
+            <NavigationMenu.List>
+                <NavigationMenu.Item>
+                    <NavigationMenu.Link href="#">Home</NavigationMenu.Link>
+                </NavigationMenu.Item>
+            </NavigationMenu.List>
+        </NavigationMenu.Root>
     );
 };
 
@@ -25,7 +25,7 @@ describe('Nav', () => {
 
         /**
          * FIXME
-         * - The issue is that the Base UI's Nav.List element is typed as HTMLDivElement, so the aria-orientation attribute cannot be applied.
+         * - The issue is that the Base UI's NavigationMenu.List element is typed as HTMLDivElement, so the aria-orientation attribute cannot be applied.
          * - It has been resolved in the PR below, and the test case will be activated in the next release once the changes are applied.
          *
          * @link https://github.com/mui/base-ui/pull/2526
@@ -34,20 +34,20 @@ describe('Nav', () => {
     });
 });
 
-describe('Nav.Link', () => {
+describe('NavigationMenu.Link', () => {
     afterEach(cleanup);
 
     const NAV_LINK = 'nav-link';
-    const NavLinkTest = (linkProps: NavLinkProps) => (
-        <Nav.Root aria-label="Main">
-            <Nav.List>
-                <Nav.Item>
-                    <Nav.Link data-testid={NAV_LINK} href="#" {...linkProps}>
+    const NavLinkTest = (linkProps: NavigationMenuLinkProps) => (
+        <NavigationMenu.Root aria-label="Main">
+            <NavigationMenu.List>
+                <NavigationMenu.Item>
+                    <NavigationMenu.Link data-testid={NAV_LINK} href="#" {...linkProps}>
                         Home
-                    </Nav.Link>
-                </Nav.Item>
-            </Nav.List>
-        </Nav.Root>
+                    </NavigationMenu.Link>
+                </NavigationMenu.Item>
+            </NavigationMenu.List>
+        </NavigationMenu.Root>
     );
 
     it('should render with aria-current="page" when given selected', () => {

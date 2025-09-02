@@ -13,7 +13,7 @@ export * from './components/grid';
 export * from './components/h-stack';
 export * from './components/icon-button';
 export * from './components/menu';
-export * from './components/nav';
+export * from './components/navigation-menu';
 export * from './components/radio-group';
 export * from './components/switch';
 export * from './components/text';

@@ -41,12 +41,20 @@ export const link = recipe({
 
             width: '100%',
             borderRadius: vars.size.borderRadius[300],
+
+            backgroundColor: 'transparent',
+            color: vars.color.foreground['normal-lighter'],
+
+            selectors: {
+                '&[aria-current="page"]': {
+                    color: vars.color.foreground['primary-darker'],
+                },
+            },
         }),
     ],
 
     defaultVariants: {
         size: 'md',
-        shape: 'fill',
         align: 'center',
         disabled: false,
     },
@@ -62,32 +70,7 @@ export const link = recipe({
             center: layerStyle('components', { justifyContent: 'center' }),
             end: layerStyle('components', { justifyContent: 'end' }),
         },
-        shape: {
-            fill: [
-                layerStyle('components', {
-                    // !NOTE: `rgb-hint` is not a semantic. Consider using `rgb-secondary` or similar.
-                    backgroundColor: `rgba(${vars.color.background['rgb-hint']}, 0.08)`,
-                    color: vars.color.foreground['normal-lighter'],
 
-                    selectors: {
-                        '&[aria-current="page"]': {
-                            backgroundColor: `rgba(${vars.color.background['rgb-primary']}, 0.24)`,
-                            color: vars.color.foreground['primary-darker'],
-                        },
-                    },
-                }),
-            ],
-            ghost: layerStyle('components', {
-                backgroundColor: 'transparent',
-                color: vars.color.foreground['normal-lighter'],
-
-                selectors: {
-                    '&[aria-current="page"]': {
-                        color: vars.color.foreground['primary-darker'],
-                    },
-                },
-            }),
-        },
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['075'],
