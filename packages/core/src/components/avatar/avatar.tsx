@@ -32,6 +32,12 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 type AvatarRootPrimitiveProps = VComponentProps<typeof RadixAvatar>;
 interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
 
+/**
+ * Displays a user's profile picture, initials, or fallback icon.
+ * Renders a `<span>` element.
+ *
+ * Documentation: [Base UI Avatar](https://base-ui.com/react/components/avatar)
+ */
 const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
         'src',
