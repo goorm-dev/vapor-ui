@@ -51,7 +51,7 @@
         {
             "prop": "align",
             "type": ["start", "center", "end"],
-            "default": "center", 
+            "default": "center",
             "description": "메뉴의 정렬을 설정합니다."
         },
         {
@@ -62,7 +62,7 @@
         },
         {
             "prop": "alignOffset",
-            "type": ["number"], 
+            "type": ["number"],
             "default": "0",
             "description": "정렬 축에서의 오프셋을 설정합니다."
         },
