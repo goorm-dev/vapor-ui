@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { Box } from '@vapor-ui/core';
+
 import { PrimitiveColorsTab } from './components/PrimitiveColorsTab';
 import { SemanticColorsTab } from './components/SemanticColorsTab';
 
@@ -7,7 +9,7 @@ function App() {
     const [activeTab, setActiveTab] = useState<'primitive' | 'semantic'>('primitive');
 
     return (
-        <main className="bg-white p-2">
+        <Box className="bg-white p-v-100">
             {/* Tab Navigation */}
             <div role="tablist" className="flex border-b border-gray-200">
                 <button
@@ -37,10 +39,10 @@ function App() {
             </div>
 
             {/* Tab Content */}
-            <div className="p-4" role="tabpanel">
+            <Box className="p-v-200" role="tabpanel">
                 {activeTab === 'primitive' ? <PrimitiveColorsTab /> : <SemanticColorsTab />}
-            </div>
-        </main>
+            </Box>
+        </Box>
     );
 }
 
