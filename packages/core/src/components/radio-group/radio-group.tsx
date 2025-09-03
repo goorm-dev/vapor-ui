@@ -21,7 +21,9 @@ import * as styles from './radio-group.css';
 type RadioGroupBaseProps = Pick<
     ComponentPropsWithoutRef<typeof RadixRoot>,
     'name' | 'dir' | 'loop' | 'value' | 'onValueChange' | 'defaultValue' | 'required' | 'disabled'
->;
+> & {
+    readOnly?: boolean;
+};
 
 type RadioGroupVariants = RootVariants & ControlVariants & LabelVariants;
 type RadioGroupSharedProps = RadioGroupVariants & RadioGroupBaseProps;
@@ -50,6 +52,7 @@ const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...pr
         'required',
         'dir',
         'loop',
+        'readOnly',
     ]);
 
     const [variantProps, otherProps] = createSplitProps<RadioGroupVariants>()(_otherProps, [
@@ -59,7 +62,7 @@ const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...pr
         'invalid',
     ]);
 
-    const { disabled } = sharedProps;
+    const { disabled, readOnly, onValueChange, ...restSharedProps } = sharedProps;
     const { size, orientation, invalid } = variantProps;
 
     return (
@@ -68,9 +71,12 @@ const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...pr
                 ref={ref}
                 aria-invalid={invalid}
                 aria-disabled={disabled}
+                aria-readonly={readOnly}
+                data-readonly={readOnly}
                 orientation={orientation}
                 className={clsx(styles.root({ size, orientation }), className)}
-                {...sharedProps}
+                onValueChange={readOnly ? undefined : onValueChange}
+                {...restSharedProps}
                 {...otherProps}
             />
         </RadioGroupProvider>
@@ -141,9 +147,17 @@ interface RadioGroupControlProps
     extends Omit<RadioGroupControlPrimitiveProps, keyof RadioGroupItemSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, RadioGroupControlProps>(
-    ({ id, className, ...props }, ref) => {
-        const { size } = useRadioGroupContext();
+    ({ id, className, onClick, ...props }, ref) => {
+        const { size, readOnly } = useRadioGroupContext();
         const { radioGroupItemId, value, invalid, disabled } = useRadioGroupItemContext();
+
+        const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (readOnly) {
+                e.preventDefault();
+                return;
+            }
+            onClick?.(e);
+        };
 
         return (
             <RadixItem
@@ -152,6 +166,9 @@ const Control = forwardRef<HTMLButtonElement, RadioGroupControlProps>(
                 value={value}
                 disabled={disabled}
                 aria-invalid={invalid}
+                aria-readonly={readOnly}
+                data-readonly={readOnly}
+                onClick={handleClick}
                 className={clsx(styles.control({ size, invalid }), className)}
                 {...props}
             >
