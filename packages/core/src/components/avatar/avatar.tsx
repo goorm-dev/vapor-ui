@@ -1,25 +1,21 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import {
-    Root as RadixAvatar,
-    Fallback as RadixFallback,
-    Image as RadixImage,
-} from '@radix-ui/react-avatar';
+import { Avatar as BaseAvatar } from '@base-ui-components/react/avatar';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/vars.css';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
 
 type AvatarVariants = RootVariants & FallbackVariants;
-type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delayMs?: number };
+type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delay?: number };
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     name: 'AvatarContext',
@@ -29,7 +25,7 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type AvatarRootPrimitiveProps = ComponentPropsWithoutRef<typeof RadixAvatar>;
+type AvatarRootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
 interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
 
 const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
@@ -38,14 +34,14 @@ const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props
         'alt',
         'size',
         'shape',
-        'delayMs',
+        'delay',
     ]);
 
     const { shape, size } = variantProps;
 
     return (
         <AvatarProvider value={variantProps}>
-            <RadixAvatar
+            <BaseAvatar.Root
                 ref={ref}
                 className={clsx(styles.root({ shape, size }), className)}
                 {...otherProps}
@@ -59,14 +55,14 @@ Root.displayName = 'Avatar.Root';
  * Avatar.Image
  * -----------------------------------------------------------------------------------------------*/
 
-type AvatarImagePrimitiveProps = ComponentPropsWithoutRef<typeof RadixImage>;
+type AvatarImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
 interface AvatarImageProps extends Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps> {}
 
 const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...props }, ref) => {
     const { src, alt } = useAvatarContext();
 
     return (
-        <RadixImage
+        <BaseAvatar.Image
             ref={ref}
             src={src}
             alt={alt}
@@ -81,18 +77,18 @@ Image.displayName = 'Avatar.Image';
  * Avatar.Fallback
  * -----------------------------------------------------------------------------------------------*/
 
-type AvatarFallbackPrimitiveProps = ComponentPropsWithoutRef<typeof RadixFallback>;
+type AvatarFallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
 interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
 
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
     ({ className, style, children, ...props }, ref) => {
-        const { size, alt, delayMs } = useAvatarContext();
+        const { size, alt, delay } = useAvatarContext();
         const background = getRandomColor(alt);
 
         return (
-            <RadixFallback
+            <BaseAvatar.Fallback
                 ref={ref}
-                delayMs={delayMs}
+                delay={delay}
                 style={{
                     ...assignInlineVars({ [styles.fallbackBgVar]: background }),
                     ...style,
@@ -101,7 +97,7 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
                 {...props}
             >
                 {children ?? getAvatarInitials(alt)}
-            </RadixFallback>
+            </BaseAvatar.Fallback>
         );
     },
 );

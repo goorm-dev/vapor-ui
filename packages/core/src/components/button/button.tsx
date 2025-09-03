@@ -1,19 +1,19 @@
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
+import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
-type ButtonPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Primitive.button>, 'color'>;
+type ButtonPrimitiveProps = VComponentProps<'button'>;
 interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {}
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ render, className, ...props }, ref) => {
         const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(props, [
             'color',
             'size',
@@ -21,16 +21,15 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'stretch',
         ]);
 
-        return (
-            <Primitive.button
-                ref={ref}
-                className={clsx(styles.root(variantsProps), className)}
-                data-disabled={otherProps.disabled}
-                {...otherProps}
-            >
-                {children}
-            </Primitive.button>
-        );
+        return useRender({
+            ref,
+            render: render || <button />,
+            props: {
+                'data-disabled': otherProps.disabled,
+                className: clsx(styles.root(variantsProps), className),
+                ...otherProps,
+            },
+        });
     },
 );
 Button.displayName = 'Button';

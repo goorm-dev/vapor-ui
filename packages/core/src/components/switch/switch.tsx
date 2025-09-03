@@ -1,25 +1,25 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useId } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
-import { Thumb as RadixSwitchIndicator, Root as RadixSwitchRoot } from '@radix-ui/react-switch';
+import { Switch as BaseSwitch } from '@base-ui-components/react';
+import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import type { ControlVariants, LabelVariants, RootVariants } from './switch.css';
 import * as styles from './switch.css';
 
-type SwitchVariants = RootVariants & ControlVariants & LabelVariants;
+type SwitchBaseProps = Pick<
+    SwitchControlPrimitiveProps,
+    'checked' | 'onCheckedChange' | 'defaultChecked' | 'required' | 'readOnly' | 'disabled'
+>;
 
-type SwitchSharedProps = SwitchVariants & {
-    checked?: boolean;
-    onCheckedChange?: (checked: boolean) => void;
-    defaultChecked?: boolean;
-};
+type SwitchVariants = RootVariants & ControlVariants & LabelVariants;
+type SwitchSharedProps = SwitchVariants & SwitchBaseProps;
 
 type SwitchContext = SwitchSharedProps & {
     switchId?: string;
@@ -35,33 +35,34 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchContext>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchRootPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
-interface SwitchRootProps
-    extends Omit<SwitchRootPrimitiveProps, keyof SwitchSharedProps>,
-        SwitchSharedProps {}
+type SwitchRootPrimitiveProps = VComponentProps<'div'>;
+interface SwitchRootProps extends SwitchRootPrimitiveProps, SwitchSharedProps {}
 
-const Root = forwardRef<HTMLDivElement, SwitchRootProps>(({ className, ...props }, ref) => {
+const Root = forwardRef<HTMLDivElement, SwitchRootProps>(({ render, className, ...props }, ref) => {
     const switchId = useId();
     const [switchProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, [
         'checked',
         'onCheckedChange',
         'defaultChecked',
         'disabled',
+        'readOnly',
+        'required',
         'size',
         'visuallyHidden',
     ]);
 
     const { disabled } = switchProps;
 
-    return (
-        <SwitchProvider value={{ switchId, ...switchProps }}>
-            <Primitive.div
-                ref={ref}
-                className={clsx(styles.root({ disabled }), className)}
-                {...otherProps}
-            />
-        </SwitchProvider>
-    );
+    const element = useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.root({ disabled }), className),
+            ...otherProps,
+        },
+    });
+
+    return <SwitchProvider value={{ switchId, ...switchProps }}>{element}</SwitchProvider>;
 });
 Root.displayName = 'Switch.Root';
 
@@ -69,21 +70,22 @@ Root.displayName = 'Switch.Root';
  * Switch.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchLabelPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.label>;
-interface SwitchLabelProps extends SwitchLabelPrimitiveProps {}
+type PrimitiveLabelProps = VComponentProps<'label'>;
+interface SwitchLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, SwitchLabelProps>(
-    ({ htmlFor, className, ...props }, ref) => {
+    ({ render, htmlFor, className, ...props }, ref) => {
         const { switchId, visuallyHidden } = useSwitchContext();
 
-        return (
-            <Primitive.label
-                ref={ref}
-                htmlFor={htmlFor || switchId}
-                className={clsx(styles.label({ visuallyHidden }), className)}
-                {...props}
-            />
-        );
+        return useRender({
+            ref,
+            render: render || <label />,
+            props: {
+                htmlFor: htmlFor || switchId,
+                className: clsx(styles.label({ visuallyHidden }), className),
+                ...props,
+            },
+        });
     },
 );
 Label.displayName = 'Switch.Label';
@@ -92,27 +94,31 @@ Label.displayName = 'Switch.Label';
  * Switch.Control
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchControlPrimitiveProps = ComponentPropsWithoutRef<typeof RadixSwitchRoot>;
+type SwitchControlPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
 interface SwitchControlProps extends Omit<SwitchControlPrimitiveProps, keyof SwitchSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, SwitchControlProps>(
     ({ id, className, ...props }, ref) => {
-        const { switchId, checked, onCheckedChange, defaultChecked, disabled, size } =
-            useSwitchContext();
+        const { switchId, size, ...context } = useSwitchContext();
+        const [switchProps] = createSplitProps<SwitchBaseProps>()(context, [
+            'checked',
+            'onCheckedChange',
+            'defaultChecked',
+            'disabled',
+            'readOnly',
+            'required',
+        ]);
 
         return (
-            <RadixSwitchRoot
+            <BaseSwitch.Root
                 ref={ref}
                 id={id || switchId}
-                checked={checked}
-                defaultChecked={defaultChecked}
-                onCheckedChange={onCheckedChange}
-                disabled={disabled}
                 className={clsx(styles.control({ size }), className)}
+                {...switchProps}
                 {...props}
             >
-                <RadixSwitchIndicator className={styles.indicator({ size })} />
-            </RadixSwitchRoot>
+                <BaseSwitch.Thumb className={styles.indicator({ size })} />
+            </BaseSwitch.Root>
         );
     },
 );

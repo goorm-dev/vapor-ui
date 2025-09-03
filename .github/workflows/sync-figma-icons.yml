@@ -1,0 +1,208 @@
+name: '[CI] Sync Icons'
+
+on:
+    workflow_dispatch:
+    schedule:
+        # Run every Thursday at 4 PM KST (07:00 UTC)
+        - cron: '0 7 * * 4'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    sync-figma-icons:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
+            - name: Sync Basic Icons
+              id: sync_basic
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  TYPE: basic
+              run: |
+                  echo "🚀 Syncing basic icons"
+                  TYPE=basic node ./scripts/syncFigmaIcons.js | tee basic_sync_output.txt
+
+                  # Extract sync results from output
+                  NEW_BASIC=$(grep "FIGMA_SYNC_NEW_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
+                  UPDATED_BASIC=$(grep "FIGMA_SYNC_UPDATED_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
+
+                  echo "new_icons=$NEW_BASIC" >> $GITHUB_OUTPUT
+                  echo "updated_icons=$UPDATED_BASIC" >> $GITHUB_OUTPUT
+
+            - name: Sync Symbol Icons
+              id: sync_symbol
+              env:
+                  FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+                  TYPE: symbol
+              run: |
+                  echo "🚀 Syncing symbol icons"
+                  TYPE=symbol node ./scripts/syncFigmaIcons.js | tee symbol_sync_output.txt
+
+                  # Extract sync results from output
+                  NEW_SYMBOL=$(grep "FIGMA_SYNC_NEW_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
+                  UPDATED_SYMBOL=$(grep "FIGMA_SYNC_UPDATED_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
+
+                  echo "new_icons=$NEW_SYMBOL" >> $GITHUB_OUTPUT
+                  echo "updated_icons=$UPDATED_SYMBOL" >> $GITHUB_OUTPUT
+
+            - name: Format generated files
+              run: |
+                  pnpm icons format
+
+            - name: Create branch and commit changes
+              run: |
+                  # Check if there are changes in the icons directory
+                  if [[ -n $(git status --porcelain packages/icons/src/) ]]; then
+                      BRANCH_NAME="sync-figma-icons-$(date +%Y%m%d-%H%M%S)"
+                      echo "branch_name=$BRANCH_NAME" >> $GITHUB_ENV
+
+                      git config --local user.email "action@github.com"
+                      git config --local user.name "GitHub Action"
+
+                      # Ensure we have the latest main branch
+                      git fetch origin main
+                      git checkout main
+                      git pull origin main
+
+                      # Create new branch from main
+                      git switch -c $BRANCH_NAME
+
+                      # Create changeset with details about updated icons
+                      CHANGESET_FILE=".changeset/sync-icons-$(date +%Y%m%d%H%M%S).md"
+                      
+                      # Get icon lists for changeset
+                      NEW_BASIC=$(grep "FIGMA_SYNC_NEW_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
+                      NEW_SYMBOL=$(grep "FIGMA_SYNC_NEW_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
+                      UPDATED_BASIC=$(grep "FIGMA_SYNC_UPDATED_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
+                      UPDATED_SYMBOL=$(grep "FIGMA_SYNC_UPDATED_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
+
+                      # Determine if we have new icons (minor) or just updates (patch)
+                      if [[ -n "$NEW_BASIC" || -n "$NEW_SYMBOL" ]]; then
+                          # Minor version for new icons
+                          echo "---" > "$CHANGESET_FILE"
+                          echo "\"@vapor-ui/icons\": minor" >> "$CHANGESET_FILE"
+                          echo "---" >> "$CHANGESET_FILE"
+                          echo "" >> "$CHANGESET_FILE"
+                          
+                          # Create title with new icons list
+                          echo "Add new icons from Figma" >> "$CHANGESET_FILE"
+                          echo "" >> "$CHANGESET_FILE"
+                          
+                          if [[ -n "$NEW_BASIC" ]]; then
+                              echo "**New Basic Icons:** \`$(echo $NEW_BASIC | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                          fi
+                          if [[ -n "$NEW_SYMBOL" ]]; then
+                              echo "**New Symbol Icons:** \`$(echo $NEW_SYMBOL | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                          fi
+                          
+                          # Add updated icons if any
+                          if [[ -n "$UPDATED_BASIC" || -n "$UPDATED_SYMBOL" ]]; then
+                              echo "" >> "$CHANGESET_FILE"
+                              echo "**Also Updated:**" >> "$CHANGESET_FILE"
+                              if [[ -n "$UPDATED_BASIC" ]]; then
+                                  echo "- Basic Icons: \`$(echo $UPDATED_BASIC | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                              fi
+                              if [[ -n "$UPDATED_SYMBOL" ]]; then
+                                  echo "- Symbol Icons: \`$(echo $UPDATED_SYMBOL | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                              fi
+                          fi
+                      else
+                          # Patch version for updated icons only
+                          echo "---" > "$CHANGESET_FILE"
+                          echo "\"@vapor-ui/icons\": patch" >> "$CHANGESET_FILE"
+                          echo "---" >> "$CHANGESET_FILE"
+                          echo "" >> "$CHANGESET_FILE"
+                          
+                          # Create title with updated icons list
+                          echo "Update icons from Figma" >> "$CHANGESET_FILE"
+                          echo "" >> "$CHANGESET_FILE"
+                          
+                          if [[ -n "$UPDATED_BASIC" ]]; then
+                              echo "**Updated Basic Icons:** \`$(echo $UPDATED_BASIC | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                          fi
+                          if [[ -n "$UPDATED_SYMBOL" ]]; then
+                              echo "**Updated Symbol Icons:** \`$(echo $UPDATED_SYMBOL | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                          fi
+                          
+                          # Fallback if no specific icons listed
+                          if [[ -z "$UPDATED_BASIC" && -z "$UPDATED_SYMBOL" ]]; then
+                              echo "Some icons have been updated with the latest changes from Figma." >> "$CHANGESET_FILE"
+                          fi
+                      fi
+
+                      # Add all changes including the changeset
+                      git add packages/icons/src/ .changeset/
+                      git commit -m "feat: sync icons from Figma
+
+                      🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+                      Co-Authored-By: GitHub Action <action@github.com>"
+                      git push -u origin $BRANCH_NAME
+                  fi
+
+            - name: Create Pull Request
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  # Check if a branch was created (indicates changes were found)
+                  if [[ -n "${branch_name:-}" ]]; then
+                      # Prepare icon lists for PR body
+                      NEW_BASIC_ICONS="${{ steps.sync_basic.outputs.new_icons }}"
+                      NEW_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.new_icons }}"
+                      UPDATED_BASIC_ICONS="${{ steps.sync_basic.outputs.updated_icons }}"
+                      UPDATED_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.updated_icons }}"
+
+                      # Determine version bump type for PR body
+                      if [[ -n "$NEW_BASIC_ICONS" || -n "$NEW_SYMBOL_ICONS" ]]; then
+                          VERSION_BUMP="Minor"
+                      else
+                          VERSION_BUMP="Patch"
+                      fi
+
+                      # Create PR body
+                      cat > pr_body.txt << EOF
+                  ## 🤖 Automated Icon Sync from Figma
+
+                  This PR syncs icons from Figma.
+
+                  ### Sync Summary
+                  | Category         | Details                          |
+                  | ---------------- | -------------------------------- |
+                  | **Version Bump** | $VERSION_BUMP |
+                  | **Workflow Run** | [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+
+                  ### Changes
+                  EOF
+                      if [[ -n "$NEW_BASIC_ICONS" ]]; then
+                          echo "**New Basic Icons:** \`$(echo $NEW_BASIC_ICONS | sed 's/,/\`, \`/g')\`" >> pr_body.txt
+                          echo "" >> pr_body.txt
+                      fi
+                      if [[ -n "$NEW_SYMBOL_ICONS" ]]; then
+                          echo "**New Symbol Icons:** \`$(echo $NEW_SYMBOL_ICONS | sed 's/,/\`, \`/g')\`" >> pr_body.txt
+                          echo "" >> pr_body.txt
+                      fi
+                      if [[ -n "$UPDATED_BASIC_ICONS" ]]; then
+                          echo "**Updated Basic Icons:** \`$(echo $UPDATED_BASIC_ICONS | sed 's/,/\`, \`/g')\`" >> pr_body.txt
+                          echo "" >> pr_body.txt
+                      fi
+                      if [[ -n "$UPDATED_SYMBOL_ICONS" ]]; then
+                          echo "**Updated Symbol Icons:** \`$(echo $UPDATED_SYMBOL_ICONS | sed 's/,/\`, \`/g')\`" >> pr_body.txt
+                          echo "" >> pr_body.txt
+                      fi
+
+                      gh pr create \
+                      --title "feat: sync icons from Figma" \
+                      --body-file pr_body.txt \
+                      --base main \
+                      --head "${branch_name}"
+
+                      # Clean up temporary file
+                      rm -f pr_body.txt
+                  fi

@@ -56,7 +56,7 @@ export const control = recipe({
             padding: vars.size.space['000'],
 
             selectors: {
-                '&[data-state="checked"], &[data-state="indeterminate"]': {
+                '&[data-checked], &[data-indeterminate]': {
                     backgroundColor: vars.color.background.primary,
                 },
             },

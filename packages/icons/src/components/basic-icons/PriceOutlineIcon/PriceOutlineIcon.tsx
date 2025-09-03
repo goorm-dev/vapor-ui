@@ -1,7 +1,7 @@
 import IconBase, { type IconType } from '~/components/icon-base';
 
 const PriceOutlineIcon: IconType = (props) => (
-    <IconBase width="17" viewBox="0 0 17 16" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <IconBase viewBox="0 0 17 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             fillRule="evenodd"
             clipRule="evenodd"

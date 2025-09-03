@@ -1,13 +1,14 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ChangeEvent } from 'react';
 import { forwardRef, useId } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
+import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { FieldVariants, LabelVariants, RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
@@ -36,13 +37,11 @@ const [TextInputProvider, useTextInputContext] = createContext<TextInputContextT
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.div>;
-interface TextInputRootProps
-    extends Omit<TextInputPrimitiveProps, keyof TextInputSharedProps>,
-        TextInputSharedProps {}
+type TextInputPrimitiveProps = VComponentProps<'div'>;
+interface TextInputRootProps extends Assign<TextInputPrimitiveProps, TextInputSharedProps> {}
 
 const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ render, className, ...props }, ref) => {
         const textInputId = useId();
         const [textInputRootProps, otherProps] = createSplitProps<TextInputSharedProps>()(props, [
             'type',
@@ -59,15 +58,18 @@ const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
 
         const { disabled } = textInputRootProps;
 
+        const element = useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(styles.root({ disabled }), className),
+                ...otherProps,
+            },
+        });
+
         return (
             <TextInputProvider value={{ textInputId, ...textInputRootProps }}>
-                <Primitive.div
-                    ref={ref}
-                    className={clsx(styles.root({ disabled }), className)}
-                    {...otherProps}
-                >
-                    {children}
-                </Primitive.div>
+                {element}
             </TextInputProvider>
         );
     },
@@ -78,21 +80,22 @@ Root.displayName = 'TextInput.Root';
  * TextInput.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = ComponentPropsWithoutRef<typeof Primitive.label>;
+type PrimitiveLabelProps = VComponentProps<'label'>;
 interface TextInputLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, TextInputLabelProps>(
-    ({ htmlFor, className, ...props }, ref) => {
+    ({ render, htmlFor, className, ...props }, ref) => {
         const { textInputId = htmlFor, visuallyHidden } = useTextInputContext();
 
-        return (
-            <Primitive.label
-                ref={ref}
-                htmlFor={textInputId}
-                className={clsx(styles.label({ visuallyHidden }), className)}
-                {...props}
-            />
-        );
+        return useRender({
+            ref,
+            render: render || <label />,
+            props: {
+                htmlFor: htmlFor || textInputId,
+                className: clsx(styles.label({ visuallyHidden }), className),
+                ...props,
+            },
+        });
     },
 );
 Label.displayName = 'TextInput.Label';
@@ -101,14 +104,14 @@ Label.displayName = 'TextInput.Label';
  * TextInput.Field
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveInputProps = ComponentPropsWithoutRef<typeof Primitive.input>;
+type PrimitiveInputProps = VComponentProps<'input'>;
 interface TextInputFieldProps extends Omit<PrimitiveInputProps, keyof TextInputSharedProps> {}
 
 const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
-    ({ id, className, ...props }, ref) => {
+    ({ render, id: idProp, className, ...props }, ref) => {
         const {
             type,
-            textInputId = id,
+            textInputId,
             value,
             onValueChange,
             defaultValue,
@@ -119,22 +122,30 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
             placeholder,
         } = useTextInputContext();
 
-        return (
-            <Primitive.input
-                ref={ref}
-                id={textInputId}
-                type={type}
-                value={value}
-                onChange={(event) => onValueChange?.(event.target.value)}
-                defaultValue={defaultValue}
-                disabled={disabled}
-                aria-invalid={invalid}
-                readOnly={readOnly}
-                placeholder={placeholder}
-                className={clsx(styles.field({ invalid, size }), className)}
-                {...props}
-            />
-        );
+        const id = idProp || textInputId;
+
+        return useRender({
+            ref,
+            render: render || <input />,
+            props: {
+                id,
+                type,
+                value,
+                onChange(event: ChangeEvent<HTMLInputElement>) {
+                    if (event.defaultPrevented) return;
+                    if (disabled || readOnly) return;
+
+                    onValueChange?.(event.target.value);
+                },
+                defaultValue,
+                disabled,
+                'aria-invalid': invalid,
+                readOnly,
+                placeholder,
+                className: clsx(styles.field({ invalid, size }), className),
+                ...props,
+            },
+        });
     },
 );
 Field.displayName = 'TextInput.Field';

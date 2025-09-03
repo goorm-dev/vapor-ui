@@ -194,6 +194,7 @@ export { default as SchoolIcon } from './SchoolIcon';
 export { default as ParentsIcon } from './ParentsIcon';
 export { default as AiSmartieIcon } from './AiSmartieIcon';
 export { default as DashboardIcon } from './DashboardIcon';
+export { default as SidenavIcon } from './SidenavIcon';
 export { default as SlotIcon } from './SlotIcon';
 export { default as EraserIcon } from './EraserIcon';
 export { default as CakeIcon } from './CakeIcon';
@@ -541,3 +542,4 @@ export { default as ContainerShareOutlineIcon } from './ContainerShareOutlineIco
 export { default as CpuOutlineIcon } from './CpuOutlineIcon';
 export { default as CreateBranchOutlineIcon } from './CreateBranchOutlineIcon';
 export { default as ContainerStopOutlineIcon } from './ContainerStopOutlineIcon';
+export { default as LinearScaleOutlineIcon } from './LinearScaleOutlineIcon';

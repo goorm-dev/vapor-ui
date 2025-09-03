@@ -66,7 +66,7 @@ const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
             <span className={styles.iconContainer}>
                 <Icon size="40" color="var(--vapor-color-foreground-secondary-darker)" />
             </span>
-            <Text typography="body3" color="foreground-normal" className={styles.text}>
+            <Text typography="body3" foreground="normal" className={styles.text}>
                 {iconName}
             </Text>
             {isHovered && <div className={styles.dim}></div>}
@@ -76,21 +76,16 @@ const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
                     className={clsx(styles.badge, {
                         [styles[`badge_copied`]]: isCopied,
                     })}
-                    asChild
+                    render={<button className={styles.button} onClick={copyIconImportStatement} />}
                 >
-                    <button className={styles.button} onClick={copyIconImportStatement}>
-                        {isCopied ? (
-                            <CheckCircleIcon
-                                size="16"
-                                color="var(--vapor-color-foreground-success)"
-                            />
-                        ) : (
-                            <CopyIcon size="16" color="var(--vapor-color-foreground-contrast)" />
-                        )}
-                        <Text foreground={isCopied ? 'success' : 'contrast'} typography="subtitle1">
-                            {isCopied ? '코드 복사됨' : '코드 복사'}
-                        </Text>
-                    </button>
+                    {isCopied ? (
+                        <CheckCircleIcon size="16" color="var(--vapor-color-foreground-success)" />
+                    ) : (
+                        <CopyIcon size="16" color="var(--vapor-color-foreground-contrast)" />
+                    )}
+                    <Text foreground={isCopied ? 'success' : 'contrast'} typography="subtitle1">
+                        {isCopied ? '코드 복사됨' : '코드 복사'}
+                    </Text>
                 </Badge>
             )}
         </div>
