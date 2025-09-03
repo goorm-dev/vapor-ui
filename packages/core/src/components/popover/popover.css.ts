@@ -1,7 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { foregrounds } from '~/styles/mixins/foreground.css';
-import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
@@ -49,10 +47,3 @@ export const arrow = layerStyle('components', {
         },
     },
 });
-
-export const title = style([typography({ style: 'heading5' }), foregrounds({ color: 'normal' })]);
-
-export const description = style([
-    typography({ style: 'body2' }),
-    foregrounds({ color: 'normal' }),
-]);

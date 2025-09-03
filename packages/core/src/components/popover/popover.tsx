@@ -157,8 +157,9 @@ Content.displayName = 'Popover.Content';
 type TitlePrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Title>;
 interface PopoverTitleProps extends TitlePrimitiveProps {}
 
-const Title = forwardRef<HTMLHeadingElement, PopoverTitleProps>(({ className, ...props }, ref) => {
-    return <BasePopover.Title ref={ref} className={clsx(styles.title, className)} {...props} />;
+const Title = forwardRef<HTMLHeadingElement, PopoverTitleProps>((props, ref) => {
+    // NOTE: Consider whether to add styles for the Title component
+    return <BasePopover.Title ref={ref} {...props} />;
 });
 
 /* -------------------------------------------------------------------------------------------------
@@ -168,17 +169,10 @@ const Title = forwardRef<HTMLHeadingElement, PopoverTitleProps>(({ className, ..
 type DescriptionPrimitiveProps = ComponentPropsWithoutRef<typeof BasePopover.Description>;
 interface PopoverDescriptionProps extends DescriptionPrimitiveProps {}
 
-const Description = forwardRef<HTMLParagraphElement, PopoverDescriptionProps>(
-    ({ className, ...props }, ref) => {
-        return (
-            <BasePopover.Description
-                ref={ref}
-                className={clsx(styles.description, className)}
-                {...props}
-            />
-        );
-    },
-);
+const Description = forwardRef<HTMLParagraphElement, PopoverDescriptionProps>((props, ref) => {
+    // NOTE: Consider whether to add styles for the Description component
+    return <BasePopover.Description ref={ref} {...props} />;
+});
 
 /* -----------------------------------------------------------------------------------------------*/
 
