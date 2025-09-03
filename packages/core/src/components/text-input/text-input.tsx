@@ -2,16 +2,16 @@
 
 import { forwardRef } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
+import { Input as BaseInput } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
-import type { VComponentProps } from '~/utils/types';
+import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { FieldVariants, RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
 
-type Override<T, U> = Omit<T, keyof U> & Partial<U>;
+// type Override<T, U> = Omit<T, keyof U> & Partial<U>;
 
 type TextInputVariants = RootVariants & FieldVariants;
 type BaseProps = TextInputVariants & {
@@ -25,8 +25,8 @@ type BaseProps = TextInputVariants & {
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputPrimitiveProps = VComponentProps<typeof Primitive.input>;
-interface TextInputProps extends Override<TextInputPrimitiveProps, BaseProps> {}
+type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
+interface TextInputProps extends Assign<TextInputPrimitiveProps, BaseProps> {}
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ({ onValueChange, className, ...props }, ref) => {
@@ -39,7 +39,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         const { disabled, invalid, size } = textInputRootProps;
 
         return (
-            <Primitive.input
+            <BaseInput
                 ref={ref}
                 aria-invalid={invalid}
                 disabled={disabled}

@@ -31,7 +31,7 @@ export const control = recipe({
             cursor: 'pointer',
 
             selectors: {
-                '&[data-state="checked"]': {
+                '&[data-checked]': {
                     backgroundColor: vars.color.background.primary,
                 },
             },
@@ -72,7 +72,7 @@ export const indicator = recipe({
         backgroundColor: 'white',
 
         selectors: {
-            '&[data-state="checked"]': { transform: 'translateX(100%)' },
+            '&[data-checked]': { transform: 'translateX(100%)' },
         },
     }),
 

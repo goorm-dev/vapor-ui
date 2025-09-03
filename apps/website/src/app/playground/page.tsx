@@ -20,7 +20,7 @@ import PageWrapper from './_components/page-wrapper';
 import RenderingTemplate from './_components/rendering-template';
 
 const AVATAR_PROPS = {
-    src: 'https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg',
+    src: 'https://statics.goorm.io/gds/docs/images/vapor-log.svg',
     alt: 'vapor-ui',
 };
 
@@ -240,9 +240,8 @@ const Page = () => {
                     <RenderingTemplate.Title title="Dialog" />
                     <RenderingTemplate.Component>
                         <Dialog.Root>
-                            <Dialog.Trigger asChild>
-                                <Button>트리거</Button>
-                            </Dialog.Trigger>
+                            <Dialog.Trigger render={<Button>트리거</Button>} />
+
                             <Dialog.Portal>
                                 <Dialog.Overlay />
                                 <Dialog.Content>
