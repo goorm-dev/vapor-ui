@@ -41,7 +41,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     const [searchQuery, setSearchQuery] = useState('');
 
     // Payment method state
-    const [paymentMethod, setPaymentMethod] = useState('card');
+    const [paymentMethod, setPaymentMethod] = useState<string>('card');
 
     // ================================
     // EVENT HANDLERS
@@ -130,8 +130,8 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     const CreditPurchaseCard = () => (
         <Card.Root className="w-full max-[767px]:border-l-0 max-[767px]:border-r-0 max-[767px]:rounded-none">
             <Card.Header>
-                <Text typography="heading6" foreground="normal" asChild>
-                    <h6>크레딧 구매</h6>
+                <Text typography="heading6" foreground="normal" render={<h6 />}>
+                    크레딧 구매
                 </Text>
             </Card.Header>
             <Card.Body>
@@ -229,8 +229,8 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     const TemplateListCard = () => (
         <Card.Root className="w-full max-[767px]:border-l-0 max-[767px]:border-r-0 max-[767px]:rounded-none">
             <Card.Header>
-                <Text asChild foreground="normal" typography="heading6">
-                    <h6>템플릿 리스트</h6>
+                <Text render={<h6 />} foreground="normal" typography="heading6">
+                    템플릿 리스트
                 </Text>
             </Card.Header>
             <Card.Body>
@@ -261,7 +261,9 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
                 <RadioGroup.Root
                     name="payment-method"
                     value={paymentMethod}
-                    onValueChange={setPaymentMethod}
+                    onValueChange={(value) => {
+                        if (typeof value === 'string') setPaymentMethod(value);
+                    }}
                     className="flex flex-col gap-4"
                 >
                     <RadioGroup.Item value="card">

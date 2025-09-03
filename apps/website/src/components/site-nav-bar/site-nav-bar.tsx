@@ -113,12 +113,17 @@ export const SiteNavBar = () => {
                             </Link>
 
                             <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem className="text-sm" href="/docs" asChild>
-                                    <Link>Docs</Link>
-                                </Nav.LinkItem>
-                                <Nav.LinkItem className="text-sm" href="/playground" asChild>
-                                    <Link>Theme Playground</Link>
-                                </Nav.LinkItem>
+                                <Nav.LinkItem
+                                    className="text-sm"
+                                    href="/docs"
+                                    render={<Link>Docs</Link>}
+                                />
+
+                                <Nav.LinkItem
+                                    className="text-sm"
+                                    href="/playground"
+                                    render={<Link>Theme Playground</Link>}
+                                />
                             </Nav.List>
                         </div>
                         <div className="flex items-center gap-10">
@@ -127,16 +132,19 @@ export const SiteNavBar = () => {
                                     return (
                                         <Nav.Item key={item.text}>
                                             <IconButton
-                                                asChild
+                                                aria-label={item.text}
                                                 size="lg"
                                                 color="secondary"
                                                 variant="ghost"
-                                                aria-label={item.text}
-                                            >
-                                                <Nav.Link asChild className="p-0">
-                                                    <Link href={item.url}>{item.icon}</Link>
-                                                </Nav.Link>
-                                            </IconButton>
+                                                render={
+                                                    <Nav.Link
+                                                        render={
+                                                            <Link href={item.url}>{item.icon}</Link>
+                                                        }
+                                                        className="p-0"
+                                                    />
+                                                }
+                                            />
                                         </Nav.Item>
                                     );
                                 })}
@@ -199,12 +207,10 @@ export const SiteNavBar = () => {
                                 <Text
                                     className="flex items-center gap-2 text-base"
                                     onClick={() => setIsOpen(false)}
-                                    asChild
+                                    render={<h6 />}
                                 >
-                                    <h6>
-                                        {item.type === 'icon' ? item.icon : null}
-                                        {hasText(item) ? item.text : null}
-                                    </h6>
+                                    {item.type === 'icon' ? item.icon : null}
+                                    {hasText(item) ? item.text : null}
                                 </Text>
                                 <IconButton
                                     size="md"
@@ -237,11 +243,9 @@ export const SiteNavBar = () => {
                                 gap: 'var(--vapor-size-space-100, 8px)',
                             }}
                         >
-                            <Text className="flex items-center gap-2 text-base" asChild>
-                                <h6>
-                                    {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
-                                    {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                                </h6>
+                            <Text className="flex items-center gap-2 text-base" render={<h6 />}>
+                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
                             </Text>
                             <IconButton
                                 size="md"

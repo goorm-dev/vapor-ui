@@ -100,26 +100,22 @@ export default function HomePage() {
                                     <Text
                                         typography="display4"
                                         foreground="normal"
-                                        asChild
+                                        render={<h1 />}
                                         className="hidden md:block"
                                     >
-                                        <h1>
-                                            Kickstart your project
-                                            <br />
-                                            with our UI Kit.
-                                        </h1>
+                                        Kickstart your project
+                                        <br />
+                                        with our UI Kit.
                                     </Text>
                                     <Text
                                         typography="heading2"
                                         foreground="normal"
-                                        asChild
+                                        render={<h1 />}
                                         className="md:hidden"
                                     >
-                                        <h1>
-                                            Kickstart your project
-                                            <br />
-                                            with our UI Kit.
-                                        </h1>
+                                        Kickstart your project
+                                        <br />
+                                        with our UI Kit.
                                     </Text>
                                 </div>
 
@@ -166,38 +162,43 @@ export default function HomePage() {
                                     </div>
                                     <div className="flex items-center gap-[var(--vapor-size-space-100)]">
                                         <Badge
-                                            asChild
+                                            render={<kbd />}
                                             color="hint"
                                             size="md"
                                             shape="square"
                                             className="text-lg"
                                         >
-                                            <kbd>⌘</kbd>
+                                            ⌘
                                         </Badge>
                                         <Badge
-                                            asChild
+                                            render={<kbd />}
                                             color="hint"
                                             size="md"
                                             shape="square"
                                             className="h-[24px] w-[24px]"
                                         >
-                                            <kbd>K</kbd>
+                                            K
                                         </Badge>
                                     </div>
                                 </div>
                             </button>
                         </div>
 
-                        <Button size="lg" color="secondary" className={'w-full md:w-auto'} asChild>
-                            <Link href="/docs">
-                                Docs 보러 가기
-                                <ForwardPageOutlineIcon
-                                    width="24"
-                                    height="24"
-                                    color="var(--vapor-color-foreground-secondary)"
-                                />
-                            </Link>
-                        </Button>
+                        <Button
+                            size="lg"
+                            color="secondary"
+                            className={'w-full md:w-auto'}
+                            render={
+                                <Link href="/docs">
+                                    Docs 보러 가기
+                                    <ForwardPageOutlineIcon
+                                        width="24"
+                                        height="24"
+                                        color="var(--vapor-color-foreground-secondary)"
+                                    />
+                                </Link>
+                            }
+                        ></Button>
                     </div>
                 </section>
                 <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-background-normal)]">
@@ -206,18 +207,18 @@ export default function HomePage() {
                             <Text
                                 typography="heading2"
                                 foreground="normal"
-                                asChild
+                                render={<h2 />}
                                 className="max-[575px]:hidden"
                             >
-                                <h2>Instantly customize your theme</h2>
+                                Instantly customize your theme
                             </Text>
                             <Text
                                 typography="heading3"
                                 foreground="normal"
-                                asChild
+                                render={<h3 />}
                                 className="hidden max-[575px]:block"
                             >
-                                <h3>Instantly customize your theme</h3>
+                                Instantly customize your theme
                             </Text>
                             <Text typography="body1" foreground="normal">
                                 샘플 테마를 통해 Vapor가 어떻게 변화하는지 확인하고,
