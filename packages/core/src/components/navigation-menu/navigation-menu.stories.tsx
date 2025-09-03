@@ -1,5 +1,6 @@
 import type { StoryObj } from '@storybook/react';
 
+import { VStack } from '../v-stack';
 import { NavigationMenu } from './navigation-menu';
 
 export default {
@@ -35,6 +36,66 @@ export const Default: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
+                            <NavigationMenu.Trigger>
+                                Overview
+                                <NavigationMenu.TriggerIndicator />
+                            </NavigationMenu.Trigger>
+                            <NavigationMenu.Panel>
+                                <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={args.disabled} href="#">
+                                            Sub Link 1
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={args.disabled} href="#">
+                                            Sub Link 2
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={args.disabled} href="#">
+                                            Sub Link 3
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={args.disabled} href="#">
+                                            Sub Link 4
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                </NavigationMenu.List>
+                            </NavigationMenu.Panel>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Trigger>
+                                Trigger 2
+                                <NavigationMenu.TriggerIndicator />
+                            </NavigationMenu.Trigger>
+                            <NavigationMenu.Panel>
+                                <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={args.disabled} href="#">
+                                            Sub Link 1
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={args.disabled} href="#">
+                                            Sub Link 2
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={args.disabled} href="#">
+                                            Sub Link 3
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={args.disabled} href="#">
+                                            Sub Link 4
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                </NavigationMenu.List>
+                            </NavigationMenu.Panel>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
                             <NavigationMenu.Link disabled={args.disabled} href="#">
                                 23411234
                             </NavigationMenu.Link>
@@ -48,6 +109,14 @@ export const Default: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
+
+                    <NavigationMenu.Portal>
+                        <NavigationMenu.Positioner>
+                            <NavigationMenu.Popup>
+                                <NavigationMenu.Viewport />
+                            </NavigationMenu.Popup>
+                        </NavigationMenu.Positioner>
+                    </NavigationMenu.Portal>
                 </NavigationMenu.Root>
             </>
         );
