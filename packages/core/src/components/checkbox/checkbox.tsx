@@ -21,6 +21,7 @@ type CheckboxSharedProps = CheckboxVariants & {
     onCheckedChange?: (checked: boolean) => void;
     defaultChecked?: boolean;
     indeterminate?: boolean;
+    readOnly?: boolean;
 };
 
 type CheckboxContext = CheckboxSharedProps & {
@@ -51,6 +52,7 @@ const Root = forwardRef<HTMLDivElement, CheckboxRootProps>(({ className, ...prop
         'invalid',
         'disabled',
         'visuallyHidden',
+        'readOnly',
     ]);
 
     const { disabled } = checkboxProps;
@@ -107,6 +109,7 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
             invalid,
             disabled,
             size,
+            readOnly,
         } = useCheckboxContext();
 
         const [checkedState, setCheckedState] = useControllableState<CheckedState>({
@@ -124,9 +127,11 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
                 ref={ref}
                 id={checkboxId || id}
                 checked={checkedState}
-                onCheckedChange={setCheckedState}
+                onCheckedChange={readOnly ? undefined : setCheckedState}
                 disabled={disabled}
                 aria-invalid={invalid}
+                aria-readonly={readOnly}
+                data-readonly={readOnly}
                 className={clsx(styles.control({ invalid, size }), className)}
                 {...props}
             >

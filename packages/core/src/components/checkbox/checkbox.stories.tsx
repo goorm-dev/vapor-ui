@@ -14,6 +14,7 @@ export default {
         disabled: { control: 'boolean' },
         invalid: { control: 'boolean' },
         visuallyHidden: { control: 'boolean' },
+        readOnly: { control: 'boolean' },
     },
 } as Meta<typeof Checkbox.Root>;
 
@@ -126,6 +127,21 @@ export const TestBed: Story = {
                     </Checkbox.Root>
                 </Flex>
 
+                <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
+                    <Checkbox.Root readOnly>
+                        <Checkbox.Label>ReadOnly</Checkbox.Label>
+                        <Checkbox.Control />
+                    </Checkbox.Root>
+                    <Checkbox.Root checked readOnly>
+                        <Checkbox.Label>ReadOnly Checked</Checkbox.Label>
+                        <Checkbox.Control />
+                    </Checkbox.Root>
+                    <Checkbox.Root indeterminate readOnly>
+                        <Checkbox.Label>ReadOnly Indeterminate</Checkbox.Label>
+                        <Checkbox.Control />
+                    </Checkbox.Root>
+                </Flex>
+
                 <Checkbox.Root size="md">
                     <Checkbox.Label>MD</Checkbox.Label>
                     <Checkbox.Control />
@@ -144,7 +160,6 @@ export const TestBed: Story = {
         );
     },
 };
-
 /* -----------------------------------------------------------------------------------------------*/
 
 type CheckboxItems = Record<string, boolean>;
