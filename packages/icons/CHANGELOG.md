@@ -1,5 +1,22 @@
 # @vapor-ui/icons
 
+## 0.3.0
+
+### Minor Changes
+
+- c4d0e8e: Add new icons from Figma
+
+    **New Basic Icons:** `LinearScaleOutlineIcon`
+
+    **Also Updated:**
+
+    - Basic Icons: `PlayIcon`, `ReplaceIcon`, `ClassIcon`, `ArrowUpOutlineIcon`, `ArrowDownOutlineIcon`, `TerminalOutlineIcon`, `ViewShrinkOutlineIcon`, `FolderSearchIcon`, `StarOutlineIcon`, `PriceOutlineIcon`, `HistoryOutlineIcon`, `CardsOutlineIcon`, `ZoomOutOutlineIcon`, `IntelliSensePropertyOutlineIcon`, `CorrectOutlineIcon`, `ChevronDoubleRightOutlineIcon`, `AutoCodeOutlineIcon`, `ChapterOutlineIcon`
+    - Symbol Icons: `RstudioColorIcon`
+
+- a156f82: Add new icons from Figma
+
+    **New Basic Icons:** `SidenavIcon`
+
 ## 0.2.0
 
 ### Minor Changes
@@ -15,10 +32,6 @@
     - Updated approximately 190 existing icons with refined SVG paths and improved rendering
     - Minor coordinate adjustments for better visual consistency
     - Enhanced clipPath definitions where needed
-
-    ```
-
-    ```
 
 ## 0.1.0
 
