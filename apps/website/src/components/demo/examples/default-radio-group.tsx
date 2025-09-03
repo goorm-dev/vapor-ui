@@ -5,11 +5,11 @@ export default function DefaultRadioGroup() {
         <RadioGroup.Root name="fruits">
             <RadioGroup.Item value="apple">
                 <RadioGroup.Control />
-                <RadioGroup.Label>Apple</RadioGroup.Label>
+                Apple
             </RadioGroup.Item>
             <RadioGroup.Item value="orange">
                 <RadioGroup.Control />
-                <RadioGroup.Label>Orange</RadioGroup.Label>
+                Orange
             </RadioGroup.Item>
         </RadioGroup.Root>
     );
