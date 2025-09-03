@@ -29,7 +29,6 @@ jobs:
 
             - name: Install Dependencies
               run: |
-                  pnpm install --no-frozen-lockfile
                   pnpm install --frozen-lockfile
 
             - name: Create .npmrc file
@@ -56,3 +55,20 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Update releases documentation
+              if: steps.changesets.outputs.published == 'false'
+              run: node scripts/update-releases.mjs
+
+            - name: Format releases documentation
+              if: steps.changesets.outputs.published == 'false'
+              run: pnpm prettier --write apps/website/content/docs/getting-started/releases.md
+
+            - name: Commit updated releases documentation
+              if: steps.changesets.outputs.published == 'false'
+              run: |
+                  if [[ -n $(git status --porcelain) ]]; then
+                      git add apps/website/content/docs/getting-started/releases.md
+                      git commit -m "docs: update releases.md with latest changelogs"
+                      git push --set-upstream origin changeset-release/main
+                  fi

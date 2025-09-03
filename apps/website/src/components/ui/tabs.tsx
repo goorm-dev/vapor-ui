@@ -126,21 +126,25 @@ const Button = forwardRef<ButtonElement, ButtonProps>(({ className, children, ..
     const { size, stretch } = useTabsContext();
 
     return (
-        <Text asChild typography={SIZE_TO_TEXT_TYPO[size]} title={children as string}>
-            <TabsButton
-                ref={ref}
-                className={clsx(
-                    styles.tab,
-                    styles[`tab_${size}`],
-                    {
-                        [styles.tab_stretch]: stretch,
-                    },
-                    className,
-                )}
-                {...props}
-            >
-                {children}
-            </TabsButton>
+        <Text
+            render={
+                <TabsButton
+                    ref={ref}
+                    className={clsx(
+                        styles.tab,
+                        styles[`tab_${size}`],
+                        {
+                            [styles.tab_stretch]: stretch,
+                        },
+                        className,
+                    )}
+                    {...props}
+                />
+            }
+            typography={SIZE_TO_TEXT_TYPO[size]}
+            title={children as string}
+        >
+            {children}
         </Text>
     );
 });
