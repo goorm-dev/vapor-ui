@@ -61,7 +61,7 @@ export const list = recipe({
     ],
 });
 
-const buttonBase = style([
+const triggerBase = style([
     foregrounds({ color: 'normal' }),
     interaction({ scale: 'light' }),
     layerStyle('components', {
@@ -78,8 +78,8 @@ const buttonBase = style([
     }),
 ]);
 
-export const button = recipe({
-    base: buttonBase,
+export const trigger = recipe({
+    base: triggerBase,
 
     defaultVariants: { size: 'md', disabled: false, orientation: 'horizontal' },
     variants: {
@@ -152,4 +152,4 @@ export const indicator = recipe({
 });
 
 export type ListVariants = NonNullable<RecipeVariants<typeof list>>;
-export type ButtonVariants = NonNullable<RecipeVariants<typeof button>>;
+export type TriggerVariants = NonNullable<RecipeVariants<typeof trigger>>;

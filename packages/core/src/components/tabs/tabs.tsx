@@ -7,9 +7,9 @@ import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
 
 import * as styles from './tabs.css';
-import type { ButtonVariants, ListVariants } from './tabs.css';
+import type { ListVariants, TriggerVariants } from './tabs.css';
 
-type TabsVariants = ListVariants & ButtonVariants;
+type TabsVariants = ListVariants & TriggerVariants;
 type TabsSharedProps = TabsVariants & { activateOnFocus?: boolean; loop?: boolean };
 type TabsContext = TabsSharedProps;
 
@@ -49,6 +49,7 @@ const Root = forwardRef<HTMLDivElement, TabsRootProps>(({ className, ...props },
         </TabsProvider>
     );
 });
+Root.displayName = 'Tabs.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Tabs.List
@@ -70,15 +71,16 @@ const List = forwardRef<HTMLDivElement, TabsListProps>(({ className, ...props },
         />
     );
 });
+List.displayName = 'Tabs.List';
 
 /* -------------------------------------------------------------------------------------------------
- * Tabs.Button
+ * Tabs.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type ButtonPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Tab>;
-interface TabsButtonProps extends ButtonPrimitiveProps {}
+type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Tab>;
+interface TabsTriggerProps extends TriggerPrimitiveProps {}
 
-const Button = forwardRef<HTMLButtonElement, TabsButtonProps>(
+const Trigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
     ({ disabled: disabledProp, className, ...props }, ref) => {
         const { disabled: rootDisabled, size, orientation } = useTabsContext();
 
@@ -88,12 +90,13 @@ const Button = forwardRef<HTMLButtonElement, TabsButtonProps>(
             <BaseTabs.Tab
                 ref={ref}
                 disabled={disabled}
-                className={clsx(styles.button({ size, disabled, orientation }), className)}
+                className={clsx(styles.trigger({ size, disabled, orientation }), className)}
                 {...props}
             />
         );
     },
 );
+Trigger.displayName = 'Tabs.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Tabs.Indicator
@@ -113,6 +116,7 @@ const Indicator = forwardRef<HTMLDivElement, TabsIndicatorProps>(({ className, .
         />
     );
 });
+Indicator.displayName = 'Tabs.Indicator';
 
 /* -------------------------------------------------------------------------------------------------
  * Tabs.Panel
@@ -124,23 +128,24 @@ interface TabsPanelProps extends PanelPrimitiveProps {}
 const Panel = forwardRef<HTMLDivElement, TabsPanelProps>((props, ref) => {
     return <BaseTabs.Panel ref={ref} {...props} />;
 });
+Panel.displayName = 'Tabs.Panel';
 
 /* -----------------------------------------------------------------------------------------------*/
 
 export {
     Root as TabsRoot,
     List as TabsList,
-    Button as TabsButton,
+    Trigger as TabsTrigger,
     Indicator as TabsIndicator,
     Panel as TabsPanel,
 };
 
-export type { TabsRootProps, TabsListProps, TabsButtonProps, TabsIndicatorProps, TabsPanelProps };
+export type { TabsRootProps, TabsListProps, TabsTriggerProps, TabsIndicatorProps, TabsPanelProps };
 
 export const Tabs = {
     Root,
     List,
-    Button,
+    Trigger,
     Indicator,
     Panel,
 };
