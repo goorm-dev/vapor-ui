@@ -243,11 +243,9 @@ export const SiteNavBar = () => {
                                 gap: 'var(--vapor-size-space-100, 8px)',
                             }}
                         >
-                            <Text className="flex items-center gap-2 text-base" asChild>
-                                <h6>
-                                    {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
-                                    {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                                </h6>
+                            <Text className="flex items-center gap-2 text-base" render={<h6 />}>
+                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
                             </Text>
                             <IconButton
                                 size="md"
