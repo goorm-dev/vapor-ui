@@ -60,8 +60,9 @@ const ColorSelector = ({ checkedColor, bgColor }: { checkedColor: string; bgColo
     const isChecked = checkedColor === bgColor;
 
     return (
-        <RadioGroup.Item value={bgColor} className={styles.colorSelector} visuallyHidden>
+        <RadioGroup.Item value={bgColor} className={styles.colorSelector}>
             <RadioGroup.Control
+                aria-label={bgColor}
                 style={
                     !isChecked
                         ? {
@@ -71,7 +72,6 @@ const ColorSelector = ({ checkedColor, bgColor }: { checkedColor: string; bgColo
                         : {}
                 }
             />
-            <RadioGroup.Label>{bgColor}</RadioGroup.Label>
         </RadioGroup.Item>
     );
 };
