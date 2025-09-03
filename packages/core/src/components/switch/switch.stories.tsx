@@ -10,6 +10,7 @@ export default {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
         disabled: { control: 'boolean' },
         visuallyHidden: { control: 'boolean' },
+        readOnly: { control: 'boolean' },
     },
 } as Meta<typeof Switch.Root>;
 
@@ -46,6 +47,16 @@ export const TestBed: Story = {
                 <Switch.Root visuallyHidden>
                     <Switch.Control />
                     <Switch.Label>Test Bed</Switch.Label>
+                </Switch.Root>
+
+                <Switch.Root readOnly>
+                    <Switch.Control />
+                    <Switch.Label>ReadOnly Switch</Switch.Label>
+                </Switch.Root>
+
+                <Switch.Root checked readOnly>
+                    <Switch.Control />
+                    <Switch.Label>ReadOnly Switch (Checked)</Switch.Label>
                 </Switch.Root>
             </VStack>
         );

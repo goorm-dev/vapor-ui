@@ -19,6 +19,7 @@ type SwitchSharedProps = SwitchVariants & {
     checked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
     defaultChecked?: boolean;
+    readOnly?: boolean;
 };
 
 type SwitchContext = SwitchSharedProps & {
@@ -47,6 +48,7 @@ const Root = forwardRef<HTMLDivElement, SwitchRootProps>(({ className, ...props 
         'disabled',
         'size',
         'visuallyHidden',
+        'readOnly',
     ]);
 
     const { disabled } = switchProps;
@@ -94,9 +96,17 @@ type SwitchControlPrimitiveProps = VComponentProps<typeof RadixSwitchRoot>;
 interface SwitchControlProps extends Omit<SwitchControlPrimitiveProps, keyof SwitchSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, SwitchControlProps>(
-    ({ id, className, ...props }, ref) => {
-        const { switchId, checked, onCheckedChange, defaultChecked, disabled, size } =
+    ({ id, className, onClick, ...props }, ref) => {
+        const { switchId, checked, onCheckedChange, defaultChecked, disabled, size, readOnly } =
             useSwitchContext();
+
+        const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (readOnly) {
+                e.preventDefault();
+                return;
+            }
+            onClick?.(e);
+        };
 
         return (
             <RadixSwitchRoot
@@ -104,8 +114,11 @@ const Control = forwardRef<HTMLButtonElement, SwitchControlProps>(
                 id={id || switchId}
                 checked={checked}
                 defaultChecked={defaultChecked}
-                onCheckedChange={onCheckedChange}
+                onCheckedChange={readOnly ? undefined : onCheckedChange}
                 disabled={disabled}
+                aria-readonly={readOnly}
+                data-readonly={readOnly}
+                onClick={handleClick}
                 className={clsx(styles.control({ size }), className)}
                 {...props}
             >
