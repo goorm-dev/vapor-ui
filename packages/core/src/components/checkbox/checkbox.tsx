@@ -99,7 +99,7 @@ type ControlPrimitiveProps = VComponentProps<typeof RadixRoot>;
 interface CheckboxControlProps extends Omit<ControlPrimitiveProps, keyof CheckboxSharedProps> {}
 
 const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
-    ({ id, className, ...props }, ref) => {
+    ({ id, className, onClick, ...props }, ref) => {
         const {
             checkboxId,
             checked,
@@ -122,6 +122,14 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
             },
         });
 
+        const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (readOnly) {
+                e.preventDefault();
+                return;
+            }
+            onClick?.(e);
+        };
+
         return (
             <RadixRoot
                 ref={ref}
@@ -132,6 +140,7 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
                 aria-invalid={invalid}
                 aria-readonly={readOnly}
                 data-readonly={readOnly}
+                onClick={handleClick}
                 className={clsx(styles.control({ invalid, size }), className)}
                 {...props}
             >
