@@ -71,16 +71,17 @@ export const interaction = recipe({
             form: layerStyle('components', {
                 transition: 'border-color 150ms cubic-bezier(.4,0,.2,1)',
 
+                selectors: {
+                    '&:focus': { borderColor: vars.color.border.primary },
+                },
+
                 '@media': {
                     '(hover: hover)': {
                         selectors: {
                             '&:hover': { borderColor: `rgba(0,0,0, 0.24)` },
+                            '&:focus': { borderColor: vars.color.border.primary },
                         },
                     },
-                },
-
-                selectors: {
-                    '&:focus-visible': { borderColor: vars.color.border.primary },
                 },
             }),
             roving: {
