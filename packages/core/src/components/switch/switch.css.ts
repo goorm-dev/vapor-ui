@@ -26,6 +26,8 @@ export const control = recipe({
         interaction(),
         layerStyle('components', {
             position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
             border: 'none',
             borderRadius: '9999px',
             backgroundColor: vars.color.gray[400],
@@ -34,6 +36,21 @@ export const control = recipe({
             selectors: {
                 '&[data-checked]': {
                     backgroundColor: vars.color.background.primary,
+                },
+                '&[data-readonly]': {
+                    backgroundColor: vars.color.gray[200],
+                    border: '0.0625rem solid',
+                    borderColor: vars.color.border.normal,
+                    pointerEvents: 'none',
+                },
+                '&[data-readonly]&:hover::before': {
+                    opacity: '0',
+                },
+                '&[data-readonly]&:focus::before': {
+                    opacity: '0',
+                },
+                '&[data-readonly]&:active::before': {
+                    opacity: '0',
                 },
             },
         }),
@@ -65,7 +82,7 @@ export const indicator = recipe({
     base: layerStyle('components', {
         display: 'block',
 
-        transition: 'transform 0.1s',
+        transition: 'transform 0.1s ease',
         willChange: 'transform',
         borderRadius: '100%',
 
@@ -73,7 +90,12 @@ export const indicator = recipe({
         backgroundColor: 'white',
 
         selectors: {
-            '&[data-checked]': { transform: 'translateX(100%)' },
+            '&[data-readonly]:not([data-checked])': {
+                backgroundColor: vars.color.white,
+            },
+            '&[data-readonly][data-checked]': {
+                backgroundColor: vars.color.foreground.hint,
+            },
         },
     }),
 
@@ -83,14 +105,29 @@ export const indicator = recipe({
             sm: layerStyle('components', {
                 width: vars.size.dimension['175'],
                 height: vars.size.dimension['175'],
+                selectors: {
+                    '&[data-checked]': {
+                        transform: 'translateX(100%)',
+                    },
+                },
             }),
             md: layerStyle('components', {
                 width: vars.size.dimension['200'],
                 height: vars.size.dimension['200'],
+                selectors: {
+                    '&[data-checked]': {
+                        transform: 'translateX(100%)',
+                    },
+                },
             }),
             lg: layerStyle('components', {
                 width: vars.size.dimension['300'],
                 height: vars.size.dimension['300'],
+                selectors: {
+                    '&[data-checked]': {
+                        transform: 'translateX(100%)',
+                    },
+                },
             }),
         },
     },
