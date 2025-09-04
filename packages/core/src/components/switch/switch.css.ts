@@ -39,8 +39,8 @@ export const control = recipe({
                 },
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray[200],
-                    border: '0.0625rem solid',
-                    borderColor: vars.color.border.normal,
+                    outline: '0.0625rem solid',
+                    outlineColor: vars.color.border.normal,
                     pointerEvents: 'none',
                 },
                 '&[data-readonly]&:hover::before': {
