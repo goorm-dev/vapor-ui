@@ -133,7 +133,10 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
                 value,
                 onChange(event: ChangeEvent<HTMLInputElement>) {
                     if (event.defaultPrevented) return;
-                    if (disabled || readOnly) return;
+                    if (disabled || readOnly) {
+                        event.preventDefault();
+                        return;
+                    }
 
                     onValueChange?.(event.target.value);
                 },

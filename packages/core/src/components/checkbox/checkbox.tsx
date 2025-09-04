@@ -129,7 +129,7 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
                         event.preventDefault();
                         return;
                     }
-                    if (onCheckedChange) onCheckedChange(checked, event);
+                    onCheckedChange?.(checked, event);
                 }}
                 indeterminate={indeterminate}
                 disabled={disabled}
