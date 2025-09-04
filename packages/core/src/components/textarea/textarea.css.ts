@@ -6,13 +6,13 @@ import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: {
+    base: layerStyle('components', {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
         gap: vars.size.space[100],
         width: '100%',
-    },
+    }),
 
     defaultVariants: { disabled: false },
 
@@ -38,7 +38,6 @@ export const field = recipe({
             padding: vars.size.space['150'],
             width: '260px',
             height: '114px',
-            resize: 'both',
 
             color: vars.color.foreground.normal,
             fontSize: vars.typography.fontSize['075'],
@@ -56,7 +55,7 @@ export const field = recipe({
         }),
     ],
 
-    defaultVariants: { invalid: false, size: 'md', resizing: true, autoResize: false },
+    defaultVariants: { invalid: false, size: 'md', resizing: false, autoResize: false },
 
     variants: {
         invalid: {
@@ -71,7 +70,7 @@ export const field = recipe({
         },
 
         autoResize: {
-            true: { 
+            true: {
                 overflow: 'hidden',
                 resize: 'none',
             },

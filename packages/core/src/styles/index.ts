@@ -22,3 +22,4 @@ import '../components/radio-group/radio-group.css';
 import '../components/switch/switch.css';
 import '../components/text-input/text-input.css';
 import '../components/tooltip/tooltip.css';
+import '../components/textarea/textarea.css';
