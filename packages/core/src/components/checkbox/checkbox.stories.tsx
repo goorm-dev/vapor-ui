@@ -13,6 +13,7 @@ export default {
         size: { control: 'inline-radio', options: ['md', 'lg'] },
         disabled: { control: 'boolean' },
         invalid: { control: 'boolean' },
+        readOnly: { control: 'boolean' },
         visuallyHidden: { control: 'boolean' },
     },
 } as Meta<typeof Checkbox.Root>;
@@ -80,8 +81,8 @@ export const Default: Story = {
 export const TestBed: Story = {
     render: () => {
         return (
-            <Flex style={{ gap: 'var(--vapor-size-dimension-100)', flexDirection: 'column' }}>
-                <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
+            <Flex flexDirection="column" gap="100">
+                <Flex gap="150">
                     <Checkbox.Root>
                         <Checkbox.Label>Default</Checkbox.Label>
                         <Checkbox.Control />
@@ -96,7 +97,7 @@ export const TestBed: Story = {
                     </Checkbox.Root>
                 </Flex>
 
-                <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
+                <Flex gap="150">
                     <Checkbox.Root disabled>
                         <Checkbox.Label>Disabled</Checkbox.Label>
                         <Checkbox.Control />
@@ -111,7 +112,7 @@ export const TestBed: Story = {
                     </Checkbox.Root>
                 </Flex>
 
-                <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
+                <Flex gap="150">
                     <Checkbox.Root invalid>
                         <Checkbox.Label>Invalid</Checkbox.Label>
                         <Checkbox.Control />
@@ -122,6 +123,23 @@ export const TestBed: Story = {
                     </Checkbox.Root>
                     <Checkbox.Root indeterminate invalid>
                         <Checkbox.Label>Invalid Indeterminate</Checkbox.Label>
+                        <Checkbox.Control />
+                    </Checkbox.Root>
+                </Flex>
+
+                <Flex gap="$150">
+                    <label>
+                        <Checkbox.Root readOnly>
+                            <Checkbox.Control />
+                        </Checkbox.Root>
+                        checkbox
+                    </label>
+                    <Checkbox.Root defaultChecked readOnly>
+                        <Checkbox.Label>ReadOnly Checked</Checkbox.Label>
+                        <Checkbox.Control />
+                    </Checkbox.Root>
+                    <Checkbox.Root indeterminate readOnly>
+                        <Checkbox.Label>ReadOnly Indeterminate</Checkbox.Label>
                         <Checkbox.Control />
                     </Checkbox.Root>
                 </Flex>

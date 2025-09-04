@@ -112,6 +112,7 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
             invalid,
             disabled,
             size,
+            readOnly,
         } = useCheckboxContext();
 
         const id = idProp || checkboxId;
@@ -120,9 +121,16 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
             <BaseCheckbox.Root
                 ref={ref}
                 id={id}
+                readOnly={readOnly}
                 checked={checked}
                 defaultChecked={defaultChecked}
-                onCheckedChange={onCheckedChange}
+                onCheckedChange={(checked, event) => {
+                    if (readOnly) {
+                        event.preventDefault();
+                        return;
+                    }
+                    if (onCheckedChange) onCheckedChange(checked, event);
+                }}
                 indeterminate={indeterminate}
                 disabled={disabled}
                 aria-invalid={invalid}

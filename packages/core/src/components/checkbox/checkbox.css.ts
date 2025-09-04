@@ -26,10 +26,19 @@ export const root = recipe({
 export const label = recipe({
     base: [
         typography({ style: 'body2' }),
-        layerStyle('components', { color: vars.color.foreground.normal }),
+        layerStyle('components', {
+            color: vars.color.foreground.normal,
+            selectors: {
+                '&[data-readonly]': {
+                    pointerEvents: 'none',
+                },
+            },
+        }),
     ],
 
-    defaultVariants: { visuallyHidden: false },
+    defaultVariants: {
+        visuallyHidden: false,
+    },
     variants: {
         visuallyHidden: {
             true: visuallyHidden,
@@ -58,6 +67,19 @@ export const control = recipe({
             selectors: {
                 '&[data-checked], &[data-indeterminate]': {
                     backgroundColor: vars.color.background.primary,
+                },
+                '&[data-readonly]': {
+                    backgroundColor: vars.color.gray[200],
+                    pointerEvents: 'none',
+                },
+                '&[data-readonly]&:hover::before': {
+                    opacity: '0',
+                },
+                '&[data-readonly]&:focus::before': {
+                    opacity: '0',
+                },
+                '&[data-readonly]&:active::before': {
+                    opacity: '0',
                 },
             },
         }),
@@ -94,6 +116,11 @@ export const indicator = recipe({
         alignItems: 'center',
         justifyContent: 'center',
         color: vars.color.white,
+        selectors: {
+            '&[data-readonly]': {
+                color: vars.color.foreground.hint,
+            },
+        },
     }),
 
     defaultVariants: { size: 'md' },
