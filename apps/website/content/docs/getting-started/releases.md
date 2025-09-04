@@ -3,6 +3,20 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
 ---
 
+## 0.6.0
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- e64e867: change the overlay component interface
+- b78f3e1: add new `Tabs` component
+- 0880cf7: add new `Sheet` component
+- 1d2f506: migrate to `Base UI`
+- b4509b1: add new `Popover` component
+
+---
+
 ## 0.5.0
 
 ### @vapor-ui/core

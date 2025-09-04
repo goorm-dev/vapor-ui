@@ -1,5 +1,16 @@
 # website
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [e64e867]
+- Updated dependencies [b78f3e1]
+- Updated dependencies [0880cf7]
+- Updated dependencies [1d2f506]
+- Updated dependencies [b4509b1]
+    - @vapor-ui/core@0.6.0
+
 ## 0.0.7
 
 ### Patch Changes
