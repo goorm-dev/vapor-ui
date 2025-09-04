@@ -185,9 +185,9 @@ exports[`Primary Color Generator > primaryColorPalette > should generate consist
     },
     "primary": {
       "050": {
-        "deltaE": 2.86,
-        "hex": "#f1f1ce",
-        "oklch": "oklch(0.949 0.046 107.2)",
+        "deltaE": 0,
+        "hex": "#ffffdc",
+        "oklch": "oklch(0.991 0.045 107.2)",
       },
       "100": {
         "deltaE": 5.71,
