@@ -43,13 +43,7 @@ export const control = recipe({
                     outlineColor: vars.color.border.normal,
                     pointerEvents: 'none',
                 },
-                '&[data-readonly]&:hover::before': {
-                    opacity: '0',
-                },
-                '&[data-readonly]&:focus::before': {
-                    opacity: '0',
-                },
-                '&[data-readonly]&:active::before': {
+                '&[data-readonly]:is(:hover, :focus, :active)::before': {
                     opacity: '0',
                 },
             },
