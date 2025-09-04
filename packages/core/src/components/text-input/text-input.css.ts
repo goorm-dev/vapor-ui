@@ -57,7 +57,16 @@ export const field = recipe({
             color: vars.color.foreground.normal,
 
             selectors: {
-                '&:read-only': { backgroundColor: vars.color.gray['050'] },
+                '&:read-only': { 
+                    backgroundColor: vars.color.gray[200],
+                    pointerEvents: 'none',
+                },
+                '&:read-only:hover': {
+                    borderColor: vars.color.border.normal,
+                },
+                '&:read-only:focus': {
+                    borderColor: vars.color.border.normal,
+                },
 
                 '&::placeholder': { color: vars.color.foreground.hint },
                 '&::-webkit-search-cancel-button': { display: 'none' },
