@@ -25,8 +25,8 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <link rel="icon" href="/favicon.ico" sizes="any" />
                 <Script type="application/ld+json" id="vapor-ui-schema">
                     {JSON.stringify({
-                        context: 'https://schema.org',
-                        type: 'WebSite',
+                        '@context': 'https://schema.org',
+                        '@type': 'WebSite',
                         name: 'Vapor UI',
                         url: 'https://vapor-ui.goorm.io/',
                     })}
