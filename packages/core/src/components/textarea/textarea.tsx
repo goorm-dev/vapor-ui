@@ -3,7 +3,7 @@
 import type { ChangeEvent } from 'react';
 import { forwardRef, useId } from 'react';
 
-import { useRender } from '@base-ui-components/react';
+import { Field as BaseField, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
@@ -107,7 +107,7 @@ const Field = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
 
         return useRender({
             ref,
-            render: render || <textarea />,
+            render: render || <BaseField.Control render={<textarea />} />,
             props: {
                 id,
                 value,
