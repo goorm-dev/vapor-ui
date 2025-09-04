@@ -1,8 +1,8 @@
-import { Checkbox } from '@vapor-ui/core';
+import { Checkbox, Flex } from '@vapor-ui/core';
 
 export default function CheckboxReadOnly() {
     return (
-        <div className="space-y-3">
+        <Flex gap="$000" flexDirection="column">
             <Checkbox.Root readOnly defaultChecked>
                 <Checkbox.Control />
                 <Checkbox.Label>읽기 전용 (체크됨)</Checkbox.Label>
@@ -15,6 +15,6 @@ export default function CheckboxReadOnly() {
                 <Checkbox.Control />
                 <Checkbox.Label>읽기 전용 (혼합 상태)</Checkbox.Label>
             </Checkbox.Root>
-        </div>
+        </Flex>
     );
 }

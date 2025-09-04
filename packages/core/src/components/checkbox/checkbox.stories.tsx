@@ -82,7 +82,7 @@ export const TestBed: Story = {
     render: () => {
         return (
             <Flex flexDirection="column" gap="100">
-                <Flex gap="150">
+                <Flex gap="$150">
                     <Checkbox.Root>
                         <Checkbox.Label>Default</Checkbox.Label>
                         <Checkbox.Control />
@@ -97,7 +97,7 @@ export const TestBed: Story = {
                     </Checkbox.Root>
                 </Flex>
 
-                <Flex gap="150">
+                <Flex gap="$150">
                     <Checkbox.Root disabled>
                         <Checkbox.Label>Disabled</Checkbox.Label>
                         <Checkbox.Control />
@@ -112,7 +112,7 @@ export const TestBed: Story = {
                     </Checkbox.Root>
                 </Flex>
 
-                <Flex gap="150">
+                <Flex gap="$150">
                     <Checkbox.Root invalid>
                         <Checkbox.Label>Invalid</Checkbox.Label>
                         <Checkbox.Control />
