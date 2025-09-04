@@ -41,7 +41,6 @@ export const control = recipe({
                     backgroundColor: vars.color.gray[200],
                     outline: '0.0625rem solid',
                     outlineColor: vars.color.border.normal,
-                    pointerEvents: 'none',
                 },
                 '&[data-readonly]:is(:hover, :focus, :active)::before': {
                     opacity: '0',
@@ -84,6 +83,9 @@ export const indicator = recipe({
         backgroundColor: 'white',
 
         selectors: {
+            '&[data-checked]': {
+                transform: 'translateX(100%)',
+            },
             '&[data-readonly]:not([data-checked])': {
                 backgroundColor: vars.color.white,
             },
@@ -99,29 +101,14 @@ export const indicator = recipe({
             sm: layerStyle('components', {
                 width: vars.size.dimension['175'],
                 height: vars.size.dimension['175'],
-                selectors: {
-                    '&[data-checked]': {
-                        transform: 'translateX(100%)',
-                    },
-                },
             }),
             md: layerStyle('components', {
                 width: vars.size.dimension['200'],
                 height: vars.size.dimension['200'],
-                selectors: {
-                    '&[data-checked]': {
-                        transform: 'translateX(100%)',
-                    },
-                },
             }),
             lg: layerStyle('components', {
                 width: vars.size.dimension['300'],
                 height: vars.size.dimension['300'],
-                selectors: {
-                    '&[data-checked]': {
-                        transform: 'translateX(100%)',
-                    },
-                },
             }),
         },
     },

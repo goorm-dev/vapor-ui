@@ -57,10 +57,6 @@ export const field = recipe({
             color: vars.color.foreground.normal,
 
             selectors: {
-                '&:read-only': {
-                    backgroundColor: vars.color.gray[200],
-                    pointerEvents: 'none',
-                },
                 '&:read-only:is(:hover, :focus)': {
                     borderColor: vars.color.border.normal,
                 },

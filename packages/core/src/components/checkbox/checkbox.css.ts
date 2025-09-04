@@ -28,11 +28,6 @@ export const label = recipe({
         typography({ style: 'body2' }),
         layerStyle('components', {
             color: vars.color.foreground.normal,
-            selectors: {
-                '&[data-readonly]': {
-                    pointerEvents: 'none',
-                },
-            },
         }),
     ],
 
@@ -67,10 +62,6 @@ export const control = recipe({
             selectors: {
                 '&[data-checked], &[data-indeterminate]': {
                     backgroundColor: vars.color.background.primary,
-                },
-                '&[data-readonly]': {
-                    backgroundColor: vars.color.gray[200],
-                    pointerEvents: 'none',
                 },
                 '&[data-readonly]:is(:hover, :focus, :active)::before': {
                     opacity: '0',
