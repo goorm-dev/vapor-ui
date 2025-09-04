@@ -35,6 +35,7 @@ export { default as MysqlIcon } from './MysqlIcon';
 export { default as JupyterlabIcon } from './JupyterlabIcon';
 export { default as VscodeIcon } from './VscodeIcon';
 export { default as GoogleIcon } from './GoogleIcon';
+export { default as MediumIcon } from './MediumIcon';
 export { default as InstagramColorIcon } from './InstagramColorIcon';
 export { default as BlogColorIcon } from './BlogColorIcon';
 export { default as SlackColorIcon } from './SlackColorIcon';
