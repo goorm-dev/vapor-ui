@@ -1,0 +1,98 @@
+import type { RecipeVariants } from '@vanilla-extract/recipes';
+import { recipe } from '@vanilla-extract/recipes';
+
+import { interaction } from '~/styles/mixins/interactions.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
+
+export const root = recipe({
+    base: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: vars.size.space[100],
+        width: '100%',
+    },
+
+    defaultVariants: { disabled: false },
+
+    variants: {
+        disabled: {
+            true: {
+                opacity: 0.32,
+                pointerEvents: 'none',
+            },
+        },
+    },
+});
+
+export const field = recipe({
+    base: [
+        interaction({ type: 'form' }),
+
+        layerStyle('components', {
+            outline: 0,
+            border: `0.0625rem solid ${vars.color.border.normal}`,
+            borderRadius: vars.size.borderRadius['300'],
+            backgroundColor: vars.color.background.normal,
+            padding: vars.size.space['150'],
+            minHeight: vars.size.dimension['600'],
+            resize: 'both',
+
+            color: vars.color.foreground.normal,
+            fontSize: vars.typography.fontSize['075'],
+            lineHeight: vars.typography.lineHeight['075'],
+            fontFamily: vars.typography.fontFamily.sans,
+
+            selectors: {
+                '&:read-only': {
+                    backgroundColor: vars.color.gray['050'],
+                    resize: 'none',
+                },
+
+                '&::placeholder': { color: vars.color.foreground.hint },
+            },
+        }),
+    ],
+
+    defaultVariants: { invalid: false, size: 'md', resizing: true },
+
+    variants: {
+        invalid: {
+            true: {
+                borderColor: vars.color.border.danger,
+            },
+        },
+
+        resizing: {
+            true: { resize: 'both' },
+            false: { resize: 'none' },
+        },
+
+        size: {
+            sm: {
+                padding: vars.size.space[100],
+                minHeight: vars.size.dimension['500'],
+                fontSize: vars.typography.fontSize['050'],
+            },
+            md: {
+                padding: vars.size.space[150],
+                minHeight: vars.size.dimension['600'],
+                fontSize: vars.typography.fontSize['075'],
+            },
+            lg: {
+                padding: vars.size.space[200],
+                minHeight: vars.size.dimension['700'],
+                fontSize: vars.typography.fontSize['075'],
+            },
+            xl: {
+                padding: vars.size.space[300],
+                minHeight: vars.size.dimension['800'],
+                fontSize: vars.typography.fontSize['100'],
+            },
+        },
+    },
+});
+
+export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type FieldVariants = NonNullable<RecipeVariants<typeof field>>;
