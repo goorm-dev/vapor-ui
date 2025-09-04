@@ -64,6 +64,7 @@ const Root = forwardRef<HTMLDivElement, SwitchRootProps>(({ render, className, .
 
     return <SwitchProvider value={{ switchId, ...switchProps }}>{element}</SwitchProvider>;
 });
+
 Root.displayName = 'Switch.Root';
 
 /* -------------------------------------------------------------------------------------------------
@@ -99,7 +100,7 @@ interface SwitchControlProps extends Omit<SwitchControlPrimitiveProps, keyof Swi
 
 const Control = forwardRef<HTMLButtonElement, SwitchControlProps>(
     ({ id, className, ...props }, ref) => {
-        const { switchId, size, ...context } = useSwitchContext();
+        const { switchId, size, readOnly, ...context } = useSwitchContext();
         const [switchProps] = createSplitProps<SwitchBaseProps>()(context, [
             'checked',
             'onCheckedChange',
@@ -112,8 +113,16 @@ const Control = forwardRef<HTMLButtonElement, SwitchControlProps>(
         return (
             <BaseSwitch.Root
                 ref={ref}
+                readOnly={readOnly}
                 id={id || switchId}
                 className={clsx(styles.control({ size }), className)}
+                onCheckedChange={(checked, event) => {
+                    if (readOnly) {
+                        event.preventDefault();
+                        return;
+                    }
+                    switchProps.onCheckedChange?.(checked, event);
+                }}
                 {...switchProps}
                 {...props}
             >
