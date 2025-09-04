@@ -1,4 +1,3 @@
-
 import {
     type ColorGeneratorConfig,
     type ColorPaletteCollection,
@@ -29,15 +28,13 @@ export const DEFAULT_PRIMITIVE_COLORS = {
 // Primitive Color Generation Logic
 // ============================================================================
 
-
 export function generateColorPalette(config: ColorGeneratorConfig = {}): ColorPaletteCollection {
-    const primitiveColors = config.primitiveColors || DEFAULT_PRIMITIVE_COLORS;
+    const colors = config.colors || DEFAULT_PRIMITIVE_COLORS;
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
-
 
     return {
         base: createBaseColorTokens(formatOklchForWeb),
-        light: generateThemeTokens(primitiveColors, contrastRatios, 'light'),
-        dark: generateThemeTokens(primitiveColors, contrastRatios, 'dark'),
+        light: generateThemeTokens(colors, contrastRatios, 'light'),
+        dark: generateThemeTokens(colors, contrastRatios, 'dark'),
     };
 }

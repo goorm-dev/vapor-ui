@@ -20,6 +20,7 @@ export interface OklchColor {
 export interface ColorToken {
     hex: string;
     oklch: string;
+    deltaE?: number;
 }
 
 export interface ThemeTokens {
@@ -41,7 +42,7 @@ export interface ColorPaletteCollection {
 }
 
 export interface ColorGeneratorConfig {
-    primitiveColors?: Record<string, string>;
+    colors?: Record<string, string>;
     contrastRatios?: Record<string, number>;
     backgroundLightness?: {
         light: number;

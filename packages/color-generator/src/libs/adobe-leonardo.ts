@@ -1,5 +1,5 @@
 import { BackgroundColor, Color, CssColor, Theme } from '@adobe/leonardo-contrast-colors';
-import { formatCss, formatHex, oklch } from 'culori';
+import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 
 import {
     type ColorGeneratorConfig,
@@ -128,23 +128,17 @@ const createLeonardoTheme = (
 // Public API
 // ============================================================================
 
-/**
- * 색상 팔레트 생성
- * 입력받은 색상들과 대비 비율을 기반으로 테마 토큰을 생성합니다.
- */
 const generateThemeTokens = (
     colors: Record<string, string>,
     contrast: Record<string, number>,
     themeType: ThemeType = 'light',
 ): ThemeTokens => {
-    // Color definitions 생성
     const colorDefinitions = Object.entries(colors)
         .map(([name, hex]) =>
             createColorDefinition({ name, colorHex: hex, contrastRatios: contrast }),
         )
         .filter((def): def is Color => def !== null);
 
-    // 기본 설정 사용
     const config: ColorGeneratorConfig = {
         backgroundLightness: DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
         contrastRatios: contrast,
@@ -152,6 +146,8 @@ const generateThemeTokens = (
 
     const theme = createLeonardoTheme(themeType, colorDefinitions, config);
     const [backgroundObj, ...themeColors] = theme.contrastColors;
+
+    const calculateDeltaE = differenceCiede2000();
 
     const result: ThemeTokens = {
         background: {
@@ -175,17 +171,29 @@ const generateThemeTokens = (
     // Key Colors
     themeColors.forEach((color) => {
         if ('name' in color && 'values' in color && color.values.length > 0) {
-            const shadeData: Array<{ name: string; hex: string; oklch: string }> = [];
+            const colorName = color.name;
+            const originalColorHex = colors[colorName];
+
+            const shadeData: Array<{ name: string; hex: string; oklch: string; deltaE: number }> =
+                [];
 
             color.values.forEach((instance) => {
                 const oklchColor = oklch(instance.value);
                 const oklchValue = formatCss(oklchColor);
 
                 if (oklchValue) {
+                    let deltaE: number | undefined = undefined;
+                    if (originalColorHex) {
+                        deltaE =
+                            Math.round(calculateDeltaE(originalColorHex, instance.value) * 100) /
+                            100;
+                    }
+
                     shadeData.push({
                         name: instance.name,
                         hex: instance.value,
                         oklch: formatOklchForWeb(oklchValue),
+                        deltaE: deltaE || 0,
                     });
                 }
             });
@@ -196,13 +204,15 @@ const generateThemeTokens = (
                 return numA - numB;
             });
 
-            result[color.name] = {};
+            const colorObj: Record<string, any> = {};
             shadeData.forEach((shade) => {
-                result[color.name][shade.name] = {
+                colorObj[shade.name] = {
                     hex: shade.hex,
                     oklch: shade.oklch,
+                    deltaE: shade.deltaE,
                 };
             });
+            result[colorName] = colorObj;
         }
     });
 
