@@ -36,7 +36,8 @@ export const field = recipe({
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.normal,
             padding: vars.size.space['150'],
-            minHeight: vars.size.dimension['600'],
+            width: '260px',
+            height: '114px',
             resize: 'both',
 
             color: vars.color.foreground.normal,
@@ -71,24 +72,24 @@ export const field = recipe({
 
         size: {
             sm: {
-                padding: vars.size.space[100],
+                padding: `${vars.size.space['050']} ${vars.size.space['100']}`,
                 minHeight: vars.size.dimension['500'],
-                fontSize: vars.typography.fontSize['050'],
+                fontSize: vars.typography.fontSize['025'],
             },
             md: {
-                padding: vars.size.space[150],
+                padding: `${vars.size.space['075']} ${vars.size.space['150']}`,
                 minHeight: vars.size.dimension['600'],
-                fontSize: vars.typography.fontSize['075'],
+                fontSize: vars.typography.fontSize['050'],
             },
             lg: {
-                padding: vars.size.space[200],
+                padding: `${vars.size.space['100']} ${vars.size.space['200']}`,
                 minHeight: vars.size.dimension['700'],
-                fontSize: vars.typography.fontSize['075'],
+                fontSize: vars.typography.fontSize['050'],
             },
             xl: {
-                padding: vars.size.space[300],
+                padding: `${vars.size.space['175']} ${vars.size.space['300']}`,
                 minHeight: vars.size.dimension['800'],
-                fontSize: vars.typography.fontSize['100'],
+                fontSize: vars.typography.fontSize['075'],
             },
         },
     },
