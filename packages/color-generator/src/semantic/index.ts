@@ -1,4 +1,3 @@
-import { Color } from '@adobe/leonardo-contrast-colors';
 
 import {
     type ColorGeneratorConfig,
@@ -7,7 +6,7 @@ import {
     createBaseColorTokens,
     formatOklchForWeb,
 } from '../core';
-import { createColorDefinition, generateThemeTokens } from '../libs/adobe-leonardo';
+import { generateThemeTokens } from '../libs/adobe-leonardo';
 
 // ============================================================================
 // Semantic Color Configuration
@@ -30,17 +29,6 @@ export interface SemanticColorConfig extends Omit<ColorGeneratorConfig, 'primiti
 // Semantic Color Generation Logic
 // ============================================================================
 
-/**
- * Creates semantic color definitions from a color configuration
- */
-function createSemanticColorDefinitions(
-    semanticColors: Record<string, string>,
-    contrastRatios: Record<string, number>,
-): Color[] {
-    return Object.entries(semanticColors)
-        .map(([name, colorHex]) => createColorDefinition({ name, colorHex, contrastRatios }))
-        .filter((c): c is Color => c !== null);
-}
 
 /**
  * Generate semantic color palette with primary and optional semantic colors
@@ -60,12 +48,11 @@ export function generateSemanticColorPalette(config: SemanticColorConfig): Color
     if (config.infoColor) semanticColors.info = config.infoColor;
     if (config.accentColor) semanticColors.accent = config.accentColor;
 
-    const semanticColorDefinitions = createSemanticColorDefinitions(semanticColors, contrastRatios);
 
     return {
         base: createBaseColorTokens(formatOklchForWeb),
-        light: generateThemeTokens('light', semanticColorDefinitions, config, formatOklchForWeb),
-        dark: generateThemeTokens('dark', semanticColorDefinitions, config, formatOklchForWeb),
+        light: generateThemeTokens(semanticColors, contrastRatios, 'light'),
+        dark: generateThemeTokens(semanticColors, contrastRatios, 'dark'),
     };
 }
 

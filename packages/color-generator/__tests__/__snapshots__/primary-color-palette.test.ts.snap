@@ -19,6 +19,48 @@ exports[`Primary Color Generator > primaryColorPalette > should generate consist
         "oklch": "oklch(0.256 0.000 0.0)",
       },
     },
+    "gray": {
+      "050": {
+        "hex": "#2e2e2e",
+        "oklch": "oklch(0.301 0.000 0.0)",
+      },
+      "100": {
+        "hex": "#363636",
+        "oklch": "oklch(0.333 0.000 0.0)",
+      },
+      "200": {
+        "hex": "#474747",
+        "oklch": "oklch(0.398 0.000 0.0)",
+      },
+      "300": {
+        "hex": "#606060",
+        "oklch": "oklch(0.489 0.000 0.0)",
+      },
+      "400": {
+        "hex": "#6c6c6c",
+        "oklch": "oklch(0.531 0.000 0.0)",
+      },
+      "500": {
+        "hex": "#898989",
+        "oklch": "oklch(0.630 0.000 0.0)",
+      },
+      "600": {
+        "hex": "#a7a7a7",
+        "oklch": "oklch(0.728 0.000 0.0)",
+      },
+      "700": {
+        "hex": "#bebebe",
+        "oklch": "oklch(0.802 0.000 0.0)",
+      },
+      "800": {
+        "hex": "#dcdcdc",
+        "oklch": "oklch(0.894 0.000 0.0)",
+      },
+      "900": {
+        "hex": "#fafafa",
+        "oklch": "oklch(0.985 0.000 0.0)",
+      },
+    },
     "primary": {
       "050": {
         "hex": "#4d2100",
@@ -67,6 +109,48 @@ exports[`Primary Color Generator > primaryColorPalette > should generate consist
       "canvas": {
         "hex": "#ffffff",
         "oklch": "oklch(1.000 0.000 0.0)",
+      },
+    },
+    "gray": {
+      "050": {
+        "hex": "#efefef",
+        "oklch": "oklch(0.952 0.000 0.0)",
+      },
+      "100": {
+        "hex": "#e1e1e1",
+        "oklch": "oklch(0.910 0.000 0.0)",
+      },
+      "200": {
+        "hex": "#c6c6c6",
+        "oklch": "oklch(0.827 0.000 0.0)",
+      },
+      "300": {
+        "hex": "#a3a3a3",
+        "oklch": "oklch(0.715 0.000 0.0)",
+      },
+      "400": {
+        "hex": "#959595",
+        "oklch": "oklch(0.670 0.000 0.0)",
+      },
+      "500": {
+        "hex": "#767676",
+        "oklch": "oklch(0.566 0.000 0.0)",
+      },
+      "600": {
+        "hex": "#5d5d5d",
+        "oklch": "oklch(0.478 0.000 0.0)",
+      },
+      "700": {
+        "hex": "#4c4c4c",
+        "oklch": "oklch(0.417 0.000 0.0)",
+      },
+      "800": {
+        "hex": "#393939",
+        "oklch": "oklch(0.345 0.000 0.0)",
+      },
+      "900": {
+        "hex": "#262626",
+        "oklch": "oklch(0.269 0.000 0.0)",
       },
     },
     "primary": {

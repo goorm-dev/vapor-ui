@@ -1,4 +1,3 @@
-import { Color } from '@adobe/leonardo-contrast-colors';
 
 import {
     type ColorGeneratorConfig,
@@ -7,7 +6,7 @@ import {
     createBaseColorTokens,
     formatOklchForWeb,
 } from '../core';
-import { createColorDefinition, generateThemeTokens } from '../libs/adobe-leonardo';
+import { generateThemeTokens } from '../libs/adobe-leonardo';
 
 // ============================================================================
 // Primitive Colors Configuration
@@ -30,24 +29,15 @@ export const DEFAULT_PRIMITIVE_COLORS = {
 // Primitive Color Generation Logic
 // ============================================================================
 
-function createVaporColorDefinitions(
-    primitiveColors: Record<string, string>,
-    contrastRatios: Record<string, number>,
-): Color[] {
-    return Object.entries(primitiveColors)
-        .map(([name, colorHex]) => createColorDefinition({ name, colorHex, contrastRatios }))
-        .filter((c): c is Color => c !== null);
-}
 
 export function generateColorPalette(config: ColorGeneratorConfig = {}): ColorPaletteCollection {
     const primitiveColors = config.primitiveColors || DEFAULT_PRIMITIVE_COLORS;
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
 
-    const vaporColorDefinitions = createVaporColorDefinitions(primitiveColors, contrastRatios);
 
     return {
         base: createBaseColorTokens(formatOklchForWeb),
-        light: generateThemeTokens('light', vaporColorDefinitions, config, formatOklchForWeb),
-        dark: generateThemeTokens('dark', vaporColorDefinitions, config, formatOklchForWeb),
+        light: generateThemeTokens(primitiveColors, contrastRatios, 'light'),
+        dark: generateThemeTokens(primitiveColors, contrastRatios, 'dark'),
     };
 }
