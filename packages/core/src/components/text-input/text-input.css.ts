@@ -6,27 +6,6 @@ import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        gap: vars.size.space[100],
-        width: '100%',
-    },
-
-    defaultVariants: { disabled: false },
-
-    variants: {
-        disabled: {
-            true: {
-                opacity: 0.32,
-                pointerEvents: 'none',
-            },
-        },
-    },
-});
-
-export const field = recipe({
     base: [
         interaction({ type: 'form' }),
 
@@ -40,8 +19,8 @@ export const field = recipe({
             color: vars.color.foreground.normal,
 
             selectors: {
-                '&:read-only': { backgroundColor: vars.color.gray['050'] },
-
+                '&:read-only': { backgroundColor: vars.color.gray['200'] },
+                '&:disabled': { pointerEvents: 'none', opacity: 0.32 },
                 '&::placeholder': { color: vars.color.foreground.hint },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
@@ -83,4 +62,3 @@ export const field = recipe({
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
-export type FieldVariants = NonNullable<RecipeVariants<typeof field>>;

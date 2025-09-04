@@ -8,12 +8,10 @@ import clsx from 'clsx';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
-import type { FieldVariants, RootVariants } from './text-input.css';
+import type { RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
 
-// type Override<T, U> = Omit<T, keyof U> & Partial<U>;
-
-type TextInputVariants = RootVariants & FieldVariants;
+type TextInputVariants = RootVariants;
 type BaseProps = TextInputVariants & {
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     value?: string;
@@ -32,19 +30,17 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ({ onValueChange, className, ...props }, ref) => {
         const [textInputRootProps, otherProps] = createSplitProps<TextInputVariants>()(props, [
             'size',
-            'disabled',
             'invalid',
         ]);
 
-        const { disabled, invalid, size } = textInputRootProps;
+        const { invalid, size } = textInputRootProps;
 
         return (
             <BaseInput
                 ref={ref}
                 aria-invalid={invalid}
-                disabled={disabled}
                 onChange={(event) => onValueChange?.(event.target.value)}
-                className={clsx(styles.field({ invalid, size }), className)}
+                className={clsx(styles.root({ invalid, size }), className)}
                 {...otherProps}
             />
         );
