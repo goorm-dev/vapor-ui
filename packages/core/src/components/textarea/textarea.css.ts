@@ -56,7 +56,7 @@ export const field = recipe({
         }),
     ],
 
-    defaultVariants: { invalid: false, size: 'md', resizing: true },
+    defaultVariants: { invalid: false, size: 'md', resizing: true, autoResize: false },
 
     variants: {
         invalid: {
@@ -68,6 +68,14 @@ export const field = recipe({
         resizing: {
             true: { resize: 'both' },
             false: { resize: 'none' },
+        },
+
+        autoResize: {
+            true: { 
+                overflow: 'hidden',
+                resize: 'none',
+            },
+            false: {},
         },
 
         size: {

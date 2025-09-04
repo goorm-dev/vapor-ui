@@ -26,6 +26,9 @@ const meta: Meta<typeof Textarea.Root> = {
         resizing: {
             control: { type: 'boolean' },
         },
+        autoResize: {
+            control: { type: 'boolean' },
+        },
     },
 } satisfies Meta<typeof Textarea.Root>;
 
@@ -105,6 +108,52 @@ export const ResizeOptions: Story = {
                 <Textarea.Field />
             </Textarea.Root>
             <Textarea.Root resizing={false} placeholder="Non-resizable">
+                <Textarea.Field />
+            </Textarea.Root>
+            <Textarea.Root autoResize={true} placeholder="Auto-resize height (type to see it grow)">
+                <Textarea.Field />
+            </Textarea.Root>
+        </div>
+    ),
+};
+
+export const AutoResize: Story = {
+    render: () => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '400px' }}>
+            <div>
+                <h3 style={{ marginBottom: '0.5rem' }}>Auto-resize enabled</h3>
+                <Textarea.Root autoResize={true} placeholder="Type multiple lines to see the textarea grow automatically...">
+                    <Textarea.Field />
+                </Textarea.Root>
+            </div>
+            <div>
+                <h3 style={{ marginBottom: '0.5rem' }}>Auto-resize disabled</h3>
+                <Textarea.Root autoResize={false} placeholder="This textarea has fixed height">
+                    <Textarea.Field />
+                </Textarea.Root>
+            </div>
+        </div>
+    ),
+};
+
+export const WithContent: Story = {
+    render: () => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '400px' }}>
+            <Textarea.Root 
+                defaultValue="This is some sample content that demonstrates how the textarea looks with text already in it."
+                placeholder="Enter your text here..."
+            >
+                <Textarea.Field />
+            </Textarea.Root>
+            <Textarea.Root 
+                autoResize={true}
+                defaultValue={`Line 1: This textarea has auto-resize enabled
+Line 2: Notice how it automatically adjusts height
+Line 3: To fit all the content without scrolling
+Line 4: You can keep typing and it will grow
+Line 5: This makes for a better user experience`}
+                placeholder="Auto-resizing textarea with content..."
+            >
                 <Textarea.Field />
             </Textarea.Root>
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
-import type { ChangeEvent } from 'react';
-import { forwardRef, useId } from 'react';
+import type { ChangeEvent, MutableRefObject } from 'react';
+import { forwardRef, useCallback, useEffect, useId, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
@@ -23,6 +23,7 @@ type TextareaSharedProps = TextareaVariants & {
     rows?: number;
     cols?: number;
     resizing?: boolean;
+    autoResize?: boolean;
 };
 
 type TextareaContextType = TextareaSharedProps & {
@@ -57,6 +58,7 @@ const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
             'rows',
             'cols',
             'resizing',
+            'autoResize',
         ]);
 
         const { disabled } = textareaRootProps;
@@ -101,12 +103,37 @@ const Field = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
             rows,
             cols,
             resizing,
+            autoResize,
         } = useTextareaContext();
 
         const id = idProp || textareaId;
+        const textareaRef = useRef<HTMLTextAreaElement | null>(
+            null,
+        ) as MutableRefObject<HTMLTextAreaElement | null>;
+
+        const autoResizeTextarea = useCallback(() => {
+            if (!autoResize || !textareaRef.current) return;
+
+            const textarea = textareaRef.current;
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }, [autoResize]);
+
+        useEffect(() => {
+            if (autoResize) {
+                autoResizeTextarea();
+            }
+        }, [value, autoResize, autoResizeTextarea]);
 
         return useRender({
-            ref,
+            ref: (node: HTMLTextAreaElement | null) => {
+                textareaRef.current = node;
+                if (typeof ref === 'function') {
+                    ref(node);
+                } else if (ref && 'current' in ref) {
+                    (ref as MutableRefObject<HTMLTextAreaElement | null>).current = node;
+                }
+            },
             render: render || <BaseField.Control render={<textarea />} />,
             props: {
                 id,
@@ -116,6 +143,10 @@ const Field = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
                     if (disabled || readOnly) return;
 
                     onValueChange?.(event.target.value);
+
+                    if (autoResize) {
+                        autoResizeTextarea();
+                    }
                 },
                 defaultValue,
                 disabled,
@@ -124,7 +155,7 @@ const Field = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
                 placeholder,
                 rows,
                 cols,
-                className: clsx(styles.field({ invalid, size, resizing }), className),
+                className: clsx(styles.field({ invalid, size, resizing, autoResize }), className),
                 ...props,
             },
         });
@@ -134,7 +165,7 @@ Field.displayName = 'Textarea.Field';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as TextareaRoot, Field as TextareaField };
-export type { TextareaRootProps, TextareaFieldProps };
+export { Field as TextareaField, Root as TextareaRoot };
+export type { TextareaFieldProps, TextareaRootProps };
 
 export const Textarea = { Root, Field };
