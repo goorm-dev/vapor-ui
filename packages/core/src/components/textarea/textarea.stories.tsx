@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Textarea } from './textarea';
+import { Grid } from '../grid';
 
 const meta: Meta<typeof Textarea.Root> = {
     title: 'Textarea',
@@ -43,122 +44,36 @@ export const Default: Story = {
     ),
 };
 
-export const Size: Story = {
-    render: () => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '300px' }}>
-            <Textarea.Root size="sm" placeholder="Small textarea">
+export const TestBed: Story = {
+    render: (args) => (
+        <Grid.Root templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
+            <Textarea.Root placeholder="Enter your text here..." {...args}>
                 <Textarea.Input />
             </Textarea.Root>
-            <Textarea.Root size="md" placeholder="Medium textarea">
-                <Textarea.Input />
-            </Textarea.Root>
-            <Textarea.Root size="lg" placeholder="Large textarea">
-                <Textarea.Input />
-            </Textarea.Root>
-            <Textarea.Root size="xl" placeholder="Extra large textarea">
-                <Textarea.Input />
-            </Textarea.Root>
-        </div>
-    ),
-};
 
-export const States: Story = {
-    render: () => (
-        <div
-            style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '1rem',
-                width: '600px',
-            }}
-        >
-            <Textarea.Root placeholder="Normal state">
+            <Textarea.Root placeholder="Enter your text here..." {...args} disabled>
                 <Textarea.Input />
             </Textarea.Root>
-            <Textarea.Root disabled placeholder="Disabled state">
-                <Textarea.Input />
-            </Textarea.Root>
-            <Textarea.Root invalid placeholder="Invalid state">
-                <Textarea.Input />
-            </Textarea.Root>
-            <Textarea.Root readOnly defaultValue="This is read-only content">
-                <Textarea.Input />
-            </Textarea.Root>
-        </div>
-    ),
-};
 
-export const CustomRows: Story = {
-    render: () => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '300px' }}>
-            <Textarea.Root rows={3} placeholder="3 rows">
+            <Textarea.Root placeholder="Enter your text here..." {...args} invalid>
                 <Textarea.Input />
             </Textarea.Root>
-            <Textarea.Root rows={6} placeholder="6 rows">
-                <Textarea.Input />
-            </Textarea.Root>
-        </div>
-    ),
-};
 
-export const ResizeOptions: Story = {
-    render: () => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '400px' }}>
-            <Textarea.Root resizing={true} placeholder="Resizable (both width and height)">
+            <Textarea.Root placeholder="Enter your text here..." {...args} readOnly>
                 <Textarea.Input />
             </Textarea.Root>
-            <Textarea.Root resizing={false} placeholder="Non-resizable">
-                <Textarea.Input />
-            </Textarea.Root>
-            <Textarea.Root autoResize={true} placeholder="Auto-resize height (type to see it grow)">
-                <Textarea.Input />
-            </Textarea.Root>
-        </div>
-    ),
-};
 
-export const AutoResize: Story = {
-    render: () => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '400px' }}>
-            <div>
-                <h3 style={{ marginBottom: '0.5rem' }}>Auto-resize enabled</h3>
-                <Textarea.Root
-                    autoResize={true}
-                    placeholder="Type multiple lines to see the textarea grow automatically..."
-                >
-                    <Textarea.Input />
-                </Textarea.Root>
-            </div>
-            <div>
-                <h3 style={{ marginBottom: '0.5rem' }}>Auto-resize disabled</h3>
-                <Textarea.Root autoResize={false} placeholder="This textarea has fixed height">
-                    <Textarea.Input />
-                </Textarea.Root>
-            </div>
-        </div>
-    ),
-};
+            <Textarea.Root placeholder="Enter your text here..." {...args} autoResize>
+                <Textarea.Input />
+            </Textarea.Root>
 
-export const WithContent: Story = {
-    render: () => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '400px' }}>
-            <Textarea.Root
-                defaultValue="This is some sample content that demonstrates how the textarea looks with text already in it."
-                placeholder="Enter your text here..."
-            >
+            <Textarea.Root placeholder="Enter your text here..." {...args}>
                 <Textarea.Input />
             </Textarea.Root>
-            <Textarea.Root
-                autoResize={true}
-                defaultValue={`Line 1: This textarea has auto-resize enabled
-Line 2: Notice how it automatically adjusts height
-Line 3: To fit all the content without scrolling
-Line 4: You can keep typing and it will grow
-Line 5: This makes for a better user experience`}
-                placeholder="Auto-resizing textarea with content..."
-            >
+
+            <Textarea.Root defaultValue="Sample text content" placeholder="Enter your text here..." {...args}>
                 <Textarea.Input />
             </Textarea.Root>
-        </div>
+        </Grid.Root>
     ),
 };
