@@ -14,7 +14,7 @@ import type { ColorToken } from '../types';
  * - 'none' 값을 '0.0'으로 변환
  */
 export const formatOklchForWeb = (oklchString: string): string => {
-    const match = oklchString.match(/oklch\(([^\s]+)\s+([^\s]+)\s+([^\)]+)\)/);
+    const match = oklchString.match(/oklch\(([^\s]+)\s+([^\s]+)\s+([^)]+)\)/);
     if (match) {
         const [, l, c, h] = match;
         const roundedL = parseFloat(l).toFixed(3);
@@ -33,6 +33,18 @@ export const formatOklchForWeb = (oklchString: string): string => {
 };
 
 /**
+ * 상위 계층 key값 조합으로 codeSyntax를 생성합니다.
+ * 최상위 계층(base, light, dark)는 제외하고 생성합니다.
+ * @param keyPath - 계층 구조의 key 경로들 (예: ['light', 'blue', '050'])
+ * @returns vapor-color- prefix를 포함한 codeSyntax
+ */
+export const generateCodeSyntax = (keyPath: string[]): string => {
+    const topLevelKeys = ['base', 'light', 'dark'];
+    const filteredPath = keyPath.filter((key) => !topLevelKeys.includes(key));
+    return `vapor-color-${filteredPath.join('-')}`;
+};
+
+/**
  * 배경 색상의 명도에 따라 적절한 전경 색상을 결정합니다.
  * culori의 oklch() 함수를 사용하여 안전하고 정확하게 lightness 값을 추출합니다.
  * @param backgroundOklch - 배경 색상의 OKLCH 문자열
@@ -42,14 +54,11 @@ export const formatOklchForWeb = (oklchString: string): string => {
 export const getContrastingForegroundColor = (
     backgroundOklch: string,
     threshold: number = BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD,
-): 'black' | 'white' => {
-    // culori의 oklch() 함수를 사용하여 색상 객체로 변환
+) => {
     const colorObj = oklch(backgroundOklch);
-    
-    // colorObj가 null이거나 lightness가 없는 경우 기본값 사용
     const lightness = colorObj?.l ?? 0;
-    
-    return lightness > threshold ? 'black' : 'white';
+
+    return lightness > threshold ? BASE_COLORS.black.codeSyntax : BASE_COLORS.white.codeSyntax;
 };
 
 // ============================================================================
@@ -61,11 +70,12 @@ export const getContrastingForegroundColor = (
  */
 export const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
     return Object.entries(BASE_COLORS).reduce(
-        (tokens, [colorName, hexValue]) => {
-            const oklchColor = oklch(hexValue);
+        (tokens, [colorName, colorData]) => {
+            const oklchColor = oklch(colorData.hex);
             tokens[colorName as keyof typeof BASE_COLORS] = {
-                hex: hexValue,
+                hex: colorData.hex,
                 oklch: formatter(formatCss(oklchColor) ?? ''),
+                codeSyntax: colorData.codeSyntax,
             };
             return tokens;
         },

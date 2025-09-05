@@ -1,9 +1,10 @@
-import { BackgroundColor, Color, CssColor, Theme } from '@adobe/leonardo-contrast-colors';
+import type { CssColor} from '@adobe/leonardo-contrast-colors';
+import { BackgroundColor, Color, Theme } from '@adobe/leonardo-contrast-colors';
 import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 
 import { ADAPTIVE_COLOR_GENERATION, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from '../constants';
 import type { ColorGeneratorConfig, OklchColor, ThemeTokens, ThemeType } from '../types';
-import { formatOklchForWeb } from '../utils/color';
+import { formatOklchForWeb, generateCodeSyntax } from '../utils/color';
 
 // ============================================================================
 // Color Key Generation
@@ -141,7 +142,7 @@ const generateThemeTokens = (
 
     const result: ThemeTokens = {
         background: {
-            canvas: { hex: '', oklch: '' },
+            canvas: { hex: '', oklch: '', codeSyntax: '' },
         },
     };
 
@@ -154,6 +155,7 @@ const generateThemeTokens = (
             result.background.canvas = {
                 hex: backgroundObj.background,
                 oklch: formatOklchForWeb(oklchValue),
+                codeSyntax: generateCodeSyntax(['background', 'canvas']),
             };
         }
     }
@@ -164,7 +166,7 @@ const generateThemeTokens = (
             const colorName = color.name;
             const originalColorHex = colors[colorName];
 
-            const shadeData: Array<{ name: string; hex: string; oklch: string; deltaE: number }> =
+            const shadeData: Array<{ name: string; hex: string; oklch: string; deltaE: number; codeSyntax: string }> =
                 [];
 
             color.values.forEach((instance) => {
@@ -184,6 +186,7 @@ const generateThemeTokens = (
                         hex: instance.value,
                         oklch: formatOklchForWeb(oklchValue),
                         deltaE: deltaE || 0,
+                        codeSyntax: generateCodeSyntax([colorName, instance.name]),
                     });
                 }
             });
@@ -194,12 +197,13 @@ const generateThemeTokens = (
                 return numA - numB;
             });
 
-            const colorObj: Record<string, any> = {};
+            const colorObj: Record<string, { hex: string; oklch: string; deltaE: number; codeSyntax: string }> = {};
             shadeData.forEach((shade) => {
                 colorObj[shade.name] = {
                     hex: shade.hex,
                     oklch: shade.oklch,
                     deltaE: shade.deltaE,
+                    codeSyntax: shade.codeSyntax,
                 };
             });
             result[colorName] = colorObj;

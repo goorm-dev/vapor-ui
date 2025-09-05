@@ -8,7 +8,7 @@ describe('Primary Color Generator', () => {
             expect(primaryColorPalette).toMatchSnapshot();
         });
 
-        it('should generate consistent primary color palette collection22', () => {
+        it('should generate consistent primary dependent tokens', () => {
             expect(primaryDependentTokens).toMatchSnapshot();
         });
     });

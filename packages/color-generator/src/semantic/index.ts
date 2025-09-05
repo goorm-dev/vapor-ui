@@ -1,6 +1,6 @@
 import { formatCss, oklch } from 'culori';
 
-import { DEFAULT_CONTRAST_RATIOS } from '../constants';
+import { BASE_COLORS, DEFAULT_CONTRAST_RATIOS } from '../constants';
 import { generateThemeTokens } from '../libs/adobe-leonardo';
 import type {
     ColorGeneratorConfig,
@@ -8,7 +8,12 @@ import type {
     ScaleInfo,
     ThemeTokens,
 } from '../types';
-import { createBaseColorTokens, formatOklchForWeb, getContrastingForegroundColor } from '../utils/color';
+import {
+    createBaseColorTokens,
+    formatOklchForWeb,
+    generateCodeSyntax,
+    getContrastingForegroundColor,
+} from '../utils/color';
 
 // ============================================================================
 // Types, Tokens & Configuration
@@ -113,7 +118,6 @@ function overrideCustomColors(
     const newThemeTokens = deepCloneThemeTokens(themeTokens);
 
     for (const [colorName, hexValue] of Object.entries(customColors)) {
-        // 'background'는 특별한 시스템 색상이므로 커스텀 색상 처리에서 제외
         if (colorName === 'background') continue;
 
         const palette = newThemeTokens[colorName];
@@ -133,6 +137,7 @@ function overrideCustomColors(
             deltaE: 0,
             hex: hexValue,
             oklch: oklchString,
+            codeSyntax: generateCodeSyntax([colorName, closestScaleKey]),
         };
     }
 
@@ -188,9 +193,9 @@ function createSemanticTokenMap<T extends string>(
 ): SemanticDependentTokenMap<T> {
     // 배경 색상의 OKLCH 값을 가져와서 적절한 button foreground 색상 결정
     const backgroundToken = palette[scaleInfo.backgroundScale];
-    const buttonForegroundColor = backgroundToken 
+    const buttonForegroundColor = backgroundToken
         ? getContrastingForegroundColor(backgroundToken.oklch)
-        : 'black';
+        : BASE_COLORS.white.codeSyntax;
 
     return {
         [tokenKeys.Background]: `color-${colorName}-${scaleInfo.backgroundScale}`,
@@ -223,10 +228,6 @@ export function generateSemanticColorPalette(
     };
 }
 
-/**
- * 시맨틱 컬러 팔레트를 기반으로 테마별 의존 토큰을 생성합니다.
- * 현재는 primary만 지원하며, 향후 secondary, success 등을 확장 예정입니다.
- */
 export function generateSemanticDependentTokens(
     semanticColorPalette: ColorPaletteCollection,
 ): ThemeDependentTokensCollection {
@@ -247,11 +248,21 @@ export function generateSemanticDependentTokens(
     const darkScaleInfo = findDarkThemeScales(darkPrimaryPalette, darkScales);
 
     return {
-        light: { 
-            primary: createSemanticTokenMap('primary', lightScaleInfo, PRIMARY_TOKEN_KEYS, lightPrimaryPalette) 
+        light: {
+            primary: createSemanticTokenMap(
+                'primary',
+                lightScaleInfo,
+                PRIMARY_TOKEN_KEYS,
+                lightPrimaryPalette,
+            ),
         },
-        dark: { 
-            primary: createSemanticTokenMap('primary', darkScaleInfo, PRIMARY_TOKEN_KEYS, darkPrimaryPalette) 
+        dark: {
+            primary: createSemanticTokenMap(
+                'primary',
+                darkScaleInfo,
+                PRIMARY_TOKEN_KEYS,
+                darkPrimaryPalette,
+            ),
         },
     };
 }

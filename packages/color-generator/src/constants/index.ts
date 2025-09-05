@@ -25,8 +25,14 @@ export const DEFAULT_CONTRAST_RATIOS = {
 // ============================================================================
 
 export const BASE_COLORS = {
-    white: '#ffffff',
-    black: '#000000',
+    white: {
+        hex: '#FFFFFF',
+        codeSyntax: 'vapor-color-white',
+    },
+    black: {
+        hex: '#000000',
+        codeSyntax: 'vapor-color-black',
+    },
 } as const;
 
 // ============================================================================
@@ -40,5 +46,9 @@ export const ADAPTIVE_COLOR_GENERATION = {
     CHROMA_REDUCTION_FACTOR: 0.85,
 } as const;
 
-
 export const BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD = 0.65;
+
+export const FOREGROUND_TOKEN_NAMES = {
+    WHITE: 'vapor-color-white',
+    BLACK: 'vapor-color-black',
+} as const;

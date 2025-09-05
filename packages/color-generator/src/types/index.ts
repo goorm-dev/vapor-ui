@@ -15,6 +15,7 @@ export interface ColorToken {
     hex: string;
     oklch: string;
     deltaE?: number;
+    codeSyntax: string;
 }
 
 export interface ScaleInfo {
