@@ -19,6 +19,7 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
     name: 'RadioGroup',
     hookName: 'useRadioGroupContext',
     providerName: 'RadioGroupProvider',
+    defaultValue: { size: 'md', orientation: 'vertical', invalid: false },
     strict: false,
 });
 
