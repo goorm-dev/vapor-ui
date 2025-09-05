@@ -42,17 +42,17 @@ export const Controlled: Story = {
 export const TestBed: Story = {
     render: (args) => (
         <Grid.Root templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
-            <TextInput placeholder="sadf" {...args} />
+            <TextInput placeholder="default" {...args} />
 
-            <TextInput placeholder="sadf" {...args} disabled />
+            <TextInput placeholder="disabled" {...args} disabled />
 
-            <TextInput placeholder="sadf" {...args} invalid />
+            <TextInput placeholder="invalid" {...args} invalid />
 
-            <TextInput placeholder="sadf" {...args} readOnly />
+            <TextInput placeholder="readOnly" {...args} readOnly />
 
-            <TextInput placeholder="sadf" {...args} />
+            <TextInput placeholder="required" {...args} required />
 
-            <TextInput value="value" placeholder="sadf" {...args} />
+            <TextInput value="has value" placeholder="has value" {...args} />
         </Grid.Root>
     ),
 };

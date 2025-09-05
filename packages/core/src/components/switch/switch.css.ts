@@ -15,6 +15,8 @@ export const control = recipe({
             backgroundColor: vars.color.gray[400],
             cursor: 'pointer',
 
+            flexShrink: 0,
+
             selectors: {
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
                 '&[data-checked]': { backgroundColor: vars.color.background.primary },

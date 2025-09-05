@@ -1,6 +1,8 @@
 import type { StoryObj } from '@storybook/react';
 
+import { HStack } from '../h-stack';
 import { Radio } from '../radio/radio';
+import { VStack } from '../v-stack';
 
 export default {
     title: 'Radio',
@@ -20,26 +22,27 @@ export default {
 type Story = StoryObj<typeof Radio.Root>;
 
 export const Default: Story = {
-    render: (args) => (
-        <>
-            <Radio.Root {...args} />
-
-            <label>
-                <Radio.Root {...args} />
-                With Label
-            </label>
-        </>
-    ),
+    render: (args) => <Radio.Root {...args} />,
 };
 
 export const TestBed: Story = {
     render: () => (
-        <>
-            <Radio.Root value="default" />
-            <Radio.Root invalid value="invalid" />
-            <Radio.Root disabled value="disabled" />
-            <Radio.Root required value="required" />
-            <Radio.Root readOnly value="readOnly" />
-        </>
+        <VStack gap="$200">
+            <HStack gap="$100" alignItems="center">
+                <Radio.Root value="default" />
+                <Radio.Root invalid value="invalid" />
+                <Radio.Root disabled value="disabled" />
+                <Radio.Root required value="required" />
+                <Radio.Root readOnly value="readOnly" />
+            </HStack>
+
+            <HStack gap="$100" alignItems="center">
+                <Radio.Root size="lg" value="default" />
+                <Radio.Root size="lg" invalid value="invalid" />
+                <Radio.Root size="lg" disabled value="disabled" />
+                <Radio.Root size="lg" required value="required" />
+                <Radio.Root size="lg" readOnly value="readOnly" />
+            </HStack>
+        </VStack>
     ),
 };
