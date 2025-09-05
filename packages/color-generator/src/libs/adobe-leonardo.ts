@@ -4,11 +4,17 @@ import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 import {
     type ColorGeneratorConfig,
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
-    type OklchColor,
     type ThemeTokens,
     type ThemeType,
     formatOklchForWeb,
 } from '../core';
+
+type OklchColor = {
+    mode: 'oklch';
+    l: number;
+    c: number;
+    h?: number;
+};
 
 // ============================================================================
 // Utilities
@@ -41,9 +47,10 @@ const createAdaptiveColorKeys = (
             c: brandColorOklch.c * ADAPTIVE_COLOR_GENERATION.CHROMA_REDUCTION_FACTOR,
         };
 
+        const darkKeyHex = formatHex(darkerKeyOklch);
         return {
             lightKey: originalHex as CssColor,
-            darkKey: formatHex(darkerKeyOklch) as CssColor,
+            darkKey: (darkKeyHex ?? originalHex) as CssColor,
         };
     } else {
         // 어두운 색상: 밝은 Key 생성
@@ -57,8 +64,9 @@ const createAdaptiveColorKeys = (
             c: brandColorOklch.c * ADAPTIVE_COLOR_GENERATION.CHROMA_REDUCTION_FACTOR,
         };
 
+        const lightKeyHex = formatHex(lighterKeyOklch);
         return {
-            lightKey: formatHex(lighterKeyOklch) as CssColor,
+            lightKey: (lightKeyHex ?? originalHex) as CssColor,
             darkKey: originalHex as CssColor,
         };
     }

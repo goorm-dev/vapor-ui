@@ -1,8 +1,58 @@
 import { formatCss, oklch } from 'culori';
 
 // ============================================================================
-// Color Generator Core Types & Utilities
+// Domain Constants
 // ============================================================================
+
+export const DEFAULT_MAIN_BACKGROUND_LIGHTNESS = {
+    light: 100,
+    dark: 14,
+} as const;
+
+export const DEFAULT_CONTRAST_RATIOS = {
+    '050': 1.15,
+    '100': 1.3,
+    '200': 1.7,
+    '300': 2.5,
+    '400': 3.0,
+    '500': 4.5,
+    '600': 6.5,
+    '700': 8.5,
+    '800': 11.5,
+    '900': 15.0,
+} as const;
+
+// 시맨틱 토큰 카테고리와 변형 정의
+export const SEMANTIC_TOKEN_BASE_PATTERNS = {
+    Background: 'background',
+    Foreground: 'foreground',
+    Border: 'border',
+    ButtonForeground: 'button-foreground',
+} as const;
+
+export const SEMANTIC_TOKEN_VARIANTS = {
+    Default: '', // 기본 변형 (background, border, button-foreground)
+    Variant100: '100',
+    Variant200: '200',
+} as const;
+
+// 색상별 시맨틱 토큰 생성 함수 (패턴: {category}-{color}[-{variant}])
+export const createSemanticTokenKeys = <T extends string>(colorName: T) => {
+    return {
+        Background: `background-${colorName}` as const,
+        Foreground100: `foreground-${colorName}-100` as const,
+        Foreground200: `foreground-${colorName}-200` as const,
+        Border: `border-${colorName}` as const,
+        ButtonForeground: `button-foreground-${colorName}` as const,
+    };
+};
+
+// 각 색상별 토큰 키 정의
+export const PRIMARY_TOKEN_KEYS = createSemanticTokenKeys('primary');
+export const SECONDARY_TOKEN_KEYS = createSemanticTokenKeys('secondary');
+export const SUCCESS_TOKEN_KEYS = createSemanticTokenKeys('success');
+export const WARNING_TOKEN_KEYS = createSemanticTokenKeys('warning');
+export const ERROR_TOKEN_KEYS = createSemanticTokenKeys('error');
 
 // ============================================================================
 // Domain Types
@@ -10,17 +60,40 @@ import { formatCss, oklch } from 'culori';
 
 export type ThemeType = 'light' | 'dark';
 
-export interface OklchColor {
-    mode: 'oklch';
-    l: number;
-    c: number;
-    h?: number;
-}
-
 export interface ColorToken {
     hex: string;
     oklch: string;
     deltaE?: number;
+}
+
+// 일반적인 시맨틱 토큰 맵 타입
+export type SemanticDependentTokens<T extends string> = Record<
+    ReturnType<typeof createSemanticTokenKeys<T>>[keyof ReturnType<
+        typeof createSemanticTokenKeys<T>
+    >],
+    string
+>;
+
+// 각 색상별 토큰 맵 타입
+export type PrimaryDependentTokenMap = SemanticDependentTokens<'primary'>;
+export type SecondaryDependentTokenMap = SemanticDependentTokens<'secondary'>;
+export type SuccessDependentTokenMap = SemanticDependentTokens<'success'>;
+export type WarningDependentTokenMap = SemanticDependentTokens<'warning'>;
+export type ErrorDependentTokenMap = SemanticDependentTokens<'error'>;
+
+export interface SemanticTokenMap {
+    primary: PrimaryDependentTokenMap;
+    secondary?: SecondaryDependentTokenMap;
+    success?: SuccessDependentTokenMap;
+    warning?: WarningDependentTokenMap;
+    error?: ErrorDependentTokenMap;
+}
+
+export type SemanticColorName = keyof SemanticTokenMap;
+
+export interface ThemeDependentTokensCollection {
+    light: SemanticTokenMap;
+    dark: SemanticTokenMap;
 }
 
 export interface ThemeTokens {
@@ -50,27 +123,17 @@ export interface ColorGeneratorConfig {
     };
 }
 
-// ============================================================================
-// Domain Constants
-// ============================================================================
-
-export const DEFAULT_MAIN_BACKGROUND_LIGHTNESS = {
-    light: 100,
-    dark: 14,
-} as const;
-
-export const DEFAULT_CONTRAST_RATIOS = {
-    '050': 1.15,
-    '100': 1.3,
-    '200': 1.7,
-    '300': 2.5,
-    '400': 3.0,
-    '500': 4.5,
-    '600': 6.5,
-    '700': 8.5,
-    '800': 11.5,
-    '900': 15.0,
-} as const;
+export interface SemanticColorGeneratorConfig extends ColorGeneratorConfig {
+    colors: {
+        primary: string;
+        secondary?: string;
+        success?: string;
+        warning?: string;
+        error?: string;
+        hint?: string;
+        contrast?: string;
+    };
+}
 
 // ============================================================================
 // Domain Utilities
@@ -104,15 +167,21 @@ export const formatOklchForWeb = (oklchString: string): string => {
 /**
  * Base 컬러 토큰 생성 (흰색, 검은색)
  */
+const BASE_COLORS = {
+    white: '#ffffff',
+    black: '#000000',
+} as const;
+
 export const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
-    return {
-        white: {
-            hex: '#ffffff',
-            oklch: formatter(formatCss(oklch('#ffffff'))!),
+    return Object.entries(BASE_COLORS).reduce(
+        (tokens, [colorName, hexValue]) => {
+            const oklchColor = oklch(hexValue);
+            tokens[colorName as keyof typeof BASE_COLORS] = {
+                hex: hexValue,
+                oklch: formatter(formatCss(oklchColor) ?? ''),
+            };
+            return tokens;
         },
-        black: {
-            hex: '#000000',
-            oklch: formatter(formatCss(oklch('#000000'))!),
-        },
-    };
+        {} as Record<keyof typeof BASE_COLORS, ColorToken>,
+    );
 };

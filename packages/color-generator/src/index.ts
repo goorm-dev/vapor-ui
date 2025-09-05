@@ -1,5 +1,5 @@
 import { generateColorPalette } from './primitive';
-import { generateSemanticColorPalette } from './semantic';
+import { generateSemanticColorPalette, generateSemanticDependentTokens } from './semantic';
 
 // ============================================================================
 // Primitive Colors
@@ -12,12 +12,13 @@ export const colorPalette = generateColorPalette();
 // Semantic Colors
 // ============================================================================
 
-export { generateSemanticColorPalette, type SemanticColorConfig } from './semantic';
+export { generateSemanticColorPalette } from './semantic';
 export const primaryColorPalette = generateSemanticColorPalette({
     colors: {
-        primary: '#ffffdc',
+        primary: '#ffffdd',
     },
 });
+export const primaryDependentTokens = generateSemanticDependentTokens(primaryColorPalette);
 
 // ============================================================================
 // Core Constants & Types

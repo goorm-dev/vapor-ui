@@ -73,14 +73,14 @@ exports[`Primary Color Generator > primaryColorPalette > should generate consist
     },
     "primary": {
       "050": {
-        "deltaE": 71.75,
-        "hex": "#2f2f17",
-        "oklch": "oklch(0.298 0.039 108.6)",
+        "deltaE": 71.73,
+        "hex": "#2f2f18",
+        "oklch": "oklch(0.299 0.038 108.5)",
       },
       "100": {
-        "deltaE": 66.14,
-        "hex": "#383820",
-        "oklch": "oklch(0.334 0.039 108.3)",
+        "deltaE": 66.13,
+        "hex": "#383821",
+        "oklch": "oklch(0.334 0.037 108.3)",
       },
       "200": {
         "deltaE": 56.76,
@@ -88,39 +88,39 @@ exports[`Primary Color Generator > primaryColorPalette > should generate consist
         "oklch": "oklch(0.398 0.038 108.0)",
       },
       "300": {
-        "deltaE": 45.09,
-        "hex": "#626248",
-        "oklch": "oklch(0.489 0.039 107.8)",
+        "deltaE": 45.42,
+        "hex": "#626149",
+        "oklch": "oklch(0.487 0.037 105.7)",
       },
       "400": {
-        "deltaE": 40.17,
-        "hex": "#6e6e54",
-        "oklch": "oklch(0.531 0.039 107.7)",
+        "deltaE": 40.16,
+        "hex": "#6e6e55",
+        "oklch": "oklch(0.531 0.037 107.6)",
       },
       "500": {
-        "deltaE": 29.67,
-        "hex": "#8b8b6f",
-        "oklch": "oklch(0.629 0.040 107.5)",
+        "deltaE": 29.66,
+        "hex": "#8b8b70",
+        "oklch": "oklch(0.629 0.039 107.5)",
       },
       "600": {
         "deltaE": 20.71,
-        "hex": "#a8a88b",
-        "oklch": "oklch(0.724 0.040 107.4)",
+        "hex": "#a8a88c",
+        "oklch": "oklch(0.724 0.039 107.3)",
       },
       "700": {
         "deltaE": 14.2,
-        "hex": "#c0c0a1",
-        "oklch": "oklch(0.800 0.042 107.3)",
+        "hex": "#c0c0a2",
+        "oklch": "oklch(0.800 0.041 107.3)",
       },
       "800": {
-        "deltaE": 6.98,
-        "hex": "#dedebd",
-        "oklch": "oklch(0.892 0.044 107.3)",
+        "deltaE": 6.82,
+        "hex": "#dedfbe",
+        "oklch": "oklch(0.894 0.044 108.7)",
       },
       "900": {
         "deltaE": 0.83,
-        "hex": "#fbfbd9",
-        "oklch": "oklch(0.979 0.044 107.2)",
+        "hex": "#fbfbda",
+        "oklch": "oklch(0.980 0.043 107.2)",
       },
     },
   },
@@ -186,38 +186,38 @@ exports[`Primary Color Generator > primaryColorPalette > should generate consist
     "primary": {
       "050": {
         "deltaE": 0,
-        "hex": "#ffffdc",
-        "oklch": "oklch(0.991 0.045 107.2)",
+        "hex": "#ffffdd",
+        "oklch": "oklch(0.991 0.044 107.2)",
       },
       "100": {
-        "deltaE": 5.71,
-        "hex": "#e3e4c2",
-        "oklch": "oklch(0.909 0.045 108.6)",
+        "deltaE": 5.87,
+        "hex": "#e3e3c3",
+        "oklch": "oklch(0.907 0.042 107.2)",
       },
       "200": {
-        "deltaE": 12.19,
-        "hex": "#c8c8a8",
-        "oklch": "oklch(0.824 0.043 107.3)",
+        "deltaE": 12.18,
+        "hex": "#c8c8a9",
+        "oklch": "oklch(0.825 0.042 107.3)",
       },
       "300": {
         "deltaE": 21.35,
-        "hex": "#a5a688",
-        "oklch": "oklch(0.716 0.042 109.0)",
+        "hex": "#a5a689",
+        "oklch": "oklch(0.716 0.041 109.0)",
       },
       "400": {
-        "deltaE": 25.87,
-        "hex": "#96977a",
-        "oklch": "oklch(0.668 0.041 109.1)",
+        "deltaE": 25.86,
+        "hex": "#96977b",
+        "oklch": "oklch(0.668 0.040 109.1)",
       },
       "500": {
-        "deltaE": 36.34,
-        "hex": "#78785e",
-        "oklch": "oklch(0.565 0.038 107.6)",
+        "deltaE": 36.05,
+        "hex": "#78795f",
+        "oklch": "oklch(0.568 0.038 109.4)",
       },
       "600": {
-        "deltaE": 46.29,
-        "hex": "#605f46",
-        "oklch": "oklch(0.479 0.038 105.8)",
+        "deltaE": 46.28,
+        "hex": "#605f47",
+        "oklch": "oklch(0.480 0.037 105.7)",
       },
       "700": {
         "deltaE": 54.24,
@@ -225,15 +225,38 @@ exports[`Primary Color Generator > primaryColorPalette > should generate consist
         "oklch": "oklch(0.417 0.038 107.9)",
       },
       "800": {
-        "deltaE": 64.38,
-        "hex": "#3b3b23",
-        "oklch": "oklch(0.345 0.039 108.3)",
+        "deltaE": 64.83,
+        "hex": "#3b3a23",
+        "oklch": "oklch(0.343 0.037 106.1)",
       },
       "900": {
-        "deltaE": 76.48,
-        "hex": "#282810",
-        "oklch": "oklch(0.270 0.039 108.8)",
+        "deltaE": 77,
+        "hex": "#282711",
+        "oklch": "oklch(0.268 0.037 106.3)",
       },
+    },
+  },
+}
+`;
+
+exports[`Primary Color Generator > primaryColorPalette > should generate consistent primary color palette collection22 1`] = `
+{
+  "dark": {
+    "primary": {
+      "background-primary": "color-primary-900",
+      "border-primary": "color-primary-900",
+      "button-foreground-primary": "black",
+      "foreground-primary-100": "color-primary-900",
+      "foreground-primary-200": "color-primary-900",
+    },
+  },
+  "light": {
+    "primary": {
+      "background-primary": "color-primary-050",
+      "border-primary": "color-primary-050",
+      "button-foreground-primary": "black",
+      "foreground-primary-100": "color-primary-100",
+      "foreground-primary-200": "color-primary-200",
     },
   },
 }
