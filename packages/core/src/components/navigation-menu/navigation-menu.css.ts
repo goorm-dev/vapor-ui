@@ -50,28 +50,16 @@ export const link = recipe({
                 '&[aria-current="page"]': {
                     color: vars.color.foreground['primary-darker'],
                 },
+
+                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
             },
         }),
     ],
 
     defaultVariants: {
         size: 'md',
-        align: 'center',
-        disabled: false,
     },
     variants: {
-        disabled: {
-            true: layerStyle('components', {
-                pointerEvents: 'none',
-                opacity: 0.32,
-            }),
-        },
-        align: {
-            start: layerStyle('components', { justifyContent: 'start' }),
-            center: layerStyle('components', { justifyContent: 'center' }),
-            end: layerStyle('components', { justifyContent: 'end' }),
-        },
-
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['075'],

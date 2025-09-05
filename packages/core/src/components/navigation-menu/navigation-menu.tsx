@@ -13,12 +13,16 @@ import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/vars.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import type { VComponentProps } from '~/utils/types';
 
 import type { ItemVariants, LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
 
-type NavigationMenuContextType = NavigationMenuVariants;
+type NavigationMenuVariants = ListVariants & ItemVariants & LinkVariants;
+type NavigationMenuSharedProps = NavigationMenuVariants & { disabled?: boolean };
+type NavigationMenuContextType = NavigationMenuSharedProps;
+
 const [NavigationMenuProvider, useNavigationMenuContext] = createContext<NavigationMenuContextType>(
     {
         name: 'NavigationMenuContext',
@@ -31,20 +35,18 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
  * NavigationMenu.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type NavigationMenuVariants = ListVariants & ItemVariants & LinkVariants;
 type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
 
-interface NavigationMenuRootProps extends RootPrimitiveProps, NavigationMenuVariants {
+interface NavigationMenuRootProps extends RootPrimitiveProps, NavigationMenuSharedProps {
     'aria-label': string;
 }
 
 const Root = forwardRef<HTMLElement, NavigationMenuRootProps>(
     ({ 'aria-label': ariaLabel, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<NavigationMenuVariants>()(props, [
+        const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(props, [
             'direction',
             'size',
             'stretch',
-            'align',
             'disabled',
         ]);
 
@@ -116,7 +118,12 @@ interface NavigationMenuLinkProps extends LinkPrimitiveProps {
 
 const Link = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
     ({ selected, disabled, href, className, ...props }, ref) => {
-        const { size, align } = useNavigationMenuContext();
+        const { size } = useNavigationMenuContext();
+
+        const dataAttrs = createDataAttributes({
+            'data-selected': selected,
+            'data-disabled': disabled,
+        });
 
         return (
             <BaseNavigationMenu.Link
@@ -124,8 +131,8 @@ const Link = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
                 href={disabled ? undefined : href}
                 aria-current={selected ? 'page' : undefined}
                 aria-disabled={disabled ? 'true' : undefined}
-                data-selected={selected ? 'true' : undefined}
-                className={clsx(styles.link({ size, align, disabled }), className)}
+                className={clsx(styles.link({ size }), className)}
+                {...dataAttrs}
                 {...props}
             />
         );
@@ -157,14 +164,15 @@ interface NavigationMenuTriggerProps extends TriggerPrimitiveProps {}
 
 const Trigger = forwardRef<HTMLButtonElement, NavigationMenuTriggerProps>(
     ({ disabled: disabledProp, className, ...props }, ref) => {
-        const { size, align, disabled: contextDisabled } = useNavigationMenuContext();
+        const { size, disabled: contextDisabled } = useNavigationMenuContext();
         const disabled = disabledProp || contextDisabled;
 
         return (
             <BaseNavigationMenu.Trigger
                 ref={ref}
                 disabled={disabled}
-                className={clsx(styles.trigger({ size, align, disabled }), className)}
+                data-disabled={disabled ? 'true' : undefined}
+                className={clsx(styles.trigger({ size }), className)}
                 {...props}
             />
         );
@@ -254,7 +262,6 @@ const Popup = forwardRef<HTMLElement, NavigationMenuPopupProps>(
         const [side, setSide] = useState<PositionerPrimitiveProps['side']>('bottom');
         const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('start');
 
-        // arrow position을 메모이제이션
         const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
 
         const popupRef = useRef<HTMLDivElement>(null);
