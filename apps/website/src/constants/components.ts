@@ -17,6 +17,7 @@ import radioGroupData from '../../public/components/radio-group.json';
 import switchData from '../../public/components/switch.json';
 import textInputData from '../../public/components/text-input.json';
 import textData from '../../public/components/text.json';
+import textareaData from '../../public/components/textarea.json';
 import tooltipData from '../../public/components/tooltip.json';
 import vStackData from '../../public/components/v-stack.json';
 
@@ -43,4 +44,5 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     switch: switchData,
     'radio-group': radioGroupData,
     tooltip: tooltipData,
+    textarea: textareaData,
 };
