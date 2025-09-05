@@ -425,6 +425,9 @@ importers:
       '@vanilla-extract/css':
         specifier: ^1.17.1
         version: 1.17.4
+      '@vanilla-extract/dynamic':
+        specifier: ^2.1.5
+        version: 2.1.5
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
