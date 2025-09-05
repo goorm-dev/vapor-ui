@@ -205,6 +205,7 @@ function createColorFamilySection(
                     `${familyName} ${shadeName}`,
                     colorData.hex,
                     colorData.oklch,
+                    colorData.codeSyntax,
                 );
                 colorContainer.appendChild(colorRow);
             }
@@ -225,6 +226,7 @@ function createColorFamilySection(
                     `${familyName} ${shade}`,
                     colorData.hex,
                     colorData.oklch,
+                    colorData.codeSyntax,
                 );
                 colorContainer.appendChild(colorRow);
             }
@@ -244,7 +246,7 @@ function formatFamilyTitle(familyName: string): string {
     return familyName.charAt(0).toUpperCase() + familyName.slice(1);
 }
 
-function createColorRow(colorName: string, hexColor: string, oklchColor?: string): FrameNode {
+function createColorRow(colorName: string, hexColor: string, oklchColor?: string, codeSyntax?: string): FrameNode {
     const row = figma.createFrame();
     row.name = 'color row';
     row.fills = [];
@@ -347,6 +349,22 @@ function createColorRow(colorName: string, hexColor: string, oklchColor?: string
             },
         ];
         colorValuesContainer.appendChild(oklchText);
+    }
+
+    // Code syntax text (if available)
+    if (codeSyntax) {
+        const codeSyntaxText = figma.createText();
+        codeSyntaxText.name = 'code syntax value';
+        codeSyntaxText.characters = codeSyntax;
+        codeSyntaxText.fontSize = 10;
+        // Make code syntax text slightly lighter/gray
+        codeSyntaxText.fills = [
+            {
+                type: 'SOLID',
+                color: { r: 0.4, g: 0.4, b: 0.4 },
+            },
+        ];
+        colorValuesContainer.appendChild(codeSyntaxText);
     }
 
     valueField.appendChild(colorValuesContainer);

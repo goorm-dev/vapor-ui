@@ -14,8 +14,8 @@ export async function handleCreateFigmaVariables(
         const collection = await createOrGetCollection(collectionName);
 
         // Create base variables (white, black)
-        await createVariable(collection, 'base/white', generatedPalette.base.white.hex);
-        await createVariable(collection, 'base/black', generatedPalette.base.black.hex);
+        await createVariable(collection, 'base/white', generatedPalette.base.white.hex, generatedPalette.base.white.codeSyntax);
+        await createVariable(collection, 'base/black', generatedPalette.base.black.hex, generatedPalette.base.black.codeSyntax);
 
         // Create theme-specific variables with group structure
         for (const themeName of ['light', 'dark'] as const) {
@@ -27,7 +27,8 @@ export async function handleCreateFigmaVariables(
                     await createVariable(
                         collection,
                         `${themeName}/${colorName}/canvas`,
-                        colorShades.canvas.hex
+                        colorShades.canvas.hex,
+                        colorShades.canvas.codeSyntax
                     );
                 } else {
                     // Handle color shades (050, 100, 200, etc.) - sort by numeric value
@@ -44,7 +45,8 @@ export async function handleCreateFigmaVariables(
                         await createVariable(
                             collection,
                             `${themeName}/${colorName}/${shade}`,
-                            colorToken.hex
+                            colorToken.hex,
+                            colorToken.codeSyntax
                         );
                     }
                 }
@@ -81,7 +83,8 @@ async function createOrGetCollection(name: string): Promise<VariableCollection> 
 async function createVariable(
     collection: VariableCollection,
     name: string,
-    hexColor: string
+    hexColor: string,
+    codeSyntax?: string
 ): Promise<Variable> {
     // Check if variable already exists
     const existingVariables = await figma.variables.getLocalVariablesAsync();
@@ -92,12 +95,24 @@ async function createVariable(
     if (existing) {
         // Update existing variable
         existing.setValueForMode(collection.defaultModeId, hexToFigmaColor(hexColor));
+        
+        // Update codeSyntax if available
+        if (codeSyntax) {
+            existing.setVariableCodeSyntax('WEB', codeSyntax);
+        }
+        
         return existing;
     }
 
     // Create new variable
     const variable = figma.variables.createVariable(name, collection, 'COLOR');
     variable.setValueForMode(collection.defaultModeId, hexToFigmaColor(hexColor));
+    
+    // Set codeSyntax if available
+    if (codeSyntax) {
+        variable.setVariableCodeSyntax('WEB', codeSyntax);
+    }
+    
     return variable;
 }
 
