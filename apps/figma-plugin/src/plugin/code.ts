@@ -1,6 +1,7 @@
 import type { UIMessage } from '../figma-messages';
 import { handleCreateFigmaVariables } from './handlers/create-figma-variables';
 import { handleCreatePaletteSections } from './handlers/create-palette-sections';
+import { handleCreateSemanticFigmaVariables } from './handlers/create-semantic-figma-variables';
 
 // ============================================================================
 // Figma Plugin Setup
@@ -20,6 +21,13 @@ figma.ui.onmessage = async (msg: UIMessage) => {
             break;
         case 'create-figma-variables':
             await handleCreateFigmaVariables(msg.data.generatedPalette, msg.data.collectionName);
+            break;
+        case 'create-semantic-palette-sections':
+            handleCreatePaletteSections(msg.data.generatedSemanticPalette);
+            break;
+        case 'create-semantic-figma-variables':
+            // Use semantic palette directly without base colors
+            await handleCreateSemanticFigmaVariables(msg.data.generatedSemanticPalette, msg.data.collectionName);
             break;
         default:
             console.warn('Unknown message type:', msg);

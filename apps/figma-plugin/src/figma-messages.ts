@@ -14,7 +14,17 @@ type CreateFigmaVariablesMessage = {
     data: { generatedPalette: ColorPaletteCollection; collectionName: string };
 };
 
-export type UIMessage = CreatePaletteSectionsMessage | CreateFigmaVariablesMessage;
+type CreateSemanticPaletteSectionsMessage = {
+    type: 'create-semantic-palette-sections';
+    data: { generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'> };
+};
+
+type CreateSemanticFigmaVariablesMessage = {
+    type: 'create-semantic-figma-variables';
+    data: { generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>; collectionName: string };
+};
+
+export type UIMessage = CreatePaletteSectionsMessage | CreateFigmaVariablesMessage | CreateSemanticPaletteSectionsMessage | CreateSemanticFigmaVariablesMessage;
 
 // ============================================================================
 // Message  Utilities

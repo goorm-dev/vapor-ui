@@ -9,7 +9,6 @@ import type {
     ThemeTokens,
 } from '../types';
 import {
-    createBaseColorTokens,
     formatOklchForWeb,
     generateCodeSyntax,
     getContrastingForegroundColor,
@@ -212,7 +211,7 @@ function createSemanticTokenMap<T extends string>(
 
 export function generateSemanticColorPalette(
     config: SemanticColorGeneratorConfig,
-): ColorPaletteCollection {
+): Pick<ColorPaletteCollection, 'light' | 'dark'> {
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
 
     // NOTE: In the "light" theme, find the closest scale to the custom color and overwrite it.
@@ -221,15 +220,25 @@ export function generateSemanticColorPalette(
         config.colors,
     );
 
+    const lightTokens = adjustedLightColorTokens;
+    const darkTokens = generateThemeTokens(config.colors, contrastRatios, 'dark');
+
+    // Remove gray from both themes if it exists
+    if ('gray' in lightTokens) {
+        delete lightTokens.gray;
+    }
+    if ('gray' in darkTokens) {
+        delete darkTokens.gray;
+    }
+
     return {
-        base: createBaseColorTokens(formatOklchForWeb),
-        light: adjustedLightColorTokens,
-        dark: generateThemeTokens(config.colors, contrastRatios, 'dark'),
+        light: lightTokens,
+        dark: darkTokens,
     };
 }
 
 export function generateSemanticDependentTokens(
-    semanticColorPalette: ColorPaletteCollection,
+    semanticColorPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>,
 ): ThemeDependentTokensCollection {
     const lightPrimaryPalette = semanticColorPalette.light.primary;
     const darkPrimaryPalette = semanticColorPalette.dark.primary;
