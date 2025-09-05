@@ -24,7 +24,9 @@ const ColorBoard = () => {
                 <RadioGroup.Root
                     value={value}
                     className={styles.colorBoard_radio_group}
-                    onValueChange={onChangeColor}
+                    onValueChange={(value) => {
+                        if (typeof value === 'string') onChangeColor(value);
+                    }}
                 >
                     <ColorSelector bgColor="#df3337" checkedColor={value} />
                     <ColorSelector bgColor="#da2f74" checkedColor={value} />
@@ -43,13 +45,13 @@ const ColorBoard = () => {
                 color="secondary"
                 variant="outline"
                 className={styles.customButton}
-                asChild
-            >
-                <Link href="/docs/getting-started/theming">
-                    커스텀 컬러 사용 방법 알아보기
-                    <ChevronRightOutlineIcon className={styles.icon} />
-                </Link>
-            </Button>
+                render={
+                    <Link href="/docs/getting-started/theming">
+                        커스텀 컬러 사용 방법 알아보기
+                        <ChevronRightOutlineIcon className={styles.icon} />
+                    </Link>
+                }
+            ></Button>
         </div>
     );
 };

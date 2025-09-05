@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
+import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
@@ -9,7 +9,7 @@ import type { VComponentProps } from '~/utils/types';
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
-type BadgePrimitiveProps = VComponentProps<typeof Primitive.span>;
+type BadgePrimitiveProps = VComponentProps<'span'>;
 interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {
     /**
      * ko: Badge의 색상을 설정합니다.
@@ -34,22 +34,22 @@ interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {
  * ko: Badge는 이미지, 컨텐츠 등의 상태 또는 분류를 시각적으로 표시합니다.
  * en: english description
  */
-const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ className, children, ...props }, ref) => {
+
+const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ render, className, ...props }, ref) => {
     const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(props, [
         'color',
         'size',
         'shape',
     ]);
 
-    return (
-        <Primitive.span
-            ref={ref}
-            className={clsx(styles.root(variantsProps), className)}
-            {...otherProps}
-        >
-            {children}
-        </Primitive.span>
-    );
+    return useRender({
+        ref,
+        render: render || <span />,
+        props: {
+            className: clsx(styles.root(variantsProps), className),
+            ...otherProps,
+        },
+    });
 });
 Badge.displayName = 'Badge';
 

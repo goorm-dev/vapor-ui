@@ -4,34 +4,28 @@ export default function DialogVariants() {
     return (
         <div className="space-y-4">
             <div className="space-x-4">
-                <Dialog.Root size="md" closeOnEscape={false}>
-                    <Dialog.Trigger asChild>
-                        <Button>Medium + No ESC</Button>
-                    </Dialog.Trigger>
+                <Dialog.Root size="md" closeOnClickOverlay={false}>
+                    <Dialog.Trigger render={<Button>Medium + Prevent Overlay Click</Button>} />
                     <Dialog.CombinedContent>
                         <Dialog.Header>
                             <Dialog.Title>Medium Size</Dialog.Title>
-                            <Dialog.Close aria-label="Close" />
                         </Dialog.Header>
                         <Dialog.Body>
-                            <Dialog.Description>ESC 키로 닫을 수 없습니다.</Dialog.Description>
+                            <Dialog.Description>
+                                Overlay 클릭 시 닫을 수 없습니다.
+                            </Dialog.Description>
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <Dialog.Close asChild>
-                                <Button>확인</Button>
-                            </Dialog.Close>
+                            <Dialog.Close render={<Button>확인</Button>} />
                         </Dialog.Footer>
                     </Dialog.CombinedContent>
                 </Dialog.Root>
 
                 <Dialog.Root size="xl" modal={false}>
-                    <Dialog.Trigger asChild>
-                        <Button>XL + Non-Modal</Button>
-                    </Dialog.Trigger>
+                    <Dialog.Trigger render={<Button>XL + Non-Modal</Button>} />
                     <Dialog.CombinedContent>
                         <Dialog.Header>
                             <Dialog.Title>Extra Large Size</Dialog.Title>
-                            <Dialog.Close aria-label="Close" />
                         </Dialog.Header>
                         <Dialog.Body>
                             <Dialog.Description>
@@ -40,9 +34,7 @@ export default function DialogVariants() {
                             </Dialog.Description>
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <Dialog.Close asChild>
-                                <Button>확인</Button>
-                            </Dialog.Close>
+                            <Dialog.Close render={<Button>확인</Button>} />
                         </Dialog.Footer>
                     </Dialog.CombinedContent>
                 </Dialog.Root>

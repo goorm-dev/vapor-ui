@@ -9,7 +9,7 @@ export default function AvatarFallbackOnly() {
             <Avatar.Root size="md" alt="Vapor tokens">
                 <Avatar.Fallback>VT</Avatar.Fallback>
             </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Delay" delayMs={600}>
+            <Avatar.Root size="md" alt="Vapor Delay" delay={600}>
                 <Avatar.Fallback>VD</Avatar.Fallback>
             </Avatar.Root>
         </div>

@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
+import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
@@ -13,24 +13,21 @@ import * as styles from './callout.css';
  * Callout
  * -----------------------------------------------------------------------------------------------*/
 
-type CalloutPrimitiveProps = VComponentProps<typeof Primitive.div>;
+type CalloutPrimitiveProps = VComponentProps<'div'>;
 interface CalloutProps extends CalloutPrimitiveProps, CalloutVariants {}
 
-const Callout = forwardRef<HTMLDivElement, CalloutProps>(
-    ({ className, children, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(props, ['color']);
+const Callout = forwardRef<HTMLDivElement, CalloutProps>(({ render, className, ...props }, ref) => {
+    const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(props, ['color']);
 
-        return (
-            <Primitive.div
-                ref={ref}
-                className={clsx(styles.root(variantProps), className)}
-                {...otherProps}
-            >
-                {children}
-            </Primitive.div>
-        );
-    },
-);
+    return useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.root(variantProps), className),
+            ...otherProps,
+        },
+    });
+});
 Callout.displayName = 'Callout';
 
 export { Callout };

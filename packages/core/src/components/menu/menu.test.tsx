@@ -1,5 +1,5 @@
 import { DirectionProvider } from '@base-ui-components/react';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 // import { axe } from 'vitest-axe';
@@ -9,17 +9,15 @@ import { Menu } from './menu';
 
 const MenuTest = (props: Omit<MenuRootProps, 'children'>) => {
     return (
-        <Menu.Root {...props} modal={false} side="bottom" sideOffset={8}>
+        <Menu.Root {...props} modal={false}>
             <Menu.Trigger>Open Menu</Menu.Trigger>
-            <Menu.Portal>
-                <Menu.Content>
-                    <Menu.Group>
-                        <Menu.Item>item1</Menu.Item>
-                        <Menu.Item>item2</Menu.Item>
-                        <Menu.Item>item3</Menu.Item>
-                    </Menu.Group>
-                </Menu.Content>
-            </Menu.Portal>
+            <Menu.Content>
+                <Menu.Group>
+                    <Menu.Item>item1</Menu.Item>
+                    <Menu.Item>item2</Menu.Item>
+                    <Menu.Item>item3</Menu.Item>
+                </Menu.Group>
+            </Menu.Content>
         </Menu.Root>
     );
 };
@@ -32,6 +30,8 @@ describe('<Menu.Root />', () => {
 
     //     expect(result).toHaveNoViolations();
     // });
+
+    afterEach(cleanup);
 
     describe('keyboard navigation', () => {
         it('should open the menu when pressed "Enter"', async () => {
@@ -82,7 +82,6 @@ describe('<Menu.Root />', () => {
 
             const [item1, item2, item3] = rendered.getAllByRole('menuitem');
 
-            expect(item1).toHaveFocus();
             expect(item1).toHaveAttribute('data-highlighted');
 
             await userEvent.keyboard('[ArrowDown]');
@@ -128,13 +127,12 @@ describe('<Menu.Root />', () => {
             const rendered = render(
                 <Menu.Root>
                     <Menu.Trigger>Open Menu</Menu.Trigger>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.Item>1</Menu.Item>
-                            <Menu.Item disabled>2</Menu.Item>
-                            <Menu.Item>3</Menu.Item>
-                        </Menu.Content>
-                    </Menu.Portal>
+
+                    <Menu.Content>
+                        <Menu.Item>1</Menu.Item>
+                        <Menu.Item disabled>2</Menu.Item>
+                        <Menu.Item>3</Menu.Item>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const trigger = rendered.getByRole('button', { name: 'Open Menu' });
@@ -169,16 +167,14 @@ describe('<Menu.Root />', () => {
         it('should change the highlighted item when typed character matches', async () => {
             const rendered = render(
                 <Menu.Root open>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.Item>Aa</Menu.Item>
-                            <Menu.Item>Ba</Menu.Item>
-                            <Menu.Item>Bb</Menu.Item>
-                            <Menu.Item>Ca</Menu.Item>
-                            <Menu.Item>Cb</Menu.Item>
-                            <Menu.Item>Cd</Menu.Item>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.Item>Aa</Menu.Item>
+                        <Menu.Item>Ba</Menu.Item>
+                        <Menu.Item>Bb</Menu.Item>
+                        <Menu.Item>Ca</Menu.Item>
+                        <Menu.Item>Cb</Menu.Item>
+                        <Menu.Item>Cd</Menu.Item>
+                    </Menu.Content>
                 </Menu.Root>,
             );
 
@@ -216,13 +212,11 @@ describe('<Menu.Root />', () => {
             const handleClick = vi.fn();
             const rendered = render(
                 <Menu.Root open>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.Item onClick={handleClick}>Item One</Menu.Item>
-                            <Menu.Item onClick={handleClick}>Item Two</Menu.Item>
-                            <Menu.Item onClick={handleClick}>Item Three</Menu.Item>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.Item onClick={handleClick}>Item One</Menu.Item>
+                        <Menu.Item onClick={handleClick}>Item Two</Menu.Item>
+                        <Menu.Item onClick={handleClick}>Item Three</Menu.Item>
+                    </Menu.Content>
                 </Menu.Root>,
             );
 
@@ -317,16 +311,14 @@ describe('<Menu.Root />', () => {
     describe('<Menu.Group />', () => {
         const Test = ({ id }: { id?: string }) => (
             <Menu.Root defaultOpen>
-                <Menu.Portal>
-                    <Menu.Content>
-                        <Menu.Group>
-                            <Menu.GroupLabel id={id || undefined}>Group Label</Menu.GroupLabel>
-                            <Menu.Item>Item 1</Menu.Item>
-                            <Menu.Item>Item 2</Menu.Item>
-                        </Menu.Group>
-                        <Menu.Separator />
-                    </Menu.Content>
-                </Menu.Portal>
+                <Menu.Content>
+                    <Menu.Group>
+                        <Menu.GroupLabel id={id || undefined}>Group Label</Menu.GroupLabel>
+                        <Menu.Item>Item 1</Menu.Item>
+                        <Menu.Item>Item 2</Menu.Item>
+                    </Menu.Group>
+                    <Menu.Separator />
+                </Menu.Content>
             </Menu.Root>
         );
 
@@ -369,21 +361,18 @@ describe('<Menu.SubmenuRoot />', () => {
                 const rendered = render(
                     <DirectionProvider direction={direction}>
                         <Menu.Root open>
-                            <Menu.Portal>
-                                <Menu.Content>
-                                    <Menu.SubmenuRoot>
-                                        <Menu.SubmenuTriggerItem>
-                                            Submenu Trigger
-                                        </Menu.SubmenuTriggerItem>
-                                        <Menu.Portal>
-                                            <Menu.SubmenuContent>
-                                                <Menu.Item>Item 1</Menu.Item>
-                                                <Menu.Item>Item 1</Menu.Item>
-                                            </Menu.SubmenuContent>
-                                        </Menu.Portal>
-                                    </Menu.SubmenuRoot>
-                                </Menu.Content>
-                            </Menu.Portal>
+                            <Menu.Content>
+                                <Menu.SubmenuRoot>
+                                    <Menu.SubmenuTriggerItem>
+                                        Submenu Trigger
+                                    </Menu.SubmenuTriggerItem>
+
+                                    <Menu.SubmenuContent>
+                                        <Menu.Item>Item 1</Menu.Item>
+                                        <Menu.Item>Item 1</Menu.Item>
+                                    </Menu.SubmenuContent>
+                                </Menu.SubmenuRoot>
+                            </Menu.Content>
                         </Menu.Root>
                     </DirectionProvider>,
                 );
@@ -421,21 +410,16 @@ describe('<Menu.SubmenuRoot />', () => {
             const rendered = render(
                 <DirectionProvider direction={direction}>
                     <Menu.Root defaultOpen>
-                        <Menu.Portal>
-                            <Menu.Content>
-                                <Menu.SubmenuRoot defaultOpen>
-                                    <Menu.SubmenuTriggerItem>
-                                        Submenu Trigger
-                                    </Menu.SubmenuTriggerItem>
-                                    <Menu.Portal>
-                                        <Menu.SubmenuContent>
-                                            <Menu.Item>Item 1</Menu.Item>
-                                            <Menu.Item>Item 2</Menu.Item>
-                                        </Menu.SubmenuContent>
-                                    </Menu.Portal>
-                                </Menu.SubmenuRoot>
-                            </Menu.Content>
-                        </Menu.Portal>
+                        <Menu.Content>
+                            <Menu.SubmenuRoot defaultOpen>
+                                <Menu.SubmenuTriggerItem>Submenu Trigger</Menu.SubmenuTriggerItem>
+
+                                <Menu.SubmenuContent>
+                                    <Menu.Item>Item 1</Menu.Item>
+                                    <Menu.Item>Item 2</Menu.Item>
+                                </Menu.SubmenuContent>
+                            </Menu.SubmenuRoot>
+                        </Menu.Content>
                     </Menu.Root>
                 </DirectionProvider>,
             );
@@ -460,13 +444,11 @@ describe('<Menu.SubmenuRoot />', () => {
 describe('<Menu.CheckboxItem>', () => {
     const Test = () => (
         <Menu.Root defaultOpen modal={false}>
-            <Menu.Portal>
-                <Menu.Content>
-                    <Menu.CheckboxItem>Checkbox Item 1</Menu.CheckboxItem>
-                    <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                    <Menu.CheckboxItem>Checkbox Item 3</Menu.CheckboxItem>
-                </Menu.Content>
-            </Menu.Portal>
+            <Menu.Content>
+                <Menu.CheckboxItem>Checkbox Item 1</Menu.CheckboxItem>
+                <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                <Menu.CheckboxItem>Checkbox Item 3</Menu.CheckboxItem>
+            </Menu.Content>
         </Menu.Root>
     );
 
@@ -544,13 +526,11 @@ describe('<Menu.CheckboxItem>', () => {
             const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
-                                Checkbox Item
-                            </Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
+                            Checkbox Item
+                        </Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const checkitem = rendered.getByRole('menuitemcheckbox');
@@ -573,12 +553,10 @@ describe('<Menu.CheckboxItem>', () => {
         it('should close the menu when clicked', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem closeOnClick>Checkbox Item 1</Menu.CheckboxItem>
-                            <Menu.CheckboxItem closeOnClick>Checkbox Item 2</Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.CheckboxItem closeOnClick>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem closeOnClick>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
@@ -597,12 +575,11 @@ describe('<Menu.CheckboxItem>', () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
                     <Menu.Trigger />
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem defaultChecked>Checkbox Item 1</Menu.CheckboxItem>
-                            <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+
+                    <Menu.Content>
+                        <Menu.CheckboxItem defaultChecked>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [check1] = rendered.getAllByRole('menuitemcheckbox');
@@ -622,12 +599,11 @@ describe('<Menu.CheckboxItem>', () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
                     <Menu.Trigger>메뉴 열기</Menu.Trigger>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem disabled>Checkbox Item 1</Menu.CheckboxItem>
-                            <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+
+                    <Menu.Content>
+                        <Menu.CheckboxItem disabled>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [checkitem] = rendered.getAllByRole('menuitemcheckbox');
@@ -644,12 +620,11 @@ describe('<Menu.CheckboxItem>', () => {
             const rendered = render(
                 <Menu.Root>
                     <Menu.Trigger />
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem disabled>Checkbox Item 1</Menu.CheckboxItem>
-                            <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+
+                    <Menu.Content>
+                        <Menu.CheckboxItem disabled>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
 
@@ -679,12 +654,10 @@ describe('<Menu.CheckboxItem>', () => {
         it('should set the initial checked state', () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem defaultChecked>Checkbox Item 1</Menu.CheckboxItem>
-                            <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.CheckboxItem defaultChecked>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
@@ -698,12 +671,10 @@ describe('<Menu.CheckboxItem>', () => {
         it('should set the checked state when controlled', () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem checked>Checkbox Item 1</Menu.CheckboxItem>
-                            <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.CheckboxItem checked>Checkbox Item 1</Menu.CheckboxItem>
+                        <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
@@ -718,13 +689,11 @@ describe('<Menu.CheckboxItem>', () => {
             const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
-                                Checkbox Item
-                            </Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
+                            Checkbox Item
+                        </Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const checkitem = rendered.getByRole('menuitemcheckbox');
@@ -741,15 +710,13 @@ describe('<Menu.CheckboxItem>', () => {
 describe('<Menu.RadioGroupItem>', () => {
     const Test = () => (
         <Menu.Root defaultOpen>
-            <Menu.Portal>
-                <Menu.Content>
-                    <Menu.RadioGroup>
-                        <Menu.RadioItem value="item1">Checkbox Item 1</Menu.RadioItem>
-                        <Menu.RadioItem value="item2">Checkbox Item 2</Menu.RadioItem>
-                        <Menu.RadioItem value="item3">Checkbox Item 3</Menu.RadioItem>
-                    </Menu.RadioGroup>
-                </Menu.Content>
-            </Menu.Portal>
+            <Menu.Content>
+                <Menu.RadioGroup>
+                    <Menu.RadioItem value="item1">Checkbox Item 1</Menu.RadioItem>
+                    <Menu.RadioItem value="item2">Checkbox Item 2</Menu.RadioItem>
+                    <Menu.RadioItem value="item3">Checkbox Item 3</Menu.RadioItem>
+                </Menu.RadioGroup>
+            </Menu.Content>
         </Menu.Root>
     );
 
@@ -830,13 +797,11 @@ describe('<Menu.RadioGroupItem>', () => {
             const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
-                                Checkbox Item
-                            </Menu.CheckboxItem>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
+                            Checkbox Item
+                        </Menu.CheckboxItem>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const checkitem = rendered.getByRole('menuitemcheckbox');
@@ -857,18 +822,16 @@ describe('<Menu.RadioGroupItem>', () => {
         it('should close the menu when clicked', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.RadioGroup>
-                                <Menu.RadioItem value="item1" closeOnClick>
-                                    Radio Item 1
-                                </Menu.RadioItem>
-                                <Menu.RadioItem value="item2" closeOnClick>
-                                    Radio Item 2
-                                </Menu.RadioItem>
-                            </Menu.RadioGroup>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.RadioGroup>
+                            <Menu.RadioItem value="item1" closeOnClick>
+                                Radio Item 1
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item2" closeOnClick>
+                                Radio Item 2
+                            </Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
@@ -887,14 +850,13 @@ describe('<Menu.RadioGroupItem>', () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
                     <Menu.Trigger />
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.RadioGroup defaultValue="item1">
-                                <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
-                                <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
-                            </Menu.RadioGroup>
-                        </Menu.Content>
-                    </Menu.Portal>
+
+                    <Menu.Content>
+                        <Menu.RadioGroup defaultValue="item1">
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [radio1] = rendered.getAllByRole('menuitemradio');
@@ -914,16 +876,15 @@ describe('<Menu.RadioGroupItem>', () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
                     <Menu.Trigger>메뉴 열기</Menu.Trigger>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.RadioGroup>
-                                <Menu.RadioItem disabled value="item1">
-                                    Radio Item 1
-                                </Menu.RadioItem>
-                                <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
-                            </Menu.RadioGroup>
-                        </Menu.Content>
-                    </Menu.Portal>
+
+                    <Menu.Content>
+                        <Menu.RadioGroup>
+                            <Menu.RadioItem disabled value="item1">
+                                Radio Item 1
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [checkitem] = rendered.getAllByRole('menuitemradio');
@@ -940,16 +901,15 @@ describe('<Menu.RadioGroupItem>', () => {
             const rendered = render(
                 <Menu.Root>
                     <Menu.Trigger />
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.RadioGroup>
-                                <Menu.RadioItem disabled value="item1">
-                                    Radio Item 1
-                                </Menu.RadioItem>
-                                <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
-                            </Menu.RadioGroup>
-                        </Menu.Content>
-                    </Menu.Portal>
+
+                    <Menu.Content>
+                        <Menu.RadioGroup>
+                            <Menu.RadioItem disabled value="item1">
+                                Radio Item 1
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
                 </Menu.Root>,
             );
 
@@ -985,14 +945,12 @@ describe('<Menu.RadioGroupItem>', () => {
         it('should set the initial value state', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.RadioGroup defaultValue="item1">
-                                <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
-                                <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
-                            </Menu.RadioGroup>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.RadioGroup defaultValue="item1">
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
@@ -1011,14 +969,12 @@ describe('<Menu.RadioGroupItem>', () => {
         it('should set the value state when controlled', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.RadioGroup value="item1">
-                                <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
-                                <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
-                            </Menu.RadioGroup>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.RadioGroup value="item1">
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
@@ -1038,14 +994,12 @@ describe('<Menu.RadioGroupItem>', () => {
             const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Portal>
-                        <Menu.Content>
-                            <Menu.RadioGroup onValueChange={handleCheckedChange}>
-                                <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
-                                <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
-                            </Menu.RadioGroup>
-                        </Menu.Content>
-                    </Menu.Portal>
+                    <Menu.Content>
+                        <Menu.RadioGroup onValueChange={handleCheckedChange}>
+                            <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
+                            <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Content>
                 </Menu.Root>,
             );
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');

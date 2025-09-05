@@ -8,7 +8,7 @@ import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
-export const content = layerStyle('components', {
+export const popup = layerStyle('components', {
     display: 'flex',
     flexDirection: 'column',
 
@@ -25,7 +25,7 @@ export const content = layerStyle('components', {
     ':focus-visible': { outline: 'none' },
 });
 
-export const subContents = content;
+export const subPopup = popup;
 
 export const item = recipe({
     base: [

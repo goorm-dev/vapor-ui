@@ -6,24 +6,30 @@ export default function TooltipAlignment() {
             <div>
                 <h4 className="text-sm font-medium mb-4">하단 정렬</h4>
                 <div className="flex gap-4">
-                    <Tooltip.Root side="bottom" align="start">
+                    <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>시작</Button>} />
                         <Tooltip.Portal>
-                            <Tooltip.Content>시작 위치에 정렬된 툴팁</Tooltip.Content>
+                            <Tooltip.Positioner side="bottom" align="start">
+                                <Tooltip.Popup>시작 위치에 정렬된 툴팁</Tooltip.Popup>
+                            </Tooltip.Positioner>
                         </Tooltip.Portal>
                     </Tooltip.Root>
 
-                    <Tooltip.Root side="bottom" align="center">
+                    <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
                         <Tooltip.Portal>
-                            <Tooltip.Content>중앙에 정렬된 툴팁</Tooltip.Content>
+                            <Tooltip.Positioner side="bottom" align="center">
+                                <Tooltip.Popup>중앙에 정렬된 툴팁</Tooltip.Popup>
+                            </Tooltip.Positioner>
                         </Tooltip.Portal>
                     </Tooltip.Root>
 
-                    <Tooltip.Root side="bottom" align="end">
+                    <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>끝</Button>} />
                         <Tooltip.Portal>
-                            <Tooltip.Content>끝 위치에 정렬된 툴팁</Tooltip.Content>
+                            <Tooltip.Positioner side="bottom" align="end">
+                                <Tooltip.Popup>끝 위치에 정렬된 툴팁</Tooltip.Popup>
+                            </Tooltip.Positioner>
                         </Tooltip.Portal>
                     </Tooltip.Root>
                 </div>
@@ -32,24 +38,30 @@ export default function TooltipAlignment() {
             <div>
                 <h4 className="text-sm font-medium mb-4">우측 정렬</h4>
                 <div className="flex flex-col gap-4">
-                    <Tooltip.Root side="right" align="start">
+                    <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>시작</Button>} />
                         <Tooltip.Portal>
-                            <Tooltip.Content>상단 시작 위치</Tooltip.Content>
+                            <Tooltip.Positioner side="right" align="start">
+                                <Tooltip.Popup>상단 시작 위치</Tooltip.Popup>
+                            </Tooltip.Positioner>
                         </Tooltip.Portal>
                     </Tooltip.Root>
 
-                    <Tooltip.Root side="right" align="center">
+                    <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
                         <Tooltip.Portal>
-                            <Tooltip.Content>중앙 위치</Tooltip.Content>
+                            <Tooltip.Positioner side="right" align="center">
+                                <Tooltip.Popup>중앙 위치</Tooltip.Popup>
+                            </Tooltip.Positioner>
                         </Tooltip.Portal>
                     </Tooltip.Root>
 
-                    <Tooltip.Root side="right" align="end">
+                    <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>끝</Button>} />
                         <Tooltip.Portal>
-                            <Tooltip.Content>하단 끝 위치</Tooltip.Content>
+                            <Tooltip.Positioner side="right" align="end">
+                                <Tooltip.Popup>하단 끝 위치</Tooltip.Popup>
+                            </Tooltip.Positioner>
                         </Tooltip.Portal>
                     </Tooltip.Root>
                 </div>

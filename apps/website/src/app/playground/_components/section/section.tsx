@@ -23,8 +23,8 @@ const Section = ({ title, children }: SectionProps) => {
 
     return (
         <section className={styles.section}>
-            <Text id={`${kebabCase(title)}-title`} typography="subtitle1" asChild>
-                <p>{title}</p>
+            <Text id={`${kebabCase(title)}-title`} typography="subtitle1" render={<p />}>
+                {title}
             </Text>
 
             <Element />
