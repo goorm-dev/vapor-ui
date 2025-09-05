@@ -1,6 +1,6 @@
 import { formatCss, oklch } from 'culori';
 
-import { BASE_COLORS } from '../constants';
+import { BASE_COLORS, BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD } from '../constants';
 import type { ColorToken } from '../types';
 
 // ============================================================================
@@ -30,6 +30,26 @@ export const formatOklchForWeb = (oklchString: string): string => {
         return `oklch(${roundedL} ${roundedC} ${roundedH})`;
     }
     return oklchString;
+};
+
+/**
+ * 배경 색상의 명도에 따라 적절한 전경 색상을 결정합니다.
+ * culori의 oklch() 함수를 사용하여 안전하고 정확하게 lightness 값을 추출합니다.
+ * @param backgroundOklch - 배경 색상의 OKLCH 문자열
+ * @param threshold - 명도 임계값 (기본값: BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD)
+ * @returns 'black' 또는 'white'
+ */
+export const getContrastingForegroundColor = (
+    backgroundOklch: string,
+    threshold: number = BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD,
+): 'black' | 'white' => {
+    // culori의 oklch() 함수를 사용하여 색상 객체로 변환
+    const colorObj = oklch(backgroundOklch);
+    
+    // colorObj가 null이거나 lightness가 없는 경우 기본값 사용
+    const lightness = colorObj?.l ?? 0;
+    
+    return lightness > threshold ? 'black' : 'white';
 };
 
 // ============================================================================

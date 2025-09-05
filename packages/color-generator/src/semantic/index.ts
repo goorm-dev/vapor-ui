@@ -8,7 +8,7 @@ import type {
     ScaleInfo,
     ThemeTokens,
 } from '../types';
-import { createBaseColorTokens, formatOklchForWeb } from '../utils/color';
+import { createBaseColorTokens, formatOklchForWeb, getContrastingForegroundColor } from '../utils/color';
 
 // ============================================================================
 // Types, Tokens & Configuration
@@ -184,13 +184,20 @@ function createSemanticTokenMap<T extends string>(
     colorName: T,
     scaleInfo: ScaleInfo,
     tokenKeys: ReturnType<typeof createSemanticTokenKeys<T>>,
+    palette: Record<string, { oklch: string }>,
 ): SemanticDependentTokenMap<T> {
+    // 배경 색상의 OKLCH 값을 가져와서 적절한 button foreground 색상 결정
+    const backgroundToken = palette[scaleInfo.backgroundScale];
+    const buttonForegroundColor = backgroundToken 
+        ? getContrastingForegroundColor(backgroundToken.oklch)
+        : 'black';
+
     return {
         [tokenKeys.Background]: `color-${colorName}-${scaleInfo.backgroundScale}`,
         [tokenKeys.Foreground100]: `color-${colorName}-${scaleInfo.foregroundScale}`,
         [tokenKeys.Foreground200]: `color-${colorName}-${scaleInfo.alternativeScale}`,
         [tokenKeys.Border]: `color-${colorName}-${scaleInfo.backgroundScale}`,
-        [tokenKeys.ButtonForeground]: 'black',
+        [tokenKeys.ButtonForeground]: buttonForegroundColor,
     } as SemanticDependentTokenMap<T>;
 }
 
@@ -240,7 +247,11 @@ export function generateSemanticDependentTokens(
     const darkScaleInfo = findDarkThemeScales(darkPrimaryPalette, darkScales);
 
     return {
-        light: { primary: createSemanticTokenMap('primary', lightScaleInfo, PRIMARY_TOKEN_KEYS) },
-        dark: { primary: createSemanticTokenMap('primary', darkScaleInfo, PRIMARY_TOKEN_KEYS) },
+        light: { 
+            primary: createSemanticTokenMap('primary', lightScaleInfo, PRIMARY_TOKEN_KEYS, lightPrimaryPalette) 
+        },
+        dark: { 
+            primary: createSemanticTokenMap('primary', darkScaleInfo, PRIMARY_TOKEN_KEYS, darkPrimaryPalette) 
+        },
     };
 }
