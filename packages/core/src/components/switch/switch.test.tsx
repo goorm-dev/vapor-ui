@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import type { RenderResult } from '@testing-library/react';
 import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
@@ -12,24 +11,17 @@ describe('Switch', () => {
     afterEach(cleanup);
 
     describe('given a default Switch', () => {
-        let rendered: RenderResult;
-        let control: HTMLElement;
-        let label: HTMLElement;
-
-        beforeEach(() => {
-            rendered = render(<SwitchTest />);
-            control = rendered.getByRole('switch');
-            label = rendered.getByText(LABEL_TEXT);
-        });
-
         it('should have no a11y violations', async () => {
+            const rendered = render(<SwitchTest />);
             const result = await axe(rendered.container);
 
             expect(result).toHaveNoViolations();
         });
 
         it('should associate the label with the switch control', async () => {
-            const label = rendered.getByLabelText(LABEL_TEXT);
+            const rendered = render(<SwitchTest />);
+            const control = rendered.getByRole('switch');
+            const label = rendered.getByText(LABEL_TEXT);
 
             await userEvent.click(label);
 
@@ -37,6 +29,9 @@ describe('Switch', () => {
         });
 
         it('should toggle checked state when clicked', async () => {
+            const rendered = render(<SwitchTest />);
+            const control = rendered.getByRole('switch');
+
             expect(control).not.toBeChecked();
 
             await userEvent.click(control);
@@ -47,6 +42,10 @@ describe('Switch', () => {
         });
 
         it('should toggle checked state when label is clicked', async () => {
+            const rendered = render(<SwitchTest />);
+            const control = rendered.getByRole('switch');
+            const label = rendered.getByText(LABEL_TEXT);
+
             expect(control).not.toBeChecked();
 
             await userEvent.click(label);
@@ -59,23 +58,26 @@ describe('Switch', () => {
 
     describe('given a uncontrolled Switch', () => {
         const onCheckedChange = vi.fn();
-        let rendered: RenderResult;
-        let control: HTMLElement;
 
         beforeEach(() => {
-            rendered = render(<SwitchTest defaultChecked onCheckedChange={onCheckedChange} />);
-            control = rendered.getByRole('switch') as HTMLElement;
-
             onCheckedChange.mockClear();
         });
 
         it('should have no a11y violations', async () => {
+            const rendered = render(
+                <SwitchTest defaultChecked onCheckedChange={onCheckedChange} />,
+            );
             const result = await axe(rendered.container);
 
             expect(result).toHaveNoViolations();
         });
 
         it('should invoke onCheckedChange callback when toggled', async () => {
+            const rendered = render(
+                <SwitchTest defaultChecked onCheckedChange={onCheckedChange} />,
+            );
+            const control = rendered.getByRole('switch');
+
             expect(onCheckedChange).not.toHaveBeenCalled();
 
             await userEvent.click(control);
@@ -86,6 +88,11 @@ describe('Switch', () => {
         });
 
         it('should toggle checked state when clicked', async () => {
+            const rendered = render(
+                <SwitchTest defaultChecked onCheckedChange={onCheckedChange} />,
+            );
+            const control = rendered.getByRole('switch');
+
             expect(control).toBeChecked();
 
             await userEvent.click(control);
@@ -97,24 +104,21 @@ describe('Switch', () => {
     });
 
     describe('given a controlled Switch', () => {
-        const onCheckedChange = vi.fn();
-        let rendered: RenderResult;
-        let control: HTMLElement;
-
-        beforeEach(() => {
-            rendered = render(<ControlledSwitchTest onCheckedChange={onCheckedChange} />);
-            control = rendered.getByRole('switch') as HTMLElement;
-
-            onCheckedChange.mockClear();
-        });
-
         it('should have no a11y violations', async () => {
+            const onCheckedChange = vi.fn();
+
+            const rendered = render(<SwitchTest onCheckedChange={onCheckedChange} />);
             const result = await axe(rendered.container);
 
             expect(result).toHaveNoViolations();
         });
 
         it('should toggle checked state when clicked', async () => {
+            const onCheckedChange = vi.fn();
+
+            const rendered = render(<SwitchTest onCheckedChange={onCheckedChange} />);
+            const control = rendered.getByRole('switch');
+
             expect(control).not.toBeChecked();
 
             await userEvent.click(control);
@@ -125,27 +129,40 @@ describe('Switch', () => {
         });
 
         it('should invoke onCheckedChange callback when clicked', async () => {
+            const onCheckedChange = vi.fn();
+
+            const rendered = render(<SwitchTest onCheckedChange={onCheckedChange} />);
+            const control = rendered.getByRole('switch');
+
             expect(onCheckedChange).not.toHaveBeenCalled();
 
             await userEvent.click(control);
             expect(onCheckedChange).toHaveBeenCalledTimes(1);
+            expect(onCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
 
             await userEvent.click(control);
             expect(onCheckedChange).toHaveBeenCalledTimes(2);
+            expect(onCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
         });
 
         it('should not toggle checked state when blocker is active', async () => {
-            expect(control).not.toBeChecked();
+            const onCheckedChange = vi.fn();
 
+            const rendered = render(<ControlledSwitchTest onCheckedChange={onCheckedChange} />);
+            const control = rendered.getByRole('switch');
             const blockerButton = rendered.getByText('Blocker Controller');
+
+            expect(control).not.toBeChecked();
 
             await userEvent.click(blockerButton);
             await userEvent.click(control);
+
             expect(onCheckedChange).toHaveBeenCalled();
             expect(control).not.toBeChecked();
 
             await userEvent.click(blockerButton);
             await userEvent.click(control);
+
             expect(onCheckedChange).toHaveBeenCalled();
             expect(control).toBeChecked();
         });
@@ -193,18 +210,18 @@ describe('Switch', () => {
 const LABEL_TEXT = 'Test Switch';
 
 const SwitchTest = (props: SwitchRootProps) => (
-    <Switch.Root {...props}>
-        <Switch.Control />
-        {LABEL_TEXT}
-    </Switch.Root>
+    <>
+        <Switch.Root id="switch-test" {...props} />
+        <label htmlFor="switch-test">{LABEL_TEXT}</label>
+    </>
 );
 
-const ControlledSwitchTest = (props: SwitchRootProps) => {
+const ControlledSwitchTest = ({ onCheckedChange, ...props }: SwitchRootProps) => {
     const [checked, setChecked] = useState<boolean>(false);
     const [blocker, setBlocker] = useState<boolean>(false);
 
     const handleCheckedChange = (checked: boolean, event: Event) => {
-        props.onCheckedChange?.(checked, event);
+        onCheckedChange?.(checked, event);
 
         if (blocker) return;
         setChecked(checked);
@@ -212,10 +229,13 @@ const ControlledSwitchTest = (props: SwitchRootProps) => {
 
     return (
         <>
-            <Switch.Root {...props} checked={checked} onCheckedChange={handleCheckedChange}>
-                <Switch.Control />
-                {LABEL_TEXT}
-            </Switch.Root>
+            <Switch.Root
+                id="switch-test"
+                checked={checked}
+                onCheckedChange={handleCheckedChange}
+                {...props}
+            />
+            <label htmlFor="switch-test">{LABEL_TEXT}</label>
 
             <button onClick={() => setBlocker((prev) => !prev)}>Blocker Controller</button>
         </>

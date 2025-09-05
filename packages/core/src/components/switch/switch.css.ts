@@ -5,21 +5,6 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
-export const root = recipe({
-    base: layerStyle('components', {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: vars.size.space['100'],
-    }),
-
-    defaultVariants: { disabled: false },
-    variants: {
-        disabled: {
-            true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
-        },
-    },
-});
-
 export const control = recipe({
     base: [
         interaction(),
@@ -31,9 +16,8 @@ export const control = recipe({
             cursor: 'pointer',
 
             selectors: {
-                '&[data-checked]': {
-                    backgroundColor: vars.color.background.primary,
-                },
+                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
+                '&[data-checked]': { backgroundColor: vars.color.background.primary },
             },
         }),
     ],
@@ -95,5 +79,4 @@ export const indicator = recipe({
     },
 });
 
-export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
 export type ControlVariants = NonNullable<RecipeVariants<typeof control>>;
