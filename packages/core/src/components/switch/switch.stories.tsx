@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Switch } from '.';
+import { HStack } from '../h-stack';
 import { VStack } from '../v-stack';
 
 export default {
@@ -9,7 +10,8 @@ export default {
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
         disabled: { control: 'boolean' },
-        visuallyHidden: { control: 'boolean' },
+        readOnly: { control: 'boolean' },
+        required: { control: 'boolean' },
     },
 } as Meta<typeof Switch.Root>;
 
@@ -17,36 +19,35 @@ type Story = StoryObj<typeof Switch.Root>;
 
 export const Default: Story = {
     render: (args) => {
-        return (
-            <Switch.Root {...args}>
-                <Switch.Control />
-                <Switch.Label>Default</Switch.Label>
-            </Switch.Root>
-        );
+        return <Switch.Root {...args} />;
     },
 };
 
 export const TestBed: Story = {
     render: () => {
         return (
-            <VStack gap="$150">
-                <Switch.Root size="sm">
-                    <Switch.Control />
-                    <Switch.Label>Test Bed</Switch.Label>
-                </Switch.Root>
-                <Switch.Root size="md">
-                    <Switch.Control />
-                    <Switch.Label>Test Bed</Switch.Label>
-                </Switch.Root>
-                <Switch.Root size="lg">
-                    <Switch.Control />
-                    <Switch.Label>Test Bed</Switch.Label>
-                </Switch.Root>
+            <VStack gap="$200">
+                <HStack gap="$100" alignItems="center">
+                    <Switch.Root size="md" />
+                    <Switch.Root size="md" checked />
+                    <Switch.Root size="md" disabled />
+                    <Switch.Root size="md" checked disabled />
+                    <Switch.Root size="md" required />
+                    <Switch.Root size="md" checked required />
+                    <Switch.Root size="md" readOnly />
+                    <Switch.Root size="md" checked readOnly />
+                </HStack>
 
-                <Switch.Root visuallyHidden>
-                    <Switch.Control />
-                    <Switch.Label>Test Bed</Switch.Label>
-                </Switch.Root>
+                <HStack gap="$100" alignItems="center">
+                    <Switch.Root size="lg" />
+                    <Switch.Root size="lg" checked />
+                    <Switch.Root size="lg" disabled />
+                    <Switch.Root size="lg" checked disabled />
+                    <Switch.Root size="lg" required />
+                    <Switch.Root size="lg" checked required />
+                    <Switch.Root size="lg" readOnly />
+                    <Switch.Root size="lg" checked readOnly />
+                </HStack>
             </VStack>
         );
     },

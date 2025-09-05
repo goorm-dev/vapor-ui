@@ -3,7 +3,7 @@ import { Switch } from '@vapor-ui/core';
 export default function DefaultSwitch() {
     return (
         <Switch.Root>
-            <Switch.Label>Airplane mode</Switch.Label>
+            Airplane mode
             <Switch.Control />
         </Switch.Root>
     );
