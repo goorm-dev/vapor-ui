@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { CheckboxIcon, CloseOutlineIcon } from '@vapor-ui/icons';
 
 import type { CalloutProps } from '.';
 import { Callout } from '.';
@@ -30,6 +31,15 @@ export const TestBed: Story = {
             <Callout color="danger">Anyone can develop</Callout>
             <Callout color="hint">Anyone can develop</Callout>
             <Callout color="contrast">Anyone can develop</Callout>
+
+            <Callout color="success">
+                <CheckboxIcon />
+                Success operation completed
+            </Callout>
+            <Callout color="danger">
+                <CloseOutlineIcon />
+                Error: Something went wrong
+            </Callout>
         </Flex>
     ),
 };
