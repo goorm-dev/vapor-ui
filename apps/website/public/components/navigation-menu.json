@@ -61,22 +61,10 @@
             "description": "Nav.Link의 높이·타이포그래피 크기 등을 제어합니다."
         },
         {
-            "prop": "shape",
-            "type": ["fill", "ghost"],
-            "default": "fill",
-            "description": "Nav.Link의 배경 스타일을 설정합니다."
-        },
-        {
             "prop": "stretch",
             "type": ["boolean"],
             "default": "false",
             "description": "stretch가 true이면 Nav.List와 Nav.Item이 가용 공간을 가득 채웁니다."
-        },
-        {
-            "prop": "align",
-            "type": ["start", "center", "end"],
-            "default": "center",
-            "description": "Nav.Link 내부 컨텐츠(아이콘+텍스트 등)의 정렬 위치를 지정합니다."
         },
         {
             "prop": "disabled",
@@ -145,18 +133,6 @@
             "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
         },
         {
-            "prop": "active",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "현재 활성 페이지로 링크를 식별하는 데 사용됩니다."
-        },
-        {
-            "prop": "onSelect",
-            "type": ["function"],
-            "default": "-",
-            "description": "사용자가 링크를 선택할 때(마우스 또는 키보드를 통해) 호출되는 이벤트 핸들러입니다. 이 핸들러에서 event.preventDefault를 호출하면 해당 링크를 선택할 때 네비게이션 메뉴가 닫히는 것을 방지할 수 있습니다."
-        },
-        {
             "prop": "selected",
             "type": ["boolean"],
             "default": "false",
@@ -187,12 +163,6 @@
             "type": ["boolean"],
             "default": "false",
             "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
-        },
-        {
-            "prop": "active",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "현재 활성 페이지로 링크를 식별하는 데 사용됩니다."
         },
         {
             "prop": "selected",

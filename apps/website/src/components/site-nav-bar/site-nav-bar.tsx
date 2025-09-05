@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { IconButton, Nav, Text, useTheme } from '@vapor-ui/core';
+import { IconButton, NavigationMenu, Text, useTheme } from '@vapor-ui/core';
 import {
     CloseOutlineIcon,
     DarkIcon,
@@ -93,10 +93,9 @@ export const SiteNavBar = () => {
                 }`}
             >
                 <div className="flex items-center gap-10 relative w-full">
-                    <Nav.Root
+                    <NavigationMenu.Root
                         aria-label="Main"
                         size="lg"
-                        shape="ghost"
                         className="flex justify-between items-center gap-10 w-full"
                     >
                         <div className="flex items-center gap-10">
@@ -112,32 +111,32 @@ export const SiteNavBar = () => {
                                 />
                             </Link>
 
-                            <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem
+                            <NavigationMenu.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
+                                <NavigationMenu.LinkItem
                                     className="text-sm"
                                     href="/docs"
                                     render={<Link>Docs</Link>}
                                 />
 
-                                <Nav.LinkItem
+                                <NavigationMenu.LinkItem
                                     className="text-sm"
                                     href="/playground"
                                     render={<Link>Theme Playground</Link>}
                                 />
-                            </Nav.List>
+                            </NavigationMenu.List>
                         </div>
                         <div className="flex items-center gap-10">
-                            <Nav.List className="hidden md:flex flex-row items-center gap-0">
+                            <NavigationMenu.List className="hidden md:flex flex-row items-center gap-0">
                                 {externalLinks.map((item) => {
                                     return (
-                                        <Nav.Item key={item.text}>
+                                        <NavigationMenu.Item key={item.text}>
                                             <IconButton
                                                 aria-label={item.text}
                                                 size="lg"
                                                 color="secondary"
                                                 variant="ghost"
                                                 render={
-                                                    <Nav.Link
+                                                    <NavigationMenu.Link
                                                         render={
                                                             <Link href={item.url}>{item.icon}</Link>
                                                         }
@@ -145,7 +144,7 @@ export const SiteNavBar = () => {
                                                     />
                                                 }
                                             />
-                                        </Nav.Item>
+                                        </NavigationMenu.Item>
                                     );
                                 })}
                                 <div
@@ -157,7 +156,7 @@ export const SiteNavBar = () => {
                                     }}
                                     className="border-l mx-2"
                                 />
-                                <Nav.Item>
+                                <NavigationMenu.Item>
                                     <IconButton
                                         suppressHydrationWarning
                                         size="lg"
@@ -168,10 +167,10 @@ export const SiteNavBar = () => {
                                     >
                                         {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
                                     </IconButton>
-                                </Nav.Item>
-                            </Nav.List>
+                                </NavigationMenu.Item>
+                            </NavigationMenu.List>
                         </div>
-                    </Nav.Root>
+                    </NavigationMenu.Root>
                 </div>
                 <Dialog.Trigger asChild>
                     <IconButton
