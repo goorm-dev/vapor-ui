@@ -197,6 +197,173 @@ export async function createThemeVariables(
 }
 
 // ============================================================================
+// Mode-based Variable Creation for Semantic Colors
+// ============================================================================
+
+/**
+ * Creates or gets existing variable collection with light and dark modes
+ */
+export async function createOrGetSemanticCollection(name: string): Promise<{
+    collection: VariableCollection;
+    lightModeId: string;
+    darkModeId: string;
+}> {
+    const existingCollections = await figma.variables.getLocalVariableCollectionsAsync();
+    let collection = existingCollections.find((collection) => collection.name === name);
+
+    if (!collection) {
+        collection = figma.variables.createVariableCollection(name);
+    }
+
+    // Ensure we have light and dark modes
+    let lightModeId = collection.defaultModeId;
+    let darkModeId: string;
+
+    const existingModes = collection.modes;
+    const lightMode = existingModes.find(mode => mode.name === 'Light');
+    const darkMode = existingModes.find(mode => mode.name === 'Dark');
+
+    if (lightMode && darkMode) {
+        lightModeId = lightMode.modeId;
+        darkModeId = darkMode.modeId;
+    } else if (lightMode) {
+        lightModeId = lightMode.modeId;
+        darkModeId = collection.addMode('Dark');
+    } else if (darkMode) {
+        // Rename default mode to Light and use existing dark mode
+        collection.renameMode(collection.defaultModeId, 'Light');
+        lightModeId = collection.defaultModeId;
+        darkModeId = darkMode.modeId;
+    } else {
+        // Rename default mode to Light and create Dark mode
+        collection.renameMode(collection.defaultModeId, 'Light');
+        lightModeId = collection.defaultModeId;
+        darkModeId = collection.addMode('Dark');
+    }
+
+    return { collection, lightModeId, darkModeId };
+}
+
+/**
+ * Creates or updates a semantic Figma variable with light and dark mode values
+ */
+export async function createSemanticVariable(
+    collection: VariableCollection,
+    lightModeId: string,
+    darkModeId: string,
+    name: string,
+    lightColor: string,
+    darkColor: string,
+    lightCodeSyntax?: string,
+): Promise<Variable> {
+    const existingVariables = await figma.variables.getLocalVariablesAsync();
+    const existing = existingVariables.find(
+        (variable) => variable.name === name && variable.variableCollectionId === collection.id,
+    );
+
+    let variable: Variable;
+    if (existing) {
+        variable = existing;
+    } else {
+        variable = figma.variables.createVariable(name, collection, 'COLOR');
+    }
+
+    // Set values for both modes
+    variable.setValueForMode(lightModeId, hexToFigmaColor(lightColor));
+    variable.setValueForMode(darkModeId, hexToFigmaColor(darkColor));
+
+    // Set code syntax (using light mode syntax as primary)
+    if (lightCodeSyntax) {
+        variable.setVariableCodeSyntax('WEB', lightCodeSyntax);
+    }
+
+    return variable;
+}
+
+/**
+ * Creates semantic theme variables with mode support
+ */
+export async function createSemanticThemeVariables(
+    collection: VariableCollection,
+    lightModeId: string,
+    darkModeId: string,
+    lightTheme: ThemeTokens,
+    darkTheme: ThemeTokens,
+): Promise<void> {
+    const variablePromises: Promise<Variable>[] = [];
+
+    // Process each color family
+    for (const [colorName, lightColorShades] of Object.entries(lightTheme)) {
+        const darkColorShades = darkTheme[colorName];
+
+        if (colorName === 'background' && lightColorShades && 'canvas' in lightColorShades && 
+            darkColorShades && 'canvas' in darkColorShades) {
+            // Handle background canvas
+            variablePromises.push(
+                createSemanticVariable(
+                    collection,
+                    lightModeId,
+                    darkModeId,
+                    `${colorName}/canvas`,
+                    lightColorShades.canvas.hex,
+                    darkColorShades.canvas.hex,
+                    lightColorShades.canvas.codeSyntax,
+                ),
+            );
+        } else {
+            // Handle color shades (050, 100, 200, etc.)
+            const lightShades = getValidColorShades(lightColorShades);
+            const darkShades = getValidColorShades(darkColorShades);
+
+            for (const [shade, lightColorToken] of lightShades) {
+                const darkColorToken = darkShades.find(([darkShade]) => darkShade === shade)?.[1];
+                
+                if (darkColorToken) {
+                    variablePromises.push(
+                        createSemanticVariable(
+                            collection,
+                            lightModeId,
+                            darkModeId,
+                            `${colorName}/${shade}`,
+                            lightColorToken.hex,
+                            darkColorToken.hex,
+                            lightColorToken.codeSyntax,
+                        ),
+                    );
+                }
+            }
+        }
+    }
+
+    await Promise.all(variablePromises);
+}
+
+/**
+ * Creates semantic Figma variables with light and dark modes
+ */
+export async function createSemanticFigmaVariables(
+    palette: { light: ThemeTokens; dark: ThemeTokens },
+    config: FigmaVariablesConfig,
+): Promise<void> {
+    try {
+        console.log('Creating Semantic Figma Variables with modes...', palette);
+
+        const { collection, lightModeId, darkModeId } = await createOrGetSemanticCollection(config.collectionName);
+
+        // Create semantic variables with light and dark modes
+        await createSemanticThemeVariables(collection, lightModeId, darkModeId, palette.light, palette.dark);
+
+        const message = config.notificationMessage || '✅ Semantic Figma Variables created successfully!';
+        figma.notify(message);
+        console.log('Semantic Figma Variables creation completed');
+    } catch (error) {
+        console.error('Error creating Semantic Figma Variables:', error);
+        figma.notify('❌ Failed to create Semantic Figma Variables');
+        throw error;
+    }
+}
+
+// ============================================================================
 // Main Factory Function
 // ============================================================================
 
