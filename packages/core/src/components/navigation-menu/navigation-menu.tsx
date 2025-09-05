@@ -121,8 +121,8 @@ const Link = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
         const { size } = useNavigationMenuContext();
 
         const dataAttrs = createDataAttributes({
-            'data-selected': selected,
-            'data-disabled': disabled,
+            selected,
+            disabled,
         });
 
         return (
@@ -260,7 +260,7 @@ interface NavigationMenuPopupProps extends PopupPrimitiveProps {}
 const Popup = forwardRef<HTMLElement, NavigationMenuPopupProps>(
     ({ className, children, ...props }, ref) => {
         const [side, setSide] = useState<PositionerPrimitiveProps['side']>('bottom');
-        const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('start');
+        const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('center');
 
         const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
 

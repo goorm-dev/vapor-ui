@@ -2,6 +2,7 @@ import type { ComponentProps } from 'react';
 
 import type { StoryObj } from '@storybook/react';
 
+import { HStack } from '../h-stack';
 import { VStack } from '../v-stack';
 import { NavigationMenu } from './navigation-menu';
 
@@ -137,32 +138,257 @@ export const Default: StoryObj<StoryProps> = {
 };
 
 export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
-    render: (args) => {
+    render: () => {
         return (
-            <>
-                <NavigationMenu.Root {...args} aria-label="Main">
+            <VStack
+                padding="200px"
+                gap="96px"
+                justifyContent="center"
+                alignItems="center"
+                border="1px solid"
+            >
+                {/* Top Navigation Menu */}
+                <NavigationMenu.Root aria-label="Main" value="1">
                     <NavigationMenu.List>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link disabled={args.disabled} selected href="#">
-                                Link 1
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link disabled={args.disabled} href="#">
-                                23411234
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.LinkItem disabled={args.disabled} href="#">
-                            213412341234
-                        </NavigationMenu.LinkItem>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link disabled={args.disabled} href="#">
-                                asdf
-                            </NavigationMenu.Link>
+                        <NavigationMenu.Item value="1">
+                            <NavigationMenu.Trigger>
+                                Overview
+                                <NavigationMenu.TriggerIndicator />
+                            </NavigationMenu.Trigger>
+                            <NavigationMenu.Panel>
+                                <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link href="#">
+                                            Sub Link 1
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link href="#">
+                                            Sub Link 2
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                </NavigationMenu.List>
+                            </NavigationMenu.Panel>
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
+
+                    <NavigationMenu.Portal>
+                        <NavigationMenu.Positioner side="top">
+                            <NavigationMenu.Popup>
+                                <NavigationMenu.Viewport />
+                            </NavigationMenu.Popup>
+                        </NavigationMenu.Positioner>
+                    </NavigationMenu.Portal>
                 </NavigationMenu.Root>
-            </>
+
+                <HStack gap="$250">
+                    {/* Left Navigation Menu */}
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
+                                <NavigationMenu.Trigger>
+                                    Overview
+                                    <NavigationMenu.TriggerIndicator />
+                                </NavigationMenu.Trigger>
+                                <NavigationMenu.Panel>
+                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 1
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 2
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                    </NavigationMenu.List>
+                                </NavigationMenu.Panel>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+
+                        <NavigationMenu.Portal>
+                            <NavigationMenu.Positioner side="left">
+                                <NavigationMenu.Popup>
+                                    <NavigationMenu.Viewport />
+                                </NavigationMenu.Popup>
+                            </NavigationMenu.Positioner>
+                        </NavigationMenu.Portal>
+                    </NavigationMenu.Root>
+
+                    {/* Bottom Navigation Menu */}
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
+                                <NavigationMenu.Trigger>
+                                    Overview
+                                    <NavigationMenu.TriggerIndicator />
+                                </NavigationMenu.Trigger>
+                                <NavigationMenu.Panel>
+                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 1
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 2
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                    </NavigationMenu.List>
+                                </NavigationMenu.Panel>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+
+                        <NavigationMenu.Portal>
+                            <NavigationMenu.Positioner side="bottom">
+                                <NavigationMenu.Popup>
+                                    <NavigationMenu.Viewport />
+                                </NavigationMenu.Popup>
+                            </NavigationMenu.Positioner>
+                        </NavigationMenu.Portal>
+                    </NavigationMenu.Root>
+
+                    {/* Right Navigation Menu */}
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
+                                <NavigationMenu.Trigger>
+                                    Overview
+                                    <NavigationMenu.TriggerIndicator />
+                                </NavigationMenu.Trigger>
+                                <NavigationMenu.Panel>
+                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 1
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 2
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                    </NavigationMenu.List>
+                                </NavigationMenu.Panel>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+
+                        <NavigationMenu.Portal>
+                            <NavigationMenu.Positioner side="right">
+                                <NavigationMenu.Popup>
+                                    <NavigationMenu.Viewport />
+                                </NavigationMenu.Popup>
+                            </NavigationMenu.Positioner>
+                        </NavigationMenu.Portal>
+                    </NavigationMenu.Root>
+                </HStack>
+
+                <HStack gap="$250">
+                    {/* Start Navigation Menu */}
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
+                                <NavigationMenu.Trigger>
+                                    Overview
+                                    <NavigationMenu.TriggerIndicator />
+                                </NavigationMenu.Trigger>
+                                <NavigationMenu.Panel>
+                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 1
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 2
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                    </NavigationMenu.List>
+                                </NavigationMenu.Panel>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+
+                        <NavigationMenu.Portal>
+                            <NavigationMenu.Positioner align="start">
+                                <NavigationMenu.Popup>
+                                    <NavigationMenu.Viewport />
+                                </NavigationMenu.Popup>
+                            </NavigationMenu.Positioner>
+                        </NavigationMenu.Portal>
+                    </NavigationMenu.Root>
+
+                    {/* Center Navigation Menu */}
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
+                                <NavigationMenu.Trigger>
+                                    Overview
+                                    <NavigationMenu.TriggerIndicator />
+                                </NavigationMenu.Trigger>
+                                <NavigationMenu.Panel>
+                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 1
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 2
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                    </NavigationMenu.List>
+                                </NavigationMenu.Panel>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+
+                        <NavigationMenu.Portal>
+                            <NavigationMenu.Positioner align="center">
+                                <NavigationMenu.Popup>
+                                    <NavigationMenu.Viewport />
+                                </NavigationMenu.Popup>
+                            </NavigationMenu.Positioner>
+                        </NavigationMenu.Portal>
+                    </NavigationMenu.Root>
+
+                    {/* End Navigation Menu */}
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
+                                <NavigationMenu.Trigger>
+                                    Overview
+                                    <NavigationMenu.TriggerIndicator />
+                                </NavigationMenu.Trigger>
+                                <NavigationMenu.Panel>
+                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 1
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 2
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                    </NavigationMenu.List>
+                                </NavigationMenu.Panel>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+
+                        <NavigationMenu.Portal>
+                            <NavigationMenu.Positioner align="end">
+                                <NavigationMenu.Popup>
+                                    <NavigationMenu.Viewport />
+                                </NavigationMenu.Popup>
+                            </NavigationMenu.Positioner>
+                        </NavigationMenu.Portal>
+                    </NavigationMenu.Root>
+                </HStack>
+            </VStack>
         );
     },
 };
