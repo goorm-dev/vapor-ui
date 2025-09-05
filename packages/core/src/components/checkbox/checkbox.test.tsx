@@ -27,7 +27,7 @@ describe('Checkbox', () => {
         });
 
         it('should associate the label with the input field', async () => {
-            const label = rendered.getByLabelText(LABEL_TEXT);
+            const label = rendered.getByText(LABEL_TEXT);
 
             await userEvent.click(label);
 
@@ -126,7 +126,7 @@ describe('Checkbox', () => {
 
         beforeEach(() => {
             rendered = render(<ControlledCheckboxTest onCheckedChange={onCheckedChange} />);
-            checkbox = rendered.getByRole('checkbox') as HTMLElement;
+            checkbox = rendered.getByRole('checkbox');
         });
 
         it('should have no a11y violations', async () => {
@@ -255,10 +255,10 @@ describe('Checkbox', () => {
 const LABEL_TEXT = 'Checkbox Label';
 
 const CheckboxTest = (props: CheckboxRootProps) => (
-    <Checkbox.Root {...props}>
-        <Checkbox.Control />
-        {LABEL_TEXT}
-    </Checkbox.Root>
+    <>
+        <Checkbox.Root id="checkbox" {...props} />
+        <label htmlFor="checkbox">{LABEL_TEXT}</label>
+    </>
 );
 
 const ControlledCheckboxTest = (props: CheckboxRootProps) => {
@@ -274,10 +274,8 @@ const ControlledCheckboxTest = (props: CheckboxRootProps) => {
 
     return (
         <div>
-            <Checkbox.Root {...props} checked={checkbox} onCheckedChange={handleCheckedChange}>
-                <Checkbox.Control />
-                {LABEL_TEXT}
-            </Checkbox.Root>
+            <Checkbox.Root id="checkbox" checked={checkbox} onCheckedChange={handleCheckedChange} />
+            <label htmlFor="checkbox">{LABEL_TEXT}</label>
 
             <button onClick={() => setBlocker((prev) => !prev)}>Blocker Controller</button>
         </div>

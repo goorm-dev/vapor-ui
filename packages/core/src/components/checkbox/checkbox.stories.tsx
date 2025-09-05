@@ -41,36 +41,34 @@ export const Default: Story = {
         return (
             <Flex style={{ flexDirection: 'column' }}>
                 <Text typography="heading3">Uncontrolled</Text>
-                <Checkbox.Root {...args}>
-                    <Checkbox.Control />
+                <Flex alignItems="center" gap="$100" render={<label />}>
+                    <Checkbox.Root {...args} />
                     Default
-                </Checkbox.Root>
-
+                </Flex>
                 <br />
-
                 <Text typography="heading3">Controlled</Text>
-                <Checkbox.Root
-                    {...args}
-                    checked={allChecked}
-                    indeterminate={indeterminate}
-                    onCheckedChange={handleAllCheckedChange}
-                >
-                    <Checkbox.Control />
-                    three meals a day
-                </Checkbox.Root>
-
-                {checkboxItems.map((item) => (
+                <Flex alignItems="center" gap="$100" render={<label />}>
                     <Checkbox.Root
                         {...args}
-                        key={item.key}
-                        checked={checked[item.key]}
-                        onCheckedChange={(checkedState) =>
-                            handleCheckedChange(item.key, checkedState)
-                        }
-                    >
-                        <Checkbox.Control />
+                        checked={allChecked}
+                        indeterminate={indeterminate}
+                        onCheckedChange={handleAllCheckedChange}
+                    />
+                    three meals a day
+                </Flex>
+
+                {checkboxItems.map((item) => (
+                    <Flex key={item.key} alignItems="center" gap="$100" render={<label />}>
+                        <Checkbox.Root
+                            {...args}
+                            checked={checked[item.key]}
+                            onCheckedChange={(checkedState) =>
+                                handleCheckedChange(item.key, checkedState)
+                            }
+                        />
+
                         {item.label}
-                    </Checkbox.Root>
+                    </Flex>
                 ))}
             </Flex>
         );
@@ -82,59 +80,59 @@ export const TestBed: Story = {
         return (
             <Flex style={{ gap: 'var(--vapor-size-dimension-100)', flexDirection: 'column' }}>
                 <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
-                    <Checkbox.Root>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Default
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root checked>
+                        <Checkbox.Root />
+                    </Flex>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Default checked
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root indeterminate>
+                        <Checkbox.Root checked />
+                    </Flex>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Default Indeterminate
-                        <Checkbox.Control />
-                    </Checkbox.Root>
+                        <Checkbox.Root indeterminate />
+                    </Flex>
                 </Flex>
 
                 <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
-                    <Checkbox.Root disabled>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Disabled
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root checked disabled>
+                        <Checkbox.Root disabled />
+                    </Flex>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Disabled Checked
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root indeterminate disabled>
+                        <Checkbox.Root checked disabled />
+                    </Flex>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Disabled Indeterminate
-                        <Checkbox.Control />
-                    </Checkbox.Root>
+                        <Checkbox.Root indeterminate disabled />
+                    </Flex>
                 </Flex>
 
                 <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
-                    <Checkbox.Root invalid>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Invalid
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root checked invalid>
+                        <Checkbox.Root invalid />
+                    </Flex>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Invalid Checked
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root indeterminate invalid>
+                        <Checkbox.Root checked invalid />
+                    </Flex>
+                    <Flex alignItems="center" gap="$100" render={<label />}>
                         Invalid Indeterminate
-                        <Checkbox.Control />
-                    </Checkbox.Root>
+                        <Checkbox.Root indeterminate invalid />
+                    </Flex>
                 </Flex>
 
-                <Checkbox.Root size="md">
+                <Flex alignItems="center" gap="$100" render={<label />}>
                     MD
-                    <Checkbox.Control />
-                </Checkbox.Root>
+                    <Checkbox.Root size="md" />
+                </Flex>
 
-                <Checkbox.Root size="lg">
+                <Flex alignItems="center" gap="$100" render={<label />}>
                     LG
-                    <Checkbox.Control />
-                </Checkbox.Root>
+                    <Checkbox.Root size="lg" />
+                </Flex>
             </Flex>
         );
     },

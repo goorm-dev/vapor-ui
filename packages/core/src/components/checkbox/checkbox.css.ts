@@ -6,22 +6,6 @@ import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('components', {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: vars.size.space[100],
-        verticalAlign: 'middle',
-    }),
-
-    defaultVariants: { disabled: false },
-    variants: {
-        disabled: {
-            true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
-        },
-    },
-});
-
-export const control = recipe({
     base: [
         interaction(),
         layerStyle('components', {
@@ -43,6 +27,10 @@ export const control = recipe({
                 '&[data-checked], &[data-indeterminate]': {
                     backgroundColor: vars.color.background.primary,
                 },
+
+                // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
+                '&:disabled::before': { opacity: 0 },
+                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
             },
         }),
     ],
@@ -96,4 +84,3 @@ export const indicator = recipe({
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
-export type ControlVariants = NonNullable<RecipeVariants<typeof control>>;
