@@ -10,6 +10,7 @@ import '../components/avatar/avatar.css';
 import '../components/badge/badge.css';
 import '../components/breadcrumb/breadcrumb.css';
 import '../components/button/button.css';
+import '../components/callout/callout.css';
 import '../components/card/card.css';
 import '../components/checkbox/checkbox.css';
 import '../components/dialog/dialog.css';

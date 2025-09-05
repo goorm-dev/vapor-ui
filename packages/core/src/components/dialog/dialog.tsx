@@ -29,9 +29,6 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
 
 type DialogPrimitiveProps = Omit<VComponentProps<typeof BaseDialog.Root>, 'dismissible'>;
 interface DialogRootProps extends DialogPrimitiveProps, DialogSharedProps {
-    // TODO: need closeOnEscape?
-    // closeOnEscape?: boolean;
-
     closeOnClickOverlay?: boolean;
 }
 

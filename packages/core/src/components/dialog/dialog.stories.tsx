@@ -11,7 +11,6 @@ export default {
             options: ['md', 'lg', 'xl'],
         },
         closeOnClickOverlay: { control: 'boolean' },
-        closeOnEscape: { control: 'boolean' },
     },
 };
 
