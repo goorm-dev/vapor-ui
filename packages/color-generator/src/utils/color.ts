@@ -1,0 +1,54 @@
+import { formatCss, oklch } from 'culori';
+
+import { BASE_COLORS } from '../constants';
+import type { ColorToken } from '../types';
+
+// ============================================================================
+// Color Formatting Utilities
+// ============================================================================
+
+/**
+ * OKLCH 색상 값을 웹 호환성을 위해 포맷팅합니다.
+ * - Lightness, Chroma를 3자리 소수점으로 반올림
+ * - Hue를 1자리 소수점으로 반올림
+ * - 'none' 값을 '0.0'으로 변환
+ */
+export const formatOklchForWeb = (oklchString: string): string => {
+    const match = oklchString.match(/oklch\(([^\s]+)\s+([^\s]+)\s+([^\)]+)\)/);
+    if (match) {
+        const [, l, c, h] = match;
+        const roundedL = parseFloat(l).toFixed(3);
+        const roundedC = parseFloat(c).toFixed(3);
+
+        let roundedH: string;
+        if (h === 'none' || isNaN(parseFloat(h))) {
+            roundedH = '0.0';
+        } else {
+            roundedH = parseFloat(h).toFixed(1);
+        }
+
+        return `oklch(${roundedL} ${roundedC} ${roundedH})`;
+    }
+    return oklchString;
+};
+
+// ============================================================================
+// Base Color Token Generation
+// ============================================================================
+
+/**
+ * Base 컬러 토큰 생성 (흰색, 검은색)
+ */
+export const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
+    return Object.entries(BASE_COLORS).reduce(
+        (tokens, [colorName, hexValue]) => {
+            const oklchColor = oklch(hexValue);
+            tokens[colorName as keyof typeof BASE_COLORS] = {
+                hex: hexValue,
+                oklch: formatter(formatCss(oklchColor) ?? ''),
+            };
+            return tokens;
+        },
+        {} as Record<keyof typeof BASE_COLORS, ColorToken>,
+    );
+};

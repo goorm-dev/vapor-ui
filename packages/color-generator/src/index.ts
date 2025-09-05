@@ -23,5 +23,5 @@ export const primaryDependentTokens = generateSemanticDependentTokens(primaryCol
 // ============================================================================
 // Core Constants & Types
 // ============================================================================
-export { DEFAULT_CONTRAST_RATIOS, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from './core';
-export type { ThemeType, ColorToken, ColorPaletteCollection, ColorGeneratorConfig } from './core';
+export { DEFAULT_CONTRAST_RATIOS, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from './constants';
+export type { ThemeType, ColorToken, ColorPaletteCollection, ColorGeneratorConfig } from './types';

@@ -1,31 +1,13 @@
 import { BackgroundColor, Color, CssColor, Theme } from '@adobe/leonardo-contrast-colors';
 import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 
-import {
-    type ColorGeneratorConfig,
-    DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
-    type ThemeTokens,
-    type ThemeType,
-    formatOklchForWeb,
-} from '../core';
-
-type OklchColor = {
-    mode: 'oklch';
-    l: number;
-    c: number;
-    h?: number;
-};
+import { ADAPTIVE_COLOR_GENERATION, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from '../constants';
+import type { ColorGeneratorConfig, OklchColor, ThemeTokens, ThemeType } from '../types';
+import { formatOklchForWeb } from '../utils/color';
 
 // ============================================================================
-// Utilities
+// Color Key Generation
 // ============================================================================
-
-const ADAPTIVE_COLOR_GENERATION = {
-    LIGHTNESS_THRESHOLD: 0.5,
-    DARK_LIGHTNESS_FACTOR: 0.55,
-    LIGHT_LIGHTNESS_FACTOR: 0.85,
-    CHROMA_REDUCTION_FACTOR: 0.85,
-} as const;
 
 /**
  * 입력 색상의 명도를 분석하여 최적의 Light/Dark Key 쌍을 생성합니다.
@@ -133,7 +115,7 @@ const createLeonardoTheme = (
 };
 
 // ============================================================================
-// Public API
+// Theme Token Generation
 // ============================================================================
 
 const generateThemeTokens = (

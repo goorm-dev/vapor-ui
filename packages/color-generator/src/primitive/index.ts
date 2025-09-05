@@ -1,14 +1,10 @@
-import {
-    type ColorGeneratorConfig,
-    type ColorPaletteCollection,
-    DEFAULT_CONTRAST_RATIOS,
-    createBaseColorTokens,
-    formatOklchForWeb,
-} from '../core';
+import { DEFAULT_CONTRAST_RATIOS } from '../constants';
 import { generateThemeTokens } from '../libs/adobe-leonardo';
+import type { ColorGeneratorConfig, ColorPaletteCollection } from '../types';
+import { createBaseColorTokens, formatOklchForWeb } from '../utils/color';
 
 // ============================================================================
-// Primitive Colors Configuration
+// Default Primitive Color Palette
 // ============================================================================
 
 export const DEFAULT_PRIMITIVE_COLORS = {
