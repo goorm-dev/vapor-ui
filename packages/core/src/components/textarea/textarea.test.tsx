@@ -1,10 +1,25 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';
+import { axe } from 'vitest-axe';
 
 import { Textarea } from './textarea';
 
 describe('Textarea', () => {
+    test('should have no a11y violations', async () => {
+        const rendered = render(
+            <label>
+                <Textarea.Root>
+                    <Textarea.Input />
+                </Textarea.Root>
+                Label
+            </label>,
+        );
+        const result = await axe(rendered.container);
+
+        expect(result).toHaveNoViolations();
+    });
+
     test('renders textarea Input', () => {
         render(
             <Textarea.Root>
@@ -57,7 +72,7 @@ describe('Textarea', () => {
         await user.clear(textarea);
         await user.type(textarea, 'new content');
 
-        expect(handleValueChange).toHaveBeenCalledWith('new content');
+        expect(handleValueChange).toHaveBeenLastCalledWith('new content');
 
         // Simulate controlled component behavior by updating the value prop
         rerender(
