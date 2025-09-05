@@ -26,7 +26,7 @@ export const root = recipe({
     },
 });
 
-export const field = recipe({
+export const input = recipe({
     base: [
         interaction({ type: 'form' }),
 
@@ -103,4 +103,4 @@ export const field = recipe({
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
-export type FieldVariants = NonNullable<RecipeVariants<typeof field>>;
+export type InputVariants = NonNullable<RecipeVariants<typeof input>>;

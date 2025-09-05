@@ -1,10 +1,10 @@
 {
     "props": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "-",
+            "description": "다른 태그로 컴포넌트의 HTML 요소를 교체하거나 다른 컴포넌트와 합성할 수 있습니다. ReactElement 또는 렌더링할 요소를 반환하는 함수를 허용합니다."
         },
         {
             "prop": "value",
@@ -69,7 +69,7 @@
         {
             "prop": "resizing",
             "type": ["boolean"],
-            "default": "true",
+            "default": "false",
             "description": "사용자가 텍스트 영역의 크기를 수동으로 조절할 수 있는지 설정합니다."
         },
         {
@@ -79,78 +79,12 @@
             "description": "텍스트 내용에 따라 자동으로 높이가 조절되는지 설정합니다."
         }
     ],
-    "fieldProps": [
+    "inputProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
-        },
-        {
-            "prop": "id",
-            "type": ["string"],
+            "prop": "render",
+            "type": ["ReactElement", "function"],
             "default": "-",
-            "description": "텍스트 영역 필드의 고유 식별자입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "value",
-            "type": ["string"],
-            "default": "-",
-            "description": "텍스트 영역의 제어된 값입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "onChange",
-            "type": ["function"],
-            "default": "-",
-            "description": "텍스트 영역의 값이 변경될 때 호출되는 이벤트 핸들러입니다."
-        },
-        {
-            "prop": "defaultValue",
-            "type": ["string"],
-            "default": "-",
-            "description": "텍스트 영역의 초기값입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "disabled",
-            "type": ["boolean"],
-            "default": "-",
-            "description": "텍스트 영역 비활성화 상태입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "readOnly",
-            "type": ["boolean"],
-            "default": "-",
-            "description": "텍스트 영역 읽기 전용 상태입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "invalid",
-            "type": ["boolean"],
-            "default": "-",
-            "description": "텍스트 영역의 유효성 검증 상태입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "placeholder",
-            "type": ["string"],
-            "default": "-",
-            "description": "텍스트 영역의 힌트 텍스트입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "rows",
-            "type": ["number"],
-            "default": "-",
-            "description": "텍스트 영역의 행 수입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "cols",
-            "type": ["number"],
-            "default": "-",
-            "description": "텍스트 영역의 열 수입니다. Root에서 상속받습니다."
-        },
-        {
-            "prop": "aria-invalid",
-            "type": ["boolean"],
-            "default": "-",
-            "description": "접근성을 위한 유효성 검증 상태를 나타냅니다."
+            "description": "다른 태그로 컴포넌트의 HTML 요소를 교체하거나 다른 컴포넌트와 합성할 수 있습니다. ReactElement 또는 렌더링할 요소를 반환하는 함수를 허용합니다."
         }
     ]
 }

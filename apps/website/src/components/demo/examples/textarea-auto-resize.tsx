@@ -7,7 +7,7 @@ export default function TextareaAutoResize() {
                 autoResize={true}
                 placeholder="텍스트를 입력하면 자동으로 높이가 조절됩니다..."
             >
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>
         </Box>
     );

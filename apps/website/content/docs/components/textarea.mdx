@@ -12,7 +12,7 @@ export default function DefaultTextarea() {
     return (
         <Box display="felx" alignItems="center" justifyContent="center">
             <Textarea.Root placeholder="여러 줄 텍스트를 입력하세요...">
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>
         </Box>
     );
@@ -36,16 +36,16 @@ export default function TextareaSize() {
     return (
         <div className="space-y-4">
             <Textarea.Root size="sm" placeholder="Small size">
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>
             <Textarea.Root size="md" placeholder="Medium size">
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>
             <Textarea.Root size="lg" placeholder="Large size">
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>
             <Textarea.Root size="xl" placeholder="Extra large size">
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>
         </div>
     );
@@ -69,7 +69,7 @@ export default function TextareaAutoResize() {
                 autoResize={true}
                 placeholder="텍스트를 입력하면 자동으로 높이가 조절됩니다..."
             >
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>
         </Box>
     );
@@ -92,7 +92,7 @@ export default function TextareaResizing() {
                 resizing={true}
                 placeholder="크기 조절 가능 (우하단 모서리를 드래그하세요)"
             >
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>
         </Box>
     );
@@ -114,22 +114,22 @@ export default function TextareaStates() {
         <Grid.Root templateColumns="1" gap="$100">
             <Grid.Item>
                 <Textarea.Root placeholder="Default state">
-                    <Textarea.Field />
+                    <Textarea.Input />
                 </Textarea.Root>
             </Grid.Item>
             <Grid.Item>
                 <Textarea.Root disabled placeholder="Disabled state">
-                    <Textarea.Field />
+                    <Textarea.Input />
                 </Textarea.Root>
             </Grid.Item>
             <Grid.Item>
                 <Textarea.Root invalid placeholder="Invalid state">
-                    <Textarea.Field />
+                    <Textarea.Input />
                 </Textarea.Root>
             </Grid.Item>
             <Grid.Item>
                 <Textarea.Root readOnly defaultValue="Read only content">
-                    <Textarea.Field />
+                    <Textarea.Input />
                 </Textarea.Root>
             </Grid.Item>
         </Grid.Root>
@@ -149,8 +149,8 @@ Textarea의 루트 컴포넌트로 공유 상태와 기본 설정을 제공합�
 
 <ComponentPropsTable file="textarea" section="props" />
 
-### Textarea.Field
+### Textarea.Input
 
-Textarea의 입력 필드 컴포넌트로 실제 텍스트 입력을 받는 요소입니다.
+Textarea의 입력 필드 컴포넌트로 실제 텍스트 입력을 받는 요소입니다. 기본적으로 `textarea` 태그로 렌더링됩니다.
 
-<ComponentPropsTable file="textarea" section="fieldProps" />
+<ComponentPropsTable file="textarea" section="inputProps" />

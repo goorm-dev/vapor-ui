@@ -10,10 +10,10 @@ import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
-import type { FieldVariants, RootVariants } from './textarea.css';
+import type { InputVariants, RootVariants } from './textarea.css';
 import * as styles from './textarea.css';
 
-type TextareaVariants = RootVariants & FieldVariants;
+type TextareaVariants = RootVariants & InputVariants;
 type TextareaSharedProps = TextareaVariants & {
     value?: string;
     defaultValue?: string;
@@ -82,13 +82,13 @@ const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
 Root.displayName = 'Textarea.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Textarea.Field
+ * Textarea.Input
  * -----------------------------------------------------------------------------------------------*/
 
 type PrimitiveTextareaProps = VComponentProps<'textarea'>;
-interface TextareaFieldProps extends Omit<PrimitiveTextareaProps, keyof TextareaSharedProps> {}
+interface TextareaInputProps extends Omit<PrimitiveTextareaProps, keyof TextareaSharedProps> {}
 
-const Field = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
+const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
     ({ render, id: idProp, className, ...props }, ref) => {
         const {
             textareaId,
@@ -155,17 +155,17 @@ const Field = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
                 placeholder,
                 rows,
                 cols,
-                className: clsx(styles.field({ invalid, size, resizing, autoResize }), className),
+                className: clsx(styles.input({ invalid, size, resizing, autoResize }), className),
                 ...props,
             },
         });
     },
 );
-Field.displayName = 'Textarea.Field';
+Input.displayName = 'Textarea.Input';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Field as TextareaField, Root as TextareaRoot };
-export type { TextareaFieldProps, TextareaRootProps };
+export { Input as TextareaInput, Root as TextareaRoot };
+export type { TextareaInputProps, TextareaRootProps };
 
-export const Textarea = { Root, Field };
+export const Textarea = { Root, Input };
