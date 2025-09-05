@@ -5,10 +5,10 @@ import { describe, expect, test, vi } from 'vitest';
 import { Textarea } from './textarea';
 
 describe('Textarea', () => {
-    test('renders textarea field', () => {
+    test('renders textarea Input', () => {
         render(
             <Textarea.Root>
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>,
         );
 
@@ -18,7 +18,7 @@ describe('Textarea', () => {
     test('supports placeholder text', () => {
         render(
             <Textarea.Root placeholder="Enter your message...">
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>,
         );
 
@@ -28,7 +28,7 @@ describe('Textarea', () => {
     test('supports default value', () => {
         render(
             <Textarea.Root defaultValue="Default content">
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>,
         );
 
@@ -37,11 +37,17 @@ describe('Textarea', () => {
 
     test('handles controlled value and onChange', async () => {
         const user = userEvent.setup();
-        const handleValueChange = vi.fn();
+        const handleValueChange = vi.fn((value: string) => {
+            rerender(
+                <Textarea.Root value={value} onValueChange={handleValueChange}>
+                    <Textarea.Input />
+                </Textarea.Root>,
+            );
+        });
 
-        render(
+        const { rerender } = render(
             <Textarea.Root value="initial" onValueChange={handleValueChange}>
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>,
         );
 
@@ -52,12 +58,21 @@ describe('Textarea', () => {
         await user.type(textarea, 'new content');
 
         expect(handleValueChange).toHaveBeenCalledWith('new content');
+
+        // Simulate controlled component behavior by updating the value prop
+        rerender(
+            <Textarea.Root value="new content" onValueChange={handleValueChange}>
+                <Textarea.Input />
+            </Textarea.Root>,
+        );
+
+        expect(textarea).toHaveValue('new content');
     });
 
     test('can be disabled', () => {
         render(
             <Textarea.Root disabled>
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>,
         );
 
@@ -67,7 +82,7 @@ describe('Textarea', () => {
     test('can be readonly', () => {
         render(
             <Textarea.Root readOnly>
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>,
         );
 
@@ -77,7 +92,7 @@ describe('Textarea', () => {
     test('supports invalid state', () => {
         render(
             <Textarea.Root invalid>
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>,
         );
 
@@ -87,7 +102,7 @@ describe('Textarea', () => {
     test('supports custom rows and cols', () => {
         render(
             <Textarea.Root rows={10} cols={50}>
-                <Textarea.Field />
+                <Textarea.Input />
             </Textarea.Root>,
         );
 
@@ -99,7 +114,7 @@ describe('Textarea', () => {
     test('applies size variants', () => {
         const { rerender } = render(
             <Textarea.Root size="sm">
-                <Textarea.Field data-testid="textarea" />
+                <Textarea.Input data-testid="textarea" />
             </Textarea.Root>,
         );
 
@@ -107,7 +122,7 @@ describe('Textarea', () => {
 
         rerender(
             <Textarea.Root size="lg">
-                <Textarea.Field data-testid="textarea" />
+                <Textarea.Input data-testid="textarea" />
             </Textarea.Root>,
         );
 
@@ -117,7 +132,7 @@ describe('Textarea', () => {
     test('supports resizing control', () => {
         const { rerender } = render(
             <Textarea.Root resizing={true}>
-                <Textarea.Field data-testid="textarea" />
+                <Textarea.Input data-testid="textarea" />
             </Textarea.Root>,
         );
 
@@ -125,7 +140,7 @@ describe('Textarea', () => {
 
         rerender(
             <Textarea.Root resizing={false}>
-                <Textarea.Field data-testid="textarea" />
+                <Textarea.Input data-testid="textarea" />
             </Textarea.Root>,
         );
 

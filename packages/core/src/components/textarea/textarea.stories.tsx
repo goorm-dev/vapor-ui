@@ -1,7 +1,9 @@
+import { useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Textarea } from './textarea';
 import { Grid } from '../grid';
+import { Textarea } from './textarea';
 
 const meta: Meta<typeof Textarea.Root> = {
     title: 'Textarea',
@@ -71,9 +73,30 @@ export const TestBed: Story = {
                 <Textarea.Input />
             </Textarea.Root>
 
-            <Textarea.Root defaultValue="Sample text content" placeholder="Enter your text here..." {...args}>
+            <Textarea.Root
+                defaultValue="Sample text content"
+                placeholder="Enter your text here..."
+                {...args}
+            >
                 <Textarea.Input />
             </Textarea.Root>
         </Grid.Root>
     ),
+};
+
+export const Controlled: Story = {
+    render: (args) => {
+        const [value, setValue] = useState('Initial controlled value');
+
+        return (
+            <Textarea.Root
+                value={value}
+                onValueChange={setValue}
+                placeholder="This is a controlled textarea..."
+                {...args}
+            >
+                <Textarea.Input />
+            </Textarea.Root>
+        );
+    },
 };
