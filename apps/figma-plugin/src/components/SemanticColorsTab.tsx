@@ -18,7 +18,7 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
 };
 
 export const SemanticColorsTab = () => {
-    const [primaryColor, setPrimaryColor] = useState<string>('#7c7c00');
+    const [primaryColor, setPrimaryColor] = useState<string>('#8662F3');
     const [generatedSemanticPalette, setGeneratedSemanticPalette] = useState<Pick<
         ColorPaletteCollection,
         'light' | 'dark'
@@ -35,7 +35,6 @@ export const SemanticColorsTab = () => {
                 },
             });
 
-            // The API now already excludes base and gray colors
             setGeneratedSemanticPalette(semanticPalette);
 
             postMessage({
