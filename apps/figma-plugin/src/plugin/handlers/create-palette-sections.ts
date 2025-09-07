@@ -14,10 +14,8 @@ export async function handleCreatePaletteSections(
     try {
         console.log('Creating palette sections:', { generatedPalette });
 
-        // 1. Load default font first using await for proper async handling.
         const fontName = await loadDefaultFont();
 
-        // 2. Create palette sections with the loaded font.
         createPaletteSections(generatedPalette, fontName);
 
         figma.notify('새로운 팔레트 섹션이 생성되었습니다! 🎨');
@@ -38,22 +36,21 @@ export async function handleCreatePaletteSections(
  * @returns {Promise<FontName>} The font name that was successfully loaded.
  */
 async function loadDefaultFont(): Promise<FontName> {
-    const pretendardFont: FontName = { family: 'Pretendard', style: 'Regular' };
+    const defaultFontFamily = 'Pretendard';
+    const defaultFount: FontName = { family: defaultFontFamily, style: 'Regular' };
     const interFont: FontName = { family: 'Inter', style: 'Regular' };
 
     try {
-        await figma.loadFontAsync(pretendardFont);
-        console.log('Successfully loaded "Pretendard" font.');
-        return pretendardFont;
+        await figma.loadFontAsync(defaultFount);
+        console.log(`Successfully loaded default "${defaultFontFamily}" font.`);
+        return defaultFount;
     } catch (error) {
-        // If "Pretendard" font fails to load, warn the user but don't stop the process.
-        console.warn('Could not load "Pretendard" font. Falling back to "Inter".', error);
+        console.warn(`Could not load "${defaultFontFamily}" font. Falling back to "Inter".`, error);
         try {
             await figma.loadFontAsync(interFont);
             console.log('Successfully loaded fallback "Inter" font.');
             return interFont;
         } catch (fallbackError) {
-            // If the fallback font also fails, throw an error to stop the execution.
             console.error('Critical: Could not load fallback "Inter" font.', fallbackError);
             throw new Error('Default fonts could not be loaded.');
         }
