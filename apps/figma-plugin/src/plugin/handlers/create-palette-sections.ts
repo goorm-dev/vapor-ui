@@ -4,17 +4,23 @@ import type { ColorPaletteCollection } from '@vapor-ui/color-generator';
 // Palette Creation Logic
 // ============================================================================
 
-export function handleCreatePaletteSections(
-    generatedPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>
-): void {
+/**
+ * Handles the end-to-end process of creating palette sections.
+ * It loads the necessary font and then creates the visual sections in Figma.
+ */
+export async function handleCreatePaletteSections(
+    generatedPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>,
+): Promise<void> {
     try {
         console.log('Creating palette sections:', { generatedPalette });
 
-        // Load default font first
-        loadDefaultFont().then(() => {
-            createPaletteSections(generatedPalette);
-            figma.notify('새로운 팔레트 섹션이 생성되었습니다! 🎨');
-        });
+        // 1. Load default font first using await for proper async handling.
+        const fontName = await loadDefaultFont();
+
+        // 2. Create palette sections with the loaded font.
+        createPaletteSections(generatedPalette, fontName);
+
+        figma.notify('새로운 팔레트 섹션이 생성되었습니다! 🎨');
     } catch (error) {
         console.error('Error creating palette sections:', error);
         figma.notify('팔레트 섹션 생성 중 오류가 발생했습니다 ❌');
@@ -25,12 +31,32 @@ export function handleCreatePaletteSections(
 // Font Loading
 // ============================================================================
 
-async function loadDefaultFont(): Promise<void> {
+/**
+ * Loads the default font for the plugin.
+ * It first tries to load "Pretendard". If it fails, it logs a warning
+ * and falls back to "Inter". If "Inter" also fails, it throws an error.
+ * @returns {Promise<FontName>} The font name that was successfully loaded.
+ */
+async function loadDefaultFont(): Promise<FontName> {
+    const pretendardFont: FontName = { family: 'Pretendard', style: 'Regular' };
+    const interFont: FontName = { family: 'Inter', style: 'Regular' };
+
     try {
-        await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
-    } catch {
-        // Fallback to Roboto if Inter is not available
-        await figma.loadFontAsync({ family: 'Roboto', style: 'Regular' });
+        await figma.loadFontAsync(pretendardFont);
+        console.log('Successfully loaded "Pretendard" font.');
+        return pretendardFont;
+    } catch (error) {
+        // If "Pretendard" font fails to load, warn the user but don't stop the process.
+        console.warn('Could not load "Pretendard" font. Falling back to "Inter".', error);
+        try {
+            await figma.loadFontAsync(interFont);
+            console.log('Successfully loaded fallback "Inter" font.');
+            return interFont;
+        } catch (fallbackError) {
+            // If the fallback font also fails, throw an error to stop the execution.
+            console.error('Critical: Could not load fallback "Inter" font.', fallbackError);
+            throw new Error('Default fonts could not be loaded.');
+        }
     }
 }
 
@@ -38,7 +64,10 @@ async function loadDefaultFont(): Promise<void> {
 // Palette Creation Functions
 // ============================================================================
 
-function createPaletteSections(generatedPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>): void {
+function createPaletteSections(
+    generatedPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>,
+    fontName: FontName,
+): void {
     const currentPage = figma.currentPage;
 
     console.log('Generated palette:', generatedPalette);
@@ -46,19 +75,23 @@ function createPaletteSections(generatedPalette: Pick<ColorPaletteCollection, 'l
     // Create light theme section
     if (generatedPalette.light) {
         console.log('Creating light section');
-        const lightSection = createThemeSection('light', generatedPalette.light);
+        const lightSection = createThemeSection('light', generatedPalette.light, fontName);
         currentPage.appendChild(lightSection);
     }
 
     // Create dark theme section
     if (generatedPalette.dark) {
         console.log('Creating dark section');
-        const darkSection = createThemeSection('dark', generatedPalette.dark);
+        const darkSection = createThemeSection('dark', generatedPalette.dark, fontName);
         currentPage.appendChild(darkSection);
     }
 }
 
-function createThemeSection(theme: 'light' | 'dark', themeData: ColorPaletteCollection['light']): SectionNode {
+function createThemeSection(
+    theme: 'light' | 'dark',
+    themeData: ColorPaletteCollection['light'],
+    fontName: FontName,
+): SectionNode {
     // Create section
     const section = figma.createSection();
     section.name = `${theme} (Generated)`;
@@ -71,7 +104,7 @@ function createThemeSection(theme: 'light' | 'dark', themeData: ColorPaletteColl
     console.log(`Creating ${theme} section with generated colors:`, Object.keys(themeData));
 
     // Create palette table with generated color data
-    const paletteTable = createPaletteTable(themeData, theme);
+    const paletteTable = createPaletteTable(themeData, theme, fontName);
     if (paletteTable) {
         section.appendChild(paletteTable);
 
@@ -89,7 +122,11 @@ function createThemeSection(theme: 'light' | 'dark', themeData: ColorPaletteColl
     return section;
 }
 
-function createPaletteTable(generatedThemeData: ColorPaletteCollection['light'], theme: string): FrameNode {
+function createPaletteTable(
+    generatedThemeData: ColorPaletteCollection['light'],
+    theme: string,
+    fontName: FontName,
+): FrameNode {
     // Create main frame with auto layout
     const newMainFrame = figma.createFrame();
     newMainFrame.name = 'Generated Palette';
@@ -108,18 +145,23 @@ function createPaletteTable(generatedThemeData: ColorPaletteCollection['light'],
     newMainFrame.counterAxisSizingMode = 'AUTO'; // Auto width
 
     // Create header section
-    const header = createPaletteHeader(theme);
+    const header = createPaletteHeader(theme, fontName);
     newMainFrame.appendChild(header);
 
     // Process each color family from generated data (auto layout handles positioning)
     Object.entries(generatedThemeData).forEach(([colorFamily, colorShades]) => {
         if (colorFamily === 'background') {
             // Handle background colors specially
-            const bgSection = createColorFamilySection(colorFamily, colorShades, true);
+            const bgSection = createColorFamilySection(colorFamily, colorShades, true, fontName);
             newMainFrame.appendChild(bgSection);
         } else if (typeof colorShades === 'object' && colorShades !== null) {
             // Regular color family (red, blue, green, etc.)
-            const colorSection = createColorFamilySection(colorFamily, colorShades, false);
+            const colorSection = createColorFamilySection(
+                colorFamily,
+                colorShades,
+                false,
+                fontName,
+            );
             newMainFrame.appendChild(colorSection);
         }
     });
@@ -127,7 +169,7 @@ function createPaletteTable(generatedThemeData: ColorPaletteCollection['light'],
     return newMainFrame;
 }
 
-function createPaletteHeader(theme: string): FrameNode {
+function createPaletteHeader(theme: string, fontName: FontName): FrameNode {
     const header = figma.createFrame();
     header.name = 'header';
     header.x = 0;
@@ -147,6 +189,8 @@ function createPaletteHeader(theme: string): FrameNode {
     titleFrame.counterAxisSizingMode = 'AUTO'; // Auto height
 
     const titleText = figma.createText();
+    // Apply the loaded font
+    titleText.fontName = fontName;
     titleText.name = 'title';
     titleText.characters = `Generated ${theme.charAt(0).toUpperCase() + theme.slice(1)} Colors`;
     titleText.x = 0;
@@ -163,6 +207,7 @@ function createColorFamilySection(
     familyName: string,
     colorShades: ColorPaletteCollection['light'][string],
     isBackground: boolean,
+    fontName: FontName,
 ): FrameNode {
     const section = figma.createFrame();
     section.name = `${familyName} section`;
@@ -180,6 +225,8 @@ function createColorFamilySection(
 
     // Create family title
     const familyTitle = figma.createText();
+    // Apply the loaded font
+    familyTitle.fontName = fontName;
     familyTitle.name = `${familyName} title`;
     familyTitle.characters = `${formatFamilyTitle(familyName)} Colors`;
     familyTitle.fontSize = 24;
@@ -204,6 +251,7 @@ function createColorFamilySection(
                 const colorRow = createColorRow(
                     `${familyName} ${shadeName}`,
                     colorData.hex,
+                    fontName,
                     colorData.oklch,
                     colorData.codeSyntax,
                 );
@@ -225,6 +273,7 @@ function createColorFamilySection(
                 const colorRow = createColorRow(
                     `${familyName} ${shade}`,
                     colorData.hex,
+                    fontName,
                     colorData.oklch,
                     colorData.codeSyntax,
                 );
@@ -246,7 +295,13 @@ function formatFamilyTitle(familyName: string): string {
     return familyName.charAt(0).toUpperCase() + familyName.slice(1);
 }
 
-function createColorRow(colorName: string, hexColor: string, oklchColor?: string, codeSyntax?: string): FrameNode {
+function createColorRow(
+    colorName: string,
+    hexColor: string,
+    fontName: FontName,
+    oklchColor?: string,
+    codeSyntax?: string,
+): FrameNode {
     const row = figma.createFrame();
     row.name = 'color row';
     row.fills = [];
@@ -280,6 +335,8 @@ function createColorRow(colorName: string, hexColor: string, oklchColor?: string
     nameField.resizeWithoutConstraints(592, 56);
 
     const nameText = figma.createText();
+    // Apply the loaded font
+    nameText.fontName = fontName;
     nameText.name = 'name text';
     nameText.characters = formatColorName(colorName);
     nameText.fontSize = 14;
@@ -330,6 +387,8 @@ function createColorRow(colorName: string, hexColor: string, oklchColor?: string
 
     // Hex value text
     const hexText = figma.createText();
+    // Apply the loaded font
+    hexText.fontName = fontName;
     hexText.name = 'hex value';
     hexText.characters = hexColor.toUpperCase();
     hexText.fontSize = 12;
@@ -338,6 +397,8 @@ function createColorRow(colorName: string, hexColor: string, oklchColor?: string
     // OKLCH value text (if available)
     if (oklchColor) {
         const oklchText = figma.createText();
+        // Apply the loaded font
+        oklchText.fontName = fontName;
         oklchText.name = 'oklch value';
         oklchText.characters = oklchColor;
         oklchText.fontSize = 10;
@@ -354,6 +415,8 @@ function createColorRow(colorName: string, hexColor: string, oklchColor?: string
     // Code syntax text (if available)
     if (codeSyntax) {
         const codeSyntaxText = figma.createText();
+        // Apply the loaded font
+        codeSyntaxText.fontName = fontName;
         codeSyntaxText.name = 'code syntax value';
         codeSyntaxText.characters = codeSyntax;
         codeSyntaxText.fontSize = 10;
