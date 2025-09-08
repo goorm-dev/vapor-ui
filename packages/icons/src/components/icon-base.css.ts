@@ -1,7 +1,7 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { createGlobalVar, style } from '@vanilla-extract/css';
 
-export const vaporIconWidth = createVar();
-export const vaporIconHeight = createVar();
+export const vaporIconWidth = createGlobalVar('vapor-icon-width');
+export const vaporIconHeight = createGlobalVar('vapor-icon-height');
 
 export const container_width = style({
     width: vaporIconWidth,
