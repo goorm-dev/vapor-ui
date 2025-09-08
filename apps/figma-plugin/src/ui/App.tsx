@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { Box } from '@vapor-ui/core';
 
-import { PrimitiveColorsTab } from './ui/features/primitive-colors-tab';
-import { SemanticColorsTab } from './ui/features/semantic-colors-tab';
+import { PrimitiveColorsTab } from './features/primitive-colors-tab';
+import { SemanticColorsTab } from './features/semantic-colors-tab';
 
 function App() {
     const [activeTab, setActiveTab] = useState<'primitive' | 'semantic'>('primitive');
