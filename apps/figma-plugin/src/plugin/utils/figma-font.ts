@@ -1,4 +1,4 @@
-import { Logger } from '~/services/logger';
+import { Logger } from '~/common/logger';
 
 const FONT_CONFIG = {
     DEFAULT_FAMILY: 'Pretendard',
@@ -7,8 +7,8 @@ const FONT_CONFIG = {
 } as const;
 
 /**
- * 기본 폰트를 로드하는 유틸리티 함수
- * Pretendard를 우선 시도하고, 실패 시 Inter 폰트로 폴백
+ * Attempts to load `Pretendard` first,
+ * and falls back to `Inter` if the first attempt fails.
  */
 export async function loadDefaultFont(): Promise<FontName> {
     const defaultFont: FontName = {

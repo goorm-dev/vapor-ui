@@ -2,30 +2,17 @@ export const Logger = {
     // ============================================================================
     // General Logging
     // ============================================================================
-
-    /**
-     * 정보성 로그
-     */
     info: (message: string, data?: unknown) => {
         console.log(`[INFO] ${message}`, data ?? '');
     },
-
-    /**
-     * 경고 로그
-     */
     warn: (message: string, data?: unknown) => {
         console.warn(`[WARN] ${message}`, data ?? '');
     },
-
-    /**
-     * 오류 로그
-     */
     error: (message: string, error?: unknown) => {
         console.error(`[ERROR] ${message}`, error ?? '');
     },
-
     /**
-     * 디버그 로그 (개발 환경에서만)
+     * only use dev
      */
     debug: (message: string, data?: unknown) => {
         console.debug(`[DEBUG] ${message}`, data ?? '');
@@ -35,9 +22,6 @@ export const Logger = {
     // Domain-Specific Logging
     // ============================================================================
 
-    /**
-     * 팔레트 관련 로깅
-     */
     palette: {
         generating: (colorData: unknown) => {
             Logger.info('팔레트 생성 시작', colorData);
@@ -59,10 +43,6 @@ export const Logger = {
             Logger.error(`팔레트 처리 오류: ${message}`, error);
         },
     },
-
-    /**
-     * 시맨틱 토큰 관련 로깅
-     */
     semantic: {
         generating: (colorData: unknown, dependentTokens: unknown) => {
             Logger.info('시맨틱 토큰 생성 시작', { colorData, dependentTokens });
@@ -84,10 +64,6 @@ export const Logger = {
             Logger.error(`시맨틱 토큰 처리 오류: ${message}`, error);
         },
     },
-
-    /**
-     * Figma 변수 관련 로깅
-     */
     variables: {
         creating: (collectionName: string) => {
             Logger.info(`Figma 변수 생성 시작: ${collectionName}`);
@@ -101,10 +77,6 @@ export const Logger = {
             Logger.error(`Figma 변수 생성 오류: ${message}`, error);
         },
     },
-
-    /**
-     * 폰트 관련 로깅
-     */
     font: {
         loading: (fontFamily: string) => {
             Logger.info(`폰트 로드 시작: ${fontFamily}`);

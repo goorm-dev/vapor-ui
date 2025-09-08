@@ -1,5 +1,5 @@
-import type { UIMessage } from '~/figma-messages';
-import { FigmaAPIService } from '~/services/figma-api';
+import type { UIMessage } from '~/common/messages';
+import { primitiveController, semanticController } from './controllers';
 
 // ============================================================================
 // Figma Plugin Setup
@@ -9,33 +9,22 @@ figma.showUI(__html__);
 figma.ui.resize(400, 600);
 
 // ============================================================================
-// Message Handler
+// Message Router
 // ============================================================================
 
 figma.ui.onmessage = async (msg: UIMessage) => {
     switch (msg.type) {
         case 'create-palette-sections':
-            await FigmaAPIService.createPaletteSections({
-                generatedPalette: msg.data.generatedPalette,
-            });
+            await primitiveController.createPaletteSections(msg.data);
             break;
         case 'create-figma-variables':
-            await FigmaAPIService.createFigmaVariables(
-                msg.data.generatedPalette,
-                msg.data.collectionName,
-            );
+            await primitiveController.createFigmaVariables(msg.data);
             break;
         case 'create-semantic-palette-sections':
-            await FigmaAPIService.createSemanticPaletteSections({
-                generatedSemanticPalette: msg.data.generatedSemanticPalette,
-                dependentTokens: msg.data.dependentTokens,
-            });
+            await semanticController.createSemanticPaletteSections(msg.data);
             break;
         case 'create-semantic-figma-variables':
-            await FigmaAPIService.createSemanticFigmaVariables(
-                msg.data.generatedSemanticPalette,
-                msg.data.collectionName,
-            );
+            await semanticController.createSemanticFigmaVariables(msg.data);
             break;
         default:
             console.warn('알 수 없는 메시지 유형:', msg);

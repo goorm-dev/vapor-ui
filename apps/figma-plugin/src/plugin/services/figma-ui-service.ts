@@ -1,15 +1,22 @@
-import type { ColorPaletteCollection, ThemeDependentTokensCollection } from '@vapor-ui/color-generator';
+import type {
+    ColorPaletteCollection,
+    ThemeDependentTokensCollection,
+} from '@vapor-ui/color-generator';
 
-import type { PaletteCreationRequest, SemanticPaletteCreationRequest } from '~/types/palette';
-import { hexToFigmaColor, formatColorName, formatFamilyTitle, sortColorShades } from '~/utils/color';
-import { loadDefaultFont } from '~/utils/figma-font';
-import { createFigmaVariables, createSemanticFigmaVariables } from '~/plugin/utils/figma-variables';
-import { Logger } from './logger';
-import { NotificationService } from './notification';
+import type {
+    PaletteCreationRequest,
+    SemanticPaletteCreationRequest,
+} from '~/plugin/types/palette';
+import { formatColorName, formatFamilyTitle, sortColorShades } from '~/plugin/utils/color';
+import { hexToFigmaColor } from '~/plugin/utils/color';
+import { loadDefaultFont } from '~/plugin/utils/figma-font';
+import { Logger } from '~/common/logger';
 
-/* -----------------------------------------------------------------------------------------------*/
+import { NotificationService } from './figma-notification';
+
+// ============================================================================
 // Constants
-
+// ============================================================================
 const UI_CONSTANTS = {
     SECTION_OFFSET: 2000,
     SECTION_PADDING: 100,
@@ -26,17 +33,14 @@ const UI_CONSTANTS = {
     },
 } as const;
 
-/* -----------------------------------------------------------------------------------------------*/
-// Main API
-
-export const FigmaAPIService = {
-    /* -----------------------------------------------------------------------------------------------*/
-    // Palette Sections
-
+// ============================================================================
+// Public Service
+// ============================================================================
+export const figmaUIService = {
     /**
-     * 팔레트 섹션 생성
+     * 기본 팔레트 섹션 생성 (Primitive Colors Tab용)
      */
-    async createPaletteSections(request: PaletteCreationRequest): Promise<void> {
+    async createPrimitivePaletteSections(request: PaletteCreationRequest): Promise<void> {
         try {
             Logger.palette.generating(request.generatedPalette);
 
@@ -46,7 +50,11 @@ export const FigmaAPIService = {
             // Light 테마 생성
             if (request.generatedPalette.light) {
                 Logger.palette.creatingSection('light');
-                const lightSection = createPaletteSection('light', request.generatedPalette.light, fontName);
+                const lightSection = createPaletteSection(
+                    'light',
+                    request.generatedPalette.light,
+                    fontName,
+                );
                 currentPage.appendChild(lightSection);
                 Logger.palette.sectionCreated('light');
             }
@@ -54,7 +62,11 @@ export const FigmaAPIService = {
             // Dark 테마 생성
             if (request.generatedPalette.dark) {
                 Logger.palette.creatingSection('dark');
-                const darkSection = createPaletteSection('dark', request.generatedPalette.dark, fontName);
+                const darkSection = createPaletteSection(
+                    'dark',
+                    request.generatedPalette.dark,
+                    fontName,
+                );
                 currentPage.appendChild(darkSection);
                 Logger.palette.sectionCreated('dark');
             }
@@ -68,7 +80,7 @@ export const FigmaAPIService = {
     },
 
     /**
-     * 시맨틱 팔레트 섹션 생성
+     * 시맨틱 팔레트 섹션 생성 (Semantic Colors Tab용)
      */
     async createSemanticPaletteSections(request: SemanticPaletteCreationRequest): Promise<void> {
         try {
@@ -110,70 +122,11 @@ export const FigmaAPIService = {
             NotificationService.semanticPaletteCreateFailed();
         }
     },
-
-    /* -----------------------------------------------------------------------------------------------*/
-    // Figma Variables
-
-    async createFigmaVariables(generatedPalette: ColorPaletteCollection, collectionName: string): Promise<void> {
-        try {
-            Logger.variables.creating(collectionName);
-
-            await createFigmaVariables(generatedPalette, {
-                collectionName,
-                includeBase: true,
-            });
-
-            // Get created variables count for logging
-            const collections = await figma.variables.getLocalVariableCollectionsAsync();
-            const targetCollection = collections.find(c => c.name === collectionName);
-            const variables = await figma.variables.getLocalVariablesAsync();
-            const variableCount = variables.filter(v => v.variableCollectionId === targetCollection?.id).length;
-
-            if (variableCount === 0) {
-                throw new Error('변수가 생성되지 않았습니다');
-            }
-
-            Logger.variables.created(collectionName, variableCount);
-            NotificationService.variablesCreated();
-        } catch (error) {
-            Logger.variables.error('Figma 변수 생성 실패', error);
-            NotificationService.variablesCreateFailed();
-        }
-    },
-
-    async createSemanticFigmaVariables(
-        generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>,
-        collectionName: string,
-    ): Promise<void> {
-        try {
-            Logger.variables.creating(collectionName);
-
-            await createSemanticFigmaVariables(generatedSemanticPalette, {
-                collectionName,
-            });
-
-            // Get created variables count for logging
-            const collections = await figma.variables.getLocalVariableCollectionsAsync();
-            const targetCollection = collections.find(c => c.name === collectionName);
-            const variables = await figma.variables.getLocalVariablesAsync();
-            const variableCount = variables.filter(v => v.variableCollectionId === targetCollection?.id).length;
-
-            if (variableCount === 0) {
-                throw new Error('시맨틱 변수가 생성되지 않았습니다');
-            }
-
-            Logger.variables.created(collectionName, variableCount);
-            NotificationService.variablesCreated();
-        } catch (error) {
-            Logger.variables.error('시맨틱 Figma 변수 생성 실패', error);
-            NotificationService.variablesCreateFailed();
-        }
-    },
 } as const;
 
-/* -----------------------------------------------------------------------------------------------*/
-// Private UI Creation Functions
-
+// ============================================================================
+// Figma UI Helpers
+// ============================================================================
 function createPaletteSection(
     theme: 'light' | 'dark',
     themeData: ColorPaletteCollection['light'],
@@ -258,7 +211,12 @@ function createPaletteTable(
             const bgSection = createColorFamilySection(colorFamily, colorShades, true, fontName);
             mainFrame.appendChild(bgSection);
         } else if (typeof colorShades === 'object' && colorShades !== null) {
-            const colorSection = createColorFamilySection(colorFamily, colorShades, false, fontName);
+            const colorSection = createColorFamilySection(
+                colorFamily,
+                colorShades,
+                false,
+                fontName,
+            );
             mainFrame.appendChild(colorSection);
         }
     });
@@ -394,13 +352,22 @@ function createColorFamilySection(
 
     if (isBackground && typeof colorShades === 'object') {
         Object.entries(colorShades).forEach(([shadeName, colorData]) => {
-            if (colorData && typeof colorData === 'object' && 'hex' in colorData && typeof colorData.hex === 'string') {
+            if (
+                colorData &&
+                typeof colorData === 'object' &&
+                'hex' in colorData &&
+                typeof colorData.hex === 'string'
+            ) {
                 const colorRow = createColorRow(
                     `${familyName} ${shadeName}`,
                     colorData.hex,
                     fontName,
-                    'oklch' in colorData && typeof colorData.oklch === 'string' ? colorData.oklch : undefined,
-                    'codeSyntax' in colorData && typeof colorData.codeSyntax === 'string' ? colorData.codeSyntax : undefined,
+                    'oklch' in colorData && typeof colorData.oklch === 'string'
+                        ? colorData.oklch
+                        : undefined,
+                    'codeSyntax' in colorData && typeof colorData.codeSyntax === 'string'
+                        ? colorData.codeSyntax
+                        : undefined,
                 );
                 colorContainer.appendChild(colorRow);
             }
@@ -408,13 +375,22 @@ function createColorFamilySection(
     } else {
         const sortedShades = sortColorShades(colorShades);
         sortedShades.forEach(([shade, colorData]) => {
-            if (colorData && typeof colorData === 'object' && 'hex' in colorData && typeof colorData.hex === 'string') {
+            if (
+                colorData &&
+                typeof colorData === 'object' &&
+                'hex' in colorData &&
+                typeof colorData.hex === 'string'
+            ) {
                 const colorRow = createColorRow(
                     `${familyName} ${shade}`,
                     colorData.hex,
                     fontName,
-                    'oklch' in colorData && typeof colorData.oklch === 'string' ? colorData.oklch : undefined,
-                    'codeSyntax' in colorData && typeof colorData.codeSyntax === 'string' ? colorData.codeSyntax : undefined,
+                    'oklch' in colorData && typeof colorData.oklch === 'string'
+                        ? colorData.oklch
+                        : undefined,
+                    'codeSyntax' in colorData && typeof colorData.codeSyntax === 'string'
+                        ? colorData.codeSyntax
+                        : undefined,
                 );
                 colorContainer.appendChild(colorRow);
             }
@@ -448,7 +424,12 @@ function createPrimitiveColorsSection(
             const bgSection = createColorFamilySection(colorFamily, colorShades, true, fontName);
             section.appendChild(bgSection);
         } else if (typeof colorShades === 'object' && colorShades !== null) {
-            const colorSection = createColorFamilySection(colorFamily, colorShades, false, fontName);
+            const colorSection = createColorFamilySection(
+                colorFamily,
+                colorShades,
+                false,
+                fontName,
+            );
             section.appendChild(colorSection);
         }
     });
@@ -485,7 +466,10 @@ function createSemanticTokensSection(
 
 function createSemanticTokenFamilySection(
     familyName: string,
-    tokenMap: Record<string, { hex: string; oklch?: string; codeSyntax?: string; primitiveCodeSyntax?: string }>,
+    tokenMap: Record<
+        string,
+        { hex: string; oklch?: string; codeSyntax?: string; primitiveCodeSyntax?: string }
+    >,
     fontName: FontName,
 ): FrameNode {
     const section = figma.createFrame();
@@ -544,7 +528,10 @@ function createColorRow(
     row.itemSpacing = 0;
     row.primaryAxisSizingMode = 'AUTO';
     row.counterAxisSizingMode = 'FIXED';
-    row.resizeWithoutConstraints(UI_CONSTANTS.LAYOUT_WIDTHS.STANDARD_ROW, UI_CONSTANTS.COLOR_ROW_HEIGHT);
+    row.resizeWithoutConstraints(
+        UI_CONSTANTS.LAYOUT_WIDTHS.STANDARD_ROW,
+        UI_CONSTANTS.COLOR_ROW_HEIGHT,
+    );
 
     // 이름 필드
     const nameField = createNameField(colorName, fontName, UI_CONSTANTS.LAYOUT_WIDTHS.NAME_FIELD);
@@ -572,10 +559,17 @@ function createSemanticColorRow(
     row.itemSpacing = 0;
     row.primaryAxisSizingMode = 'AUTO';
     row.counterAxisSizingMode = 'FIXED';
-    row.resizeWithoutConstraints(UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_ROW, UI_CONSTANTS.COLOR_ROW_HEIGHT);
+    row.resizeWithoutConstraints(
+        UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_ROW,
+        UI_CONSTANTS.COLOR_ROW_HEIGHT,
+    );
 
     // 이름 필드
-    const nameField = createNameField(colorName, fontName, UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_NAME_FIELD);
+    const nameField = createNameField(
+        colorName,
+        fontName,
+        UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_NAME_FIELD,
+    );
     row.appendChild(nameField);
 
     // 토큰 필드
@@ -627,7 +621,10 @@ function createTokenField(tokenRef: string, fontName: FontName): FrameNode {
     tokenField.primaryAxisAlignItems = 'CENTER';
     tokenField.primaryAxisSizingMode = 'FIXED';
     tokenField.counterAxisSizingMode = 'FIXED';
-    tokenField.resizeWithoutConstraints(UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_TOKEN_FIELD, UI_CONSTANTS.COLOR_ROW_HEIGHT);
+    tokenField.resizeWithoutConstraints(
+        UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_TOKEN_FIELD,
+        UI_CONSTANTS.COLOR_ROW_HEIGHT,
+    );
 
     const tokenText = figma.createText();
     tokenText.fontName = fontName;
@@ -661,7 +658,10 @@ function createValueField(
     // 컬러 스와치
     const colorRect = figma.createRectangle();
     colorRect.name = 'color shape';
-    colorRect.resizeWithoutConstraints(UI_CONSTANTS.COLOR_SWATCH_SIZE, UI_CONSTANTS.COLOR_SWATCH_SIZE);
+    colorRect.resizeWithoutConstraints(
+        UI_CONSTANTS.COLOR_SWATCH_SIZE,
+        UI_CONSTANTS.COLOR_SWATCH_SIZE,
+    );
     colorRect.fills = [{ type: 'SOLID', color: hexToFigmaColor(hexColor) }];
     valueField.appendChild(colorRect);
 

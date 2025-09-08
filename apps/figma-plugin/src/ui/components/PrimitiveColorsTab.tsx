@@ -10,9 +10,9 @@ import {
 } from '@vapor-ui/color-generator';
 import { Box, Button, Text, VStack } from '@vapor-ui/core';
 
-import { postMessage } from '~/figma-messages';
-import { calculatePerceptualUniformity } from '~/utils/colorMetrics';
-import { Logger } from '~/services/logger';
+import { postMessage } from '~/common/messages';
+import { calculatePerceptualUniformity } from '~/ui/utils/color-metrics';
+import { Logger } from '~/common/logger';
 
 const Section = ({ title, children }: { title: string; children: ReactNode }) => {
     return (

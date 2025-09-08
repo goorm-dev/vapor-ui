@@ -8,8 +8,8 @@ import {
 } from '@vapor-ui/color-generator';
 import { Box, Button, Text, VStack } from '@vapor-ui/core';
 
-import { postMessage } from '~/figma-messages';
-import { Logger } from '~/services/logger';
+import { postMessage } from '~/common/messages';
+import { Logger } from '~/common/logger';
 
 const DEFAULT_PRIMARY_COLOR = '#8662F3';
 

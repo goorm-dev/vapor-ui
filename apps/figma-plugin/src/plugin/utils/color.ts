@@ -1,9 +1,12 @@
+import type { ColorToken } from '@vapor-ui/color-generator';
+
 // ============================================================================
 // Color Conversion
 // ============================================================================
 
 /**
- * HEX 색상을 RGB 값으로 변환
+ * Converts hex color to RGB values
+ * @returns { r: 255, g: 0, b: 128 }
  */
 export function hexToRgb(hex: string): { r: number; g: number; b: number } {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -17,7 +20,8 @@ export function hexToRgb(hex: string): { r: number; g: number; b: number } {
 }
 
 /**
- * RGB 값을 Figma 색상 포맷(0-1 범위)으로 변환
+ * Converts RGB values to Figma color format (0-1 range)
+ * @returns { r: 1.0, g: 0.0, b: 0.5 }
  */
 export function rgbToFigmaColor(
     r: number,
@@ -32,7 +36,8 @@ export function rgbToFigmaColor(
 }
 
 /**
- * HEX 색상을 Figma 색상 포맷으로 직접 변환
+ * Converts hex color directly to Figma color format
+ * @returns { r: 0.5, g: 0.5, b: 0.5 }
  */
 export function hexToFigmaColor(hex: string): { r: number; g: number; b: number } {
     const { r, g, b } = hexToRgb(hex);
@@ -44,14 +49,16 @@ export function hexToFigmaColor(hex: string): { r: number; g: number; b: number 
 // ============================================================================
 
 /**
- * 컬러 이름 포맷팅 (예: '050' -> '50')
+ * Formats color names by removing leading zeros
+ * @returns '50', '100', '200'
  */
 export function formatColorName(colorName: string): string {
     return colorName.replace(/\b0(\d+)\b/g, '$1');
 }
 
 /**
- * 패밀리 이름 포맷팅 (첫 글자 대문자)
+ * Formats family names with capitalized first letter
+ * @returns 'Primary', 'Secondary', 'Background'
  */
 export function formatFamilyTitle(familyName: string): string {
     return familyName.charAt(0).toUpperCase() + familyName.slice(1);
@@ -62,10 +69,31 @@ export function formatFamilyTitle(familyName: string): string {
 // ============================================================================
 
 /**
- * 컬러 쉐이드 정렬 (숫자 순서대로)
+ * Sorts color shades by numeric value
+ * @returns [['050', data], ['100', data], ['200', data]]
  */
 export function sortColorShades(shades: Record<string, unknown>): Array<[string, unknown]> {
     return Object.entries(shades).sort(([a], [b]) => {
+        const numA = parseInt(a, 10);
+        const numB = parseInt(b, 10);
+        return numA - numB;
+    });
+}
+
+/**
+ * Filters and sorts valid color shades from color palette
+ * @returns [['050', colorToken], ['100', colorToken]]
+ */
+export function getValidColorShades(colorShades: unknown): [string, ColorToken][] {
+    if (typeof colorShades !== 'object' || !colorShades) {
+        return [];
+    }
+
+    const entries = Object.entries(colorShades).filter(
+        ([_, colorToken]) => typeof colorToken === 'object' && colorToken && 'hex' in colorToken,
+    ) as [string, ColorToken][];
+
+    return entries.sort(([a], [b]) => {
         const numA = parseInt(a, 10);
         const numB = parseInt(b, 10);
         return numA - numB;
@@ -77,14 +105,16 @@ export function sortColorShades(shades: Record<string, unknown>): Array<[string,
 // ============================================================================
 
 /**
- * 유효한 HEX 색상인지 확인
+ * Validates if string is a valid hex color
+ * @returns true for '#ff0000', false for 'invalid'
  */
 export function isValidHexColor(hex: string): boolean {
     return /^#?([a-f\d]{6}|[a-f\d]{3})$/i.test(hex);
 }
 
 /**
- * 색상 데이터 유효성 검증
+ * Validates color data object structure
+ * @returns true for { hex: '#ff0000' }, false for invalid objects
  */
 export function isValidColorData(
     colorData: unknown,

@@ -30,9 +30,13 @@ type CreateSemanticFigmaVariablesMessage = {
 export type UIMessage = CreatePaletteSectionsMessage | CreateFigmaVariablesMessage | CreateSemanticPaletteSectionsMessage | CreateSemanticFigmaVariablesMessage;
 
 // ============================================================================
-// Message  Utilities
+// Message Utilities
 // ============================================================================
 
+/**
+ * Posts message from UI to Plugin
+ * @param message - Message to send to plugin
+ */
 export function postMessage(message: UIMessage): void {
     parent.postMessage({ pluginMessage: message }, '*');
 }
