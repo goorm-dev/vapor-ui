@@ -3,6 +3,7 @@ import { type ReactNode, useState } from 'react';
 import {
     type ColorPaletteCollection,
     generateSemanticColorPalette,
+    generateSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
 import { Box, Button, Text, VStack } from '@vapor-ui/core';
 
@@ -37,11 +38,16 @@ export const SemanticColorsTab = () => {
                 },
             });
 
+            const dependentTokens = generateSemanticDependentTokens(semanticPalette);
+
             setGeneratedSemanticPalette(semanticPalette);
 
             postMessage({
                 type: 'create-semantic-palette-sections',
-                data: { generatedSemanticPalette: semanticPalette },
+                data: {
+                    generatedSemanticPalette: semanticPalette,
+                    dependentTokens: dependentTokens,
+                },
             });
         } catch (error) {
             console.error('Error generating semantic palette:', error);

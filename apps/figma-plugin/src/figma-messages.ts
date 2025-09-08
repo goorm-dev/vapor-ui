@@ -1,4 +1,4 @@
-import type { ColorPaletteCollection } from '@vapor-ui/color-generator';
+import type { ColorPaletteCollection, ThemeDependentTokensCollection } from '@vapor-ui/color-generator';
 
 // ============================================================================
 // Message Types
@@ -16,7 +16,10 @@ type CreateFigmaVariablesMessage = {
 
 type CreateSemanticPaletteSectionsMessage = {
     type: 'create-semantic-palette-sections';
-    data: { generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'> };
+    data: { 
+        generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
+        dependentTokens: ThemeDependentTokensCollection;
+    };
 };
 
 type CreateSemanticFigmaVariablesMessage = {
