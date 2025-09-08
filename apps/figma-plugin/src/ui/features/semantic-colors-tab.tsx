@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 
 import {
     type ColorPaletteCollection,
@@ -6,21 +6,15 @@ import {
     generateSemanticDependentTokens,
     type SemanticColorGeneratorConfig,
 } from '@vapor-ui/color-generator';
-import { Box, Button, Text, VStack } from '@vapor-ui/core';
+import { Box, Button, VStack } from '@vapor-ui/core';
 
 import { postMessage } from '~/common/messages';
 import { Logger } from '~/common/logger';
+import { Section } from '~/ui/components/section';
+import { ColorInput } from '~/ui/components/color-input';
+import { LabeledInput } from '~/ui/components/labeled-input';
 
 const DEFAULT_PRIMARY_COLOR = '#8662F3';
-
-const Section = ({ title, children }: { title: string; children: ReactNode }) => {
-    return (
-        <VStack gap="$100" className="flex-1">
-            <Text typography="heading6">{title}</Text>
-            {children}
-        </VStack>
-    );
-};
 
 export const SemanticColorsTab = () => {
     const [primaryColor, setPrimaryColor] = useState<string>(DEFAULT_PRIMARY_COLOR);
@@ -84,23 +78,12 @@ export const SemanticColorsTab = () => {
         <VStack gap="$300">
             <VStack gap="$200">
                 <Section title="Primary Color">
-                    <div className="flex items-center gap-2">
-                        <label className="text-xs text-gray-600 min-w-[50px]">Primary:</label>
-                        <input
-                            type="text"
-                            value={primaryColor}
-                            onChange={(e) => setPrimaryColor(e.target.value)}
-                            className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            placeholder={DEFAULT_PRIMARY_COLOR}
-                        />
-                        <input
-                            type="color"
-                            value={primaryColor}
-                            onChange={(e) => setPrimaryColor(e.target.value)}
-                            className="w-6 h-6 border border-gray-300 rounded cursor-pointer"
-                            title="Pick primary color"
-                        />
-                    </div>
+                    <ColorInput
+                        label="Primary"
+                        value={primaryColor}
+                        onChange={setPrimaryColor}
+                        placeholder={DEFAULT_PRIMARY_COLOR}
+                    />
                 </Section>
 
                 <Button onClick={handleGenerateSemanticPalette}>Generate Semantic Palette</Button>
@@ -110,18 +93,12 @@ export const SemanticColorsTab = () => {
                 <>
                     <div className="border-t border-gray-300" />
                     <VStack gap="$200">
-                        <div className="flex items-center gap-2">
-                            <label className="text-xs text-gray-600 min-w-[80px]">
-                                Collection Name:
-                            </label>
-                            <input
-                                type="text"
-                                value={collectionName}
-                                onChange={(e) => setCollectionName(e.target.value)}
-                                className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                placeholder="Enter collection name"
-                            />
-                        </div>
+                        <LabeledInput
+                            label="Collection Name"
+                            value={collectionName}
+                            onChange={setCollectionName}
+                            placeholder="Enter collection name"
+                        />
 
                         <Box className="p-3 bg-v-gray-100 rounded-lg">
                             <div className="text-sm font-medium text-gray-700 mb-2">
