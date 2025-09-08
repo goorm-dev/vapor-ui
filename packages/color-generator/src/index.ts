@@ -14,7 +14,7 @@ export const colorPalette = generateColorPalette();
 
 export { generateSemanticColorPalette } from './semantic';
 export { generateSemanticDependentTokens } from './semantic';
-export type { ThemeDependentTokensCollection } from './semantic';
+export type { ThemeDependentTokensCollection, SemanticColorGeneratorConfig } from './semantic';
 // Default primary color palette
 export const primaryColorPalette = generateSemanticColorPalette({
     colors: {

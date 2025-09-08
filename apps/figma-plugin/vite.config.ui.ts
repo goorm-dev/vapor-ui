@@ -11,6 +11,11 @@ export default defineConfig(({ mode }) => ({
     tailwindcss(), 
     ...(mode === 'production' ? [viteSingleFile()] : [])
   ],
+  resolve: {
+    alias: {
+      '~': path.resolve(__dirname, 'src'),
+    },
+  },
   build: {
     minify: mode === "production",
     cssMinify: mode === "production",

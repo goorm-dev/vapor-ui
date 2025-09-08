@@ -4,6 +4,11 @@ import { viteSingleFile } from "vite-plugin-singlefile";
 
 export default defineConfig(({ mode }) => ({
   plugins: [viteSingleFile()],
+  resolve: {
+    alias: {
+      '~': path.resolve(__dirname, 'src'),
+    },
+  },
   build: {
     minify: mode === 'production',
     sourcemap: mode !== 'production' ? 'inline' : false,

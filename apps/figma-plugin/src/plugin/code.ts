@@ -1,8 +1,5 @@
-import type { UIMessage } from '../figma-messages';
-import { handleCreateFigmaVariables } from './handlers/create-figma-variables';
-import { handleCreatePaletteSections } from './handlers/create-palette-sections';
-import { handleCreateSemanticFigmaVariables } from './handlers/create-semantic-figma-variables';
-import { handleCreateSemanticPaletteSections } from './handlers/create-semantic-palette-sections';
+import type { UIMessage } from '~/figma-messages';
+import { FigmaAPIService } from '~/services/figma-api';
 
 // ============================================================================
 // Figma Plugin Setup
@@ -18,19 +15,29 @@ figma.ui.resize(400, 600);
 figma.ui.onmessage = async (msg: UIMessage) => {
     switch (msg.type) {
         case 'create-palette-sections':
-            handleCreatePaletteSections(msg.data.generatedPalette);
+            await FigmaAPIService.createPaletteSections({
+                generatedPalette: msg.data.generatedPalette,
+            });
             break;
         case 'create-figma-variables':
-            await handleCreateFigmaVariables(msg.data.generatedPalette, msg.data.collectionName);
+            await FigmaAPIService.createFigmaVariables(
+                msg.data.generatedPalette,
+                msg.data.collectionName,
+            );
             break;
         case 'create-semantic-palette-sections':
-            handleCreateSemanticPaletteSections(msg.data.generatedSemanticPalette, msg.data.dependentTokens);
+            await FigmaAPIService.createSemanticPaletteSections({
+                generatedSemanticPalette: msg.data.generatedSemanticPalette,
+                dependentTokens: msg.data.dependentTokens,
+            });
             break;
         case 'create-semantic-figma-variables':
-            // Use semantic palette directly without base colors
-            await handleCreateSemanticFigmaVariables(msg.data.generatedSemanticPalette, msg.data.collectionName);
+            await FigmaAPIService.createSemanticFigmaVariables(
+                msg.data.generatedSemanticPalette,
+                msg.data.collectionName,
+            );
             break;
         default:
-            console.warn('Unknown message type:', msg);
+            console.warn('알 수 없는 메시지 유형:', msg);
     }
 };

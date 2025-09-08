@@ -2,6 +2,7 @@ import { type ReactNode, useState } from 'react';
 
 import {
     type ColorPaletteCollection,
+    type ColorGeneratorConfig,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
     DEFAULT_PRIMITIVE_COLORS,
@@ -9,8 +10,9 @@ import {
 } from '@vapor-ui/color-generator';
 import { Box, Button, Text, VStack } from '@vapor-ui/core';
 
-import { postMessage } from '../figma-messages';
-import { calculatePerceptualUniformity } from '../utils/colorMetrics';
+import { postMessage } from '~/figma-messages';
+import { calculatePerceptualUniformity } from '~/utils/colorMetrics';
+import { Logger } from '~/services/logger';
 
 const Section = ({ title, children }: { title: string; children: ReactNode }) => {
     return (
@@ -39,13 +41,13 @@ export const PrimitiveColorsTab = () => {
 
     const handleGeneratePalette = () => {
         try {
-            const config = {
-                primitiveColors,
+            const config: ColorGeneratorConfig = {
+                colors: primitiveColors,
                 contrastRatios,
                 backgroundLightness,
             };
 
-            console.log('Generating palette with config:', config);
+            Logger.palette.generating(config);
 
             const palette = generateColorPalette(config);
             setGeneratedPalette(palette);
@@ -54,24 +56,30 @@ export const PrimitiveColorsTab = () => {
                 type: 'create-palette-sections',
                 data: { generatedPalette: palette },
             });
+
+            Logger.palette.generated('팔레트 UI 요청 전송 완료');
         } catch (error) {
-            console.error('Error generating palette:', error);
+            Logger.palette.error('팔레트 생성 실패', error);
         }
     };
 
     const handleCreateFigmaVariables = () => {
         if (!generatedPalette) {
-            console.warn('No palette generated yet');
+            Logger.warn('팔레트가 생성되지 않았습니다');
             return;
         }
 
         try {
+            Logger.variables.creating(collectionName);
+            
             postMessage({
                 type: 'create-figma-variables',
                 data: { generatedPalette, collectionName },
             });
+            
+            Logger.info('Figma 변수 생성 요청 전송 완료');
         } catch (error) {
-            console.error('Error creating Figma variables:', error);
+            Logger.variables.error('Figma 변수 생성 요청 실패', error);
         }
     };
 

@@ -4,10 +4,12 @@ import {
     type ColorPaletteCollection,
     generateSemanticColorPalette,
     generateSemanticDependentTokens,
+    type SemanticColorGeneratorConfig,
 } from '@vapor-ui/color-generator';
 import { Box, Button, Text, VStack } from '@vapor-ui/core';
 
-import { postMessage } from '../figma-messages';
+import { postMessage } from '~/figma-messages';
+import { Logger } from '~/services/logger';
 
 const DEFAULT_PRIMARY_COLOR = '#8662F3';
 
@@ -30,13 +32,15 @@ export const SemanticColorsTab = () => {
 
     const handleGenerateSemanticPalette = () => {
         try {
-            console.log('Generating semantic palette with primary color:', primaryColor);
+            Logger.semantic.generating({ primary: primaryColor }, null);
 
-            const semanticPalette = generateSemanticColorPalette({
+            const config: SemanticColorGeneratorConfig = {
                 colors: {
                     primary: primaryColor,
                 },
-            });
+            };
+
+            const semanticPalette = generateSemanticColorPalette(config);
 
             const dependentTokens = generateSemanticDependentTokens(semanticPalette);
 
@@ -49,24 +53,30 @@ export const SemanticColorsTab = () => {
                     dependentTokens: dependentTokens,
                 },
             });
+
+            Logger.semantic.generated('시맨틱 팔레트 UI 요청 전송 완료');
         } catch (error) {
-            console.error('Error generating semantic palette:', error);
+            Logger.semantic.error('시맨틱 팔레트 생성 실패', error);
         }
     };
 
     const handleCreateSemanticFigmaVariables = () => {
         if (!generatedSemanticPalette) {
-            console.warn('No semantic palette generated yet');
+            Logger.warn('시맨틱 팔레트가 생성되지 않았습니다');
             return;
         }
 
         try {
+            Logger.variables.creating(collectionName);
+            
             postMessage({
                 type: 'create-semantic-figma-variables',
                 data: { generatedSemanticPalette, collectionName },
             });
+            
+            Logger.info('시맨틱 Figma 변수 생성 요청 전송 완료');
         } catch (error) {
-            console.error('Error creating semantic Figma variables:', error);
+            Logger.variables.error('시맨틱 Figma 변수 생성 요청 실패', error);
         }
     };
 

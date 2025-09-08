@@ -345,22 +345,14 @@ export async function createSemanticFigmaVariables(
     palette: { light: ThemeTokens; dark: ThemeTokens },
     config: FigmaVariablesConfig,
 ): Promise<void> {
-    try {
-        console.log('Creating Semantic Figma Variables with modes...', palette);
+    console.log('Creating Semantic Figma Variables with modes...', palette);
 
-        const { collection, lightModeId, darkModeId } = await createOrGetSemanticCollection(config.collectionName);
+    const { collection, lightModeId, darkModeId } = await createOrGetSemanticCollection(config.collectionName);
 
-        // Create semantic variables with light and dark modes
-        await createSemanticThemeVariables(collection, lightModeId, darkModeId, palette.light, palette.dark);
+    // Create semantic variables with light and dark modes
+    await createSemanticThemeVariables(collection, lightModeId, darkModeId, palette.light, palette.dark);
 
-        const message = config.notificationMessage || '✅ Semantic Figma Variables created successfully!';
-        figma.notify(message);
-        console.log('Semantic Figma Variables creation completed');
-    } catch (error) {
-        console.error('Error creating Semantic Figma Variables:', error);
-        figma.notify('❌ Failed to create Semantic Figma Variables');
-        throw error;
-    }
+    console.log('Semantic Figma Variables creation completed');
 }
 
 // ============================================================================
@@ -374,31 +366,23 @@ export async function createFigmaVariables(
     palette: { light: ThemeTokens; dark: ThemeTokens; base?: BaseColorTokens },
     config: FigmaVariablesConfig,
 ): Promise<void> {
-    try {
-        console.log(
-            `Creating ${config.includeBase ? 'Full' : 'Semantic'} Figma Variables...`,
-            palette,
-        );
+    console.log(
+        `Creating ${config.includeBase ? 'Full' : 'Semantic'} Figma Variables...`,
+        palette,
+    );
 
-        const collection = await createOrGetCollection(config.collectionName);
+    const collection = await createOrGetCollection(config.collectionName);
 
-        // Create base variables if included
-        if (config.includeBase && palette.base) {
-            await createBaseVariables(collection, palette.base);
-        }
-
-        // Create theme variables
-        await Promise.all([
-            createThemeVariables(collection, 'light', palette.light),
-            createThemeVariables(collection, 'dark', palette.dark),
-        ]);
-
-        const message = config.notificationMessage || '✅ Figma Variables created successfully!';
-        figma.notify(message);
-        console.log('Figma Variables creation completed');
-    } catch (error) {
-        console.error('Error creating Figma Variables:', error);
-        figma.notify('❌ Failed to create Figma Variables');
-        throw error;
+    // Create base variables if included
+    if (config.includeBase && palette.base) {
+        await createBaseVariables(collection, palette.base);
     }
+
+    // Create theme variables
+    await Promise.all([
+        createThemeVariables(collection, 'light', palette.light),
+        createThemeVariables(collection, 'dark', palette.dark),
+    ]);
+
+    console.log('Figma Variables creation completed');
 }
