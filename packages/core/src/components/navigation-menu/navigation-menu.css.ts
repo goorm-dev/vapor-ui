@@ -1,3 +1,4 @@
+import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -5,18 +6,26 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
+export const root = recipe({
+    defaultVariants: { stretch: false },
+    variants: {
+        stretch: {
+            true: layerStyle('components', { width: '100%' }),
+            false: layerStyle('components', { width: 'fit-content' }),
+        },
+    },
+});
+
 export const list = recipe({
     base: layerStyle('components', {
         display: 'flex',
         gap: vars.size.space[100],
+
+        listStyle: 'none',
     }),
 
-    defaultVariants: { direction: 'horizontal', stretch: false },
+    defaultVariants: { direction: 'horizontal' },
     variants: {
-        stretch: {
-            true: layerStyle('components', { display: 'flex' }),
-            false: layerStyle('components', { display: 'inline-flex' }),
-        },
         direction: {
             horizontal: layerStyle('components', { flexDirection: 'row' }),
             vertical: layerStyle('components', { flexDirection: 'column' }),
@@ -111,45 +120,112 @@ export const icon = layerStyle('components', {
     display: 'flex',
 });
 
+const durationVar = createVar('duration');
+const easingVar = createVar('easing');
+
+export const positioner = layerStyle('components', {
+    transitionProperty: 'top, left, right, bottom',
+    transitionDuration: durationVar,
+    transitionTimingFunction: easingVar,
+    width: 'var(--positioner-width)',
+    height: 'var(--positioner-height)',
+    maxWidth: 'var(--available-width)',
+
+    vars: {
+        [durationVar]: '0.25s',
+        [easingVar]: 'cubic-bezier(.23, 1, .32, 1)',
+    },
+});
+
 export const popup = layerStyle('components', {
-    outline: 'none',
-    border: `1px solid ${vars.color.border.normal}`,
+    outline: `1px solid ${vars.color.border.normal}`,
 
     borderRadius: vars.size.borderRadius[300],
     boxShadow: vars.shadow.md,
 
     backgroundColor: vars.color.background['normal-lighter'],
-    paddingBlock: vars.size.space[150],
 
+    transformOrigin: 'var(--transform-origin)',
+    transitionProperty: 'opacity, transform, width, height',
+    transitionDuration: durationVar,
+    transitionTimingFunction: easingVar,
+
+    width: 'var(--popup-width)',
+    height: 'var(--popup-height)',
+
+    selectors: {
+        '&[data-starting-style], &[data-ending-style]': {
+            opacity: 0,
+            transform: 'scale(0.9)',
+        },
+        '&[data-ending-style]': {
+            transitionTimingFunction: 'ease',
+            transitionDuration: '0.15s',
+        },
+    },
+});
+
+export const panel = layerStyle('components', {
+    width: '100%',
+    height: '100%',
+
+    paddingBlock: vars.size.space[150],
     paddingInline: vars.size.space[200],
+
+    transition: `opacity calc(${durationVar} * 0.5) ease, transform ${durationVar} ${easingVar}`,
+
+    selectors: {
+        '&[data-starting-style], &[data-ending-style]': {
+            opacity: 0,
+        },
+        '&[data-starting-style] &[data-activation-direction="left"]': {
+            transform: 'translateX(-50%)',
+        },
+        '&[data-starting-style] &[data-activation-direction="right"]': {
+            transform: 'translateX(50%)',
+        },
+        '&[data-ending-style] &[data-activation-direction="left"]': {
+            transform: 'translateX(50%)',
+        },
+        '&[data-ending-style] &[data-activation-direction="right"]': {
+            transform: 'translateX(-50%)',
+        },
+    },
+});
+
+export const viewport = layerStyle('components', {
+    position: 'relative',
+    overflow: 'hidden',
+    width: '100%',
+    height: '100%',
 });
 
 export const arrow = layerStyle('components', {
     display: 'flex',
     color: vars.color.background['normal-lighter'],
 
-    width: vars.size.dimension[100],
-    height: vars.size.dimension[200],
-
-    transform: 'rotate(180deg)',
-    zIndex: 1,
+    transition: `left ${durationVar} ${easingVar}`,
 
     selectors: {
         '&[data-side="top"]': {
-            bottom: '-11px',
-            transform: 'rotate(-90deg)',
+            bottom: '-8px',
+            transform: 'rotate(-180deg)',
         },
         '&[data-side="right"]': {
-            left: '-7px',
-            transform: 'rotate(0deg)',
+            left: '-12px',
+            transform: 'rotate(-90deg)',
         },
         '&[data-side="bottom"]': {
-            top: '-11px',
-            transform: 'rotate(90deg)',
+            top: '-8px',
+            transform: 'rotate(0deg)',
         },
         '&[data-side="left"]': {
-            right: '-7px',
-            transform: 'rotate(180deg)',
+            right: '-12px',
+            transform: 'rotate(90deg)',
+        },
+
+        '&[data-starting-style], &[data-ending-style]': {
+            opacity: 0,
         },
     },
 });
