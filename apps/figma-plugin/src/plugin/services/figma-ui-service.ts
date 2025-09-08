@@ -3,19 +3,15 @@ import type {
     ThemeDependentTokensCollection,
 } from '@vapor-ui/color-generator';
 
-import type {
-    PaletteCreationRequest,
-    SemanticPaletteCreationRequest,
-} from '~/plugin/types/palette';
+import { Logger } from '~/common/logger';
 import { formatColorName, formatFamilyTitle, sortColorShades } from '~/plugin/utils/color';
 import { hexToFigmaColor } from '~/plugin/utils/color';
 import { loadDefaultFont } from '~/plugin/utils/figma-font';
-import { Logger } from '~/common/logger';
 
 import { NotificationService } from './figma-notification';
 
 // ============================================================================
-// Constants
+// Constants & Types
 // ============================================================================
 const UI_CONSTANTS = {
     SECTION_OFFSET: 2000,
@@ -32,6 +28,15 @@ const UI_CONSTANTS = {
         SEMANTIC_TOKEN_FIELD: 400,
     },
 } as const;
+
+interface PaletteCreationRequest {
+    generatedPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
+}
+
+interface SemanticPaletteCreationRequest {
+    generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
+    dependentTokens: ThemeDependentTokensCollection;
+}
 
 // ============================================================================
 // Public Service
