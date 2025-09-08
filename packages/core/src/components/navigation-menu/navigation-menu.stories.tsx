@@ -41,8 +41,8 @@ export default {
 export const Default: StoryObj<StoryProps> = {
     render: ({ side, align, disabled, ...args }) => {
         return (
-            <>
-                <NavigationMenu.Root {...args} aria-label="Main" value="1">
+            <HStack justifyContent={'end'} margin="-$200">
+                <NavigationMenu.Root {...args} defaultValue={'1'} aria-label="Main">
                     <NavigationMenu.List>
                         <NavigationMenu.Item>
                             <NavigationMenu.Link disabled={disabled} selected href="#">
@@ -55,7 +55,7 @@ export const Default: StoryObj<StoryProps> = {
                                 <NavigationMenu.TriggerIndicator />
                             </NavigationMenu.Trigger>
                             <NavigationMenu.Panel>
-                                <NavigationMenu.List render={<VStack gap="0" />}>
+                                <VStack render={<ul style={{ listStyle: 'none' }} />}>
                                     <NavigationMenu.Item>
                                         <NavigationMenu.Link disabled={disabled} href="#">
                                             Sub Link 1
@@ -76,7 +76,7 @@ export const Default: StoryObj<StoryProps> = {
                                             Sub Link 4
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
-                                </NavigationMenu.List>
+                                </VStack>
                             </NavigationMenu.Panel>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
@@ -85,46 +85,43 @@ export const Default: StoryObj<StoryProps> = {
                                 <NavigationMenu.TriggerIndicator />
                             </NavigationMenu.Trigger>
                             <NavigationMenu.Panel>
-                                <NavigationMenu.List render={<VStack gap="0" />}>
+                                <VStack render={<ul style={{ listStyle: 'none' }} />} gap="0">
                                     <NavigationMenu.Item>
                                         <NavigationMenu.Link disabled={disabled} href="#">
-                                            Sub Link 1
+                                            TESTETSTSETSET 1
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
                                         <NavigationMenu.Link disabled={disabled} href="#">
-                                            Sub Link 2
+                                            TESTETSTSETSET 2
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
                                         <NavigationMenu.Link disabled={disabled} href="#">
-                                            Sub Link 3
+                                            TESTETSTSETSET 3
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
                                         <NavigationMenu.Link disabled={disabled} href="#">
-                                            Sub Link 4
+                                            TESTETSTSETSET 4
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
-                                </NavigationMenu.List>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                            TESTETSTSETSET 4
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                    <NavigationMenu.Item>
+                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                            TESTETSTSETSET 4
+                                        </NavigationMenu.Link>
+                                    </NavigationMenu.Item>
+                                </VStack>
                             </NavigationMenu.Panel>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link disabled={disabled} href="#">
-                                23411234
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.LinkItem disabled={disabled} href="#">
-                            213412341234
-                        </NavigationMenu.LinkItem>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link disabled={disabled} href="#">
-                                asdf
-                            </NavigationMenu.Link>
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
 
-                    <NavigationMenu.Portal>
+                    <NavigationMenu.Portal keepMounted>
                         <NavigationMenu.Positioner side={side} align={align}>
                             <NavigationMenu.Popup>
                                 <NavigationMenu.Viewport />
@@ -132,7 +129,7 @@ export const Default: StoryObj<StoryProps> = {
                         </NavigationMenu.Positioner>
                     </NavigationMenu.Portal>
                 </NavigationMenu.Root>
-            </>
+            </HStack>
         );
     },
 };
@@ -147,38 +144,20 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                 alignItems="center"
                 border="1px solid"
             >
-                {/* Top Navigation Menu */}
-                <NavigationMenu.Root aria-label="Main" value="1">
+                <NavigationMenu.Root aria-label="Main">
                     <NavigationMenu.List>
-                        <NavigationMenu.Item value="1">
-                            <NavigationMenu.Trigger>
-                                Overview
-                                <NavigationMenu.TriggerIndicator />
-                            </NavigationMenu.Trigger>
-                            <NavigationMenu.Panel>
-                                <NavigationMenu.List render={<VStack gap="0" />}>
-                                    <NavigationMenu.Item>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 1
-                                        </NavigationMenu.Link>
-                                    </NavigationMenu.Item>
-                                    <NavigationMenu.Item>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 2
-                                        </NavigationMenu.Link>
-                                    </NavigationMenu.Item>
-                                </NavigationMenu.List>
-                            </NavigationMenu.Panel>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="#" selected>
+                                Link 1
+                            </NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="#">Link 2</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="#">Link 3</NavigationMenu.Link>
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
-
-                    <NavigationMenu.Portal>
-                        <NavigationMenu.Positioner side="top">
-                            <NavigationMenu.Popup>
-                                <NavigationMenu.Viewport />
-                            </NavigationMenu.Popup>
-                        </NavigationMenu.Positioner>
-                    </NavigationMenu.Portal>
                 </NavigationMenu.Root>
 
                 <HStack gap="$250">
@@ -191,7 +170,10 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                     <NavigationMenu.TriggerIndicator />
                                 </NavigationMenu.Trigger>
                                 <NavigationMenu.Panel>
-                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <VStack
+                                        render={<ul style={{ listStyle: 'none' }} />}
+                                        gap="$000"
+                                    >
                                         <NavigationMenu.Item>
                                             <NavigationMenu.Link href="#">
                                                 Sub Link 1
@@ -202,13 +184,50 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                                 Sub Link 2
                                             </NavigationMenu.Link>
                                         </NavigationMenu.Item>
-                                    </NavigationMenu.List>
+                                    </VStack>
                                 </NavigationMenu.Panel>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
                         <NavigationMenu.Portal>
                             <NavigationMenu.Positioner side="left">
+                                <NavigationMenu.Popup>
+                                    <NavigationMenu.Viewport />
+                                </NavigationMenu.Popup>
+                            </NavigationMenu.Positioner>
+                        </NavigationMenu.Portal>
+                    </NavigationMenu.Root>
+
+                    {/* Top Navigation Menu */}
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
+                                <NavigationMenu.Trigger>
+                                    Overview
+                                    <NavigationMenu.TriggerIndicator />
+                                </NavigationMenu.Trigger>
+                                <NavigationMenu.Panel>
+                                    <VStack
+                                        render={<ul style={{ listStyle: 'none' }} />}
+                                        gap="$000"
+                                    >
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 1
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link href="#">
+                                                Sub Link 2
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                    </VStack>
+                                </NavigationMenu.Panel>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+
+                        <NavigationMenu.Portal>
+                            <NavigationMenu.Positioner side="top">
                                 <NavigationMenu.Popup>
                                     <NavigationMenu.Viewport />
                                 </NavigationMenu.Popup>
@@ -225,7 +244,10 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                     <NavigationMenu.TriggerIndicator />
                                 </NavigationMenu.Trigger>
                                 <NavigationMenu.Panel>
-                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <VStack
+                                        render={<ul style={{ listStyle: 'none' }} />}
+                                        gap="$000"
+                                    >
                                         <NavigationMenu.Item>
                                             <NavigationMenu.Link href="#">
                                                 Sub Link 1
@@ -236,18 +258,14 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                                 Sub Link 2
                                             </NavigationMenu.Link>
                                         </NavigationMenu.Item>
-                                    </NavigationMenu.List>
+                                    </VStack>
                                 </NavigationMenu.Panel>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
-                        <NavigationMenu.Portal>
-                            <NavigationMenu.Positioner side="bottom">
-                                <NavigationMenu.Popup>
-                                    <NavigationMenu.Viewport />
-                                </NavigationMenu.Popup>
-                            </NavigationMenu.Positioner>
-                        </NavigationMenu.Portal>
+                        <NavigationMenu.Content>
+                            <NavigationMenu.Viewport />
+                        </NavigationMenu.Content>
                     </NavigationMenu.Root>
 
                     {/* Right Navigation Menu */}
@@ -259,7 +277,10 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                     <NavigationMenu.TriggerIndicator />
                                 </NavigationMenu.Trigger>
                                 <NavigationMenu.Panel>
-                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <VStack
+                                        render={<ul style={{ listStyle: 'none' }} />}
+                                        gap="$000"
+                                    >
                                         <NavigationMenu.Item>
                                             <NavigationMenu.Link href="#">
                                                 Sub Link 1
@@ -270,7 +291,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                                 Sub Link 2
                                             </NavigationMenu.Link>
                                         </NavigationMenu.Item>
-                                    </NavigationMenu.List>
+                                    </VStack>
                                 </NavigationMenu.Panel>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -295,7 +316,10 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                     <NavigationMenu.TriggerIndicator />
                                 </NavigationMenu.Trigger>
                                 <NavigationMenu.Panel>
-                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <VStack
+                                        render={<ul style={{ listStyle: 'none' }} />}
+                                        gap="$000"
+                                    >
                                         <NavigationMenu.Item>
                                             <NavigationMenu.Link href="#">
                                                 Sub Link 1
@@ -306,7 +330,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                                 Sub Link 2
                                             </NavigationMenu.Link>
                                         </NavigationMenu.Item>
-                                    </NavigationMenu.List>
+                                    </VStack>
                                 </NavigationMenu.Panel>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -329,7 +353,10 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                     <NavigationMenu.TriggerIndicator />
                                 </NavigationMenu.Trigger>
                                 <NavigationMenu.Panel>
-                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <VStack
+                                        render={<ul style={{ listStyle: 'none' }} />}
+                                        gap="$000"
+                                    >
                                         <NavigationMenu.Item>
                                             <NavigationMenu.Link href="#">
                                                 Sub Link 1
@@ -340,7 +367,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                                 Sub Link 2
                                             </NavigationMenu.Link>
                                         </NavigationMenu.Item>
-                                    </NavigationMenu.List>
+                                    </VStack>
                                 </NavigationMenu.Panel>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -363,7 +390,10 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                     <NavigationMenu.TriggerIndicator />
                                 </NavigationMenu.Trigger>
                                 <NavigationMenu.Panel>
-                                    <NavigationMenu.List render={<VStack gap="0" />}>
+                                    <VStack
+                                        render={<ul style={{ listStyle: 'none' }} />}
+                                        gap="$000"
+                                    >
                                         <NavigationMenu.Item>
                                             <NavigationMenu.Link href="#">
                                                 Sub Link 1
@@ -374,7 +404,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                                                 Sub Link 2
                                             </NavigationMenu.Link>
                                         </NavigationMenu.Item>
-                                    </NavigationMenu.List>
+                                    </VStack>
                                 </NavigationMenu.Panel>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
