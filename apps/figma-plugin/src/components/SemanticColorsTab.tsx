@@ -8,6 +8,8 @@ import { Box, Button, Text, VStack } from '@vapor-ui/core';
 
 import { postMessage } from '../figma-messages';
 
+const DEFAULT_PRIMARY_COLOR = '#8662F3';
+
 const Section = ({ title, children }: { title: string; children: ReactNode }) => {
     return (
         <VStack gap="$100" className="flex-1">
@@ -18,7 +20,7 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
 };
 
 export const SemanticColorsTab = () => {
-    const [primaryColor, setPrimaryColor] = useState<string>('#8662F3');
+    const [primaryColor, setPrimaryColor] = useState<string>(DEFAULT_PRIMARY_COLOR);
     const [generatedSemanticPalette, setGeneratedSemanticPalette] = useState<Pick<
         ColorPaletteCollection,
         'light' | 'dark'
@@ -73,7 +75,7 @@ export const SemanticColorsTab = () => {
                             value={primaryColor}
                             onChange={(e) => setPrimaryColor(e.target.value)}
                             className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            placeholder="#7c7c00"
+                            placeholder={DEFAULT_PRIMARY_COLOR}
                         />
                         <input
                             type="color"

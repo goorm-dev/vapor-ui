@@ -36,7 +36,7 @@ export const formatOklchForWeb = (oklchString: string): string => {
  * 상위 계층 key값 조합으로 codeSyntax를 생성합니다.
  * 최상위 계층(base, light, dark)는 제외하고 생성합니다.
  * @param keyPath - 계층 구조의 key 경로들 (예: ['light', 'blue', '050'])
- * @returns vapor-color- prefix를 포함한 codeSyntax
+ * @returns `vapor-color-` prefix를 포함한 codeSyntax
  */
 export const generateCodeSyntax = (keyPath: string[]): string => {
     const topLevelKeys = ['base', 'light', 'dark'];
@@ -49,7 +49,7 @@ export const generateCodeSyntax = (keyPath: string[]): string => {
  * culori의 oklch() 함수를 사용하여 안전하고 정확하게 lightness 값을 추출합니다.
  * @param backgroundOklch - 배경 색상의 OKLCH 문자열
  * @param threshold - 명도 임계값 (기본값: BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD)
- * @returns 'black' 또는 'white'
+ * @returns 검은색 또는 흰색 ColorToken 객체
  */
 export const getContrastingForegroundColor = (
     backgroundOklch: string,
@@ -58,7 +58,7 @@ export const getContrastingForegroundColor = (
     const colorObj = oklch(backgroundOklch);
     const lightness = colorObj?.l ?? 0;
 
-    return lightness > threshold ? BASE_COLORS.black.codeSyntax : BASE_COLORS.white.codeSyntax;
+    return lightness > threshold ? { ...BASE_COLORS.black } : { ...BASE_COLORS.white };
 };
 
 // ============================================================================

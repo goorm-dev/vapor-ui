@@ -5,6 +5,7 @@ import { generateThemeTokens } from '../libs/adobe-leonardo';
 import type {
     ColorGeneratorConfig,
     ColorPaletteCollection,
+    ColorToken,
     ScaleInfo,
     ThemeTokens,
 } from '../types';
@@ -36,7 +37,7 @@ export type SemanticDependentTokenMap<TColorName extends string> = Record<
     ReturnType<typeof createSemanticTokenKeys<TColorName>>[keyof ReturnType<
         typeof createSemanticTokenKeys<TColorName>
     >],
-    string
+    ColorToken & { primitiveCodeSyntax: string }
 >;
 
 export type SemanticTokenMap = {
@@ -189,19 +190,39 @@ function createSemanticTokenMap<T extends string>(
     scaleInfo: ScaleInfo,
     tokenKeys: ReturnType<typeof createSemanticTokenKeys<T>>,
     palette: Record<string, { oklch: string }>,
-): SemanticDependentTokenMap<T> {
-    // 배경 색상의 OKLCH 값을 가져와서 적절한 button foreground 색상 결정
+) {
     const backgroundToken = palette[scaleInfo.backgroundScale];
     const buttonForegroundColor = backgroundToken
         ? getContrastingForegroundColor(backgroundToken.oklch)
-        : BASE_COLORS.white.codeSyntax;
+        : {
+              ...BASE_COLORS.white,
+          };
 
     return {
-        [tokenKeys.Background]: `color-${colorName}-${scaleInfo.backgroundScale}`,
-        [tokenKeys.Foreground100]: `color-${colorName}-${scaleInfo.foregroundScale}`,
-        [tokenKeys.Foreground200]: `color-${colorName}-${scaleInfo.alternativeScale}`,
-        [tokenKeys.Border]: `color-${colorName}-${scaleInfo.backgroundScale}`,
-        [tokenKeys.ButtonForeground]: buttonForegroundColor,
+        [tokenKeys.Background]: {
+            ...palette[scaleInfo.backgroundScale],
+            codeSyntax: generateCodeSyntax([tokenKeys.Background]),
+            primitiveCodeSyntax: generateCodeSyntax([colorName, scaleInfo.backgroundScale]),
+        },
+        [tokenKeys.Foreground100]: {
+            ...palette[scaleInfo.foregroundScale],
+            codeSyntax: generateCodeSyntax([tokenKeys.Foreground100]),
+            primitiveCodeSyntax: generateCodeSyntax([colorName, scaleInfo.foregroundScale]),
+        },
+        [tokenKeys.Foreground200]: {
+            ...palette[scaleInfo.alternativeScale],
+            codeSyntax: generateCodeSyntax([tokenKeys.Foreground200]),
+            primitiveCodeSyntax: generateCodeSyntax([colorName, scaleInfo.alternativeScale]),
+        },
+        [tokenKeys.Border]: {
+            ...palette[scaleInfo.backgroundScale],
+            codeSyntax: generateCodeSyntax([tokenKeys.Border]),
+            primitiveCodeSyntax: generateCodeSyntax([colorName, scaleInfo.backgroundScale]),
+        },
+        [tokenKeys.ButtonForeground]: {
+            ...buttonForegroundColor,
+            primitiveCodeSyntax: buttonForegroundColor.codeSyntax,
+        },
     } as SemanticDependentTokenMap<T>;
 }
 

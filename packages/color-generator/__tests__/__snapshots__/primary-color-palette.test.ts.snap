@@ -151,20 +151,78 @@ exports[`Primary Color Generator > primaryColorPalette > should generate consist
 {
   "dark": {
     "primary": {
-      "background-primary": "color-primary-500",
-      "border-primary": "color-primary-500",
-      "button-foreground-primary": "vapor-color-white",
-      "foreground-primary-100": "color-primary-600",
-      "foreground-primary-200": "color-primary-700",
+      "background-primary": {
+        "codeSyntax": "vapor-color-background-primary",
+        "deltaE": 5.23,
+        "hex": "#9074f6",
+        "oklch": "oklch(0.647 0.187 290.1)",
+        "primitiveCodeSyntax": "vapor-color-primary-500",
+      },
+      "border-primary": {
+        "codeSyntax": "vapor-color-border-primary",
+        "deltaE": 5.23,
+        "hex": "#9074f6",
+        "oklch": "oklch(0.647 0.187 290.1)",
+        "primitiveCodeSyntax": "vapor-color-primary-500",
+      },
+      "button-foreground-primary": {
+        "codeSyntax": "vapor-color-white",
+        "hex": "#FFFFFF",
+        "oklch": "oklch(1 0 0)",
+        "primitiveCodeSyntax": "vapor-color-white",
+      },
+      "foreground-primary-100": {
+        "codeSyntax": "vapor-color-foreground-primary-100",
+        "deltaE": 15.72,
+        "hex": "#aa99fb",
+        "oklch": "oklch(0.737 0.140 290.5)",
+        "primitiveCodeSyntax": "vapor-color-primary-600",
+      },
+      "foreground-primary-200": {
+        "codeSyntax": "vapor-color-foreground-primary-200",
+        "deltaE": 23.54,
+        "hex": "#c0b6fe",
+        "oklch": "oklch(0.810 0.101 290.3)",
+        "primitiveCodeSyntax": "vapor-color-primary-700",
+      },
     },
   },
   "light": {
     "primary": {
-      "background-primary": "color-primary-500",
-      "border-primary": "color-primary-500",
-      "button-foreground-primary": "vapor-color-white",
-      "foreground-primary-100": "color-primary-600",
-      "foreground-primary-200": "color-primary-700",
+      "background-primary": {
+        "codeSyntax": "vapor-color-background-primary",
+        "deltaE": 0,
+        "hex": "#8662F3",
+        "oklch": "oklch(0.608 0.208 290.3)",
+        "primitiveCodeSyntax": "vapor-color-primary-500",
+      },
+      "border-primary": {
+        "codeSyntax": "vapor-color-border-primary",
+        "deltaE": 0,
+        "hex": "#8662F3",
+        "oklch": "oklch(0.608 0.208 290.3)",
+        "primitiveCodeSyntax": "vapor-color-primary-500",
+      },
+      "button-foreground-primary": {
+        "codeSyntax": "vapor-color-white",
+        "hex": "#FFFFFF",
+        "oklch": "oklch(1 0 0)",
+        "primitiveCodeSyntax": "vapor-color-white",
+      },
+      "foreground-primary-100": {
+        "codeSyntax": "vapor-color-foreground-primary-100",
+        "deltaE": 11.97,
+        "hex": "#6843c8",
+        "oklch": "oklch(0.502 0.195 290.4)",
+        "primitiveCodeSyntax": "vapor-color-primary-600",
+      },
+      "foreground-primary-200": {
+        "codeSyntax": "vapor-color-foreground-primary-200",
+        "deltaE": 17.95,
+        "hex": "#5731b0",
+        "oklch": "oklch(0.440 0.188 290.1)",
+        "primitiveCodeSyntax": "vapor-color-primary-700",
+      },
     },
   },
 }
