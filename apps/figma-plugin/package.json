@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "vite --config vite.config.ui.ts",
         "dev:figma": "concurrently \"vite build --config vite.config.ui.ts --watch\" \"vite build --config vite.config.plugin.ts --watch\"",
-        "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts",
+        "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts && cp manifest.json dist/",
         "build:ui": "vite build --config vite.config.ui.ts",
         "build:plugin": "vite build --config vite.config.plugin.ts",
         "lint": "eslint .",

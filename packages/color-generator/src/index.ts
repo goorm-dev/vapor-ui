@@ -13,11 +13,15 @@ export const colorPalette = generateColorPalette();
 // ============================================================================
 
 export { generateSemanticColorPalette } from './semantic';
+export { generateSemanticDependentTokens } from './semantic';
+export type { ThemeDependentTokensCollection, SemanticColorGeneratorConfig } from './semantic';
+// Default primary color palette
 export const primaryColorPalette = generateSemanticColorPalette({
     colors: {
-        primary: '#7c7c00',
+        primary: '#8662F3',
     },
 });
+// Default primary dependent tokens
 export const primaryDependentTokens = generateSemanticDependentTokens(primaryColorPalette);
 
 // ============================================================================

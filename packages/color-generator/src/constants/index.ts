@@ -27,10 +27,12 @@ export const DEFAULT_CONTRAST_RATIOS = {
 export const BASE_COLORS = {
     white: {
         hex: '#FFFFFF',
+        oklch: 'oklch(1 0 0)',
         codeSyntax: 'vapor-color-white',
     },
     black: {
         hex: '#000000',
+        oklch: 'oklch(0 0 0)',
         codeSyntax: 'vapor-color-black',
     },
 } as const;
@@ -49,6 +51,6 @@ export const ADAPTIVE_COLOR_GENERATION = {
 export const BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD = 0.65;
 
 export const FOREGROUND_TOKEN_NAMES = {
-    WHITE: 'vapor-color-white',
-    BLACK: 'vapor-color-black',
+    WHITE: 'color-white',
+    BLACK: 'color-black',
 } as const;
