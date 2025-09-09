@@ -193,7 +193,7 @@ const Count = forwardRef<HTMLDivElement, TextInputCountProps>(
 
                 const input = textInputRef.current;
                 input.addEventListener('input', updateLength);
-                
+
                 return () => {
                     input.removeEventListener('input', updateLength);
                 };
@@ -221,7 +221,12 @@ Count.displayName = 'TextInput.Count';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as TextInputRoot, Label as TextInputLabel, Field as TextInputField, Count as TextInputCount };
+export {
+    Root as TextInputRoot,
+    Label as TextInputLabel,
+    Field as TextInputField,
+    Count as TextInputCount,
+};
 export type { TextInputRootProps, TextInputLabelProps, TextInputFieldProps, TextInputCountProps };
 
 export const TextInput = { Root, Label, Field, Count };

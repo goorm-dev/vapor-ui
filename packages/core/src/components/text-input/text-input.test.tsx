@@ -106,9 +106,7 @@ describe('TextInput', () => {
         });
 
         it('should show count when exceeding maxLength', () => {
-            render(
-                <TextInputWithCountTest defaultValue="This is too long" maxLength={10} />,
-            );
+            render(<TextInputWithCountTest defaultValue="This is too long" maxLength={10} />);
 
             expect(screen.getByText('16/10')).toBeInTheDocument();
         });
