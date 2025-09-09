@@ -29,7 +29,7 @@ export default function CheckboxIndeterminate() {
 
     return (
         <div className="space-y-3">
-            <Text typography="body2" className="font-medium">
+            <Text typography="body2" className="flex items-center gap-2.5 font-medium">
                 <Checkbox.Root
                     checked={allChecked}
                     indeterminate={isIndeterminate}
@@ -39,7 +39,7 @@ export default function CheckboxIndeterminate() {
                 Select All Fruits
             </Text>
             <div className="ml-6 space-y-2">
-                <Text typography="body2" className="cursor-pointer">
+                <Text typography="body2" className="flex items-center gap-2.5 cursor-pointer">
                     <Checkbox.Root
                         checked={checkedItems.apple}
                         onCheckedChange={(checked) => handleItemChange('apple', checked)}
@@ -48,7 +48,7 @@ export default function CheckboxIndeterminate() {
                     Apple
                 </Text>
 
-                <Text typography="body2" className="cursor-pointer">
+                <Text typography="body2" className="flex items-center gap-2.5 cursor-pointer">
                     <Checkbox.Root
                         checked={checkedItems.banana}
                         onCheckedChange={(checked) => handleItemChange('banana', checked)}
@@ -57,7 +57,7 @@ export default function CheckboxIndeterminate() {
                     Banana
                 </Text>
 
-                <Text typography="body2" className="cursor-pointer">
+                <Text typography="body2" className="flex items-center gap-2.5 cursor-pointer">
                     <Checkbox.Root
                         checked={checkedItems.orange}
                         onCheckedChange={(checked) => handleItemChange('orange', checked)}
