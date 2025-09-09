@@ -3,18 +3,9 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputType() {
     return (
         <div className="space-y-4">
-            <label>
-                Text
-                <TextInput type="text" placeholder="Enter text" />
-            </label>
-            <label>
-                Email
-                <TextInput type="email" placeholder="Enter email" />
-            </label>
-            <label>
-                Password
-                <TextInput type="password" placeholder="Enter password" />
-            </label>
+            <TextInput type="text" placeholder="type='text'" />
+            <TextInput type="email" placeholder="type='email'" />
+            <TextInput type="password" placeholder="type='password'" />
         </div>
     );
 }
