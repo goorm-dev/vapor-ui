@@ -56,14 +56,14 @@ type PositionerPrimitiveProps = VComponentProps<typeof BaseTooltip.Positioner>;
 interface TooltipPositionerProps extends PositionerPrimitiveProps {}
 
 const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(
-    ({ side = 'top', align = 'center', sideOffset = 8, ...props }, ref) => {
+    ({ side = 'top', align = 'center', sideOffset = 8, collisionAvoidance, ...props }, ref) => {
         return (
             <BaseTooltip.Positioner
                 ref={ref}
                 side={side}
                 align={align}
                 sideOffset={sideOffset}
-                arrowPadding={side === 'top' || side === 'bottom' ? 12 : 6}
+                collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
                 {...props}
             />
         );
