@@ -3,14 +3,14 @@
     "extends": ["config:recommended", "group:monorepos"],
     "baseBranches": ["main"],
     "rebaseWhen": "conflicted",
-    "labels": ["type:dependencies"],
-    "automergeStrategy": "merge-commit",
+    "labels": ["type: dependencies"],
+    "automergeStrategy": "squash",
     "prHourlyLimit": 2,
     "prNotPendingHours": 48,
     "groupName": "all",
     "vulnerabilityAlerts": {
         "enabled": true,
-        "labels": ["type:security"],
+        "labels": ["type: security"],
         "automerge": false
     },
     "packageRules": [
@@ -37,7 +37,7 @@
             "matchPackagePatterns": ["*"],
             "isVulnerabilityAlert": true,
             "automerge": false,
-            "labels": ["type:security"]
+            "labels": ["type: security"]
         }
     ]
 }

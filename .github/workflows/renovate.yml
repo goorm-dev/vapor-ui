@@ -1,42 +1,42 @@
 name: Renovate
 
 on:
-  schedule:
-    # Run every Thursday at 9 AM KST (0 AM UTC on Thursday)
-    - cron: '0 0 * * 4'
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level override (e.g., debug)'
-        required: false
-        default: 'info'
-        type: string
-      overrideSchedule:
-        description: 'Ignore all schedules and run immediately'
-        required: false
-        default: 'false'
-        type: string
-      testMode:
-        description: 'Run in test mode (dry run)'
-        required: false
-        default: false
-        type: boolean
+    schedule:
+        # Run every Thursday at 9 AM KST (0 AM UTC on Thursday)
+        - cron: '0 0 * * 1'
+    workflow_dispatch:
+        inputs:
+            logLevel:
+                description: 'Log level override (e.g., debug)'
+                required: false
+                default: 'info'
+                type: string
+            overrideSchedule:
+                description: 'Ignore all schedules and run immediately'
+                required: false
+                default: 'false'
+                type: string
+            testMode:
+                description: 'Run in test mode (dry run)'
+                required: false
+                default: false
+                type: boolean
 
 concurrency: renovate
 
 jobs:
-  renovate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    renovate:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Self-hosted Renovate
-        uses: renovatebot/github-action@v43.0.8
-        with:
-          configurationFile: .github/renovate.json
-          token: ${{ secrets.RENOVATE_TOKEN }}
-        env:
-          LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
-          RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{\"schedule\":null}' || '' }}
-          RENOVATE_DRY_RUN: ${{ inputs.testMode && 'full' || '' }}
+            - name: Self-hosted Renovate
+              uses: renovatebot/github-action@v43.0.8
+              with:
+                  configurationFile: .github/renovate.json
+                  token: ${{ secrets.RENOVATE_TOKEN }}
+              env:
+                  LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
+                  RENOVATE_FORCE: ${{ github.event.inputs.overrideSchedule == 'true' && '{\"schedule\":null}' || '' }}
+                  RENOVATE_DRY_RUN: ${{ inputs.testMode && 'full' || '' }}
