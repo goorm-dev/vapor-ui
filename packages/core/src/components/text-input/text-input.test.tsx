@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 import { describe, expect, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
@@ -112,40 +113,24 @@ describe('TextInput', () => {
         });
 
         it('should update count when controlled value changes', async () => {
-            const handleValueChange = vi.fn((value: string) => {
-                rerender(
-                    <TextInputWithCountTest
-                        value={value}
-                        onValueChange={handleValueChange}
-                        maxLength={10}
-                    />,
+            const ControlledTextInputTest = () => {
+                const [value, setValue] = useState('initial');
+                return (
+                    <TextInput.Root value={value} onValueChange={setValue} maxLength={10}>
+                        <TextInput.Label>{LABEL_TEXT}</TextInput.Label>
+                        <TextInput.Field />
+                        <TextInput.Count />
+                    </TextInput.Root>
                 );
-            });
+            };
 
-            const { rerender } = render(
-                <TextInputWithCountTest
-                    value="initial"
-                    onValueChange={handleValueChange}
-                    maxLength={10}
-                />,
-            );
+            render(<ControlledTextInputTest />);
 
             expect(screen.getByText('7/10')).toBeInTheDocument();
 
             const input = screen.getByRole('textbox');
             await userEvent.clear(input);
             await userEvent.type(input, 'new');
-
-            expect(handleValueChange).toHaveBeenLastCalledWith('new');
-
-            // Simulate controlled component behavior
-            rerender(
-                <TextInputWithCountTest
-                    value="new"
-                    onValueChange={handleValueChange}
-                    maxLength={10}
-                />,
-            );
 
             expect(screen.getByText('3/10')).toBeInTheDocument();
         });
