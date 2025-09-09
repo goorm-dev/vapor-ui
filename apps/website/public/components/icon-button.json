@@ -2,81 +2,39 @@
     "props": [
         {
             "prop": "color",
-            "type": "primary | secondary | success | warning | danger | contrast",
+            "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "default": "primary",
             "description": "아이콘 버튼의 주 색상(의미)을 설정합니다."
         },
         {
             "prop": "size",
-            "type": "sm | md | lg | xl",
+            "type": ["sm", "md", "lg", "xl"],
             "default": "md",
             "description": "버튼 및 아이콘의 크기를 설정합니다."
         },
         {
             "prop": "variant",
-            "type": "fill | outline | ghost",
+            "type": ["fill", "outline", "ghost"],
             "default": "fill",
             "description": "버튼의 스타일 변형을 선택합니다."
         },
         {
             "prop": "shape",
-            "type": "square | circle",
+            "type": ["square", "circle"],
             "default": "square",
             "description": "circle 경우 버튼이 완전히 원형이 됩니다."
         },
         {
             "prop": "disabled",
-            "type": "boolean",
-            "default": "false",
+            "type": ["boolean", "undefined"],
+            "default": false,
             "description": "버튼을 비활성화합니다."
         },
         {
             "prop": "aria-label",
-            "type": "string",
+            "type": ["string"],
             "default": null,
             "description": "화면 읽기 전용 사용자에게 아이콘 버튼의 용도를 설명하는 텍스트입니다. 가시적 레이블이 없으므로 필수입니다."
-        }
-    ],
-    "accessibility": [
-        {
-            "headingDescription": "IconButton WAI-ARIA 표준에 기반한 웹 접근성(A11y)을 준수합니다.",
-            "sections": [
-                {
-                    "title": "개발 시 준수해야 할 내용을 명시합니다.",
-                    "headerList": {
-                        "props": "Props",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "aria-label",
-                            "descriptions": [
-                                "버튼의 기능을 설명하는 접근 가능한 이름을 제공해야 합니다.",
-                                "아이콘 버튼의 경우, 아이콘의 모양이 아닌 기능을 간결하게 설명해야 합니다."
-                            ],
-                            "exampleCode": "<IconButton aria-label=\"편집 버튼\">\n  <EditIcon />\n</IconButton>",
-                            "badgeColor": "primary"
-                        }
-                    ]
-                },
-                {
-                    "title": "컴포넌트 내부적으로 준수되고 있는 접근성 기능을 명시합니다.",
-                    "headerList": {
-                        "accessibility": "Accessibility",
-                        "description": "Description"
-                    },
-                    "items": [
-                        {
-                            "itemKey": "aria-hidden",
-                            "descriptions": [
-                                "아이콘은 주로 장식적 요소이므로, aria-hidden=\"true\"를 사용하여 스크린 리더가 이를 읽지 않도록 \n하여 불필요한 정보 전달을 방지하도록 합니다."
-                            ],
-                            "exampleCode": "",
-                            "badgeColor": "primary"
-                        }
-                    ]
-                }
-            ]
         }
     ]
 }
