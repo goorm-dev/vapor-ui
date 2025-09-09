@@ -9,10 +9,6 @@ import { vars } from '~/styles/vars.css';
 export const root = recipe({
     base: layerStyle('components', {
         display: 'flex',
-
-        selectors: {
-            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
-        },
     }),
 
     defaultVariants: { size: 'md', orientation: 'vertical' },

@@ -10,19 +10,10 @@ import { RadioGroup } from '@vapor-ui/core';
 
 export default function DefaultRadioGroup() {
     return (
-        <RadioGroup.Root name="fruits" size="md">
-            <RadioGroup.Item value="apple">
-                <RadioGroup.Control />
-                <RadioGroup.Label>Apple</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="orange">
-                <RadioGroup.Control />
-                <RadioGroup.Label>Orange</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="banana" disabled>
-                <RadioGroup.Control />
-                <RadioGroup.Label>Banana</RadioGroup.Label>
-            </RadioGroup.Item>
+        <RadioGroup.Root name="fruits">
+            <Radio.Root value="apple" />
+            <Radio.Root value="orange" />
+            <Radio.Root value="banana" disabled />
         </RadioGroup.Root>
     );
 }
@@ -47,34 +38,24 @@ export default function RadioGroupSize() {
             <div>
                 <h4 className="text-sm font-medium mb-2">Medium</h4>
                 <RadioGroup.Root name="size-md" size="md">
-                    <RadioGroup.Item value="md1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Medium Option 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="md2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Medium Option 2</RadioGroup.Label>
-                    </RadioGroup.Item>
+                    <Radio.Root value="md1" />
+                    <Radio.Root value="md2" />
                 </RadioGroup.Root>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Large</h4>
                 <RadioGroup.Root name="size-lg" size="lg">
-                    <RadioGroup.Item value="lg1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Large Option 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="lg2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Large Option 2</RadioGroup.Label>
-                    </RadioGroup.Item>
+                    <Radio.Root value="lg1" />
+                    <Radio.Root value="lg2" />
                 </RadioGroup.Root>
             </div>
         </div>
     );
+
 }
-```
+
+````
 </Demo>
 
 ### Orientation
@@ -91,42 +72,25 @@ export default function RadioGroupDirection() {
             <div>
                 <h4 className="text-sm font-medium mb-2">Vertical (기본값)</h4>
                 <RadioGroup.Root name="orientation-vertical" orientation="vertical">
-                    <RadioGroup.Item value="v1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Vertical Option 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="v2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Vertical Option 2</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="v3">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Vertical Option 3</RadioGroup.Label>
-                    </RadioGroup.Item>
+                    <Radio.Root value="v1" />
+                    <Radio.Root value="v2" />
+                    <Radio.Root value="v3" />
                 </RadioGroup.Root>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">Horizontal</h4>
                 <RadioGroup.Root name="orientation-horizontal" orientation="horizontal">
-                    <RadioGroup.Item value="h1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Option 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="h2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Option 2</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="h3">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Option 3</RadioGroup.Label>
-                    </RadioGroup.Item>
+                    <Radio.Root value="h1" />
+                    <Radio.Root value="h2" />
+                    <Radio.Root value="h3" />
                 </RadioGroup.Root>
             </div>
         </div>
     );
 }
-```
+````
+
 </Demo>
 
 ### Disabled
@@ -143,98 +107,27 @@ export default function RadioGroupDisabled() {
             <div>
                 <h4 className="text-sm font-medium mb-2">개별 아이템 비활성화</h4>
                 <RadioGroup.Root name="disabled-items" defaultValue="option1">
-                    <RadioGroup.Item value="option1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>활성 옵션 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="option2" disabled>
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>비활성 옵션 2</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="option3">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>활성 옵션 3</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="option4" disabled>
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>비활성 옵션 4</RadioGroup.Label>
-                    </RadioGroup.Item>
+                    <Radio.Root value="option1" />
+                    <Radio.Root value="option2" disabled />
+                    <Radio.Root value="option3" />
+                    <Radio.Root value="option4" disabled />
                 </RadioGroup.Root>
             </div>
-            
+
             <div>
                 <h4 className="text-sm font-medium mb-2">전체 그룹 비활성화</h4>
                 <RadioGroup.Root name="disabled-group" disabled defaultValue="group1">
-                    <RadioGroup.Item value="group1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>그룹 옵션 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="group2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>그룹 옵션 2</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="group3">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>그룹 옵션 3</RadioGroup.Label>
-                    </RadioGroup.Item>
+                    <Radio.Root value="group1" />
+                    <Radio.Root value="group2" />
+                    <Radio.Root value="group3" />
                 </RadioGroup.Root>
             </div>
         </div>
     );
+
 }
-```
-</Demo>
 
-### Visually Hidden
-
-라벨을 제거한 형태로 사용할 수 있습니다. 이 때 화면에 Label이 시각적으로 표시되지 않지만, 여전히 화면 읽기 도구(Screen readers)에서는 읽을 수 있도록 처리합니다.
-
-<Demo name="radio-group-visually-hidden">
-```tsx
-import { RadioGroup } from '@vapor-ui/core';
-
-export default function RadioGroupVisuallyHidden() {
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">기본 라벨</h4>
-                <RadioGroup.Root name="normal-labels" defaultValue="visible1">
-                    <RadioGroup.Item value="visible1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>보이는 라벨 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="visible2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>보이는 라벨 2</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="visible3">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>보이는 라벨 3</RadioGroup.Label>
-                    </RadioGroup.Item>
-                </RadioGroup.Root>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">시각적으로 숨겨진 라벨</h4>
-                <RadioGroup.Root name="hidden-labels" defaultValue="hidden2" visuallyHidden>
-                    <RadioGroup.Item value="hidden1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>숨겨진 라벨 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="hidden2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>숨겨진 라벨 2</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="hidden3">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>숨겨진 라벨 3</RadioGroup.Label>
-                    </RadioGroup.Item>
-                </RadioGroup.Root>
-            </div>
-        </div>
-    );
-}
-```
+````
 </Demo>
 
 ## Examples
@@ -252,22 +145,14 @@ import { RadioGroup } from '@vapor-ui/core';
 export default function RadioGroupSimple() {
     return (
         <RadioGroup.Root name="simple" defaultValue="option1">
-            <RadioGroup.Item value="option1">
-                <RadioGroup.Control />
-                <RadioGroup.Label>첫 번째 옵션</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="option2">
-                <RadioGroup.Control />
-                <RadioGroup.Label>두 번째 옵션</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="option3">
-                <RadioGroup.Control />
-                <RadioGroup.Label>세 번째 옵션</RadioGroup.Label>
-            </RadioGroup.Item>
+            <Radio.Root value="option1" />
+            <Radio.Root value="option2" />
+            <Radio.Root value="option3" />
         </RadioGroup.Root>
     );
 }
-```
+````
+
 </Demo>
 
 ## Props Table

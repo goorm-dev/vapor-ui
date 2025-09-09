@@ -24,13 +24,16 @@ interface RadioRootProps extends RootPrimitiveProps, RadioVariants {}
 
 const Root = forwardRef<HTMLButtonElement, RadioRootProps>(
     ({ className, children, ...props }, ref) => {
-        const { size: rootSize, invalid: rootInvalid } = useRadioGroupContext();
+        const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
+
         const [variantProps, otherProps] = createSplitProps<RadioVariants>()(props, [
             'invalid',
             'size',
         ]);
+        const { size: sizeProp, invalid: invalidProp } = variantProps;
 
-        const { size = rootSize, invalid = rootInvalid } = variantProps;
+        const size = sizeProp || contextSize;
+        const invalid = invalidProp || contextInvalid;
 
         const IndicatorElement = createSlot(children || <Indicator />);
 
