@@ -1,10 +1,11 @@
 import { Box, Textarea } from '@vapor-ui/core';
 
-export default function DefaultTextarea() {
+export default function TextareaCharacterCount() {
     return (
         <Box display="flex" alignItems="center" justifyContent="center">
-            <Textarea.Root placeholder="여러 줄 텍스트를 입력하세요...">
+            <Textarea.Root placeholder="Type to see character count..." maxLength={100}>
                 <Textarea.Input />
+                <Textarea.Count />
             </Textarea.Root>
         </Box>
     );

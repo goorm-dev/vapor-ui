@@ -10,7 +10,7 @@ import { Box, Textarea } from '@vapor-ui/core';
 
 export default function DefaultTextarea() {
     return (
-        <Box display="felx" alignItems="center" justifyContent="center">
+        <Box display="flex" alignItems="center" justifyContent="center">
             <Textarea.Root placeholder="여러 줄 텍스트를 입력하세요...">
                 <Textarea.Input />
             </Textarea.Root>
@@ -139,10 +139,32 @@ export default function TextareaStates() {
 
 </Demo>
 
-## Props Table
+## Examples
 
 ---
 
+### Character Count with maxLength
+
+Textarea에 `maxLength` 속성을 추가하여 입력 가능한 최대 문자 수를 제한하고, 현재 입력된 문자 수를 실시간으로 표시하는 기능을 제공합니다.
+
+<Demo name="textarea-character-count">
+```tsx
+import { Box, Textarea } from '@vapor-ui/core';
+
+export default function TextareaCharacterCount() {
+    return (
+        <Box display="flex" alignItems="center" justifyContent="center">
+              <Textarea.Root placeholder="Type to see character count..." maxLength={100}>
+                <Textarea.Input />
+                <Textarea.Count />
+            </Textarea.Root>
+        </Box>
+    );
+}
+```
+</Demo>
+## Props Table
+---
 ### Textarea.Root
 
 Textarea의 루트 컴포넌트로 공유 상태와 기본 설정을 제공합니다.
