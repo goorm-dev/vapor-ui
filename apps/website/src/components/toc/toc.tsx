@@ -14,7 +14,7 @@ const TOC_CONSTANTS = {
 } as const;
 
 interface TOCProps {
-    toc: TableOfContents;
+    toc?: TableOfContents;
     containerRef: RefObject<HTMLElement>;
     className?: string;
 }
@@ -29,23 +29,29 @@ export const TOC = ({ toc, containerRef, className }: TOCProps) => {
             <Base.AnchorProvider toc={toc}>
                 <Base.ScrollProvider containerRef={containerRef}>
                     <nav className="flex flex-col gap-[var(--vapor-size-space-100)]">
-                        <Text typography="subtitle1" foreground="normal" asChild>
-                            <h4>On this page</h4>
-                        </Text>
+                        <Text
+                            typography="subtitle1"
+                            foreground="normal"
+                            render={<h4>On this page</h4>}
+                        />
                         <ul className="flex flex-col items-start gap-[var(--vapor-size-space-050)]">
                             {toc.map((item) => (
                                 <li key={item.url}>
-                                    <Text typography="subtitle1" foreground="hint-darker" asChild>
-                                        <Base.TOCItem
-                                            href={item.url}
-                                            className="block h-[var(--vapor-size-dimension-400)] leading-[var(--vapor-size-dimension-400)] hover:text-gray-900 data-[active=true]:text-[var(--vapor-color-foreground-primary)] data-[active=true]:font-medium transition-colors"
-                                            style={{
-                                                paddingLeft: `${(item.depth - TOC_CONSTANTS.MIN_DEPTH) * TOC_CONSTANTS.INDENT_SIZE + TOC_CONSTANTS.BASE_PADDING}px`,
-                                            }}
-                                        >
-                                            {item.title}
-                                        </Base.TOCItem>
-                                    </Text>
+                                    <Text
+                                        typography="subtitle1"
+                                        foreground="hint-darker"
+                                        render={
+                                            <Base.TOCItem
+                                                href={item.url}
+                                                className="block h-[var(--vapor-size-dimension-400)] leading-[var(--vapor-size-dimension-400)] hover:text-gray-900 data-[active=true]:text-[var(--vapor-color-foreground-primary)] data-[active=true]:font-medium transition-colors"
+                                                style={{
+                                                    paddingLeft: `${(item.depth - TOC_CONSTANTS.MIN_DEPTH) * TOC_CONSTANTS.INDENT_SIZE + TOC_CONSTANTS.BASE_PADDING}px`,
+                                                }}
+                                            >
+                                                {item.title}
+                                            </Base.TOCItem>
+                                        }
+                                    />
                                 </li>
                             ))}
                         </ul>
