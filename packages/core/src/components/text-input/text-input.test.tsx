@@ -170,5 +170,39 @@ describe('TextInput', () => {
 
             expect(screen.getByText('4/10')).toBeInTheDocument();
         });
+
+        it('should work when Field component is conditionally rendered', async () => {
+            const ConditionalFieldTest = () => {
+                const [showField, setShowField] = useState(false);
+                return (
+                    <div>
+                        <button onClick={() => setShowField(true)}>Show Field</button>
+                        <TextInput.Root maxLength={10}>
+                            <TextInput.Label>{LABEL_TEXT}</TextInput.Label>
+                            {showField && <TextInput.Field />}
+                            <TextInput.Count />
+                        </TextInput.Root>
+                    </div>
+                );
+            };
+
+            render(<ConditionalFieldTest />);
+
+            // Initially, count should show 0/10 (no field rendered yet)
+            expect(screen.getByText('0/10')).toBeInTheDocument();
+
+            // Show the field
+            await userEvent.click(screen.getByText('Show Field'));
+
+            // Count should still work
+            expect(screen.getByText('0/10')).toBeInTheDocument();
+
+            // Type in the field
+            const input = screen.getByRole('textbox');
+            await userEvent.type(input, 'test');
+
+            // Count should update correctly
+            expect(screen.getByText('4/10')).toBeInTheDocument();
+        });
     });
 });

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ChangeEvent, MutableRefObject } from 'react';
-import React, { forwardRef, useId, useRef } from 'react';
+import React, { forwardRef, useCallback, useEffect, useId, useState } from 'react';
 
 import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
@@ -26,7 +26,8 @@ type TextInputSharedProps = TextInputVariants & {
 
 type TextInputContextType = TextInputSharedProps & {
     textInputId?: string;
-    textInputRef?: MutableRefObject<HTMLInputElement | null>;
+    textInputNode: HTMLInputElement | null;
+    setTextInputNode: (node: HTMLInputElement | null) => void;
 };
 
 const [TextInputProvider, useTextInputContext] = createContext<TextInputContextType>({
@@ -45,7 +46,7 @@ interface TextInputRootProps extends Assign<TextInputPrimitiveProps, TextInputSh
 const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
     ({ render, className, ...props }, ref) => {
         const textInputId = useId();
-        const textInputRef = useRef<HTMLInputElement | null>(null);
+        const [textInputNode, setTextInputNode] = useState<HTMLInputElement | null>(null);
         const [textInputRootProps, otherProps] = createSplitProps<TextInputSharedProps>()(props, [
             'type',
             'value',
@@ -72,7 +73,9 @@ const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
         });
 
         return (
-            <TextInputProvider value={{ textInputId, textInputRef, ...textInputRootProps }}>
+            <TextInputProvider
+                value={{ textInputId, textInputNode, setTextInputNode, ...textInputRootProps }}
+            >
                 {element}
             </TextInputProvider>
         );
@@ -116,7 +119,7 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
         const {
             type,
             textInputId,
-            textInputRef: contextTextInputRef,
+            setTextInputNode,
             value,
             onValueChange,
             defaultValue,
@@ -130,17 +133,20 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
 
         const id = idProp || textInputId;
 
-        return useRender({
-            ref: (node: HTMLInputElement | null) => {
-                if (contextTextInputRef) {
-                    contextTextInputRef.current = node;
-                }
+        const callbackRef = useCallback(
+            (node: HTMLInputElement | null) => {
+                setTextInputNode(node);
                 if (typeof ref === 'function') {
                     ref(node);
                 } else if (ref && 'current' in ref) {
                     (ref as MutableRefObject<HTMLInputElement | null>).current = node;
                 }
             },
+            [ref, setTextInputNode],
+        );
+
+        return useRender({
+            ref: callbackRef,
             render: render || <input />,
             props: {
                 id,
@@ -177,28 +183,30 @@ interface TextInputCountProps extends Omit<TextInputCountPrimitiveProps, 'childr
 
 const Count = forwardRef<HTMLDivElement, TextInputCountProps>(
     ({ render, className, children, ...props }, ref) => {
-        const { value, defaultValue, maxLength, textInputRef } = useTextInputContext();
+        const { value, defaultValue, maxLength, textInputNode } = useTextInputContext();
         const [currentLength, setCurrentLength] = React.useState(() => {
             const initialValue = value ?? defaultValue ?? '';
             return initialValue.length;
         });
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (value !== undefined) {
                 setCurrentLength(value.length);
-            } else if (textInputRef?.current) {
+            } else if (textInputNode) {
                 const updateLength = () => {
-                    setCurrentLength(textInputRef.current?.value.length || 0);
+                    setCurrentLength(textInputNode.value.length);
                 };
 
-                const input = textInputRef.current;
-                input.addEventListener('input', updateLength);
+                // Set initial length from DOM node
+                setCurrentLength(textInputNode.value.length);
+
+                textInputNode.addEventListener('input', updateLength);
 
                 return () => {
-                    input.removeEventListener('input', updateLength);
+                    textInputNode.removeEventListener('input', updateLength);
                 };
             }
-        }, [value, textInputRef]);
+        }, [value, textInputNode]);
 
         const content = children
             ? children({ current: currentLength, max: maxLength })
