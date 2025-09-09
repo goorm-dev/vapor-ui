@@ -233,6 +233,28 @@ export default function TextInputStates() {
 ```
 </Demo>
 
+### Character Count
+
+TextInput에 `maxLength` 속성을 추가하여 입력 가능한 최대 문자 수를 제한하고, 현재 입력된 문자 수를 실시간으로 표시하는 기능을 제공합니다.
+
+<Demo name="text-input-character-count">
+```tsx
+import { Box, TextInput } from '@vapor-ui/core';
+
+export default function TextInputCharacterCount() {
+    return (
+        <Box display="flex" alignItems="center" justifyContent="center">
+            <TextInput.Root placeholder="Type to see character count..." maxLength={50}>
+                <TextInput.Label>Character Count</TextInput.Label>
+                <TextInput.Field />
+                <TextInput.Count />
+            </TextInput.Root>
+        </Box>
+    );
+}
+```
+</Demo>
+
 ## Props Table
 
 ---
