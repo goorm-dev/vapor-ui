@@ -32,6 +32,9 @@ const meta: Meta<typeof Textarea.Root> = {
         autoResize: {
             control: { type: 'boolean' },
         },
+        maxLength: {
+            control: { type: 'number' },
+        },
     },
 } satisfies Meta<typeof Textarea.Root>;
 
@@ -79,6 +82,10 @@ export const TestBed: Story = {
                 {...args}
             >
                 <Textarea.Input />
+            </Textarea.Root>
+            <Textarea.Root placeholder="Basic count..." maxLength={100} {...args}>
+                <Textarea.Input />
+                <Textarea.Count />
             </Textarea.Root>
         </Grid.Root>
     ),

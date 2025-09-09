@@ -1,7 +1,7 @@
 'use client';
 
 import type { ChangeEvent, MutableRefObject } from 'react';
-import { forwardRef, useCallback, useEffect, useId, useRef } from 'react';
+import React, { forwardRef, useCallback, useEffect, useId, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
@@ -24,10 +24,12 @@ type TextareaSharedProps = TextareaVariants & {
     cols?: number;
     resizing?: boolean;
     autoResize?: boolean;
+    maxLength?: number;
 };
 
 type TextareaContextType = TextareaSharedProps & {
     textareaId?: string;
+    textareaRef?: MutableRefObject<HTMLTextAreaElement | null>;
 };
 
 const [TextareaProvider, useTextareaContext] = createContext<TextareaContextType>({
@@ -46,6 +48,7 @@ interface TextareaRootProps extends Assign<TextareaPrimitiveProps, TextareaShare
 const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
     ({ render, className, ...props }, ref) => {
         const textareaId = useId();
+        const textareaRef = useRef<HTMLTextAreaElement | null>(null);
         const [textareaRootProps, otherProps] = createSplitProps<TextareaSharedProps>()(props, [
             'value',
             'onValueChange',
@@ -59,6 +62,7 @@ const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
             'cols',
             'resizing',
             'autoResize',
+            'maxLength',
         ]);
 
         const { disabled } = textareaRootProps;
@@ -73,7 +77,7 @@ const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
         });
 
         return (
-            <TextareaProvider value={{ textareaId, ...textareaRootProps }}>
+            <TextareaProvider value={{ textareaId, textareaRef, ...textareaRootProps }}>
                 {element}
             </TextareaProvider>
         );
@@ -92,6 +96,7 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
     ({ render, id: idProp, className, ...props }, ref) => {
         const {
             textareaId,
+            textareaRef: contextTextareaRef,
             value,
             onValueChange,
             defaultValue,
@@ -104,20 +109,18 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
             cols,
             resizing,
             autoResize,
+            maxLength,
         } = useTextareaContext();
 
         const id = idProp || textareaId;
-        const textareaRef = useRef<HTMLTextAreaElement | null>(
-            null,
-        ) as MutableRefObject<HTMLTextAreaElement | null>;
 
         const autoResizeTextarea = useCallback(() => {
-            if (!autoResize || !textareaRef.current) return;
+            if (!autoResize || !contextTextareaRef?.current) return;
 
-            const textarea = textareaRef.current;
+            const textarea = contextTextareaRef.current;
             textarea.style.height = 'auto';
             textarea.style.height = `${textarea.scrollHeight}px`;
-        }, [autoResize]);
+        }, [autoResize, contextTextareaRef]);
 
         useEffect(() => {
             if (autoResize) {
@@ -127,7 +130,9 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
 
         return useRender({
             ref: (node: HTMLTextAreaElement | null) => {
-                textareaRef.current = node;
+                if (contextTextareaRef) {
+                    contextTextareaRef.current = node;
+                }
                 if (typeof ref === 'function') {
                     ref(node);
                 } else if (ref && 'current' in ref) {
@@ -155,6 +160,7 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
                 placeholder,
                 rows,
                 cols,
+                maxLength,
                 className: clsx(styles.input({ invalid, size, resizing, autoResize }), className),
                 ...props,
             },
@@ -163,9 +169,62 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
 );
 Input.displayName = 'Textarea.Input';
 
+/* -------------------------------------------------------------------------------------------------
+ * Textarea.Count
+ * -----------------------------------------------------------------------------------------------*/
+
+type TextareaCountPrimitiveProps = VComponentProps<'div'>;
+interface TextareaCountProps extends Omit<TextareaCountPrimitiveProps, 'children'> {
+    children?: (props: { current: number; max?: number }) => React.ReactNode;
+}
+
+const Count = forwardRef<HTMLDivElement, TextareaCountProps>(
+    ({ render, className, children, ...props }, ref) => {
+        const { value, defaultValue, maxLength, textareaRef } = useTextareaContext();
+        const [currentLength, setCurrentLength] = React.useState(() => {
+            const initialValue = value ?? defaultValue ?? '';
+            return initialValue.length;
+        });
+
+        React.useEffect(() => {
+            if (value !== undefined) {
+                setCurrentLength(value.length);
+            } else if (textareaRef?.current) {
+                const updateLength = () => {
+                    setCurrentLength(textareaRef.current?.value.length || 0);
+                };
+
+                const textarea = textareaRef.current;
+                textarea.addEventListener('input', updateLength);
+
+                return () => {
+                    textarea.removeEventListener('input', updateLength);
+                };
+            }
+        }, [value, textareaRef]);
+
+        const content = children
+            ? children({ current: currentLength, max: maxLength })
+            : maxLength !== undefined
+              ? `${currentLength}/${maxLength}`
+              : currentLength.toString();
+
+        return useRender({
+            ref,
+            render: render || <span />,
+            props: {
+                className: clsx(styles.count, className),
+                children: content,
+                ...props,
+            },
+        });
+    },
+);
+Count.displayName = 'Textarea.Count';
+
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Input as TextareaInput, Root as TextareaRoot };
-export type { TextareaInputProps, TextareaRootProps };
+export { Count as TextareaCount, Input as TextareaInput, Root as TextareaRoot };
+export type { TextareaCountProps, TextareaInputProps, TextareaRootProps };
 
-export const Textarea = { Root, Input };
+export const Textarea = { Root, Input, Count };

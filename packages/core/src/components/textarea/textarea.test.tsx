@@ -161,4 +161,89 @@ describe('Textarea', () => {
 
         expect(screen.getByTestId('textarea')).toBeInTheDocument();
     });
+
+    describe('Textarea.Count', () => {
+        test('displays character count without maxLength', () => {
+            render(
+                <Textarea.Root defaultValue="Hello">
+                    <Textarea.Input />
+                    <Textarea.Count />
+                </Textarea.Root>,
+            );
+
+            expect(screen.getByText('5')).toBeInTheDocument();
+        });
+
+        test('displays character count with maxLength', () => {
+            render(
+                <Textarea.Root defaultValue="Hello" maxLength={10}>
+                    <Textarea.Input />
+                    <Textarea.Count />
+                </Textarea.Root>,
+            );
+
+            expect(screen.getByText('5/10')).toBeInTheDocument();
+        });
+
+        test('shows error state when exceeding maxLength', () => {
+            render(
+                <Textarea.Root defaultValue="This is too long" maxLength={10}>
+                    <Textarea.Input />
+                    <Textarea.Count data-testid="count" />
+                </Textarea.Root>,
+            );
+
+            const count = screen.getByTestId('count');
+            expect(count).toBeInTheDocument();
+            expect(screen.getByText('16/10')).toBeInTheDocument();
+        });
+
+        test('updates count when controlled value changes', async () => {
+            const user = userEvent.setup();
+            const handleValueChange = vi.fn((value: string) => {
+                rerender(
+                    <Textarea.Root value={value} onValueChange={handleValueChange} maxLength={10}>
+                        <Textarea.Input />
+                        <Textarea.Count />
+                    </Textarea.Root>,
+                );
+            });
+
+            const { rerender } = render(
+                <Textarea.Root value="initial" onValueChange={handleValueChange} maxLength={10}>
+                    <Textarea.Input />
+                    <Textarea.Count />
+                </Textarea.Root>,
+            );
+
+            expect(screen.getByText('7/10')).toBeInTheDocument();
+
+            const textarea = screen.getByRole('textbox');
+            await user.clear(textarea);
+            await user.type(textarea, 'new');
+
+            expect(handleValueChange).toHaveBeenLastCalledWith('new');
+
+            // Simulate controlled component behavior
+            rerender(
+                <Textarea.Root value="new" onValueChange={handleValueChange} maxLength={10}>
+                    <Textarea.Input />
+                    <Textarea.Count />
+                </Textarea.Root>,
+            );
+
+            expect(screen.getByText('3/10')).toBeInTheDocument();
+        });
+
+        test('supports maxLength prop on input', () => {
+            render(
+                <Textarea.Root maxLength={5}>
+                    <Textarea.Input />
+                </Textarea.Root>,
+            );
+
+            const textarea = screen.getByRole('textbox');
+            expect(textarea).toHaveAttribute('maxLength', '5');
+        });
+    });
 });
