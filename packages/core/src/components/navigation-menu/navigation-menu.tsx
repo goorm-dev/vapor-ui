@@ -119,9 +119,10 @@ interface NavigationMenuLinkProps extends LinkPrimitiveProps {
 }
 
 const Link = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
-    ({ selected, disabled, href, className, ...props }, ref) => {
-        const { size } = useNavigationMenuContext();
+    ({ selected, href, disabled: disabledProp, className, ...props }, ref) => {
+        const { size, disabled: contextDisabled } = useNavigationMenuContext();
 
+        const disabled = disabledProp ?? contextDisabled;
         const dataAttrs = createDataAttributes({
             selected,
             disabled,
@@ -166,12 +167,17 @@ interface NavigationMenuTriggerProps extends TriggerPrimitiveProps {}
 
 const Trigger = forwardRef<HTMLButtonElement, NavigationMenuTriggerProps>(
     ({ disabled: disabledProp, className, ...props }, ref) => {
-        const { size } = useNavigationMenuContext();
+        const { size, disabled: contextDisabled } = useNavigationMenuContext();
+
+        const disabled = disabledProp ?? contextDisabled;
+        const dataAttrs = createDataAttributes({ disabled });
 
         return (
             <BaseNavigationMenu.Trigger
                 ref={ref}
-                className={clsx(styles.trigger({ size }), className)}
+                disabled={disabled}
+                className={clsx(styles.link({ size }), styles.trigger, className)}
+                {...dataAttrs}
                 {...props}
             />
         );

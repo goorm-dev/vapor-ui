@@ -39,7 +39,7 @@ export default {
 };
 
 export const Default: StoryObj<StoryProps> = {
-    render: ({ side, align, disabled, ...args }) => {
+    render: ({ side, align, ...args }) => {
         return (
             <HStack justifyContent={'start'} margin="-$200">
                 <NavigationMenu.Root {...args} defaultValue={'1'} aria-label="Main">
@@ -52,22 +52,22 @@ export const Default: StoryObj<StoryProps> = {
                             <NavigationMenu.Panel>
                                 <VStack render={<ul style={{ listStyle: 'none' }} />}>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 1
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 2
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 3
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 4
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
@@ -82,32 +82,32 @@ export const Default: StoryObj<StoryProps> = {
                             <NavigationMenu.Panel>
                                 <VStack render={<ul style={{ listStyle: 'none' }} />} gap="0">
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             TESTETSTSETSET 1
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             TESTETSTSETSET 2
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             TESTETSTSETSET 3
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             TESTETSTSETSET 4
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             TESTETSTSETSET 4
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Link disabled={disabled} href="#">
+                                        <NavigationMenu.Link href="#">
                                             TESTETSTSETSET 4
                                         </NavigationMenu.Link>
                                     </NavigationMenu.Item>
@@ -116,7 +116,7 @@ export const Default: StoryObj<StoryProps> = {
                         </NavigationMenu.Item>
 
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link disabled={disabled} selected href="#">
+                            <NavigationMenu.Link selected href="#">
                                 Link 1
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>

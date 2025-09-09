@@ -114,7 +114,9 @@ export const link = recipe({
     },
 });
 
-export const trigger = link;
+export const trigger = layerStyle('components', {
+    selectors: { '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' } },
+});
 
 export const icon = layerStyle('components', {
     display: 'flex',
