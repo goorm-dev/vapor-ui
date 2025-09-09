@@ -170,7 +170,7 @@ Field.displayName = 'TextInput.Field';
  * TextInput.Count
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputCountPrimitiveProps = VComponentProps<'div'>;
+type TextInputCountPrimitiveProps = VComponentProps<'span'>;
 interface TextInputCountProps extends Omit<TextInputCountPrimitiveProps, 'children'> {
     children?: (props: { current: number; max?: number }) => React.ReactNode;
 }
