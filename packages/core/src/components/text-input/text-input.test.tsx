@@ -1,5 +1,6 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
 import { TextInput, type TextInputRootProps } from './text-input';
@@ -10,6 +11,16 @@ const TextInputTest = (props: TextInputRootProps) => {
         <TextInput.Root {...props}>
             <TextInput.Label>{LABEL_TEXT}</TextInput.Label>
             <TextInput.Field />
+        </TextInput.Root>
+    );
+};
+
+const TextInputWithCountTest = (props: TextInputRootProps) => {
+    return (
+        <TextInput.Root {...props}>
+            <TextInput.Label>{LABEL_TEXT}</TextInput.Label>
+            <TextInput.Field />
+            <TextInput.Count />
         </TextInput.Root>
     );
 };
@@ -79,5 +90,102 @@ describe('TextInput', () => {
         const input = rendered.getByPlaceholderText(placeholderText);
 
         expect(input).toBeInTheDocument();
+    });
+
+    describe('TextInput.Count', () => {
+        it('should display character count without maxLength', () => {
+            render(<TextInputWithCountTest defaultValue="Hello" />);
+
+            expect(screen.getByText('5')).toBeInTheDocument();
+        });
+
+        it('should display character count with maxLength', () => {
+            render(<TextInputWithCountTest defaultValue="Hello" maxLength={10} />);
+
+            expect(screen.getByText('5/10')).toBeInTheDocument();
+        });
+
+        it('should show count when exceeding maxLength', () => {
+            render(
+                <TextInputWithCountTest defaultValue="This is too long" maxLength={10} />,
+            );
+
+            expect(screen.getByText('16/10')).toBeInTheDocument();
+        });
+
+        it('should update count when controlled value changes', async () => {
+            const handleValueChange = vi.fn((value: string) => {
+                rerender(
+                    <TextInputWithCountTest
+                        value={value}
+                        onValueChange={handleValueChange}
+                        maxLength={10}
+                    />,
+                );
+            });
+
+            const { rerender } = render(
+                <TextInputWithCountTest
+                    value="initial"
+                    onValueChange={handleValueChange}
+                    maxLength={10}
+                />,
+            );
+
+            expect(screen.getByText('7/10')).toBeInTheDocument();
+
+            const input = screen.getByRole('textbox');
+            await userEvent.clear(input);
+            await userEvent.type(input, 'new');
+
+            expect(handleValueChange).toHaveBeenLastCalledWith('new');
+
+            // Simulate controlled component behavior
+            rerender(
+                <TextInputWithCountTest
+                    value="new"
+                    onValueChange={handleValueChange}
+                    maxLength={10}
+                />,
+            );
+
+            expect(screen.getByText('3/10')).toBeInTheDocument();
+        });
+
+        it('should support custom render props', () => {
+            render(
+                <TextInput.Root defaultValue="Hello" maxLength={10}>
+                    <TextInput.Label>{LABEL_TEXT}</TextInput.Label>
+                    <TextInput.Field />
+                    <TextInput.Count>
+                        {({ current, max }) => (
+                            <span data-testid="custom-count">
+                                {current} {max ? `of ${max}` : ''} chars
+                            </span>
+                        )}
+                    </TextInput.Count>
+                </TextInput.Root>,
+            );
+
+            expect(screen.getByTestId('custom-count')).toHaveTextContent('5 of 10 chars');
+        });
+
+        it('should support maxLength prop on input field', () => {
+            render(<TextInputWithCountTest maxLength={5} />);
+            const input = screen.getByRole('textbox');
+
+            expect(input).toHaveAttribute('maxLength', '5');
+        });
+
+        it('should update count for uncontrolled inputs', async () => {
+            render(<TextInputWithCountTest maxLength={10} />);
+
+            expect(screen.getByText('0/10')).toBeInTheDocument();
+
+            const input = screen.getByRole('textbox');
+            await userEvent.type(input, 'test');
+
+            expect(screen.getByText('4/10')).toBeInTheDocument();
+        });
     });
 });
