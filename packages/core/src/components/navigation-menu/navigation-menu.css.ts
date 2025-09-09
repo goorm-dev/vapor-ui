@@ -129,7 +129,6 @@ export const positioner = layerStyle('components', {
     transitionTimingFunction: easingVar,
     width: 'var(--positioner-width)',
     height: 'var(--positioner-height)',
-    maxWidth: 'var(--available-width)',
 
     vars: {
         [durationVar]: '0.25s',

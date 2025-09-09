@@ -239,13 +239,24 @@ type PositionerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Positi
 interface NavigationMenuPositionerProps extends PositionerPrimitiveProps {}
 
 const Positioner = forwardRef<HTMLDivElement, NavigationMenuPositionerProps>(
-    ({ side = 'bottom', align = 'center', sideOffset = 8, className, ...props }, ref) => {
+    (
+        {
+            side = 'bottom',
+            align = 'center',
+            sideOffset = 8,
+            collisionAvoidance,
+            className,
+            ...props
+        },
+        ref,
+    ) => {
         return (
             <BaseNavigationMenu.Positioner
                 ref={ref}
                 side={side}
                 align={align}
                 sideOffset={sideOffset}
+                collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
                 className={clsx(styles.positioner, className)}
                 {...props}
             />

@@ -41,14 +41,9 @@ export default {
 export const Default: StoryObj<StoryProps> = {
     render: ({ side, align, disabled, ...args }) => {
         return (
-            <HStack justifyContent={'end'} margin="-$200">
+            <HStack justifyContent={'start'} margin="-$200">
                 <NavigationMenu.Root {...args} defaultValue={'1'} aria-label="Main">
                     <NavigationMenu.List>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link disabled={disabled} selected href="#">
-                                Link 1
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
                         <NavigationMenu.Item value="1">
                             <NavigationMenu.Trigger>
                                 Overview
@@ -118,6 +113,12 @@ export const Default: StoryObj<StoryProps> = {
                                     </NavigationMenu.Item>
                                 </VStack>
                             </NavigationMenu.Panel>
+                        </NavigationMenu.Item>
+
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link disabled={disabled} selected href="#">
+                                Link 1
+                            </NavigationMenu.Link>
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
 
