@@ -1,6 +1,6 @@
 'use client';
 
-import type { ChangeEvent, MutableRefObject } from 'react';
+import type { ChangeEvent, MutableRefObject, ReactNode } from 'react';
 import React, { forwardRef, useCallback, useEffect, useId, useState } from 'react';
 
 import { useRender } from '@base-ui-components/react';
@@ -178,13 +178,13 @@ Field.displayName = 'TextInput.Field';
 
 type TextInputCountPrimitiveProps = VComponentProps<'span'>;
 interface TextInputCountProps extends Omit<TextInputCountPrimitiveProps, 'children'> {
-    children?: (props: { current: number; max?: number }) => React.ReactNode;
+    children?: (props: { current: number; max?: number }) => ReactNode;
 }
 
 const Count = forwardRef<HTMLDivElement, TextInputCountProps>(
     ({ render, className, children, ...props }, ref) => {
         const { value, defaultValue, maxLength, textInputNode } = useTextInputContext();
-        const [currentLength, setCurrentLength] = React.useState(() => {
+        const [currentLength, setCurrentLength] = useState(() => {
             const initialValue = value ?? defaultValue ?? '';
             return initialValue.length;
         });
