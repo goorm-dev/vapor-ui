@@ -1,6 +1,8 @@
+'use client';
+
 import { useState } from 'react';
 
-import { Button, RadioGroup, useTheme } from '@vapor-ui/core';
+import { Button, Radio, RadioGroup, useTheme } from '@vapor-ui/core';
 import { ChevronRightOutlineIcon } from '@vapor-ui/icons';
 import Link from 'next/link';
 
@@ -62,18 +64,17 @@ const ColorSelector = ({ checkedColor, bgColor }: { checkedColor: string; bgColo
     const isChecked = checkedColor === bgColor;
 
     return (
-        <RadioGroup.Item value={bgColor} className={styles.colorSelector}>
-            <RadioGroup.Control
-                aria-label={bgColor}
-                style={
-                    !isChecked
-                        ? {
-                              borderColor: bgColor,
-                              backgroundColor: bgColor,
-                          }
-                        : {}
-                }
-            />
-        </RadioGroup.Item>
+        <Radio.Root
+            value={bgColor}
+            aria-label={bgColor}
+            style={
+                !isChecked
+                    ? {
+                          borderColor: bgColor,
+                          backgroundColor: bgColor,
+                      }
+                    : {}
+            }
+        />
     );
 };

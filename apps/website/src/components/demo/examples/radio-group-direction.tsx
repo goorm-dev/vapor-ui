@@ -1,4 +1,4 @@
-import { RadioGroup } from '@vapor-ui/core';
+import { Radio, RadioGroup } from '@vapor-ui/core';
 
 export default function RadioGroupDirection() {
     return (
@@ -6,36 +6,38 @@ export default function RadioGroupDirection() {
             <div>
                 <h4 className="text-sm font-medium mb-2">Vertical (기본값)</h4>
                 <RadioGroup.Root name="orientation-vertical" orientation="vertical">
-                    <RadioGroup.Item value="v1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Vertical Option 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="v2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Vertical Option 2</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="v3">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Vertical Option 3</RadioGroup.Label>
-                    </RadioGroup.Item>
+                    <label>
+                        <Radio.Root value="v1" />
+                        Vertical Option 1
+                    </label>
+                    <label>
+                        <Radio.Root value="v2" />
+                        Vertical Option 2
+                    </label>
+                    <label>
+                        <Radio.Root value="v3" />
+                        Vertical Option 3
+                    </label>
                 </RadioGroup.Root>
             </div>
 
             <div>
                 <h4 className="text-sm font-medium mb-2">Horizontal</h4>
                 <RadioGroup.Root name="orientation-horizontal" orientation="horizontal">
-                    <RadioGroup.Item value="h1">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Option 1</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="h2">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Option 2</RadioGroup.Label>
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="h3">
-                        <RadioGroup.Control />
-                        <RadioGroup.Label>Option 3</RadioGroup.Label>
-                    </RadioGroup.Item>
+                    <label>
+                        <Radio.Root value="h1" />
+                        Option 1
+                    </label>
+
+                    <label>
+                        <Radio.Root value="h2" />
+                        Option 2
+                    </label>
+
+                    <label>
+                        <Radio.Root value="h3" />
+                        Option 3
+                    </label>
                 </RadioGroup.Root>
             </div>
         </div>

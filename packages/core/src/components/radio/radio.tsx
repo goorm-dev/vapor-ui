@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef } from 'react';
 
 import { Radio as BaseRadio } from '@base-ui-components/react';
@@ -18,9 +20,9 @@ import * as styles from './radio.css';
 type RadioVariants = RootVariants;
 
 type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-interface RadioGroupRootProps extends RootPrimitiveProps, RadioVariants {}
+interface RadioRootProps extends RootPrimitiveProps, RadioVariants {}
 
-const Root = forwardRef<HTMLButtonElement, RadioGroupRootProps>(
+const Root = forwardRef<HTMLButtonElement, RadioRootProps>(
     ({ className, children, ...props }, ref) => {
         const { size: rootSize, invalid: rootInvalid } = useRadioGroupContext();
         const [variantProps, otherProps] = createSplitProps<RadioVariants>()(props, [
@@ -69,5 +71,5 @@ Indicator.displayName = 'Radio.Indicator';
 /* -----------------------------------------------------------------------------------------------*/
 
 export { Root as RadioRoot, Indicator as RadioIndicator };
-export type { RadioGroupRootProps, RadioIndicatorProps };
+export type { RadioRootProps, RadioIndicatorProps };
 export const Radio = { Root, Indicator };

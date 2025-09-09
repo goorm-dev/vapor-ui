@@ -101,15 +101,14 @@ const renderSwitches = () => {
     const combinations = getCartesianProduct(switchSizes, switchStates);
 
     return combinations.map(([size, state], index) => (
-        <Switch.Root
-            key={`${size}-${index}`}
-            size={size}
-            defaultChecked={state.defaultChecked}
-            disabled={state.disabled}
-        >
-            Airplane mode
-            <Switch.Control />
-        </Switch.Root>
+        <label key={`${size}-${index}`}>
+            <Switch.Root
+                size={size}
+                defaultChecked={state.defaultChecked}
+                disabled={state.disabled}
+            />
+            <Text typography="body2">Airplane mode</Text>
+        </label>
     ));
 };
 
@@ -192,15 +191,15 @@ const Page = () => {
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="Checkbox" />
                     <RenderingTemplate.Component rows={2} gap="1rem">
-                        <Checkbox.Root defaultChecked>
-                            <Checkbox.Control />
+                        <Text render={<label />} typography="body2">
+                            <Checkbox.Root defaultChecked />
                             Checkbox
-                        </Checkbox.Root>
+                        </Text>
 
-                        <Checkbox.Root id="checkbox-lg" defaultChecked size="lg">
-                            <Checkbox.Control />
+                        <Text render={<label />} typography="body2">
+                            <Checkbox.Root id="checkbox-lg" defaultChecked size="lg" />
                             Checkbox
-                        </Checkbox.Root>
+                        </Text>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 

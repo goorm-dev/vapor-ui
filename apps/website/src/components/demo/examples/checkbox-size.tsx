@@ -1,16 +1,16 @@
-import { Checkbox } from '@vapor-ui/core';
+import { Checkbox, Text } from '@vapor-ui/core';
 
 export default function CheckboxSize() {
     return (
         <div className="flex items-center gap-4">
-            <Checkbox.Root size="md">
-                <Checkbox.Control />
-                <Checkbox.Label>MD</Checkbox.Label>
-            </Checkbox.Root>
-            <Checkbox.Root size="lg">
-                <Checkbox.Control />
-                <Checkbox.Label>LG</Checkbox.Label>
-            </Checkbox.Root>
+            <Text typography="body2" render={<label />}>
+                <Checkbox.Root size="md" />
+                MD
+            </Text>
+            <Text typography="body2" render={<label />}>
+                <Checkbox.Root size="lg" />
+                LG
+            </Text>
         </div>
     );
 }

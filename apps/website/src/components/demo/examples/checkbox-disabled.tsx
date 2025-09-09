@@ -1,16 +1,16 @@
-import { Checkbox } from '@vapor-ui/core';
+import { Checkbox, Text } from '@vapor-ui/core';
 
 export default function CheckboxDisabled() {
     return (
         <div className="flex items-center gap-4">
-            <Checkbox.Root disabled>
-                <Checkbox.Control />
-                <Checkbox.Label>Disabled</Checkbox.Label>
-            </Checkbox.Root>
-            <Checkbox.Root disabled checked>
-                <Checkbox.Control />
-                <Checkbox.Label>Disabled Checked</Checkbox.Label>
-            </Checkbox.Root>
+            <Text typography="body2" render={<label />}>
+                <Checkbox.Root disabled />
+                Disabled
+            </Text>
+            <Text typography="body2" render={<label />}>
+                <Checkbox.Root disabled checked />
+                Disabled Checked
+            </Text>
         </div>
     );
 }
