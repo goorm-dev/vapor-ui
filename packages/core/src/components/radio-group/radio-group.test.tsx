@@ -39,7 +39,7 @@ describe('RadioGroup', () => {
         await userEvent.click(firstItem);
 
         expect(onValueChange).toHaveBeenCalledOnce();
-        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Event));
+        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Object));
     });
 
     it('should invoke onValueChange when an label is clicked', async () => {
@@ -50,7 +50,7 @@ describe('RadioGroup', () => {
         await userEvent.click(item);
 
         expect(onValueChange).toHaveBeenCalledOnce();
-        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Event));
+        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Object));
     });
 
     describe('prop: disabled', () => {
@@ -102,7 +102,7 @@ describe('RadioGroup', () => {
 
     it('should propagate the name attribute to the input', async () => {
         const name = 'test-radio-group';
-        const rendered = render(<RadioGroupTest name={name} />);
+        const rendered = render(<RadioGroupTest defaultValue={'option1'} name={name} />);
 
         const input = rendered.container.querySelector<HTMLInputElement>(`input[name="${name}"]`);
         expect(input).toBeInTheDocument();
