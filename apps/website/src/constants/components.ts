@@ -20,6 +20,7 @@ import textData from '../../public/components/text.json';
 import tooltipData from '../../public/components/tooltip.json';
 import vStackData from '../../public/components/v-stack.json';
 
+// FIXME: TextInput, Switch, Checkbox, RadioGroup, Radio 컴포넌트 props 점검
 // Map of component key -> entire JSON documentation object
 export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     avatar: avatarData,
