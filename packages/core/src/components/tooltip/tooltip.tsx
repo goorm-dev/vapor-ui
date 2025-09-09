@@ -55,9 +55,20 @@ const Portal = (props: TooltipPortalProps) => {
 type PositionerPrimitiveProps = VComponentProps<typeof BaseTooltip.Positioner>;
 interface TooltipPositionerProps extends PositionerPrimitiveProps {}
 
-const Positioner = (props: TooltipPositionerProps) => {
-    return <BaseTooltip.Positioner {...props} />;
-};
+const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(
+    ({ side = 'top', align = 'center', sideOffset = 8, ...props }, ref) => {
+        return (
+            <BaseTooltip.Positioner
+                ref={ref}
+                side={side}
+                align={align}
+                sideOffset={sideOffset}
+                arrowPadding={side === 'top' || side === 'bottom' ? 12 : 6}
+                {...props}
+            />
+        );
+    },
+);
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Popup
@@ -72,10 +83,17 @@ interface TooltipPopupProps extends PopupPrimitiveProps {}
 const Popup = forwardRef<HTMLDivElement, TooltipPopupProps>(
     ({ className, children, ...props }, ref) => {
         const [side, setSide] = useState<PositionerPrimitiveProps['side']>('bottom');
-        const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('start');
+        const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('center');
 
-        // arrow position을 메모이제이션
-        const position = useMemo(() => getArrowPosition({ side, align, offset: 6 }), [side, align]);
+        const position = useMemo(
+            () =>
+                getArrowPosition({
+                    side,
+                    align,
+                    offset: side === 'top' || side === 'bottom' ? 12 : 6,
+                }),
+            [side, align],
+        );
 
         const popupRef = useRef<HTMLDivElement>(null);
         const composedRef = composeRefs(popupRef, ref);
