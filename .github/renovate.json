@@ -15,10 +15,37 @@
     },
     "packageRules": [
         {
-            "description": "Auto-merge only patch updates",
-            "matchUpdateTypes": ["patch"],
+            "description": "React and React DOM - Core framework",
+            "groupName": "React Core",
+            "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+            "labels": ["category: react"],
+            "automerge": false,
+            "dependencyDashboardApproval": true
+        },
+        {
+            "description": "Vanilla Extract - CSS-in-TS styling",
+            "groupName": "Vanilla Extract",
+            "matchPackagePatterns": ["@vanilla-extract/*"],
+            "labels": ["category: styling"],
+            "automerge": false,
+            "matchUpdateTypes": ["patch", "minor"]
+        },
+        {
+            "description": "Base UI - Unstyled component library",
+            "groupName": "Base UI",
+            "matchPackagePatterns": ["@base-ui-components/*"],
+            "labels": ["category: ui-library"],
+            "automerge": false,
+            "dependencyDashboardApproval": true
+        },
+        {
+            "description": "All other dependencies grouped together",
+            "groupName": "Other Dependencies",
+            "excludePackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+            "excludePackagePatterns": ["@vanilla-extract/*", "@base-ui-components/*"],
+            "labels": ["category: dependencies"],
             "automerge": true,
-            "automergeType": "branch"
+            "matchUpdateTypes": ["patch"]
         },
         {
             "description": "Manual review required for minor and major updates",
