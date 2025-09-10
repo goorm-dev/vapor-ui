@@ -9,7 +9,9 @@ export function DocPageClient({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         setTheme({
-            appearance: 'light',
+            primaryColor: '#3B82F6',
+            radius: 'md',
+            scaling: 1.0,
         });
     }, [setTheme]);
 
