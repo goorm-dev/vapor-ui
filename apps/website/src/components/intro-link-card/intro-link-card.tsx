@@ -33,11 +33,15 @@ const IntroLinkCard = ({
                             </Text>
                         </div>
                     </div>
-                    <Button size="lg" color="secondary" asChild>
-                        <Link href={link}>
-                            Learn more <ForwardPageOutlineIcon size={20} />
-                        </Link>
-                    </Button>
+                    <Button
+                        size="lg"
+                        color="secondary"
+                        render={
+                            <Link href={link}>
+                                Learn more <ForwardPageOutlineIcon size={20} />
+                            </Link>
+                        }
+                    />
                 </div>
             </Card.Body>
         </Card.Root>

@@ -2,12 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import {
-    Item as RadixItem,
-    Link as RadixLink,
-    List as RadixList,
-    Root as RadixRoot,
-} from '@radix-ui/react-navigation-menu';
+import { NavigationMenu as BaseNav } from '@base-ui-components/react/navigation-menu';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
@@ -29,7 +24,7 @@ const [NavProvider, useNavContext] = createContext<NavContextType>({
  * -----------------------------------------------------------------------------------------------*/
 
 type NavVariants = ListVariants & ItemVariants & LinkVariants;
-type NavPrimitiveProps = VComponentProps<typeof RadixRoot>;
+type NavPrimitiveProps = VComponentProps<typeof BaseNav.Root>;
 
 interface NavRootProps extends NavPrimitiveProps, NavVariants {
     'aria-label': string;
@@ -49,7 +44,7 @@ const Root = forwardRef<HTMLElement, NavRootProps>(({ 'aria-label': ariaLabel, .
 
     return (
         <NavProvider value={variantProps}>
-            <RadixRoot
+            <BaseNav.Root
                 ref={ref}
                 orientation={direction}
                 aria-label={ariaLabel || undefined}
@@ -64,14 +59,14 @@ Root.displayName = 'Nav.Root';
  * Nav.List
  * -----------------------------------------------------------------------------------------------*/
 
-type ListPrimitiveProps = VComponentProps<typeof RadixList>;
+type ListPrimitiveProps = VComponentProps<typeof BaseNav.List>;
 interface NavMenuList extends ListPrimitiveProps {}
 
-const List = forwardRef<HTMLUListElement, NavMenuList>(({ className, ...props }, ref) => {
+const List = forwardRef<HTMLDivElement, NavMenuList>(({ className, ...props }, ref) => {
     const { direction, stretch } = useNavContext();
 
     return (
-        <RadixList
+        <BaseNav.List
             ref={ref}
             className={clsx(styles.list({ direction, stretch }), className)}
             {...props}
@@ -84,13 +79,15 @@ List.displayName = 'Nav.List';
  * Nav.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemPrimitiveProps = VComponentProps<typeof RadixItem>;
+type ItemPrimitiveProps = VComponentProps<typeof BaseNav.Item>;
 interface NavItemProps extends ItemPrimitiveProps {}
 
-const Item = forwardRef<HTMLLIElement, NavItemProps>(({ className, ...props }, ref) => {
+const Item = forwardRef<HTMLDivElement, NavItemProps>(({ className, ...props }, ref) => {
     const { stretch } = useNavContext();
 
-    return <RadixItem ref={ref} className={clsx(styles.item({ stretch }), className)} {...props} />;
+    return (
+        <BaseNav.Item ref={ref} className={clsx(styles.item({ stretch }), className)} {...props} />
+    );
 });
 Item.displayName = 'Nav.Item';
 
@@ -98,7 +95,7 @@ Item.displayName = 'Nav.Item';
  * Nav.Link
  * -----------------------------------------------------------------------------------------------*/
 
-type LinkPrimitiveProps = Omit<VComponentProps<typeof RadixLink>, 'active'>;
+type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNav.Link>, 'active'>;
 interface NavLinkProps extends LinkPrimitiveProps {
     selected?: boolean;
     disabled?: boolean;
@@ -109,13 +106,12 @@ const Link = forwardRef<HTMLAnchorElement, NavLinkProps>(
         const { shape, size, align } = useNavContext();
 
         return (
-            <RadixLink
+            <BaseNav.Link
                 ref={ref}
                 href={disabled ? undefined : href}
-                active={selected}
-                data-active={undefined}
-                data-selected={selected ? 'true' : undefined}
+                aria-current={selected ? 'page' : undefined}
                 aria-disabled={disabled ? 'true' : undefined}
+                data-selected={selected ? 'true' : undefined}
                 className={clsx(styles.link({ shape, size, align, disabled }), className)}
                 {...props}
             />

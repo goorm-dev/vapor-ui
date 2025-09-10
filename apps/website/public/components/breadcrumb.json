@@ -1,0 +1,104 @@
+{
+    "props": [
+        {
+            "prop": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "default": "md",
+            "description": "브레드크럼의 크기를 설정합니다. 텍스트 크기와 아이콘 크기가 함께 조절됩니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "추가적인 CSS 클래스를 적용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "undefined",
+            "description": "브레드크럼의 하위 컴포넌트들을 포함합니다."
+        }
+    ],
+    "listProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "추가적인 CSS 클래스를 적용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "undefined",
+            "description": "브레드크럼 아이템들을 포함합니다."
+        }
+    ],
+    "itemProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "추가적인 CSS 클래스를 적용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "undefined",
+            "description": "브레드크럼 아이템의 내용을 포함합니다."
+        }
+    ],
+    "linkProps": [
+        {
+            "prop": "current",
+            "type": ["boolean"],
+            "default": false,
+            "description": "현재 페이지를 나타내는 링크인지 설정합니다. true일 경우 시각적으로 구분되어 표시됩니다."
+        },
+        {
+            "prop": "href",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "링크의 목적지 URL을 설정합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "추가적인 CSS 클래스를 적용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "undefined",
+            "description": "링크의 텍스트 내용을 포함합니다."
+        }
+    ],
+    "separatorProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "추가적인 CSS 클래스를 적용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "undefined",
+            "description": "커스텀 구분자 아이콘을 제공할 수 있습니다. 기본값은 SlashOutlineIcon입니다."
+        }
+    ],
+    "ellipsisProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "추가적인 CSS 클래스를 적용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "undefined",
+            "description": "커스텀 생략 표시 아이콘을 제공할 수 있습니다. 기본값은 MoreCommonOutlineIcon입니다."
+        }
+    ]
+}

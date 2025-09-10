@@ -290,7 +290,7 @@ const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
         return (
             <Portal>
                 <Positioner side="right" align="start">
-                    <BaseMenu.Popup
+                    <Popup
                         ref={ref}
                         finalFocus={triggerRef}
                         className={clsx(styles.subPopup, className)}
@@ -383,6 +383,8 @@ export {
     Root as MenuRoot,
     Trigger as MenuTrigger,
     Portal as MenuPortal,
+    Positioner as MenuPositioner,
+    Popup as MenuPopup,
     Content as MenuContent,
     Item as MenuItem,
     Separator as MenuSeparator,
@@ -400,6 +402,8 @@ export type {
     MenuRootProps,
     MenuTriggerProps,
     MenuPortalProps,
+    MenuPositionerProps,
+    MenuPopupProps,
     MenuContentProps,
     MenuItemProps,
     MenuSeparatorProps,
@@ -417,6 +421,8 @@ export const Menu = {
     Root,
     Trigger,
     Portal,
+    Positioner,
+    Popup,
     Content,
     Item,
     Separator,

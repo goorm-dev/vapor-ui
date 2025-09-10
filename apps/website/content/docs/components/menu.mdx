@@ -1,0 +1,423 @@
+---
+title: 'Menu'
+site_name: 'Menu - Vapor Core'
+description: '드롭다운 메뉴와 컨텍스트 메뉴를 제공하는 컴포넌트입니다'
+---
+
+<Demo name="default-menu">
+```tsx
+import { Button, Menu } from '@vapor-ui/core';
+
+export default function DefaultMenu() {
+    return (
+        <Menu.Root>
+            <Menu.Trigger render={<Button>메뉴 열기</Button>} />
+            <Menu.Portal>
+                <Menu.Content>
+                    <Menu.Item>새 파일</Menu.Item>
+                    <Menu.Item>새 폴더</Menu.Item>
+                    <Menu.Separator />
+                    <Menu.Item>복사</Menu.Item>
+                    <Menu.Item>붙여넣기</Menu.Item>
+                    <Menu.Separator />
+                    <Menu.Item>삭제</Menu.Item>
+                </Menu.Content>
+            </Menu.Portal>
+        </Menu.Root>
+    );
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Positioning
+
+Menu의 표시 위치를 설정할 수 있습니다.
+
+<Demo name="menu-positioning">
+```tsx
+import { Button, Menu } from '@vapor-ui/core';
+
+export default function MenuPositioning() {
+    return (
+        <div className="flex flex-wrap gap-4">
+            <Menu.Root side="top">
+                <Menu.Trigger render={<Button>상단 메뉴</Button>} />
+                <Menu.Portal>
+                    <Menu.Content>
+                        <Menu.Item>상단 아이템 1</Menu.Item>
+                        <Menu.Item>상단 아이템 2</Menu.Item>
+                        <Menu.Item>상단 아이템 3</Menu.Item>
+                    </Menu.Content>
+                </Menu.Portal>
+            </Menu.Root>
+
+            <Menu.Root side="right">
+                <Menu.Trigger render={<Button>우측 메뉴</Button>} />
+                <Menu.Portal>
+                    <Menu.Content>
+                        <Menu.Item>우측 아이템 1</Menu.Item>
+                        <Menu.Item>우측 아이템 2</Menu.Item>
+                        <Menu.Item>우측 아이템 3</Menu.Item>
+                    </Menu.Content>
+                </Menu.Portal>
+            </Menu.Root>
+
+            <Menu.Root side="bottom">
+                <Menu.Trigger render={<Button>하단 메뉴</Button>} />
+                <Menu.Portal>
+                    <Menu.Content>
+                        <Menu.Item>하단 아이템 1</Menu.Item>
+                        <Menu.Item>하단 아이템 2</Menu.Item>
+                        <Menu.Item>하단 아이템 3</Menu.Item>
+                    </Menu.Content>
+                </Menu.Portal>
+            </Menu.Root>
+
+            <Menu.Root side="left">
+                <Menu.Trigger render={<Button>좌측 메뉴</Button>} />
+                <Menu.Portal>
+                    <Menu.Content>
+                        <Menu.Item>좌측 아이템 1</Menu.Item>
+                        <Menu.Item>좌측 아이템 2</Menu.Item>
+                        <Menu.Item>좌측 아이템 3</Menu.Item>
+                    </Menu.Content>
+                </Menu.Portal>
+            </Menu.Root>
+        </div>
+    );
+
+}
+
+````
+</Demo>
+
+### Groups
+
+Menu 아이템을 그룹으로 구성할 수 있습니다.
+
+<Demo name="menu-groups">
+```tsx
+import { Button, Menu } from '@vapor-ui/core';
+
+export default function MenuGroups() {
+    return (
+        <Menu.Root>
+            <Menu.Trigger render={<Button>그룹 메뉴</Button>} />
+            <Menu.Portal>
+                <Menu.Content>
+                    <Menu.Group>
+                        <Menu.GroupLabel>파일</Menu.GroupLabel>
+                        <Menu.Item>새 파일</Menu.Item>
+                        <Menu.Item>파일 열기</Menu.Item>
+                        <Menu.Item>파일 저장</Menu.Item>
+                    </Menu.Group>
+                    <Menu.Separator />
+                    <Menu.Group>
+                        <Menu.GroupLabel>편집</Menu.GroupLabel>
+                        <Menu.Item>복사</Menu.Item>
+                        <Menu.Item>붙여넣기</Menu.Item>
+                        <Menu.Item>잘라내기</Menu.Item>
+                    </Menu.Group>
+                    <Menu.Separator />
+                    <Menu.Group>
+                        <Menu.GroupLabel>도구</Menu.GroupLabel>
+                        <Menu.Item>설정</Menu.Item>
+                        <Menu.Item>도움말</Menu.Item>
+                    </Menu.Group>
+                </Menu.Content>
+            </Menu.Portal>
+        </Menu.Root>
+    );
+}
+````
+
+</Demo>
+
+### Disabled
+
+Menu와 개별 아이템을 비활성화할 수 있습니다.
+
+<Demo name="menu-disabled">
+```tsx
+import { Button, Menu } from '@vapor-ui/core';
+
+export default function MenuDisabled() {
+    return (
+        <div className="flex flex-wrap gap-4">
+            <Menu.Root>
+                <Menu.Trigger render={<Button>일반 메뉴</Button>} />
+                <Menu.Portal>
+                    <Menu.Content>
+                        <Menu.Item>활성 아이템 1</Menu.Item>
+                        <Menu.Item disabled>비활성 아이템</Menu.Item>
+                        <Menu.Item>활성 아이템 2</Menu.Item>
+                        <Menu.Separator />
+                        <Menu.Item disabled>비활성 아이템 2</Menu.Item>
+                        <Menu.Item>활성 아이템 3</Menu.Item>
+                    </Menu.Content>
+                </Menu.Portal>
+            </Menu.Root>
+
+            <Menu.Root disabled>
+                <Menu.Trigger render={<Button>비활성 메뉴</Button>} />
+                <Menu.Portal>
+                    <Menu.Content>
+                        <Menu.Item>아이템 1</Menu.Item>
+                        <Menu.Item>아이템 2</Menu.Item>
+                        <Menu.Item>아이템 3</Menu.Item>
+                    </Menu.Content>
+                </Menu.Portal>
+            </Menu.Root>
+        </div>
+    );
+
+}
+
+````
+</Demo>
+
+## Examples
+
+---
+
+### Checkbox Items
+
+체크박스 형태의 메뉴 아이템을 사용할 수 있습니다.
+
+<Demo name="menu-checkbox">
+```tsx
+import { Button, Menu } from '@vapor-ui/core';
+import { useState } from 'react';
+
+export default function MenuCheckbox() {
+    const [showToolbar, setShowToolbar] = useState(true);
+    const [showSidebar, setShowSidebar] = useState(false);
+    const [showStatusbar, setShowStatusbar] = useState(true);
+
+    return (
+        <Menu.Root>
+            <Menu.Trigger render={<Button>보기 설정</Button>} />
+            <Menu.Portal>
+                <Menu.Content>
+                    <Menu.Group>
+                        <Menu.GroupLabel>보기 옵션</Menu.GroupLabel>
+                        <Menu.CheckboxItem
+                            checked={showToolbar}
+                            onCheckedChange={setShowToolbar}
+                        >
+                            툴바 표시
+                        </Menu.CheckboxItem>
+                        <Menu.CheckboxItem
+                            checked={showSidebar}
+                            onCheckedChange={setShowSidebar}
+                        >
+                            사이드바 표시
+                        </Menu.CheckboxItem>
+                        <Menu.CheckboxItem
+                            checked={showStatusbar}
+                            onCheckedChange={setShowStatusbar}
+                        >
+                            상태바 표시
+                        </Menu.CheckboxItem>
+                    </Menu.Group>
+                </Menu.Content>
+            </Menu.Portal>
+        </Menu.Root>
+    );
+}
+````
+
+</Demo>
+
+### Radio Items
+
+라디오 버튼 형태의 메뉴 아이템을 사용할 수 있습니다.
+
+<Demo name="menu-radio">
+```tsx
+import { Button, Menu } from '@vapor-ui/core';
+import { useState } from 'react';
+
+export default function MenuRadio() {
+    const [fontSize, setFontSize] = useState('medium');
+
+    return (
+        <Menu.Root>
+            <Menu.Trigger render={<Button>글꼴 크기</Button>} />
+            <Menu.Portal>
+                <Menu.Content>
+                    <Menu.Group>
+                        <Menu.GroupLabel>글꼴 크기 선택</Menu.GroupLabel>
+                        <Menu.RadioGroup value={fontSize} onValueChange={setFontSize}>
+                            <Menu.RadioItem value="small">
+                                작게 (12px)
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="medium">
+                                보통 (14px)
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="large">
+                                크게 (16px)
+                            </Menu.RadioItem>
+                            <Menu.RadioItem value="xl">
+                                매우 크게 (18px)
+                            </Menu.RadioItem>
+                        </Menu.RadioGroup>
+                    </Menu.Group>
+                </Menu.Content>
+            </Menu.Portal>
+        </Menu.Root>
+    );
+
+}
+
+````
+</Demo>
+
+### Submenu
+
+서브메뉴를 구성할 수 있습니다.
+
+<Demo name="menu-submenu">
+```tsx
+import { Button, Menu } from '@vapor-ui/core';
+
+export default function MenuSubmenu() {
+    return (
+        <Menu.Root>
+            <Menu.Trigger render={<Button>서브메뉴</Button>} />
+            <Menu.Portal>
+                <Menu.Content>
+                    <Menu.Item>새 파일</Menu.Item>
+                    <Menu.Item>파일 열기</Menu.Item>
+                    <Menu.Separator />
+
+                    <Menu.SubmenuRoot>
+                        <Menu.SubmenuTriggerItem>
+                            최근 파일
+                        </Menu.SubmenuTriggerItem>
+                        <Menu.Portal>
+                            <Menu.SubmenuContent>
+                                <Menu.Item>document.txt</Menu.Item>
+                                <Menu.Item>presentation.pptx</Menu.Item>
+                                <Menu.Item>spreadsheet.xlsx</Menu.Item>
+                                <Menu.Separator />
+                                <Menu.Item>더 많은 파일...</Menu.Item>
+                            </Menu.SubmenuContent>
+                        </Menu.Portal>
+                    </Menu.SubmenuRoot>
+
+                    <Menu.SubmenuRoot>
+                        <Menu.SubmenuTriggerItem>
+                            내보내기
+                        </Menu.SubmenuTriggerItem>
+                        <Menu.Portal>
+                            <Menu.SubmenuContent>
+                                <Menu.Item>PDF로 내보내기</Menu.Item>
+                                <Menu.Item>이미지로 내보내기</Menu.Item>
+                                <Menu.Item>HTML로 내보내기</Menu.Item>
+                            </Menu.SubmenuContent>
+                        </Menu.Portal>
+                    </Menu.SubmenuRoot>
+
+                    <Menu.Separator />
+                    <Menu.Item>종료</Menu.Item>
+                </Menu.Content>
+            </Menu.Portal>
+        </Menu.Root>
+    );
+}
+````
+
+</Demo>
+
+## Props Table
+
+---
+
+### Menu.Root
+
+Menu의 루트 컨테이너 컴포넌트입니다. 위치 관련 props와 Base UI Menu.Root의 모든 props를 지원합니다.
+
+<ComponentPropsTable file="menu" section="props" />
+
+### Menu.Trigger
+
+Menu를 트리거하는 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="triggerProps" />
+
+### Menu.Portal
+
+Menu 콘텐츠를 DOM 트리의 다른 위치로 렌더링하는 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="portalProps" />
+
+### Menu.Content
+
+Menu의 실제 콘텐츠를 포함하는 컴포넌트입니다. 내장된 Positioner, Popup을 포함하며, 자동으로 위치가 조정됩니다.
+
+<ComponentPropsTable file="menu" section="contentProps" />
+
+### Menu.Item
+
+개별 메뉴 아이템 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="itemProps" />
+
+### Menu.Separator
+
+메뉴 아이템들 사이의 구분선을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="separatorProps" />
+
+### Menu.Group
+
+메뉴 아이템들을 그룹화하는 컨테이너 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="groupProps" />
+
+### Menu.GroupLabel
+
+메뉴 그룹의 라벨을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="groupLabelProps" />
+
+### Menu.SubmenuRoot
+
+서브메뉴의 루트 컨테이너 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="submenuRootProps" />
+
+### Menu.SubmenuContent
+
+서브메뉴의 실제 콘텐츠를 포함하는 컴포넌트입니다. finalFocus가 자동으로 설정되어 서브메뉴가 닫힐 때 트리거로 포커스가 돌아갑니다.
+
+<ComponentPropsTable file="menu" section="submenuContentProps" />
+
+### Menu.SubmenuTriggerItem
+
+서브메뉴를 트리거하는 메뉴 아이템 컴포넌트입니다. ChevronRightOutlineIcon이 자동으로 추가됩니다.
+
+<ComponentPropsTable file="menu" section="submenuTriggerItemProps" />
+
+### Menu.CheckboxItem
+
+체크박스 형태의 메뉴 아이템 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="checkboxItemProps" />
+
+### Menu.RadioGroup
+
+라디오 그룹 메뉴 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="radioGroupProps" />
+
+### Menu.RadioItem
+
+라디오 아이템 메뉴 컴포넌트입니다.
+
+<ComponentPropsTable file="menu" section="radioItemProps" />
