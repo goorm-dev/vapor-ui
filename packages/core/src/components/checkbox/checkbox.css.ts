@@ -63,9 +63,6 @@ export const control = recipe({
                 '&[data-checked], &[data-indeterminate]': {
                     backgroundColor: vars.color.background.primary,
                 },
-                '&[data-readonly]:is(:hover, :focus, :active)::before': {
-                    opacity: '0',
-                },
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray[200],
                 },

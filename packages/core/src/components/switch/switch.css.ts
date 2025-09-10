@@ -42,9 +42,6 @@ export const control = recipe({
                     outline: '0.0625rem solid',
                     outlineColor: vars.color.border.normal,
                 },
-                '&[data-readonly]:is(:hover, :focus, :active)::before': {
-                    opacity: '0',
-                },
             },
         }),
     ],
