@@ -97,7 +97,7 @@ const createColorDefinition = ({
 
 function createVaporColorDefinitions(
     primitiveColors: Record<string, string>,
-    contrastRatios: Record<string, number>
+    contrastRatios: Record<string, number>,
 ): Color[] {
     return Object.entries(primitiveColors)
         .map(([name, colorHex]) => createColorDefinition({ name, colorHex, contrastRatios }))
@@ -108,14 +108,11 @@ function createVaporColorDefinitions(
 // Theme Generation
 // ============================================================================
 
-const createTheme = (
-    themeType: ThemeType,
-    config: ColorGeneratorConfig
-): Theme => {
+const createTheme = (themeType: ThemeType, config: ColorGeneratorConfig): Theme => {
     const backgroundLightness = config.backgroundLightness || DEFAULT_MAIN_BACKGROUND_LIGHTNESS;
     const primitiveColors = config.primitiveColors || DEFAULT_PRIMITIVE_COLORS;
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
-    
+
     const lightness = backgroundLightness[themeType];
     const colorKey = (themeType === 'light' ? '#FFFFFF' : '#000000') as CssColor;
 
@@ -204,7 +201,9 @@ function generateThemeTokens(themeType: ThemeType, config: ColorGeneratorConfig)
     return result;
 }
 
-function generateFigmaVariableCollection(config: ColorGeneratorConfig = {}): FigmaVariableCollection {
+function generateFigmaVariableCollection(
+    config: ColorGeneratorConfig = {},
+): FigmaVariableCollection {
     return {
         base: {
             white: {
