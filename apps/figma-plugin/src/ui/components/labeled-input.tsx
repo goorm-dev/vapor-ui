@@ -11,7 +11,7 @@ export const LabeledInput = ({
     label, 
     value, 
     onChange, 
-    labelWidth = 'min-w-[80px]',
+    labelWidth = 'min-w-[102px]',
     className = '',
     ...inputProps 
 }: LabeledInputProps) => {

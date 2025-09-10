@@ -1,6 +1,5 @@
 import type {
     ColorPaletteCollection,
-    ThemeDependentTokensCollection,
 } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
@@ -35,7 +34,7 @@ interface PaletteCreationRequest {
 
 interface SemanticPaletteCreationRequest {
     generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
-    dependentTokens: ThemeDependentTokensCollection;
+    dependentTokens: { light: Record<string, string>; dark: Record<string, string> };
 }
 
 // ============================================================================
@@ -161,7 +160,7 @@ function createPaletteSection(
 function createSemanticPaletteSection(
     theme: 'light' | 'dark',
     themeData: ColorPaletteCollection['light'],
-    semanticTokens: ThemeDependentTokensCollection['light'],
+    semanticTokens: Record<string, string>,
     fontName: FontName,
 ): SectionNode {
     const section = figma.createSection();
@@ -231,7 +230,7 @@ function createPaletteTable(
 
 function createSemanticPaletteTable(
     generatedThemeData: ColorPaletteCollection['light'],
-    semanticTokens: ThemeDependentTokensCollection['light'],
+    semanticTokens: Record<string, string>,
     theme: string,
     fontName: FontName,
 ): FrameNode {
@@ -443,7 +442,7 @@ function createPrimitiveColorsSection(
 }
 
 function createSemanticTokensSection(
-    semanticTokens: ThemeDependentTokensCollection['light'],
+    semanticTokens: Record<string, string>,
     fontName: FontName,
 ): FrameNode {
     const section = figma.createFrame();
@@ -461,24 +460,19 @@ function createSemanticTokensSection(
     sectionTitle.fontSize = 24;
     section.appendChild(sectionTitle);
 
-    Object.entries(semanticTokens).forEach(([colorFamily, tokenMap]) => {
-        const tokenSection = createSemanticTokenFamilySection(colorFamily, tokenMap, fontName);
-        section.appendChild(tokenSection);
-    });
+    // semanticTokens는 이제 Record<string, string> 형태이므로 직접 처리
+    const tokenSection = createSemanticTokenMappingSection(semanticTokens, fontName);
+    section.appendChild(tokenSection);
 
     return section;
 }
 
-function createSemanticTokenFamilySection(
-    familyName: string,
-    tokenMap: Record<
-        string,
-        { hex: string; oklch?: string; codeSyntax?: string; primitiveCodeSyntax?: string }
-    >,
+function createSemanticTokenMappingSection(
+    tokenMapping: Record<string, string>,
     fontName: FontName,
 ): FrameNode {
     const section = figma.createFrame();
-    section.name = `${familyName} semantic tokens section`;
+    section.name = 'semantic token mapping section';
     section.fills = [];
     section.layoutMode = 'VERTICAL';
     section.itemSpacing = 8;
@@ -486,37 +480,81 @@ function createSemanticTokenFamilySection(
     section.primaryAxisSizingMode = 'AUTO';
     section.counterAxisSizingMode = 'AUTO';
 
-    const familyTitle = figma.createText();
-    familyTitle.fontName = fontName;
-    familyTitle.name = `${familyName} semantic title`;
-    familyTitle.characters = `${formatFamilyTitle(familyName)} Semantic Tokens`;
-    familyTitle.fontSize = 20;
-    section.appendChild(familyTitle);
+    const sectionTitle = figma.createText();
+    sectionTitle.fontName = fontName;
+    sectionTitle.name = 'semantic mapping title';
+    sectionTitle.characters = 'Semantic Token Mapping';
+    sectionTitle.fontSize = 20;
+    section.appendChild(sectionTitle);
 
-    const colorContainer = figma.createFrame();
-    colorContainer.name = 'semantic color container';
-    colorContainer.fills = [];
-    colorContainer.layoutMode = 'VERTICAL';
-    colorContainer.itemSpacing = 0;
-    colorContainer.primaryAxisSizingMode = 'AUTO';
-    colorContainer.counterAxisSizingMode = 'AUTO';
-    section.appendChild(colorContainer);
+    const mappingContainer = figma.createFrame();
+    mappingContainer.name = 'mapping container';
+    mappingContainer.fills = [];
+    mappingContainer.layoutMode = 'VERTICAL';
+    mappingContainer.itemSpacing = 0;
+    mappingContainer.primaryAxisSizingMode = 'AUTO';
+    mappingContainer.counterAxisSizingMode = 'AUTO';
+    section.appendChild(mappingContainer);
 
-    Object.entries(tokenMap).forEach(([tokenName, tokenData]) => {
-        if (tokenData && typeof tokenData === 'object' && tokenData.hex) {
-            const semanticColorRow = createSemanticColorRow(
-                tokenName,
-                tokenData.hex,
-                fontName,
-                tokenData.oklch,
-                tokenData.codeSyntax,
-                tokenData.primitiveCodeSyntax,
-            );
-            colorContainer.appendChild(semanticColorRow);
-        }
+    Object.entries(tokenMapping).forEach(([semanticToken, primitiveToken]) => {
+        const mappingRow = createTokenMappingRow(
+            semanticToken,
+            primitiveToken,
+            fontName
+        );
+        mappingContainer.appendChild(mappingRow);
     });
 
     return section;
+}
+
+function createTokenMappingRow(
+    semanticToken: string,
+    primitiveToken: string,
+    fontName: FontName,
+): FrameNode {
+    const row = figma.createFrame();
+    row.name = 'token mapping row';
+    row.fills = [];
+    row.layoutMode = 'HORIZONTAL';
+    row.itemSpacing = 0;
+    row.primaryAxisSizingMode = 'AUTO';
+    row.counterAxisSizingMode = 'FIXED';
+    row.resizeWithoutConstraints(
+        UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_ROW,
+        UI_CONSTANTS.COLOR_ROW_HEIGHT,
+    );
+
+    // Semantic token 이름
+    const semanticField = createNameField(
+        semanticToken,
+        fontName,
+        UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_NAME_FIELD,
+    );
+    row.appendChild(semanticField);
+
+    // 화살표 및 Primitive token 참조
+    const arrowField = figma.createFrame();
+    arrowField.name = 'arrow';
+    arrowField.fills = [];
+    arrowField.layoutMode = 'HORIZONTAL';
+    arrowField.primaryAxisAlignItems = 'CENTER';
+    arrowField.primaryAxisSizingMode = 'FIXED';
+    arrowField.counterAxisSizingMode = 'FIXED';
+    arrowField.resizeWithoutConstraints(50, UI_CONSTANTS.COLOR_ROW_HEIGHT);
+    
+    const arrowText = figma.createText();
+    arrowText.fontName = fontName;
+    arrowText.characters = '→';
+    arrowText.fontSize = 16;
+    arrowField.appendChild(arrowText);
+    row.appendChild(arrowField);
+
+    // Primitive token 참조
+    const primitiveField = createTokenField(primitiveToken, fontName);
+    row.appendChild(primitiveField);
+
+    return row;
 }
 
 function createColorRow(
@@ -549,44 +587,6 @@ function createColorRow(
     return row;
 }
 
-function createSemanticColorRow(
-    colorName: string,
-    hexColor: string,
-    fontName: FontName,
-    oklchColor?: string,
-    _codeSyntax?: string,
-    primitiveCodeSyntax?: string,
-): FrameNode {
-    const row = figma.createFrame();
-    row.name = 'semantic color row';
-    row.fills = [];
-    row.layoutMode = 'HORIZONTAL';
-    row.itemSpacing = 0;
-    row.primaryAxisSizingMode = 'AUTO';
-    row.counterAxisSizingMode = 'FIXED';
-    row.resizeWithoutConstraints(
-        UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_ROW,
-        UI_CONSTANTS.COLOR_ROW_HEIGHT,
-    );
-
-    // 이름 필드
-    const nameField = createNameField(
-        colorName,
-        fontName,
-        UI_CONSTANTS.LAYOUT_WIDTHS.SEMANTIC_NAME_FIELD,
-    );
-    row.appendChild(nameField);
-
-    // 토큰 필드
-    const tokenField = createTokenField(primitiveCodeSyntax || 'N/A', fontName);
-    row.appendChild(tokenField);
-
-    // 값 필드
-    const valueField = createValueField(hexColor, oklchColor, undefined, fontName);
-    row.appendChild(valueField);
-
-    return row;
-}
 
 function createNameField(name: string, fontName: FontName, width: number): FrameNode {
     const nameField = figma.createFrame();

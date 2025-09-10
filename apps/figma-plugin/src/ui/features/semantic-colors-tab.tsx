@@ -1,23 +1,35 @@
 import { useState } from 'react';
 
 import {
+    type BrandColorGeneratorConfig,
     type ColorPaletteCollection,
-    generateSemanticColorPalette,
-    generateSemanticDependentTokens,
-    type SemanticColorGeneratorConfig,
+    type SemanticMappingConfig,
+    generateBrandColorPalette,
+    getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
 import { Box, Button, VStack } from '@vapor-ui/core';
 
-import { postMessage } from '~/common/messages';
 import { Logger } from '~/common/logger';
-import { Section } from '~/ui/components/section';
+import { postMessage } from '~/common/messages';
 import { ColorInput } from '~/ui/components/color-input';
 import { LabeledInput } from '~/ui/components/labeled-input';
+import { LabeledSelect } from '~/ui/components/labeled-select';
+import { Section } from '~/ui/components/section';
 
-const DEFAULT_PRIMARY_COLOR = '#8662F3';
+type ThemeColorType = keyof SemanticMappingConfig;
+
+const THEME_COLOR_OPTIONS: { value: ThemeColorType; label: string }[] = [
+    { value: 'primary', label: 'Primary' },
+    { value: 'secondary', label: 'Secondary' },
+    { value: 'success', label: 'Success' },
+    { value: 'warning', label: 'Warning' },
+    { value: 'error', label: 'Error' },
+];
 
 export const SemanticColorsTab = () => {
-    const [primaryColor, setPrimaryColor] = useState<string>(DEFAULT_PRIMARY_COLOR);
+    const [colorName, setColorName] = useState<string>('myblue');
+    const [colorHex, setColorHex] = useState<string>('#8662F3');
+    const [themeColorType, setThemeColorType] = useState<ThemeColorType>('primary');
     const [generatedSemanticPalette, setGeneratedSemanticPalette] = useState<Pick<
         ColorPaletteCollection,
         'light' | 'dark'
@@ -26,17 +38,28 @@ export const SemanticColorsTab = () => {
 
     const handleGenerateSemanticPalette = () => {
         try {
-            Logger.semantic.generating({ primary: primaryColor }, null);
-
-            const config: SemanticColorGeneratorConfig = {
+            const config: BrandColorGeneratorConfig = {
                 colors: {
-                    primary: primaryColor,
+                    [colorName]: colorHex,
                 },
             };
 
-            const semanticPalette = generateSemanticColorPalette(config);
+            const semanticPalette = generateBrandColorPalette(config);
 
-            const dependentTokens = generateSemanticDependentTokens(semanticPalette);
+            const mappingConfig: SemanticMappingConfig = {
+                primary:
+                    themeColorType === 'primary'
+                        ? { name: colorName, hex: colorHex }
+                        : { name: 'default', hex: '#000000' },
+            };
+
+            if (themeColorType !== 'primary') {
+                mappingConfig[themeColorType] = { name: colorName, hex: colorHex };
+            }
+
+            const dependentTokens = getSemanticDependentTokens(mappingConfig);
+
+            Logger.semantic.generating({ primary: colorHex }, dependentTokens);
 
             setGeneratedSemanticPalette(semanticPalette);
 
@@ -62,12 +85,12 @@ export const SemanticColorsTab = () => {
 
         try {
             Logger.variables.creating(collectionName);
-            
+
             postMessage({
                 type: 'create-semantic-figma-variables',
                 data: { generatedSemanticPalette, collectionName },
             });
-            
+
             Logger.info('시맨틱 Figma 변수 생성 요청 전송 완료');
         } catch (error) {
             Logger.variables.error('시맨틱 Figma 변수 생성 요청 실패', error);
@@ -77,14 +100,27 @@ export const SemanticColorsTab = () => {
     return (
         <VStack gap="$300">
             <VStack gap="$200">
-                <Section title="Primary Color">
+                <Section title="Custom Color">
+                    <LabeledInput
+                        label="Color Name"
+                        value={colorName}
+                        onChange={setColorName}
+                        placeholder="myblue"
+                    />
                     <ColorInput
-                        label="Primary"
-                        value={primaryColor}
-                        onChange={setPrimaryColor}
-                        placeholder={DEFAULT_PRIMARY_COLOR}
+                        label="Hex Code"
+                        value={colorHex}
+                        onChange={setColorHex}
+                        placeholder="#8662F3"
+                    />
+                    <LabeledSelect
+                        label="Theme Color Type"
+                        value={themeColorType}
+                        onChange={setThemeColorType}
+                        options={THEME_COLOR_OPTIONS}
                     />
                 </Section>
+
 
                 <Button onClick={handleGenerateSemanticPalette}>Generate Semantic Palette</Button>
             </VStack>
@@ -105,7 +141,11 @@ export const SemanticColorsTab = () => {
                                 Semantic Palette Generated
                             </div>
                             <div className="text-xs text-gray-600">
-                                Primary color: <span className="font-medium">{primaryColor}</span>
+                                {
+                                    THEME_COLOR_OPTIONS.find((opt) => opt.value === themeColorType)
+                                        ?.label
+                                }{' '}
+                                color: <span className="font-medium">{colorName}</span> ({colorHex})
                             </div>
                         </Box>
 

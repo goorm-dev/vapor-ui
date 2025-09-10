@@ -1,6 +1,5 @@
 import type {
     ColorPaletteCollection,
-    ThemeDependentTokensCollection,
 } from '@vapor-ui/color-generator';
 
 import { figmaUIService } from '../services/figma-ui-service';
@@ -15,7 +14,7 @@ export const semanticController = {
      */
     async createSemanticPaletteSections(data: {
         generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
-        dependentTokens: ThemeDependentTokensCollection;
+        dependentTokens: { light: Record<string, string>; dark: Record<string, string> };
     }): Promise<void> {
         await figmaUIService.createSemanticPaletteSections({
             generatedSemanticPalette: data.generatedSemanticPalette,

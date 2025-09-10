@@ -1,31 +1,23 @@
-import { generateColorPalette } from './primitive';
-import { generateSemanticColorPalette, generateSemanticDependentTokens } from './semantic';
+/* -------------------------------------------------------------------------------------------------
+ * Primitive Colors
+ * -----------------------------------------------------------------------------------------------*/
 
-// ============================================================================
-// Primitive Colors
-// ============================================================================
+export {
+    generateSystemColorPalette,
+    generateBrandColorPalette,
+    DEFAULT_PRIMITIVE_COLORS,
+} from './primitive';
+export type { BrandColorGeneratorConfig } from './primitive';
 
-export { generateColorPalette, DEFAULT_PRIMITIVE_COLORS } from './primitive';
-export const colorPalette = generateColorPalette();
+/* -------------------------------------------------------------------------------------------------
+ * Semantic Colors
+ * -----------------------------------------------------------------------------------------------*/
 
-// ============================================================================
-// Semantic Colors
-// ============================================================================
+export { getSemanticDependentTokens } from './semantic';
+export type { SemanticMappingConfig } from './semantic';
 
-export { generateSemanticColorPalette } from './semantic';
-export { generateSemanticDependentTokens } from './semantic';
-export type { ThemeDependentTokensCollection, SemanticColorGeneratorConfig } from './semantic';
-// Default primary color palette
-export const primaryColorPalette = generateSemanticColorPalette({
-    colors: {
-        primary: '#8662F3',
-    },
-});
-// Default primary dependent tokens
-export const primaryDependentTokens = generateSemanticDependentTokens(primaryColorPalette);
-
-// ============================================================================
-// Core Constants & Types
-// ============================================================================
+/* -------------------------------------------------------------------------------------------------
+ * Core Constants & Types
+ * -----------------------------------------------------------------------------------------------*/
 export { DEFAULT_CONTRAST_RATIOS, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from './constants';
 export type { ThemeType, ColorToken, ColorPaletteCollection, ColorGeneratorConfig } from './types';

@@ -8,7 +8,7 @@ interface ColorInputProps {
 export const ColorInput = ({ label, value, onChange, placeholder = '#000000' }: ColorInputProps) => {
     return (
         <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-600 min-w-[40px] capitalize">
+            <label className="text-xs text-gray-600 min-w-[102px] capitalize">
                 {label}:
             </label>
             <input

@@ -1,6 +1,182 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Color Generator > colorPalette > should generate consistent color palette collection 1`] = `
+exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`] = `
+{
+  "dark": {
+    "background": {
+      "canvas": {
+        "codeSyntax": "vapor-color-background-canvas",
+        "hex": "#232323",
+        "oklch": "oklch(0.256 0.000 0.0)",
+      },
+    },
+    "myBlue": {
+      "050": {
+        "codeSyntax": "vapor-color-myBlue-050",
+        "deltaE": 27.11,
+        "hex": "#2c0891",
+        "oklch": "oklch(0.326 0.191 279.3)",
+      },
+      "100": {
+        "codeSyntax": "vapor-color-myBlue-100",
+        "deltaE": 24.42,
+        "hex": "#33179d",
+        "oklch": "oklch(0.357 0.194 279.7)",
+      },
+      "200": {
+        "codeSyntax": "vapor-color-myBlue-200",
+        "deltaE": 18.81,
+        "hex": "#402db6",
+        "oklch": "oklch(0.420 0.202 279.4)",
+      },
+      "300": {
+        "codeSyntax": "vapor-color-myBlue-300",
+        "deltaE": 9.92,
+        "hex": "#5549da",
+        "oklch": "oklch(0.509 0.212 279.4)",
+      },
+      "400": {
+        "codeSyntax": "vapor-color-myBlue-400",
+        "deltaE": 5.36,
+        "hex": "#6055ec",
+        "oklch": "oklch(0.551 0.219 279.7)",
+      },
+      "500": {
+        "codeSyntax": "vapor-color-myBlue-500",
+        "deltaE": 6.59,
+        "hex": "#7a79ff",
+        "oklch": "oklch(0.645 0.194 279.8)",
+      },
+      "600": {
+        "codeSyntax": "vapor-color-myBlue-600",
+        "deltaE": 17.25,
+        "hex": "#989eff",
+        "oklch": "oklch(0.735 0.140 279.7)",
+      },
+      "700": {
+        "codeSyntax": "vapor-color-myBlue-700",
+        "deltaE": 24.76,
+        "hex": "#b2baff",
+        "oklch": "oklch(0.808 0.098 278.8)",
+      },
+      "800": {
+        "codeSyntax": "vapor-color-myBlue-800",
+        "deltaE": 33.43,
+        "hex": "#d5daff",
+        "oklch": "oklch(0.896 0.051 279.2)",
+      },
+      "900": {
+        "codeSyntax": "vapor-color-myBlue-900",
+        "deltaE": 43.82,
+        "hex": "#f9f9ff",
+        "oklch": "oklch(0.984 0.008 286.3)",
+      },
+    },
+  },
+  "light": {
+    "background": {
+      "canvas": {
+        "codeSyntax": "vapor-color-background-canvas",
+        "hex": "#ffffff",
+        "oklch": "oklch(1.000 0.000 0.0)",
+      },
+    },
+    "myBlue": {
+      "050": {
+        "codeSyntax": "vapor-color-myBlue-050",
+        "deltaE": 39.21,
+        "hex": "#ebeeff",
+        "oklch": "oklch(0.952 0.023 278.0)",
+      },
+      "100": {
+        "codeSyntax": "vapor-color-myBlue-100",
+        "deltaE": 34.74,
+        "hex": "#dadfff",
+        "oklch": "oklch(0.910 0.044 278.5)",
+      },
+      "200": {
+        "codeSyntax": "vapor-color-myBlue-200",
+        "deltaE": 26.93,
+        "hex": "#bbc2ff",
+        "oklch": "oklch(0.830 0.086 279.3)",
+      },
+      "300": {
+        "codeSyntax": "vapor-color-myBlue-300",
+        "deltaE": 16.41,
+        "hex": "#959bff",
+        "oklch": "oklch(0.727 0.144 279.6)",
+      },
+      "400": {
+        "codeSyntax": "vapor-color-myBlue-400",
+        "deltaE": 11.28,
+        "hex": "#8589ff",
+        "oklch": "oklch(0.681 0.171 279.4)",
+      },
+      "500": {
+        "codeSyntax": "vapor-color-myBlue-500",
+        "deltaE": 0,
+        "hex": "#6b63ffff",
+        "oklch": "oklch(0.597 0.224 279.5)",
+      },
+      "600": {
+        "codeSyntax": "vapor-color-myBlue-600",
+        "deltaE": 10.86,
+        "hex": "#5346d7",
+        "oklch": "oklch(0.501 0.212 279.5)",
+      },
+      "700": {
+        "codeSyntax": "vapor-color-myBlue-700",
+        "deltaE": 16.97,
+        "hex": "#4533be",
+        "oklch": "oklch(0.440 0.205 279.7)",
+      },
+      "800": {
+        "codeSyntax": "vapor-color-myBlue-800",
+        "deltaE": 23.53,
+        "hex": "#351ba1",
+        "oklch": "oklch(0.367 0.195 279.6)",
+      },
+      "900": {
+        "codeSyntax": "vapor-color-myBlue-900",
+        "deltaE": 29.51,
+        "hex": "#240082",
+        "oklch": "oklch(0.294 0.180 278.2)",
+      },
+    },
+  },
+}
+`;
+
+exports[`Color Generator Snapshots > should match semanticDependentTokens snapshot 1`] = `
+{
+  "dark": {
+    "color-background-primary": "color-myBlue-400",
+    "color-background-secondary": "color-myRed-500",
+    "color-border-primary": "color-myBlue-400",
+    "color-border-secondary": "color-myRed-500",
+    "color-button-foreground-primary": "color-white",
+    "color-button-foreground-secondary": "color-black",
+    "color-foreground-primary-100": "color-myBlue-500",
+    "color-foreground-primary-200": "color-myBlue-600",
+    "color-foreground-secondary-100": "color-myRed-600",
+    "color-foreground-secondary-200": "color-myRed-700",
+  },
+  "light": {
+    "color-background-primary": "color-myBlue-500",
+    "color-background-secondary": "color-myRed-400",
+    "color-border-primary": "color-myBlue-500",
+    "color-border-secondary": "color-myRed-400",
+    "color-button-foreground-primary": "color-white",
+    "color-button-foreground-secondary": "color-black",
+    "color-foreground-primary-100": "color-myBlue-600",
+    "color-foreground-primary-200": "color-myBlue-700",
+    "color-foreground-secondary-100": "color-myRed-500",
+    "color-foreground-secondary-200": "color-myRed-600",
+  },
+}
+`;
+
+exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`] = `
 {
   "base": {
     "black": {

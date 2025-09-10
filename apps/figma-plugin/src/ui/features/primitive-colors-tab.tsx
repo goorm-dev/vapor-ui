@@ -6,7 +6,7 @@ import {
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
     DEFAULT_PRIMITIVE_COLORS,
-    generateColorPalette,
+    generateSystemColorPalette,
 } from '@vapor-ui/color-generator';
 import { Box, Button, VStack } from '@vapor-ui/core';
 
@@ -44,7 +44,7 @@ export const PrimitiveColorsTab = () => {
 
             Logger.palette.generating(config);
 
-            const palette = generateColorPalette(config);
+            const palette = generateSystemColorPalette(config);
             setGeneratedPalette(palette);
 
             postMessage({

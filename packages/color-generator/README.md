@@ -48,9 +48,9 @@ red, pink, grape, violet, blue, cyan, green, lime, yellow, orange, gray
 
 ### 1. Primitive 색상 변경
 ```typescript
-import { generateColorPalette } from '@vapor-ui/color-generator';
+import { generateSystemColorPalette } from '@vapor-ui/color-generator';
 
-const customPalette = generateColorPalette({
+const customPalette = generateSystemColorPalette({
     primitiveColors: {
         sky: '#87CEEB',      // cyan 대신 sky 색상
         purple: '#9966CC',   // violet 대신 purple 색상
@@ -62,7 +62,7 @@ const customPalette = generateColorPalette({
 
 ### 2. 대비비 조정 (기본값)
 ```typescript
-const customPalette = generateColorPalette({
+const customPalette = generateSystemColorPalette({
     contrastRatios: {
         '050': 1.15,  // 가장 연한 색상
         '100': 1.3,
@@ -80,7 +80,7 @@ const customPalette = generateColorPalette({
 
 ### 3. 배경 밝기 설정 (기본값)
 ```typescript
-const customPalette = generateColorPalette({
+const customPalette = generateSystemColorPalette({
     backgroundLightness: {
         light: 100,  // 밝은 테마: 완전한 흰색
         dark: 14,    // 어두운 테마: 매우 어두운 회색
@@ -91,17 +91,17 @@ const customPalette = generateColorPalette({
 ## 사용법
 
 ```typescript
-import { colorPalette, generateColorPalette } from '@vapor-ui/color-generator';
+import { defaultSystemColorPalette, generateSystemColorPalette } from '@vapor-ui/color-generator';
 
 // 기본 팔레트 사용
-console.log(colorPalette.light.blue['500'].hex);    // '#2a6ff3'
-console.log(colorPalette.dark.blue['500'].hex);     // '#4985f7'
-console.log(colorPalette.base.white.hex);           // '#ffffff'
-console.log(colorPalette.light.background.canvas.hex); // '#ffffff'
-console.log(colorPalette.dark.background.canvas.hex);  // '#232323'
+console.log(defaultSystemColorPalette.light.blue['500'].hex);    // '#2a6ff3'
+console.log(defaultSystemColorPalette.dark.blue['500'].hex);     // '#4985f7'
+console.log(defaultSystemColorPalette.base.white.hex);           // '#ffffff'
+console.log(defaultSystemColorPalette.light.background.canvas.hex); // '#ffffff'
+console.log(defaultSystemColorPalette.dark.background.canvas.hex);  // '#232323'
 
 // 커스텀 팔레트 생성
-const myPalette = generateColorPalette({
+const myPalette = generateSystemColorPalette({
     primitiveColors: { primary: '#FF0000' }
 });
 ```
