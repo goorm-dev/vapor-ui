@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
+import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import type { VComponentProps } from '~/utils/types';
@@ -13,14 +13,17 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardRootProps extends VComponentProps<typeof Primitive.div> {}
+interface CardRootProps extends VComponentProps<'div'> {}
 
-const Root = forwardRef<HTMLDivElement, CardRootProps>(({ className, children, ...props }, ref) => {
-    return (
-        <Primitive.div ref={ref} className={clsx(styles.root, className)} {...props}>
-            {children}
-        </Primitive.div>
-    );
+const Root = forwardRef<HTMLDivElement, CardRootProps>(({ render, className, ...props }, ref) => {
+    return useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.root, className),
+            ...props,
+        },
+    });
 });
 Root.displayName = 'Card';
 
@@ -28,15 +31,18 @@ Root.displayName = 'Card';
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardHeaderProps extends VComponentProps<typeof Primitive.div> {}
+interface CardHeaderProps extends VComponentProps<'div'> {}
 
 const Header = forwardRef<HTMLDivElement, CardHeaderProps>(
-    ({ className, children, ...props }, ref) => {
-        return (
-            <Primitive.div ref={ref} className={clsx(styles.header, className)} {...props}>
-                {children}
-            </Primitive.div>
-        );
+    ({ render, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(styles.header, className),
+                ...props,
+            },
+        });
     },
 );
 Header.displayName = 'Card.Header';
@@ -45,14 +51,17 @@ Header.displayName = 'Card.Header';
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardBodyProps extends VComponentProps<typeof Primitive.div> {}
+interface CardBodyProps extends VComponentProps<'div'> {}
 
-const Body = forwardRef<HTMLDivElement, CardBodyProps>(({ className, children, ...props }, ref) => {
-    return (
-        <Primitive.div ref={ref} className={clsx(styles.body, className)} {...props}>
-            {children}
-        </Primitive.div>
-    );
+const Body = forwardRef<HTMLDivElement, CardBodyProps>(({ render, className, ...props }, ref) => {
+    return useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.body, className),
+            ...props,
+        },
+    });
 });
 Body.displayName = 'Card.Body';
 
@@ -60,15 +69,18 @@ Body.displayName = 'Card.Body';
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardFooterProps extends VComponentProps<typeof Primitive.div> {}
+interface CardFooterProps extends VComponentProps<'div'> {}
 
 const Footer = forwardRef<HTMLDivElement, CardFooterProps>(
-    ({ className, children, ...props }, ref) => {
-        return (
-            <Primitive.div ref={ref} className={clsx(styles.footer, className)} {...props}>
-                {children}
-            </Primitive.div>
-        );
+    ({ render, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(styles.footer, className),
+                ...props,
+            },
+        });
     },
 );
 Footer.displayName = 'Card.Footer';
