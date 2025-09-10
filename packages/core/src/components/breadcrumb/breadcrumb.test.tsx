@@ -45,18 +45,15 @@ describe('Breadcrumb', () => {
             <Breadcrumb.Root>
                 <Breadcrumb.List>
                     <Breadcrumb.Item>
-                        <Breadcrumb.Link
-                            href="home"
-                            onClick={onClick}
-                            data-testid="breadcrumb-link"
-                        >
+                        <Breadcrumb.Link href="home" onClick={onClick}>
                             Home
                         </Breadcrumb.Link>
                     </Breadcrumb.Item>
                 </Breadcrumb.List>
             </Breadcrumb.Root>,
         );
-        const link = rendered.getByTestId('breadcrumb-link');
+
+        const link = rendered.getByRole('link', { name: 'Home' });
 
         await userEvent.click(link);
 

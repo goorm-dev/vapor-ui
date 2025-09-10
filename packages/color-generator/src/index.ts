@@ -11,20 +11,20 @@ const DEFAULT_MAIN_BACKGROUND_LIGHTNESS = {
 } as const;
 
 const DEFAULT_PRIMITIVE_COLORS = {
-    red: '#F5535E',
-    pink: '#F26394',
-    grape: '#CC5DE8',
-    violet: '#8662F3',
-    blue: '#448EFE',
-    cyan: '#1EBAD2',
-    green: '#04A37E',
-    lime: '#1EBAD2',
-    yellow: '#FFC107',
-    orange: '#ED670C',
+    red: '#DF3337',
+    pink: '#DA2F74',
+    grape: '#BE2CE2',
+    violet: '#8754F9',
+    blue: '#2A6FF3',
+    cyan: '#0E81A0',
+    green: '#0A8672',
+    lime: '#8FD327',
+    yellow: '#FABB00',
+    orange: '#D14905',
 } as const;
 
 const DEFAULT_CONTRAST_RATIOS = {
-    '050': 1.15,
+    '50': 1.15,
     '100': 1.3,
     '200': 1.7,
     '300': 2.5,
@@ -34,13 +34,6 @@ const DEFAULT_CONTRAST_RATIOS = {
     '700': 8.5,
     '800': 11.5,
     '900': 15.0,
-} as const;
-
-const ADAPTIVE_COLOR_GENERATION = {
-    LIGHTNESS_THRESHOLD: 0.5,
-    DARK_LIGHTNESS_FACTOR: 0.55,
-    LIGHT_LIGHTNESS_FACTOR: 0.85,
-    CHROMA_REDUCTION_FACTOR: 0.85,
 } as const;
 
 // ============================================================================
@@ -66,31 +59,6 @@ interface ColorGeneratorConfig {
 }
 
 // ============================================================================
-// Utility Functions
-// ============================================================================
-
-const formatOklchForWeb = (oklchString: string): string => {
-    // Parse oklch(l c h) format and round to 3 decimal places for web compatibility
-    const match = oklchString.match(/oklch\(([^\s]+)\s+([^\s]+)\s+([^\)]+)\)/);
-    if (match) {
-        const [, l, c, h] = match;
-        const roundedL = parseFloat(l).toFixed(3);
-        const roundedC = parseFloat(c).toFixed(3);
-
-        // Handle 'none' values and round hue
-        let roundedH: string;
-        if (h === 'none' || isNaN(parseFloat(h))) {
-            roundedH = '0.0';
-        } else {
-            roundedH = parseFloat(h).toFixed(1);
-        }
-
-        return `oklch(${roundedL} ${roundedC} ${roundedH})`;
-    }
-    return oklchString;
-};
-
-// ============================================================================
 // Color Generation Logic
 // ============================================================================
 
@@ -109,57 +77,22 @@ const createColorDefinition = ({
         return null;
     }
 
-    const { lightKey, darkKey } = createAdaptiveColorKeys(brandColorOklch, colorHex);
+    const adaptiveL = brandColorOklch.l * Math.max(0.35, 0.25);
+    const adaptiveC = brandColorOklch.c * 0.85;
+
+    const darkerKeyOklch: OklchColor = {
+        ...brandColorOklch,
+        mode: 'oklch',
+        l: adaptiveL,
+        c: adaptiveC,
+    };
 
     return new Color({
         name,
-        colorKeys: [lightKey, darkKey],
+        colorKeys: [colorHex as CssColor, formatHex(darkerKeyOklch) as CssColor],
         colorspace: 'OKLCH',
         ratios: contrastRatios,
     });
-};
-
-/**
- * 입력 색상의 명도를 분석하여 최적의 Light/Dark Key 쌍을 생성합니다.
- * - 밝은 색상 (L > 0.5): 어두운 Key를 생성하여 duoKey 구성
- * - 어두운 색상 (L ≤ 0.5): 밝은 Key를 생성하여 duoKey 구성
- */
-const createAdaptiveColorKeys = (
-    brandColorOklch: OklchColor,
-    originalHex: string,
-): { lightKey: CssColor; darkKey: CssColor } => {
-    const isLightColor = brandColorOklch.l > ADAPTIVE_COLOR_GENERATION.LIGHTNESS_THRESHOLD;
-
-    if (isLightColor) {
-        // 밝은 색상: 어두운 Key 생성
-        const darkerKeyOklch: OklchColor = {
-            ...brandColorOklch,
-            mode: 'oklch',
-            l: brandColorOklch.l * ADAPTIVE_COLOR_GENERATION.DARK_LIGHTNESS_FACTOR,
-            c: brandColorOklch.c * ADAPTIVE_COLOR_GENERATION.CHROMA_REDUCTION_FACTOR,
-        };
-
-        return {
-            lightKey: originalHex as CssColor,
-            darkKey: formatHex(darkerKeyOklch) as CssColor,
-        };
-    } else {
-        // 어두운 색상: 밝은 Key 생성
-        const lighterKeyOklch: OklchColor = {
-            ...brandColorOklch,
-            mode: 'oklch',
-            l: Math.min(
-                brandColorOklch.l / ADAPTIVE_COLOR_GENERATION.DARK_LIGHTNESS_FACTOR,
-                ADAPTIVE_COLOR_GENERATION.LIGHT_LIGHTNESS_FACTOR,
-            ),
-            c: brandColorOklch.c * ADAPTIVE_COLOR_GENERATION.CHROMA_REDUCTION_FACTOR,
-        };
-
-        return {
-            lightKey: formatHex(lighterKeyOklch) as CssColor,
-            darkKey: originalHex as CssColor,
-        };
-    }
 };
 
 function createVaporColorDefinitions(
@@ -200,7 +133,7 @@ const createTheme = (themeType: ThemeType, config: ColorGeneratorConfig): Theme 
 };
 
 // ============================================================================
-// Color Palette Collection Structure
+// Figma Variable Collection Structure
 // ============================================================================
 
 interface ColorToken {
@@ -217,7 +150,7 @@ interface ThemeTokens {
     };
 }
 
-interface ColorPaletteCollection {
+interface FigmaVariableCollection {
     base: {
         white: ColorToken;
         black: ColorToken;
@@ -243,7 +176,7 @@ function generateThemeTokens(themeType: ThemeType, config: ColorGeneratorConfig)
         if (oklchValue) {
             result.background.canvas = {
                 hex: backgroundObj.background,
-                oklch: formatOklchForWeb(oklchValue),
+                oklch: oklchValue,
             };
         }
     }
@@ -258,7 +191,7 @@ function generateThemeTokens(themeType: ThemeType, config: ColorGeneratorConfig)
                 if (oklchValue) {
                     result[color.name][instance.name] = {
                         hex: instance.value,
-                        oklch: formatOklchForWeb(oklchValue),
+                        oklch: oklchValue,
                     };
                 }
             });
@@ -268,16 +201,18 @@ function generateThemeTokens(themeType: ThemeType, config: ColorGeneratorConfig)
     return result;
 }
 
-function generateColorPalette(config: ColorGeneratorConfig = {}): ColorPaletteCollection {
+function generateFigmaVariableCollection(
+    config: ColorGeneratorConfig = {},
+): FigmaVariableCollection {
     return {
         base: {
             white: {
                 hex: '#ffffff',
-                oklch: formatOklchForWeb(formatCss(oklch('#ffffff'))!),
+                oklch: formatCss(oklch('#ffffff'))!,
             },
             black: {
                 hex: '#000000',
-                oklch: formatOklchForWeb(formatCss(oklch('#000000'))!),
+                oklch: formatCss(oklch('#000000'))!,
             },
         },
         light: generateThemeTokens('light', config),
@@ -289,13 +224,13 @@ function generateColorPalette(config: ColorGeneratorConfig = {}): ColorPaletteCo
 // Export
 // ============================================================================
 
-export const colorPalette = generateColorPalette();
+export const figmaVariables = generateFigmaVariableCollection();
 
 export {
-    generateColorPalette,
+    generateFigmaVariableCollection,
     DEFAULT_PRIMITIVE_COLORS,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
 };
 
-export type { ThemeType, ColorToken, ColorPaletteCollection, ColorGeneratorConfig };
+export type { ThemeType, ColorToken, FigmaVariableCollection, ColorGeneratorConfig };

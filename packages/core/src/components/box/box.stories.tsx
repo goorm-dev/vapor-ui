@@ -16,9 +16,7 @@ export const Default = {
                 padding="$800"
                 backgroundColor="$gray-500"
             >
-                <Box style={{ backgroundColor: 'red' }} asChild>
-                    <Button>sadfasdf</Button>
-                </Box>
+                <Box style={{ backgroundColor: 'red' }} render={<Button>sadfasdf</Button>} />
                 <Box
                     display="flex"
                     justifyContent="center"
@@ -53,9 +51,7 @@ export const Default = {
                     1
                 </Box>
 
-                <Box asChild>
-                    <a href="asd">as anchor</a>
-                </Box>
+                <Box render={<a href="asd">as anchor</a>} />
 
                 <Box display="flex" flexDirection="row" gap="$200">
                     <span style={{ border: '1px solid' }}>row 1</span>
@@ -82,9 +78,7 @@ export const TestBed = {
                 padding="$500"
                 backgroundColor="$gray-500"
             >
-                <Box style={{ backgroundColor: 'red' }} asChild>
-                    <Button>I'm Button</Button>
-                </Box>
+                <Box style={{ backgroundColor: 'red' }} render={<Button>I'm Button</Button>} />
                 <Box
                     display="flex"
                     justifyContent="center"
@@ -119,9 +113,7 @@ export const TestBed = {
                     1
                 </Box>
 
-                <Box asChild>
-                    <a href="asd">as anchor</a>
-                </Box>
+                <Box render={<a href="asd">as anchor</a>} />
 
                 <Box display="flex" flexDirection="row" gap="$200">
                     <span style={{ border: '1px solid' }}>row 1</span>
