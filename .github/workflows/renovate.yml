@@ -2,7 +2,7 @@ name: Renovate
 
 on:
     schedule:
-        # Run every Thursday at 9 AM KST (0 AM UTC on Thursday)
+        # Run every Monday at 9 AM KST (0 AM UTC on Monday)
         - cron: '0 0 * * 1'
     workflow_dispatch:
         inputs:
