@@ -18,7 +18,7 @@
             "description": "React and React DOM - Core framework",
             "groupName": "React Core",
             "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
-            "labels": ["category: react"],
+            "labels": ["type: dependencies"],
             "automerge": false,
             "dependencyDashboardApproval": true
         },
@@ -26,7 +26,7 @@
             "description": "Vanilla Extract - CSS-in-TS styling",
             "groupName": "Vanilla Extract",
             "matchPackagePatterns": ["@vanilla-extract/*"],
-            "labels": ["category: styling"],
+            "labels": ["type: dependencies"],
             "automerge": false,
             "matchUpdateTypes": ["patch", "minor"]
         },
@@ -34,7 +34,7 @@
             "description": "Base UI - Unstyled component library",
             "groupName": "Base UI",
             "matchPackagePatterns": ["@base-ui-components/*"],
-            "labels": ["category: ui-library"],
+            "labels": ["type: dependencies"],
             "automerge": false,
             "dependencyDashboardApproval": true
         },
@@ -43,7 +43,7 @@
             "groupName": "Other Dependencies",
             "excludePackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
             "excludePackagePatterns": ["@vanilla-extract/*", "@base-ui-components/*"],
-            "labels": ["category: dependencies"],
+            "labels": ["type: dependencies"],
             "automerge": true,
             "matchUpdateTypes": ["patch"]
         },
