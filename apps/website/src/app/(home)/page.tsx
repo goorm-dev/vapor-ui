@@ -20,6 +20,7 @@ import {
     LocalTabsList,
 } from '~/components/local-tabs/local-tabs';
 import DefaultSearchDialog from '~/components/search/search';
+import { VAPOR_BANNER_URL } from '~/constants/image-urls';
 
 export default function HomePage() {
     const [mounted, setMounted] = useState(false);
@@ -72,7 +73,7 @@ export default function HomePage() {
                 <section
                     className="relative flex flex-col items-center gap-10 self-stretch justify-center text-center md:p-0 p-4 h-[720px]"
                     style={{
-                        backgroundImage: `url(https://statics.goorm.io/gds/docs/main/vapor-index-background-image-${appearance}.png)`,
+                        backgroundImage: `url(${VAPOR_BANNER_URL})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',

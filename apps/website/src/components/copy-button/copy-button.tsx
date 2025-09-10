@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, type ButtonProps } from '@vapor-ui/core';
-import { ConfirmOutlineIcon, CopyIcon } from '@vapor-ui/icons';
+import { CopyAsMarkdownOutlineIcon, CopyIcon } from '@vapor-ui/icons';
 import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 
 const cache = new Map<string, string>();
@@ -31,7 +31,7 @@ export const CopyButton = ({ markdownUrl, ...props }: CopyButtonProps) => {
 
     return (
         <Button color="secondary" variant="outline" onClick={onClick} {...props}>
-            {checked ? <ConfirmOutlineIcon /> : <CopyIcon />}
+            {checked ? <CopyAsMarkdownOutlineIcon /> : <CopyIcon />}
             Copy as Markdown
         </Button>
     );

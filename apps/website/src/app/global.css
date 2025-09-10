@@ -10,6 +10,14 @@
 @import 'fumadocs-ui/css/preset.css';
 
 @theme {
+    /* Custom Breakpoints */
+    --breakpoint-sm: 768px;
+    --breakpoint-md: 992px;
+    --breakpoint-lg: 1200px;
+    --breakpoint-xl: 1440px;
+    --breakpoint-xxl: 1441px;
+
+    /* Fumadocs Theme Variables */
     --color-fd-background: var(--vapor-color-background-normal);
     --color-fd-primary: var(--vapor-color-background-primary);
     --color-fd-border: var(--vapor-color-border-normal);
