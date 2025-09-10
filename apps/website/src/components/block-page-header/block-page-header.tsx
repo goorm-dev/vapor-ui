@@ -15,22 +15,30 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
             {/* Header Section */}
             <div className="flex  flex-col gap-[var(--vapor-size-space-250)] items-start justify-start min-w-[424px]">
                 <div className="flex flex-col gap-[var(--vapor-size-space-100)] items-start justify-start w-full">
-                    <Text asChild typography="heading1" foreground="normal">
-                        <h1 className="text-[38px] leading-[56px] tracking-[-0.4px] font-bold">
-                            {title}
-                        </h1>
-                    </Text>
+                    <Text
+                        render={
+                            <h1 className="text-[38px] leading-[56px] tracking-[-0.4px] font-bold">
+                                {title}
+                            </h1>
+                        }
+                        typography="heading1"
+                        foreground="normal"
+                    />
 
                     {description && (
-                        <Text asChild typography="body1" foreground="normal">
-                            <div className="w-full">
-                                {description.split('\n').map((line, index) => (
-                                    <p key={index} className={index === 0 ? 'mb-0' : ''}>
-                                        {line}
-                                    </p>
-                                ))}
-                            </div>
-                        </Text>
+                        <Text
+                            render={
+                                <div className="w-full">
+                                    {description.split('\n').map((line, index) => (
+                                        <p key={index} className={index === 0 ? 'mb-0' : ''}>
+                                            {line}
+                                        </p>
+                                    ))}
+                                </div>
+                            }
+                            typography="body1"
+                            foreground="normal"
+                        />
                     )}
                 </div>
                 <CopyButton markdownUrl="/" />

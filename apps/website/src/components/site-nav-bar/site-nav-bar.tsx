@@ -1,10 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { IconButton, Nav, Text } from '@vapor-ui/core';
-import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
+import { IconButton, Nav, Text, useTheme } from '@vapor-ui/core';
+import {
+    CloseOutlineIcon,
+    DarkIcon,
+    LightIcon,
+    MenuOutlineIcon,
+    OpenInNewOutlineIcon,
+} from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
 import { usePathname } from 'next/navigation';
@@ -16,7 +22,7 @@ import LogoVapor from '../../../public/icons/logo-vapor.svg';
 const NAVIGATION_LINKS = [
     { href: '/docs', label: 'Docs' },
     { href: '/playground', label: 'Playground' },
-    { href: '/blocks', label: 'UI Blocks' },
+    // { href: '/blocks', label: 'UI Blocks' }, Todo : when blocks page is ready
 ];
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
@@ -51,12 +57,49 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
 }
 
 export const SiteNavBar = () => {
-    const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
+    const [mounted, setMounted] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const { appearance, setTheme } = useTheme();
+
+    const toggleTheme = () => {
+        setTheme({ appearance: appearance === 'light' ? 'dark' : 'light' });
+    };
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const header = document.querySelector('header');
+            const headerHeight = header?.offsetHeight || 60;
+            const headerHalfHeight = headerHeight / 2;
+            setIsScrolled(scrollTop > headerHalfHeight);
+        };
+
+        // 초기 스크롤 위치 체크
+        handleScroll();
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    if (!mounted) {
+        return null;
+    }
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-            <header className="flex z-10 w-full py-3 px-4 md:px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
+            <header
+                className={`z-10 flex w-full py-3 px-4 md:px-8 justify-between items-center fixed top-0 transition-all duration-300 ${
+                    isScrolled
+                        ? 'bg-[var(--vapor-color-background-normal)] shadow-lg backdrop-blur-sm z-20'
+                        : 'bg-transparent'
+                }`}
+            >
                 <div className="flex items-center gap-10 relative w-full">
                     <Nav.Root
                         aria-label="Main"
@@ -95,19 +138,43 @@ export const SiteNavBar = () => {
                                     return (
                                         <Nav.Item key={item.text}>
                                             <IconButton
-                                                asChild
+                                                aria-label={item.text}
                                                 size="lg"
                                                 color="secondary"
                                                 variant="ghost"
-                                                aria-label={item.text}
-                                            >
-                                                <Nav.Link asChild className="p-0">
-                                                    <Link href={item.url}>{item.icon}</Link>
-                                                </Nav.Link>
-                                            </IconButton>
+                                                render={
+                                                    <Nav.Link
+                                                        render={
+                                                            <Link href={item.url}>{item.icon}</Link>
+                                                        }
+                                                        className="p-0"
+                                                    />
+                                                }
+                                            />
                                         </Nav.Item>
                                     );
                                 })}
+                                <div
+                                    style={{
+                                        strokeWidth: '1px',
+                                        stroke: 'var(--vapor-color-border-normal, #E1E1E8)',
+                                        width: '0',
+                                        height: 'var(--vapor-size-dimension-400, 32px)',
+                                    }}
+                                    className="border-l mx-2"
+                                />
+                                <Nav.Item>
+                                    <IconButton
+                                        suppressHydrationWarning
+                                        size="lg"
+                                        color="secondary"
+                                        variant="ghost"
+                                        aria-label={`Switch to ${appearance} mode`}
+                                        onClick={toggleTheme}
+                                    >
+                                        {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                    </IconButton>
+                                </Nav.Item>
                             </Nav.List>
                         </div>
                     </Nav.Root>
@@ -128,7 +195,7 @@ export const SiteNavBar = () => {
                 <Dialog.Overlay className="fixed z-10 inset-0 bg-black/40 md:hidden" />
 
                 <Dialog.Content
-                    className="fixed z-10 inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
+                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >
@@ -146,12 +213,10 @@ export const SiteNavBar = () => {
                                 <Text
                                     className="flex items-center gap-2 text-base"
                                     onClick={() => setIsOpen(false)}
-                                    asChild
+                                    render={<h6 />}
                                 >
-                                    <h6>
-                                        {item.type === 'icon' ? item.icon : null}
-                                        {hasText(item) ? item.text : null}
-                                    </h6>
+                                    {item.type === 'icon' ? item.icon : null}
+                                    {hasText(item) ? item.text : null}
                                 </Text>
                                 <IconButton
                                     size="md"
@@ -165,6 +230,43 @@ export const SiteNavBar = () => {
                                 </IconButton>
                             </li>
                         ))}
+                        <li>
+                            <div
+                                style={{
+                                    strokeWidth: '1px',
+                                    stroke: 'var(--vapor-color-border-normal, #E1E1E8)',
+                                    width: '0',
+                                    height: 'var(--vapor-size-dimension-400, 32px)',
+                                }}
+                                className="border-t w-full my-2"
+                            />
+                        </li>
+                        <li
+                            className="flex h-10 px-6 items-center justify-between"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 'var(--vapor-size-space-100, 8px)',
+                            }}
+                        >
+                            <Text className="flex items-center gap-2 text-base" render={<h6 />}>
+                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                            </Text>
+                            <IconButton
+                                size="md"
+                                color="secondary"
+                                variant="fill"
+                                aria-label={
+                                    appearance
+                                        ? `Switch to ${appearance === 'light' ? 'dark' : 'light'} mode`
+                                        : 'Toggle theme'
+                                }
+                                onClick={toggleTheme}
+                            >
+                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                            </IconButton>
+                        </li>
                     </ul>
                 </Dialog.Content>
             </Dialog.Portal>

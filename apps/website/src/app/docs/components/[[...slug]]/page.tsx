@@ -27,13 +27,19 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
             footer={{
                 enabled: false,
             }}
+            article={{
+                className: 'gap-[var(--vapor-size-space-500)]',
+            }}
+            breadcrumb={{
+                enabled: false,
+            }}
         >
             <DocsPageHeader
                 title={page.data.title}
                 description={page.data.description}
                 markdownUrl={`${page.url}.mdx`}
             />
-            <DocsBody className="px-0">
+            <DocsBody className="px-0 flex flex-col">
                 <MDX components={getMDXComponents({})} />
             </DocsBody>
         </DocsPage>

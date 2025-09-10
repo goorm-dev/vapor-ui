@@ -38,49 +38,77 @@ export default function BlocksPage() {
                             </div>
                             <div className="flex flex-col gap-[var(--vapor-size-space-200)] items-start">
                                 {/* Desktop (≥1200px) */}
-                                <Text typography="display4" asChild className="lg:block hidden">
-                                    <h1>
-                                        Build pages faster
-                                        <br />
-                                        with ready-to-use UI blocks
-                                    </h1>
-                                </Text>
+                                <Text
+                                    typography="display4"
+                                    render={
+                                        <h1>
+                                            Build pages faster
+                                            <br />
+                                            with ready-to-use UI blocks
+                                        </h1>
+                                    }
+                                    className="lg:block hidden"
+                                />
+
                                 {/* Tablet (992px-1199px) */}
                                 <Text
                                     typography="heading1"
-                                    asChild
+                                    render={
+                                        <h1>
+                                            Build pages faster
+                                            <br />
+                                            with ready-to-use UI blocks
+                                        </h1>
+                                    }
                                     className="md:max-lg:block hidden"
-                                >
-                                    <h1>
-                                        Build pages faster
-                                        <br />
-                                        with ready-to-use UI blocks
-                                    </h1>
-                                </Text>
+                                />
                                 {/* Mobile Large (768px-991px) */}
                                 <Text
                                     typography="heading2"
-                                    asChild
+                                    render={
+                                        <h1>
+                                            Build pages faster
+                                            <br />
+                                            with ready-to-use UI blocks
+                                        </h1>
+                                    }
                                     className="sm:max-md:block hidden"
-                                >
-                                    <h1>
-                                        Build pages faster
-                                        <br />
-                                        with ready-to-use UI blocks
-                                    </h1>
-                                </Text>
+                                />
                                 {/* Mobile Small (<768px) */}
                                 <Text
                                     typography="heading3"
-                                    asChild
+                                    render={
+                                        <h1>
+                                            Build pages faster
+                                            <br />
+                                            with ready-to-use UI blocks
+                                        </h1>
+                                    }
                                     className="max-sm:block sm:hidden"
-                                >
-                                    <h1>
-                                        Build pages faster
-                                        <br />
-                                        with ready-to-use UI blocks
-                                    </h1>
-                                </Text>
+                                />
+                                {/* Mobile Small (<768px) */}
+                                <Text
+                                    typography="heading3"
+                                    render={
+                                        <h1>
+                                            Build pages faster
+                                            <br />
+                                            with ready-to-use UI blocks
+                                        </h1>
+                                    }
+                                    className="max-sm:block sm:hidden"
+                                />
+                                {/* Mobile Small (<768px) */}
+                                <Text
+                                    typography="heading3"
+                                    render={
+                                        <h1>
+                                            Build pages faster
+                                            <br />
+                                            with ready-to-use UI blocks
+                                        </h1>
+                                    }
+                                />
                                 <Text typography="body1" foreground="normal">
                                     UI 블록은 불필요한 과정을 줄이고 협업을 원활하게 하여,
                                     <br />
