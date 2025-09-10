@@ -1,23 +1,11 @@
 /* -------------------------------------------------------------------------------------------------
- * Primitive Colors
+ * Color Generators
  * -----------------------------------------------------------------------------------------------*/
 
-export {
-    generateSystemColorPalette,
-    generateBrandColorPalette,
-    DEFAULT_PRIMITIVE_COLORS,
-} from './primitive';
-export type { BrandColorGeneratorConfig } from './primitive';
+export * from './generators';
 
 /* -------------------------------------------------------------------------------------------------
- * Semantic Colors
+ * Types
  * -----------------------------------------------------------------------------------------------*/
 
-export { getSemanticDependentTokens } from './semantic';
-export type { SemanticMappingConfig } from './semantic';
-
-/* -------------------------------------------------------------------------------------------------
- * Core Constants & Types
- * -----------------------------------------------------------------------------------------------*/
-export { DEFAULT_CONTRAST_RATIOS, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from './constants';
-export type { ThemeType, ColorToken, ColorPaletteCollection, ColorGeneratorConfig } from './types';
+export type * from './types';

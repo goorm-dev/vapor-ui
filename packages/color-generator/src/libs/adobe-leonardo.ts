@@ -1,19 +1,25 @@
-import type { CssColor} from '@adobe/leonardo-contrast-colors';
+import type { CssColor } from '@adobe/leonardo-contrast-colors';
 import { BackgroundColor, Color, Theme } from '@adobe/leonardo-contrast-colors';
 import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 
 import { ADAPTIVE_COLOR_GENERATION, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from '../constants';
 import type { ColorGeneratorConfig, OklchColor, ThemeTokens, ThemeType } from '../types';
-import { formatOklchForWeb, generateCodeSyntax } from '../utils/color';
-
-/* -------------------------------------------------------------------------------------------------
- * Color Key Generation
- * -----------------------------------------------------------------------------------------------*/
+import { formatOklchForWeb, generateCodeSyntax } from '../utils';
 
 /**
  * 입력 색상의 명도를 분석하여 최적의 Light/Dark Key 쌍을 생성합니다.
- * - 밝은 색상 (L > 0.5): 어두운 Key를 생성하여 duoKey 구성
- * - 어두운 색상 (L ≤ 0.5): 밝은 Key를 생성하여 duoKey 구성
+ * 밝은 색상은 어두운 Key를, 어두운 색상은 밝은 Key를 생성하여 duoKey를 구성합니다.
+ * 
+ * @param brandColorOklch - 브랜드 색상의 OKLCH 객체
+ * @param originalHex - 원본 HEX 색상 문자열
+ * @returns Light/Dark 테마용 색상 키 쌍
+ * 
+ * @example
+ * createAdaptiveColorKeys({ mode: 'oklch', l: 0.8, c: 0.15, h: 180 }, '#87CEEB')
+ * // returns: { 
+ * //   lightKey: '#87CEEB', 
+ * //   darkKey: '#4A90A4' 
+ * // }
  */
 const createAdaptiveColorKeys = (
     brandColorOklch: OklchColor,
@@ -22,7 +28,6 @@ const createAdaptiveColorKeys = (
     const isLightColor = brandColorOklch.l > ADAPTIVE_COLOR_GENERATION.LIGHTNESS_THRESHOLD;
 
     if (isLightColor) {
-        // 밝은 색상: 어두운 Key 생성
         const darkerKeyOklch: OklchColor = {
             ...brandColorOklch,
             mode: 'oklch',
@@ -36,7 +41,6 @@ const createAdaptiveColorKeys = (
             darkKey: (darkKeyHex ?? originalHex) as CssColor,
         };
     } else {
-        // 어두운 색상: 밝은 Key 생성
         const lighterKeyOklch: OklchColor = {
             ...brandColorOklch,
             mode: 'oklch',
@@ -56,8 +60,27 @@ const createAdaptiveColorKeys = (
 };
 
 /**
- * Adobe Leonardo Color 정의 생성
+ * Adobe Leonardo Color 정의 객체를 생성합니다.
  * 브랜드 컬러를 기반으로 adaptive light/dark key pair를 생성하여 Leonardo Color 객체를 만듭니다.
+ * 
+ * @param config - 색상 정의 설정 객체
+ * @param config.name - 색상 이름
+ * @param config.colorHex - HEX 색상 값
+ * @param config.contrastRatios - 대비 비율 설정
+ * @returns Adobe Leonardo Color 객체 또는 null (유효하지 않은 색상인 경우)
+ * 
+ * @example
+ * createColorDefinition({ 
+ *   name: 'blue', 
+ *   colorHex: '#448EFE', 
+ *   contrastRatios: { '050': 1.15, '100': 1.3, '200': 1.7 } 
+ * })
+ * // returns: Color {
+ * //   name: 'blue',
+ * //   colorKeys: ['#448EFE', '#2563EB'],
+ * //   colorspace: 'OKLCH',
+ * //   ratios: { '050': 1.15, '100': 1.3, '200': 1.7 }
+ * // }
  */
 const createColorDefinition = ({
     name,
@@ -85,8 +108,25 @@ const createColorDefinition = ({
 };
 
 /**
- * Adobe Leonardo Theme 생성
- * Color definitions와 configuration을 기반으로 Leonardo Theme을 생성합니다.
+ * Adobe Leonardo Theme 객체를 생성합니다.
+ * Color definitions와 configuration을 기반으로 특정 테마(light/dark)에 최적화된 Leonardo Theme을 생성합니다.
+ * 
+ * @param themeType - 테마 타입 ('light' 또는 'dark')
+ * @param colorDefinitions - Adobe Leonardo Color 객체 배열
+ * @param config - 색상 생성기 설정
+ * @returns Adobe Leonardo Theme 객체
+ * 
+ * @example
+ * createLeonardoTheme('light', [blueColor, redColor], { 
+ *   backgroundLightness: { light: 100, dark: 14 },
+ *   contrastRatios: { '050': 1.15, '100': 1.3 }
+ * })
+ * // returns: Theme {
+ * //   colors: [blueColor, redColor, grayBackground],
+ * //   backgroundColor: grayBackground,
+ * //   lightness: 100,
+ * //   output: 'HEX'
+ * // }
  */
 const createLeonardoTheme = (
     themeType: ThemeType,
@@ -115,11 +155,7 @@ const createLeonardoTheme = (
     });
 };
 
-/* -------------------------------------------------------------------------------------------------
- * Theme Token Generation
- * -----------------------------------------------------------------------------------------------*/
-
-const generateThemeTokens = (
+export const generateThemeTokens = (
     colors: Record<string, string>,
     contrast: Record<string, number>,
     themeType: ThemeType = 'light',
@@ -146,7 +182,6 @@ const generateThemeTokens = (
         },
     };
 
-    // Background Color
     if ('background' in backgroundObj) {
         const oklchColor = oklch(backgroundObj.background);
         const oklchValue = formatCss(oklchColor);
@@ -160,14 +195,18 @@ const generateThemeTokens = (
         }
     }
 
-    // Key Colors
     themeColors.forEach((color) => {
         if ('name' in color && 'values' in color && color.values.length > 0) {
             const colorName = color.name;
             const originalColorHex = colors[colorName];
 
-            const shadeData: Array<{ name: string; hex: string; oklch: string; deltaE: number; codeSyntax: string }> =
-                [];
+            const shadeData: Array<{
+                name: string;
+                hex: string;
+                oklch: string;
+                deltaE: number;
+                codeSyntax: string;
+            }> = [];
 
             color.values.forEach((instance) => {
                 const oklchColor = oklch(instance.value);
@@ -177,8 +216,7 @@ const generateThemeTokens = (
                     let deltaE: number | undefined = undefined;
                     if (originalColorHex) {
                         deltaE =
-                            Math.round(calculateDeltaE(originalColorHex, instance.value) * 100) /
-                            100;
+                            Math.round(calculateDeltaE(originalColorHex, instance.value) * 100) / 100;
                     }
 
                     shadeData.push({
@@ -197,7 +235,10 @@ const generateThemeTokens = (
                 return numA - numB;
             });
 
-            const colorObj: Record<string, { hex: string; oklch: string; deltaE: number; codeSyntax: string }> = {};
+            const colorObj: Record<
+                string,
+                { hex: string; oklch: string; deltaE: number; codeSyntax: string }
+            > = {};
             shadeData.forEach((shade) => {
                 colorObj[shade.name] = {
                     hex: shade.hex,
@@ -212,9 +253,3 @@ const generateThemeTokens = (
 
     return result;
 };
-
-/* -------------------------------------------------------------------------------------------------
- * Exports
- * -----------------------------------------------------------------------------------------------*/
-
-export { createColorDefinition, createAdaptiveColorKeys, createLeonardoTheme, generateThemeTokens };
