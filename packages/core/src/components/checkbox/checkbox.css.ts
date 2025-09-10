@@ -66,6 +66,9 @@ export const control = recipe({
                 '&[data-readonly]:is(:hover, :focus, :active)::before': {
                     opacity: '0',
                 },
+                '&[data-readonly]': {
+                    backgroundColor: vars.color.gray[200],
+                },
             },
         }),
     ],
