@@ -26,6 +26,8 @@ export const control = recipe({
         interaction(),
         layerStyle('components', {
             position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
             border: 'none',
             borderRadius: '9999px',
             backgroundColor: vars.color.gray[400],
@@ -34,6 +36,11 @@ export const control = recipe({
             selectors: {
                 '&[data-checked]': {
                     backgroundColor: vars.color.background.primary,
+                },
+                '&[data-readonly]': {
+                    backgroundColor: vars.color.gray[200],
+                    outline: '0.0625rem solid',
+                    outlineColor: vars.color.border.normal,
                 },
             },
         }),
@@ -65,7 +72,7 @@ export const indicator = recipe({
     base: layerStyle('components', {
         display: 'block',
 
-        transition: 'transform 0.1s',
+        transition: 'transform 0.1s ease',
         willChange: 'transform',
         borderRadius: '100%',
 
@@ -73,7 +80,15 @@ export const indicator = recipe({
         backgroundColor: 'white',
 
         selectors: {
-            '&[data-checked]': { transform: 'translateX(100%)' },
+            '&[data-checked]': {
+                transform: 'translateX(100%)',
+            },
+            '&[data-readonly]:not([data-checked])': {
+                backgroundColor: vars.color.white,
+            },
+            '&[data-readonly][data-checked]': {
+                backgroundColor: vars.color.foreground.hint,
+            },
         },
     }),
 
