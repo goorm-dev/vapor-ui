@@ -188,6 +188,19 @@ const colorTokens = {
 const sprinkleProperties = defineProperties({
     '@layer': layers.utilities,
 
+    defaultCondition: 'desktop',
+    conditions: {
+        mobile: {
+            '@media': `screen and (max-width: 767px)`,
+            // '@media': `screen and (max-width: env(--mobile))`,
+        },
+        tablet: {
+            '@media': `screen and (max-width: 1024px)`,
+            // '@media': `screen and (max-width: env(--tablet))`,
+        },
+        desktop: {},
+    },
+
     dynamicProperties: {
         // Layout
         position: true,
