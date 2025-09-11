@@ -1,9 +1,14 @@
 import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react';
+import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
+import { Box } from '~/components/box';
 import { Button } from '~/components/button';
 import { Checkbox } from '~/components/checkbox';
+import { Flex } from '~/components/flex';
+import { RadioGroup } from '~/components/radio-group';
+import { Switch } from '~/components/switch';
 
 import { Field } from './field';
 
@@ -21,53 +26,179 @@ type Story = StoryObj<typeof Field.Root>;
 
 export const TestBed: Story = {
     render: () => {
-        const [agreed, setAgreed] = useState(false);
-        const [submitted, setSubmitted] = useState(false);
+        const [isChecked, setIsChecked] = useState(false);
+        const [isFirstTouched, setIsFirstTouched] = useState(true);
+        const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
+        const [isNotificationTouched, setIsNotificationTouched] = useState(false);
+        const [selectedPlan, setSelectedPlan] = useState('');
+        const [isPlanTouched, setIsPlanTouched] = useState(false);
 
-        const handleSubmit = (e: React.FormEvent) => {
-            e.preventDefault();
-            setSubmitted(true);
+        const validateCheckbox = (value: boolean) => {
+            if (!value) {
+                return 'You must agree to the terms and conditions to continue';
+            }
+            return null;
         };
 
-        const showError = submitted && !agreed;
+        const validateNotifications = (value: boolean) => {
+            if (!value) {
+                return 'Please enable notifications to receive important updates';
+            }
+            return null;
+        };
+
+        const validatePlan = (value: string) => {
+            if (value.length === 0 || !value) {
+                return 'customError';
+            }
+            return null;
+        };
+
+        const handleCheckboxChange = (checked: boolean) => {
+            if (isFirstTouched) setIsFirstTouched(false);
+            setIsChecked(checked);
+        };
+
+        const handleNotificationChange = (checked: boolean) => {
+            if (!isNotificationTouched) setIsNotificationTouched(true);
+            setIsNotificationEnabled(checked);
+        };
+
+        const handlePlanChange = (value: unknown) => {
+            if (!isPlanTouched) setIsPlanTouched(true);
+            setSelectedPlan(value as string);
+        };
+
+        const handleResetPlan = () => {
+            setSelectedPlan('');
+            setIsPlanTouched(true); // Mark as touched to show validation error
+        };
 
         return (
-            <form
-                onSubmit={handleSubmit}
-                style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '400px' }}
-            >
-                <h3>Terms of Service Agreement</h3>
-
-                <Field.Root
-                    validationMode="onBlur"
-                    validate={(value) => {
-                        console.log(value);
-                        return value === true ? null : 'You must agree to the terms.';
-                    }}
-                >
-                    <Checkbox.Root
-                        checked={agreed}
-                        onCheckedChange={(checked) => setAgreed(!!checked)}
-                        invalid={showError}
+            <Box padding="$225">
+                <Flex flexDirection="column" gap="$225">
+                    <Field.Root
+                        name="policy-agreement"
+                        validate={() => validateCheckbox(isChecked)}
                     >
-                        <Checkbox.Control />
-                        <Checkbox.Label>I agree to the Terms of Service *</Checkbox.Label>
-                    </Checkbox.Root>
-                    <Field.Description>
-                        Please read and accept our terms of service to proceed with registration.
-                    </Field.Description>
+                        <Checkbox.Root
+                            required
+                            checked={isChecked}
+                            onCheckedChange={handleCheckboxChange}
+                        >
+                            <Checkbox.Control>
+                                <ConfirmOutlineIcon />
+                            </Checkbox.Control>
+                            <Field.Label>agree</Field.Label>
+                        </Checkbox.Root>
+                        <Field.Description>
+                            I agree to the Terms and Conditions and Privacy Policy
+                        </Field.Description>
+                        <Field.Error match="customError" />
+                        <Field.Success>
+                            ✓ Thank you for accepting our terms and conditions
+                        </Field.Success>
+                    </Field.Root>
 
-                    <Field.Error match="customError" />
+                    {/* Switch Component Example */}
+                    <Field.Root
+                        name="notifications"
+                        validate={() => validateNotifications(isNotificationEnabled)}
+                    >
+                        <Switch.Root
+                            checked={isNotificationEnabled}
+                            onCheckedChange={handleNotificationChange}
+                        >
+                            <Flex alignItems="center" gap="$150">
+                                <Switch.Control />
+                                <Field.Label>Enable push notifications</Field.Label>
+                            </Flex>
+                        </Switch.Root>
+                        <Field.Description>
+                            Get notified about important updates, security alerts, and account
+                            activities
+                        </Field.Description>
+                        <Field.Error match="customError" />
+                        <Field.Success>
+                            ✓ Notifications enabled - you'll receive important updates
+                        </Field.Success>
+                    </Field.Root>
 
-                    <Field.Success>
-                        <span>Thank you for agreeing!</span>
-                    </Field.Success>
-                </Field.Root>
-
-                <Button type="submit" style={{ alignSelf: 'flex-start' }}>
-                    Submit
-                </Button>
-            </form>
+                    {/* RadioGroup Component Example */}
+                    <Field.Root
+                        name="subscription-plan"
+                        validate={() => validatePlan(selectedPlan)}
+                    >
+                        <Field.Label>Choose your subscription plan</Field.Label>
+                        <Field.Description>
+                            Select a plan that best fits your needs. You can upgrade or downgrade
+                            anytime.
+                        </Field.Description>
+                        <RadioGroup.Root
+                            value={selectedPlan}
+                            onValueChange={handlePlanChange}
+                            invalid={isPlanTouched && validatePlan(selectedPlan) !== null}
+                        >
+                            <RadioGroup.Item value="basic">
+                                <Flex alignItems="center" gap="$150">
+                                    <RadioGroup.Control />
+                                    <RadioGroup.Label>
+                                        <Box>
+                                            <div style={{ fontWeight: 'bold' }}>
+                                                Basic Plan - Free
+                                            </div>
+                                        </Box>
+                                    </RadioGroup.Label>
+                                    <Field.Description style={{ fontSize: '14px', color: '#666' }}>
+                                        Up to 5 projects, 1GB storage
+                                    </Field.Description>
+                                </Flex>
+                            </RadioGroup.Item>
+                            <RadioGroup.Item value="pro">
+                                <Flex alignItems="center" gap="$150">
+                                    <RadioGroup.Control />
+                                    <RadioGroup.Label>
+                                        <Box>
+                                            <div style={{ fontWeight: 'bold' }}>
+                                                Pro Plan - $9/month
+                                            </div>
+                                        </Box>
+                                    </RadioGroup.Label>
+                                    <Field.Description style={{ fontSize: '14px', color: '#666' }}>
+                                        Unlimited projects, 100GB storage, Priority support
+                                    </Field.Description>
+                                </Flex>
+                            </RadioGroup.Item>
+                            <RadioGroup.Item value="enterprise">
+                                <Flex alignItems="center" gap="$150">
+                                    <RadioGroup.Control />
+                                    <RadioGroup.Label>
+                                        <Box>
+                                            <div style={{ fontWeight: 'bold' }}>
+                                                Enterprise - $29/month
+                                            </div>
+                                        </Box>
+                                    </RadioGroup.Label>
+                                    <Field.Description style={{ fontSize: '14px', color: '#666' }}>
+                                        Everything in Pro + Advanced analytics, Custom integrations
+                                    </Field.Description>
+                                </Flex>
+                            </RadioGroup.Item>
+                        </RadioGroup.Root>
+                        <Box marginTop="$150">
+                            <Button variant="outline" size="md" onClick={handleResetPlan}>
+                                Reset Selection
+                            </Button>
+                        </Box>
+                        <Field.Error match="customError">
+                            Please select a subscription plan to continue
+                        </Field.Error>
+                        <Field.Success>
+                            ✓ Great choice! Your {selectedPlan} plan has been selected
+                        </Field.Success>
+                    </Field.Root>
+                </Flex>
+            </Box>
         );
     },
 };
