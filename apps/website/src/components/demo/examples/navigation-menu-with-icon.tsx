@@ -1,7 +1,7 @@
 import { NavigationMenu } from '@vapor-ui/core';
 import { HomeIcon, SettingIcon, StarIcon, UserIcon } from '@vapor-ui/icons';
 
-export default function NavWithIcon() {
+export default function NavigationMenuWithIcon() {
     return (
         <div className="space-y-6">
             <div>

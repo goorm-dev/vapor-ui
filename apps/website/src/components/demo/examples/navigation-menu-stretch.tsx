@@ -1,6 +1,6 @@
 import { NavigationMenu } from '@vapor-ui/core';
 
-export default function NavStretch() {
+export default function NavigationMenuStretch() {
     return (
         <div className="space-y-4 w-full">
             <div>

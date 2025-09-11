@@ -1,6 +1,6 @@
 import { NavigationMenu } from '@vapor-ui/core';
 
-export default function NavDisabled() {
+export default function NavigationMenuDisabled() {
     return (
         <div className="space-y-4">
             <div>

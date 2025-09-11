@@ -1,6 +1,6 @@
 import { NavigationMenu } from '@vapor-ui/core';
 
-export default function DefaultNav() {
+export default function DefaultNavigationMenu() {
     return (
         <NavigationMenu.Root size="md" aria-label="Navigation menu">
             <NavigationMenu.List>

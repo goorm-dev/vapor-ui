@@ -1,6 +1,6 @@
 import { NavigationMenu } from '@vapor-ui/core';
 
-export default function NavSize() {
+export default function NavigationMenuSize() {
     return (
         <div className="space-y-4">
             <NavigationMenu.Root size="sm" aria-label="Small navigation">
