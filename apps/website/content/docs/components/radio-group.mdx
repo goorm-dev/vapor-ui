@@ -11,9 +11,18 @@ import { RadioGroup } from '@vapor-ui/core';
 export default function DefaultRadioGroup() {
     return (
         <RadioGroup.Root name="fruits">
-            <Radio.Root value="apple" />
-            <Radio.Root value="orange" />
-            <Radio.Root value="banana" disabled />
+            <label className="flex items-center gap-2">
+                <Radio.Root value="apple" />
+                Apple
+            </label>
+            <label className="flex items-center gap-2">
+                <Radio.Root value="orange" />
+                Orange
+            </label>
+            <label className="flex items-center gap-2">
+                <Radio.Root value="banana" disabled />
+                Banana (Disabled)
+            </label>
         </RadioGroup.Root>
     );
 }
@@ -29,6 +38,7 @@ export default function DefaultRadioGroup() {
 RadioGroup 사이즈는 md, lg로 제공합니다.
 
 <Demo name="radio-group-size">
+
 ```tsx
 import { RadioGroup } from '@vapor-ui/core';
 
@@ -38,24 +48,35 @@ export default function RadioGroupSize() {
             <div>
                 <h4 className="text-sm font-medium mb-2">Medium</h4>
                 <RadioGroup.Root name="size-md" size="md">
-                    <Radio.Root value="md1" />
-                    <Radio.Root value="md2" />
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="md1" />
+                        Medium Option 1
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="md2" />
+                        Medium Option 2
+                    </label>
                 </RadioGroup.Root>
             </div>
 
             <div>
                 <h4 className="text-sm font-medium mb-2">Large</h4>
                 <RadioGroup.Root name="size-lg" size="lg">
-                    <Radio.Root value="lg1" />
-                    <Radio.Root value="lg2" />
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="lg1" />
+                        Large Option 1
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="lg2" />
+                        Large Option 2
+                    </label>
                 </RadioGroup.Root>
             </div>
         </div>
     );
-
 }
+```
 
-````
 </Demo>
 
 ### Orientation
@@ -63,6 +84,7 @@ export default function RadioGroupSize() {
 RadioGroup 방향은 vertical, horizontal로 제공합니다.
 
 <Demo name="radio-group-direction">
+
 ```tsx
 import { RadioGroup } from '@vapor-ui/core';
 
@@ -72,24 +94,42 @@ export default function RadioGroupDirection() {
             <div>
                 <h4 className="text-sm font-medium mb-2">Vertical (기본값)</h4>
                 <RadioGroup.Root name="orientation-vertical" orientation="vertical">
-                    <Radio.Root value="v1" />
-                    <Radio.Root value="v2" />
-                    <Radio.Root value="v3" />
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="v1" />
+                        Option 1
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="v2" />
+                        Option 2
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="v3" />
+                        Option 3
+                    </label>
                 </RadioGroup.Root>
             </div>
 
             <div>
                 <h4 className="text-sm font-medium mb-2">Horizontal</h4>
                 <RadioGroup.Root name="orientation-horizontal" orientation="horizontal">
-                    <Radio.Root value="h1" />
-                    <Radio.Root value="h2" />
-                    <Radio.Root value="h3" />
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="h1" />
+                        Option 1
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="h2" />
+                        Option 2
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="h3" />
+                        Option 3
+                    </label>
                 </RadioGroup.Root>
             </div>
         </div>
     );
 }
-````
+```
 
 </Demo>
 
@@ -98,6 +138,7 @@ export default function RadioGroupDirection() {
 사용자가 상호작용할 수 없는 상태입니다. 액션을 수행하기 위한 특정 조건을 충족하지 않았거나 일시적으로 기능을 제한하려는 상황에서 사용합니다.
 
 <Demo name="radio-group-disabled">
+
 ```tsx
 import { RadioGroup } from '@vapor-ui/core';
 
@@ -107,27 +148,43 @@ export default function RadioGroupDisabled() {
             <div>
                 <h4 className="text-sm font-medium mb-2">개별 아이템 비활성화</h4>
                 <RadioGroup.Root name="disabled-items" defaultValue="option1">
-                    <Radio.Root value="option1" />
-                    <Radio.Root value="option2" disabled />
-                    <Radio.Root value="option3" />
-                    <Radio.Root value="option4" disabled />
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="option1" />
+                        Option 1 (Default)
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="option2" />
+                        Option 2 (Default)
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="option3" disabled />
+                        Option 3 (Disabled)
+                    </label>
                 </RadioGroup.Root>
             </div>
 
             <div>
                 <h4 className="text-sm font-medium mb-2">전체 그룹 비활성화</h4>
                 <RadioGroup.Root name="disabled-group" disabled defaultValue="group1">
-                    <Radio.Root value="group1" />
-                    <Radio.Root value="group2" />
-                    <Radio.Root value="group3" />
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="group1" />
+                        Group 1
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="group2" />
+                        Group 2
+                    </label>
+                    <label className="flex items-center gap-2">
+                        <Radio.Root value="group3" />
+                        Group 3
+                    </label>
                 </RadioGroup.Root>
             </div>
         </div>
     );
-
 }
+```
 
-````
 </Demo>
 
 ## Examples
@@ -139,19 +196,29 @@ export default function RadioGroupDisabled() {
 기본적인 RadioGroup 사용법입니다.
 
 <Demo name="radio-group-simple">
+
 ```tsx
 import { RadioGroup } from '@vapor-ui/core';
 
 export default function RadioGroupSimple() {
     return (
         <RadioGroup.Root name="simple" defaultValue="option1">
-            <Radio.Root value="option1" />
-            <Radio.Root value="option2" />
-            <Radio.Root value="option3" />
+            <label className="flex items-center gap-2">
+                <Radio.Root value="option1" />
+                Option 1
+            </label>
+            <label className="flex items-center gap-2">
+                <Radio.Root value="option2" />
+                Option 2
+            </label>
+            <label className="flex items-center gap-2">
+                <Radio.Root value="option3" />
+                Option 3
+            </label>
         </RadioGroup.Root>
     );
 }
-````
+```
 
 </Demo>
 
