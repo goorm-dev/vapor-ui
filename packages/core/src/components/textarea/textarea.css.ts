@@ -43,9 +43,6 @@ export const input = recipe({
             height: '114px',
 
             color: vars.color.foreground.normal,
-            fontSize: vars.typography.fontSize['075'],
-            lineHeight: vars.typography.lineHeight['075'],
-            fontFamily: vars.typography.fontFamily.sans,
 
             selectors: {
                 '&:read-only': {
@@ -81,26 +78,34 @@ export const input = recipe({
         },
 
         size: {
-            sm: {
-                padding: `${vars.size.space['050']} ${vars.size.space['100']}`,
-                minHeight: vars.size.dimension['500'],
-                fontSize: vars.typography.fontSize['025'],
-            },
-            md: {
-                padding: `${vars.size.space['075']} ${vars.size.space['150']}`,
-                minHeight: vars.size.dimension['600'],
-                fontSize: vars.typography.fontSize['050'],
-            },
-            lg: {
-                padding: `${vars.size.space['100']} ${vars.size.space['200']}`,
-                minHeight: vars.size.dimension['700'],
-                fontSize: vars.typography.fontSize['050'],
-            },
-            xl: {
-                padding: `${vars.size.space['175']} ${vars.size.space['300']}`,
-                minHeight: vars.size.dimension['800'],
-                fontSize: vars.typography.fontSize['075'],
-            },
+            sm: [
+                typography({ style: 'body3' }),
+                {
+                    padding: `${vars.size.space['050']} ${vars.size.space['100']}`,
+                    minHeight: vars.size.dimension['500'],
+                },
+            ],
+            md: [
+                typography({ style: 'body2' }),
+                {
+                    padding: `${vars.size.space['075']} ${vars.size.space['150']}`,
+                    minHeight: vars.size.dimension['600'],
+                },
+            ],
+            lg: [
+                typography({ style: 'body2' }),
+                {
+                    padding: `${vars.size.space['100']} ${vars.size.space['200']}`,
+                    minHeight: vars.size.dimension['700'],
+                },
+            ],
+            xl: [
+                typography({ style: 'body1' }),
+                {
+                    padding: `${vars.size.space['175']} ${vars.size.space['300']}`,
+                    minHeight: vars.size.dimension['800'],
+                },
+            ],
         },
     },
 });

@@ -46,7 +46,7 @@ type TextareaPrimitiveProps = VComponentProps<'div'>;
 interface TextareaRootProps extends Assign<TextareaPrimitiveProps, TextareaSharedProps> {}
 
 const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
-    ({ render, className, ...props }, ref) => {
+    ({ render, className, children, ...props }, ref) => {
         const textareaId = useId();
         const textareaRef = useRef<HTMLTextAreaElement | null>(null);
         const [textareaRootProps, otherProps] = createSplitProps<TextareaSharedProps>()(props, [
@@ -72,6 +72,7 @@ const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
             render: render || <div />,
             props: {
                 className: clsx(styles.root({ disabled }), className),
+                children,
                 ...otherProps,
             },
         });
