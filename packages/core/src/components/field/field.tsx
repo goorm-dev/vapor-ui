@@ -45,6 +45,7 @@ const Root = forwardRef<HTMLDivElement, FieldRootProps>(
                 <BaseField.Root
                     className={clsx(className, styles.root({ disabled }))}
                     ref={ref}
+                    disabled={disabled}
                     {...otherProps}
                 >
                     {children}
