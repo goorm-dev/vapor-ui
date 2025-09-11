@@ -1,4 +1,6 @@
-type ThemeType = 'light' | 'dark';
+type ThemeType = 'light' | 'dark' | 'base';
+
+type TokenType = 'primitive' | 'semantic' | 'component-specific';
 
 interface OklchColor {
     mode: 'oklch';
@@ -21,24 +23,43 @@ interface ScaleInfo {
     alternativeScale: string;
 }
 
-interface ThemeTokens {
-    background: {
-        canvas: ColorToken;
+interface TokenContainer {
+    tokens: {
+        [tokenName: string]: ColorToken | string; // ColorToken for primitive, string for semantic/component
     };
-    [colorName: string]: {
-        [shade: string]: ColorToken;
+    metadata: {
+        type: TokenType;
+        theme: ThemeType;
     };
 }
 
-interface ColorPaletteCollection {
-    base: {
-        white: ColorToken;
-        black: ColorToken;
-    };
-    light: ThemeTokens;
-    dark: ThemeTokens;
+interface ColorPaletteResult {
+    base?: TokenContainer;
+    light: TokenContainer;
+    dark: TokenContainer;
 }
+
+interface SemanticTokensResult {
+    semantic: {
+        light: TokenContainer;
+        dark: TokenContainer;
+    };
+    componentSpecific: {
+        light: TokenContainer;
+        dark: TokenContainer;
+    };
+}
+
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export type { ThemeType, OklchColor, ColorToken, ScaleInfo, ThemeTokens, ColorPaletteCollection };
+export type {
+    ThemeType,
+    TokenType,
+    OklchColor,
+    ColorToken,
+    ScaleInfo,
+    TokenContainer,
+    ColorPaletteResult,
+    SemanticTokensResult,
+};

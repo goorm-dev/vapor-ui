@@ -1,5 +1,5 @@
 import { BASE_COLORS } from '../constants';
-import type { ColorToken, ScaleInfo, SemanticMappingConfig } from '../types';
+import type { ColorToken, ScaleInfo, SemanticMappingConfig, SemanticTokensResult } from '../types';
 import { getContrastingForegroundColor, getSortedScales } from '../utils';
 import { generateBrandColorPalette } from './brand-color-palette';
 
@@ -10,15 +10,22 @@ interface SemanticTokenMapping {
     buttonForegroundColor: ColorToken;
 }
 
-function createSemanticTokenMapping(mapping: SemanticTokenMapping): Record<string, string> {
+function createSemanticTokenMapping(mapping: SemanticTokenMapping): {
+    semantic: Record<string, string>;
+    componentSpecific: Record<string, string>;
+} {
     const { semanticRole, brandColorName, scaleInfo, buttonForegroundColor } = mapping;
 
     return {
-        [`color-background-${semanticRole}`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
-        [`color-foreground-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.foregroundScale}`,
-        [`color-foreground-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.alternativeScale}`,
-        [`color-border-${semanticRole}`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
-        [`color-button-foreground-${semanticRole}`]: buttonForegroundColor.name || '',
+        semantic: {
+            [`color-background-${semanticRole}`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
+            [`color-foreground-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.foregroundScale}`,
+            [`color-foreground-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.alternativeScale}`,
+            [`color-border-${semanticRole}`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
+        },
+        componentSpecific: {
+            [`color-button-foreground-${semanticRole}`]: buttonForegroundColor.name!,
+        },
     };
 }
 
@@ -83,20 +90,62 @@ function findDarkThemeScales(
     };
 }
 
-function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): {
-    light: Record<string, string>;
-    dark: Record<string, string>;
-} {
-    const lightMapping: Record<string, string> = {};
-    const darkMapping: Record<string, string> = {};
+/**
+ * 시맨틱 토큰을 생성합니다.
+ * 브랜드 컬러를 기반으로 semantic과 component-specific 토큰을 분리하여 생성합니다.
+ * 
+ * @param mappingConfig - 시맨틱 역할과 브랜드 컬러 매핑 설정
+ * @returns semantic과 componentSpecific으로 분리된 토큰 컨테이너
+ * 
+ * @example
+ * getSemanticDependentTokens({ primary: { name: 'myBlue', hex: '#448EFE' } })
+ * // returns: {
+ * //   semantic: {
+ * //     light: { tokens: { "color-background-primary": "color-myBlue-500" }, metadata: {...} },
+ * //     dark: { tokens: { "color-background-primary": "color-myBlue-400" }, metadata: {...} }
+ * //   },
+ * //   componentSpecific: {
+ * //     light: { tokens: { "color-button-foreground-primary": "color-white" }, metadata: {...} },
+ * //     dark: { tokens: { "color-button-foreground-primary": "color-white" }, metadata: {...} }
+ * //   }
+ * // }
+ */
+function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): SemanticTokensResult {
+    const lightSemanticMapping: Record<string, string> = {};
+    const lightComponentMapping: Record<string, string> = {};
+    const darkSemanticMapping: Record<string, string> = {};
+    const darkComponentMapping: Record<string, string> = {};
 
     Object.entries(mappingConfig).forEach(([semanticRole, config]) => {
         const brandPalette = generateBrandColorPalette({
             colors: { [config.name]: config.hex },
         });
 
-        const lightPalette = brandPalette.light[config.name];
-        const darkPalette = brandPalette.dark[config.name];
+        // Extract color tokens from TokenContainer format
+        const lightTokens = brandPalette.light.tokens;
+        const darkTokens = brandPalette.dark.tokens;
+
+        // Group tokens by color name to reconstruct palette structure
+        const lightPalette: Record<string, ColorToken> = {};
+        const darkPalette: Record<string, ColorToken> = {};
+
+        Object.entries(lightTokens).forEach(([tokenName, token]) => {
+            if (typeof token === 'object' && tokenName.includes(`-${config.name}-`)) {
+                const scaleMatch = tokenName.match(/-(\d{3})$/);
+                if (scaleMatch) {
+                    lightPalette[scaleMatch[1]] = token;
+                }
+            }
+        });
+
+        Object.entries(darkTokens).forEach(([tokenName, token]) => {
+            if (typeof token === 'object' && tokenName.includes(`-${config.name}-`)) {
+                const scaleMatch = tokenName.match(/-(\d{3})$/);
+                if (scaleMatch) {
+                    darkPalette[scaleMatch[1]] = token;
+                }
+            }
+        });
 
         const lightScales = getSortedScales(lightPalette);
         const darkScales = getSortedScales(darkPalette);
@@ -115,26 +164,58 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): {
             ? getContrastingForegroundColor(darkBackgroundToken.oklch)
             : { ...BASE_COLORS.white };
 
-        const lightTokens = createSemanticTokenMapping({
+        const lightTokenMappings = createSemanticTokenMapping({
             semanticRole,
             brandColorName: config.name,
             scaleInfo: lightScaleInfo,
             buttonForegroundColor: lightButtonForegroundColor,
         });
-        Object.assign(lightMapping, lightTokens);
+        Object.assign(lightSemanticMapping, lightTokenMappings.semantic);
+        Object.assign(lightComponentMapping, lightTokenMappings.componentSpecific);
 
-        const darkTokens = createSemanticTokenMapping({
+        const darkTokenMappings = createSemanticTokenMapping({
             semanticRole,
             brandColorName: config.name,
             scaleInfo: darkScaleInfo,
             buttonForegroundColor: darkButtonForegroundColor,
         });
-        Object.assign(darkMapping, darkTokens);
+        Object.assign(darkSemanticMapping, darkTokenMappings.semantic);
+        Object.assign(darkComponentMapping, darkTokenMappings.componentSpecific);
     });
 
     return {
-        light: lightMapping,
-        dark: darkMapping,
+        semantic: {
+            light: {
+                tokens: lightSemanticMapping,
+                metadata: {
+                    type: 'semantic',
+                    theme: 'light',
+                },
+            },
+            dark: {
+                tokens: darkSemanticMapping,
+                metadata: {
+                    type: 'semantic',
+                    theme: 'dark',
+                },
+            },
+        },
+        componentSpecific: {
+            light: {
+                tokens: lightComponentMapping,
+                metadata: {
+                    type: 'component-specific',
+                    theme: 'light',
+                },
+            },
+            dark: {
+                tokens: darkComponentMapping,
+                metadata: {
+                    type: 'component-specific',
+                    theme: 'dark',
+                },
+            },
+        },
     };
 }
 

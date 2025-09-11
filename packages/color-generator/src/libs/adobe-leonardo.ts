@@ -3,8 +3,8 @@ import { BackgroundColor, Color, Theme } from '@adobe/leonardo-contrast-colors';
 import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 
 import { ADAPTIVE_COLOR_GENERATION, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from '../constants';
-import type { ColorGeneratorConfig, OklchColor, ThemeTokens, ThemeType } from '../types';
-import { formatOklchForWeb, generateCodeSyntax } from '../utils';
+import type { ColorGeneratorConfig, OklchColor, ThemeType, ColorToken, TokenContainer } from '../types';
+import { formatOklchForWeb, generateCodeSyntax, generateTokenName } from '../utils';
 
 /**
  * 입력 색상의 명도를 분석하여 최적의 Light/Dark Key 쌍을 생성합니다.
@@ -155,11 +155,27 @@ const createLeonardoTheme = (
     });
 };
 
+/**
+ * Adobe Leonardo를 사용하여 테마별 컬러 토큰을 생성합니다.
+ * 직접 TokenContainer 형태로 반환하여 변환 과정 없이 일관된 구조를 제공합니다.
+ * 
+ * @param colors - 색상 이름과 HEX 값의 매핑
+ * @param contrast - 대비 비율 설정
+ * @param themeType - 테마 타입 ('light' | 'dark')
+ * @returns 생성된 토큰들이 포함된 TokenContainer
+ * 
+ * @example
+ * generateThemeTokens({ blue: '#448EFE' }, { '050': 1.15, '100': 1.3 }, 'light')
+ * // returns: {
+ * //   tokens: { "vapor-color-blue-050": {...}, "vapor-color-background-canvas": {...} },
+ * //   metadata: { type: 'primitive', theme: 'light', generated: '...' }
+ * // }
+ */
 export const generateThemeTokens = (
     colors: Record<string, string>,
     contrast: Record<string, number>,
     themeType: ThemeType = 'light',
-): ThemeTokens => {
+): TokenContainer => {
     const colorDefinitions = Object.entries(colors)
         .map(([name, hex]) =>
             createColorDefinition({ name, colorHex: hex, contrastRatios: contrast }),
@@ -175,26 +191,25 @@ export const generateThemeTokens = (
     const [backgroundObj, ...themeColors] = theme.contrastColors;
 
     const calculateDeltaE = differenceCiede2000();
+    const tokens: Record<string, ColorToken> = {};
 
-    const result: ThemeTokens = {
-        background: {
-            canvas: { hex: '', oklch: '', codeSyntax: '' },
-        },
-    };
-
+    // Background canvas token 처리
     if ('background' in backgroundObj) {
         const oklchColor = oklch(backgroundObj.background);
         const oklchValue = formatCss(oklchColor);
 
         if (oklchValue) {
-            result.background.canvas = {
+            const canvasToken: ColorToken = {
+                name: generateTokenName(['background', 'canvas']),
                 hex: backgroundObj.background,
                 oklch: formatOklchForWeb(oklchValue),
                 codeSyntax: generateCodeSyntax(['background', 'canvas']),
             };
+            tokens[canvasToken.name!] = canvasToken;
         }
     }
 
+    // 색상 팔레트 토큰들 처리
     themeColors.forEach((color) => {
         if ('name' in color && 'values' in color && color.values.length > 0) {
             const colorName = color.name;
@@ -205,6 +220,7 @@ export const generateThemeTokens = (
                 hex: string;
                 oklch: string;
                 deltaE: number;
+                tokenName: string;
                 codeSyntax: string;
             }> = [];
 
@@ -224,32 +240,38 @@ export const generateThemeTokens = (
                         hex: instance.value,
                         oklch: formatOklchForWeb(oklchValue),
                         deltaE: deltaE || 0,
+                        tokenName: generateTokenName([colorName, instance.name]),
                         codeSyntax: generateCodeSyntax([colorName, instance.name]),
                     });
                 }
             });
 
+            // 숫자 순으로 정렬
             shadeData.sort((a, b) => {
                 const numA = parseInt(a.name, 10);
                 const numB = parseInt(b.name, 10);
                 return numA - numB;
             });
 
-            const colorObj: Record<
-                string,
-                { hex: string; oklch: string; deltaE: number; codeSyntax: string }
-            > = {};
+            // 토큰 객체에 추가
             shadeData.forEach((shade) => {
-                colorObj[shade.name] = {
+                const token: ColorToken = {
+                    name: shade.tokenName,
                     hex: shade.hex,
                     oklch: shade.oklch,
                     deltaE: shade.deltaE,
                     codeSyntax: shade.codeSyntax,
                 };
+                tokens[shade.tokenName] = token;
             });
-            result[colorName] = colorObj;
         }
     });
 
-    return result;
+    return {
+        tokens,
+        metadata: {
+            type: 'primitive',
+            theme: themeType,
+        },
+    };
 };

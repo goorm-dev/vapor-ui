@@ -59,6 +59,26 @@ const generateCodeSyntax = (keyPath: string[]): string => {
 };
 
 /**
+ * 상위 계층 key값 조합으로 토큰 name을 생성합니다.
+ * `vapor-` prefix가 없는 name을 생성하여 tokens 객체의 key로 사용됩니다.
+ *
+ * @param keyPath - 계층 구조의 key 경로들
+ * @returns `color-` prefix를 포함한 토큰 name
+ *
+ * @example
+ * generateTokenName(['light', 'blue', '050'])
+ * // returns: 'color-blue-050'
+ *
+ * generateTokenName(['background', 'canvas'])
+ * // returns: 'color-background-canvas'
+ */
+const generateTokenName = (keyPath: string[]): string => {
+    const topLevelKeys = ['base', 'light', 'dark'];
+    const filteredPath = keyPath.filter((key) => !topLevelKeys.includes(key));
+    return `color-${filteredPath.join('-')}`;
+};
+
+/**
  * 배경 색상의 명도에 따라 적절한 전경 색상(흑/백)을 결정합니다.
  *
  * @param backgroundOklch - 배경 색상의 OKLCH 문자열
@@ -127,6 +147,7 @@ function findClosestScale(palette: Record<string, { deltaE?: number }>): string 
 export {
     formatOklchForWeb,
     generateCodeSyntax,
+    generateTokenName,
     getContrastingForegroundColor,
     getSortedScales,
     findClosestScale,
