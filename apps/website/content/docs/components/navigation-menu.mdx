@@ -10,7 +10,7 @@ import { NavigationMenu } from '@vapor-ui/core';
 
 export default function DefaultNavigationMenu() {
     return (
-        <NavigationMenu.Root size="md" shape="fill" aria-label="Navigation menu">
+        <NavigationMenu.Root size="md" aria-label="Navigation menu">
             <NavigationMenu.List>
                 <NavigationMenu.Item>
                     <NavigationMenu.Link href="#">Default Link</NavigationMenu.Link>
@@ -221,7 +221,7 @@ export default function NavSelected() {
             <div>
                 <h4 className="text-sm font-medium mb-2">다양한 모양에서의 선택 상태</h4>
                 <div className="space-y-3">
-                    <NavigationMenu.Root shape="fill" aria-label="Fill navigation with selection">
+                    <NavigationMenu.Root aria-label="Fill navigation with selection">
                         <NavigationMenu.List>
                             <NavigationMenu.Item><NavigationMenu.Link href="#">일반</NavigationMenu.Link></NavigationMenu.Item>
                             <NavigationMenu.Item><NavigationMenu.Link href="#" selected>선택됨 (Fill)</NavigationMenu.Link></NavigationMenu.Item>
@@ -229,7 +229,7 @@ export default function NavSelected() {
                         </NavigationMenu.List>
                     </NavigationMenu.Root>
                     
-                    <NavigationMenu.Root shape="ghost" aria-label="Ghost navigation with selection">
+                    <NavigationMenu.Root aria-label="Ghost navigation with selection">
                         <NavigationMenu.List>
                             <NavigationMenu.Item><NavigationMenu.Link href="#">일반</NavigationMenu.Link></NavigationMenu.Item>
                             <NavigationMenu.Item><NavigationMenu.Link href="#" selected>선택됨 (Ghost)</NavigationMenu.Link></NavigationMenu.Item>
@@ -258,7 +258,7 @@ import { NavigationMenu } from '@vapor-ui/core';
 
 export default function NavSimple() {
     return (
-        <NavigationMenu.Root size="md" shape="fill" aria-label="Simple navigation">
+        <NavigationMenu.Root size="md" aria-label="Simple navigation">
             <NavigationMenu.List>
                 <NavigationMenu.LinkItem href="/">홈</NavigationMenu.LinkItem>
                 <NavigationMenu.LinkItem href="/products" selected>
