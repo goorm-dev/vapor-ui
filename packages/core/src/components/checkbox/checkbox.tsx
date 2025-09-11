@@ -111,6 +111,7 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
             indeterminate,
             invalid,
             disabled,
+            required,
             size,
         } = useCheckboxContext();
 
@@ -126,6 +127,7 @@ const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
                 indeterminate={indeterminate}
                 disabled={disabled}
                 aria-invalid={invalid}
+                required={required}
                 className={clsx(styles.control({ invalid, size }), className)}
                 {...props}
             >
