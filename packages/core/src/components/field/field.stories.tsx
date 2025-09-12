@@ -79,9 +79,8 @@ export const TestBed: Story = {
 
                 {/* RadioGroup Selection RadioGroup */}
                 <Field.Root name="gender" validationMode="onChange" {...fieldArgs}>
-                    <legend>성별 선택</legend>
+                    <Field.Label render={<legend />}>성별을 선택하세요</Field.Label>
                     <RadioGroup.Root required={required}>
-                        <Field.Label>성별을 선택하세요</Field.Label>
                         <Field.Description>회원 가입을 위해 성별을 선택해주세요.</Field.Description>
                         <Flex alignItems="center" gap="$150">
                             <Radio.Root value="male" />
