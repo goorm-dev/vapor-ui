@@ -2,13 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { Checkbox } from '~/components/checkbox';
+import { Field } from '~/components/field';
 import { Flex } from '~/components/flex';
+import { Radio } from '~/components/radio';
 import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
-
-import { Radio } from '../radio';
-import { TextInput } from '../text-input';
-import { Field } from './field';
+import { TextInput } from '~/components/text-input';
 
 type FieldStoryArgs = React.ComponentProps<typeof Field.Root> & {
     required?: boolean;
@@ -80,7 +79,7 @@ export const TestBed: Story = {
 
                 {/* RadioGroup Selection RadioGroup */}
                 <Field.Root name="gender" validationMode="onChange" {...fieldArgs}>
-                    <Field.Label render={<legend />}>성별을 선택하세요</Field.Label>
+                    <Field.Label>성별을 선택하세요</Field.Label>
                     <RadioGroup.Root required={required}>
                         <Field.Description>회원 가입을 위해 성별을 선택해주세요.</Field.Description>
                         <Flex alignItems="center" gap="$150">

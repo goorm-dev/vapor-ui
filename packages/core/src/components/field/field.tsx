@@ -6,21 +6,16 @@ import { useRender } from '@base-ui-components/react';
 import { Field as BaseField } from '@base-ui-components/react/field';
 import clsx from 'clsx';
 
-import type { Assign, VComponentProps } from '~/utils/types';
+import type { VComponentProps } from '~/utils/types';
 
-import type { RootVariants } from './field.css';
 import * as styles from './field.css';
-
-type FieldVariants = RootVariants;
-
-type FieldSharedProps = FieldVariants;
 
 /* -------------------------------------------------------------------------------------------------
  * Field
  * -----------------------------------------------------------------------------------------------*/
 
 type FieldPrimitiveProps = VComponentProps<typeof BaseField.Root>;
-interface FieldRootProps extends Assign<FieldPrimitiveProps, FieldSharedProps> {}
+interface FieldRootProps extends FieldPrimitiveProps {}
 
 const Root = forwardRef<HTMLDivElement, FieldRootProps>(
     ({ children, className, ...props }, ref) => {
