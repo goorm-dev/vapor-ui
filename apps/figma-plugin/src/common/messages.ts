@@ -1,4 +1,4 @@
-import type { ColorPaletteCollection } from '@vapor-ui/color-generator';
+import type { ColorPaletteResult } from '@vapor-ui/color-generator';
 
 // ============================================================================
 // Message Types
@@ -6,25 +6,25 @@ import type { ColorPaletteCollection } from '@vapor-ui/color-generator';
 
 type CreatePaletteSectionsMessage = {
     type: 'create-palette-sections';
-    data: { generatedPalette: Pick<ColorPaletteCollection, 'light' | 'dark'> };
+    data: { generatedPalette: Pick<ColorPaletteResult, 'light' | 'dark'> };
 };
 
 type CreateFigmaVariablesMessage = {
     type: 'create-figma-variables';
-    data: { generatedPalette: ColorPaletteCollection; collectionName: string };
+    data: { generatedPalette: ColorPaletteResult; collectionName: string };
 };
 
 type CreateSemanticPaletteSectionsMessage = {
     type: 'create-semantic-palette-sections';
     data: { 
-        generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
+        generatedSemanticPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
         dependentTokens: { light: Record<string, string>; dark: Record<string, string> };
     };
 };
 
 type CreateSemanticFigmaVariablesMessage = {
     type: 'create-semantic-figma-variables';
-    data: { generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>; collectionName: string };
+    data: { generatedSemanticPalette: Pick<ColorPaletteResult, 'light' | 'dark'>; collectionName: string };
 };
 
 export type UIMessage = CreatePaletteSectionsMessage | CreateFigmaVariablesMessage | CreateSemanticPaletteSectionsMessage | CreateSemanticFigmaVariablesMessage;

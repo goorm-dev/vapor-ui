@@ -1,6 +1,4 @@
-import type {
-    ColorPaletteCollection,
-} from '@vapor-ui/color-generator';
+import type { ColorPaletteResult } from '@vapor-ui/color-generator';
 
 import { figmaUIService } from '../services/figma-ui-service';
 import { figmaVariableService } from '../services/figma-variable-service';
@@ -11,15 +9,28 @@ export const semanticController = {
      * - Primary color 기반
      * - Dependent tokens 처리
      * - Primitive + Semantic token 표시
+     * - 각 테마(light, dark)별로 개별 섹션 생성
      */
     async createSemanticPaletteSections(data: {
-        generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
+        generatedSemanticPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
         dependentTokens: { light: Record<string, string>; dark: Record<string, string> };
     }): Promise<void> {
-        await figmaUIService.createSemanticPaletteSections({
-            generatedSemanticPalette: data.generatedSemanticPalette,
-            dependentTokens: data.dependentTokens,
+        const { generatedSemanticPalette } = data;
+        
+        // 테마 순서: light -> dark
+        const themeOrder = ['light', 'dark'];
+        const sortedThemes = Object.entries(generatedSemanticPalette).sort(([themeA], [themeB]) => {
+            const indexA = themeOrder.indexOf(themeA);
+            const indexB = themeOrder.indexOf(themeB);
+            return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
         });
+        
+        // 순차적으로 섹션 생성 (기존 섹션 위치를 고려하기 위해)
+        for (const [theme, themeData] of sortedThemes) {
+            if (themeData && themeData.tokens) {
+                await figmaUIService.generatePalette(themeData, `semantic-${theme}`);
+            }
+        }
     },
 
     /**
@@ -28,7 +39,7 @@ export const semanticController = {
      * - Semantic token 구조
      */
     async createSemanticFigmaVariables(data: {
-        generatedSemanticPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
+        generatedSemanticPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
         collectionName: string;
     }): Promise<void> {
         await figmaVariableService.createSemanticVariables(

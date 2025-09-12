@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import {
     type BrandColorGeneratorConfig,
-    type ColorPaletteCollection,
+    type ColorPaletteResult,
     type SemanticMappingConfig,
     generateBrandColorPalette,
     getSemanticDependentTokens,
@@ -31,7 +31,7 @@ export const SemanticColorsTab = () => {
     const [colorHex, setColorHex] = useState<string>('#8662F3');
     const [themeColorType, setThemeColorType] = useState<ThemeColorType>('primary');
     const [generatedSemanticPalette, setGeneratedSemanticPalette] = useState<Pick<
-        ColorPaletteCollection,
+        ColorPaletteResult,
         'light' | 'dark'
     > | null>(null);
     const [collectionName, setCollectionName] = useState<string>('Semantic Color Tokens');
@@ -57,7 +57,11 @@ export const SemanticColorsTab = () => {
                 mappingConfig[themeColorType] = { name: colorName, hex: colorHex };
             }
 
-            const dependentTokens = getSemanticDependentTokens(mappingConfig);
+            const semanticTokensResult = getSemanticDependentTokens(mappingConfig);
+            const dependentTokens = {
+                light: semanticTokensResult.semantic.light.tokens as Record<string, string>,
+                dark: semanticTokensResult.semantic.dark.tokens as Record<string, string>,
+            };
 
             Logger.semantic.generating({ primary: colorHex }, dependentTokens);
 
@@ -122,7 +126,7 @@ export const SemanticColorsTab = () => {
                 </Section>
 
 
-                <Button onClick={handleGenerateSemanticPalette}>Generate Semantic Palette</Button>
+                <Button onClick={handleGenerateSemanticPalette}>Generate Palette</Button>
             </VStack>
 
             {generatedSemanticPalette && (

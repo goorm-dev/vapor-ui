@@ -1,20 +1,32 @@
-import type { ColorPaletteCollection } from '@vapor-ui/color-generator';
+import type { ColorPaletteResult } from '@vapor-ui/color-generator';
 
+import { figmaNoticeService } from '../services/figma-notification';
 import { figmaUIService } from '../services/figma-ui-service';
 import { figmaVariableService } from '../services/figma-variable-service';
 
 export const primitiveController = {
-    /**
-     * Primitive 팔레트 섹션 생성
-     * - 다양한 색상 패밀리 (red, blue, green, etc.)
-     * - Contrast ratios 기반 shade 생성
-     */
-    async createPaletteSections(data: {
-        generatedPalette: Pick<ColorPaletteCollection, 'light' | 'dark'>;
-    }): Promise<void> {
-        await figmaUIService.createPrimitivePaletteSections({
-            generatedPalette: data.generatedPalette,
-        });
+    async createPaletteSections(data: { generatedPalette: ColorPaletteResult }): Promise<void> {
+        const { generatedPalette } = data;
+
+        const themeOrder: (keyof ColorPaletteResult)[] = ['base', 'light', 'dark'];
+
+        const sortedThemes = themeOrder
+            .filter((theme) => theme in generatedPalette)
+            .map((theme) => [theme, generatedPalette[theme]] as const);
+
+        figmaNoticeService.paletteCreating();
+        try {
+            for (const [theme, themeData] of sortedThemes) {
+                if (themeData && themeData.tokens) {
+                    await figmaUIService.generatePalette(themeData, theme);
+                }
+            }
+
+            figmaNoticeService.paletteCreated();
+        } catch (error) {
+            figmaNoticeService.paletteCreateFailed();
+            throw error;
+        }
     },
 
     /**
@@ -23,7 +35,7 @@ export const primitiveController = {
      * - Light/Dark 테마별 변수
      */
     async createFigmaVariables(data: {
-        generatedPalette: ColorPaletteCollection;
+        generatedPalette: ColorPaletteResult;
         collectionName: string;
     }): Promise<void> {
         await figmaVariableService.createPrimitiveVariables(

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import {
-    type ColorPaletteCollection,
     type ColorGeneratorConfig,
+    type ColorPaletteResult,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
     DEFAULT_PRIMITIVE_COLORS,
@@ -10,13 +10,13 @@ import {
 } from '@vapor-ui/color-generator';
 import { Box, Button, VStack } from '@vapor-ui/core';
 
-import { postMessage } from '~/common/messages';
-import { calculatePerceptualUniformity } from '~/ui/utils/color-metrics';
 import { Logger } from '~/common/logger';
-import { Section } from '~/ui/components/section';
+import { postMessage } from '~/common/messages';
 import { ColorInput } from '~/ui/components/color-input';
 import { LabeledInput } from '~/ui/components/labeled-input';
 import { RangeSlider } from '~/ui/components/range-slider';
+import { Section } from '~/ui/components/section';
+import { calculatePerceptualUniformity } from '~/ui/utils/color-metrics';
 
 export const PrimitiveColorsTab = () => {
     const [backgroundLightness, setBackgroundLightness] = useState<{ light: number; dark: number }>(
@@ -31,7 +31,7 @@ export const PrimitiveColorsTab = () => {
     const [primitiveColors, setPrimitiveColors] = useState<Record<string, string>>({
         ...DEFAULT_PRIMITIVE_COLORS,
     });
-    const [generatedPalette, setGeneratedPalette] = useState<ColorPaletteCollection | null>(null);
+    const [generatedPalette, setGeneratedPalette] = useState<ColorPaletteResult | null>(null);
     const [collectionName, setCollectionName] = useState<string>('Color Tokens');
 
     const handleGeneratePalette = () => {
@@ -41,7 +41,6 @@ export const PrimitiveColorsTab = () => {
                 contrastRatios,
                 backgroundLightness,
             };
-
             Logger.palette.generating(config);
 
             const palette = generateSystemColorPalette(config);
@@ -66,12 +65,12 @@ export const PrimitiveColorsTab = () => {
 
         try {
             Logger.variables.creating(collectionName);
-            
+
             postMessage({
                 type: 'create-figma-variables',
                 data: { generatedPalette, collectionName },
             });
-            
+
             Logger.info('Figma 변수 생성 요청 전송 완료');
         } catch (error) {
             Logger.variables.error('Figma 변수 생성 요청 실패', error);

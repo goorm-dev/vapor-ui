@@ -138,7 +138,9 @@ const createLeonardoTheme = (
     };
     const contrastRatios = config.contrastRatios || {};
 
-    const lightness = backgroundLightness[themeType];
+    const lightness = themeType === 'base' 
+        ? backgroundLightness.light 
+        : backgroundLightness[themeType];
     const colorKey = (themeType === 'light' ? '#FFFFFF' : '#000000') as CssColor;
 
     const background = new BackgroundColor({

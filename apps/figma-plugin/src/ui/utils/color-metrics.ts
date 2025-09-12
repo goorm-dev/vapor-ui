@@ -1,4 +1,4 @@
-import type { ColorPaletteCollection } from '@vapor-ui/color-generator';
+import type { ColorPaletteResult } from '@vapor-ui/color-generator';
 
 export interface PerceptualUniformityMetrics {
     uniformity: string;
@@ -24,9 +24,9 @@ export interface PerceptualUniformityMetrics {
  * @returns 균일성 메트릭 또는 계산 실패시 null
  */
 export const calculatePerceptualUniformity = (
-    palette: ColorPaletteCollection,
+    palette: ColorPaletteResult,
 ): PerceptualUniformityMetrics | null => {
-    const lightColors = palette.light;
+    const lightColors = palette.light.tokens;
     const colorEntries = Object.entries(lightColors).filter(([key]) => key !== 'background');
 
     if (colorEntries.length === 0) return null;

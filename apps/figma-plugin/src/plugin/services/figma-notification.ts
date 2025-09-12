@@ -1,7 +1,10 @@
-export const NotificationService = {
+export const figmaNoticeService = {
     // ============================================================================
     // UI Notifications
     // ============================================================================
+    paletteCreating: () => {
+        figma.notify('팔레트 섹션을 생성하는 중입니다... ⏳');
+    },
     paletteCreated: () => {
         figma.notify('새로운 팔레트 섹션이 생성되었습니다! 🎨');
     },

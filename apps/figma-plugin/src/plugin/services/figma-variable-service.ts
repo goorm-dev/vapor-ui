@@ -1,8 +1,8 @@
-import type { ColorPaletteCollection, ColorToken } from '@vapor-ui/color-generator';
+import type { ColorPaletteResult, ColorToken } from '@vapor-ui/color-generator';
 
 import { getValidColorShades, hexToFigmaColor } from '~/plugin/utils/color';
 import { Logger } from '~/common/logger';
-import { NotificationService } from './figma-notification';
+import { figmaNoticeService } from './figma-notification';
 
 // ============================================================================
 // Types
@@ -30,7 +30,7 @@ export const figmaVariableService = {
      * Creates primitive Figma variables (includes base colors)
      */
     async createPrimitiveVariables(
-        palette: ColorPaletteCollection,
+        palette: ColorPaletteResult,
         collectionName: string,
     ): Promise<void> {
         try {
@@ -40,13 +40,13 @@ export const figmaVariableService = {
 
             // Create base variables
             if (palette.base) {
-                await createBaseVariables(collection, palette.base);
+                await createBaseVariables(collection, palette.base.tokens as unknown as BaseColorTokens);
             }
 
             // Create theme variables
             await Promise.all([
-                createThemeVariables(collection, 'light', palette.light),
-                createThemeVariables(collection, 'dark', palette.dark),
+                createThemeVariables(collection, 'light', palette.light.tokens as unknown as ThemeTokens),
+                createThemeVariables(collection, 'dark', palette.dark.tokens as unknown as ThemeTokens),
             ]);
 
             // Verify creation
@@ -62,10 +62,10 @@ export const figmaVariableService = {
             }
 
             Logger.variables.created(collectionName, variableCount);
-            NotificationService.variablesCreated();
+            figmaNoticeService.variablesCreated();
         } catch (error) {
             Logger.variables.error('Primitive Figma 변수 생성 실패', error);
-            NotificationService.variablesCreateFailed();
+            figmaNoticeService.variablesCreateFailed();
         }
     },
 
@@ -73,7 +73,7 @@ export const figmaVariableService = {
      * Creates semantic Figma variables (with light/dark modes)
      */
     async createSemanticVariables(
-        palette: Pick<ColorPaletteCollection, 'light' | 'dark'>,
+        palette: Pick<ColorPaletteResult, 'light' | 'dark'>,
         collectionName: string,
     ): Promise<void> {
         try {
@@ -87,8 +87,8 @@ export const figmaVariableService = {
                 collection,
                 lightModeId,
                 darkModeId,
-                palette.light,
-                palette.dark,
+                palette.light.tokens as unknown as ThemeTokens,
+                palette.dark.tokens as unknown as ThemeTokens,
             );
 
             // Verify creation
@@ -104,10 +104,10 @@ export const figmaVariableService = {
             }
 
             Logger.variables.created(collectionName, variableCount);
-            NotificationService.variablesCreated();
+            figmaNoticeService.variablesCreated();
         } catch (error) {
             Logger.variables.error('Semantic Figma 변수 생성 실패', error);
-            NotificationService.variablesCreateFailed();
+            figmaNoticeService.variablesCreateFailed();
         }
     },
 } as const;
