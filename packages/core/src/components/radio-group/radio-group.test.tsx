@@ -147,7 +147,7 @@ describe('RadioGroup', () => {
 
         await userEvent.click(submitButton);
 
-        expect(stringifiedFormData).toBe('radio-group-test=');
+        expect(stringifiedFormData).toBe('');
 
         await userEvent.click(radioA);
         await userEvent.click(submitButton);

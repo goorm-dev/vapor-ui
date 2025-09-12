@@ -20,7 +20,7 @@ describe('<Radio.Root />', () => {
     it('allows `null` value', async () => {
         const name = 'test-radio-group';
         const rendered = render(
-            <RadioGroup.Root name={name}>
+            <RadioGroup.Root name={name} defaultValue="a">
                 <Radio.Root value={null} data-testid="radio-null" />
                 <Radio.Root value="a" data-testid="radio-a" />
             </RadioGroup.Root>,
