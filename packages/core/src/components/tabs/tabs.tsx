@@ -1,3 +1,5 @@
+'use client';
+
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 
 import { Tabs as BaseTabs } from '@base-ui-components/react';

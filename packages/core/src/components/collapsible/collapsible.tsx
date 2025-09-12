@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef } from 'react';
 
 import { Collapsible as BaseCollapsible } from '@base-ui-components/react';
