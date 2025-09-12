@@ -94,7 +94,7 @@ const DisplayValue = forwardRef<HTMLSpanElement, SelectDisplayValueProps>(
     ({ placeholder, className, children: childrenProp, ...props }, ref) => {
         const { items } = useSelectContext();
 
-        const renderValue = (value: string = '') => {
+        const renderValue = (value: string) => {
             if (!items) return value;
 
             if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
