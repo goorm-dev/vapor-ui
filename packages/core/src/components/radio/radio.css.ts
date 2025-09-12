@@ -2,7 +2,7 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
+import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
@@ -17,14 +17,16 @@ export const root = recipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
-            border: '0.0625rem solid',
-            borderColor: vars.color.border.normal,
+            border: `0.0625rem solid ${vars.color.border.normal}`,
+            borderRadius: 9999,
 
-            backgroundColor: vars.color.background['normal-darker'],
+            backgroundColor: vars.color.background.normal,
+            cursor: 'pointer',
+
             padding: vars.size.space['000'],
 
             selectors: {
-                '&[data-checked], &[data-indeterminate]': {
+                '&[data-checked]': {
                     backgroundColor: vars.color.background.primary,
                 },
 
@@ -42,17 +44,15 @@ export const root = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('components', { borderColor: vars.color.border.danger }),
+            true: layerStyle('components', { borderColor: vars.color.background['danger'] }),
         },
 
         size: {
             md: layerStyle('components', {
-                borderRadius: vars.size.borderRadius[100],
                 width: vars.size.dimension[200],
                 height: vars.size.dimension[200],
             }),
             lg: layerStyle('components', {
-                borderRadius: vars.size.borderRadius[200],
                 width: vars.size.dimension[300],
                 height: vars.size.dimension[300],
             }),
@@ -60,27 +60,16 @@ export const root = recipe({
     },
 });
 
-export const indicator = recipe({
-    base: layerStyle('components', {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: vars.color.white,
-    }),
-
-    defaultVariants: { size: 'md' },
-    variants: {
-        size: {
-            md: layerStyle('components', {
-                width: vars.size.dimension[100],
-                height: vars.size.dimension[100],
-            }),
-            lg: layerStyle('components', {
-                width: vars.size.dimension[150],
-                height: vars.size.dimension[150],
-            }),
-        },
-    },
+export const indicator = layerStyle('components', {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    border: 'none',
+    borderRadius: '9999px',
+    backgroundColor: vars.color.white,
+    width: '50%',
+    height: '50%',
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

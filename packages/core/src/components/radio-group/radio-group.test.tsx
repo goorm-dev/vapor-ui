@@ -1,5 +1,6 @@
 import { act } from 'react';
 
+import { Radio } from '@base-ui-components/react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
@@ -13,14 +14,11 @@ const OPTION_2 = 'Option 2';
 const RadioGroupTest = (props: RadioGroupRootProps) => {
     return (
         <RadioGroup.Root {...props}>
-            <RadioGroup.Item value="option1">
-                <RadioGroup.Control />
-                <RadioGroup.Label>{OPTION_1}</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="option2">
-                <RadioGroup.Control />
-                <RadioGroup.Label>{OPTION_2}</RadioGroup.Label>
-            </RadioGroup.Item>
+            <Radio.Root id="option1" value="option1" />
+            <label htmlFor="option1">{OPTION_1}</label>
+
+            <Radio.Root id="option2" value="option2" />
+            <label htmlFor="option2">{OPTION_2}</label>
         </RadioGroup.Root>
     );
 };
@@ -41,7 +39,7 @@ describe('RadioGroup', () => {
         await userEvent.click(firstItem);
 
         expect(onValueChange).toHaveBeenCalledOnce();
-        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Event));
+        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Object));
     });
 
     it('should invoke onValueChange when an label is clicked', async () => {
@@ -52,7 +50,7 @@ describe('RadioGroup', () => {
         await userEvent.click(item);
 
         expect(onValueChange).toHaveBeenCalledOnce();
-        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Event));
+        expect(onValueChange).toHaveBeenCalledWith('option1', expect.any(Object));
     });
 
     describe('prop: disabled', () => {
@@ -66,12 +64,11 @@ describe('RadioGroup', () => {
 
         it('should have aria-disabled attribute', () => {
             const rendered = render(<RadioGroupTest disabled />);
-            const root = rendered.getByRole('radiogroup');
+            const radioGroup = rendered.getByRole('radiogroup');
             const [firstItem, secondItem] = rendered.getAllByRole('radio');
 
-            // the root component does not support the disabled attribute directly, so use aria-disabled attributes.
-            expect(root).toHaveAttribute('aria-disabled', 'true');
-            expect(root).toHaveAttribute('data-disabled');
+            expect(radioGroup).toHaveAttribute('aria-disabled', 'true');
+            expect(radioGroup).toHaveAttribute('data-disabled');
 
             expect(firstItem).toBeDisabled();
             expect(firstItem).toHaveAttribute('data-disabled');
@@ -105,7 +102,7 @@ describe('RadioGroup', () => {
 
     it('should propagate the name attribute to the input', async () => {
         const name = 'test-radio-group';
-        const rendered = render(<RadioGroupTest name={name} />);
+        const rendered = render(<RadioGroupTest defaultValue={'option1'} name={name} />);
 
         const input = rendered.container.querySelector<HTMLInputElement>(`input[name="${name}"]`);
         expect(input).toBeInTheDocument();
@@ -134,14 +131,11 @@ describe('RadioGroup', () => {
                 }}
             >
                 <RadioGroup.Root name="radio-group-test">
-                    <RadioGroup.Item value="a">
-                        <RadioGroup.Label>a</RadioGroup.Label>
-                        <RadioGroup.Control />
-                    </RadioGroup.Item>
-                    <RadioGroup.Item value="b">
-                        <RadioGroup.Label>b</RadioGroup.Label>
-                        <RadioGroup.Control />
-                    </RadioGroup.Item>
+                    <label htmlFor="a">a</label>
+                    <Radio.Root id="a" value="a" />
+
+                    <label htmlFor="b">b</label>
+                    <Radio.Root id="b" value="b" />
                 </RadioGroup.Root>
 
                 <button type="submit">Submit</button>
@@ -164,18 +158,14 @@ describe('RadioGroup', () => {
     it('should change the checked state using the arrow keys', async () => {
         const rendered = render(
             <RadioGroup.Root>
-                <RadioGroup.Item value="option1">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>option1</RadioGroup.Label>
-                </RadioGroup.Item>
-                <RadioGroup.Item value="option2">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>option2</RadioGroup.Label>
-                </RadioGroup.Item>
-                <RadioGroup.Item value="option3">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>option3</RadioGroup.Label>
-                </RadioGroup.Item>
+                <Radio.Root id="option1" value="option1" />
+                <label htmlFor="option1">option1</label>
+
+                <Radio.Root id="option2" value="option2" />
+                <label htmlFor="option2">option2</label>
+
+                <Radio.Root id="option3" value="option3" />
+                <label htmlFor="option3"> option3</label>
             </RadioGroup.Root>,
         );
         const [option1, option2, option3] = rendered.getAllByRole('radio');
@@ -205,18 +195,14 @@ describe('RadioGroup', () => {
     it('should not include disabled items during keyboard navigation', async () => {
         const rendered = render(
             <RadioGroup.Root>
-                <RadioGroup.Item value="option1">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>option1</RadioGroup.Label>
-                </RadioGroup.Item>
-                <RadioGroup.Item value="option2" disabled>
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>option2</RadioGroup.Label>
-                </RadioGroup.Item>
-                <RadioGroup.Item value="option3">
-                    <RadioGroup.Control />
-                    <RadioGroup.Label>option3</RadioGroup.Label>
-                </RadioGroup.Item>
+                <Radio.Root id="option1" value="option1" />
+                <label htmlFor="option1">option1</label>
+
+                <Radio.Root id="option2" value="option2" disabled />
+                <label htmlFor="option2">option2</label>
+
+                <Radio.Root id="option3" value="option3" />
+                <label htmlFor="option3">option3</label>
             </RadioGroup.Root>,
         );
         const [option1, _option2, option3] = rendered.getAllByRole('radio');
@@ -253,43 +239,15 @@ describe('RadioGroup', () => {
         await userEvent.keyboard('[ArrowDown]');
 
         expect(secondItem).toHaveFocus();
-
-        /**
-         * NOTE
-         * - When userEvent.keyboard([ArrowDown]) is input in the test environment, the checked state does not automatically change.
-         * - Therefore, userEvent.keyboard([Space]) has been temporarily added to manually toggle the state.
-         *
-         * @link https://github.com/radix-ui/primitives/issues/3076
-         */
-        await userEvent.keyboard('[Space]');
-
         expect(firstItem).not.toBeChecked();
         expect(secondItem).toBeChecked();
-    });
-
-    it('does not forward `value` prop', async () => {
-        const rendered = render(
-            <RadioGroup.Root value="test" data-testid="radio-group">
-                <RadioGroup.Item value="">
-                    <RadioGroup.Control />
-                </RadioGroup.Item>
-            </RadioGroup.Root>,
-        );
-
-        const root = rendered.getByTestId('radio-group');
-
-        expect(root).not.toHaveAttribute('value');
     });
 
     it('sets tabIndex=0 to the correct element when focused', async () => {
         const rendered = render(
             <RadioGroup.Root defaultValue="b">
-                <RadioGroup.Item value="a">
-                    <RadioGroup.Control />
-                </RadioGroup.Item>
-                <RadioGroup.Item value="b">
-                    <RadioGroup.Control />
-                </RadioGroup.Item>
+                <Radio.Root value="a" />
+                <Radio.Root value="b" />
             </RadioGroup.Root>,
         );
 
