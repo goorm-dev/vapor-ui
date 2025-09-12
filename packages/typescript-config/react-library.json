@@ -4,6 +4,8 @@
     "compilerOptions": {
         "jsx": "react-jsx",
         "target": "ESNext",
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
 
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "module": "ESNext"
