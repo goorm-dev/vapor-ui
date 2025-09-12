@@ -1,7 +1,7 @@
 'use client';
 
-import type { ChangeEvent } from 'react';
-import { forwardRef, useId } from 'react';
+import type { ChangeEvent, ComponentProps, MutableRefObject, ReactNode } from 'react';
+import React, { forwardRef, useCallback, useEffect, useId, useState } from 'react';
 
 import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
@@ -21,10 +21,13 @@ type TextInputSharedProps = TextInputVariants & {
     onValueChange?: (value: string) => void;
     readOnly?: boolean;
     placeholder?: string;
+    maxLength?: number;
 };
 
 type TextInputContextType = TextInputSharedProps & {
     textInputId?: string;
+    textInputNode: HTMLInputElement | null;
+    setTextInputNode: (node: HTMLInputElement | null) => void;
 };
 
 const [TextInputProvider, useTextInputContext] = createContext<TextInputContextType>({
@@ -43,6 +46,7 @@ interface TextInputRootProps extends Assign<TextInputPrimitiveProps, TextInputSh
 const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
     ({ render, className, ...props }, ref) => {
         const textInputId = useId();
+        const [textInputNode, setTextInputNode] = useState<HTMLInputElement | null>(null);
         const [textInputRootProps, otherProps] = createSplitProps<TextInputSharedProps>()(props, [
             'type',
             'value',
@@ -54,6 +58,7 @@ const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
             'readOnly',
             'visuallyHidden',
             'placeholder',
+            'maxLength',
         ]);
 
         const { disabled } = textInputRootProps;
@@ -68,7 +73,9 @@ const Root = forwardRef<HTMLDivElement, TextInputRootProps>(
         });
 
         return (
-            <TextInputProvider value={{ textInputId, ...textInputRootProps }}>
+            <TextInputProvider
+                value={{ textInputId, textInputNode, setTextInputNode, ...textInputRootProps }}
+            >
                 {element}
             </TextInputProvider>
         );
@@ -112,6 +119,7 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
         const {
             type,
             textInputId,
+            setTextInputNode,
             value,
             onValueChange,
             defaultValue,
@@ -120,12 +128,25 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
             readOnly,
             size,
             placeholder,
+            maxLength,
         } = useTextInputContext();
 
         const id = idProp || textInputId;
 
+        const callbackRef = useCallback(
+            (node: HTMLInputElement | null) => {
+                setTextInputNode(node);
+                if (typeof ref === 'function') {
+                    ref(node);
+                } else if (ref && 'current' in ref) {
+                    (ref as MutableRefObject<HTMLInputElement | null>).current = node;
+                }
+            },
+            [ref, setTextInputNode],
+        );
+
         return useRender({
-            ref,
+            ref: callbackRef,
             render: render || <input />,
             props: {
                 id,
@@ -142,6 +163,7 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
                 'aria-invalid': invalid,
                 readOnly,
                 placeholder,
+                maxLength,
                 className: clsx(styles.field({ invalid, size }), className),
                 ...props,
             },
@@ -150,9 +172,73 @@ const Field = forwardRef<HTMLInputElement, TextInputFieldProps>(
 );
 Field.displayName = 'TextInput.Field';
 
+/* -------------------------------------------------------------------------------------------------
+ * TextInput.Count
+ * -----------------------------------------------------------------------------------------------*/
+
+type TextInputCountPrimitiveProps = VComponentProps<'span'>;
+interface TextInputCountProps extends Omit<TextInputCountPrimitiveProps, 'children'> {
+    children?: (props: {
+        current: number;
+        max?: number;
+        value?: ComponentProps<'input'>['value'];
+    }) => ReactNode;
+}
+
+const Count = forwardRef<HTMLDivElement, TextInputCountProps>(
+    ({ render, className, children, ...props }, ref) => {
+        const { value, defaultValue, maxLength, textInputNode } = useTextInputContext();
+        const [currentLength, setCurrentLength] = useState(() => {
+            const initialValue = value ?? defaultValue ?? '';
+            return initialValue.length;
+        });
+
+        useEffect(() => {
+            if (value !== undefined) {
+                setCurrentLength(value.length);
+            } else if (textInputNode) {
+                const updateLength = () => {
+                    setCurrentLength(textInputNode.value.length);
+                };
+
+                // Set initial length from DOM node
+                setCurrentLength(textInputNode.value.length);
+
+                textInputNode.addEventListener('input', updateLength);
+
+                return () => {
+                    textInputNode.removeEventListener('input', updateLength);
+                };
+            }
+        }, [value, textInputNode]);
+
+        const content = children
+            ? children({ current: currentLength, max: maxLength, value })
+            : maxLength !== undefined
+              ? `${currentLength}/${maxLength}`
+              : currentLength.toString();
+
+        return useRender({
+            ref,
+            render: render || <span />,
+            props: {
+                className: clsx(styles.count, className),
+                children: content,
+                ...props,
+            },
+        });
+    },
+);
+Count.displayName = 'TextInput.Count';
+
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as TextInputRoot, Label as TextInputLabel, Field as TextInputField };
-export type { TextInputRootProps, TextInputLabelProps, TextInputFieldProps };
+export {
+    Root as TextInputRoot,
+    Label as TextInputLabel,
+    Field as TextInputField,
+    Count as TextInputCount,
+};
+export type { TextInputRootProps, TextInputLabelProps, TextInputFieldProps, TextInputCountProps };
 
-export const TextInput = { Root, Label, Field };
+export const TextInput = { Root, Label, Field, Count };

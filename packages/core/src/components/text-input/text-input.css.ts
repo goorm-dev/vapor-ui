@@ -1,7 +1,10 @@
+import { style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
+import { typography } from '~/styles/mixins/typography.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
@@ -98,6 +101,16 @@ export const field = recipe({
         },
     },
 });
+
+export const count = style([
+    typography({ style: 'body3' }),
+    foregrounds({ color: 'hint' }),
+    layerStyle('components', {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    }),
+]);
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
 export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;
