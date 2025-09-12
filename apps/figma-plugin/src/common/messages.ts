@@ -1,4 +1,4 @@
-import type { ColorPaletteResult } from '@vapor-ui/color-generator';
+import type { ColorPaletteResult, SemanticTokensResult } from '@vapor-ui/color-generator';
 
 // ============================================================================
 // Message Types
@@ -18,7 +18,7 @@ type CreateBrandPaletteSectionsMessage = {
     type: 'create-brand-palette-sections';
     data: { 
         generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
-        dependentTokens: { light: Record<string, string>; dark: Record<string, string> };
+        dependentTokens: SemanticTokensResult;
     };
 };
 

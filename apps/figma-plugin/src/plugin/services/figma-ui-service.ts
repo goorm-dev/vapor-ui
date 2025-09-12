@@ -1,4 +1,4 @@
-import type { ColorToken, ColorPaletteResult } from '@vapor-ui/color-generator';
+import type { ColorToken, ColorPaletteResult, TokenContainer } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
 import { formatColorName, formatFamilyTitle } from '~/plugin/utils/color';
@@ -219,8 +219,8 @@ export const figmaUIService = {
      */
     async generateDependentTokensListOnly(
         dependentTokensByTheme: { 
-            light: { tokens: Record<string, string> }; 
-            dark: { tokens: Record<string, string> } 
+            light: TokenContainer; 
+            dark: TokenContainer 
         },
         sectionTitle: string,
         brandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>
@@ -358,25 +358,37 @@ function extractColorFamilies(tokens: ThemeTokens): Record<string, ColorData[]> 
 }
 
 function createDependentTokenList(
-    tokens: Record<string, string>,
+    tokens: Record<string, string | ColorToken>,
     brandPaletteTheme?: { tokens: Record<string, ColorToken | string> }
 ): DependentTokenData[] {
     return Object.entries(tokens).map(([tokenName, dependentValue]) => {
-        // brandPaletteTheme에서 dependent token의 실제 hex 값 찾기
+        // dependentValue가 string인지 ColorToken인지 확인
+        let actualDependentValue: string;
         let hex: string | undefined;
         
-        if (brandPaletteTheme?.tokens[dependentValue]) {
-            const referencedToken = brandPaletteTheme.tokens[dependentValue];
-            if (typeof referencedToken === 'object' && 'hex' in referencedToken) {
-                hex = referencedToken.hex;
-            } else if (typeof referencedToken === 'string' && referencedToken.startsWith('#')) {
-                hex = referencedToken;
+        if (typeof dependentValue === 'string') {
+            actualDependentValue = dependentValue;
+            
+            // brandPaletteTheme에서 dependent token의 실제 hex 값 찾기
+            if (brandPaletteTheme?.tokens[dependentValue]) {
+                const referencedToken = brandPaletteTheme.tokens[dependentValue];
+                if (typeof referencedToken === 'object' && 'hex' in referencedToken) {
+                    hex = referencedToken.hex;
+                } else if (typeof referencedToken === 'string' && referencedToken.startsWith('#')) {
+                    hex = referencedToken;
+                }
             }
+        } else if (typeof dependentValue === 'object' && 'hex' in dependentValue) {
+            // ColorToken인 경우 직접 hex 값 사용
+            actualDependentValue = dependentValue.hex;
+            hex = dependentValue.hex;
+        } else {
+            actualDependentValue = String(dependentValue);
         }
         
         return {
             name: formatColorName(tokenName),
-            dependentValue,
+            dependentValue: actualDependentValue,
             hex,
         };
     });

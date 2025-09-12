@@ -1,4 +1,4 @@
-import type { ColorPaletteResult } from '@vapor-ui/color-generator';
+import type { ColorPaletteResult, SemanticTokensResult } from '@vapor-ui/color-generator';
 
 import { figmaNoticeService } from '../services/figma-notification';
 import { figmaUIService } from '../services/figma-ui-service';
@@ -7,16 +7,7 @@ import { figmaVariableService } from '../services/figma-variable-service';
 export const brandController = {
     async createBrandPaletteSections(data: {
         generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
-        dependentTokens: {
-            semantic: {
-                light: { tokens: Record<string, string> };
-                dark: { tokens: Record<string, string> };
-            };
-            componentSpecific: {
-                light: { tokens: Record<string, string> };
-                dark: { tokens: Record<string, string> };
-            };
-        };
+        dependentTokens: SemanticTokensResult;
     }): Promise<void> {
         const { generatedBrandPalette, dependentTokens } = data;
 
