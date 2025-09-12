@@ -484,11 +484,7 @@ const FieldWithTextInputTest = ({
     return (
         <Field.Root name="email" validationMode={validationMode} disabled={disabled}>
             <Field.Label>Email Address</Field.Label>
-            <TextInput
-                type="email"
-                placeholder="your.email@example.com"
-                required
-            />
+            <TextInput type="email" placeholder="your.email@example.com" required />
             <Field.Description>
                 Please enter a valid email address for your account
             </Field.Description>
