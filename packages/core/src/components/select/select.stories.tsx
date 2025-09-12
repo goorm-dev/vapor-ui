@@ -21,7 +21,7 @@ export const Default: StoryObj<typeof Select.Root> = {
     render: (args) => (
         <Select.Root {...args}>
             <Select.Trigger>
-                <Select.DisplayValue />
+                <Select.DisplayValue placeholder="Select Font" />
                 <Select.TriggerIcon />
             </Select.Trigger>
 
