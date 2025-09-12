@@ -3,6 +3,7 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { typography } from '~/styles/mixins/typography.css';
+import { layerStyle } from '~/styles/utils/layer-style.css';
 
 export const root = recipe({
     base: {
@@ -35,7 +36,18 @@ export const success = recipe({
 });
 
 export const label = recipe({
-    base: [typography({ style: 'subtitle2' }), foregrounds({ color: 'normal-lighter' })],
+    base: [
+        typography({ style: 'subtitle2' }),
+        foregrounds({ color: 'normal-lighter' }),
+        layerStyle('components', {
+            selectors: {
+                '&:is(:disabled, [data-disabled])': {
+                    opacity: 0.32,
+                    pointerEvents: 'none',
+                },
+            },
+        }),
+    ],
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

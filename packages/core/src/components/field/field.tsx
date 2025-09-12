@@ -6,8 +6,6 @@ import { useRender } from '@base-ui-components/react';
 import { Field as BaseField } from '@base-ui-components/react/field';
 import clsx from 'clsx';
 
-import { createContext } from '~/libs/create-context';
-import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './field.css';
@@ -16,14 +14,6 @@ import * as styles from './field.css';
 type FieldVariants = RootVariants;
 
 type FieldSharedProps = FieldVariants;
-
-type FieldContextType = FieldSharedProps;
-
-const [FieldProvider] = createContext<FieldContextType>({
-    name: 'Field',
-    hookName: 'useFieldContext',
-    providerName: 'FieldProvider',
-});
 
 /* -------------------------------------------------------------------------------------------------
  * Field
@@ -34,23 +24,10 @@ interface FieldRootProps extends Assign<FieldPrimitiveProps, FieldSharedProps> {
 
 const Root = forwardRef<HTMLDivElement, FieldRootProps>(
     ({ children, className, ...props }, ref) => {
-        const [fieldRootProps, otherProps] = createSplitProps<FieldSharedProps>()(props, [
-            'disabled',
-        ]);
-
-        const { disabled } = fieldRootProps;
-
         return (
-            <FieldProvider value={fieldRootProps}>
-                <BaseField.Root
-                    className={clsx(className, styles.root({ disabled }))}
-                    ref={ref}
-                    disabled={disabled}
-                    {...otherProps}
-                >
-                    {children}
-                </BaseField.Root>
-            </FieldProvider>
+            <BaseField.Root className={clsx(className, styles.root())} ref={ref} {...props}>
+                {children}
+            </BaseField.Root>
         );
     },
 );

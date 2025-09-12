@@ -6,31 +6,49 @@ import { Flex } from '~/components/flex';
 import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
 
+import { Radio } from '../radio';
 import { Field } from './field';
 
-const meta: Meta<typeof Field.Root> = {
+type FieldStoryArgs = React.ComponentProps<typeof Field.Root> & {
+    required?: boolean;
+};
+
+const meta: Meta<FieldStoryArgs> = {
     title: 'Field',
     component: Field.Root,
     parameters: {
         layout: 'padded',
     },
     tags: ['autodocs'],
+    argTypes: {
+        disabled: {
+            control: 'boolean',
+            description: 'Whether the field is disabled',
+        },
+        required: {
+            control: 'boolean',
+            description: 'Whether the inner form controls are required',
+        },
+    },
 };
 
 export default meta;
-type Story = StoryObj<typeof Field.Root>;
+type Story = StoryObj<FieldStoryArgs>;
 
 export const TestBed: Story = {
-    render: () => {
+    render: (args) => {
+        const { required, ...fieldArgs } = args;
         return (
             <Flex flexDirection="column" gap="$300">
-                <Field.Root name="vapor-policy-agreement" validationMode="onChange">
-                    <Checkbox.Root required>
-                        <Checkbox.Control>
-                            <ConfirmOutlineIcon />
-                        </Checkbox.Control>
+                <Field.Root name="vapor-policy-agreement" validationMode="onChange" {...fieldArgs}>
+                    <Flex gap="$100">
+                        <Checkbox.Root required={required}>
+                            <Checkbox.Indicator>
+                                <ConfirmOutlineIcon />
+                            </Checkbox.Indicator>
+                        </Checkbox.Root>
                         <Field.Label>동의합니다.</Field.Label>
-                    </Checkbox.Root>
+                    </Flex>
                     <Field.Description>
                         I agree to the Terms and Conditions and Privacy Policy
                     </Field.Description>
@@ -42,13 +60,11 @@ export const TestBed: Story = {
                     </Field.Success>
                 </Field.Root>
                 {/* Switch Component Example */}
-                <Field.Root name="notifications" validationMode="onChange">
-                    <Switch.Root required>
-                        <Flex alignItems="center" gap="$150">
-                            <Switch.Control />
-                            <Field.Label>Enable push notifications</Field.Label>
-                        </Flex>
-                    </Switch.Root>
+                <Field.Root name="notifications" validationMode="onChange" {...fieldArgs}>
+                    <Flex alignItems="center" gap="$150">
+                        <Switch.Root required={required} />
+                        <Field.Label>Enable push notifications</Field.Label>
+                    </Flex>
                     <Field.Description>
                         Get notified about important updates, security alerts, and account
                         activities
@@ -62,31 +78,27 @@ export const TestBed: Story = {
                 </Field.Root>
 
                 {/* RadioGroup Selection RadioGroup */}
-                <Field.Root name="gender" validationMode="onChange">
-                    <Field.Label>성별을 선택하세요</Field.Label>
-                    <Field.Description>회원 가입을 위해 성별을 선택해주세요.</Field.Description>
-                    <RadioGroup.Root required>
-                        <RadioGroup.Item value="male">
-                            <Flex alignItems="center" gap="$150">
-                                <RadioGroup.Control />
-                                <RadioGroup.Label>남성</RadioGroup.Label>
-                            </Flex>
-                        </RadioGroup.Item>
-                        <RadioGroup.Item value="female">
-                            <Flex alignItems="center" gap="$150">
-                                <RadioGroup.Control />
-                                <RadioGroup.Label>여성</RadioGroup.Label>
-                            </Flex>
-                        </RadioGroup.Item>
-                        <RadioGroup.Item value="other">
-                            <Flex alignItems="center" gap="$150">
-                                <RadioGroup.Control />
-                                <RadioGroup.Label>기타</RadioGroup.Label>
-                            </Flex>
-                        </RadioGroup.Item>
+                <Field.Root name="gender" validationMode="onChange" {...fieldArgs}>
+                    <legend>성별 선택</legend>
+                    <RadioGroup.Root required={required}>
+                        <Field.Label>성별을 선택하세요</Field.Label>
+                        <Field.Description>회원 가입을 위해 성별을 선택해주세요.</Field.Description>
+                        <Flex alignItems="center" gap="$150">
+                            <Radio.Root value="male" />
+                            <Field.Label>남성</Field.Label>
+                        </Flex>
+                        <Flex alignItems="center" gap="$150">
+                            <Radio.Root value="female" />
+                            <Field.Label>여성</Field.Label>
+                        </Flex>
+                        <Flex alignItems="center" gap="$150">
+                            <Radio.Root value="other" />
+                            <Field.Label>기타</Field.Label>
+                        </Flex>
+                        {/* Alternatively, you can use Radio.Item for better semantics */}
+                        <Field.Error>성별을 반드시 선택해주세요.</Field.Error>
+                        <Field.Success>✓ 성별이 선택되었습니다</Field.Success>
                     </RadioGroup.Root>
-                    <Field.Error>성별을 반드시 선택해주세요.</Field.Error>
-                    <Field.Success>✓ 성별이 선택되었습니다</Field.Success>
                 </Field.Root>
             </Flex>
         );
