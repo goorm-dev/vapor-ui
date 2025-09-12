@@ -7,6 +7,7 @@ import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
 
 import { Radio } from '../radio';
+import { TextInput } from '../text-input';
 import { Field } from './field';
 
 type FieldStoryArgs = React.ComponentProps<typeof Field.Root> & {
@@ -98,6 +99,17 @@ export const TestBed: Story = {
                         <Field.Error>성별을 반드시 선택해주세요.</Field.Error>
                         <Field.Success>✓ 성별이 선택되었습니다</Field.Success>
                     </RadioGroup.Root>
+                </Field.Root>
+
+                {/* TextInput Component Example */}
+                <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
+                    <Field.Label>이름</Field.Label>
+                    <TextInput type="text" placeholder="" required={required} />
+                    <Field.Description>
+                        계정 생성을 위해 유효한 이름을 입력해주세요
+                    </Field.Description>
+                    <Field.Error match="valueMissing">이 필드는 필수입니다.</Field.Error>
+                    <Field.Success>✓ 올바른 이름 형식입니다</Field.Success>
                 </Field.Root>
             </Flex>
         );

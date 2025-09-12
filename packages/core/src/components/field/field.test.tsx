@@ -11,6 +11,7 @@ import { Flex } from '~/components/flex';
 import { Radio } from '~/components/radio';
 import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
+import { TextInput } from '~/components/text-input';
 
 import { Field } from './field';
 
@@ -198,6 +199,13 @@ describe('Field', () => {
 
             expect(switchElement).toBeDisabled();
         });
+
+        it('should disable text input when field is disabled', () => {
+            const rendered = render(<FieldWithTextInputTest disabled />);
+            const textInput = rendered.getByRole('textbox');
+
+            expect(textInput).toBeDisabled();
+        });
     });
 
     describe('Field validation modes', () => {
@@ -280,6 +288,102 @@ describe('Field', () => {
             // Note: Radio buttons typically can't be unchecked once selected
             // This is expected behavior for radio groups
             expect(screen.queryByText('Please select your gender')).not.toBeInTheDocument();
+        });
+    });
+
+    describe('Field with TextInput integration', () => {
+        let rendered: RenderResult;
+        let textInput: HTMLElement;
+
+        beforeEach(() => {
+            rendered = render(<FieldWithTextInputTest />);
+            textInput = rendered.getByRole('textbox');
+        });
+
+        it('should have no a11y violations', async () => {
+            const result = await axe(rendered.container);
+            expect(result).toHaveNoViolations();
+        });
+
+        it('should associate field label with text input', async () => {
+            const label = rendered.getByText('Email Address');
+
+            await userEvent.click(label);
+            expect(textInput).toHaveFocus();
+        });
+
+        it('should update text input value when typed', async () => {
+            await userEvent.type(textInput, 'test@example.com');
+            expect(textInput).toHaveValue('test@example.com');
+        });
+
+        it('should show field success when valid email is entered', async () => {
+            await userEvent.type(textInput, 'test@example.com');
+            expect(textInput).toHaveValue('test@example.com');
+        });
+
+        it('should show error when invalid email is entered', async () => {
+            await userEvent.type(textInput, 'invalid-email');
+            expect(textInput).toHaveValue('invalid-email');
+        });
+
+        it('should clear input value when cleared', async () => {
+            // Type valid email first
+            await userEvent.type(textInput, 'test@example.com');
+            expect(textInput).toHaveValue('test@example.com');
+
+            // Clear the input
+            await userEvent.clear(textInput);
+            expect(textInput).toHaveValue('');
+        });
+
+        it('should not be typable when disabled', async () => {
+            cleanup(); // Clean up previous renders
+            const disabledRendered = render(<FieldWithTextInputTest disabled />);
+            const disabledInput = disabledRendered.getByRole('textbox');
+
+            await userEvent.type(disabledInput, 'test@example.com');
+            expect(disabledInput).toHaveValue('');
+            expect(disabledInput).toBeDisabled();
+        });
+
+        it('should show proper input type for email', () => {
+            expect(textInput).toHaveAttribute('type', 'email');
+        });
+
+        it('should display placeholder text', () => {
+            expect(textInput).toHaveAttribute('placeholder', 'your.email@example.com');
+        });
+
+        it('should have required attribute when field requires it', () => {
+            expect(textInput).toHaveAttribute('required');
+        });
+    });
+
+    describe('Field with TextInput validation modes', () => {
+        it('should validate onChange for text input field', async () => {
+            cleanup();
+            const rendered = render(<FieldWithTextInputTest validationMode="onChange" />);
+            const validationInput = rendered.getByRole('textbox');
+
+            // Type and clear to trigger validation
+            await userEvent.type(validationInput, 'test');
+            await userEvent.clear(validationInput);
+
+            expect(validationInput).toHaveValue('');
+        });
+
+        it('should validate onBlur for text input field', async () => {
+            cleanup();
+            const rendered = render(<FieldWithTextInputTest validationMode="onBlur" />);
+            const blurInput = rendered.getByRole('textbox');
+
+            await act(async () => {
+                blurInput.focus();
+                blurInput.blur();
+            });
+
+            expect(blurInput).not.toHaveFocus();
         });
     });
 });
@@ -366,6 +470,30 @@ const FieldWithRadioGroupTest = ({
                 <Field.Error>Please select your gender</Field.Error>
                 <Field.Success>✓ Gender selected</Field.Success>
             </RadioGroup.Root>
+        </Field.Root>
+    );
+};
+
+const FieldWithTextInputTest = ({
+    disabled = false,
+    validationMode = 'onChange',
+}: {
+    disabled?: boolean;
+    validationMode?: 'onChange' | 'onBlur';
+}) => {
+    return (
+        <Field.Root name="email" validationMode={validationMode} disabled={disabled}>
+            <Field.Label>Email Address</Field.Label>
+            <TextInput
+                type="email"
+                placeholder="your.email@example.com"
+                required
+            />
+            <Field.Description>
+                Please enter a valid email address for your account
+            </Field.Description>
+            <Field.Error>Email address is required</Field.Error>
+            <Field.Success>✓ Valid email format</Field.Success>
         </Field.Root>
     );
 };
