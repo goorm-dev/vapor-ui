@@ -8,22 +8,25 @@ import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/vars.css';
 
 export const trigger = recipe({
-    base: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: vars.size.space['100'],
+    base: [
+        interaction(),
+        {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: vars.size.space['100'],
 
-        border: `1px solid ${vars.color.border.normal}`,
-        borderRadius: vars.size.borderRadius['300'],
+            border: `1px solid ${vars.color.border.normal}`,
+            borderRadius: vars.size.borderRadius['300'],
 
-        backgroundColor: vars.color.background['normal-lighter'],
+            backgroundColor: vars.color.background['normal-lighter'],
 
-        selectors: {
-            '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
-            '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+            selectors: {
+                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+            },
         },
-    },
+    ],
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
