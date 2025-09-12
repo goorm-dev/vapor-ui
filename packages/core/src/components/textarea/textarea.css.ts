@@ -12,7 +12,7 @@ export const root = recipe({
     base: layerStyle('components', {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'flex-start',
+        alignItems: 'flex-end',
         gap: vars.size.space[100],
         width: '100%',
     }),
