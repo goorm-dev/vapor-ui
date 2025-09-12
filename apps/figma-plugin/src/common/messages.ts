@@ -14,20 +14,20 @@ type CreateFigmaVariablesMessage = {
     data: { generatedPalette: ColorPaletteResult; collectionName: string };
 };
 
-type CreateSemanticPaletteSectionsMessage = {
-    type: 'create-semantic-palette-sections';
+type CreateBrandPaletteSectionsMessage = {
+    type: 'create-brand-palette-sections';
     data: { 
-        generatedSemanticPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
+        generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
         dependentTokens: { light: Record<string, string>; dark: Record<string, string> };
     };
 };
 
-type CreateSemanticFigmaVariablesMessage = {
-    type: 'create-semantic-figma-variables';
-    data: { generatedSemanticPalette: Pick<ColorPaletteResult, 'light' | 'dark'>; collectionName: string };
+type CreateBrandFigmaVariablesMessage = {
+    type: 'create-brand-figma-variables';
+    data: { generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>; collectionName: string };
 };
 
-export type UIMessage = CreatePaletteSectionsMessage | CreateFigmaVariablesMessage | CreateSemanticPaletteSectionsMessage | CreateSemanticFigmaVariablesMessage;
+export type UIMessage = CreatePaletteSectionsMessage | CreateFigmaVariablesMessage | CreateBrandPaletteSectionsMessage | CreateBrandFigmaVariablesMessage;
 
 // ============================================================================
 // Message Utilities

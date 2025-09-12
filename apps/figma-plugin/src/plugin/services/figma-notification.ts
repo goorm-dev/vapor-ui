@@ -11,11 +11,17 @@ export const figmaNoticeService = {
     semanticPaletteCreated: () => {
         figma.notify('새로운 시맨틱 팔레트 섹션이 생성되었습니다! 🎨');
     },
+    brandPaletteCreated: () => {
+        figma.notify('새로운 브랜드 팔레트 섹션이 생성되었습니다! 🎨');
+    },
     paletteCreateFailed: () => {
         figma.notify('팔레트 섹션 생성 중 오류가 발생했습니다 ❌');
     },
     semanticPaletteCreateFailed: () => {
         figma.notify('시맨틱 팔레트 섹션 생성 중 오류가 발생했습니다 ❌');
+    },
+    brandPaletteCreateFailed: () => {
+        figma.notify('브랜드 팔레트 섹션 생성 중 오류가 발생했습니다 ❌');
     },
 
     // ============================================================================

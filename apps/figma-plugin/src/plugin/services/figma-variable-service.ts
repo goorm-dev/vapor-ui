@@ -70,6 +70,17 @@ export const figmaVariableService = {
     },
 
     /**
+     * Creates brand Figma variables (with light/dark modes)
+     * Alias for createSemanticVariables for backward compatibility
+     */
+    async createBrandVariables(
+        palette: Pick<ColorPaletteResult, 'light' | 'dark'>,
+        collectionName: string,
+    ): Promise<void> {
+        return this.createSemanticVariables(palette, collectionName);
+    },
+
+    /**
      * Creates semantic Figma variables (with light/dark modes)
      */
     async createSemanticVariables(

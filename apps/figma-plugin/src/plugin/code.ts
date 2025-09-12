@@ -1,5 +1,5 @@
 import type { UIMessage } from '~/common/messages';
-import { primitiveController, semanticController } from './controllers';
+import { primitiveController, brandController } from './controllers';
 
 // ============================================================================
 // Figma Plugin Setup
@@ -20,11 +20,11 @@ figma.ui.onmessage = async (msg: UIMessage) => {
         case 'create-figma-variables':
             await primitiveController.createFigmaVariables(msg.data);
             break;
-        case 'create-semantic-palette-sections':
-            await semanticController.createSemanticPaletteSections(msg.data);
+        case 'create-brand-palette-sections':
+            await brandController.createBrandPaletteSections(msg.data);
             break;
-        case 'create-semantic-figma-variables':
-            await semanticController.createSemanticFigmaVariables(msg.data);
+        case 'create-brand-figma-variables':
+            await brandController.createBrandFigmaVariables(msg.data);
             break;
         default:
             console.warn('알 수 없는 메시지 유형:', msg);

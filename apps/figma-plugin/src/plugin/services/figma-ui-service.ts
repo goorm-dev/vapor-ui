@@ -385,7 +385,7 @@ async function createColorChip(colorData: ColorData, width: number): Promise<Fra
     // 색상 이름
     const nameText = figma.createText();
     nameText.name = 'Color Name';
-    await setTextSafely(nameText, colorData.name, 12, 'Medium');
+    await setTextSafely(nameText, colorData.name, 10, 'Medium');
     nameText.fills = [
         {
             type: 'SOLID',
