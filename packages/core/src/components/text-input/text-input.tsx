@@ -1,6 +1,6 @@
 'use client';
 
-import type { ChangeEvent, MutableRefObject, ReactNode } from 'react';
+import type { ChangeEvent, ComponentProps, MutableRefObject, ReactNode } from 'react';
 import React, { forwardRef, useCallback, useEffect, useId, useState } from 'react';
 
 import { useRender } from '@base-ui-components/react';
@@ -178,7 +178,11 @@ Field.displayName = 'TextInput.Field';
 
 type TextInputCountPrimitiveProps = VComponentProps<'span'>;
 interface TextInputCountProps extends Omit<TextInputCountPrimitiveProps, 'children'> {
-    children?: (props: { current: number; max?: number }) => ReactNode;
+    children?: (props: {
+        current: number;
+        max?: number;
+        value?: ComponentProps<'input'>['value'];
+    }) => ReactNode;
 }
 
 const Count = forwardRef<HTMLDivElement, TextInputCountProps>(
@@ -209,7 +213,7 @@ const Count = forwardRef<HTMLDivElement, TextInputCountProps>(
         }, [value, textInputNode]);
 
         const content = children
-            ? children({ current: currentLength, max: maxLength })
+            ? children({ current: currentLength, max: maxLength, value })
             : maxLength !== undefined
               ? `${currentLength}/${maxLength}`
               : currentLength.toString();
