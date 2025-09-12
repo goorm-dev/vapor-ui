@@ -18,6 +18,7 @@ import '../components/grid/grid.css';
 import '../components/icon-button/icon-button.css';
 import '../components/menu/menu.css';
 import '../components/navigation-menu/navigation-menu.css';
+import '../components/radio/radio.css';
 import '../components/radio-group/radio-group.css';
 import '../components/switch/switch.css';
 import '../components/text-input/text-input.css';

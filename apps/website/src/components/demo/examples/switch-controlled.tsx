@@ -7,10 +7,7 @@ export default function SwitchControlled() {
 
     return (
         <div className="space-y-4">
-            <Switch.Root checked={checked} onCheckedChange={setChecked}>
-                <Switch.Label>Controlled Switch</Switch.Label>
-                <Switch.Control />
-            </Switch.Root>
+            <Switch.Root checked={checked} onCheckedChange={setChecked} />
             <p>Current state: {checked ? 'On' : 'Off'}</p>
         </div>
     );
