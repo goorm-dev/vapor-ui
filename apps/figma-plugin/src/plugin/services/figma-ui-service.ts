@@ -1,4 +1,4 @@
-import type { ColorToken } from '@vapor-ui/color-generator';
+import type { ColorToken, ColorPaletteResult } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
 import { formatColorName, formatFamilyTitle } from '~/plugin/utils/color';
@@ -34,6 +34,12 @@ interface ColorData {
     hex: string;
     oklch: string;
     textColor?: string;
+}
+
+interface DependentTokenData {
+    name: string;
+    dependentValue: string; // 의존 토큰 문자열 (예: "color-myBlue-500")
+    hex?: string; // 해석된 hex 값
 }
 
 interface ThemeTokens {
@@ -205,6 +211,97 @@ export const figmaUIService = {
             throw error;
         }
     },
+
+    /**
+     * Dependent tokens로 ListView만 있는 섹션 생성
+     * - PaletteContainer 없이 ListView만 표시
+     * - Value에 의존 토큰 문자열 표시
+     */
+    async generateDependentTokensListOnly(
+        dependentTokensByTheme: { 
+            light: { tokens: Record<string, string> }; 
+            dark: { tokens: Record<string, string> } 
+        },
+        sectionTitle: string,
+        brandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>
+    ): Promise<SectionNode[]> {
+        try {
+            Logger.info(`Starting dependent tokens list generation for: ${sectionTitle}`);
+
+            // 필요한 모든 폰트 스타일 로드
+            await loadRequiredFonts();
+
+            const sections: SectionNode[] = [];
+            const themeOrder: ('light' | 'dark')[] = ['light', 'dark'];
+
+            for (const theme of themeOrder) {
+                const themeData = dependentTokensByTheme[theme];
+                if (!themeData?.tokens || Object.keys(themeData.tokens).length === 0) {
+                    continue;
+                }
+
+                // 토큰을 DependentTokenData 형태로 변환 (hex 값 포함)
+                const tokenList = createDependentTokenList(themeData.tokens, brandPalette[theme]);
+                
+                // 섹션 노드 생성
+                const sectionNode = figma.createSection();
+                sectionNode.name = `${sectionTitle}-${theme}`;
+                sectionNode.fills = [{ type: 'SOLID', color: hexToFigmaColor('#F7F7FA') }];
+                
+                // 섹션 패딩 설정
+                const sectionPadding = 100;
+
+                // 단일 프레임으로 리스트 생성
+                const tokenListFrame = await createDependentTokenListFrame(
+                    `${sectionTitle} / ${theme}`,
+                    tokenList
+                );
+
+                // 프레임을 섹션에 추가하고 위치 설정
+                sectionNode.appendChild(tokenListFrame);
+                tokenListFrame.x = sectionPadding;
+                tokenListFrame.y = sectionPadding;
+
+                // SectionNode 크기 조정 - 패딩 포함
+                const finalHeight = tokenListFrame.height + sectionPadding * 2;
+                const finalWidth = tokenListFrame.width + sectionPadding * 2;
+                sectionNode.resizeWithoutConstraints(finalWidth, finalHeight);
+
+                // 섹션들을 겹치지 않도록 위치 설정
+                const existingSections = figma.currentPage.findAll(
+                    (node) => node.type === 'SECTION' && node !== sectionNode,
+                ) as SectionNode[];
+
+                let sectionX = 0;
+                let sectionY = 0;
+
+                if (existingSections.length > 0) {
+                    const rightmostSection = existingSections.reduce((rightmost, section) =>
+                        section.x + section.width > rightmost.x + rightmost.width ? section : rightmost,
+                    );
+                    sectionX = rightmostSection.x + rightmostSection.width + 100;
+                    sectionY = rightmostSection.y;
+                }
+
+                sectionNode.x = sectionX;
+                sectionNode.y = sectionY;
+
+                // 모든 요소가 추가된 후에 페이지에 추가
+                figma.currentPage.appendChild(sectionNode);
+                sections.push(sectionNode);
+            }
+
+            // 모든 섹션을 뷰포트에 맞춤
+            if (sections.length > 0) {
+                figma.viewport.scrollAndZoomIntoView(sections);
+            }
+
+            return sections;
+        } catch (error) {
+            Logger.error('Failed to generate dependent tokens list:', error);
+            throw error;
+        }
+    },
 } as const;
 
 // ============================================================================
@@ -258,6 +355,31 @@ function extractColorFamilies(tokens: ThemeTokens): Record<string, ColorData[]> 
     });
 
     return colorFamilies;
+}
+
+function createDependentTokenList(
+    tokens: Record<string, string>,
+    brandPaletteTheme?: { tokens: Record<string, ColorToken | string> }
+): DependentTokenData[] {
+    return Object.entries(tokens).map(([tokenName, dependentValue]) => {
+        // brandPaletteTheme에서 dependent token의 실제 hex 값 찾기
+        let hex: string | undefined;
+        
+        if (brandPaletteTheme?.tokens[dependentValue]) {
+            const referencedToken = brandPaletteTheme.tokens[dependentValue];
+            if (typeof referencedToken === 'object' && 'hex' in referencedToken) {
+                hex = referencedToken.hex;
+            } else if (typeof referencedToken === 'string' && referencedToken.startsWith('#')) {
+                hex = referencedToken;
+            }
+        }
+        
+        return {
+            name: formatColorName(tokenName),
+            dependentValue,
+            hex,
+        };
+    });
 }
 
 function sortColorsByShade(colors: ColorData[]): ColorData[] {
@@ -346,6 +468,58 @@ async function createColorSetFrame(title: string, colors: ColorData[]): Promise<
     return colorSetFrame;
 }
 
+async function createDependentTokenListFrame(title: string, tokens: DependentTokenData[]): Promise<FrameNode> {
+    const tokenListFrame = figma.createFrame();
+    tokenListFrame.name = 'Dependent Token List';
+    tokenListFrame.resize(UI_CONSTANTS.width, calculateDependentTokenListHeight(tokens.length));
+    tokenListFrame.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.containerBg) }];
+    tokenListFrame.cornerRadius = 8;
+    tokenListFrame.effects = [
+        {
+            type: 'DROP_SHADOW',
+            color: { r: 0, g: 0, b: 0, a: 0.05 },
+            offset: { x: 0, y: 4 },
+            radius: 12,
+            visible: true,
+            blendMode: 'NORMAL',
+        },
+    ];
+    tokenListFrame.strokes = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
+    tokenListFrame.strokeWeight = 1;
+    tokenListFrame.layoutMode = 'VERTICAL';
+    tokenListFrame.itemSpacing = UI_CONSTANTS.spacing.palette;
+    tokenListFrame.paddingTop = 32;
+    tokenListFrame.paddingBottom = 32;
+    tokenListFrame.paddingLeft = 32;
+    tokenListFrame.paddingRight = 32;
+
+    // 섹션 제목
+    const titleText = figma.createText();
+    titleText.name = 'Section Title';
+    await setTextSafely(titleText, title, 18, 'Bold');
+    titleText.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.primary) }];
+    titleText.layoutAlign = 'STRETCH';
+    
+    // 제목 하단 보더 추가
+    const titleBorder = figma.createFrame();
+    titleBorder.name = 'Title Border';
+    titleBorder.resize(UI_CONSTANTS.width - 64, 1);
+    titleBorder.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
+    
+    tokenListFrame.appendChild(titleText);
+    tokenListFrame.appendChild(titleBorder);
+    
+    // 부모에 추가된 후에 sizing 설정
+    titleBorder.layoutSizingHorizontal = 'FILL';
+
+    // 리스트 뷰만 생성 (PaletteContainer 없음)
+    const listView = await createDependentTokenListView(tokens);
+    tokenListFrame.appendChild(listView);
+    listView.layoutSizingHorizontal = 'FILL';
+
+    return tokenListFrame;
+}
+
 async function createPaletteContainer(colors: ColorData[]): Promise<FrameNode> {
     const container = figma.createFrame();
     container.name = 'Palette Container';
@@ -429,6 +603,120 @@ async function createListView(colors: ColorData[]): Promise<FrameNode> {
     }
 
     return listView;
+}
+
+async function createDependentTokenListView(tokens: DependentTokenData[]): Promise<FrameNode> {
+    const listView = figma.createFrame();
+    listView.name = 'Dependent Token List View';
+    listView.layoutMode = 'VERTICAL';
+    listView.itemSpacing = 0;
+    listView.resize(UI_CONSTANTS.width - 64, calculateDependentTokenListHeight(tokens.length));
+
+    // 리스트 헤더
+    const listHeader = await createDependentTokenListHeader();
+    listView.appendChild(listHeader);
+    listHeader.layoutSizingHorizontal = 'FILL';
+
+    // 리스트 아이템들
+    for (const tokenData of tokens) {
+        const listItem = await createDependentTokenListItem(tokenData);
+        listView.appendChild(listItem);
+        listItem.layoutSizingHorizontal = 'FILL';
+    }
+
+    return listView;
+}
+
+async function createDependentTokenListHeader(): Promise<FrameNode> {
+    const header = figma.createFrame();
+    header.name = 'Dependent Token List Header';
+    header.layoutMode = 'HORIZONTAL';
+    header.itemSpacing = 16;
+    header.paddingBottom = 16;
+    header.resize(UI_CONSTANTS.width - 64, 40);
+    
+    // 하단 보더
+    header.strokes = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
+    header.strokeWeight = 1;
+    header.strokeAlign = 'OUTSIDE';
+
+    // Name 컬럼
+    const nameColumn = figma.createText();
+    nameColumn.name = 'Name Column';
+    await setTextSafely(nameColumn, 'Name', 16, 'Medium');
+    nameColumn.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) }];
+    header.appendChild(nameColumn);
+
+    // Value 컬럼
+    const valueColumn = figma.createText();
+    valueColumn.name = 'Value Column';
+    await setTextSafely(valueColumn, 'Value', 16, 'Medium');
+    valueColumn.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) }];
+    header.appendChild(valueColumn);
+    
+    // 부모에 추가된 후에 sizing 설정
+    nameColumn.layoutSizingHorizontal = 'FILL';
+    valueColumn.layoutSizingHorizontal = 'FILL';
+
+    return header;
+}
+
+async function createDependentTokenListItem(tokenData: DependentTokenData): Promise<FrameNode> {
+    const item = figma.createFrame();
+    item.name = 'Dependent Token List Item';
+    item.layoutMode = 'HORIZONTAL';
+    item.itemSpacing = 16;
+    item.paddingTop = 16;
+    item.paddingBottom = 16;
+    item.resize(UI_CONSTANTS.width - 64, UI_CONSTANTS.listRowHeight);
+    
+    // 하단 보더
+    item.strokes = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
+    item.strokeWeight = 1;
+    item.strokeAlign = 'OUTSIDE';
+
+    // Name 컬럼
+    const nameText = figma.createText();
+    nameText.name = 'Name';
+    await setTextSafely(nameText, tokenData.name, 16, 'Medium');
+    nameText.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.primary) }];
+    item.appendChild(nameText);
+
+    // Value 컬럼 (Color Swatch + Dependent Value)
+    const valueColumn = figma.createFrame();
+    valueColumn.name = 'Value Column';
+    valueColumn.layoutMode = 'HORIZONTAL';
+    valueColumn.itemSpacing = 12;
+    valueColumn.primaryAxisAlignItems = 'MIN';
+    valueColumn.counterAxisAlignItems = 'CENTER';
+    valueColumn.layoutSizingVertical = 'HUG';
+
+    // Color Swatch (hex 값이 있는 경우에만)
+    if (tokenData.hex) {
+        const colorSwatch = figma.createFrame();
+        colorSwatch.name = 'Dependent Color Swatch';
+        colorSwatch.resize(32, 32);
+        colorSwatch.cornerRadius = 8;
+        colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor(tokenData.hex) }];
+        colorSwatch.strokes = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
+        colorSwatch.strokeWeight = 1;
+        valueColumn.appendChild(colorSwatch);
+    }
+
+    // Dependent Value
+    const dependentValueText = figma.createText();
+    dependentValueText.name = 'Dependent Value';
+    await setTextSafely(dependentValueText, tokenData.dependentValue, 16, 'Regular');
+    dependentValueText.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) }];
+    valueColumn.appendChild(dependentValueText);
+
+    item.appendChild(valueColumn);
+    
+    // 부모에 추가된 후에 sizing 설정
+    nameText.layoutSizingHorizontal = 'FILL';
+    valueColumn.layoutSizingHorizontal = 'FILL';
+
+    return item;
 }
 
 async function createListHeader(): Promise<FrameNode> {
@@ -559,4 +847,14 @@ function calculateListHeight(colorCount: number): number {
     const headerHeight = 40;
     const itemHeight = UI_CONSTANTS.listRowHeight;
     return headerHeight + itemHeight * colorCount;
+}
+
+function calculateDependentTokenListHeight(tokenCount: number): number {
+    const headerHeight = 50; // 제목 + 보더
+    const listHeaderHeight = 40;
+    const itemHeight = UI_CONSTANTS.listRowHeight;
+    const padding = 64; // top + bottom
+    const spacing = UI_CONSTANTS.spacing.palette; // 제목과 리스트 간 간격
+    
+    return headerHeight + listHeaderHeight + (itemHeight * tokenCount) + padding + spacing;
 }

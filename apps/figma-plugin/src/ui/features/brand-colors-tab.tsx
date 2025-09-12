@@ -20,10 +20,11 @@ type ThemeColorType = keyof SemanticMappingConfig;
 
 const THEME_COLOR_OPTIONS: { value: ThemeColorType; label: string }[] = [
     { value: 'primary', label: 'Primary' },
-    { value: 'secondary', label: 'Secondary' },
-    { value: 'success', label: 'Success' },
-    { value: 'warning', label: 'Warning' },
-    { value: 'error', label: 'Error' },
+    // TODO: 향후 다중 테마 컬러 지원 시 활성화
+    // { value: 'secondary', label: 'Secondary' },
+    // { value: 'success', label: 'Success' },
+    // { value: 'warning', label: 'Warning' },
+    // { value: 'error', label: 'Error' },
 ];
 
 export const BrandColorsTab = () => {
@@ -45,33 +46,12 @@ export const BrandColorsTab = () => {
             };
 
             const brandPalette = generateBrandColorPalette(config);
-
-            const mappingConfig: SemanticMappingConfig = {
-                primary:
-                    themeColorType === 'primary'
-                        ? { name: colorName, hex: colorHex }
-                        : { name: 'default', hex: '#000000' },
-            };
-
-            if (themeColorType !== 'primary') {
-                mappingConfig[themeColorType] = { name: colorName, hex: colorHex };
-            }
-
-            const brandTokensResult = getSemanticDependentTokens({
-                primary: {
-                    name: 'myBlue',
-                    hex: '#413ce3ff',
-                },
-                secondary:{
-                    name: 'myYellow',
-                    hex: '#f3e246ff',
-                }
+            const semanticDependentTokens = getSemanticDependentTokens({
+                primary: { name: colorName, hex: colorHex },
             });
-            console.log('Brand Tokens Result:', brandTokensResult);
-            const dependentTokens = {
-                light: brandTokensResult.semantic.light.tokens as Record<string, string>,
-                dark: brandTokensResult.semantic.dark.tokens as Record<string, string>,
-            };
+
+            // 실제 구조에 맞게 전체 semanticDependentTokens 전달
+            const dependentTokens = semanticDependentTokens;
 
             Logger.semantic.generating({ primary: colorHex }, dependentTokens);
 

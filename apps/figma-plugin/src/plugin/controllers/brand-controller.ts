@@ -14,9 +14,12 @@ export const brandController = {
      */
     async createBrandPaletteSections(data: {
         generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
-        dependentTokens: { light: Record<string, string>; dark: Record<string, string> };
+        dependentTokens: {
+            semantic: { light: { tokens: Record<string, string> }; dark: { tokens: Record<string, string> } };
+            componentSpecific: { light: { tokens: Record<string, string> }; dark: { tokens: Record<string, string> } };
+        };
     }): Promise<void> {
-        const { generatedBrandPalette } = data;
+        const { generatedBrandPalette, dependentTokens } = data;
         
         // 테마 순서: light -> dark
         const themeOrder: ('light' | 'dark')[] = ['light', 'dark'];
@@ -26,11 +29,21 @@ export const brandController = {
             .map((theme) => [theme, generatedBrandPalette[theme]] as const);
 
         try {
-            // 순차적으로 섹션 생성
+            // 1. Brand 색상 팔레트 섹션 생성 (generateBrandColorPalette 결과)
             for (const [theme, themeData] of sortedThemes) {
                 if (themeData && themeData.tokens) {
                     await figmaUIService.generatePalette(themeData, `brand-${theme}`);
                 }
+            }
+            
+            // 2. Semantic tokens 섹션 생성
+            if (dependentTokens?.semantic) {
+                await figmaUIService.generateDependentTokensListOnly(dependentTokens.semantic, 'semantic-tokens', generatedBrandPalette);
+            }
+            
+            // 3. Component-specific tokens 섹션 생성  
+            if (dependentTokens?.componentSpecific) {
+                await figmaUIService.generateDependentTokensListOnly(dependentTokens.componentSpecific, 'component-tokens', generatedBrandPalette);
             }
             
             // 모든 팔레트 생성 완료 알림
