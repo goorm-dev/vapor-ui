@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentProps, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import { Select as BaseSelect } from '@base-ui-components/react';
@@ -86,37 +86,29 @@ const Value = forwardRef<HTMLSpanElement, SelectValueProps>(({ ...props }, ref) 
  * -----------------------------------------------------------------------------------------------*/
 
 type DisplayValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
-interface SelectDisplayValueProps extends DisplayValuePrimitiveProps {}
+interface SelectDisplayValueProps extends DisplayValuePrimitiveProps {
+    placeholder?: ReactNode;
+}
 
 const DisplayValue = forwardRef<HTMLSpanElement, SelectDisplayValueProps>(
-    ({ render, className, children: childrenProp, ...props }, ref) => {
+    ({ placeholder, className, children: childrenProp, ...props }, ref) => {
         const { items } = useSelectContext();
-        const isChildrenPropFunction = typeof childrenProp === 'function';
 
         const renderValue = (value: string = '') => {
-            if (!items) {
-                return undefined;
-            }
+            if (!items) return value;
 
-            if (Array.isArray(items)) {
-                return items.find((item) => item.value === value)?.label;
-            }
-
+            if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
             return items[value];
         };
 
+        const children = (value: string) =>
+            typeof childrenProp === 'function'
+                ? childrenProp(value)
+                : (childrenProp ?? renderValue(value) ?? <Placeholder>{placeholder}</Placeholder>);
+
         return (
-            <BaseSelect.Value
-                ref={ref}
-                render={render}
-                className={clsx(styles.value, className)}
-                {...props}
-            >
-                {(value) => {
-                    return isChildrenPropFunction
-                        ? childrenProp(value)
-                        : (childrenProp ?? renderValue(value) ?? undefined);
-                }}
+            <BaseSelect.Value ref={ref} className={clsx(styles.value, className)} {...props}>
+                {children}
             </BaseSelect.Value>
         );
     },
@@ -126,27 +118,17 @@ const DisplayValue = forwardRef<HTMLSpanElement, SelectDisplayValueProps>(
  * Select.Placeholder
  * -----------------------------------------------------------------------------------------------*/
 
-type PlaceholderPrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
-interface SelectPlaceholderProps extends PlaceholderPrimitiveProps {
-    children: ReactNode;
-}
+type PlaceholderPrimitiveProps = VComponentProps<'span'>;
+interface SelectPlaceholderProps extends PlaceholderPrimitiveProps {}
 
 const Placeholder = forwardRef<HTMLSpanElement, SelectPlaceholderProps>(
-    ({ render, className, children, ...props }, ref) => {
-        const defaultRender = (props: ComponentProps<'span'>, state: BaseSelect.Value.State) => {
-            if (state.value) return <></>;
-            return <span {...props}>{children}</span>;
-        };
-
+    ({ render, className, ...props }, ref) => {
         return (
             <BaseSelect.Value
                 ref={ref}
-                render={render || defaultRender}
                 className={clsx(styles.placeholder, className)}
                 {...props}
-            >
-                {children}
-            </BaseSelect.Value>
+            />
         );
     },
 );
@@ -242,17 +224,6 @@ const Item = forwardRef<HTMLDivElement, SelectItemProps>(({ className, ...props 
 });
 
 /* -------------------------------------------------------------------------------------------------
- * Select.ItemText
- * -----------------------------------------------------------------------------------------------*/
-
-type ItemTextPrimitiveProps = VComponentProps<typeof BaseSelect.ItemText>;
-interface SelectItemTextProps extends ItemTextPrimitiveProps {}
-
-const ItemText = forwardRef<HTMLDivElement, SelectItemTextProps>(({ ...props }, ref) => {
-    return <BaseSelect.ItemText ref={ref} {...props} />;
-});
-
-/* -------------------------------------------------------------------------------------------------
  * Select.ItemIndicator
  * -----------------------------------------------------------------------------------------------*/
 
@@ -331,7 +302,6 @@ export {
     TriggerIcon as SelectTriggerIcon,
     Content as SelectContent,
     Item as SelectItem,
-    ItemText as SelectItemText,
     ItemIndicator as SelectItemIndicator,
     Group as SelectGroup,
     GroupLabel as SelectGroupLabel,
@@ -346,7 +316,6 @@ export type {
     SelectTriggerIconProps,
     SelectContentProps,
     SelectItemProps,
-    SelectItemTextProps,
     SelectItemIndicatorProps,
     SelectGroupProps,
     SelectGroupLabelProps,
@@ -362,7 +331,6 @@ export const Select = {
     TriggerIcon,
     Content,
     Item,
-    ItemText,
     ItemIndicator,
     Group,
     GroupLabel,
