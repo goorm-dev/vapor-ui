@@ -125,7 +125,11 @@ const DisplayValue = forwardRef<HTMLSpanElement, MultiSelectDisplayValueProps>(
         };
 
         return (
-            <BaseSelect.Value ref={ref} className={clsx(styles.value, className)} {...props}>
+            <BaseSelect.Value
+                ref={ref}
+                className={clsx(styles.value({ size }), className)}
+                {...props}
+            >
                 {children}
             </BaseSelect.Value>
         );
@@ -136,6 +140,7 @@ const badgeSizeMap: Record<
     NonNullable<MultiSelectVariants['size']>,
     NonNullable<React.ComponentProps<typeof Badge>['size']>
 > = {
+    sm: 'sm',
     md: 'sm',
     lg: 'md',
     xl: 'lg',
@@ -150,10 +155,12 @@ interface MultiSelectPlaceholderProps extends PlaceholderPrimitiveProps {}
 
 const Placeholder = forwardRef<HTMLSpanElement, MultiSelectPlaceholderProps>(
     ({ render, className, ...props }, ref) => {
+        const { size } = useMultiSelectContext();
+
         return (
             <BaseSelect.Value
                 ref={ref}
-                className={clsx(styles.placeholder, className)}
+                className={clsx(styles.placeholder({ size }), className)}
                 {...props}
             />
         );
@@ -201,13 +208,23 @@ type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
 interface MultiSelectPositionerProps extends PositionerPrimitiveProps {}
 
 const Positioner = forwardRef<HTMLDivElement, MultiSelectPositionerProps>(
-    ({ side = 'bottom', align = 'start', sideOffset = 4, ...props }, ref) => {
+    (
+        {
+            side = 'bottom',
+            align = 'start',
+            sideOffset = 4,
+            alignItemWithTrigger = false,
+            ...props
+        },
+        ref,
+    ) => {
         return (
             <BaseSelect.Positioner
                 ref={ref}
                 side={side}
                 align={align}
                 sideOffset={sideOffset}
+                alignItemWithTrigger={alignItemWithTrigger}
                 {...props}
             />
         );
@@ -338,6 +355,9 @@ export {
     DisplayValue as MultiSelectDisplayValue,
     Placeholder as MultiSelectPlaceholder,
     TriggerIcon as MultiSelectTriggerIcon,
+    Portal as MultiSelectPortal,
+    Positioner as MultiSelectPositioner,
+    Popup as MultiSelectPopup,
     Content as MultiSelectContent,
     Item as MultiSelectItem,
     ItemIndicator as MultiSelectItemIndicator,
@@ -353,6 +373,9 @@ export type {
     MultiSelectDisplayValueProps,
     MultiSelectPlaceholderProps,
     MultiSelectTriggerIconProps,
+    MultiSelectPortalProps,
+    MultiSelectPositionerProps,
+    MultiSelectPopupProps,
     MultiSelectContentProps,
     MultiSelectItemProps,
     MultiSelectItemIndicatorProps,
@@ -368,6 +391,9 @@ export const MultiSelect = {
     DisplayValue,
     Placeholder,
     TriggerIcon,
+    Portal,
+    Positioner,
+    Popup,
     Content,
     Item,
     ItemIndicator,

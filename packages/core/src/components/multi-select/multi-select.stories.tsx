@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { Badge } from '../badge';
 import { Grid } from '../grid';
+import { HStack } from '../h-stack';
+import { VStack } from '../v-stack';
 import { MultiSelect } from './multi-select';
 
 export default {
@@ -10,7 +12,7 @@ export default {
     argTypes: {
         size: {
             control: { type: 'inline-radio' },
-            options: ['md', 'lg', 'xl'],
+            options: ['sm', 'md', 'lg', 'xl'],
         },
         invalid: { control: 'boolean' },
         disabled: { control: 'boolean' },
@@ -62,10 +64,10 @@ export const Default: StoryObj = {
 };
 
 export const ObjectItems: StoryObj = {
-    render: () => {
+    render: (args) => {
         const renderValue = (value: Array<Language>) => {
             if (value.length === 0) {
-                return 'Select languages';
+                return <MultiSelect.Placeholder>Select languages</MultiSelect.Placeholder>;
             }
 
             const values = value.slice(0, 2);
@@ -78,30 +80,62 @@ export const ObjectItems: StoryObj = {
         };
 
         return (
-            <MultiSelect.Root items={languages}>
-                <MultiSelect.Trigger>
-                    {/* <MultiSelect.DisplayValue placeholder="Select languages" /> */}
-                    <MultiSelect.DisplayValue>{renderValue}</MultiSelect.DisplayValue>
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {Object.entries(languages).map(([value, label]) => (
-                        <MultiSelect.Item key={value} value={value}>
-                            {label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
+            <HStack gap="$200">
+                <VStack>
+                    <span>Default</span>
+                    <MultiSelect.Root {...args} items={languages}>
+                        <MultiSelect.Trigger>
+                            <MultiSelect.DisplayValue>{renderValue}</MultiSelect.DisplayValue>
+                            <MultiSelect.TriggerIcon />
+                        </MultiSelect.Trigger>
+                        <MultiSelect.Content>
+                            {Object.entries(languages).map(([value, label]) => (
+                                <MultiSelect.Item key={value} value={value}>
+                                    {label}
+                                    <MultiSelect.ItemIndicator />
+                                </MultiSelect.Item>
+                            ))}
+                        </MultiSelect.Content>
+                    </MultiSelect.Root>
+                </VStack>
+
+                <VStack>
+                    <span>Custom Value</span>
+                    <MultiSelect.Root {...args} items={languages}>
+                        <MultiSelect.Trigger>
+                            <MultiSelect.DisplayValue>
+                                {(value) =>
+                                    value.length ? (
+                                        value.join(', ')
+                                    ) : (
+                                        <MultiSelect.Placeholder>
+                                            Select languages
+                                        </MultiSelect.Placeholder>
+                                    )
+                                }
+                            </MultiSelect.DisplayValue>
+                            <MultiSelect.TriggerIcon />
+                        </MultiSelect.Trigger>
+                        <MultiSelect.Content>
+                            {Object.entries(languages).map(([value, label]) => (
+                                <MultiSelect.Item key={value} value={value}>
+                                    {label}
+                                    <MultiSelect.ItemIndicator />
+                                </MultiSelect.Item>
+                            ))}
+                        </MultiSelect.Content>
+                    </MultiSelect.Root>
+                </VStack>
+            </HStack>
         );
     },
 };
 
 export const ArrayItmes: StoryObj = {
-    render: () => {
+    render: (args) => {
         const renderValue = (value: Array<string>) => {
             if (value.length === 0) {
-                return 'Select fonts';
+                return <MultiSelect.Placeholder>Select fonts</MultiSelect.Placeholder>;
             }
 
             const values = value.slice(0, 2);
@@ -114,21 +148,55 @@ export const ArrayItmes: StoryObj = {
         };
 
         return (
-            <MultiSelect.Root items={fonts} defaultValue={null}>
-                <MultiSelect.Trigger>
-                    {/* <MultiSelect.DisplayValue placeholder="Select fonts" /> */}
-                    <MultiSelect.DisplayValue>{renderValue}</MultiSelect.DisplayValue>
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {fonts.map(({ value, label }) => (
-                        <MultiSelect.Item key={value} value={value}>
-                            {label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
+            <HStack gap="$200">
+                <VStack>
+                    <span>Default</span>
+                    <MultiSelect.Root {...args} items={fonts} defaultValue={null}>
+                        <MultiSelect.Trigger>
+                            {/* <MultiSelect.DisplayValue placeholder="Select fonts" /> */}
+                            <MultiSelect.DisplayValue>{renderValue}</MultiSelect.DisplayValue>
+                            <MultiSelect.TriggerIcon />
+                        </MultiSelect.Trigger>
+                        <MultiSelect.Content>
+                            {fonts.map(({ value, label }) => (
+                                <MultiSelect.Item key={value} value={value}>
+                                    {label}
+                                    <MultiSelect.ItemIndicator />
+                                </MultiSelect.Item>
+                            ))}
+                        </MultiSelect.Content>
+                    </MultiSelect.Root>
+                </VStack>
+
+                <VStack>
+                    <span>Custom Value</span>
+                    <MultiSelect.Root {...args} items={fonts}>
+                        <MultiSelect.Trigger>
+                            <MultiSelect.DisplayValue>
+                                {(value) =>
+                                    value.length ? (
+                                        value.join(', ')
+                                    ) : (
+                                        <MultiSelect.Placeholder>
+                                            Select fonts
+                                        </MultiSelect.Placeholder>
+                                    )
+                                }
+                            </MultiSelect.DisplayValue>
+
+                            <MultiSelect.TriggerIcon />
+                        </MultiSelect.Trigger>
+                        <MultiSelect.Content>
+                            {fonts.map(({ value, label }) => (
+                                <MultiSelect.Item key={value} value={value}>
+                                    {label}
+                                    <MultiSelect.ItemIndicator />
+                                </MultiSelect.Item>
+                            ))}
+                        </MultiSelect.Content>
+                    </MultiSelect.Root>
+                </VStack>
+            </HStack>
         );
     },
 };

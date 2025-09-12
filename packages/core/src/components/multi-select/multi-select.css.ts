@@ -28,9 +28,26 @@ export const trigger = recipe({
     defaultVariants: { size: 'md', invalid: false },
     variants: {
         size: {
-            md: { paddingInline: vars.size.space['150'], minHeight: vars.size.space['400'] },
-            lg: { paddingInline: vars.size.space['200'], minHeight: vars.size.space['500'] },
-            xl: { paddingInline: vars.size.space['300'], minHeight: vars.size.space['600'] },
+            sm: {
+                paddingBlock: vars.size.space['025'],
+                paddingInline: vars.size.space['100'],
+                minHeight: vars.size.space['300'],
+            },
+            md: {
+                paddingBlock: vars.size.space['050'],
+                paddingInline: vars.size.space['150'],
+                minHeight: vars.size.space['400'],
+            },
+            lg: {
+                paddingBlock: vars.size.space['100'],
+                paddingInline: vars.size.space['200'],
+                minHeight: vars.size.space['500'],
+            },
+            xl: {
+                paddingBlock: vars.size.space['150'],
+                paddingInline: vars.size.space['300'],
+                minHeight: vars.size.space['600'],
+            },
         },
         invalid: {
             true: { borderColor: vars.color.border.danger },
@@ -38,18 +55,41 @@ export const trigger = recipe({
     },
 });
 
-export const value = style([
-    typography({ style: 'body2' }),
-    foregrounds({ color: 'normal' }),
-    {
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        gap: vars.size.space['050'],
-    },
-]);
+export const value = recipe({
+    base: [
+        foregrounds({ color: 'normal' }),
+        {
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: vars.size.space['050'],
+        },
+    ],
 
-export const placeholder = style([typography({ style: 'body2' }), foregrounds({ color: 'hint' })]);
+    defaultVariants: { size: 'md' },
+    variants: {
+        size: {
+            sm: typography({ style: 'body3' }),
+            md: typography({ style: 'body2' }),
+            lg: typography({ style: 'body2' }),
+            xl: typography({ style: 'body1' }),
+        },
+    },
+});
+
+export const placeholder = recipe({
+    base: [foregrounds({ color: 'hint' })],
+
+    defaultVariants: { size: 'md' },
+    variants: {
+        size: {
+            sm: typography({ style: 'body3' }),
+            md: typography({ style: 'body2' }),
+            lg: typography({ style: 'body2' }),
+            xl: typography({ style: 'body1' }),
+        },
+    },
+});
 
 export const icon = style({ display: 'flex' });
 
