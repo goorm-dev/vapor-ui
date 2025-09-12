@@ -1,4 +1,4 @@
-import type { CssColor} from '@adobe/leonardo-contrast-colors';
+import type { CssColor } from '@adobe/leonardo-contrast-colors';
 import { BackgroundColor, Color, Theme } from '@adobe/leonardo-contrast-colors';
 import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 
@@ -166,8 +166,13 @@ const generateThemeTokens = (
             const colorName = color.name;
             const originalColorHex = colors[colorName];
 
-            const shadeData: Array<{ name: string; hex: string; oklch: string; deltaE: number; codeSyntax: string }> =
-                [];
+            const shadeData: Array<{
+                name: string;
+                hex: string;
+                oklch: string;
+                deltaE: number;
+                codeSyntax: string;
+            }> = [];
 
             color.values.forEach((instance) => {
                 const oklchColor = oklch(instance.value);
@@ -197,7 +202,10 @@ const generateThemeTokens = (
                 return numA - numB;
             });
 
-            const colorObj: Record<string, { hex: string; oklch: string; deltaE: number; codeSyntax: string }> = {};
+            const colorObj: Record<
+                string,
+                { hex: string; oklch: string; deltaE: number; codeSyntax: string }
+            > = {};
             shadeData.forEach((shade) => {
                 colorObj[shade.name] = {
                     hex: shade.hex,
