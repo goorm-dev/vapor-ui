@@ -3,6 +3,29 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
 ---
 
+## 0.6.0
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- e64e867: change the overlay component interface
+- d294454: remove label components'
+- b92cff1: add new `Collapsible` component
+- b78f3e1: add new `Tabs` component
+- 0880cf7: add new `Sheet` component
+- 1d2f506: migrate to `Base UI`
+- b4509b1: add new `Popover` component
+
+#### Patch Changes
+
+- 2651ee2: eidt tooltip offset
+- 1f4ba60: prioritize focus style over hover
+- Updated dependencies [e381247]
+    - @vapor-ui/icons@0.4.0
+
+---
+
 ## 0.5.0
 
 ### @vapor-ui/core
@@ -47,6 +70,17 @@ description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
 - Updated dependencies [30ebcde]
     - @vapor-ui/icons@0.2.0
 
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- e381247: Add new icons from Figma
+
+    **New Symbol Icons:** `MediumIcon`
+
+    **Also Updated:**
+    - Symbol Icons: `FirefoxColorIcon`
+
 ---
 
 ## 0.3.1
@@ -81,7 +115,6 @@ description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
     **New Basic Icons:** `LinearScaleOutlineIcon`
 
     **Also Updated:**
-
     - Basic Icons: `PlayIcon`, `ReplaceIcon`, `ClassIcon`, `ArrowUpOutlineIcon`, `ArrowDownOutlineIcon`, `TerminalOutlineIcon`, `ViewShrinkOutlineIcon`, `FolderSearchIcon`, `StarOutlineIcon`, `PriceOutlineIcon`, `HistoryOutlineIcon`, `CardsOutlineIcon`, `ZoomOutOutlineIcon`, `IntelliSensePropertyOutlineIcon`, `CorrectOutlineIcon`, `ChevronDoubleRightOutlineIcon`, `AutoCodeOutlineIcon`, `ChapterOutlineIcon`
     - Symbol Icons: `RstudioColorIcon`
 
@@ -127,11 +160,9 @@ description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
 - 30ebcde: feat: Add new icons and update existing icon components
 
     ## New Icons Added
-
     - `AlignJustifyOutlineIcon`, `CopyAsMarkdownOutlineIcon`, `IndentDecreaseOutlineIcon`, `SlotIcon`, `TextScanOutlineIcon`
 
     ## Updated Icons
-
     - Updated approximately 190 existing icons with refined SVG paths and improved rendering
     - Minor coordinate adjustments for better visual consistency
     - Enhanced clipPath definitions where needed
