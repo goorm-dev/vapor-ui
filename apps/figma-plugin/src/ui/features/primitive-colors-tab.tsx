@@ -16,7 +16,11 @@ import { ColorInput } from '~/ui/components/color-input';
 import { LabeledInput } from '~/ui/components/labeled-input';
 import { RangeSlider } from '~/ui/components/range-slider';
 import { Section } from '~/ui/components/section';
-import { calculatePerceptualUniformity } from '~/ui/utils/color-metrics';
+import {
+    type PerceptualUniformityMetrics,
+    calculatePerceptualUniformity,
+    extractColorsFromPalette,
+} from '~/ui/utils/color-metrics';
 
 export const PrimitiveColorsTab = () => {
     const [backgroundLightness, setBackgroundLightness] = useState<{ light: number; dark: number }>(
@@ -33,6 +37,7 @@ export const PrimitiveColorsTab = () => {
     });
     const [generatedPalette, setGeneratedPalette] = useState<ColorPaletteResult | null>(null);
     const [collectionName, setCollectionName] = useState<string>('Color Tokens');
+    const [metrics, setMetrics] = useState<PerceptualUniformityMetrics | null>(null);
 
     const handleGeneratePalette = () => {
         try {
@@ -45,6 +50,12 @@ export const PrimitiveColorsTab = () => {
 
             const palette = generateSystemColorPalette(config);
             setGeneratedPalette(palette);
+
+            const extractedColors = extractColorsFromPalette(palette, {
+                excludeBackgroundTokens: true,
+                theme: 'light',
+            });
+            setMetrics(calculatePerceptualUniformity(extractedColors));
 
             postMessage({
                 type: 'create-palette-sections',
@@ -157,45 +168,41 @@ export const PrimitiveColorsTab = () => {
                 <Button onClick={handleGeneratePalette}>Generate Palette</Button>
             </VStack>
 
-            {generatedPalette &&
-                (() => {
-                    const metrics = calculatePerceptualUniformity(generatedPalette);
-                    return metrics ? (
-                        <>
-                            <div className="border-t border-gray-300" />
-                            <VStack gap="$200">
-                                <LabeledInput
-                                    label="Collection Name"
-                                    value={collectionName}
-                                    onChange={setCollectionName}
-                                    placeholder="Enter collection name"
-                                />
+            {generatedPalette && metrics && (
+                <>
+                    <div className="border-t border-gray-300" />
+                    <VStack gap="$200">
+                        <LabeledInput
+                            label="Collection Name"
+                            value={collectionName}
+                            onChange={setCollectionName}
+                            placeholder="Enter collection name"
+                        />
 
-                                <Box className="p-3 bg-v-gray-100 rounded-lg">
-                                    <div className="text-sm font-medium text-gray-700 mb-2">
-                                        Perceptual Uniformity
-                                    </div>
-                                    <div className="text-xs text-gray-600 mb-1">
-                                        Uniformity Score:{' '}
-                                        <span className="font-medium">{metrics.uniformity}%</span>
-                                    </div>
-                                    <div className="text-xs text-gray-600">
-                                        Lightness Range: {metrics.lightnessRange.min} -{' '}
-                                        {metrics.lightnessRange.max}
-                                    </div>
-                                </Box>
+                        <Box className="p-3 bg-v-gray-100 rounded-lg">
+                            <div className="text-sm font-medium text-gray-700 mb-2">
+                                Perceptual Uniformity
+                            </div>
+                            <div className="text-xs text-gray-600 mb-1">
+                                Uniformity Score:{' '}
+                                <span className="font-medium">{metrics.uniformity}%</span>
+                            </div>
+                            <div className="text-xs text-gray-600">
+                                Lightness Range: {metrics.lightnessRange.min} -{' '}
+                                {metrics.lightnessRange.max}
+                            </div>
+                        </Box>
 
-                                <Button
-                                    onClick={handleCreateFigmaVariables}
-                                    variant="outline"
-                                    color="primary"
-                                >
-                                    Create Figma Variables
-                                </Button>
-                            </VStack>
-                        </>
-                    ) : null;
-                })()}
+                        <Button
+                            onClick={handleCreateFigmaVariables}
+                            variant="outline"
+                            color="primary"
+                        >
+                            Create Figma Variables
+                        </Button>
+                    </VStack>
+                </>
+            )}
         </VStack>
     );
 };

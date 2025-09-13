@@ -1,24 +1,15 @@
-import type { ColorPaletteResult, ColorToken } from '@vapor-ui/color-generator';
+import type { ColorToken, TokenContainer } from '@vapor-ui/color-generator';
 
-import { getValidColorShades, hexToFigmaColor } from '~/plugin/utils/color';
 import { Logger } from '~/common/logger';
-import { figmaNoticeService } from './figma-notification';
+import { hexToFigmaColor } from '~/plugin/utils/color';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-interface BaseColorTokens {
-    white: ColorToken;
-    black: ColorToken;
-}
-
-interface ThemeTokens {
-    [colorName: string]:
-        | {
-              [shade: string]: ColorToken;
-          }
-        | { canvas: ColorToken };
+interface GroupConfig {
+    name: string;
+    tokenContainer: TokenContainer;
 }
 
 // ============================================================================
@@ -27,98 +18,132 @@ interface ThemeTokens {
 
 export const figmaVariableService = {
     /**
-     * Creates primitive Figma variables (includes base colors)
+     * Creates Figma variables from primitive color palette (base, light, dark)
+     * No light/dark modes - each theme creates separate variables
      */
     async createPrimitiveVariables(
-        palette: ColorPaletteResult,
+        palette: { base?: TokenContainer; light: TokenContainer; dark: TokenContainer },
         collectionName: string,
     ): Promise<void> {
         try {
             Logger.variables.creating(collectionName);
 
             const collection = await createOrGetCollection(collectionName);
-
-            // Create base variables
+            
+            // Create groups for each available theme
+            const groups: GroupConfig[] = [];
+            
             if (palette.base) {
-                await createBaseVariables(collection, palette.base.tokens as unknown as BaseColorTokens);
+                groups.push({ name: 'base', tokenContainer: palette.base });
             }
+            groups.push({ name: 'light', tokenContainer: palette.light });
+            groups.push({ name: 'dark', tokenContainer: palette.dark });
 
-            // Create theme variables
-            await Promise.all([
-                createThemeVariables(collection, 'light', palette.light.tokens as unknown as ThemeTokens),
-                createThemeVariables(collection, 'dark', palette.dark.tokens as unknown as ThemeTokens),
-            ]);
+            await createVariablesFromGroups(collection, groups);
 
-            // Verify creation
-            const collections = await figma.variables.getLocalVariableCollectionsAsync();
-            const targetCollection = collections.find((c) => c.name === collectionName);
+            // Log creation success
             const variables = await figma.variables.getLocalVariablesAsync();
             const variableCount = variables.filter(
-                (v) => v.variableCollectionId === targetCollection?.id,
+                (v) => v.variableCollectionId === collection.id,
             ).length;
 
-            if (variableCount === 0) {
-                throw new Error('변수가 생성되지 않았습니다');
-            }
-
             Logger.variables.created(collectionName, variableCount);
-            figmaNoticeService.variablesCreated();
         } catch (error) {
-            Logger.variables.error('Primitive Figma 변수 생성 실패', error);
-            figmaNoticeService.variablesCreateFailed();
+            Logger.variables.error('Primitive 변수 생성 실패', error);
+            throw error;
         }
     },
 
     /**
-     * Creates brand Figma variables (with light/dark modes)
-     * Alias for createSemanticVariables for backward compatibility
+     * Creates Figma variables from brand color palette (light, dark)
+     * No light/dark modes - each theme creates separate variables
      */
     async createBrandVariables(
-        palette: Pick<ColorPaletteResult, 'light' | 'dark'>,
-        collectionName: string,
-    ): Promise<void> {
-        return this.createSemanticVariables(palette, collectionName);
-    },
-
-    /**
-     * Creates semantic Figma variables (with light/dark modes)
-     */
-    async createSemanticVariables(
-        palette: Pick<ColorPaletteResult, 'light' | 'dark'>,
+        palette: { light: TokenContainer; dark: TokenContainer },
         collectionName: string,
     ): Promise<void> {
         try {
             Logger.variables.creating(collectionName);
 
-            const { collection, lightModeId, darkModeId } =
-                await createOrGetSemanticCollection(collectionName);
+            const collection = await createOrGetCollection(collectionName);
+            
+            // Create groups for each available theme
+            const groups: GroupConfig[] = [
+                { name: 'light', tokenContainer: palette.light },
+                { name: 'dark', tokenContainer: palette.dark },
+            ];
 
-            // Create semantic variables with light and dark modes
-            await createSemanticThemeVariables(
-                collection,
-                lightModeId,
-                darkModeId,
-                palette.light.tokens as unknown as ThemeTokens,
-                palette.dark.tokens as unknown as ThemeTokens,
-            );
+            await createVariablesFromGroups(collection, groups);
 
-            // Verify creation
-            const collections = await figma.variables.getLocalVariableCollectionsAsync();
-            const targetCollection = collections.find((c) => c.name === collectionName);
+            // Log creation success
             const variables = await figma.variables.getLocalVariablesAsync();
             const variableCount = variables.filter(
-                (v) => v.variableCollectionId === targetCollection?.id,
+                (v) => v.variableCollectionId === collection.id,
             ).length;
 
-            if (variableCount === 0) {
-                throw new Error('시맨틱 변수가 생성되지 않았습니다');
+            Logger.variables.created(collectionName, variableCount);
+        } catch (error) {
+            Logger.variables.error('Brand 변수 생성 실패', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Generic function to create variables for any palette structure
+     * Supports both grouped and ungrouped variables
+     */
+    async createVariables(
+        data: {
+            palette: Record<string, TokenContainer>;
+            collectionName: string;
+            groupNames?: string[]; // If provided, only create variables for these groups
+            useGroups?: boolean; // If false, create variables without groups
+        },
+    ): Promise<void> {
+        const { palette, collectionName, groupNames, useGroups = true } = data;
+
+        try {
+            Logger.variables.creating(collectionName);
+
+            const collection = await createOrGetCollection(collectionName);
+            
+            let groups: GroupConfig[] = [];
+
+            if (useGroups) {
+                // Create groups for specified themes or all available themes
+                const themeNames = groupNames || Object.keys(palette);
+                groups = themeNames
+                    .filter(themeName => palette[themeName]) // Only include existing themes
+                    .map(themeName => ({
+                        name: themeName,
+                        tokenContainer: palette[themeName],
+                    }));
+                
+                await createVariablesFromGroups(collection, groups);
+            } else {
+                // Create variables without groups (flatten all tokens)
+                const allTokens: Record<string, ColorToken | string> = {};
+                
+                Object.entries(palette).forEach(([_themeName, tokenContainer]) => {
+                    Object.entries(tokenContainer.tokens).forEach(([tokenName, tokenValue]) => {
+                        // Use original token name without theme prefix
+                        allTokens[tokenName] = tokenValue;
+                    });
+                });
+
+                await createVariablesFromTokens(collection, allTokens, '');
             }
 
+            // Log creation success
+            const variables = await figma.variables.getLocalVariablesAsync();
+            const variableCount = variables.filter(
+                (v) => v.variableCollectionId === collection.id,
+            ).length;
+
             Logger.variables.created(collectionName, variableCount);
-            figmaNoticeService.variablesCreated();
         } catch (error) {
-            Logger.variables.error('Semantic Figma 변수 생성 실패', error);
-            figmaNoticeService.variablesCreateFailed();
+            Logger.variables.error('변수 생성 실패', error);
+            throw error;
         }
     },
 } as const;
@@ -134,50 +159,50 @@ async function createOrGetCollection(name: string): Promise<VariableCollection> 
     return existing || figma.variables.createVariableCollection(name);
 }
 
-async function createOrGetSemanticCollection(name: string): Promise<{
-    collection: VariableCollection;
-    lightModeId: string;
-    darkModeId: string;
-}> {
-    const existingCollections = await figma.variables.getLocalVariableCollectionsAsync();
-    let collection = existingCollections.find((collection) => collection.name === name);
-
-    if (!collection) {
-        collection = figma.variables.createVariableCollection(name);
-    }
-
-    // Ensure we have light and dark modes
-    let lightModeId = collection.defaultModeId;
-    let darkModeId: string;
-
-    const existingModes = collection.modes;
-    const lightMode = existingModes.find((mode) => mode.name === 'Light');
-    const darkMode = existingModes.find((mode) => mode.name === 'Dark');
-
-    if (lightMode && darkMode) {
-        lightModeId = lightMode.modeId;
-        darkModeId = darkMode.modeId;
-    } else if (lightMode) {
-        lightModeId = lightMode.modeId;
-        darkModeId = collection.addMode('Dark');
-    } else if (darkMode) {
-        // Rename default mode to Light and use existing dark mode
-        collection.renameMode(collection.defaultModeId, 'Light');
-        lightModeId = collection.defaultModeId;
-        darkModeId = darkMode.modeId;
-    } else {
-        // Rename default mode to Light and create Dark mode
-        collection.renameMode(collection.defaultModeId, 'Light');
-        lightModeId = collection.defaultModeId;
-        darkModeId = collection.addMode('Dark');
-    }
-
-    return { collection, lightModeId, darkModeId };
-}
-
 // ============================================================================
 // Variable Creation
 // ============================================================================
+
+async function createVariablesFromGroups(
+    collection: VariableCollection,
+    groups: GroupConfig[],
+): Promise<void> {
+    const promises: Promise<void>[] = [];
+
+    for (const group of groups) {
+        promises.push(
+            createVariablesFromTokens(collection, group.tokenContainer.tokens, group.name)
+        );
+    }
+
+    await Promise.all(promises);
+}
+
+async function createVariablesFromTokens(
+    collection: VariableCollection,
+    tokens: Record<string, ColorToken | string>,
+    groupPrefix: string,
+): Promise<void> {
+    const variablePromises: Promise<Variable>[] = [];
+
+    Object.entries(tokens).forEach(([tokenName, tokenValue]) => {
+        // Only process ColorToken objects (not string references)
+        if (typeof tokenValue === 'object' && tokenValue !== null && 'hex' in tokenValue) {
+            const colorToken = tokenValue as ColorToken;
+            
+            // Create variable name with or without group prefix
+            const variableName = groupPrefix 
+                ? `${groupPrefix}/${formatTokenName(tokenName)}`
+                : formatTokenName(tokenName);
+
+            variablePromises.push(
+                createVariable(collection, variableName, colorToken.hex, colorToken.codeSyntax)
+            );
+        }
+    });
+
+    await Promise.all(variablePromises);
+}
 
 async function createVariable(
     collection: VariableCollection,
@@ -228,147 +253,32 @@ function createNewVariable(
     return variable;
 }
 
-async function createSemanticVariable(
-    collection: VariableCollection,
-    lightModeId: string,
-    darkModeId: string,
-    name: string,
-    lightColor: string,
-    darkColor: string,
-    lightCodeSyntax?: string,
-): Promise<Variable> {
-    const existingVariables = await figma.variables.getLocalVariablesAsync();
-    const existing = existingVariables.find(
-        (variable) => variable.name === name && variable.variableCollectionId === collection.id,
-    );
-
-    let variable: Variable;
-    if (existing) {
-        variable = existing;
-    } else {
-        variable = figma.variables.createVariable(name, collection, 'COLOR');
-    }
-
-    // Set values for both modes
-    variable.setValueForMode(lightModeId, hexToFigmaColor(lightColor));
-    variable.setValueForMode(darkModeId, hexToFigmaColor(darkColor));
-
-    // Set code syntax (using light mode syntax as primary)
-    if (lightCodeSyntax) {
-        variable.setVariableCodeSyntax('WEB', lightCodeSyntax);
-    }
-
-    return variable;
-}
-
 // ============================================================================
-// Variable Creation Strategies
+// Utility Functions
 // ============================================================================
 
-async function createBaseVariables(
-    collection: VariableCollection,
-    baseColors: BaseColorTokens,
-): Promise<void> {
-    await Promise.all([
-        createVariable(collection, 'base/white', baseColors.white.hex, baseColors.white.codeSyntax),
-        createVariable(collection, 'base/black', baseColors.black.hex, baseColors.black.codeSyntax),
-    ]);
-}
-
-async function createThemeVariables(
-    collection: VariableCollection,
-    themeName: 'light' | 'dark',
-    themeData: ThemeTokens,
-): Promise<void> {
-    const variablePromises: Promise<Variable>[] = [];
-
-    for (const [colorName, colorShades] of Object.entries(themeData)) {
-        if (colorName === 'background' && colorShades && 'canvas' in colorShades) {
-            // Handle background canvas
-            variablePromises.push(
-                createVariable(
-                    collection,
-                    `${themeName}/${colorName}/canvas`,
-                    colorShades.canvas.hex,
-                    colorShades.canvas.codeSyntax,
-                ),
-            );
-        } else {
-            // Handle color shades (050, 100, 200, etc.)
-            const validShades = getValidColorShades(colorShades);
-
-            for (const [shade, colorToken] of validShades) {
-                variablePromises.push(
-                    createVariable(
-                        collection,
-                        `${themeName}/${colorName}/${shade}`,
-                        colorToken.hex,
-                        colorToken.codeSyntax,
-                    ),
-                );
-            }
+function formatTokenName(tokenName: string): string {
+    // Convert token names like "color-blue-500" to "blue/500"
+    // or "vapor-color-background-canvas" to "background/canvas"
+    
+    if (tokenName.startsWith('color-')) {
+        // Handle "color-blue-500" -> "blue/500"
+        const parts = tokenName.substring(6).split('-'); // Remove "color-" prefix
+        if (parts.length >= 2) {
+            const colorFamily = parts.slice(0, -1).join('-'); // Join all but last part
+            const shade = parts[parts.length - 1];
+            return `${colorFamily}/${shade}`;
+        }
+    } else if (tokenName.startsWith('vapor-color-')) {
+        // Handle "vapor-color-background-canvas" -> "background/canvas"
+        const parts = tokenName.substring(12).split('-'); // Remove "vapor-color-" prefix
+        if (parts.length >= 2) {
+            const colorFamily = parts.slice(0, -1).join('-'); // Join all but last part
+            const shade = parts[parts.length - 1];
+            return `${colorFamily}/${shade}`;
         }
     }
-
-    await Promise.all(variablePromises);
-}
-
-async function createSemanticThemeVariables(
-    collection: VariableCollection,
-    lightModeId: string,
-    darkModeId: string,
-    lightTheme: ThemeTokens,
-    darkTheme: ThemeTokens,
-): Promise<void> {
-    const variablePromises: Promise<Variable>[] = [];
-
-    // Process each color family
-    for (const [colorName, lightColorShades] of Object.entries(lightTheme)) {
-        const darkColorShades = darkTheme[colorName];
-
-        if (
-            colorName === 'background' &&
-            lightColorShades &&
-            'canvas' in lightColorShades &&
-            darkColorShades &&
-            'canvas' in darkColorShades
-        ) {
-            // Handle background canvas
-            variablePromises.push(
-                createSemanticVariable(
-                    collection,
-                    lightModeId,
-                    darkModeId,
-                    `${colorName}/canvas`,
-                    lightColorShades.canvas.hex,
-                    darkColorShades.canvas.hex,
-                    lightColorShades.canvas.codeSyntax,
-                ),
-            );
-        } else {
-            // Handle color shades (050, 100, 200, etc.)
-            const lightShades = getValidColorShades(lightColorShades);
-            const darkShades = getValidColorShades(darkColorShades);
-
-            for (const [shade, lightColorToken] of lightShades) {
-                const darkColorToken = darkShades.find(([darkShade]) => darkShade === shade)?.[1];
-
-                if (darkColorToken) {
-                    variablePromises.push(
-                        createSemanticVariable(
-                            collection,
-                            lightModeId,
-                            darkModeId,
-                            `${colorName}/${shade}`,
-                            lightColorToken.hex,
-                            darkColorToken.hex,
-                            lightColorToken.codeSyntax,
-                        ),
-                    );
-                }
-            }
-        }
-    }
-
-    await Promise.all(variablePromises);
+    
+    // Fallback: use original token name with slashes for dashes
+    return tokenName.replace(/-/g, '/');
 }

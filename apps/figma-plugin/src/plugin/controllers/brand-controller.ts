@@ -63,9 +63,16 @@ export const brandController = {
         generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
         collectionName: string;
     }): Promise<void> {
-        await figmaVariableService.createBrandVariables(
-            data.generatedBrandPalette,
-            data.collectionName,
-        );
+        try {
+            await figmaVariableService.createBrandVariables(
+                data.generatedBrandPalette,
+                data.collectionName,
+            );
+
+            figmaNoticeService.variablesCreated();
+        } catch (error) {
+            figmaNoticeService.variablesCreateFailed();
+            throw error;
+        }
     },
 } as const;
