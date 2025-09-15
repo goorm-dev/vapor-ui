@@ -61,6 +61,7 @@
             "description": "Security updates require manual review with alerts",
             "isVulnerabilityAlert": true,
             "automerge": false,
+            "matchPackagePatterns": ["*"],
             "dependencyDashboardApproval": true,
             "labels": ["type: security"]
         },
