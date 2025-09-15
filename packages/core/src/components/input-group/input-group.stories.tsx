@@ -15,7 +15,7 @@ const meta: Meta<typeof InputGroup.Root> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const TestBed: Story = {
     render: () => (
         <div className="space-y-4">
             <InputGroup.Root>
