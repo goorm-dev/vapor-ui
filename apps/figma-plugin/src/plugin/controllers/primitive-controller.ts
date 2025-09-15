@@ -28,16 +28,11 @@ export const primitiveController = {
             throw error;
         }
     },
-
-    /**
-     * Primitive Figma Variables 생성
-     * - Base colors 포함 (white, black)  
-     * - Light/Dark 테마별 변수
-     */
     async createFigmaVariables(data: {
         generatedPalette: ColorPaletteResult;
         collectionName: string;
     }): Promise<void> {
+        figmaNoticeService.variableCreating();
         try {
             await figmaVariableService.createPrimitiveVariables(
                 data.generatedPalette,

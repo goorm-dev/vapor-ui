@@ -53,16 +53,11 @@ export const brandController = {
             throw error;
         }
     },
-
-    /**
-     * Brand Figma Variables 생성
-     * - Light/Dark 모드 지원
-     * - Brand token 구조
-     */
     async createBrandFigmaVariables(data: {
         generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
         collectionName: string;
     }): Promise<void> {
+        figmaNoticeService.variableCreating();
         try {
             await figmaVariableService.createBrandVariables(
                 data.generatedBrandPalette,

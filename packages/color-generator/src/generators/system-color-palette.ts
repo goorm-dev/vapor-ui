@@ -1,6 +1,11 @@
 import { formatCss, oklch } from 'culori';
 
-import { DEFAULT_CONTRAST_RATIOS, DEFAULT_PRIMITIVE_COLORS, BASE_COLORS } from '../constants';
+import {
+    BASE_COLORS,
+    DEFAULT_CONTRAST_RATIOS,
+    DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
+    DEFAULT_PRIMITIVE_COLORS,
+} from '../constants';
 import { generateThemeTokens } from '../libs';
 import type { ColorGeneratorConfig, ColorPaletteResult, ColorToken } from '../types';
 import { formatOklchForWeb } from '../utils';
@@ -24,10 +29,10 @@ const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
 /**
  * 시스템 컬러 팔레트를 생성합니다.
  * Primitive 토큰들을 포함한 일관된 토큰 컨테이너 형태로 반환합니다.
- * 
+ *
  * @param config - 색상 생성기 설정
  * @returns 기본, 라이트, 다크 테마의 토큰 컨테이너
- * 
+ *
  * @example
  * generateSystemColorPalette()
  * // returns: {
@@ -36,23 +41,58 @@ const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
  * //   dark: { tokens: { ... }, metadata: {...} }
  * // }
  */
-function generateSystemColorPalette(
-    config: ColorGeneratorConfig = {},
-): ColorPaletteResult {
+function generateSystemColorPalette(config: ColorGeneratorConfig = {}): ColorPaletteResult {
     const colors = config.colors || DEFAULT_PRIMITIVE_COLORS;
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
+    const background = config.background || {
+        color: '#FFFFFF',
+        lightness: DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
+        name: 'gray',
+    };
 
-    // Generate theme tokens - now returns TokenContainer directly
-    const lightContainer = generateThemeTokens(colors, contrastRatios, 'light');
-    const darkContainer = generateThemeTokens(colors, contrastRatios, 'dark');
+    const lightTokens = generateThemeTokens({
+        colors,
+        contrastRatios,
+        backgroundColor: background.color,
+        backgroundName: background.name,
+        lightness: background.lightness.light,
+    });
+
+    const darkTokens = generateThemeTokens({
+        colors,
+        contrastRatios,
+        backgroundColor: background.color,
+        backgroundName: background.name,
+        lightness: background.lightness.dark,
+    });
+
+    const lightContainer: ColorPaletteResult['light'] = {
+        tokens: lightTokens,
+        metadata: {
+            type: 'primitive',
+            theme: 'light',
+        },
+    };
+
+    const darkContainer: ColorPaletteResult['dark'] = {
+        tokens: darkTokens,
+        metadata: {
+            type: 'primitive',
+            theme: 'dark',
+        },
+    };
+
     const baseTokens = createBaseColorTokens(formatOklchForWeb);
 
     // Create base token container
     const baseContainer = {
-        tokens: Object.entries(baseTokens).reduce((acc, [, token]) => {
-            acc[token.name!] = token;
-            return acc;
-        }, {} as Record<string, ColorToken>),
+        tokens: Object.entries(baseTokens).reduce(
+            (acc, [, token]) => {
+                acc[token.name!] = token;
+                return acc;
+            },
+            {} as Record<string, ColorToken>,
+        ),
         metadata: {
             type: 'primitive' as const,
             theme: 'base' as const,
@@ -65,7 +105,6 @@ function generateSystemColorPalette(
         dark: darkContainer,
     };
 }
-
 
 /* -----------------------------------------------------------------------------------------------*/
 

@@ -17,6 +17,10 @@ interface ColorToken {
     codeSyntax: string;
 }
 
+interface Tokens {
+    [tokenName: string]: ColorToken | string;
+}
+
 interface ScaleInfo {
     backgroundScale: string;
     foregroundScale: string;
@@ -24,9 +28,7 @@ interface ScaleInfo {
 }
 
 interface TokenContainer {
-    tokens: {
-        [tokenName: string]: ColorToken | string; // ColorToken for primitive, string for semantic/component
-    };
+    tokens: Tokens;
     metadata: {
         type: TokenType;
         theme: ThemeType;
@@ -50,7 +52,6 @@ interface SemanticTokensResult {
     };
 }
 
-
 /* -----------------------------------------------------------------------------------------------*/
 
 export type {
@@ -58,6 +59,7 @@ export type {
     TokenType,
     OklchColor,
     ColorToken,
+    Tokens,
     ScaleInfo,
     TokenContainer,
     ColorPaletteResult,

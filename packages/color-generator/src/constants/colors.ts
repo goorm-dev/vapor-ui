@@ -30,12 +30,4 @@ const DEFAULT_PRIMITIVE_COLORS = {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    BASE_COLORS,
-    DEFAULT_PRIMITIVE_COLORS,
-};
-
-export const Colors = {
-    BASE_COLORS,
-    DEFAULT_PRIMITIVE_COLORS,
-};
+export { BASE_COLORS, DEFAULT_PRIMITIVE_COLORS };

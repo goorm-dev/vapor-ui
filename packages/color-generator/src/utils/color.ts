@@ -153,10 +153,3 @@ export {
     findClosestScale,
 };
 
-export const Color = {
-    formatOklchForWeb,
-    generateCodeSyntax,
-    getContrastingForegroundColor,
-    getSortedScales,
-    findClosestScale,
-};

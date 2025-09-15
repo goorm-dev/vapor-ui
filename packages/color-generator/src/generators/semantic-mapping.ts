@@ -32,11 +32,11 @@ function createSemanticTokenMapping(mapping: SemanticTokenMapping): {
 /**
  * 라이트 테마용 스케일 정보를 찾습니다.
  * deltaE가 0인 스케일을 배경으로, 그 다음 스케일들을 전경으로 사용합니다.
- * 
+ *
  * @param palette - 색상 팔레트
  * @param scales - 정렬된 스케일 배열
  * @returns 배경, 전경, 대체 스케일 정보
- * 
+ *
  * @example
  * findLightThemeScales(palette, ['050', '100', '200', '300'])
  * // returns: { backgroundScale: '200', foregroundScale: '300', alternativeScale: '300' }
@@ -45,11 +45,12 @@ function findLightThemeScales(
     palette: Record<string, { deltaE?: number }>,
     scales: string[],
 ): ScaleInfo {
-    const backgroundScale = scales.find((scale) => palette[scale]?.deltaE === 0);
-    if (!backgroundScale) {
+    const deltaEZeroScale = scales.find((scale) => palette[scale]?.deltaE === 0);
+    if (!deltaEZeroScale) {
         throw new Error('No scale with deltaE 0 found for light theme background-primary');
     }
 
+    const backgroundScale = deltaEZeroScale;
     const backgroundIndex = scales.indexOf(backgroundScale);
     const foregroundScale = scales[backgroundIndex + 1] ?? backgroundScale;
     const alternativeScale = scales[backgroundIndex + 2] ?? foregroundScale;
@@ -60,11 +61,11 @@ function findLightThemeScales(
 /**
  * 다크 테마용 스케일 정보를 찾습니다.
  * deltaE가 가장 낮은 스케일을 배경으로, 그 다음 스케일들을 전경으로 사용합니다.
- * 
+ *
  * @param palette - 색상 팔레트
  * @param scales - 정렬된 스케일 배열
  * @returns 배경, 전경, 대체 스케일 정보
- * 
+ *
  * @example
  * findDarkThemeScales(palette, ['050', '100', '200', '300'])
  * // returns: { backgroundScale: '050', foregroundScale: '100', alternativeScale: '200' }
@@ -93,10 +94,10 @@ function findDarkThemeScales(
 /**
  * 시맨틱 토큰을 생성합니다.
  * 브랜드 컬러를 기반으로 semantic과 component-specific 토큰을 분리하여 생성합니다.
- * 
+ *
  * @param mappingConfig - 시맨틱 역할과 브랜드 컬러 매핑 설정
  * @returns semantic과 componentSpecific으로 분리된 토큰 컨테이너
- * 
+ *
  * @example
  * getSemanticDependentTokens({ primary: { name: 'myBlue', hex: '#448EFE' } })
  * // returns: {
@@ -117,8 +118,11 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): Seman
     const darkComponentMapping: Record<string, string> = {};
 
     Object.entries(mappingConfig).forEach(([semanticRole, config]) => {
+        if (semanticRole === 'background') return; // Skip background config entry
+        
         const brandPalette = generateBrandColorPalette({
             colors: { [config.name]: config.hex },
+            background: mappingConfig.background,
         });
 
         // Extract color tokens from TokenContainer format

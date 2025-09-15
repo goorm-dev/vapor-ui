@@ -15,7 +15,15 @@ describe('Color Generator Snapshots', () => {
     it('should match brandColorPalette snapshot', () => {
         const brandColorPalette = generateBrandColorPalette({
             colors: {
-                myBlue: '#6b63ffff',
+                mint: '#44ebd3',
+            },
+            background: {
+                name: 'myGray',
+                color: '#EFEAE6',
+                lightness: {
+                    light: 93,
+                    dark: 10,
+                },
             },
         });
         expect(brandColorPalette).toMatchSnapshot();
@@ -23,8 +31,15 @@ describe('Color Generator Snapshots', () => {
 
     it('should match semanticDependentTokens snapshot', () => {
         const semanticDependentTokens = getSemanticDependentTokens({
-            primary: { name: 'myBlue', hex: '#6b63ffff' },
-            secondary: { name: 'myRed', hex: '#cf67c8ff' },
+            primary: { name: 'mint', hex: '#44ebd3' },
+            background: {
+                name: 'myGray',
+                color: '#EFEAE6',
+                lightness: {
+                    light: 93,
+                    dark: 10,
+                },
+            },
         });
         expect(semanticDependentTokens).toMatchSnapshot();
     });

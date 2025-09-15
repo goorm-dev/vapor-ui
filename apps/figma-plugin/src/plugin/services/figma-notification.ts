@@ -27,6 +27,9 @@ export const figmaNoticeService = {
     // ============================================================================
     // Figma Variable Notifications
     // ============================================================================
+    variableCreating: () => {
+        figma.notify('Figma Variable을 생성하는 중입니다... ⏳');
+    },
     variablesCreated: () => {
         figma.notify('Figma Variable 생성이 성공적으로 완료되었습니다! ✅');
     },
