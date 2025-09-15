@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useEffect, useCallback } from 'react';
+import { forwardRef, useEffect } from 'react';
 
 import { Input as BaseInput } from '@base-ui-components/react';
 import clsx from 'clsx';
@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
-import { useInputGroupRootContext } from '../input-group';
+import { useInputGroupContext } from '../input-group';
 import type { RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
 
@@ -35,51 +35,30 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         ]);
 
         const { invalid, size } = textInputRootProps;
-        const groupContext = useInputGroupRootContext(false);
+        const groupContext = useInputGroupContext();
 
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             const newValue = event.target.value;
             onValueChange?.(newValue);
-            groupContext?.setValue(newValue);
+            
+            // Update InputGroup context with current value
+            if (groupContext?.updateValue) {
+                groupContext.updateValue(newValue);
+            }
         };
 
-        // Contribute props to InputGroup context if available
+        // Set maxLength in InputGroup context on mount
         useEffect(() => {
-            if (groupContext?.updateProps) {
-                groupContext.updateProps({
-                    onValueChange,
-                    defaultValue,
-                    maxLength: otherProps.maxLength,
-                });
+            if (groupContext?.setMaxLength && otherProps.maxLength) {
+                groupContext.setMaxLength(otherProps.maxLength);
             }
-        }, [groupContext, onValueChange, defaultValue, otherProps.maxLength]);
-
-        // Create a combined ref callback that handles both the forwarded ref and InputGroup context
-        const handleRef = useCallback((element: HTMLInputElement | null) => {
-            // Handle the forwarded ref
-            if (typeof ref === 'function') {
-                ref(element);
-            } else if (ref) {
-                ref.current = element;
-            }
-            
-            // Handle InputGroup context
-            if (groupContext?.setInputRef) {
-                groupContext.setInputRef(element);
-            }
-        }, [ref, groupContext]);
-
-        // Use group context value if available, otherwise use component props
-        const inputValue = groupContext ? groupContext.value : value;
-        const inputDefaultValue = groupContext ? undefined : defaultValue;
-        const maxLength = groupContext?.maxLength || otherProps.maxLength;
+        }, [groupContext, otherProps.maxLength]);
 
         return (
             <BaseInput
-                ref={handleRef}
-                value={inputValue}
-                defaultValue={inputDefaultValue}
-                maxLength={maxLength}
+                ref={ref}
+                value={value}
+                defaultValue={defaultValue}
                 aria-invalid={invalid}
                 onChange={handleChange}
                 className={clsx(styles.root({ invalid, size }), className)}

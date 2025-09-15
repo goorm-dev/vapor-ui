@@ -1,18 +1,8 @@
 'use client';
 
-import {
-    createContext,
-    forwardRef,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+import { createContext, forwardRef, useContext, useState, useCallback } from 'react';
 
 import { useRender } from '@base-ui-components/react';
-import { useControlled } from '@base-ui-components/utils/useControlled';
 import clsx from 'clsx';
 
 import type { VComponentProps } from '~/utils/types';
@@ -23,185 +13,55 @@ import * as styles from './input-group.css';
  * InputGroup Context
  * -----------------------------------------------------------------------------------------------*/
 
-interface InputGroupSharedProps {
-    setValue: (value: string) => void;
+interface InputGroupContextValue {
+    value?: string;
     maxLength?: number;
-    setInputRef: (ref: HTMLInputElement | null) => void;
-    value: string;
-    updateProps: (props: Partial<InputGroupInputProps & { maxLength?: number }>) => void;
+    updateValue?: (value: string) => void;
+    setMaxLength?: (maxLength: number) => void;
 }
 
-const InputGroupRootContext = createContext<InputGroupSharedProps | null>(null);
+const InputGroupContext = createContext<InputGroupContextValue>({});
 
-const useInputGroupRootContext = (required: boolean = true) => {
-    const context = useContext(InputGroupRootContext);
-
-    if (required && !context) {
-        throw new Error('useInputGroupRootContext must be used within InputGroup.Root');
-    }
-
-    return context;
+const useInputGroupContext = () => {
+    return useContext(InputGroupContext);
 };
 
 /* -------------------------------------------------------------------------------------------------
  * InputGroup Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface InputGroupRootProps extends VComponentProps<'div'> {
-    maxLength?: number;
-    defaultValue?: string;
-    onValueChange?: (value: string) => void;
-}
+interface InputGroupRootProps extends VComponentProps<'div'> {}
 
 const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
-    (
-        {
-            maxLength: rootMaxLength,
-            defaultValue = '',
-            onValueChange: rootOnValueChange,
-            className,
-            children,
-            ...props
-        },
-        ref,
-    ) => {
-        const [value, setValue] = useState(defaultValue);
-        const [mergedProps, setMergedProps] = useState({
-            maxLength: rootMaxLength,
-            onValueChange: rootOnValueChange,
-            defaultValue,
-        });
-        const inputRef = useRef<HTMLInputElement | null>(null);
+    ({ className, children, ...props }, ref) => {
+        const [value, setValue] = useState('');
+        const [maxLength, setMaxLength] = useState<number | undefined>();
 
-        const handleSetValue = useCallback((newValue: string) => {
+        const updateValue = useCallback((newValue: string) => {
             setValue(newValue);
-            mergedProps.onValueChange?.(newValue);
-        }, [mergedProps]);
-
-        const setInputRef = useCallback((ref: HTMLInputElement | null) => {
-            inputRef.current = ref;
         }, []);
 
-        const updateProps = useCallback(
-            (inputProps: Partial<InputGroupInputProps & { maxLength?: number }>) => {
-                setMergedProps(currentProps => {
-                    const newMaxLength = inputProps.maxLength ?? currentProps.maxLength;
-                    const newOnValueChange = inputProps.onValueChange ?? currentProps.onValueChange;
-                    const newDefaultValue =
-                        inputProps.defaultValue?.toString() ?? currentProps.defaultValue;
+        const handleSetMaxLength = useCallback((newMaxLength: number) => {
+            setMaxLength(newMaxLength);
+        }, []);
 
-                    // Only update if something actually changed
-                    if (
-                        newMaxLength !== currentProps.maxLength ||
-                        newOnValueChange !== currentProps.onValueChange ||
-                        newDefaultValue !== currentProps.defaultValue
-                    ) {
-                        return {
-                            maxLength: newMaxLength,
-                            onValueChange: newOnValueChange,
-                            defaultValue: newDefaultValue,
-                        };
-                    }
-                    
-                    return currentProps;
-                });
-
-                // Update defaultValue if provided from Input
-                if (inputProps.defaultValue !== undefined && value === defaultValue) {
-                    setValue(inputProps.defaultValue.toString());
-                }
-            },
-            [value, defaultValue],
-        );
-
-        const contextValue = useMemo(
-            (): InputGroupSharedProps => ({
-                setValue: handleSetValue,
-                maxLength: mergedProps.maxLength,
-                setInputRef,
-                value,
-                updateProps,
-            }),
-            [handleSetValue, setInputRef, value, updateProps, mergedProps.maxLength],
-        );
+        const contextValue: InputGroupContextValue = {
+            value,
+            maxLength,
+            updateValue,
+            setMaxLength: handleSetMaxLength,
+        };
 
         return (
-            <InputGroupRootContext.Provider value={contextValue}>
+            <InputGroupContext.Provider value={contextValue}>
                 <div ref={ref} className={clsx(styles.root(), className)} {...props}>
                     {children}
                 </div>
-            </InputGroupRootContext.Provider>
+            </InputGroupContext.Provider>
         );
     },
 );
 InputGroupRoot.displayName = 'InputGroup.Root';
-
-/* -------------------------------------------------------------------------------------------------
- * InputGroup Input
- * -----------------------------------------------------------------------------------------------*/
-
-interface InputGroupInputProps extends VComponentProps<'input'> {
-    type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
-    onValueChange?: (value: string) => void;
-    maxLength?: number;
-}
-
-const InputGroupInput = forwardRef<HTMLInputElement, InputGroupInputProps>(
-    ({ onValueChange, className, defaultValue, maxLength: inputMaxLength, ...props }, ref) => {
-        const groupContext = useInputGroupRootContext(true);
-        const {
-            maxLength: contextMaxLength,
-            setInputRef,
-            value: valueProp,
-            updateProps,
-        } = groupContext!;
-
-        // Contribute props to context on mount and when props change
-        useEffect(() => {
-            updateProps({
-                onValueChange,
-                defaultValue,
-                maxLength: inputMaxLength,
-            });
-        }, [updateProps, onValueChange, defaultValue, inputMaxLength]);
-
-        const [value, setValue] = useControlled({
-            controlled: valueProp,
-            default: defaultValue,
-            name: 'InputGroup',
-            state: 'value',
-        });
-
-        const maxLength = inputMaxLength ?? contextMaxLength;
-
-        const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            const newValue = event.target.value;
-            setValue(newValue);
-            onValueChange?.(newValue);
-        };
-
-        const handleRef = (element: HTMLInputElement | null) => {
-            setInputRef(element);
-            if (typeof ref === 'function') {
-                ref(element);
-            } else if (ref) {
-                ref.current = element;
-            }
-        };
-
-        return (
-            <input
-                ref={handleRef}
-                value={value}
-                maxLength={maxLength}
-                onChange={handleChange}
-                className={className}
-                {...props}
-            />
-        );
-    },
-);
-InputGroupInput.displayName = 'InputGroup.Input';
 
 /* -------------------------------------------------------------------------------------------------
  * InputGroup Count
@@ -213,9 +73,7 @@ interface InputGroupCountProps extends Omit<VComponentProps<'span'>, 'children'>
 
 const InputGroupCount = forwardRef<HTMLSpanElement, InputGroupCountProps>(
     ({ className, children, render, ...props }, ref) => {
-        const groupContext = useInputGroupRootContext(true);
-        const { value, maxLength } = groupContext!;
-        console.log(maxLength);
+        const { value = '', maxLength } = useInputGroupContext();
         const currentLength = value.length;
 
         const content = children
@@ -242,9 +100,8 @@ InputGroupCount.displayName = 'InputGroup.Count';
 
 const InputGroup = {
     Root: InputGroupRoot,
-    Input: InputGroupInput,
     Count: InputGroupCount,
 };
 
-export { InputGroup, useInputGroupRootContext };
-export type { InputGroupRootProps, InputGroupInputProps, InputGroupCountProps };
+export { InputGroup, useInputGroupContext };
+export type { InputGroupRootProps, InputGroupCountProps };

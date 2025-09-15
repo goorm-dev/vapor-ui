@@ -17,53 +17,51 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
     render: () => (
-        <>
-            <InputGroup.Root maxLength={100} defaultValue="Initial text">
-                <TextInput placeholder="Enter text..." />
+        <div className="space-y-4">
+            <InputGroup.Root>
+                <TextInput placeholder="Enter text..." maxLength={100} />
                 <InputGroup.Count />
             </InputGroup.Root>
-            <InputGroup.Root defaultValue="Initial text">
-                <TextInput placeholder="Enter text..." maxLength={1001} />
-                <InputGroup.Count />
-            </InputGroup.Root>
-        </>
+        </div>
     ),
 };
 
-export const WithoutMax: Story = {
+export const WithoutMaxLength: Story = {
     render: () => (
-        <InputGroup.Root defaultValue="Some text">
-            <InputGroup.Input placeholder="Enter text..." />
+        <InputGroup.Root>
+            <TextInput placeholder="Enter text without maxLength..." />
             <InputGroup.Count />
         </InputGroup.Root>
     ),
 };
 
-export const CountFormats: Story = {
+export const CustomCountDisplay: Story = {
     render: () => (
         <div className="space-y-4">
-            <InputGroup.Root maxLength={50} defaultValue="Hello">
-                <InputGroup.Input placeholder="Default format..." />
+            <InputGroup.Root>
+                <TextInput placeholder="Default format..." maxLength={50} />
                 <InputGroup.Count />
             </InputGroup.Root>
 
-            <InputGroup.Root maxLength={50} defaultValue="Hello">
-                <InputGroup.Input placeholder="Current only..." />
-                <InputGroup.Count>{({ current }) => current}</InputGroup.Count>
-            </InputGroup.Root>
-
-            <InputGroup.Root maxLength={50} defaultValue="Hello">
-                <InputGroup.Input placeholder="Remaining..." />
+            <InputGroup.Root>
+                <TextInput placeholder="Current only..." maxLength={50} />
                 <InputGroup.Count>
-                    {({ current, max }) => (max ? max - current : current)}
+                    {({ current }) => `${current} characters`}
                 </InputGroup.Count>
             </InputGroup.Root>
 
-            <InputGroup.Root maxLength={50} defaultValue="Hello">
-                <InputGroup.Input placeholder="Custom format..." />
+            <InputGroup.Root>
+                <TextInput placeholder="Remaining..." maxLength={50} />
                 <InputGroup.Count>
-                    {({ current, max, value }) =>
-                        `${value.length} chars (${max ? max - current : 0} left)`
+                    {({ current, max }) => max ? `${max - current} left` : `${current} chars`}
+                </InputGroup.Count>
+            </InputGroup.Root>
+
+            <InputGroup.Root>
+                <TextInput placeholder="Custom format..." maxLength={50} />
+                <InputGroup.Count>
+                    {({ max, value }) => 
+                        `Length: ${value.length} | Limit: ${max || 'none'}`
                     }
                 </InputGroup.Count>
             </InputGroup.Root>
@@ -73,48 +71,4 @@ export const CountFormats: Story = {
 
 export const StandaloneTextInput: Story = {
     render: () => <TextInput placeholder="Standalone input without InputGroup" maxLength={50} />,
-};
-
-export const CustomCount: Story = {
-    render: () => (
-        <InputGroup.Root maxLength={200}>
-            <InputGroup.Input placeholder="Enter text..." />
-            <InputGroup.Count>{({ current, max }) => `Custom: ${current}/${max}`}</InputGroup.Count>
-        </InputGroup.Root>
-    ),
-};
-
-export const InputPropsOverride: Story = {
-    render: () => (
-        <div className="space-y-4">
-            <div>
-                <p className="text-sm mb-2">Root maxLength=50, Input maxLength=100 (Input wins)</p>
-                <InputGroup.Root maxLength={50}>
-                    <InputGroup.Input placeholder="Input maxLength=100" maxLength={100} />
-                    <InputGroup.Count />
-                </InputGroup.Root>
-            </div>
-
-            <div>
-                <p className="text-sm mb-2">
-                    Root defaultValue="Root", Input defaultValue="Input" (Input wins)
-                </p>
-                <InputGroup.Root defaultValue="Root">
-                    <InputGroup.Input placeholder="Should show 'Input'" defaultValue="Input" />
-                    <InputGroup.Count />
-                </InputGroup.Root>
-            </div>
-
-            <div>
-                <p className="text-sm mb-2">Input onValueChange overrides Root onValueChange</p>
-                <InputGroup.Root onValueChange={(v) => console.log('Root:', v)}>
-                    <InputGroup.Input
-                        placeholder="Check console..."
-                        onValueChange={(v) => console.log('Input:', v)}
-                    />
-                    <InputGroup.Count />
-                </InputGroup.Root>
-            </div>
-        </div>
-    ),
 };

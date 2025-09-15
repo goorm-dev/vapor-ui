@@ -1,8 +1,7 @@
 import { recipe } from '@vanilla-extract/recipes';
 
+import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
-
-import { layerStyle } from './../../styles/utils/layer-style.css';
 
 export const root = recipe({
     base: layerStyle('components', {
