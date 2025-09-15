@@ -7,7 +7,7 @@
     "automergeStrategy": "squash",
     "autodiscover": true,
     "autodiscoverFilter": ["goorm-dev/vapor-ui"],
-    "prHourlyLimit": 4,
+    "prHourlyLimit": 10,
     "prNotPendingHours": 48,
     "rangeStrategy": "bump",
     "vulnerabilityAlerts": {
@@ -49,6 +49,13 @@
             "labels": ["type: dependencies"],
             "automerge": false,
             "dependencyDashboardApproval": true
+        },
+        {
+            "description": "Auto-merge patch updates only",
+            "matchUpdateTypes": ["patch"],
+            "automerge": true,
+            "dependencyDashboardApproval": false,
+            "labels": ["type: dependencies", "auto-merge"]
         },
         {
             "description": "Security updates require manual review with alerts",
