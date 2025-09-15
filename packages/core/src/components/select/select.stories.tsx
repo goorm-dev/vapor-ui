@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { Box } from '../box';
 import { Grid } from '../grid';
+import type { SelectPositionerProps, SelectRootProps } from './select';
 import { Select } from './select';
+
+type SelectProps = SelectRootProps &
+    Pick<SelectPositionerProps, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
 
 export default {
     title: 'Select',
@@ -14,40 +19,61 @@ export default {
         invalid: { control: 'boolean' },
         disabled: { control: 'boolean' },
         readOnly: { control: 'boolean' },
+        side: {
+            control: { type: 'inline-radio' },
+            options: ['top', 'right', 'bottom', 'left'],
+        },
+        align: {
+            control: { type: 'inline-radio' },
+            options: ['start', 'center', 'end'],
+        },
+        sideOffset: { control: { type: 'number' } },
+        alignOffset: { control: { type: 'number' } },
     },
-} satisfies Meta<typeof Select.Root>;
+} satisfies Meta<SelectProps>;
 
-export const Default: StoryObj<typeof Select.Root> = {
-    render: (args) => (
-        <Select.Root {...args}>
-            <Select.Trigger>
-                <Select.DisplayValue placeholder="Select Font" />
-                <Select.TriggerIcon />
-            </Select.Trigger>
+export const Default: StoryObj<SelectProps> = {
+    render: ({ side, align, sideOffset, alignOffset, ...args }) => (
+        <Box margin="200px">
+            <Select.Root {...args}>
+                <Select.Trigger>
+                    <Select.DisplayValue placeholder="Select Font" />
+                    <Select.TriggerIcon />
+                </Select.Trigger>
 
-            <Select.Content>
-                <Select.Group>
-                    <Select.GroupLabel>Font</Select.GroupLabel>
-                    <Select.Item value="sans">
-                        Sans-serif
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="serif">
-                        Serif
-                        <Select.ItemIndicator />
-                    </Select.Item>
+                <Select.Portal>
+                    <Select.Positioner
+                        side={side}
+                        align={align}
+                        sideOffset={sideOffset}
+                        alignOffset={alignOffset}
+                    >
+                        <Select.Popup>
+                            <Select.Group>
+                                <Select.GroupLabel>Font</Select.GroupLabel>
+                                <Select.Item value="sans">
+                                    Sans-serif
+                                    <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="serif">
+                                    Serif
+                                    <Select.ItemIndicator />
+                                </Select.Item>
 
-                    <Select.Item value="mono">
-                        Monospace
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="cursive">
-                        Cursive
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Group>
-            </Select.Content>
-        </Select.Root>
+                                <Select.Item value="mono">
+                                    Monospace
+                                    <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="cursive">
+                                    Cursive
+                                    <Select.ItemIndicator />
+                                </Select.Item>
+                            </Select.Group>
+                        </Select.Popup>
+                    </Select.Positioner>
+                </Select.Portal>
+            </Select.Root>
+        </Box>
     ),
 };
 
