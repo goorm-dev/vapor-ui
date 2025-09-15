@@ -38,19 +38,19 @@ export const input = recipe({
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.normal,
-            padding: vars.size.space['150'],
-            width: '260px',
-            height: '114px',
-
             color: vars.color.foreground.normal,
+            width: '100%',
+            minHeight: '116px',
+            resize: 'vertical',
 
             selectors: {
                 '&:read-only': {
                     backgroundColor: vars.color.gray['050'],
                     resize: 'none',
                 },
-
-                '&::placeholder': { color: vars.color.foreground.hint },
+                '&::placeholder': {
+                    color: vars.color.foreground.hint,
+                },
             },
         }),
     ],
@@ -71,8 +71,20 @@ export const input = recipe({
 
         autoResize: {
             true: {
-                overflow: 'hidden',
+                boxSizing: 'border-box',
+                overflowX: 'hidden',
+                overflowY: 'auto',
                 resize: 'none',
+                scrollbarGutter: 'stable',
+                verticalAlign: 'top',
+
+                // Ensure consistent scrollbar space
+                selectors: {
+                    // Always show scrollbar space to prevent width changes
+                    '&': {
+                        scrollbarWidth: 'auto',
+                    },
+                },
             },
             false: {},
         },
@@ -82,28 +94,24 @@ export const input = recipe({
                 typography({ style: 'body3' }),
                 {
                     padding: `${vars.size.space['050']} ${vars.size.space['100']}`,
-                    minHeight: vars.size.dimension['500'],
                 },
             ],
             md: [
                 typography({ style: 'body2' }),
                 {
                     padding: `${vars.size.space['075']} ${vars.size.space['150']}`,
-                    minHeight: vars.size.dimension['600'],
                 },
             ],
             lg: [
                 typography({ style: 'body2' }),
                 {
                     padding: `${vars.size.space['100']} ${vars.size.space['200']}`,
-                    minHeight: vars.size.dimension['700'],
                 },
             ],
             xl: [
                 typography({ style: 'body1' }),
                 {
                     padding: `${vars.size.space['175']} ${vars.size.space['300']}`,
-                    minHeight: vars.size.dimension['800'],
                 },
             ],
         },

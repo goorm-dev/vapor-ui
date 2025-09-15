@@ -1,7 +1,7 @@
 'use client';
 
 import type { ChangeEvent, MutableRefObject } from 'react';
-import React, { forwardRef, useCallback, useEffect, useId, useRef } from 'react';
+import React, { forwardRef, useCallback, useEffect, useId, useMemo, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
@@ -25,6 +25,10 @@ type TextareaSharedProps = TextareaVariants & {
     resizing?: boolean;
     autoResize?: boolean;
     maxLength?: number;
+    'aria-label'?: string;
+    'aria-labelledby'?: string;
+    'aria-describedby'?: string;
+    required?: boolean;
 };
 
 type TextareaContextType = TextareaSharedProps & {
@@ -49,7 +53,7 @@ const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
     ({ render, className, children, ...props }, ref) => {
         const textareaId = useId();
         const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-        const [textareaRootProps, otherProps] = createSplitProps<TextareaSharedProps>()(props, [
+        const textareaSharedPropKeys: (keyof TextareaSharedProps)[] = [
             'value',
             'onValueChange',
             'defaultValue',
@@ -63,7 +67,16 @@ const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
             'resizing',
             'autoResize',
             'maxLength',
-        ]);
+            'aria-label',
+            'aria-labelledby',
+            'aria-describedby',
+            'required',
+        ];
+
+        const [textareaRootProps, otherProps] = createSplitProps<TextareaSharedProps>()(
+            props,
+            textareaSharedPropKeys,
+        );
 
         const { disabled } = textareaRootProps;
 
@@ -111,16 +124,111 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
             resizing,
             autoResize,
             maxLength,
+            'aria-label': ariaLabel,
+            'aria-labelledby': ariaLabelledby,
+            'aria-describedby': ariaDescribedby,
+            required,
         } = useTextareaContext();
 
         const id = idProp || textareaId;
 
-        const autoResizeTextarea = useCallback(() => {
-            if (!autoResize || !contextTextareaRef?.current) return;
+        const autoResizeTextarea = useMemo(() => {
+            let cachedScrollbarWidth: number | null = null;
+            
+            const getScrollbarWidth = () => {
+                if (cachedScrollbarWidth !== null) return cachedScrollbarWidth;
+                
+                const outer = document.createElement('div');
+                outer.style.visibility = 'hidden';
+                outer.style.overflow = 'scroll';
+                // @ts-ignore - msOverflowStyle is IE specific
+                outer.style.msOverflowStyle = 'scrollbar';
+                document.body.appendChild(outer);
+                
+                const inner = document.createElement('div');
+                outer.appendChild(inner);
+                
+                cachedScrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+                document.body.removeChild(outer);
+                
+                return cachedScrollbarWidth;
+            };
+            
+            const performResize = () => {
+                if (!autoResize || !contextTextareaRef?.current) return;
 
-            const textarea = contextTextareaRef.current;
-            textarea.style.height = 'auto';
-            textarea.style.height = `${textarea.scrollHeight}px`;
+                const textarea = contextTextareaRef.current;
+
+                // Create a hidden clone to measure the actual content height
+                const hiddenDiv = document.createElement('div');
+                const style = window.getComputedStyle(textarea);
+                
+                // Get the exact inner dimensions of the textarea
+                const paddingLeft = parseInt(style.paddingLeft) || 0;
+                const paddingRight = parseInt(style.paddingRight) || 0;
+                
+                // Always reserve space for scrollbar to maintain consistent width
+                const scrollbarWidth = getScrollbarWidth();
+                
+                // Calculate content width with scrollbar space always reserved
+                const totalWidth = textarea.offsetWidth;
+                const exactContentWidth = totalWidth - paddingLeft - paddingRight - scrollbarWidth;
+                
+                // Copy relevant styles to the hidden div
+                hiddenDiv.style.position = 'absolute';
+                hiddenDiv.style.visibility = 'hidden';
+                hiddenDiv.style.height = 'auto';
+                hiddenDiv.style.width = exactContentWidth + 'px';
+                hiddenDiv.style.fontSize = style.fontSize;
+                hiddenDiv.style.fontFamily = style.fontFamily;
+                hiddenDiv.style.fontWeight = style.fontWeight;
+                hiddenDiv.style.lineHeight = style.lineHeight;
+                hiddenDiv.style.letterSpacing = style.letterSpacing;
+                hiddenDiv.style.wordSpacing = style.wordSpacing;
+                // Don't add padding/border to the hidden div since we set exact content width
+                hiddenDiv.style.padding = '0';
+                hiddenDiv.style.border = 'none';
+                hiddenDiv.style.margin = '0';
+                hiddenDiv.style.boxSizing = 'content-box';
+                hiddenDiv.style.whiteSpace = 'pre-wrap';
+                hiddenDiv.style.overflowWrap = 'break-word';
+                hiddenDiv.style.wordBreak = 'break-word';
+                
+                // Set the content exactly as it is in the textarea
+                hiddenDiv.textContent = textarea.value || '';
+                
+                // Append to DOM to measure
+                document.body.appendChild(hiddenDiv);
+                
+                // Get the measured height and add padding back
+                const contentHeight = hiddenDiv.scrollHeight;
+                const paddingTop = parseInt(style.paddingTop) || 0;
+                const paddingBottom = parseInt(style.paddingBottom) || 0;
+                const borderTop = parseInt(style.borderTopWidth) || 0;
+                const borderBottom = parseInt(style.borderBottomWidth) || 0;
+                
+                const totalHeight = contentHeight + paddingTop + paddingBottom + borderTop + borderBottom;
+                
+                const maxHeight = 400; // Prevent unlimited growth
+                const minHeight = parseInt(style.minHeight) || 60;
+                
+                const newHeight = Math.min(Math.max(totalHeight, minHeight), maxHeight);
+                
+                // Clean up
+                document.body.removeChild(hiddenDiv);
+                
+                // Only update if height actually changed
+                const currentHeight = parseInt(textarea.style.height) || textarea.offsetHeight;
+                if (Math.abs(currentHeight - newHeight) > 1) {
+                    // Set the height - CSS will handle scrollbar automatically
+                    textarea.style.height = `${newHeight}px`;
+                }
+            };
+
+            // Use requestAnimationFrame for smooth updates
+            return () => {
+                requestAnimationFrame(performResize);
+            };
         }, [autoResize, contextTextareaRef]);
 
         useEffect(() => {
@@ -129,8 +237,8 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
             }
         }, [value, autoResize, autoResizeTextarea]);
 
-        return useRender({
-            ref: (node: HTMLTextAreaElement | null) => {
+        const handleRef = useCallback(
+            (node: HTMLTextAreaElement | null) => {
                 if (contextTextareaRef) {
                     contextTextareaRef.current = node;
                 }
@@ -140,6 +248,11 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
                     (ref as MutableRefObject<HTMLTextAreaElement | null>).current = node;
                 }
             },
+            [contextTextareaRef, ref],
+        );
+
+        return useRender({
+            ref: handleRef,
             render: render || <BaseField.Control render={<textarea />} />,
             props: {
                 id,
@@ -156,7 +269,11 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
                 },
                 defaultValue,
                 disabled,
-                'aria-invalid': invalid,
+                'aria-invalid': invalid || undefined,
+                'aria-required': required || undefined,
+                'aria-label': ariaLabel,
+                'aria-labelledby': ariaLabelledby,
+                'aria-describedby': ariaDescribedby,
                 readOnly,
                 placeholder,
                 rows,
@@ -192,15 +309,27 @@ const Count = forwardRef<HTMLDivElement, TextareaCountProps>(
                 setCurrentLength(value.length);
             } else if (textareaRef?.current) {
                 const updateLength = () => {
-                    setCurrentLength(textareaRef.current?.value.length || 0);
+                    if (textareaRef.current) {
+                        setCurrentLength(textareaRef.current.value.length);
+                    }
                 };
 
                 const textarea = textareaRef.current;
-                textarea.addEventListener('input', updateLength);
 
-                return () => {
-                    textarea.removeEventListener('input', updateLength);
-                };
+                try {
+                    textarea.addEventListener('input', updateLength);
+
+                    return () => {
+                        try {
+                            textarea.removeEventListener('input', updateLength);
+                        } catch (error) {
+                            // Silently handle cleanup errors
+                            console.warn('Failed to remove textarea event listener:', error);
+                        }
+                    };
+                } catch (error) {
+                    console.warn('Failed to add textarea event listener:', error);
+                }
             }
         }, [value, textareaRef]);
 
@@ -216,6 +345,9 @@ const Count = forwardRef<HTMLDivElement, TextareaCountProps>(
             props: {
                 className: clsx(styles.count, className),
                 children: content,
+                'aria-live': 'polite',
+                'aria-atomic': 'true',
+                role: 'status',
                 ...props,
             },
         });
