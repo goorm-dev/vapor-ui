@@ -47,12 +47,26 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             }
         };
 
-        // Set maxLength in InputGroup context on mount
+        // Set maxLength and initial value in InputGroup context on mount
         useEffect(() => {
-            if (groupContext?.setMaxLength && otherProps.maxLength) {
-                groupContext.setMaxLength(otherProps.maxLength);
+            if (groupContext) {
+                if (groupContext.setMaxLength && otherProps.maxLength) {
+                    groupContext.setMaxLength(otherProps.maxLength);
+                }
+                
+                // Set initial value if there's a defaultValue
+                if (groupContext.updateValue && defaultValue) {
+                    groupContext.updateValue(defaultValue);
+                }
             }
-        }, [groupContext, otherProps.maxLength]);
+        }, [groupContext, otherProps.maxLength, defaultValue]);
+
+        // Update context when controlled value changes
+        useEffect(() => {
+            if (groupContext?.updateValue && value !== undefined) {
+                groupContext.updateValue(value);
+            }
+        }, [groupContext, value]);
 
         return (
             <BaseInput

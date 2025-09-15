@@ -25,6 +25,7 @@ const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupShare
     name: 'InputGroup',
     hookName: 'useInputGroup',
     providerName: 'InputGroupProvider',
+    strict: false, // Make it non-strict so TextInput can work standalone
 });
 
 /* -------------------------------------------------------------------------------------------------
