@@ -1,3 +1,4 @@
+import { Fieldset } from '@base-ui-components/react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
@@ -7,9 +8,8 @@ import { Flex } from '~/components/flex';
 import { Radio } from '~/components/radio';
 import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
-import { TextInput } from '~/components/text-input';
 
-import { Text } from '../text';
+import { TextInput } from '../text-input';
 
 type FieldStoryArgs = React.ComponentProps<typeof Field.Root> & {
     required?: boolean;
@@ -43,10 +43,7 @@ export const TestBed: Story = {
         return (
             <Flex flexDirection="column" gap="$300">
                 <Field.Root name="vapor-policy-agreement" validationMode="onChange" {...fieldArgs}>
-                    <Text typography="heading5" render={<legend />}>
-                        좋았던 강의는 무엇인가요?
-                    </Text>
-                    <Field.Description>중복 선택 가능</Field.Description>
+                    <Field.Description>non-required checkbox</Field.Description>
                     <Flex gap="$100">
                         <Checkbox.Root required={required}>
                             <Checkbox.Indicator>
@@ -55,53 +52,38 @@ export const TestBed: Story = {
                         </Checkbox.Root>
                         <Field.Label>멘토님 강연 능력</Field.Label>
                     </Flex>
+                    <Field.Error>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
+                    <Field.Success>✓ 강의 평가가 완료되었습니다</Field.Success>
+                </Field.Root>
+                <Field.Root name="vapor-policy-agreement" validationMode="onChange">
+                    <Field.Description>required checkbox</Field.Description>
                     <Flex gap="$100">
-                        <Checkbox.Root required={required}>
+                        <Checkbox.Root required>
                             <Checkbox.Indicator>
                                 <ConfirmOutlineIcon />
                             </Checkbox.Indicator>
                         </Checkbox.Root>
-                        <Field.Label>주제(협업 및 커뮤니케이션 스킬)</Field.Label>
-                    </Flex>
-                    <Flex gap="$100">
-                        <Checkbox.Root required={required}>
-                            <Checkbox.Indicator>
-                                <ConfirmOutlineIcon />
-                            </Checkbox.Indicator>
-                        </Checkbox.Root>
-                        <Field.Label>전반적인 강의 내용</Field.Label>
-                    </Flex>
-                    <Flex gap="$100">
-                        <Checkbox.Root required={required}>
-                            <Checkbox.Indicator>
-                                <ConfirmOutlineIcon />
-                            </Checkbox.Indicator>
-                        </Checkbox.Root>
-                        <Field.Label>세미나 자료</Field.Label>
-                    </Flex>
-                    <Flex gap="$100">
-                        <Checkbox.Root required={required}>
-                            <Checkbox.Indicator>
-                                <ConfirmOutlineIcon />
-                            </Checkbox.Indicator>
-                        </Checkbox.Root>
-                        <Field.Label>기타</Field.Label>
+                        <Field.Label>멘토님 강연 능력</Field.Label>
                     </Flex>
                     <Field.Error>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
                     <Field.Success>✓ 강의 평가가 완료되었습니다</Field.Success>
                 </Field.Root>
                 {/* Switch Component Example */}
                 <Field.Root name="notifications" validationMode="onChange" {...fieldArgs}>
-                    <Text typography="heading5" render={<legend />}>
-                        개인 정보 수신 동의
-                    </Text>
                     <Flex alignItems="center" gap="$100" justifyContent="space-between">
-                        <Field.Label>서비스 메일 수신 동의</Field.Label>
-                        <Switch.Root required={required} />
+                        <Field.Label>서비스 메일 수신 동의 - required</Field.Label>
+                        <Switch.Root required />
                     </Flex>
+                    <Field.Description>
+                        서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
+                    </Field.Description>
+                    <Field.Error>개인 정보 수신 동의가 필요합니다</Field.Error>
+                    <Field.Success>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
+                </Field.Root>
+                <Field.Root name="notifications" validationMode="onChange" {...fieldArgs}>
                     <Flex alignItems="center" gap="$100" justifyContent="space-between">
-                        <Field.Label>이벤트성 광고 수신 동의</Field.Label>
-                        <Switch.Root required={required} />
+                        <Field.Label>이벤트성 광고 수신 동의 - non required</Field.Label>
+                        <Switch.Root />
                     </Flex>
                     <Field.Description>
                         서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
@@ -111,32 +93,33 @@ export const TestBed: Story = {
                 </Field.Root>
 
                 {/* RadioGroup Selection RadioGroup */}
-                <Field.Root name="gender" validationMode="onChange" {...fieldArgs}>
-                    <Field.Label>성별을 선택하세요</Field.Label>
-                    <RadioGroup.Root required={required}>
-                        <Field.Description>회원 가입을 위해 성별을 선택해주세요.</Field.Description>
-                        <Flex alignItems="center" gap="$150">
-                            <Radio.Root value="male" />
-                            <Field.Label>남성</Field.Label>
-                        </Flex>
-                        <Flex alignItems="center" gap="$150">
-                            <Radio.Root value="female" />
-                            <Field.Label>여성</Field.Label>
-                        </Flex>
-                        <Flex alignItems="center" gap="$150">
-                            <Radio.Root value="other" />
-                            <Field.Label>기타</Field.Label>
-                        </Flex>
-                        {/* Alternatively, you can use Radio.Item for better semantics */}
-                        <Field.Error>성별을 반드시 선택해주세요.</Field.Error>
-                        <Field.Success>✓ 성별이 선택되었습니다</Field.Success>
+                <Field.Root name="radio-group" render={<Fieldset.Root />} validationMode="onChange">
+                    <RadioGroup.Root required>
+                        <Field.Label>
+                            <Radio.Root value="male">
+                                <Radio.Indicator />
+                            </Radio.Root>
+                            남성
+                        </Field.Label>
+                        <Field.Label>
+                            <Radio.Root value="female">
+                                <Radio.Indicator />
+                            </Radio.Root>
+                            여성
+                        </Field.Label>
+                        <Field.Label>
+                            <Radio.Root value="other">
+                                <Radio.Indicator />
+                            </Radio.Root>
+                            기타
+                        </Field.Label>
                     </RadioGroup.Root>
+                    <Field.Error>성별을 반드시 선택해주세요.</Field.Error>
+                    <Field.Success>✓ 성별이 선택되었습니다</Field.Success>
                 </Field.Root>
-
-                {/* TextInput Component Example */}
-                <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
+                <Field.Root name="email" validationMode="onChange">
                     <Field.Label>이름</Field.Label>
-                    <TextInput type="text" placeholder="" required={required} />
+                    <TextInput type="text" placeholder="" required />
                     <Field.Description>
                         계정 생성을 위해 유효한 이름을 입력해주세요
                     </Field.Description>
