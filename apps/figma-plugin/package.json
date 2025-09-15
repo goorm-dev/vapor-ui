@@ -13,10 +13,10 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
         "@vapor-ui/color-generator": "workspace:*",
-        "@vapor-ui/core": "workspace:*"
+        "@vapor-ui/core": "workspace:*",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
     },
     "devDependencies": {
         "@figma/plugin-typings": "^1.117.0",

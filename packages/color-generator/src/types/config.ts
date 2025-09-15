@@ -1,5 +1,3 @@
-import type { CssColor } from '@adobe/leonardo-contrast-colors';
-
 import type { DEFAULT_CONTRAST_RATIOS, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from '~/constants';
 
 type Colors = Record<string, string>;
@@ -7,7 +5,7 @@ type ContrastRatios = Record<keyof typeof DEFAULT_CONTRAST_RATIOS, number>;
 type BackgroundLightness = Record<keyof typeof DEFAULT_MAIN_BACKGROUND_LIGHTNESS, number>;
 type Background = {
     name: string;
-    color: CssColor;
+    color: string;
     lightness: BackgroundLightness;
 };
 

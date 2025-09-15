@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {
     type ColorGeneratorConfig,
     type ColorPaletteResult,
+    type ContrastRatios,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
     DEFAULT_PRIMITIVE_COLORS,
@@ -29,7 +30,7 @@ export const PrimitiveColorsTab = () => {
             dark: DEFAULT_MAIN_BACKGROUND_LIGHTNESS.dark,
         },
     );
-    const [contrastRatios, setContrastRatios] = useState<Record<string, number>>({
+    const [contrastRatios, setContrastRatios] = useState<ContrastRatios>({
         ...DEFAULT_CONTRAST_RATIOS,
     });
     const [primitiveColors, setPrimitiveColors] = useState<Record<string, string>>({
@@ -44,7 +45,11 @@ export const PrimitiveColorsTab = () => {
             const config: ColorGeneratorConfig = {
                 colors: primitiveColors,
                 contrastRatios,
-                backgroundLightness,
+                background:{
+                    color: '#FFFFFF',
+                    name: 'gray',
+                    lightness: backgroundLightness,
+                },
             };
             Logger.palette.generating(config);
 
