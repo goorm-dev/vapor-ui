@@ -2,48 +2,10 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        gap: vars.size.space[100],
-        width: '100%',
-    },
-
-    defaultVariants: { disabled: false },
-
-    variants: {
-        disabled: {
-            true: {
-                opacity: 0.32,
-                pointerEvents: 'none',
-            },
-        },
-    },
-});
-
-export const label = recipe({
-    base: layerStyle('components', {
-        lineHeight: vars.typography.lineHeight['050'],
-
-        letterSpacing: vars.typography.letterSpacing['000'],
-        color: vars.color.foreground['normal-lighter'],
-        fontSize: vars.typography.fontSize['050'],
-        fontWeight: vars.typography.fontWeight[500],
-    }),
-
-    defaultVariants: { visuallyHidden: false },
-    variants: {
-        visuallyHidden: { true: visuallyHidden },
-    },
-});
-
-export const field = recipe({
     base: [
         interaction({ type: 'form' }),
 
@@ -57,9 +19,8 @@ export const field = recipe({
             color: vars.color.foreground.normal,
 
             selectors: {
-                '&:read-only:is(:hover, :focus)': {
-                    borderColor: vars.color.border.normal,
-                },
+                '&:read-only': { backgroundColor: vars.color.gray['200'] },
+                '&:disabled': { pointerEvents: 'none', opacity: 0.32 },
                 '&::placeholder': { color: vars.color.foreground.hint },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
@@ -101,5 +62,3 @@ export const field = recipe({
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
-export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;
-export type FieldVariants = NonNullable<RecipeVariants<typeof field>>;
