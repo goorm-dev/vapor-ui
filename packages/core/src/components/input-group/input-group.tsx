@@ -34,7 +34,7 @@ const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupShare
 interface InputGroupRootProps extends VComponentProps<'div'> {}
 
 const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ className, children, render, ...props }, ref) => {
         const [value, setValue] = useState('');
         const [maxLength, setMaxLength] = useState<number | undefined>();
 
@@ -53,13 +53,17 @@ const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
             setMaxLength: handleSetMaxLength,
         };
 
-        return (
-            <InputGroupProvider value={contextValue}>
-                <div ref={ref} className={clsx(styles.root(), className)} {...props}>
-                    {children}
-                </div>
-            </InputGroupProvider>
-        );
+        const element = useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(styles.root(), className),
+                children,
+                ...props,
+            },
+        });
+
+        return <InputGroupProvider value={contextValue}>{element}</InputGroupProvider>;
     },
 );
 InputGroupRoot.displayName = 'InputGroup.Root';
