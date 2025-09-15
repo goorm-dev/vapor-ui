@@ -186,6 +186,7 @@ const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref
         align = 'start',
         sideOffset = 4,
         alignItemWithTrigger = false,
+        className,
         ...componentProps
     } = props;
 
@@ -196,6 +197,7 @@ const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref
             align={align}
             sideOffset={sideOffset}
             alignItemWithTrigger={alignItemWithTrigger}
+            className={clsx(styles.positioner, className)}
             {...componentProps}
         />
     );
