@@ -5,12 +5,13 @@ import { recipe } from '@vanilla-extract/recipes';
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { typography } from '~/styles/mixins/typography.css';
+import { layerStyle } from '~/styles/utils';
 import { vars } from '~/styles/vars.css';
 
 export const trigger = recipe({
     base: [
         interaction(),
-        {
+        layerStyle('components', {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -24,35 +25,35 @@ export const trigger = recipe({
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
             },
-        },
+        }),
     ],
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
         size: {
-            sm: {
+            sm: layerStyle('components', {
                 gap: vars.size.space['100'],
                 paddingInline: vars.size.space['100'],
                 height: vars.size.space['300'],
-            },
-            md: {
+            }),
+            md: layerStyle('components', {
                 gap: vars.size.space['100'],
                 paddingInline: vars.size.space['150'],
                 height: vars.size.space['400'],
-            },
-            lg: {
+            }),
+            lg: layerStyle('components', {
                 gap: vars.size.space['100'],
                 paddingInline: vars.size.space['200'],
                 height: vars.size.space['500'],
-            },
-            xl: {
+            }),
+            xl: layerStyle('components', {
                 gap: vars.size.space['150'],
                 paddingInline: vars.size.space['300'],
                 height: vars.size.space['600'],
-            },
+            }),
         },
         invalid: {
-            true: { borderColor: vars.color.border.danger },
+            true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },
     },
 });
@@ -73,23 +74,42 @@ export const value = recipe({
 
 export const placeholder = style([foregrounds({ color: 'hint' })]);
 
+export const icon = layerStyle('components', { display: 'flex' });
+
 export const triggerIcon = recipe({
-    base: [foregrounds({ color: 'hint' }), { display: 'flex' }],
+    base: [foregrounds({ color: 'hint' }), icon],
 
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            sm: { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
-            md: { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
-            lg: { width: vars.size.dimension['250'], height: vars.size.dimension['250'] },
-            xl: { width: vars.size.dimension['300'], height: vars.size.dimension['300'] },
+            sm: layerStyle('components', {
+                width: vars.size.dimension['200'],
+                height: vars.size.dimension['200'],
+            }),
+            md: layerStyle('components', {
+                width: vars.size.dimension['200'],
+                height: vars.size.dimension['200'],
+            }),
+            lg: layerStyle('components', {
+                width: vars.size.dimension['250'],
+                height: vars.size.dimension['250'],
+            }),
+            xl: layerStyle('components', {
+                width: vars.size.dimension['300'],
+                height: vars.size.dimension['300'],
+            }),
         },
     },
 });
 
-export const itemIndicator = style([foregrounds({ color: 'normal' }), { display: 'flex' }]);
+export const itemIndicator = style([foregrounds({ color: 'normal' }), icon]);
 
-export const popup = style({
+export const positioner = layerStyle('components', {
+    position: 'relative',
+    zIndex: 50, // TODO: move to vars
+});
+
+export const popup = layerStyle('components', {
     display: 'flex',
     flexDirection: 'column',
 
@@ -116,7 +136,7 @@ export const popup = style({
 export const item = [
     interaction({ type: 'roving' }),
     typography({ style: 'body2' }),
-    style({
+    layerStyle('components', {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -132,7 +152,7 @@ export const item = [
     }),
 ];
 
-export const separator = style({
+export const separator = layerStyle('components', {
     flexShrink: 0,
     marginBlock: vars.size.space['050'],
     backgroundColor: vars.color.border.normal,
@@ -142,12 +162,12 @@ export const separator = style({
 export const groupLabel = style([
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'hint' }),
-    {
+    layerStyle('components', {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],
         paddingBottom: vars.size.space['050'],
         paddingLeft: vars.size.space['100'],
-    },
+    }),
 ]);
 
 export type TriggerVariants = NonNullable<RecipeVariants<typeof trigger>>;
