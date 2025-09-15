@@ -1,10 +1,11 @@
 'use client';
 
-import { createContext, forwardRef, useCallback, useContext, useState } from 'react';
+import { forwardRef, useCallback, useState } from 'react';
 
 import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
+import { createContext } from '~/libs/create-context';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './input-group.css';
@@ -13,18 +14,18 @@ import * as styles from './input-group.css';
  * InputGroup Context
  * -----------------------------------------------------------------------------------------------*/
 
-interface InputGroupContextValue {
+interface InputGroupSharedProps {
     value?: string;
     maxLength?: number;
     updateValue?: (value: string) => void;
     setMaxLength?: (maxLength: number) => void;
 }
 
-const InputGroupContext = createContext<InputGroupContextValue>({});
-
-const useInputGroupContext = () => {
-    return useContext(InputGroupContext);
-};
+const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupSharedProps>({
+    name: 'InputGroup',
+    hookName: 'useInputGroup',
+    providerName: 'InputGroupProvider',
+});
 
 /* -------------------------------------------------------------------------------------------------
  * InputGroup Root
@@ -45,7 +46,7 @@ const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
             setMaxLength(newMaxLength);
         }, []);
 
-        const contextValue: InputGroupContextValue = {
+        const contextValue: InputGroupSharedProps = {
             value,
             maxLength,
             updateValue,
@@ -53,11 +54,11 @@ const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
         };
 
         return (
-            <InputGroupContext.Provider value={contextValue}>
+            <InputGroupProvider value={contextValue}>
                 <div ref={ref} className={clsx(styles.root(), className)} {...props}>
                     {children}
                 </div>
-            </InputGroupContext.Provider>
+            </InputGroupProvider>
         );
     },
 );
@@ -104,4 +105,4 @@ const InputGroup = {
 };
 
 export { InputGroup, useInputGroupContext };
-export type { InputGroupRootProps, InputGroupCountProps };
+export type { InputGroupCountProps, InputGroupRootProps };
