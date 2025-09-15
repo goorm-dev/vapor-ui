@@ -5,6 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite --config vite.config.ui.ts",
+        "predev:figma": "mkdir -p dist && cp manifest.json dist/",
         "dev:figma": "concurrently \"vite build --config vite.config.ui.ts --watch\" \"vite build --config vite.config.plugin.ts --watch\"",
         "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts && cp manifest.json dist/",
         "build:ui": "vite build --config vite.config.ui.ts",
