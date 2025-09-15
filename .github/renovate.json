@@ -7,13 +7,14 @@
     "automergeStrategy": "squash",
     "autodiscover": true,
     "autodiscoverFilter": ["goorm-dev/vapor-ui"],
-    "prHourlyLimit": 2,
+    "prHourlyLimit": 4,
     "prNotPendingHours": 48,
-    "groupName": "all",
+    "rangeStrategy": "bump",
     "vulnerabilityAlerts": {
         "enabled": true,
         "labels": ["type: security"],
-        "automerge": false
+        "automerge": false,
+        "dependencyDashboardApproval": true
     },
     "packageRules": [
         {
@@ -30,7 +31,7 @@
             "matchPackagePatterns": ["@vanilla-extract/*"],
             "labels": ["type: dependencies"],
             "automerge": false,
-            "matchUpdateTypes": ["patch", "minor"]
+            "dependencyDashboardApproval": true
         },
         {
             "description": "Base UI - Unstyled component library",
@@ -46,27 +47,22 @@
             "excludePackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
             "excludePackagePatterns": ["@vanilla-extract/*", "@base-ui-components/*"],
             "labels": ["type: dependencies"],
-            "automerge": true,
-            "matchUpdateTypes": ["patch"]
-        },
-        {
-            "description": "Manual review required for minor and major updates",
-            "matchUpdateTypes": ["minor", "major"],
             "automerge": false,
             "dependencyDashboardApproval": true
         },
         {
-            "description": "Auto-merge lockfile maintenance",
-            "matchUpdateTypes": ["lockFileMaintenance"],
-            "automerge": true,
-            "automergeType": "branch"
-        },
-        {
             "description": "Security updates require manual review with alerts",
-            "matchPackagePatterns": ["*"],
             "isVulnerabilityAlert": true,
             "automerge": false,
+            "dependencyDashboardApproval": true,
             "labels": ["type: security"]
+        },
+        {
+            "description": "Lockfile maintenance requires manual review",
+            "matchUpdateTypes": ["lockFileMaintenance"],
+            "automerge": false,
+            "dependencyDashboardApproval": true,
+            "labels": ["type: maintenance"]
         }
     ]
 }
