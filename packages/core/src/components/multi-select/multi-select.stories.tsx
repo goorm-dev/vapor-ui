@@ -333,7 +333,6 @@ export const TestBed = {
                         defaultOpen
                     >
                         <MultiSelect.Trigger>
-                            {/* <MultiSelect.DisplayValue placeholder="Select languages" /> */}
                             <MultiSelect.DisplayValue>{renderValue}</MultiSelect.DisplayValue>
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>

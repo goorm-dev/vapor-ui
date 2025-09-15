@@ -14,7 +14,6 @@ export const trigger = recipe({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: vars.size.space['100'],
 
             border: `1px solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
@@ -32,24 +31,28 @@ export const trigger = recipe({
     variants: {
         size: {
             sm: {
-                paddingBlock: vars.size.space['025'],
+                gap: vars.size.space['100'],
+                // paddingBlock: vars.size.space['025'],
                 paddingInline: vars.size.space['100'],
-                minHeight: vars.size.space['300'],
+                // minHeight: vars.size.space['300'],
             },
             md: {
-                paddingBlock: vars.size.space['050'],
+                gap: vars.size.space['100'],
+                // paddingBlock: vars.size.space['050'],
                 paddingInline: vars.size.space['150'],
-                minHeight: vars.size.space['400'],
+                // minHeight: vars.size.space['400'],
             },
             lg: {
-                paddingBlock: vars.size.space['100'],
+                gap: vars.size.space['100'],
+                // paddingBlock: vars.size.space['100'],
                 paddingInline: vars.size.space['200'],
-                minHeight: vars.size.space['500'],
+                // minHeight: vars.size.space['500'],
             },
             xl: {
-                paddingBlock: vars.size.space['150'],
+                gap: vars.size.space['150'],
+                // paddingBlock: vars.size.space['150'],
                 paddingInline: vars.size.space['300'],
-                minHeight: vars.size.space['600'],
+                // minHeight: vars.size.space['600'],
             },
         },
         invalid: {
@@ -72,10 +75,34 @@ export const value = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            sm: typography({ style: 'body3' }),
-            md: typography({ style: 'body2' }),
-            lg: typography({ style: 'body2' }),
-            xl: typography({ style: 'body1' }),
+            sm: [
+                typography({ style: 'body3' }),
+                {
+                    paddingBlock: vars.size.space['025'],
+                    minHeight: vars.size.space['300'],
+                },
+            ],
+            md: [
+                typography({ style: 'body2' }),
+                {
+                    paddingBlock: vars.size.space['050'],
+                    minHeight: vars.size.space['400'],
+                },
+            ],
+            lg: [
+                typography({ style: 'body2' }),
+                {
+                    paddingBlock: vars.size.space['100'],
+                    minHeight: vars.size.space['500'],
+                },
+            ],
+            xl: [
+                typography({ style: 'body1' }),
+                {
+                    paddingBlock: vars.size.space['150'],
+                    minHeight: vars.size.space['600'],
+                },
+            ],
         },
     },
 });
@@ -94,7 +121,26 @@ export const placeholder = recipe({
     },
 });
 
-export const icon = style({ display: 'flex' });
+export const triggerIcon = recipe({
+    base: [foregrounds({ color: 'hint' }), { display: 'flex' }],
+
+    defaultVariants: { size: 'md' },
+    variants: {
+        size: {
+            sm: { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
+            md: { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
+            lg: { width: vars.size.dimension['250'], height: vars.size.dimension['250'] },
+            xl: { width: vars.size.dimension['300'], height: vars.size.dimension['300'] },
+        },
+    },
+});
+
+export const itemIndicator = style([foregrounds({ color: 'normal' }), { display: 'flex' }]);
+
+export const positioner = style({
+    position: 'relative',
+    zIndex: 50, // TODO: move to vars
+});
 
 export const popup = style({
     display: 'flex',
@@ -105,10 +151,9 @@ export const popup = style({
 
     border: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
-
     boxShadow: vars.shadow.md,
-
     backgroundColor: vars.color.background['normal'],
+
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',
 

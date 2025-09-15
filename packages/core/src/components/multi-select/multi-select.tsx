@@ -176,10 +176,15 @@ interface MultiSelectTriggerIconProps extends TriggerIconPrimitiveProps {}
 
 const TriggerIcon = forwardRef<HTMLDivElement, MultiSelectTriggerIconProps>(
     ({ className, children, ...props }, ref) => {
-        const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
+        const { size } = useMultiSelectContext();
+        const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
 
         return (
-            <BaseSelect.Icon ref={ref} className={clsx(styles.icon, className)} {...props}>
+            <BaseSelect.Icon
+                ref={ref}
+                className={clsx(styles.triggerIcon({ size }), className)}
+                {...props}
+            >
                 <IconElement />
             </BaseSelect.Icon>
         );
@@ -207,29 +212,28 @@ Portal.displayName = 'MultiSelect.Portal';
 type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
 interface MultiSelectPositionerProps extends PositionerPrimitiveProps {}
 
-const Positioner = forwardRef<HTMLDivElement, MultiSelectPositionerProps>(
-    (
-        {
-            side = 'bottom',
-            align = 'start',
-            sideOffset = 4,
-            alignItemWithTrigger = false,
-            ...props
-        },
-        ref,
-    ) => {
-        return (
-            <BaseSelect.Positioner
-                ref={ref}
-                side={side}
-                align={align}
-                sideOffset={sideOffset}
-                alignItemWithTrigger={alignItemWithTrigger}
-                {...props}
-            />
-        );
-    },
-);
+const Positioner = forwardRef<HTMLDivElement, MultiSelectPositionerProps>((props, ref) => {
+    const {
+        side = 'bottom',
+        align = 'start',
+        sideOffset = 4,
+        alignItemWithTrigger = false,
+        className,
+        ...componentProps
+    } = props;
+
+    return (
+        <BaseSelect.Positioner
+            ref={ref}
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            alignItemWithTrigger={alignItemWithTrigger}
+            className={clsx(styles.positioner, className)}
+            {...componentProps}
+        />
+    );
+});
 Positioner.displayName = 'MultiSelect.Positioner';
 
 /* -------------------------------------------------------------------------------------------------
@@ -286,7 +290,11 @@ const ItemIndicator = forwardRef<HTMLSpanElement, MultiSelectItemIndicatorProps>
         const IconElement = createSlot(children || <ConfirmOutlineIcon />);
 
         return (
-            <BaseSelect.ItemIndicator ref={ref} className={clsx(styles.icon, className)} {...props}>
+            <BaseSelect.ItemIndicator
+                ref={ref}
+                className={clsx(styles.itemIndicator, className)}
+                {...props}
+            >
                 <IconElement />
             </BaseSelect.ItemIndicator>
         );
