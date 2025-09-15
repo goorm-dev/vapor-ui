@@ -92,7 +92,7 @@ interface SelectDisplayValueProps extends DisplayValuePrimitiveProps {
 
 const DisplayValue = forwardRef<HTMLSpanElement, SelectDisplayValueProps>(
     ({ placeholder, className, children: childrenProp, ...props }, ref) => {
-        const { items } = useSelectContext();
+        const { items, size } = useSelectContext();
 
         const renderValue = (value: string) => {
             if (!items) return value;
@@ -107,7 +107,11 @@ const DisplayValue = forwardRef<HTMLSpanElement, SelectDisplayValueProps>(
                 : (childrenProp ?? renderValue(value) ?? <Placeholder>{placeholder}</Placeholder>);
 
         return (
-            <BaseSelect.Value ref={ref} className={clsx(styles.value, className)} {...props}>
+            <BaseSelect.Value
+                ref={ref}
+                className={clsx(styles.value({ size }), className)}
+                {...props}
+            >
                 {children}
             </BaseSelect.Value>
         );
@@ -142,10 +146,16 @@ interface SelectTriggerIconProps extends TriggerIconPrimitiveProps {}
 
 const TriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIconProps>(
     ({ className, children, ...props }, ref) => {
-        const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
+        const { size } = useSelectContext();
+
+        const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
 
         return (
-            <BaseSelect.Icon ref={ref} className={clsx(styles.icon, className)} {...props}>
+            <BaseSelect.Icon
+                ref={ref}
+                className={clsx(styles.triggerIcon({ size }), className)}
+                {...props}
+            >
                 <IconElement />
             </BaseSelect.Icon>
         );
@@ -170,19 +180,26 @@ const Portal = (props: SelectPortalProps) => {
 type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
 interface SelectPositionerProps extends PositionerPrimitiveProps {}
 
-const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>(
-    ({ side = 'bottom', align = 'start', sideOffset = 4, ...props }, ref) => {
-        return (
-            <BaseSelect.Positioner
-                ref={ref}
-                side={side}
-                align={align}
-                sideOffset={sideOffset}
-                {...props}
-            />
-        );
-    },
-);
+const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref) => {
+    const {
+        side = 'bottom',
+        align = 'start',
+        sideOffset = 4,
+        alignItemWithTrigger = false,
+        ...componentProps
+    } = props;
+
+    return (
+        <BaseSelect.Positioner
+            ref={ref}
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            alignItemWithTrigger={alignItemWithTrigger}
+            {...componentProps}
+        />
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Popup
@@ -235,7 +252,11 @@ const ItemIndicator = forwardRef<HTMLSpanElement, SelectItemIndicatorProps>(
         const IconElement = createSlot(children || <ConfirmOutlineIcon />);
 
         return (
-            <BaseSelect.ItemIndicator ref={ref} className={clsx(styles.icon, className)} {...props}>
+            <BaseSelect.ItemIndicator
+                ref={ref}
+                className={clsx(styles.itemIndicator, className)}
+                {...props}
+            >
                 <IconElement />
             </BaseSelect.ItemIndicator>
         );
@@ -300,6 +321,9 @@ export {
     DisplayValue as SelectDisplayValue,
     Placeholder as SelectPlaceholder,
     TriggerIcon as SelectTriggerIcon,
+    Portal as SelectPortal,
+    Positioner as SelectPositioner,
+    Popup as SelectPopup,
     Content as SelectContent,
     Item as SelectItem,
     ItemIndicator as SelectItemIndicator,
@@ -314,6 +338,9 @@ export type {
     SelectDisplayValueProps,
     SelectPlaceholderProps,
     SelectTriggerIconProps,
+    SelectPortalProps,
+    SelectPositionerProps,
+    SelectPopupProps,
     SelectContentProps,
     SelectItemProps,
     SelectItemIndicatorProps,
@@ -330,6 +357,9 @@ export const Select = {
     Placeholder,
     TriggerIcon,
     Content,
+    Portal,
+    Positioner,
+    Popup,
     Item,
     ItemIndicator,
     Group,
