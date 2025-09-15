@@ -13,10 +13,17 @@ import {
 } from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
+import { usePathname } from 'next/navigation';
 
 import { externalLinks } from '~/constants/site-links';
 
 import LogoVapor from '../../../public/icons/logo-vapor.svg';
+
+const NAVIGATION_LINKS = [
+    { href: '/docs', label: 'Docs' },
+    { href: '/playground', label: 'Playground' },
+    // { href: '/blocks', label: 'UI Blocks' }, Todo : when blocks page is ready
+];
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];
@@ -50,6 +57,7 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
 }
 
 export const SiteNavBar = () => {
+    const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -113,17 +121,15 @@ export const SiteNavBar = () => {
                             </Link>
 
                             <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem
-                                    className="text-sm"
-                                    href="/docs"
-                                    render={<Link>Docs</Link>}
-                                />
-
-                                <Nav.LinkItem
-                                    className="text-sm"
-                                    href="/playground"
-                                    render={<Link>Theme Playground</Link>}
-                                />
+                                {NAVIGATION_LINKS.map((item) => (
+                                    <Nav.LinkItem
+                                        key={item.href}
+                                        href={item.href}
+                                        selected={pathname.includes(item.href)}
+                                    >
+                                        {item.label}
+                                    </Nav.LinkItem>
+                                ))}
                             </Nav.List>
                         </div>
                         <div className="flex items-center gap-10">
@@ -186,7 +192,7 @@ export const SiteNavBar = () => {
                 </Dialog.Trigger>
             </header>
             <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 bg-black/40 md:hidden" />
+                <Dialog.Overlay className="fixed z-10 inset-0 bg-black/40 md:hidden" />
 
                 <Dialog.Content
                     className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
