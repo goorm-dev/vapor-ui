@@ -5,15 +5,15 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
-import { TextInput, type TextInputRootProps } from './text-input';
+import { TextInput, type TextInputProps } from './text-input';
 
 const LABEL_TEXT = 'Label';
-const TextInputTest = (props: TextInputRootProps) => {
+const TextInputTest = (props: TextInputProps) => {
     return (
-        <TextInput.Root {...props}>
-            <TextInput.Label>{LABEL_TEXT}</TextInput.Label>
-            <TextInput.Field />
-        </TextInput.Root>
+        <label>
+            {LABEL_TEXT}
+            <TextInput {...props} />
+        </label>
     );
 };
 
@@ -35,12 +35,14 @@ describe('TextInput', () => {
         expect(result).toHaveNoViolations();
     });
 
-    it('should associate the label with the input field', () => {
+    it('should associate the label with the input field', async () => {
         const rendered = render(<TextInputTest />);
-        const label = rendered.getByText(LABEL_TEXT) as HTMLLabelElement;
+        const label = rendered.getByText(LABEL_TEXT);
         const input = rendered.getByRole('textbox');
 
-        expect(label.htmlFor).toBe(input.id);
+        await userEvent.click(label);
+
+        expect(input).toHaveFocus();
     });
 
     it('should invoke onValueChange when the input value changes', async () => {

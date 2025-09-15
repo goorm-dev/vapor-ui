@@ -7,11 +7,7 @@ import { Grid } from '../grid';
 
 export default {
     title: 'TextInput',
-    component: TextInput.Root,
-    parameters: {
-        layout: 'centered',
-    },
-    tags: ['autodocs'],
+    component: TextInput,
     argTypes: {
         type: {
             control: 'inline-radio',
@@ -21,20 +17,13 @@ export default {
         disabled: { control: 'boolean' },
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
         readOnly: { control: 'boolean' },
-        visuallyHidden: { control: 'boolean' },
-        maxLength: { control: { type: 'number' } },
     },
-} as Meta<typeof TextInput.Root>;
+} as Meta<typeof TextInput>;
 
-type Story = StoryObj<typeof TextInput.Root>;
+type Story = StoryObj<typeof TextInput>;
 
 export const Default: Story = {
-    render: (args) => (
-        <TextInput.Root placeholder="Enter your text here..." {...args}>
-            <TextInput.Label>Label</TextInput.Label>
-            <TextInput.Field />
-        </TextInput.Root>
-    ),
+    render: (args) => <TextInput placeholder="sadf" {...args} />,
 };
 
 export const Controlled: Story = {
@@ -42,15 +31,10 @@ export const Controlled: Story = {
         const [value, setValue] = useState('Initial controlled value');
 
         return (
-            <TextInput.Root
-                value={value}
-                onValueChange={setValue}
-                placeholder="This is a controlled text input..."
-                {...args}
-            >
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <>
+                value: {value}
+                <TextInput placeholder="sadf" value={value} onValueChange={setValue} {...args} />
+            </>
         );
     },
 };
@@ -58,50 +42,17 @@ export const Controlled: Story = {
 export const TestBed: Story = {
     render: (args) => (
         <Grid.Root templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
-            <TextInput.Root placeholder="Enter your text here..." {...args}>
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <TextInput placeholder="default" {...args} />
 
-            <TextInput.Root placeholder="Enter your text here..." {...args} disabled>
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <TextInput placeholder="disabled" {...args} disabled />
 
-            <TextInput.Root placeholder="Enter your text here..." {...args} invalid>
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <TextInput placeholder="invalid" {...args} invalid />
 
-            <TextInput.Root placeholder="Enter your text here..." {...args} readOnly>
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <TextInput placeholder="readOnly" {...args} readOnly />
 
-            <TextInput.Root placeholder="Enter your text here..." {...args} visuallyHidden>
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <TextInput placeholder="required" {...args} required />
 
-            <TextInput.Root placeholder="Enter your text here..." {...args}>
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-
-            <TextInput.Root
-                defaultValue="Sample text content"
-                placeholder="Enter your text here..."
-                {...args}
-            >
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-
-            <TextInput.Root placeholder="Basic count..." maxLength={100} {...args}>
-                <TextInput.Label>Label</TextInput.Label>
-                <TextInput.Field />
-                <TextInput.Count />
-            </TextInput.Root>
+            <TextInput value="has value" placeholder="has value" {...args} />
         </Grid.Root>
     ),
 };
