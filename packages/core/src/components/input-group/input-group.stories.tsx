@@ -45,24 +45,22 @@ export const CustomCountDisplay: Story = {
 
             <InputGroup.Root>
                 <TextInput placeholder="Current only..." maxLength={50} />
-                <InputGroup.Count>
-                    {({ current }) => `${current} characters`}
-                </InputGroup.Count>
+                <InputGroup.Count>{({ current }) => `${current} characters`}</InputGroup.Count>
             </InputGroup.Root>
 
             <InputGroup.Root>
                 <TextInput placeholder="Remaining..." maxLength={50} />
                 <InputGroup.Count>
-                    {({ current, max }) => max ? `${max - current} left` : `${current} chars`}
+                    {({ current, maxLength }) =>
+                        maxLength ? `${maxLength - current} left` : `${current} chars`
+                    }
                 </InputGroup.Count>
             </InputGroup.Root>
 
             <InputGroup.Root>
                 <TextInput placeholder="Custom format..." maxLength={50} />
                 <InputGroup.Count>
-                    {({ max, value }) => 
-                        `Length: ${value.length} | Limit: ${max || 'none'}`
-                    }
+                    {({ maxLength, value }) => `Length: ${value} | Limit: ${maxLength || 'none'}`}
                 </InputGroup.Count>
             </InputGroup.Root>
         </div>

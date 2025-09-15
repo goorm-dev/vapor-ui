@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, forwardRef, useContext, useState, useCallback } from 'react';
+import { createContext, forwardRef, useCallback, useContext, useState } from 'react';
 
 import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
@@ -68,7 +68,7 @@ InputGroupRoot.displayName = 'InputGroup.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 interface InputGroupCountProps extends Omit<VComponentProps<'span'>, 'children'> {
-    children?: (params: { current: number; max?: number; value: string }) => React.ReactNode;
+    children?: (params: { current: number; maxLength?: number; value: string }) => React.ReactNode;
 }
 
 const InputGroupCount = forwardRef<HTMLSpanElement, InputGroupCountProps>(
@@ -77,7 +77,7 @@ const InputGroupCount = forwardRef<HTMLSpanElement, InputGroupCountProps>(
         const currentLength = value.length;
 
         const content = children
-            ? children({ current: currentLength, max: maxLength, value })
+            ? children({ current: currentLength, maxLength, value })
             : maxLength !== undefined
               ? `${currentLength}/${maxLength}`
               : currentLength.toString();
