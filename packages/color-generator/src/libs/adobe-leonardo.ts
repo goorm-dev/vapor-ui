@@ -132,7 +132,7 @@ const createLeonardoTheme = ({
 }): Theme => {
     const backgroundColorObj = new BackgroundColor({
         name: backgroundName,
-        colorKeys: [backgroundColor],
+        colorKeys: [backgroundColor as CssColor],
         ratios: contrastRatios,
     });
 
