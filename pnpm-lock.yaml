@@ -240,11 +240,8 @@ importers:
       sass:
         specifier: ^1.89.2
         version: 1.92.1
-      tabs:
-        specifier: link:@base-ui-components/react/tabs
-        version: link:@base-ui-components/react/tabs
       zod:
-        specifier: ^3.25.67
+        specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
       '@fumadocs/mdx-remote':
