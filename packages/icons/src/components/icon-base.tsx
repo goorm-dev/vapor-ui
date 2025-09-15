@@ -1,4 +1,4 @@
-import type { FunctionComponent, SVGProps } from 'react';
+import type { SVGProps } from 'react';
 import React from 'react';
 
 import clsx from 'clsx';
@@ -14,7 +14,6 @@ export interface IconBaseProps extends SVGProps<SVGSVGElement> {
     children: React.ReactNode;
 }
 
-export interface IconType extends FunctionComponent<Omit<IconBaseProps, 'children'>> {}
 type Size = number | string;
 
 const isCssVariable = (value?: Size) => typeof value === 'string' && value.startsWith('var(--');
