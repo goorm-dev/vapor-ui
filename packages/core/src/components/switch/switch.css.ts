@@ -71,10 +71,12 @@ export const indicator = recipe({
                 transform: 'translateX(100%)',
             },
             '&[data-readonly]:not([data-checked])': {
-                backgroundColor: vars.color.white,
+                backgroundColor: vars.color.gray[400],
+                boxShadow: 'none',
             },
             '&[data-readonly][data-checked]': {
                 backgroundColor: vars.color.foreground.hint,
+                boxShadow: 'none',
             },
         },
     }),
