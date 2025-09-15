@@ -5,10 +5,10 @@ import { forwardRef, useEffect } from 'react';
 import { Input as BaseInput } from '@base-ui-components/react';
 import clsx from 'clsx';
 
+import { useInputGroupContext } from '~/components/input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
-import { useInputGroupContext } from '../input-group';
 import type { RootVariants } from './text-input.css';
 import * as styles from './text-input.css';
 
@@ -40,7 +40,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             const newValue = event.target.value;
             onValueChange?.(newValue);
-            
+
             // Update InputGroup context with current value
             if (groupContext?.updateValue) {
                 groupContext.updateValue(newValue);
@@ -53,7 +53,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
                 if (groupContext.setMaxLength && otherProps.maxLength) {
                     groupContext.setMaxLength(otherProps.maxLength);
                 }
-                
+
                 // Set initial value if there's a defaultValue
                 if (groupContext.updateValue && defaultValue) {
                     groupContext.updateValue(defaultValue);
