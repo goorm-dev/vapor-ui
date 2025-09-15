@@ -16,6 +16,7 @@ export * from './components/menu';
 export * from './components/nav';
 export * from './components/radio';
 export * from './components/radio-group';
+export * from './components/select';
 export * from './components/switch';
 export * from './components/text';
 export * from './components/text-input';
