@@ -92,7 +92,7 @@ export const value = recipe({
             xl: [
                 typography({ style: 'body1' }),
                 layerStyle('components', {
-                    paddingBlock: vars.size.space['150'],
+                    paddingBlock: vars.size.space['100'],
                     minHeight: vars.size.space['600'],
                 }),
             ],
