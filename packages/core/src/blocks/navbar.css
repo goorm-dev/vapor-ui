@@ -17,3 +17,22 @@
 .logo {
     flex-shrink: 0;
 }
+
+.vertical-navigation-menu {
+    width: 100%;
+}
+
+.collapsible-trigger {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.link-item {
+    justify-content: flex-start;
+}
+
+.nested-link-item {
+    justify-content: flex-start;
+
+    padding-left: var(--vapor-size-space-250);
+}
