@@ -14,7 +14,7 @@ import { Avatar } from '~/components/avatar';
 import { Button } from '~/components/button';
 import { HStack } from '~/components/h-stack';
 import { IconButton } from '~/components/icon-button';
-import { Nav } from '~/components/nav';
+import { NavigationMenu } from '~/components/navigation-menu';
 
 export default {
     title: 'blocks/navbar',
@@ -38,26 +38,26 @@ export const Block1: StoryObj = {
                 <HStack gap="$200">
                     <LogoSvg className="logo" />
 
-                    <Nav.Root aria-label="Main" shape="ghost" className="navbar-desktop">
-                        <Nav.List>
-                            <Nav.Item>
-                                <Nav.Link href="/features">Features</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/pricing">Pricing</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/templates">Templates</Nav.Link>
-                            </Nav.Item>
-                        </Nav.List>
-                    </Nav.Root>
+                    <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link href="/features">Features</NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link href="/templates">
+                                    Templates
+                                </NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+                    </NavigationMenu.Root>
                 </HStack>
 
                 <HStack gap="$100">
-                    <Avatar.Root shape="circle" alt="bell" asChild>
-                        <button>
-                            <BellOnIcon />
-                        </button>
+                    <Avatar.Root shape="circle" alt="bell" render={<button />}>
+                        <BellOnIcon />
                     </Avatar.Root>
                     <Avatar.Simple shape="circle" alt="goorm" />
 
@@ -86,25 +86,23 @@ export const Block2: StoryObj = {
             >
                 <LogoSvg className="logo" />
 
-                <Nav.Root aria-label="Main" shape="ghost" className="navbar-desktop">
-                    <Nav.List>
-                        <Nav.Item>
-                            <Nav.Link href="/features">Features</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="/pricing">Pricing</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="/templates">Templates</Nav.Link>
-                        </Nav.Item>
-                    </Nav.List>
-                </Nav.Root>
+                <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
+                    <NavigationMenu.List>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/features">Features</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/templates">Templates</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                    </NavigationMenu.List>
+                </NavigationMenu.Root>
 
                 <HStack gap="$100">
-                    <Avatar.Root shape="circle" alt="bell" asChild>
-                        <button>
-                            <BellOnIcon />
-                        </button>
+                    <Avatar.Root shape="circle" alt="bell" render={<button />}>
+                        <BellOnIcon />
                     </Avatar.Root>
                     <Avatar.Simple shape="circle" alt="goorm" />
 
@@ -134,25 +132,25 @@ export const Block3: StoryObj = {
                 <LogoSvg className="logo" />
 
                 <HStack gap="$200">
-                    <Nav.Root aria-label="Main" shape="ghost" className="navbar-desktop">
-                        <Nav.List>
-                            <Nav.Item>
-                                <Nav.Link href="/features">Features</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/pricing">Pricing</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/templates">Templates</Nav.Link>
-                            </Nav.Item>
-                        </Nav.List>
-                    </Nav.Root>
+                    <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link href="/features">Features</NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link href="/templates">
+                                    Templates
+                                </NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+                    </NavigationMenu.Root>
 
                     <HStack gap="$100">
-                        <Avatar.Root shape="circle" alt="bell" asChild>
-                            <button>
-                                <BellOnIcon />
-                            </button>
+                        <Avatar.Root shape="circle" alt="bell" render={<button />}>
+                            <BellOnIcon />
                         </Avatar.Root>
                         <Avatar.Simple shape="circle" alt="goorm" />
 
@@ -182,19 +180,19 @@ export const Block4: StoryObj = {
             >
                 <LogoSvg className="logo" />
 
-                <Nav.Root aria-label="Main" shape="ghost" className="navbar-desktop">
-                    <Nav.List>
-                        <Nav.Item>
-                            <Nav.Link href="/features">Features</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="/pricing">Pricing</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="/templates">Templates</Nav.Link>
-                        </Nav.Item>
-                    </Nav.List>
-                </Nav.Root>
+                <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
+                    <NavigationMenu.List>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/features">Features</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="/templates">Templates</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                    </NavigationMenu.List>
+                </NavigationMenu.Root>
 
                 <HStack gap="$100">
                     <Button variant="ghost">Log in</Button>
