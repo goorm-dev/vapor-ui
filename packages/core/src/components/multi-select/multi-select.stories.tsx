@@ -45,9 +45,9 @@ type Language = keyof typeof languages;
 export const Default: StoryObj = {
     render: (args) => {
         return (
-            <MultiSelect.Root items={fonts} {...args}>
+            <MultiSelect.Root placeholder="Select fonts" items={fonts} {...args}>
                 <MultiSelect.Trigger>
-                    <MultiSelect.DisplayValue placeholder="Select fonts" />
+                    <MultiSelect.Value />
                     <MultiSelect.TriggerIcon />
                 </MultiSelect.Trigger>
                 <MultiSelect.Content>
@@ -85,7 +85,7 @@ export const ObjectItems: StoryObj = {
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={languages}>
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue>{renderValue}</MultiSelect.DisplayValue>
+                            <MultiSelect.Value>{renderValue}</MultiSelect.Value>
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
                         <MultiSelect.Content>
@@ -103,7 +103,7 @@ export const ObjectItems: StoryObj = {
                     <span>Custom Value</span>
                     <MultiSelect.Root {...args} items={languages}>
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue>
+                            <MultiSelect.Value>
                                 {(value) =>
                                     value.length ? (
                                         value.join(', ')
@@ -113,7 +113,7 @@ export const ObjectItems: StoryObj = {
                                         </MultiSelect.Placeholder>
                                     )
                                 }
-                            </MultiSelect.DisplayValue>
+                            </MultiSelect.Value>
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
                         <MultiSelect.Content>
@@ -153,8 +153,8 @@ export const ArrayItmes: StoryObj = {
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={fonts} defaultValue={null}>
                         <MultiSelect.Trigger>
-                            {/* <MultiSelect.DisplayValue placeholder="Select fonts" /> */}
-                            <MultiSelect.DisplayValue>{renderValue}</MultiSelect.DisplayValue>
+                            {/* <MultiSelect.Value placeholder="Select fonts" /> */}
+                            <MultiSelect.Value>{renderValue}</MultiSelect.Value>
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
                         <MultiSelect.Content>
@@ -172,7 +172,7 @@ export const ArrayItmes: StoryObj = {
                     <span>Custom Value</span>
                     <MultiSelect.Root {...args} items={fonts}>
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue>
+                            <MultiSelect.Value>
                                 {(value) =>
                                     value.length ? (
                                         value.join(', ')
@@ -182,7 +182,7 @@ export const ArrayItmes: StoryObj = {
                                         </MultiSelect.Placeholder>
                                     )
                                 }
-                            </MultiSelect.DisplayValue>
+                            </MultiSelect.Value>
 
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
@@ -223,18 +223,18 @@ export const TestBed = {
                 templateRows="repeat(auto-fit, minmax(150px, 1fr))"
             >
                 <Grid.Item>
-                    <MultiSelect.Root>
+                    <MultiSelect.Root placeholder="Placeholder">
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue placeholder="Placeholder" />
+                            <MultiSelect.Value />
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
                     </MultiSelect.Root>
                 </Grid.Item>
 
                 <Grid.Item>
-                    <MultiSelect.Root defaultOpen>
+                    <MultiSelect.Root placeholder="Grouped" defaultOpen>
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue placeholder="Grouped" />
+                            <MultiSelect.Value />
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
                         <MultiSelect.Content>
@@ -264,9 +264,9 @@ export const TestBed = {
                 </Grid.Item>
 
                 <Grid.Item>
-                    <MultiSelect.Root defaultOpen defaultValue={['mono']}>
+                    <MultiSelect.Root placeholder="Placeholder" defaultOpen defaultValue={['mono']}>
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue placeholder="Placeholder" />
+                            <MultiSelect.Value />
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
                         <MultiSelect.Content>
@@ -285,9 +285,14 @@ export const TestBed = {
                 </Grid.Item>
 
                 <Grid.Item>
-                    <MultiSelect.Root defaultOpen items={languages} defaultValue={['csharp']}>
+                    <MultiSelect.Root
+                        placeholder="MultiSelect Font"
+                        defaultOpen
+                        items={languages}
+                        defaultValue={['csharp']}
+                    >
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue placeholder="MultiSelect Font" />
+                            <MultiSelect.Value />
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
 
@@ -306,9 +311,14 @@ export const TestBed = {
                 </Grid.Item>
 
                 <Grid.Item>
-                    <MultiSelect.Root items={fonts} defaultValue={['mono']} defaultOpen>
+                    <MultiSelect.Root
+                        placeholder="MultiSelect Font"
+                        items={fonts}
+                        defaultValue={['mono']}
+                        defaultOpen
+                    >
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue placeholder="MultiSelect Font" />
+                            <MultiSelect.Value />
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
 
@@ -333,7 +343,7 @@ export const TestBed = {
                         defaultOpen
                     >
                         <MultiSelect.Trigger>
-                            <MultiSelect.DisplayValue>{renderValue}</MultiSelect.DisplayValue>
+                            <MultiSelect.Value>{renderValue}</MultiSelect.Value>
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>
                         <MultiSelect.Content>

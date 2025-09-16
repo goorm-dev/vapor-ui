@@ -14,9 +14,11 @@ import type { TriggerVariants } from './multi-select.css';
 import * as styles from './multi-select.css';
 
 type MultiSelectVariants = TriggerVariants;
-type MultiSelectSharedProps = MultiSelectVariants & Pick<RootPrimitiveProps<unknown>, 'items'>;
+type MultiSelectSharedProps = MultiSelectVariants & {
+    placeholder?: React.ReactNode;
+};
 
-type MultiSelectContext = MultiSelectSharedProps;
+type MultiSelectContext = MultiSelectSharedProps & Pick<RootPrimitiveProps<unknown>, 'items'>;
 
 const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectContext>({
     name: 'MultiSelectContext',
@@ -31,10 +33,11 @@ const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectCo
 type RootPrimitiveProps<Value> = VComponentProps<typeof BaseSelect.Root<Value, true>>;
 interface MultiSelectRootProps<Value>
     extends Omit<RootPrimitiveProps<Value>, 'multiple'>,
-        MultiSelectVariants {}
+        MultiSelectSharedProps {}
 
 const Root = <Value,>({ items, ...props }: MultiSelectRootProps<Value>) => {
-    const [sharedProps, otherProps] = createSplitProps<MultiSelectVariants>()(props, [
+    const [sharedProps, otherProps] = createSplitProps<MultiSelectSharedProps>()(props, [
+        'placeholder',
         'size',
         'invalid',
     ]);
@@ -72,29 +75,15 @@ const Trigger = forwardRef<HTMLButtonElement, MultiSelectTriggerProps>(
 Trigger.displayName = 'MultiSelect.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
- * MultiSelect.Value
+ * Select.Value
  * -----------------------------------------------------------------------------------------------*/
 
 type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
 interface MultiSelectValueProps extends ValuePrimitiveProps {}
 
-const Value = forwardRef<HTMLSpanElement, MultiSelectValueProps>((props, ref) => {
-    return <BaseSelect.Value ref={ref} {...props} />;
-});
-Value.displayName = 'MultiSelect.Value';
-
-/* -------------------------------------------------------------------------------------------------
- * Select.DisplayValue
- * -----------------------------------------------------------------------------------------------*/
-
-type DisplayValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
-interface MultiSelectDisplayValueProps extends DisplayValuePrimitiveProps {
-    placeholder?: React.ReactNode;
-}
-
-const DisplayValue = forwardRef<HTMLSpanElement, MultiSelectDisplayValueProps>(
-    ({ placeholder, className, children: childrenProp, ...props }, ref) => {
-        const { size = 'md', items } = useMultiSelectContext();
+const Value = forwardRef<HTMLSpanElement, MultiSelectValueProps>(
+    ({ className, children: childrenProp, ...props }, ref) => {
+        const { size = 'md', items, placeholder } = useMultiSelectContext();
 
         const itemMap = useMemo(() => {
             if (Array.isArray(items)) return new Map(items.map((item) => [item.value, item.label]));
@@ -360,7 +349,6 @@ export {
     Root as MultiSelectRoot,
     Trigger as MultiSelectTrigger,
     Value as MultiSelectValue,
-    DisplayValue as MultiSelectDisplayValue,
     Placeholder as MultiSelectPlaceholder,
     TriggerIcon as MultiSelectTriggerIcon,
     Portal as MultiSelectPortal,
@@ -378,7 +366,6 @@ export type {
     MultiSelectRootProps,
     MultiSelectTriggerProps,
     MultiSelectValueProps,
-    MultiSelectDisplayValueProps,
     MultiSelectPlaceholderProps,
     MultiSelectTriggerIconProps,
     MultiSelectPortalProps,
@@ -396,7 +383,6 @@ export const MultiSelect = {
     Root,
     Trigger,
     Value,
-    DisplayValue,
     Placeholder,
     TriggerIcon,
     Portal,
