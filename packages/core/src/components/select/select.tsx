@@ -16,9 +16,11 @@ import * as styles from './select.css';
 import type { TriggerVariants } from './select.css';
 
 type SelectVariants = TriggerVariants;
-type SelectSharedProps = SelectVariants & Pick<RootPrimitiveProps, 'items'>;
+type SelectSharedProps = SelectVariants & {
+    placeholder?: ReactNode;
+};
 
-type SelectContext = SelectSharedProps;
+type SelectContext = SelectSharedProps & Pick<RootPrimitiveProps, 'items'>;
 
 const [SelectProvider, useSelectContext] = createContext<SelectContext>({
     name: 'SelectContext',
@@ -31,10 +33,11 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
  * -----------------------------------------------------------------------------------------------*/
 
 type RootPrimitiveProps = Omit<VComponentProps<typeof BaseSelect.Root>, 'multiple'>;
-interface SelectRootProps extends RootPrimitiveProps, SelectVariants {}
+interface SelectRootProps extends RootPrimitiveProps, SelectSharedProps {}
 
 const Root = ({ items, ...props }: SelectRootProps) => {
-    const [sharedProps, otherProps] = createSplitProps<SelectVariants>()(props, [
+    const [sharedProps, otherProps] = createSplitProps<SelectSharedProps>()(props, [
+        'placeholder',
         'size',
         'invalid',
     ]);
@@ -77,22 +80,9 @@ const Trigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
 type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
 interface SelectValueProps extends ValuePrimitiveProps {}
 
-const Value = forwardRef<HTMLSpanElement, SelectValueProps>(({ ...props }, ref) => {
-    return <BaseSelect.Value ref={ref} {...props} />;
-});
-
-/* -------------------------------------------------------------------------------------------------
- * Select.DisplayValue
- * -----------------------------------------------------------------------------------------------*/
-
-type DisplayValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
-interface SelectDisplayValueProps extends DisplayValuePrimitiveProps {
-    placeholder?: ReactNode;
-}
-
-const DisplayValue = forwardRef<HTMLSpanElement, SelectDisplayValueProps>(
-    ({ placeholder, className, children: childrenProp, ...props }, ref) => {
-        const { items, size } = useSelectContext();
+const Value = forwardRef<HTMLSpanElement, SelectValueProps>(
+    ({ className, children: childrenProp, ...props }, ref) => {
+        const { items, size, placeholder } = useSelectContext();
 
         const renderValue = (value: string) => {
             if (!items) return value;
@@ -320,7 +310,6 @@ export {
     Root as SelectRoot,
     Trigger as SelectTrigger,
     Value as SelectValue,
-    DisplayValue as SelectDisplayValue,
     Placeholder as SelectPlaceholder,
     TriggerIcon as SelectTriggerIcon,
     Portal as SelectPortal,
@@ -337,7 +326,6 @@ export type {
     SelectRootProps,
     SelectTriggerProps,
     SelectValueProps,
-    SelectDisplayValueProps,
     SelectPlaceholderProps,
     SelectTriggerIconProps,
     SelectPortalProps,
@@ -355,7 +343,6 @@ export const Select = {
     Root,
     Trigger,
     Value,
-    DisplayValue,
     Placeholder,
     TriggerIcon,
     Content,
