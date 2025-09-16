@@ -47,8 +47,8 @@ const css = generateCompleteCSS(brandPalette, semanticTokens, {
     radius: 8
 });
 
-// 3. Use in your app
-document.head.insertAdjacentHTML('beforeend', `<style>${css}</style>`);
+// 3. Add to your global.css
+console.log(css); // Copy this output to your global.css file
 ```
 
 ## API Reference
