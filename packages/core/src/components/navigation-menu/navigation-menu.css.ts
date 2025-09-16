@@ -24,9 +24,9 @@ export const list = recipe({
         listStyle: 'none',
     }),
 
-    defaultVariants: { direction: 'horizontal' },
+    defaultVariants: { orientation: 'horizontal' },
     variants: {
-        direction: {
+        orientation: {
             horizontal: layerStyle('components', { flexDirection: 'row' }),
             vertical: layerStyle('components', { flexDirection: 'column' }),
         },

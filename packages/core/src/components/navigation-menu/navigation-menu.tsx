@@ -44,20 +44,20 @@ interface NavigationMenuRootProps extends RootPrimitiveProps, NavigationMenuShar
 const Root = forwardRef<HTMLElement, NavigationMenuRootProps>(
     ({ 'aria-label': ariaLabel, className, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(props, [
-            'direction',
+            'orientation',
             'size',
             'stretch',
             'disabled',
         ]);
 
-        const { direction } = variantProps;
+        const { orientation } = variantProps;
 
         return (
             <NavigationMenuProvider value={variantProps}>
                 <BaseNavigationMenu.Root
                     ref={ref}
                     aria-label={ariaLabel}
-                    orientation={direction}
+                    orientation={orientation}
                     className={clsx(styles.root({ stretch: variantProps.stretch }), className)}
                     {...otherProps}
                 />
@@ -75,13 +75,13 @@ type ListPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.List>;
 interface NavigationMenuListProps extends ListPrimitiveProps {}
 
 const List = forwardRef<HTMLDivElement, NavigationMenuListProps>(({ className, ...props }, ref) => {
-    const { direction } = useNavigationMenuContext();
+    const { orientation } = useNavigationMenuContext();
 
     return (
         <BaseNavigationMenu.List
             ref={ref}
             aria-orientation={undefined}
-            className={clsx(styles.list({ direction }), className)}
+            className={clsx(styles.list({ orientation }), className)}
             {...props}
         />
     );
