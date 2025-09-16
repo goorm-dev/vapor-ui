@@ -1,31 +1,22 @@
 'use client';
 
-import { forwardRef, useId } from 'react';
+import { forwardRef } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
-import { Thumb as RadixSwitchIndicator, Root as RadixSwitchRoot } from '@radix-ui/react-switch';
+import { Switch as BaseSwitch } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { VComponentProps } from '~/utils/types';
 
-import type { ControlVariants, LabelVariants, RootVariants } from './switch.css';
+import type { ControlVariants } from './switch.css';
 import * as styles from './switch.css';
 
-type SwitchVariants = RootVariants & ControlVariants & LabelVariants;
+type SwitchVariants = ControlVariants;
+type SwitchSharedProps = SwitchVariants;
 
-type SwitchSharedProps = SwitchVariants & {
-    checked?: boolean;
-    onCheckedChange?: (checked: boolean) => void;
-    defaultChecked?: boolean;
-};
-
-type SwitchContext = SwitchSharedProps & {
-    switchId?: string;
-};
-
-const [SwitchProvider, useSwitchContext] = createContext<SwitchContext>({
+const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
     name: 'Switch',
     hookName: 'useSwitch',
     providerName: 'SwitchProvider',
@@ -35,90 +26,48 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchContext>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type SwitchRootPrimitiveProps = VComponentProps<typeof Primitive.div>;
-interface SwitchRootProps extends SwitchRootPrimitiveProps, SwitchSharedProps {}
+type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
+interface SwitchRootProps extends RootPrimitiveProps, SwitchSharedProps {}
 
-const Root = forwardRef<HTMLDivElement, SwitchRootProps>(({ className, ...props }, ref) => {
-    const switchId = useId();
-    const [switchProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, [
-        'checked',
-        'onCheckedChange',
-        'defaultChecked',
-        'disabled',
-        'size',
-        'visuallyHidden',
-    ]);
+const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
+    ({ className, children, ...props }, ref) => {
+        const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, ['size']);
 
-    const { disabled } = switchProps;
+        const { size } = variantProps;
 
-    return (
-        <SwitchProvider value={{ switchId, ...switchProps }}>
-            <Primitive.div
-                ref={ref}
-                className={clsx(styles.root({ disabled }), className)}
-                {...otherProps}
-            />
-        </SwitchProvider>
-    );
+        const ThumbElement = createSlot(children || <Thumb />);
+
+        return (
+            <SwitchProvider value={variantProps}>
+                <BaseSwitch.Root
+                    ref={ref}
+                    className={clsx(styles.control({ size }), className)}
+                    {...otherProps}
+                >
+                    <ThumbElement />
+                </BaseSwitch.Root>
+            </SwitchProvider>
+        );
+    },
+);
+
+/* -------------------------------------------------------------------------------------------------
+ * Switch.Thumb
+ * -----------------------------------------------------------------------------------------------*/
+
+type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
+interface SwitchThumbProps extends ThumbPrimitiveProps {}
+
+const Thumb = forwardRef<HTMLDivElement, SwitchThumbProps>(({ className, ...props }, ref) => {
+    const { size } = useSwitchContext();
+
+    return <BaseSwitch.Thumb ref={ref} className={styles.indicator({ size })} {...props} />;
 });
-Root.displayName = 'Switch.Root';
-
-/* -------------------------------------------------------------------------------------------------
- * Switch.Label
- * -----------------------------------------------------------------------------------------------*/
-
-type SwitchLabelPrimitiveProps = VComponentProps<typeof Primitive.label>;
-interface SwitchLabelProps extends SwitchLabelPrimitiveProps {}
-
-const Label = forwardRef<HTMLLabelElement, SwitchLabelProps>(
-    ({ htmlFor, className, ...props }, ref) => {
-        const { switchId, visuallyHidden } = useSwitchContext();
-
-        return (
-            <Primitive.label
-                ref={ref}
-                htmlFor={htmlFor || switchId}
-                className={clsx(styles.label({ visuallyHidden }), className)}
-                {...props}
-            />
-        );
-    },
-);
-Label.displayName = 'Switch.Label';
-
-/* -------------------------------------------------------------------------------------------------
- * Switch.Control
- * -----------------------------------------------------------------------------------------------*/
-
-type SwitchControlPrimitiveProps = VComponentProps<typeof RadixSwitchRoot>;
-interface SwitchControlProps extends Omit<SwitchControlPrimitiveProps, keyof SwitchSharedProps> {}
-
-const Control = forwardRef<HTMLButtonElement, SwitchControlProps>(
-    ({ id, className, ...props }, ref) => {
-        const { switchId, checked, onCheckedChange, defaultChecked, disabled, size } =
-            useSwitchContext();
-
-        return (
-            <RadixSwitchRoot
-                ref={ref}
-                id={id || switchId}
-                checked={checked}
-                defaultChecked={defaultChecked}
-                onCheckedChange={onCheckedChange}
-                disabled={disabled}
-                className={clsx(styles.control({ size }), className)}
-                {...props}
-            >
-                <RadixSwitchIndicator className={styles.indicator({ size })} />
-            </RadixSwitchRoot>
-        );
-    },
-);
-Control.displayName = 'Switch.Control';
+Thumb.displayName = 'Switch.Thumb';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as SwitchRoot, Label as SwitchLabel, Control as SwitchControl };
-export type { SwitchRootProps, SwitchLabelProps, SwitchControlProps };
+export { Root as SwitchRoot, Thumb as SwitchThumb };
+export type { SwitchRootProps, SwitchThumbProps };
 
-export const Switch = { Root, Label, Control };
+export const Switch = { Root, Thumb };

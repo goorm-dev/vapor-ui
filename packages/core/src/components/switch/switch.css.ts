@@ -2,24 +2,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
-
-export const root = recipe({
-    base: layerStyle('components', {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: vars.size.space['100'],
-    }),
-
-    defaultVariants: { disabled: false },
-    variants: {
-        disabled: {
-            true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
-        },
-    },
-});
 
 export const control = recipe({
     base: [
@@ -31,10 +15,11 @@ export const control = recipe({
             backgroundColor: vars.color.gray[400],
             cursor: 'pointer',
 
+            flexShrink: 0,
+
             selectors: {
-                '&[data-state="checked"]': {
-                    backgroundColor: vars.color.background.primary,
-                },
+                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
+                '&[data-checked]': { backgroundColor: vars.color.background.primary },
             },
         }),
     ],
@@ -73,7 +58,7 @@ export const indicator = recipe({
         backgroundColor: 'white',
 
         selectors: {
-            '&[data-state="checked"]': { transform: 'translateX(100%)' },
+            '&[data-checked]': { transform: 'translateX(100%)' },
         },
     }),
 
@@ -96,23 +81,4 @@ export const indicator = recipe({
     },
 });
 
-export const label = recipe({
-    base: layerStyle('components', {
-        lineHeight: vars.typography.lineHeight['075'],
-        letterSpacing: vars.typography.letterSpacing['100'],
-        color: vars.color.foreground['normal'],
-        fontSize: vars.typography.fontSize['075'],
-        fontWeight: vars.typography.fontWeight['400'],
-    }),
-
-    defaultVariants: { visuallyHidden: false },
-    variants: {
-        visuallyHidden: {
-            true: visuallyHidden,
-        },
-    },
-});
-
-export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
 export type ControlVariants = NonNullable<RecipeVariants<typeof control>>;
-export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;

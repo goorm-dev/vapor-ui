@@ -1,0 +1,1 @@
+export { BlockPageLayout } from './block-page-layout';

@@ -20,7 +20,7 @@ import PageWrapper from './_components/page-wrapper';
 import RenderingTemplate from './_components/rendering-template';
 
 const AVATAR_PROPS = {
-    src: 'https://statics.goorm.io/gds/resources/brand-images/light/favi_goorm.svg',
+    src: 'https://statics.goorm.io/gds/docs/images/vapor-log.svg',
     alt: 'vapor-ui',
 };
 
@@ -101,15 +101,14 @@ const renderSwitches = () => {
     const combinations = getCartesianProduct(switchSizes, switchStates);
 
     return combinations.map(([size, state], index) => (
-        <Switch.Root
-            key={`${size}-${index}`}
-            size={size}
-            defaultChecked={state.defaultChecked}
-            disabled={state.disabled}
-        >
-            <Switch.Label>Airplane mode</Switch.Label>
-            <Switch.Control />
-        </Switch.Root>
+        <label key={`${size}-${index}`}>
+            <Switch.Root
+                size={size}
+                defaultChecked={state.defaultChecked}
+                disabled={state.disabled}
+            />
+            <Text typography="body2">Airplane mode</Text>
+        </label>
     ));
 };
 
@@ -118,10 +117,10 @@ const renderTextInputs = () => {
     const combinations = getCartesianProduct(SIZES, inputTypes);
 
     return combinations.map(([size, type]) => (
-        <TextInput.Root key={`${size}-${type}`} size={size} type={type}>
-            <TextInput.Label>type {type} 입니다.</TextInput.Label>
-            <TextInput.Field />
-        </TextInput.Root>
+        <label key={`${size}-${type}`}>
+            type {type} 입니다.
+            <TextInput size={size} type={type} />
+        </label>
     ));
 };
 
@@ -192,15 +191,15 @@ const Page = () => {
                 <RenderingTemplate>
                     <RenderingTemplate.Title title="Checkbox" />
                     <RenderingTemplate.Component rows={2} gap="1rem">
-                        <Checkbox.Root id="checkbox-md" defaultChecked>
-                            <Checkbox.Control />
-                            <Checkbox.Label htmlFor="checkbox-md">Checkbox</Checkbox.Label>
-                        </Checkbox.Root>
+                        <Text render={<label />} typography="body2">
+                            <Checkbox.Root defaultChecked />
+                            Checkbox
+                        </Text>
 
-                        <Checkbox.Root id="checkbox-lg" defaultChecked size="lg">
-                            <Checkbox.Control />
-                            <Checkbox.Label htmlFor="checkbox-lg">Checkbox</Checkbox.Label>
-                        </Checkbox.Root>
+                        <Text render={<label />} typography="body2">
+                            <Checkbox.Root id="checkbox-lg" defaultChecked size="lg" />
+                            Checkbox
+                        </Text>
                     </RenderingTemplate.Component>
                 </RenderingTemplate>
 
@@ -240,9 +239,8 @@ const Page = () => {
                     <RenderingTemplate.Title title="Dialog" />
                     <RenderingTemplate.Component>
                         <Dialog.Root>
-                            <Dialog.Trigger asChild>
-                                <Button>트리거</Button>
-                            </Dialog.Trigger>
+                            <Dialog.Trigger render={<Button>트리거</Button>} />
+
                             <Dialog.Portal>
                                 <Dialog.Overlay />
                                 <Dialog.Content>

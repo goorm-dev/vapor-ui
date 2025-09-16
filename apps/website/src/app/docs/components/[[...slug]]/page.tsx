@@ -2,6 +2,7 @@ import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
+import { getComponentOgImageUrl } from '~/constants/image-urls';
 import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
@@ -26,13 +27,19 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
             footer={{
                 enabled: false,
             }}
+            article={{
+                className: 'gap-[var(--vapor-size-space-500)]',
+            }}
+            breadcrumb={{
+                enabled: false,
+            }}
         >
             <DocsPageHeader
                 title={page.data.title}
                 description={page.data.description}
                 markdownUrl={`${page.url}.mdx`}
             />
-            <DocsBody className="px-0">
+            <DocsBody className="px-0 flex flex-col">
                 <MDX components={getMDXComponents({})} />
             </DocsBody>
         </DocsPage>
@@ -46,8 +53,7 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
     const page = source.getPage(['components', ...slug]);
     if (!page) notFound();
 
-    // NOTE: 이미지 경로 수정 필요
-    const image = `https://statics.goorm.io/gds/docs/og-image/components/core/${slug[slug.length - 1]}.png`;
+    const image = getComponentOgImageUrl(slug[slug.length - 1]);
 
     return createMetadata({
         title: `${page.data.title} - Vapor UI`,

@@ -1,16 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { IconButton, Nav, Text } from '@vapor-ui/core';
-import { CloseOutlineIcon, MenuOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
+import { IconButton, NavigationMenu, Text, useTheme } from '@vapor-ui/core';
+import {
+    CloseOutlineIcon,
+    DarkIcon,
+    LightIcon,
+    MenuOutlineIcon,
+    OpenInNewOutlineIcon,
+} from '@vapor-ui/icons';
 import Link from 'fumadocs-core/link';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
+import { usePathname } from 'next/navigation';
 
 import { externalLinks } from '~/constants/site-links';
 
 import LogoVapor from '../../../public/icons/logo-vapor.svg';
+
+const NAVIGATION_LINKS = [
+    { href: '/docs', label: 'Docs' },
+    { href: '/playground', label: 'Playground' },
+    // { href: '/blocks', label: 'UI Blocks' }, // TODO : when blocks page is ready
+];
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];
@@ -44,16 +57,53 @@ function hasUrl(item: LinkItemType): item is LinkItemType & { url: string } {
 }
 
 export const SiteNavBar = () => {
+    const pathname = usePathname();
+    const [mounted, setMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const { appearance, setTheme } = useTheme();
+
+    const toggleTheme = () => {
+        setTheme({ appearance: appearance === 'light' ? 'dark' : 'light' });
+    };
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const header = document.querySelector('header');
+            const headerHeight = header?.offsetHeight || 60;
+            const headerHalfHeight = headerHeight / 2;
+            setIsScrolled(scrollTop > headerHalfHeight);
+        };
+
+        // 초기 스크롤 위치 체크
+        handleScroll();
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    if (!mounted) {
+        return null;
+    }
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-            <header className="flex w-full py-3 px-4 md:px-8 justify-between items-center h-[62px] fixed top-[var(--fd-banner-height)] bg-fd-background">
+            <header
+                className={`z-10 flex w-full py-3 px-4 md:px-8 justify-between items-center fixed top-0 transition-all duration-300 ${
+                    isScrolled
+                        ? 'bg-[var(--vapor-color-background-normal)] shadow-lg backdrop-blur-sm z-20'
+                        : 'bg-transparent'
+                }`}
+            >
                 <div className="flex items-center gap-10 relative w-full">
-                    <Nav.Root
+                    <NavigationMenu.Root
                         aria-label="Main"
                         size="lg"
-                        shape="ghost"
                         className="flex justify-between items-center gap-10 w-full"
                     >
                         <div className="flex items-center gap-10">
@@ -69,37 +119,63 @@ export const SiteNavBar = () => {
                                 />
                             </Link>
 
-                            <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
-                                <Nav.LinkItem className="text-sm" href="/docs" asChild>
-                                    <Link>Docs</Link>
-                                </Nav.LinkItem>
-                                <Nav.LinkItem className="text-sm" href="/playground" asChild>
-                                    <Link>Theme Playground</Link>
-                                </Nav.LinkItem>
-                            </Nav.List>
+                            <NavigationMenu.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
+                                {NAVIGATION_LINKS.map((item) => (
+                                    <NavigationMenu.LinkItem
+                                        key={item.href}
+                                        href={item.href}
+                                        selected={pathname.includes(item.href)}
+                                        render={<Link>{item.label}</Link>}
+                                    />
+                                ))}
+                            </NavigationMenu.List>
                         </div>
                         <div className="flex items-center gap-10">
-                            <Nav.List className="hidden md:flex flex-row items-center gap-0">
+                            <NavigationMenu.List className="hidden md:flex flex-row items-center gap-0">
                                 {externalLinks.map((item) => {
                                     return (
-                                        <Nav.Item key={item.text}>
+                                        <NavigationMenu.Item key={item.text}>
                                             <IconButton
-                                                asChild
+                                                aria-label={item.text}
                                                 size="lg"
                                                 color="secondary"
                                                 variant="ghost"
-                                                aria-label={item.text}
-                                            >
-                                                <Nav.Link asChild className="p-0">
-                                                    <Link href={item.url}>{item.icon}</Link>
-                                                </Nav.Link>
-                                            </IconButton>
-                                        </Nav.Item>
+                                                render={
+                                                    <NavigationMenu.Link
+                                                        render={
+                                                            <Link href={item.url}>{item.icon}</Link>
+                                                        }
+                                                        className="p-0"
+                                                    />
+                                                }
+                                            />
+                                        </NavigationMenu.Item>
                                     );
                                 })}
-                            </Nav.List>
+                                <div
+                                    style={{
+                                        strokeWidth: '1px',
+                                        stroke: 'var(--vapor-color-border-normal, #E1E1E8)',
+                                        width: '0',
+                                        height: 'var(--vapor-size-dimension-400, 32px)',
+                                    }}
+                                    className="border-l mx-2"
+                                />
+                                <NavigationMenu.Item>
+                                    <IconButton
+                                        suppressHydrationWarning
+                                        size="lg"
+                                        color="secondary"
+                                        variant="ghost"
+                                        aria-label={`Switch to ${appearance} mode`}
+                                        onClick={toggleTheme}
+                                    >
+                                        {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                    </IconButton>
+                                </NavigationMenu.Item>
+                            </NavigationMenu.List>
                         </div>
-                    </Nav.Root>
+                    </NavigationMenu.Root>
                 </div>
                 <Dialog.Trigger asChild>
                     <IconButton
@@ -114,10 +190,10 @@ export const SiteNavBar = () => {
                 </Dialog.Trigger>
             </header>
             <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 bg-black/40 md:hidden" />
+                <Dialog.Overlay className="fixed z-10 inset-0 bg-black/40 md:hidden" />
 
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none"
+                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >
@@ -135,12 +211,10 @@ export const SiteNavBar = () => {
                                 <Text
                                     className="flex items-center gap-2 text-base"
                                     onClick={() => setIsOpen(false)}
-                                    asChild
+                                    render={<h6 />}
                                 >
-                                    <h6>
-                                        {item.type === 'icon' ? item.icon : null}
-                                        {hasText(item) ? item.text : null}
-                                    </h6>
+                                    {item.type === 'icon' ? item.icon : null}
+                                    {hasText(item) ? item.text : null}
                                 </Text>
                                 <IconButton
                                     size="md"
@@ -154,6 +228,43 @@ export const SiteNavBar = () => {
                                 </IconButton>
                             </li>
                         ))}
+                        <li>
+                            <div
+                                style={{
+                                    strokeWidth: '1px',
+                                    stroke: 'var(--vapor-color-border-normal, #E1E1E8)',
+                                    width: '0',
+                                    height: 'var(--vapor-size-dimension-400, 32px)',
+                                }}
+                                className="border-t w-full my-2"
+                            />
+                        </li>
+                        <li
+                            className="flex h-10 px-6 items-center justify-between"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 'var(--vapor-size-space-100, 8px)',
+                            }}
+                        >
+                            <Text className="flex items-center gap-2 text-base" render={<h6 />}>
+                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                            </Text>
+                            <IconButton
+                                size="md"
+                                color="secondary"
+                                variant="fill"
+                                aria-label={
+                                    appearance
+                                        ? `Switch to ${appearance === 'light' ? 'dark' : 'light'} mode`
+                                        : 'Toggle theme'
+                                }
+                                onClick={toggleTheme}
+                            >
+                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                            </IconButton>
+                        </li>
                     </ul>
                 </Dialog.Content>
             </Dialog.Portal>

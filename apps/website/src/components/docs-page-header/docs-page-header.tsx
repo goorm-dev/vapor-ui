@@ -1,6 +1,7 @@
-import { Text } from '@vapor-ui/core';
-
 import { CopyButton } from '~/components/copy-button';
+
+import DocsDescription from '../docs-description';
+import DocsTitle from '../docs-title';
 
 type DocsPageHeaderProps = {
     title: string;
@@ -12,14 +13,8 @@ export const DocsPageHeader = ({ title, description, markdownUrl }: DocsPageHead
     return (
         <div className="flex flex-col items-start gap-[var(--vapor-size-space-250)] self-stretch">
             <div className="flex flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch">
-                <Text asChild typography="heading1" foreground="normal">
-                    <h1>{title}</h1>
-                </Text>
-                {description && (
-                    <Text typography="body1" foreground="normal">
-                        {description}
-                    </Text>
-                )}
+                <DocsTitle>{title}</DocsTitle>
+                <DocsDescription>{description}</DocsDescription>
             </div>
             {markdownUrl && (
                 <div className="w-full">

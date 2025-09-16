@@ -4,43 +4,154 @@ site_name: 'TextInput - Vapor Core'
 description: 'TextInput은 사용자가 데이터를 입력할 수 있도록 텍스트, 숫자 등 다양한 형식의 입력 필드를 제공합니다.'
 ---
 
-## Import
-
-```js
-import { TextInput } from '@vapor-ui/core';
-```
-
-## Preview
-
 <Demo name="default-text-input">
 ```tsx
 import { TextInput } from '@vapor-ui/core';
 
 export default function DefaultTextInput() {
+    return <TextInput />
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Size
+
+TextInput 크기는 sm, md, lg, xl 로 제공합니다.
+
+<Demo name="text-input-size">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputSize() {
     return (
-        <TextInput.Root>
-            <TextInput.Label>Label</TextInput.Label>    
-            <TextInput.Field />
-        </TextInput.Root>
+        <div className="space-y-4">
+            <TextInput size="sm" placeholder="Small size" />
+            <TextInput size="md" placeholder="Medium size" />
+            <TextInput size="lg" placeholder="Large size" />
+            <TextInput size="xl" placeholder="Extra large size" />
+        </div>
     );
 }
 ```
 </Demo>
 
-## Props
+### Type
+
+TextInput 타입은 text, email, password, url, tel, search 로 제공합니다.
+
+<Demo name="text-input-type">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputType() {
+    return (
+        <div className="space-y-4">
+            <TextInput type="text" placeholder="type='text'" />
+            <TextInput type="email" placeholder="type='email'" />
+            <TextInput type="password" placeholder="type='password'" />
+        </div>
+    );
+}
+```
+</Demo>
+
+### Disabled
+
+사용자가 상호작용할 수 없는 상태입니다. 액션을 수행하기 위한 특정 조건을 충족하지 않았거나 일시적으로 기능을 제한하려는 상황에서 사용합니다.
+
+<Demo name="text-input-disabled">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputDisabled() {
+    return (
+        <div className="space-y-3">
+            <TextInput disabled placeholder="비활성화된 입력 필드" />
+            <TextInput disabled defaultValue="기본 값이 있는 비활성화 필드" />
+        </div>
+    );
+}
+```
+</Demo>
+
+### Invalid
+
+유효하지 않은 상태(필수 항목 누락, 잘못된 입력 등)임을 나타냅니다. 사용자에게 시각적 피드백을 제공하여 올바른 입력을 유도할 수 있습니다.
+
+<Demo name="text-input-invalid">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputInvalid() {
+    return (
+        <div className="space-y-3">
+            <TextInput
+                type="email"
+                invalid
+                placeholder="잘못된 이메일 형식"
+                defaultValue="invalid-email"
+            />
+            <TextInput invalid placeholder="필수 입력 항목" />
+        </div>
+    );
+}
+```
+</Demo>
+
+### Read Only
+
+사용자는 값을 수정할 수 없지만, 텍스트를 복사하거나 읽을 수 있도록 허용하는 상태입니다.
+
+<Demo name="text-input-readonly">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputReadOnly() {
+    return (
+        <div className="space-y-3">
+            <TextInput readOnly defaultValue="수정할 수 없는 값" />
+            <TextInput type="email" readOnly defaultValue="user@example.com" />
+        </div>
+    );
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### States
+
+TextInput의 다양한 상태를 보여줍니다.
+
+<Demo name="text-input-states">
+```tsx
+import { TextInput } from '@vapor-ui/core';
+
+export default function TextInputStates() {
+    return (
+        <div className="space-y-4">
+            <TextInput placeholder="Default state" />
+            <TextInput disabled placeholder="Disabled state" />
+            <TextInput invalid placeholder="Invalid state" />
+            <TextInput readOnly value="Read only value" />
+        </div>
+    );
+}
+```
+</Demo>
+
+## Props Table
+
+---
 
 ### TextInput.Root
 
-<PropsTable file="text-input" section="props" />
+TextInput의 입력 필드 컴포넌트로, 실제 입력을 받는 요소입니다.
 
-### TextInput.Label
-
-<PropsTable file="text-input" section="labelProps" />
-
-### TextInput.Field
-
-<PropsTable file="text-input" section="fieldProps" />
-
-## Accessibility Table
-
-<AccessibilityTable file="text-input" />
+<ComponentPropsTable file="text-input" section="props" />
