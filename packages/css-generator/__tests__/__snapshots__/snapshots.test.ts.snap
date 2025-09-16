@@ -1,0 +1,157 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CSS Generator Snapshots > should match generateColorCSS snapshot 1`] = `
+":root {
+    --vapor-color-background-canvas: #f8fafc;
+    --vapor-color-primary-050: #e0eafd;
+    --vapor-color-primary-100: #cddefc;
+    --vapor-color-primary-200: #acc7f8ff;
+    --vapor-color-primary-300: #88a1ce;
+    --vapor-color-primary-400: #7a92bc;
+    --vapor-color-primary-500: #5e749b;
+    --vapor-color-primary-600: #475b7f;
+    --vapor-color-primary-700: #374a6c;
+    --vapor-color-primary-800: #243657;
+    --vapor-color-primary-900: #112241;
+    --vapor-color-neutral-050: #e7e9ea;
+    --vapor-color-neutral-100: #dbddde;
+    --vapor-color-neutral-200: #c0c2c3;
+    --vapor-color-neutral-300: #9fa0a2;
+    --vapor-color-neutral-400: #909193;
+    --vapor-color-neutral-500: #737374;
+    --vapor-color-neutral-600: #5a5b5b;
+    --vapor-color-neutral-700: #494a4a;
+    --vapor-color-neutral-800: #363637;
+    --vapor-color-neutral-900: #232324;
+    --vapor-color-background-primary: var(--vapor-color-primary-200);
+    --vapor-color-foreground-primary-100: var(--vapor-color-primary-300);
+    --vapor-color-foreground-primary-200: var(--vapor-color-primary-400);
+    --vapor-color-border-primary: var(--vapor-color-primary-200);
+    --vapor-color-button-foreground-primary: var(--vapor-color-black);
+}
+
+:root.vapor-dark-theme {
+    --vapor-color-background-canvas: #161717;
+    --vapor-color-primary-050: #132443;
+    --vapor-color-primary-100: #1b2d4d;
+    --vapor-color-primary-200: #2d3f61;
+    --vapor-color-primary-300: #44587b;
+    --vapor-color-primary-400: #4f6488;
+    --vapor-color-primary-500: #6a80a9;
+    --vapor-color-primary-600: #849cc8;
+    --vapor-color-primary-700: #9ab3e2;
+    --vapor-color-primary-800: #b9d0f9;
+    --vapor-color-primary-900: #e2ebfd;
+    --vapor-color-neutral-050: #242424;
+    --vapor-color-neutral-100: #2d2d2d;
+    --vapor-color-neutral-200: #3f3f40;
+    --vapor-color-neutral-300: #575758;
+    --vapor-color-neutral-400: #636364;
+    --vapor-color-neutral-500: #7e7f81;
+    --vapor-color-neutral-600: #9a9c9d;
+    --vapor-color-neutral-700: #b1b2b4;
+    --vapor-color-neutral-800: #cdcfd1;
+    --vapor-color-neutral-900: #e9ebec;
+    --vapor-color-background-primary: var(--vapor-color-primary-800);
+    --vapor-color-foreground-primary-100: var(--vapor-color-primary-900);
+    --vapor-color-foreground-primary-200: var(--vapor-color-primary-900);
+    --vapor-color-border-primary: var(--vapor-color-primary-800);
+    --vapor-color-button-foreground-primary: var(--vapor-color-black);
+}"
+`;
+
+exports[`CSS Generator Snapshots > should match generateColorCSS with options snapshot 1`] = `":root{--custom-color-background-canvas:#f8fafc;--custom-color-primary-050:#e0eafd;--custom-color-primary-100:#cddefc;--custom-color-primary-200:#acc7f8ff;--custom-color-primary-300:#88a1ce;--custom-color-primary-400:#7a92bc;--custom-color-primary-500:#5e749b;--custom-color-primary-600:#475b7f;--custom-color-primary-700:#374a6c;--custom-color-primary-800:#243657;--custom-color-primary-900:#112241;--custom-color-neutral-050:#e7e9ea;--custom-color-neutral-100:#dbddde;--custom-color-neutral-200:#c0c2c3;--custom-color-neutral-300:#9fa0a2;--custom-color-neutral-400:#909193;--custom-color-neutral-500:#737374;--custom-color-neutral-600:#5a5b5b;--custom-color-neutral-700:#494a4a;--custom-color-neutral-800:#363637;--custom-color-neutral-900:#232324;--custom-color-background-primary:var(--custom-color-primary-200);--custom-color-foreground-primary-100:var(--custom-color-primary-300);--custom-color-foreground-primary-200:var(--custom-color-primary-400);--custom-color-border-primary:var(--custom-color-primary-200);--custom-color-button-foreground-primary:var(--custom-color-black)}:root.dark-mode{--custom-color-background-canvas:#161717;--custom-color-primary-050:#132443;--custom-color-primary-100:#1b2d4d;--custom-color-primary-200:#2d3f61;--custom-color-primary-300:#44587b;--custom-color-primary-400:#4f6488;--custom-color-primary-500:#6a80a9;--custom-color-primary-600:#849cc8;--custom-color-primary-700:#9ab3e2;--custom-color-primary-800:#b9d0f9;--custom-color-primary-900:#e2ebfd;--custom-color-neutral-050:#242424;--custom-color-neutral-100:#2d2d2d;--custom-color-neutral-200:#3f3f40;--custom-color-neutral-300:#575758;--custom-color-neutral-400:#636364;--custom-color-neutral-500:#7e7f81;--custom-color-neutral-600:#9a9c9d;--custom-color-neutral-700:#b1b2b4;--custom-color-neutral-800:#cdcfd1;--custom-color-neutral-900:#e9ebec;--custom-color-background-primary:var(--custom-color-primary-800);--custom-color-foreground-primary-100:var(--custom-color-primary-900);--custom-color-foreground-primary-200:var(--custom-color-primary-900);--custom-color-border-primary:var(--custom-color-primary-800);--custom-color-button-foreground-primary:var(--custom-color-black)}"`;
+
+exports[`CSS Generator Snapshots > should match generateCompleteCSS snapshot 1`] = `
+":root {
+    --vapor-color-background-canvas: #f8fafc;
+    --vapor-color-primary-050: #e0eafd;
+    --vapor-color-primary-100: #cddefc;
+    --vapor-color-primary-200: #acc7f8ff;
+    --vapor-color-primary-300: #88a1ce;
+    --vapor-color-primary-400: #7a92bc;
+    --vapor-color-primary-500: #5e749b;
+    --vapor-color-primary-600: #475b7f;
+    --vapor-color-primary-700: #374a6c;
+    --vapor-color-primary-800: #243657;
+    --vapor-color-primary-900: #112241;
+    --vapor-color-neutral-050: #e7e9ea;
+    --vapor-color-neutral-100: #dbddde;
+    --vapor-color-neutral-200: #c0c2c3;
+    --vapor-color-neutral-300: #9fa0a2;
+    --vapor-color-neutral-400: #909193;
+    --vapor-color-neutral-500: #737374;
+    --vapor-color-neutral-600: #5a5b5b;
+    --vapor-color-neutral-700: #494a4a;
+    --vapor-color-neutral-800: #363637;
+    --vapor-color-neutral-900: #232324;
+    --vapor-color-background-primary: var(--vapor-color-primary-200);
+    --vapor-color-foreground-primary-100: var(--vapor-color-primary-300);
+    --vapor-color-foreground-primary-200: var(--vapor-color-primary-400);
+    --vapor-color-border-primary: var(--vapor-color-primary-200);
+    --vapor-color-button-foreground-primary: var(--vapor-color-black);
+    --vapor-scale-factor: 1.15;
+    --vapor-radius-base: 8px;
+}
+
+:root.vapor-dark-theme {
+    --vapor-color-background-canvas: #161717;
+    --vapor-color-primary-050: #132443;
+    --vapor-color-primary-100: #1b2d4d;
+    --vapor-color-primary-200: #2d3f61;
+    --vapor-color-primary-300: #44587b;
+    --vapor-color-primary-400: #4f6488;
+    --vapor-color-primary-500: #6a80a9;
+    --vapor-color-primary-600: #849cc8;
+    --vapor-color-primary-700: #9ab3e2;
+    --vapor-color-primary-800: #b9d0f9;
+    --vapor-color-primary-900: #e2ebfd;
+    --vapor-color-neutral-050: #242424;
+    --vapor-color-neutral-100: #2d2d2d;
+    --vapor-color-neutral-200: #3f3f40;
+    --vapor-color-neutral-300: #575758;
+    --vapor-color-neutral-400: #636364;
+    --vapor-color-neutral-500: #7e7f81;
+    --vapor-color-neutral-600: #9a9c9d;
+    --vapor-color-neutral-700: #b1b2b4;
+    --vapor-color-neutral-800: #cdcfd1;
+    --vapor-color-neutral-900: #e9ebec;
+    --vapor-color-background-primary: var(--vapor-color-primary-800);
+    --vapor-color-foreground-primary-100: var(--vapor-color-primary-900);
+    --vapor-color-foreground-primary-200: var(--vapor-color-primary-900);
+    --vapor-color-border-primary: var(--vapor-color-primary-800);
+    --vapor-color-button-foreground-primary: var(--vapor-color-black);}"
+`;
+
+exports[`CSS Generator Snapshots > should match generateCompleteCSS with options snapshot 1`] = `
+"/*
+ * Vapor UI Theme
+ * Generated with @vapor-ui/css-generator
+ * 
+ * Colors: primary (#acc7f8ff)
+ * Scaling: 1.15
+ * Radius: 8px
+ */
+
+
+
+:root{--custom-color-background-canvas:#f8fafc;--custom-color-primary-050:#e0eafd;--custom-color-primary-100:#cddefc;--custom-color-primary-200:#acc7f8ff;--custom-color-primary-300:#88a1ce;--custom-color-primary-400:#7a92bc;--custom-color-primary-500:#5e749b;--custom-color-primary-600:#475b7f;--custom-color-primary-700:#374a6c;--custom-color-primary-800:#243657;--custom-color-primary-900:#112241;--custom-color-neutral-050:#e7e9ea;--custom-color-neutral-100:#dbddde;--custom-color-neutral-200:#c0c2c3;--custom-color-neutral-300:#9fa0a2;--custom-color-neutral-400:#909193;--custom-color-neutral-500:#737374;--custom-color-neutral-600:#5a5b5b;--custom-color-neutral-700:#494a4a;--custom-color-neutral-800:#363637;--custom-color-neutral-900:#232324;--custom-color-background-primary:var(--custom-color-primary-200);--custom-color-foreground-primary-100:var(--custom-color-primary-300);--custom-color-foreground-primary-200:var(--custom-color-primary-400);--custom-color-border-primary:var(--custom-color-primary-200);--custom-color-button-foreground-primary:var(--custom-color-black)};--custom-scale-factor:1.15};--custom-radius-base:8px}}
+
+:root.vapor-dark-theme{--custom-color-background-canvas:#161717;--custom-color-primary-050:#132443;--custom-color-primary-100:#1b2d4d;--custom-color-primary-200:#2d3f61;--custom-color-primary-300:#44587b;--custom-color-primary-400:#4f6488;--custom-color-primary-500:#6a80a9;--custom-color-primary-600:#849cc8;--custom-color-primary-700:#9ab3e2;--custom-color-primary-800:#b9d0f9;--custom-color-primary-900:#e2ebfd;--custom-color-neutral-050:#242424;--custom-color-neutral-100:#2d2d2d;--custom-color-neutral-200:#3f3f40;--custom-color-neutral-300:#575758;--custom-color-neutral-400:#636364;--custom-color-neutral-500:#7e7f81;--custom-color-neutral-600:#9a9c9d;--custom-color-neutral-700:#b1b2b4;--custom-color-neutral-800:#cdcfd1;--custom-color-neutral-900:#e9ebec;--custom-color-background-primary:var(--custom-color-primary-800);--custom-color-foreground-primary-100:var(--custom-color-primary-900);--custom-color-foreground-primary-200:var(--custom-color-primary-900);--custom-color-border-primary:var(--custom-color-primary-800);--custom-color-button-foreground-primary:var(--custom-color-black)}"
+`;
+
+exports[`CSS Generator Snapshots > should match generateRadiusCSS snapshot 1`] = `
+":root {
+    --vapor-radius-base: 8px;
+}"
+`;
+
+exports[`CSS Generator Snapshots > should match generateRadiusCSS with options snapshot 1`] = `":root{--custom-radius-base:12px}"`;
+
+exports[`CSS Generator Snapshots > should match generateScalingCSS snapshot 1`] = `
+":root {
+    --vapor-scale-factor: 1.15;
+}"
+`;
+
+exports[`CSS Generator Snapshots > should match generateScalingCSS with options snapshot 1`] = `":root{--custom-scale-factor:1.25}"`;
