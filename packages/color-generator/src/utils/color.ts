@@ -1,4 +1,4 @@
-import { oklch, lch } from 'culori';
+import { lch, oklch } from 'culori';
 
 import { BASE_COLORS, BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD } from '../constants';
 
@@ -141,12 +141,11 @@ function findClosestScale(palette: Record<string, { deltaE?: number }>): string 
     });
 }
 
-
 /* -----------------------------------------------------------------------------------------------*/
 
 /**
  * 색상의 LCH Lightness 값을 반환합니다.
- * 
+ *
  * @param colorHex - HEX 색상 값
  * @returns 0-100 범위의 정수 lightness 값 또는 null
  */
@@ -167,4 +166,3 @@ export {
     findClosestScale,
     getColorLightness,
 };
-

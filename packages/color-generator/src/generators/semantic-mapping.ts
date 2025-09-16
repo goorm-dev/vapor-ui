@@ -119,7 +119,7 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): Seman
 
     Object.entries(mappingConfig).forEach(([semanticRole, config]) => {
         if (semanticRole === 'background') return; // Skip background config entry
-        
+
         const brandPalette = generateBrandColorPalette({
             colors: { [config.name]: config.hex },
             background: mappingConfig.background,
