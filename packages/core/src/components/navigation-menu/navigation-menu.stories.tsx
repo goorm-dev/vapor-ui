@@ -29,7 +29,7 @@ export default {
             control: { type: 'inline-radio' },
             options: ['start', 'center', 'end'],
         },
-        direction: {
+        orientation: {
             control: { type: 'inline-radio' },
             options: ['horizontal', 'vertical'],
         },
