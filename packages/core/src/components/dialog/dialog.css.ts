@@ -1,41 +1,24 @@
-import { keyframes } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
-const fadeIn = keyframes({
-    '0%': { opacity: 0 },
-    '100%': { opacity: 0.32 },
-});
-
-const fadeOut = keyframes({
-    '0%': { opacity: 0.32 },
-    '100%': { opacity: 0 },
-});
-
 export const overlay = layerStyle('components', {
     position: 'fixed',
+    zIndex: 50,
     inset: 0,
-    transition: 'opacity 0.2s cubic-bezier(0.175,0.885,0.32,1.1)',
-    backgroundColor: vars.color['black'],
-    zIndex: 50, // TODO: Use constant z-index value
+
+    transition: 'opacity 0.15s cubic-bezier(.45,1.005,0,1.005)',
+
+    opacity: 0.32,
+    backgroundColor: vars.color['black'], // TODO: Use constant z-index value
 
     selectors: {
-        "&[data-state='open']": { animation: `${fadeIn} 0.2s ease-out forwards` },
-        "&[data-state='closed']": { animation: `${fadeOut} 0.2s ease-out forwards` },
+        '&[data-starting-style], &[data-ending-style]': {
+            opacity: 0,
+        },
     },
-});
-
-export const scaleUp = keyframes({
-    '0%': { transform: 'translate(-50%, -50%) scale(0.96)', opacity: 0 },
-    '100%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
-});
-
-export const scaleDown = keyframes({
-    '0%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
-    '100%': { transform: 'translate(-50%, -50%) scale(0.96)', opacity: 0 },
 });
 
 export const content = recipe({
@@ -43,23 +26,23 @@ export const content = recipe({
         position: 'fixed',
         top: '50%',
         left: '50%',
+        zIndex: 50,
 
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
 
-        borderRadius: vars.size.borderRadius[300],
+        transform: 'translate(-50%,-50%)',
+        transition: 'all 0.15s',
 
+        borderRadius: vars.size.borderRadius[300],
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-        backgroundColor: vars.color.background['normal-lighter'],
-        zIndex: 50, // TODO: Use constant z-index value
+        backgroundColor: vars.color.background['normal-lighter'], // TODO: Use constant z-index value
 
         selectors: {
-            "&[data-state='open']": {
-                animation: `${scaleUp} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
-            },
-            "&[data-state='closed']": {
-                animation: `${scaleDown} 0.2s cubic-bezier(0.175,0.885,0.32,1.1) forwards`,
+            '&[data-starting-style], &[data-ending-style]': {
+                transform: 'translate(-50%, -50%) scale(0.9)',
+                opacity: 0,
             },
         },
     }),
@@ -73,8 +56,6 @@ export const content = recipe({
         },
     },
 });
-
-export type DialogContentVariants = RecipeVariants<typeof content>;
 
 export const title = layerStyle('components', {
     lineHeight: vars.typography.lineHeight['200'],
@@ -122,3 +103,5 @@ export const footer = layerStyle('components', {
     paddingInline: vars.size.space['300'],
     width: '100%',
 });
+
+export type DialogContentVariants = NonNullable<RecipeVariants<typeof content>>;

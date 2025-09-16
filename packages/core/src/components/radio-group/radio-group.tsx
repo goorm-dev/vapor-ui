@@ -1,76 +1,60 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
-import { forwardRef, useId } from 'react';
+import { forwardRef, useState } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
-import {
-    Indicator as RadixIndicator,
-    Item as RadixItem,
-    Root as RadixRoot,
-} from '@radix-ui/react-radio-group';
+import { RadioGroup as BaseRadioGroup, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
+import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
+import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { VComponentProps } from '~/utils/types';
 
-import type { ControlVariants, LabelVariants, RootVariants } from './radio-group.css';
+import type { RootVariants } from './radio-group.css';
 import * as styles from './radio-group.css';
 
-type RadioGroupBaseProps = Pick<
-    ComponentPropsWithoutRef<typeof RadixRoot>,
-    'name' | 'dir' | 'loop' | 'value' | 'onValueChange' | 'defaultValue' | 'required' | 'disabled'
->;
+type RadioGroupVariants = RootVariants;
+type RadioGroupSharedProps = RadioGroupVariants & { invalid?: boolean };
 
-type RadioGroupVariants = RootVariants & ControlVariants & LabelVariants;
-type RadioGroupSharedProps = RadioGroupVariants & RadioGroupBaseProps;
-type RadioGroupContext = RadioGroupSharedProps;
+type RadioGroupContext = RadioGroupSharedProps & {
+    setLabelElementId?: (id?: string) => void;
+};
 
-const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupContext>({
+export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupContext>({
     name: 'RadioGroup',
     hookName: 'useRadioGroupContext',
     providerName: 'RadioGroupProvider',
+    defaultValue: { size: 'md', orientation: 'vertical', invalid: false },
+    strict: false,
 });
 
 /* -------------------------------------------------------------------------------------------------
  * RadioGroup.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioGroupRootPrimitiveProps = VComponentProps<typeof Primitive.div>;
-interface RadioGroupRootProps extends RadioGroupRootPrimitiveProps, RadioGroupSharedProps {}
+type RootPrimitiveProps = VComponentProps<typeof BaseRadioGroup>;
+interface RadioGroupRootProps extends RootPrimitiveProps, RadioGroupSharedProps {}
 
 const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...props }, ref) => {
-    const [sharedProps, _otherProps] = createSplitProps<RadioGroupBaseProps>()(props, [
-        'name',
-        'value',
-        'onValueChange',
-        'defaultValue',
-        'disabled',
-        'required',
-        'dir',
-        'loop',
-    ]);
+    const [labelElementId, setLabelElementId] = useState<string | undefined>(undefined);
 
-    const [variantProps, otherProps] = createSplitProps<RadioGroupVariants>()(_otherProps, [
+    const [variantProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(props, [
         'size',
-        'visuallyHidden',
-        'orientation',
         'invalid',
+        'orientation',
     ]);
 
-    const { disabled } = sharedProps;
     const { size, orientation, invalid } = variantProps;
 
     return (
-        <RadioGroupProvider value={{ ...sharedProps, ...variantProps }}>
-            <RadixRoot
+        <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
+            <BaseRadioGroup
                 ref={ref}
                 aria-invalid={invalid}
-                aria-disabled={disabled}
-                orientation={orientation}
+                aria-orientation={orientation}
+                aria-describedby={labelElementId}
                 className={clsx(styles.root({ size, orientation }), className)}
-                {...sharedProps}
                 {...otherProps}
             />
         </RadioGroupProvider>
@@ -79,125 +63,35 @@ const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...pr
 Root.displayName = 'RadioGroup.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * RadioGroup.Item
- * -----------------------------------------------------------------------------------------------*/
-
-type RadioGroupItemPrimitiveProps = VComponentProps<typeof Primitive.div>;
-type RadioGroupItemBaseProps = Pick<RadioGroupControlPrimitiveProps, 'value' | 'disabled'>;
-
-type RadioGroupItemVariants = ControlVariants & LabelVariants;
-type RadioGroupItemSharedProps = RadioGroupItemVariants & RadioGroupItemBaseProps;
-
-type RadioGroupItemContext = RadioGroupItemSharedProps & {
-    radioGroupItemId?: string;
-};
-
-const [RadioGroupItemProvider, useRadioGroupItemContext] = createContext<RadioGroupItemContext>({
-    name: 'RadioGroupItem',
-    hookName: 'useRadioGroupItemContext',
-    providerName: 'RadioGroupItemProvider',
-});
-
-interface RadioGroupItemProps extends RadioGroupItemPrimitiveProps, RadioGroupItemSharedProps {}
-
-const Item = forwardRef<HTMLDivElement, RadioGroupItemProps>(({ className, ...props }, ref) => {
-    const radioGroupItemId = useId();
-    const rootContext = useRadioGroupContext();
-
-    const [itemProps, otherProps] = createSplitProps<RadioGroupItemSharedProps>()(props, [
-        'value',
-        'disabled',
-        'visuallyHidden',
-        'size',
-        'invalid',
-    ]);
-
-    const {
-        disabled = rootContext.disabled,
-        invalid = rootContext.invalid,
-        visuallyHidden = rootContext.visuallyHidden,
-    } = itemProps;
-
-    return (
-        <RadioGroupItemProvider
-            value={{ ...itemProps, radioGroupItemId, disabled, invalid, visuallyHidden }}
-        >
-            <Primitive.div
-                ref={ref}
-                className={clsx(styles.item({ disabled }), className)}
-                {...otherProps}
-            />
-        </RadioGroupItemProvider>
-    );
-});
-Item.displayName = 'RadioGroup.Item';
-
-/* -------------------------------------------------------------------------------------------------
- * RadioGroup.Control
- * -----------------------------------------------------------------------------------------------*/
-
-type RadioGroupControlPrimitiveProps = VComponentProps<typeof RadixItem>;
-interface RadioGroupControlProps
-    extends Omit<RadioGroupControlPrimitiveProps, keyof RadioGroupItemSharedProps> {}
-
-const Control = forwardRef<HTMLButtonElement, RadioGroupControlProps>(
-    ({ id, className, ...props }, ref) => {
-        const { size } = useRadioGroupContext();
-        const { radioGroupItemId, value, invalid, disabled } = useRadioGroupItemContext();
-
-        return (
-            <RadixItem
-                ref={ref}
-                id={id || radioGroupItemId}
-                value={value}
-                disabled={disabled}
-                aria-invalid={invalid}
-                className={clsx(styles.control({ size, invalid }), className)}
-                {...props}
-            >
-                <RadixIndicator className={clsx(styles.indicator)} />
-            </RadixItem>
-        );
-    },
-);
-Control.displayName = 'RadioGroup.Control';
-
-/* -------------------------------------------------------------------------------------------------
  * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = VComponentProps<typeof Primitive.label>;
-interface RadioGroupLabelProps extends Omit<PrimitiveLabelProps, keyof RadioGroupItemSharedProps> {}
+type LabelPrimitiveProps = VComponentProps<'span'>;
+interface RadioGroupLabelProps extends LabelPrimitiveProps {}
 
-const Label = forwardRef<HTMLLabelElement, RadioGroupLabelProps>(
-    ({ htmlFor, className, ...props }, ref) => {
-        const { radioGroupItemId, visuallyHidden } = useRadioGroupItemContext();
+const Label = forwardRef<HTMLSpanElement, RadioGroupLabelProps>(
+    ({ render, className, ...props }, ref) => {
+        const { setLabelElementId } = useRadioGroupContext();
 
-        return (
-            <Primitive.label
-                ref={ref}
-                htmlFor={htmlFor || radioGroupItemId}
-                className={clsx(styles.label({ visuallyHidden }), className)}
-                {...props}
-            />
-        );
+        const id = useVaporId();
+
+        useIsoLayoutEffect(() => {
+            setLabelElementId?.(id);
+            return () => setLabelElementId?.(undefined);
+        }, [id, setLabelElementId]);
+
+        return useRender({
+            ref,
+            render: render || <span />,
+            props: { id, className: clsx(styles.label, className), ...props },
+        });
     },
 );
 Label.displayName = 'RadioGroup.Label';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as RadioGroupRoot,
-    Item as RadioGroupItem,
-    Control as RadioGroupControl,
-    Label as RadioGroupLabel,
-};
-export type {
-    RadioGroupRootProps,
-    RadioGroupItemProps,
-    RadioGroupControlProps,
-    RadioGroupLabelProps,
-};
+export { Root as RadioGroupRoot, Label as RadioGroupLabel };
+export type { RadioGroupRootProps, RadioGroupLabelProps };
 
-export const RadioGroup = { Root, Item, Control, Label };
+export const RadioGroup = { Root, Label };
