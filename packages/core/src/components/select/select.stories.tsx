@@ -35,9 +35,9 @@ export default {
 export const Default: StoryObj<SelectProps> = {
     render: ({ side, align, sideOffset, alignOffset, ...args }) => (
         <Box margin="200px">
-            <Select.Root {...args}>
+            <Select.Root placeholder="Select Font" {...args}>
                 <Select.Trigger>
-                    <Select.DisplayValue placeholder="Select Font" />
+                    <Select.Value />
                     <Select.TriggerIcon />
                 </Select.Trigger>
 
@@ -92,9 +92,9 @@ const languages = {
 
 export const ObjectItems: StoryObj<typeof Select.Root> = {
     render: (args) => (
-        <Select.Root items={languages} {...args}>
+        <Select.Root placeholder="Select Font" items={languages} {...args}>
             <Select.Trigger>
-                <Select.DisplayValue placeholder="Select Font" />
+                <Select.Value />
                 <Select.TriggerIcon />
             </Select.Trigger>
 
@@ -123,9 +123,9 @@ const fonts = [
 
 export const ArrayItems: StoryObj<typeof Select.Root> = {
     render: (args) => (
-        <Select.Root items={fonts} {...args}>
+        <Select.Root placeholder="Select Font" items={fonts} {...args}>
             <Select.Trigger>
-                <Select.DisplayValue placeholder="Select Font" />
+                <Select.Value />
                 <Select.TriggerIcon />
             </Select.Trigger>
 
@@ -154,18 +154,18 @@ export const TestBed = {
                 templateRows="repeat(auto-fit, minmax(150px, 1fr))"
             >
                 <Grid.Item>
-                    <Select.Root>
+                    <Select.Root placeholder="Placeholder">
                         <Select.Trigger>
-                            <Select.DisplayValue placeholder="Placeholder" />
+                            <Select.Value />
                             <Select.TriggerIcon />
                         </Select.Trigger>
                     </Select.Root>
                 </Grid.Item>
 
                 <Grid.Item>
-                    <Select.Root defaultOpen>
+                    <Select.Root placeholder="Grouped" defaultOpen>
                         <Select.Trigger>
-                            <Select.DisplayValue placeholder="Grouped" />
+                            <Select.Value />
                             <Select.TriggerIcon />
                         </Select.Trigger>
                         <Select.Content>
@@ -195,9 +195,9 @@ export const TestBed = {
                 </Grid.Item>
 
                 <Grid.Item>
-                    <Select.Root defaultOpen defaultValue={'mono'}>
+                    <Select.Root placeholder="Placeholder" defaultOpen defaultValue={'mono'}>
                         <Select.Trigger>
-                            <Select.DisplayValue placeholder="Placeholder" />
+                            <Select.Value />
                             <Select.TriggerIcon />
                         </Select.Trigger>
                         <Select.Content>
@@ -216,9 +216,14 @@ export const TestBed = {
                 </Grid.Item>
 
                 <Grid.Item>
-                    <Select.Root defaultOpen items={languages} defaultValue={'csharp'}>
+                    <Select.Root
+                        placeholder="Select Font"
+                        defaultOpen
+                        items={languages}
+                        defaultValue={'csharp'}
+                    >
                         <Select.Trigger>
-                            <Select.DisplayValue placeholder="Select Font" />
+                            <Select.Value />
                             <Select.TriggerIcon />
                         </Select.Trigger>
 
@@ -237,9 +242,14 @@ export const TestBed = {
                 </Grid.Item>
 
                 <Grid.Item>
-                    <Select.Root items={fonts} defaultValue={'mono'} defaultOpen>
+                    <Select.Root
+                        placeholder="Select Font"
+                        items={fonts}
+                        defaultValue={'mono'}
+                        defaultOpen
+                    >
                         <Select.Trigger>
-                            <Select.DisplayValue placeholder="Select Font" />
+                            <Select.Value />
                             <Select.TriggerIcon />
                         </Select.Trigger>
 
