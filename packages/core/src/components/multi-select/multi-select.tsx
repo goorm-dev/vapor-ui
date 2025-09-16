@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef, useMemo } from 'react';
 
 import { Select as BaseSelect } from '@base-ui-components/react';
