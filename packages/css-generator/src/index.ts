@@ -1,6 +1,6 @@
 // Main exports
 export * from './generators';
-export * from './integrations';
+export * from './composers';
 export * from './types';
 export * from './utils';
 

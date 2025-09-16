@@ -8,12 +8,15 @@ export interface CSSRule {
     properties: CSSProperty[];
 }
 
-export const formatCSS = (rules: CSSRule[], format: 'compact' | 'readable' = 'readable'): string => {
+export const formatCSS = (
+    rules: CSSRule[],
+    format: 'compact' | 'readable' = 'readable',
+): string => {
     if (format === 'compact') {
         return rules
-            .map(rule => {
+            .map((rule) => {
                 const props = rule.properties
-                    .map(prop => `${prop.property}:${prop.value}`)
+                    .map((prop) => `${prop.property}:${prop.value}`)
                     .join(';');
                 return `${rule.selector}{${props}}`;
             })
@@ -21,9 +24,9 @@ export const formatCSS = (rules: CSSRule[], format: 'compact' | 'readable' = 're
     }
 
     return rules
-        .map(rule => {
+        .map((rule) => {
             const properties = rule.properties
-                .map(prop => `    ${prop.property}: ${prop.value};`)
+                .map((prop) => `    ${prop.property}: ${prop.value};`)
                 .join('\n');
             return `${rule.selector} {\n${properties}\n}`;
         })

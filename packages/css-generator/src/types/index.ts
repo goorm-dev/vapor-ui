@@ -19,7 +19,6 @@ export interface CompleteCSSConfig {
     radius: number;
 }
 
-
 export interface ThemeClassNames {
     light: string;
     dark: string;

@@ -1,3 +1,3 @@
-export * from './color-css';
-export * from './scaling-css';
-export * from './radius-css';
+export * from './color';
+export * from './scaling';
+export * from './radius';
