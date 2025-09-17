@@ -153,6 +153,33 @@
 - **세미콜론**: 문장 끝에 항상 사용.
 - prettierc (Github link)
 
+## 3.4. 조건문 및 함수 구조
+
+- **Early Return**: 중첩 깊이가 3 depth 이상인 경우 early return 패턴을 적용하여 가독성을 향상시킵니다.
+    ```tsx
+    // Bad - 3 depth 이상 중첩
+    function processUser(user: User) {
+        if (user) {
+            if (user.isActive) {
+                if (user.permissions.canEdit) {
+                    // 로직 처리
+                    return editUser(user);
+                }
+            }
+        }
+        return null;
+    }
+
+    // Good - Early return 적용
+    function processUser(user: User) {
+        if (!user) return null;
+        if (!user.isActive) return null;
+        if (!user.permissions.canEdit) return null;
+        
+        return editUser(user);
+    }
+    ```
+
 # 4. TypeScript
 
 ---
@@ -360,11 +387,33 @@ src/
 
 - HTML `<input>` 타입별 독립 컴포넌트 제공 (예: `TextInput`, `Checkbox`).
 
-## 6.12. Props 처리
+## 6.12. 함수 매개변수
 
-### **6.12.1. Props 병합 (Merge)**
+- **매개변수 개수**: 함수 매개변수가 3개 이상인 경우 객체 형태로 전달합니다.
+    ```tsx
+    // Bad - 3개 이상의 개별 매개변수
+    function createUser(name: string, email: string, age: number, department: string) {
+        // ...
+    }
 
-### **6.12.2. Props 타입 정의**
+    // Good - 객체로 그룹화
+    interface CreateUserParams {
+        name: string;
+        email: string;
+        age: number;
+        department: string;
+    }
+
+    function createUser({ name, email, age, department }: CreateUserParams) {
+        // ...
+    }
+    ```
+
+## 6.13. Props 처리
+
+### **6.13.1. Props 병합 (Merge)**
+
+### **6.13.2. Props 타입 정의**
 
 - **일반 HTML 요소 Props**:
     - `React.ComponentPropsWithoutRef<ElementType>` 또는
@@ -396,7 +445,7 @@ src/
         });
         ```
 
-### **6.12.3. `defaultProps` 사용 지양**
+### **6.13.3. `defaultProps` 사용 지양**
 
 - 클래스형 컴포넌트의 `defaultProps` 또는 함수형 컴포넌트의 `Component.defaultProps = { ... }` 방식은 사용하지 않습니다.
 - **대안**: 함수 매개변수의 기본값 문법을 사용합니다.
@@ -413,11 +462,11 @@ src/
 
     ```
 
-## 6.13. 컴파운드 컴포넌트 (Compound Pattern)
+## 6.14. 컴파운드 컴포넌트 (Compound Pattern)
 
 여러 하위 요소를 조합하여 유연한 UI 구성을 지원하는 Compound Pattern을 적극 활용합니다.
 
-### **6.13.1. Export 방식**
+### **6.14.1. Export 방식**
 
 컴파운드 컴포넌트 사용 시 `Dialog.Trigger`와 같이 직관적인 API를 제공하기 위해, 주 컴포넌트 객체에 하위 컴포넌트들을 할당하여 export 합니다.
 
@@ -496,7 +545,7 @@ src/
     </Dialog>;
     ```
 
-### **6.13.2. 타입 그룹화**
+### **6.14.2. 타입 그룹화**
 
 - 컴파운드 컴포넌트의 여러 Props 타입을 그룹화하여 관리할 수 있습니다.
 - 다음 두 가지 방식 중 프로젝트 일관성을 고려하여 선택합니다.
