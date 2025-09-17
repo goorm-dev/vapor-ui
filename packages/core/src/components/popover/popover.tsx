@@ -1,3 +1,5 @@
+'use client';
+
 import type { CSSProperties, ComponentPropsWithoutRef } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
