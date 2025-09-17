@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { TextInput } from '../text-input';
@@ -24,4 +26,25 @@ export const TestBed: Story = {
             </InputGroup.Root>
         </div>
     ),
+};
+
+export const ControlledInput: Story = {
+    render: () => {
+        const [value, setValue] = useState('');
+
+        return (
+            <div className="space-y-4">
+                <InputGroup.Root>
+                    <TextInput
+                        value={value}
+                        onValueChange={setValue}
+                        placeholder="Controlled input..."
+                        maxLength={30}
+                    />
+                    <InputGroup.Counter />
+                </InputGroup.Root>
+                <div className="text-sm text-gray-600">Current value: "{value}"</div>
+            </div>
+        );
+    },
 };
