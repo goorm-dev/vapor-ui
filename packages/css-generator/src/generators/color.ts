@@ -3,6 +3,8 @@ import type {
     getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
 
+import { DEFAULT_PREFIX } from '~/constants';
+
 import type { CSSGeneratorOptions, ThemeVariant } from '../types';
 import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 
@@ -13,8 +15,6 @@ const DEFAULT_CLASS_NAMES = {
     light: 'vapor-light-theme',
     dark: 'vapor-dark-theme',
 } as const;
-
-const DEFAULT_PREFIX = 'vapor';
 
 interface ColorCSSGeneratorContext {
     brandPalette: BrandColorPalette;

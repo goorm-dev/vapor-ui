@@ -1,3 +1,5 @@
+import { DEFAULT_PREFIX } from '~/constants';
+
 import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 
 interface RadiusCSSOptions {
@@ -5,8 +7,6 @@ interface RadiusCSSOptions {
     format?: 'compact' | 'readable';
     unit?: 'px' | 'rem';
 }
-
-const DEFAULT_PREFIX = 'vapor';
 
 export const generateRadiusCSS = (radius: number, options: RadiusCSSOptions = {}): string => {
     const { prefix = DEFAULT_PREFIX, format = 'readable', unit = 'px' } = options;

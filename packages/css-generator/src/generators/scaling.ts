@@ -1,11 +1,11 @@
+import { DEFAULT_PREFIX } from '~/constants';
+
 import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 
 interface ScalingCSSOptions {
     prefix?: string;
     format?: 'compact' | 'readable';
 }
-
-const DEFAULT_PREFIX = 'vapor';
 
 export const generateScalingCSS = (scaling: number, options: ScalingCSSOptions = {}): string => {
     const { prefix = DEFAULT_PREFIX, format = 'readable' } = options;
