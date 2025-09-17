@@ -9,7 +9,7 @@ const meta: Meta<typeof Textarea.Root> = {
     title: 'Textarea',
     component: Textarea.Root,
     parameters: {
-        layout: 'centered',
+        layout: 'fullscreen',
     },
     tags: ['autodocs'],
     argTypes: {
@@ -43,7 +43,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
     render: (args) => (
-        <div style={{ width: '100%', maxWidth: '400px' }}>
+        <div style={{ width: '100%', padding: '50px' }}>
             <Textarea.Root placeholder="Enter your text here..." {...args}>
                 <Textarea.Input />
             </Textarea.Root>
@@ -98,7 +98,7 @@ export const Controlled: Story = {
         const [value, setValue] = useState('Initial controlled value');
 
         return (
-            <div style={{ width: '100%', maxWidth: '400px' }}>
+            <div style={{ width: '100%' }}>
                 <Textarea.Root
                     value={value}
                     onValueChange={setValue}
