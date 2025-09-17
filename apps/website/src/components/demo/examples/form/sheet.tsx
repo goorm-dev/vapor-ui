@@ -1,7 +1,7 @@
 import { Button, Checkbox, HStack, Sheet, Tabs, VStack } from '@vapor-ui/core';
 import { RefreshOutlineIcon } from '@vapor-ui/icons';
 
-export const SheetForm = () => {
+export default function SheetForm() {
     return (
         <VStack
             gap="$250"
@@ -35,7 +35,7 @@ export const SheetForm = () => {
                                         </Tabs.List>
                                     </VStack>
                                 </Sheet.Header>
-                                <Sheet.Body>
+                                <Sheet.Body style={{ paddingBlock: 16 }}>
                                     <Tabs.Panel value="sort">
                                         <VStack gap="$100">
                                             <HStack alignItems="center" gap="$100">
@@ -83,4 +83,4 @@ export const SheetForm = () => {
             </Sheet.Root>
         </VStack>
     );
-};
+}
