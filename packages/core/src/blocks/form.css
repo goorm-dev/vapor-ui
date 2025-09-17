@@ -67,12 +67,11 @@
     }
 }
 
-.sheet-form {
-    & .popup {
-        border-radius: var(--vapor-size-borderRadius-300);
-    }
+.popup {
+    border-top-left-radius: var(--vapor-size-borderRadius-300);
+    border-top-right-radius: var(--vapor-size-borderRadius-300);
+}
 
-    & .tabs {
-        height: 100%;
-    }
+.tabs {
+    height: 100%;
 }

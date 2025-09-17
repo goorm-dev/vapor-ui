@@ -329,27 +329,14 @@ export const Filter: StoryObj = {
 export const SheetExample: StoryObj = {
     render: () => {
         return (
-            <VStack
-                gap="$250"
-                width="400px"
-                padding="$300"
-                borderRadius="$300"
-                border="1px solid #eee"
-                className="sheet-form"
-            >
+            <VStack gap="$250" width="400px" padding="$300" borderRadius="$300">
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button />}>Open Filter</Sheet.Trigger>
                     <Sheet.Portal>
                         <Sheet.Overlay />
                         <Sheet.Positioner side="bottom">
-                            <Sheet.Popup
-                                style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-                            >
-                                <Tabs.Root
-                                    defaultValue={'sort'}
-                                    className={'tabs'}
-                                    style={{ height: '100%' }}
-                                >
+                            <Sheet.Popup className={'popup'}>
+                                <Tabs.Root defaultValue={'sort'} className={'tabs'}>
                                     <Sheet.Header>
                                         <VStack width="100%">
                                             <Sheet.Title>Filter</Sheet.Title>
