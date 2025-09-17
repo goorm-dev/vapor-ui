@@ -35,6 +35,14 @@ const meta: Meta<typeof Textarea> = {
         maxLength: {
             control: { type: 'number' },
         },
+        minHeight: {
+            control: { type: 'number' },
+            description: 'Minimum height for auto-resize (in pixels)',
+        },
+        maxHeight: {
+            control: { type: 'number' },
+            description: 'Maximum height for auto-resize (in pixels)',
+        },
     },
 } satisfies Meta<typeof Textarea>;
 

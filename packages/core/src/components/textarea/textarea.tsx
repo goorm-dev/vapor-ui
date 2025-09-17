@@ -4,6 +4,7 @@ import type { ChangeEvent } from 'react';
 import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import type { Assign, VComponentProps } from '~/utils/types';
@@ -22,6 +23,8 @@ type TextareaProps = InputVariants & {
     resizing?: boolean;
     autoResize?: boolean;
     maxLength?: number;
+    minHeight?: string | number;
+    maxHeight?: string | number;
     'aria-label'?: string;
     'aria-labelledby'?: string;
     'aria-describedby'?: string;
@@ -32,7 +35,33 @@ type PrimitiveTextareaProps = VComponentProps<'textarea'>;
 interface TextareaComponentProps extends Assign<PrimitiveTextareaProps, TextareaProps> {}
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaComponentProps>(
-    ({ render, className, value, onValueChange, defaultValue, disabled, invalid, readOnly, size, placeholder, rows, cols, resizing, autoResize, maxLength, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, required, ...props }, ref) => {
+    (
+        {
+            render,
+            className,
+            value,
+            onValueChange,
+            defaultValue,
+            disabled,
+            invalid,
+            readOnly,
+            size,
+            placeholder,
+            rows,
+            cols,
+            resizing,
+            autoResize,
+            maxLength,
+            minHeight = 116,
+            maxHeight = 400,
+            'aria-label': ariaLabel,
+            'aria-labelledby': ariaLabelledby,
+            'aria-describedby': ariaDescribedby,
+            required,
+            ...props
+        },
+        ref,
+    ) => {
         const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
         const autoResizeTextarea = useMemo(() => {
@@ -40,27 +69,29 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaComponentProps>(
                 if (!autoResize || !textareaRef?.current) return;
 
                 const textarea = textareaRef.current;
-                const maxHeight = 400;
-                const minHeight = 60;
-                
+                const maxHeightPx =
+                    typeof maxHeight === 'number' ? maxHeight : parseFloat(maxHeight);
+                const minHeightPx =
+                    typeof minHeight === 'number' ? minHeight : parseFloat(minHeight);
+
                 // Reset to get accurate measurement
                 textarea.style.overflowY = 'hidden';
                 textarea.style.height = 'auto';
-                
+
                 const scrollHeight = textarea.scrollHeight;
-                
-                if (scrollHeight > maxHeight) {
-                    textarea.style.height = `${maxHeight}px`;
+
+                if (scrollHeight > maxHeightPx) {
+                    textarea.style.height = `${maxHeightPx}px`;
                     textarea.style.overflowY = 'scroll';
                 } else {
-                    const newHeight = Math.max(scrollHeight, minHeight);
+                    const newHeight = Math.max(scrollHeight, minHeightPx);
                     textarea.style.height = `${newHeight}px`;
                     textarea.style.overflowY = 'hidden';
                 }
             };
 
             return () => requestAnimationFrame(performResize);
-        }, [autoResize]);
+        }, [autoResize, maxHeight, minHeight]);
 
         useEffect(() => {
             if (autoResize) {
@@ -79,6 +110,13 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaComponentProps>(
             },
             [ref],
         );
+
+        const styleVars = assignInlineVars({
+            [styles.textareaMinHeightVar]:
+                typeof minHeight === 'number' ? `${minHeight}px` : minHeight,
+            [styles.textareaMaxHeightVar]:
+                typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight,
+        });
 
         return useRender({
             ref: handleRef,
@@ -108,6 +146,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaComponentProps>(
                 cols,
                 maxLength,
                 className: clsx(styles.input({ invalid, size, resizing, autoResize }), className),
+                style: { ...styleVars, ...props.style },
                 ...props,
             },
         });

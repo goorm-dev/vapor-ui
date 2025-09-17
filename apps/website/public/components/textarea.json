@@ -77,6 +77,30 @@
             "type": ["boolean"],
             "default": "false",
             "description": "텍스트 내용에 따라 자동으로 높이가 조절되는지 설정합니다."
+        },
+        {
+            "prop": "minHeight",
+            "type": ["string", "number"],
+            "default": "116",
+            "description": "autoResize 사용 시 최소 높이를 설정합니다. 숫자(px) 또는 문자열을 허용합니다."
+        },
+        {
+            "prop": "maxHeight",
+            "type": ["string", "number"],
+            "default": "400",
+            "description": "autoResize 사용 시 최대 높이를 설정합니다. 숫자(px) 또는 문자열을 허용합니다."
+        },
+        {
+            "prop": "maxLength",
+            "type": ["number"],
+            "default": "-",
+            "description": "입력 가능한 최대 문자 수를 제한합니다."
+        },
+        {
+            "prop": "required",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "폼 필드가 필수인지 설정합니다."
         }
     ],
     "inputProps": [

@@ -46,7 +46,7 @@ export default function TextareaSize() {
 
 ### Auto Resize
 
-텍스트 내용에 따라 자동으로 높이가 조절되는 기능을 제공합니다.
+텍스트 내용에 따라 자동으로 높이가 조절되는 기능을 제공합니다. `minHeight`와 `maxHeight` props로 최소/최대 높이를 설정할 수 있습니다.
 
 <Demo name="textarea-auto-resize">
 ```tsx
@@ -60,6 +60,35 @@ export default function TextareaAutoResize() {
                 placeholder="텍스트를 입력하면 자동으로 높이가 조절됩니다..."
             />
         </Box>
+    );
+}
+```
+</Demo>
+
+### Custom Height
+
+`autoResize` 기능 사용 시 `minHeight`와 `maxHeight`로 높이 범위를 커스터마이징할 수 있습니다.
+
+<Demo name="textarea-custom-height">
+```tsx
+import { Textarea } from '@vapor-ui/core';
+
+export default function TextareaCustomHeight() {
+    return (
+        <div className="space-y-4">
+            <Textarea
+                autoResize
+                minHeight={100}
+                maxHeight={300}
+                placeholder="최소 100px, 최대 300px로 조절됩니다..."
+            />
+            <Textarea
+                autoResize
+                minHeight={50}
+                maxHeight={200}
+                placeholder="최소 50px, 최대 200px로 조절됩니다..."
+            />
+        </div>
     );
 }
 ```
