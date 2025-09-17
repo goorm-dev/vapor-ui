@@ -1,3 +1,5 @@
+'use client';
+
 import type { RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
