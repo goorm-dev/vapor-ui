@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { IconButton, Nav, Text, useTheme } from '@vapor-ui/core';
+import { IconButton, NavigationMenu, Text, useTheme } from '@vapor-ui/core';
 import {
     CloseOutlineIcon,
     DarkIcon,
@@ -22,7 +22,7 @@ import LogoVapor from '../../../public/icons/logo-vapor.svg';
 const NAVIGATION_LINKS = [
     { href: '/docs', label: 'Docs' },
     { href: '/playground', label: 'Playground' },
-    // { href: '/blocks', label: 'UI Blocks' }, Todo : when blocks page is ready
+    // { href: '/blocks', label: 'UI Blocks' }, // TODO : when blocks page is ready
 ];
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
@@ -101,10 +101,9 @@ export const SiteNavBar = () => {
                 }`}
             >
                 <div className="flex items-center gap-10 relative w-full">
-                    <Nav.Root
+                    <NavigationMenu.Root
                         aria-label="Main"
                         size="lg"
-                        shape="ghost"
                         className="flex justify-between items-center gap-10 w-full"
                     >
                         <div className="flex items-center gap-10">
@@ -120,30 +119,29 @@ export const SiteNavBar = () => {
                                 />
                             </Link>
 
-                            <Nav.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
+                            <NavigationMenu.List className="hidden md:flex flex-row items-center gap-2 p-0 h-full">
                                 {NAVIGATION_LINKS.map((item) => (
-                                    <Nav.LinkItem
+                                    <NavigationMenu.LinkItem
                                         key={item.href}
                                         href={item.href}
                                         selected={pathname.includes(item.href)}
-                                    >
-                                        {item.label}
-                                    </Nav.LinkItem>
+                                        render={<Link>{item.label}</Link>}
+                                    />
                                 ))}
-                            </Nav.List>
+                            </NavigationMenu.List>
                         </div>
                         <div className="flex items-center gap-10">
-                            <Nav.List className="hidden md:flex flex-row items-center gap-0">
+                            <NavigationMenu.List className="hidden md:flex flex-row items-center gap-0">
                                 {externalLinks.map((item) => {
                                     return (
-                                        <Nav.Item key={item.text}>
+                                        <NavigationMenu.Item key={item.text}>
                                             <IconButton
                                                 aria-label={item.text}
                                                 size="lg"
                                                 color="secondary"
                                                 variant="ghost"
                                                 render={
-                                                    <Nav.Link
+                                                    <NavigationMenu.Link
                                                         render={
                                                             <Link href={item.url}>{item.icon}</Link>
                                                         }
@@ -151,7 +149,7 @@ export const SiteNavBar = () => {
                                                     />
                                                 }
                                             />
-                                        </Nav.Item>
+                                        </NavigationMenu.Item>
                                     );
                                 })}
                                 <div
@@ -163,7 +161,7 @@ export const SiteNavBar = () => {
                                     }}
                                     className="border-l mx-2"
                                 />
-                                <Nav.Item>
+                                <NavigationMenu.Item>
                                     <IconButton
                                         suppressHydrationWarning
                                         size="lg"
@@ -174,10 +172,10 @@ export const SiteNavBar = () => {
                                     >
                                         {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
                                     </IconButton>
-                                </Nav.Item>
-                            </Nav.List>
+                                </NavigationMenu.Item>
+                            </NavigationMenu.List>
                         </div>
-                    </Nav.Root>
+                    </NavigationMenu.Root>
                 </div>
                 <Dialog.Trigger asChild>
                     <IconButton
