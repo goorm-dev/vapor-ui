@@ -2,7 +2,7 @@ import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
-import { createMetadata } from '~/lib/metadata';
+import { generatePageMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
 
@@ -59,18 +59,5 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
     }
 
     const page = source.getPage(slug);
-    if (!page) notFound();
-    const image = 'https://statics.goorm.io/gds/docs/og-image/logo/og-vapor-1.png';
-
-    return createMetadata({
-        title: `${page.data.title} - Vapor UI`,
-        description: page.data.description,
-        openGraph: {
-            images: image,
-        },
-        twitter: {
-            card: 'summary_large_image',
-            images: image,
-        },
-    });
+    return generatePageMetadata(page || null);
 }

@@ -12,7 +12,7 @@ import gridData from '../../public/components/grid.json';
 import hStackData from '../../public/components/h-stack.json';
 import iconButtonData from '../../public/components/icon-button.json';
 import menuData from '../../public/components/menu.json';
-import navData from '../../public/components/nav.json';
+import navigationMenuData from '../../public/components/navigation-menu.json';
 import radioGroupData from '../../public/components/radio-group.json';
 import switchData from '../../public/components/switch.json';
 import textInputData from '../../public/components/text-input.json';
@@ -38,7 +38,7 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     checkbox: checkboxData,
     'icon-button': iconButtonData,
     menu: menuData,
-    nav: navData,
+    'navigation-menu': navigationMenuData,
     text: textData,
     'text-input': textInputData,
     dialog: dialogData,
