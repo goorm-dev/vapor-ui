@@ -14,15 +14,60 @@ export const root = recipe({
 });
 
 export const description = recipe({
-    base: [typography({ style: 'body2' }), foregrounds({ color: 'hint' })],
+    base: [
+        typography({ style: 'body2' }),
+        foregrounds({ color: 'hint' }),
+        layerStyle('components', {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: vars.size.space['050'],
+            selectors: {
+                '&:is(:disabled, [data-disabled])': {
+                    opacity: 0.32,
+                    pointerEvents: 'none',
+                },
+            },
+        }),
+    ],
 });
 
 export const error = recipe({
-    base: [typography({ style: 'body2' }), foregrounds({ color: 'danger' })],
+    base: [
+        typography({ style: 'body2' }),
+        foregrounds({ color: 'danger' }),
+        layerStyle('components', {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: vars.size.space['050'],
+            selectors: {
+                '&:is(:disabled, [data-disabled])': {
+                    opacity: 0.32,
+                    pointerEvents: 'none',
+                },
+            },
+        }),
+    ],
 });
 
 export const success = recipe({
-    base: [typography({ style: 'body2' }), foregrounds({ color: 'success' })],
+    base: [
+        typography({ style: 'body2' }),
+        foregrounds({ color: 'success' }),
+        layerStyle('components', {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: vars.size.space['050'],
+            selectors: {
+                '&:is(:disabled, [data-disabled])': {
+                    opacity: 0.32,
+                    pointerEvents: 'none',
+                },
+            },
+        }),
+    ],
 });
 
 export const label = recipe({

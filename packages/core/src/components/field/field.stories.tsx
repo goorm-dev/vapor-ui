@@ -1,6 +1,6 @@
 import { Fieldset } from '@base-ui-components/react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { ConfirmOutlineIcon } from '@vapor-ui/icons';
+import { CheckCircleIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { Checkbox } from '~/components/checkbox';
 import { Field } from '~/components/field';
@@ -53,9 +53,11 @@ export const TestBed: Story = {
                         <Field.Label>멘토님 강연 능력</Field.Label>
                     </Flex>
                     <Field.Error>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
-                    <Field.Success>✓ 강의 평가가 완료되었습니다</Field.Success>
+                    <Field.Success>
+                        <CheckCircleIcon /> 강의 평가가 완료되었습니다
+                    </Field.Success>
                 </Field.Root>
-                <Field.Root name="vapor-policy-agreement" validationMode="onChange">
+                <Field.Root name="vapor-policy-agreement" validationMode="onChange" {...fieldArgs}>
                     <Field.Description>required checkbox</Field.Description>
                     <Flex gap="$100">
                         <Checkbox.Root required>
@@ -93,7 +95,12 @@ export const TestBed: Story = {
                 </Field.Root>
 
                 {/* RadioGroup Selection RadioGroup */}
-                <Field.Root name="radio-group" render={<Fieldset.Root />} validationMode="onChange">
+                <Field.Root
+                    name="radio-group"
+                    render={<Fieldset.Root />}
+                    validationMode="onChange"
+                    {...fieldArgs}
+                >
                     <RadioGroup.Root required>
                         <Field.Label>
                             <Radio.Root value="male">
