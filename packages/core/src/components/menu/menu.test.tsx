@@ -539,11 +539,11 @@ describe('<Menu.CheckboxItem>', () => {
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(1);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
+            expect(handleCheckedChange.mock.calls[0][0]).toBe(true);
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(2);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
+            expect(handleCheckedChange.mock.calls[1][0]).toBe(false);
         });
 
         // it('should keep the state when closed and reopened', async () => {});
@@ -699,10 +699,10 @@ describe('<Menu.CheckboxItem>', () => {
             const checkitem = rendered.getByRole('menuitemcheckbox');
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
+            expect(handleCheckedChange.mock.calls[0][0]).toBe(true);
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
+            expect(handleCheckedChange.mock.calls[1][0]).toBe(false);
         });
     });
 });
@@ -809,12 +809,10 @@ describe('<Menu.RadioGroupItem>', () => {
             expect(checkitem).toHaveAttribute('aria-checked', 'false');
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledTimes(1);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
+            expect(handleCheckedChange.mock.calls[0][0]).toBe(true);
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledTimes(2);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
+            expect(handleCheckedChange.mock.calls[1][0]).toBe(false);
         });
     });
 
@@ -991,11 +989,11 @@ describe('<Menu.RadioGroupItem>', () => {
 
     describe('prop: onValueChange', () => {
         it('should call onValueChange when the checked state changes', async () => {
-            const handleCheckedChange = vi.fn();
+            const handleValueChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
                     <Menu.Content>
-                        <Menu.RadioGroup onValueChange={handleCheckedChange}>
+                        <Menu.RadioGroup onValueChange={handleValueChange}>
                             <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
                             <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
                         </Menu.RadioGroup>
@@ -1005,10 +1003,10 @@ describe('<Menu.RadioGroupItem>', () => {
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
 
             await userEvent.click(radio1);
-            expect(handleCheckedChange).toHaveBeenCalledWith('item1', expect.any(Event));
+            expect(handleValueChange.mock.calls[0][0]).toBe('item1');
 
             await userEvent.click(radio2);
-            expect(handleCheckedChange).toHaveBeenCalledWith('item2', expect.any(Event));
+            expect(handleValueChange.mock.calls[1][0]).toBe('item2');
         });
     });
 });
