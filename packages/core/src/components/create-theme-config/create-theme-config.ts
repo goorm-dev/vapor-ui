@@ -1,32 +1,31 @@
-import { THEME_CONFIG } from '../theme-inject/theme-injector';
-import { type ThemeState } from '../theme-provider';
-
 /* -------------------------------------------------------------------------------------------------
- * Constants & Core Types
+ * Theme Configuration (Simplified)
  * -----------------------------------------------------------------------------------------------*/
-const DEFAULT_THEME: ThemeState = {
-    appearance: 'light',
-    radius: 'md',
-    scaling: 1,
-};
 
-interface VaporThemeConfig extends Partial<ThemeState> {
-    /** localStorage key for persistence */
+// 런타임 전용 설정 관리 (appearance만)
+interface ThemeConfig {
+    appearance?: 'light' | 'dark' | 'system';
     storageKey?: string;
-    /** CSP nonce value */
-    nonce?: string;
-    /** Enable system theme detection (for future extension) */
     enableSystemTheme?: boolean;
-}
-interface ResolvedThemeConfig extends ThemeState {
-    storageKey: string;
     nonce?: string;
-    enableSystemTheme: boolean;
 }
+
+interface ResolvedThemeConfig {
+    appearance: 'light' | 'dark' | 'system';
+    storageKey: string;
+    enableSystemTheme: boolean;
+    nonce?: string;
+}
+
+const DEFAULT_CONFIG = {
+    appearance: 'system' as const,
+    storageKey: 'vapor-ui-theme',
+    enableSystemTheme: true,
+};
 
 /**
  * Creates a complete configuration object by merging user config with defaults
- *
+ * 
  * @example
  * ```tsx
  * const config = createThemeConfig({
@@ -35,21 +34,12 @@ interface ResolvedThemeConfig extends ThemeState {
  * });
  * ```
  */
-const createThemeConfig = (userConfig?: VaporThemeConfig): ResolvedThemeConfig => {
-    const {
-        storageKey = THEME_CONFIG.STORAGE_KEY,
-        nonce,
-        enableSystemTheme = false,
-        ...themeProps
-    } = userConfig ?? {};
-
+const createThemeConfig = (userConfig?: ThemeConfig): ResolvedThemeConfig => {
     return {
-        ...DEFAULT_THEME,
-        ...themeProps,
-        storageKey,
-        nonce,
-        enableSystemTheme,
+        ...DEFAULT_CONFIG,
+        ...userConfig,
     };
 };
 
 export { createThemeConfig };
+export type { ThemeConfig, ResolvedThemeConfig };
