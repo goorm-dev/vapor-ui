@@ -115,7 +115,7 @@ const Overlay = Dialog.Overlay;
 interface SheetPortalProps extends VComponentProps<typeof Dialog.Portal> {}
 
 const Portal = (props: SheetPortalProps) => {
-    return <Dialog.Portal {...props} />;
+    return <BaseDialog.Portal {...props} />;
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -189,7 +189,7 @@ Popup.displayName = 'Sheet.Popup';
 
 interface SheetContentProps extends VComponentProps<typeof BaseDialog.Popup> {}
 
-const Content = forwardRef<HTMLDivElement, SheetContentProps>(({ className, ...props }, ref) => {
+const Content = forwardRef<HTMLDivElement, SheetContentProps>((props, ref) => {
     return (
         <Portal>
             <Overlay />

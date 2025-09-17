@@ -1,0 +1,417 @@
+---
+title: Navbar
+description: 사용자의 액션에 대한 피드백 혹은 서비스에 대한 메시지를 제공할 때 사용할 수 있습니다.  상황에 따라 컬러와 좌측 아이콘, 닫기 버튼을 적절히 사용합니다.
+previewImageUrl: /images/nav-bar-preview.svg
+---
+
+### Navbar with logo
+
+<Demo name="form/login">
+
+```tsx
+import './index.css';
+
+import { Button, Checkbox, HStack, TextInput, VStack } from '@vapor-ui/core';
+
+export const Login = () => {
+    return (
+        <VStack
+            gap="$250"
+            width="400px"
+            padding="$300"
+            borderRadius="$300"
+            border="1px solid #eee"
+            className="login"
+        >
+            <VStack gap="$200">
+                <VStack gap="$100">
+                    <label htmlFor="email" className="input-label">
+                        이메일
+                    </label>
+                    <TextInput id="email" />
+                </VStack>
+                <VStack gap="$100">
+                    <label htmlFor="password" className="input-label">
+                        비밀번호
+                    </label>
+                    <TextInput id="password" />
+                    <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
+                </VStack>
+            </VStack>
+            <VStack gap="$100">
+                <HStack justifyContent="space-between">
+                    <HStack alignItems="center" gap="$100">
+                        <Checkbox.Root id="auto-login" />
+                        <label htmlFor="auto-login" className="checkbox-label">
+                            자동 로그인
+                        </label>
+                    </HStack>
+
+                    <Button variant="ghost" color="secondary">
+                        ID/비밀번호 찾기
+                    </Button>
+                </HStack>
+                <Button>로그인</Button>
+                <Button color="secondary" variant="outline">
+                    회원가입
+                </Button>
+            </VStack>
+        </VStack>
+    );
+};
+```
+
+</Demo>
+
+### Navbar with logo
+
+<Demo name="form/filter">
+
+```tsx
+const Filter = () => {
+    const [sort, setSort] = useState({
+        feedback: false,
+        buttons: false,
+        'data-display': false,
+        overlay: false,
+        inputs: false,
+        navigation: false,
+        utils: false,
+    });
+
+    return (
+        <VStack width="17.625rem" className="filter">
+            <HStack justifyContent="space-between">
+                <Text typography="heading5">Filter</Text>
+                <Button size="sm" variant="ghost" color="secondary" disabled>
+                    <RefreshOutlineIcon />
+                    Refresh
+                </Button>
+            </HStack>
+
+            <Box
+                render={<hr />}
+                border="none"
+                marginY="$150"
+                height="1px"
+                width="100%"
+                backgroundColor="$gray-300"
+            />
+
+            <VStack gap="$300">
+                <Collapsible.Root render={<VStack gap="$150" />}>
+                    <Collapsible.Trigger className="collapsible-trigger">
+                        <Text typography="heading6">View</Text>
+
+                        <ChevronDownOutlineIcon className="trigger-icon" />
+                    </Collapsible.Trigger>
+
+                    <Collapsible.Panel>
+                        <RadioGroup.Root>
+                            <HStack gap="$100" alignItems="center">
+                                <Radio.Root id="recent" value="recent" />
+                                <label htmlFor="recent" className="radio-label">
+                                    Recent
+                                </label>
+                            </HStack>
+
+                            <HStack gap="$100" alignItems="center">
+                                <Radio.Root id="popular" value="popular" />
+                                <label htmlFor="popular" className="radio-label">
+                                    Most Popular
+                                </label>
+                            </HStack>
+                        </RadioGroup.Root>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
+
+                <Collapsible.Root render={<VStack gap="$150" />}>
+                    <Collapsible.Trigger className="collapsible-trigger">
+                        <Text typography="heading6">
+                            Sort{' '}
+                            <Text foreground="primary">
+                                {Object.values(sort).filter((v) => v).length}
+                            </Text>
+                        </Text>
+                        <ChevronDownOutlineIcon className="trigger-icon" />
+                    </Collapsible.Trigger>
+
+                    <Collapsible.Panel>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root
+                                id="feedback"
+                                checked={sort.feedback}
+                                onCheckedChange={(checked) =>
+                                    setSort((prev) => ({ ...prev, feedback: checked }))
+                                }
+                            />
+                            <label htmlFor="feedback" className="checkbox-label">
+                                Feedback
+                            </label>
+                        </HStack>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root
+                                id="buttons"
+                                checked={sort.buttons}
+                                onCheckedChange={(checked) =>
+                                    setSort((prev) => ({ ...prev, buttons: checked }))
+                                }
+                            />
+                            <label htmlFor="buttons" className="checkbox-label">
+                                Buttons
+                            </label>
+                        </HStack>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root
+                                id="data-display"
+                                checked={sort['data-display']}
+                                onCheckedChange={(checked) =>
+                                    setSort((prev) => ({ ...prev, 'data-display': checked }))
+                                }
+                            />
+                            <label htmlFor="data-display" className="checkbox-label">
+                                Data Display
+                            </label>
+                        </HStack>
+
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root
+                                id="overlay"
+                                checked={sort.overlay}
+                                onCheckedChange={(checked) =>
+                                    setSort((prev) => ({ ...prev, overlay: checked }))
+                                }
+                            />
+                            <label htmlFor="overlay" className="checkbox-label">
+                                Overlay
+                            </label>
+                        </HStack>
+
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root
+                                id="inputs"
+                                checked={sort.inputs}
+                                onCheckedChange={(checked) =>
+                                    setSort((prev) => ({ ...prev, inputs: checked }))
+                                }
+                            />
+                            <label htmlFor="inputs" className="checkbox-label">
+                                Inputs
+                            </label>
+                        </HStack>
+
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root
+                                id="auto-login"
+                                checked={sort.navigation}
+                                onCheckedChange={(checked) =>
+                                    setSort((prev) => ({ ...prev, navigation: checked }))
+                                }
+                            />
+                            <label htmlFor="auto-login" className="checkbox-label">
+                                Navigation
+                            </label>
+                        </HStack>
+
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root
+                                id="utils"
+                                checked={sort.utils}
+                                onCheckedChange={(checked) =>
+                                    setSort((prev) => ({ ...prev, utils: checked }))
+                                }
+                            />
+                            <label htmlFor="utils" className="checkbox-label">
+                                Utils
+                            </label>
+                        </HStack>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
+
+                <Collapsible.Root render={<VStack gap="$150" />}>
+                    <Collapsible.Trigger className="collapsible-trigger">
+                        <Text typography="heading6">Package</Text>
+                        <ChevronDownOutlineIcon className="trigger-icon" />
+                    </Collapsible.Trigger>
+
+                    <Collapsible.Panel>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="goorm-dev/vapor-core" />
+                            <label htmlFor="goorm-dev/vapor-core" className="checkbox-label">
+                                goorm-dev/vapor-core
+                            </label>
+                        </HStack>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="goorm-dev/vapor-component" />
+                            <label htmlFor="goorm-dev/vapor-component" className="checkbox-label">
+                                goorm-dev/vapor-component
+                            </label>
+                        </HStack>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="vapor-ui/core" />
+                            <label htmlFor="vapor-ui/core" className="checkbox-label">
+                                vapor-ui/core
+                            </label>
+                        </HStack>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
+
+                <Collapsible.Root render={<VStack gap="$150" />}>
+                    <Collapsible.Trigger className="collapsible-trigger">
+                        <Text typography="heading6">Status</Text>
+                        <ChevronDownOutlineIcon className="trigger-icon" />
+                    </Collapsible.Trigger>
+
+                    <Collapsible.Panel>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="active" />
+                            <label htmlFor="active" className="checkbox-label">
+                                Active
+                            </label>
+                        </HStack>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="inactive" />
+                            <label htmlFor="inactive" className="checkbox-label">
+                                Inactive
+                            </label>
+                        </HStack>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="draft" />
+                            <label htmlFor="draft" className="checkbox-label">
+                                Draft
+                            </label>
+                        </HStack>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
+
+                <Collapsible.Root render={<VStack gap="$150" />}>
+                    <Collapsible.Trigger className="collapsible-trigger">
+                        <Text typography="heading6">Tag</Text>
+                        <ChevronDownOutlineIcon className="trigger-icon" />
+                    </Collapsible.Trigger>
+
+                    <Collapsible.Panel>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="ui" />
+                            <label htmlFor="ui" className="checkbox-label">
+                                UI
+                            </label>
+                        </HStack>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="open-source" />
+                            <label htmlFor="open-source" className="checkbox-label">
+                                Open Source
+                            </label>
+                        </HStack>
+                        <HStack alignItems="center" gap="$100">
+                            <Checkbox.Root id="performance" />
+                            <label htmlFor="performance" className="checkbox-label">
+                                Performance
+                            </label>
+                        </HStack>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
+            </VStack>
+        </VStack>
+    );
+};
+```
+
+</Demo>
+
+### Navbar with logo
+
+<Demo name="form/sheet-form">
+
+```tsx
+'use client';
+
+import { Button, Checkbox, HStack, Sheet, Tabs, VStack } from '@vapor-ui/core';
+import { RefreshOutlineIcon } from '@vapor-ui/icons';
+
+export const SheetForm = () => {
+    return (
+        <VStack
+            gap="$250"
+            width="400px"
+            padding="$300"
+            borderRadius="$300"
+            border="1px solid #eee"
+            className="sheet-form"
+        >
+            <Sheet.Root>
+                <Sheet.Trigger render={<Button />}>Open Filter</Sheet.Trigger>
+                <Sheet.Portal>
+                    <Sheet.Overlay />
+                    <Sheet.Positioner side="bottom">
+                        <Sheet.Popup style={{ borderTopLeftRadius: 8, borderTopRightRadius: 8 }}>
+                            <Tabs.Root
+                                defaultValue={'sort'}
+                                className={'tabs'}
+                                style={{ height: '100%' }}
+                            >
+                                <Sheet.Header>
+                                    <VStack width="100%">
+                                        <Sheet.Title>Filter</Sheet.Title>
+
+                                        <Tabs.List style={{ paddingInline: 0 }}>
+                                            <Tabs.Trigger value="sort">Sort</Tabs.Trigger>
+                                            <Tabs.Trigger value="package">Package</Tabs.Trigger>
+                                            <Tabs.Trigger value="status">Status</Tabs.Trigger>
+                                            <Tabs.Trigger value="tag">Tag</Tabs.Trigger>
+                                            <Tabs.Indicator />
+                                        </Tabs.List>
+                                    </VStack>
+                                </Sheet.Header>
+                                <Sheet.Body>
+                                    <Tabs.Panel value="sort">
+                                        <VStack gap="$100">
+                                            <HStack alignItems="center" gap="$100">
+                                                <Checkbox.Root id="mentor" size="lg" />
+                                                <label htmlFor="mentor" className="checkbox-label">
+                                                    멘토님 강연 능력
+                                                </label>
+                                            </HStack>
+                                            <HStack alignItems="center" gap="$100">
+                                                <Checkbox.Root id="topic" size="lg" />
+                                                <label htmlFor="topic" className="checkbox-label">
+                                                    주제(협업 및 커뮤니케이션 스킬)
+                                                </label>
+                                            </HStack>
+                                            <HStack alignItems="center" gap="$100">
+                                                <Checkbox.Root id="seminar" size="lg" />
+                                                <label htmlFor="seminar" className="checkbox-label">
+                                                    세미나 자료
+                                                </label>
+                                            </HStack>
+                                            <HStack alignItems="center" gap="$100">
+                                                <Checkbox.Root id="etc" size="lg" />
+                                                <label htmlFor="etc" className="checkbox-label">
+                                                    기타
+                                                </label>
+                                            </HStack>
+                                        </VStack>
+                                    </Tabs.Panel>
+                                </Sheet.Body>
+                                <Sheet.Footer style={{ gap: 8, paddingTop: 8 }}>
+                                    <Button size="lg" color="secondary" style={{ flexShrink: 0 }}>
+                                        <RefreshOutlineIcon />
+                                        Refresh
+                                    </Button>
+                                    <Sheet.Close
+                                        render={<Button size="lg" style={{ width: '100%' }} />}
+                                    >
+                                        Apply
+                                    </Sheet.Close>
+                                </Sheet.Footer>
+                            </Tabs.Root>
+                        </Sheet.Popup>
+                    </Sheet.Positioner>
+                </Sheet.Portal>
+            </Sheet.Root>
+        </VStack>
+    );
+};
+```
+
+</Demo>

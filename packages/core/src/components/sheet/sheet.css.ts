@@ -84,10 +84,6 @@ export const popup = layerStyle('components', {
     boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
     backgroundColor: vars.color.background['normal-lighter'],
 
-    paddingTop: vars.size.space[250],
-    paddingBottom: vars.size.space[100],
-    paddingInline: vars.size.space[150],
-
     selectors: {
         ...sideSelectors,
 
@@ -104,16 +100,21 @@ export const popup = layerStyle('components', {
 });
 
 export const header = layerStyle('components', {
-    padding: 'unset',
+    paddingTop: vars.size.space[250],
+    paddingBottom: vars.size.space[100],
+    paddingInline: vars.size.space[150],
     height: 'unset',
 });
 
 export const body = layerStyle('components', {
     flex: 1,
-    padding: 'unset',
+    paddingInline: vars.size.space[150],
+    paddingBlock: vars.size.space[100],
+    height: '100%',
     maxHeight: 'unset',
 });
 
 export const footer = layerStyle('components', {
-    padding: 'unset',
+    paddingInline: vars.size.space[150],
+    paddingBlock: vars.size.space[100],
 });
