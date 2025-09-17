@@ -4,24 +4,16 @@ export default function TextareaStates() {
     return (
         <Grid.Root templateColumns="1" gap="$100">
             <Grid.Item>
-                <Textarea.Root placeholder="Default state">
-                    <Textarea.Input />
-                </Textarea.Root>
+                <Textarea placeholder="Default state" />
             </Grid.Item>
             <Grid.Item>
-                <Textarea.Root disabled placeholder="Disabled state">
-                    <Textarea.Input />
-                </Textarea.Root>
+                <Textarea disabled placeholder="Disabled state" />
             </Grid.Item>
             <Grid.Item>
-                <Textarea.Root invalid placeholder="Invalid state">
-                    <Textarea.Input />
-                </Textarea.Root>
+                <Textarea invalid placeholder="Invalid state" />
             </Grid.Item>
             <Grid.Item>
-                <Textarea.Root readOnly defaultValue="Read only content">
-                    <Textarea.Input />
-                </Textarea.Root>
+                <Textarea readOnly defaultValue="Read only content" />
             </Grid.Item>
         </Grid.Root>
     );

@@ -1,20 +1,17 @@
 'use client';
 
-import type { ChangeEvent, MutableRefObject } from 'react';
-import React, { forwardRef, useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import type { ChangeEvent } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { createContext } from '~/libs/create-context';
-import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
-import type { InputVariants, RootVariants } from './textarea.css';
+import type { InputVariants } from './textarea.css';
 import * as styles from './textarea.css';
 
-type TextareaVariants = RootVariants & InputVariants;
-type TextareaSharedProps = TextareaVariants & {
+type TextareaProps = InputVariants & {
     value?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
@@ -31,112 +28,18 @@ type TextareaSharedProps = TextareaVariants & {
     required?: boolean;
 };
 
-type TextareaContextType = TextareaSharedProps & {
-    textareaId?: string;
-    textareaRef?: MutableRefObject<HTMLTextAreaElement | null>;
-};
-
-const [TextareaProvider, useTextareaContext] = createContext<TextareaContextType>({
-    name: 'Textarea',
-    hookName: 'useTextareaContext',
-    providerName: 'TextareaProvider',
-});
-
-/* -------------------------------------------------------------------------------------------------
- * Textarea
- * -----------------------------------------------------------------------------------------------*/
-
-type TextareaPrimitiveProps = VComponentProps<'div'>;
-interface TextareaRootProps extends Assign<TextareaPrimitiveProps, TextareaSharedProps> {}
-
-const Root = forwardRef<HTMLDivElement, TextareaRootProps>(
-    ({ render, className, children, ...props }, ref) => {
-        const textareaId = useId();
-        const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-        const textareaSharedPropKeys: (keyof TextareaSharedProps)[] = [
-            'value',
-            'onValueChange',
-            'defaultValue',
-            'size',
-            'disabled',
-            'invalid',
-            'readOnly',
-            'placeholder',
-            'rows',
-            'cols',
-            'resizing',
-            'autoResize',
-            'maxLength',
-            'aria-label',
-            'aria-labelledby',
-            'aria-describedby',
-            'required',
-        ];
-
-        const [textareaRootProps, otherProps] = createSplitProps<TextareaSharedProps>()(
-            props,
-            textareaSharedPropKeys,
-        );
-
-        const { disabled } = textareaRootProps;
-
-        const element = useRender({
-            ref,
-            render: render || <div />,
-            props: {
-                className: clsx(styles.root({ disabled }), className),
-                children,
-                ...otherProps,
-            },
-        });
-
-        return (
-            <TextareaProvider value={{ textareaId, textareaRef, ...textareaRootProps }}>
-                {element}
-            </TextareaProvider>
-        );
-    },
-);
-Root.displayName = 'Textarea.Root';
-
-/* -------------------------------------------------------------------------------------------------
- * Textarea.Input
- * -----------------------------------------------------------------------------------------------*/
-
 type PrimitiveTextareaProps = VComponentProps<'textarea'>;
-interface TextareaInputProps extends Omit<PrimitiveTextareaProps, keyof TextareaSharedProps> {}
+interface TextareaComponentProps extends Assign<PrimitiveTextareaProps, TextareaProps> {}
 
-const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
-    ({ render, id: idProp, className, ...props }, ref) => {
-        const {
-            textareaId,
-            textareaRef: contextTextareaRef,
-            value,
-            onValueChange,
-            defaultValue,
-            disabled,
-            invalid,
-            readOnly,
-            size,
-            placeholder,
-            rows,
-            cols,
-            resizing,
-            autoResize,
-            maxLength,
-            'aria-label': ariaLabel,
-            'aria-labelledby': ariaLabelledby,
-            'aria-describedby': ariaDescribedby,
-            required,
-        } = useTextareaContext();
-
-        const id = idProp || textareaId;
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaComponentProps>(
+    ({ render, className, value, onValueChange, defaultValue, disabled, invalid, readOnly, size, placeholder, rows, cols, resizing, autoResize, maxLength, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, required, ...props }, ref) => {
+        const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
         const autoResizeTextarea = useMemo(() => {
             const performResize = () => {
-                if (!autoResize || !contextTextareaRef?.current) return;
+                if (!autoResize || !textareaRef?.current) return;
 
-                const textarea = contextTextareaRef.current;
+                const textarea = textareaRef.current;
                 const maxHeight = 400;
                 const minHeight = 60;
                 
@@ -157,7 +60,7 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
             };
 
             return () => requestAnimationFrame(performResize);
-        }, [autoResize, contextTextareaRef]);
+        }, [autoResize]);
 
         useEffect(() => {
             if (autoResize) {
@@ -167,23 +70,20 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
 
         const handleRef = useCallback(
             (node: HTMLTextAreaElement | null) => {
-                if (contextTextareaRef) {
-                    contextTextareaRef.current = node;
-                }
+                textareaRef.current = node;
                 if (typeof ref === 'function') {
                     ref(node);
                 } else if (ref && 'current' in ref) {
-                    (ref as MutableRefObject<HTMLTextAreaElement | null>).current = node;
+                    ref.current = node;
                 }
             },
-            [contextTextareaRef, ref],
+            [ref],
         );
 
         return useRender({
             ref: handleRef,
             render: render || <BaseField.Control render={<textarea />} />,
             props: {
-                id,
                 value,
                 onChange(event: ChangeEvent<HTMLTextAreaElement>) {
                     if (event.defaultPrevented) return;
@@ -213,79 +113,7 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
         });
     },
 );
-Input.displayName = 'Textarea.Input';
+Textarea.displayName = 'Textarea';
 
-/* -------------------------------------------------------------------------------------------------
- * Textarea.Count
- * -----------------------------------------------------------------------------------------------*/
-
-type TextareaCountPrimitiveProps = VComponentProps<'div'>;
-interface TextareaCountProps extends Omit<TextareaCountPrimitiveProps, 'children'> {
-    children?: (props: { current: number; max?: number }) => React.ReactNode;
-}
-
-const Count = forwardRef<HTMLDivElement, TextareaCountProps>(
-    ({ render, className, children, ...props }, ref) => {
-        const { value, defaultValue, maxLength, textareaRef } = useTextareaContext();
-        const [currentLength, setCurrentLength] = React.useState(() => {
-            const initialValue = value ?? defaultValue ?? '';
-            return initialValue.length;
-        });
-
-        React.useEffect(() => {
-            if (value !== undefined) {
-                setCurrentLength(value.length);
-            } else if (textareaRef?.current) {
-                const updateLength = () => {
-                    if (textareaRef.current) {
-                        setCurrentLength(textareaRef.current.value.length);
-                    }
-                };
-
-                const textarea = textareaRef.current;
-
-                try {
-                    textarea.addEventListener('input', updateLength);
-
-                    return () => {
-                        try {
-                            textarea.removeEventListener('input', updateLength);
-                        } catch (error) {
-                            // Silently handle cleanup errors
-                            console.warn('Failed to remove textarea event listener:', error);
-                        }
-                    };
-                } catch (error) {
-                    console.warn('Failed to add textarea event listener:', error);
-                }
-            }
-        }, [value, textareaRef]);
-
-        const content = children
-            ? children({ current: currentLength, max: maxLength })
-            : maxLength !== undefined
-              ? `${currentLength}/${maxLength}`
-              : currentLength.toString();
-
-        return useRender({
-            ref,
-            render: render || <span />,
-            props: {
-                className: clsx(styles.count, className),
-                children: content,
-                'aria-live': 'polite',
-                'aria-atomic': 'true',
-                role: 'status',
-                ...props,
-            },
-        });
-    },
-);
-Count.displayName = 'Textarea.Count';
-
-/* -----------------------------------------------------------------------------------------------*/
-
-export { Count as TextareaCount, Input as TextareaInput, Root as TextareaRoot };
-export type { TextareaCountProps, TextareaInputProps, TextareaRootProps };
-
-export const Textarea = { Root, Input, Count };
+export { Textarea };
+export type { TextareaComponentProps as TextareaProps };

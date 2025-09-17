@@ -1,33 +1,10 @@
-import { style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
-
-export const root = recipe({
-    base: layerStyle('components', {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        gap: vars.size.space[100],
-        width: '100%',
-    }),
-
-    defaultVariants: { disabled: false },
-
-    variants: {
-        disabled: {
-            true: {
-                opacity: 0.32,
-                pointerEvents: 'none',
-            },
-        },
-    },
-});
 
 export const input = recipe({
     base: [
@@ -118,15 +95,4 @@ export const input = recipe({
     },
 });
 
-export const count = style([
-    typography({ style: 'body3' }),
-    foregrounds({ color: 'hint' }),
-    layerStyle('components', {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    }),
-]);
-
-export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
 export type InputVariants = NonNullable<RecipeVariants<typeof input>>;
