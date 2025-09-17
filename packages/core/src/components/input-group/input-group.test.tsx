@@ -302,9 +302,7 @@ describe('InputGroup', () => {
             rerender(
                 <InputGroup.Root>
                     <TextInput placeholder="Enter text" maxLength={10} defaultValue="test" />
-                    <InputGroup.Counter data-testid="counter">
-                        Static content
-                    </InputGroup.Counter>
+                    <InputGroup.Counter data-testid="counter">Static content</InputGroup.Counter>
                 </InputGroup.Root>,
             );
 

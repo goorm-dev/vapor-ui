@@ -1,12 +1,12 @@
 'use client';
 
-import { forwardRef, useEffect } from 'react';
+import { forwardRef } from 'react';
 
 import { Input as BaseInput } from '@base-ui-components/react';
 import { useControlled } from '@base-ui-components/utils/useControlled';
 import clsx from 'clsx';
 
-import { useInputGroupContext } from '~/components/input-group';
+import { useInputGroupSync } from '~/hooks/use-input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
@@ -29,55 +29,48 @@ type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
 interface TextInputProps extends Assign<TextInputPrimitiveProps, BaseProps> {}
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-    ({ onValueChange, value, defaultValue, className, ...props }, ref) => {
+    ({ onValueChange, value: valueProp, defaultValue, className, ...props }, ref) => {
         const [textInputRootProps, otherProps] = createSplitProps<TextInputVariants>()(props, [
             'size',
             'invalid',
         ]);
 
         const { invalid, size } = textInputRootProps;
-        const groupContext = useInputGroupContext();
+        const isControlled = valueProp !== undefined;
 
         // Use useControlled for unified value state management
-        const [internalValue, setInternalValue] = useControlled({
-            controlled: value,
+        const [value, setValue] = useControlled({
+            controlled: valueProp,
             default: defaultValue,
             name: 'TextInput',
             state: 'value',
         });
 
-        const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            const newValue = event.target.value;
-            setInternalValue(newValue);
-            onValueChange?.(newValue);
+        // Handle InputGroup synchronization via custom hook
+        const { syncOnChange } = useInputGroupSync({
+            value,
+            defaultValue,
+            maxLength: otherProps.maxLength,
+        });
 
-            // Update InputGroup context with current value
-            if (groupContext?.updateValue) {
-                groupContext.updateValue(newValue);
-            }
+        const handleChange = (
+            ...params: Parameters<NonNullable<TextInputPrimitiveProps['onValueChange']>>
+        ) => {
+            const newValue = params[0];
+            setValue(newValue);
+            onValueChange?.(newValue);
+            syncOnChange(newValue);
         };
 
-        // Set maxLength in InputGroup context on mount
-        useEffect(() => {
-            if (groupContext?.setMaxLength && otherProps.maxLength) {
-                groupContext.setMaxLength(otherProps.maxLength);
-            }
-        }, [groupContext, otherProps.maxLength]);
-
-        // Update context when internal value changes
-        useEffect(() => {
-            if (groupContext?.updateValue && internalValue !== undefined) {
-                groupContext.updateValue(internalValue);
-            }
-        }, [groupContext, internalValue]);
+        // Determine if this is a controlled component based on initial value prop
+        const finalValue = value ?? '';
 
         return (
             <BaseInput
                 ref={ref}
-                value={value !== undefined ? internalValue : undefined}
-                defaultValue={value === undefined ? internalValue : undefined}
+                {...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' })}
                 aria-invalid={invalid}
-                onChange={onValueChange !== undefined ? handleChange : undefined}
+                onValueChange={handleChange}
                 className={clsx(styles.root({ invalid, size }), className)}
                 {...otherProps}
             />
