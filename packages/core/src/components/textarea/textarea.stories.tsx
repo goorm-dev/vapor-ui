@@ -43,9 +43,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
     render: (args) => (
-        <Textarea.Root placeholder="Enter your text here..." {...args}>
-            <Textarea.Input />
-        </Textarea.Root>
+        <div style={{ width: '100%', maxWidth: '400px' }}>
+            <Textarea.Root placeholder="Enter your text here..." {...args}>
+                <Textarea.Input />
+            </Textarea.Root>
+        </div>
     ),
 };
 
@@ -96,14 +98,16 @@ export const Controlled: Story = {
         const [value, setValue] = useState('Initial controlled value');
 
         return (
-            <Textarea.Root
-                value={value}
-                onValueChange={setValue}
-                placeholder="This is a controlled textarea..."
-                {...args}
-            >
-                <Textarea.Input />
-            </Textarea.Root>
+            <div style={{ width: '100%', maxWidth: '400px' }}>
+                <Textarea.Root
+                    value={value}
+                    onValueChange={setValue}
+                    placeholder="This is a controlled textarea..."
+                    {...args}
+                >
+                    <Textarea.Input />
+                </Textarea.Root>
+            </div>
         );
     },
 };

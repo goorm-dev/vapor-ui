@@ -133,102 +133,30 @@ const Input = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
         const id = idProp || textareaId;
 
         const autoResizeTextarea = useMemo(() => {
-            let cachedScrollbarWidth: number | null = null;
-            
-            const getScrollbarWidth = () => {
-                if (cachedScrollbarWidth !== null) return cachedScrollbarWidth;
-                
-                const outer = document.createElement('div');
-                outer.style.visibility = 'hidden';
-                outer.style.overflow = 'scroll';
-                // @ts-ignore - msOverflowStyle is IE specific
-                outer.style.msOverflowStyle = 'scrollbar';
-                document.body.appendChild(outer);
-                
-                const inner = document.createElement('div');
-                outer.appendChild(inner);
-                
-                cachedScrollbarWidth = outer.offsetWidth - inner.offsetWidth;
-                document.body.removeChild(outer);
-                
-                return cachedScrollbarWidth;
-            };
-            
             const performResize = () => {
                 if (!autoResize || !contextTextareaRef?.current) return;
 
                 const textarea = contextTextareaRef.current;
-
-                // Create a hidden clone to measure the actual content height
-                const hiddenDiv = document.createElement('div');
-                const style = window.getComputedStyle(textarea);
+                const maxHeight = 400;
+                const minHeight = 60;
                 
-                // Get the exact inner dimensions of the textarea
-                const paddingLeft = parseInt(style.paddingLeft) || 0;
-                const paddingRight = parseInt(style.paddingRight) || 0;
+                // Reset to get accurate measurement
+                textarea.style.overflowY = 'hidden';
+                textarea.style.height = 'auto';
                 
-                // Always reserve space for scrollbar to maintain consistent width
-                const scrollbarWidth = getScrollbarWidth();
+                const scrollHeight = textarea.scrollHeight;
                 
-                // Calculate content width with scrollbar space always reserved
-                const totalWidth = textarea.offsetWidth;
-                const exactContentWidth = totalWidth - paddingLeft - paddingRight - scrollbarWidth;
-                
-                // Copy relevant styles to the hidden div
-                hiddenDiv.style.position = 'absolute';
-                hiddenDiv.style.visibility = 'hidden';
-                hiddenDiv.style.height = 'auto';
-                hiddenDiv.style.width = exactContentWidth + 'px';
-                hiddenDiv.style.fontSize = style.fontSize;
-                hiddenDiv.style.fontFamily = style.fontFamily;
-                hiddenDiv.style.fontWeight = style.fontWeight;
-                hiddenDiv.style.lineHeight = style.lineHeight;
-                hiddenDiv.style.letterSpacing = style.letterSpacing;
-                hiddenDiv.style.wordSpacing = style.wordSpacing;
-                // Don't add padding/border to the hidden div since we set exact content width
-                hiddenDiv.style.padding = '0';
-                hiddenDiv.style.border = 'none';
-                hiddenDiv.style.margin = '0';
-                hiddenDiv.style.boxSizing = 'content-box';
-                hiddenDiv.style.whiteSpace = 'pre-wrap';
-                hiddenDiv.style.overflowWrap = 'break-word';
-                hiddenDiv.style.wordBreak = 'break-word';
-                
-                // Set the content exactly as it is in the textarea
-                hiddenDiv.textContent = textarea.value || '';
-                
-                // Append to DOM to measure
-                document.body.appendChild(hiddenDiv);
-                
-                // Get the measured height and add padding back
-                const contentHeight = hiddenDiv.scrollHeight;
-                const paddingTop = parseInt(style.paddingTop) || 0;
-                const paddingBottom = parseInt(style.paddingBottom) || 0;
-                const borderTop = parseInt(style.borderTopWidth) || 0;
-                const borderBottom = parseInt(style.borderBottomWidth) || 0;
-                
-                const totalHeight = contentHeight + paddingTop + paddingBottom + borderTop + borderBottom;
-                
-                const maxHeight = 400; // Prevent unlimited growth
-                const minHeight = parseInt(style.minHeight) || 60;
-                
-                const newHeight = Math.min(Math.max(totalHeight, minHeight), maxHeight);
-                
-                // Clean up
-                document.body.removeChild(hiddenDiv);
-                
-                // Only update if height actually changed
-                const currentHeight = parseInt(textarea.style.height) || textarea.offsetHeight;
-                if (Math.abs(currentHeight - newHeight) > 1) {
-                    // Set the height - CSS will handle scrollbar automatically
+                if (scrollHeight > maxHeight) {
+                    textarea.style.height = `${maxHeight}px`;
+                    textarea.style.overflowY = 'scroll';
+                } else {
+                    const newHeight = Math.max(scrollHeight, minHeight);
                     textarea.style.height = `${newHeight}px`;
+                    textarea.style.overflowY = 'hidden';
                 }
             };
 
-            // Use requestAnimationFrame for smooth updates
-            return () => {
-                requestAnimationFrame(performResize);
-            };
+            return () => requestAnimationFrame(performResize);
         }, [autoResize, contextTextareaRef]);
 
         useEffect(() => {
