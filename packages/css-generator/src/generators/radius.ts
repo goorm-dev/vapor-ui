@@ -1,4 +1,4 @@
-import { DEFAULT_PREFIX } from '~/constants';
+const DEFAULT_PREFIX = 'vapor';
 
 import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 

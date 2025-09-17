@@ -1,4 +1,3 @@
-import { generateBrandColorPalette, getSemanticDependentTokens } from '@vapor-ui/color-generator';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -8,13 +7,11 @@ import {
     generateScalingCSS,
 } from '../src/index';
 
-const TEST_COLOR_CONFIG = {
-    colors: {
-        primary: '#acc7f8ff',
-    },
+const MOCK_COLOR_CONFIG = {
+    primary: { name: 'mint', hex: '#6af574ff' },
     background: {
         name: 'neutral',
-        color: '#F8FAFC',
+        hex: '#F8FAFC',
         lightness: {
             light: 98,
             dark: 8,
@@ -22,41 +19,23 @@ const TEST_COLOR_CONFIG = {
     },
 };
 
-const getSemanticConfig = () => ({
-    primary: { name: 'primary', hex: TEST_COLOR_CONFIG.colors.primary },
-    background: TEST_COLOR_CONFIG.background,
-});
-
-const getCompleteConfig = () => ({
-    colors: {
-        primary: { name: 'primary', hex: TEST_COLOR_CONFIG.colors.primary },
-        background: {
-            name: TEST_COLOR_CONFIG.background.name,
-            hex: TEST_COLOR_CONFIG.background.color,
-            lightness: TEST_COLOR_CONFIG.background.lightness,
-        },
-    },
+const MOCK_TOTAL_CONFIG = {
+    colors: MOCK_COLOR_CONFIG,
     scaling: 1.15,
     radius: 8,
-});
+};
 
 describe('CSS Generator Snapshots', () => {
     /* -------------------------------------------------------------------------------------------------
      * Color CSS
      * -----------------------------------------------------------------------------------------------*/
     it('should match generateColorCSS snapshot', () => {
-        const brandPalette = generateBrandColorPalette(TEST_COLOR_CONFIG);
-        const semanticTokens = getSemanticDependentTokens(getSemanticConfig());
-
-        const result = generateColorCSS(brandPalette, semanticTokens);
+        const result = generateColorCSS(MOCK_COLOR_CONFIG);
         expect(result).toMatchSnapshot();
     });
 
     it('should match generateColorCSS with options snapshot', () => {
-        const brandPalette = generateBrandColorPalette(TEST_COLOR_CONFIG);
-        const semanticTokens = getSemanticDependentTokens(getSemanticConfig());
-
-        const result = generateColorCSS(brandPalette, semanticTokens, {
+        const result = generateColorCSS(MOCK_COLOR_CONFIG, {
             prefix: 'custom',
             format: 'compact',
             classNames: {
@@ -105,18 +84,12 @@ describe('CSS Generator Snapshots', () => {
      * -----------------------------------------------------------------------------------------------*/
 
     it('should match generateCompleteCSS snapshot', () => {
-        const brandPalette = generateBrandColorPalette(TEST_COLOR_CONFIG);
-        const semanticTokens = getSemanticDependentTokens(getSemanticConfig());
-
-        const result = generateCompleteCSS(brandPalette, semanticTokens, getCompleteConfig());
+        const result = generateCompleteCSS(MOCK_TOTAL_CONFIG);
         expect(result).toMatchSnapshot();
     });
 
     it('should match generateCompleteCSS with options snapshot', () => {
-        const brandPalette = generateBrandColorPalette(TEST_COLOR_CONFIG);
-        const semanticTokens = getSemanticDependentTokens(getSemanticConfig());
-
-        const result = generateCompleteCSS(brandPalette, semanticTokens, getCompleteConfig(), {
+        const result = generateCompleteCSS(MOCK_TOTAL_CONFIG, {
             includeColorComments: true,
             prefix: 'custom',
             format: 'compact',

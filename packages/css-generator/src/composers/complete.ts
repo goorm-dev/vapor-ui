@@ -1,15 +1,7 @@
-import type {
-    generateBrandColorPalette,
-    getSemanticDependentTokens,
-} from '@vapor-ui/color-generator';
-
 import { generateColorCSS } from '../generators/color';
 import { generateRadiusCSS } from '../generators/radius';
 import { generateScalingCSS } from '../generators/scaling';
 import type { CSSGeneratorOptions, CompleteCSSConfig } from '../types';
-
-type BrandColorPalette = ReturnType<typeof generateBrandColorPalette>;
-type SemanticTokens = ReturnType<typeof getSemanticDependentTokens>;
 
 interface CompleteCSSOptions extends CSSGeneratorOptions {
     includeColorComments?: boolean;
@@ -39,8 +31,6 @@ const generateThemeComment = (config: CompleteCSSConfig): string => {
 };
 
 export const generateCompleteCSS = (
-    brandPalette: BrandColorPalette,
-    semanticTokens: SemanticTokens,
     config: CompleteCSSConfig,
     options: CompleteCSSOptions = {},
 ): string => {
@@ -60,7 +50,7 @@ export const generateCompleteCSS = (
     }
 
     // Generate individual CSS sections
-    const colorCSS = generateColorCSS(brandPalette, semanticTokens, {
+    const colorCSS = generateColorCSS(config.colors, {
         classNames: resolvedOptions.classNames,
         prefix: resolvedOptions.prefix,
         format: resolvedOptions.format,
