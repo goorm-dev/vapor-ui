@@ -6,7 +6,7 @@ import { Input as BaseInput } from '@base-ui-components/react';
 import { useControlled } from '@base-ui-components/utils/useControlled';
 import clsx from 'clsx';
 
-import { useInputGroupSync } from '~/hooks/use-input-group';
+import { useInputGroup } from '~/hooks/use-input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
@@ -47,7 +47,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         });
 
         // Handle InputGroup synchronization via custom hook
-        const { syncOnChange } = useInputGroupSync({
+        const { syncOnChange, isInGroup } = useInputGroup({
             value,
             defaultValue,
             maxLength: otherProps.maxLength,
@@ -59,7 +59,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             const newValue = params[0];
             setValue(newValue);
             onValueChange?.(newValue);
-            syncOnChange(newValue);
+            if (isInGroup) syncOnChange(newValue);
         };
 
         // Determine if this is a controlled component based on initial value prop

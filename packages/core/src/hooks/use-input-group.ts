@@ -12,7 +12,7 @@ interface UseInputGroupSyncOptions {
  * Custom hook to handle InputGroup context synchronization
  * Separates InputGroup-related logic from TextInput component
  */
-export function useInputGroupSync({ value, defaultValue, maxLength }: UseInputGroupSyncOptions) {
+export function useInputGroup({ value, defaultValue, maxLength }: UseInputGroupSyncOptions) {
     const groupContext = useInputGroupContext();
 
     // Sync maxLength with InputGroup context on mount

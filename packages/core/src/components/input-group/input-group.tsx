@@ -39,12 +39,12 @@ const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
         const [value, setValue] = useState('');
         const [maxLength, setMaxLength] = useState<number | undefined>();
 
-        const updateValue = useCallback((newValue: string) => {
-            setValue(newValue);
+        const updateValue = useCallback((value: string) => {
+            setValue(value);
         }, []);
 
-        const updateMaxLength = useCallback((newMaxLength: number) => {
-            setMaxLength(newMaxLength);
+        const updateMaxLength = useCallback((length: number) => {
+            setMaxLength(length);
         }, []);
 
         const contextValue: InputGroupSharedProps = {
