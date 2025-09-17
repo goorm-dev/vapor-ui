@@ -11,6 +11,7 @@ import {
 export default function Block2() {
     return (
         <HStack
+            width="100%"
             justifyContent="space-between"
             paddingX={{ desktop: '$400', mobile: '$200' }}
             paddingY={{ desktop: '$100', mobile: '$050' }}

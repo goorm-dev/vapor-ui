@@ -1,14 +1,9 @@
 import type { ComponentProps } from 'react';
 
-import { Avatar, Collapsible, HStack, IconButton, NavigationMenu, Sheet } from '@vapor-ui/core';
-import {
-    BellOnIcon,
-    ChevronDownOutlineIcon,
-    CloseOutlineIcon,
-    MenuOutlineIcon,
-} from '@vapor-ui/icons';
+import { Button, Collapsible, HStack, IconButton, NavigationMenu, Sheet } from '@vapor-ui/core';
+import { ChevronDownOutlineIcon, CloseOutlineIcon, MenuOutlineIcon } from '@vapor-ui/icons';
 
-export default function Block1() {
+export default function Block4() {
     return (
         <HStack
             width="100%"
@@ -16,29 +11,25 @@ export default function Block1() {
             paddingX={{ desktop: '$400', mobile: '$200' }}
             paddingY={{ desktop: '$100', mobile: '$050' }}
         >
-            <HStack gap="$200">
-                <LogoSvg className="logo" />
+            <LogoSvg className="logo" />
 
-                <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/features">Features</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/templates">Templates</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </HStack>
+            <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
+                <NavigationMenu.List>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link href="/features">Features</NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link href="/templates">Templates</NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                </NavigationMenu.List>
+            </NavigationMenu.Root>
 
             <HStack gap="$100">
-                <Avatar.Root shape="circle" alt="bell" render={<button />}>
-                    <BellOnIcon />
-                </Avatar.Root>
-                <Avatar.Simple shape="circle" alt="goorm" />
+                <Button variant="ghost">Log in</Button>
+                <Button>Sign up</Button>
 
                 <Sheet.Root>
                     <Sheet.Trigger
@@ -62,14 +53,8 @@ export default function Block1() {
                                         <LogoSvg className="logo" />
 
                                         <HStack gap="$100">
-                                            <Avatar.Root
-                                                shape="circle"
-                                                alt="bell"
-                                                render={<button />}
-                                            >
-                                                <BellOnIcon />
-                                            </Avatar.Root>
-                                            <Avatar.Simple shape="circle" alt="goorm" />
+                                            <Button variant="ghost">Log in</Button>
+                                            <Button>Sign up</Button>
                                             <Sheet.Close
                                                 render={
                                                     <IconButton
