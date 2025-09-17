@@ -3,11 +3,13 @@ import { recipe } from '@vanilla-extract/recipes';
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
+import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
     base: {
         display: 'flex',
         flexDirection: 'column',
+        gap: vars.size.space['050'],
     },
 });
 

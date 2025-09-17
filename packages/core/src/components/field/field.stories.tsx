@@ -117,7 +117,7 @@ export const TestBed: Story = {
                     <Field.Error>성별을 반드시 선택해주세요.</Field.Error>
                     <Field.Success>✓ 성별이 선택되었습니다</Field.Success>
                 </Field.Root>
-                <Field.Root name="email" validationMode="onChange">
+                <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
                     <Field.Label>이름</Field.Label>
                     <TextInput type="text" placeholder="" required />
                     <Field.Description>
