@@ -20,7 +20,7 @@ export const TestBed: Story = {
         <div className="space-y-4">
             <InputGroup.Root>
                 <TextInput placeholder="Enter text..." maxLength={100} />
-                <InputGroup.Count />
+                <InputGroup.Counter />
             </InputGroup.Root>
         </div>
     ),

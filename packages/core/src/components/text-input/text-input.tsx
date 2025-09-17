@@ -3,6 +3,7 @@
 import { forwardRef, useEffect } from 'react';
 
 import { Input as BaseInput } from '@base-ui-components/react';
+import { useControlled } from '@base-ui-components/utils/useControlled';
 import clsx from 'clsx';
 
 import { useInputGroupContext } from '~/components/input-group';
@@ -37,8 +38,17 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         const { invalid, size } = textInputRootProps;
         const groupContext = useInputGroupContext();
 
+        // Use useControlled for unified value state management
+        const [internalValue, setInternalValue] = useControlled({
+            controlled: value,
+            default: defaultValue,
+            name: 'TextInput',
+            state: 'value',
+        });
+
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             const newValue = event.target.value;
+            setInternalValue(newValue);
             onValueChange?.(newValue);
 
             // Update InputGroup context with current value
@@ -47,34 +57,27 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             }
         };
 
-        // Set maxLength and initial value in InputGroup context on mount
+        // Set maxLength in InputGroup context on mount
         useEffect(() => {
-            if (groupContext) {
-                if (groupContext.setMaxLength && otherProps.maxLength) {
-                    groupContext.setMaxLength(otherProps.maxLength);
-                }
-
-                // Set initial value if there's a defaultValue
-                if (groupContext.updateValue && defaultValue) {
-                    groupContext.updateValue(defaultValue);
-                }
+            if (groupContext?.setMaxLength && otherProps.maxLength) {
+                groupContext.setMaxLength(otherProps.maxLength);
             }
-        }, [groupContext, otherProps.maxLength, defaultValue]);
+        }, [groupContext, otherProps.maxLength]);
 
-        // Update context when controlled value changes
+        // Update context when internal value changes
         useEffect(() => {
-            if (groupContext?.updateValue && value !== undefined) {
-                groupContext.updateValue(value);
+            if (groupContext?.updateValue && internalValue !== undefined) {
+                groupContext.updateValue(internalValue);
             }
-        }, [groupContext, value]);
+        }, [groupContext, internalValue]);
 
         return (
             <BaseInput
                 ref={ref}
-                value={value}
-                defaultValue={defaultValue}
+                value={value !== undefined ? internalValue : undefined}
+                defaultValue={value === undefined ? internalValue : undefined}
                 aria-invalid={invalid}
-                onChange={handleChange}
+                onChange={onValueChange !== undefined ? handleChange : undefined}
                 className={clsx(styles.root({ invalid, size }), className)}
                 {...otherProps}
             />

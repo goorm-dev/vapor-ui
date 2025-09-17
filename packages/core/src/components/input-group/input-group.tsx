@@ -34,8 +34,8 @@ const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupShare
 
 interface InputGroupRootProps extends VComponentProps<'div'> {}
 
-const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
-    ({ className, children, render, ...props }, ref) => {
+const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
+    ({ className, render, ...props }, ref) => {
         const [value, setValue] = useState('');
         const [maxLength, setMaxLength] = useState<number | undefined>();
 
@@ -43,7 +43,7 @@ const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
             setValue(newValue);
         }, []);
 
-        const handleSetMaxLength = useCallback((newMaxLength: number) => {
+        const updateMaxLength = useCallback((newMaxLength: number) => {
             setMaxLength(newMaxLength);
         }, []);
 
@@ -51,15 +51,14 @@ const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
             value,
             maxLength,
             updateValue,
-            setMaxLength: handleSetMaxLength,
+            setMaxLength: updateMaxLength,
         };
 
         const element = useRender({
             ref,
             render: render || <div />,
             props: {
-                className: clsx(styles.root(), className),
-                children,
+                className: clsx(styles.root, className),
                 ...props,
             },
         });
@@ -67,23 +66,27 @@ const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRootProps>(
         return <InputGroupProvider value={contextValue}>{element}</InputGroupProvider>;
     },
 );
-InputGroupRoot.displayName = 'InputGroup.Root';
+Root.displayName = 'InputGroup.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * InputGroup Count
  * -----------------------------------------------------------------------------------------------*/
 
-interface InputGroupCountProps extends Omit<VComponentProps<'span'>, 'children'> {
-    children?: (params: { current: number; maxLength?: number; value: string }) => React.ReactNode;
+type ChildrenProps = { count: number; maxLength?: number; value: string };
+
+interface InputGroupCounterProps extends Omit<VComponentProps<'span'>, 'children'> {
+    children?: React.ReactNode | ((props: ChildrenProps) => React.ReactNode);
 }
 
-const InputGroupCount = forwardRef<HTMLSpanElement, InputGroupCountProps>(
+const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>(
     ({ className, children, render, ...props }, ref) => {
         const { value = '', maxLength } = useInputGroupContext();
         const currentLength = value.length;
 
         const content = children
-            ? children({ current: currentLength, maxLength, value })
+            ? typeof children === 'function'
+                ? children({ count: currentLength, maxLength, value })
+                : children
             : maxLength !== undefined
               ? `${currentLength}/${maxLength}`
               : currentLength.toString();
@@ -92,7 +95,7 @@ const InputGroupCount = forwardRef<HTMLSpanElement, InputGroupCountProps>(
             ref,
             render: render || <span />,
             props: {
-                className: clsx(styles.count(), className),
+                className: clsx(styles.counter, className),
                 children: content,
                 ...props,
             },
@@ -100,14 +103,14 @@ const InputGroupCount = forwardRef<HTMLSpanElement, InputGroupCountProps>(
     },
 );
 
-InputGroupCount.displayName = 'InputGroup.Count';
+Counter.displayName = 'InputGroup.Counter';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const InputGroup = {
-    Root: InputGroupRoot,
-    Count: InputGroupCount,
+export const InputGroup = {
+    Root,
+    Counter,
 };
 
-export { InputGroup, useInputGroupContext };
-export type { InputGroupCountProps, InputGroupRootProps };
+export { Root as InputGroupRoot, Counter as InputGroupCounter, useInputGroupContext };
+export type { InputGroupCounterProps, InputGroupRootProps };
