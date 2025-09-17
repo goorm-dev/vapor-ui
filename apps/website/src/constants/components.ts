@@ -12,7 +12,7 @@ import gridData from '../../public/components/grid.json';
 import hStackData from '../../public/components/h-stack.json';
 import iconButtonData from '../../public/components/icon-button.json';
 import menuData from '../../public/components/menu.json';
-import navData from '../../public/components/nav.json';
+import navigationMenuData from '../../public/components/navigation-menu.json';
 import radioGroupData from '../../public/components/radio-group.json';
 import switchData from '../../public/components/switch.json';
 import textInputData from '../../public/components/text-input.json';
@@ -20,6 +20,7 @@ import textData from '../../public/components/text.json';
 import tooltipData from '../../public/components/tooltip.json';
 import vStackData from '../../public/components/v-stack.json';
 
+// FIXME: TextInput, Switch, Checkbox, RadioGroup, Radio 컴포넌트 props 점검
 // Map of component key -> entire JSON documentation object
 export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     avatar: avatarData,
@@ -36,7 +37,7 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     checkbox: checkboxData,
     'icon-button': iconButtonData,
     menu: menuData,
-    nav: navData,
+    'navigation-menu': navigationMenuData,
     text: textData,
     'text-input': textInputData,
     dialog: dialogData,

@@ -1,5 +1,3 @@
-import '@vapor-ui/core/styles.css';
-
 import type { ReactNode } from 'react';
 
 import { ThemeProvider, ThemeScript, createThemeConfig } from '@vapor-ui/core';

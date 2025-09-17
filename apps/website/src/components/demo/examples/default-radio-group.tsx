@@ -1,16 +1,20 @@
-import { RadioGroup } from '@vapor-ui/core';
+import { Radio, RadioGroup } from '@vapor-ui/core';
 
 export default function DefaultRadioGroup() {
     return (
         <RadioGroup.Root name="fruits">
-            <RadioGroup.Item value="apple">
-                <RadioGroup.Control />
-                <RadioGroup.Label>Apple</RadioGroup.Label>
-            </RadioGroup.Item>
-            <RadioGroup.Item value="orange">
-                <RadioGroup.Control />
-                <RadioGroup.Label>Orange</RadioGroup.Label>
-            </RadioGroup.Item>
+            <label className="flex items-center gap-2">
+                <Radio.Root value="apple" />
+                Apple
+            </label>
+            <label className="flex items-center gap-2">
+                <Radio.Root value="orange" />
+                Orange
+            </label>
+            <label className="flex items-center gap-2">
+                <Radio.Root value="banana" disabled />
+                Banana (Disabled)
+            </label>
         </RadioGroup.Root>
     );
 }
