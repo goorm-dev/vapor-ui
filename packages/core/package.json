@@ -55,7 +55,7 @@
         "clean": "rimraf dist node_modules .turbo",
         "test": "vitest",
         "test:coverage": "vitest --coverage",
-        "test:visual": "npx playwright test -c ./playwright.config.ts --workers=4",
+        "test:visual": "npx playwright test -c ./playwright.config.ts",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
