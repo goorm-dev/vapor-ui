@@ -1,4 +1,13 @@
-import { Button, Checkbox, HStack, Select, Text, TextInput, VStack } from '@vapor-ui/core';
+import {
+    Button,
+    Checkbox,
+    HStack,
+    IconButton,
+    Select,
+    Text,
+    TextInput,
+    VStack,
+} from '@vapor-ui/core';
 import { ChevronRightOutlineIcon } from '@vapor-ui/icons';
 
 const jobs = [
@@ -21,42 +30,42 @@ export default function LoginForm() {
             <VStack gap="$400">
                 <VStack gap="$200">
                     <VStack gap="$100">
-                        <label htmlFor="email" className="input-label">
+                        <label htmlFor="signup-email" className="input-label">
                             이메일
                         </label>
-                        <TextInput id="email" />
+                        <TextInput id="signup-email" />
                     </VStack>
                     <VStack gap="$100">
-                        <label htmlFor="password" className="input-label">
+                        <label htmlFor="signup-password" className="input-label">
                             비밀번호
                         </label>
                         <VStack gap="$050">
-                            <TextInput id="password" />
+                            <TextInput id="signup-password" />
                             <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
                         </VStack>
                     </VStack>
                     <VStack gap="$100">
-                        <label htmlFor="password-check" className="input-label">
+                        <label htmlFor="signup-password-check" className="input-label">
                             비밀번호 확인
                         </label>
                         <VStack gap="$050">
-                            <TextInput id="password-check" />
+                            <TextInput id="signup-password-check" />
                             <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
                         </VStack>
                     </VStack>
 
                     <VStack gap="$100">
-                        <label htmlFor="name" className="input-label">
+                        <label htmlFor="signup-name" className="input-label">
                             이름
                         </label>
-                        <TextInput id="name" />
+                        <TextInput id="signup-name" />
                     </VStack>
                     <VStack gap="$100">
-                        <label htmlFor="jobs" className="input-label">
+                        <label htmlFor="signup-jobs" className="input-label">
                             직업
                         </label>
                         <Select.Root items={jobs} placeholder="직업을 선택해주세요.">
-                            <Select.Trigger id="jobs">
+                            <Select.Trigger id="signup-jobs">
                                 <Select.Value />
                                 <Select.TriggerIcon />
                             </Select.Trigger>
@@ -74,34 +83,45 @@ export default function LoginForm() {
                 <VStack gap="$300">
                     <VStack justifyContent="space-between" gap="$050">
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="agree-all" />
+                            <Checkbox.Root id="signup-agree-all" />
                             <HStack
-                                render={<label htmlFor="agree-all" className="checkbox-label" />}
+                                render={
+                                    <label htmlFor="signup-agree-all" className="checkbox-label" />
+                                }
                                 justifyContent="space-between"
                             >
                                 필수 약관에 모두 동의
                             </HStack>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="terms-of-service" />
+                            <Checkbox.Root id="signup-terms-of-service" />
                             <HStack
                                 render={
-                                    <label htmlFor="terms-of-service" className="checkbox-label" />
+                                    <label
+                                        htmlFor="signup-terms-of-service"
+                                        className="checkbox-label"
+                                    />
                                 }
                                 width="100%"
                                 justifyContent="space-between"
                                 alignItems="center"
                             >
                                 이용 약관 동의
-                                <ChevronRightOutlineIcon />
+                                <IconButton
+                                    color="secondary"
+                                    variant="ghost"
+                                    aria-label="약관 보기"
+                                >
+                                    <ChevronRightOutlineIcon />
+                                </IconButton>
                             </HStack>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="personal-info-collection" />
+                            <Checkbox.Root id="signup-personal-info-collection" />
                             <HStack
                                 render={
                                     <label
-                                        htmlFor="personal-info-collection"
+                                        htmlFor="signup-personal-info-collection"
                                         className="checkbox-label"
                                     />
                                 }
@@ -110,7 +130,13 @@ export default function LoginForm() {
                                 alignItems="center"
                             >
                                 개인 정보 수집 이용 동의
-                                <ChevronRightOutlineIcon />
+                                <IconButton
+                                    color="secondary"
+                                    variant="ghost"
+                                    aria-label="개인 정보 수집 이용 보기"
+                                >
+                                    <ChevronRightOutlineIcon />
+                                </IconButton>
                             </HStack>
                         </HStack>
 

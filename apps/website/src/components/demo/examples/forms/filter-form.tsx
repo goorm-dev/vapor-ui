@@ -54,15 +54,15 @@ export default function FilterForm() {
                     <Collapsible.Panel>
                         <RadioGroup.Root>
                             <HStack gap="$100" alignItems="center">
-                                <Radio.Root id="recent" value="recent" />
-                                <label htmlFor="recent" className="radio-label">
+                                <Radio.Root id="filter-recent" value="recent" />
+                                <label htmlFor="filter-recent" className="radio-label">
                                     Recent
                                 </label>
                             </HStack>
 
                             <HStack gap="$100" alignItems="center">
-                                <Radio.Root id="popular" value="popular" />
-                                <label htmlFor="popular" className="radio-label">
+                                <Radio.Root id="filter-popular" value="popular" />
+                                <label htmlFor="filter-popular" className="radio-label">
                                     Most Popular
                                 </label>
                             </HStack>
@@ -84,89 +84,89 @@ export default function FilterForm() {
                     <Collapsible.Panel>
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root
-                                id="feedback"
+                                id="filter-feedback"
                                 checked={sort.feedback}
                                 onCheckedChange={(checked) =>
                                     setSort((prev) => ({ ...prev, feedback: checked }))
                                 }
                             />
-                            <label htmlFor="feedback" className="checkbox-label">
+                            <label htmlFor="filter-feedback" className="checkbox-label">
                                 Feedback
                             </label>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root
-                                id="buttons"
+                                id="filter-buttons"
                                 checked={sort.buttons}
                                 onCheckedChange={(checked) =>
                                     setSort((prev) => ({ ...prev, buttons: checked }))
                                 }
                             />
-                            <label htmlFor="buttons" className="checkbox-label">
+                            <label htmlFor="filter-buttons" className="checkbox-label">
                                 Buttons
                             </label>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root
-                                id="data-display"
+                                id="filter-data-display"
                                 checked={sort['data-display']}
                                 onCheckedChange={(checked) =>
                                     setSort((prev) => ({ ...prev, 'data-display': checked }))
                                 }
                             />
-                            <label htmlFor="data-display" className="checkbox-label">
+                            <label htmlFor="filter-data-display" className="checkbox-label">
                                 Data Display
                             </label>
                         </HStack>
 
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root
-                                id="overlay"
+                                id="filter-overlay"
                                 checked={sort.overlay}
                                 onCheckedChange={(checked) =>
                                     setSort((prev) => ({ ...prev, overlay: checked }))
                                 }
                             />
-                            <label htmlFor="overlay" className="checkbox-label">
+                            <label htmlFor="filter-overlay" className="checkbox-label">
                                 Overlay
                             </label>
                         </HStack>
 
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root
-                                id="inputs"
+                                id="filter-inputs"
                                 checked={sort.inputs}
                                 onCheckedChange={(checked) =>
                                     setSort((prev) => ({ ...prev, inputs: checked }))
                                 }
                             />
-                            <label htmlFor="inputs" className="checkbox-label">
+                            <label htmlFor="filter-inputs" className="checkbox-label">
                                 Inputs
                             </label>
                         </HStack>
 
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root
-                                id="auto-login"
+                                id="filter-auto-login"
                                 checked={sort.navigation}
                                 onCheckedChange={(checked) =>
                                     setSort((prev) => ({ ...prev, navigation: checked }))
                                 }
                             />
-                            <label htmlFor="auto-login" className="checkbox-label">
+                            <label htmlFor="filter-auto-login" className="checkbox-label">
                                 Navigation
                             </label>
                         </HStack>
 
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root
-                                id="utils"
+                                id="filter-utils"
                                 checked={sort.utils}
                                 onCheckedChange={(checked) =>
                                     setSort((prev) => ({ ...prev, utils: checked }))
                                 }
                             />
-                            <label htmlFor="utils" className="checkbox-label">
+                            <label htmlFor="filter-utils" className="checkbox-label">
                                 Utils
                             </label>
                         </HStack>
@@ -181,20 +181,23 @@ export default function FilterForm() {
 
                     <Collapsible.Panel>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="goorm-dev/vapor-core" />
-                            <label htmlFor="goorm-dev/vapor-core" className="checkbox-label">
+                            <Checkbox.Root id="filter-goorm-dev/vapor-core" />
+                            <label htmlFor="filter-goorm-dev/vapor-core" className="checkbox-label">
                                 goorm-dev/vapor-core
                             </label>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="goorm-dev/vapor-component" />
-                            <label htmlFor="goorm-dev/vapor-component" className="checkbox-label">
+                            <Checkbox.Root id="filter-goorm-dev/vapor-component" />
+                            <label
+                                htmlFor="filter-goorm-dev/vapor-component"
+                                className="checkbox-label"
+                            >
                                 goorm-dev/vapor-component
                             </label>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="vapor-ui/core" />
-                            <label htmlFor="vapor-ui/core" className="checkbox-label">
+                            <Checkbox.Root id="filter-vapor-ui/core" />
+                            <label htmlFor="filter-vapor-ui/core" className="checkbox-label">
                                 vapor-ui/core
                             </label>
                         </HStack>
@@ -209,20 +212,20 @@ export default function FilterForm() {
 
                     <Collapsible.Panel>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="active" />
-                            <label htmlFor="active" className="checkbox-label">
+                            <Checkbox.Root id="filter-active" />
+                            <label htmlFor="filter-active" className="checkbox-label">
                                 Active
                             </label>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="inactive" />
-                            <label htmlFor="inactive" className="checkbox-label">
+                            <Checkbox.Root id="filter-inactive" />
+                            <label htmlFor="filter-inactive" className="checkbox-label">
                                 Inactive
                             </label>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="draft" />
-                            <label htmlFor="draft" className="checkbox-label">
+                            <Checkbox.Root id="filter-draft" />
+                            <label htmlFor="filter-draft" className="checkbox-label">
                                 Draft
                             </label>
                         </HStack>
@@ -237,20 +240,20 @@ export default function FilterForm() {
 
                     <Collapsible.Panel>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="ui" />
-                            <label htmlFor="ui" className="checkbox-label">
+                            <Checkbox.Root id="filter-ui" />
+                            <label htmlFor="filter-ui" className="checkbox-label">
                                 UI
                             </label>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="open-source" />
-                            <label htmlFor="open-source" className="checkbox-label">
+                            <Checkbox.Root id="filter-open-source" />
+                            <label htmlFor="filter-open-source" className="checkbox-label">
                                 Open Source
                             </label>
                         </HStack>
                         <HStack alignItems="center" gap="$100">
-                            <Checkbox.Root id="performance" />
-                            <label htmlFor="performance" className="checkbox-label">
+                            <Checkbox.Root id="filter-performance" />
+                            <label htmlFor="filter-performance" className="checkbox-label">
                                 Performance
                             </label>
                         </HStack>

@@ -33,53 +33,65 @@ export default function SheetForm() {
                                         <VStack gap="$100">
                                             {/* Sort */}
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="feedback" size="lg" />
+                                                <Checkbox.Root id="sheet-feedback" size="lg" />
                                                 <label
-                                                    htmlFor="feedback"
+                                                    htmlFor="sheet-feedback"
                                                     className="checkbox-label"
                                                 >
                                                     Feedback
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="buttons" size="lg" />
-                                                <label htmlFor="buttons" className="checkbox-label">
+                                                <Checkbox.Root id="sheet-buttons" size="lg" />
+                                                <label
+                                                    htmlFor="sheet-buttons"
+                                                    className="checkbox-label"
+                                                >
                                                     Buttons
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="data-display" size="lg" />
+                                                <Checkbox.Root id="sheet-data-display" size="lg" />
                                                 <label
-                                                    htmlFor="data-display"
+                                                    htmlFor="sheet-data-display"
                                                     className="checkbox-label"
                                                 >
                                                     Data Display
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="overlay" size="lg" />
-                                                <label htmlFor="overlay" className="checkbox-label">
+                                                <Checkbox.Root id="sheet-overlay" size="lg" />
+                                                <label
+                                                    htmlFor="sheet-overlay"
+                                                    className="checkbox-label"
+                                                >
                                                     Overlay
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="inputs" size="lg" />
-                                                <label htmlFor="inputs" className="checkbox-label">
+                                                <Checkbox.Root id="sheet-inputs" size="lg" />
+                                                <label
+                                                    htmlFor="sheet-inputs"
+                                                    className="checkbox-label"
+                                                >
                                                     Inputs
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="navigation" size="lg" />
+                                                <Checkbox.Root id="sheet-navigation" size="lg" />
                                                 <label
-                                                    htmlFor="navigation"
+                                                    htmlFor="sheet-navigation"
                                                     className="checkbox-label"
                                                 >
                                                     Navigation
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="utils" size="lg" />
-                                                <label htmlFor="utils" className="checkbox-label">
+                                                <Checkbox.Root id="sheet-utils" size="lg" />
+                                                <label
+                                                    htmlFor="sheet-utils"
+                                                    className="checkbox-label"
+                                                >
                                                     Utils
                                                 </label>
                                             </HStack>
@@ -90,11 +102,11 @@ export default function SheetForm() {
                                         <VStack gap="$100">
                                             <HStack alignItems="center" gap="$100">
                                                 <Checkbox.Root
-                                                    id="goorm-dev/vapor-core"
+                                                    id="sheet-goorm-dev/vapor-core"
                                                     size="lg"
                                                 />
                                                 <label
-                                                    htmlFor="goorm-dev/vapor-core"
+                                                    htmlFor="sheet-goorm-dev/vapor-core"
                                                     className="checkbox-label"
                                                 >
                                                     goorm-dev/vapor-core
@@ -102,20 +114,20 @@ export default function SheetForm() {
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
                                                 <Checkbox.Root
-                                                    id="goorm-dev/vapor-component"
+                                                    id="sheet-goorm-dev/vapor-component"
                                                     size="lg"
                                                 />
                                                 <label
-                                                    htmlFor="goorm-dev/vapor-component"
+                                                    htmlFor="sheet-goorm-dev/vapor-component"
                                                     className="checkbox-label"
                                                 >
                                                     goorm-dev/vapor-component
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="vapor-ui/core" size="lg" />
+                                                <Checkbox.Root id="sheet-vapor-ui/core" size="lg" />
                                                 <label
-                                                    htmlFor="vapor-ui/core"
+                                                    htmlFor="sheet-vapor-ui/core"
                                                     className="checkbox-label"
                                                 >
                                                     vapor-ui/core
@@ -127,23 +139,29 @@ export default function SheetForm() {
                                     <Tabs.Panel value="status" className={'tabs-panel'}>
                                         <VStack gap="$100">
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="active" size="lg" />
-                                                <label htmlFor="active" className="checkbox-label">
+                                                <Checkbox.Root id="sheet-active" size="lg" />
+                                                <label
+                                                    htmlFor="sheet-active"
+                                                    className="checkbox-label"
+                                                >
                                                     Active
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="inactive" size="lg" />
+                                                <Checkbox.Root id="sheet-inactive" size="lg" />
                                                 <label
-                                                    htmlFor="inactive"
+                                                    htmlFor="sheet-inactive"
                                                     className="checkbox-label"
                                                 >
                                                     Inactive
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="draft" size="lg" />
-                                                <label htmlFor="draft" className="checkbox-label">
+                                                <Checkbox.Root id="sheet-draft" size="lg" />
+                                                <label
+                                                    htmlFor="sheet-draft"
+                                                    className="checkbox-label"
+                                                >
                                                     Draft
                                                 </label>
                                             </HStack>
@@ -153,24 +171,27 @@ export default function SheetForm() {
                                     <Tabs.Panel value="tag" className={'tabs-panel'}>
                                         <VStack gap="$100">
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="ui" size="lg" />
-                                                <label htmlFor="ui" className="checkbox-label">
+                                                <Checkbox.Root id="sheet-ui" size="lg" />
+                                                <label
+                                                    htmlFor="sheet-ui"
+                                                    className="checkbox-label"
+                                                >
                                                     UI
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="open-source" size="lg" />
+                                                <Checkbox.Root id="sheet-open-source" size="lg" />
                                                 <label
-                                                    htmlFor="open-source"
+                                                    htmlFor="sheet-open-source"
                                                     className="checkbox-label"
                                                 >
                                                     Open Source
                                                 </label>
                                             </HStack>
                                             <HStack alignItems="center" gap="$100">
-                                                <Checkbox.Root id="performance" size="lg" />
+                                                <Checkbox.Root id="sheet-performance" size="lg" />
                                                 <label
-                                                    htmlFor="performance"
+                                                    htmlFor="sheet-performance"
                                                     className="checkbox-label"
                                                 >
                                                     Performance

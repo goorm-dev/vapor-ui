@@ -34,7 +34,6 @@ export default function LoginForm() {
     };
 
     const regex = /^[0-9\s-()]{6,20}$/;
-    // const regex = /^\+[0-9](?:[- ]?[0-9]){,14}$/;
 
     return (
         <VStack
@@ -47,7 +46,7 @@ export default function LoginForm() {
         >
             <VStack gap="$200" render={<form onSubmit={(e) => e.preventDefault()} />}>
                 <VStack gap="$100">
-                    <label htmlFor="phone" className="input-label">
+                    <label htmlFor="auth-phone" className="input-label">
                         핸드폰 번호
                     </label>
                     {/* <Group attached> */}
@@ -58,10 +57,9 @@ export default function LoginForm() {
                                 <Select.TriggerIcon />
                             </Select.Trigger>
                             <TextInput
+                                id="auth-phone"
                                 value={phoneNumber}
                                 onChange={handleChange}
-                                onError={(e) => console.log(e)}
-                                // onChange={(e) => setPhoneNumber(e.target.value)}
                             />
                             <Button disabled={!regex.test(phoneNumber)}>인증번호 받기</Button>
                         </Group>
@@ -69,10 +67,10 @@ export default function LoginForm() {
                     {/* </Group> */}
                 </VStack>
                 <VStack gap="$100">
-                    <label htmlFor="verification-code" className="input-label">
+                    <label htmlFor="auth-verification-code" className="input-label">
                         인증번호
                     </label>
-                    <TextInput id="verification-code" />
+                    <TextInput id="auth-verification-code" />
                 </VStack>
             </VStack>
 

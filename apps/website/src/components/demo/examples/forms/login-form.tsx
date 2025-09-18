@@ -14,17 +14,17 @@ export default function LoginForm() {
         >
             <VStack gap="$200">
                 <VStack gap="$100">
-                    <label htmlFor="email" className="input-label">
+                    <label htmlFor="login-email" className="input-label">
                         이메일
                     </label>
-                    <TextInput id="email" />
+                    <TextInput id="login-email" />
                 </VStack>
                 <VStack gap="$100">
-                    <label htmlFor="password" className="input-label">
+                    <label htmlFor="login-password" className="input-label">
                         비밀번호
                     </label>
                     <VStack gap="$050">
-                        <TextInput id="password" />
+                        <TextInput id="login-password" />
                         <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
                     </VStack>
                 </VStack>
@@ -33,8 +33,8 @@ export default function LoginForm() {
             <VStack gap="$100">
                 <HStack justifyContent="space-between">
                     <HStack alignItems="center" gap="$100">
-                        <Checkbox.Root id="auto-login" />
-                        <label htmlFor="auto-login" className="checkbox-label">
+                        <Checkbox.Root id="login-auto-login" />
+                        <label htmlFor="login-auto-login" className="checkbox-label">
                             자동 로그인
                         </label>
                     </HStack>
