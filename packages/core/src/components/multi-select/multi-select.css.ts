@@ -19,6 +19,8 @@ export const trigger = recipe({
             border: `1px solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
 
+            width: '100%',
+
             backgroundColor: vars.color.background['normal-lighter'],
 
             selectors: {
