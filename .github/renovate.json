@@ -1,12 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-        "config:base",
-        "config:recommended",
-        "group:monorepos",
-        ":dependencyDashboard",
-        ":dependencyDashboardApproval"
-    ],
+    "extends": ["config:base", "config:recommended", "group:monorepos", ":dependencyDashboard"],
     "baseBranchPatterns": ["main"],
     "rebaseWhen": "conflicted",
     "labels": ["type: dependencies"],
