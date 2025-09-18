@@ -15,6 +15,7 @@ async function navigate(page, storybookUrl, id) {
         const url = getStoryUrl(storybookUrl, id);
 
         await page.goto(url);
+        await page.waitForFunction(() => document.fonts.ready);
         await page.waitForLoadState('networkidle');
         await page.waitForSelector('#storybook-root');
     } catch (error) {
