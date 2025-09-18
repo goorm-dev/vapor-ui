@@ -4,27 +4,16 @@ import './index.css';
 
 import { Button, Select, TextInput, VStack } from '@vapor-ui/core';
 
-interface GroupProps {
-    attached?: boolean;
-    children: React.ReactNode;
-}
-
-const Group = ({ attached = false, children: childrenProp }: GroupProps) => {
-    const children = Children.map(childrenProp, (child, index) => {
-        if (!isValidElement(child)) return;
-
-        return cloneElement(child as React.ReactElement, {
-            style: { '--group-index': index },
-            ...(index === 0 ? { 'data-first-item': '' } : {}),
-            ...(index === Children.count(childrenProp) - 1 ? { 'data-last-item': '' } : {}),
-        });
-    });
-
-    return (
-        <div data-part="group" className={`group` + (attached ? ' attached' : '')}>
-            {children}
-        </div>
-    );
+const codes = {
+    '+82': '🇰🇷 +82',
+    '+1': '🇺🇸 +1',
+    '+34': '🇪🇸 +34',
+    '+33': '🇫🇷 +33',
+    '+39': '🇮🇹 +39',
+    '+44': '🇬🇧 +44',
+    '+81': '🇯🇵 +81',
+    '+86': '🇨🇳 +86',
+    '+7': '🇷🇺 +7',
 };
 
 export default function AuthenticationForm() {
@@ -56,32 +45,15 @@ export default function AuthenticationForm() {
                                 <Select.TriggerIcon />
                             </Select.Trigger>
                             <Select.Content>
-                                <Select.Item value="+82">
-                                    +82 <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="+1">
-                                    +1 <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="+34">
-                                    +34 <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="+32">
-                                    +32 <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="+39">
-                                    +39 <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="+44">
-                                    +44 <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="+81">
-                                    +81 <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="+86">
-                                    +86 <Select.ItemIndicator />
-                                </Select.Item>
+                                {Object.entries(codes).map(([value, label]) => (
+                                    <Select.Item key={value} value={value}>
+                                        {label}
+                                        <Select.ItemIndicator />
+                                    </Select.Item>
+                                ))}
                             </Select.Content>
                             <TextInput
+                                style={{ flex: 1, width: '100%' }}
                                 id="auth-phone"
                                 value={phoneNumber}
                                 onChange={handleChange}
@@ -102,3 +74,26 @@ export default function AuthenticationForm() {
         </VStack>
     );
 }
+
+interface GroupProps {
+    attached?: boolean;
+    children?: React.ReactNode;
+}
+
+const Group = ({ attached = false, children: childrenProp }: GroupProps) => {
+    const children = Children.map(childrenProp, (child, index) => {
+        if (!isValidElement(child)) return;
+
+        return cloneElement(child as React.ReactElement, {
+            style: { '--group-index': index, ...child.props.style },
+            ...(index === 0 ? { 'data-first-item': '' } : {}),
+            ...(index === Children.count(childrenProp) - 1 ? { 'data-last-item': '' } : {}),
+        });
+    });
+
+    return (
+        <div data-part="group" className={`group` + (attached ? ' attached' : '')}>
+            {children}
+        </div>
+    );
+};
