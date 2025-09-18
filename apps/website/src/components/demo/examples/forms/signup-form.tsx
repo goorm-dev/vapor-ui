@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Checkbox,
     HStack,
@@ -17,7 +18,7 @@ const jobs = [
     { label: '기타', value: 'etc' },
 ];
 
-export default function LoginForm() {
+export default function SignupForm() {
     return (
         <VStack
             gap="$250"
@@ -140,9 +141,9 @@ export default function LoginForm() {
                             </HStack>
                         </HStack>
 
-                        <Button size="lg" style={{ marginTop: 'var(--vapor-size-space-300)' }}>
+                        <Box marginTop="$300" render={<Button size="lg" />}>
                             회원가입
-                        </Button>
+                        </Box>
                     </VStack>
                 </VStack>
             </VStack>

@@ -24,6 +24,10 @@ export default function FilterForm() {
         utils: false,
     });
 
+    const handleSortChange = (key: keyof typeof sort) => (checked: boolean) => {
+        setSort((prev) => ({ ...prev, [key]: checked }));
+    };
+
     return (
         <VStack width="17.625rem" className="filter">
             <HStack justifyContent="space-between">
@@ -86,9 +90,7 @@ export default function FilterForm() {
                             <Checkbox.Root
                                 id="filter-feedback"
                                 checked={sort.feedback}
-                                onCheckedChange={(checked) =>
-                                    setSort((prev) => ({ ...prev, feedback: checked }))
-                                }
+                                onCheckedChange={handleSortChange('feedback')}
                             />
                             <label htmlFor="filter-feedback" className="checkbox-label">
                                 Feedback
@@ -98,9 +100,7 @@ export default function FilterForm() {
                             <Checkbox.Root
                                 id="filter-buttons"
                                 checked={sort.buttons}
-                                onCheckedChange={(checked) =>
-                                    setSort((prev) => ({ ...prev, buttons: checked }))
-                                }
+                                onCheckedChange={handleSortChange('buttons')}
                             />
                             <label htmlFor="filter-buttons" className="checkbox-label">
                                 Buttons
@@ -110,9 +110,7 @@ export default function FilterForm() {
                             <Checkbox.Root
                                 id="filter-data-display"
                                 checked={sort['data-display']}
-                                onCheckedChange={(checked) =>
-                                    setSort((prev) => ({ ...prev, 'data-display': checked }))
-                                }
+                                onCheckedChange={handleSortChange('data-display')}
                             />
                             <label htmlFor="filter-data-display" className="checkbox-label">
                                 Data Display
@@ -123,9 +121,7 @@ export default function FilterForm() {
                             <Checkbox.Root
                                 id="filter-overlay"
                                 checked={sort.overlay}
-                                onCheckedChange={(checked) =>
-                                    setSort((prev) => ({ ...prev, overlay: checked }))
-                                }
+                                onCheckedChange={handleSortChange('overlay')}
                             />
                             <label htmlFor="filter-overlay" className="checkbox-label">
                                 Overlay
@@ -136,9 +132,7 @@ export default function FilterForm() {
                             <Checkbox.Root
                                 id="filter-inputs"
                                 checked={sort.inputs}
-                                onCheckedChange={(checked) =>
-                                    setSort((prev) => ({ ...prev, inputs: checked }))
-                                }
+                                onCheckedChange={handleSortChange('inputs')}
                             />
                             <label htmlFor="filter-inputs" className="checkbox-label">
                                 Inputs
@@ -147,13 +141,11 @@ export default function FilterForm() {
 
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root
-                                id="filter-auto-login"
+                                id="filter-navigation"
                                 checked={sort.navigation}
-                                onCheckedChange={(checked) =>
-                                    setSort((prev) => ({ ...prev, navigation: checked }))
-                                }
+                                onCheckedChange={handleSortChange('navigation')}
                             />
-                            <label htmlFor="filter-auto-login" className="checkbox-label">
+                            <label htmlFor="filter-navigation" className="checkbox-label">
                                 Navigation
                             </label>
                         </HStack>
@@ -162,9 +154,7 @@ export default function FilterForm() {
                             <Checkbox.Root
                                 id="filter-utils"
                                 checked={sort.utils}
-                                onCheckedChange={(checked) =>
-                                    setSort((prev) => ({ ...prev, utils: checked }))
-                                }
+                                onCheckedChange={handleSortChange('utils')}
                             />
                             <label htmlFor="filter-utils" className="checkbox-label">
                                 Utils

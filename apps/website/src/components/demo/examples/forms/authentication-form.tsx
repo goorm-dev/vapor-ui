@@ -27,7 +27,7 @@ const Group = ({ attached = false, children: childrenProp }: GroupProps) => {
     );
 };
 
-export default function LoginForm() {
+export default function AuthenticationForm() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPhoneNumber(e.target.value);
@@ -49,13 +49,38 @@ export default function LoginForm() {
                     <label htmlFor="auth-phone" className="input-label">
                         핸드폰 번호
                     </label>
-                    {/* <Group attached> */}
                     <Select.Root defaultValue="+82">
                         <Group attached>
                             <Select.Trigger>
                                 <Select.Value />
                                 <Select.TriggerIcon />
                             </Select.Trigger>
+                            <Select.Content>
+                                <Select.Item value="+82">
+                                    +82 <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="+1">
+                                    +1 <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="+34">
+                                    +34 <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="+32">
+                                    +32 <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="+39">
+                                    +39 <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="+44">
+                                    +44 <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="+81">
+                                    +81 <Select.ItemIndicator />
+                                </Select.Item>
+                                <Select.Item value="+86">
+                                    +86 <Select.ItemIndicator />
+                                </Select.Item>
+                            </Select.Content>
                             <TextInput
                                 id="auth-phone"
                                 value={phoneNumber}
@@ -64,7 +89,6 @@ export default function LoginForm() {
                             <Button disabled={!regex.test(phoneNumber)}>인증번호 받기</Button>
                         </Group>
                     </Select.Root>
-                    {/* </Group> */}
                 </VStack>
                 <VStack gap="$100">
                     <label htmlFor="auth-verification-code" className="input-label">
