@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 
+import type { Field } from '@base-ui-components/react';
+
 import { useInputGroupContext } from '~/components/input-group';
 
 interface UseInputGroupSyncOptions {
-    value?: string;
-    defaultValue?: string;
-    maxLength?: number;
+    value?: Field.Control.Props['value'];
+    defaultValue?: Field.Control.Props['defaultValue'];
+    maxLength?: Field.Control.Props['maxLength'];
 }
 
 /**
@@ -31,7 +33,7 @@ export function useInputGroup({ value, defaultValue, maxLength }: UseInputGroupS
     }, [groupContext, value, defaultValue]);
 
     // Return a function to update InputGroup on change
-    const syncOnChange = (newValue: string) => {
+    const syncOnChange = (newValue: Field.Control.Props['value']) => {
         if (groupContext?.updateValue) {
             groupContext.updateValue(newValue);
         }

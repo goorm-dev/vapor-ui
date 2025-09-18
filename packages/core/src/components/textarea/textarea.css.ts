@@ -10,7 +10,7 @@ import { vars } from '~/styles/vars.css';
 export const textareaMinHeightVar = createGlobalVar('vapor-textarea-min-height');
 export const textareaMaxHeightVar = createGlobalVar('vapor-textarea-max-height');
 
-export const input = recipe({
+export const textarea = recipe({
     base: [
         interaction({ type: 'form' }),
 
@@ -36,7 +36,7 @@ export const input = recipe({
         }),
     ],
 
-    defaultVariants: { invalid: false, size: 'md', resizing: false, autoResize: false },
+    defaultVariants: { invalid: false, size: 'md', resize: false, autoResize: false },
 
     variants: {
         invalid: {
@@ -45,7 +45,7 @@ export const input = recipe({
             },
         },
 
-        resizing: {
+        resize: {
             true: { resize: 'both' },
             false: { resize: 'none' },
         },
@@ -101,4 +101,4 @@ export const input = recipe({
     },
 });
 
-export type InputVariants = NonNullable<RecipeVariants<typeof input>>;
+export type TextareaVariants = NonNullable<RecipeVariants<typeof textarea>>;

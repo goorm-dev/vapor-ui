@@ -67,7 +67,7 @@
             "description": "텍스트 영역의 크기를 설정합니다."
         },
         {
-            "prop": "resizing",
+            "prop": "resize",
             "type": ["boolean"],
             "default": "false",
             "description": "사용자가 텍스트 영역의 크기를 수동으로 조절할 수 있는지 설정합니다."

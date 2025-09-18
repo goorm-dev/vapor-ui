@@ -26,7 +26,7 @@ const meta: Meta<typeof Textarea> = {
         readOnly: {
             control: { type: 'boolean' },
         },
-        resizing: {
+        resize: {
             control: { type: 'boolean' },
         },
         autoResize: {

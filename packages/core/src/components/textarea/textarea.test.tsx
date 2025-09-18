@@ -94,12 +94,12 @@ describe('Textarea', () => {
         expect(screen.getByTestId('textarea')).toBeInTheDocument();
     });
 
-    test('supports resizing control', () => {
-        const { rerender } = render(<Textarea resizing={true} data-testid="textarea" />);
+    test('supports resize control', () => {
+        const { rerender } = render(<Textarea resize={true} data-testid="textarea" />);
 
         expect(screen.getByTestId('textarea')).toBeInTheDocument();
 
-        rerender(<Textarea resizing={false} data-testid="textarea" />);
+        rerender(<Textarea resize={false} data-testid="textarea" />);
 
         expect(screen.getByTestId('textarea')).toBeInTheDocument();
     });

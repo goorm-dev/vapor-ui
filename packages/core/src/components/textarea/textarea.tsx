@@ -1,67 +1,74 @@
 'use client';
 
-import type { ChangeEvent } from 'react';
+import type { ComponentProps } from 'react';
 import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
+import { useControlled } from '@base-ui-components/utils/useControlled';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
+import { useInputGroup } from '~/hooks/use-input-group';
 import type { Assign, VComponentProps } from '~/utils/types';
 
-import type { InputVariants } from './textarea.css';
+import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
 
-type TextareaProps = InputVariants & {
-    value?: string;
-    defaultValue?: string;
-    onValueChange?: (value: string) => void;
-    readOnly?: boolean;
-    placeholder?: string;
-    rows?: number;
-    cols?: number;
-    resizing?: boolean;
-    autoResize?: boolean;
-    maxLength?: number;
-    minHeight?: string | number;
-    maxHeight?: string | number;
-    'aria-label'?: string;
-    'aria-labelledby'?: string;
-    'aria-describedby'?: string;
-    required?: boolean;
-};
+type BaseProps = TextareaVariants &
+    ComponentProps<'textarea'> & {
+        onValueChange?: (value: string) => void;
+        minHeight?: number | string;
+        maxHeight?: number | string;
+        resize?: boolean;
+        autoResize?: boolean;
+    };
 
-type PrimitiveTextareaProps = VComponentProps<'textarea'>;
-interface TextareaComponentProps extends Assign<PrimitiveTextareaProps, TextareaProps> {}
+/* -------------------------------------------------------------------------------------------------
+ * Textarea
+ * -----------------------------------------------------------------------------------------------*/
 
-const Textarea = forwardRef<HTMLTextAreaElement, TextareaComponentProps>(
+type TextareaPrimitiveProps = VComponentProps<typeof BaseField.Control>;
+interface TextareaProps extends Assign<TextareaPrimitiveProps, BaseProps> {}
+
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     (
         {
-            render,
-            className,
-            value,
             onValueChange,
+            value: valueProp,
             defaultValue,
-            disabled,
-            invalid,
-            readOnly,
-            size,
-            placeholder,
-            rows,
-            cols,
-            resizing,
-            autoResize,
-            maxLength,
+            className,
             minHeight = 116,
             maxHeight = 400,
-            'aria-label': ariaLabel,
-            'aria-labelledby': ariaLabelledby,
-            'aria-describedby': ariaDescribedby,
-            required,
+            invalid,
+            size,
+            resize,
+            autoResize,
+            maxLength,
+            render,
+            disabled,
+            readOnly,
+            style,
             ...props
         },
         ref,
     ) => {
+        const isControlled = valueProp !== undefined;
+
+        // Use useControlled for unified value state management
+        const [value, setValue] = useControlled({
+            controlled: valueProp,
+            default: defaultValue,
+            name: 'TextArea',
+            state: 'value',
+        });
+
+        // Handle InputGroup synchronization via custom hook
+        const { syncOnChange, isInGroup } = useInputGroup({
+            value,
+            defaultValue,
+            maxLength,
+        });
+
         const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
         const autoResizeTextarea = useMemo(() => {
@@ -118,35 +125,34 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaComponentProps>(
                 typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight,
         });
 
+        const handleValueChange = (newValue: string) => {
+            onValueChange?.(newValue);
+            setValue(newValue);
+            if (isInGroup) syncOnChange(newValue);
+        };
+
+        const finalValue = value ?? '';
         return useRender({
             ref: handleRef,
             render: render || <BaseField.Control render={<textarea />} />,
             props: {
-                value,
-                onChange(event: ChangeEvent<HTMLTextAreaElement>) {
-                    if (event.defaultPrevented) return;
+                onValueChange(newValue: string) {
                     if (disabled || readOnly) return;
 
-                    onValueChange?.(event.target.value);
+                    handleValueChange(newValue);
 
                     if (autoResize) {
                         autoResizeTextarea();
                     }
                 },
-                defaultValue,
+                ...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' }),
                 disabled,
-                'aria-invalid': invalid || undefined,
-                'aria-required': required || undefined,
-                'aria-label': ariaLabel,
-                'aria-labelledby': ariaLabelledby,
-                'aria-describedby': ariaDescribedby,
                 readOnly,
-                placeholder,
-                rows,
-                cols,
                 maxLength,
-                className: clsx(styles.input({ invalid, size, resizing, autoResize }), className),
-                style: { ...styleVars, ...props.style },
+                'aria-invalid': invalid || undefined,
+                'aria-required': props.required || undefined,
+                className: clsx(styles.textarea({ invalid, size, resize, autoResize }), className),
+                style: { ...styleVars, ...style },
                 ...props,
             },
         });
@@ -155,4 +161,4 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaComponentProps>(
 Textarea.displayName = 'Textarea';
 
 export { Textarea };
-export type { TextareaComponentProps as TextareaProps };
+export type { TextareaProps };

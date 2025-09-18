@@ -2,6 +2,7 @@
 
 import { forwardRef, useCallback, useState } from 'react';
 
+import type { Field } from '@base-ui-components/react';
 import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
@@ -15,10 +16,10 @@ import * as styles from './input-group.css';
  * -----------------------------------------------------------------------------------------------*/
 
 interface InputGroupSharedProps {
-    value?: string;
-    maxLength?: number;
-    updateValue?: (value: string) => void;
-    setMaxLength?: (maxLength: number) => void;
+    value?: Field.Control.Props['value'];
+    maxLength?: Field.Control.Props['maxLength'];
+    updateValue?: (value: Field.Control.Props['value']) => void;
+    setMaxLength?: (maxLength: Field.Control.Props['maxLength']) => void;
 }
 
 const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupSharedProps>({
@@ -36,14 +37,14 @@ interface InputGroupRootProps extends VComponentProps<'div'> {}
 
 const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
     ({ className, render, ...props }, ref) => {
-        const [value, setValue] = useState('');
-        const [maxLength, setMaxLength] = useState<number | undefined>();
+        const [value, setValue] = useState<Field.Control.Props['value']>('');
+        const [maxLength, setMaxLength] = useState<Field.Control.Props['maxLength'] | undefined>();
 
-        const updateValue = useCallback((value: string) => {
+        const updateValue = useCallback((value: Field.Control.Props['value']) => {
             setValue(value);
         }, []);
 
-        const updateMaxLength = useCallback((length: number) => {
+        const updateMaxLength = useCallback((length: Field.Control.Props['maxLength']) => {
             setMaxLength(length);
         }, []);
 
@@ -72,7 +73,7 @@ Root.displayName = 'InputGroup.Root';
  * InputGroup Count
  * -----------------------------------------------------------------------------------------------*/
 
-type ChildrenProps = { count: number; maxLength?: number; value: string };
+type ChildrenProps = { count: number; maxLength?: number; value: Field.Control.Props['value'] };
 
 interface InputGroupCounterProps extends Omit<VComponentProps<'span'>, 'children'> {
     children?: React.ReactNode | ((props: ChildrenProps) => React.ReactNode);
@@ -81,7 +82,7 @@ interface InputGroupCounterProps extends Omit<VComponentProps<'span'>, 'children
 const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>(
     ({ className, children, render, ...props }, ref) => {
         const { value = '', maxLength } = useInputGroupContext();
-        const currentLength = value.length;
+        const currentLength = value.toString().length;
 
         const content = children
             ? typeof children === 'function'
@@ -112,5 +113,5 @@ export const InputGroup = {
     Counter,
 };
 
-export { Root as InputGroupRoot, Counter as InputGroupCounter, useInputGroupContext };
+export { Counter as InputGroupCounter, Root as InputGroupRoot, useInputGroupContext };
 export type { InputGroupCounterProps, InputGroupRootProps };
