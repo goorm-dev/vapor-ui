@@ -122,7 +122,6 @@ describe('InputGroup', () => {
             expect(counter).toHaveTextContent('7/10');
         });
 
-
         it('should handle multiple InputGroups independently', async () => {
             render(
                 <div>
@@ -170,7 +169,6 @@ describe('InputGroup', () => {
             expect(counter).toHaveTextContent('7/15');
         });
 
-
         it('should count space characters correctly', async () => {
             render(
                 <InputGroup.Root>
@@ -195,7 +193,6 @@ describe('InputGroup', () => {
             await userEvent.type(input, '  hello world');
             expect(counter).toHaveTextContent('13/20');
         });
-
 
         it('should support static ReactNode children', async () => {
             render(
