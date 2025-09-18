@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 
+import type { Field } from '@base-ui-components/react';
+
 import { useInputGroupContext } from '~/components/input-group';
 
 interface UseInputGroupSyncOptions {
-    value?: string;
-    defaultValue?: string;
-    maxLength?: number;
+    value?: Field.Control.Props['value'];
+    defaultValue?: Field.Control.Props['defaultValue'];
+    maxLength?: Field.Control.Props['maxLength'];
 }
 
 /**
@@ -24,21 +26,21 @@ export function useInputGroup({ value, defaultValue, maxLength }: UseInputGroupS
 
     // Update context when value changes (including initial value)
     useEffect(() => {
-        if (groupContext?.updateValue) {
+        if (groupContext?.setValue) {
             const currentValue = value ?? defaultValue ?? '';
-            groupContext.updateValue(currentValue);
+            groupContext.setValue(currentValue);
         }
     }, [groupContext, value, defaultValue]);
 
     // Return a function to update InputGroup on change
-    const syncOnChange = (newValue: string) => {
-        if (groupContext?.updateValue) {
-            groupContext.updateValue(newValue);
+    const setInputGroupValue = (newValue: Field.Control.Props['value']) => {
+        if (groupContext?.setValue) {
+            groupContext.setValue(newValue);
         }
     };
 
     return {
-        syncOnChange,
+        setInputGroupValue,
         isInGroup: !!groupContext,
     };
 }

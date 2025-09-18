@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { TextInput } from '../text-input';
+import { Textarea } from '../textarea';
 import { InputGroup } from './input-group';
 
 const meta: Meta<typeof InputGroup.Root> = {
@@ -22,6 +23,10 @@ export const TestBed: Story = {
         <div className="space-y-4">
             <InputGroup.Root>
                 <TextInput placeholder="Enter text..." maxLength={100} />
+                <InputGroup.Counter />
+            </InputGroup.Root>
+            <InputGroup.Root>
+                <Textarea placeholder="Enter text..." maxLength={1000} autoResize />
                 <InputGroup.Counter />
             </InputGroup.Root>
         </div>

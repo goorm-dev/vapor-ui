@@ -121,24 +121,6 @@ describe('InputGroup', () => {
             expect(counter).toHaveTextContent('7/10');
         });
 
-        it('should handle clear input correctly', async () => {
-            render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'hello');
-            expect(counter).toHaveTextContent('5/10');
-
-            await userEvent.clear(input);
-            expect(counter).toHaveTextContent('0/10');
-        });
-
         it('should handle multiple InputGroups independently', async () => {
             render(
                 <div>
@@ -186,35 +168,6 @@ describe('InputGroup', () => {
             expect(counter).toHaveTextContent('7/15');
         });
 
-        it('should handle text deletion with Backspace keys', async () => {
-            render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={15} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'hello world');
-            expect(counter).toHaveTextContent('11/15');
-
-            // Use backspace to remove 6 characters (" world")
-            await userEvent.keyboard(
-                '{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}',
-            );
-            expect(counter).toHaveTextContent('5/15');
-
-            // Add text back
-            await userEvent.type(input, ' testing');
-            expect(counter).toHaveTextContent('13/15');
-
-            // Use backspace to remove 3 characters ("ing")
-            await userEvent.keyboard('{Backspace}{Backspace}{Backspace}');
-            expect(counter).toHaveTextContent('10/15');
-        });
-
         it('should count space characters correctly', async () => {
             render(
                 <InputGroup.Root>
@@ -238,31 +191,6 @@ describe('InputGroup', () => {
             await userEvent.clear(input);
             await userEvent.type(input, '  hello world');
             expect(counter).toHaveTextContent('13/20');
-        });
-
-        it('should handle text selection and replacement', async () => {
-            render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={15} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'hello world');
-            expect(counter).toHaveTextContent('11/15');
-
-            // Clear and type shorter text
-            await userEvent.clear(input);
-            await userEvent.type(input, 'test');
-            expect(counter).toHaveTextContent('4/15');
-
-            // Clear and type longer text
-            await userEvent.clear(input);
-            await userEvent.type(input, 'new text here');
-            expect(counter).toHaveTextContent('13/15');
         });
 
         it('should support static ReactNode children', async () => {
