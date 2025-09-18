@@ -1,222 +1,360 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import { createContext, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-
-import { createThemeConfig, type ThemeConfig, type ResolvedThemeConfig } from '../create-theme-config';
-import { generateThemeScript, THEME_CLASSES } from '../theme-inject/theme-injector';
 
 /* -------------------------------------------------------------------------------------------------
  * Types
  * -----------------------------------------------------------------------------------------------*/
 
-type Appearance = 'light' | 'dark';
-
-interface ThemeState {
-    appearance: Appearance;
+interface ThemeConfig {
+    defaultTheme?: 'light' | 'dark' | 'system';
+    storageKey?: string;
+    enableSystem?: boolean;
+    forcedTheme?: string;
+    disableTransitionOnChange?: boolean;
+    enableColorScheme?: boolean;
+    nonce?: string;
 }
 
-interface ThemeContextValue extends ThemeState {
-    setAppearance: (appearance: 'light' | 'dark' | 'system') => void;
-    toggleAppearance: () => void;
+interface UseThemeProps {
+    theme?: string;
+    setTheme: (theme: string | ((prev: string) => string)) => void;
+    forcedTheme?: string;
+    resolvedTheme?: string;
+    themes: string[];
+    systemTheme?: 'light' | 'dark';
+}
+
+interface ThemeProviderProps extends ThemeConfig {
+    children: React.ReactNode;
 }
 
 /* -------------------------------------------------------------------------------------------------
- * ThemeProvider (Simplified - Appearance Only)
+ * Constants
  * -----------------------------------------------------------------------------------------------*/
 
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+const MEDIA_QUERY = '(prefers-color-scheme: dark)';
+const COLOR_SCHEMES = ['light', 'dark'];
+const DEFAULT_THEMES = ['light', 'dark'];
 
-interface ThemeProviderProps {
-    children: ReactNode;
-    config?: ThemeConfig;
-}
+/* -------------------------------------------------------------------------------------------------
+ * Utilities
+ * -----------------------------------------------------------------------------------------------*/
 
-const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
-    const resolvedConfig = useMemo<ResolvedThemeConfig>(() => {
-        return createThemeConfig(config);
-    }, [config]);
+const isServer = typeof window === 'undefined';
 
-    // Internal state - only appearance
-    const [appearance, setAppearanceState] = useState<Appearance>(() => {
-        if (typeof window === 'undefined') {
-            return 'light';
-        }
+const getTheme = (storageKey: string, defaultTheme?: string): string | undefined => {
+    if (isServer) return undefined;
+    try {
+        return localStorage.getItem(storageKey) || defaultTheme;
+    } catch {
+        return defaultTheme;
+    }
+};
 
-        // Check system preference if default is 'system'
-        if (resolvedConfig.appearance === 'system') {
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
+const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent): 'light' | 'dark' => {
+    if (isServer) return 'light';
+    if (!e) e = window.matchMedia(MEDIA_QUERY);
+    return e.matches ? 'dark' : 'light';
+};
 
-        // Load from localStorage
-        try {
-            const storedItem = localStorage.getItem(resolvedConfig.storageKey);
-            if (storedItem) {
-                const storedSettings = JSON.parse(storedItem);
-                if (storedSettings.appearance) {
-                    if (storedSettings.appearance === 'system') {
-                        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                    }
-                    return storedSettings.appearance === 'dark' ? 'dark' : 'light';
-                }
-            }
-        } catch (e) {
-            console.error('[@vapor-ui/core] Failed to read theme from localStorage.', e);
-        }
+const saveToStorage = (storageKey: string, value: string): void => {
+    try {
+        localStorage.setItem(storageKey, value);
+    } catch {
+        // Storage not available
+    }
+};
 
-        return resolvedConfig.appearance === 'dark' ? 'dark' : 'light';
+const disableAnimation = (nonce?: string) => {
+    const css = document.createElement('style');
+    if (nonce) css.setAttribute('nonce', nonce);
+    css.appendChild(
+        document.createTextNode(
+            '*,*::before,*::after{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}',
+        ),
+    );
+    document.head.appendChild(css);
+
+    return () => {
+        (() => window.getComputedStyle(document.body))();
+        setTimeout(() => {
+            document.head.removeChild(css);
+        }, 1);
+    };
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * FOUC Prevention Script
+ * -----------------------------------------------------------------------------------------------*/
+
+const generateThemeScript = (
+    config: Required<Pick<ThemeConfig, 'storageKey' | 'defaultTheme' | 'enableSystem'>>,
+): string => {
+    return `(function(){
+    const STORAGE_KEY='${config.storageKey}';
+    const DEFAULT_THEME='${config.defaultTheme}';
+    const ENABLE_SYSTEM=${config.enableSystem};
+    
+    function getSystemTheme(){
+      return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+    }
+    
+    function applyTheme(theme){
+      const resolved=(theme==='system'&&ENABLE_SYSTEM)?getSystemTheme():theme;
+      const d=document.documentElement;
+      
+      d.classList.remove('vapor-light-theme','vapor-dark-theme','light','dark');
+      if(resolved==='light')d.classList.add('vapor-light-theme');
+      if(resolved==='dark')d.classList.add('vapor-dark-theme');
+    }
+    
+    try{
+      const stored=localStorage.getItem(STORAGE_KEY);
+      applyTheme(stored||DEFAULT_THEME);
+    }catch(e){
+      applyTheme(DEFAULT_THEME);
+    }
+  })();`;
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Context
+ * -----------------------------------------------------------------------------------------------*/
+
+const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
+
+const defaultContext: UseThemeProps = {
+    setTheme: () => {},
+    themes: [],
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * ThemeProvider
+ * -----------------------------------------------------------------------------------------------*/
+
+const ThemeProvider = ({
+    children,
+    defaultTheme = 'system',
+    storageKey = 'vapor-ui-theme',
+    enableSystem = true,
+    forcedTheme,
+    disableTransitionOnChange = false,
+    enableColorScheme = true,
+    nonce,
+}: ThemeProviderProps) => {
+    const context = useContext(ThemeContext);
+
+    if (context) return <>{children}</>;
+
+    return (
+        <Theme
+            defaultTheme={defaultTheme}
+            storageKey={storageKey}
+            enableSystem={enableSystem}
+            forcedTheme={forcedTheme}
+            disableTransitionOnChange={disableTransitionOnChange}
+            enableColorScheme={enableColorScheme}
+            nonce={nonce}
+        >
+            {children}
+        </Theme>
+    );
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Theme (Internal)
+ * -----------------------------------------------------------------------------------------------*/
+
+const Theme = ({
+    children,
+    defaultTheme = 'system',
+    storageKey = 'vapor-ui-theme',
+    enableSystem = true,
+    forcedTheme,
+    disableTransitionOnChange = false,
+    enableColorScheme = true,
+    nonce,
+}: ThemeProviderProps) => {
+    const [theme, setThemeState] = useState(() => {
+        if (isServer) return defaultTheme;
+        return getTheme(storageKey, defaultTheme) || defaultTheme;
     });
 
-    // User preference state (can be 'system')
-    const [userPreference, setUserPreference] = useState<'light' | 'dark' | 'system'>(() => {
-        if (typeof window === 'undefined') {
-            return resolvedConfig.appearance;
-        }
-
-        try {
-            const storedItem = localStorage.getItem(resolvedConfig.storageKey);
-            if (storedItem) {
-                const storedSettings = JSON.parse(storedItem);
-                return storedSettings.appearance || resolvedConfig.appearance;
-            }
-        } catch (_e) {
-            // Ignore errors
-        }
-
-        return resolvedConfig.appearance;
+    const [resolvedTheme, setResolvedTheme] = useState(() => {
+        if (isServer) return defaultTheme === 'system' ? 'light' : defaultTheme;
+        return theme === 'system' ? getSystemTheme() : theme;
     });
 
-    const setAppearance = useCallback(
-        (newAppearance: 'light' | 'dark' | 'system') => {
-            setUserPreference(newAppearance);
+    const applyTheme = useCallback(
+        (newTheme: string) => {
+            if (!newTheme || isServer) return;
 
-            // Resolve actual appearance
-            let resolvedAppearance: Appearance;
-            if (newAppearance === 'system') {
-                resolvedAppearance = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            } else {
-                resolvedAppearance = newAppearance;
+            let resolved = newTheme;
+            if (newTheme === 'system' && enableSystem) {
+                resolved = getSystemTheme();
             }
 
-            setAppearanceState(resolvedAppearance);
+            const enableTransition = disableTransitionOnChange ? disableAnimation(nonce) : null;
+            const d = document.documentElement;
 
-            // Save to localStorage
-            try {
-                localStorage.setItem(
-                    resolvedConfig.storageKey,
-                    JSON.stringify({ appearance: newAppearance })
-                );
-            } catch (e) {
-                console.error('[@vapor-ui/core] Could not save theme state to localStorage.', e);
+            d.classList.remove('vapor-light-theme', 'vapor-dark-theme', 'light', 'dark');
+
+            if (resolved === 'light') d.classList.add('vapor-light-theme');
+            if (resolved === 'dark') d.classList.add('vapor-dark-theme');
+
+            if (enableColorScheme) {
+                const fallback = COLOR_SCHEMES.includes(defaultTheme) ? defaultTheme : null;
+                const colorScheme = COLOR_SCHEMES.includes(resolved) ? resolved : fallback;
+                // @ts-ignore
+                d.style.colorScheme = colorScheme;
             }
+
+            enableTransition?.();
         },
-        [resolvedConfig.storageKey],
+        [enableSystem, enableColorScheme, defaultTheme, disableTransitionOnChange, nonce],
     );
 
-    const toggleAppearance = useCallback(() => {
-        setAppearance(appearance === 'dark' ? 'light' : 'dark');
-    }, [appearance, setAppearance]);
+    const setTheme = useCallback(
+        (newTheme: string | ((prev: string) => string)) => {
+            if (typeof newTheme === 'function') {
+                setThemeState((prevTheme) => {
+                    const resolved = newTheme(prevTheme);
+                    saveToStorage(storageKey, resolved);
+                    return resolved;
+                });
+            } else {
+                setThemeState(newTheme);
+                saveToStorage(storageKey, newTheme);
+            }
+        },
+        [storageKey],
+    );
 
-    // Listen for theme changes in other tabs
+    const handleMediaQuery = useCallback(
+        (e: MediaQueryListEvent | MediaQueryList) => {
+            const systemTheme = getSystemTheme(e);
+            setResolvedTheme(systemTheme);
+
+            if (theme === 'system' && enableSystem && !forcedTheme) {
+                applyTheme('system');
+            }
+        },
+        [theme, enableSystem, forcedTheme, applyTheme],
+    );
+
     useEffect(() => {
-        const handleStorageChange = (event: StorageEvent) => {
-            if (event.key === resolvedConfig.storageKey && event.newValue) {
-                try {
-                    const stored = JSON.parse(event.newValue);
-                    if (stored.appearance) {
-                        setAppearance(stored.appearance);
-                    }
-                } catch (e) {
-                    console.error('[@vapor-ui/core] Error parsing stored theme from storage event.', e);
-                }
+        if (isServer) return;
+
+        const media = window.matchMedia(MEDIA_QUERY);
+
+        if (media.addEventListener) {
+            media.addEventListener('change', handleMediaQuery);
+            handleMediaQuery(media);
+            return () => media.removeEventListener('change', handleMediaQuery);
+        } else {
+            media.addListener(handleMediaQuery);
+            handleMediaQuery(media);
+            return () => media.removeListener(handleMediaQuery);
+        }
+    }, [handleMediaQuery]);
+
+    useEffect(() => {
+        if (isServer) return;
+
+        const handleStorage = (e: StorageEvent) => {
+            if (e.key !== storageKey) return;
+
+            if (!e.newValue) {
+                setTheme(defaultTheme);
+            } else {
+                setThemeState(e.newValue);
             }
         };
 
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, [resolvedConfig.storageKey, setAppearance]);
+        window.addEventListener('storage', handleStorage);
+        return () => window.removeEventListener('storage', handleStorage);
+    }, [setTheme, defaultTheme, storageKey]);
 
-    // Listen for system theme changes (only when user preference is 'system')
     useEffect(() => {
-        if (!resolvedConfig.enableSystemTheme || userPreference !== 'system') return;
+        if (isServer) return;
 
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleChange = (e: MediaQueryListEvent) => {
-            setAppearanceState(e.matches ? 'dark' : 'light');
-        };
-
-        mediaQuery.addEventListener('change', handleChange);
-        return () => mediaQuery.removeEventListener('change', handleChange);
-    }, [resolvedConfig.enableSystemTheme, userPreference]);
-
-    // Apply CSS classes to document
-    useEffect(() => {
-        const root = document.documentElement;
-        
-        // Remove both classes first
-        root.classList.remove(THEME_CLASSES.light, THEME_CLASSES.dark);
-        
-        // Add the appropriate class
-        if (appearance === 'dark') {
-            root.classList.add(THEME_CLASSES.dark);
-        } else {
-            root.classList.add(THEME_CLASSES.light);
+        const actualTheme = getTheme(storageKey, defaultTheme) || defaultTheme;
+        if (actualTheme !== theme) {
+            setThemeState(actualTheme);
         }
-    }, [appearance]);
+
+        if (actualTheme === 'system') {
+            const actualSystemTheme = getSystemTheme();
+            if (actualSystemTheme !== resolvedTheme) {
+                setResolvedTheme(actualSystemTheme);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        applyTheme(forcedTheme || theme);
+    }, [forcedTheme, theme, applyTheme]);
 
     const contextValue = useMemo(
         () => ({
-            appearance,
-            setAppearance,
-            toggleAppearance,
+            theme,
+            setTheme,
+            forcedTheme,
+            resolvedTheme: theme === 'system' ? resolvedTheme : theme,
+            themes: enableSystem ? [...DEFAULT_THEMES, 'system'] : DEFAULT_THEMES,
+            systemTheme: enableSystem ? (resolvedTheme as 'light' | 'dark') : undefined,
         }),
-        [appearance, setAppearance, toggleAppearance],
+        [theme, setTheme, forcedTheme, resolvedTheme, enableSystem],
     );
 
     return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };
 
 /* -------------------------------------------------------------------------------------------------
- * ThemeScript (Simplified)
+ * useTheme Hook
  * -----------------------------------------------------------------------------------------------*/
 
-interface ThemeScriptProps {
-    config?: ThemeConfig;
-}
-
-const ThemeScript = memo(({ config }: ThemeScriptProps) => {
-    const resolvedConfig = useMemo<ResolvedThemeConfig>(() => {
-        return createThemeConfig(config);
-    }, [config]);
-
-    const scriptContent = generateThemeScript(resolvedConfig);
-
-    return (
-        <script
-            nonce={resolvedConfig.nonce}
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: scriptContent }}
-        />
-    );
-});
-
-ThemeScript.displayName = 'ThemeScript';
-
-/* -------------------------------------------------------------------------------------------------
- * Hook
- * -----------------------------------------------------------------------------------------------*/
-
-const useTheme = (): ThemeContextValue => {
+const useTheme = (): UseThemeProps => {
     const context = useContext(ThemeContext);
-    if (context === undefined) {
-        throw new Error('`useTheme` must be used within a `ThemeProvider`.');
-    }
-    return context;
+    return context ?? defaultContext;
 };
 
 /* -------------------------------------------------------------------------------------------------
- * Exports
+ * ThemeScript Component
  * -----------------------------------------------------------------------------------------------*/
 
-export { ThemeProvider, ThemeScript, useTheme };
-export type { ThemeConfig, Appearance, ThemeState };
+const ThemeScript = memo(
+    ({
+        storageKey = 'vapor-ui-theme',
+        defaultTheme = 'system',
+        enableSystem = true,
+        nonce,
+    }: Omit<ThemeConfig, 'children'> & {
+        defaultTheme?: string;
+    }) => {
+        const script = generateThemeScript({
+            storageKey,
+            defaultTheme,
+            enableSystem,
+        });
+
+        return (
+            <script
+                suppressHydrationWarning
+                nonce={typeof window === 'undefined' ? nonce : ''}
+                dangerouslySetInnerHTML={{ __html: script }}
+            />
+        );
+    },
+);
+
+ThemeScript.displayName = 'ThemeScript';
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { ThemeProvider, useTheme, ThemeScript, generateThemeScript };
+export type { ThemeConfig, UseThemeProps, ThemeProviderProps };
+
+export type UseThemeReturn = UseThemeProps;
