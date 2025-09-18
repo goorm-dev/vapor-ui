@@ -20,7 +20,6 @@ type BaseProps = TextareaVariants &
         onValueChange?: (value: string) => void;
         minHeight?: number | string;
         maxHeight?: number | string;
-        resize?: boolean;
         autoResize?: boolean;
     };
 
