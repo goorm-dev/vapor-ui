@@ -22,6 +22,7 @@ import '../components/navigation-menu/navigation-menu.css';
 import '../components/popover/popover.css';
 import '../components/radio/radio.css';
 import '../components/radio-group/radio-group.css';
+import '../components/select/select.css';
 import '../components/sheet/sheet.css';
 import '../components/switch/switch.css';
 import '../components/tabs/tabs.css';
