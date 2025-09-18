@@ -87,21 +87,21 @@ describe('Textarea', () => {
     test('applies size variants', () => {
         const { rerender } = render(<Textarea size="sm" data-testid="textarea" />);
 
-        expect(screen.getByTestId('textarea')).toBeInTheDocument();
+        expect(screen.getByTestId('textarea')).toHaveClass(/size_sm/);
 
         rerender(<Textarea size="lg" data-testid="textarea" />);
 
-        expect(screen.getByTestId('textarea')).toBeInTheDocument();
+        expect(screen.getByTestId('textarea')).toHaveClass(/size_lg/);
     });
 
     test('supports resize control', () => {
         const { rerender } = render(<Textarea resize={true} data-testid="textarea" />);
 
-        expect(screen.getByTestId('textarea')).toBeInTheDocument();
+        expect(screen.getByTestId('textarea')).toHaveClass(/resize_true/);
 
         rerender(<Textarea resize={false} data-testid="textarea" />);
 
-        expect(screen.getByTestId('textarea')).toBeInTheDocument();
+        expect(screen.getByTestId('textarea')).not.toHaveClass(/resize_true/);
     });
 
     test('supports maxLength prop', () => {
@@ -151,46 +151,24 @@ describe('Textarea', () => {
             expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('400px');
         });
 
-        test('minHeight and maxHeight only affect autoResize variant', () => {
-            const { rerender } = render(
-                <Textarea minHeight={100} maxHeight={300} data-testid="textarea" />,
-            );
+        test('CSS variables are set regardless of autoResize', () => {
+            render(<Textarea minHeight={100} maxHeight={300} data-testid="textarea" />);
 
-            let textarea = screen.getByTestId('textarea');
+            const textarea = screen.getByTestId('textarea');
 
-            // CSS variables should still be set even without autoResize
             expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('100px');
             expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('300px');
-
-            // But the actual CSS classes should not include autoResize styles
             expect(textarea).not.toHaveClass(/autoResize_true/);
-
-            rerender(
-                <Textarea autoResize minHeight={100} maxHeight={300} data-testid="textarea" />,
-            );
-
-            textarea = screen.getByTestId('textarea');
-            expect(textarea).toHaveClass(/autoResize_true/);
         });
     });
 
     describe('autoResize functionality', () => {
-        test('autoResize enables proper CSS classes', () => {
-            render(<Textarea autoResize data-testid="textarea" />);
-
-            const textarea = screen.getByTestId('textarea');
-            expect(textarea).toHaveClass(/autoResize_true/);
-        });
-
-        test('autoResize with custom heights works together', () => {
+        test('applies autoResize CSS classes and height variables', () => {
             render(<Textarea autoResize minHeight={80} maxHeight={250} data-testid="textarea" />);
 
             const textarea = screen.getByTestId('textarea');
 
-            // Should have autoResize class
             expect(textarea).toHaveClass(/autoResize_true/);
-
-            // Should have custom height variables
             expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('80px');
             expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('250px');
         });

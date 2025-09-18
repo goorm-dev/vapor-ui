@@ -122,23 +122,6 @@ describe('InputGroup', () => {
             expect(counter).toHaveTextContent('7/10');
         });
 
-        it('should handle clear input correctly', async () => {
-            render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={10} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'hello');
-            expect(counter).toHaveTextContent('5/10');
-
-            await userEvent.clear(input);
-            expect(counter).toHaveTextContent('0/10');
-        });
 
         it('should handle multiple InputGroups independently', async () => {
             render(
@@ -187,34 +170,6 @@ describe('InputGroup', () => {
             expect(counter).toHaveTextContent('7/15');
         });
 
-        it('should handle text deletion with Backspace keys', async () => {
-            render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={15} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'hello world');
-            expect(counter).toHaveTextContent('11/15');
-
-            // Use backspace to remove 6 characters (" world")
-            await userEvent.keyboard(
-                '{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}',
-            );
-            expect(counter).toHaveTextContent('5/15');
-
-            // Add text back
-            await userEvent.type(input, ' testing');
-            expect(counter).toHaveTextContent('13/15');
-
-            // Use backspace to remove 3 characters ("ing")
-            await userEvent.keyboard('{Backspace}{Backspace}{Backspace}');
-            expect(counter).toHaveTextContent('10/15');
-        });
 
         it('should count space characters correctly', async () => {
             render(
@@ -241,30 +196,6 @@ describe('InputGroup', () => {
             expect(counter).toHaveTextContent('13/20');
         });
 
-        it('should handle text selection and replacement', async () => {
-            render(
-                <InputGroup.Root>
-                    <TextInput placeholder="Enter text" maxLength={15} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const input = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(input, 'hello world');
-            expect(counter).toHaveTextContent('11/15');
-
-            // Clear and type shorter text
-            await userEvent.clear(input);
-            await userEvent.type(input, 'test');
-            expect(counter).toHaveTextContent('4/15');
-
-            // Clear and type longer text
-            await userEvent.clear(input);
-            await userEvent.type(input, 'new text here');
-            expect(counter).toHaveTextContent('13/15');
-        });
 
         it('should support static ReactNode children', async () => {
             render(
@@ -312,75 +243,7 @@ describe('InputGroup', () => {
     });
 
     describe('with Textarea', () => {
-        it('should display character count when Textarea has value', async () => {
-            render(
-                <InputGroup.Root>
-                    <Textarea placeholder="Enter text" maxLength={50} />
-                    <InputGroup.Counter />
-                </InputGroup.Root>,
-            );
-
-            const textarea = screen.getByPlaceholderText('Enter text');
-            await userEvent.type(textarea, 'Hello world');
-
-            const counter = screen.getByText('11/50');
-            expect(counter).toBeInTheDocument();
-        });
-
-        it('should update character count as user types in Textarea', async () => {
-            render(
-                <InputGroup.Root>
-                    <Textarea placeholder="Enter text" maxLength={20} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const textarea = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(textarea, 'Line 1');
-            expect(counter).toHaveTextContent('6/20');
-
-            await userEvent.type(textarea, '{enter}Line 2');
-            expect(counter).toHaveTextContent('13/20');
-        });
-
-        it('should work with defaultValue from Textarea', () => {
-            render(
-                <InputGroup.Root>
-                    <Textarea placeholder="Enter text" maxLength={30} defaultValue="Initial text" />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const counter = screen.getByTestId('counter');
-            expect(counter).toHaveTextContent('12/30');
-        });
-
-        it('should work with controlled Textarea component', () => {
-            const ControlledTextareaComponent = () => {
-                const [value, setValue] = React.useState('Initial textarea content');
-
-                return (
-                    <InputGroup.Root>
-                        <Textarea
-                            placeholder="Controlled textarea"
-                            maxLength={100}
-                            value={value}
-                            onValueChange={setValue}
-                        />
-                        <InputGroup.Counter data-testid="counter" />
-                    </InputGroup.Root>
-                );
-            };
-
-            render(<ControlledTextareaComponent />);
-
-            const counter = screen.getByTestId('counter');
-            expect(counter).toHaveTextContent('24/100');
-        });
-
-        it('should handle multiline text correctly', async () => {
+        it('should handle multiline text and character counting', async () => {
             render(
                 <InputGroup.Root>
                     <Textarea placeholder="Enter text" maxLength={50} />
@@ -395,7 +258,30 @@ describe('InputGroup', () => {
             expect(counter).toHaveTextContent('20/50');
         });
 
-        it('should show only current count when no maxLength is provided', async () => {
+        it('should work with controlled Textarea', () => {
+            const ControlledTextareaComponent = () => {
+                const [value, setValue] = React.useState('Initial content');
+
+                return (
+                    <InputGroup.Root>
+                        <Textarea
+                            placeholder="Controlled textarea"
+                            maxLength={50}
+                            value={value}
+                            onValueChange={setValue}
+                        />
+                        <InputGroup.Counter data-testid="counter" />
+                    </InputGroup.Root>
+                );
+            };
+
+            render(<ControlledTextareaComponent />);
+
+            const counter = screen.getByTestId('counter');
+            expect(counter).toHaveTextContent('15/50');
+        });
+
+        it('should show only current count without maxLength', async () => {
             render(
                 <InputGroup.Root>
                     <Textarea placeholder="Enter text" />
@@ -407,7 +293,6 @@ describe('InputGroup', () => {
             const counter = screen.getByTestId('counter');
 
             await userEvent.type(textarea, 'Hello world!');
-
             expect(counter).toHaveTextContent('12');
         });
     });

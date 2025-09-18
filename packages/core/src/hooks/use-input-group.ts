@@ -33,14 +33,14 @@ export function useInputGroup({ value, defaultValue, maxLength }: UseInputGroupS
     }, [groupContext, value, defaultValue]);
 
     // Return a function to update InputGroup on change
-    const syncOnChange = (newValue: Field.Control.Props['value']) => {
+    const setInputGroupValue = (newValue: Field.Control.Props['value']) => {
         if (groupContext?.updateValue) {
             groupContext.updateValue(newValue);
         }
     };
 
     return {
-        syncOnChange,
+        setInputGroupValue,
         isInGroup: !!groupContext,
     };
 }

@@ -47,7 +47,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         });
 
         // Handle InputGroup synchronization via custom hook
-        const { syncOnChange, isInGroup } = useInputGroup({
+        const { setInputGroupValue, isInGroup } = useInputGroup({
             value,
             defaultValue,
             maxLength: otherProps.maxLength,
@@ -59,7 +59,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             const newValue = params[0];
             setValue(newValue);
             onValueChange?.(newValue);
-            if (isInGroup) syncOnChange(newValue);
+            if (isInGroup) setInputGroupValue(newValue);
         };
 
         // Determine if this is a controlled component based on initial value prop

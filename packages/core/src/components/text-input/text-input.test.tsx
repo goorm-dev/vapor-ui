@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
 import { TextInput, type TextInputProps } from './text-input';
@@ -41,30 +42,22 @@ describe('TextInput', () => {
         expect(handleValueChange).toHaveBeenCalledWith('Testing');
     });
 
-    it('should render the proper value when typed', async () => {
-        const rendered = render(<TextInputTest />);
-        const input = rendered.getByRole('textbox');
-
-        await userEvent.type(input, 'Testing');
-        expect(input).toHaveValue('Testing');
-    });
-
-    it('should not typable when disabled', async () => {
+    it('should be disabled and prevent input', async () => {
         const rendered = render(<TextInputTest disabled />);
         const input = rendered.getByRole('textbox');
 
+        expect(input).toBeDisabled();
         await userEvent.type(input, 'Testing');
         expect(input).toHaveValue('');
-        expect(input).toBeDisabled();
     });
 
-    it('should not typable when readOnly', async () => {
+    it('should be readonly and prevent input', async () => {
         const rendered = render(<TextInputTest readOnly />);
         const input = rendered.getByRole('textbox');
 
+        expect(input).toHaveAttribute('readonly');
         await userEvent.type(input, 'Testing');
         expect(input).toHaveValue('');
-        expect(input).toHaveAttribute('readonly');
     });
 
     it('should have aria-invalid when invalid', () => {

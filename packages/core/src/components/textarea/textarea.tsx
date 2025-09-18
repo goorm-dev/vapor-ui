@@ -1,13 +1,14 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
 import { useControlled } from '@base-ui-components/utils/useControlled';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
+import { useAutoResize } from '~/hooks/use-auto-resize';
 import { useInputGroup } from '~/hooks/use-input-group';
 import type { Assign, VComponentProps } from '~/utils/types';
 
@@ -63,7 +64,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         });
 
         // Handle InputGroup synchronization via custom hook
-        const { syncOnChange, isInGroup } = useInputGroup({
+        const { setInputGroupValue, isInGroup } = useInputGroup({
             value,
             defaultValue,
             maxLength,
@@ -71,34 +72,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-        const autoResizeTextarea = useMemo(() => {
-            const performResize = () => {
-                if (!autoResize || !textareaRef?.current) return;
-
-                const textarea = textareaRef.current;
-                const maxHeightPx =
-                    typeof maxHeight === 'number' ? maxHeight : parseFloat(maxHeight);
-                const minHeightPx =
-                    typeof minHeight === 'number' ? minHeight : parseFloat(minHeight);
-
-                // Reset to get accurate measurement
-                textarea.style.overflowY = 'hidden';
-                textarea.style.height = 'auto';
-
-                const scrollHeight = textarea.scrollHeight;
-
-                if (scrollHeight > maxHeightPx) {
-                    textarea.style.height = `${maxHeightPx}px`;
-                    textarea.style.overflowY = 'scroll';
-                } else {
-                    const newHeight = Math.max(scrollHeight, minHeightPx);
-                    textarea.style.height = `${newHeight}px`;
-                    textarea.style.overflowY = 'hidden';
-                }
-            };
-
-            return () => requestAnimationFrame(performResize);
-        }, [autoResize, maxHeight, minHeight]);
+        const autoResizeTextarea = useAutoResize(textareaRef, {
+            autoResize,
+            minHeight,
+            maxHeight,
+        });
 
         useEffect(() => {
             if (autoResize) {
@@ -128,7 +106,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         const handleValueChange = (newValue: string) => {
             onValueChange?.(newValue);
             setValue(newValue);
-            if (isInGroup) syncOnChange(newValue);
+            if (isInGroup) setInputGroupValue(newValue);
         };
 
         const finalValue = value ?? '';
@@ -140,10 +118,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                     if (disabled || readOnly) return;
 
                     handleValueChange(newValue);
-
-                    if (autoResize) {
-                        autoResizeTextarea();
-                    }
                 },
                 ...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' }),
                 disabled,
