@@ -13,8 +13,8 @@ const Group = ({ attached = false, children: childrenProp }: GroupProps) => {
     const children = Children.map(childrenProp, (child, index) => {
         if (!isValidElement(child)) return;
 
-        return cloneElement(child, {
-            style: { '--group-index': index, ...child.props.style },
+        return cloneElement(child as React.ReactElement, {
+            style: { '--group-index': index },
             ...(index === 0 ? { 'data-first-item': '' } : {}),
             ...(index === Children.count(childrenProp) - 1 ? { 'data-last-item': '' } : {}),
         });
