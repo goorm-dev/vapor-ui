@@ -6,7 +6,7 @@ import { Input as BaseInput } from '@base-ui-components/react';
 import { useControlled } from '@base-ui-components/utils/useControlled';
 import clsx from 'clsx';
 
-import { useInputGroup } from '~/hooks/use-input-group';
+import { useInputGroup } from '~/components/input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
@@ -18,7 +18,7 @@ type BaseProps = TextInputVariants & {
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     value?: string;
     defaultValue?: string;
-    onValueChange?: (value: string) => void;
+    onValueChange?: (value: string, event: Event) => void;
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
 interface TextInputProps extends Assign<TextInputPrimitiveProps, BaseProps> {}
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-    ({ onValueChange, value: valueProp, defaultValue, className, ...props }, ref) => {
+    ({ onValueChange, value: valueProp, defaultValue = '', className, ...props }, ref) => {
         const [textInputRootProps, otherProps] = createSplitProps<TextInputVariants>()(props, [
             'size',
             'invalid',
@@ -47,28 +47,20 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         });
 
         // Handle InputGroup synchronization via custom hook
-        const { setInputGroupValue, isInGroup } = useInputGroup({
+        useInputGroup({
             value,
-            defaultValue,
             maxLength: otherProps.maxLength,
         });
 
-        const handleChange = (
-            ...params: Parameters<NonNullable<TextInputPrimitiveProps['onValueChange']>>
-        ) => {
-            const newValue = params[0];
-            setValue(newValue);
-            onValueChange?.(newValue);
-            if (isInGroup) setInputGroupValue(newValue);
+        const handleChange = (value: string, event: Event) => {
+            setValue(value);
+            onValueChange?.(value, event);
         };
-
-        // Determine if this is a controlled component based on initial value prop
-        const finalValue = value ?? '';
 
         return (
             <BaseInput
                 ref={ref}
-                {...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' })}
+                {...(isControlled ? { value } : { defaultValue })}
                 aria-invalid={invalid}
                 onValueChange={handleChange}
                 className={clsx(styles.root({ invalid, size }), className)}

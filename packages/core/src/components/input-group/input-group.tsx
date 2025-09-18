@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useState } from 'react';
 
 import type { Field } from '@base-ui-components/react';
 import { useRender } from '@base-ui-components/react';
@@ -15,7 +15,7 @@ import * as styles from './input-group.css';
  * Type Aliases
  * -----------------------------------------------------------------------------------------------*/
 
-type FieldValue = Field.Control.Props['value'];
+type FieldValue = string;
 type FieldMaxLength = Field.Control.Props['maxLength'];
 
 /* -------------------------------------------------------------------------------------------------
@@ -23,10 +23,10 @@ type FieldMaxLength = Field.Control.Props['maxLength'];
  * -----------------------------------------------------------------------------------------------*/
 
 interface InputGroupSharedProps {
-    value?: FieldValue;
+    value: FieldValue;
     maxLength?: FieldMaxLength;
-    setValue?: (value: FieldValue) => void;
-    setMaxLength?: (maxLength: FieldMaxLength) => void;
+    setValue: (value: FieldValue) => void;
+    setMaxLength: (maxLength: FieldMaxLength) => void;
 }
 
 const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupSharedProps>({
@@ -35,6 +35,39 @@ const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupShare
     providerName: 'InputGroupProvider',
     strict: false, // Make it non-strict so TextInput can work standalone
 });
+
+/* -------------------------------------------------------------------------------------------------
+ * useInputGroup Hook
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Custom hook to handle InputGroup context synchronization
+ * Separates InputGroup-related logic from TextInput component
+ */
+
+interface UseInputGroupSyncOptions {
+    value?: string;
+    maxLength?: Field.Control.Props['maxLength'];
+}
+
+export function useInputGroup({ value, maxLength }: UseInputGroupSyncOptions) {
+    const groupContext = useInputGroupContext();
+    const { setValue, setMaxLength } = groupContext ?? {};
+
+    // Sync maxLength with InputGroup context on mount
+    useEffect(() => {
+        if (setMaxLength && maxLength !== undefined) {
+            setMaxLength(maxLength);
+        }
+    }, [setMaxLength, maxLength]);
+
+    // Update context when value changes (including initial value)
+    useEffect(() => {
+        if (setValue && value !== undefined) {
+            setValue(String(value));
+        }
+    }, [setValue, value]);
+}
 
 /* -------------------------------------------------------------------------------------------------
  * InputGroup Root
@@ -75,7 +108,7 @@ Root.displayName = 'InputGroup.Root';
  * InputGroup Count
  * -----------------------------------------------------------------------------------------------*/
 
-type CounterRenderProps = { count: number; maxLength?: number; value: FieldValue };
+type CounterRenderProps = { count: number; maxLength?: number; value: string };
 
 interface InputGroupCounterProps extends Omit<VComponentProps<'span'>, 'children'> {
     children?: React.ReactNode | ((props: CounterRenderProps) => React.ReactNode);
@@ -84,9 +117,8 @@ interface InputGroupCounterProps extends Omit<VComponentProps<'span'>, 'children
 /**
  * Safely calculates the length of a field value, handling null/undefined cases
  */
-const getValueLength = (value: FieldValue): number => {
-    if (value == null) return 0;
-    return String(value).length;
+const getValueLength = (value: string): number => {
+    return value.length;
 };
 
 /**
@@ -96,10 +128,12 @@ const generateCounterContent = (
     children: InputGroupCounterProps['children'],
     count: number,
     maxLength?: number,
-    value?: FieldValue,
+    value?: string,
 ): React.ReactNode => {
     if (children) {
-        return typeof children === 'function' ? children({ count, maxLength, value }) : children;
+        return typeof children === 'function'
+            ? children({ count, maxLength, value: value ?? '' })
+            : children;
     }
 
     return maxLength !== undefined ? `${count}/${maxLength}` : count.toString();
