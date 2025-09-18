@@ -29,3 +29,4 @@ import '../components/tabs/tabs.css';
 import '../components/text-input/text-input.css';
 import '../components/tooltip/tooltip.css';
 import '../components/textarea/textarea.css';
+import '../components/input-group/input-group.css';

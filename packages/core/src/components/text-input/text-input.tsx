@@ -3,8 +3,10 @@
 import { forwardRef } from 'react';
 
 import { Input as BaseInput } from '@base-ui-components/react';
+import { useControlled } from '@base-ui-components/utils/useControlled';
 import clsx from 'clsx';
 
+import { useInputGroup } from '~/hooks/use-input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
@@ -27,19 +29,48 @@ type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
 interface TextInputProps extends Assign<TextInputPrimitiveProps, BaseProps> {}
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-    ({ onValueChange, className, ...props }, ref) => {
+    ({ onValueChange, value: valueProp, defaultValue, className, ...props }, ref) => {
         const [textInputRootProps, otherProps] = createSplitProps<TextInputVariants>()(props, [
             'size',
             'invalid',
         ]);
 
         const { invalid, size } = textInputRootProps;
+        const isControlled = valueProp !== undefined;
+
+        // Use useControlled for unified value state management
+        const [value, setValue] = useControlled({
+            controlled: valueProp,
+            default: defaultValue,
+            name: 'TextInput',
+            state: 'value',
+        });
+
+        // Handle InputGroup synchronization via custom hook
+        const { syncOnChange, isInGroup } = useInputGroup({
+            value,
+            defaultValue,
+            maxLength: otherProps.maxLength,
+        });
+
+        const handleChange = (
+            ...params: Parameters<NonNullable<TextInputPrimitiveProps['onValueChange']>>
+        ) => {
+            const newValue = params[0];
+            setValue(newValue);
+            onValueChange?.(newValue);
+            if (isInGroup) syncOnChange(newValue);
+        };
+
+        // Determine if this is a controlled component based on initial value prop
+        const finalValue = value ?? '';
 
         return (
             <BaseInput
                 ref={ref}
+                {...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' })}
                 aria-invalid={invalid}
-                onChange={(event) => onValueChange?.(event.target.value)}
+                onValueChange={handleChange}
                 className={clsx(styles.root({ invalid, size }), className)}
                 {...otherProps}
             />
