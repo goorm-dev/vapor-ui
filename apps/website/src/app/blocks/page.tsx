@@ -4,7 +4,7 @@ import { Badge, Text } from '@vapor-ui/core';
 
 import ComponentsCard from '~/components/component-card/component-card';
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
-import { NAVBAR_BLOCK_URL, SIDEBAR_BLOCK_URL } from '~/constants/image-urls';
+import { NAVBAR_BLOCK_URL } from '~/constants/image-urls';
 
 const blocks = [
     {
@@ -15,11 +15,11 @@ const blocks = [
         imageUrl: NAVBAR_BLOCK_URL,
     },
     {
-        id: 'side-bar',
-        name: 'Sidebar',
-        description: '화면의 좌측 또는 우측에 위치하는 네비게이션 컴포넌트입니다.',
-        href: '/blocks/side-bar',
-        imageUrl: SIDEBAR_BLOCK_URL, // placeholder
+        id: 'form',
+        name: 'Form',
+        description: 'Form은 사용자가 데이터를 입력하고 제출할 수 있는 인터페이스를 제공합니다.',
+        href: '/blocks/form',
+        imageUrl: NAVBAR_BLOCK_URL, // FIXME: 이미지 교체 필요
     },
 ];
 
