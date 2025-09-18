@@ -61,9 +61,7 @@ export const textarea = recipe({
                 scrollbarGutter: 'stable',
                 verticalAlign: 'top',
 
-                // Ensure consistent scrollbar space
                 selectors: {
-                    // Always show scrollbar space to prevent width changes
                     '&': {
                         scrollbarWidth: 'auto',
                     },
