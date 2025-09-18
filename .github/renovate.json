@@ -1,6 +1,12 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended", "group:monorepos"],
+    "extends": [
+        "config:base",
+        "config:recommended",
+        "group:monorepos",
+        ":dependencyDashboard",
+        ":dependencyDashboardApproval"
+    ],
     "baseBranchPatterns": ["main"],
     "rebaseWhen": "conflicted",
     "labels": ["type: dependencies"],
@@ -18,19 +24,38 @@
     },
     "packageRules": [
         {
+            "description": "patch make auto PR , auto merge",
+            "matchUpdateTypes": ["patch"],
+            "automerge": true,
+            "dependencyDashboardApproval": false,
+            "labels": ["type: dependencies", "auto-merge"]
+        },
+        {
+            "description": "minor make auto PR, no auto merge",
+            "matchUpdateTypes": ["minor"],
+            "automerge": false,
+            "dependencyDashboardApproval": false,
+            "labels": ["type: dependencies"]
+        },
+        {
+            "description": "major make auto PR, require dashboard approval",
+            "matchUpdateTypes": ["major"],
+            "automerge": false,
+            "dependencyDashboardApproval": true,
+            "labels": ["type: dependencies", "major"]
+        },
+        {
             "description": "React and React DOM - Core framework",
             "groupName": "React Core",
             "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
             "labels": ["type: dependencies"],
-            "automerge": false,
-            "dependencyDashboardApproval": true
+            "automerge": false
         },
         {
             "description": "Vanilla Extract - CSS-in-TS styling",
             "groupName": "Vanilla Extract",
             "labels": ["type: dependencies"],
             "automerge": false,
-            "dependencyDashboardApproval": true,
             "matchPackageNames": ["/@vanilla-extract/*/"]
         },
         {
@@ -38,7 +63,6 @@
             "groupName": "Base UI",
             "labels": ["type: dependencies"],
             "automerge": false,
-            "dependencyDashboardApproval": true,
             "matchPackageNames": ["/@base-ui-components/*/"]
         },
         {
@@ -46,7 +70,6 @@
             "groupName": "Other Dependencies",
             "labels": ["type: dependencies"],
             "automerge": false,
-            "dependencyDashboardApproval": true,
             "matchPackageNames": [
                 "!react",
                 "!react-dom",
@@ -55,13 +78,6 @@
                 "!/@vanilla-extract/*/",
                 "!/@base-ui-components/*/"
             ]
-        },
-        {
-            "description": "Auto-merge patch updates only",
-            "matchUpdateTypes": ["patch"],
-            "automerge": true,
-            "dependencyDashboardApproval": false,
-            "labels": ["type: dependencies", "auto-merge"]
         },
         {
             "description": "Security updates require manual review with alerts",
