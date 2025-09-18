@@ -53,8 +53,8 @@ export const textarea = recipe({
         autoResize: {
             true: {
                 boxSizing: 'border-box',
-                minHeight: `var(${textareaMinHeightVar}, 60px)`,
-                maxHeight: `var(${textareaMaxHeightVar}, 400px)`,
+                minHeight: textareaMinHeightVar,
+                maxHeight: textareaMaxHeightVar,
                 overflowX: 'hidden',
                 overflowY: 'auto',
                 resize: 'none',
