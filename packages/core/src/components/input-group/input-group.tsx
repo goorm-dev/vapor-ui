@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useCallback, useState } from 'react';
+import { forwardRef, useMemo, useState } from 'react';
 
 import type { Field } from '@base-ui-components/react';
 import { useRender } from '@base-ui-components/react';
@@ -12,14 +12,21 @@ import type { VComponentProps } from '~/utils/types';
 import * as styles from './input-group.css';
 
 /* -------------------------------------------------------------------------------------------------
+ * Type Aliases
+ * -----------------------------------------------------------------------------------------------*/
+
+type FieldValue = Field.Control.Props['value'];
+type FieldMaxLength = Field.Control.Props['maxLength'];
+
+/* -------------------------------------------------------------------------------------------------
  * InputGroup Context
  * -----------------------------------------------------------------------------------------------*/
 
 interface InputGroupSharedProps {
-    value?: Field.Control.Props['value'];
-    maxLength?: Field.Control.Props['maxLength'];
-    updateValue?: (value: Field.Control.Props['value']) => void;
-    setMaxLength?: (maxLength: Field.Control.Props['maxLength']) => void;
+    value?: FieldValue;
+    maxLength?: FieldMaxLength;
+    setValue?: (value: FieldValue) => void;
+    setMaxLength?: (maxLength: FieldMaxLength) => void;
 }
 
 const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupSharedProps>({
@@ -37,23 +44,18 @@ interface InputGroupRootProps extends VComponentProps<'div'> {}
 
 const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
     ({ className, render, ...props }, ref) => {
-        const [value, setValue] = useState<Field.Control.Props['value']>('');
-        const [maxLength, setMaxLength] = useState<Field.Control.Props['maxLength'] | undefined>();
+        const [value, setValue] = useState<FieldValue>('');
+        const [maxLength, setMaxLength] = useState<FieldMaxLength | undefined>();
 
-        const updateValue = useCallback((value: Field.Control.Props['value']) => {
-            setValue(value);
-        }, []);
-
-        const updateMaxLength = useCallback((length: Field.Control.Props['maxLength']) => {
-            setMaxLength(length);
-        }, []);
-
-        const contextValue: InputGroupSharedProps = {
-            value,
-            maxLength,
-            updateValue,
-            setMaxLength: updateMaxLength,
-        };
+        const contextValue: InputGroupSharedProps = useMemo(
+            () => ({
+                value,
+                maxLength,
+                setValue,
+                setMaxLength,
+            }),
+            [value, maxLength],
+        );
 
         const element = useRender({
             ref,
@@ -73,24 +75,41 @@ Root.displayName = 'InputGroup.Root';
  * InputGroup Count
  * -----------------------------------------------------------------------------------------------*/
 
-type ChildrenProps = { count: number; maxLength?: number; value: Field.Control.Props['value'] };
+type CounterRenderProps = { count: number; maxLength?: number; value: FieldValue };
 
 interface InputGroupCounterProps extends Omit<VComponentProps<'span'>, 'children'> {
-    children?: React.ReactNode | ((props: ChildrenProps) => React.ReactNode);
+    children?: React.ReactNode | ((props: CounterRenderProps) => React.ReactNode);
 }
+
+/**
+ * Safely calculates the length of a field value, handling null/undefined cases
+ */
+const getValueLength = (value: FieldValue): number => {
+    if (value == null) return 0;
+    return String(value).length;
+};
+
+/**
+ * Generates counter content based on children prop or default format
+ */
+const generateCounterContent = (
+    children: InputGroupCounterProps['children'],
+    count: number,
+    maxLength?: number,
+    value?: FieldValue,
+): React.ReactNode => {
+    if (children) {
+        return typeof children === 'function' ? children({ count, maxLength, value }) : children;
+    }
+
+    return maxLength !== undefined ? `${count}/${maxLength}` : count.toString();
+};
 
 const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>(
     ({ className, children, render, ...props }, ref) => {
-        const { value = '', maxLength } = useInputGroupContext();
-        const currentLength = value.toString().length;
-
-        const content = children
-            ? typeof children === 'function'
-                ? children({ count: currentLength, maxLength, value })
-                : children
-            : maxLength !== undefined
-              ? `${currentLength}/${maxLength}`
-              : currentLength.toString();
+        const { value, maxLength } = useInputGroupContext();
+        const currentLength = getValueLength(value);
+        const content = generateCounterContent(children, currentLength, maxLength, value);
 
         return useRender({
             ref,

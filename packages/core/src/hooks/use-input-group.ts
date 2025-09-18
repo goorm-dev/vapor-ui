@@ -26,16 +26,16 @@ export function useInputGroup({ value, defaultValue, maxLength }: UseInputGroupS
 
     // Update context when value changes (including initial value)
     useEffect(() => {
-        if (groupContext?.updateValue) {
+        if (groupContext?.setValue) {
             const currentValue = value ?? defaultValue ?? '';
-            groupContext.updateValue(currentValue);
+            groupContext.setValue(currentValue);
         }
     }, [groupContext, value, defaultValue]);
 
     // Return a function to update InputGroup on change
     const setInputGroupValue = (newValue: Field.Control.Props['value']) => {
-        if (groupContext?.updateValue) {
-            groupContext.updateValue(newValue);
+        if (groupContext?.setValue) {
+            groupContext.setValue(newValue);
         }
     };
 
