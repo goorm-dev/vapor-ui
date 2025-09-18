@@ -1,6 +1,6 @@
 ---
 title: Releases
-description: 각 Vapor UI 릴리스의 Chanagelogs입니다.
+description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
 ## 0.5.0
