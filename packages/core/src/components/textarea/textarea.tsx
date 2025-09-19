@@ -14,7 +14,7 @@ import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
 
 type BaseProps = TextareaVariants & {
-    onValueChange?: (value: string) => void;
+    onValueChange?: (value: string, event: Event) => void;
     autoResize?: boolean;
 };
 
@@ -86,8 +86,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             [ref],
         );
 
-        const handleValueChange = (newValue: string) => {
-            onValueChange?.(newValue);
+        const handleValueChange = (newValue: string, event: Event) => {
+            onValueChange?.(newValue, event);
             setValue(newValue);
         };
 
@@ -96,10 +96,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             ref: handleRef,
             render: render || <BaseField.Control render={<textarea />} />,
             props: {
-                onValueChange(newValue: string) {
+                onValueChange(newValue: string, event: Event) {
                     if (disabled || readOnly) return;
 
-                    handleValueChange(newValue);
+                    handleValueChange(newValue, event);
                 },
                 ...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' }),
                 disabled,
