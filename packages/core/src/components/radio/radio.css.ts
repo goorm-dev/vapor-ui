@@ -34,6 +34,8 @@ export const root = recipe({
                 '&:disabled::before': { opacity: 0 },
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+
+                '&[data-readonly]:active::before': { opacity: 0.08 },
             },
         }),
     ],

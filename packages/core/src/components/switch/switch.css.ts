@@ -27,8 +27,13 @@ export const control = recipe({
                     backgroundColor: vars.color.gray[200],
                     outline: '0.0625rem solid',
                     outlineColor: vars.color.border.normal,
+                    outlineOffset: '-0.0625rem',
                 },
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
+
+                '&[data-readonly]:active::before': {
+                    opacity: 0.08,
+                },
             },
         }),
     ],
@@ -70,7 +75,7 @@ export const indicator = recipe({
             '&[data-checked]': {
                 transform: 'translateX(100%)',
             },
-            '&[data-readonly]:not([data-checked])': {
+            '&[data-readonly][data-unchecked]': {
                 backgroundColor: vars.color.gray[400],
                 boxShadow: 'none',
             },
