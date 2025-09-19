@@ -4,6 +4,7 @@ import {
     Button,
     Checkbox,
     HStack,
+    MultiSelect,
     Radio,
     RadioGroup,
     Select,
@@ -39,13 +40,13 @@ export default function ResearchForm() {
                     <label htmlFor="research-name" className="input-label">
                         이름
                     </label>
-                    <TextInput id="research-name" />
+                    <TextInput id="research-name" size="lg" />
                 </VStack>
                 <VStack gap="$100">
                     <label htmlFor="research-jobs" className="input-label">
                         직업
                     </label>
-                    <Select.Root items={jobs} placeholder="직업을 선택해주세요.">
+                    <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
                         <Select.Trigger id="research-jobs">
                             <Select.Value />
                             <Select.TriggerIcon />
@@ -64,20 +65,24 @@ export default function ResearchForm() {
                     <label htmlFor="research-stack" className="input-label">
                         스택
                     </label>
-                    <Select.Root items={stacks} placeholder="자주 사용하는 스택을 선택해주세요.">
-                        <Select.Trigger id="research-stack">
-                            <Select.Value />
-                            <Select.TriggerIcon />
-                        </Select.Trigger>
-                        <Select.Content>
+                    <MultiSelect.Root
+                        items={stacks}
+                        placeholder="자주 사용하는 스택을 선택해주세요."
+                        size="lg"
+                    >
+                        <MultiSelect.Trigger id="research-stack">
+                            <MultiSelect.Value />
+                            <MultiSelect.TriggerIcon />
+                        </MultiSelect.Trigger>
+                        <MultiSelect.Content>
                             {stacks.map((stack) => (
-                                <Select.Item key={stack.value} value={stack.value}>
+                                <MultiSelect.Item key={stack.value} value={stack.value}>
                                     {stack.label}
-                                    <Select.ItemIndicator />
-                                </Select.Item>
+                                    <MultiSelect.ItemIndicator />
+                                </MultiSelect.Item>
                             ))}
-                        </Select.Content>
-                    </Select.Root>
+                        </MultiSelect.Content>
+                    </MultiSelect.Root>
                 </VStack>
             </VStack>
 

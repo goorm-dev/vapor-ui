@@ -36,14 +36,14 @@ export default function SignupForm() {
                         <label htmlFor="signup-email" className="input-label">
                             이메일
                         </label>
-                        <TextInput id="signup-email" />
+                        <TextInput id="signup-email" size="lg" />
                     </VStack>
                     <VStack gap="$100">
                         <label htmlFor="signup-password" className="input-label">
                             비밀번호
                         </label>
                         <VStack gap="$050">
-                            <TextInput id="signup-password" />
+                            <TextInput id="signup-password" size="lg" />
                             <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
                         </VStack>
                     </VStack>
@@ -52,7 +52,7 @@ export default function SignupForm() {
                             비밀번호 확인
                         </label>
                         <VStack gap="$050">
-                            <TextInput id="signup-password-check" />
+                            <TextInput id="signup-password-check" size="lg" />
                             <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
                         </VStack>
                     </VStack>
@@ -61,13 +61,13 @@ export default function SignupForm() {
                         <label htmlFor="signup-name" className="input-label">
                             이름
                         </label>
-                        <TextInput id="signup-name" />
+                        <TextInput id="signup-name" size="lg" />
                     </VStack>
                     <VStack gap="$100">
                         <label htmlFor="signup-jobs" className="input-label">
                             직업
                         </label>
-                        <Select.Root items={jobs} placeholder="직업을 선택해주세요.">
+                        <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
                             <Select.Trigger id="signup-jobs">
                                 <Select.Value />
                                 <Select.TriggerIcon />

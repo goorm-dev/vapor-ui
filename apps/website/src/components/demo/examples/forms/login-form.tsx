@@ -17,14 +17,14 @@ export default function LoginForm() {
                     <label htmlFor="login-email" className="input-label">
                         이메일
                     </label>
-                    <TextInput id="login-email" />
+                    <TextInput id="login-email" size="lg" />
                 </VStack>
                 <VStack gap="$100">
                     <label htmlFor="login-password" className="input-label">
                         비밀번호
                     </label>
                     <VStack gap="$050">
-                        <TextInput id="login-password" />
+                        <TextInput id="login-password" size="lg" />
                         <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
                     </VStack>
                 </VStack>
@@ -44,8 +44,8 @@ export default function LoginForm() {
                     </Button>
                 </HStack>
 
-                <Button>로그인</Button>
-                <Button color="secondary" variant="outline">
+                <Button size="lg">로그인</Button>
+                <Button size="lg" color="secondary" variant="outline">
                     회원가입
                 </Button>
             </VStack>

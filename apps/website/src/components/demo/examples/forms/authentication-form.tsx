@@ -31,7 +31,7 @@ export default function AuthenticationForm() {
                     <label htmlFor="auth-phone" className="input-label">
                         핸드폰 번호
                     </label>
-                    <Select.Root defaultValue="+82">
+                    <Select.Root defaultValue="+82" size="lg">
                         <Group attached>
                             <Select.Trigger>
                                 <Select.Value />
@@ -50,8 +50,11 @@ export default function AuthenticationForm() {
                                 id="auth-phone"
                                 value={phoneNumber}
                                 onChange={handleChange}
+                                size="lg"
                             />
-                            <Button disabled={!regex.test(phoneNumber)}>인증번호 받기</Button>
+                            <Button size="lg" disabled={!regex.test(phoneNumber)}>
+                                인증번호 받기
+                            </Button>
                         </Group>
                     </Select.Root>
                 </VStack>
@@ -59,7 +62,7 @@ export default function AuthenticationForm() {
                     <label htmlFor="auth-verification-code" className="input-label">
                         인증번호
                     </label>
-                    <TextInput id="auth-verification-code" />
+                    <TextInput id="auth-verification-code" size="lg" />
                 </VStack>
             </VStack>
 
