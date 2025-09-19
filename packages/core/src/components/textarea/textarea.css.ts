@@ -36,7 +36,7 @@ export const textarea = recipe({
         }),
     ],
 
-    defaultVariants: { invalid: false, size: 'md', resize: false, autoResize: false },
+    defaultVariants: { invalid: false, size: 'md', autoResize: false },
 
     variants: {
         invalid: {
@@ -44,12 +44,6 @@ export const textarea = recipe({
                 borderColor: vars.color.border.danger,
             },
         },
-
-        resize: {
-            true: { resize: 'both' },
-            false: { resize: 'none' },
-        },
-
         autoResize: {
             true: {
                 boxSizing: 'border-box',

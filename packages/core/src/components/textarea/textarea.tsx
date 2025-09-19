@@ -8,8 +8,8 @@ import { useControlled } from '@base-ui-components/utils/useControlled';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
+import { useInputGroup } from '~/components/input-group/input-group';
 import { useAutoResize } from '~/hooks/use-auto-resize';
-import { useInputGroup } from '~/hooks/use-input-group';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
@@ -28,7 +28,10 @@ type BaseProps = TextareaVariants &
  * -----------------------------------------------------------------------------------------------*/
 
 type TextareaPrimitiveProps = VComponentProps<typeof BaseField.Control>;
-interface TextareaProps extends Assign<TextareaPrimitiveProps, BaseProps> {}
+interface TextareaProps extends Assign<TextareaPrimitiveProps, BaseProps> {
+    value?: string;
+    defaultValue?: string;
+}
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     (
@@ -41,7 +44,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             maxHeight = 400,
             invalid,
             size,
-            resize,
             autoResize,
             maxLength,
             render,
@@ -63,9 +65,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         });
 
         // Handle InputGroup synchronization via custom hook
-        const { setInputGroupValue, isInGroup } = useInputGroup({
+        useInputGroup({
             value,
-            defaultValue,
             maxLength,
         });
 
@@ -105,7 +106,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         const handleValueChange = (newValue: string) => {
             onValueChange?.(newValue);
             setValue(newValue);
-            if (isInGroup) setInputGroupValue(newValue);
         };
 
         const finalValue = value ?? '';
@@ -124,7 +124,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 maxLength,
                 'aria-invalid': invalid || undefined,
                 'aria-required': props.required || undefined,
-                className: clsx(styles.textarea({ invalid, size, resize, autoResize }), className),
+                className: clsx(styles.textarea({ invalid, size, autoResize }), className),
                 style: { ...styleVars, ...style },
                 ...props,
             },
