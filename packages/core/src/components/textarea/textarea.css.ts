@@ -67,25 +67,29 @@ export const textarea = recipe({
             sm: [
                 typography({ style: 'body3' }),
                 {
-                    padding: `${vars.size.space['050']} ${vars.size.space['100']}`,
+                    paddingBlock: vars.size.space['050'],
+                    paddingInline: vars.size.space['100'],
                 },
             ],
             md: [
                 typography({ style: 'body2' }),
                 {
-                    padding: `${vars.size.space['075']} ${vars.size.space['150']}`,
+                    paddingBlock: vars.size.space['075'],
+                    paddingInline: vars.size.space['150'],
                 },
             ],
             lg: [
                 typography({ style: 'body2' }),
                 {
-                    padding: `${vars.size.space['100']} ${vars.size.space['200']}`,
+                    paddingBlock: vars.size.space['100'],
+                    paddingInline: vars.size.space['200'],
                 },
             ],
             xl: [
                 typography({ style: 'body1' }),
                 {
-                    padding: `${vars.size.space['175']} ${vars.size.space['300']}`,
+                    paddingBlock: vars.size.space['175'],
+                    paddingInline: vars.size.space['300'],
                 },
             ],
         },
