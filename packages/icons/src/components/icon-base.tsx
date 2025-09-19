@@ -1,13 +1,12 @@
-import type { FunctionComponent, SVGProps } from 'react';
+import type { SVGProps } from 'react';
+import React from 'react';
 
-export interface IconBaseProps extends SVGProps<SVGSVGElement> {
+export interface IconProps extends SVGProps<SVGSVGElement> {
     size?: string | number;
     color?: string;
     className?: string;
     children: React.ReactNode;
 }
-
-export interface IconType extends FunctionComponent<Omit<IconBaseProps, 'children'>> {}
 
 function IconBase({
     size = 16,
@@ -17,7 +16,7 @@ function IconBase({
     children,
     color = 'currentColor',
     ...props
-}: IconBaseProps) {
+}: IconProps) {
     return (
         <svg
             aria-hidden="true"
