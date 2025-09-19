@@ -1,6 +1,6 @@
 import { Children, cloneElement, isValidElement, useState } from 'react';
 
-import './index.css';
+import './authentication-form.css';
 
 import { Button, Select, TextInput, VStack } from '@vapor-ui/core';
 
@@ -25,14 +25,7 @@ export default function AuthenticationForm() {
     const regex = /^[0-9\s-()]{6,20}$/;
 
     return (
-        <VStack
-            gap="$400"
-            width="400px"
-            padding="$300"
-            borderRadius="$300"
-            border="1px solid #eee"
-            className="login"
-        >
+        <VStack gap="$400" width="400px" padding="$300" borderRadius="$300" border="1px solid #eee">
             <VStack gap="$200" render={<form onSubmit={(e) => e.preventDefault()} />}>
                 <VStack gap="$100">
                     <label htmlFor="auth-phone" className="input-label">
