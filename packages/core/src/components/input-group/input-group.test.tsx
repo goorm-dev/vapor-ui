@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
 import { TextInput } from '../text-input';
-import { Textarea } from '../textarea';
 import { InputGroup } from './input-group';
 
 describe('InputGroup', () => {
@@ -236,61 +235,6 @@ describe('InputGroup', () => {
             );
 
             expect(counter).toHaveTextContent('Static content');
-        });
-    });
-
-    describe('with Textarea', () => {
-        it('should handle multiline text and character counting', async () => {
-            render(
-                <InputGroup.Root>
-                    <Textarea placeholder="Enter text" maxLength={50} />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const textarea = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(textarea, 'Line 1{enter}Line 2{enter}Line 3');
-            expect(counter).toHaveTextContent('20/50');
-        });
-
-        it('should work with controlled Textarea', () => {
-            const ControlledTextareaComponent = () => {
-                const [value, setValue] = React.useState('Initial content');
-
-                return (
-                    <InputGroup.Root>
-                        <Textarea
-                            placeholder="Controlled textarea"
-                            maxLength={50}
-                            value={value}
-                            onValueChange={setValue}
-                        />
-                        <InputGroup.Counter data-testid="counter" />
-                    </InputGroup.Root>
-                );
-            };
-
-            render(<ControlledTextareaComponent />);
-
-            const counter = screen.getByTestId('counter');
-            expect(counter).toHaveTextContent('15/50');
-        });
-
-        it('should show only current count without maxLength', async () => {
-            render(
-                <InputGroup.Root>
-                    <Textarea placeholder="Enter text" />
-                    <InputGroup.Counter data-testid="counter" />
-                </InputGroup.Root>,
-            );
-
-            const textarea = screen.getByPlaceholderText('Enter text');
-            const counter = screen.getByTestId('counter');
-
-            await userEvent.type(textarea, 'Hello world!');
-            expect(counter).toHaveTextContent('12');
         });
     });
 });

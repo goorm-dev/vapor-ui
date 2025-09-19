@@ -1,3 +1,5 @@
+'use client';
+
 import { InputGroup, TextInput } from '@vapor-ui/core';
 
 export default function InputGroupCustomCounter() {

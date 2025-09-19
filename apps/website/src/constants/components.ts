@@ -46,6 +46,6 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     switch: switchData,
     'radio-group': radioGroupData,
     tooltip: tooltipData,
-    textarea: textareaData,
     'input-group': inputGroupData,
+    textarea: textareaData,
 };
