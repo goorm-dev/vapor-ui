@@ -1,4 +1,4 @@
-import './index.css';
+import './research-form.css';
 
 import {
     Button,

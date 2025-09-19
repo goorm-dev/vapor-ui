@@ -1,3 +1,5 @@
+import './signup-form.css';
+
 import { Button, Checkbox, HStack, Sheet, Tabs, VStack } from '@vapor-ui/core';
 import { RefreshOutlineIcon } from '@vapor-ui/icons';
 

@@ -1,4 +1,4 @@
-import './index.css';
+import './login-form.css';
 
 import { Button, Checkbox, HStack, TextInput, VStack } from '@vapor-ui/core';
 
