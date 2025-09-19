@@ -29,3 +29,4 @@ import '../components/switch/switch.css';
 import '../components/tabs/tabs.css';
 import '../components/text-input/text-input.css';
 import '../components/tooltip/tooltip.css';
+import '../components/input-group/input-group.css';
