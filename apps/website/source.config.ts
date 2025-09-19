@@ -1,3 +1,4 @@
+import { remarkNpm } from 'fumadocs-core/mdx-plugins';
 import { fileGenerator, remarkDocGen } from 'fumadocs-docgen';
 import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
 import { z } from 'zod';
@@ -25,11 +26,16 @@ export const blocks = defineDocs({
 
 export default defineConfig({
     mdxOptions: {
-        remarkNpmOptions: {
-            persist: {
-                id: 'package-manager',
-            },
-        },
-        remarkPlugins: [[remarkDocGen, { generators: [fileGenerator()] }]],
+        remarkPlugins: [
+            [
+                remarkNpm,
+                {
+                    persist: {
+                        id: 'package-manager',
+                    },
+                },
+            ],
+            [remarkDocGen, { generators: [fileGenerator()] }],
+        ],
     },
 });
