@@ -1,0 +1,128 @@
+---
+title: 'Textarea'
+site_name: 'Textarea - Vapor Core'
+description: 'Textarea는 사용자가 여러 줄의 텍스트를 입력할 수 있도록 하는 텍스트 입력 필드를 제공합니다.'
+---
+
+<Demo name="default-textarea">
+```tsx
+import { Box, Textarea } from '@vapor-ui/core';
+
+export default function DefaultTextarea() {
+    return (
+        <Box display="flex" alignItems="center" justifyContent="center" width="100%">
+            <Textarea placeholder="여러 줄 텍스트를 입력하세요..." />
+        </Box>
+    );
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Size
+
+Textarea 크기는 sm, md, lg, xl 로 제공합니다.
+
+<Demo name="textarea-size">
+```tsx
+import { Textarea } from '@vapor-ui/core';
+
+export default function TextareaSize() {
+    return (
+        <div className="space-y-4">
+            <Textarea size="sm" placeholder="Small size" />
+            <Textarea size="md" placeholder="Medium size" />
+            <Textarea size="lg" placeholder="Large size" />
+            <Textarea size="xl" placeholder="Extra large size" />
+        </div>
+    );
+}
+```
+
+</Demo>
+
+### Auto Resize
+
+텍스트 내용에 따라 자동으로 높이가 조절되는 기능을 제공합니다.
+
+<Demo name="textarea-auto-resize">
+```tsx
+import { Box, Textarea } from '@vapor-ui/core';
+
+export default function TextareaAutoResize() {
+    return (
+        <Box display="flex" alignItems="center" justifyContent="center" width="100%">
+            <Textarea
+                autoResize
+                placeholder="텍스트를 입력하면 자동으로 높이가 조절됩니다..."
+            />
+        </Box>
+    );
+}
+```
+</Demo>
+
+### States
+
+Textarea의 다양한 상태를 보여줍니다.
+
+<Demo name="textarea-states">
+```tsx
+import { Grid, Textarea } from '@vapor-ui/core';
+
+export default function TextareaStates() {
+    return (
+        <Grid.Root templateColumns="1" gap="$100">
+            <Grid.Item>
+                <Textarea placeholder="Default state" />
+            </Grid.Item>
+            <Grid.Item>
+                <Textarea disabled placeholder="Disabled state" />
+            </Grid.Item>
+            <Grid.Item>
+                <Textarea invalid placeholder="Invalid state" />
+            </Grid.Item>
+            <Grid.Item>
+                <Textarea readOnly defaultValue="Read only content" />
+            </Grid.Item>
+        </Grid.Root>
+    );
+}
+```
+
+</Demo>
+
+## Examples
+
+---
+
+### maxLength
+
+Textarea에 `maxLength` 속성을 추가하여 입력 가능한 최대 문자 수를 제한하는 기능을 제공합니다.
+
+<Demo name="textarea-character-count">
+```tsx
+import { Box, Textarea } from '@vapor-ui/core';
+
+export default function TextareaCharacterCount() {
+    return (
+        <Box display="flex" alignItems="center" justifyContent="center">
+            <Textarea placeholder="Type your message..." maxLength={100} />
+        </Box>
+    );
+}
+```
+</Demo>
+
+## Props Table
+
+---
+
+### Textarea
+
+간단한 단일 컴포넌트로 사용할 수 있는 Textarea입니다.
+
+<ComponentPropsTable file="textarea" section="props" />

@@ -26,6 +26,8 @@ export const trigger = recipe({
             selectors: {
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+
+                '&[data-readonly]:active::before': { opacity: 0.08 },
             },
         }),
     ],

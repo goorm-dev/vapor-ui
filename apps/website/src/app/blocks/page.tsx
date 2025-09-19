@@ -4,7 +4,7 @@ import { Badge, Text } from '@vapor-ui/core';
 
 import ComponentsCard from '~/components/component-card/component-card';
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
-import { NAVBAR_BLOCK_URL } from '~/constants/image-urls';
+import { FORM_BLOCK_URL, NAVBAR_BLOCK_URL } from '~/constants/image-urls';
 
 const blocks = [
     {
@@ -19,7 +19,7 @@ const blocks = [
         name: 'Form',
         description: 'Form은 사용자가 데이터를 입력하고 제출할 수 있는 인터페이스를 제공합니다.',
         href: '/blocks/form',
-        imageUrl: NAVBAR_BLOCK_URL, // FIXME: 이미지 교체 필요
+        imageUrl: FORM_BLOCK_URL,
     },
 ];
 
