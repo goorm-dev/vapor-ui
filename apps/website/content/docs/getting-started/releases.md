@@ -3,6 +3,48 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 0.6.0
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 4d7eb69: Add new Textarea component with auto-resize functionality
+- 4026b68: add field components
+- 4a9bad5: add new `MultiSelect` component
+- e64e867: change the overlay component interface
+- 3fff33e: add new `Select` component
+- d294454: remove label components'
+- b92cff1: add new `Collapsible` component
+- b78f3e1: add new `Tabs` component
+- 98dee18: Migrate `Nav` to `NavigationMenu`
+- 0880cf7: add new `Sheet` component
+- 1d2f506: migrate to `Base UI`
+- e1bf119: add inputgroup component
+- b4509b1: add new `Popover` component
+
+#### Patch Changes
+
+- 2651ee2: eidt tooltip offset
+- 6de8824: edit spacing style implementation
+- 1ea54c0: fix(Callout): add flex layout for icons and text alignment
+    - Add display: 'flex' to align icons and text horizontally
+    - Add alignItems: 'center' for vertical centering
+    - Add gap spacing between icon and text content
+    - Ensures consistent layout behavior with Button component
+
+- 1ba360b: add readonly props
+- 2b756c5: fix svg rendering issue on safari
+- 6d1a2e3: remove active style when provided readonly
+- 1f4ba60: prioritize focus style over hover
+- Updated dependencies [450b324]
+- Updated dependencies [2b756c5]
+- Updated dependencies [e381247]
+- Updated dependencies [3bfda49]
+    - @vapor-ui/icons@0.4.0
+
+---
+
 ## 0.5.0
 
 ### @vapor-ui/core
@@ -47,6 +89,25 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - Updated dependencies [30ebcde]
     - @vapor-ui/icons@0.2.0
 
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- e381247: Add new icons from Figma
+
+    **New Symbol Icons:** `MediumIcon`
+
+    **Also Updated:**
+    - Symbol Icons: `FirefoxColorIcon`
+
+#### Patch Changes
+
+- 450b324: conditionally add CSS variables only when isCssVariable is true
+- 2b756c5: fix icon size
+- 3bfda49: Update icons from Figma
+
+    **Updated Basic Icons:** `TerminalWindowOutlineIcon`
+
 ---
 
 ## 0.3.1
@@ -81,7 +142,6 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
     **New Basic Icons:** `LinearScaleOutlineIcon`
 
     **Also Updated:**
-
     - Basic Icons: `PlayIcon`, `ReplaceIcon`, `ClassIcon`, `ArrowUpOutlineIcon`, `ArrowDownOutlineIcon`, `TerminalOutlineIcon`, `ViewShrinkOutlineIcon`, `FolderSearchIcon`, `StarOutlineIcon`, `PriceOutlineIcon`, `HistoryOutlineIcon`, `CardsOutlineIcon`, `ZoomOutOutlineIcon`, `IntelliSensePropertyOutlineIcon`, `CorrectOutlineIcon`, `ChevronDoubleRightOutlineIcon`, `AutoCodeOutlineIcon`, `ChapterOutlineIcon`
     - Symbol Icons: `RstudioColorIcon`
 
@@ -127,11 +187,9 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - 30ebcde: feat: Add new icons and update existing icon components
 
     ## New Icons Added
-
     - `AlignJustifyOutlineIcon`, `CopyAsMarkdownOutlineIcon`, `IndentDecreaseOutlineIcon`, `SlotIcon`, `TextScanOutlineIcon`
 
     ## Updated Icons
-
     - Updated approximately 190 existing icons with refined SVG paths and improved rendering
     - Minor coordinate adjustments for better visual consistency
     - Enhanced clipPath definitions where needed
