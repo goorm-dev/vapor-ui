@@ -33,35 +33,31 @@ const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupShare
     name: 'InputGroup',
     hookName: 'useInputGroup',
     providerName: 'InputGroupProvider',
-    strict: false, // Make it non-strict so TextInput can work standalone
+    strict: false,
 });
 
 /* -------------------------------------------------------------------------------------------------
  * useInputGroup Hook
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * Custom hook to handle InputGroup context synchronization
- * Separates InputGroup-related logic from TextInput component
- */
-
 interface UseInputGroupSyncOptions {
     value?: string;
     maxLength?: Field.Control.Props['maxLength'];
 }
 
+/**
+ * Custom hook to handle InputGroup context synchronization
+ * Separates InputGroup-related logic from Input component
+ */
 export function useInputGroup({ value, maxLength }: UseInputGroupSyncOptions) {
-    const groupContext = useInputGroupContext();
-    const { setValue, setMaxLength } = groupContext ?? {};
+    const { setValue, setMaxLength } = useInputGroupContext() ?? {};
 
-    // Sync maxLength with InputGroup context on mount
     useEffect(() => {
         if (setMaxLength && maxLength !== undefined) {
             setMaxLength(maxLength);
         }
     }, [setMaxLength, maxLength]);
 
-    // Update context when value changes (including initial value)
     useEffect(() => {
         if (setValue && value !== undefined) {
             setValue(String(value));
@@ -102,6 +98,7 @@ const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
         return <InputGroupProvider value={contextValue}>{element}</InputGroupProvider>;
     },
 );
+
 Root.displayName = 'InputGroup.Root';
 
 /* -------------------------------------------------------------------------------------------------
@@ -113,13 +110,6 @@ type CounterRenderProps = { count: number; maxLength?: number; value: string };
 interface InputGroupCounterProps extends Omit<VComponentProps<'span'>, 'children'> {
     children?: React.ReactNode | ((props: CounterRenderProps) => React.ReactNode);
 }
-
-/**
- * Safely calculates the length of a field value, handling null/undefined cases
- */
-const getValueLength = (value: string): number => {
-    return value.length;
-};
 
 /**
  * Generates counter content based on children prop or default format
@@ -136,13 +126,13 @@ const generateCounterContent = (
             : children;
     }
 
-    return maxLength !== undefined ? `${count}/${maxLength}` : count.toString();
+    return maxLength !== undefined ? `${count}/${maxLength}` : `${count}`;
 };
 
 const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>(
     ({ className, children, render, ...props }, ref) => {
         const { value, maxLength } = useInputGroupContext();
-        const currentLength = getValueLength(value);
+        const currentLength = value.length;
         const content = generateCounterContent(children, currentLength, maxLength, value);
 
         return useRender({

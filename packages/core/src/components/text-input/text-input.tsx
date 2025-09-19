@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 
 import { Input as BaseInput } from '@base-ui-components/react';
 import { useControlled } from '@base-ui-components/utils/useControlled';
@@ -36,9 +36,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         ]);
 
         const { invalid, size } = textInputRootProps;
-        const isControlled = valueProp !== undefined;
+        const { current: isControlled } = useRef(valueProp !== undefined);
 
-        // Use useControlled for unified value state management
         const [value, setValue] = useControlled({
             controlled: valueProp,
             default: defaultValue,
@@ -46,16 +45,15 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             state: 'value',
         });
 
-        // Handle InputGroup synchronization via custom hook
-        useInputGroup({
-            value,
-            maxLength: otherProps.maxLength,
-        });
-
         const handleChange = (value: string, event: Event) => {
             setValue(value);
             onValueChange?.(value, event);
         };
+
+        useInputGroup({
+            value,
+            maxLength: otherProps.maxLength,
+        });
 
         return (
             <BaseInput
