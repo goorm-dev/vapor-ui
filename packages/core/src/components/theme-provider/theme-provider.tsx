@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 /* -------------------------------------------------------------------------------------------------
  * Types
@@ -82,40 +82,6 @@ const disableAnimation = (nonce?: string) => {
             document.head.removeChild(css);
         }, 1);
     };
-};
-
-/* -------------------------------------------------------------------------------------------------
- * FOUC Prevention Script
- * -----------------------------------------------------------------------------------------------*/
-
-const generateThemeScript = (
-    config: Required<Pick<ThemeConfig, 'storageKey' | 'defaultTheme' | 'enableSystem'>>,
-): string => {
-    return `(function(){
-    const STORAGE_KEY='${config.storageKey}';
-    const DEFAULT_THEME='${config.defaultTheme}';
-    const ENABLE_SYSTEM=${config.enableSystem};
-    
-    function getSystemTheme(){
-      return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
-    }
-    
-    function applyTheme(theme){
-      const resolved=(theme==='system'&&ENABLE_SYSTEM)?getSystemTheme():theme;
-      const d=document.documentElement;
-      
-      d.classList.remove('vapor-light-theme','vapor-dark-theme','light','dark');
-      if(resolved==='light')d.classList.add('vapor-light-theme');
-      if(resolved==='dark')d.classList.add('vapor-dark-theme');
-    }
-    
-    try{
-      const stored=localStorage.getItem(STORAGE_KEY);
-      applyTheme(stored||DEFAULT_THEME);
-    }catch(e){
-      applyTheme(DEFAULT_THEME);
-    }
-  })();`;
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -321,40 +287,9 @@ const useTheme = (): UseThemeProps => {
     return context ?? defaultContext;
 };
 
-/* -------------------------------------------------------------------------------------------------
- * ThemeScript Component
- * -----------------------------------------------------------------------------------------------*/
-
-const ThemeScript = memo(
-    ({
-        storageKey = 'vapor-ui-theme',
-        defaultTheme = 'system',
-        enableSystem = true,
-        nonce,
-    }: Omit<ThemeConfig, 'children'> & {
-        defaultTheme?: string;
-    }) => {
-        const script = generateThemeScript({
-            storageKey,
-            defaultTheme,
-            enableSystem,
-        });
-
-        return (
-            <script
-                suppressHydrationWarning
-                nonce={typeof window === 'undefined' ? nonce : ''}
-                dangerouslySetInnerHTML={{ __html: script }}
-            />
-        );
-    },
-);
-
-ThemeScript.displayName = 'ThemeScript';
-
 /* -----------------------------------------------------------------------------------------------*/
 
-export { ThemeProvider, useTheme, ThemeScript, generateThemeScript };
+export { ThemeProvider, useTheme };
 export type { ThemeConfig, UseThemeProps, ThemeProviderProps };
 
 export type UseThemeReturn = UseThemeProps;
