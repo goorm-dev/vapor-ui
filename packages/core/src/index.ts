@@ -26,6 +26,7 @@ export * from './components/switch';
 export * from './components/tabs';
 export * from './components/text';
 export * from './components/text-input';
+export * from './components/textarea';
 export * from './components/theme-provider';
 export * from './components/tooltip';
 export * from './components/v-stack';
