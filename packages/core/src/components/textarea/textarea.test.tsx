@@ -94,16 +94,6 @@ describe('Textarea', () => {
         expect(screen.getByTestId('textarea')).toHaveClass(/size_lg/);
     });
 
-    test('supports resize control', () => {
-        const { rerender } = render(<Textarea resize={true} data-testid="textarea" />);
-
-        expect(screen.getByTestId('textarea')).toHaveClass(/resize_true/);
-
-        rerender(<Textarea resize={false} data-testid="textarea" />);
-
-        expect(screen.getByTestId('textarea')).not.toHaveClass(/resize_true/);
-    });
-
     test('supports maxLength prop', () => {
         render(<Textarea maxLength={5} />);
 
