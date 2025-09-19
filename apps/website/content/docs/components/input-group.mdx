@@ -1,7 +1,7 @@
 ---
 title: 'InputGroup'
 site_name: 'InputGroup - Vapor Core'
-description: 'InputGroup은 텍스트 입력 필드와 관련 요소들을 그룹화하여 문자 수 카운터와 같은 추가 기능을 제공합니다.'
+description: 'InputGroup은 입력 필드(TextInput, Textarea)와 관련 요소들을 그룹화하여 문자 수 카운터와 같은 추가 기능을 제공합니다.'
 ---
 
 <Demo name="default-input-group">
@@ -29,23 +29,54 @@ export default function DefaultInputGroup() {
 
 ### Basic Usage
 
-InputGroup은 TextInput과 Counter를 조합하여 사용합니다. TextInput에 maxLength가 설정되면 자동으로 "현재글자수/최대글자수" 형태로 표시되고, maxLength가 없으면 현재 글자 수만 표시됩니다.
+InputGroup은 입력 컴포넌트(TextInput, Textarea)와 Counter를 조합하여 사용합니다. 입력 컴포넌트에 maxLength가 설정되면 자동으로 "현재글자수/최대글자수" 형태로 표시되고, maxLength가 없으면 현재 글자 수만 표시됩니다.
 
 <Demo name="input-group-basic">
 ```tsx
 'use client';
 
-import { InputGroup, TextInput } from '@vapor-ui/core';
+import { InputGroup, TextInput, Textarea } from '@vapor-ui/core';
 
 export default function InputGroupBasic() {
     return (
         <div className="space-y-4">
             <InputGroup.Root>
-                <TextInput placeholder="최대 길이 제한 있음" maxLength={50} />
+                <TextInput placeholder="텍스트 입력 (최대 50자)" maxLength={50} />
                 <InputGroup.Counter />
             </InputGroup.Root>
             <InputGroup.Root>
-                <TextInput placeholder="최대 길이 제한 없음" />
+                <Textarea placeholder="텍스트 영역 (최대 100자)" maxLength={100} rows={3} />
+                <InputGroup.Counter />
+            </InputGroup.Root>
+            <InputGroup.Root>
+                <TextInput placeholder="글자 수 제한 없음" />
+                <InputGroup.Counter />
+            </InputGroup.Root>
+        </div>
+    );
+}
+```
+</Demo>
+
+### With Textarea
+
+InputGroup은 Textarea와도 함께 사용할 수 있습니다.
+
+<Demo name="input-group-textarea">
+```tsx
+'use client';
+
+import { InputGroup, Textarea } from '@vapor-ui/core';
+
+export default function InputGroupTextarea() {
+    return (
+        <div className="space-y-4">
+            <InputGroup.Root>
+                <Textarea 
+                    placeholder="긴 텍스트를 입력하세요..." 
+                    maxLength={200}
+                    rows={4}
+                />
                 <InputGroup.Counter />
             </InputGroup.Root>
         </div>
@@ -102,7 +133,7 @@ export default function InputGroupCustomCounter() {
 
 ### InputGroup.Root
 
-InputGroup의 루트 컨테이너로, TextInput과 Counter를 감싸는 래퍼 역할을 합니다.
+InputGroup의 루트 컨테이너로, 입력 컴포넌트(TextInput, Textarea)와 Counter를 감싸는 래퍼 역할을 합니다.
 
 <ComponentPropsTable file="input-group" section="props" />
 
