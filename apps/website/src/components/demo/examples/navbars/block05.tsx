@@ -1,11 +1,10 @@
-import './index.css';
+import './logo.css';
 
 import type { ComponentProps } from 'react';
 
-import { HStack, IconButton } from '@vapor-ui/core';
-import { BackPageOutlineIcon, ForwardPageOutlineIcon } from '@vapor-ui/icons';
+import { Button, HStack } from '@vapor-ui/core';
 
-export default function Block6() {
+export default function Block5() {
     return (
         <HStack
             width="100%"
@@ -13,13 +12,9 @@ export default function Block6() {
             paddingX={{ desktop: '$400', mobile: '$200' }}
             paddingY={{ desktop: '$100', mobile: '$050' }}
         >
-            <IconButton aria-label="back" variant="outline" color="secondary">
-                <BackPageOutlineIcon />
-            </IconButton>
+            <Button color="secondary">뒤로가기</Button>
             <LogoSvg className="logo" />
-            <IconButton aria-label="next" variant="outline" color="secondary">
-                <ForwardPageOutlineIcon />
-            </IconButton>
+            <Button color="primary">완료</Button>
         </HStack>
     );
 }

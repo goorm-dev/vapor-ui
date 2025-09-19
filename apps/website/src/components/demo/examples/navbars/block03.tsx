@@ -1,4 +1,4 @@
-import './index.css';
+import './block.css';
 
 import type { ComponentProps } from 'react';
 

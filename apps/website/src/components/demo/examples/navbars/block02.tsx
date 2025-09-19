@@ -1,4 +1,4 @@
-import './index.css';
+import './block.css';
 
 import type { ComponentProps } from 'react';
 
@@ -10,7 +10,7 @@ import {
     MenuOutlineIcon,
 } from '@vapor-ui/icons';
 
-export default function Block1() {
+export default function Block2() {
     return (
         <HStack
             width="100%"
@@ -18,23 +18,21 @@ export default function Block1() {
             paddingX={{ desktop: '$400', mobile: '$200' }}
             paddingY={{ desktop: '$100', mobile: '$050' }}
         >
-            <HStack gap="$200">
-                <LogoSvg className="logo" />
+            <LogoSvg className="logo" />
 
-                <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/features">Features</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/templates">Templates</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </HStack>
+            <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
+                <NavigationMenu.List>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link href="/features">Features</NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link href="/pricing">Pricing</NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link href="/templates">Templates</NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                </NavigationMenu.List>
+            </NavigationMenu.Root>
 
             <HStack gap="$100">
                 <Avatar.Root shape="circle" alt="bell" render={<button />}>
