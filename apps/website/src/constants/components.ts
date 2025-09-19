@@ -11,6 +11,7 @@ import flexData from '../../public/components/flex.json';
 import gridData from '../../public/components/grid.json';
 import hStackData from '../../public/components/h-stack.json';
 import iconButtonData from '../../public/components/icon-button.json';
+import inputGroupData from '../../public/components/input-group.json';
 import menuData from '../../public/components/menu.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
 import radioGroupData from '../../public/components/radio-group.json';
@@ -46,4 +47,5 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     'radio-group': radioGroupData,
     tooltip: tooltipData,
     textarea: textareaData,
+    'input-group': inputGroupData,
 };
