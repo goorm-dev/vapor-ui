@@ -59,7 +59,7 @@ export const root = recipe({
 
 export const icon = layerStyle('components', {
     flex: '0 0 auto',
-    height: '22px',
+    height: vars.typography.lineHeight['075'],
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
