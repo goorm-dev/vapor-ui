@@ -59,6 +59,12 @@
             "type": ["boolean"],
             "default": "false",
             "description": "레이블을 시각적으로 숨깁니다. true 설정 시 레이블이 화면에 표시되지 않지만 스크린 리더는 읽을 수 있습니다."
+        },
+        {
+            "prop": "readOnly",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "true일 때 스위치가 읽기 전용 상태가 되어 사용자 상호작용을 방지하지만 폼 제출에는 포함됩니다."
         }
     ],
     "controlProps": [
