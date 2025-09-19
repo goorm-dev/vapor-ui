@@ -6,7 +6,7 @@ interface UseAutoResizeOptions {
 
 export function useAutoResize<T extends HTMLElement = HTMLTextAreaElement>(
     ref: React.RefObject<T>,
-    { autoResize = false }: UseAutoResizeOptions = {},
+    { autoResize = true }: UseAutoResizeOptions = {},
 ) {
     const adjustHeight = useCallback(() => {
         const element = ref.current;

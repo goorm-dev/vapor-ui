@@ -22,7 +22,6 @@ export const textarea = recipe({
             color: vars.color.foreground.normal,
             width: '100%',
             minHeight: textareaMinHeightVar,
-            resize: 'vertical',
 
             selectors: {
                 '&:read-only': {

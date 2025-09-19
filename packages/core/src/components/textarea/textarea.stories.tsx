@@ -26,22 +26,12 @@ const meta: Meta<typeof Textarea> = {
         readOnly: {
             control: { type: 'boolean' },
         },
-        resize: {
-            control: { type: 'boolean' },
-        },
+
         autoResize: {
             control: { type: 'boolean' },
         },
         maxLength: {
             control: { type: 'number' },
-        },
-        minHeight: {
-            control: { type: 'number' },
-            description: 'Minimum height for auto-resize (in pixels)',
-        },
-        maxHeight: {
-            control: { type: 'number' },
-            description: 'Maximum height for auto-resize (in pixels)',
         },
     },
 } satisfies Meta<typeof Textarea>;

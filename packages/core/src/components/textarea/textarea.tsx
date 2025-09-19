@@ -42,7 +42,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             render,
             disabled,
             readOnly,
-            style,
             ...props
         },
         ref,
@@ -109,7 +108,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 'aria-invalid': invalid || undefined,
                 'aria-required': props.required || undefined,
                 className: clsx(styles.textarea({ invalid, size, autoResize }), className),
-                style,
                 ...props,
             },
         });
