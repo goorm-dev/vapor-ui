@@ -5,10 +5,20 @@ description: 'InputGroup은 텍스트 입력 필드와 관련 요소들을 그�
 ---
 
 <Demo name="default-input-group">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/default-input-group.tsx",
-    "codeblock": true
+```tsx
+'use client';
+
+import { InputGroup, TextInput } from '@vapor-ui/core';
+
+export default function DefaultInputGroup() {
+    return (
+        <div className="space-y-4">
+            <InputGroup.Root>
+                <TextInput placeholder="메시지를 입력하세요..." maxLength={100} />
+                <InputGroup.Counter />
+            </InputGroup.Root>
+        </div>
+    );
 }
 ```
 </Demo>
@@ -22,10 +32,24 @@ description: 'InputGroup은 텍스트 입력 필드와 관련 요소들을 그�
 InputGroup은 TextInput과 Counter를 조합하여 사용합니다. TextInput에 maxLength가 설정되면 자동으로 "현재글자수/최대글자수" 형태로 표시되고, maxLength가 없으면 현재 글자 수만 표시됩니다.
 
 <Demo name="input-group-basic">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/input-group-basic.tsx",
-    "codeblock": true
+```tsx
+'use client';
+
+import { InputGroup, TextInput } from '@vapor-ui/core';
+
+export default function InputGroupBasic() {
+    return (
+        <div className="space-y-4">
+            <InputGroup.Root>
+                <TextInput placeholder="최대 길이 제한 있음" maxLength={50} />
+                <InputGroup.Counter />
+            </InputGroup.Root>
+            <InputGroup.Root>
+                <TextInput placeholder="최대 길이 제한 없음" />
+                <InputGroup.Counter />
+            </InputGroup.Root>
+        </div>
+    );
 }
 ```
 </Demo>
@@ -35,12 +59,41 @@ InputGroup은 TextInput과 Counter를 조합하여 사용합니다. TextInput에
 Counter는 함수형 children을 지원하여 커스텀 카운터 UI를 구현할 수 있습니다.
 
 <Demo name="input-group-custom-counter">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/input-group-custom-counter.tsx",
-    "codeblock": true
+```tsx
+'use client';
+
+import { InputGroup, TextInput } from '@vapor-ui/core';
+
+export default function InputGroupCustomCounter() {
+    return (
+        <div className="space-y-4">
+            <InputGroup.Root>
+                <TextInput placeholder="커스텀 카운터 예시 1" maxLength={20} />
+                <InputGroup.Counter>
+                    {({ count, maxLength }) => `${count} of ${maxLength} characters`}
+                </InputGroup.Counter>
+            </InputGroup.Root>
+            <InputGroup.Root>
+                <TextInput placeholder="커스텀 카운터 예시 2" maxLength={100} />
+                <InputGroup.Counter>
+                    {({ count, maxLength, value }) => (
+                        <span
+                            className={
+                                maxLength && count > maxLength * 0.8
+                                    ? 'text-red-500'
+                                    : 'text-gray-500'
+                            }
+                        >
+                            {count}/{maxLength} {value.length > 50 && '⚠️'}
+                        </span>
+                    )}
+                </InputGroup.Counter>
+            </InputGroup.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ## Props Table
