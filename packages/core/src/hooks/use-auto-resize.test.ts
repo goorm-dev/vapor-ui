@@ -107,7 +107,7 @@ describe('useAutoResize', () => {
 
         result.current();
 
-        // Should not adjust height since default autoResize is false
-        expect(mockElement.style.height).toBe('');
+        // Should adjust height since default autoResize is true
+        expect(mockElement.style.height).toBe('75px');
     });
 });

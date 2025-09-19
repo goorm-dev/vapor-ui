@@ -38,7 +38,7 @@ describe('Textarea', () => {
 
     test('handles controlled value and onChange', async () => {
         const user = userEvent.setup();
-        const handleValueChange = vi.fn((value: string) => {
+        const handleValueChange = vi.fn((value: string, _event: Event) => {
             rerender(<Textarea value={value} onValueChange={handleValueChange} />);
         });
 
@@ -50,7 +50,7 @@ describe('Textarea', () => {
         await user.clear(textarea);
         await user.type(textarea, 'new content');
 
-        expect(handleValueChange).toHaveBeenLastCalledWith('new content');
+        expect(handleValueChange).toHaveBeenLastCalledWith('new content', expect.any(Event));
 
         // Simulate controlled component behavior by updating the value prop
         rerender(<Textarea value="new content" onValueChange={handleValueChange} />);

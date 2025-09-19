@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
 import { useControlled } from '@base-ui-components/utils/useControlled';
@@ -8,6 +8,7 @@ import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group/input-group';
 import { useAutoResize } from '~/hooks/use-auto-resize';
+import { composeRefs } from '~/utils/compose-refs';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
@@ -42,6 +43,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             render,
             disabled,
             readOnly,
+            required,
             ...props
         },
         ref,
@@ -74,17 +76,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             }
         }, [value, autoResize, adjustHeight]);
 
-        const handleRef = useCallback(
-            (node: HTMLTextAreaElement | null) => {
-                textareaRef.current = node;
-                if (typeof ref === 'function') {
-                    ref(node);
-                } else if (ref && 'current' in ref) {
-                    ref.current = node;
-                }
-            },
-            [ref],
-        );
+        const handleRef = composeRefs(textareaRef, ref);
 
         const handleValueChange = (newValue: string, event: Event) => {
             onValueChange?.(newValue, event);
@@ -104,9 +96,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 ...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' }),
                 disabled,
                 readOnly,
+                required,
                 maxLength,
                 'aria-invalid': invalid || undefined,
-                'aria-required': props.required || undefined,
+                'aria-required': required || undefined,
                 className: clsx(styles.textarea({ invalid, size, autoResize }), className),
                 ...props,
             },
