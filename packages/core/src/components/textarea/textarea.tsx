@@ -24,7 +24,7 @@ type BaseProps = TextareaVariants & {
  * -----------------------------------------------------------------------------------------------*/
 
 type TextareaPrimitiveProps = VComponentProps<'textarea'>;
-interface TextareaProps extends Assign<TextareaPrimitiveProps, BaseProps> {
+interface TextareaProps extends Assign<Omit<TextareaPrimitiveProps, 'size'>, BaseProps> {
     value?: string;
     defaultValue?: string;
 }
