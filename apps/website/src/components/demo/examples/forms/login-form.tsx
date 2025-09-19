@@ -24,7 +24,7 @@ export default function LoginForm() {
                         비밀번호
                     </label>
                     <VStack gap="$050">
-                        <TextInput id="login-password" size="lg" />
+                        <TextInput id="login-password" size="lg" type="password" />
                         <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
                     </VStack>
                 </VStack>

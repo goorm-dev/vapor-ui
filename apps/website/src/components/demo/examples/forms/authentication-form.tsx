@@ -51,6 +51,7 @@ export default function AuthenticationForm() {
                                 value={phoneNumber}
                                 onChange={handleChange}
                                 size="lg"
+                                type="tel"
                             />
                             <Button size="lg" disabled={!regex.test(phoneNumber)}>
                                 인증번호 받기
