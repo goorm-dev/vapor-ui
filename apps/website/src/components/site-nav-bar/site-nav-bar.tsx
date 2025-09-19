@@ -22,7 +22,7 @@ import LogoVapor from '../../../public/icons/logo-vapor.svg';
 const NAVIGATION_LINKS = [
     { href: '/docs', label: 'Docs' },
     { href: '/playground', label: 'Playground' },
-    // { href: '/blocks', label: 'UI Blocks' }, // TODO : when blocks page is ready
+    { href: '/blocks', label: 'Blocks' },
 ];
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {

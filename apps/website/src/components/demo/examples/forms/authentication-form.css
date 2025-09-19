@@ -1,0 +1,34 @@
+.input-label {
+    color: var(--vapor-color-foreground-normal-lighter, #525463);
+
+    font-size: var(--vapor-typography-fontSize-050, 0.75rem);
+    font-weight: var(--vapor-typography-fontWeight-500);
+    line-height: var(--vapor-typography-lineHeight-050, 1.125rem); /* 150% */
+    letter-spacing: var(--vapor-typography-letterSpacing-000, 0);
+}
+
+.group {
+    display: flex;
+    align-items: center;
+    gap: 0;
+
+    &.attached {
+        & > [data-first-item] {
+            border-right: none;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        & > [data-last-item] {
+            border: 1px solid var(--vapor-color-border-normal, #d1d2d8);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        & > *:not([data-first-item]):not([data-last-item]) {
+            border: 1px solid var(--vapor-color-border-normal, #d1d2d8);
+            border-right: none;
+            border-radius: 0;
+        }
+    }
+}
