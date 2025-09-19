@@ -76,6 +76,7 @@ export default function SignupForm() {
                                 {jobs.map((job) => (
                                     <Select.Item key={job.value} value={job.value}>
                                         {job.label}
+                                        <Select.ItemIndicator />
                                     </Select.Item>
                                 ))}
                             </Select.Content>
@@ -98,19 +99,19 @@ export default function SignupForm() {
                         </HStack>
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root id="signup-terms-of-service" />
-                            <HStack
-                                render={
-                                    <label
-                                        htmlFor="signup-terms-of-service"
-                                        className="checkbox-label"
-                                    />
-                                }
-                                width="100%"
-                                justifyContent="space-between"
-                                alignItems="center"
-                            >
-                                이용 약관 동의
+                            <HStack width="100%" justifyContent="space-between" alignItems="center">
+                                <HStack
+                                    render={
+                                        <label
+                                            htmlFor="signup-terms-of-service"
+                                            className="checkbox-label"
+                                        />
+                                    }
+                                >
+                                    이용 약관 동의
+                                </HStack>
                                 <IconButton
+                                    size="sm"
                                     color="secondary"
                                     variant="ghost"
                                     aria-label="약관 보기"
@@ -121,19 +122,19 @@ export default function SignupForm() {
                         </HStack>
                         <HStack alignItems="center" gap="$100">
                             <Checkbox.Root id="signup-personal-info-collection" />
-                            <HStack
-                                render={
-                                    <label
-                                        htmlFor="signup-personal-info-collection"
-                                        className="checkbox-label"
-                                    />
-                                }
-                                width="100%"
-                                justifyContent="space-between"
-                                alignItems="center"
-                            >
-                                개인 정보 수집 이용 동의
+                            <HStack width="100%" justifyContent="space-between" alignItems="center">
+                                <HStack
+                                    render={
+                                        <label
+                                            htmlFor="signup-personal-info-collection"
+                                            className="checkbox-label"
+                                        />
+                                    }
+                                >
+                                    개인 정보 수집 이용 동의
+                                </HStack>
                                 <IconButton
+                                    size="sm"
                                     color="secondary"
                                     variant="ghost"
                                     aria-label="개인 정보 수집 이용 보기"

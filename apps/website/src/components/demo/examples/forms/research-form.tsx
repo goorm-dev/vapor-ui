@@ -54,6 +54,7 @@ export default function ResearchForm() {
                             {jobs.map((job) => (
                                 <Select.Item key={job.value} value={job.value}>
                                     {job.label}
+                                    <Select.ItemIndicator />
                                 </Select.Item>
                             ))}
                         </Select.Content>
@@ -72,6 +73,7 @@ export default function ResearchForm() {
                             {stacks.map((stack) => (
                                 <Select.Item key={stack.value} value={stack.value}>
                                     {stack.label}
+                                    <Select.ItemIndicator />
                                 </Select.Item>
                             ))}
                         </Select.Content>
