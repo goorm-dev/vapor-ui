@@ -14,6 +14,7 @@ export * from './components/grid';
 export * from './components/h-stack';
 export * from './components/icon-button';
 export * from './components/menu';
+export * from './components/multi-select';
 export * from './components/navigation-menu';
 export * from './components/popover';
 export * from './components/radio';
