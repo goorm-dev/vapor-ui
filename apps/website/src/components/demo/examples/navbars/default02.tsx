@@ -73,7 +73,7 @@ export default function Block2() {
                                             <Sheet.Close
                                                 render={
                                                     <IconButton
-                                                        aria-label="Clsoe Sheet"
+                                                        aria-label="Close Sheet"
                                                         variant="ghost"
                                                         color="secondary"
                                                     />

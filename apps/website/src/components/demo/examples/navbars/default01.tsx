@@ -10,7 +10,7 @@ import {
     MenuOutlineIcon,
 } from '@vapor-ui/icons';
 
-export default function Block01() {
+export default function Block1() {
     return (
         <HStack
             width="100%"
@@ -75,7 +75,7 @@ export default function Block01() {
                                             <Sheet.Close
                                                 render={
                                                     <IconButton
-                                                        aria-label="Clsoe Sheet"
+                                                        aria-label="Close Sheet"
                                                         variant="ghost"
                                                         color="secondary"
                                                     />
