@@ -4,18 +4,24 @@ import { CheckCircleIcon, HeartIcon, InfoCircleOutlineIcon } from '@vapor-ui/ico
 export default function CalloutWithIcon() {
     return (
         <div className="flex w-full max-w-xl flex-col gap-2">
-            <Callout color="success">
-                <CheckCircleIcon />
+            <Callout.Root color="success">
+                <Callout.Icon>
+                    <CheckCircleIcon />
+                </Callout.Icon>
                 Task completed successfully
-            </Callout>
-            <Callout color="warning">
-                <InfoCircleOutlineIcon />
+            </Callout.Root>
+            <Callout.Root color="warning">
+                <Callout.Icon>
+                    <InfoCircleOutlineIcon />
+                </Callout.Icon>
                 Please review your settings
-            </Callout>
-            <Callout color="primary">
-                <HeartIcon />
+            </Callout.Root>
+            <Callout.Root color="primary">
+                <Callout.Icon>
+                    <HeartIcon />
+                </Callout.Icon>
                 New notification available
-            </Callout>
+            </Callout.Root>
         </div>
     );
 }

@@ -18,6 +18,7 @@ import '../components/dialog/dialog.css';
 import '../components/grid/grid.css';
 import '../components/icon-button/icon-button.css';
 import '../components/menu/menu.css';
+import '../components/multi-select/multi-select.css';
 import '../components/navigation-menu/navigation-menu.css';
 import '../components/popover/popover.css';
 import '../components/radio/radio.css';
