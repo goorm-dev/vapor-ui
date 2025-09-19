@@ -108,95 +108,50 @@ describe('Textarea', () => {
         expect(textarea).toHaveAttribute('aria-required', 'true');
     });
 
-    describe('minHeight and maxHeight props', () => {
-        test('applies custom minHeight and maxHeight with numbers', () => {
-            render(<Textarea autoResize minHeight={100} maxHeight={300} data-testid="textarea" />);
-
-            const textarea = screen.getByTestId('textarea');
-
-            // CSS variables should be set with pixel values
-            expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('100px');
-            expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('300px');
-        });
-
-        test('applies custom minHeight and maxHeight with strings', () => {
-            render(
-                <Textarea autoResize minHeight="5rem" maxHeight="20rem" data-testid="textarea" />,
-            );
-
-            const textarea = screen.getByTestId('textarea');
-
-            // CSS variables should be set with string values as-is
-            expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('5rem');
-            expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('20rem');
-        });
-
-        test('uses default values when minHeight and maxHeight are not provided', () => {
+    describe('autoResize functionality', () => {
+        test('applies autoResize CSS classes when enabled', () => {
             render(<Textarea autoResize data-testid="textarea" />);
 
             const textarea = screen.getByTestId('textarea');
 
-            // Should use default values
-            expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('116px');
-            expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('400px');
+            expect(textarea).toHaveClass(/autoResize_true/);
         });
 
-        test('CSS variables are set regardless of autoResize', () => {
-            render(<Textarea minHeight={100} maxHeight={300} data-testid="textarea" />);
+        test('does not apply autoResize CSS classes when disabled', () => {
+            render(<Textarea data-testid="textarea" />);
 
             const textarea = screen.getByTestId('textarea');
 
-            expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('100px');
-            expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('300px');
             expect(textarea).not.toHaveClass(/autoResize_true/);
         });
     });
 
-    describe('autoResize functionality', () => {
-        test('applies autoResize CSS classes and height variables', () => {
-            render(<Textarea autoResize minHeight={80} maxHeight={250} data-testid="textarea" />);
-
-            const textarea = screen.getByTestId('textarea');
-
-            expect(textarea).toHaveClass(/autoResize_true/);
-            expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('80px');
-            expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('250px');
-        });
-    });
-
-    describe('CSS variable inheritance', () => {
-        test('allows CSS variables to be overridden by external styles', () => {
+    describe('custom styling', () => {
+        test('supports custom styles via style prop', () => {
             render(
                 <Textarea
                     autoResize
-                    minHeight={100}
-                    maxHeight={300}
-                    style={
-                        {
-                            '--vapor-textarea-min-height': '150px',
-                            '--vapor-textarea-max-height': '500px',
-                        } as React.CSSProperties
-                    }
+                    style={{
+                        minHeight: '150px',
+                        maxHeight: '500px',
+                    }}
                     data-testid="textarea"
                 />,
             );
 
             const textarea = screen.getByTestId('textarea');
 
-            // External style should override props
-            expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('150px');
-            expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('500px');
+            // Custom styles should be applied
+            expect(textarea.style.minHeight).toBe('150px');
+            expect(textarea.style.maxHeight).toBe('500px');
         });
 
-        test('supports mixed number and string height values', () => {
-            render(
-                <Textarea autoResize minHeight={100} maxHeight="25rem" data-testid="textarea" />,
-            );
+        test('supports className prop for additional styling', () => {
+            render(<Textarea className="custom-textarea" data-testid="textarea" />);
 
             const textarea = screen.getByTestId('textarea');
 
-            expect(textarea.style.getPropertyValue('--vapor-textarea-min-height')).toBe('100px');
-            expect(textarea.style.getPropertyValue('--vapor-textarea-max-height')).toBe('25rem');
+            expect(textarea).toHaveClass('custom-textarea');
         });
     });
 });

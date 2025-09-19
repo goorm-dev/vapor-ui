@@ -1,11 +1,9 @@
 'use client';
 
-import type { ComponentProps } from 'react';
 import { forwardRef, useCallback, useEffect, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
 import { useControlled } from '@base-ui-components/utils/useControlled';
-import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group/input-group';
@@ -15,19 +13,16 @@ import type { Assign, VComponentProps } from '~/utils/types';
 import type { TextareaVariants } from './textarea.css';
 import * as styles from './textarea.css';
 
-type BaseProps = TextareaVariants &
-    ComponentProps<'textarea'> & {
-        onValueChange?: (value: string) => void;
-        minHeight?: number | string;
-        maxHeight?: number | string;
-        autoResize?: boolean;
-    };
+type BaseProps = TextareaVariants & {
+    onValueChange?: (value: string) => void;
+    autoResize?: boolean;
+};
 
 /* -------------------------------------------------------------------------------------------------
  * Textarea
  * -----------------------------------------------------------------------------------------------*/
 
-type TextareaPrimitiveProps = VComponentProps<typeof BaseField.Control>;
+type TextareaPrimitiveProps = VComponentProps<'textarea'>;
 interface TextareaProps extends Assign<TextareaPrimitiveProps, BaseProps> {
     value?: string;
     defaultValue?: string;
@@ -40,8 +35,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             value: valueProp,
             defaultValue,
             className,
-            minHeight = 116,
-            maxHeight = 400,
             invalid,
             size,
             autoResize,
@@ -72,17 +65,15 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-        const autoResizeTextarea = useAutoResize(textareaRef, {
-            autoResize,
-            minHeight,
-            maxHeight,
-        });
+        // Auto resize functionality
+        const adjustHeight = useAutoResize(textareaRef);
 
+        // Trigger auto resize when value changes
         useEffect(() => {
             if (autoResize) {
-                autoResizeTextarea();
+                adjustHeight();
             }
-        }, [value, autoResize, autoResizeTextarea]);
+        }, [value, autoResize, adjustHeight]);
 
         const handleRef = useCallback(
             (node: HTMLTextAreaElement | null) => {
@@ -95,13 +86,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             },
             [ref],
         );
-
-        const styleVars = assignInlineVars({
-            [styles.textareaMinHeightVar]:
-                typeof minHeight === 'number' ? `${minHeight}px` : minHeight,
-            [styles.textareaMaxHeightVar]:
-                typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight,
-        });
 
         const handleValueChange = (newValue: string) => {
             onValueChange?.(newValue);
@@ -125,7 +109,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 'aria-invalid': invalid || undefined,
                 'aria-required': props.required || undefined,
                 className: clsx(styles.textarea({ invalid, size, autoResize }), className),
-                style: { ...styleVars, ...style },
+                style,
                 ...props,
             },
         });
