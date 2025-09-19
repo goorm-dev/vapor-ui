@@ -71,6 +71,12 @@
             "type": ["boolean"],
             "default": "false",
             "description": "혼합(indeterminate) 상태를 표시합니다. 일부 선택된 경우를 나타낼 때 사용합니다."
+        },
+        {
+            "prop": "readOnly",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "true일 때 체크박스가 읽기 전용 상태가 되어 사용자 상호작용을 방지하지만 폼 제출에는 포함됩니다."
         }
     ],
     "controlProps": [

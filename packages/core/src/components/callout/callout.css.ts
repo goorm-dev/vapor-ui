@@ -6,6 +6,9 @@ import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
     base: layerStyle('components', {
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: vars.size.space['075'],
         borderRadius: vars.size.borderRadius[300],
         padding: `${vars.size.space[150]} ${vars.size.space[200]}`,
         width: '100%',
@@ -52,6 +55,14 @@ export const root = recipe({
             }),
         },
     },
+});
+
+export const icon = layerStyle('components', {
+    flex: '0 0 auto',
+    height: vars.typography.lineHeight['075'],
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
 });
 
 export type CalloutVariants = NonNullable<RecipeVariants<typeof root>>;

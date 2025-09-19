@@ -2,7 +2,7 @@ import { TextInput } from '@vapor-ui/core';
 
 export default function TextInputInvalid() {
     return (
-        <div className="space-y-3">
+        <div className="space-y-3 flex flex-col">
             <TextInput
                 type="email"
                 invalid
