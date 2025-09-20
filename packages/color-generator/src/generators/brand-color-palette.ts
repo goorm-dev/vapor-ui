@@ -96,28 +96,21 @@ function generateBrandColorPalette(
         lightness: background.lightness.dark,
     });
 
+    console.log('Generated light tokens:', lightTokens);
+
     // Apply custom color overrides
     const adjustedLightTokens = overrideCustomColors(lightTokens, config.colors);
 
-    // Remove gray background tokens as they're not brand-specific
-    const filteredLightTokens = Object.fromEntries(
-        Object.entries(adjustedLightTokens).filter(([tokenName]) => !tokenName.includes('-gray-')),
-    );
-
-    const filteredDarkTokens = Object.fromEntries(
-        Object.entries(darkTokens).filter(([tokenName]) => !tokenName.includes('-gray-')),
-    );
-
     return {
         light: {
-            tokens: filteredLightTokens,
+            tokens: adjustedLightTokens,
             metadata: {
                 type: 'primitive',
                 theme: 'light',
             },
         },
         dark: {
-            tokens: filteredDarkTokens,
+            tokens: darkTokens,
             metadata: {
                 type: 'primitive',
                 theme: 'dark',
