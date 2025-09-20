@@ -23,7 +23,7 @@ const DEFAULT_PRIMITIVE_COLORS = {
     blue: '#448EFE',
     cyan: '#1EBAD2',
     green: '#04A37E',
-    lime: '#1EBAD2',
+    lime: '#8FD327',
     yellow: '#FFC107',
     orange: '#ED670C',
 } as const;
