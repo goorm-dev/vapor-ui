@@ -121,8 +121,6 @@ function generateBrandColorPalette(
         lightness: background.lightness.dark,
     });
 
-    console.log('Generated light tokens:', lightTokens);
-
     // Apply custom color overrides
     const adjustedLightTokens = overrideCustomColors(lightTokens, config.colors);
 
