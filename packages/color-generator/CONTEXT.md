@@ -186,20 +186,21 @@ const formatOklchForWeb = (oklchString: string): string => {
 **Algorithm Priority**: OKLCH 지각적 균일성 > Stevens' Power Law 준수
 
 **Configuration**:
+
 - 10개 기본 색조 (red, pink, grape, violet, blue, cyan, green, lime, yellow, orange)
 - Gray 스케일 기본 배경색
 - Light/Dark 테마별 명도 기준점
 
 **Output Structure**:
+
 ```
 Light Theme: 110 color tokens + 1 canvas (10 hues × 10 scales + 1 gray × 10 scales + 1 canvas)
-Dark Theme:  110 color tokens + 1 canvas (10 hues × 10 scales + 1 gray × 10 scales + 1 canvas)  
+Dark Theme:  110 color tokens + 1 canvas (10 hues × 10 scales + 1 gray × 10 scales + 1 canvas)
 Base Theme:  2 tokens (white, black)
 Total:       224 tokens
 ```
 
 **Use Case**: 브랜드 중립적 기본 색상 체계가 필요한 프로덕트
-
 
 ### Brand Color Palette Generation
 
@@ -210,22 +211,24 @@ Total:       224 tokens
 **Algorithm Priority**: 브랜드 색상 충실도 > 지각적 균일성
 
 **Key Features**:
+
 - 브랜드 색상과 deltaE 최소값을 가진 스케일을 원본 색상으로 대체
 - Light 테마: 실제 색상 교체, Dark 테마: deltaE 마킹만 수행
 - 커스텀 배경색 지원 (기본값: white)
 
 **Brand Color Mapping**:
+
 ```
 Light Theme: brand-500 = original brand color
 Dark Theme:  brand-700 = deltaE marked (not replaced)
 ```
 
 **Output Structure**:
+
 ```
 Per Brand Color: 10 scales × 2 themes = 20 tokens
 Per Background:  10 scales × 2 themes + 2 canvas = 22 tokens
 ```
-
 
 ### Semantic Token Generation
 
@@ -234,12 +237,14 @@ Per Background:  10 scales × 2 themes + 2 canvas = 22 tokens
 **Purpose**: 의미적 역할 기반 토큰 매핑
 
 **Mapping Logic**:
+
 - `background-{role}`: deltaE 0인 스케일 (Light) / 최소 deltaE 스케일 (Dark)
 - `foreground-{role}-100`: background 다음 스케일
 - `foreground-{role}-200`: foreground-100 다음 스케일
 - `border-{role}`: background와 동일 스케일
 
 **Token Structure**:
+
 ```typescript
 {
   semantic: {
@@ -254,10 +259,10 @@ Per Background:  10 scales × 2 themes + 2 canvas = 22 tokens
 ```
 
 **Integration Flow**:
+
 ```
 Brand Palette → deltaE Analysis → Semantic Role Assignment → Component Token Generation
 ```
-
 
 ### API Design Principles
 

@@ -11,7 +11,22 @@ import {
 } from '../utils';
 
 /**
- * 브랜드 컬러를 사용하여 생성된 토큰 중에서 사용자 지정 색상과 가장 가까운 토큰을 덮어씁니다.
+ * 사용자 지정 색상(customColors)을 기반으로 기존 토큰(tokens) 객체의 색상 값을 덮어씁니다.
+ *
+ * @param {Tokens} tokens - 덮어쓰기의 대상이 될 원본 토큰 객체.
+ * @param {Record<string, string>} customColors - 적용할 색상. { '색상이름': '새로운 hex값' } 형태.
+ * @returns {Tokens} 사용자 지정 색상이 적용된 새로운 토큰 객체.
+ *
+ * @example
+ * const tokens = {
+ * 'color-primary-500': { name: '...', hex: '#7878f8ff' },
+ * 'color-primary-600': { name: '...', hex: '#0000DD' },
+ * };
+ *
+ * const custom = { 'primary': '#0808dbff' };
+ *
+ * // 'primary'와 가장 가까운 'color-primary-500'의 hex값이 '#0808dbff'으로 변경됨
+ * const newTokens = overrideCustomColors(tokens, custom);
  */
 function overrideCustomColors(tokens: Tokens, customColors: Record<string, string>): Tokens {
     const newTokens = { ...tokens };
@@ -19,13 +34,17 @@ function overrideCustomColors(tokens: Tokens, customColors: Record<string, strin
     for (const [colorName, hexValue] of Object.entries(customColors)) {
         if (colorName === 'background') continue;
 
-        // 해당 컬러의 토큰들을 찾아서 palette 형태로 재구성
+        // 토큰 구조 재구성
         const colorTokens: Record<string, ColorToken> = {};
         Object.entries(newTokens).forEach(([tokenName, token]) => {
-            if (typeof token === 'object' && tokenName.includes(`-${colorName}-`)) {
+            const isRelatedColorToken =
+                token && typeof token === 'object' && tokenName.includes(`-${colorName}-`);
+
+            if (isRelatedColorToken) {
                 const scaleMatch = tokenName.match(/-(\d{3})$/);
                 if (scaleMatch) {
-                    colorTokens[scaleMatch[1]] = token;
+                    const scale = scaleMatch[1];
+                    colorTokens[scale] = token;
                 }
             }
         });
@@ -35,6 +54,7 @@ function overrideCustomColors(tokens: Tokens, customColors: Record<string, strin
             continue;
         }
 
+        // deltaE 기준으로 가장 가까운 스케일 찾기
         const closestScaleKey = findClosestScale(colorTokens);
         if (!closestScaleKey) continue;
 
@@ -42,15 +62,18 @@ function overrideCustomColors(tokens: Tokens, customColors: Record<string, strin
         const oklchValue = formatCss(oklchColor) ?? '';
         const oklchString = formatOklchForWeb(oklchValue);
 
+        const tokenIdentifier = [colorName, closestScaleKey];
+        const updatedTokenName = generateTokenName(tokenIdentifier);
+
         const updatedToken: ColorToken = {
-            name: generateTokenName([colorName, closestScaleKey]),
+            name: updatedTokenName,
             deltaE: 0,
             hex: hexValue,
             oklch: oklchString,
-            codeSyntax: generateCodeSyntax([colorName, closestScaleKey]),
+            codeSyntax: generateCodeSyntax(tokenIdentifier),
         };
 
-        newTokens[updatedToken.name!] = updatedToken;
+        newTokens[updatedTokenName] = updatedToken;
     }
 
     return newTokens;
@@ -70,9 +93,11 @@ function overrideCustomColors(tokens: Tokens, customColors: Record<string, strin
  * //   dark: { tokens: { ... }, metadata: {...} }
  * // }
  */
+type BrandColorPalette = Omit<ColorPaletteResult, 'base'>;
+
 function generateBrandColorPalette(
     config: BrandColorGeneratorConfig,
-): Omit<ColorPaletteResult, 'base'> {
+): BrandColorPalette {
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
     const background = config.background || {
         color: '#FFFFFF',
@@ -99,25 +124,16 @@ function generateBrandColorPalette(
     // Apply custom color overrides
     const adjustedLightTokens = overrideCustomColors(lightTokens, config.colors);
 
-    // Remove gray background tokens as they're not brand-specific
-    const filteredLightTokens = Object.fromEntries(
-        Object.entries(adjustedLightTokens).filter(([tokenName]) => !tokenName.includes('-gray-')),
-    );
-
-    const filteredDarkTokens = Object.fromEntries(
-        Object.entries(darkTokens).filter(([tokenName]) => !tokenName.includes('-gray-')),
-    );
-
     return {
         light: {
-            tokens: filteredLightTokens,
+            tokens: adjustedLightTokens,
             metadata: {
                 type: 'primitive',
                 theme: 'light',
             },
         },
         dark: {
-            tokens: filteredDarkTokens,
+            tokens: darkTokens,
             metadata: {
                 type: 'primitive',
                 theme: 'dark',

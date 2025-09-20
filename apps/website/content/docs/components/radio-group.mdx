@@ -1,7 +1,7 @@
 ---
-title: 'Radio Group'
-site_name: 'Radio Group - Vapor Core'
-description: 'Radio Group는 둘 또는 그 이상의 옵션 중 하나만 선택할 수 있도록 돕는 입력 컴포넌트입니다.'
+title: 'RadioGroup'
+site_name: 'RadioGroup - Vapor Core'
+description: 'RadioGroup는 둘 또는 그 이상의 옵션 중 하나만 선택할 수 있도록 돕는 입력 컴포넌트입니다.'
 ---
 
 <Demo name="default-radio-group">
@@ -181,6 +181,33 @@ export default function RadioGroupDisabled() {
                 </RadioGroup.Root>
             </div>
         </div>
+    );
+}
+```
+
+</Demo>
+
+### Read Only
+
+RadioGroup의 읽기 전용 상태입니다. 사용자가 값을 변경할 수 없지만 현재 선택된 상태를 확인할 수 있습니다.
+
+<Demo name="radio-readonly">
+
+```tsx
+import { Radio, RadioGroup } from '@vapor-ui/core';
+
+export default function RadioReadOnly() {
+    return (
+        <RadioGroup.Root name="readonly-fruits" defaultValue="apple">
+            <label className="flex items-center gap-2">
+                <Radio.Root value="apple" readOnly />
+                읽기 전용 (선택됨)
+            </label>
+            <label className="flex items-center gap-2">
+                <Radio.Root value="orange" readOnly />
+                읽기 전용 (선택 안됨)
+            </label>
+        </RadioGroup.Root>
     );
 }
 ```

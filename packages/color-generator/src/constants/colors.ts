@@ -6,13 +6,13 @@ const BASE_COLORS = {
         hex: '#FFFFFF',
         oklch: 'oklch(1 0 0)',
         codeSyntax: 'vapor-color-white',
-    } as ColorToken,
+    },
     black: {
         name: 'color-black',
         hex: '#000000',
         oklch: 'oklch(0 0 0)',
         codeSyntax: 'vapor-color-black',
-    } as ColorToken,
+    },
 } as const satisfies Record<'white' | 'black', ColorToken>;
 
 const DEFAULT_PRIMITIVE_COLORS = {
@@ -23,7 +23,7 @@ const DEFAULT_PRIMITIVE_COLORS = {
     blue: '#448EFE',
     cyan: '#1EBAD2',
     green: '#04A37E',
-    lime: '#1EBAD2',
+    lime: '#8FD327',
     yellow: '#FFC107',
     orange: '#ED670C',
 } as const;

@@ -21,15 +21,6 @@ interface BrandColorGeneratorConfig extends ColorGeneratorConfig {
     };
 }
 
-interface SemanticMappingConfig {
-    primary: { name: string; hex: string };
-    secondary?: { name: string; hex: string };
-    success?: { name: string; hex: string };
-    warning?: { name: string; hex: string };
-    error?: { name: string; hex: string };
-    background?: Background;
-}
-
 /* -----------------------------------------------------------------------------------------------*/
 
 export type {
@@ -39,5 +30,4 @@ export type {
     Background,
     ColorGeneratorConfig,
     BrandColorGeneratorConfig,
-    SemanticMappingConfig,
 };
