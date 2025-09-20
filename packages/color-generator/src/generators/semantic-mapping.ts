@@ -127,13 +127,22 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): Seman
     const darkSemanticMapping: Record<string, string> = {};
     const darkComponentMapping: Record<string, string> = {};
 
+    // Extract all brand colors first
+    const brandColors: Record<string, string> = {};
+    Object.entries(mappingConfig).forEach(([semanticRole, config]) => {
+        if (semanticRole !== 'background') {
+            brandColors[config.name] = config.hex;
+        }
+    });
+
+    // Generate brand palette once for all colors
+    const brandPalette = generateBrandColorPalette({
+        colors: brandColors,
+        background: mappingConfig.background,
+    });
+
     Object.entries(mappingConfig).forEach(([semanticRole, config]) => {
         if (semanticRole === 'background') return; // Skip background config entry
-
-        const brandPalette = generateBrandColorPalette({
-            colors: { [config.name]: config.hex },
-            background: mappingConfig.background,
-        });
 
         // Extract color tokens from TokenContainer format
         const lightTokens = brandPalette.light.tokens;
