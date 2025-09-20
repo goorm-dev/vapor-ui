@@ -1,5 +1,5 @@
 import { BASE_COLORS } from '../constants';
-import type { Background, ColorToken, ScaleInfo, SemanticTokensResult } from '../types';
+import type { Background, ColorToken, ScaleInfo, SemanticTokensResult, ThemeType } from '../types';
 import { findClosestScale, getContrastingForegroundColor, getSortedScales } from '../utils';
 import { generateBrandColorPalette } from './brand-color-palette';
 
@@ -16,6 +16,7 @@ interface SemanticMappingConfig {
 }
 
 interface SemanticTokenMapping {
+    themeName: ThemeType;
     semanticRole: string;
     brandColorName: string;
     scaleInfo: ScaleInfo;
@@ -57,15 +58,21 @@ function determineButtonForegroundColor(backgroundToken: ColorToken | undefined)
     return { ...BASE_COLORS.white };
 }
 
-function createSemanticTokenMapping(mapping: SemanticTokenMapping): {
+function createSemanticTokenMapping({
+    themeName,
+    semanticRole,
+    brandColorName,
+    scaleInfo,
+    buttonForegroundColor,
+}: SemanticTokenMapping): {
     semantic: Record<string, string>;
     componentSpecific: Record<string, string>;
 } {
-    const { semanticRole, brandColorName, scaleInfo, buttonForegroundColor } = mapping;
+    const background100Scale = themeName === 'dark' ? 800 : 100;
 
     return {
         semantic: {
-            [`color-background-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
+            [`color-background-${semanticRole}-100`]: `color-${brandColorName}-${background100Scale}`,
             [`color-background-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
             [`color-foreground-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.foregroundScale}`,
             [`color-foreground-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.alternativeScale}`,
@@ -191,12 +198,14 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): Seman
 
         const themes = [
             {
+                name: 'light' as ThemeType,
                 tokens: brandPalette.light.tokens,
                 findScales: findLightThemeScales,
                 semanticMappingTarget: lightSemanticMapping,
                 componentMappingTarget: lightComponentMapping,
             },
             {
+                name: 'dark' as ThemeType,
                 tokens: brandPalette.dark.tokens,
                 findScales: findDarkThemeScales,
                 semanticMappingTarget: darkSemanticMapping,
@@ -211,7 +220,8 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): Seman
             const backgroundToken = palette[scaleInfo.backgroundScale];
             const buttonForegroundColor = determineButtonForegroundColor(backgroundToken);
 
-            const tokenMappings = createSemanticTokenMapping({
+            const tokenMappings = createSemanticTokenMapping({         
+                themeName: theme.name,
                 semanticRole,
                 brandColorName: config.name,
                 scaleInfo,
