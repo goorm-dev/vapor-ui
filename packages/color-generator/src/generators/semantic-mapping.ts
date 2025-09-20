@@ -1,6 +1,6 @@
 import { BASE_COLORS } from '../constants';
 import type { Background, ColorToken, ScaleInfo, SemanticTokensResult } from '../types';
-import { getContrastingForegroundColor, getSortedScales } from '../utils';
+import { findClosestScale, getContrastingForegroundColor, getSortedScales } from '../utils';
 import { generateBrandColorPalette } from './brand-color-palette';
 
 interface SemanticMappingConfig {
@@ -44,12 +44,21 @@ function createSemanticTokenMapping(mapping: SemanticTokenMapping): {
  * deltaE가 0인 스케일을 배경으로, 그 다음 스케일들을 전경으로 사용합니다.
  *
  * @param palette - 색상 팔레트
- * @param scales - 정렬된 스케일 배열
+ * @param scales - 명도순으로 정렬된 스케일 배열
  * @returns 배경, 전경, 대체 스케일 정보
  *
  * @example
- * findLightThemeScales(palette, ['050', '100', '200', '300'])
- * // returns: { backgroundScale: '200', foregroundScale: '300', alternativeScale: '300' }
+ * // palette에서 '400' 스케일의 deltaE가 0이라고 가정
+ * const palette = {
+ * '300': { deltaE: 15 },
+ * '400': { deltaE: 0 },   // 👈 이 스케일이 배경(background)이 됨
+ * '500': { deltaE: 12 },  // 👈 그 다음 스케일이 전경(foreground)
+ * '600': { deltaE: 25 },  // 👈 다다음 스케일이 대체(alternative)
+ * };
+ * const scales = ['300', '400', '500', '600'];
+ *
+ * findLightThemeScales(palette, scales)
+ * // returns: { backgroundScale: '400', foregroundScale: '500', alternativeScale: '600' }
  */
 function findLightThemeScales(
     palette: Record<string, { deltaE?: number }>,
@@ -73,22 +82,31 @@ function findLightThemeScales(
  * deltaE가 가장 낮은 스케일을 배경으로, 그 다음 스케일들을 전경으로 사용합니다.
  *
  * @param palette - 색상 팔레트
- * @param scales - 정렬된 스케일 배열
+ * @param scales - 명도순으로 정렬된 스케일 배열
  * @returns 배경, 전경, 대체 스케일 정보
  *
  * @example
- * findDarkThemeScales(palette, ['050', '100', '200', '300'])
- * // returns: { backgroundScale: '050', foregroundScale: '100', alternativeScale: '200' }
+ * // palette에서 '800' 스케일의 deltaE가 가장 낮다고 가정
+ * const palette = {
+ * '600': { deltaE: 14.44 },
+ * '700': { deltaE: 7.53 },
+ * '800': { deltaE: 0.35 },  // 👈 deltaE가 가장 낮으므로 이 스케일이 배경(background)
+ * '900': { deltaE: 13.97 }, // 👈 그 다음 스케일이 전경(foreground)
+ * };
+ * const scales = ['600', '700', '800', '900'];
+ *
+ * findDarkThemeScales(palette, scales)
+ * // returns: { backgroundScale: '800', foregroundScale: '900', alternativeScale: '900' }
  */
 function findDarkThemeScales(
     palette: Record<string, { deltaE?: number }>,
     scales: string[],
 ): ScaleInfo {
-    const backgroundScale = scales.reduce((lowest, current) => {
-        const lowestDeltaE = palette[lowest]?.deltaE ?? Infinity;
-        const currentDeltaE = palette[current]?.deltaE ?? Infinity;
-        return currentDeltaE < lowestDeltaE ? current : lowest;
-    });
+    const backgroundScale = findClosestScale(palette);
+
+    if (!backgroundScale) {
+        throw new Error('Could not find a valid background scale in the palette for dark theme.');
+    }
 
     const backgroundIndex = scales.indexOf(backgroundScale);
     const foregroundScale = scales[backgroundIndex + 1] ?? backgroundScale;
