@@ -1,7 +1,16 @@
 import { BASE_COLORS } from '../constants';
-import type { ColorToken, ScaleInfo, SemanticMappingConfig, SemanticTokensResult } from '../types';
+import type { Background, ColorToken, ScaleInfo, SemanticTokensResult } from '../types';
 import { getContrastingForegroundColor, getSortedScales } from '../utils';
 import { generateBrandColorPalette } from './brand-color-palette';
+
+interface SemanticMappingConfig {
+    primary: { name: string; hex: string };
+    secondary?: { name: string; hex: string };
+    success?: { name: string; hex: string };
+    warning?: { name: string; hex: string };
+    error?: { name: string; hex: string };
+    background?: Background;
+}
 
 interface SemanticTokenMapping {
     semanticRole: string;
@@ -18,7 +27,8 @@ function createSemanticTokenMapping(mapping: SemanticTokenMapping): {
 
     return {
         semantic: {
-            [`color-background-${semanticRole}`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
+            [`color-background-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
+            [`color-background-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
             [`color-foreground-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.foregroundScale}`,
             [`color-foreground-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.alternativeScale}`,
             [`color-border-${semanticRole}`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
@@ -225,4 +235,5 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): Seman
 
 /* -----------------------------------------------------------------------------------------------*/
 
+export type { SemanticMappingConfig };
 export { getSemanticDependentTokens };
