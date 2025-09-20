@@ -6,13 +6,13 @@ const BASE_COLORS = {
         hex: '#FFFFFF',
         oklch: 'oklch(1 0 0)',
         codeSyntax: 'vapor-color-white',
-    } as ColorToken,
+    },
     black: {
         name: 'color-black',
         hex: '#000000',
         oklch: 'oklch(0 0 0)',
         codeSyntax: 'vapor-color-black',
-    } as ColorToken,
+    },
 } as const satisfies Record<'white' | 'black', ColorToken>;
 
 const DEFAULT_PRIMITIVE_COLORS = {
