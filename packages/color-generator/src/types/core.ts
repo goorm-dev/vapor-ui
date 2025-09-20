@@ -10,7 +10,7 @@ interface OklchColor {
 }
 
 interface ColorToken {
-    name?: string;
+    name: string;
     hex: string;
     oklch: string;
     deltaE?: number;
