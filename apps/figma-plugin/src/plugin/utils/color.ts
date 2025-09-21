@@ -111,11 +111,13 @@ export function isValidHexColor(hex: string): boolean {
 export function isValidColorData(
     colorData: unknown,
 ): colorData is { hex: string; oklch?: string; codeSyntax?: string } {
-    return (
-        typeof colorData === 'object' &&
-        colorData !== null &&
-        'hex' in colorData &&
-        typeof colorData.hex === 'string' &&
-        isValidHexColor(colorData.hex)
-    );
+    if (typeof colorData !== 'object' || colorData === null) {
+        return false;
+    }
+
+    if (!('hex' in colorData) || typeof (colorData as { hex: unknown }).hex !== 'string') {
+        return false;
+    }
+
+    return isValidHexColor((colorData as { hex: string }).hex);
 }
