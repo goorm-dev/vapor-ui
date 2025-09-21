@@ -15,18 +15,16 @@ import { generateCompleteCSS } from '@vapor-ui/css-generator';
 
 const css = generateCompleteCSS({
     colors: {
-        primary: { name: 'blue', hex: '#2563eb' },
+        primary: { name: 'mint', color: '#6af574ff' },
         background: {
             name: 'neutral',
-            hex: '#f8fafc',
+            color: '#f8fafc',
             lightness: { light: 98, dark: 8 },
         },
     },
     scaling: 1.15,
-    radius: 8,
+    radius: 'lg',
 });
-
-console.log(css); // Add to your CSS
 ```
 
 ## API
@@ -38,15 +36,15 @@ Generate complete theme CSS with colors, scaling, and radius.
 ```typescript
 interface CompleteCSSConfig {
     colors: {
-        primary: { name: string; hex: string };
+        primary: { name: string; color: string };
         background: {
             name: string;
-            hex: string;
+            color: string;
             lightness: { light: number; dark: number };
         };
     };
     scaling: number;
-    radius: number;
+    radius: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 }
 ```
 
@@ -55,9 +53,15 @@ interface CompleteCSSConfig {
 Generate color variables only.
 
 ```typescript
+import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
+
 const colorCSS = generateColorCSS({
-    primary: { name: 'blue', hex: '#2563eb' },
-    background: { name: 'neutral', hex: '#f8fafc', lightness: { light: 98, dark: 8 } },
+    primary: { name: 'mint', color: '#6af574ff' },
+    background: { 
+        name: 'neutral', 
+        color: '#f8fafc', 
+        lightness: { light: 98, dark: 8 } 
+    },
 });
 ```
 
@@ -75,8 +79,10 @@ const scalingCSS = generateScalingCSS(1.25);
 Generate radius variable.
 
 ```typescript
-const radiusCSS = generateRadiusCSS(8);
-// Output: :root { --vapor-radius-base: 8px; }
+type RadiusKey = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+
+const radiusCSS = generateRadiusCSS('lg');
+// Output: :root { --vapor-radius-factor: 1.5; }
 ```
 
 ## Options
@@ -102,14 +108,6 @@ All functions support these options:
 }
 ```
 
-### Additional options for generateRadiusCSS:
-
-```typescript
-{
-  unit?: 'px' | 'rem';               // Default: 'px'
-}
-```
-
 ## Examples
 
 ### Custom options
@@ -129,7 +127,7 @@ import { generateColorCSS, generateRadiusCSS, generateScalingCSS } from '@vapor-
 
 const colorCSS = generateColorCSS(colorConfig);
 const scalingCSS = generateScalingCSS(1.2);
-const radiusCSS = generateRadiusCSS(12, { unit: 'rem' });
+const radiusCSS = generateRadiusCSS('xl');
 ```
 
 ## Generated Variables
@@ -144,20 +142,31 @@ const radiusCSS = generateRadiusCSS(12, { unit: 'rem' });
 ### Other
 
 - `--{prefix}-scale-factor`: Typography scale
-- `--{prefix}-radius-base`: Border radius
+- `--{prefix}-radius-factor`: Border radius factor
+
+## Radius Values
+
+The `generateRadiusCSS` function accepts predefined radius keys:
+
+- `'none'`: 0
+- `'sm'`: 0.5
+- `'md'`: 1
+- `'lg'`: 1.5
+- `'xl'`: 2
+- `'full'`: 3
 
 ## Output Example
 
 ```css
 :root {
-    --vapor-color-primary-500: #2563eb;
+    --vapor-color-mint-500: #6af574ff;
     --vapor-color-background-canvas: #f8fafc;
     --vapor-scale-factor: 1.15;
-    --vapor-radius-base: 8px;
+    --vapor-radius-factor: 1.5;
 }
 
 :root.vapor-dark-theme {
-    --vapor-color-primary-500: #417af0;
+    --vapor-color-mint-800: #62e96b;
     --vapor-color-background-canvas: #161717;
 }
 ```
