@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { DARK_CLASS_NAME } from '../../styles/theme.css';
+const DARK_CLASS_NAME = 'vapor-dark-theme'
 
 /* -------------------------------------------------------------------------------------------------
  * NOTE: Theme Priority Order (highest to lowest):
@@ -68,6 +68,9 @@ interface UseThemeProps {
 
     /** Function to change theme (automatically saves to localStorage) */
     setTheme: (theme: string | ((prev: string) => string)) => void;
+
+    /** Resets theme to default and clears localStorage */
+    resetTheme: () => void;
 
     /** Forced theme if set (highest priority) */
     forcedTheme?: string;
@@ -200,6 +203,15 @@ const Theme = ({
         [storageKey, theme],
     );
 
+    const resetTheme = useCallback(() => {
+        try {
+            localStorage.removeItem(storageKey);
+        } catch {
+            // Storage not available
+        }
+        setThemeState(defaultTheme);
+    }, [storageKey, defaultTheme]);
+
     const handleMediaQuery = useCallback(
         (e: MediaQueryListEvent | MediaQueryList) => {
             const systemTheme = getSystemTheme(e);
@@ -240,12 +252,13 @@ const Theme = ({
         () => ({
             theme,
             setTheme,
+            resetTheme,
             forcedTheme,
             resolvedTheme: theme === 'system' ? resolvedTheme : theme,
             themes: enableSystem ? [...THEME_LIST, 'system'] : THEME_LIST,
             systemTheme: enableSystem ? (resolvedTheme as 'light' | 'dark') : undefined,
         }),
-        [theme, setTheme, forcedTheme, resolvedTheme, enableSystem],
+        [theme, setTheme, resetTheme, forcedTheme, resolvedTheme, enableSystem],
     );
 
     return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
