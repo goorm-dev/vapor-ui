@@ -5,9 +5,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { DARK_CLASS_NAME } from '../../styles/theme.css';
 
 /* -------------------------------------------------------------------------------------------------
- * Types
- * -----------------------------------------------------------------------------------------------*/
-/* -------------------------------------------------------------------------------------------------
  * NOTE: Theme Priority Order (highest to lowest):
  *
  * 1. forcedTheme - Force a specific theme (when developer wants to override all settings)
