@@ -14,16 +14,16 @@ npm install @vapor-ui/css-generator @vapor-ui/color-generator
 import { generateCompleteCSS } from '@vapor-ui/css-generator';
 
 const css = generateCompleteCSS({
-  colors: {
-    primary: { name: 'blue', hex: '#2563eb' },
-    background: { 
-      name: 'neutral', 
-      hex: '#f8fafc', 
-      lightness: { light: 98, dark: 8 }
-    }
-  },
-  scaling: 1.15,
-  radius: 8
+    colors: {
+        primary: { name: 'blue', hex: '#2563eb' },
+        background: {
+            name: 'neutral',
+            hex: '#f8fafc',
+            lightness: { light: 98, dark: 8 },
+        },
+    },
+    scaling: 1.15,
+    radius: 8,
 });
 
 console.log(css); // Add to your CSS
@@ -37,16 +37,16 @@ Generate complete theme CSS with colors, scaling, and radius.
 
 ```typescript
 interface CompleteCSSConfig {
-  colors: {
-    primary: { name: string; hex: string };
-    background: { 
-      name: string; 
-      hex: string; 
-      lightness: { light: number; dark: number };
+    colors: {
+        primary: { name: string; hex: string };
+        background: {
+            name: string;
+            hex: string;
+            lightness: { light: number; dark: number };
+        };
     };
-  };
-  scaling: number;
-  radius: number;
+    scaling: number;
+    radius: number;
 }
 ```
 
@@ -56,8 +56,8 @@ Generate color variables only.
 
 ```typescript
 const colorCSS = generateColorCSS({
-  primary: { name: 'blue', hex: '#2563eb' },
-  background: { name: 'neutral', hex: '#f8fafc', lightness: { light: 98, dark: 8 }}
+    primary: { name: 'blue', hex: '#2563eb' },
+    background: { name: 'neutral', hex: '#f8fafc', lightness: { light: 98, dark: 8 } },
 });
 ```
 
@@ -88,13 +88,14 @@ All functions support these options:
   prefix?: string;                    // Default: 'vapor'
   format?: 'compact' | 'readable';    // Default: 'readable'
   classNames?: {                      // Theme class names
-    light: string;                    // Default: 'vapor-light-theme'  
+    light: string;                    // Default: 'vapor-light-theme'
     dark: string;                     // Default: 'vapor-dark-theme'
   };
 }
 ```
 
 ### Additional options for generateCompleteCSS:
+
 ```typescript
 {
   includeColorComments?: boolean;     // Default: false
@@ -102,6 +103,7 @@ All functions support these options:
 ```
 
 ### Additional options for generateRadiusCSS:
+
 ```typescript
 {
   unit?: 'px' | 'rem';               // Default: 'px'
@@ -111,17 +113,19 @@ All functions support these options:
 ## Examples
 
 ### Custom options
+
 ```typescript
 const css = generateCompleteCSS(config, {
-  prefix: 'my-theme',
-  format: 'compact',
-  includeColorComments: true
+    prefix: 'my-theme',
+    format: 'compact',
+    includeColorComments: true,
 });
 ```
 
 ### Individual generators
+
 ```typescript
-import { generateColorCSS, generateScalingCSS, generateRadiusCSS } from '@vapor-ui/css-generator';
+import { generateColorCSS, generateRadiusCSS, generateScalingCSS } from '@vapor-ui/css-generator';
 
 const colorCSS = generateColorCSS(colorConfig);
 const scalingCSS = generateScalingCSS(1.2);
@@ -131,12 +135,14 @@ const radiusCSS = generateRadiusCSS(12, { unit: 'rem' });
 ## Generated Variables
 
 ### Colors
+
 - `--{prefix}-color-{name}-{050-900}`: Color palettes
 - `--{prefix}-color-background-*`: Background colors
 - `--{prefix}-color-foreground-*`: Text colors
 - `--{prefix}-color-border-*`: Border colors
 
 ### Other
+
 - `--{prefix}-scale-factor`: Typography scale
 - `--{prefix}-radius-base`: Border radius
 
@@ -144,14 +150,14 @@ const radiusCSS = generateRadiusCSS(12, { unit: 'rem' });
 
 ```css
 :root {
-  --vapor-color-primary-500: #2563eb;
-  --vapor-color-background-canvas: #f8fafc;
-  --vapor-scale-factor: 1.15;
-  --vapor-radius-base: 8px;
+    --vapor-color-primary-500: #2563eb;
+    --vapor-color-background-canvas: #f8fafc;
+    --vapor-scale-factor: 1.15;
+    --vapor-radius-base: 8px;
 }
 
 :root.vapor-dark-theme {
-  --vapor-color-primary-500: #417af0;
-  --vapor-color-background-canvas: #161717;
+    --vapor-color-primary-500: #417af0;
+    --vapor-color-background-canvas: #161717;
 }
 ```

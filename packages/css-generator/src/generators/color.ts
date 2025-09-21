@@ -1,12 +1,9 @@
-import {
-    generateBrandColorPalette,
-    getSemanticDependentTokens,
-} from '@vapor-ui/color-generator';
+import { generateBrandColorPalette, getSemanticDependentTokens } from '@vapor-ui/color-generator';
+
+import type { CSSGeneratorOptions, ColorThemeConfig, ThemeVariant } from '../types';
+import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 
 const DEFAULT_PREFIX = 'vapor';
-
-import type { CSSGeneratorOptions, ThemeVariant, ColorThemeConfig } from '../types';
-import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 
 type BrandColorPalette = ReturnType<typeof generateBrandColorPalette>;
 type SemanticTokens = ReturnType<typeof getSemanticDependentTokens>;
@@ -103,9 +100,9 @@ export const generateColorCSS = (
     };
 
     const semanticConfig = {
-        primary: { 
-            name: colorConfig.primary.name, 
-            hex: colorConfig.primary.hex 
+        primary: {
+            name: colorConfig.primary.name,
+            hex: colorConfig.primary.hex,
         },
         background: {
             name: colorConfig.background.name,

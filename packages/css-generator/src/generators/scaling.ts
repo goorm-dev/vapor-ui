@@ -1,6 +1,6 @@
-const DEFAULT_PREFIX = 'vapor';
-
 import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
+
+const DEFAULT_PREFIX = 'vapor';
 
 interface ScalingCSSOptions {
     prefix?: string;
