@@ -90,7 +90,7 @@ export const generateColorCSS = (
     // Convert ColorThemeConfig to the format expected by color-generator functions
     const brandColorConfig = {
         colors: {
-            primary: colorConfig.primary.hex,
+            [colorConfig.primary.name]: colorConfig.primary.hex,
         },
         background: {
             name: colorConfig.background.name,
@@ -111,7 +111,6 @@ export const generateColorCSS = (
         },
     };
 
-    // Generate brand palette and semantic tokens internally
     const brandPalette = generateBrandColorPalette(brandColorConfig);
     const semanticTokens = getSemanticDependentTokens(semanticConfig);
 

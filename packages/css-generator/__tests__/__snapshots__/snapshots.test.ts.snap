@@ -3,16 +3,16 @@
 exports[`CSS Generator Snapshots > should match generateColorCSS snapshot 1`] = `
 ":root {
     --vapor-color-background-canvas: #f8fafc;
-    --vapor-color-primary-050: #b3fbb3;
-    --vapor-color-primary-100: #6af574ff;
-    --vapor-color-primary-200: #58db60;
-    --vapor-color-primary-300: #3eb643;
-    --vapor-color-primary-400: #33a636;
-    --vapor-color-primary-500: #178618;
-    --vapor-color-primary-600: #006a00;
-    --vapor-color-primary-700: #005700;
-    --vapor-color-primary-800: #004000;
-    --vapor-color-primary-900: #002a00;
+    --vapor-color-mint-050: #b3fbb3;
+    --vapor-color-mint-100: #6af574ff;
+    --vapor-color-mint-200: #58db60;
+    --vapor-color-mint-300: #3eb643;
+    --vapor-color-mint-400: #33a636;
+    --vapor-color-mint-500: #178618;
+    --vapor-color-mint-600: #006a00;
+    --vapor-color-mint-700: #005700;
+    --vapor-color-mint-800: #004000;
+    --vapor-color-mint-900: #002a00;
     --vapor-color-neutral-050: #e7e9ea;
     --vapor-color-neutral-100: #dbddde;
     --vapor-color-neutral-200: #c0c2c3;
@@ -23,7 +23,8 @@ exports[`CSS Generator Snapshots > should match generateColorCSS snapshot 1`] = 
     --vapor-color-neutral-700: #494a4a;
     --vapor-color-neutral-800: #363637;
     --vapor-color-neutral-900: #232324;
-    --vapor-color-background-primary: var(--vapor-color-mint-100);
+    --vapor-color-background-primary-100: var(--vapor-color-mint-100);
+    --vapor-color-background-primary-200: var(--vapor-color-mint-100);
     --vapor-color-foreground-primary-100: var(--vapor-color-mint-200);
     --vapor-color-foreground-primary-200: var(--vapor-color-mint-300);
     --vapor-color-border-primary: var(--vapor-color-mint-100);
@@ -32,16 +33,16 @@ exports[`CSS Generator Snapshots > should match generateColorCSS snapshot 1`] = 
 
 :root.vapor-dark-theme {
     --vapor-color-background-canvas: #161717;
-    --vapor-color-primary-050: #002c00;
-    --vapor-color-primary-100: #003600;
-    --vapor-color-primary-200: #004a00;
-    --vapor-color-primary-300: #006700;
-    --vapor-color-primary-400: #017401;
-    --vapor-color-primary-500: #239325;
-    --vapor-color-primary-600: #3bb13f;
-    --vapor-color-primary-700: #4dcb53;
-    --vapor-color-primary-800: #62e96b;
-    --vapor-color-primary-900: #b8fbb9;
+    --vapor-color-mint-050: #002c00;
+    --vapor-color-mint-100: #003600;
+    --vapor-color-mint-200: #004a00;
+    --vapor-color-mint-300: #006700;
+    --vapor-color-mint-400: #017401;
+    --vapor-color-mint-500: #239325;
+    --vapor-color-mint-600: #3bb13f;
+    --vapor-color-mint-700: #4dcb53;
+    --vapor-color-mint-800: #62e96b;
+    --vapor-color-mint-900: #b8fbb9;
     --vapor-color-neutral-050: #242424;
     --vapor-color-neutral-100: #2d2d2d;
     --vapor-color-neutral-200: #3f3f40;
@@ -52,7 +53,8 @@ exports[`CSS Generator Snapshots > should match generateColorCSS snapshot 1`] = 
     --vapor-color-neutral-700: #b1b2b4;
     --vapor-color-neutral-800: #cdcfd1;
     --vapor-color-neutral-900: #e9ebec;
-    --vapor-color-background-primary: var(--vapor-color-mint-800);
+    --vapor-color-background-primary-100: var(--vapor-color-mint-800);
+    --vapor-color-background-primary-200: var(--vapor-color-mint-800);
     --vapor-color-foreground-primary-100: var(--vapor-color-mint-900);
     --vapor-color-foreground-primary-200: var(--vapor-color-mint-900);
     --vapor-color-border-primary: var(--vapor-color-mint-800);
@@ -60,21 +62,21 @@ exports[`CSS Generator Snapshots > should match generateColorCSS snapshot 1`] = 
 }"
 `;
 
-exports[`CSS Generator Snapshots > should match generateColorCSS with options snapshot 1`] = `":root{--custom-color-background-canvas:#f8fafc;--custom-color-primary-050:#b3fbb3;--custom-color-primary-100:#6af574ff;--custom-color-primary-200:#58db60;--custom-color-primary-300:#3eb643;--custom-color-primary-400:#33a636;--custom-color-primary-500:#178618;--custom-color-primary-600:#006a00;--custom-color-primary-700:#005700;--custom-color-primary-800:#004000;--custom-color-primary-900:#002a00;--custom-color-neutral-050:#e7e9ea;--custom-color-neutral-100:#dbddde;--custom-color-neutral-200:#c0c2c3;--custom-color-neutral-300:#9fa0a2;--custom-color-neutral-400:#909193;--custom-color-neutral-500:#737374;--custom-color-neutral-600:#5a5b5b;--custom-color-neutral-700:#494a4a;--custom-color-neutral-800:#363637;--custom-color-neutral-900:#232324;--custom-color-background-primary:var(--custom-color-mint-100);--custom-color-foreground-primary-100:var(--custom-color-mint-200);--custom-color-foreground-primary-200:var(--custom-color-mint-300);--custom-color-border-primary:var(--custom-color-mint-100);--custom-color-button-foreground-primary:var(--custom-color-black)}:root.dark-mode{--custom-color-background-canvas:#161717;--custom-color-primary-050:#002c00;--custom-color-primary-100:#003600;--custom-color-primary-200:#004a00;--custom-color-primary-300:#006700;--custom-color-primary-400:#017401;--custom-color-primary-500:#239325;--custom-color-primary-600:#3bb13f;--custom-color-primary-700:#4dcb53;--custom-color-primary-800:#62e96b;--custom-color-primary-900:#b8fbb9;--custom-color-neutral-050:#242424;--custom-color-neutral-100:#2d2d2d;--custom-color-neutral-200:#3f3f40;--custom-color-neutral-300:#575758;--custom-color-neutral-400:#636364;--custom-color-neutral-500:#7e7f81;--custom-color-neutral-600:#9a9c9d;--custom-color-neutral-700:#b1b2b4;--custom-color-neutral-800:#cdcfd1;--custom-color-neutral-900:#e9ebec;--custom-color-background-primary:var(--custom-color-mint-800);--custom-color-foreground-primary-100:var(--custom-color-mint-900);--custom-color-foreground-primary-200:var(--custom-color-mint-900);--custom-color-border-primary:var(--custom-color-mint-800);--custom-color-button-foreground-primary:var(--custom-color-black)}"`;
+exports[`CSS Generator Snapshots > should match generateColorCSS with options snapshot 1`] = `":root{--custom-color-background-canvas:#f8fafc;--custom-color-mint-050:#b3fbb3;--custom-color-mint-100:#6af574ff;--custom-color-mint-200:#58db60;--custom-color-mint-300:#3eb643;--custom-color-mint-400:#33a636;--custom-color-mint-500:#178618;--custom-color-mint-600:#006a00;--custom-color-mint-700:#005700;--custom-color-mint-800:#004000;--custom-color-mint-900:#002a00;--custom-color-neutral-050:#e7e9ea;--custom-color-neutral-100:#dbddde;--custom-color-neutral-200:#c0c2c3;--custom-color-neutral-300:#9fa0a2;--custom-color-neutral-400:#909193;--custom-color-neutral-500:#737374;--custom-color-neutral-600:#5a5b5b;--custom-color-neutral-700:#494a4a;--custom-color-neutral-800:#363637;--custom-color-neutral-900:#232324;--custom-color-background-primary-100:var(--custom-color-mint-100);--custom-color-background-primary-200:var(--custom-color-mint-100);--custom-color-foreground-primary-100:var(--custom-color-mint-200);--custom-color-foreground-primary-200:var(--custom-color-mint-300);--custom-color-border-primary:var(--custom-color-mint-100);--custom-color-button-foreground-primary:var(--custom-color-black)}:root.dark-mode{--custom-color-background-canvas:#161717;--custom-color-mint-050:#002c00;--custom-color-mint-100:#003600;--custom-color-mint-200:#004a00;--custom-color-mint-300:#006700;--custom-color-mint-400:#017401;--custom-color-mint-500:#239325;--custom-color-mint-600:#3bb13f;--custom-color-mint-700:#4dcb53;--custom-color-mint-800:#62e96b;--custom-color-mint-900:#b8fbb9;--custom-color-neutral-050:#242424;--custom-color-neutral-100:#2d2d2d;--custom-color-neutral-200:#3f3f40;--custom-color-neutral-300:#575758;--custom-color-neutral-400:#636364;--custom-color-neutral-500:#7e7f81;--custom-color-neutral-600:#9a9c9d;--custom-color-neutral-700:#b1b2b4;--custom-color-neutral-800:#cdcfd1;--custom-color-neutral-900:#e9ebec;--custom-color-background-primary-100:var(--custom-color-mint-800);--custom-color-background-primary-200:var(--custom-color-mint-800);--custom-color-foreground-primary-100:var(--custom-color-mint-900);--custom-color-foreground-primary-200:var(--custom-color-mint-900);--custom-color-border-primary:var(--custom-color-mint-800);--custom-color-button-foreground-primary:var(--custom-color-black)}"`;
 
 exports[`CSS Generator Snapshots > should match generateCompleteCSS snapshot 1`] = `
 ":root {
     --vapor-color-background-canvas: #f8fafc;
-    --vapor-color-primary-050: #b3fbb3;
-    --vapor-color-primary-100: #6af574ff;
-    --vapor-color-primary-200: #58db60;
-    --vapor-color-primary-300: #3eb643;
-    --vapor-color-primary-400: #33a636;
-    --vapor-color-primary-500: #178618;
-    --vapor-color-primary-600: #006a00;
-    --vapor-color-primary-700: #005700;
-    --vapor-color-primary-800: #004000;
-    --vapor-color-primary-900: #002a00;
+    --vapor-color-mint-050: #b3fbb3;
+    --vapor-color-mint-100: #6af574ff;
+    --vapor-color-mint-200: #58db60;
+    --vapor-color-mint-300: #3eb643;
+    --vapor-color-mint-400: #33a636;
+    --vapor-color-mint-500: #178618;
+    --vapor-color-mint-600: #006a00;
+    --vapor-color-mint-700: #005700;
+    --vapor-color-mint-800: #004000;
+    --vapor-color-mint-900: #002a00;
     --vapor-color-neutral-050: #e7e9ea;
     --vapor-color-neutral-100: #dbddde;
     --vapor-color-neutral-200: #c0c2c3;
@@ -85,7 +87,8 @@ exports[`CSS Generator Snapshots > should match generateCompleteCSS snapshot 1`]
     --vapor-color-neutral-700: #494a4a;
     --vapor-color-neutral-800: #363637;
     --vapor-color-neutral-900: #232324;
-    --vapor-color-background-primary: var(--vapor-color-mint-100);
+    --vapor-color-background-primary-100: var(--vapor-color-mint-100);
+    --vapor-color-background-primary-200: var(--vapor-color-mint-100);
     --vapor-color-foreground-primary-100: var(--vapor-color-mint-200);
     --vapor-color-foreground-primary-200: var(--vapor-color-mint-300);
     --vapor-color-border-primary: var(--vapor-color-mint-100);
@@ -96,16 +99,16 @@ exports[`CSS Generator Snapshots > should match generateCompleteCSS snapshot 1`]
 
 :root.vapor-dark-theme {
     --vapor-color-background-canvas: #161717;
-    --vapor-color-primary-050: #002c00;
-    --vapor-color-primary-100: #003600;
-    --vapor-color-primary-200: #004a00;
-    --vapor-color-primary-300: #006700;
-    --vapor-color-primary-400: #017401;
-    --vapor-color-primary-500: #239325;
-    --vapor-color-primary-600: #3bb13f;
-    --vapor-color-primary-700: #4dcb53;
-    --vapor-color-primary-800: #62e96b;
-    --vapor-color-primary-900: #b8fbb9;
+    --vapor-color-mint-050: #002c00;
+    --vapor-color-mint-100: #003600;
+    --vapor-color-mint-200: #004a00;
+    --vapor-color-mint-300: #006700;
+    --vapor-color-mint-400: #017401;
+    --vapor-color-mint-500: #239325;
+    --vapor-color-mint-600: #3bb13f;
+    --vapor-color-mint-700: #4dcb53;
+    --vapor-color-mint-800: #62e96b;
+    --vapor-color-mint-900: #b8fbb9;
     --vapor-color-neutral-050: #242424;
     --vapor-color-neutral-100: #2d2d2d;
     --vapor-color-neutral-200: #3f3f40;
@@ -116,7 +119,8 @@ exports[`CSS Generator Snapshots > should match generateCompleteCSS snapshot 1`]
     --vapor-color-neutral-700: #b1b2b4;
     --vapor-color-neutral-800: #cdcfd1;
     --vapor-color-neutral-900: #e9ebec;
-    --vapor-color-background-primary: var(--vapor-color-mint-800);
+    --vapor-color-background-primary-100: var(--vapor-color-mint-800);
+    --vapor-color-background-primary-200: var(--vapor-color-mint-800);
     --vapor-color-foreground-primary-100: var(--vapor-color-mint-900);
     --vapor-color-foreground-primary-200: var(--vapor-color-mint-900);
     --vapor-color-border-primary: var(--vapor-color-mint-800);
@@ -135,9 +139,9 @@ exports[`CSS Generator Snapshots > should match generateCompleteCSS with options
 
 
 
-:root{--custom-color-background-canvas:#f8fafc;--custom-color-primary-050:#b3fbb3;--custom-color-primary-100:#6af574ff;--custom-color-primary-200:#58db60;--custom-color-primary-300:#3eb643;--custom-color-primary-400:#33a636;--custom-color-primary-500:#178618;--custom-color-primary-600:#006a00;--custom-color-primary-700:#005700;--custom-color-primary-800:#004000;--custom-color-primary-900:#002a00;--custom-color-neutral-050:#e7e9ea;--custom-color-neutral-100:#dbddde;--custom-color-neutral-200:#c0c2c3;--custom-color-neutral-300:#9fa0a2;--custom-color-neutral-400:#909193;--custom-color-neutral-500:#737374;--custom-color-neutral-600:#5a5b5b;--custom-color-neutral-700:#494a4a;--custom-color-neutral-800:#363637;--custom-color-neutral-900:#232324;--custom-color-background-primary:var(--custom-color-mint-100);--custom-color-foreground-primary-100:var(--custom-color-mint-200);--custom-color-foreground-primary-200:var(--custom-color-mint-300);--custom-color-border-primary:var(--custom-color-mint-100);--custom-color-button-foreground-primary:var(--custom-color-black)};--custom-scale-factor:1.15};--custom-radius-base:8px}}
+:root{--custom-color-background-canvas:#f8fafc;--custom-color-mint-050:#b3fbb3;--custom-color-mint-100:#6af574ff;--custom-color-mint-200:#58db60;--custom-color-mint-300:#3eb643;--custom-color-mint-400:#33a636;--custom-color-mint-500:#178618;--custom-color-mint-600:#006a00;--custom-color-mint-700:#005700;--custom-color-mint-800:#004000;--custom-color-mint-900:#002a00;--custom-color-neutral-050:#e7e9ea;--custom-color-neutral-100:#dbddde;--custom-color-neutral-200:#c0c2c3;--custom-color-neutral-300:#9fa0a2;--custom-color-neutral-400:#909193;--custom-color-neutral-500:#737374;--custom-color-neutral-600:#5a5b5b;--custom-color-neutral-700:#494a4a;--custom-color-neutral-800:#363637;--custom-color-neutral-900:#232324;--custom-color-background-primary-100:var(--custom-color-mint-100);--custom-color-background-primary-200:var(--custom-color-mint-100);--custom-color-foreground-primary-100:var(--custom-color-mint-200);--custom-color-foreground-primary-200:var(--custom-color-mint-300);--custom-color-border-primary:var(--custom-color-mint-100);--custom-color-button-foreground-primary:var(--custom-color-black)};--custom-scale-factor:1.15};--custom-radius-base:8px}}
 
-:root.vapor-dark-theme{--custom-color-background-canvas:#161717;--custom-color-primary-050:#002c00;--custom-color-primary-100:#003600;--custom-color-primary-200:#004a00;--custom-color-primary-300:#006700;--custom-color-primary-400:#017401;--custom-color-primary-500:#239325;--custom-color-primary-600:#3bb13f;--custom-color-primary-700:#4dcb53;--custom-color-primary-800:#62e96b;--custom-color-primary-900:#b8fbb9;--custom-color-neutral-050:#242424;--custom-color-neutral-100:#2d2d2d;--custom-color-neutral-200:#3f3f40;--custom-color-neutral-300:#575758;--custom-color-neutral-400:#636364;--custom-color-neutral-500:#7e7f81;--custom-color-neutral-600:#9a9c9d;--custom-color-neutral-700:#b1b2b4;--custom-color-neutral-800:#cdcfd1;--custom-color-neutral-900:#e9ebec;--custom-color-background-primary:var(--custom-color-mint-800);--custom-color-foreground-primary-100:var(--custom-color-mint-900);--custom-color-foreground-primary-200:var(--custom-color-mint-900);--custom-color-border-primary:var(--custom-color-mint-800);--custom-color-button-foreground-primary:var(--custom-color-black)}"
+:root.vapor-dark-theme{--custom-color-background-canvas:#161717;--custom-color-mint-050:#002c00;--custom-color-mint-100:#003600;--custom-color-mint-200:#004a00;--custom-color-mint-300:#006700;--custom-color-mint-400:#017401;--custom-color-mint-500:#239325;--custom-color-mint-600:#3bb13f;--custom-color-mint-700:#4dcb53;--custom-color-mint-800:#62e96b;--custom-color-mint-900:#b8fbb9;--custom-color-neutral-050:#242424;--custom-color-neutral-100:#2d2d2d;--custom-color-neutral-200:#3f3f40;--custom-color-neutral-300:#575758;--custom-color-neutral-400:#636364;--custom-color-neutral-500:#7e7f81;--custom-color-neutral-600:#9a9c9d;--custom-color-neutral-700:#b1b2b4;--custom-color-neutral-800:#cdcfd1;--custom-color-neutral-900:#e9ebec;--custom-color-background-primary-100:var(--custom-color-mint-800);--custom-color-background-primary-200:var(--custom-color-mint-800);--custom-color-foreground-primary-100:var(--custom-color-mint-900);--custom-color-foreground-primary-200:var(--custom-color-mint-900);--custom-color-border-primary:var(--custom-color-mint-800);--custom-color-button-foreground-primary:var(--custom-color-black)}"
 `;
 
 exports[`CSS Generator Snapshots > should match generateRadiusCSS snapshot 1`] = `
