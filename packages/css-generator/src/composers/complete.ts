@@ -24,7 +24,7 @@ const generateThemeComment = (config: CompleteCSSConfig): string => {
  * 
  * Colors: ${config.colors.primary.name} (#${config.colors.primary.color.replace('#', '')})
  * Scaling: ${config.scaling}
- * Radius: ${config.radius}px
+ * Radius: ${config.radius}
  */
 
 `;
@@ -45,8 +45,8 @@ export const generateCompleteCSS = (
         throw new Error('Invalid scaling configuration: must be a positive number');
     }
 
-    if (typeof config.radius !== 'number' || config.radius < 0) {
-        throw new Error('Invalid radius configuration: must be a non-negative number');
+    if (typeof config.radius !== 'string') {
+        throw new Error('Invalid radius configuration: must be a string');
     }
 
     // Generate individual CSS sections

@@ -7,6 +7,7 @@ import {
     generateRadiusCSS,
     generateScalingCSS,
 } from '../src/index';
+import type { CompleteCSSConfig } from '../src/types';
 
 const MOCK_COLOR_CONFIG = {
     primary: { name: 'mint', color: '#6af574ff' },
@@ -20,10 +21,10 @@ const MOCK_COLOR_CONFIG = {
     },
 } satisfies SemanticMappingConfig;
 
-const MOCK_TOTAL_CONFIG = {
+const MOCK_TOTAL_CONFIG: CompleteCSSConfig = {
     colors: MOCK_COLOR_CONFIG,
     scaling: 1.15,
-    radius: 8,
+    radius: 'lg',
 };
 
 describe('CSS Generator Snapshots', () => {
@@ -51,12 +52,12 @@ describe('CSS Generator Snapshots', () => {
      * Radius CSS
      * -----------------------------------------------------------------------------------------------*/
     it('should match generateRadiusCSS snapshot', () => {
-        const result = generateRadiusCSS(8);
+        const result = generateRadiusCSS('full');
         expect(result).toMatchSnapshot();
     });
 
     it('should match generateRadiusCSS with options snapshot', () => {
-        const result = generateRadiusCSS(12, {
+        const result = generateRadiusCSS('sm', {
             prefix: 'custom',
             format: 'compact',
         });
