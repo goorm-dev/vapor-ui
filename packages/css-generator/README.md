@@ -57,10 +57,10 @@ import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 
 const colorCSS = generateColorCSS({
     primary: { name: 'mint', color: '#6af574ff' },
-    background: { 
-        name: 'neutral', 
-        color: '#f8fafc', 
-        lightness: { light: 98, dark: 8 } 
+    background: {
+        name: 'neutral',
+        color: '#f8fafc',
+        lightness: { light: 98, dark: 8 },
     },
 });
 ```
