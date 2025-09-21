@@ -5,7 +5,7 @@ import { Box } from '@vapor-ui/core';
 import { BrandColorsTab } from './features/brand-colors-tab';
 import { PrimitiveColorsTab } from './features/primitive-colors-tab';
 
-function App() {
+const App = () => {
     const [activeTab, setActiveTab] = useState<'primitive' | 'brand'>('primitive');
 
     return (
@@ -44,6 +44,6 @@ function App() {
             </Box>
         </Box>
     );
-}
+};
 
 export default App;
