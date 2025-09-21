@@ -4,7 +4,7 @@ export default function DialogComposition() {
     return (
         <Dialog.Root size="lg" closeOnClickOverlay={false}>
             <Dialog.Trigger render={<Button variant="outline">확인 다이얼로그</Button>} />
-            <Dialog.CombinedContent>
+            <Dialog.Content>
                 <Dialog.Header>
                     <Dialog.Title>작업 확인</Dialog.Title>
                 </Dialog.Header>
@@ -17,7 +17,7 @@ export default function DialogComposition() {
                     <Dialog.Close render={<Button variant="ghost">취소</Button>} />
                     <Dialog.Close render={<Button color="danger">삭제</Button>} />
                 </Dialog.Footer>
-            </Dialog.CombinedContent>
+            </Dialog.Content>
         </Dialog.Root>
     );
 }
