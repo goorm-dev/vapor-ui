@@ -212,21 +212,24 @@ function createNewVariable(
  * Utilities
  * -----------------------------------------------------------------------------------------------*/
 
+const PRIMITIVE_PREFIX = 'color-';
+const SEMANTIC_PREFIX = 'vapor-color-';
+
 function formatTokenName(tokenName: string): string {
     // Convert token names like "color-blue-500" to "blue/500"
     // or "vapor-color-background-canvas" to "background/canvas"
 
-    if (tokenName.startsWith('color-')) {
+    if (tokenName.startsWith(PRIMITIVE_PREFIX)) {
         // Handle "color-blue-500" -> "blue/500"
-        const parts = tokenName.substring(6).split('-'); // Remove "color-" prefix
+        const parts = tokenName.substring(PRIMITIVE_PREFIX.length).split('-'); // Remove "color-" prefix
         if (parts.length >= 2) {
             const colorFamily = parts.slice(0, -1).join('-'); // Join all but last part
             const shade = parts[parts.length - 1];
             return `${colorFamily}/${shade}`;
         }
-    } else if (tokenName.startsWith('vapor-color-')) {
+    } else if (tokenName.startsWith(SEMANTIC_PREFIX)) {
         // Handle "vapor-color-background-canvas" -> "background/canvas"
-        const parts = tokenName.substring(12).split('-'); // Remove "vapor-color-" prefix
+        const parts = tokenName.substring(SEMANTIC_PREFIX.length).split('-'); // Remove "vapor-color-" prefix
         if (parts.length >= 2) {
             const colorFamily = parts.slice(0, -1).join('-'); // Join all but last part
             const shade = parts[parts.length - 1];
