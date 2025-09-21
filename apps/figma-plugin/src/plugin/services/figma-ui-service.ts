@@ -13,11 +13,13 @@ interface PaletteConfig {
     width: number;
     chipHeight: number;
     listRowHeight: number;
+    colorSetPadding: number;
     spacing: {
         section: number;
         palette: number;
         item: number;
     };
+
     colors: {
         background: string;
         containerBg: string;
@@ -59,6 +61,7 @@ const UI_CONSTANTS: PaletteConfig = {
     width: 1200,
     chipHeight: 100,
     listRowHeight: 64,
+    colorSetPadding: 32,
     spacing: {
         section: 40,
         palette: 24,
@@ -448,10 +451,10 @@ async function createColorSetFrame(title: string, colors: ColorData[]): Promise<
     colorSetFrame.strokeWeight = 1;
     colorSetFrame.layoutMode = 'VERTICAL';
     colorSetFrame.itemSpacing = UI_CONSTANTS.spacing.palette;
-    colorSetFrame.paddingTop = 32;
-    colorSetFrame.paddingBottom = 32;
-    colorSetFrame.paddingLeft = 32;
-    colorSetFrame.paddingRight = 32;
+    colorSetFrame.paddingTop = UI_CONSTANTS.colorSetPadding;
+    colorSetFrame.paddingBottom = UI_CONSTANTS.colorSetPadding;
+    colorSetFrame.paddingLeft = UI_CONSTANTS.colorSetPadding;
+    colorSetFrame.paddingRight = UI_CONSTANTS.colorSetPadding;
 
     // 섹션 제목
     const titleText = figma.createText();
