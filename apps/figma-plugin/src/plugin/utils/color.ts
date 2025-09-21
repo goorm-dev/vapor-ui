@@ -49,14 +49,6 @@ export function hexToFigmaColor(hex: string): { r: number; g: number; b: number 
 // ============================================================================
 
 /**
- * Formats color names by removing leading zeros
- * @returns '50', '100', '200'
- */
-export function formatColorName(colorName: string): string {
-    return colorName.replace(/\b0(\d+)\b/g, '$1');
-}
-
-/**
  * Formats family names with capitalized first letter
  * @returns 'Primary', 'Secondary', 'Background'
  */

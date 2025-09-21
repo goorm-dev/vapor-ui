@@ -1,7 +1,7 @@
 import type { ColorPaletteResult, ColorToken, TokenContainer } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
-import { formatColorName, formatFamilyTitle } from '~/plugin/utils/color';
+import { formatFamilyTitle } from '~/plugin/utils/color';
 import { hexToFigmaColor } from '~/plugin/utils/color';
 import { loadDefaultFont } from '~/plugin/utils/figma-font';
 
@@ -354,7 +354,7 @@ function extractColorFamilies(tokens: ThemeTokens): Record<string, ColorData[]> 
 
             const normalizedHex = normalizeHexColor(colorToken.hex);
             colorFamilies[familyName].push({
-                name: formatColorName(tokenName),
+                name: tokenName,
                 hex: normalizedHex,
                 oklch: colorToken.oklch,
                 textColor: getContrastColor(normalizedHex),
@@ -395,7 +395,7 @@ function createDependentTokenList(
         }
 
         return {
-            name: formatColorName(tokenName),
+            name: tokenName,
             dependentValue: actualDependentValue,
             hex,
         };
