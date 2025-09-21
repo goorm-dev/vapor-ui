@@ -109,7 +109,7 @@ export function getValidColorShades(colorShades: unknown): [string, ColorToken][
  * @returns true for '#ff0000', false for 'invalid'
  */
 export function isValidHexColor(hex: string): boolean {
-    return /^#?([a-f\d]{6}|[a-f\d]{3})$/i.test(hex);
+    return /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.test(hex);
 }
 
 /**
