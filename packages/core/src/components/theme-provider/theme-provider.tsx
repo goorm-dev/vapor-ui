@@ -7,22 +7,81 @@ import { DARK_CLASS_NAME } from '../../styles/theme.css';
 /* -------------------------------------------------------------------------------------------------
  * Types
  * -----------------------------------------------------------------------------------------------*/
+/* -------------------------------------------------------------------------------------------------
+ * NOTE: Theme Priority Order (highest to lowest):
+ *
+ * 1. forcedTheme - Force a specific theme (when developer wants to override all settings)
+ * 2. localStorage - User's saved theme via setTheme() (respects user choice)
+ * 3. defaultTheme - Initial theme for first load
+ * 4. system theme - Only referenced when defaultTheme is 'system'
+ * -----------------------------------------------------------------------------------------------*/
+
+/* -------------------------------------------------------------------------------------------------
+ * Types
+ * -----------------------------------------------------------------------------------------------*/
 interface ThemeConfig {
+    /**
+     * Theme to display on initial load (Priority: 3rd)
+     * Only used when no theme is saved in localStorage
+     * @default 'system'
+     */
     defaultTheme?: 'light' | 'dark' | 'system';
+
+    /**
+     * Key used to store theme in localStorage
+     * Theme is saved to localStorage only when setTheme() is called (Priority: 2nd)
+     * @default 'vapor-ui-theme'
+     */
     storageKey?: string;
+
+    /**
+     * Whether to automatically sync with user's system theme changes
+     * When false, system theme is only referenced on initial load, then operates independently
+     * @default true
+     */
     enableSystem?: boolean;
+
+    /**
+     * Force a specific theme (Priority: 1st - highest)
+     * When set, ignores all other theme settings and always applies this value
+     */
     forcedTheme?: string;
+
+    /**
+     * Whether to disable CSS transitions during theme changes
+     * @default false
+     */
     disableTransitionOnChange?: boolean;
+
+    /**
+     * Whether to automatically set CSS color-scheme property
+     * @default true
+     */
     enableColorScheme?: boolean;
+
+    /**
+     * CSP nonce value (Content Security Policy)
+     */
     nonce?: string;
 }
 
 interface UseThemeProps {
+    /** Current active theme ('light' | 'dark' | 'system') */
     theme?: string;
+
+    /** Function to change theme (automatically saves to localStorage) */
     setTheme: (theme: string | ((prev: string) => string)) => void;
+
+    /** Forced theme if set (highest priority) */
     forcedTheme?: string;
+
+    /** Actually applied theme ('light' | 'dark') */
     resolvedTheme?: string;
+
+    /** List of available themes */
     themes: string[];
+
+    /** Current system theme (only provided when enableSystem=true) */
     systemTheme?: 'light' | 'dark';
 }
 
