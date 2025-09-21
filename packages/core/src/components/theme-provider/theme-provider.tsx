@@ -2,6 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { DARK_CLASS_NAME } from '../../styles/theme.css';
+
 /* -------------------------------------------------------------------------------------------------
  * Types
  * -----------------------------------------------------------------------------------------------*/
@@ -33,7 +35,7 @@ interface ThemeProviderProps extends ThemeConfig {
  * -----------------------------------------------------------------------------------------------*/
 const MEDIA_QUERY = '(prefers-color-scheme: dark)';
 const COLOR_SCHEMES = ['light', 'dark'];
-const DEFAULT_THEMES = ['light', 'dark'];
+const THEME_LIST = ['light', 'dark'];
 
 /* -------------------------------------------------------------------------------------------------
  * Utilities
@@ -116,9 +118,10 @@ const Theme = ({
             const enableTransition = disableTransitionOnChange ? disableAnimation(nonce) : null;
             const d = document.documentElement;
 
-            d.classList.remove(...DEFAULT_THEMES);
-            if (resolved) {
-                d.classList.add(resolved);
+            d.classList.remove(DARK_CLASS_NAME);
+
+            if (resolved === 'dark') {
+                d.classList.add(DARK_CLASS_NAME);
             }
 
             if (enableColorScheme) {
@@ -183,7 +186,7 @@ const Theme = ({
             setTheme,
             forcedTheme,
             resolvedTheme: theme === 'system' ? resolvedTheme : theme,
-            themes: enableSystem ? [...DEFAULT_THEMES, 'system'] : DEFAULT_THEMES,
+            themes: enableSystem ? [...THEME_LIST, 'system'] : THEME_LIST,
             systemTheme: enableSystem ? (resolvedTheme as 'light' | 'dark') : undefined,
         }),
         [theme, setTheme, forcedTheme, resolvedTheme, enableSystem],
