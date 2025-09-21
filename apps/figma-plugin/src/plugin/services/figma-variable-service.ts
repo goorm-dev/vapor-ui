@@ -13,137 +13,106 @@ interface GroupConfig {
 }
 
 // ============================================================================
+// Helpers
+// ============================================================================
+
+/**
+ * Generic function to create variables for any palette structure
+ * Supports both grouped and ungrouped variables.
+ */
+async function createVariables(data: {
+    palette: Record<string, TokenContainer | undefined>;
+    collectionName: string;
+    groupNames?: string[];
+    useGroups?: boolean;
+    context?: string; // Optional context for more specific error logging
+}): Promise<void> {
+    const { palette, collectionName, groupNames, useGroups = true, context } = data;
+
+    try {
+        Logger.variables.creating(collectionName);
+
+        const collection = await createOrGetCollection(collectionName);
+
+        if (useGroups) {
+            // Create groups for specified themes or all available themes
+            const themeNames = groupNames || Object.keys(palette);
+            const groups: GroupConfig[] = themeNames
+                .map((themeName) => {
+                    const tokenContainer = palette[themeName];
+                    return tokenContainer ? { name: themeName, tokenContainer } : null;
+                })
+                .filter((g): g is GroupConfig => g !== null); // Filter out nulls and type guard
+
+            await createVariablesFromGroups(collection, groups);
+        } else {
+            // Create variables without groups (flatten all tokens)
+            const allTokens: Record<string, ColorToken | string> = {};
+
+            Object.values(palette).forEach((tokenContainer) => {
+                if (!tokenContainer) return;
+                Object.entries(tokenContainer.tokens).forEach(([tokenName, tokenValue]) => {
+                    // Use original token name without theme prefix
+                    allTokens[tokenName] = tokenValue;
+                });
+            });
+
+            await createVariablesFromTokens(collection, allTokens, '');
+        }
+
+        // Log creation success
+        const variables = await figma.variables.getLocalVariablesAsync();
+        const variableCount = variables.filter(
+            (v) => v.variableCollectionId === collection.id,
+        ).length;
+
+        Logger.variables.created(collectionName, variableCount);
+    } catch (error) {
+        const errorMessage = context ? `${context} 변수 생성 실패` : '변수 생성 실패';
+        Logger.variables.error(errorMessage, error);
+        throw error;
+    }
+}
+
+// ============================================================================
 // Public Service
 // ============================================================================
 
 export const figmaVariableService = {
     /**
      * Creates Figma variables from primitive color palette (base, light, dark)
-     * No light/dark modes - each theme creates separate variables
+     * This is a convenience wrapper around the generic createVariables function.
      */
     async createPrimitiveVariables(
         palette: { base?: TokenContainer; light: TokenContainer; dark: TokenContainer },
         collectionName: string,
     ): Promise<void> {
-        try {
-            Logger.variables.creating(collectionName);
-
-            const collection = await createOrGetCollection(collectionName);
-
-            // Create groups for each available theme
-            const groups: GroupConfig[] = [];
-
-            if (palette.base) {
-                groups.push({ name: 'base', tokenContainer: palette.base });
-            }
-            groups.push({ name: 'light', tokenContainer: palette.light });
-            groups.push({ name: 'dark', tokenContainer: palette.dark });
-
-            await createVariablesFromGroups(collection, groups);
-
-            // Log creation success
-            const variables = await figma.variables.getLocalVariablesAsync();
-            const variableCount = variables.filter(
-                (v) => v.variableCollectionId === collection.id,
-            ).length;
-
-            Logger.variables.created(collectionName, variableCount);
-        } catch (error) {
-            Logger.variables.error('Primitive 변수 생성 실패', error);
-            throw error;
-        }
+        await createVariables({
+            palette,
+            collectionName,
+            context: 'Primitive',
+        });
     },
 
     /**
      * Creates Figma variables from brand color palette (light, dark)
-     * No light/dark modes - each theme creates separate variables
+     * This is a convenience wrapper around the generic createVariables function.
      */
     async createBrandVariables(
         palette: { light: TokenContainer; dark: TokenContainer },
         collectionName: string,
     ): Promise<void> {
-        try {
-            Logger.variables.creating(collectionName);
-
-            const collection = await createOrGetCollection(collectionName);
-
-            // Create groups for each available theme
-            const groups: GroupConfig[] = [
-                { name: 'light', tokenContainer: palette.light },
-                { name: 'dark', tokenContainer: palette.dark },
-            ];
-
-            await createVariablesFromGroups(collection, groups);
-
-            // Log creation success
-            const variables = await figma.variables.getLocalVariablesAsync();
-            const variableCount = variables.filter(
-                (v) => v.variableCollectionId === collection.id,
-            ).length;
-
-            Logger.variables.created(collectionName, variableCount);
-        } catch (error) {
-            Logger.variables.error('Brand 변수 생성 실패', error);
-            throw error;
-        }
+        await createVariables({
+            palette,
+            collectionName,
+            context: 'Brand',
+        });
     },
 
     /**
-     * Generic function to create variables for any palette structure
-     * Supports both grouped and ungrouped variables
+     * Exposing the generic function for more complex use cases.
      */
-    async createVariables(data: {
-        palette: Record<string, TokenContainer>;
-        collectionName: string;
-        groupNames?: string[]; // If provided, only create variables for these groups
-        useGroups?: boolean; // If false, create variables without groups
-    }): Promise<void> {
-        const { palette, collectionName, groupNames, useGroups = true } = data;
-
-        try {
-            Logger.variables.creating(collectionName);
-
-            const collection = await createOrGetCollection(collectionName);
-
-            let groups: GroupConfig[] = [];
-
-            if (useGroups) {
-                // Create groups for specified themes or all available themes
-                const themeNames = groupNames || Object.keys(palette);
-                groups = themeNames
-                    .filter((themeName) => palette[themeName]) // Only include existing themes
-                    .map((themeName) => ({
-                        name: themeName,
-                        tokenContainer: palette[themeName],
-                    }));
-
-                await createVariablesFromGroups(collection, groups);
-            } else {
-                // Create variables without groups (flatten all tokens)
-                const allTokens: Record<string, ColorToken | string> = {};
-
-                Object.entries(palette).forEach(([_themeName, tokenContainer]) => {
-                    Object.entries(tokenContainer.tokens).forEach(([tokenName, tokenValue]) => {
-                        // Use original token name without theme prefix
-                        allTokens[tokenName] = tokenValue;
-                    });
-                });
-
-                await createVariablesFromTokens(collection, allTokens, '');
-            }
-
-            // Log creation success
-            const variables = await figma.variables.getLocalVariablesAsync();
-            const variableCount = variables.filter(
-                (v) => v.variableCollectionId === collection.id,
-            ).length;
-
-            Logger.variables.created(collectionName, variableCount);
-        } catch (error) {
-            Logger.variables.error('변수 생성 실패', error);
-            throw error;
-        }
-    },
+    createVariables,
 } as const;
 
 // ============================================================================
