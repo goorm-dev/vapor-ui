@@ -2,18 +2,24 @@ import type { CssColor } from '@adobe/leonardo-contrast-colors';
 import { BackgroundColor, Color, Theme } from '@adobe/leonardo-contrast-colors';
 import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 
-import { ADAPTIVE_COLOR_GENERATION, DEFAULT_MAIN_BACKGROUND_LIGHTNESS } from '../constants';
-import type { ColorGeneratorConfig, OklchColor, ThemeTokens, ThemeType } from '../types';
-import { formatOklchForWeb, generateCodeSyntax } from '../utils/color';
-
-// ============================================================================
-// Color Key Generation
-// ============================================================================
+import { ADAPTIVE_COLOR_GENERATION } from '../constants';
+import type { Background, ColorToken, Colors, ContrastRatios, OklchColor, Tokens } from '../types';
+import { formatOklchForWeb, generateCodeSyntax, generateTokenName } from '../utils';
 
 /**
  * 입력 색상의 명도를 분석하여 최적의 Light/Dark Key 쌍을 생성합니다.
- * - 밝은 색상 (L > 0.5): 어두운 Key를 생성하여 duoKey 구성
- * - 어두운 색상 (L ≤ 0.5): 밝은 Key를 생성하여 duoKey 구성
+ * 밝은 색상은 어두운 Key를, 어두운 색상은 밝은 Key를 생성하여 duoKey를 구성합니다.
+ *
+ * @param brandColorOklch - 브랜드 색상의 OKLCH 객체
+ * @param originalHex - 원본 HEX 색상 문자열
+ * @returns Light/Dark 테마용 색상 키 쌍
+ *
+ * @example
+ * createAdaptiveColorKeys({ mode: 'oklch', l: 0.8, c: 0.15, h: 180 }, '#87CEEB')
+ * // returns: {
+ * //   lightKey: '#87CEEB',
+ * //   darkKey: '#4A90A4'
+ * // }
  */
 const createAdaptiveColorKeys = (
     brandColorOklch: OklchColor,
@@ -22,7 +28,6 @@ const createAdaptiveColorKeys = (
     const isLightColor = brandColorOklch.l > ADAPTIVE_COLOR_GENERATION.LIGHTNESS_THRESHOLD;
 
     if (isLightColor) {
-        // 밝은 색상: 어두운 Key 생성
         const darkerKeyOklch: OklchColor = {
             ...brandColorOklch,
             mode: 'oklch',
@@ -36,7 +41,6 @@ const createAdaptiveColorKeys = (
             darkKey: (darkKeyHex ?? originalHex) as CssColor,
         };
     } else {
-        // 어두운 색상: 밝은 Key 생성
         const lighterKeyOklch: OklchColor = {
             ...brandColorOklch,
             mode: 'oklch',
@@ -56,8 +60,27 @@ const createAdaptiveColorKeys = (
 };
 
 /**
- * Adobe Leonardo Color 정의 생성
+ * Adobe Leonardo Color 정의 객체를 생성합니다.
  * 브랜드 컬러를 기반으로 adaptive light/dark key pair를 생성하여 Leonardo Color 객체를 만듭니다.
+ *
+ * @param config - 색상 정의 설정 객체
+ * @param config.name - 색상 이름
+ * @param config.colorHex - HEX 색상 값
+ * @param config.contrastRatios - 대비 비율 설정
+ * @returns Adobe Leonardo Color 객체 또는 null (유효하지 않은 색상인 경우)
+ *
+ * @example
+ * createColorDefinition({
+ *   name: 'blue',
+ *   colorHex: '#448EFE',
+ *   contrastRatios: { '050': 1.15, '100': 1.3, '200': 1.7 }
+ * })
+ * // returns: Color {
+ * //   name: 'blue',
+ * //   colorKeys: ['#448EFE', '#2563EB'],
+ * //   colorspace: 'OKLCH',
+ * //   ratios: { '050': 1.15, '100': 1.3, '200': 1.7 }
+ * // }
  */
 const createColorDefinition = ({
     name,
@@ -85,82 +108,104 @@ const createColorDefinition = ({
 };
 
 /**
- * Adobe Leonardo Theme 생성
- * Color definitions와 configuration을 기반으로 Leonardo Theme을 생성합니다.
+ * Adobe Leonardo Theme 객체를 생성합니다.
+ *
+ * @param colorDefinitions - Leonardo 색상 정의 배열
+ * @param backgroundColor - 배경색
+ * @param backgroundName - 배경색 이름
+ * @param lightness - 테마의 명도 값
+ * @param contrastRatios - 대비 비율
+ * @returns Adobe Leonardo Theme 객체
  */
-const createLeonardoTheme = (
-    themeType: ThemeType,
-    colorDefinitions: Color[],
-    config: ColorGeneratorConfig,
-): Theme => {
-    const backgroundLightness = config.backgroundLightness || {
-        ...DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
-    };
-    const contrastRatios = config.contrastRatios || {};
-
-    const lightness = backgroundLightness[themeType];
-    const colorKey = (themeType === 'light' ? '#FFFFFF' : '#000000') as CssColor;
-
-    const background = new BackgroundColor({
-        name: 'gray',
-        colorKeys: [colorKey],
+const createLeonardoTheme = ({
+    colorDefinitions,
+    backgroundColor,
+    backgroundName,
+    lightness,
+    contrastRatios,
+}: {
+    colorDefinitions: Color[];
+    backgroundColor: Background['color'];
+    backgroundName: Background['name'];
+    lightness: number;
+    contrastRatios: ContrastRatios;
+}): Theme => {
+    const backgroundColorObj = new BackgroundColor({
+        name: backgroundName,
+        colorKeys: [backgroundColor as CssColor],
         ratios: contrastRatios,
     });
 
     return new Theme({
-        colors: [...colorDefinitions, background],
-        backgroundColor: background,
+        colors: [...colorDefinitions, backgroundColorObj],
+        backgroundColor: backgroundColorObj,
         lightness,
         output: 'HEX',
     });
 };
 
-// ============================================================================
-// Theme Token Generation
-// ============================================================================
-
-const generateThemeTokens = (
-    colors: Record<string, string>,
-    contrast: Record<string, number>,
-    themeType: ThemeType = 'light',
-): ThemeTokens => {
+/**
+ * Adobe Leonardo를 사용하여 테마별 컬러 토큰을 생성합니다.
+ * 직접 TokenContainer 형태로 반환하여 변환 과정 없이 일관된 구조를 제공합니다.
+ *
+ * @param colors - 색상 이름과 HEX 값의 매핑
+ * @param contrast - 대비 비율 설정
+ * @param themeType - 테마 타입 ('light' | 'dark')
+ * @returns 생성된 토큰들이 포함된 TokenContainer
+ *
+ * @example
+ * generateThemeTokens({ blue: '#448EFE' }, { '050': 1.15, '100': 1.3 }, 'light')
+ * // returns: {
+ * //   tokens: { "vapor-color-blue-050": {...}, "vapor-color-background-canvas": {...} },
+ * //   metadata: { type: 'primitive', theme: 'light', generated: '...' }
+ * // }
+ */
+export const generateThemeTokens = ({
+    colors,
+    contrastRatios,
+    backgroundColor,
+    backgroundName,
+    lightness,
+}: {
+    colors: Colors;
+    contrastRatios: ContrastRatios;
+    backgroundColor: Background['color'];
+    backgroundName: Background['name'];
+    lightness: number;
+}): Tokens => {
     const colorDefinitions = Object.entries(colors)
-        .map(([name, hex]) =>
-            createColorDefinition({ name, colorHex: hex, contrastRatios: contrast }),
-        )
+        .map(([name, hex]) => createColorDefinition({ name, colorHex: hex, contrastRatios }))
         .filter((def): def is Color => def !== null);
 
-    const config: ColorGeneratorConfig = {
-        backgroundLightness: DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
-        contrastRatios: contrast,
-    };
-
-    const theme = createLeonardoTheme(themeType, colorDefinitions, config);
+    const theme = createLeonardoTheme({
+        colorDefinitions,
+        backgroundColor,
+        backgroundName,
+        lightness,
+        contrastRatios,
+    });
     const [backgroundObj, ...themeColors] = theme.contrastColors;
 
     const calculateDeltaE = differenceCiede2000();
+    const tokens: Record<string, ColorToken> = {};
 
-    const result: ThemeTokens = {
-        background: {
-            canvas: { hex: '', oklch: '', codeSyntax: '' },
-        },
-    };
-
-    // Background Color
+    // Background canvas token 처리
     if ('background' in backgroundObj) {
         const oklchColor = oklch(backgroundObj.background);
         const oklchValue = formatCss(oklchColor);
 
         if (oklchValue) {
-            result.background.canvas = {
+            const canvasToken: ColorToken = {
+                name: generateTokenName(['background', 'canvas']),
                 hex: backgroundObj.background,
                 oklch: formatOklchForWeb(oklchValue),
                 codeSyntax: generateCodeSyntax(['background', 'canvas']),
             };
+            tokens[canvasToken.name!] = canvasToken;
         }
     }
 
-    // Key Colors
+    // 색상 팔레트 토큰들 처리
     themeColors.forEach((color) => {
         if ('name' in color && 'values' in color && color.values.length > 0) {
             const colorName = color.name;
@@ -171,6 +216,7 @@ const generateThemeTokens = (
                 hex: string;
                 oklch: string;
                 deltaE: number;
+                tokenName: string;
                 codeSyntax: string;
             }> = [];
 
@@ -191,38 +237,32 @@ const generateThemeTokens = (
                         hex: instance.value,
                         oklch: formatOklchForWeb(oklchValue),
                         deltaE: deltaE || 0,
+                        tokenName: generateTokenName([colorName, instance.name]),
                         codeSyntax: generateCodeSyntax([colorName, instance.name]),
                     });
                 }
             });
 
+            // 숫자 순으로 정렬
             shadeData.sort((a, b) => {
                 const numA = parseInt(a.name, 10);
                 const numB = parseInt(b.name, 10);
                 return numA - numB;
             });
 
-            const colorObj: Record<
-                string,
-                { hex: string; oklch: string; deltaE: number; codeSyntax: string }
-            > = {};
+            // 토큰 객체에 추가
             shadeData.forEach((shade) => {
-                colorObj[shade.name] = {
+                const token: ColorToken = {
+                    name: shade.tokenName,
                     hex: shade.hex,
                     oklch: shade.oklch,
                     deltaE: shade.deltaE,
                     codeSyntax: shade.codeSyntax,
                 };
+                tokens[shade.tokenName] = token;
             });
-            result[colorName] = colorObj;
         }
     });
 
-    return result;
+    return tokens;
 };
-
-// ============================================================================
-// Exports
-// ============================================================================
-
-export { createColorDefinition, createAdaptiveColorKeys, createLeonardoTheme, generateThemeTokens };
