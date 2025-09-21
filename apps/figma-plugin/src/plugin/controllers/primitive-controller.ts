@@ -9,7 +9,11 @@ export const primitiveController = {
     async createPaletteSections(data: { generatedPalette: ColorPaletteResult }): Promise<void> {
         const { generatedPalette } = data;
 
-        const sortedThemes = sortThemesByOrder(generatedPalette, ['base', 'light', 'dark'] as const);
+        const sortedThemes = sortThemesByOrder(generatedPalette, [
+            'base',
+            'light',
+            'dark',
+        ] as const);
 
         figmaNoticeService.paletteCreating();
         try {
