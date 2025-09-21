@@ -94,7 +94,7 @@ const Content = forwardRef<HTMLDivElement, DialogContentProps>(
         return (
             <Portal {...portalProps}>
                 <Overlay {...overlayProps} />
-                <Content ref={ref} {...props} />
+                <Popup ref={ref} {...props} />
             </Portal>
         );
     },
