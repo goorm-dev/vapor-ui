@@ -1,17 +1,6 @@
-export interface ColorThemeConfig {
-    primary: {
-        name: string;
-        hex: string;
-    };
-    background: {
-        name: string;
-        hex: string;
-        lightness: {
-            light: number;
-            dark: number;
-        };
-    };
-}
+import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
+
+export type ColorThemeConfig = SemanticMappingConfig;
 
 export interface CompleteCSSConfig {
     colors: ColorThemeConfig;

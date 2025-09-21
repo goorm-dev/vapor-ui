@@ -1,9 +1,9 @@
 import { generateBrandColorPalette, getSemanticDependentTokens } from '@vapor-ui/color-generator';
 
-import type { CSSGeneratorOptions, ColorThemeConfig, ThemeVariant } from '../types';
-import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 import { DEFAULT_PREFIX } from '~/constants';
 
+import type { CSSGeneratorOptions, ColorThemeConfig, ThemeVariant } from '../types';
+import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 
 type BrandColorPalette = ReturnType<typeof generateBrandColorPalette>;
 type SemanticTokens = ReturnType<typeof getSemanticDependentTokens>;
@@ -82,37 +82,20 @@ export const generateColorCSS = (
     options: CSSGeneratorOptions = {},
 ): string => {
     const resolvedOptions: Required<CSSGeneratorOptions> = {
-        classNames: options.classNames || DEFAULT_CLASS_NAMES,
-        prefix: options.prefix || DEFAULT_PREFIX,
-        format: options.format || 'readable',
+        classNames: DEFAULT_CLASS_NAMES,
+        prefix: DEFAULT_PREFIX,
+        format: 'readable',
+        ...options,
     };
 
-    // Convert ColorThemeConfig to the format expected by color-generator functions
-    const brandColorConfig = {
+    const brandPalette = generateBrandColorPalette({
         colors: {
-            [colorConfig.primary.name]: colorConfig.primary.hex,
+            [colorConfig.primary.name]: colorConfig.primary.color,
         },
-        background: {
-            name: colorConfig.background.name,
-            color: colorConfig.background.hex,
-            lightness: colorConfig.background.lightness,
-        },
-    };
+        background: colorConfig.background,
+    });
 
-    const semanticConfig = {
-        primary: {
-            name: colorConfig.primary.name,
-            hex: colorConfig.primary.hex,
-        },
-        background: {
-            name: colorConfig.background.name,
-            color: colorConfig.background.hex,
-            lightness: colorConfig.background.lightness,
-        },
-    };
-
-    const brandPalette = generateBrandColorPalette(brandColorConfig);
-    const semanticTokens = getSemanticDependentTokens(semanticConfig);
+    const semanticTokens = getSemanticDependentTokens(colorConfig);
 
     const context: ColorCSSGeneratorContext = {
         brandPalette,

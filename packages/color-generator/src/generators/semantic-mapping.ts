@@ -12,7 +12,7 @@ interface SemanticMappingConfig {
     success?: { name: string; color: string };
     warning?: { name: string; color: string };
     error?: { name: string; color: string };
-    background?: Background;
+    background: Background;
 }
 
 interface SemanticTokenMapping {

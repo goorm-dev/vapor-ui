@@ -1,3 +1,4 @@
+import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -17,7 +18,7 @@ const MOCK_COLOR_CONFIG = {
             dark: 8,
         },
     },
-};
+} satisfies SemanticMappingConfig;
 
 const MOCK_TOTAL_CONFIG = {
     colors: MOCK_COLOR_CONFIG,
