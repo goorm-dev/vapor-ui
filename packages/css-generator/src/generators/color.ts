@@ -24,10 +24,7 @@ const isColorToken = (value: string | ColorToken): value is ColorToken => {
     return typeof value === 'object' && 'hex' in value && 'codeSyntax' in value;
 };
 
-const generatePaletteVariables = (
-    tokens: Tokens,
-    prefix: string,
-) => {
+const generatePaletteVariables = (tokens: Tokens, prefix: string) => {
     return Object.entries(tokens)
         .filter(([, tokenData]) => isColorToken(tokenData))
         .map(([, tokenData]) => {
@@ -37,10 +34,7 @@ const generatePaletteVariables = (
         });
 };
 
-const generateSemanticVariables = (
-    tokens: Tokens,
-    prefix: string,
-) => {
+const generateSemanticVariables = (tokens: Tokens, prefix: string) => {
     return Object.entries(tokens)
         .filter(([, tokenValue]) => typeof tokenValue === 'string')
         .map(([tokenName, tokenValue]) => {

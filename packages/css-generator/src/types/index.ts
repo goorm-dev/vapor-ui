@@ -1,5 +1,6 @@
-import type { RadiusKey } from '../generators/radius';
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
+
+import type { RadiusKey } from '../generators/radius';
 
 export type ColorThemeConfig = SemanticMappingConfig;
 
