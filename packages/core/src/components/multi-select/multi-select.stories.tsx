@@ -153,7 +153,6 @@ export const ArrayItmes: StoryObj = {
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={fonts} defaultValue={null}>
                         <MultiSelect.Trigger>
-                            {/* <MultiSelect.Value placeholder="Select fonts" /> */}
                             <MultiSelect.Value>{renderValue}</MultiSelect.Value>
                             <MultiSelect.TriggerIcon />
                         </MultiSelect.Trigger>

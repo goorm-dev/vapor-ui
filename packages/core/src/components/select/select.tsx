@@ -209,17 +209,22 @@ const Popup = forwardRef<HTMLDivElement, SelectPopupProps>(({ className, ...prop
  * -----------------------------------------------------------------------------------------------*/
 
 type ContentPrimitiveProps = VComponentProps<typeof Popup>;
-interface SelectContentProps extends ContentPrimitiveProps {}
+interface SelectContentProps extends ContentPrimitiveProps {
+    portalProps?: SelectPortalProps;
+    positionerProps?: SelectPositionerProps;
+}
 
-const Content = forwardRef<HTMLDivElement, SelectContentProps>((props, ref) => {
-    return (
-        <Portal>
-            <Positioner>
-                <Popup ref={ref} {...props} />
-            </Positioner>
-        </Portal>
-    );
-});
+const Content = forwardRef<HTMLDivElement, SelectContentProps>(
+    ({ portalProps, positionerProps, ...props }, ref) => {
+        return (
+            <Portal {...portalProps}>
+                <Positioner {...positionerProps}>
+                    <Popup ref={ref} {...props} />
+                </Positioner>
+            </Portal>
+        );
+    },
+);
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Item
