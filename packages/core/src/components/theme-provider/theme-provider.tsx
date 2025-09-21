@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-const DARK_CLASS_NAME = 'vapor-dark-theme'
+const DARK_CLASS_NAME = 'vapor-dark-theme';
 
 /* -------------------------------------------------------------------------------------------------
  * NOTE: Theme Priority Order (highest to lowest):
