@@ -1,3 +1,5 @@
 import { configs } from '@repo/eslint-config/base';
 
-export default [...configs];
+export default [
+    ...configs,
+];
