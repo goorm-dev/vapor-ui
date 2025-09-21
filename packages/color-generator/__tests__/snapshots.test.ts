@@ -31,7 +31,7 @@ describe('Color Generator Snapshots', () => {
 
     it('should match semanticDependentTokens snapshot', () => {
         const semanticDependentTokens = getSemanticDependentTokens({
-            primary: { name: 'mint', hex: '#44ebd3' },
+            primary: { name: 'mint', color: '#44ebd3' },
             background: {
                 name: 'myGray',
                 color: '#EFEAE6',

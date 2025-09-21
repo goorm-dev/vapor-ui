@@ -1,0 +1,47 @@
+.checkbox-label {
+    color: var(--vapor-color-foreground-normal, #2b2d36);
+
+    font-size: var(--vapor-typography-fontSize-075, 0.875rem);
+    font-weight: var(--vapor-typography-fontWeight-400);
+    line-height: var(--vapor-typography-lineHeight-075, 1.375rem); /* 157.143% */
+    letter-spacing: var(--vapor-typography-letterSpacing-100, -0.00625rem);
+}
+
+.popup {
+    border-top-left-radius: var(--vapor-size-borderRadius-300);
+    border-top-right-radius: var(--vapor-size-borderRadius-300);
+}
+
+.tabs {
+    height: 100%;
+}
+
+.tabs-list {
+    padding-inline: 0;
+}
+
+.tabs-panel {
+    padding-block: var(--vapor-size-space-200);
+}
+
+.header {
+    padding: var(--vapor-size-space-250) var(--vapor-size-space-200) 0;
+}
+
+.body {
+    padding-inline: var(--vapor-size-space-200);
+}
+
+.footer {
+    gap: var(--vapor-size-space-100);
+    padding-top: var(--vapor-size-space-100);
+}
+
+.refresh-button {
+    flex-shrink: 0;
+}
+
+.apply-button {
+    flex-shrink: 0;
+    flex-grow: 1;
+}

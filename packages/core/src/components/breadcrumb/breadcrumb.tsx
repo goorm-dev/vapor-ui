@@ -123,7 +123,7 @@ interface BreadcrumbSeparatorProps extends VComponentProps<'li'> {}
 const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
     ({ render, className, children, ...props }, ref) => {
         const { size } = useBreadcrumbContext();
-        const Icon = createSlot(children || <SlashOutlineIcon size="auto" />);
+        const Icon = createSlot(children || <SlashOutlineIcon size="100%" />);
 
         return useRender({
             ref,
