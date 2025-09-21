@@ -29,7 +29,7 @@
             "outputs": ["dist/**"]
         },
         "typecheck": {
-            "dependsOn": ["^typecheck"]
+            "dependsOn": ["^build"]
         },
         "clean": {
             "cache": false
