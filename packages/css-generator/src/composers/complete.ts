@@ -99,12 +99,10 @@ const mergeRootVariables = (
     radiusCSS: string,
     format: 'compact' | 'readable',
 ): string => {
-    // Extract properties from each CSS block
     const lightProperties = extractCSSProperties(lightThemeCSS);
     const scalingProperties = extractCSSProperties(scalingCSS);
     const radiusProperties = extractCSSProperties(radiusCSS);
 
-    // Combine all properties
     const allProperties = [...lightProperties, ...scalingProperties, ...radiusProperties];
 
     if (format === 'compact') {
@@ -117,31 +115,34 @@ const mergeRootVariables = (
 };
 
 const extractCSSProperties = (css: string): string[] => {
-    // Simple regex to extract CSS custom properties
-    const matches = css.match(/--[^:]+:[^;]+/g);
-    return matches || [];
+    const startBrace = css.indexOf('{');
+    const endBrace = css.lastIndexOf('}');
+
+    if (startBrace === -1 || endBrace === -1 || startBrace >= endBrace) {
+        return [];
+    }
+
+    const content = css.slice(startBrace + 1, endBrace);
+    return content
+        .split(';')
+        .map((prop) => prop.trim())
+        .filter((prop) => prop && prop.startsWith('--') && prop.includes(':'));
 };
 
 const extractThemeCSS = (fullCSS: string): { lightTheme: string; darkTheme?: string } => {
-    // Split CSS into individual rules
-    const rules = fullCSS.split(/\}/).filter((rule) => rule.trim());
+    const trimmedCSS = fullCSS.trim();
 
     let lightTheme = '';
     let darkTheme = '';
 
-    for (const rule of rules) {
-        const trimmedRule = rule.trim() + '}';
+    const rootMatch = trimmedCSS.match(/:root\s*\{[^}]*\}/);
+    if (rootMatch) {
+        lightTheme = rootMatch[0];
+    }
 
-        if (trimmedRule.includes(':root') && !trimmedRule.includes('.vapor-dark-theme')) {
-            // This is the light theme root rule
-            lightTheme = trimmedRule;
-        } else if (
-            trimmedRule.includes('.vapor-dark-theme') ||
-            trimmedRule.includes(':root.vapor-dark-theme')
-        ) {
-            // This is the dark theme rule
-            darkTheme = trimmedRule;
-        }
+    const darkThemeMatch = trimmedCSS.match(/:root\.[^{]*dark[^{]*\{[^}]*\}/);
+    if (darkThemeMatch) {
+        darkTheme = darkThemeMatch[0];
     }
 
     return {
