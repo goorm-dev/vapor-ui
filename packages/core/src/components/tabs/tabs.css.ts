@@ -36,12 +36,12 @@ export const list = recipe({
         orientation: {
             horizontal: layerStyle('components', {
                 display: 'flex',
-                paddingInline: vars.size.space[300],
+                // paddingInline: vars.size.space[300],
             }),
             vertical: layerStyle('components', {
                 display: 'inline-flex',
                 flexDirection: 'column',
-                paddingBlock: vars.size.space[300],
+                // paddingBlock: vars.size.space[300],
             }),
         },
     },

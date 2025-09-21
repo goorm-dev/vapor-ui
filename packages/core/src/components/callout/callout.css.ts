@@ -1,24 +1,22 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { typography } from '~/styles/mixins/typography.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
 import { vars } from '~/styles/vars.css';
 
 export const root = recipe({
-    base: layerStyle('components', {
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: vars.size.space['075'],
-        borderRadius: vars.size.borderRadius[300],
-        padding: `${vars.size.space[150]} ${vars.size.space[200]}`,
-        width: '100%',
-
-        lineHeight: vars.typography.lineHeight['075'],
-        letterSpacing: vars.typography.letterSpacing[100],
-        fontSize: vars.typography.fontSize['075'],
-        fontWeight: vars.typography.fontWeight['500'],
-        fontStyle: 'normal',
-    }),
+    base: [
+        typography({ style: 'subtitle1' }),
+        layerStyle('components', {
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: vars.size.space['075'],
+            borderRadius: vars.size.borderRadius[300],
+            padding: `${vars.size.space[150]} ${vars.size.space[200]}`,
+            width: '100%',
+        }),
+    ],
 
     defaultVariants: { color: 'primary' },
     variants: {

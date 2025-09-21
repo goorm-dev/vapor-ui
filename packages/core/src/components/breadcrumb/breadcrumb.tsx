@@ -149,7 +149,7 @@ interface BreadcrumbEllipsisProps extends BreadcrumbEllipsisPrimitiveProps {}
 const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
     ({ render, className, children, ...props }, ref) => {
         const { size } = useBreadcrumbContext();
-        const Icon = createSlot(children || <MoreCommonOutlineIcon size="auto" />);
+        const Icon = createSlot(children || <MoreCommonOutlineIcon size="100%" />);
 
         return useRender({
             ref,
