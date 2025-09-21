@@ -7,11 +7,11 @@ import { generateBrandColorPalette } from './brand-color-palette';
  * Interfaces
  * -----------------------------------------------------------------------------------------------*/
 interface SemanticMappingConfig {
-    primary: { name: string; hex: string };
-    secondary?: { name: string; hex: string };
-    success?: { name: string; hex: string };
-    warning?: { name: string; hex: string };
-    error?: { name: string; hex: string };
+    primary: { name: string; color: string };
+    secondary?: { name: string; color: string };
+    success?: { name: string; color: string };
+    warning?: { name: string; color: string };
+    error?: { name: string; color: string };
     background?: Background;
 }
 
@@ -184,7 +184,7 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): Seman
     const brandColors: Record<string, string> = {};
     Object.entries(mappingConfig).forEach(([semanticRole, config]) => {
         if (semanticRole !== 'background') {
-            brandColors[config.name] = config.hex;
+            brandColors[config.name] = config.color;
         }
     });
 

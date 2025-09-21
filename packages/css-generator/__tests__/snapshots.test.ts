@@ -8,10 +8,10 @@ import {
 } from '../src/index';
 
 const MOCK_COLOR_CONFIG = {
-    primary: { name: 'mint', hex: '#6af574ff' },
+    primary: { name: 'mint', color: '#6af574ff' },
     background: {
         name: 'neutral',
-        hex: '#F8FAFC',
+        color: '#F8FAFC',
         lightness: {
             light: 98,
             dark: 8,
