@@ -220,7 +220,7 @@ function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): Seman
             const backgroundToken = palette[scaleInfo.backgroundScale];
             const buttonForegroundColor = determineButtonForegroundColor(backgroundToken);
 
-            const tokenMappings = createSemanticTokenMapping({         
+            const tokenMappings = createSemanticTokenMapping({
                 themeName: theme.name,
                 semanticRole,
                 brandColorName: config.name,
