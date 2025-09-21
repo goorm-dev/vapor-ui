@@ -205,11 +205,11 @@ const Theme = ({
             const systemTheme = getSystemTheme(e);
             setResolvedTheme(systemTheme);
 
-            if (theme === 'system' && enableSystem && !forcedTheme) {
-                applyTheme('system');
+            if (enableSystem && !forcedTheme) {
+                applyTheme(systemTheme);
             }
         },
-        [theme, enableSystem, forcedTheme, applyTheme],
+        [enableSystem, forcedTheme, applyTheme],
     );
 
     useEffect(() => {
