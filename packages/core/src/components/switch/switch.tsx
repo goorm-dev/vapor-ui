@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 
 import { Switch as BaseSwitch } from '@base-ui-components/react';
 import clsx from 'clsx';
@@ -30,12 +30,13 @@ type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
 interface SwitchRootProps extends RootPrimitiveProps, SwitchSharedProps {}
 
 const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ className, children: childrenProp, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, ['size']);
 
         const { size } = variantProps;
 
-        const ThumbElement = createSlot(children || <Thumb />);
+        const ThumbElement = useMemo(() => createSlot(<Thumb />), []);
+        const children = childrenProp || <ThumbElement />;
 
         return (
             <SwitchProvider value={variantProps}>
@@ -44,7 +45,7 @@ const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
                     className={clsx(styles.control({ size }), className)}
                     {...otherProps}
                 >
-                    <ThumbElement />
+                    {children}
                 </BaseSwitch.Root>
             </SwitchProvider>
         );
