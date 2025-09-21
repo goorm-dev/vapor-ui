@@ -1,4 +1,5 @@
 import { generateBrandColorPalette, getSemanticDependentTokens } from '@vapor-ui/color-generator';
+import type { ColorToken, Tokens } from '@vapor-ui/color-generator';
 
 import { DEFAULT_PREFIX } from '~/constants';
 
@@ -19,27 +20,25 @@ interface ColorCSSGeneratorContext {
     options: Required<CSSGeneratorOptions>;
 }
 
+const isColorToken = (value: string | ColorToken): value is ColorToken => {
+    return typeof value === 'object' && 'hex' in value && 'codeSyntax' in value;
+};
+
 const generatePaletteVariables = (
-    tokens: Record<
-        string,
-        string | { hex: string; codeSyntax: string; oklch?: string; name?: string; deltaE?: number }
-    >,
+    tokens: Tokens,
     prefix: string,
 ) => {
     return Object.entries(tokens)
-        .filter(([, tokenData]) => typeof tokenData === 'object')
+        .filter(([, tokenData]) => isColorToken(tokenData))
         .map(([, tokenData]) => {
-            const token = tokenData as { hex: string; codeSyntax: string };
+            const token = tokenData as ColorToken;
             const variableName = token.codeSyntax.replace('vapor-', `${prefix}-`);
             return createCSSVariable(variableName, token.hex);
         });
 };
 
 const generateSemanticVariables = (
-    tokens: Record<
-        string,
-        string | { hex: string; codeSyntax: string; oklch?: string; name?: string; deltaE?: number }
-    >,
+    tokens: Tokens,
     prefix: string,
 ) => {
     return Object.entries(tokens)
