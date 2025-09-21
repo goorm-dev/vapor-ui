@@ -6,8 +6,8 @@ import {
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
     type SemanticMappingConfig,
     generateBrandColorPalette,
-    getSemanticDependentTokens,
     getColorLightness,
+    getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
 import { Box, Button, VStack } from '@vapor-ui/core';
 
@@ -52,7 +52,7 @@ export const BrandColorsTab = () => {
     // Background color 변경 시 Light 테마에만 반영
     useEffect(() => {
         const actualLightness = getColorLightness(backgroundHex);
-        
+
         if (actualLightness !== null) {
             setBackgroundLightness((prev) => ({
                 ...prev,
@@ -78,7 +78,7 @@ export const BrandColorsTab = () => {
 
             const brandPalette = generateBrandColorPalette(config);
             const semanticDependentTokens = getSemanticDependentTokens({
-                primary: { name: colorName, hex: colorHex },
+                primary: { name: colorName, color: colorHex },
                 background: {
                     name: backgroundName,
                     color: backgroundHex,
@@ -162,7 +162,8 @@ export const BrandColorsTab = () => {
 
                 <Section title="Background Lightness">
                     <div className="mb-2 text-xs text-gray-600">
-                        Base Color Lightness: {currentLightness !== null ? `${currentLightness}%` : 'Invalid'}
+                        Base Color Lightness:{' '}
+                        {currentLightness !== null ? `${currentLightness}%` : 'Invalid'}
                     </div>
                     <RangeSlider
                         label="Light Theme"
