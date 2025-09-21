@@ -94,7 +94,6 @@ const Popup = forwardRef<HTMLDivElement, PopoverPopupProps>(
         const [side, setSide] = useState<PositionerPrimitiveProps['side']>('bottom');
         const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('start');
 
-        // arrow position을 메모이제이션
         const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
 
         const popupRef = useRef<HTMLDivElement>(null);
@@ -151,17 +150,22 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Popover.Content
  * -----------------------------------------------------------------------------------------------*/
 
-interface PopoverContentProps extends VComponentProps<typeof Popup> {}
+interface PopoverContentProps extends VComponentProps<typeof Popup> {
+    portalProps?: PopoverPortalProps;
+    positionerProps?: PopoverPositionerProps;
+}
 
-const Content = forwardRef<HTMLDivElement, PopoverContentProps>((props, ref) => {
-    return (
-        <Portal>
-            <Positioner>
-                <Popup ref={ref} {...props} />
-            </Positioner>
-        </Portal>
-    );
-});
+const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
+    ({ portalProps, positionerProps, ...props }, ref) => {
+        return (
+            <Portal {...portalProps}>
+                <Positioner {...positionerProps}>
+                    <Popup ref={ref} {...props} />
+                </Positioner>
+            </Portal>
+        );
+    },
+);
 Content.displayName = 'Popover.Content';
 
 /* -------------------------------------------------------------------------------------------------
