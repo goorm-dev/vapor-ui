@@ -412,19 +412,25 @@ Viewport.displayName = 'NavigationMenu.Viewport';
  * -----------------------------------------------------------------------------------------------*/
 
 type ContentPrimitiveProps = VComponentProps<typeof Viewport>;
-interface NavigationMenuContentProps extends ContentPrimitiveProps {}
+interface NavigationMenuContentProps extends ContentPrimitiveProps {
+    portalProps?: NavigationMenuPortalProps;
+    positionerProps?: NavigationMenuPositionerProps;
+    popupProps?: NavigationMenuPopupProps;
+}
 
-const Content = forwardRef<HTMLDivElement, NavigationMenuContentProps>((props, ref) => {
-    return (
-        <Portal>
-            <Positioner>
-                <Popup>
-                    <Viewport ref={ref} {...props} />
-                </Popup>
-            </Positioner>
-        </Portal>
-    );
-});
+const Content = forwardRef<HTMLDivElement, NavigationMenuContentProps>(
+    ({ portalProps, positionerProps, popupProps, className, ...props }, ref) => {
+        return (
+            <Portal {...portalProps}>
+                <Positioner {...positionerProps}>
+                    <Popup {...popupProps}>
+                        <Viewport ref={ref} {...props} />
+                    </Popup>
+                </Positioner>
+            </Portal>
+        );
+    },
+);
 Content.displayName = 'NavigationMenu.Content';
 
 /* -----------------------------------------------------------------------------------------------*/

@@ -9,7 +9,7 @@ description: 'Callout은 중요한 정보를 시각적으로 강조하여 사용
 import { Callout } from '@vapor-ui/core';
 
 export default function DefaultCallout() {
-    return <Callout color="primary">Anyone can develop</Callout>;
+    return <Callout.Root color="primary">Anyone can develop</Callout.Root>;
 }
 ```
 </Demo>
@@ -29,12 +29,12 @@ import { Callout } from '@vapor-ui/core';
 export default function CalloutColor() {
     return (
         <div className="flex w-full max-w-xl flex-col gap-2">
-            <Callout color="primary">Anyone can develop</Callout>
-            <Callout color="success">Anyone can develop</Callout>
-            <Callout color="warning">Anyone can develop</Callout>
-            <Callout color="danger">Anyone can develop</Callout>
-            <Callout color="hint">Anyone can develop</Callout>
-            <Callout color="contrast">Anyone can develop</Callout>
+            <Callout.Root color="primary">Anyone can develop</Callout.Root>
+            <Callout.Root color="success">Anyone can develop</Callout.Root>
+            <Callout.Root color="warning">Anyone can develop</Callout.Root>
+            <Callout.Root color="danger">Anyone can develop</Callout.Root>
+            <Callout.Root color="hint">Anyone can develop</Callout.Root>
+            <Callout.Root color="contrast">Anyone can develop</Callout.Root>
         </div>
     );
 }
@@ -47,7 +47,7 @@ export default function CalloutColor() {
 
 ### Callout with Icon
 
-아이콘과 함께 사용하는 Callout 예제입니다.
+아이콘과 함께 사용하는 Callout 예제입니다. 아이콘은 `Callout.Icon`으로 감싸서 고정된 크기를 유지합니다.
 
 <Demo name="callout-with-icon">
 ```tsx
@@ -57,18 +57,24 @@ import { CheckCircleIcon, InfoCircleOutlineIcon, HeartIcon } from '@vapor-ui/ico
 export default function CalloutWithIcon() {
     return (
         <div className="flex w-full max-w-xl flex-col gap-2">
-            <Callout color="success">
-                <CheckCircleIcon />
+            <Callout.Root color="success">
+                <Callout.Icon>
+                    <CheckCircleIcon />
+                </Callout.Icon>
                 Task completed successfully
-            </Callout>
-            <Callout color="warning">
-                <InfoCircleOutlineIcon />
+            </Callout.Root>
+            <Callout.Root color="warning">
+                <Callout.Icon>
+                    <InfoCircleOutlineIcon />
+                </Callout.Icon>
                 Please review your settings
-            </Callout>
-            <Callout color="primary">
-                <HeartIcon />
+            </Callout.Root>
+            <Callout.Root color="primary">
+                <Callout.Icon>
+                    <HeartIcon />
+                </Callout.Icon>
                 New notification available
-            </Callout>
+            </Callout.Root>
         </div>
     );
 }
