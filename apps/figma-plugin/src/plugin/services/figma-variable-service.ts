@@ -3,18 +3,55 @@ import type { ColorToken, TokenContainer } from '@vapor-ui/color-generator';
 import { Logger } from '~/common/logger';
 import { hexToFigmaColor } from '~/plugin/utils/color';
 
-// ============================================================================
-// Types
-// ============================================================================
+/* -------------------------------------------------------------------------------------------------
+ * Public API
+ * -----------------------------------------------------------------------------------------------*/
+
+export const figmaVariableService = {
+    /**
+     * Creates Figma variables from primitive color palette (base, light, dark)
+     * This is a convenience wrapper around the generic createVariables function.
+     */
+    async createPrimitiveVariables(
+        palette: { base?: TokenContainer; light: TokenContainer; dark: TokenContainer },
+        collectionName: string,
+    ): Promise<void> {
+        await createVariables({
+            palette,
+            collectionName,
+            context: 'Primitive',
+        });
+    },
+
+    /**
+     * Creates Figma variables from brand color palette (light, dark)
+     * This is a convenience wrapper around the generic createVariables function.
+     */
+    async createBrandVariables(
+        palette: { light: TokenContainer; dark: TokenContainer },
+        collectionName: string,
+    ): Promise<void> {
+        await createVariables({
+            palette,
+            collectionName,
+            context: 'Brand',
+        });
+    },
+
+    /**
+     * Exposing the generic function for more complex use cases.
+     */
+    createVariables,
+} as const;
+
+/* -------------------------------------------------------------------------------------------------
+ * Variable Creation
+ * -----------------------------------------------------------------------------------------------*/
 
 interface GroupConfig {
     name: string;
     tokenContainer: TokenContainer;
 }
-
-// ============================================================================
-// Helpers
-// ============================================================================
 
 /**
  * Generic function to create variables for any palette structure
@@ -74,61 +111,12 @@ async function createVariables(data: {
     }
 }
 
-// ============================================================================
-// Public Service
-// ============================================================================
-
-export const figmaVariableService = {
-    /**
-     * Creates Figma variables from primitive color palette (base, light, dark)
-     * This is a convenience wrapper around the generic createVariables function.
-     */
-    async createPrimitiveVariables(
-        palette: { base?: TokenContainer; light: TokenContainer; dark: TokenContainer },
-        collectionName: string,
-    ): Promise<void> {
-        await createVariables({
-            palette,
-            collectionName,
-            context: 'Primitive',
-        });
-    },
-
-    /**
-     * Creates Figma variables from brand color palette (light, dark)
-     * This is a convenience wrapper around the generic createVariables function.
-     */
-    async createBrandVariables(
-        palette: { light: TokenContainer; dark: TokenContainer },
-        collectionName: string,
-    ): Promise<void> {
-        await createVariables({
-            palette,
-            collectionName,
-            context: 'Brand',
-        });
-    },
-
-    /**
-     * Exposing the generic function for more complex use cases.
-     */
-    createVariables,
-} as const;
-
-// ============================================================================
-// Collection Management
-// ============================================================================
-
 async function createOrGetCollection(name: string): Promise<VariableCollection> {
     const existingCollections = await figma.variables.getLocalVariableCollectionsAsync();
     const existing = existingCollections.find((collection) => collection.name === name);
 
     return existing || figma.variables.createVariableCollection(name);
 }
-
-// ============================================================================
-// Variable Creation
-// ============================================================================
 
 async function createVariablesFromGroups(
     collection: VariableCollection,
@@ -220,9 +208,9 @@ function createNewVariable(
     return variable;
 }
 
-// ============================================================================
-// Utility Functions
-// ============================================================================
+/* -------------------------------------------------------------------------------------------------
+ * Utilities
+ * -----------------------------------------------------------------------------------------------*/
 
 function formatTokenName(tokenName: string): string {
     // Convert token names like "color-blue-500" to "blue/500"
