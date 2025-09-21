@@ -3,6 +3,7 @@ import type { ColorPaletteResult, SemanticTokensResult } from '@vapor-ui/color-g
 import { figmaNoticeService } from '../services/figma-notification';
 import { figmaUIService } from '../services/figma-ui-service';
 import { figmaVariableService } from '../services/figma-variable-service';
+import { sortThemesByOrder } from '../utils/theme-sorter';
 
 export const brandController = {
     async createBrandPaletteSections(data: {
@@ -11,12 +12,7 @@ export const brandController = {
     }): Promise<void> {
         const { generatedBrandPalette, dependentTokens } = data;
 
-        // 테마 순서: light -> dark
-        const themeOrder: ('light' | 'dark')[] = ['light', 'dark'];
-
-        const sortedThemes = themeOrder
-            .filter((theme) => theme in generatedBrandPalette)
-            .map((theme) => [theme, generatedBrandPalette[theme]] as const);
+        const sortedThemes = sortThemesByOrder(generatedBrandPalette, ['light', 'dark'] as const);
 
         figmaNoticeService.paletteCreating();
         try {
