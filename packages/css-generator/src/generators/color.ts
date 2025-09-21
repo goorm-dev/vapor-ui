@@ -2,8 +2,8 @@ import { generateBrandColorPalette, getSemanticDependentTokens } from '@vapor-ui
 
 import type { CSSGeneratorOptions, ColorThemeConfig, ThemeVariant } from '../types';
 import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
+import { DEFAULT_PREFIX } from '~/constants';
 
-const DEFAULT_PREFIX = 'vapor';
 
 type BrandColorPalette = ReturnType<typeof generateBrandColorPalette>;
 type SemanticTokens = ReturnType<typeof getSemanticDependentTokens>;
