@@ -95,9 +95,7 @@ function overrideCustomColors(tokens: Tokens, customColors: Record<string, strin
  */
 type BrandColorPalette = Omit<ColorPaletteResult, 'base'>;
 
-function generateBrandColorPalette(
-    config: BrandColorGeneratorConfig,
-): BrandColorPalette {
+function generateBrandColorPalette(config: BrandColorGeneratorConfig): BrandColorPalette {
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
     const background = config.background || {
         color: '#FFFFFF',

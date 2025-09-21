@@ -1,0 +1,41 @@
+{
+    "name": "figma-plugin",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --config vite.config.ui.ts",
+        "predev:figma": "mkdir -p dist && cp manifest.json dist/",
+        "dev:figma": "concurrently \"vite build --config vite.config.ui.ts --watch\" \"vite build --config vite.config.plugin.ts --watch\"",
+        "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts && cp manifest.json dist/",
+        "build:ui": "vite build --config vite.config.ui.ts",
+        "build:plugin": "vite build --config vite.config.plugin.ts",
+        "lint": "eslint ./src",
+        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
+        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
+        "clean": "rimraf dist node_modules .turbo",
+        "typecheck": "tsc --noEmit",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@vapor-ui/color-generator": "workspace:*",
+        "@vapor-ui/core": "workspace:*",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@figma/plugin-typings": "^1.117.0",
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@tailwindcss/vite": "^4.1.12",
+        "@types/react": "^18.3.23",
+        "@types/react-dom": "^18.3.7",
+        "@vitejs/plugin-react": "^5.0.0",
+        "concurrently": "^8.2.2",
+        "eslint": "^9.33.0",
+        "tailwindcss": "^4.1.5",
+        "typescript": "~5.8.3",
+        "vite": "^7.1.2",
+        "vite-plugin-singlefile": "^2.3.0"
+    }
+}
