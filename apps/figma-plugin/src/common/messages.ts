@@ -16,7 +16,7 @@ type CreateFigmaVariablesMessage = {
 
 type CreateBrandPaletteSectionsMessage = {
     type: 'create-brand-palette-sections';
-    data: { 
+    data: {
         generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
         dependentTokens: SemanticTokensResult;
     };
@@ -24,10 +24,17 @@ type CreateBrandPaletteSectionsMessage = {
 
 type CreateBrandFigmaVariablesMessage = {
     type: 'create-brand-figma-variables';
-    data: { generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>; collectionName: string };
+    data: {
+        generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
+        collectionName: string;
+    };
 };
 
-export type UIMessage = CreatePaletteSectionsMessage | CreateFigmaVariablesMessage | CreateBrandPaletteSectionsMessage | CreateBrandFigmaVariablesMessage;
+export type UIMessage =
+    | CreatePaletteSectionsMessage
+    | CreateFigmaVariablesMessage
+    | CreateBrandPaletteSectionsMessage
+    | CreateBrandFigmaVariablesMessage;
 
 // ============================================================================
 // Message Utilities

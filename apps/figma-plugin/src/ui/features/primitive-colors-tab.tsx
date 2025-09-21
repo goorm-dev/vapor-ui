@@ -45,7 +45,7 @@ export const PrimitiveColorsTab = () => {
             const config: ColorGeneratorConfig = {
                 colors: primitiveColors,
                 contrastRatios,
-                background:{
+                background: {
                     color: '#FFFFFF',
                     name: 'gray',
                     lightness: backgroundLightness,

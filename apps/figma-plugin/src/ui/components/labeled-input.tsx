@@ -7,22 +7,19 @@ interface LabeledInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
     labelWidth?: string;
 }
 
-export const LabeledInput = ({ 
-    label, 
-    value, 
-    onChange, 
+export const LabeledInput = ({
+    label,
+    value,
+    onChange,
     labelWidth = 'min-w-[102px]',
     className = '',
-    ...inputProps 
+    ...inputProps
 }: LabeledInputProps) => {
     const inputId = `labeled-input-${label.toLowerCase().replace(/\s+/g, '-')}`;
-    
+
     return (
         <div className="flex items-center gap-2">
-            <label 
-                htmlFor={inputId}
-                className={`text-xs text-gray-600 ${labelWidth}`}
-            >
+            <label htmlFor={inputId} className={`text-xs text-gray-600 ${labelWidth}`}>
                 {label}:
             </label>
             <input

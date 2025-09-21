@@ -29,10 +29,10 @@ export const figmaVariableService = {
             Logger.variables.creating(collectionName);
 
             const collection = await createOrGetCollection(collectionName);
-            
+
             // Create groups for each available theme
             const groups: GroupConfig[] = [];
-            
+
             if (palette.base) {
                 groups.push({ name: 'base', tokenContainer: palette.base });
             }
@@ -66,7 +66,7 @@ export const figmaVariableService = {
             Logger.variables.creating(collectionName);
 
             const collection = await createOrGetCollection(collectionName);
-            
+
             // Create groups for each available theme
             const groups: GroupConfig[] = [
                 { name: 'light', tokenContainer: palette.light },
@@ -92,38 +92,36 @@ export const figmaVariableService = {
      * Generic function to create variables for any palette structure
      * Supports both grouped and ungrouped variables
      */
-    async createVariables(
-        data: {
-            palette: Record<string, TokenContainer>;
-            collectionName: string;
-            groupNames?: string[]; // If provided, only create variables for these groups
-            useGroups?: boolean; // If false, create variables without groups
-        },
-    ): Promise<void> {
+    async createVariables(data: {
+        palette: Record<string, TokenContainer>;
+        collectionName: string;
+        groupNames?: string[]; // If provided, only create variables for these groups
+        useGroups?: boolean; // If false, create variables without groups
+    }): Promise<void> {
         const { palette, collectionName, groupNames, useGroups = true } = data;
 
         try {
             Logger.variables.creating(collectionName);
 
             const collection = await createOrGetCollection(collectionName);
-            
+
             let groups: GroupConfig[] = [];
 
             if (useGroups) {
                 // Create groups for specified themes or all available themes
                 const themeNames = groupNames || Object.keys(palette);
                 groups = themeNames
-                    .filter(themeName => palette[themeName]) // Only include existing themes
-                    .map(themeName => ({
+                    .filter((themeName) => palette[themeName]) // Only include existing themes
+                    .map((themeName) => ({
                         name: themeName,
                         tokenContainer: palette[themeName],
                     }));
-                
+
                 await createVariablesFromGroups(collection, groups);
             } else {
                 // Create variables without groups (flatten all tokens)
                 const allTokens: Record<string, ColorToken | string> = {};
-                
+
                 Object.entries(palette).forEach(([_themeName, tokenContainer]) => {
                     Object.entries(tokenContainer.tokens).forEach(([tokenName, tokenValue]) => {
                         // Use original token name without theme prefix
@@ -171,7 +169,7 @@ async function createVariablesFromGroups(
 
     for (const group of groups) {
         promises.push(
-            createVariablesFromTokens(collection, group.tokenContainer.tokens, group.name)
+            createVariablesFromTokens(collection, group.tokenContainer.tokens, group.name),
         );
     }
 
@@ -189,14 +187,14 @@ async function createVariablesFromTokens(
         // Only process ColorToken objects (not string references)
         if (typeof tokenValue === 'object' && tokenValue !== null && 'hex' in tokenValue) {
             const colorToken = tokenValue as ColorToken;
-            
+
             // Create variable name with or without group prefix
-            const variableName = groupPrefix 
+            const variableName = groupPrefix
                 ? `${groupPrefix}/${formatTokenName(tokenName)}`
                 : formatTokenName(tokenName);
 
             variablePromises.push(
-                createVariable(collection, variableName, colorToken.hex, colorToken.codeSyntax)
+                createVariable(collection, variableName, colorToken.hex, colorToken.codeSyntax),
             );
         }
     });
@@ -260,7 +258,7 @@ function createNewVariable(
 function formatTokenName(tokenName: string): string {
     // Convert token names like "color-blue-500" to "blue/500"
     // or "vapor-color-background-canvas" to "background/canvas"
-    
+
     if (tokenName.startsWith('color-')) {
         // Handle "color-blue-500" -> "blue/500"
         const parts = tokenName.substring(6).split('-'); // Remove "color-" prefix
@@ -278,7 +276,7 @@ function formatTokenName(tokenName: string): string {
             return `${colorFamily}/${shade}`;
         }
     }
-    
+
     // Fallback: use original token name with slashes for dashes
     return tokenName.replace(/-/g, '/');
 }

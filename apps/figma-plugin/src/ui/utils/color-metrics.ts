@@ -37,7 +37,7 @@ export const calculatePerceptualUniformity = (
     });
 
     // 유효한 명도값이 없으면 null 반환
-    if (lightnessValues.every(val => val === 0)) return null;
+    if (lightnessValues.every((val) => val === 0)) return null;
 
     const mean = lightnessValues.reduce((a, b) => a + b, 0) / lightnessValues.length;
     const variance =
@@ -72,15 +72,15 @@ export const extractColorsFromPalette = (
     options: {
         excludeBackgroundTokens?: boolean;
         theme?: 'light' | 'dark' | 'base';
-    } = {}
+    } = {},
 ): ColorToken[] => {
     const { excludeBackgroundTokens = true, theme = 'light' } = options;
-    
+
     const themeData = palette[theme];
     if (!themeData?.tokens) return [];
 
     const colors: ColorToken[] = [];
-    
+
     Object.entries(themeData.tokens).forEach(([tokenName, tokenValue]) => {
         // 배경 토큰 제외 옵션이 활성화된 경우
         if (excludeBackgroundTokens && tokenName.includes('background')) {
@@ -88,7 +88,12 @@ export const extractColorsFromPalette = (
         }
 
         // ColorToken 형태의 객체인지 확인
-        if (typeof tokenValue === 'object' && tokenValue !== null && 'hex' in tokenValue && 'oklch' in tokenValue) {
+        if (
+            typeof tokenValue === 'object' &&
+            tokenValue !== null &&
+            'hex' in tokenValue &&
+            'oklch' in tokenValue
+        ) {
             const token = tokenValue as { hex: string; oklch: string };
             colors.push({
                 hex: token.hex,

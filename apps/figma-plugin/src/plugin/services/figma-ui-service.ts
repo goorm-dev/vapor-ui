@@ -1,4 +1,4 @@
-import type { ColorToken, ColorPaletteResult, TokenContainer } from '@vapor-ui/color-generator';
+import type { ColorPaletteResult, ColorToken, TokenContainer } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
 import { formatColorName, formatFamilyTitle } from '~/plugin/utils/color';
@@ -149,7 +149,7 @@ export const figmaUIService = {
             const sectionNode = figma.createSection();
             sectionNode.name = sectionTitle;
             sectionNode.fills = [{ type: 'SOLID', color: hexToFigmaColor('#F7F7FA') }];
-            
+
             // 섹션 패딩 설정
             const sectionPadding = 100;
 
@@ -177,7 +177,10 @@ export const figmaUIService = {
             }
 
             // SectionNode 크기 조정 - 패딩 포함
-            const finalHeight = Math.max(yPosition - spacing + sectionPadding, 200 + sectionPadding * 2);
+            const finalHeight = Math.max(
+                yPosition - spacing + sectionPadding,
+                200 + sectionPadding * 2,
+            );
             const finalWidth = maxWidth + sectionPadding * 2; // 좌우 패딩
             sectionNode.resizeWithoutConstraints(finalWidth, finalHeight);
 
@@ -218,12 +221,12 @@ export const figmaUIService = {
      * - Value에 의존 토큰 문자열 표시
      */
     async generateDependentTokensListOnly(
-        dependentTokensByTheme: { 
-            light: TokenContainer; 
-            dark: TokenContainer 
+        dependentTokensByTheme: {
+            light: TokenContainer;
+            dark: TokenContainer;
         },
         sectionTitle: string,
-        brandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>
+        brandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>,
     ): Promise<SectionNode[]> {
         try {
             Logger.info(`Starting dependent tokens list generation for: ${sectionTitle}`);
@@ -242,19 +245,19 @@ export const figmaUIService = {
 
                 // 토큰을 DependentTokenData 형태로 변환 (hex 값 포함)
                 const tokenList = createDependentTokenList(themeData.tokens, brandPalette[theme]);
-                
+
                 // 섹션 노드 생성
                 const sectionNode = figma.createSection();
                 sectionNode.name = `${sectionTitle}-${theme}`;
                 sectionNode.fills = [{ type: 'SOLID', color: hexToFigmaColor('#F7F7FA') }];
-                
+
                 // 섹션 패딩 설정
                 const sectionPadding = 100;
 
                 // 단일 프레임으로 리스트 생성
                 const tokenListFrame = await createDependentTokenListFrame(
                     `${sectionTitle} / ${theme}`,
-                    tokenList
+                    tokenList,
                 );
 
                 // 프레임을 섹션에 추가하고 위치 설정
@@ -277,7 +280,9 @@ export const figmaUIService = {
 
                 if (existingSections.length > 0) {
                     const rightmostSection = existingSections.reduce((rightmost, section) =>
-                        section.x + section.width > rightmost.x + rightmost.width ? section : rightmost,
+                        section.x + section.width > rightmost.x + rightmost.width
+                            ? section
+                            : rightmost,
                     );
                     sectionX = rightmostSection.x + rightmostSection.width + 100;
                     sectionY = rightmostSection.y;
@@ -359,16 +364,16 @@ function extractColorFamilies(tokens: ThemeTokens): Record<string, ColorData[]> 
 
 function createDependentTokenList(
     tokens: Record<string, string | ColorToken>,
-    brandPaletteTheme?: { tokens: Record<string, ColorToken | string> }
+    brandPaletteTheme?: { tokens: Record<string, ColorToken | string> },
 ): DependentTokenData[] {
     return Object.entries(tokens).map(([tokenName, dependentValue]) => {
         // dependentValue가 string인지 ColorToken인지 확인
         let actualDependentValue: string;
         let hex: string | undefined;
-        
+
         if (typeof dependentValue === 'string') {
             actualDependentValue = dependentValue;
-            
+
             // brandPaletteTheme에서 dependent token의 실제 hex 값 찾기
             if (brandPaletteTheme?.tokens[dependentValue]) {
                 const referencedToken = brandPaletteTheme.tokens[dependentValue];
@@ -385,7 +390,7 @@ function createDependentTokenList(
         } else {
             actualDependentValue = String(dependentValue);
         }
-        
+
         return {
             name: formatColorName(tokenName),
             dependentValue: actualDependentValue,
@@ -480,11 +485,16 @@ async function createColorSetFrame(title: string, colors: ColorData[]): Promise<
     return colorSetFrame;
 }
 
-async function createDependentTokenListFrame(title: string, tokens: DependentTokenData[]): Promise<FrameNode> {
+async function createDependentTokenListFrame(
+    title: string,
+    tokens: DependentTokenData[],
+): Promise<FrameNode> {
     const tokenListFrame = figma.createFrame();
     tokenListFrame.name = 'Dependent Token List';
     tokenListFrame.resize(UI_CONSTANTS.width, calculateDependentTokenListHeight(tokens.length));
-    tokenListFrame.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.containerBg) }];
+    tokenListFrame.fills = [
+        { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.containerBg) },
+    ];
     tokenListFrame.cornerRadius = 8;
     tokenListFrame.effects = [
         {
@@ -496,7 +506,9 @@ async function createDependentTokenListFrame(title: string, tokens: DependentTok
             blendMode: 'NORMAL',
         },
     ];
-    tokenListFrame.strokes = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
+    tokenListFrame.strokes = [
+        { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) },
+    ];
     tokenListFrame.strokeWeight = 1;
     tokenListFrame.layoutMode = 'VERTICAL';
     tokenListFrame.itemSpacing = UI_CONSTANTS.spacing.palette;
@@ -511,16 +523,16 @@ async function createDependentTokenListFrame(title: string, tokens: DependentTok
     await setTextSafely(titleText, title, 18, 'Bold');
     titleText.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.primary) }];
     titleText.layoutAlign = 'STRETCH';
-    
+
     // 제목 하단 보더 추가
     const titleBorder = figma.createFrame();
     titleBorder.name = 'Title Border';
     titleBorder.resize(UI_CONSTANTS.width - 64, 1);
     titleBorder.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
-    
+
     tokenListFrame.appendChild(titleText);
     tokenListFrame.appendChild(titleBorder);
-    
+
     // 부모에 추가된 후에 sizing 설정
     titleBorder.layoutSizingHorizontal = 'FILL';
 
@@ -646,7 +658,7 @@ async function createDependentTokenListHeader(): Promise<FrameNode> {
     header.itemSpacing = 16;
     header.paddingBottom = 16;
     header.resize(UI_CONSTANTS.width - 64, 40);
-    
+
     // 하단 보더
     header.strokes = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
     header.strokeWeight = 1;
@@ -656,16 +668,20 @@ async function createDependentTokenListHeader(): Promise<FrameNode> {
     const nameColumn = figma.createText();
     nameColumn.name = 'Name Column';
     await setTextSafely(nameColumn, 'Name', 16, 'Medium');
-    nameColumn.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) }];
+    nameColumn.fills = [
+        { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) },
+    ];
     header.appendChild(nameColumn);
 
     // Value 컬럼
     const valueColumn = figma.createText();
     valueColumn.name = 'Value Column';
     await setTextSafely(valueColumn, 'Value', 16, 'Medium');
-    valueColumn.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) }];
+    valueColumn.fills = [
+        { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) },
+    ];
     header.appendChild(valueColumn);
-    
+
     // 부모에 추가된 후에 sizing 설정
     nameColumn.layoutSizingHorizontal = 'FILL';
     valueColumn.layoutSizingHorizontal = 'FILL';
@@ -681,7 +697,7 @@ async function createDependentTokenListItem(tokenData: DependentTokenData): Prom
     item.paddingTop = 16;
     item.paddingBottom = 16;
     item.resize(UI_CONSTANTS.width - 64, UI_CONSTANTS.listRowHeight);
-    
+
     // 하단 보더
     item.strokes = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
     item.strokeWeight = 1;
@@ -710,7 +726,9 @@ async function createDependentTokenListItem(tokenData: DependentTokenData): Prom
         colorSwatch.resize(32, 32);
         colorSwatch.cornerRadius = 8;
         colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor(tokenData.hex) }];
-        colorSwatch.strokes = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) }];
+        colorSwatch.strokes = [
+            { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) },
+        ];
         colorSwatch.strokeWeight = 1;
         valueColumn.appendChild(colorSwatch);
     }
@@ -719,11 +737,13 @@ async function createDependentTokenListItem(tokenData: DependentTokenData): Prom
     const dependentValueText = figma.createText();
     dependentValueText.name = 'Dependent Value';
     await setTextSafely(dependentValueText, tokenData.dependentValue, 16, 'Regular');
-    dependentValueText.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) }];
+    dependentValueText.fills = [
+        { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) },
+    ];
     valueColumn.appendChild(dependentValueText);
 
     item.appendChild(valueColumn);
-    
+
     // 부모에 추가된 후에 sizing 설정
     nameText.layoutSizingHorizontal = 'FILL';
     valueColumn.layoutSizingHorizontal = 'FILL';
@@ -828,7 +848,9 @@ async function createListItem(colorData: ColorData): Promise<FrameNode> {
     const oklchText = figma.createText();
     oklchText.name = 'OKLCH Value';
     await setTextSafely(oklchText, colorData.oklch, 12, 'Regular');
-    oklchText.fills = [{ type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) }];
+    oklchText.fills = [
+        { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.text.secondary) },
+    ];
     colorValuesContainer.appendChild(oklchText);
 
     valueColumn.appendChild(colorValuesContainer);
@@ -867,6 +889,6 @@ function calculateDependentTokenListHeight(tokenCount: number): number {
     const itemHeight = UI_CONSTANTS.listRowHeight;
     const padding = 64; // top + bottom
     const spacing = UI_CONSTANTS.spacing.palette; // 제목과 리스트 간 간격
-    
-    return headerHeight + listHeaderHeight + (itemHeight * tokenCount) + padding + spacing;
+
+    return headerHeight + listHeaderHeight + itemHeight * tokenCount + padding + spacing;
 }

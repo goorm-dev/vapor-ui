@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { Box } from '@vapor-ui/core';
 
-import { PrimitiveColorsTab } from './features/primitive-colors-tab';
 import { BrandColorsTab } from './features/brand-colors-tab';
+import { PrimitiveColorsTab } from './features/primitive-colors-tab';
 
 function App() {
     const [activeTab, setActiveTab] = useState<'primitive' | 'brand'>('primitive');

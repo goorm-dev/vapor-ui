@@ -5,29 +5,27 @@ export interface SelectOption<T = string> {
     label: string;
 }
 
-interface LabeledSelectProps<T = string> extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value'> {
+interface LabeledSelectProps<T = string>
+    extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value'> {
     label: string;
     value: T;
     onChange: (value: T) => void;
     options: SelectOption<T>[];
 }
 
-export const LabeledSelect = <T extends string>({ 
-    label, 
-    value, 
-    onChange, 
+export const LabeledSelect = <T extends string>({
+    label,
+    value,
+    onChange,
     options,
     className = '',
-    ...selectProps 
+    ...selectProps
 }: LabeledSelectProps<T>) => {
     const selectId = `labeled-select-${label.toLowerCase().replace(/\s+/g, '-')}`;
-    
+
     return (
         <div className="flex items-center gap-2">
-            <label 
-                htmlFor={selectId}
-                className="text-xs text-gray-600 min-w-[102px]"
-            >
+            <label htmlFor={selectId} className="text-xs text-gray-600 min-w-[102px]">
                 {label}:
             </label>
             <select

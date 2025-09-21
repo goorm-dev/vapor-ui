@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+
 import { Text, VStack } from '@vapor-ui/core';
 
 interface SectionProps {

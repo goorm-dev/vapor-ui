@@ -10,7 +10,11 @@
         "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts && cp manifest.json dist/",
         "build:ui": "vite build --config vite.config.ui.ts",
         "build:plugin": "vite build --config vite.config.plugin.ts",
-        "lint": "eslint .",
+        "lint": "eslint ./src",
+        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
+        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
+        "clean": "rimraf dist node_modules .turbo",
+        "typecheck": "tsc --noEmit",
         "preview": "vite preview"
     },
     "dependencies": {
