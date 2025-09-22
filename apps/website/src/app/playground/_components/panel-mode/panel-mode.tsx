@@ -1,9 +1,11 @@
-import { type Appearance, useTheme } from '@vapor-ui/core';
+import { useTheme } from '@vapor-ui/core';
 import type { IconType } from '@vapor-ui/icons';
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';
 
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
+
+type Appearance = 'light' | 'dark';
 
 const APPEARANCE_CONFIG = {
     light: {
@@ -17,16 +19,15 @@ const APPEARANCE_CONFIG = {
 } satisfies Record<Appearance, { icon: IconType; label: string }>;
 
 function Mode() {
-    const { setTheme, appearance } = useTheme();
+    const { setTheme, theme } = useTheme();
 
-    const handleAppearanceChange = (appearance: Appearance) => {
-        console.log('Appearance changed to:', appearance);
-        setTheme({ appearance });
+    const handleAppearanceChange = (selectedTheme: Appearance) => {
+        setTheme(selectedTheme);
     };
 
     return (
         <Section title="Appearance">
-            <RadioButtonGroup value={appearance} onValueChange={handleAppearanceChange}>
+            <RadioButtonGroup value={theme} onValueChange={handleAppearanceChange}>
                 {(Object.keys(APPEARANCE_CONFIG) as Appearance[]).map((appearanceKey) => {
                     const { icon: Icon, label } = APPEARANCE_CONFIG[appearanceKey];
                     return (
@@ -34,7 +35,7 @@ function Mode() {
                             data-theme-category="mode"
                             key={appearanceKey}
                             value={appearanceKey}
-                            color={appearanceKey === appearance ? 'primary' : 'secondary'}
+                            color={appearanceKey === theme ? 'primary' : 'secondary'}
                         >
                             <Icon />
                             <span>{label}</span>

@@ -1,80 +1,68 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
-import { Button, Radio, RadioGroup, useTheme } from '@vapor-ui/core';
-import { ChevronRightOutlineIcon } from '@vapor-ui/icons';
-import Link from 'next/link';
+import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
+import { Button } from '@vapor-ui/core';
+import { generateColorCSS } from '@vapor-ui/css-generator';
 
+import { ColorPicker } from '../color-picker';
 import Section from '../section';
-import styles from './color-board.module.scss';
 
 const ColorBoard = () => {
-    const [value, setValue] = useState<string>('');
-    const { setTheme } = useTheme();
+    const [primaryColor, setPrimaryColor] = useState('#2a6ff3');
+    const [backgroundColor, setBackgroundColor] = useState('#ffffff');
 
-    const onChangeColor = (color: string) => {
-        setTheme({
-            primaryColor: color,
-        });
-        setValue(color);
-    };
+    const applyColorsToCSS = useCallback(() => {
+        const colorConfig: SemanticMappingConfig = {
+            primary: {
+                name: 'primary',
+                color: primaryColor,
+            },
+            background: {
+                name: 'neutral',
+                color: backgroundColor,
+                lightness: {
+                    light: 98,
+                    dark: 8,
+                },
+            },
+        };
+
+        const generatedCSS = generateColorCSS(colorConfig);
+
+        const existingStyle = document.getElementById('vapor-dynamic-theme');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+
+        const styleElement = document.createElement('style');
+        styleElement.id = 'vapor-dynamic-theme';
+        styleElement.textContent = generatedCSS;
+        document.head.appendChild(styleElement);
+    }, [primaryColor, backgroundColor]);
 
     return (
-        <div>
-            <Section title="Color">
-                <RadioGroup.Root
-                    value={value}
-                    className={styles.colorBoard_radio_group}
-                    onValueChange={(value) => {
-                        if (typeof value === 'string') onChangeColor(value);
-                    }}
-                >
-                    <ColorSelector bgColor="#df3337" checkedColor={value} />
-                    <ColorSelector bgColor="#da2f74" checkedColor={value} />
-                    <ColorSelector bgColor="#be2ce2" checkedColor={value} />
-                    <ColorSelector bgColor="#8754f9" checkedColor={value} />
-                    <ColorSelector bgColor="#2a6ff3" checkedColor={value} />
-                    <ColorSelector bgColor="#0e81a0" checkedColor={value} />
-                    <ColorSelector bgColor="#0a8672" checkedColor={value} />
-                    <ColorSelector bgColor="#8fd327" checkedColor={value} />
-                    <ColorSelector bgColor="#fabb00" checkedColor={value} />
-                    <ColorSelector bgColor="#d14905" checkedColor={value} />
-                </RadioGroup.Root>
-            </Section>
-            <Button
-                size="md"
-                color="secondary"
-                variant="outline"
-                className={styles.customButton}
-                render={
-                    <Link href="/docs/getting-started/theming">
-                        커스텀 컬러 사용 방법 알아보기
-                        <ChevronRightOutlineIcon className={styles.icon} />
-                    </Link>
-                }
-            ></Button>
-        </div>
+        <Section title="Color">
+            <ColorPicker
+                defaultValue={primaryColor}
+                onColorChange={setPrimaryColor}
+                width="100%"
+                height={150}
+            />
+
+            <ColorPicker
+                defaultValue={backgroundColor}
+                onColorChange={setBackgroundColor}
+                width="100%"
+                height={150}
+            />
+
+            <Button onClick={applyColorsToCSS} className="w-full">
+                Apply Colors to Theme
+            </Button>
+        </Section>
     );
 };
 
 export default ColorBoard;
-
-const ColorSelector = ({ checkedColor, bgColor }: { checkedColor: string; bgColor: string }) => {
-    const isChecked = checkedColor === bgColor;
-
-    return (
-        <Radio.Root
-            value={bgColor}
-            aria-label={bgColor}
-            style={
-                !isChecked
-                    ? {
-                          borderColor: bgColor,
-                          backgroundColor: bgColor,
-                      }
-                    : {}
-            }
-        />
-    );
-};
