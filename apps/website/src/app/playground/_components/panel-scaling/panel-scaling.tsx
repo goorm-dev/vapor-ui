@@ -1,23 +1,21 @@
 import { useState } from 'react';
 
-import { useTheme } from '@vapor-ui/core';
+import { SCALE_VALUES, type ScaleValue, useThemeVariables } from '~/hooks/use-theme-variables';
 
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
 
-const SCALES = ['0.8', '0.9', '1', '1.15', '1.2'] as const;
-
-type Scaling = (typeof SCALES)[number];
-
 function Scaling() {
-    const [checked, setChecked] = useState('1');
-    const { setTheme } = useTheme();
+    const [checked, setChecked] = useState<ScaleValue>('1');
+    const { setThemeVariable } = useThemeVariables();
 
     return (
         <Section title="Scaling">
-            <RadioButtonGroup value={checked} onValueChange={(value: Scaling) => setChecked(value)}>
-                {SCALES.map((scale) => {
-                    const scaleNumber = parseFloat(scale);
+            <RadioButtonGroup
+                value={checked}
+                onValueChange={(value: ScaleValue) => setChecked(value)}
+            >
+                {SCALE_VALUES.map((scale) => {
                     return (
                         <RadioButtonGroup.Button
                             data-theme-category="scaling"
@@ -26,11 +24,7 @@ function Scaling() {
                             stretch
                             color={scale === checked ? 'primary' : 'secondary'}
                             variant="outline"
-                            onClick={() =>
-                                setTheme({
-                                    scaling: scaleNumber,
-                                })
-                            }
+                            onClick={() => setThemeVariable('scale', scale)}
                         >
                             <span>{scaleToPercent(scale)}</span>
                         </RadioButtonGroup.Button>

@@ -1,22 +1,21 @@
 import { useState } from 'react';
 
-import { useTheme } from '@vapor-ui/core';
+import { RADIUS_VALUES, type RadiusValue, useThemeVariables } from '~/hooks/use-theme-variables';
 
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
 
-const radius = ['none', 'sm', 'md', 'lg', 'xl', 'full'] as const;
-
-type Radius = (typeof radius)[number];
-
 function Radius() {
-    const [checked, setChecked] = useState<Radius>('md');
-    const { setTheme } = useTheme();
+    const [checked, setChecked] = useState<RadiusValue>('md');
+    const { setThemeVariable } = useThemeVariables();
 
     return (
         <Section title="Border Radius">
-            <RadioButtonGroup value={checked} onValueChange={(value: Radius) => setChecked(value)}>
-                {radius.map((r) => {
+            <RadioButtonGroup
+                value={checked}
+                onValueChange={(value: RadiusValue) => setChecked(value)}
+            >
+                {RADIUS_VALUES.map((r) => {
                     return (
                         <RadioButtonGroup.Button
                             data-theme-category={'border-radius'}
@@ -25,7 +24,7 @@ function Radius() {
                             stretch
                             color={r === checked ? 'primary' : 'secondary'}
                             variant="outline"
-                            onClick={() => setTheme({ radius: r })}
+                            onClick={() => setThemeVariable('radius', r)}
                         >
                             <span>{r}</span>
                         </RadioButtonGroup.Button>
