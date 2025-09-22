@@ -47,7 +47,7 @@ export default function BlocksPage() {
                                             with ready-to-use UI blocks
                                         </h1>
                                     }
-                                    className="hidden lg:block "
+                                    className="hidden lg:block"
                                 />
 
                                 {/* Tablet (992px-1199px) */}
@@ -60,7 +60,7 @@ export default function BlocksPage() {
                                             with ready-to-use UI blocks
                                         </h1>
                                     }
-                                    className="hidden md:max-lg:block "
+                                    className="hidden md:max-lg:block"
                                 />
                                 {/* Mobile Large (768px-991px) */}
                                 <Text
