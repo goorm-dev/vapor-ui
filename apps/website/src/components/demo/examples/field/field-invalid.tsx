@@ -16,13 +16,14 @@ export default function FieldInvalid() {
     };
 
     return (
-        <Field.Root name="email" validationMode="onChange" validate={validate} className="v-space-y-2">
+        <Field.Root
+            name="email"
+            validationMode="onChange"
+            validate={validate}
+            className="v-space-y-2"
+        >
             <Field.Label>이메일</Field.Label>
-            <TextInput 
-                type="email" 
-                placeholder="이메일을 입력하세요" 
-                className="v-w-full" 
-            />
+            <TextInput type="email" placeholder="이메일을 입력하세요" className="v-w-full" />
             <Field.Error />
         </Field.Root>
     );

@@ -17,6 +17,7 @@ import inputGroupData from '../../public/components/input-group.json';
 import menuData from '../../public/components/menu.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
 import radioGroupData from '../../public/components/radio-group.json';
+import radioData from '../../public/components/radio.json';
 import switchData from '../../public/components/switch.json';
 import textInputData from '../../public/components/text-input.json';
 import textData from '../../public/components/text.json';
@@ -48,6 +49,7 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     'text-input': textInputData,
     dialog: dialogData,
     switch: switchData,
+    radio: radioData,
     'radio-group': radioGroupData,
     tooltip: tooltipData,
     'input-group': inputGroupData,
