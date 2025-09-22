@@ -84,7 +84,7 @@ export default function BlocksPage() {
                                             with ready-to-use UI blocks
                                         </h1>
                                     }
-                                    className="hidden max-sm:block"
+                                    className="block sm:hidden"
                                 />
                                 <Text typography="body1" foreground="normal">
                                     UI 블록은 불필요한 과정을 줄이고 협업을 원활하게 하여,
