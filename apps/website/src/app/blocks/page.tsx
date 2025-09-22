@@ -95,7 +95,7 @@ export default function BlocksPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:max-lg:grid-cols-2 lg:max-xxl:grid-cols-3 min-xxl:grid-cols-4 gap-[var(--vapor-size-space-400)] min-[1440px]:[&>*]:h-[263px] max-md:gap-[var(--vapor-size-space-300)] max-sm:gap-[var(--vapor-size-space-400)]">
+                    <div className="grid grid-cols-1 sm:max-lg:grid-cols-2 lg:max-xxl:grid-cols-3 min-xxl:grid-cols-4 gap-[var(--vapor-size-space-400)] min-xxl:[&>*]:h-[263px] max-md:gap-[var(--vapor-size-space-300)] max-sm:gap-[var(--vapor-size-space-400)]">
                         {blocks.map((block) => (
                             <ComponentsCard
                                 key={block.id}
