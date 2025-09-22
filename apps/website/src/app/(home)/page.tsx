@@ -26,45 +26,19 @@ export default function HomePage() {
     const [mounted, setMounted] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-    const { appearance, setTheme } = useTheme();
+    const { theme } = useTheme();
+
     useEffect(() => {
         setMounted(true);
         // Reset to default tab1 theme on page load
-        setTheme({
-            primaryColor: '#3B82F6', // blue-500
-            radius: 'md',
-            scaling: 1.0, // 100%
-        });
-    }, [setTheme]);
+    }, []);
 
     if (!mounted) {
         return null;
     }
 
-    const handleTabChange = (value: string) => {
-        switch (value) {
-            case 'tab1': // Vapor theme
-                setTheme({
-                    primaryColor: '#3B82F6', // blue-500
-                    radius: 'md',
-                    scaling: 1.0, // 100%
-                });
-                break;
-            case 'tab2': // Aurora theme
-                setTheme({
-                    primaryColor: '#8B5CF6', // violet-500
-                    radius: 'lg',
-                    scaling: 1.0, // 100%
-                });
-                break;
-            case 'tab3': // Pop theme
-                setTheme({
-                    primaryColor: '#EC4899', // pink-500
-                    radius: 'full',
-                    scaling: 1.2, // 120%
-                });
-                break;
-        }
+    const handleTabChange = () => {
+        // TODO: update theme
     };
 
     return (
@@ -83,7 +57,7 @@ export default function HomePage() {
                         className="absolute bottom-0 left-0 w-full h-[162px]"
                         style={{
                             background:
-                                appearance === 'light'
+                                theme === 'light'
                                     ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--color-background-normal, #FFF) 100%)'
                                     : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--color-background-normal, #23272E) 100%)',
                         }}
