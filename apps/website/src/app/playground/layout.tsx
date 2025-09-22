@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { ThemeProvider } from '@vapor-ui/core';
 import type { Metadata } from 'next';
 
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
@@ -11,8 +12,10 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
-            <SiteNavBar />
-            {children}
+            <ThemeProvider defaultTheme="system" enableSystem storageKey="vapor-docs-theme">
+                <SiteNavBar />
+                {children}
+            </ThemeProvider>
         </>
     );
 }
