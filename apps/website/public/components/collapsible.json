@@ -1,0 +1,104 @@
+{
+    "root": [
+        {
+            "prop": "open",
+            "type": ["boolean"],
+            "default": "-",
+            "description": "콜랩시블의 제어된 열림 상태입니다. onOpenChange와 함께 사용해야 합니다."
+        },
+        {
+            "prop": "defaultOpen",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "콜랩시블이 처음 렌더링될 때의 열림 상태입니다. 열림 상태를 제어할 필요가 없을 때 사용합니다."
+        },
+        {
+            "prop": "onOpenChange",
+            "type": ["function"],
+            "default": "-",
+            "description": "콜랩시블의 열림 상태가 변경될 때 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "콜랩시블의 상호작용을 비활성화합니다."
+        },
+        {
+            "prop": "render",
+            "type": ["ReactElement", "null"],
+            "default": "-",
+            "description": "커스텀 렌더링 요소를 지정합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "루트 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "콜랩시블의 자식 컴포넌트들입니다."
+        }
+    ],
+    "trigger": [
+        {
+            "prop": "render",
+            "type": ["ReactElement", "null"],
+            "default": "-",
+            "description": "커스텀 트리거 요소를 지정합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "트리거 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "트리거를 비활성화합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "트리거의 자식 컴포넌트들입니다."
+        }
+    ],
+    "panel": [
+        {
+            "prop": "keepMounted",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "패널이 닫힌 상태에서도 DOM에 유지할지 여부를 설정합니다."
+        },
+        {
+            "prop": "hiddenUntilFound",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "브라우저의 페이지 내 검색이나 fragment navigation에서 콘텐츠를 찾을 수 있도록 합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "-",
+            "description": "패널 요소에 적용할 추가 CSS 클래스입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "패널의 자식 컴포넌트들입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["ReactElement", "null"],
+            "default": "-",
+            "description": "커스텀 렌더링 요소를 지정합니다."
+        }
+    ]
+}

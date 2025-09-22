@@ -6,6 +6,7 @@ import buttonData from '../../public/components/button.json';
 import calloutData from '../../public/components/callout.json';
 import cardData from '../../public/components/card.json';
 import checkboxData from '../../public/components/checkbox.json';
+import collapsibleData from '../../public/components/collapsible.json';
 import dialogData from '../../public/components/dialog.json';
 import flexData from '../../public/components/flex.json';
 import gridData from '../../public/components/grid.json';
@@ -32,6 +33,7 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     button: buttonData,
     card: cardData,
     callout: calloutData,
+    collapsible: collapsibleData,
     flex: flexData,
     grid: gridData,
     'h-stack': hStackData,
