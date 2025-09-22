@@ -1,5 +1,13 @@
 # @vapor-ui/core
 
+## 0.7.0-field-export.0
+
+### Minor Changes
+
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+- 6c02d6f: unreflected content revisions
+- 7928a67: add subcomponent props to `Content`
+
 ## 0.6.0
 
 ### Minor Changes

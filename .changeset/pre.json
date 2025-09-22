@@ -1,0 +1,21 @@
+{
+  "mode": "pre",
+  "tag": "field-export",
+  "initialVersions": {
+    "figma-plugin": "0.0.0",
+    "website": "0.0.8",
+    "@vapor-ui/color-generator": "0.0.0",
+    "@vapor-ui/core": "0.6.0",
+    "@vapor-ui/css-generator": "0.0.0",
+    "@repo/eslint-config": "0.0.0",
+    "@vapor-ui/hooks": "0.1.0",
+    "@vapor-ui/icons": "0.4.0",
+    "@repo/typescript-config": "0.0.0"
+  },
+  "changesets": [
+    "chatty-keys-bathe",
+    "green-candies-drive",
+    "six-rats-reply",
+    "thick-states-kick"
+  ]
+}

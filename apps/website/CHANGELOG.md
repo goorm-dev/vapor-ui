@@ -1,5 +1,18 @@
 # website
 
+## 0.1.0-field-export.0
+
+### Minor Changes
+
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+
+### Patch Changes
+
+- Updated dependencies [f8af6e2]
+- Updated dependencies [6c02d6f]
+- Updated dependencies [7928a67]
+    - @vapor-ui/core@0.7.0-field-export.0
+
 ## 0.0.8
 
 ### Patch Changes
