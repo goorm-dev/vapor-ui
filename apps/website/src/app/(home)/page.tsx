@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
+import { Badge, Button, Text } from '@vapor-ui/core';
 import {
     AiSmartieIcon,
     ForwardPageOutlineIcon,
@@ -23,49 +23,7 @@ import DefaultSearchDialog from '~/components/search/search';
 import { VAPOR_BANNER_URL } from '~/constants/image-urls';
 
 export default function HomePage() {
-    const [mounted, setMounted] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-    const { appearance, setTheme } = useTheme();
-    useEffect(() => {
-        setMounted(true);
-        // Reset to default tab1 theme on page load
-        setTheme({
-            primaryColor: '#3B82F6', // blue-500
-            radius: 'md',
-            scaling: 1.0, // 100%
-        });
-    }, [setTheme]);
-
-    if (!mounted) {
-        return null;
-    }
-
-    const handleTabChange = (value: string) => {
-        switch (value) {
-            case 'tab1': // Vapor theme
-                setTheme({
-                    primaryColor: '#3B82F6', // blue-500
-                    radius: 'md',
-                    scaling: 1.0, // 100%
-                });
-                break;
-            case 'tab2': // Aurora theme
-                setTheme({
-                    primaryColor: '#8B5CF6', // violet-500
-                    radius: 'lg',
-                    scaling: 1.0, // 100%
-                });
-                break;
-            case 'tab3': // Pop theme
-                setTheme({
-                    primaryColor: '#EC4899', // pink-500
-                    radius: 'full',
-                    scaling: 1.2, // 120%
-                });
-                break;
-        }
-    };
 
     return (
         <>
@@ -83,9 +41,7 @@ export default function HomePage() {
                         className="absolute bottom-0 left-0 w-full h-[162px]"
                         style={{
                             background:
-                                appearance === 'light'
-                                    ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--color-background-normal, #FFF) 100%)'
-                                    : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--color-background-normal, #23272E) 100%)',
+                                'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--color-background-normal, #FFF) 100%)',
                         }}
                     />
                     <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
@@ -227,7 +183,7 @@ export default function HomePage() {
                                 나만의 테마를 완성해보세요
                             </Text>
                         </div>
-                        <LocalTabs defaultValue="tab1" onValueChange={handleTabChange}>
+                        <LocalTabs defaultValue="tab1">
                             <LocalTabsList>
                                 <LocalTab value="tab1">
                                     <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">

@@ -1,5 +1,12 @@
 # website
 
+## 0.1.0-field-export.2
+
+### Patch Changes
+
+- Updated dependencies
+    - @vapor-ui/core@0.7.0-field-export.2
+
 ## 0.1.0-field-export.1
 
 ### Patch Changes

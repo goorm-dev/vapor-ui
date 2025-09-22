@@ -181,8 +181,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.13(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@vapor-ui/core':
-        specifier: 0.7.0-field-export.0
-        version: 0.7.0-field-export.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.7.0-field-export.2
+        version: 0.7.0-field-export.2(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@vapor-ui/icons':
         specifier: workspace:*
         version: link:../../packages/icons
@@ -3356,8 +3356,8 @@ packages:
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0
 
-  '@vapor-ui/core@0.7.0-field-export.0':
-    resolution: {integrity: sha512-6DQAsZ0eBUJfAj5O5UEyOSpCYTXDYS16gRz/i7LhK5ajJiBsf4U5APIxi6yZE3/xW0NHhjNMCQCO6O0ba1EAIw==}
+  '@vapor-ui/core@0.7.0-field-export.2':
+    resolution: {integrity: sha512-ZQKplQlBD7hbL53X9ZSFWs1t26DqaKQEIxpEbPX51mUrvvIXfX7knLpmeSiEddoqsImunVpPC++vWFD8olb1ow==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -9756,7 +9756,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@vapor-ui/core@0.7.0-field-export.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@vapor-ui/core@0.7.0-field-export.2(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@base-ui-components/react': 1.0.0-beta.2(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@base-ui-components/utils': 0.1.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

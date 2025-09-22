@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 0.7.0-field-export.2
+
+### Patch Changes
+
+- update export
+
 ## 0.7.0-field-export.1
 
 ### Patch Changes
