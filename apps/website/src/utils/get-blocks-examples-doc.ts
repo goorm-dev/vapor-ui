@@ -21,7 +21,7 @@ export const replaceBlockDoc = (text: string) => {
                 const config: DocGenFile = JSON.parse(jsonContent.trim());
                 // Remove leading ./ from the file path and resolve from apps/website
                 const normalizedFile = config.file.replace(/^\.\//, '');
-                const filePath = path.join(process.cwd(), normalizedFile);
+                const filePath = path.join(path.resolve(__dirname, '../..'), normalizedFile);
 
                 if (!fs.existsSync(filePath)) {
                     return `> ⚠️ File not found: \`${config.file}\` (resolved to: ${filePath})`;
