@@ -108,7 +108,10 @@ const getTheme = (storageKey: string, defaultTheme?: string): string | undefined
 };
 
 const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent): 'light' | 'dark' => {
-    if (!e) e = window.matchMedia(MEDIA_QUERY);
+    if (!e) {
+        if (typeof window === 'undefined') return 'light';
+        e = window.matchMedia(MEDIA_QUERY);
+    }
     return e.matches ? 'dark' : 'light';
 };
 
