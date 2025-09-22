@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { TextInput } from '@vapor-ui/core';
+import { Button, TextInput } from '@vapor-ui/core';
 
 // 컬러 유틸리티 함수들
 const hexToHsv = (hex: string): { h: number; s: number; v: number } => {
@@ -53,8 +53,6 @@ const hsvToHex = (h: number, s: number, v: number): string => {
 export interface ColorPickerProps {
     /** 초기 색상 값 (hex 형식) */
     defaultValue?: string;
-    /** 색상 변경 시 호출되는 콜백 함수 */
-    onColorChange?: (color: string) => void;
     /** 컴포넌트의 너비 */
     width?: number | string;
     /** 컴포넌트의 높이 */
@@ -63,15 +61,20 @@ export interface ColorPickerProps {
     className?: string;
     /** 비활성화 상태 */
     disabled?: boolean;
+    /** 색상 변경 시 호출되는 콜백 함수 */
+    onColorChange?: (color: string) => void;
+    /** 적용 버튼 클릭 시 호출되는 콜백 함수 */
+    onClickApply?: () => void;
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = ({
     defaultValue = '#245ecf',
-    onColorChange,
     width = 250,
     height = 200,
     className = '',
     disabled = false,
+    onColorChange,
+    onClickApply,
 }) => {
     const [color, setColor] = useState(defaultValue);
     const [hsv, setHsv] = useState(() => hexToHsv(defaultValue));
@@ -275,6 +278,10 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                         aria-label={`선택된 색상: ${color}`}
                     />
                 </div>
+
+                <Button variant="outline" onClick={onClickApply}>
+                    적용
+                </Button>
             </div>
         </div>
     );
