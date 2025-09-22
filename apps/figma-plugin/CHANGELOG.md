@@ -1,5 +1,12 @@
 # figma-plugin
 
+## 0.0.1-field-export.1
+
+### Patch Changes
+
+- Updated dependencies
+    - @vapor-ui/core@0.7.0-field-export.1
+
 ## 0.0.1-field-export.0
 
 ### Patch Changes

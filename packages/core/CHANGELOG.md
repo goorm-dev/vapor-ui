@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 0.7.0-field-export.1
+
+### Patch Changes
+
+- add buid;
+
 ## 0.7.0-field-export.0
 
 ### Minor Changes
