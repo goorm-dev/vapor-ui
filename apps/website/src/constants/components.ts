@@ -18,6 +18,7 @@ import menuData from '../../public/components/menu.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
 import radioGroupData from '../../public/components/radio-group.json';
 import radioData from '../../public/components/radio.json';
+import sheetData from '../../public/components/sheet.json';
 import switchData from '../../public/components/switch.json';
 import textInputData from '../../public/components/text-input.json';
 import textData from '../../public/components/text.json';
@@ -51,6 +52,7 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     switch: switchData,
     radio: radioData,
     'radio-group': radioGroupData,
+    sheet: sheetData,
     tooltip: tooltipData,
     'input-group': inputGroupData,
     textarea: textareaData,
