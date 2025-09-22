@@ -3,15 +3,17 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { getLLMText } from '~/lib/get-llm-text';
 import { source } from '~/lib/source';
+import { blockSource } from '~/lib/source';
 
 export const revalidate = false;
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ slug?: string[] }> }) {
     const { slug } = await params;
-    const page = source.getPage(slug);
+    const page = source.getPage(slug) ?? blockSource.getPage(slug);
+
     if (!page) notFound();
 
-    return new NextResponse(await getLLMText(page));
+    return new NextResponse(await getLLMText(page, 'docs'));
 }
 
 export function generateStaticParams() {
