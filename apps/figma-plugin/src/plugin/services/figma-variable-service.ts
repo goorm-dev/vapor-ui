@@ -217,15 +217,19 @@ const SEMANTIC_PREFIX = 'vapor-color-';
 
 function formatTokenName(tokenName: string): string {
     // Convert token names like "color-blue-500" to "blue/500"
+    // or "color-black" to "black"
     // or "vapor-color-background-canvas" to "background/canvas"
 
     if (tokenName.startsWith(PRIMITIVE_PREFIX)) {
-        // Handle "color-blue-500" -> "blue/500"
+        // Handle "color-blue-500" -> "blue/500" or "color-black" -> "black"
         const parts = tokenName.substring(PRIMITIVE_PREFIX.length).split('-'); // Remove "color-" prefix
         if (parts.length >= 2) {
             const colorFamily = parts.slice(0, -1).join('-'); // Join all but last part
             const shade = parts[parts.length - 1];
             return `${colorFamily}/${shade}`;
+        } else if (parts.length === 1) {
+            // Handle single-part tokens like "color-black" -> "black"
+            return parts[0];
         }
     } else if (tokenName.startsWith(SEMANTIC_PREFIX)) {
         // Handle "vapor-color-background-canvas" -> "background/canvas"
