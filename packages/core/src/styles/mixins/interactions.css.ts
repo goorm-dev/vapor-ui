@@ -75,7 +75,9 @@ export const interaction = recipe({
                 '@media': {
                     '(hover: hover)': {
                         selectors: {
-                            '&:hover:not(:focus)': { borderColor: `rgba(0,0,0, 0.24)` },
+                            '&:hover:not(:focus)': {
+                                borderColor: `rgba(${vars.color.gray['rgb-950']}, 0.24)`,
+                            },
                         },
                     },
                 },
