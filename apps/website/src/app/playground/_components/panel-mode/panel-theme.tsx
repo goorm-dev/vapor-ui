@@ -5,9 +5,9 @@ import { DarkIcon, LightIcon } from '@vapor-ui/icons';
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
 
-type Appearance = 'light' | 'dark';
+type Theme = 'light' | 'dark';
 
-const APPEARANCE_CONFIG = {
+const THEME_CONFIG = {
     light: {
         icon: LightIcon,
         label: 'Light',
@@ -16,26 +16,26 @@ const APPEARANCE_CONFIG = {
         icon: DarkIcon,
         label: 'Dark',
     },
-} satisfies Record<Appearance, { icon: IconType; label: string }>;
+} satisfies Record<Theme, { icon: IconType; label: string }>;
 
-function Mode() {
+function Theme() {
     const { setTheme, theme } = useTheme();
 
-    const handleAppearanceChange = (selectedTheme: Appearance) => {
+    const handleThemeChange = (selectedTheme: Theme) => {
         setTheme(selectedTheme);
     };
 
     return (
-        <Section title="Appearance">
-            <RadioButtonGroup value={theme} onValueChange={handleAppearanceChange}>
-                {(Object.keys(APPEARANCE_CONFIG) as Appearance[]).map((appearanceKey) => {
-                    const { icon: Icon, label } = APPEARANCE_CONFIG[appearanceKey];
+        <Section title="Theme">
+            <RadioButtonGroup value={theme} onValueChange={handleThemeChange}>
+                {(Object.keys(THEME_CONFIG) as Theme[]).map((themeKey) => {
+                    const { icon: Icon, label } = THEME_CONFIG[themeKey];
                     return (
                         <RadioButtonGroup.Button
                             data-theme-category="mode"
-                            key={appearanceKey}
-                            value={appearanceKey}
-                            color={appearanceKey === theme ? 'primary' : 'secondary'}
+                            key={themeKey}
+                            value={themeKey}
+                            color={themeKey === theme ? 'primary' : 'secondary'}
                         >
                             <Icon />
                             <span>{label}</span>
@@ -47,4 +47,4 @@ function Mode() {
     );
 }
 
-export default Mode;
+export default Theme;
