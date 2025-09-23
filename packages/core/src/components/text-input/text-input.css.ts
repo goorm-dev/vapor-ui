@@ -31,32 +31,32 @@ export const root = recipe({
 
     variants: {
         invalid: {
-            true: {
+            true: layerStyle('components', {
                 borderColor: vars.color.border.danger,
-            },
+            }),
         },
 
         size: {
-            sm: {
+            sm: layerStyle('components', {
                 paddingInline: vars.size.space[100],
                 height: vars.size.dimension['300'],
                 fontSize: vars.typography.fontSize['050'],
-            },
-            md: {
+            }),
+            md: layerStyle('components', {
                 paddingInline: vars.size.space[150],
                 height: vars.size.dimension['400'],
                 fontSize: vars.typography.fontSize['075'],
-            },
-            lg: {
+            }),
+            lg: layerStyle('components', {
                 paddingInline: vars.size.space[200],
                 height: vars.size.dimension['500'],
                 fontSize: vars.typography.fontSize['075'],
-            },
-            xl: {
+            }),
+            xl: layerStyle('components', {
                 paddingInline: vars.size.space[300],
                 height: vars.size.dimension['600'],
                 fontSize: vars.typography.fontSize['100'],
-            },
+            }),
         },
     },
 });
