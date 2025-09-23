@@ -1,0 +1,85 @@
+---
+title: 'React Router'
+description: 'Vapor UI 컴포넌트를 React Router와 함께 사용하는 방법'
+---
+
+## React Router
+
+React Router는 React 애플리케이션에서 선언적 라우팅을 위한 표준 라이브러리입니다. SPA(Single Page Application)를 구축할 때 필수적인 도구입니다.
+
+<Steps>
+<Step>
+
+### 프로젝트 생성
+
+Vite를 사용하여 React 프로젝트를 생성하고 React Router를 설치합니다.
+
+```bash
+# 프로젝트 생성
+npx create-react-router@latest my-react-router-app
+cd my-react-router-app
+```
+
+</Step>
+
+<Step>
+
+### 라이브러리 설치
+
+Vapor UI 패키지를 설치합니다.
+
+```package-install
+npm install @vapor-ui/core @vapor-ui/icons
+```
+
+</Step>
+
+<Step>
+
+### Vite 설정
+
+Vite 설정 파일에서 Vapor UI 패키지가 SSR에서 올바르게 작동하도록 구성합니다.
+
+```typescript title="vite.config.ts"
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [react()],
+    ssr: {
+        noExternal: ['@vapor-ui/core', '@vapor-ui/icons'],
+    },
+});
+```
+
+</Step>
+
+<Step>
+
+### 컴포넌트 사용 예시
+
+```tsx title="pages/index.tsx"
+import { Card, Text } from '@vapor-ui/core';
+
+export default function HomePage() {
+    return (
+        <main className="flex min-h-screen flex-col items-center justify-center p-24">
+            <Card.Root className="max-w-md">
+                <Card.Body>
+                    <div className="flex flex-col gap-4">
+                        <Text asChild typography="heading1" foreground="normal">
+                            <h1>Welcome to Vapor UI!</h1>
+                        </Text>
+                        <Text>
+                            이것은 React Router와 함께 Vapor UI 컴포넌트를 사용하는 예시입니다.
+                        </Text>
+                    </div>
+                </Card.Body>
+            </Card.Root>
+        </main>
+    );
+}
+```
+
+</Step>
+</Steps>

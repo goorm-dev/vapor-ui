@@ -27,7 +27,6 @@
     --color-fd-muted: var(--vapor-color-secondary);
     --color-fd-muted-foreground: var(--vapor-color-foreground-secondary);
     --color-fd-foreground: var(--vapor-color-foreground-secondary);
-    --color-fd-secondary: var(--vapor-color-secondary);
     --color-fd-secondary-foreground: var(--vapor-color-foreground-secondary);
     --color-fd-card: var(--vapor-color-background-normal);
     --color-fd-card-foreground: var(--vapor-color-foreground-secondary);
