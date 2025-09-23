@@ -30,9 +30,9 @@ const THEME_COLOR_OPTIONS: { value: ThemeColorType; label: string }[] = [
 ];
 
 export const BrandColorsTab = () => {
-    const [colorName, setColorName] = useState<string>('mint');
+    const [colorName, setColorName] = useState<string>('primary');
     const [colorHex, setColorHex] = useState<string>('#70f0ae');
-    const [backgroundName, setBackgroundName] = useState<string>('beige');
+    const [backgroundName, setBackgroundName] = useState<string>('bg');
     const [backgroundHex, setBackgroundHex] = useState<string>('#EFEAE6');
     const [backgroundLightness, setBackgroundLightness] = useState<{ light: number; dark: number }>(
         {
@@ -135,7 +135,7 @@ export const BrandColorsTab = () => {
                         label="Color Name"
                         value={colorName}
                         onChange={setColorName}
-                        placeholder="myBlue"
+                        placeholder="primary"
                     />
                     <ColorInput
                         label="Hex Code"
@@ -150,7 +150,7 @@ export const BrandColorsTab = () => {
                         label="Background Name"
                         value={backgroundName}
                         onChange={setBackgroundName}
-                        placeholder="myGray"
+                        placeholder="bg"
                     />
                     <ColorInput
                         label="Background Hex"
