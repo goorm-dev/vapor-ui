@@ -5,12 +5,29 @@ description: 'Popover는 트리거 요소 근처에 부가 정보나 상호작�
 ---
 
 <Demo name="popover/default-popover">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/popover/default-popover.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { Button, Popover } from '@vapor-ui/core';
+
+export default function DefaultPopover() {
+    return (
+        <div className="flex justify-center p-20">
+            <Popover.Root>
+                <Popover.Trigger render={<Button variant="outline" />}>팝오버 열기</Popover.Trigger>
+                <Popover.Content>
+                    <Popover.Title>알림</Popover.Title>
+                    <Popover.Description>
+                        새로운 메시지 3개와 알림 1개가 있습니다.
+                    </Popover.Description>
+                </Popover.Content>
+            </Popover.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ## Property
@@ -22,12 +39,113 @@ description: 'Popover는 트리거 요소 근처에 부가 정보나 상호작�
 Popover가 나타날 위치와 정렬을 설정할 수 있습니다. 기본값은 'bottom'입니다.
 
 <Demo name="popover/popover-positioning">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/popover/popover-positioning.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { Button, Popover } from '@vapor-ui/core';
+
+export default function PopoverPositioning() {
+    return (
+        <div className="grid grid-cols-2 gap-8 p-20">
+            <div className="space-y-6">
+                <h3 className="text-sm font-medium text-foreground-hint">방향 설정</h3>
+                <div className="grid grid-cols-2 gap-4">
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            상단 팝오버
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ side: 'top' }}>
+                            <Popover.Title>상단 팝오버</Popover.Title>
+                            <Popover.Description>
+                                트리거 위쪽에 표시되는 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            우측 팝오버
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ side: 'right' }}>
+                            <Popover.Title>우측 팝오버</Popover.Title>
+                            <Popover.Description>
+                                트리거 오른쪽에 표시되는 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            하단 팝오버
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ side: 'bottom' }}>
+                            <Popover.Title>하단 팝오버</Popover.Title>
+                            <Popover.Description>
+                                트리거 아래쪽에 표시되는 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            좌측 팝오버
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ side: 'left' }}>
+                            <Popover.Title>좌측 팝오버</Popover.Title>
+                            <Popover.Description>
+                                트리거 왼쪽에 표시되는 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+                </div>
+            </div>
+
+            <div className="space-y-6">
+                <h3 className="text-sm font-medium text-foreground-hint">정렬 설정</h3>
+                <div className="space-y-4">
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            시작점 정렬
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ align: 'start' }}>
+                            <Popover.Title>시작점 정렬</Popover.Title>
+                            <Popover.Description>
+                                트리거의 시작점에 정렬된 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            중앙 정렬
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ align: 'center' }}>
+                            <Popover.Title>중앙 정렬</Popover.Title>
+                            <Popover.Description>
+                                트리거의 중앙에 정렬된 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            끝점 정렬
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ align: 'end' }}>
+                            <Popover.Title>끝점 정렬</Popover.Title>
+                            <Popover.Description>
+                                트리거의 끝점에 정렬된 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+                </div>
+            </div>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ### Controlled State
@@ -35,12 +153,50 @@ Popover가 나타날 위치와 정렬을 설정할 수 있습니다. 기본값�
 Popover의 열림/닫힘 상태를 외부에서 제어할 수 있습니다.
 
 <Demo name="popover/popover-controlled">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/popover/popover-controlled.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+import { Button, Popover } from '@vapor-ui/core';
+
+export default function PopoverControlled() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className="flex flex-col items-center gap-4 p-20">
+            <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setIsOpen(true)}>
+                    팝오버 열기
+                </Button>
+                <Button variant="outline" onClick={() => setIsOpen(false)}>
+                    팝오버 닫기
+                </Button>
+            </div>
+
+            <p className="text-sm text-foreground-hint">현재 상태: {isOpen ? '열림' : '닫힘'}</p>
+
+            <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+                <Popover.Trigger render={<Button />}>제어되는 팝오버</Popover.Trigger>
+                <Popover.Content>
+                    <Popover.Title>제어되는 팝오버</Popover.Title>
+                    <Popover.Description>
+                        이 팝오버는 외부 상태에 의해 제어됩니다. 위의 버튼으로 열고 닫을 수
+                        있습니다.
+                    </Popover.Description>
+                    <div className="mt-4 flex gap-2">
+                        <Button size="sm" onClick={() => setIsOpen(false)}>
+                            닫기
+                        </Button>
+                    </div>
+                </Popover.Content>
+            </Popover.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ### Offset
@@ -48,12 +204,75 @@ Popover의 열림/닫힘 상태를 외부에서 제어할 수 있습니다.
 Popover와 트리거 간의 거리를 세밀하게 조정할 수 있습니다.
 
 <Demo name="popover/popover-offset">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/popover/popover-offset.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { Button, Popover } from '@vapor-ui/core';
+
+export default function PopoverOffset() {
+    return (
+        <div className="flex flex-col items-center gap-8 p-20">
+            <div className="space-y-6">
+                <h3 className="text-center text-sm font-medium text-foreground-hint">
+                    오프셋 조정
+                </h3>
+
+                <div className="flex gap-4">
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            기본 오프셋
+                        </Popover.Trigger>
+                        <Popover.Content>
+                            <Popover.Title>기본 오프셋</Popover.Title>
+                            <Popover.Description>
+                                기본 8px 오프셋이 적용된 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            사이드 오프셋 16px
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ sideOffset: 16 }}>
+                            <Popover.Title>사이드 오프셋 16px</Popover.Title>
+                            <Popover.Description>
+                                트리거로부터 16px 떨어진 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            정렬 오프셋 20px
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ alignOffset: 20 }}>
+                            <Popover.Title>정렬 오프셋 20px</Popover.Title>
+                            <Popover.Description>
+                                정렬 축에서 20px 이동한 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+
+                    <Popover.Root>
+                        <Popover.Trigger render={<Button variant="outline" />}>
+                            복합 오프셋
+                        </Popover.Trigger>
+                        <Popover.Content positionerProps={{ sideOffset: 24, alignOffset: -10 }}>
+                            <Popover.Title>복합 오프셋</Popover.Title>
+                            <Popover.Description>
+                                사이드 24px, 정렬 -10px 오프셋이 적용된 팝오버입니다.
+                            </Popover.Description>
+                        </Popover.Content>
+                    </Popover.Root>
+                </div>
+            </div>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ## Examples
@@ -65,12 +284,54 @@ Popover와 트리거 간의 거리를 세밀하게 조정할 수 있습니다.
 팝오버는 간단한 텍스트부터 복잡한 상호작용 요소까지 다양한 콘텐츠를 담을 수 있습니다.
 
 <Demo name="popover/popover-content">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/popover/popover-content.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { Button, Popover } from '@vapor-ui/core';
+
+export default function PopoverContent() {
+    return (
+        <div className="flex flex-wrap gap-4 p-20">
+            <Popover.Root>
+                <Popover.Trigger render={<Button variant="outline" />}>
+                    간단한 텍스트
+                </Popover.Trigger>
+                <Popover.Content>간단한 팝오버 메시지입니다.</Popover.Content>
+            </Popover.Root>
+
+            <Popover.Root>
+                <Popover.Trigger render={<Button variant="outline" />}>제목과 설명</Popover.Trigger>
+                <Popover.Content>
+                    <Popover.Title>알림</Popover.Title>
+                    <Popover.Description>
+                        새로운 업데이트가 있습니다. 확인해보세요.
+                    </Popover.Description>
+                </Popover.Content>
+            </Popover.Root>
+
+            <Popover.Root>
+                <Popover.Trigger render={<Button variant="outline" />}>
+                    상호작용 콘텐츠
+                </Popover.Trigger>
+                <Popover.Content>
+                    <Popover.Title>설정</Popover.Title>
+                    <Popover.Description>원하는 설정을 선택하세요.</Popover.Description>
+                    <div className="mt-4 space-y-2">
+                        <Button size="sm" className="w-full">
+                            옵션 1
+                        </Button>
+                        <Button size="sm" variant="outline" className="w-full">
+                            옵션 2
+                        </Button>
+                    </div>
+                </Popover.Content>
+            </Popover.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ## Props Table
@@ -130,3 +391,4 @@ Popover의 설명을 표시하는 컴포넌트입니다.
 Popover를 닫는 버튼 컴포넌트입니다.
 
 <ComponentPropsTable file="popover" section="closeProps" />
+````

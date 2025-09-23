@@ -5,12 +5,33 @@ description: 'Dialog는 페이지 위에 모달 형태로 정보를 표시하거
 ---
 
 <Demo name="default-dialog">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/default-dialog.tsx",
-    "codeblock": true
+
+```tsx
+import { Button, Dialog } from '@vapor-ui/core';
+
+export default function DefaultDialog() {
+    return (
+        <Dialog.Root>
+            <Dialog.Trigger render={<Button />}>클릭</Dialog.Trigger>
+            <Dialog.Content>
+                <Dialog.Header>
+                    <Dialog.Title>알림</Dialog.Title>
+                    <Dialog.Close aria-label="Close" />
+                </Dialog.Header>
+                <Dialog.Body>
+                    <Dialog.Description>
+                        여기에 다이얼로그 본문 내용이 들어갑니다.
+                    </Dialog.Description>
+                </Dialog.Body>
+                <Dialog.Footer style={{ marginLeft: 'auto' }}>
+                    <Button color="primary">확인</Button>
+                </Dialog.Footer>
+            </Dialog.Content>
+        </Dialog.Root>
+    );
 }
 ```
+
 </Demo>
 
 ## Property
@@ -22,12 +43,67 @@ description: 'Dialog는 페이지 위에 모달 형태로 정보를 표시하거
 Dialog 사이즈는 md, lg, xl로 제공합니다.
 
 <Demo name="dialog-size">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/dialog-size.tsx",
-    "codeblock": true
+
+```tsx
+import { Button, Dialog } from '@vapor-ui/core';
+
+export default function DialogSize() {
+    return (
+        <div className="space-x-4">
+            <Dialog.Root size="md">
+                <Dialog.Trigger render={<Button>Medium Dialog</Button>} />
+                <Dialog.Content>
+                    <Dialog.Header>
+                        <Dialog.Title>Medium Size</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <Dialog.Description>Medium 크기의 다이얼로그입니다.</Dialog.Description>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close render={<Button variant="ghost">취소</Button>} />
+                        <Button>확인</Button>
+                    </Dialog.Footer>
+                </Dialog.Content>
+            </Dialog.Root>
+
+            <Dialog.Root size="lg">
+                <Dialog.Trigger render={<Button>Large Dialog</Button>} />
+                <Dialog.Content>
+                    <Dialog.Header>
+                        <Dialog.Title>Large Size</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <Dialog.Description>Large 크기의 다이얼로그입니다.</Dialog.Description>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close render={<Button variant="ghost">취소</Button>} />
+                        <Button>확인</Button>
+                    </Dialog.Footer>
+                </Dialog.Content>
+            </Dialog.Root>
+
+            <Dialog.Root size="xl">
+                <Dialog.Trigger render={<Button>Extra Large Dialog</Button>} />
+                <Dialog.Content>
+                    <Dialog.Header>
+                        <Dialog.Title>Extra Large Size</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <Dialog.Description>
+                            Extra Large 크기의 다이얼로그입니다.
+                        </Dialog.Description>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close render={<Button variant="ghost">취소</Button>} />
+                        <Button>확인</Button>
+                    </Dialog.Footer>
+                </Dialog.Content>
+            </Dialog.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ### Modal Behavior
@@ -35,12 +111,51 @@ Dialog 사이즈는 md, lg, xl로 제공합니다.
 Dialog의 모달 동작을 제어할 수 있습니다.
 
 <Demo name="dialog-modal">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/dialog-modal.tsx",
-    "codeblock": true
+
+```tsx
+import { Button, Dialog } from '@vapor-ui/core';
+
+export default function DialogModal() {
+    return (
+        <div className="space-x-4">
+            <Dialog.Root modal={true}>
+                <Dialog.Trigger render={<Button>Modal Dialog</Button>} />
+                <Dialog.Content>
+                    <Dialog.Header>
+                        <Dialog.Title>Modal Dialog</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <Dialog.Description>
+                            포커스가 다이얼로그 내부에 제한됩니다.
+                        </Dialog.Description>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close render={<Button>확인</Button>} />
+                    </Dialog.Footer>
+                </Dialog.Content>
+            </Dialog.Root>
+
+            <Dialog.Root modal={false}>
+                <Dialog.Trigger render={<Button>Non-Modal Dialog</Button>} />
+                <Dialog.Content>
+                    <Dialog.Header>
+                        <Dialog.Title>Non-Modal Dialog</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <Dialog.Description>
+                            배경의 다른 요소들과 상호작용할 수 있습니다.
+                        </Dialog.Description>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close render={<Button>확인</Button>} />
+                    </Dialog.Footer>
+                </Dialog.Content>
+            </Dialog.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ## Examples
@@ -52,12 +167,33 @@ Dialog의 모달 동작을 제어할 수 있습니다.
 기본적인 Dialog 사용법입니다.
 
 <Demo name="dialog-simple">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/dialog-simple.tsx",
-    "codeblock": true
+
+```tsx
+import { Button, Dialog } from '@vapor-ui/core';
+
+export default function DialogSimple() {
+    return (
+        <Dialog.Root>
+            <Dialog.Trigger render={<Button>단순 다이얼로그 열기</Button>} />
+            <Dialog.Content>
+                <Dialog.Header>
+                    <Dialog.Title>알림</Dialog.Title>
+                </Dialog.Header>
+                <Dialog.Body>
+                    <Dialog.Description>
+                        이것은 기본적인 다이얼로그입니다. Escape 키나 배경 클릭으로 닫을 수
+                        있습니다.
+                    </Dialog.Description>
+                </Dialog.Body>
+                <Dialog.Footer>
+                    <Dialog.Close render={<Button>확인</Button>} />
+                </Dialog.Footer>
+            </Dialog.Content>
+        </Dialog.Root>
+    );
 }
 ```
+
 </Demo>
 
 ### Composition Pattern
@@ -65,12 +201,33 @@ Dialog의 모달 동작을 제어할 수 있습니다.
 Dialog.Root, Dialog.Trigger, Dialog.CombinedContent, Dialog.Header, Dialog.Body, Dialog.Footer를 조합한 패턴입니다.
 
 <Demo name="dialog-composition">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/dialog-composition.tsx",
-    "codeblock": true
+
+```tsx
+import { Button, Dialog } from '@vapor-ui/core';
+
+export default function DialogComposition() {
+    return (
+        <Dialog.Root size="lg" closeOnClickOverlay={false}>
+            <Dialog.Trigger render={<Button variant="outline">확인 다이얼로그</Button>} />
+            <Dialog.Content>
+                <Dialog.Header>
+                    <Dialog.Title>작업 확인</Dialog.Title>
+                </Dialog.Header>
+                <Dialog.Body>
+                    <Dialog.Description>
+                        이 작업을 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                    </Dialog.Description>
+                </Dialog.Body>
+                <Dialog.Footer>
+                    <Dialog.Close render={<Button variant="ghost">취소</Button>} />
+                    <Dialog.Close render={<Button color="danger">삭제</Button>} />
+                </Dialog.Footer>
+            </Dialog.Content>
+        </Dialog.Root>
+    );
 }
 ```
+
 </Demo>
 
 ### Size & Modal Variants
@@ -78,12 +235,54 @@ Dialog.Root, Dialog.Trigger, Dialog.CombinedContent, Dialog.Header, Dialog.Body,
 다양한 크기와 모달 설정을 조합한 예시입니다.
 
 <Demo name="dialog-variants">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/dialog-variants.tsx",
-    "codeblock": true
+
+```tsx
+import { Button, Dialog } from '@vapor-ui/core';
+
+export default function DialogVariants() {
+    return (
+        <div className="space-y-4">
+            <div className="space-x-4">
+                <Dialog.Root size="md" closeOnClickOverlay={false}>
+                    <Dialog.Trigger render={<Button>Medium + Prevent Overlay Click</Button>} />
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title>Medium Size</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            <Dialog.Description>
+                                Overlay 클릭 시 닫을 수 없습니다.
+                            </Dialog.Description>
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <Dialog.Close render={<Button>확인</Button>} />
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Root>
+
+                <Dialog.Root size="xl" modal={false}>
+                    <Dialog.Trigger render={<Button>XL + Non-Modal</Button>} />
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title>Extra Large Size</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            <Dialog.Description>
+                                매우 큰 크기의 non-modal 다이얼로그입니다. 배경과 상호작용이
+                                가능합니다.
+                            </Dialog.Description>
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <Dialog.Close render={<Button>확인</Button>} />
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Root>
+            </div>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ## Props Table

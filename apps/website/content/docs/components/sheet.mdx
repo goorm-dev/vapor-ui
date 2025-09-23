@@ -5,12 +5,42 @@ description: 'Sheet는 화면의 가장자리에서 슬라이드되어 나타나
 ---
 
 <Demo name="sheet/default-sheet">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/sheet/default-sheet.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { Button, Sheet } from '@vapor-ui/core';
+import { CloseOutlineIcon } from '@vapor-ui/icons';
+
+export default function DefaultSheet() {
+    return (
+        <Sheet.Root>
+            <Sheet.Trigger render={<Button variant="outline" />}>Open Sheet</Sheet.Trigger>
+            <Sheet.Content>
+                <div className="absolute top-4 right-4">
+                    <Sheet.Close aria-label="Close sheet" className="flex">
+                        <CloseOutlineIcon />
+                    </Sheet.Close>
+                </div>
+                <Sheet.Header>
+                    <Sheet.Title>알림</Sheet.Title>
+                </Sheet.Header>
+                <Sheet.Body>
+                    <Sheet.Description>
+                        Sheet는 화면 가장자리에서 슬라이드되어 나타나는 오버레이 컴포넌트입니다.
+                        추가 정보나 작업을 위한 공간을 제공합니다.
+                    </Sheet.Description>
+                </Sheet.Body>
+                <Sheet.Footer>
+                    <Sheet.Close render={<Button variant="ghost" />}>닫기</Sheet.Close>
+                    <Button color="primary">확인</Button>
+                </Sheet.Footer>
+            </Sheet.Content>
+        </Sheet.Root>
+    );
 }
 ```
+
 </Demo>
 
 ## Property
@@ -22,12 +52,94 @@ description: 'Sheet는 화면의 가장자리에서 슬라이드되어 나타나
 Sheet가 나타날 위치를 설정할 수 있습니다. 기본값은 'right'입니다.
 
 <Demo name="sheet/sheet-side">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/sheet/sheet-side.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { Button, Sheet } from '@vapor-ui/core';
+import { CloseOutlineIcon } from '@vapor-ui/icons';
+
+export default function SheetSide() {
+    return (
+        <div className="flex flex-wrap gap-4">
+            {/* Right Side (Default) */}
+            <Sheet.Root>
+                <Sheet.Trigger render={<Button variant="outline" />}>Right</Sheet.Trigger>
+                <Sheet.Content positionerProps={{ side: 'right' }}>
+                    <div className="absolute top-4 right-4">
+                        <Sheet.Close aria-label="Close sheet" className="flex">
+                            <CloseOutlineIcon />
+                        </Sheet.Close>
+                    </div>
+                    <Sheet.Header>
+                        <Sheet.Title>우측 Sheet</Sheet.Title>
+                    </Sheet.Header>
+                    <Sheet.Body>
+                        <Sheet.Description>
+                            화면 우측에서 슬라이드됩니다. (기본값)
+                        </Sheet.Description>
+                    </Sheet.Body>
+                </Sheet.Content>
+            </Sheet.Root>
+
+            {/* Left Side */}
+            <Sheet.Root>
+                <Sheet.Trigger render={<Button variant="outline" />}>Left</Sheet.Trigger>
+                <Sheet.Content positionerProps={{ side: 'left' }}>
+                    <div className="absolute top-4 right-4">
+                        <Sheet.Close aria-label="Close sheet" className="flex">
+                            <CloseOutlineIcon />
+                        </Sheet.Close>
+                    </div>
+                    <Sheet.Header>
+                        <Sheet.Title>좌측 Sheet</Sheet.Title>
+                    </Sheet.Header>
+                    <Sheet.Body>
+                        <Sheet.Description>화면 좌측에서 슬라이드됩니다.</Sheet.Description>
+                    </Sheet.Body>
+                </Sheet.Content>
+            </Sheet.Root>
+
+            {/* Top Side */}
+            <Sheet.Root>
+                <Sheet.Trigger render={<Button variant="outline" />}>Top</Sheet.Trigger>
+                <Sheet.Content positionerProps={{ side: 'top' }}>
+                    <div className="absolute top-4 right-4">
+                        <Sheet.Close aria-label="Close sheet" className="flex">
+                            <CloseOutlineIcon />
+                        </Sheet.Close>
+                    </div>
+                    <Sheet.Header>
+                        <Sheet.Title>상단 Sheet</Sheet.Title>
+                    </Sheet.Header>
+                    <Sheet.Body>
+                        <Sheet.Description>화면 상단에서 슬라이드됩니다.</Sheet.Description>
+                    </Sheet.Body>
+                </Sheet.Content>
+            </Sheet.Root>
+
+            {/* Bottom Side */}
+            <Sheet.Root>
+                <Sheet.Trigger render={<Button variant="outline" />}>Bottom</Sheet.Trigger>
+                <Sheet.Content positionerProps={{ side: 'bottom' }}>
+                    <div className="absolute top-4 right-4">
+                        <Sheet.Close aria-label="Close sheet" className="flex">
+                            <CloseOutlineIcon />
+                        </Sheet.Close>
+                    </div>
+                    <Sheet.Header>
+                        <Sheet.Title>하단 Sheet</Sheet.Title>
+                    </Sheet.Header>
+                    <Sheet.Body>
+                        <Sheet.Description>화면 하단에서 슬라이드됩니다.</Sheet.Description>
+                    </Sheet.Body>
+                </Sheet.Content>
+            </Sheet.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ### Controlled State
@@ -35,12 +147,59 @@ Sheet가 나타날 위치를 설정할 수 있습니다. 기본값은 'right'입
 Sheet의 열림/닫힘 상태를 외부에서 제어할 수 있습니다.
 
 <Demo name="sheet/sheet-controlled">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/sheet/sheet-controlled.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+import { Button, Sheet } from '@vapor-ui/core';
+import { CloseOutlineIcon } from '@vapor-ui/icons';
+
+export default function SheetControlled() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className="space-y-4">
+            <div className="flex gap-2">
+                <Button onClick={() => setIsOpen(true)} color="primary">
+                    Sheet 열기
+                </Button>
+                <Button onClick={() => setIsOpen(false)} color="danger" variant="outline">
+                    Sheet 닫기
+                </Button>
+            </div>
+
+            <p className="text-sm text-gray-600">
+                현재 상태: <strong>{isOpen ? '열림' : '닫힘'}</strong>
+            </p>
+
+            <Sheet.Root open={isOpen} onOpenChange={setIsOpen}>
+                <Sheet.Content>
+                    <div className="absolute top-4 right-4">
+                        <Sheet.Close aria-label="Close sheet" className="flex">
+                            <CloseOutlineIcon />
+                        </Sheet.Close>
+                    </div>
+                    <Sheet.Header>
+                        <Sheet.Title>제어된 Sheet</Sheet.Title>
+                    </Sheet.Header>
+                    <Sheet.Body>
+                        <Sheet.Description>
+                            이 Sheet는 외부 버튼으로 상태가 제어됩니다. 프로그래밍 방식으로
+                            열림/닫힘을 관리할 수 있습니다.
+                        </Sheet.Description>
+                    </Sheet.Body>
+                    <Sheet.Footer>
+                        <Sheet.Close render={<Button variant="ghost" />}>닫기</Sheet.Close>
+                    </Sheet.Footer>
+                </Sheet.Content>
+            </Sheet.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ### Keep Mounted
@@ -48,12 +207,70 @@ Sheet의 열림/닫힘 상태를 외부에서 제어할 수 있습니다.
 Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정할 수 있습니다.
 
 <Demo name="sheet/sheet-keep-mounted">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/sheet/sheet-keep-mounted.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { Button, Sheet, TextInput } from '@vapor-ui/core';
+import { CloseOutlineIcon } from '@vapor-ui/icons';
+
+export default function SheetKeepMounted() {
+    return (
+        <div className="flex gap-4">
+            {/* Normal Sheet */}
+            <Sheet.Root>
+                <Sheet.Trigger render={<Button variant="outline" />}>일반 Sheet</Sheet.Trigger>
+                <Sheet.Content>
+                    <div className="absolute top-4 right-4">
+                        <Sheet.Close aria-label="Close sheet" className="flex">
+                            <CloseOutlineIcon />
+                        </Sheet.Close>
+                    </div>
+                    <Sheet.Header>
+                        <Sheet.Title>일반 Sheet</Sheet.Title>
+                    </Sheet.Header>
+                    <Sheet.Body>
+                        <Sheet.Description>
+                            이 Sheet는 닫힐 때 DOM에서 제거됩니다. 다시 열 때마다 내용이 새로
+                            생성됩니다.
+                        </Sheet.Description>
+                        <div className="mt-4">
+                            <TextInput placeholder="입력해보세요..." />
+                        </div>
+                    </Sheet.Body>
+                </Sheet.Content>
+            </Sheet.Root>
+
+            {/* Keep Mounted Sheet */}
+            <Sheet.Root>
+                <Sheet.Trigger render={<Button variant="outline" color="success" />}>
+                    유지 Sheet
+                </Sheet.Trigger>
+                <Sheet.Content portalProps={{ keepMounted: true }}>
+                    <div className="absolute top-4 right-4">
+                        <Sheet.Close aria-label="Close sheet" className="flex">
+                            <CloseOutlineIcon />
+                        </Sheet.Close>
+                    </div>
+                    <Sheet.Header>
+                        <Sheet.Title>유지되는 Sheet</Sheet.Title>
+                    </Sheet.Header>
+                    <Sheet.Body>
+                        <Sheet.Description>
+                            이 Sheet는 닫혀도 DOM에 유지됩니다. 입력한 내용이 보존되는 것을
+                            확인해보세요.
+                        </Sheet.Description>
+                        <div className="mt-4">
+                            <TextInput placeholder="상태 보존 테스트..." />
+                        </div>
+                    </Sheet.Body>
+                </Sheet.Content>
+            </Sheet.Root>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ## Examples
@@ -65,12 +282,38 @@ Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정할 수 �
 Sheet는 다양한 용도로 활용할 수 있는 기본적인 오버레이 컴포넌트입니다.
 
 <Demo name="sheet/sheet-simple">
-```json doc-gen:file
-{
-    "file": "../../../src/components/demo/examples/sheet/sheet-simple.tsx",
-    "codeblock": true
+
+```tsx
+'use client';
+
+import { Button, Sheet } from '@vapor-ui/core';
+import { CloseOutlineIcon } from '@vapor-ui/icons';
+
+export default function SheetSimple() {
+    return (
+        <Sheet.Root>
+            <Sheet.Trigger render={<Button variant="outline" />}>간단한 Sheet</Sheet.Trigger>
+            <Sheet.Content>
+                <div className="absolute top-4 right-4">
+                    <Sheet.Close aria-label="Close sheet" className="flex">
+                        <CloseOutlineIcon />
+                    </Sheet.Close>
+                </div>
+                <Sheet.Header>
+                    <Sheet.Title>간단한 Sheet</Sheet.Title>
+                </Sheet.Header>
+                <Sheet.Body>
+                    <Sheet.Description>
+                        이것은 Sheet 컴포넌트의 가장 기본적인 사용 예시입니다. 최소한의 구성으로
+                        Sheet를 만들 수 있습니다.
+                    </Sheet.Description>
+                </Sheet.Body>
+            </Sheet.Content>
+        </Sheet.Root>
+    );
 }
 ```
+
 </Demo>
 
 ## Props Table
