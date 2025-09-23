@@ -1,6 +1,6 @@
 'use client';
 
-import { Sheet, Button } from '@vapor-ui/core';
+import { Button, Sheet } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 export default function SheetSide() {
@@ -8,9 +8,7 @@ export default function SheetSide() {
         <div className="flex flex-wrap gap-4">
             {/* Right Side (Default) */}
             <Sheet.Root>
-                <Sheet.Trigger render={<Button variant="outline" />}>
-                    Right
-                </Sheet.Trigger>
+                <Sheet.Trigger render={<Button variant="outline" />}>Right</Sheet.Trigger>
                 <Sheet.Content positionerProps={{ side: 'right' }}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
@@ -30,9 +28,7 @@ export default function SheetSide() {
 
             {/* Left Side */}
             <Sheet.Root>
-                <Sheet.Trigger render={<Button variant="outline" />}>
-                    Left
-                </Sheet.Trigger>
+                <Sheet.Trigger render={<Button variant="outline" />}>Left</Sheet.Trigger>
                 <Sheet.Content positionerProps={{ side: 'left' }}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
@@ -43,18 +39,14 @@ export default function SheetSide() {
                         <Sheet.Title>좌측 Sheet</Sheet.Title>
                     </Sheet.Header>
                     <Sheet.Body>
-                        <Sheet.Description>
-                            화면 좌측에서 슬라이드됩니다.
-                        </Sheet.Description>
+                        <Sheet.Description>화면 좌측에서 슬라이드됩니다.</Sheet.Description>
                     </Sheet.Body>
                 </Sheet.Content>
             </Sheet.Root>
 
             {/* Top Side */}
             <Sheet.Root>
-                <Sheet.Trigger render={<Button variant="outline" />}>
-                    Top
-                </Sheet.Trigger>
+                <Sheet.Trigger render={<Button variant="outline" />}>Top</Sheet.Trigger>
                 <Sheet.Content positionerProps={{ side: 'top' }}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
@@ -65,18 +57,14 @@ export default function SheetSide() {
                         <Sheet.Title>상단 Sheet</Sheet.Title>
                     </Sheet.Header>
                     <Sheet.Body>
-                        <Sheet.Description>
-                            화면 상단에서 슬라이드됩니다.
-                        </Sheet.Description>
+                        <Sheet.Description>화면 상단에서 슬라이드됩니다.</Sheet.Description>
                     </Sheet.Body>
                 </Sheet.Content>
             </Sheet.Root>
 
             {/* Bottom Side */}
             <Sheet.Root>
-                <Sheet.Trigger render={<Button variant="outline" />}>
-                    Bottom
-                </Sheet.Trigger>
+                <Sheet.Trigger render={<Button variant="outline" />}>Bottom</Sheet.Trigger>
                 <Sheet.Content positionerProps={{ side: 'bottom' }}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
@@ -87,9 +75,7 @@ export default function SheetSide() {
                         <Sheet.Title>하단 Sheet</Sheet.Title>
                     </Sheet.Header>
                     <Sheet.Body>
-                        <Sheet.Description>
-                            화면 하단에서 슬라이드됩니다.
-                        </Sheet.Description>
+                        <Sheet.Description>화면 하단에서 슬라이드됩니다.</Sheet.Description>
                     </Sheet.Body>
                 </Sheet.Content>
             </Sheet.Root>

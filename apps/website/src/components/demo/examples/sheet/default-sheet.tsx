@@ -1,14 +1,12 @@
 'use client';
 
-import { Sheet, Button } from '@vapor-ui/core';
+import { Button, Sheet } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 export default function DefaultSheet() {
     return (
         <Sheet.Root>
-            <Sheet.Trigger render={<Button variant="outline" />}>
-                Open Sheet
-            </Sheet.Trigger>
+            <Sheet.Trigger render={<Button variant="outline" />}>Open Sheet</Sheet.Trigger>
             <Sheet.Content>
                 <div className="absolute top-4 right-4">
                     <Sheet.Close aria-label="Close sheet" className="flex">
@@ -25,9 +23,7 @@ export default function DefaultSheet() {
                     </Sheet.Description>
                 </Sheet.Body>
                 <Sheet.Footer>
-                    <Sheet.Close render={<Button variant="ghost" />}>
-                        닫기
-                    </Sheet.Close>
+                    <Sheet.Close render={<Button variant="ghost" />}>닫기</Sheet.Close>
                     <Button color="primary">확인</Button>
                 </Sheet.Footer>
             </Sheet.Content>

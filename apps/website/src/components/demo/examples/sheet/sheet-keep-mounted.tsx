@@ -1,6 +1,6 @@
 'use client';
 
-import { Sheet, Button, TextInput } from '@vapor-ui/core';
+import { Button, Sheet, TextInput } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 export default function SheetKeepMounted() {
@@ -8,9 +8,7 @@ export default function SheetKeepMounted() {
         <div className="flex gap-4">
             {/* Normal Sheet */}
             <Sheet.Root>
-                <Sheet.Trigger render={<Button variant="outline" />}>
-                    일반 Sheet
-                </Sheet.Trigger>
+                <Sheet.Trigger render={<Button variant="outline" />}>일반 Sheet</Sheet.Trigger>
                 <Sheet.Content>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
@@ -22,8 +20,8 @@ export default function SheetKeepMounted() {
                     </Sheet.Header>
                     <Sheet.Body>
                         <Sheet.Description>
-                            이 Sheet는 닫힐 때 DOM에서 제거됩니다.
-                            다시 열 때마다 내용이 새로 생성됩니다.
+                            이 Sheet는 닫힐 때 DOM에서 제거됩니다. 다시 열 때마다 내용이 새로
+                            생성됩니다.
                         </Sheet.Description>
                         <div className="mt-4">
                             <TextInput placeholder="입력해보세요..." />
@@ -48,8 +46,8 @@ export default function SheetKeepMounted() {
                     </Sheet.Header>
                     <Sheet.Body>
                         <Sheet.Description>
-                            이 Sheet는 닫혀도 DOM에 유지됩니다.
-                            입력한 내용이 보존되는 것을 확인해보세요.
+                            이 Sheet는 닫혀도 DOM에 유지됩니다. 입력한 내용이 보존되는 것을
+                            확인해보세요.
                         </Sheet.Description>
                         <div className="mt-4">
                             <TextInput placeholder="상태 보존 테스트..." />

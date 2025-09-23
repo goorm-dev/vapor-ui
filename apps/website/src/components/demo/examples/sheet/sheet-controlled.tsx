@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Sheet, Button } from '@vapor-ui/core';
+
+import { Button, Sheet } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 export default function SheetControlled() {
@@ -10,17 +11,10 @@ export default function SheetControlled() {
     return (
         <div className="space-y-4">
             <div className="flex gap-2">
-                <Button 
-                    onClick={() => setIsOpen(true)}
-                    color="primary"
-                >
+                <Button onClick={() => setIsOpen(true)} color="primary">
                     Sheet 열기
                 </Button>
-                <Button 
-                    onClick={() => setIsOpen(false)}
-                    color="danger"
-                    variant="outline"
-                >
+                <Button onClick={() => setIsOpen(false)} color="danger" variant="outline">
                     Sheet 닫기
                 </Button>
             </div>
@@ -41,14 +35,12 @@ export default function SheetControlled() {
                     </Sheet.Header>
                     <Sheet.Body>
                         <Sheet.Description>
-                            이 Sheet는 외부 버튼으로 상태가 제어됩니다.
-                            프로그래밍 방식으로 열림/닫힘을 관리할 수 있습니다.
+                            이 Sheet는 외부 버튼으로 상태가 제어됩니다. 프로그래밍 방식으로
+                            열림/닫힘을 관리할 수 있습니다.
                         </Sheet.Description>
                     </Sheet.Body>
                     <Sheet.Footer>
-                        <Sheet.Close render={<Button variant="ghost" />}>
-                            닫기
-                        </Sheet.Close>
+                        <Sheet.Close render={<Button variant="ghost" />}>닫기</Sheet.Close>
                     </Sheet.Footer>
                 </Sheet.Content>
             </Sheet.Root>
