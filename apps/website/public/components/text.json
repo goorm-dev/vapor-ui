@@ -53,10 +53,10 @@
             "description": "텍스트 색상을 지정하는 전경색 토큰입니다."
         },
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "HTML 시멘틱 태그를 변경하기 위해 사용합니다. 예: p, strong, h1 등."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "span",
+            "description": "텍스트를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "children",

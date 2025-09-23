@@ -6,16 +6,24 @@ import buttonData from '../../public/components/button.json';
 import calloutData from '../../public/components/callout.json';
 import cardData from '../../public/components/card.json';
 import checkboxData from '../../public/components/checkbox.json';
+import collapsibleData from '../../public/components/collapsible.json';
 import dialogData from '../../public/components/dialog.json';
+import fieldData from '../../public/components/field.json';
 import flexData from '../../public/components/flex.json';
 import gridData from '../../public/components/grid.json';
 import hStackData from '../../public/components/h-stack.json';
 import iconButtonData from '../../public/components/icon-button.json';
 import inputGroupData from '../../public/components/input-group.json';
 import menuData from '../../public/components/menu.json';
+import multiSelectData from '../../public/components/multi-select.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
+import popoverData from '../../public/components/popover.json';
 import radioGroupData from '../../public/components/radio-group.json';
+import radioData from '../../public/components/radio.json';
+import selectData from '../../public/components/select.json';
+import sheetData from '../../public/components/sheet.json';
 import switchData from '../../public/components/switch.json';
+import tabsData from '../../public/components/tabs.json';
 import textInputData from '../../public/components/text-input.json';
 import textData from '../../public/components/text.json';
 import textareaData from '../../public/components/textarea.json';
@@ -32,6 +40,8 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     button: buttonData,
     card: cardData,
     callout: calloutData,
+    collapsible: collapsibleData,
+    field: fieldData,
     flex: flexData,
     grid: gridData,
     'h-stack': hStackData,
@@ -39,12 +49,18 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     checkbox: checkboxData,
     'icon-button': iconButtonData,
     menu: menuData,
+    'multi-select': multiSelectData,
     'navigation-menu': navigationMenuData,
+    popover: popoverData,
     text: textData,
     'text-input': textInputData,
     dialog: dialogData,
     switch: switchData,
+    tabs: tabsData,
+    radio: radioData,
     'radio-group': radioGroupData,
+    select: selectData,
+    sheet: sheetData,
     tooltip: tooltipData,
     'input-group': inputGroupData,
     textarea: textareaData,

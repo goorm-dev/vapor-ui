@@ -30,6 +30,6 @@ export default defineConfig({
                 id: 'package-manager',
             },
         },
-        remarkPlugins: [[remarkDocGen, { generators: [fileGenerator()] }]],
+        remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({ relative: true })] }]],
     },
 });
