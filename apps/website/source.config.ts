@@ -34,8 +34,7 @@ export default defineConfig({
             [
                 remarkDocGen,
                 {
-                    generators: [fileGenerator()],
-                    workingDirectory: process.cwd(),
+                    generators: [fileGenerator({ relative: true })],
                 },
             ],
         ],
