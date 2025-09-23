@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 import { Field as BaseField } from '@base-ui-components/react/field';
 import clsx from 'clsx';
 
-import type { VComponentProps } from '~/utils/types';
+import type { Assign, VComponentProps } from '~/utils/types';
 
 import * as styles from './field.css';
 
@@ -58,11 +58,14 @@ Description.displayName = 'Field.Description';
  * Field.Error
  * -----------------------------------------------------------------------------------------------*/
 
-type ErrorValidityState = keyof Parameters<BaseField.Validity.Props['children']>[0]['validity'];
-type ErrorMatchProps = { match?: boolean | ErrorValidityState };
+type ErrorValidityState = Omit<
+    Parameters<BaseField.Validity.Props['children']>[0]['validity'],
+    'valid'
+>;
+type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
 
 type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
-interface FieldErrorProps extends BaseFieldErrorProps, ErrorMatchProps {}
+interface FieldErrorProps extends Assign<BaseFieldErrorProps, ErrorMatchProps> {}
 
 const Error = forwardRef<HTMLDivElement, FieldErrorProps>(({ match, className, ...props }, ref) => {
     return (
