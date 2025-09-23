@@ -19,7 +19,9 @@
     },
     "dependencies": {
         "@vapor-ui/color-generator": "workspace:*",
+        "@vapor-ui/css-generator": "workspace:*",
         "@vapor-ui/core": "workspace:*",
+        "@vapor-ui/icons": "workspace:*",
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
     },

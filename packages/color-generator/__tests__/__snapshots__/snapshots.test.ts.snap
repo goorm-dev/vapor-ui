@@ -16,10 +16,10 @@ exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`]
       },
       "color-mint-050": {
         "codeSyntax": "vapor-color-mint-050",
-        "deltaE": 69.87,
-        "hex": "#002e22",
+        "deltaE": 72.65,
+        "hex": "#00271c",
         "name": "color-mint-050",
-        "oklch": "oklch(0.268 0.053 170.2)",
+        "oklch": "oklch(0.242 0.048 169.5)",
       },
       "color-mint-100": {
         "codeSyntax": "vapor-color-mint-100",
@@ -87,9 +87,9 @@ exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`]
       "color-myGray-050": {
         "codeSyntax": "vapor-color-myGray-050",
         "deltaE": 0,
-        "hex": "#282727",
+        "hex": "#222121",
         "name": "color-myGray-050",
-        "oklch": "oklch(0.274 0.001 17.2)",
+        "oklch": "oklch(0.249 0.002 17.3)",
       },
       "color-myGray-100": {
         "codeSyntax": "vapor-color-myGray-100",
@@ -170,10 +170,10 @@ exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`]
       },
       "color-mint-050": {
         "codeSyntax": "vapor-color-mint-050",
-        "deltaE": 3.8,
-        "hex": "#7af0dc",
+        "deltaE": 7.45,
+        "hex": "#9cf3e3",
         "name": "color-mint-050",
-        "oklch": "oklch(0.881 0.112 181.2)",
+        "oklch": "oklch(0.904 0.087 181.3)",
       },
       "color-mint-100": {
         "codeSyntax": "vapor-color-mint-100",
@@ -241,9 +241,9 @@ exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`]
       "color-myGray-050": {
         "codeSyntax": "vapor-color-myGray-050",
         "deltaE": 0,
-        "hex": "#dfdad7",
+        "hex": "#e7e2df",
         "name": "color-myGray-050",
-        "oklch": "oklch(0.891 0.007 53.4)",
+        "oklch": "oklch(0.916 0.007 53.4)",
       },
       "color-myGray-100": {
         "codeSyntax": "vapor-color-myGray-100",
@@ -402,10 +402,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-blue-050": {
         "codeSyntax": "vapor-color-blue-050",
-        "deltaE": 37.59,
-        "hex": "#00257a",
+        "deltaE": 39.49,
+        "hex": "#001e74",
         "name": "color-blue-050",
-        "oklch": "oklch(0.311 0.149 262.5)",
+        "oklch": "oklch(0.291 0.150 263.2)",
       },
       "color-blue-100": {
         "codeSyntax": "vapor-color-blue-100",
@@ -472,10 +472,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-cyan-050": {
         "codeSyntax": "vapor-color-cyan-050",
-        "deltaE": 48.88,
-        "hex": "#003244",
+        "deltaE": 50.25,
+        "hex": "#002d3f",
         "name": "color-cyan-050",
-        "oklch": "oklch(0.297 0.058 228.9)",
+        "oklch": "oklch(0.279 0.056 231.0)",
       },
       "color-cyan-100": {
         "codeSyntax": "vapor-color-cyan-100",
@@ -542,10 +542,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-grape-050": {
         "codeSyntax": "vapor-color-grape-050",
-        "deltaE": 34.72,
-        "hex": "#510065",
+        "deltaE": 36.4,
+        "hex": "#48005c",
         "name": "color-grape-050",
-        "oklch": "oklch(0.321 0.156 317.5)",
+        "oklch": "oklch(0.298 0.146 316.4)",
       },
       "color-grape-100": {
         "codeSyntax": "vapor-color-grape-100",
@@ -613,9 +613,9 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       "color-gray-050": {
         "codeSyntax": "vapor-color-gray-050",
         "deltaE": 0,
-        "hex": "#2e2e2e",
+        "hex": "#282828",
         "name": "color-gray-050",
-        "oklch": "oklch(0.301 0.000 0.0)",
+        "oklch": "oklch(0.277 0.000 0.0)",
       },
       "color-gray-100": {
         "codeSyntax": "vapor-color-gray-100",
@@ -682,10 +682,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-green-050": {
         "codeSyntax": "vapor-color-green-050",
-        "deltaE": 36.53,
-        "hex": "#00361e",
+        "deltaE": 38.2,
+        "hex": "#003019",
         "name": "color-green-050",
-        "oklch": "oklch(0.293 0.069 157.6)",
+        "oklch": "oklch(0.272 0.065 156.5)",
       },
       "color-green-100": {
         "codeSyntax": "vapor-color-green-100",
@@ -752,10 +752,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-lime-050": {
         "codeSyntax": "vapor-color-lime-050",
-        "deltaE": 59.71,
-        "hex": "#023700",
+        "deltaE": 61.54,
+        "hex": "#003100",
         "name": "color-lime-050",
-        "oklch": "oklch(0.292 0.098 142.0)",
+        "oklch": "oklch(0.271 0.092 142.5)",
       },
       "color-lime-100": {
         "codeSyntax": "vapor-color-lime-100",
@@ -822,10 +822,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-orange-050": {
         "codeSyntax": "vapor-color-orange-050",
-        "deltaE": 38.4,
-        "hex": "#640000",
+        "deltaE": 40.28,
+        "hex": "#5a0000",
         "name": "color-orange-050",
-        "oklch": "oklch(0.316 0.130 29.2)",
+        "oklch": "oklch(0.294 0.120 29.2)",
       },
       "color-orange-100": {
         "codeSyntax": "vapor-color-orange-100",
@@ -892,10 +892,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-pink-050": {
         "codeSyntax": "vapor-color-pink-050",
-        "deltaE": 38.23,
-        "hex": "#610028",
+        "deltaE": 39.86,
+        "hex": "#580021",
         "name": "color-pink-050",
-        "oklch": "oklch(0.316 0.127 5.9)",
+        "oklch": "oklch(0.295 0.118 8.1)",
       },
       "color-pink-100": {
         "codeSyntax": "vapor-color-pink-100",
@@ -962,10 +962,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-red-050": {
         "codeSyntax": "vapor-color-red-050",
-        "deltaE": 35.31,
-        "hex": "#630000",
+        "deltaE": 36.85,
+        "hex": "#590000",
         "name": "color-red-050",
-        "oklch": "oklch(0.314 0.129 29.2)",
+        "oklch": "oklch(0.291 0.120 29.2)",
       },
       "color-red-100": {
         "codeSyntax": "vapor-color-red-100",
@@ -1032,10 +1032,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-violet-050": {
         "codeSyntax": "vapor-color-violet-050",
-        "deltaE": 28.08,
-        "hex": "#390684",
+        "deltaE": 29.61,
+        "hex": "#33007c",
         "name": "color-violet-050",
-        "oklch": "oklch(0.322 0.176 289.8)",
+        "oklch": "oklch(0.302 0.172 288.9)",
       },
       "color-violet-100": {
         "codeSyntax": "vapor-color-violet-100",
@@ -1102,10 +1102,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-yellow-050": {
         "codeSyntax": "vapor-color-yellow-050",
-        "deltaE": 66.47,
-        "hex": "#4d2100",
+        "deltaE": 68.87,
+        "hex": "#481c00",
         "name": "color-yellow-050",
-        "oklch": "oklch(0.306 0.079 51.7)",
+        "oklch": "oklch(0.288 0.077 48.8)",
       },
       "color-yellow-100": {
         "codeSyntax": "vapor-color-yellow-100",
@@ -1186,10 +1186,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-blue-050": {
         "codeSyntax": "vapor-color-blue-050",
-        "deltaE": 29.42,
-        "hex": "#e3efff",
+        "deltaE": 33,
+        "hex": "#f1f7ff",
         "name": "color-blue-050",
-        "oklch": "oklch(0.948 0.025 255.6)",
+        "oklch": "oklch(0.974 0.012 255.5)",
       },
       "color-blue-100": {
         "codeSyntax": "vapor-color-blue-100",
@@ -1256,10 +1256,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-cyan-050": {
         "codeSyntax": "vapor-color-cyan-050",
-        "deltaE": 22.93,
-        "hex": "#ddf2f7",
+        "deltaE": 26.29,
+        "hex": "#eef9fb",
         "name": "color-cyan-050",
-        "oklch": "oklch(0.947 0.023 213.6)",
+        "oklch": "oklch(0.974 0.012 209.8)",
       },
       "color-cyan-100": {
         "codeSyntax": "vapor-color-cyan-100",
@@ -1326,10 +1326,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-grape-050": {
         "codeSyntax": "vapor-color-grape-050",
-        "deltaE": 34.16,
-        "hex": "#f9e9fd",
+        "deltaE": 37.75,
+        "hex": "#fcf5fe",
         "name": "color-grape-050",
-        "oklch": "oklch(0.953 0.031 319.5)",
+        "oklch": "oklch(0.978 0.014 318.7)",
       },
       "color-grape-100": {
         "codeSyntax": "vapor-color-grape-100",
@@ -1397,9 +1397,9 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       "color-gray-050": {
         "codeSyntax": "vapor-color-gray-050",
         "deltaE": 0,
-        "hex": "#efefef",
+        "hex": "#f7f7f7",
         "name": "color-gray-050",
-        "oklch": "oklch(0.952 0.000 0.0)",
+        "oklch": "oklch(0.976 0.000 0.0)",
       },
       "color-gray-100": {
         "codeSyntax": "vapor-color-gray-100",
@@ -1466,10 +1466,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-green-050": {
         "codeSyntax": "vapor-color-green-050",
-        "deltaE": 31.34,
-        "hex": "#e3f2ec",
+        "deltaE": 34.02,
+        "hex": "#f0f8f5",
         "name": "color-green-050",
-        "oklch": "oklch(0.948 0.018 170.1)",
+        "oklch": "oklch(0.972 0.009 171.8)",
       },
       "color-green-100": {
         "codeSyntax": "vapor-color-green-100",
@@ -1536,10 +1536,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-lime-050": {
         "codeSyntax": "vapor-color-lime-050",
-        "deltaE": 22.48,
-        "hex": "#e3f5d2",
+        "deltaE": 27.01,
+        "hex": "#f1fae8",
         "name": "color-lime-050",
-        "oklch": "oklch(0.948 0.050 129.6)",
+        "oklch": "oklch(0.974 0.026 128.8)",
       },
       "color-lime-100": {
         "codeSyntax": "vapor-color-lime-100",
@@ -1606,10 +1606,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-orange-050": {
         "codeSyntax": "vapor-color-orange-050",
-        "deltaE": 34.28,
-        "hex": "#ffeae0",
+        "deltaE": 37.55,
+        "hex": "#fff6f1",
         "name": "color-orange-050",
-        "oklch": "oklch(0.951 0.027 47.2)",
+        "oklch": "oklch(0.979 0.012 51.3)",
       },
       "color-orange-100": {
         "codeSyntax": "vapor-color-orange-100",
@@ -1676,10 +1676,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-pink-050": {
         "codeSyntax": "vapor-color-pink-050",
-        "deltaE": 31.03,
-        "hex": "#ffeaf0",
+        "deltaE": 34.15,
+        "hex": "#fff5f7",
         "name": "color-pink-050",
-        "oklch": "oklch(0.956 0.024 358.3)",
+        "oklch": "oklch(0.978 0.011 3.5)",
       },
       "color-pink-100": {
         "codeSyntax": "vapor-color-pink-100",
@@ -1746,10 +1746,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-red-050": {
         "codeSyntax": "vapor-color-red-050",
-        "deltaE": 34.29,
-        "hex": "#ffeae9",
+        "deltaE": 37.12,
+        "hex": "#fff5f4",
         "name": "color-red-050",
-        "oklch": "oklch(0.954 0.023 20.9)",
+        "oklch": "oklch(0.978 0.011 24.3)",
       },
       "color-red-100": {
         "codeSyntax": "vapor-color-red-100",
@@ -1816,10 +1816,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-violet-050": {
         "codeSyntax": "vapor-color-violet-050",
-        "deltaE": 38.92,
-        "hex": "#efedff",
+        "deltaE": 41.4,
+        "hex": "#f6f5ff",
         "name": "color-violet-050",
-        "oklch": "oklch(0.953 0.024 291.0)",
+        "oklch": "oklch(0.974 0.013 290.8)",
       },
       "color-violet-100": {
         "codeSyntax": "vapor-color-violet-100",
@@ -1886,10 +1886,10 @@ exports[`Color Generator Snapshots > should match systemColorPalette snapshot 1`
       },
       "color-yellow-050": {
         "codeSyntax": "vapor-color-yellow-050",
-        "deltaE": 19.99,
-        "hex": "#ffecc3",
+        "deltaE": 26.4,
+        "hex": "#fff7e7",
         "name": "color-yellow-050",
-        "oklch": "oklch(0.948 0.057 86.1)",
+        "oklch": "oklch(0.978 0.023 84.6)",
       },
       "color-yellow-100": {
         "codeSyntax": "vapor-color-yellow-100",
