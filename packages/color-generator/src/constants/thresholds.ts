@@ -4,7 +4,7 @@ const DEFAULT_MAIN_BACKGROUND_LIGHTNESS = {
 } as const;
 
 const DEFAULT_CONTRAST_RATIOS = {
-    '050': 1.15,
+    '050': 1.07,
     '100': 1.3,
     '200': 1.7,
     '300': 2.5,
