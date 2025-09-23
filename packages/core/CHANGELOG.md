@@ -1,5 +1,17 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.0
+
+### Major Changes
+
+- 1.0.0-beta.0 Release
+
+### Patch Changes
+
+- Updated dependencies
+    - @vapor-ui/hooks@1.0.0-beta.0
+    - @vapor-ui/icons@1.0.0-beta.0
+
 ## 0.6.0
 
 ### Minor Changes

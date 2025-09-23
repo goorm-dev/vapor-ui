@@ -3,9 +3,60 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0-beta.0
+
+### @vapor-ui/color-generator
+
+
+#### Major Changes
+
+- 1.0.0-beta.0 Release
+
+### @vapor-ui/core
+
+
+#### Major Changes
+
+- 1.0.0-beta.0 Release
+
+#### Patch Changes
+
+- Updated dependencies
+    - @vapor-ui/hooks@1.0.0-beta.0
+    - @vapor-ui/icons@1.0.0-beta.0
+
+### @vapor-ui/css-generator
+
+
+#### Major Changes
+
+- 1.0.0-beta.0 Release
+
+#### Patch Changes
+
+- Updated dependencies
+    - @vapor-ui/color-generator@1.0.0-beta.0
+
+### @vapor-ui/hooks
+
+
+#### Major Changes
+
+- 1.0.0-beta.0 Release
+
+### @vapor-ui/icons
+
+
+#### Major Changes
+
+- 1.0.0-beta.0 Release
+
+---
+
 ## 0.6.0
 
 ### @vapor-ui/core
+
 
 #### Minor Changes
 
@@ -49,6 +100,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ### @vapor-ui/core
 
+
 #### Minor Changes
 
 - df2dbc4: add new `Tooltip` component
@@ -75,6 +127,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ### @vapor-ui/core
 
+
 #### Minor Changes
 
 - 2ce16a6: refactor(build): Improve DX by Overhauling CSS Bundling Strategy
@@ -90,6 +143,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
     - @vapor-ui/icons@0.2.0
 
 ### @vapor-ui/icons
+
 
 #### Minor Changes
 
@@ -114,6 +168,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ### @vapor-ui/core
 
+
 #### Patch Changes
 
 - ca267e9: feat: Added primary color custom functionality
@@ -123,6 +178,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ## 0.3.0
 
 ### @vapor-ui/core
+
 
 #### Minor Changes
 
@@ -134,6 +190,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - 488c614: refactor: replace text sprinkles into mixins
 
 ### @vapor-ui/icons
+
 
 #### Minor Changes
 
@@ -155,6 +212,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ### @vapor-ui/core
 
+
 #### Patch Changes
 
 - 6749d80: fix(createThemeConfig): support RSC
@@ -164,6 +222,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ## 0.2.0
 
 ### @vapor-ui/core
+
 
 #### Minor Changes
 
@@ -181,6 +240,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - d7c2714: build(tsup): Optimize build system with per-component bundling
 
 ### @vapor-ui/icons
+
 
 #### Minor Changes
 
@@ -200,6 +260,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ### @vapor-ui/core
 
+
 #### Minor Changes
 
 - 68b001c: create avatar , badge , box , button , card , dialog , flex , grid , h-stack , icon-button, nav , text-input , text , theme-provider , v-stack
@@ -212,14 +273,17 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ### @vapor-ui/hooks
 
+
 #### Minor Changes
 
 - 68b001c: create avatar , badge , box , button , card , dialog , flex , grid , h-stack , icon-button, nav , text-input , text , theme-provider , v-stack
 
 ### @vapor-ui/icons
 
+
 #### Minor Changes
 
 - 68b001c: create avatar , badge , box , button , card , dialog , flex , grid , h-stack , icon-button, nav , text-input , text , theme-provider , v-stack
 
 ---
+
