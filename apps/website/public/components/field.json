@@ -4,7 +4,7 @@
             "prop": "name",
             "type": ["string"],
             "default": null,
-            "description": "필드의 고유한 이름을 설정합니다."
+            "description": "필드의 고유한 이름을 설정합니다. 폼 제출 시 식별자로 사용됩니다."
         },
         {
             "prop": "disabled",
@@ -13,22 +13,46 @@
             "description": "필드와 내부 폼 컨트롤들을 비활성화합니다."
         },
         {
+            "prop": "invalid",
+            "type": ["boolean"],
+            "default": null,
+            "description": "필드가 유효하지 않은 상태임을 나타냅니다."
+        },
+        {
+            "prop": "validate",
+            "type": ["function"],
+            "default": null,
+            "description": "필드 값을 검증하는 함수를 설정합니다."
+        },
+        {
             "prop": "validationMode",
-            "type": ["'onChange' | 'onBlur'"],
-            "default": "'onChange'",
+            "type": ["'onBlur'", "'onChange'"],
+            "default": "'onBlur'",
             "description": "유효성 검사가 실행되는 타이밍을 설정합니다."
         },
         {
+            "prop": "validationDebounceTime",
+            "type": ["number"],
+            "default": 0,
+            "description": "유효성 검사 실행 전 대기 시간(밀리초)을 설정합니다."
+        },
+        {
             "prop": "className",
-            "type": ["string"],
+            "type": ["string", "function"],
             "default": null,
-            "description": "추가적인 CSS 클래스를 적용합니다."
+            "description": "필드 상태에 따라 적용할 CSS 클래스 또는 클래스를 반환하는 함수입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["React.ReactElement", "function"],
+            "default": null,
+            "description": "커스텀 렌더링 함수 또는 React 엘리먼트입니다."
         },
         {
             "prop": "children",
             "type": ["React.ReactNode"],
             "default": null,
-            "description": "필드 내부의 컨텐츠입니다."
+            "description": "필드 내부의 컨텐츠입니다. Label, Description, Error, 폼 컨트롤 등을 포함합니다."
         }
     ],
     "labelProps": [
@@ -40,9 +64,15 @@
         },
         {
             "prop": "className",
-            "type": ["string"],
+            "type": ["string", "function"],
             "default": null,
-            "description": "추가적인 CSS 클래스를 적용합니다."
+            "description": "필드 상태에 따라 적용할 CSS 클래스 또는 클래스를 반환하는 함수입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["React.ReactElement", "function"],
+            "default": null,
+            "description": "커스텀 렌더링 함수 또는 React 엘리먼트입니다."
         }
     ],
     "descriptionProps": [
@@ -50,13 +80,19 @@
             "prop": "children",
             "type": ["React.ReactNode"],
             "default": null,
-            "description": "설명 텍스트의 내용입니다."
+            "description": "설명 텍스트의 내용입니다. 필드에 대한 추가 정보를 제공합니다."
         },
         {
             "prop": "className",
-            "type": ["string"],
+            "type": ["string", "function"],
             "default": null,
-            "description": "추가적인 CSS 클래스를 적용합니다."
+            "description": "필드 상태에 따라 적용할 CSS 클래스 또는 클래스를 반환하는 함수입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["React.ReactElement", "function"],
+            "default": null,
+            "description": "커스텀 렌더링 함수 또는 React 엘리먼트입니다."
         }
     ],
     "errorProps": [
@@ -68,15 +104,21 @@
         },
         {
             "prop": "match",
-            "type": ["string | ((validity: ValidityState) => boolean)"],
+            "type": ["boolean", "string", "function"],
             "default": null,
-            "description": "특정 유효성 검사 조건에 맞는 경우에만 에러를 표시합니다."
+            "description": "에러가 표시될 조건을 설정합니다. boolean, 유효성 상태 문자열, 또는 조건을 판단하는 함수를 사용할 수 있습니다."
         },
         {
             "prop": "className",
-            "type": ["string"],
+            "type": ["string", "function"],
             "default": null,
-            "description": "추가적인 CSS 클래스를 적용합니다."
+            "description": "필드 상태에 따라 적용할 CSS 클래스 또는 클래스를 반환하는 함수입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["React.ReactElement", "function"],
+            "default": null,
+            "description": "커스텀 렌더링 함수 또는 React 엘리먼트입니다."
         }
     ],
     "successProps": [
@@ -84,19 +126,27 @@
             "prop": "children",
             "type": ["React.ReactNode"],
             "default": null,
-            "description": "성공 메시지의 내용입니다."
-        },
-        {
-            "prop": "render",
-            "type": ["React.ReactElement | ((props: any) => React.ReactElement)"],
-            "default": null,
-            "description": "커스텀 렌더링 함수 또는 엘리먼트입니다."
+            "description": "성공 메시지의 내용입니다. 필드가 유효할 때만 표시됩니다."
         },
         {
             "prop": "className",
-            "type": ["string"],
+            "type": ["string", "function"],
             "default": null,
-            "description": "추가적인 CSS 클래스를 적용합니다."
+            "description": "필드 상태에 따라 적용할 CSS 클래스 또는 클래스를 반환하는 함수입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["React.ReactElement", "function"],
+            "default": null,
+            "description": "커스텀 렌더링 함수 또는 React 엘리먼트입니다."
+        }
+    ],
+    "validityProps": [
+        {
+            "prop": "children",
+            "type": ["function"],
+            "default": null,
+            "description": "필드의 유효성 상태를 받아 내용을 반환하는 함수입니다. (validity: FieldValidityState) => ReactNode 형태입니다."
         }
     ]
 }
