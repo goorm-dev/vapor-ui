@@ -5,12 +5,20 @@ description: 'Radio는 여러 옵션 중 하나만 선택할 수 있는 입력 �
 ---
 
 <Demo name="radio/default-radio">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/radio/default-radio.tsx",
-    "codeblock": true
+
+```tsx
+import { Radio } from '@vapor-ui/core';
+
+export default function DefaultRadio() {
+    return (
+        <label className="flex items-center gap-2 cursor-pointer">
+            <Radio.Root value="option1" />
+            Option 1
+        </label>
+    );
 }
 ```
+
 </Demo>
 
 ## Property
@@ -22,12 +30,33 @@ description: 'Radio는 여러 옵션 중 하나만 선택할 수 있는 입력 �
 Radio 버튼의 크기는 `md`와 `lg` 두 가지 크기로 제공합니다.
 
 <Demo name="radio/radio-size">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/radio/radio-size.tsx",
-    "codeblock": true
+
+```tsx
+import { Radio } from '@vapor-ui/core';
+
+export default function RadioSize() {
+    return (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-medium mb-3 text-gray-700">Medium (기본 크기)</h4>
+                <label className="flex items-center gap-2 cursor-pointer">
+                    <Radio.Root size="md" value="md-1" />
+                    Medium Size
+                </label>
+            </div>
+
+            <div>
+                <h4 className="text-sm font-medium mb-3 text-gray-700">Large</h4>
+                <label className="flex items-center gap-2 cursor-pointer">
+                    <Radio.Root size="lg" value="lg-1" />
+                    Large Size
+                </label>
+            </div>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ### States
@@ -35,12 +64,49 @@ Radio 버튼의 크기는 `md`와 `lg` 두 가지 크기로 제공합니다.
 Radio는 다양한 상태를 지원하여 사용자 인터페이스에서 적절한 피드백을 제공합니다.
 
 <Demo name="radio/radio-states">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/radio/radio-states.tsx",
-    "codeblock": true
+
+```tsx
+import { Radio } from '@vapor-ui/core';
+
+export default function RadioStates() {
+    return (
+        <div className="space-y-6">
+            <div>
+                <h4 className="text-sm font-medium mb-3 text-gray-700">기본 상태</h4>
+                <label className="flex items-center gap-2 cursor-pointer">
+                    <Radio.Root value="normal" />
+                    정상 상태
+                </label>
+            </div>
+
+            <div>
+                <h4 className="text-sm font-medium mb-3 text-gray-700">비활성화 상태</h4>
+                <label className="flex items-center gap-2 opacity-50">
+                    <Radio.Root value="disabled" disabled />
+                    비활성화 상태
+                </label>
+            </div>
+
+            <div>
+                <h4 className="text-sm font-medium mb-3 text-gray-700">오류 상태</h4>
+                <label className="flex items-center gap-2 cursor-pointer">
+                    <Radio.Root value="invalid" invalid />
+                    오류 상태
+                </label>
+            </div>
+
+            <div>
+                <h4 className="text-sm font-medium mb-3 text-gray-700">읽기 전용 상태</h4>
+                <label className="flex items-center gap-2">
+                    <Radio.Root value="readonly" readOnly />
+                    읽기 전용 상태
+                </label>
+            </div>
+        </div>
+    );
 }
 ```
+
 </Demo>
 
 ## Props Table
