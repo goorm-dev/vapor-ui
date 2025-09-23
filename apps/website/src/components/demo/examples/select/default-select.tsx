@@ -11,7 +11,7 @@ export default function DefaultSelect() {
             <Select.Content>
                 <Select.Group>
                     <Select.GroupLabel>폰트</Select.GroupLabel>
-                    <Select.Item value="sans">
+                    <Select.Item value="sans-serif">
                         Sans-serif
                         <Select.ItemIndicator />
                     </Select.Item>
