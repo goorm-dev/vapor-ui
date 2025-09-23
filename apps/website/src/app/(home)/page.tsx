@@ -20,50 +20,25 @@ import {
     LocalTabsList,
 } from '~/components/local-tabs/local-tabs';
 import DefaultSearchDialog from '~/components/search/search';
+import { VAPOR_BANNER_URL } from '~/constants/image-urls';
 
 export default function HomePage() {
     const [mounted, setMounted] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-    const { appearance, setTheme } = useTheme();
+    const { theme } = useTheme();
+
     useEffect(() => {
         setMounted(true);
         // Reset to default tab1 theme on page load
-        setTheme({
-            primaryColor: '#3B82F6', // blue-500
-            radius: 'md',
-            scaling: 1.0, // 100%
-        });
-    }, [setTheme]);
+    }, []);
 
     if (!mounted) {
         return null;
     }
 
-    const handleTabChange = (value: string) => {
-        switch (value) {
-            case 'tab1': // Vapor theme
-                setTheme({
-                    primaryColor: '#3B82F6', // blue-500
-                    radius: 'md',
-                    scaling: 1.0, // 100%
-                });
-                break;
-            case 'tab2': // Aurora theme
-                setTheme({
-                    primaryColor: '#8B5CF6', // violet-500
-                    radius: 'lg',
-                    scaling: 1.0, // 100%
-                });
-                break;
-            case 'tab3': // Pop theme
-                setTheme({
-                    primaryColor: '#EC4899', // pink-500
-                    radius: 'full',
-                    scaling: 1.2, // 120%
-                });
-                break;
-        }
+    const handleTabChange = () => {
+        // TODO: update theme
     };
 
     return (
@@ -72,7 +47,7 @@ export default function HomePage() {
                 <section
                     className="relative flex flex-col items-center gap-10 self-stretch justify-center text-center md:p-0 p-4 h-[720px]"
                     style={{
-                        backgroundImage: `url(https://statics.goorm.io/gds/docs/main/vapor-index-background-image-${appearance}.png)`,
+                        backgroundImage: `url(${VAPOR_BANNER_URL})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
@@ -82,7 +57,7 @@ export default function HomePage() {
                         className="absolute bottom-0 left-0 w-full h-[162px]"
                         style={{
                             background:
-                                appearance === 'light'
+                                theme === 'light'
                                     ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--color-background-normal, #FFF) 100%)'
                                     : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--color-background-normal, #23272E) 100%)',
                         }}
@@ -100,26 +75,22 @@ export default function HomePage() {
                                     <Text
                                         typography="display4"
                                         foreground="normal"
-                                        asChild
+                                        render={<h1 />}
                                         className="hidden md:block"
                                     >
-                                        <h1>
-                                            Kickstart your project
-                                            <br />
-                                            with our UI Kit.
-                                        </h1>
+                                        Kickstart your project
+                                        <br />
+                                        with our UI Kit.
                                     </Text>
                                     <Text
                                         typography="heading2"
                                         foreground="normal"
-                                        asChild
+                                        render={<h1 />}
                                         className="md:hidden"
                                     >
-                                        <h1>
-                                            Kickstart your project
-                                            <br />
-                                            with our UI Kit.
-                                        </h1>
+                                        Kickstart your project
+                                        <br />
+                                        with our UI Kit.
                                     </Text>
                                 </div>
 
@@ -166,38 +137,43 @@ export default function HomePage() {
                                     </div>
                                     <div className="flex items-center gap-[var(--vapor-size-space-100)]">
                                         <Badge
-                                            asChild
+                                            render={<kbd />}
                                             color="hint"
                                             size="md"
                                             shape="square"
                                             className="text-lg"
                                         >
-                                            <kbd>⌘</kbd>
+                                            ⌘
                                         </Badge>
                                         <Badge
-                                            asChild
+                                            render={<kbd />}
                                             color="hint"
                                             size="md"
                                             shape="square"
                                             className="h-[24px] w-[24px]"
                                         >
-                                            <kbd>K</kbd>
+                                            K
                                         </Badge>
                                     </div>
                                 </div>
                             </button>
                         </div>
 
-                        <Button size="lg" color="secondary" className={'w-full md:w-auto'} asChild>
-                            <Link href="/docs">
-                                Docs 보러 가기
-                                <ForwardPageOutlineIcon
-                                    width="24"
-                                    height="24"
-                                    color="var(--vapor-color-foreground-secondary)"
-                                />
-                            </Link>
-                        </Button>
+                        <Button
+                            size="lg"
+                            color="secondary"
+                            className={'w-full md:w-auto'}
+                            render={
+                                <Link href="/docs">
+                                    Docs 보러 가기
+                                    <ForwardPageOutlineIcon
+                                        width="24"
+                                        height="24"
+                                        color="var(--vapor-color-foreground-secondary)"
+                                    />
+                                </Link>
+                            }
+                        ></Button>
                     </div>
                 </section>
                 <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-background-normal)]">
@@ -206,18 +182,18 @@ export default function HomePage() {
                             <Text
                                 typography="heading2"
                                 foreground="normal"
-                                asChild
+                                render={<h2 />}
                                 className="max-[575px]:hidden"
                             >
-                                <h2>Instantly customize your theme</h2>
+                                Instantly customize your theme
                             </Text>
                             <Text
                                 typography="heading3"
                                 foreground="normal"
-                                asChild
+                                render={<h3 />}
                                 className="hidden max-[575px]:block"
                             >
-                                <h3>Instantly customize your theme</h3>
+                                Instantly customize your theme
                             </Text>
                             <Text typography="body1" foreground="normal">
                                 샘플 테마를 통해 Vapor가 어떻게 변화하는지 확인하고,

@@ -25,9 +25,10 @@ export const Default: Story = {
     render: (args) => (
         <HStack gap="$200">
             <Button {...args}>Button</Button>
-            <Button {...args} asChild>
-                <a href="https://vapor-ui.goorm.io">Link Button(Polymorphic)</a>
-            </Button>
+            <Button
+                {...args}
+                render={<a href="https://vapor-ui.goorm.io">Link Button(Polymorphic)</a>}
+            />
         </HStack>
     ),
 };

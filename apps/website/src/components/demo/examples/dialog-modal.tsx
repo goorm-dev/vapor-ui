@@ -4,13 +4,10 @@ export default function DialogModal() {
     return (
         <div className="space-x-4">
             <Dialog.Root modal={true}>
-                <Dialog.Trigger asChild>
-                    <Button>Modal Dialog</Button>
-                </Dialog.Trigger>
-                <Dialog.CombinedContent>
+                <Dialog.Trigger render={<Button>Modal Dialog</Button>} />
+                <Dialog.Content>
                     <Dialog.Header>
                         <Dialog.Title>Modal Dialog</Dialog.Title>
-                        <Dialog.Close aria-label="Close" />
                     </Dialog.Header>
                     <Dialog.Body>
                         <Dialog.Description>
@@ -18,21 +15,16 @@ export default function DialogModal() {
                         </Dialog.Description>
                     </Dialog.Body>
                     <Dialog.Footer>
-                        <Dialog.Close asChild>
-                            <Button>확인</Button>
-                        </Dialog.Close>
+                        <Dialog.Close render={<Button>확인</Button>} />
                     </Dialog.Footer>
-                </Dialog.CombinedContent>
+                </Dialog.Content>
             </Dialog.Root>
 
             <Dialog.Root modal={false}>
-                <Dialog.Trigger asChild>
-                    <Button>Non-Modal Dialog</Button>
-                </Dialog.Trigger>
-                <Dialog.CombinedContent>
+                <Dialog.Trigger render={<Button>Non-Modal Dialog</Button>} />
+                <Dialog.Content>
                     <Dialog.Header>
                         <Dialog.Title>Non-Modal Dialog</Dialog.Title>
-                        <Dialog.Close aria-label="Close" />
                     </Dialog.Header>
                     <Dialog.Body>
                         <Dialog.Description>
@@ -40,11 +32,9 @@ export default function DialogModal() {
                         </Dialog.Description>
                     </Dialog.Body>
                     <Dialog.Footer>
-                        <Dialog.Close asChild>
-                            <Button>확인</Button>
-                        </Dialog.Close>
+                        <Dialog.Close render={<Button>확인</Button>} />
                     </Dialog.Footer>
-                </Dialog.CombinedContent>
+                </Dialog.Content>
             </Dialog.Root>
         </div>
     );

@@ -1,33 +1,22 @@
 'use client';
 
-import { forwardRef, useId } from 'react';
+import { forwardRef } from 'react';
 
-import type { CheckedState } from '@radix-ui/react-checkbox';
-import { Indicator as RadixIndicator, Root as RadixRoot } from '@radix-ui/react-checkbox';
-import { Primitive } from '@radix-ui/react-primitive';
-import { useControllableState } from '@radix-ui/react-use-controllable-state';
+import { Checkbox as BaseCheckbox } from '@base-ui-components/react/checkbox';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { VComponentProps } from '~/utils/types';
 
-import type { ControlVariants, LabelVariants, RootVariants } from './checkbox.css';
+import type { RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
 
-type CheckboxVariants = RootVariants & ControlVariants & LabelVariants;
-type CheckboxSharedProps = CheckboxVariants & {
-    checked?: boolean;
-    onCheckedChange?: (checked: boolean) => void;
-    defaultChecked?: boolean;
-    indeterminate?: boolean;
-};
+type CheckboxVariants = RootVariants;
+type CheckboxSharedProps = CheckboxVariants & Pick<RootPrimitiveProps, 'indeterminate'>;
 
-type CheckboxContext = CheckboxSharedProps & {
-    checkboxId?: string;
-};
-
-const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxContext>({
+const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps>({
     name: 'Checkbox',
     hookName: 'useCheckbox',
     providerName: 'CheckboxProvider',
@@ -37,108 +26,61 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxContext>({
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveRootProps = VComponentProps<typeof Primitive.div>;
-interface CheckboxRootProps extends PrimitiveRootProps, CheckboxSharedProps {}
+type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
+interface CheckboxRootProps extends RootPrimitiveProps, CheckboxSharedProps {}
 
-const Root = forwardRef<HTMLDivElement, CheckboxRootProps>(({ className, ...props }, ref) => {
-    const checkboxId = useId();
-    const [checkboxProps, otherProps] = createSplitProps<CheckboxSharedProps>()(props, [
-        'checked',
-        'onCheckedChange',
-        'defaultChecked',
-        'indeterminate',
-        'size',
-        'invalid',
-        'disabled',
-        'visuallyHidden',
-    ]);
+const Root = forwardRef<HTMLButtonElement, CheckboxRootProps>(
+    ({ render, className, children, ...props }, ref) => {
+        const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(props, [
+            'size',
+            'invalid',
+            'indeterminate',
+        ]);
 
-    const { disabled } = checkboxProps;
+        const { size, invalid, indeterminate } = variantProps;
 
-    return (
-        <CheckboxProvider value={{ checkboxId, ...checkboxProps }}>
-            <Primitive.div
-                ref={ref}
-                className={clsx(styles.root({ disabled }), className)}
-                {...otherProps}
-            />
-        </CheckboxProvider>
-    );
-});
+        const IndicatorElement = createSlot(children || <Indicator />);
+
+        return (
+            <CheckboxProvider value={{ size, indeterminate }}>
+                <BaseCheckbox.Root
+                    ref={ref}
+                    aria-invalid={invalid}
+                    indeterminate={indeterminate}
+                    className={clsx(styles.root({ invalid, size }), className)}
+                    {...otherProps}
+                >
+                    <IndicatorElement />
+                </BaseCheckbox.Root>
+            </CheckboxProvider>
+        );
+    },
+);
 Root.displayName = 'Checkbox.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Checkbox.Label
+ * Checkbox.Indicator
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = VComponentProps<typeof Primitive.label>;
-interface CheckboxLabelProps extends PrimitiveLabelProps {}
+type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
+interface CheckboxIndicatorProps extends IndicatorPrimitiveProps {}
 
-const Label = forwardRef<HTMLLabelElement, CheckboxLabelProps>(
-    ({ htmlFor, className, ...props }, ref) => {
-        const { checkboxId, visuallyHidden } = useCheckboxContext();
-
-        return (
-            <Primitive.label
-                ref={ref}
-                htmlFor={htmlFor || checkboxId}
-                className={clsx(styles.label({ visuallyHidden }), className)}
-                {...props}
-            />
-        );
-    },
-);
-
-/* ------------------------------------------------------------------------------------------------
- * Checkbox.Control
- * -----------------------------------------------------------------------------------------------*/
-
-type ControlPrimitiveProps = VComponentProps<typeof RadixRoot>;
-interface CheckboxControlProps extends Omit<ControlPrimitiveProps, keyof CheckboxSharedProps> {}
-
-const Control = forwardRef<HTMLButtonElement, CheckboxControlProps>(
-    ({ id, className, ...props }, ref) => {
-        const {
-            checkboxId,
-            checked,
-            onCheckedChange,
-            defaultChecked,
-            indeterminate,
-            invalid,
-            disabled,
-            size,
-        } = useCheckboxContext();
-
-        const [checkedState, setCheckedState] = useControllableState<CheckedState>({
-            prop: indeterminate ? 'indeterminate' : checked,
-            defaultProp: indeterminate ? 'indeterminate' : defaultChecked || false,
-            onChange: (state) => {
-                if (state === 'indeterminate') return;
-
-                onCheckedChange?.(state);
-            },
-        });
+const Indicator = forwardRef<HTMLDivElement, CheckboxIndicatorProps>(
+    ({ className, ...props }, ref) => {
+        const { size, indeterminate } = useCheckboxContext();
 
         return (
-            <RadixRoot
+            <BaseCheckbox.Indicator
                 ref={ref}
-                id={checkboxId || id}
-                checked={checkedState}
-                onCheckedChange={setCheckedState}
-                disabled={disabled}
-                aria-invalid={invalid}
-                className={clsx(styles.control({ invalid, size }), className)}
+                className={clsx(styles.indicator({ size }), className)}
                 {...props}
             >
-                <RadixIndicator className={styles.indicator({ size })}>
-                    {checkedState === 'indeterminate' && <DashIcon />}
-                    {checkedState === true && <CheckIcon />}
-                </RadixIndicator>
-            </RadixRoot>
+                {indeterminate ? <DashIcon /> : <CheckIcon />}
+            </BaseCheckbox.Indicator>
         );
     },
 );
-Control.displayName = 'Checkbox.Control';
+Indicator.displayName = 'Checkbox.Indicator';
 
 /* -------------------------------------------------------------------------------------------------
  * Icons
@@ -169,7 +111,7 @@ const DashIcon = (props: IconProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as CheckboxRoot, Label as CheckboxLabel, Control as CheckboxControl };
-export type { CheckedState, CheckboxRootProps, CheckboxLabelProps, CheckboxControlProps };
+export { Root as CheckboxRoot, Indicator as CheckboxIndicator };
+export type { CheckboxRootProps, CheckboxIndicatorProps };
 
-export const Checkbox = { Root, Label, Control };
+export const Checkbox = { Root, Indicator };

@@ -3,13 +3,10 @@ import { Button, Dialog } from '@vapor-ui/core';
 export default function DialogSimple() {
     return (
         <Dialog.Root>
-            <Dialog.Trigger asChild>
-                <Button>단순 다이얼로그 열기</Button>
-            </Dialog.Trigger>
-            <Dialog.CombinedContent>
+            <Dialog.Trigger render={<Button>단순 다이얼로그 열기</Button>} />
+            <Dialog.Content>
                 <Dialog.Header>
                     <Dialog.Title>알림</Dialog.Title>
-                    <Dialog.Close aria-label="Close" />
                 </Dialog.Header>
                 <Dialog.Body>
                     <Dialog.Description>
@@ -18,11 +15,9 @@ export default function DialogSimple() {
                     </Dialog.Description>
                 </Dialog.Body>
                 <Dialog.Footer>
-                    <Dialog.Close asChild>
-                        <Button>확인</Button>
-                    </Dialog.Close>
+                    <Dialog.Close render={<Button>확인</Button>} />
                 </Dialog.Footer>
-            </Dialog.CombinedContent>
+            </Dialog.Content>
         </Dialog.Root>
     );
 }

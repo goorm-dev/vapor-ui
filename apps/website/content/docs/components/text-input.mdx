@@ -9,12 +9,7 @@ description: 'TextInput은 사용자가 데이터를 입력할 수 있도록 텍
 import { TextInput } from '@vapor-ui/core';
 
 export default function DefaultTextInput() {
-    return (
-        <TextInput.Root>
-            <TextInput.Label>Label</TextInput.Label>    
-            <TextInput.Field />
-        </TextInput.Root>
-    );
+    return <TextInput />
 }
 ```
 </Demo>
@@ -34,22 +29,10 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputSize() {
     return (
         <div className="space-y-4">
-            <TextInput.Root size="sm" placeholder="Small size">
-                <TextInput.Label>Small</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root size="md" placeholder="Medium size">
-                <TextInput.Label>Medium</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root size="lg" placeholder="Large size">
-                <TextInput.Label>Large</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root size="xl" placeholder="Extra large size">
-                <TextInput.Label>Extra Large</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <TextInput size="sm" placeholder="Small size" />
+            <TextInput size="md" placeholder="Medium size" />
+            <TextInput size="lg" placeholder="Large size" />
+            <TextInput size="xl" placeholder="Extra large size" />
         </div>
     );
 }
@@ -67,18 +50,9 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputType() {
     return (
         <div className="space-y-4">
-            <TextInput.Root type="text" placeholder="Enter text">
-                <TextInput.Label>Text</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root type="email" placeholder="Enter email">
-                <TextInput.Label>Email</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root type="password" placeholder="Enter password">
-                <TextInput.Label>Password</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <TextInput type="text" placeholder="type='text'" />
+            <TextInput type="email" placeholder="type='email'" />
+            <TextInput type="password" placeholder="type='password'" />
         </div>
     );
 }
@@ -95,15 +69,9 @@ import { TextInput } from '@vapor-ui/core';
 
 export default function TextInputDisabled() {
     return (
-        <div className="space-y-3">
-            <TextInput.Root disabled placeholder="비활성화된 입력 필드">
-                <TextInput.Label>비활성화</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root disabled defaultValue="기본 값이 있는 비활성화 필드">
-                <TextInput.Label>값이 있는 비활성화</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+        <div className="space-y-3 flex flex-col">
+            <TextInput disabled placeholder="비활성화된 입력 필드" />
+            <TextInput disabled defaultValue="기본 값이 있는 비활성화 필드" />
         </div>
     );
 }
@@ -121,19 +89,13 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputInvalid() {
     return (
         <div className="space-y-3">
-            <TextInput.Root
+            <TextInput
                 type="email"
                 invalid
                 placeholder="잘못된 이메일 형식"
                 defaultValue="invalid-email"
-            >
-                <TextInput.Label>이메일</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root invalid placeholder="필수 입력 항목">
-                <TextInput.Label>필수 필드</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            />
+            <TextInput invalid placeholder="필수 입력 항목" />
         </div>
     );
 }
@@ -151,45 +113,8 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputReadOnly() {
     return (
         <div className="space-y-3">
-            <TextInput.Root readOnly defaultValue="수정할 수 없는 값">
-                <TextInput.Label>읽기 전용</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root type="email" readOnly defaultValue="user@example.com">
-                <TextInput.Label>사용자 이메일</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-        </div>
-    );
-}
-```
-</Demo>
-
-### Visually Hidden
-
-라벨을 제거한 형태로 사용할 수 있습니다. 이 때 화면에 Label이 시각적으로 표시되지 않지만, 여전히 화면 읽기 도구(Screen readers)에서는 읽을 수 있도록 처리합니다.
-
-<Demo name="text-input-visually-hidden">
-```tsx
-import { TextInput } from '@vapor-ui/core';
-
-export default function TextInputVisuallyHidden() {
-    return (
-        <div className="space-y-4">
-            <div>
-                <h4 className="text-sm font-medium mb-2">기본 라벨</h4>
-                <TextInput.Root placeholder="이름을 입력하세요">
-                    <TextInput.Label>보이는 라벨</TextInput.Label>
-                    <TextInput.Field />
-                </TextInput.Root>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">시각적으로 숨겨진 라벨</h4>
-                <TextInput.Root visuallyHidden placeholder="이름을 입력하세요" aria-label="사용자 이름">
-                    <TextInput.Field />
-                </TextInput.Root>
-            </div>
+            <TextInput readOnly defaultValue="수정할 수 없는 값" />
+            <TextInput type="email" readOnly defaultValue="user@example.com" />
         </div>
     );
 }
@@ -211,22 +136,10 @@ import { TextInput } from '@vapor-ui/core';
 export default function TextInputStates() {
     return (
         <div className="space-y-4">
-            <TextInput.Root placeholder="Default state">
-                <TextInput.Label>Default</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root disabled placeholder="Disabled state">
-                <TextInput.Label>Disabled</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root invalid placeholder="Invalid state">
-                <TextInput.Label>Invalid</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
-            <TextInput.Root readOnly value="Read only value">
-                <TextInput.Label>Read Only</TextInput.Label>
-                <TextInput.Field />
-            </TextInput.Root>
+            <TextInput placeholder="Default state" />
+            <TextInput disabled placeholder="Disabled state" />
+            <TextInput invalid placeholder="Invalid state" />
+            <TextInput readOnly value="Read only value" />
         </div>
     );
 }
@@ -239,18 +152,6 @@ export default function TextInputStates() {
 
 ### TextInput.Root
 
-TextInput의 루트 컴포넌트로 공유 상태와 기본 설정을 제공합니다.
+TextInput의 입력 필드 컴포넌트로, 실제 입력을 받는 요소입니다.
 
 <ComponentPropsTable file="text-input" section="props" />
-
-### TextInput.Label
-
-TextInput의 레이블 컴포넌트로 접근성을 위한 라벨을 제공합니다.
-
-<ComponentPropsTable file="text-input" section="labelProps" />
-
-### TextInput.Field
-
-TextInput의 입력 필드 컴포넌트로 실제 입력을 받는 요소입니다.
-
-<ComponentPropsTable file="text-input" section="fieldProps" />

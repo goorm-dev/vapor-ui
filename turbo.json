@@ -11,15 +11,15 @@
             "outputs": []
         },
         "test": {
-            "outputs": []
+            "outputs": [],
+            "dependsOn": ["^build"]
         },
         "format": {
             "outputs": [],
             "cache": false
         },
         "format:check": {
-            "outputs": [],
-            "cache": false
+            "outputs": []
         },
         "website#start": {
             "dependsOn": ["website#build"],
@@ -30,7 +30,7 @@
             "outputs": ["dist/**"]
         },
         "typecheck": {
-            "dependsOn": ["^typecheck"]
+            "dependsOn": ["^build"]
         },
         "clean": {
             "cache": false

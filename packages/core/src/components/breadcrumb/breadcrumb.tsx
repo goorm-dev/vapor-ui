@@ -1,15 +1,15 @@
 'use client';
 
-import type { ComponentPropsWithoutRef } from 'react';
 import { forwardRef } from 'react';
 
-import { Primitive } from '@radix-ui/react-primitive';
+import { useRender } from '@base-ui-components/react';
 import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './breadcrumb.css';
 import type { BreadcrumbItemVariants } from './breadcrumb.css';
@@ -26,20 +26,23 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
  * Breadcrumb.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type BreadcrumbPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.nav>;
+type BreadcrumbPrimitiveProps = VComponentProps<'nav'>;
 interface BreadcrumbRootProps extends BreadcrumbPrimitiveProps, BreadcrumbVariants {}
 
 const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ render, className, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(props, ['size']);
 
-        return (
-            <BreadcrumbProvider value={variantProps}>
-                <Primitive.nav ref={ref} aria-label="Breadcrumb" {...otherProps}>
-                    {children}
-                </Primitive.nav>
-            </BreadcrumbProvider>
-        );
+        const element = useRender({
+            ref,
+            render: render || <nav />,
+            props: {
+                'aria-label': 'Breadcrumb',
+                ...otherProps,
+            },
+        });
+
+        return <BreadcrumbProvider value={variantProps}>{element}</BreadcrumbProvider>;
     },
 );
 
@@ -47,16 +50,19 @@ const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
  * Breadcrumb.List
  * -----------------------------------------------------------------------------------------------*/
 
-type BreadcrumbListPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.ol>;
+type BreadcrumbListPrimitiveProps = VComponentProps<'ol'>;
 interface BreadcrumbListProps extends BreadcrumbListPrimitiveProps {}
 
 const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
-    ({ className, children, ...props }, ref) => {
-        return (
-            <Primitive.ol ref={ref} className={clsx(styles.list, className)} {...props}>
-                {children}
-            </Primitive.ol>
-        );
+    ({ render, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <ol />,
+            props: {
+                className: clsx(styles.list, className),
+                ...props,
+            },
+        });
     },
 );
 
@@ -64,15 +70,18 @@ const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
  * Breadcrumb.Item
  * -----------------------------------------------------------------------------------------------*/
 
-interface BreadcrumbItemProps extends ComponentPropsWithoutRef<typeof Primitive.li> {}
+interface BreadcrumbItemProps extends VComponentProps<'li'> {}
 
 const Item = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
-    ({ className, children, ...props }, ref) => {
-        return (
-            <Primitive.li ref={ref} className={clsx(styles.item, className)} {...props}>
-                {children}
-            </Primitive.li>
-        );
+    ({ render, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <li />,
+            props: {
+                className: clsx(styles.item, className),
+                ...props,
+            },
+        });
     },
 );
 
@@ -80,30 +89,28 @@ const Item = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
  * Breadcrumb.Link
  * -----------------------------------------------------------------------------------------------*/
 
-type BreadcrumbLinkPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.a>;
+type BreadcrumbLinkPrimitiveProps = VComponentProps<'a'>;
 interface BreadcrumbLinkProps extends BreadcrumbLinkPrimitiveProps {
     current?: boolean;
 }
 
 const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
-    ({ current, className, children, ...props }, ref) => {
-        const { a, span } = Primitive;
-        const Component = current ? span : a;
+    ({ render, current, className, ...props }, ref) => {
+        const Component = current ? 'span' : 'a';
 
         const { size } = useBreadcrumbContext();
 
-        return (
-            <Component
-                ref={ref}
-                role={current ? 'link' : undefined}
-                aria-disabled={current ? 'true' : undefined}
-                aria-current={current ? 'page' : undefined}
-                className={clsx(styles.link({ size, current }), className)}
-                {...props}
-            >
-                {children}
-            </Component>
-        );
+        return useRender({
+            ref,
+            render: render || <Component />,
+            props: {
+                role: current ? 'link' : undefined,
+                'aria-disabled': current ? 'true' : undefined,
+                'aria-current': current ? 'page' : undefined,
+                className: clsx(styles.link({ size, current }), className),
+                ...props,
+            },
+        });
     },
 );
 
@@ -111,24 +118,24 @@ const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
  * Breadcrumb.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-interface BreadcrumbSeparatorProps extends ComponentPropsWithoutRef<typeof Primitive.li> {}
+interface BreadcrumbSeparatorProps extends VComponentProps<'li'> {}
 
 const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ render, className, children, ...props }, ref) => {
         const { size } = useBreadcrumbContext();
-        const Icon = createSlot(children || <SlashOutlineIcon size="auto" />);
+        const Icon = createSlot(children || <SlashOutlineIcon size="100%" />);
 
-        return (
-            <Primitive.li
-                ref={ref}
-                role="presentation"
-                aria-hidden="true"
-                className={clsx(styles.icon({ size }), className)}
-                {...props}
-            >
-                <Icon />
-            </Primitive.li>
-        );
+        return useRender({
+            ref,
+            render: render || <li />,
+            props: {
+                role: 'presentation',
+                'aria-hidden': 'true',
+                className: clsx(styles.icon({ size }), className),
+                children: <Icon />,
+                ...props,
+            },
+        });
     },
 );
 
@@ -136,25 +143,25 @@ const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
  * Breadcrumb.Ellipsis
  * -----------------------------------------------------------------------------------------------*/
 
-type BreadcrumbEllipsisPrimitiveProps = ComponentPropsWithoutRef<typeof Primitive.span>;
+type BreadcrumbEllipsisPrimitiveProps = VComponentProps<'span'>;
 interface BreadcrumbEllipsisProps extends BreadcrumbEllipsisPrimitiveProps {}
 
 const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
-    ({ className, children, ...props }, ref) => {
+    ({ render, className, children, ...props }, ref) => {
         const { size } = useBreadcrumbContext();
-        const Icon = createSlot(children || <MoreCommonOutlineIcon size="auto" />);
+        const Icon = createSlot(children || <MoreCommonOutlineIcon size="100%" />);
 
-        return (
-            <Primitive.span
-                ref={ref}
-                role="presentation"
-                aria-hidden="true"
-                className={clsx(styles.icon({ size }), className)}
-                {...props}
-            >
-                <Icon />
-            </Primitive.span>
-        );
+        return useRender({
+            ref,
+            render: render || <span />,
+            props: {
+                role: 'presentation',
+                'aria-hidden': 'true',
+                className: clsx(styles.icon({ size }), className),
+                children: <Icon />,
+                ...props,
+            },
+        });
     },
 );
 

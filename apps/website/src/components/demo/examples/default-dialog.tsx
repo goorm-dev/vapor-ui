@@ -3,10 +3,8 @@ import { Button, Dialog } from '@vapor-ui/core';
 export default function DefaultDialog() {
     return (
         <Dialog.Root>
-            <Dialog.Trigger asChild>
-                <Button>클릭</Button>
-            </Dialog.Trigger>
-            <Dialog.CombinedContent>
+            <Dialog.Trigger render={<Button />}>클릭</Dialog.Trigger>
+            <Dialog.Content>
                 <Dialog.Header>
                     <Dialog.Title>알림</Dialog.Title>
                     <Dialog.Close aria-label="Close" />
@@ -19,7 +17,7 @@ export default function DefaultDialog() {
                 <Dialog.Footer style={{ marginLeft: 'auto' }}>
                     <Button color="primary">확인</Button>
                 </Dialog.Footer>
-            </Dialog.CombinedContent>
+            </Dialog.Content>
         </Dialog.Root>
     );
 }

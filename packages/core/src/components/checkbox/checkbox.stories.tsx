@@ -1,165 +1,70 @@
-import { useState } from 'react';
-
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Checkbox } from '.';
-import { Flex } from '../flex';
-import { Text } from '../text';
+import { HStack } from '../h-stack';
+import { VStack } from '../v-stack';
 
 export default {
     title: 'Checkbox',
     component: Checkbox.Root,
-    argTypes: {
-        size: { control: 'inline-radio', options: ['md', 'lg'] },
-        disabled: { control: 'boolean' },
-        invalid: { control: 'boolean' },
-        visuallyHidden: { control: 'boolean' },
-    },
 } as Meta<typeof Checkbox.Root>;
 
 type Story = StoryObj<typeof Checkbox.Root>;
 
 export const Default: Story = {
+    argTypes: {
+        size: { control: 'inline-radio', options: ['md', 'lg'] },
+        disabled: { control: 'boolean' },
+        invalid: { control: 'boolean' },
+        readOnly: { control: 'boolean' },
+        required: { control: 'boolean' },
+        indeterminate: { control: 'boolean' },
+    },
     render: (args) => {
-        const [checked, setChecked] = useState(evaluateNextCheckedState(false));
-
-        const values = Object.values(checked);
-        const allChecked = values.every(Boolean);
-        const indeterminate = allChecked ? false : values.some(Boolean);
-
-        const handleAllCheckedChange = (checked: boolean) => {
-            const newValue = !!checked;
-            const nextChecked = evaluateNextCheckedState(newValue);
-
-            setChecked(nextChecked);
-        };
-
-        const handleCheckedChange = (key: string, checked: boolean) => {
-            setChecked((prev) => ({ ...prev, [key]: checked }));
-        };
-
-        return (
-            <Flex style={{ flexDirection: 'column' }}>
-                <Text typography="heading3">Uncontrolled</Text>
-                <Checkbox.Root {...args}>
-                    <Checkbox.Control />
-                    <Checkbox.Label>Default</Checkbox.Label>
-                </Checkbox.Root>
-
-                <br />
-
-                <Text typography="heading3">Controlled</Text>
-                <Checkbox.Root
-                    {...args}
-                    checked={allChecked}
-                    indeterminate={indeterminate}
-                    onCheckedChange={handleAllCheckedChange}
-                >
-                    <Checkbox.Control />
-                    <Checkbox.Label>three meals a day</Checkbox.Label>
-                </Checkbox.Root>
-
-                {checkboxItems.map((item) => (
-                    <Checkbox.Root
-                        {...args}
-                        key={item.key}
-                        checked={checked[item.key]}
-                        onCheckedChange={(checkedState) =>
-                            handleCheckedChange(item.key, checkedState)
-                        }
-                    >
-                        <Checkbox.Control />
-                        <Checkbox.Label>{item.label}</Checkbox.Label>
-                    </Checkbox.Root>
-                ))}
-            </Flex>
-        );
+        return <Checkbox.Root {...args} />;
     },
 };
 
 export const TestBed: Story = {
     render: () => {
         return (
-            <Flex style={{ gap: 'var(--vapor-size-dimension-100)', flexDirection: 'column' }}>
-                <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
-                    <Checkbox.Root>
-                        <Checkbox.Label>Default</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root checked>
-                        <Checkbox.Label>Default checked</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root indeterminate>
-                        <Checkbox.Label>Default Indeterminate</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                </Flex>
+            <VStack gap="$200">
+                <HStack gap="$100" alignItems="center">
+                    <Checkbox.Root size="md" />
+                    <Checkbox.Root size="md" checked />
+                    <Checkbox.Root size="md" indeterminate />
+                    <Checkbox.Root size="md" disabled />
+                    <Checkbox.Root size="md" checked disabled />
+                    <Checkbox.Root size="md" indeterminate disabled />
+                    <Checkbox.Root size="md" invalid />
+                    <Checkbox.Root size="md" checked invalid />
+                    <Checkbox.Root size="md" indeterminate invalid />
+                    <Checkbox.Root size="md" required />
+                    <Checkbox.Root size="md" checked required />
+                    <Checkbox.Root size="md" indeterminate required />
+                    <Checkbox.Root size="md" readOnly />
+                    <Checkbox.Root size="md" checked readOnly />
+                    <Checkbox.Root size="md" indeterminate readOnly />
+                </HStack>
 
-                <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
-                    <Checkbox.Root disabled>
-                        <Checkbox.Label>Disabled</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root checked disabled>
-                        <Checkbox.Label>Disabled Checked</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root indeterminate disabled>
-                        <Checkbox.Label>Disabled Indeterminate</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                </Flex>
-
-                <Flex style={{ gap: 'var(--vapor-size-dimension-150)' }}>
-                    <Checkbox.Root invalid>
-                        <Checkbox.Label>Invalid</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root checked invalid>
-                        <Checkbox.Label>Invalid Checked</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                    <Checkbox.Root indeterminate invalid>
-                        <Checkbox.Label>Invalid Indeterminate</Checkbox.Label>
-                        <Checkbox.Control />
-                    </Checkbox.Root>
-                </Flex>
-
-                <Checkbox.Root size="md">
-                    <Checkbox.Label>MD</Checkbox.Label>
-                    <Checkbox.Control />
-                </Checkbox.Root>
-
-                <Checkbox.Root size="lg">
-                    <Checkbox.Label>LG</Checkbox.Label>
-                    <Checkbox.Control />
-                </Checkbox.Root>
-
-                <Checkbox.Root visuallyHidden>
-                    <Checkbox.Label>Visually Hidden</Checkbox.Label>
-                    <Checkbox.Control />
-                </Checkbox.Root>
-            </Flex>
+                <HStack gap="$100" alignItems="center">
+                    <Checkbox.Root size="lg" />
+                    <Checkbox.Root size="lg" checked />
+                    <Checkbox.Root size="lg" indeterminate />
+                    <Checkbox.Root size="lg" disabled />
+                    <Checkbox.Root size="lg" checked disabled />
+                    <Checkbox.Root size="lg" indeterminate disabled />
+                    <Checkbox.Root size="lg" invalid />
+                    <Checkbox.Root size="lg" checked invalid />
+                    <Checkbox.Root size="lg" indeterminate invalid />
+                    <Checkbox.Root size="lg" required />
+                    <Checkbox.Root size="lg" checked required />
+                    <Checkbox.Root size="lg" indeterminate required />
+                    <Checkbox.Root size="lg" readOnly />
+                    <Checkbox.Root size="lg" checked readOnly />
+                    <Checkbox.Root size="lg" indeterminate readOnly />
+                </HStack>
+            </VStack>
         );
     },
-};
-
-/* -----------------------------------------------------------------------------------------------*/
-
-type CheckboxItems = Record<string, boolean>;
-
-const checkboxItems = [
-    { key: 'morning', label: 'breakfast' },
-    { key: 'lunch', label: 'lunch' },
-    { key: 'dinner', label: 'dinner' },
-];
-
-const evaluateNextCheckedState = (checked: boolean) => {
-    const nextChecked = checkboxItems.reduce((acc, item) => {
-        acc[item.key] = checked;
-        return acc;
-    }, {} as CheckboxItems);
-
-    return nextChecked;
 };
