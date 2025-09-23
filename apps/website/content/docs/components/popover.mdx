@@ -1,0 +1,132 @@
+---
+title: 'Popover'
+site_name: 'Popover - Vapor Core'
+description: 'Popover는 트리거 요소 근처에 부가 정보나 상호작용 콘텐츠를 표시하는 오버레이 컴포넌트입니다. 툴팁, 메뉴, 폼, 상세 정보 등을 표시할 때 사용합니다.'
+---
+
+<Demo name="popover/default-popover">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/popover/default-popover.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### PositionerProps
+
+Popover가 나타날 위치와 정렬을 설정할 수 있습니다. 기본값은 'bottom'입니다.
+
+<Demo name="popover/popover-positioning">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/popover/popover-positioning.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Controlled State
+
+Popover의 열림/닫힘 상태를 외부에서 제어할 수 있습니다.
+
+<Demo name="popover/popover-controlled">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/popover/popover-controlled.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Offset
+
+Popover와 트리거 간의 거리를 세밀하게 조정할 수 있습니다.
+
+<Demo name="popover/popover-offset">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/popover/popover-offset.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### Content Variations
+
+팝오버는 간단한 텍스트부터 복잡한 상호작용 요소까지 다양한 콘텐츠를 담을 수 있습니다.
+
+<Demo name="popover/popover-content">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/popover/popover-content.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Props Table
+
+---
+
+### Popover.Root
+
+Popover의 루트 컨테이너로, 전체 Popover 컴포넌트의 상태와 동작을 관리합니다.
+
+<ComponentPropsTable file="popover" section="rootProps" />
+
+### Popover.Trigger
+
+Popover를 여는 트리거 요소입니다.
+
+<ComponentPropsTable file="popover" section="triggerProps" />
+
+### Popover.Content
+
+Popover의 실제 콘텐츠를 담는 컨테이너입니다. Portal과 Positioner를 조합하여 구성됩니다.
+
+<ComponentPropsTable file="popover" section="contentProps" />
+
+### Popover.Portal
+
+Popover를 DOM의 다른 위치에 렌더링하는 포털 컴포넌트입니다.
+
+<ComponentPropsTable file="popover" section="portalProps" />
+
+### Popover.Positioner
+
+Popover의 위치를 설정하는 컴포넌트입니다.
+
+<ComponentPropsTable file="popover" section="positionerProps" />
+
+### Popover.Popup
+
+Popover의 실제 팝업 콘텐츠 영역입니다.
+
+<ComponentPropsTable file="popover" section="popupProps" />
+
+### Popover.Title
+
+Popover의 제목을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="popover" section="titleProps" />
+
+### Popover.Description
+
+Popover의 설명을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="popover" section="descriptionProps" />
+
+### Popover.Close
+
+Popover를 닫는 버튼 컴포넌트입니다.
+
+<ComponentPropsTable file="popover" section="closeProps" />

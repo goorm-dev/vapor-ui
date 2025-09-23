@@ -16,6 +16,7 @@ import iconButtonData from '../../public/components/icon-button.json';
 import inputGroupData from '../../public/components/input-group.json';
 import menuData from '../../public/components/menu.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
+import popoverData from '../../public/components/popover.json';
 import radioGroupData from '../../public/components/radio-group.json';
 import radioData from '../../public/components/radio.json';
 import sheetData from '../../public/components/sheet.json';
@@ -46,6 +47,7 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     'icon-button': iconButtonData,
     menu: menuData,
     'navigation-menu': navigationMenuData,
+    popover: popoverData,
     text: textData,
     'text-input': textInputData,
     dialog: dialogData,
