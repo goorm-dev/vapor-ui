@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Badge, Button, Text } from '@vapor-ui/core';
+import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
 import {
     AiSmartieIcon,
     ForwardPageOutlineIcon,
@@ -23,7 +23,23 @@ import DefaultSearchDialog from '~/components/search/search';
 import { VAPOR_BANNER_URL } from '~/constants/image-urls';
 
 export default function HomePage() {
+    const [mounted, setMounted] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+    const { theme } = useTheme();
+
+    useEffect(() => {
+        setMounted(true);
+        // Reset to default tab1 theme on page load
+    }, []);
+
+    if (!mounted) {
+        return null;
+    }
+
+    const handleTabChange = () => {
+        // TODO: update theme
+    };
 
     return (
         <>
@@ -41,7 +57,9 @@ export default function HomePage() {
                         className="absolute bottom-0 left-0 w-full h-[162px]"
                         style={{
                             background:
-                                'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--color-background-normal, #FFF) 100%)',
+                                theme === 'light'
+                                    ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--color-background-normal, #FFF) 100%)'
+                                    : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--color-background-normal, #23272E) 100%)',
                         }}
                     />
                     <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
@@ -183,7 +201,7 @@ export default function HomePage() {
                                 나만의 테마를 완성해보세요
                             </Text>
                         </div>
-                        <LocalTabs defaultValue="tab1">
+                        <LocalTabs defaultValue="tab1" onValueChange={handleTabChange}>
                             <LocalTabsList>
                                 <LocalTab value="tab1">
                                     <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
