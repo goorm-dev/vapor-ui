@@ -1,4 +1,4 @@
-import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import { DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
@@ -6,6 +6,8 @@ import { getComponentOgImageUrl } from '~/constants/image-urls';
 import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
+
+import { DocsBody } from './_components/DocsBody';
 
 const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
     const { slug = [] } = await params;
