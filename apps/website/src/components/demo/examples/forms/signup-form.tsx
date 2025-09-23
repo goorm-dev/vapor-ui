@@ -24,7 +24,7 @@ const jobs = [
 ];
 
 export default function SignupForm() {
-    const [passwordCheck, setPasswordCheck] = useState();
+    const [passwordCheck, setPasswordCheck] = useState('');
     // const passwordCheck = useRef<string>('');
 
     return (
