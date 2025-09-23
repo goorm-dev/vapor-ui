@@ -1,14 +1,16 @@
-import { source } from '~/lib/source';
+import { blockSource, source } from '~/lib/source';
 
 export const revalidate = false;
 
-export async function GET() {
+function processPages<
+    T extends { slugs: string[]; data: { title: string; description?: string }; url: string },
+>(pages: T[], sectionTitle: string) {
     const scanned: string[] = [];
-    scanned.push('# Docs');
+    scanned.push(`# ${sectionTitle}`);
     const map = new Map<string, string[]>();
 
-    for (const page of source.getPages()) {
-        const dir = page.slugs[0];
+    for (const page of pages) {
+        const dir = page.slugs[0] || 'index';
         const list = map.get(dir) ?? [];
         list.push(`- [${page.data.title}](${page.url}.mdx): ${page.data.description}`);
         map.set(dir, list);
@@ -19,5 +21,19 @@ export async function GET() {
         scanned.push(value.join('\n'));
     }
 
-    return new Response(scanned.join('\n\n'));
+    return scanned;
+}
+
+export async function GET() {
+    const result: string[] = [];
+
+    // Process docs
+    const docsPages = source.getPages();
+    result.push(...processPages(docsPages, 'Docs'));
+
+    // Process blocks
+    const blocksPages = blockSource.getPages();
+    result.push(...processPages(blocksPages, 'Blocks'));
+
+    return new Response(result.join('\n\n'));
 }
