@@ -9,7 +9,9 @@ import {
     getColorLightness,
     getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
-import { Box, Button, VStack } from '@vapor-ui/core';
+import { Box, Button, HStack, VStack } from '@vapor-ui/core';
+import { generateCompleteCSS } from '@vapor-ui/css-generator';
+import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { Logger } from '~/common/logger';
 import { postMessage } from '~/common/messages';
@@ -45,6 +47,7 @@ export const BrandColorsTab = () => {
         'light' | 'dark'
     > | null>(null);
     const [collectionName, setCollectionName] = useState<string>('Brand Color Tokens');
+    const [isCopying, setIsCopying] = useState<boolean>(false);
 
     // TODO: 향후 다중 테마 컬러 지원 시 setState 활성화
     const [themeColorType] = useState<ThemeColorType>('primary');
@@ -124,6 +127,47 @@ export const BrandColorsTab = () => {
             Logger.info('브랜드 Figma 변수 생성 요청 전송 완료');
         } catch (error) {
             Logger.variables.error('브랜드 Figma 변수 생성 요청 실패', error);
+        }
+    };
+
+    const handleCopyBrandCssVariables = async () => {
+        if (isCopying) return;
+
+        setIsCopying(true);
+
+        try {
+            const css = generateCompleteCSS({
+                colors: {
+                    primary: { name: colorName, color: colorHex },
+                    background: {
+                        name: backgroundName,
+                        color: backgroundHex,
+                        lightness: backgroundLightness,
+                    },
+                },
+                scaling: 1,
+                radius: 'md',
+            });
+
+            // Figma plugin 환경에서는 navigator.clipboard가 없으므로 fallback 사용
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(css);
+            } else {
+                // 임시 textarea 생성하여 복사
+                const textarea = document.createElement('textarea');
+                textarea.value = css;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+
+            setTimeout(() => {
+                setIsCopying(false);
+            }, 2000);
+        } catch (error) {
+            Logger.error('CSS 복사 실패', error);
+            setIsCopying(false);
         }
     };
 
@@ -225,13 +269,25 @@ export const BrandColorsTab = () => {
                             </div>
                         </Box>
 
-                        <Button
-                            onClick={handleCreateBrandFigmaVariables}
-                            variant="outline"
-                            color="primary"
-                        >
-                            Create Brand Figma Variables
-                        </Button>
+                        <HStack gap="$200">
+                            <Button
+                                onClick={handleCreateBrandFigmaVariables}
+                                variant="outline"
+                                color="secondary"
+                                stretch
+                            >
+                                Create Figma Variables
+                            </Button>
+                            <Button
+                                onClick={handleCopyBrandCssVariables}
+                                variant="outline"
+                                color="primary"
+                                stretch
+                                disabled={isCopying}
+                            >
+                                {isCopying ? <ConfirmOutlineIcon /> : 'Copy CSS Variables'}
+                            </Button>
+                        </HStack>
                     </VStack>
                 </>
             )}

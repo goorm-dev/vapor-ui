@@ -110,6 +110,12 @@ importers:
       '@vapor-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@vapor-ui/css-generator':
+        specifier: workspace:*
+        version: link:../../packages/css-generator
+      '@vapor-ui/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       react:
         specifier: ^18.3.1
         version: 18.3.1
