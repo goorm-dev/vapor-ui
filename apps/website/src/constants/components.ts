@@ -23,6 +23,7 @@ import radioData from '../../public/components/radio.json';
 import selectData from '../../public/components/select.json';
 import sheetData from '../../public/components/sheet.json';
 import switchData from '../../public/components/switch.json';
+import tabsData from '../../public/components/tabs.json';
 import textInputData from '../../public/components/text-input.json';
 import textData from '../../public/components/text.json';
 import textareaData from '../../public/components/textarea.json';
@@ -55,6 +56,7 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     'text-input': textInputData,
     dialog: dialogData,
     switch: switchData,
+    tabs: tabsData,
     radio: radioData,
     'radio-group': radioGroupData,
     select: selectData,
