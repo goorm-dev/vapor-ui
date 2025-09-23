@@ -15,6 +15,7 @@ import hStackData from '../../public/components/h-stack.json';
 import iconButtonData from '../../public/components/icon-button.json';
 import inputGroupData from '../../public/components/input-group.json';
 import menuData from '../../public/components/menu.json';
+import multiSelectData from '../../public/components/multi-select.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
 import popoverData from '../../public/components/popover.json';
 import radioGroupData from '../../public/components/radio-group.json';
@@ -47,6 +48,7 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     checkbox: checkboxData,
     'icon-button': iconButtonData,
     menu: menuData,
+    'multi-select': multiSelectData,
     'navigation-menu': navigationMenuData,
     popover: popoverData,
     text: textData,
