@@ -1,6 +1,6 @@
 import './signup-form.css';
 
-import { useRef } from 'react';
+import { useState } from 'react';
 
 import {
     Button,
@@ -24,7 +24,8 @@ const jobs = [
 ];
 
 export default function SignupForm() {
-    const passwordCheck = useRef<string>('');
+    const [passwordCheck, setPasswordCheck] = useState();
+    // const passwordCheck = useRef<string>('');
 
     return (
         <VStack
@@ -54,10 +55,10 @@ export default function SignupForm() {
                             size="lg"
                             type="password"
                             onValueChange={(value) => {
-                                passwordCheck.current = value;
+                                setPasswordCheck(value);
                             }}
                             required
-                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}"
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,16}"
                         />
                         <Field.Description>
                             8~16자, 대소문자 영문, 숫자, 특수문자 포함
@@ -75,7 +76,7 @@ export default function SignupForm() {
                             size="lg"
                             type="password"
                             required
-                            pattern={passwordCheck.current}
+                            pattern={passwordCheck}
                         />
                         <Field.Description>8~16자, 대소문자 영문, 특수문자 포함</Field.Description>
                         <Field.Error match="valueMissing">비밀번호를 입력해주세요.</Field.Error>
@@ -120,9 +121,7 @@ export default function SignupForm() {
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
                             <Checkbox.Root id="signup-terms-of-service" />
                             <HStack width="100%" justifyContent="space-between" alignItems="center">
-                                <Field.Label className="checkbox-label">
-                                    필수 약관에 모두 동의
-                                </Field.Label>
+                                <Field.Label className="checkbox-label">이용 약관 동의</Field.Label>
                                 <IconButton
                                     size="sm"
                                     color="secondary"

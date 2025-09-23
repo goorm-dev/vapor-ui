@@ -35,18 +35,6 @@ const Label = forwardRef<HTMLLabelElement, FieldLabelProps>(({ className, ...pro
 Label.displayName = 'Field.Label';
 
 /* -------------------------------------------------------------------------------------------------
- * Field.Control
- * -----------------------------------------------------------------------------------------------*/
-
-type PrimitiveControlProps = VComponentProps<typeof BaseField.Control>;
-interface FieldControlProps extends PrimitiveControlProps {}
-
-const Control = forwardRef<HTMLInputElement, FieldControlProps>(({ className, ...props }, ref) => {
-    return <BaseField.Control ref={ref} className={clsx(styles.label, className)} {...props} />;
-});
-Control.displayName = 'Field.Control';
-
-/* -------------------------------------------------------------------------------------------------
  * Field.Description
  * -----------------------------------------------------------------------------------------------*/
 
@@ -113,7 +101,6 @@ Success.displayName = 'Field.Success';
 export {
     Root as FieldRoot,
     Label as FieldLabel,
-    Control as FieldControl,
     Description as FieldDescription,
     Error as FieldError,
     Success as FieldSuccess,
@@ -121,10 +108,9 @@ export {
 export type {
     FieldRootProps,
     FieldLabelProps,
-    FieldControlProps,
     FieldDescriptionProps,
     FieldErrorProps,
     FieldSuccessProps,
 };
 
-export const Field = { Root, Label, Control, Description, Error, Success };
+export const Field = { Root, Label, Description, Error, Success };
