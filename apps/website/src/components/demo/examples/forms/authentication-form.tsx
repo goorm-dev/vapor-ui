@@ -2,7 +2,7 @@ import { Children, cloneElement, isValidElement, useState } from 'react';
 
 import './authentication-form.css';
 
-import { Button, Select, TextInput, VStack } from '@vapor-ui/core';
+import { Button, Field, Form, Select, TextInput, VStack } from '@vapor-ui/core';
 
 const codes = {
     '+82': '🇰🇷 +82',
@@ -25,18 +25,25 @@ export default function AuthenticationForm() {
     const regex = /^[0-9\s-()]{6,20}$/;
 
     return (
-        <VStack gap="$400" width="400px" padding="$300" borderRadius="$300" border="1px solid #eee">
-            <VStack gap="$200" render={<form onSubmit={(e) => e.preventDefault()} />}>
-                <VStack gap="$100">
-                    <label htmlFor="auth-phone" className="input-label">
-                        핸드폰 번호
-                    </label>
-                    <Select.Root defaultValue="+82" size="lg">
+        <VStack
+            gap="$400"
+            width="400px"
+            padding="$300"
+            borderRadius="$300"
+            border="1px solid var(--vapor-color-border-normal)"
+            render={<Form onSubmit={(e) => e.preventDefault()} />}
+        >
+            <VStack gap="$200">
+                <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Label className="input-label">핸드폰 번호</Field.Label>
+
+                    <Select.Root defaultValue={codes['+82']} size="lg">
                         <Group attached>
                             <Select.Trigger>
                                 <Select.Value />
                                 <Select.TriggerIcon />
                             </Select.Trigger>
+
                             <Select.Content>
                                 {Object.entries(codes).map(([value, label]) => (
                                     <Select.Item key={value} value={value}>
@@ -45,26 +52,35 @@ export default function AuthenticationForm() {
                                     </Select.Item>
                                 ))}
                             </Select.Content>
+
                             <TextInput
                                 style={{ flex: 1, width: '100%' }}
                                 id="auth-phone"
+                                type="tel"
                                 value={phoneNumber}
                                 onChange={handleChange}
+                                required
+                                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                                 size="lg"
-                                type="tel"
                             />
-                            <Button size="lg" disabled={!regex.test(phoneNumber)}>
+
+                            <Button type="button" size="lg" disabled={!regex.test(phoneNumber)}>
                                 인증번호 받기
                             </Button>
                         </Group>
                     </Select.Root>
-                </VStack>
-                <VStack gap="$100">
-                    <label htmlFor="auth-verification-code" className="input-label">
-                        인증번호
-                    </label>
-                    <TextInput id="auth-verification-code" size="lg" />
-                </VStack>
+
+                    <Field.Error match="valueMissing">핸드폰 번호를 입력해주세요.</Field.Error>
+                    <Field.Error match="patternMismatch">
+                        올바른 핸드폰 번호를 입력해주세요.
+                    </Field.Error>
+                </Field.Root>
+
+                <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Label className="input-label">인증번호</Field.Label>
+                    <TextInput id="auth-verification-code" size="lg" required />
+                    <Field.Error match="valueMissing">인증번호를 입력해주세요.</Field.Error>
+                </Field.Root>
             </VStack>
 
             <Button size="lg">인증 완료</Button>
