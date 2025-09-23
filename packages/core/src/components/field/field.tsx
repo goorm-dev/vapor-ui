@@ -71,9 +71,9 @@ const Error = forwardRef<HTMLDivElement, FieldErrorProps>(({ match, className, .
     return (
         <BaseField.Error
             ref={ref}
-            match={match}
             className={clsx(styles.error, className)}
             {...props}
+            match={match}
         />
     );
 });
@@ -91,9 +91,9 @@ const Success = forwardRef<HTMLDivElement, FieldSuccessProps>(({ className, ...p
     return (
         <BaseField.Error
             ref={ref}
-            match="valid"
             className={clsx(styles.success, className)}
             {...props}
+            match="valid"
         />
     );
 });
