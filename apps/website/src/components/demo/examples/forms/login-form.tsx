@@ -1,6 +1,6 @@
 import './login-form.css';
 
-import { Button, Checkbox, HStack, TextInput, VStack } from '@vapor-ui/core';
+import { Button, Checkbox, Field, Form, HStack, TextInput, VStack } from '@vapor-ui/core';
 
 export default function LoginForm() {
     return (
@@ -9,37 +9,42 @@ export default function LoginForm() {
             width="400px"
             padding="$300"
             borderRadius="$300"
-            border="1px solid #eee"
+            border="1px solid var(--vapor-color-border-normal)"
             className="login"
+            render={<Form onSubmit={(event) => event.preventDefault()} />}
         >
             <VStack gap="$200">
-                <VStack gap="$100">
-                    <label htmlFor="login-email" className="input-label">
-                        이메일
-                    </label>
-                    <TextInput id="login-email" size="lg" />
-                </VStack>
-                <VStack gap="$100">
-                    <label htmlFor="login-password" className="input-label">
-                        비밀번호
-                    </label>
-                    <VStack gap="$050">
-                        <TextInput id="login-password" size="lg" type="password" />
-                        <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
-                    </VStack>
-                </VStack>
-            </VStack>
+                <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Label className="input-label">이메일</Field.Label>
+                    <TextInput id="login-email" size="lg" required type="email" />
+                    <Field.Error match="valueMissing">이메일을 입력해주세요.</Field.Error>
+                    <Field.Error match="typeMismatch">유효한 이메일 형식이 아닙니다.</Field.Error>
+                </Field.Root>
 
+                <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Label className="input-label">비밀번호</Field.Label>
+                    <TextInput
+                        id="login-password"
+                        size="lg"
+                        type="password"
+                        required
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}"
+                    />
+                    <Field.Description>8~16자, 대소문자 영문, 특수문자 포함</Field.Description>
+                    <Field.Error match="valueMissing">비밀번호를 입력해주세요.</Field.Error>
+                    <Field.Error match="patternMismatch">
+                        유효한 비밀번호 형식이 아닙니다.
+                    </Field.Error>
+                </Field.Root>
+            </VStack>
             <VStack gap="$100">
                 <HStack justifyContent="space-between">
-                    <HStack alignItems="center" gap="$100">
+                    <Field.Root render={<HStack alignItems="center" gap="$100" />}>
                         <Checkbox.Root id="login-auto-login" />
-                        <label htmlFor="login-auto-login" className="checkbox-label">
-                            자동 로그인
-                        </label>
-                    </HStack>
+                        <Field.Label className="checkbox-label">자동 로그인</Field.Label>
+                    </Field.Root>
 
-                    <Button variant="ghost" color="secondary">
+                    <Button type="button" variant="ghost" color="secondary">
                         ID/비밀번호 찾기
                     </Button>
                 </HStack>

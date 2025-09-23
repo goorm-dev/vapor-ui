@@ -1,9 +1,12 @@
 import './signup-form.css';
 
+import { useRef } from 'react';
+
 import {
-    Box,
     Button,
     Checkbox,
+    Field,
+    Form,
     HStack,
     IconButton,
     Select,
@@ -21,52 +24,74 @@ const jobs = [
 ];
 
 export default function SignupForm() {
+    const passwordCheck = useRef<string>('');
+
     return (
         <VStack
             gap="$250"
             width="400px"
             padding="$300"
             borderRadius="$300"
-            border="1px solid #eee"
+            border="1px solid var(--vapor-color-border-normal)"
             className="login"
+            render={<Form onSubmit={(event) => event.preventDefault()} />}
         >
             <VStack gap="$400">
                 <VStack gap="$200">
-                    <VStack gap="$100">
-                        <label htmlFor="signup-email" className="input-label">
-                            이메일
-                        </label>
-                        <TextInput id="signup-email" size="lg" />
-                    </VStack>
-                    <VStack gap="$100">
-                        <label htmlFor="signup-password" className="input-label">
-                            비밀번호
-                        </label>
-                        <VStack gap="$050">
-                            <TextInput id="signup-password" size="lg" type="password" />
-                            <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
-                        </VStack>
-                    </VStack>
-                    <VStack gap="$100">
-                        <label htmlFor="signup-password-check" className="input-label">
-                            비밀번호 확인
-                        </label>
-                        <VStack gap="$050">
-                            <TextInput id="signup-password-check" size="lg" type="password" />
-                            <span className="helper-text">8~16자, 영문, 특수문자 포함</span>
-                        </VStack>
-                    </VStack>
+                    <Field.Root render={<VStack gap="$100" />}>
+                        <Field.Label className="input-label">이메일</Field.Label>
+                        <TextInput id="signup-email" size="lg" required type="email" />
+                        <Field.Error match="valueMissing">이메일을 입력해주세요.</Field.Error>
+                        <Field.Error match="typeMismatch">
+                            유효한 이메일 형식이 아닙니다.
+                        </Field.Error>
+                    </Field.Root>
 
-                    <VStack gap="$100">
-                        <label htmlFor="signup-name" className="input-label">
-                            이름
-                        </label>
-                        <TextInput id="signup-name" size="lg" />
-                    </VStack>
-                    <VStack gap="$100">
-                        <label htmlFor="signup-jobs" className="input-label">
-                            직업
-                        </label>
+                    <Field.Root render={<VStack gap="$100" />}>
+                        <Field.Label className="input-label">비밀번호</Field.Label>
+                        <TextInput
+                            id="signup-password"
+                            size="lg"
+                            type="password"
+                            onValueChange={(value) => {
+                                passwordCheck.current = value;
+                            }}
+                            required
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}"
+                        />
+                        <Field.Description>
+                            8~16자, 대소문자 영문, 숫자, 특수문자 포함
+                        </Field.Description>
+                        <Field.Error match="valueMissing">비밀번호를 입력해주세요.</Field.Error>
+                        <Field.Error match="patternMismatch">
+                            유효한 비밀번호 형식이 아닙니다.
+                        </Field.Error>
+                    </Field.Root>
+
+                    <Field.Root render={<VStack gap="$100" />}>
+                        <Field.Label className="input-label">비밀번호 확인</Field.Label>
+                        <TextInput
+                            id="signup-password-check"
+                            size="lg"
+                            type="password"
+                            required
+                            pattern={passwordCheck.current}
+                        />
+                        <Field.Description>8~16자, 대소문자 영문, 특수문자 포함</Field.Description>
+                        <Field.Error match="valueMissing">비밀번호를 입력해주세요.</Field.Error>
+                        <Field.Error match="patternMismatch">
+                            비밀번호를 다시 확인해주세요.
+                        </Field.Error>
+                    </Field.Root>
+
+                    <Field.Root render={<VStack gap="$100" />}>
+                        <Field.Label className="input-label">이름</Field.Label>
+                        <TextInput id="signup-name" size="lg" required />
+                        <Field.Error match="valueMissing">이름을 입력해주세요.</Field.Error>
+                    </Field.Root>
+
+                    <Field.Root render={<VStack gap="$100" />}>
+                        <Field.Label className="input-label">직업</Field.Label>
                         <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
                             <Select.Trigger id="signup-jobs">
                                 <Select.Value />
@@ -81,35 +106,23 @@ export default function SignupForm() {
                                 ))}
                             </Select.Content>
                         </Select.Root>
-                    </VStack>
+                    </Field.Root>
                 </VStack>
 
                 <VStack gap="$300">
                     <VStack justifyContent="space-between" gap="$050">
-                        <HStack alignItems="center" gap="$100">
+                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
                             <Checkbox.Root id="signup-agree-all" />
-                            <HStack
-                                render={
-                                    <label htmlFor="signup-agree-all" className="checkbox-label" />
-                                }
-                                justifyContent="space-between"
-                            >
+                            <Field.Label className="checkbox-label">
                                 필수 약관에 모두 동의
-                            </HStack>
-                        </HStack>
-                        <HStack alignItems="center" gap="$100">
+                            </Field.Label>
+                        </Field.Root>
+                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
                             <Checkbox.Root id="signup-terms-of-service" />
                             <HStack width="100%" justifyContent="space-between" alignItems="center">
-                                <HStack
-                                    render={
-                                        <label
-                                            htmlFor="signup-terms-of-service"
-                                            className="checkbox-label"
-                                        />
-                                    }
-                                >
-                                    이용 약관 동의
-                                </HStack>
+                                <Field.Label className="checkbox-label">
+                                    필수 약관에 모두 동의
+                                </Field.Label>
                                 <IconButton
                                     size="sm"
                                     color="secondary"
@@ -119,20 +132,13 @@ export default function SignupForm() {
                                     <ChevronRightOutlineIcon />
                                 </IconButton>
                             </HStack>
-                        </HStack>
-                        <HStack alignItems="center" gap="$100">
+                        </Field.Root>
+                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
                             <Checkbox.Root id="signup-personal-info-collection" />
                             <HStack width="100%" justifyContent="space-between" alignItems="center">
-                                <HStack
-                                    render={
-                                        <label
-                                            htmlFor="signup-personal-info-collection"
-                                            className="checkbox-label"
-                                        />
-                                    }
-                                >
+                                <Field.Label className="checkbox-label">
                                     개인 정보 수집 이용 동의
-                                </HStack>
+                                </Field.Label>
                                 <IconButton
                                     size="sm"
                                     color="secondary"
@@ -142,18 +148,16 @@ export default function SignupForm() {
                                     <ChevronRightOutlineIcon />
                                 </IconButton>
                             </HStack>
-                        </HStack>
-
-                        <Box marginTop="$300" render={<Button size="lg" />}>
-                            회원가입
-                        </Box>
+                        </Field.Root>
                     </VStack>
+
+                    <Button size="lg">회원가입</Button>
                 </VStack>
             </VStack>
 
             <HStack justifyContent={'center'}>
                 <Text typography="body2">이미 계정이 있으세요?</Text>
-                <Button size="sm" variant="ghost">
+                <Button type="button" size="sm" variant="ghost">
                     로그인
                 </Button>
             </HStack>
