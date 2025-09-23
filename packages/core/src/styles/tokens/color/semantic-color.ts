@@ -3,31 +3,31 @@ import { BASE_BASIC_COLORS, DARK_BASIC_COLORS, LIGHT_BASIC_COLORS } from './basi
 export const LIGHT_SEMANTIC_COLORS = {
     background: {
         primary: {
-            '100': LIGHT_BASIC_COLORS.blue['050'],
+            '100': LIGHT_BASIC_COLORS.blue['100'],
             '200': LIGHT_BASIC_COLORS.blue['500'],
         },
         secondary: {
             '100': LIGHT_BASIC_COLORS.gray['050'],
-            '200': LIGHT_BASIC_COLORS.gray['200'],
+            '200': LIGHT_BASIC_COLORS.gray['100'],
         },
         success: {
-            '100': LIGHT_BASIC_COLORS.green['050'],
+            '100': LIGHT_BASIC_COLORS.green['100'],
             '200': LIGHT_BASIC_COLORS.green['500'],
         },
         warning: {
-            '100': LIGHT_BASIC_COLORS.orange['050'],
+            '100': LIGHT_BASIC_COLORS.orange['100'],
             '200': LIGHT_BASIC_COLORS.orange['500'],
         },
         danger: {
-            '100': LIGHT_BASIC_COLORS.red['050'],
+            '100': LIGHT_BASIC_COLORS.red['100'],
             '200': LIGHT_BASIC_COLORS.red['500'],
         },
         hint: {
-            '100': LIGHT_BASIC_COLORS.gray['050'],
+            '100': LIGHT_BASIC_COLORS.gray['100'],
             '200': LIGHT_BASIC_COLORS.gray['600'],
         },
         contrast: {
-            '100': LIGHT_BASIC_COLORS.gray['300'],
+            '100': LIGHT_BASIC_COLORS.gray['200'],
             '200': LIGHT_BASIC_COLORS.gray['800'],
         },
         surface: {
@@ -65,13 +65,13 @@ export const LIGHT_SEMANTIC_COLORS = {
             '200': LIGHT_BASIC_COLORS.gray['900'],
         },
         normal: {
-            '100': LIGHT_BASIC_COLORS.gray['900'],
-            '200': LIGHT_BASIC_COLORS.gray['700'],
+            '100': LIGHT_BASIC_COLORS.gray['700'],
+            '200': LIGHT_BASIC_COLORS.gray['900'],
         },
         accent: BASE_BASIC_COLORS.white,
     },
     border: {
-        normal: LIGHT_BASIC_COLORS.gray['300'],
+        normal: LIGHT_BASIC_COLORS.gray['100'],
         primary: LIGHT_BASIC_COLORS.blue['500'],
         secondary: LIGHT_BASIC_COLORS.gray['200'],
         success: LIGHT_BASIC_COLORS.green['500'],
@@ -97,23 +97,23 @@ export const DARK_SEMANTIC_COLORS = {
             '200': DARK_BASIC_COLORS.blue['500'],
         },
         secondary: {
-            '100': DARK_BASIC_COLORS.gray['950'],
+            '100': DARK_BASIC_COLORS.gray['800'],
             '200': DARK_BASIC_COLORS.gray['200'],
         },
         success: {
-            '100': DARK_BASIC_COLORS.green['900'],
+            '100': DARK_BASIC_COLORS.green['800'],
             '200': DARK_BASIC_COLORS.green['500'],
         },
         warning: {
-            '100': DARK_BASIC_COLORS.orange['900'],
+            '100': DARK_BASIC_COLORS.orange['800'],
             '200': DARK_BASIC_COLORS.orange['500'],
         },
         danger: {
-            '100': DARK_BASIC_COLORS.red['900'],
+            '100': DARK_BASIC_COLORS.red['800'],
             '200': DARK_BASIC_COLORS.red['500'],
         },
         hint: {
-            '100': DARK_BASIC_COLORS.gray['900'],
+            '100': DARK_BASIC_COLORS.gray['800'],
             '200': DARK_BASIC_COLORS.gray['600'],
         },
         contrast: {
@@ -122,7 +122,7 @@ export const DARK_SEMANTIC_COLORS = {
         },
         surface: {
             '100': DARK_BASIC_COLORS.gray['100'],
-            '200': DARK_BASIC_COLORS.gray['050'],
+            '200': DARK_BASIC_COLORS.gray['100'],
         },
     },
     foreground: {
