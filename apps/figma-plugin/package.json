@@ -1,7 +1,7 @@
 {
     "name": "figma-plugin",
     "private": true,
-    "version": "0.0.1-field-export.2",
+    "version": "0.0.0",
     "type": "module",
     "scripts": {
         "dev": "vite --config vite.config.ui.ts",

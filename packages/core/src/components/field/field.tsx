@@ -109,10 +109,10 @@ Success.displayName = 'Field.Success';
 /* -----------------------------------------------------------------------------------------------*/
 
 export {
-    Root as FieldRoot,
-    Label as FieldLabel,
     Description as FieldDescription,
     Error as FieldError,
+    Label as FieldLabel,
+    Root as FieldRoot,
     Success as FieldSuccess,
 };
 export type {
