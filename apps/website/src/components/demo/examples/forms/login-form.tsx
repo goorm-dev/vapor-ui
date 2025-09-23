@@ -28,7 +28,7 @@ export default function LoginForm() {
                         size="lg"
                         type="password"
                         required
-                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,16}"
                     />
                     <Field.Description>8~16자, 대소문자 영문, 특수문자 포함</Field.Description>
                     <Field.Error match="valueMissing">비밀번호를 입력해주세요.</Field.Error>
