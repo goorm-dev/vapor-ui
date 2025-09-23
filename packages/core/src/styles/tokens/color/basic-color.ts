@@ -18,6 +18,7 @@ export const LIGHT_BASIC_COLORS = {
         '800': '#3e404c',
         '900': '#2b2d36',
         '950': '#252730',
+        'rgb-950': '37, 39, 48',
     },
     red: {
         '050': '#fcebeb',
@@ -156,6 +157,7 @@ export const DARK_BASIC_COLORS = {
         '800': '#c3c4cf',
         '900': '#dddde4',
         '950': '#f7f7fa',
+        'rgb-950': '247, 247, 250',
     },
     red: {
         '050': '#82151c',
