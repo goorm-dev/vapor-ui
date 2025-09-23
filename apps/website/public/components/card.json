@@ -1,57 +1,81 @@
 {
     "props": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "div",
+            "description": "카드를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "className",
-            "type": ["string", "undefined"],
-            "default": null,
+            "type": ["string"],
+            "default": "undefined",
             "description": "카드 루트 요소에 적용할 추가 CSS 클래스를 지정합니다."
         },
         {
             "prop": "children",
-            "type": ["React.ReactNode"],
-            "default": null,
+            "type": ["ReactNode"],
+            "default": "undefined",
             "description": "카드에 표시할 콘텐츠입니다."
         }
     ],
     "headerProps": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "div",
+            "description": "헤더를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "className",
-            "type": ["string", "undefined"],
-            "default": null,
+            "type": ["string"],
+            "default": "undefined",
             "description": "헤더 요소에 적용할 추가 CSS 클래스를 지정합니다."
         },
         {
             "prop": "children",
-            "type": ["React.ReactNode"],
-            "default": null,
+            "type": ["ReactNode"],
+            "default": "undefined",
             "description": "헤더에 표시할 콘텐츠입니다."
         }
     ],
     "bodyProps": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "div",
+            "description": "바디를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "className",
-            "type": ["string", "undefined"],
-            "default": null,
+            "type": ["string"],
+            "default": "undefined",
             "description": "바디 요소에 적용할 추가 CSS 클래스를 지정합니다."
         },
         {
             "prop": "children",
-            "type": ["React.ReactNode"],
-            "default": null,
+            "type": ["ReactNode"],
+            "default": "undefined",
             "description": "바디에 표시할 콘텐츠입니다."
         }
     ],
     "footerProps": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "div",
+            "description": "푸터를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "className",
-            "type": ["string", "undefined"],
-            "default": null,
+            "type": ["string"],
+            "default": "undefined",
             "description": "푸터 요소에 적용할 추가 CSS 클래스를 지정합니다."
         },
         {
             "prop": "children",
-            "type": ["React.ReactNode"],
-            "default": null,
+            "type": ["ReactNode"],
+            "default": "undefined",
             "description": "푸터에 표시할 콘텐츠입니다."
         }
     ]
