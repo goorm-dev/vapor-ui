@@ -187,18 +187,24 @@ Popup.displayName = 'Sheet.Popup';
  * Sheet.Content
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetContentProps extends VComponentProps<typeof BaseDialog.Popup> {}
+interface SheetContentProps extends VComponentProps<typeof BaseDialog.Popup> {
+    portalProps?: SheetPortalProps;
+    overlayProps?: SheetOverlayProps;
+    positionerProps?: SheetPositionerProps;
+}
 
-const Content = forwardRef<HTMLDivElement, SheetContentProps>(({ className, ...props }, ref) => {
-    return (
-        <Portal>
-            <Overlay />
-            <Positioner side="right">
-                <Popup ref={ref} {...props} />
-            </Positioner>
-        </Portal>
-    );
-});
+const Content = forwardRef<HTMLDivElement, SheetContentProps>(
+    ({ portalProps, overlayProps, positionerProps, className, ...props }, ref) => {
+        return (
+            <Portal {...portalProps}>
+                <Overlay {...overlayProps} />
+                <Positioner {...positionerProps}>
+                    <Popup ref={ref} {...props} />
+                </Positioner>
+            </Portal>
+        );
+    },
+);
 Content.displayName = 'Sheet.Content';
 
 /* -------------------------------------------------------------------------------------------------

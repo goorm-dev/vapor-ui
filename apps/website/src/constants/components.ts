@@ -11,12 +11,14 @@ import flexData from '../../public/components/flex.json';
 import gridData from '../../public/components/grid.json';
 import hStackData from '../../public/components/h-stack.json';
 import iconButtonData from '../../public/components/icon-button.json';
+import inputGroupData from '../../public/components/input-group.json';
 import menuData from '../../public/components/menu.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
 import radioGroupData from '../../public/components/radio-group.json';
 import switchData from '../../public/components/switch.json';
 import textInputData from '../../public/components/text-input.json';
 import textData from '../../public/components/text.json';
+import textareaData from '../../public/components/textarea.json';
 import tooltipData from '../../public/components/tooltip.json';
 import vStackData from '../../public/components/v-stack.json';
 
@@ -44,4 +46,6 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     switch: switchData,
     'radio-group': radioGroupData,
     tooltip: tooltipData,
+    'input-group': inputGroupData,
+    textarea: textareaData,
 };

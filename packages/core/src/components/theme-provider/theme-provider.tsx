@@ -1,413 +1,284 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import { createContext, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { RADIUS_FACTOR_VAR_NAME, SCALE_FACTOR_VAR_NAME } from '~/styles/global-var.css';
+const DARK_CLASS_NAME = 'vapor-dark-theme';
 
-import { createThemeConfig } from '../create-theme-config';
-import { THEME_CONFIG, themeInjectScript } from '../theme-inject/theme-injector';
+/* -------------------------------------------------------------------------------------------------
+ * NOTE: Theme Priority Order (highest to lowest):
+ *
+ * 1. forcedTheme - Force a specific theme (when developer wants to override all settings)
+ * 2. localStorage - User's saved theme via setTheme() (respects user choice)
+ * 3. defaultTheme - Initial theme for first load
+ * 4. system theme - Only referenced when defaultTheme is 'system'
+ * -----------------------------------------------------------------------------------------------*/
 
-const COLOR_BACKGROUND_PRIMARY_VAR_NAME = 'vapor-color-background-primary';
-const COLOR_BORDER_PRIMARY_VAR_NAME = 'vapor-color-border-primary';
-const COLOR_FOREGROUND_PRIMARY_VAR_NAME = 'vapor-color-foreground-primary';
-const COLOR_FOREGROUND_PRIMARY_DARKER_VAR_NAME = 'vapor-color-foreground-primary-darker';
-const COLOR_FOREGROUND_ACCENT_VAR_NAME = 'vapor-color-foreground-accent';
-const COLOR_BACKGROUND_RGB_PRIMARY_VAR_NAME = 'vapor-color-background-rgb-primary';
+/* -------------------------------------------------------------------------------------------------
+ * Types
+ * -----------------------------------------------------------------------------------------------*/
+interface ThemeConfig {
+    /**
+     * Theme to display on initial load (Priority: 3rd)
+     * Only used when no theme is saved in localStorage
+     * @default 'system'
+     */
+    defaultTheme?: 'light' | 'dark' | 'system';
 
-interface PrimaryColorSet {
-    'vapor-color-background-primary': string;
-    'vapor-color-border-primary': string;
-    'vapor-color-foreground-primary': string;
-    'vapor-color-foreground-primary-darker': string;
-    'vapor-color-foreground-accent': string;
-    'vapor-color-background-rgb-primary': string;
+    /**
+     * Key used to store theme in localStorage
+     * Theme is saved to localStorage only when setTheme() is called (Priority: 2nd)
+     * @default 'vapor-ui-theme'
+     */
+    storageKey?: string;
+
+    /**
+     * Whether to automatically sync with user's system theme changes
+     * When false, system theme is only referenced on initial load, then operates independently
+     * @default true
+     */
+    enableSystem?: boolean;
+
+    /**
+     * Force a specific theme (Priority: 1st - highest)
+     * When set, ignores all other theme settings and always applies this value
+     */
+    forcedTheme?: string;
+
+    /**
+     * Whether to disable CSS transitions during theme changes
+     * @default false
+     */
+    disableTransitionOnChange?: boolean;
+
+    /**
+     * Whether to automatically set CSS color-scheme property
+     * @default true
+     */
+    enableColorScheme?: boolean;
+
+    /**
+     * CSP nonce value (Content Security Policy)
+     */
+    nonce?: string;
 }
 
-interface HSL {
-    h: number; // 0-360
-    s: number; // 0-1
-    l: number; // 0-1
+interface UseThemeProps {
+    /** Current active theme ('light' | 'dark' | 'system') */
+    theme?: string;
+
+    /** Function to change theme (automatically saves to localStorage) */
+    setTheme: (theme: string | ((prev: string) => string)) => void;
+
+    /** Resets theme to default and clears localStorage */
+    resetTheme: () => void;
+
+    /** Forced theme if set (highest priority) */
+    forcedTheme?: string;
+
+    /** Actually applied theme ('light' | 'dark') */
+    resolvedTheme?: string;
+
+    /** List of available themes */
+    themes: string[];
+
+    /** Current system theme (only provided when enableSystem=true) */
+    systemTheme?: 'light' | 'dark';
 }
 
-type Appearance = 'light' | 'dark';
-type Radius = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
-type Scaling = number;
+interface ThemeProviderProps extends ThemeConfig {
+    children: React.ReactNode;
+}
 
-/**
- * Calculates a set of primary color tokens based on a single hex color and a mode.
- * @param baseColorHex The base color in hex format (e.g., '#2A6FF3').
- * @param mode The color mode, either 'light' or 'dark'.
- * @returns A `PrimaryColorSet` object with calculated color values.
- */
-const calculatePrimaryColorSet = (
-    baseColorHex: string,
-    mode: 'light' | 'dark',
-): PrimaryColorSet => {
-    const hexToHsl = (hex: string): HSL => {
-        let r = 0,
-            g = 0,
-            b = 0;
-        if (hex.length === 4) {
-            r = parseInt(hex[1] + hex[1], 16);
-            g = parseInt(hex[2] + hex[2], 16);
-            b = parseInt(hex[3] + hex[3], 16);
-        } else if (hex.length === 7) {
-            r = parseInt(hex.substring(1, 3), 16);
-            g = parseInt(hex.substring(3, 5), 16);
-            b = parseInt(hex.substring(5, 7), 16);
-        }
+/* -------------------------------------------------------------------------------------------------
+ * Constants
+ * -----------------------------------------------------------------------------------------------*/
+const MEDIA_QUERY = '(prefers-color-scheme: dark)';
+const COLOR_SCHEMES = ['light', 'dark'];
+const THEME_LIST = ['light', 'dark'];
 
-        r /= 255;
-        g /= 255;
-        b /= 255;
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
-        const l = (max + min) / 2;
-        let h = 0;
-        let s = 0;
-
-        if (max !== min) {
-            const d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-            h /= 6;
-        }
-        return { h: h * 360, s, l };
-    };
-
-    const hslToHex = (hsl: HSL): string => {
-        const { h, s, l } = hsl;
-        let r, g, b;
-
-        if (s === 0) {
-            r = g = b = l; // achromatic
-        } else {
-            const hue2rgb = (p: number, q: number, t: number) => {
-                if (t < 0) t += 1;
-                if (t > 1) t -= 1;
-                if (t < 1 / 6) return p + (q - p) * 6 * t;
-                if (t < 1 / 2) return q;
-                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                return p;
-            };
-            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            const p = 2 * l - q;
-            r = hue2rgb(p, q, h / 360 + 1 / 3);
-            g = hue2rgb(p, q, h / 360);
-            b = hue2rgb(p, q, h / 360 - 1 / 3);
-        }
-        const toHex = (x: number) => {
-            const hex = Math.round(x * 255).toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-        };
-        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-    };
-
-    const hexToRgbString = (hex: string): string => {
-        let r = 0,
-            g = 0,
-            b = 0;
-        if (hex.length === 4) {
-            r = parseInt(hex[1] + hex[1], 16);
-            g = parseInt(hex[2] + hex[2], 16);
-            b = parseInt(hex[3] + hex[3], 16);
-        } else if (hex.length === 7) {
-            r = parseInt(hex.substring(1, 3), 16);
-            g = parseInt(hex.substring(3, 5), 16);
-            b = parseInt(hex.substring(5, 7), 16);
-        }
-        return `${r}, ${g}, ${b}`;
-    };
-
-    const baseHsl = hexToHsl(baseColorHex);
-
-    // Set accent color: dark for light mode, light for dark mode.
-    const accentColor = baseHsl.l > 0.5 ? 'var(--vapor-color-black)' : 'var(--vapor-color-white)';
-    const backgroundRgb = hexToRgbString(baseColorHex);
-
-    const commonColors = {
-        'vapor-color-foreground-accent': accentColor,
-        'vapor-color-background-rgb-primary': backgroundRgb,
-    };
-
-    if (mode === 'light') {
-        const foregroundHsl: HSL = { ...baseHsl, l: Math.max(0, baseHsl.l - 0.08) };
-        const foregroundDarkerHsl: HSL = {
-            ...foregroundHsl,
-            l: Math.max(0, foregroundHsl.l - 0.08),
-        };
-
-        return {
-            'vapor-color-background-primary': baseColorHex,
-            'vapor-color-border-primary': baseColorHex,
-            'vapor-color-foreground-primary': hslToHex(foregroundHsl),
-            'vapor-color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
-            ...commonColors,
-        };
-    } else {
-        const foregroundDarkerHsl: HSL = { ...baseHsl, l: Math.min(1, baseHsl.l + 0.08) };
-
-        return {
-            'vapor-color-background-primary': baseColorHex,
-            'vapor-color-border-primary': baseColorHex,
-            'vapor-color-foreground-primary': baseColorHex,
-            'vapor-color-foreground-primary-darker': hslToHex(foregroundDarkerHsl),
-            ...commonColors,
-        };
+/* -------------------------------------------------------------------------------------------------
+ * Utilities
+ * -----------------------------------------------------------------------------------------------*/
+const getTheme = (storageKey: string, defaultTheme?: string): string | undefined => {
+    try {
+        return localStorage.getItem(storageKey) || defaultTheme;
+    } catch {
+        return defaultTheme;
     }
 };
 
-interface ThemeState {
-    appearance: Appearance;
-    radius: Radius;
-    scaling: Scaling;
-    primaryColor?: string; // Hex code
-}
-interface VaporThemeConfig extends Partial<ThemeState> {
-    /** localStorage key for persistence. */
-    storageKey?: string;
-    /** CSP nonce value. */
-    nonce?: string;
-    /** Enable system theme detection (for future extension). */
-    enableSystemTheme?: boolean;
-}
-interface ResolvedThemeConfig extends ThemeState {
-    storageKey: string;
-    nonce?: string;
-    enableSystemTheme: boolean;
-}
-
-function validateThemeConfig(config: unknown): config is VaporThemeConfig {
-    if (!config || typeof config !== 'object') return true;
-
-    const c = config as Partial<VaporThemeConfig>;
-
-    if (c.appearance !== undefined && !['light', 'dark'].includes(c.appearance as Appearance)) {
-        console.warn('[@vapor-ui/core] Invalid appearance type. Expected "light" or "dark".');
-        return false;
+const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent): 'light' | 'dark' => {
+    if (!e) {
+        if (typeof window === 'undefined') return 'light';
+        e = window.matchMedia(MEDIA_QUERY);
     }
-    if (
-        c.radius !== undefined &&
-        !Object.keys(THEME_CONFIG.RADIUS_FACTOR_MAP).includes(c.radius as Radius)
-    ) {
-        console.warn('[@vapor-ui/core] Invalid radius type. Expected a valid radius key.');
-        return false;
+    return e.matches ? 'dark' : 'light';
+};
+
+const saveToStorage = (storageKey: string, value: string): void => {
+    try {
+        localStorage.setItem(storageKey, value);
+    } catch {
+        // Storage not available
     }
-    if (c.scaling !== undefined && typeof c.scaling !== 'number') {
-        console.warn('[@vapor-ui/core] Invalid scaling type. Expected a number.');
-        return false;
-    }
-    if (c.storageKey !== undefined && typeof c.storageKey !== 'string') {
-        console.warn('[@vapor-ui/core] Invalid storageKey type. Expected string.');
-        return false;
-    }
-    if (
-        c.primaryColor !== undefined &&
-        !/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(c.primaryColor)
-    ) {
-        console.warn(
-            '[@vapor-ui/core] Invalid primaryColor. Expected a valid hex code (e.g., "#RRGGBB").',
-        );
-        return false;
-    }
-    return true;
-}
+};
 
-// --- ThemeProvider -----------------------------------------------------------------
+const disableAnimation = (nonce?: string) => {
+    const css = document.createElement('style');
+    if (nonce) css.setAttribute('nonce', nonce);
+    css.appendChild(
+        document.createTextNode(
+            '*,*::before,*::after{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}',
+        ),
+    );
+    document.head.appendChild(css);
 
-interface ThemeContextValue extends ThemeState {
-    setTheme: (newTheme: Partial<ThemeState>) => void;
-}
+    return () => {
+        (() => window.getComputedStyle(document.body))();
+        setTimeout(() => {
+            document.head.removeChild(css);
+        }, 1);
+    };
+};
 
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+/* -------------------------------------------------------------------------------------------------
+ * Components
+ * -----------------------------------------------------------------------------------------------*/
+const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
 
-interface ThemeProviderProps {
-    children: ReactNode;
-    config?: VaporThemeConfig;
-}
+const ThemeProvider = (props: ThemeProviderProps) => {
+    const context = useContext(ThemeContext);
+    if (context) return <>{props.children}</>;
+    return <Theme {...props} />;
+};
 
-const ThemeProvider = ({ children, config }: ThemeProviderProps) => {
-    const resolvedConfig = useMemo<ResolvedThemeConfig>(() => {
-        if (config) {
-            validateThemeConfig(config);
-        }
-        return createThemeConfig(config);
-    }, [config]);
-
-    const [themeState, internalSetThemeState] = useState<ThemeState>(() => {
-        const { storageKey, nonce, enableSystemTheme, ...defaultTheme } = resolvedConfig;
-        if (typeof window === 'undefined') {
-            return defaultTheme;
-        }
-        try {
-            const storedItem = localStorage.getItem(resolvedConfig.storageKey);
-            const storedSettings = storedItem ? JSON.parse(storedItem) : {};
-            return { ...defaultTheme, ...storedSettings };
-        } catch (e) {
-            console.error('[@vapor-ui/core] Failed to read theme from localStorage.', e);
-            return defaultTheme;
-        }
+const Theme = ({
+    children,
+    defaultTheme = 'system',
+    storageKey = 'vapor-ui-theme',
+    enableSystem = true,
+    forcedTheme,
+    disableTransitionOnChange = false,
+    enableColorScheme = true,
+    nonce,
+}: ThemeProviderProps) => {
+    const [theme, setThemeState] = useState(
+        () => getTheme(storageKey, defaultTheme) || defaultTheme,
+    );
+    const [resolvedTheme, setResolvedTheme] = useState(() => {
+        const initialTheme = getTheme(storageKey, defaultTheme) || defaultTheme;
+        return initialTheme === 'system' ? getSystemTheme() : initialTheme;
     });
 
-    const setTheme = useCallback(
-        (newThemePartial: Partial<ThemeState>) => {
-            internalSetThemeState((prevState) => {
-                const updatedState = { ...prevState, ...newThemePartial };
+    const applyTheme = useCallback(
+        (newTheme: string) => {
+            let resolved = newTheme;
+            if (newTheme === 'system' && enableSystem) {
+                resolved = getSystemTheme();
+            }
 
-                try {
-                    localStorage.setItem(resolvedConfig.storageKey, JSON.stringify(updatedState));
-                } catch (e) {
-                    console.error(
-                        '[@vapor-ui/core] Could not save theme state to localStorage.',
-                        e,
-                    );
-                }
-                return updatedState;
-            });
+            const enableTransition = disableTransitionOnChange ? disableAnimation(nonce) : null;
+            const d = document.documentElement;
+
+            d.classList.remove(DARK_CLASS_NAME);
+
+            if (resolved === 'dark') {
+                d.classList.add(DARK_CLASS_NAME);
+            }
+
+            if (enableColorScheme) {
+                const fallback = COLOR_SCHEMES.includes(defaultTheme) ? defaultTheme : null;
+                const colorScheme = COLOR_SCHEMES.includes(resolved) ? resolved : fallback;
+                d.style.colorScheme = colorScheme || '';
+            }
+
+            enableTransition?.();
         },
-        [resolvedConfig.storageKey],
+        [enableSystem, enableColorScheme, defaultTheme, disableTransitionOnChange, nonce],
     );
 
-    // Listen for theme changes in other tabs
+    const setTheme = useCallback(
+        (newTheme: string | ((prev: string) => string)) => {
+            const resolvedTheme = typeof newTheme === 'function' ? newTheme(theme) : newTheme;
+            setThemeState(resolvedTheme);
+            saveToStorage(storageKey, resolvedTheme);
+        },
+        [storageKey, theme],
+    );
+
+    const resetTheme = useCallback(() => {
+        try {
+            localStorage.removeItem(storageKey);
+        } catch {
+            // Storage not available
+        }
+        setThemeState(defaultTheme);
+    }, [storageKey, defaultTheme]);
+
+    const handleMediaQuery = useCallback(
+        (e: MediaQueryListEvent | MediaQueryList) => {
+            const systemTheme = getSystemTheme(e);
+            setResolvedTheme(systemTheme);
+
+            if (enableSystem && !forcedTheme) {
+                applyTheme(systemTheme);
+            }
+        },
+        [enableSystem, forcedTheme, applyTheme],
+    );
+
     useEffect(() => {
-        const handleStorageChange = (event: StorageEvent) => {
-            if (event.key === resolvedConfig.storageKey && event.newValue) {
-                try {
-                    internalSetThemeState(JSON.parse(event.newValue));
-                } catch (e) {
-                    console.error(
-                        '[@vapor-ui/core] Error parsing stored theme from storage event.',
-                        e,
-                    );
-                }
+        const media = window.matchMedia(MEDIA_QUERY);
+        media.addEventListener('change', handleMediaQuery);
+        handleMediaQuery(media);
+
+        return () => media.removeEventListener('change', handleMediaQuery);
+    }, [handleMediaQuery]);
+
+    useEffect(() => {
+        const handleStorage = (e: StorageEvent) => {
+            if (e.key === storageKey) {
+                const newTheme = e.newValue || defaultTheme;
+                setThemeState(newTheme);
             }
         };
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, [resolvedConfig.storageKey]);
 
-    // Apply theme changes to the DOM
+        window.addEventListener('storage', handleStorage);
+        return () => window.removeEventListener('storage', handleStorage);
+    }, [defaultTheme, storageKey]);
+
     useEffect(() => {
-        const root = document.documentElement;
-        const { appearance, radius, scaling, primaryColor } = themeState;
+        applyTheme(forcedTheme || theme);
+    }, [forcedTheme, theme, applyTheme]);
 
-        // 1. Apply color theme class
-        if (appearance === 'dark') {
-            root.classList.add(THEME_CONFIG.CLASS_NAMES.dark);
-            root.classList.remove(THEME_CONFIG.CLASS_NAMES.light);
-        } else {
-            root.classList.add(THEME_CONFIG.CLASS_NAMES.light);
-            root.classList.remove(THEME_CONFIG.CLASS_NAMES.dark);
-        }
-
-        // 2. Apply radius theme
-        const radiusFactor = THEME_CONFIG.RADIUS_FACTOR_MAP[radius] ?? 1;
-        root.style.setProperty(`--${RADIUS_FACTOR_VAR_NAME}`, radiusFactor.toString());
-
-        // 3. Apply scale theme
-        const currentScaleFactor = scaling ?? 1;
-        root.style.setProperty(`--${SCALE_FACTOR_VAR_NAME}`, currentScaleFactor.toString());
-
-        // 4. Apply primary color
-        if (primaryColor) {
-            const colorSet = calculatePrimaryColorSet(primaryColor, appearance);
-
-            root.style.setProperty(
-                `--${COLOR_BACKGROUND_PRIMARY_VAR_NAME}`,
-                colorSet['vapor-color-background-primary'],
-            );
-            root.style.setProperty(
-                `--${COLOR_BORDER_PRIMARY_VAR_NAME}`,
-                colorSet['vapor-color-border-primary'],
-            );
-            root.style.setProperty(
-                `--${COLOR_FOREGROUND_PRIMARY_VAR_NAME}`,
-                colorSet['vapor-color-foreground-primary'],
-            );
-            root.style.setProperty(
-                `--${COLOR_FOREGROUND_PRIMARY_DARKER_VAR_NAME}`,
-                colorSet['vapor-color-foreground-primary-darker'],
-            );
-            root.style.setProperty(
-                `--${COLOR_FOREGROUND_ACCENT_VAR_NAME}`,
-                colorSet['vapor-color-foreground-accent'],
-            );
-            root.style.setProperty(
-                `--${COLOR_BACKGROUND_RGB_PRIMARY_VAR_NAME}`,
-                colorSet['vapor-color-background-rgb-primary'],
-            );
-        }
-    }, [themeState]);
-
-    const contextValue = useMemo(() => ({ ...themeState, setTheme }), [themeState, setTheme]);
+    const contextValue = useMemo(
+        () => ({
+            theme,
+            setTheme,
+            resetTheme,
+            forcedTheme,
+            resolvedTheme: theme === 'system' ? resolvedTheme : theme,
+            themes: enableSystem ? [...THEME_LIST, 'system'] : THEME_LIST,
+            systemTheme: enableSystem ? (resolvedTheme as 'light' | 'dark') : undefined,
+        }),
+        [theme, setTheme, resetTheme, forcedTheme, resolvedTheme, enableSystem],
+    );
 
     return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };
 
-// --- ThemeScript -------------------------------------------------------------------
-
-interface ThemeScriptProps {
-    config?: VaporThemeConfig;
-}
-
-const ThemeScript = memo(({ config }: ThemeScriptProps) => {
-    const resolvedConfig = useMemo<ResolvedThemeConfig>(() => {
-        return createThemeConfig(config);
-    }, [config]);
-
-    const cssVarNames = {
-        radiusFactor: RADIUS_FACTOR_VAR_NAME,
-        scaleFactor: SCALE_FACTOR_VAR_NAME,
-        colorBackgroundPrimary: COLOR_BACKGROUND_PRIMARY_VAR_NAME,
-        colorBorderPrimary: COLOR_BORDER_PRIMARY_VAR_NAME,
-        colorForegroundPrimary: COLOR_FOREGROUND_PRIMARY_VAR_NAME,
-        colorForegroundPrimaryDarker: COLOR_FOREGROUND_PRIMARY_DARKER_VAR_NAME,
-        colorForegroundAccent: COLOR_FOREGROUND_ACCENT_VAR_NAME,
-        colorBackgroundRgbPrimary: COLOR_BACKGROUND_RGB_PRIMARY_VAR_NAME,
-    };
-
-    const { storageKey, nonce, enableSystemTheme, ...defaultTheme } = resolvedConfig;
-
-    const scriptContent = `(${themeInjectScript.toString()})(
-        ${JSON.stringify(defaultTheme)},
-        '${storageKey}',
-        ${JSON.stringify(THEME_CONFIG)},
-        ${JSON.stringify(cssVarNames)}
-    )`;
-
-    return (
-        <script
-            nonce={resolvedConfig.nonce}
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: scriptContent }}
-        />
-    );
-});
-
-ThemeScript.displayName = 'ThemeScript';
-
-// --- Hooks -------------------------------------------------------------------------
-
-const useTheme = (): ThemeContextValue => {
+/* -------------------------------------------------------------------------------------------------
+ * useTheme Hook
+ * -----------------------------------------------------------------------------------------------*/
+const useTheme = (): UseThemeProps => {
     const context = useContext(ThemeContext);
-    if (context === undefined) {
-        throw new Error('`useTheme` must be used within a `ThemeProvider`.');
+    if (!context) {
+        throw new Error('useTheme must be used within a ThemeProvider');
     }
     return context;
 };
 
-// --- Exports -----------------------------------------------------------------------
-
-export { ThemeProvider, ThemeScript, useTheme };
-export type { VaporThemeConfig, ThemeState, Appearance, Radius, Scaling };
+/* -----------------------------------------------------------------------------------------------*/
+export { ThemeProvider, useTheme };
+export type { ThemeConfig, UseThemeProps, ThemeProviderProps };
+export type UseThemeReturn = UseThemeProps;

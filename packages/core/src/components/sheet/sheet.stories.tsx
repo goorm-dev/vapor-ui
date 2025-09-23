@@ -26,31 +26,26 @@ export const Default: SheetStory = {
             <VStack height="1000vh">
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
-                    <Sheet.Portal keepMounted>
-                        <Sheet.Overlay />
-                        <Sheet.Positioner side={side}>
-                            <Sheet.Popup>
-                                <Box
-                                    aria-label="Close sheet"
-                                    position="absolute"
-                                    display="flex"
-                                    style={{ top: '1rem', right: '1rem' }}
-                                    render={<Sheet.Close />}
-                                >
-                                    <CloseOutlineIcon />
-                                </Box>
-                                <Sheet.Header>
-                                    <Sheet.Title>Sheet Title</Sheet.Title>
-                                </Sheet.Header>
-                                <Sheet.Body>
-                                    <Sheet.Description>Sheet content goes here.</Sheet.Description>
-                                </Sheet.Body>
-                                <Sheet.Footer>
-                                    <Sheet.Close>Close</Sheet.Close>
-                                </Sheet.Footer>
-                            </Sheet.Popup>
-                        </Sheet.Positioner>
-                    </Sheet.Portal>
+                    <Sheet.Content portalProps={{ keepMounted: true }} positionerProps={{ side }}>
+                        <Box
+                            aria-label="Close sheet"
+                            position="absolute"
+                            display="flex"
+                            style={{ top: '1rem', right: '1rem' }}
+                            render={<Sheet.Close />}
+                        >
+                            <CloseOutlineIcon />
+                        </Box>
+                        <Sheet.Header>
+                            <Sheet.Title>Sheet Title</Sheet.Title>
+                        </Sheet.Header>
+                        <Sheet.Body>
+                            <Sheet.Description>Sheet content goes here.</Sheet.Description>
+                        </Sheet.Body>
+                        <Sheet.Footer>
+                            <Sheet.Close>Close</Sheet.Close>
+                        </Sheet.Footer>
+                    </Sheet.Content>
                 </Sheet.Root>
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>

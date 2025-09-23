@@ -4,7 +4,7 @@ import { Badge, Text } from '@vapor-ui/core';
 
 import ComponentsCard from '~/components/component-card/component-card';
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
-import { NAVBAR_BLOCK_URL, SIDEBAR_BLOCK_URL } from '~/constants/image-urls';
+import { FORM_BLOCK_URL, NAVBAR_BLOCK_URL } from '~/constants/image-urls';
 
 const blocks = [
     {
@@ -15,11 +15,11 @@ const blocks = [
         imageUrl: NAVBAR_BLOCK_URL,
     },
     {
-        id: 'side-bar',
-        name: 'Sidebar',
-        description: '화면의 좌측 또는 우측에 위치하는 네비게이션 컴포넌트입니다.',
-        href: '/blocks/side-bar',
-        imageUrl: SIDEBAR_BLOCK_URL, // placeholder
+        id: 'form',
+        name: 'Form',
+        description: 'Form은 사용자가 데이터를 입력하고 제출할 수 있는 인터페이스를 제공합니다.',
+        href: '/blocks/form',
+        imageUrl: FORM_BLOCK_URL,
     },
 ];
 
@@ -47,7 +47,7 @@ export default function BlocksPage() {
                                             with ready-to-use UI blocks
                                         </h1>
                                     }
-                                    className="lg:block hidden"
+                                    className="hidden lg:block"
                                 />
 
                                 {/* Tablet (992px-1199px) */}
@@ -60,7 +60,7 @@ export default function BlocksPage() {
                                             with ready-to-use UI blocks
                                         </h1>
                                     }
-                                    className="md:max-lg:block hidden"
+                                    className="hidden md:max-lg:block"
                                 />
                                 {/* Mobile Large (768px-991px) */}
                                 <Text
@@ -72,7 +72,7 @@ export default function BlocksPage() {
                                             with ready-to-use UI blocks
                                         </h1>
                                     }
-                                    className="sm:max-md:block hidden"
+                                    className="hidden sm:max-md:block"
                                 />
                                 {/* Mobile Small (<768px) */}
                                 <Text
@@ -84,30 +84,7 @@ export default function BlocksPage() {
                                             with ready-to-use UI blocks
                                         </h1>
                                     }
-                                    className="max-sm:block sm:hidden"
-                                />
-                                {/* Mobile Small (<768px) */}
-                                <Text
-                                    typography="heading3"
-                                    render={
-                                        <h1>
-                                            Build pages faster
-                                            <br />
-                                            with ready-to-use UI blocks
-                                        </h1>
-                                    }
-                                    className="max-sm:block sm:hidden"
-                                />
-                                {/* Mobile Small (<768px) */}
-                                <Text
-                                    typography="heading3"
-                                    render={
-                                        <h1>
-                                            Build pages faster
-                                            <br />
-                                            with ready-to-use UI blocks
-                                        </h1>
-                                    }
+                                    className="block sm:hidden"
                                 />
                                 <Text typography="body1" foreground="normal">
                                     UI 블록은 불필요한 과정을 줄이고 협업을 원활하게 하여,
@@ -118,7 +95,7 @@ export default function BlocksPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[var(--vapor-size-space-400)] min-[1440px]:[&>*]:h-[263px] max-md:gap-[var(--vapor-size-space-300)] max-sm:gap-[var(--vapor-size-space-400)]">
+                    <div className="grid grid-cols-1 sm:max-lg:grid-cols-2 lg:max-xxl:grid-cols-3 min-xxl:grid-cols-4 gap-[var(--vapor-size-space-400)] min-xxl:[&>*]:h-[263px] max-md:gap-[var(--vapor-size-space-300)] max-sm:gap-[var(--vapor-size-space-400)]">
                         {blocks.map((block) => (
                             <ComponentsCard
                                 key={block.id}

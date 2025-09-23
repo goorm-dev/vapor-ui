@@ -22,7 +22,7 @@ import LogoVapor from '../../../public/icons/logo-vapor.svg';
 const NAVIGATION_LINKS = [
     { href: '/docs', label: 'Docs' },
     { href: '/playground', label: 'Playground' },
-    // { href: '/blocks', label: 'UI Blocks' }, // TODO : when blocks page is ready
+    { href: '/blocks', label: 'Blocks' },
 ];
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
@@ -61,10 +61,10 @@ export const SiteNavBar = () => {
     const [mounted, setMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const { appearance, setTheme } = useTheme();
+    const { theme, setTheme } = useTheme();
 
     const toggleTheme = () => {
-        setTheme({ appearance: appearance === 'light' ? 'dark' : 'light' });
+        setTheme(theme === 'dark' ? 'light' : 'dark');
     };
 
     useEffect(() => {
@@ -167,10 +167,10 @@ export const SiteNavBar = () => {
                                         size="lg"
                                         color="secondary"
                                         variant="ghost"
-                                        aria-label={`Switch to ${appearance} mode`}
+                                        aria-label={`Switch to ${theme} mode`}
                                         onClick={toggleTheme}
                                     >
-                                        {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                        {theme === 'dark' ? <LightIcon /> : <DarkIcon />}
                                     </IconButton>
                                 </NavigationMenu.Item>
                             </NavigationMenu.List>
@@ -248,21 +248,21 @@ export const SiteNavBar = () => {
                             }}
                         >
                             <Text className="flex items-center gap-2 text-base" render={<h6 />}>
-                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
-                                {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                                {theme === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                             </Text>
                             <IconButton
                                 size="md"
                                 color="secondary"
                                 variant="fill"
                                 aria-label={
-                                    appearance
-                                        ? `Switch to ${appearance === 'light' ? 'dark' : 'light'} mode`
+                                    theme
+                                        ? `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`
                                         : 'Toggle theme'
                                 }
                                 onClick={toggleTheme}
                             >
-                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                {theme === 'dark' ? <LightIcon /> : <DarkIcon />}
                             </IconButton>
                         </li>
                     </ul>
