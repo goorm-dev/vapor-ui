@@ -6,7 +6,7 @@ import type { MDXComponents } from 'mdx/types';
 import Image from 'next/image';
 
 import AllComponentsContainer from '~/components/all-components-container';
-import CodeBlock from '~/components/code-block/code-block';
+import { CodeBlock } from '~/components/code-block/code-block';
 import ComponentsCard from '~/components/component-card/component-card';
 import ComponentPropsTable from '~/components/component-props-table';
 import { Demo } from '~/components/demo/demo';

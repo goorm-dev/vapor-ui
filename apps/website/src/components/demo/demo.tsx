@@ -70,7 +70,7 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
     const shouldShowDeviceToggle = selectedTab === TAB_TYPES['PREVIEW'] && showResponsiveToggle;
 
     return (
-        <Card.Header className="p-0 border-b-0 pt-[var(--vapor-size-space-050)]">
+        <Card.Header className="p-0 border-b-0 pt-v-050)]">
             <Box
                 paddingY="$000"
                 paddingX="$300"
@@ -116,7 +116,7 @@ const DemoPreviewPanel = ({
     showResponsiveToggle,
     selectedDevice,
 }: DemoPreviewPanelProps) => {
-    const previewClassName = 'p-[var(--vapor-size-space-300)]';
+    const previewClassName = 'p-v-300';
 
     if (showResponsiveToggle) {
         return <IframePreview name={name} device={selectedDevice} className={previewClassName} />;
@@ -155,7 +155,7 @@ const DemoContent = ({
             <Tabs.Root
                 value={selectedTab}
                 onValueChange={onTabChange}
-                className="w-full rounded-[var(--vapor-size-borderRadius-300)]"
+                className="w-full rounded-v-300"
                 variant="plain"
             >
                 <DemoHeader
@@ -174,7 +174,7 @@ const DemoContent = ({
                     </Tabs.Panel>
                     <Tabs.Panel
                         value="Code"
-                        className="flex flex-col gap-[var(--vapor-size-space-250)] rounded-t-none rounded-b-[var(--vapor-size-borderRadius-300)] bg-[var(--vapor-color-background-normal)]"
+                        className="flex flex-col gap-v-250 rounded-t-none rounded-b-v-300 bg-v-normal"
                     >
                         {children}
                     </Tabs.Panel>
