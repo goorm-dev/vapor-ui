@@ -185,6 +185,26 @@ const colorTokens = {
     white,
 };
 
+const foregroundColorTokens = {
+    'primary-100': foreground.primary[100],
+    'primary-200': foreground.primary[200],
+    'secondary-100': foreground.secondary[100],
+    'secondary-200': foreground.secondary[200],
+    'success-100': foreground.success[100],
+    'success-200': foreground.success[200],
+    'warning-100': foreground.warning[100],
+    'warning-200': foreground.warning[200],
+    'danger-100': foreground.danger[100],
+    'danger-200': foreground.danger[200],
+    'hint-100': foreground.hint[100],
+    'hint-200': foreground.hint[200],
+    'contrast-100': foreground.contrast[100],
+    'contrast-200': foreground.contrast[200],
+    'normal-100': foreground.normal[100],
+    'normal-200': foreground.normal[200],
+    accent: foreground.accent,
+};
+
 const sprinkleProperties = defineProperties({
     '@layer': layers.utilities,
 

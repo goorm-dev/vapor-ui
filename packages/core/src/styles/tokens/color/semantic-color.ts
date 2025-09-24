@@ -30,6 +30,7 @@ export const LIGHT_SEMANTIC_COLORS = {
             '100': LIGHT_BASIC_COLORS.gray['200'],
             '200': LIGHT_BASIC_COLORS.gray['800'],
         },
+        canvas: '#ffffff',
         surface: {
             '100': BASE_BASIC_COLORS.white,
             '200': LIGHT_BASIC_COLORS.gray['050'],
@@ -120,6 +121,7 @@ export const DARK_SEMANTIC_COLORS = {
             '100': DARK_BASIC_COLORS.gray['700'],
             '200': DARK_BASIC_COLORS.gray['300'],
         },
+        canvas: '#232323',
         surface: {
             '100': DARK_BASIC_COLORS.gray['100'],
             '200': DARK_BASIC_COLORS.gray['100'],

@@ -28,7 +28,7 @@ export const link = recipe({
         current: {
             false: [
                 layerStyle('components', {
-                    color: vars.color.foreground.hint,
+                    color: vars.color.foreground.hint[100],
 
                     // NOTE: When the link interaction style is declared multiple times, consider separating it.
                     ':hover': {
@@ -40,13 +40,12 @@ export const link = recipe({
                     },
                     ':active': {
                         textDecoration: 'underline',
-
-                        textDecorationColor: vars.color.foreground.primary,
+                        textDecorationColor: vars.color.foreground.primary[100],
                     },
                 }),
             ],
             true: layerStyle('components', {
-                color: vars.color.foreground.primary,
+                color: vars.color.foreground.primary[100],
             }),
         },
     },
@@ -54,7 +53,7 @@ export const link = recipe({
 
 export const icon = recipe({
     base: layerStyle('components', {
-        color: vars.color.foreground.hint,
+        color: vars.color.foreground.hint[100],
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
