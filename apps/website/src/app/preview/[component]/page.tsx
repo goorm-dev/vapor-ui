@@ -3,111 +3,107 @@
 import * as React from 'react';
 import { Suspense } from 'react';
 
+import { Text } from '@vapor-ui/core';
+
 interface PreviewPageProps {
-    params: Promise<{
-        component: string;
-    }>;
     searchParams: Promise<{
         path?: string;
     }>;
 }
 
-function DynamicComponent({ componentPath }: { componentPath: string }) {
-    const [Component, setComponent] = React.useState<React.ComponentType | null>(null);
+const ComponentError = ({
+    componentPath,
+    error,
+}: {
+    componentPath: string | undefined;
+    error: string;
+}) => {
+    return (
+        <div className="p-5 text-center text-v-danger">
+            <Text typography="heading1" foreground="danger" render={<h1 />} className="mb-4">
+                Component not found
+            </Text>
+            <Text typography="body2" foreground="danger">
+                {error}
+            </Text>
+            {componentPath && (
+                <Text typography="body2" foreground="danger">
+                    {componentPath}
+                </Text>
+            )}
+        </div>
+    );
+};
+
+function ComponentLoading() {
+    return (
+        <div className="p-5 text-center text-gray-500">
+            <div className="animate-spin w-6 h-6 border-2 border-v-gray-300 border-t-v-blue-500 rounded-full mx-auto mb-2" />
+            <p>Loading component...</p>
+        </div>
+    );
+}
+
+function useDynamicComponent(componentPath?: string) {
+    const [component, setComponent] = React.useState<React.ComponentType | null>(null);
     const [error, setError] = React.useState<string | null>(null);
+    const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
+        if (!componentPath) {
+            setError('No component path provided');
+            setIsLoading(false);
+            return;
+        }
+
         const loadComponent = async () => {
             try {
-                const componentModule = await import(`../../../components/demo/examples/${componentPath}.tsx`);
-                setComponent(() => componentModule.default);
+                setIsLoading(true);
+                setError(null);
+
+                const componentModule = await import(
+                    `~/components/demo/examples/${componentPath}.tsx`
+                );
+
+                if (componentModule.default) {
+                    setComponent(() => componentModule.default);
+                } else {
+                    setError(`Component "${componentPath}" does not have a default export`);
+                }
             } catch (err) {
                 console.error('Error loading component:', err);
                 setError(`Could not load component: ${componentPath}`);
+            } finally {
+                setIsLoading(false);
             }
         };
 
         loadComponent();
     }, [componentPath]);
 
+    return { component, error, isLoading };
+}
+
+function DynamicComponent({ componentPath }: { componentPath?: string }) {
+    const { component: Component, error, isLoading } = useDynamicComponent(componentPath);
+
     if (error) {
-        return (
-            <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
-                <h1>Component not found</h1>
-                <p>{error}</p>
-            </div>
-        );
+        return <ComponentError componentPath={componentPath} error={error} />;
     }
 
-    if (!Component) {
-        return (
-            <div style={{ padding: '20px', textAlign: 'center' }}>
-                Loading component...
-            </div>
-        );
+    if (isLoading || !Component) {
+        return <ComponentLoading />;
     }
 
     return <Component />;
 }
-
-export default function PreviewPage({ params, searchParams }: PreviewPageProps) {
-    const resolvedParams = React.use(params);
+export default function Page({ searchParams }: PreviewPageProps) {
     const resolvedSearchParams = React.use(searchParams);
-    const componentPath = resolvedSearchParams.path || resolvedParams.component;
-
-    React.useEffect(() => {
-        // Add styles to document head
-        const style = document.createElement('style');
-        style.textContent = `
-            body {
-                margin: 0;
-                padding: 16px;
-                min-height: 100vh;
-                background: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .preview-container {
-                width: 100%;
-                max-width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-height: calc(100vh - 32px);
-            }
-
-            /* Ensure responsive classes work */
-            .navbar-desktop {
-                display: flex;
-            }
-            
-            .navbar-mobile {
-                display: none;
-            }
-            
-            @media (max-width: 768px) {
-                .navbar-desktop {
-                    display: none !important;
-                }
-                .navbar-mobile {
-                    display: flex !important;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        return () => {
-            document.head.removeChild(style);
-        };
-    }, []);
+    const componentPath = resolvedSearchParams.path;
 
     return (
-        <div className="preview-container">
-            <Suspense fallback={<div>Loading...</div>}>
-                <DynamicComponent componentPath={componentPath} />
-            </Suspense>
-        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+            <DynamicComponent componentPath={componentPath} />
+        </Suspense>
     );
 }

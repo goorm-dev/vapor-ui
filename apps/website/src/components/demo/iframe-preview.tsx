@@ -4,27 +4,21 @@ import * as React from 'react';
 
 import clsx from 'clsx';
 
+import type { DeviceType } from '~/constants/code-block';
+import { DEVICE_WIDTH_MAP } from '~/constants/code-block';
+
 interface IframePreviewProps {
     name: string;
     className?: string;
-    device: string;
+    device: DeviceType;
 }
+const getIframeWidth = (device: DeviceType) => {
+    return DEVICE_WIDTH_MAP[device] || '100%';
+};
 
 export function IframePreview(props: IframePreviewProps) {
     const { name, className, device } = props;
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
-
-    const getIframeWidth = () => {
-        switch (device) {
-            case 'mobile':
-                return '375px';
-            case 'tablet':
-                return '768px';
-            case 'desktop':
-            default:
-                return '100%';
-        }
-    };
 
     React.useEffect(() => {
         if (iframeRef.current) {
@@ -37,15 +31,9 @@ export function IframePreview(props: IframePreviewProps) {
         <div className={clsx('iframe-preview-container flex justify-center', className)}>
             <iframe
                 ref={iframeRef}
-                width={getIframeWidth()}
+                width={getIframeWidth(device)}
                 height="400px"
-                style={{
-                    transition: 'width 0.2s ease',
-                    maxWidth: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
+                className="transition-[width] duration-200 ease-in-out max-w-full flex justify-center items-center"
                 title={`Preview of ${name}`}
                 sandbox="allow-scripts allow-same-origin"
             />

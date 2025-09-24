@@ -4,12 +4,185 @@ import * as React from 'react';
 
 import { Box, Card, Tabs } from '@vapor-ui/core';
 import { PcOutlineIcon, PhoneIcon, TabletIcon } from '@vapor-ui/icons';
-import clsx from 'clsx';
+
+import { DEVICE_TYPES, type DeviceType, TAB_TYPES, type TabType } from '~/constants/code-block';
 
 import { ButtonToggleGroup } from '../button-toggle-group';
 import ErrorBoundary from './error-boundary';
 import { IframePreview } from './iframe-preview';
 import { Preview } from './preview';
+
+// 타입 가드 함수들
+const isValidTabType = (value: string): value is TabType => {
+    return Object.values(TAB_TYPES).includes(value as TabType);
+};
+
+const isValidDeviceType = (value: string): value is DeviceType => {
+    return Object.values(DEVICE_TYPES).includes(value as DeviceType);
+};
+
+// 커스텀 훅: 상태 관리 로직 분리
+const useDemoState = () => {
+    const [selectedDevice, setSelectedDevice] = React.useState<DeviceType>(DEVICE_TYPES.DESKTOP);
+    const [selectedTab, setSelectedTab] = React.useState<TabType>(TAB_TYPES.PREVIEW);
+
+    const handleTabChange = React.useCallback((value: string) => {
+        if (isValidTabType(value)) {
+            setSelectedTab(value);
+        }
+    }, []);
+
+    const handleDeviceChange = React.useCallback((device: DeviceType) => {
+        setSelectedDevice(device);
+    }, []);
+
+    return {
+        selectedDevice,
+        selectedTab,
+        handleTabChange,
+        handleDeviceChange,
+    };
+};
+
+// DemoHeader 컴포넌트 분리
+interface DemoHeaderProps {
+    selectedTab: TabType;
+    showResponsiveToggle: boolean;
+    onDeviceChange: (device: DeviceType) => void;
+}
+
+const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoHeaderProps) => {
+    const deviceItems = [
+        {
+            value: DEVICE_TYPES['DESKTOP'],
+            label: <PcOutlineIcon size="16" />,
+        },
+        {
+            value: DEVICE_TYPES['TABLET'],
+            label: <TabletIcon size="16" />,
+        },
+        {
+            value: DEVICE_TYPES['MOBILE'],
+            label: <PhoneIcon size="16" />,
+        },
+    ];
+
+    const shouldShowDeviceToggle = selectedTab === TAB_TYPES['PREVIEW'] && showResponsiveToggle;
+
+    return (
+        <Card.Header className="p-0 border-b-0 pt-[var(--vapor-size-space-050)]">
+            <Box
+                paddingY="$000"
+                paddingX="$300"
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                gap="$050"
+                height={'$500'}
+            >
+                <Tabs.List>
+                    {Object.values(TAB_TYPES).map((tab) => (
+                        <Tabs.Trigger key={tab} value={tab}>
+                            {tab}
+                        </Tabs.Trigger>
+                    ))}
+                    <Tabs.Indicator renderBeforeHydration />
+                </Tabs.List>
+                {shouldShowDeviceToggle && (
+                    <ButtonToggleGroup
+                        items={deviceItems}
+                        defaultValue={DEVICE_TYPES['DESKTOP']}
+                        onValueChange={(value) => {
+                            if (isValidDeviceType(value)) {
+                                onDeviceChange(value);
+                            }
+                        }}
+                    />
+                )}
+            </Box>
+        </Card.Header>
+    );
+};
+
+// DemoPreviewPanel 컴포넌트 분리
+interface DemoPreviewPanelProps {
+    name: string;
+    showResponsiveToggle: boolean;
+    selectedDevice: DeviceType;
+}
+
+const DemoPreviewPanel = ({
+    name,
+    showResponsiveToggle,
+    selectedDevice,
+}: DemoPreviewPanelProps) => {
+    const previewClassName = 'p-[var(--vapor-size-space-300)]';
+
+    if (showResponsiveToggle) {
+        return <IframePreview name={name} device={selectedDevice} className={previewClassName} />;
+    }
+
+    return (
+        <Preview
+            name={name}
+            className={`mx-auto transition-all duration-200 ${previewClassName}`}
+        />
+    );
+};
+
+// DemoContent 컴포넌트 분리
+interface DemoContentProps {
+    name: string;
+    children: React.ReactNode;
+    selectedTab: TabType;
+    selectedDevice: DeviceType;
+    showResponsiveToggle: boolean;
+    onTabChange: (value: string) => void;
+    onDeviceChange: (device: DeviceType) => void;
+}
+
+const DemoContent = ({
+    name,
+    children,
+    selectedTab,
+    selectedDevice,
+    showResponsiveToggle,
+    onTabChange,
+    onDeviceChange,
+}: DemoContentProps) => {
+    return (
+        <Card.Root>
+            <Tabs.Root
+                value={selectedTab}
+                onValueChange={onTabChange}
+                className="w-full rounded-[var(--vapor-size-borderRadius-300)]"
+                variant="plain"
+            >
+                <DemoHeader
+                    selectedTab={selectedTab}
+                    showResponsiveToggle={showResponsiveToggle}
+                    onDeviceChange={onDeviceChange}
+                />
+
+                <Card.Body className="p-0">
+                    <Tabs.Panel value={TAB_TYPES['PREVIEW']} className="rounded-t-none" keepMounted>
+                        <DemoPreviewPanel
+                            name={name}
+                            showResponsiveToggle={showResponsiveToggle}
+                            selectedDevice={selectedDevice}
+                        />
+                    </Tabs.Panel>
+                    <Tabs.Panel
+                        value="Code"
+                        className="flex flex-col gap-[var(--vapor-size-space-250)] rounded-t-none rounded-b-[var(--vapor-size-borderRadius-300)] bg-[var(--vapor-color-background-normal)]"
+                    >
+                        {children}
+                    </Tabs.Panel>
+                </Card.Body>
+            </Tabs.Root>
+        </Card.Root>
+    );
+};
 
 interface DemoProps {
     name: string;
@@ -18,10 +191,9 @@ interface DemoProps {
     showResponsiveToggle?: boolean;
 }
 
-export function Demo(props: DemoProps) {
+export const Demo = (props: DemoProps) => {
     const { name, children, showResponsiveToggle = false } = props;
-    const [selectedDevice, setSelectedDevice] = React.useState('desktop');
-    const [selectedTab, setSelectedTab] = React.useState<'Preview' | 'Code'>('Preview');
+    const { selectedDevice, selectedTab, handleTabChange, handleDeviceChange } = useDemoState();
 
     if (!children) {
         return (
@@ -31,95 +203,18 @@ export function Demo(props: DemoProps) {
         );
     }
 
-    const getPreviewWidth = (device: string) => {
-        switch (device) {
-            case 'mobile':
-                return 'w-[368px]';
-            case 'tablet':
-                return 'w-[768px]';
-            case 'desktop':
-            default:
-                return 'w-full';
-        }
-    };
-
     return (
         <ErrorBoundary>
-            <Card.Root>
-                <Tabs.Root
-                    value={selectedTab}
-                    onValueChange={(value) => setSelectedTab(value as 'Preview' | 'Code')}
-                    className="w-full rounded-[var(--vapor-size-borderRadius-300)]"
-                    variant="plain"
-                >
-                    <Card.Header className="p-0 border-b-0 pt-[var(--vapor-size-space-050)]">
-                        <Box
-                            paddingY="$000"
-                            paddingX="$300"
-                            display="flex"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            gap="$050"
-                            height={'$500'}
-                        >
-                            <Tabs.List>
-                                {['Preview', 'Code'].map((tab) => (
-                                    <Tabs.Trigger key={tab} value={tab}>
-                                        {tab}
-                                    </Tabs.Trigger>
-                                ))}
-                                <Tabs.Indicator renderBeforeHydration />
-                            </Tabs.List>
-                            {selectedTab === 'Preview' && showResponsiveToggle && (
-                                <ButtonToggleGroup
-                                    items={[
-                                        {
-                                            value: 'desktop',
-                                            label: <PcOutlineIcon size="16" />,
-                                        },
-                                        {
-                                            value: 'tablet',
-                                            label: <TabletIcon size="16" />,
-                                        },
-                                        {
-                                            value: 'mobile',
-                                            label: <PhoneIcon size="16" />,
-                                        },
-                                    ]}
-                                    defaultValue="desktop"
-                                    onValueChange={setSelectedDevice}
-                                />
-                            )}
-                        </Box>
-                    </Card.Header>
-
-                    <Card.Body className="p-0">
-                        <Tabs.Panel value="Preview" className="rounded-t-none" keepMounted>
-                            {showResponsiveToggle ? (
-                                <IframePreview
-                                    name={name}
-                                    device={selectedDevice}
-                                    className="p-[var(--vapor-size-space-300)]"
-                                />
-                            ) : (
-                                <Preview
-                                    name={name}
-                                    className={clsx(
-                                        getPreviewWidth(selectedDevice),
-                                        'mx-auto transition-all duration-200 p-[var(--vapor-size-space-300)]',
-                                    )}
-                                />
-                            )}
-                        </Tabs.Panel>
-                        <Tabs.Panel
-                            value="Code"
-                            className="flex  flex-col gap-[var(--vapor-size-space-250)] rounded-t-none rounded-b-[var(--vapor-size-borderRadius-300)] bg-[var(--vapor-color-background-normal)]"
-                        >
-                            {children}
-                        </Tabs.Panel>
-                    </Card.Body>
-                </Tabs.Root>
-            </Card.Root>
+            <DemoContent
+                name={name}
+                selectedTab={selectedTab}
+                selectedDevice={selectedDevice}
+                showResponsiveToggle={showResponsiveToggle}
+                onTabChange={handleTabChange}
+                onDeviceChange={handleDeviceChange}
+            >
+                {children}
+            </DemoContent>
         </ErrorBoundary>
     );
-}
+};
