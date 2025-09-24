@@ -26,25 +26,23 @@ const radiusTokens = vars.size.borderRadius;
 const { foreground, black, white, logo, ...colors } = vars.color;
 
 const colorTokens = {
-    // Background colors (no prefix)
-    'rgb-primary': colors.background['rgb-primary'],
-    primary: colors.background.primary,
-    'rgb-secondary': colors.background['rgb-secondary'],
-    secondary: colors.background.secondary,
-    'rgb-success': colors.background['rgb-success'],
-    success: colors.background.success,
-    'rgb-warning': colors.background['rgb-warning'],
-    warning: colors.background.warning,
-    'rgb-danger': colors.background['rgb-danger'],
-    danger: colors.background.danger,
-    'rgb-hint': colors.background['rgb-hint'],
-    hint: colors.background.hint,
-    'rgb-contrast': colors.background['rgb-contrast'],
-    contrast: colors.background.contrast,
-    'rgb-normal': colors.background['rgb-normal'],
-    normal: colors.background.normal,
-    'normal-lighter': colors.background['normal-lighter'],
-    'normal-darker': colors.background['normal-darker'],
+    // Background colors
+    'primary-100': colors.background.primary[100],
+    'primary-200': colors.background.primary[200],
+    'secondary-100': colors.background.secondary[100],
+    'success-100': colors.background.success[100],
+    'success-200': colors.background.success[200],
+    'warning-100': colors.background.warning[100],
+    'warning-200': colors.background.warning[200],
+    'danger-100': colors.background.danger[100],
+    'danger-200': colors.background.danger[200],
+    'hint-100': colors.background.hint[100],
+    'hint-200': colors.background.hint[200],
+    'contrast-100': colors.background.contrast[100],
+    'contrast-200': colors.background.contrast[200],
+    canvas: colors.background.canvas,
+    'surface-100': colors.background.surface[100],
+    'surface-200': colors.background.surface[200],
 
     // Blue colors with prefix
     'blue-050': colors.blue['050'],
@@ -259,7 +257,7 @@ const sprinkleProperties = defineProperties({
         border: true,
         borderRadius: radiusTokens,
         backgroundColor: colorTokens,
-        color: foreground,
+        color: foregroundColorTokens,
         opacity: true,
 
         // Behavior
@@ -278,5 +276,5 @@ const sprinkleProperties = defineProperties({
 
 export const sprinkles = createRainbowSprinkles(sprinkleProperties);
 export type Sprinkles = Omit<Parameters<typeof sprinkles>[0], 'color'> & {
-    foregroundColor?: `$${keyof typeof foreground}`;
+    foregroundColor?: `$${keyof typeof foregroundColorTokens}`;
 };
