@@ -53,7 +53,6 @@ const RegularContent = ({
                 height={300}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                priority
             />
         </Card.Header>
         <Card.Body className="p-[var(--vapor-size-space-300)] min-h-[120px] flex flex-col justify-between">
