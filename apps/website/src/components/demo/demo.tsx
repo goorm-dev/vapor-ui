@@ -14,11 +14,13 @@ interface DemoProps {
     name: string;
 
     children?: React.ReactNode;
+    showResponsiveToggle?: boolean;
 }
 
 export function Demo(props: DemoProps) {
-    const { name, children } = props;
+    const { name, children, showResponsiveToggle = false } = props;
     const [selectedDevice, setSelectedDevice] = React.useState('desktop');
+    const [selectedTab, setSelectedTab] = React.useState<'Preview' | 'Code'>('Preview');
 
     if (!children) {
         return (
@@ -44,7 +46,8 @@ export function Demo(props: DemoProps) {
         <ErrorBoundary>
             <Card.Root>
                 <Tabs.Root
-                    defaultValue={'Preview'}
+                    value={selectedTab}
+                    onValueChange={(value) => setSelectedTab(value as 'Preview' | 'Code')}
                     className="w-full rounded-[var(--vapor-size-borderRadius-300)]"
                     variant="plain"
                 >
@@ -66,24 +69,26 @@ export function Demo(props: DemoProps) {
                                 ))}
                                 <Tabs.Indicator renderBeforeHydration />
                             </Tabs.List>
-                            <ButtonToggleGroup
-                                items={[
-                                    {
-                                        value: 'desktop',
-                                        label: <PcOutlineIcon size="16" />,
-                                    },
-                                    {
-                                        value: 'tablet',
-                                        label: <TabletIcon size="16" />,
-                                    },
-                                    {
-                                        value: 'mobile',
-                                        label: <PhoneIcon size="16" />,
-                                    },
-                                ]}
-                                defaultValue="desktop"
-                                onValueChange={setSelectedDevice}
-                            />
+                            {selectedTab === 'Preview' && showResponsiveToggle && (
+                                <ButtonToggleGroup
+                                    items={[
+                                        {
+                                            value: 'desktop',
+                                            label: <PcOutlineIcon size="16" />,
+                                        },
+                                        {
+                                            value: 'tablet',
+                                            label: <TabletIcon size="16" />,
+                                        },
+                                        {
+                                            value: 'mobile',
+                                            label: <PhoneIcon size="16" />,
+                                        },
+                                    ]}
+                                    defaultValue="desktop"
+                                    onValueChange={setSelectedDevice}
+                                />
+                            )}
                         </Box>
                     </Card.Header>
 
@@ -97,7 +102,10 @@ export function Demo(props: DemoProps) {
                                 )}
                             />
                         </Tabs.Panel>
-                        <Tabs.Panel value="Code" className="rounded-t-none">
+                        <Tabs.Panel
+                            value="Code"
+                            className="flex  flex-col gap-[var(--vapor-size-space-250)] rounded-t-none rounded-b-[var(--vapor-size-borderRadius-300)] bg-[var(--vapor-color-background-normal)]"
+                        >
                             {children}
                         </Tabs.Panel>
                     </Card.Body>

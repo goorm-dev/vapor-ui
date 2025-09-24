@@ -98,7 +98,7 @@ export default function FilterForm() {
 
     return (
         <VStack
-            width="17.625rem"
+            width="100%"
             className="filter"
             render={<Form ref={formRef} onReset={handleReset} />}
         >
