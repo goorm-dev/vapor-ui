@@ -76,10 +76,9 @@ interface ToggleItemProps {
     isSelected: boolean;
     onClick: () => void;
     ref: (el: HTMLButtonElement | null) => void;
-    tabIndex: number;
 }
 
-const ToggleItem = ({ item, isSelected, onClick, ref, tabIndex }: ToggleItemProps) => {
+const ToggleItem = ({ item, isSelected, onClick, ref }: ToggleItemProps) => {
     return (
         <Toggle
             ref={ref}
@@ -92,7 +91,6 @@ const ToggleItem = ({ item, isSelected, onClick, ref, tabIndex }: ToggleItemProp
                     ? `Select ${item.label}`
                     : `Select option ${item.value}`
             }
-            tabIndex={tabIndex}
             onClick={onClick}
             className={clsx(
                 'relative z-10 flex items-center justify-center w-v-300 h-v-300 gap-v-050 border-none bg-transparent cursor-pointer font-medium transition-colors duration-150 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-v-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
@@ -161,7 +159,6 @@ export function ButtonToggleGroup({
                 isSelected={selectedValue === item.value}
                 onClick={createOnClick(item.value)}
                 ref={createSetRef(item.value)}
-                tabIndex={selectedValue === item.value ? 0 : -1}
             />
         ));
 
@@ -172,7 +169,6 @@ export function ButtonToggleGroup({
             ref={containerRef}
             role="radiogroup"
             aria-label="Toggle options"
-            aria-orientation="horizontal"
             className={clsx(
                 'relative flex bg-v-gray-100 border border-v-normal rounded-v-300 p-[1px] gap-v-50',
                 className,
