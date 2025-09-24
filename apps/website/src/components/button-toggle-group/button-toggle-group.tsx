@@ -1,8 +1,9 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
+import type { ReactNode, RefObject } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { Toggle, ToggleGroup } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 interface ToggleItem {
@@ -18,6 +19,94 @@ interface ButtonToggleGroupProps {
     className?: string;
 }
 
+// 개선안: 커스텀 훅 분리
+const useMaskPosition = (
+    itemRefs: RefObject<{ [key: string]: HTMLButtonElement | null }>,
+    containerRef: RefObject<HTMLDivElement>,
+) => {
+    const [maskStyle, setMaskStyle] = useState<React.CSSProperties>({});
+
+    const updateMaskPosition = useCallback(
+        (value: string) => {
+            const targetElement = itemRefs.current?.[value];
+            const container = containerRef.current;
+            if (targetElement && container) {
+                const containerRect = container.getBoundingClientRect();
+                const targetRect = targetElement.getBoundingClientRect();
+
+                // Calculate position to completely cover the toggle item
+                const offsetLeft = targetRect.left - containerRect.left - 1;
+                const offsetTop = targetRect.top - containerRect.top - 1;
+
+                setMaskStyle({
+                    width: targetRect.width,
+                    height: targetRect.height,
+                    left: offsetLeft,
+                    top: offsetTop,
+                    position: 'absolute',
+                });
+            }
+        },
+        [containerRef, itemRefs],
+    );
+
+    return { maskStyle, updateMaskPosition };
+};
+
+// ToggleMask 컴포넌트 분리 - React.memo로 최적화
+interface ToggleMaskProps {
+    style: React.CSSProperties;
+}
+
+const ToggleMask = ({ style }: ToggleMaskProps) => {
+    return (
+        <div
+            className="absolute z-0 flex justify-center items-center bg-v-white border border-v-normal rounded-v-300 shadow-sm transition-all duration-200 ease-out"
+            style={style}
+            aria-hidden="true"
+        />
+    );
+};
+
+ToggleMask.displayName = 'ToggleMask';
+
+// ToggleItem 컴포넌트 분리 - React.memo로 최적화
+interface ToggleItemProps {
+    item: ToggleItem;
+    isSelected: boolean;
+    onClick: () => void;
+    ref: (el: HTMLButtonElement | null) => void;
+    tabIndex: number;
+}
+
+const ToggleItem = ({ item, isSelected, onClick, ref, tabIndex }: ToggleItemProps) => {
+    return (
+        <Toggle
+            ref={ref}
+            type="button"
+            role="radio"
+            aria-checked={isSelected}
+            value={item.value}
+            aria-label={
+                typeof item.label === 'string'
+                    ? `Select ${item.label}`
+                    : `Select option ${item.value}`
+            }
+            tabIndex={tabIndex}
+            onClick={onClick}
+            className={clsx(
+                'relative z-10 flex items-center justify-center w-v-300 h-v-300 gap-v-050 border-none bg-transparent cursor-pointer font-medium transition-colors duration-150 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-v-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+                isSelected ? 'text-v-normal' : 'text-v-gray-500 hover:text-v-normal',
+            )}
+        >
+            {item.icon && <span className="flex items-center">{item.icon}</span>}
+            {item.label}
+        </Toggle>
+    );
+};
+
+ToggleItem.displayName = 'ToggleItem';
+
 export function ButtonToggleGroup({
     items,
     defaultValue,
@@ -25,93 +114,73 @@ export function ButtonToggleGroup({
     className = '',
 }: ButtonToggleGroupProps) {
     const [selectedValue, setSelectedValue] = useState(defaultValue || items[0]?.value || '');
-    const [maskStyle, setMaskStyle] = useState<React.CSSProperties>({});
     const containerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
-
-    const updateMaskPosition = (value: string) => {
-        const targetElement = itemRefs.current[value];
-        const container = containerRef.current;
-
-        if (targetElement && container) {
-            const containerRect = container.getBoundingClientRect();
-            const targetRect = targetElement.getBoundingClientRect();
-
-            // Calculate position to completely cover the toggle item
-            const offsetLeft = targetRect.left - containerRect.left - 1;
-            const offsetTop = targetRect.top - containerRect.top - 1;
-
-            setMaskStyle({
-                width: targetRect.width,
-                height: targetRect.height,
-                left: offsetLeft,
-                top: offsetTop,
-                position: 'absolute',
-            });
-        }
-    };
+    const { maskStyle: computedMaskStyle, updateMaskPosition } = useMaskPosition(
+        itemRefs,
+        containerRef,
+    );
 
     useEffect(() => {
-        // Small delay to ensure DOM is updated and mask is centered properly
-        const timer = setTimeout(() => {
-            updateMaskPosition(selectedValue);
-        }, 0);
-
-        return () => clearTimeout(timer);
-    }, [selectedValue]);
+        updateMaskPosition(selectedValue);
+    }, [selectedValue, updateMaskPosition]);
 
     useEffect(() => {
         const handleResize = () => updateMaskPosition(selectedValue);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [selectedValue]);
+    }, [selectedValue, updateMaskPosition]);
 
-    const handleValueChange = (value: string) => {
-        setSelectedValue(value);
-        onValueChange?.(value);
+    // 콜백 함수 메모이제이션
+    const handleValueChange = useCallback(
+        ([value]: string[]) => {
+            setSelectedValue(value);
+            onValueChange?.(value);
+        },
+        [onValueChange],
+    );
+
+    // ref 함수 메모이제이션
+    const createSetRef = (itemValue: string) => {
+        return (el: HTMLButtonElement | null) => {
+            itemRefs.current[itemValue] = el;
+        };
     };
 
+    // onClick 핸들러 메모이제이션
+    const createOnClick = (itemValue: string) => {
+        return () => handleValueChange([itemValue]);
+    };
+
+    // 렌더링할 아이템들 메모이제이션
+    const renderedItems = () =>
+        items.map((item) => (
+            <ToggleItem
+                key={item.value}
+                item={item}
+                isSelected={selectedValue === item.value}
+                onClick={createOnClick(item.value)}
+                ref={createSetRef(item.value)}
+                tabIndex={selectedValue === item.value ? 0 : -1}
+            />
+        ));
+
     return (
-        <div
+        <ToggleGroup
+            value={[selectedValue]}
+            onValueChange={handleValueChange}
             ref={containerRef}
-            role="group"
-            aria-label="Toggle group"
+            role="radiogroup"
+            aria-label="Toggle options"
+            aria-orientation="horizontal"
             className={clsx(
-                'relative w-fit flex justify-center items-center bg-[#F0F0F5] border border-[#E1E1E8] rounded-[8px] p-[1px] gap-[var(--vapor-size-space-050)]',
+                'relative flex bg-v-gray-100 border border-v-normal rounded-v-300 p-[1px] gap-v-50',
                 className,
             )}
         >
-            {/* Animated selection mask */}
-            <div
-                className="absolute z-0 flex justify-center items-center bg-[#FFF] border border-[#E1E1E8] rounded-[8px] shadow-sm transition-all duration-200 ease-out"
-                style={maskStyle}
-            />
+            <ToggleMask style={computedMaskStyle} />
 
-            {items.map((item) => (
-                <button
-                    key={item.value}
-                    ref={(el) => {
-                        itemRefs.current[item.value] = el;
-                    }}
-                    type="button"
-                    role="radio"
-                    aria-checked={selectedValue === item.value}
-                    onClick={() => handleValueChange(item.value)}
-                    className={clsx(
-                        'relative z-10 flex items-center justify-center w-[24px] h-[24px] gap-1 border-none bg-transparent cursor-pointer font-medium transition-colors duration-150 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-                        selectedValue === item.value
-                            ? 'text-gray-900'
-                            : 'text-gray-600 hover:text-gray-900',
-                    )}
-                >
-                    {item.icon && (
-                        <span className={`${item.label ? 'mr-2' : ''} flex items-center`}>
-                            {item.icon}
-                        </span>
-                    )}
-                    {item.label}
-                </button>
-            ))}
-        </div>
+            {renderedItems()}
+        </ToggleGroup>
     );
 }
