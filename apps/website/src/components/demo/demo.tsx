@@ -8,6 +8,7 @@ import clsx from 'clsx';
 
 import { ButtonToggleGroup } from '../button-toggle-group';
 import ErrorBoundary from './error-boundary';
+import { IframePreview } from './iframe-preview';
 import { Preview } from './preview';
 
 interface DemoProps {
@@ -94,13 +95,21 @@ export function Demo(props: DemoProps) {
 
                     <Card.Body className="p-0">
                         <Tabs.Panel value="Preview" className="rounded-t-none" keepMounted>
-                            <Preview
-                                name={name}
-                                className={clsx(
-                                    getPreviewWidth(selectedDevice),
-                                    'mx-auto transition-all duration-200 p-[var(--vapor-size-space-300)]',
-                                )}
-                            />
+                            {showResponsiveToggle ? (
+                                <IframePreview
+                                    name={name}
+                                    device={selectedDevice}
+                                    className="p-[var(--vapor-size-space-300)]"
+                                />
+                            ) : (
+                                <Preview
+                                    name={name}
+                                    className={clsx(
+                                        getPreviewWidth(selectedDevice),
+                                        'mx-auto transition-all duration-200 p-[var(--vapor-size-space-300)]',
+                                    )}
+                                />
+                            )}
                         </Tabs.Panel>
                         <Tabs.Panel
                             value="Code"

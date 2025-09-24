@@ -95,6 +95,7 @@ export default function Block2() {
                                             <NavigationMenu.Item>
                                                 <Collapsible.Root>
                                                     <Collapsible.Trigger
+                                                        nativeButton={false}
                                                         className={'collapsible-trigger'}
                                                         render={<NavigationMenu.Link />}
                                                     >
