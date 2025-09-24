@@ -16,17 +16,17 @@ export type BlockCardProps = {
 
 const ComingSoonContent = ({ name, description }: { name: string; description: string }) => (
     <>
-        <Card.Header className="p-0 overflow-hidden relative flex items-center justify-center aspect-[5/3] bg-v-normal-darker">
+        <Card.Header className="p-0 overflow-hidden relative flex items-center justify-center aspect-[5/3] bg-v-normal-darker backdrop-blur-lg">
             <Badge color="contrast" size="lg" shape="pill">
                 Coming Soon
             </Badge>
         </Card.Header>
         <Card.Body className="p-[var(--vapor-size-space-300)] min-h-[120px] flex flex-col justify-between">
             <div className="flex flex-col gap-[var(--vapor-size-space-150)]">
-                <Text typography="heading5" className="font-semibold">
+                <Text typography="heading5" foreground="normal">
                     {name}
                 </Text>
-                <Text typography="body2" foreground="secondary" className="leading-6 line-clamp-2">
+                <Text typography="body2" foreground="normal-lighter">
                     {description}
                 </Text>
             </div>
@@ -58,10 +58,10 @@ const RegularContent = ({
         </Card.Header>
         <Card.Body className="p-[var(--vapor-size-space-300)] min-h-[120px] flex flex-col justify-between">
             <div className="flex flex-col gap-[var(--vapor-size-space-150)]">
-                <Text typography="heading5" className="font-semibold">
+                <Text typography="heading5" foreground="normal">
                     {name}
                 </Text>
-                <Text typography="body2" foreground="secondary" className="leading-6 line-clamp-2">
+                <Text typography="body2" foreground="secondary">
                     {description}
                 </Text>
             </div>
