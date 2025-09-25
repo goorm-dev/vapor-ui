@@ -19,9 +19,9 @@ export default function DefaultCollapsible() {
                     marginTop="$050"
                     className="cursor-text rounded-sm"
                 >
-                    <Text foreground="normal">• 대시보드</Text>
-                    <Text foreground="normal">• 작업 관리</Text>
-                    <Text foreground="normal">• 팀원 초대</Text>
+                    <Text foreground="normal-200">• 대시보드</Text>
+                    <Text foreground="normal-200">• 작업 관리</Text>
+                    <Text foreground="normal-200">• 팀원 초대</Text>
                 </VStack>
             </Collapsible.Panel>
         </Collapsible.Root>

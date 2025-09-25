@@ -41,7 +41,7 @@ export default function MultiSelectControlled() {
                 </MultiSelect.Content>
             </MultiSelect.Root>
 
-            <Text typography="body2" foreground="secondary-darker">
+            <Text typography="body2" foreground="secondary-200">
                 선택된 값:{' '}
                 <code className="bg-gray-100 px-1 rounded">
                     {value.length > 0 ? value.join(', ') : '없음'}

@@ -42,7 +42,7 @@ export default function SelectControlled() {
                 </Select.Content>
             </Select.Root>
 
-            <Text typography="body2" foreground="secondary-darker">
+            <Text typography="body2" foreground="secondary-200">
                 선택된 값: <code className="bg-gray-100 px-1 rounded">{value || '없음'}</code>
             </Text>
 
