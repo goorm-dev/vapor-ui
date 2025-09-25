@@ -47,7 +47,7 @@ const TypographyTable = ({ tokens }: TypographyTableProps) => {
                             <Text
                                 foreground="normal"
                                 typography="subtitle1"
-                                render={<th />}
+                                render={<td />}
                                 className="text-left py-3 px-4 "
                             >
                                 {token.value}

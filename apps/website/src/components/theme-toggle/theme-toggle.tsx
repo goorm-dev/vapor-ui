@@ -29,7 +29,6 @@ export const ThemeToggle = ({
         setTheme(theme === 'dark' ? 'light' : 'dark');
     };
 
-    // 마운트되기 전에는 기본 아이콘 표시
     if (!mounted) {
         return null;
     }
