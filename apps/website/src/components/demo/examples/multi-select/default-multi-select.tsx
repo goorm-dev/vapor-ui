@@ -9,7 +9,7 @@ const fonts = [
 
 export default function DefaultMultiSelect() {
     return (
-        <MultiSelect.Root placeholder="폰트를 선택하세요" items={fonts}>
+        <MultiSelect.Root items={fonts} placeholder="폰트를 선택하세요">
             <MultiSelect.Trigger>
                 <MultiSelect.Value />
                 <MultiSelect.TriggerIcon />

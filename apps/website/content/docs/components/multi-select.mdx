@@ -138,7 +138,7 @@ MultiSelect의 선택 상태를 외부에서 제어할 수 있습니다. 값은 
 
 import { useState } from 'react';
 
-import { MultiSelect } from '@vapor-ui/core';
+import { Button, HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const fonts = [
     { label: 'Sans-serif', value: 'sans' },
@@ -155,12 +155,12 @@ export default function MultiSelectControlled() {
     };
 
     return (
-        <div className="space-y-4">
+        <VStack gap="$200" width="400px">
             <MultiSelect.Root
-                placeholder="폰트 선택"
+                items={fonts}
                 value={value}
                 onValueChange={handleValueChange}
-                items={fonts}
+                placeholder="폰트 선택"
             >
                 <MultiSelect.Trigger>
                     <MultiSelect.Value />
@@ -177,28 +177,22 @@ export default function MultiSelectControlled() {
                 </MultiSelect.Content>
             </MultiSelect.Root>
 
-            <p className="text-sm text-gray-600">
+            <Text typography="body2" foreground="secondary-darker">
                 선택된 값:{' '}
                 <code className="bg-gray-100 px-1 rounded">
                     {value.length > 0 ? value.join(', ') : '없음'}
                 </code>
-            </p>
+            </Text>
 
-            <div className="flex gap-2">
-                <button
-                    onClick={() => setValue(['serif', 'mono'])}
-                    className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
+            <HStack gap="$100">
+                <Button color="primary" onClick={() => setValue(['serif', 'mono'])}>
                     Serif, Mono 선택
-                </button>
-                <button
-                    onClick={() => setValue([])}
-                    className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
-                >
+                </Button>
+                <Button color="secondary" onClick={() => setValue([])}>
                     모두 해제
-                </button>
-            </div>
-        </div>
+                </Button>
+            </HStack>
+        </VStack>
     );
 }
 ```
@@ -212,7 +206,8 @@ MultiSelect의 다양한 상태(비활성화, 읽기 전용, 오류)를 설정�
 <Demo name="multi-select/multi-select-states">
 
 ```tsx
-import { MultiSelect } from '@vapor-ui/core';
+import type { MultiSelectRootProps } from '@vapor-ui/core';
+import { MultiSelect, VStack } from '@vapor-ui/core';
 
 const options = [
     { label: '옵션 1', value: 'option1' },
@@ -222,69 +217,33 @@ const options = [
 
 export default function MultiSelectStates() {
     return (
-        <div className="flex flex-wrap gap-4">
-            <MultiSelect.Root placeholder="기본 상태" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="비활성화" disabled items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="읽기 전용" readOnly items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="오류 상태" invalid items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-        </div>
+        <VStack gap="$200" width="400px">
+            <MultiSelectTemplate placeholder="기본 상태" />
+            <MultiSelectTemplate placeholder="비활성화" disabled />
+            <MultiSelectTemplate placeholder="읽기 전용" readOnly />
+            <MultiSelectTemplate placeholder="오류 상태" invalid />
+        </VStack>
     );
 }
+
+export const MultiSelectTemplate = (props: MultiSelectRootProps<[]>) => {
+    return (
+        <MultiSelect.Root {...props}>
+            <MultiSelect.Trigger>
+                <MultiSelect.Value />
+                <MultiSelect.TriggerIcon />
+            </MultiSelect.Trigger>
+            <MultiSelect.Content>
+                {options.map((option) => (
+                    <MultiSelect.Item key={option.value} value={option.value}>
+                        {option.label}
+                        <MultiSelect.ItemIndicator />
+                    </MultiSelect.Item>
+                ))}
+            </MultiSelect.Content>
+        </MultiSelect.Root>
+    );
+};
 ```
 
 </Demo>
@@ -300,7 +259,7 @@ MultiSelect는 배열 형태와 객체 형태의 아이템 데이터를 모두 �
 <Demo name="multi-select/multi-select-items">
 
 ```tsx
-import { MultiSelect } from '@vapor-ui/core';
+import { HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const fonts = [
     { label: 'Sans-serif', value: 'sans' },
@@ -319,10 +278,10 @@ const languages = {
 
 export default function MultiSelectItems() {
     return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">배열 형태의 아이템</h4>
+        <HStack gap="$500">
+            <VStack gap="$100" width="300px">
                 <MultiSelect.Root placeholder="폰트 선택" items={fonts}>
+                    <Text typography="body2">배열 형태의 아이템</Text>
                     <MultiSelect.Trigger>
                         <MultiSelect.Value />
                         <MultiSelect.TriggerIcon />
@@ -336,11 +295,11 @@ export default function MultiSelectItems() {
                         ))}
                     </MultiSelect.Content>
                 </MultiSelect.Root>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">객체 형태의 아이템</h4>
+            <VStack gap="$100" width="300px">
                 <MultiSelect.Root placeholder="언어 선택" items={languages}>
+                    <Text typography="body2">객체 형태의 아이템</Text>
                     <MultiSelect.Trigger>
                         <MultiSelect.Value />
                         <MultiSelect.TriggerIcon />
@@ -354,8 +313,8 @@ export default function MultiSelectItems() {
                         ))}
                     </MultiSelect.Content>
                 </MultiSelect.Root>
-            </div>
-        </div>
+            </VStack>
+        </HStack>
     );
 }
 ```
@@ -458,7 +417,7 @@ MultiSelect.Value에 함수형 children을 제공하여 선택된 값들의 표�
 <Demo name="multi-select/multi-select-custom-value">
 
 ```tsx
-import { Badge, MultiSelect } from '@vapor-ui/core';
+import { Badge, Flex, Grid, MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const languages = {
     javascript: 'JavaScript',
@@ -469,14 +428,46 @@ const languages = {
     rust: 'Rust',
 };
 
+const renderRestValue = (value: string[]) => {
+    if (!value.length) {
+        return <MultiSelect.Placeholder>언어 선택</MultiSelect.Placeholder>;
+    }
+
+    const displayValues = value.slice(0, 2);
+    const remainingCount = value.length - 2;
+
+    return (
+        <Flex gap="$050" className="flex-wrap">
+            {displayValues.map((val) => (
+                <Badge key={val} size="sm">
+                    {languages[val as keyof typeof languages]}
+                </Badge>
+            ))}
+            {remainingCount > 0 && (
+                <Badge size="sm" color="hint">
+                    +{remainingCount} more
+                </Badge>
+            )}
+        </Flex>
+    );
+};
+
+const renderStringValue = (value: string[]) => {
+    if (!value.length) {
+        return <MultiSelect.Placeholder>언어 선택</MultiSelect.Placeholder>;
+    }
+
+    return value.map((v) => languages[v as keyof typeof languages]).join(', ');
+};
+
 export default function MultiSelectCustomValue() {
     return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">기본 배지 표시</h4>
-                <MultiSelect.Root placeholder="언어 선택" items={languages}>
+        <Grid.Root templateColumns="1fr 1fr" gap="$300">
+            <VStack gap="$100" width="250px">
+                <Text typography="body2">커스텀 값 표시 (최대 2개 + 더보기)</Text>
+                <MultiSelect.Root items={languages} placeholder="언어 선택">
                     <MultiSelect.Trigger>
-                        <MultiSelect.Value />
+                        <MultiSelect.Value>{renderRestValue}</MultiSelect.Value>
                         <MultiSelect.TriggerIcon />
                     </MultiSelect.Trigger>
                     <MultiSelect.Content>
@@ -488,39 +479,13 @@ export default function MultiSelectCustomValue() {
                         ))}
                     </MultiSelect.Content>
                 </MultiSelect.Root>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">커스텀 값 표시 (최대 2개 + 더보기)</h4>
-                <MultiSelect.Root placeholder="언어 선택" items={languages}>
+            <VStack gap="$100" width="250px">
+                <Text typography="body2">문자열 형태 표시</Text>
+                <MultiSelect.Root items={languages} placeholder="언어 선택">
                     <MultiSelect.Trigger>
-                        <MultiSelect.Value>
-                            {(value: string[]) => {
-                                if (value.length === 0) {
-                                    return (
-                                        <MultiSelect.Placeholder>언어 선택</MultiSelect.Placeholder>
-                                    );
-                                }
-
-                                const displayValues = value.slice(0, 2);
-                                const remainingCount = value.length - 2;
-
-                                return (
-                                    <div className="flex gap-1 flex-wrap">
-                                        {displayValues.map((val) => (
-                                            <Badge key={val} size="sm">
-                                                {languages[val as keyof typeof languages]}
-                                            </Badge>
-                                        ))}
-                                        {remainingCount > 0 && (
-                                            <Badge size="sm" color="hint">
-                                                +{remainingCount} more
-                                            </Badge>
-                                        )}
-                                    </div>
-                                );
-                            }}
-                        </MultiSelect.Value>
+                        <MultiSelect.Value>{renderStringValue}</MultiSelect.Value>
                         <MultiSelect.TriggerIcon />
                     </MultiSelect.Trigger>
                     <MultiSelect.Content>
@@ -532,36 +497,8 @@ export default function MultiSelectCustomValue() {
                         ))}
                     </MultiSelect.Content>
                 </MultiSelect.Root>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">문자열 형태 표시</h4>
-                <MultiSelect.Root placeholder="언어 선택" items={languages}>
-                    <MultiSelect.Trigger>
-                        <MultiSelect.Value>
-                            {(value: string[]) =>
-                                value.length > 0 ? (
-                                    value
-                                        .map((v) => languages[v as keyof typeof languages])
-                                        .join(', ')
-                                ) : (
-                                    <MultiSelect.Placeholder>언어 선택</MultiSelect.Placeholder>
-                                )
-                            }
-                        </MultiSelect.Value>
-                        <MultiSelect.TriggerIcon />
-                    </MultiSelect.Trigger>
-                    <MultiSelect.Content>
-                        {Object.entries(languages).map(([value, label]) => (
-                            <MultiSelect.Item key={value} value={value}>
-                                {label}
-                                <MultiSelect.ItemIndicator />
-                            </MultiSelect.Item>
-                        ))}
-                    </MultiSelect.Content>
-                </MultiSelect.Root>
-            </div>
-        </div>
+            </VStack>
+        </Grid.Root>
     );
 }
 ```

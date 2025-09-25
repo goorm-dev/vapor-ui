@@ -1,4 +1,4 @@
-import { MultiSelect } from '@vapor-ui/core';
+import { HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const fonts = [
     { label: 'Sans-serif', value: 'sans' },
@@ -17,10 +17,10 @@ const languages = {
 
 export default function MultiSelectItems() {
     return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">배열 형태의 아이템</h4>
+        <HStack gap="$500">
+            <VStack gap="$100" width="300px">
                 <MultiSelect.Root placeholder="폰트 선택" items={fonts}>
+                    <Text typography="body2">배열 형태의 아이템</Text>
                     <MultiSelect.Trigger>
                         <MultiSelect.Value />
                         <MultiSelect.TriggerIcon />
@@ -34,11 +34,11 @@ export default function MultiSelectItems() {
                         ))}
                     </MultiSelect.Content>
                 </MultiSelect.Root>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">객체 형태의 아이템</h4>
+            <VStack gap="$100" width="300px">
                 <MultiSelect.Root placeholder="언어 선택" items={languages}>
+                    <Text typography="body2">객체 형태의 아이템</Text>
                     <MultiSelect.Trigger>
                         <MultiSelect.Value />
                         <MultiSelect.TriggerIcon />
@@ -52,7 +52,7 @@ export default function MultiSelectItems() {
                         ))}
                     </MultiSelect.Content>
                 </MultiSelect.Root>
-            </div>
-        </div>
+            </VStack>
+        </HStack>
     );
 }
