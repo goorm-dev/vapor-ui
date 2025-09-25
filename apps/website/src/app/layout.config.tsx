@@ -2,6 +2,7 @@ import type { DocsLayoutProps } from 'fumadocs-ui/layouts/docs';
 import type { DocsLayoutProps as NotebookLayoutProps } from 'fumadocs-ui/layouts/notebook';
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 
+import { ThemeToggle } from '~/components/theme-toggle';
 import { navLinks } from '~/constants/site-links';
 import { source } from '~/lib/source';
 
@@ -14,8 +15,9 @@ export const baseOptions: BaseLayoutProps = {
         ),
     },
     links: navLinks,
+
     themeSwitch: {
-        enabled: false,
+        component: <ThemeToggle />,
     },
 };
 

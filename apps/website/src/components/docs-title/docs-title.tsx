@@ -4,7 +4,7 @@ import { Text } from '@vapor-ui/core';
 
 const DocsTitle = ({ children }: { children: React.ReactNode }) => {
     return (
-        <Text typography="heading1" foreground="contrast-100" render={<h1 />}>
+        <Text typography="heading1" foreground="normal-100" render={<h1 />}>
             {children}
         </Text>
     );
