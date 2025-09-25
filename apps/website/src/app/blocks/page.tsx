@@ -86,7 +86,7 @@ export default function BlocksPage() {
                                     }
                                     className="block sm:hidden"
                                 />
-                                <Text typography="body1" foreground="normal">
+                                <Text typography="body1" foreground="normal-200">
                                     UI 블록은 불필요한 과정을 줄이고 협업을 원활하게 하여,
                                     <br />
                                     누구나 빠르고 쉽게 완성도 높은 경험을 제공할 수 있도록 돕습니다
