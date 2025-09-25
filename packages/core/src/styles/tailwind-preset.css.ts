@@ -142,9 +142,24 @@ semanticMappings.forEach(({ prefix, property, contractGroup, tokenGroup }) => {
     const contractSemanticGroup = vars.color[contractGroup];
     for (const name in tokenGroup) {
         if (Object.prototype.hasOwnProperty.call(tokenGroup, name)) {
-            globalStyle(`@utility ${prefix}-v-${name}`, {
-                [property]: (contractSemanticGroup as Record<string, string>)[name],
-            });
+            const tokenValue = (tokenGroup as Record<string, unknown>)[name];
+            const contractValue = (contractSemanticGroup as Record<string, unknown>)[name];
+            
+            // Handle nested color variants (100, 200)
+            if (typeof tokenValue === 'object' && tokenValue !== null && typeof contractValue === 'object' && contractValue !== null) {
+                for (const variant in tokenValue) {
+                    if (Object.prototype.hasOwnProperty.call(tokenValue, variant)) {
+                        globalStyle(`@utility ${prefix}-v-${name}-${variant}`, {
+                            [property]: (contractValue as Record<string, string>)[variant],
+                        });
+                    }
+                }
+            } else {
+                // Handle single value colors (canvas, etc.)
+                globalStyle(`@utility ${prefix}-v-${name}`, {
+                    [property]: contractValue as string,
+                });
+            }
         }
     }
 });

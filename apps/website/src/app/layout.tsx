@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     content="IbSc093-S7vjF7ZyDjbY43LENvMA-pguxJhDuSMuCmo"
                 />
             </head>
-            <body className="flex flex-col min-h-screen bg-[var(--vapor-color-background-normal)]">
+            <body className="flex flex-col min-h-screen bg-[var(--vapor-color-background-canvas)]">
                 <RootProvider
                     search={{
                         SearchDialog: DefaultSearchDialog,

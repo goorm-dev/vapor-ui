@@ -45,7 +45,7 @@ const CardWrapper = ({
                         </Badge>
                     )}
                 </div>
-                <Text typography="body2" foreground="secondary" className={styles.description}>
+                <Text typography="body2" foreground="secondary-100" className={styles.description}>
                     {description}
                 </Text>
             </Card.Body>

@@ -27,7 +27,7 @@ export function Demo(props: DemoProps) {
             <Tabs
                 items={['Preview', 'Code']}
                 defaultIndex={0}
-                className="my-0 w-full bg-[var(--vapor-color-background-normal-lighter)] ]"
+                className="my-0 w-full bg-[var(--vapor-color-background-surface-100)] ]"
             >
                 <Tab value="Preview" className="rounded-t-none">
                     <Preview name={name} />
