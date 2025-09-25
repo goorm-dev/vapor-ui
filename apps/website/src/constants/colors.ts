@@ -29,9 +29,11 @@ const isSemanticColorVariant = (item: unknown): item is SemanticColorVariant => 
 };
 
 const isValidSemanticColorItem = (item: unknown): item is SemanticColorItem => {
-    return isSemanticColorValue(item) || 
-           isSemanticColorVariant(item) || 
-           (typeof item === 'object' && item !== null);
+    return (
+        isSemanticColorValue(item) ||
+        isSemanticColorVariant(item) ||
+        (typeof item === 'object' && item !== null)
+    );
 };
 
 // JSON 데이터를 기반으로 한 새로운 상수들
