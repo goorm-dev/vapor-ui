@@ -1,0 +1,657 @@
+---
+title: Field
+site_name: Field - Vapor Core
+description: Field는 폼 요소들을 감싸는 컨테이너 컴포넌트로, 라벨, 설명, 에러 메시지, 성공 메시지 등을 제공합니다.
+---
+
+<Demo name="field/default-field">
+
+```tsx
+'use client';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function DefaultField() {
+    return (
+        <Field.Root name="username" className="v-space-y-2">
+            <Field.Label>Field.Label</Field.Label>
+            <TextInput placeholder="사용자명을 입력하세요" className="v-w-full" />
+            <Field.Description>Field.Description</Field.Description>
+            <Field.Error match={true}>Field.Error</Field.Error>
+            <Field.Success>Field.Success</Field.Success>
+        </Field.Root>
+    );
+}
+```
+
+</Demo>
+
+## Property
+
+---
+
+### Invalid State
+
+`invalid` prop을 사용하여 필드의 유효하지 않은 상태를 표시할 수 있습니다.
+
+<Demo name="field/field-invalid">
+
+```tsx
+'use client';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldInvalid() {
+    // 공식 문서에 따라 custom error 타입 객체 반환
+    const validate = (value: unknown) => {
+        const email = String(value);
+        const EMAIL_REGEX =
+            /^[a-zA-Z0-9]{1}[a-zA-Z0-9-_.]*@[a-zA-Z0-9-]+.[a-zA-Z0-9-_]+(.[a-zA-Z0-9-_]+)?$/;
+        if (!EMAIL_REGEX.test(email)) {
+            return '올바른 이메일 형식을 입력해주세요.';
+        }
+        // null을 반환하거나, Base UI에서 required하지 않으면 undefined
+        return null;
+    };
+
+    return (
+        <Field.Root
+            name="email"
+            validationMode="onChange"
+            validate={validate}
+            className="v-space-y-2"
+        >
+            <Field.Label>이메일</Field.Label>
+            <TextInput type="email" placeholder="이메일을 입력하세요" className="v-w-full" />
+            <Field.Error />
+        </Field.Root>
+    );
+}
+```
+
+</Demo>
+
+### Validation Mode
+
+`validationMode` prop을 사용하여 언제 검증을 수행할지 제어할 수 있습니다. `onChange`는 입력할 때마다, `onBlur`는 포커스를 잃을 때 검증을 수행합니다.
+
+<Demo name="field/field-validation-mode">
+
+```tsx
+'use client';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldValidationMode() {
+    const validateEmail = (value: unknown) => {
+        const stringValue = String(value || '');
+        if (stringValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(stringValue)) {
+            return '올바른 이메일 형식을 입력해주세요.';
+        }
+        return null;
+    };
+
+    return (
+        <div className="v-space-y-4">
+            <Field.Root name="name" validationMode="onChange" className="v-space-y-2">
+                <Field.Label>이름 (onChange 검증)</Field.Label>
+                <TextInput required placeholder="이름을 입력하세요" className="v-w-full" />
+                <Field.Description>입력할 때마다 실시간으로 검증됩니다.</Field.Description>
+                <Field.Error />
+            </Field.Root>
+
+            <Field.Root
+                name="email"
+                validationMode="onBlur"
+                validate={validateEmail}
+                className="v-space-y-2"
+            >
+                <Field.Label>이메일 (onBlur 검증)</Field.Label>
+                <TextInput type="email" placeholder="이메일을 입력하세요" className="v-w-full" />
+                <Field.Description>입력 필드를 벗어날 때 검증됩니다.</Field.Description>
+                <Field.Error />
+            </Field.Root>
+        </div>
+    );
+}
+```
+
+</Demo>
+
+### Match
+
+`Field.Error`의 `match` prop을 사용하여 특정 조건에 따라 에러 메시지 표시를 제어할 수 있습니다.
+
+<Demo name="field/field-match">
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldMatch() {
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const isPasswordWeak = password.length > 0 && password.length < 8;
+    const isPasswordMismatch = confirmPassword.length > 0 && password !== confirmPassword;
+
+    return (
+        <div className="v-space-y-4">
+            <Field.Root name="password" className="v-space-y-2">
+                <Field.Label>비밀번호</Field.Label>
+                <TextInput
+                    type="password"
+                    placeholder="비밀번호를 입력하세요"
+                    value={password}
+                    onChange={(event) => {
+                        const { value } = event.currentTarget;
+                        setPassword(String(value));
+                    }}
+                    className="v-w-full"
+                />
+                <Field.Description>최소 8자 이상 입력해주세요.</Field.Description>
+                {/* match={true}로 에러를 강제 표시 */}
+                <Field.Error match={isPasswordWeak}>
+                    비밀번호는 최소 8자 이상이어야 합니다.
+                </Field.Error>
+            </Field.Root>
+
+            <Field.Root name="confirmPassword" className="v-space-y-2">
+                <Field.Label>비밀번호 확인</Field.Label>
+                <TextInput
+                    type="password"
+                    placeholder="비밀번호를 다시 입력하세요"
+                    value={confirmPassword}
+                    onChange={(event) => {
+                        const { value } = event.currentTarget;
+                        setConfirmPassword(String(value));
+                    }}
+                    className="v-w-full"
+                />
+                {/* 조건부로 에러 표시 */}
+                <Field.Error match={isPasswordMismatch}>비밀번호가 일치하지 않습니다.</Field.Error>
+            </Field.Root>
+        </div>
+    );
+}
+```
+
+</Demo>
+
+## Examples
+
+---
+
+### With Description
+
+Field.Description을 사용하여 필드에 대한 추가 설명을 제공할 수 있습니다.
+
+<Demo name="field/field-description">
+
+```tsx
+'use client';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldDescription() {
+    return (
+        <Field.Root name="email" className="v-space-y-2">
+            <Field.Label>이메일 주소</Field.Label>
+            <TextInput type="email" placeholder="example@email.com" className="v-w-full" />
+            <Field.Description>회원가입 시 사용할 이메일 주소를 입력해주세요.</Field.Description>
+        </Field.Root>
+    );
+}
+```
+
+</Demo>
+
+### With Validation
+
+Field.Error와 Field.Success를 사용하여 유효성 검사 결과를 표시할 수 있습니다.
+
+<Demo name="field/field-validation">
+
+```tsx
+'use client';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldValidation() {
+    return (
+        <Field.Root name="password" validationMode="onChange" className="v-space-y-2">
+            <Field.Label>비밀번호</Field.Label>
+            <TextInput
+                required
+                type="password"
+                placeholder="비밀번호를 입력하세요"
+                className="v-w-full"
+            />
+            <Field.Error>비밀번호를 입력해주세요.</Field.Error>
+            <Field.Success>✓ 사용 가능한 비밀번호입니다.</Field.Success>
+        </Field.Root>
+    );
+}
+```
+
+</Demo>
+
+### With Checkbox
+
+Checkbox 컴포넌트와 Field를 함께 사용하는 예제입니다.
+
+<Demo name="field/field-checkbox">
+
+```tsx
+'use client';
+
+import { Checkbox, Field, HStack } from '@vapor-ui/core';
+import { ConfirmOutlineIcon } from '@vapor-ui/icons';
+
+export default function FieldCheckbox() {
+    return (
+        <Field.Root name="agreement" className="v-space-y-2">
+            <HStack gap="$100" alignItems="center">
+                <Checkbox.Root>
+                    <Checkbox.Indicator>
+                        <ConfirmOutlineIcon />
+                    </Checkbox.Indicator>
+                </Checkbox.Root>
+                <Field.Label>이용약관에 동의합니다</Field.Label>
+            </HStack>
+            <Field.Description>서비스 이용을 위해 이용약관에 동의해주세요.</Field.Description>
+        </Field.Root>
+    );
+}
+```
+
+</Demo>
+
+### With Switch
+
+Switch 컴포넌트와 Field를 함께 사용하는 예제입니다.
+
+<Demo name="field/field-switch">
+
+```tsx
+'use client';
+
+import { Field, HStack, Switch } from '@vapor-ui/core';
+
+export default function FieldSwitch() {
+    return (
+        <Field.Root name="notifications" className="v-space-y-2">
+            <HStack alignItems="center" justifyContent="space-between" className="v-w-full">
+                <Field.Label>알림 수신 동의</Field.Label>
+                <Switch.Root />
+            </HStack>
+            <Field.Description>
+                새로운 소식과 업데이트를 이메일로 받아보실 수 있습니다.
+            </Field.Description>
+        </Field.Root>
+    );
+}
+```
+
+</Demo>
+
+### With RadioGroup
+
+RadioGroup과 Field를 함께 사용하여 선택지가 있는 필드를 만드는 예제입니다.
+
+<Demo name = "field/field-radio-group">
+
+```tsx
+'use client';
+
+import { Field, Radio, RadioGroup } from '@vapor-ui/core';
+
+export default function FieldRadioGroup() {
+    return (
+        <Field.Root name="gender" className="v-space-y-3">
+            <Field.Label>성별</Field.Label>
+            <RadioGroup.Root className="v-space-y-2">
+                <div className="v-flex v-items-center v-gap-2">
+                    <Radio.Root value="male">
+                        <Radio.Indicator />
+                    </Radio.Root>
+                    <Field.Label>남성</Field.Label>
+                </div>
+                <div className="v-flex v-items-center v-gap-2">
+                    <Radio.Root value="female">
+                        <Radio.Indicator />
+                    </Radio.Root>
+                    <Field.Label>여성</Field.Label>
+                </div>
+                <div className="v-flex v-items-center v-gap-2">
+                    <Radio.Root value="other">
+                        <Radio.Indicator />
+                    </Radio.Root>
+                    <Field.Label>기타</Field.Label>
+                </div>
+            </RadioGroup.Root>
+            <Field.Description>개인정보 보호를 위해 선택사항입니다.</Field.Description>
+        </Field.Root>
+    );
+}
+```
+
+</Demo>
+
+### With Different Input Types
+
+다양한 폼 컨트롤(TextInput, Checkbox, Switch, Select 등)과 Field를 함께 사용하는 예제입니다.
+
+<Demo name="field/field-with-inputs">
+
+```tsx
+'use client';
+
+import { Checkbox, Field, Select, Switch, TextInput } from '@vapor-ui/core';
+
+export default function FieldWithInputs() {
+    return (
+        <div className="v-space-y-6">
+            {/* TextInput with Field */}
+            <Field.Root name="email" className="v-space-y-2">
+                <Field.Label>이메일</Field.Label>
+                <TextInput type="email" placeholder="example@domain.com" className="v-w-full" />
+                <Field.Description>알림을 받을 이메일 주소를 입력하세요.</Field.Description>
+            </Field.Root>
+
+            {/* Checkbox with Field */}
+            <Field.Root name="newsletter" className="v-space-y-2">
+                <div className="v-flex v-items-center v-space-x-2">
+                    <Checkbox.Root>
+                        <Checkbox.Indicator />
+                    </Checkbox.Root>
+                    <Field.Label className="v-mb-0">뉴스레터 구독</Field.Label>
+                </div>
+                <Field.Description>최신 소식과 업데이트를 이메일로 받아보세요.</Field.Description>
+            </Field.Root>
+
+            {/* Switch with Field */}
+            <Field.Root name="notifications" className="v-space-y-2">
+                <div className="v-flex v-items-center v-justify-between">
+                    <div>
+                        <Field.Label>푸시 알림</Field.Label>
+                        <Field.Description>중요한 알림을 즉시 받아보세요.</Field.Description>
+                    </div>
+                    <Switch.Root>
+                        <Switch.Thumb />
+                    </Switch.Root>
+                </div>
+            </Field.Root>
+
+            {/* Select with Field */}
+            <Field.Root name="country" className="v-space-y-2">
+                <Field.Label>국가</Field.Label>
+                <Select.Root placeholder="국가를 선택하세요">
+                    <Select.Trigger />
+                    <Select.Portal>
+                        <Select.Positioner>
+                            <Select.Content>
+                                <Select.Item value="kr">대한민국</Select.Item>
+                                <Select.Item value="us">미국</Select.Item>
+                                <Select.Item value="jp">일본</Select.Item>
+                                <Select.Item value="cn">중국</Select.Item>
+                            </Select.Content>
+                        </Select.Positioner>
+                    </Select.Portal>
+                </Select.Root>
+                <Field.Description>거주 중인 국가를 선택하세요.</Field.Description>
+            </Field.Root>
+        </div>
+    );
+}
+```
+
+</Demo>
+
+### Required Fields
+
+필수 필드와 선택 필드를 구분하여 표시하는 예제입니다.
+
+<Demo name="field/field-required">
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldRequired() {
+    const [value, setValue] = useState('');
+    const showError = value.length === 0;
+
+    return (
+        <div className="v-space-y-6">
+            {/* Required Field */}
+            <Field.Root name="required-field" className="v-space-y-2">
+                <Field.Label>
+                    필수 입력 필드 <span className="v-text-red-500">*</span>
+                </Field.Label>
+                <TextInput
+                    placeholder="필수 입력 항목입니다"
+                    className="v-w-full"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    required
+                />
+                <Field.Description>
+                    이 필드는 반드시 입력해야 하는 필수 항목입니다.
+                </Field.Description>
+                <Field.Error match={showError}>이 필드는 필수 입력 항목입니다.</Field.Error>
+                {!showError && value.length > 0 && (
+                    <Field.Success>입력이 완료되었습니다.</Field.Success>
+                )}
+            </Field.Root>
+
+            {/* Optional Field */}
+            <Field.Root name="optional-field" className="v-space-y-2">
+                <Field.Label>
+                    선택 입력 필드 <span className="v-text-gray-400">(선택사항)</span>
+                </Field.Label>
+                <TextInput placeholder="선택적으로 입력하세요" className="v-w-full" />
+                <Field.Description>이 필드는 선택적으로 입력할 수 있습니다.</Field.Description>
+            </Field.Root>
+        </div>
+    );
+}
+```
+
+</Demo>
+
+### Field States
+
+다양한 필드 상태(일반, 오류, 성공, 비활성화)를 보여주는 예제입니다.
+
+<Demo name="field/field-states">
+
+```tsx
+'use client';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldStates() {
+    return (
+        <div className="v-space-y-6">
+            {/* Normal State */}
+            <Field.Root name="normal" className="v-space-y-2">
+                <Field.Label>일반 상태</Field.Label>
+                <TextInput placeholder="일반 입력 필드" className="v-w-full" />
+                <Field.Description>일반적인 필드 상태입니다.</Field.Description>
+            </Field.Root>
+
+            {/* Error State */}
+            <Field.Root name="error" className="v-space-y-2">
+                <Field.Label>오류 상태</Field.Label>
+                <TextInput placeholder="오류가 있는 필드" className="v-w-full v-border-red-500" />
+                <Field.Error match={true}>필수 입력 항목입니다. 값을 입력해주세요.</Field.Error>
+            </Field.Root>
+
+            {/* Success State */}
+            <Field.Root name="success" className="v-space-y-2">
+                <Field.Label>성공 상태</Field.Label>
+                <TextInput
+                    placeholder="유효한 필드"
+                    className="v-w-full v-border-green-500"
+                    defaultValue="valid@example.com"
+                />
+                <Field.Success>올바른 이메일 형식입니다.</Field.Success>
+            </Field.Root>
+
+            {/* Disabled State */}
+            <Field.Root name="disabled" className="v-space-y-2">
+                <Field.Label className="v-text-gray-400">비활성화 상태</Field.Label>
+                <TextInput placeholder="비활성화된 필드" className="v-w-full" disabled />
+                <Field.Description className="v-text-gray-400">
+                    이 필드는 현재 비활성화되어 있습니다.
+                </Field.Description>
+            </Field.Root>
+        </div>
+    );
+}
+```
+
+</Demo>
+
+### Controlled Fields
+
+제어 컴포넌트로 필드를 관리하고 실시간으로 상태를 표시하는 예제입니다.
+
+<Demo name="field/field-controlled">
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldControlled() {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+
+    const isEmailValid = email.includes('@') && email.includes('.');
+    const showEmailError = email.length > 0 && !isEmailValid;
+
+    return (
+        <div className="v-space-y-6">
+            <Field.Root name="firstName" className="v-space-y-2">
+                <Field.Label>이름</Field.Label>
+                <TextInput
+                    placeholder="이름을 입력하세요"
+                    className="v-w-full"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                />
+                <Field.Description>현재 값: {firstName || '(비어있음)'}</Field.Description>
+            </Field.Root>
+
+            <Field.Root name="lastName" className="v-space-y-2">
+                <Field.Label>성</Field.Label>
+                <TextInput
+                    placeholder="성을 입력하세요"
+                    className="v-w-full"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                />
+                <Field.Description>현재 값: {lastName || '(비어있음)'}</Field.Description>
+            </Field.Root>
+
+            <Field.Root name="email" className="v-space-y-2">
+                <Field.Label>이메일</Field.Label>
+                <TextInput
+                    type="email"
+                    placeholder="이메일을 입력하세요"
+                    className="v-w-full"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <Field.Description>현재 값: {email || '(비어있음)'}</Field.Description>
+                <Field.Error match={showEmailError}>올바른 이메일 형식이 아닙니다.</Field.Error>
+                {isEmailValid && <Field.Success>유효한 이메일 형식입니다.</Field.Success>}
+            </Field.Root>
+
+            <div className="v-p-4 v-bg-gray-100 v-rounded-md">
+                <h3 className="v-text-sm v-font-medium v-mb-2">현재 폼 상태</h3>
+                <pre className="v-text-xs">
+                    {JSON.stringify({ firstName, lastName, email }, null, 2)}
+                </pre>
+            </div>
+        </div>
+    );
+}
+```
+
+</Demo>
+
+### Disabled
+
+disabled 속성을 사용하여 비활성화된 필드를 만들 수 있습니다.
+
+<Demo name="field/field-disabled">
+
+```tsx
+'use client';
+
+import { Field, TextInput } from '@vapor-ui/core';
+
+export default function FieldDisabled() {
+    return (
+        <Field.Root name="readonly" disabled className="v-space-y-2">
+            <Field.Label>읽기 전용 필드</Field.Label>
+            <TextInput value="이 필드는 수정할 수 없습니다" disabled className="v-w-full" />
+            <Field.Description>이 필드는 현재 비활성화되어 수정할 수 없습니다.</Field.Description>
+        </Field.Root>
+    );
+}
+```
+
+</Demo>
+
+## Props Table
+
+---
+
+### Field.Root
+
+Field의 메인 컨테이너 컴포넌트입니다. 폼 필드의 기본 구조를 제공하며, 라벨, 입력 요소, 설명, 에러 메시지 등을 포함할 수 있습니다.
+
+<ComponentPropsTable file="field" section="props" />
+
+### Field.Label
+
+필드에 라벨을 제공하는 컴포넌트입니다. 자동으로 폼 컨트롤과 연결됩니다.
+
+<ComponentPropsTable file="field" section="labelProps" />
+
+### Field.Description
+
+필드에 대한 추가 설명을 제공하는 컴포넌트입니다.
+
+<ComponentPropsTable file="field" section="descriptionProps" />
+
+### Field.Error
+
+필드 유효성 검사 실패 시 표시되는 오류 메시지 컴포넌트입니다.
+
+<ComponentPropsTable file="field" section="errorProps" />
+
+### Field.Success
+
+필드 유효성 검사 성공 시 표시되는 성공 메시지 컴포넌트입니다.
+
+<ComponentPropsTable file="field" section="successProps" />
+
+### Field.Validity
+
+필드의 유효성 상태에 따라 커스텀 내용을 표시할 수 있는 컴포넌트입니다.
+
+<ComponentPropsTable file="field" section="validityProps" />

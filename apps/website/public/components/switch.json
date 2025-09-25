@@ -1,10 +1,10 @@
 {
     "props": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "button",
+            "description": "스위치를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "defaultChecked",
@@ -69,36 +69,16 @@
     ],
     "controlProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "button",
+            "description": "스위치 컨트롤을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "id",
             "type": ["string"],
             "default": "-",
             "description": "컨트롤 요소의 id를 지정합니다. 값을 지정하지 않으면 Switch.Root 단계에서 생성된 고유 id가 자동으로 사용됩니다."
-        }
-    ],
-    "labelProps": [
-        {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
-        },
-        {
-            "prop": "htmlFor",
-            "type": ["string"],
-            "default": "-",
-            "description": "레이블이 연결될 Switch.Control 요소의 id를 지정합니다. 생략하면 같은 Switch.Root 안에서 발견된 Switch.Control id가 자동으로 대입되어 접근성이 유지됩니다."
-        },
-        {
-            "prop": "children",
-            "type": ["ReactNode"],
-            "default": "-",
-            "description": "레이블에 표시할 텍스트나 노드입니다."
         }
     ]
 }

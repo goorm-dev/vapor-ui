@@ -81,10 +81,10 @@
     ],
     "listProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "ul",
+            "description": "네비게이션 리스트를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "className",
@@ -101,10 +101,10 @@
     ],
     "itemProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "li",
+            "description": "네비게이션 아이템을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "value",
@@ -127,10 +127,10 @@
     ],
     "linkProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "a",
+            "description": "네비게이션 링크를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "selected",
@@ -159,10 +159,10 @@
     ],
     "linkItemProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "li",
+            "description": "네비게이션 링크 아이템을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "selected",

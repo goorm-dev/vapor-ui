@@ -2,11 +2,10 @@
 
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react';
 import { Field as BaseField } from '@base-ui-components/react/field';
 import clsx from 'clsx';
 
-import type { VComponentProps } from '~/utils/types';
+import type { Assign, VComponentProps } from '~/utils/types';
 
 import * as styles from './field.css';
 
@@ -17,15 +16,9 @@ import * as styles from './field.css';
 type FieldPrimitiveProps = VComponentProps<typeof BaseField.Root>;
 interface FieldRootProps extends FieldPrimitiveProps {}
 
-const Root = forwardRef<HTMLDivElement, FieldRootProps>(
-    ({ children, className, ...props }, ref) => {
-        return (
-            <BaseField.Root className={clsx(className, styles.root())} ref={ref} {...props}>
-                {children}
-            </BaseField.Root>
-        );
-    },
-);
+const Root = forwardRef<HTMLDivElement, FieldRootProps>(({ className, ...props }, ref) => {
+    return <BaseField.Root ref={ref} className={clsx(styles.root, className)} {...props} />;
+});
 
 Root.displayName = 'Field.Root';
 
@@ -37,7 +30,7 @@ type PrimitiveLabelProps = VComponentProps<typeof BaseField.Label>;
 interface FieldLabelProps extends PrimitiveLabelProps {}
 
 const Label = forwardRef<HTMLLabelElement, FieldLabelProps>(({ className, ...props }, ref) => {
-    return <BaseField.Label ref={ref} className={clsx(styles.label(), className)} {...props} />;
+    return <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...props} />;
 });
 Label.displayName = 'Field.Label';
 
@@ -52,7 +45,7 @@ const Description = forwardRef<HTMLParagraphElement, FieldDescriptionProps>(
     ({ className, ...props }, ref) => {
         return (
             <BaseField.Description
-                className={clsx(styles.description(), className)}
+                className={clsx(styles.description, className)}
                 {...props}
                 ref={ref}
             />
@@ -65,15 +58,21 @@ Description.displayName = 'Field.Description';
  * Field.Error
  * -----------------------------------------------------------------------------------------------*/
 
-type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
-interface FieldErrorProps extends BaseFieldErrorProps {}
+type ErrorValidityState = Omit<
+    Parameters<BaseField.Validity.Props['children']>[0]['validity'],
+    'valid'
+>;
+type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
 
-const Error = forwardRef<HTMLDivElement, FieldErrorProps>(({ className, match, ...props }, ref) => {
+type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
+interface FieldErrorProps extends Assign<BaseFieldErrorProps, ErrorMatchProps> {}
+
+const Error = forwardRef<HTMLDivElement, FieldErrorProps>(({ match, className, ...props }, ref) => {
     return (
         <BaseField.Error
-            {...props}
             ref={ref}
-            className={clsx(styles.error(), className)}
+            className={clsx(styles.error, className)}
+            {...props}
             match={match}
         />
     );
@@ -85,41 +84,35 @@ Error.displayName = 'Field.Error';
  * Field.Success
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveSuccessProps = Omit<VComponentProps<typeof BaseField.Validity>, 'children'>;
-interface FieldSuccessProps extends PrimitiveSuccessProps, useRender.ComponentProps<'span'> {}
+type PrimitiveSuccessProps = Omit<VComponentProps<typeof BaseField.Error>, 'match'>;
+interface FieldSuccessProps extends PrimitiveSuccessProps {}
 
-const Success = forwardRef<HTMLSpanElement, FieldSuccessProps>(
-    ({ render, className, ...props }, ref) => {
-        const element = useRender({
-            render: render || <span />,
-            ref,
-            props: { className: clsx(styles.success(), className), ...props },
-        });
-        return (
-            <BaseField.Validity>
-                {(validity) => {
-                    return validity.validity.valid ? element : null;
-                }}
-            </BaseField.Validity>
-        );
-    },
-);
+const Success = forwardRef<HTMLDivElement, FieldSuccessProps>(({ className, ...props }, ref) => {
+    return (
+        <BaseField.Error
+            ref={ref}
+            className={clsx(styles.success, className)}
+            {...props}
+            match="valid"
+        />
+    );
+});
 Success.displayName = 'Field.Success';
 
 /* -----------------------------------------------------------------------------------------------*/
 
 export {
+    Root as FieldRoot,
+    Label as FieldLabel,
     Description as FieldDescription,
     Error as FieldError,
-    Label as FieldLabel,
-    Root as FieldRoot,
     Success as FieldSuccess,
 };
 export type {
+    FieldRootProps,
+    FieldLabelProps,
     FieldDescriptionProps,
     FieldErrorProps,
-    FieldLabelProps,
-    FieldRootProps,
     FieldSuccessProps,
 };
 

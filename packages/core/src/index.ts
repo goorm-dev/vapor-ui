@@ -10,6 +10,7 @@ export * from './components/collapsible';
 export * from './components/field';
 export * from './components/dialog';
 export * from './components/flex';
+export * from './components/form';
 export * from './components/grid';
 export * from './components/h-stack';
 export * from './components/icon-button';

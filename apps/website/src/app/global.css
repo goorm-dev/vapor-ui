@@ -1,6 +1,7 @@
 @layer reset, tw-base, base, tw-theme, theme, components, utilities, tw-utilities;
 
 @import '@vapor-ui/core/styles.css';
+@import '@vapor-ui/core/tailwind.css';
 
 @import 'tailwindcss/preflight' layer(tw-base);
 @import 'tailwindcss/theme' layer(tw-theme);
@@ -26,7 +27,6 @@
     --color-fd-muted: var(--vapor-color-secondary);
     --color-fd-muted-foreground: var(--vapor-color-foreground-secondary);
     --color-fd-foreground: var(--vapor-color-foreground-secondary);
-    --color-fd-secondary: var(--vapor-color-secondary);
     --color-fd-secondary-foreground: var(--vapor-color-foreground-secondary);
     --color-fd-card: var(--vapor-color-background-normal);
     --color-fd-card-foreground: var(--vapor-color-foreground-secondary);
@@ -34,6 +34,7 @@
     --color-fd-popover: var(--vapor-color-background-normal);
     --color-fd-primary-foreground: var(--vapor-color-foreground-primary);
     --color-fd-foreground: var(--vapor-color-foreground-normal);
+    --fd-nav-height: 64px;
 }
 
 a[data-active='true'] {
