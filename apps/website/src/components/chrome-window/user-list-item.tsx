@@ -25,7 +25,7 @@ export function UserListItem({
             </Avatar.Root>
             <div className="flex flex-col items-start gap-[var(--vapor-size-space-000)] flex-1 basis-0 grow">
                 <div className="flex items-center gap-[var(--vapor-size-space-050)] self-stretch">
-                    <Text typography="subtitle1" foreground="hint-darker">
+                    <Text typography="subtitle1" foreground="hint-200">
                         {name || '이름 없음'}
                     </Text>
                     {badge && (
@@ -36,11 +36,11 @@ export function UserListItem({
                 </div>
                 <div>
                     {online ? (
-                        <Text typography="subtitle2" foreground="hint">
+                        <Text typography="subtitle2" foreground="hint-100">
                             온라인
                         </Text>
                     ) : (
-                        <Text typography="subtitle2" foreground="hint">
+                        <Text typography="subtitle2" foreground="hint-100">
                             {lastActiveDaysAgo ? `${lastActiveDaysAgo}일 전 접속` : '오프라인'}
                         </Text>
                     )}

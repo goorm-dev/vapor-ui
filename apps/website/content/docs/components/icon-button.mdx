@@ -5,16 +5,10 @@ description: 'IconButton은 특정 작업이나 기능을 나타내며, 텍스�
 ---
 
 <Demo name="default-icon-button">
-```tsx
-import { IconButton } from '@vapor-ui/core';
-import { HeartIcon } from '@vapor-ui/icons';
-
-export default function DefaultIconButton() {
-    return (
-        <IconButton aria-label="좋아요">
-            <HeartIcon />
-        </IconButton>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-icon-button.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -28,27 +22,10 @@ export default function DefaultIconButton() {
 IconButton 사이즈는 sm, md, lg, xl 로 제공합니다.
 
 <Demo name="icon-button-size">
-```tsx
-import { IconButton } from '@vapor-ui/core';
-import { HeartIcon } from '@vapor-ui/icons';
-
-export default function IconButtonSize() {
-    return (
-        <div className="flex items-center gap-4">
-            <IconButton size="sm" aria-label="작은 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton size="md" aria-label="보통 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton size="lg" aria-label="큰 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton size="xl" aria-label="매우 큰 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/icon-button-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -58,33 +35,10 @@ export default function IconButtonSize() {
 IconButton 색상은 primary, secondary, success, warning, danger, contrast 로 제공합니다.
 
 <Demo name="icon-button-color">
-```tsx
-import { IconButton } from '@vapor-ui/core';
-import { HeartIcon } from '@vapor-ui/icons';
-
-export default function IconButtonColor() {
-    return (
-        <div className="flex flex-wrap gap-2">
-            <IconButton color="primary" aria-label="기본 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton color="secondary" aria-label="보조 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton color="success" aria-label="성공 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton color="warning" aria-label="경고 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton color="danger" aria-label="위험 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton color="contrast" aria-label="대비 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/icon-button-color.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -94,24 +48,10 @@ export default function IconButtonColor() {
 IconButton 스타일 변형은 fill, outline, ghost 로 제공합니다.
 
 <Demo name="icon-button-variant">
-```tsx
-import { IconButton } from '@vapor-ui/core';
-import { HeartIcon } from '@vapor-ui/icons';
-
-export default function IconButtonVariant() {
-    return (
-        <div className="flex items-center gap-4">
-            <IconButton variant="fill" aria-label="채움 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton variant="outline" aria-label="테두리 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton variant="ghost" aria-label="투명 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/icon-button-variant.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -121,21 +61,10 @@ export default function IconButtonVariant() {
 IconButton 모양은 square, circle 로 제공합니다.
 
 <Demo name="icon-button-shape">
-```tsx
-import { IconButton } from '@vapor-ui/core';
-import { HeartIcon } from '@vapor-ui/icons';
-
-export default function IconButtonShape() {
-    return (
-        <div className="flex items-center gap-4">
-            <IconButton shape="square" aria-label="사각형 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton shape="circle" aria-label="원형 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/icon-button-shape.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -145,24 +74,10 @@ export default function IconButtonShape() {
 비활성화된 상태의 IconButton입니다. 사용자가 상호작용할 수 없습니다.
 
 <Demo name="icon-button-disabled">
-```tsx
-import { IconButton } from '@vapor-ui/core';
-import { HeartIcon } from '@vapor-ui/icons';
-
-export default function IconButtonDisabled() {
-    return (
-        <div className="flex items-center gap-4">
-            <IconButton disabled aria-label="비활성화된 좋아요 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton disabled variant="outline" aria-label="비활성화된 테두리 버튼">
-                <HeartIcon />
-            </IconButton>
-            <IconButton disabled variant="ghost" aria-label="비활성화된 투명 버튼">
-                <HeartIcon />
-            </IconButton>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/icon-button-disabled.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

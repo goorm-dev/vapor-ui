@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
 import { getComponentOgImageUrl } from '~/constants/image-urls';
-import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
+import { createMetadata } from '~/utils/metadata';
 
 const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
     const { slug = [] } = await params;
@@ -65,4 +65,13 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
             images: image,
         },
     });
+}
+
+export async function generateStaticParams() {
+    const params = source.generateParams();
+    return params
+        .filter((param) => param.slug?.[0] === 'components')
+        .map((param) => ({
+            slug: param.slug?.slice(1) || [],
+        }));
 }

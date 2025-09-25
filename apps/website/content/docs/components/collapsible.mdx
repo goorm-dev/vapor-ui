@@ -5,32 +5,12 @@ description: 'Collapsible은 콘텐츠를 접었다 펼칠 수 있는 대화형 
 ---
 
 <Demo name="collapsible/default-collapsible">
-
-```tsx
-import * as React from 'react';
-
-import { Collapsible, Text } from '@vapor-ui/core';
-import { ChevronRightOutlineIcon } from '@vapor-ui/icons';
-
-export default function DefaultCollapsible() {
-    return (
-        <Collapsible.Root className="flex min-h-36 w-64 flex-col justify-center text-v-gray-900">
-            <Collapsible.Trigger className="group flex items-center gap-2 rounded-sm bg-v-blue-100 px-3 py-2 text-sm font-medium hover:bg-v-blue-200 focus-visible:outline-2 focus-visible:outline-v-blue-600 active:bg-v-blue-200">
-                <ChevronRightOutlineIcon className="size-3 transition-all ease-out group-data-[panel-open]:rotate-90" />
-                프로젝트 메뉴
-            </Collapsible.Trigger>
-            <Collapsible.Panel className="flex h-[var(--collapsible-panel-height)] flex-col justify-end overflow-hidden text-sm transition-all ease-out data-[ending-style]:h-0 data-[starting-style]:h-0">
-                <div className="mt-1 flex cursor-text flex-col gap-2 rounded-sm bg-v-blue-50 py-3 pl-6">
-                    <Text foreground="normal">• 대시보드</Text>
-                    <Text foreground="normal">• 작업 관리</Text>
-                    <Text foreground="normal">• 팀원 초대</Text>
-                </div>
-            </Collapsible.Panel>
-        </Collapsible.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/default-collapsible.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Property
@@ -42,56 +22,12 @@ export default function DefaultCollapsible() {
 Collapsible의 열림/닫힘 상태를 제어할 수 있습니다. `defaultOpen`으로 초기 상태를 설정하거나, `open`과 `onOpenChange`로 완전히 제어할 수 있습니다.
 
 <Demo name="collapsible/collapsible-open-state">
-
-```tsx
-import { useState } from 'react';
-
-import { Button, Collapsible } from '@vapor-ui/core';
-
-export default function CollapsibleOpenState() {
-    const [open, setOpen] = useState(false);
-
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-lg font-medium mb-3">Uncontrolled (defaultOpen)</h4>
-                <Collapsible.Root defaultOpen>
-                    <Collapsible.Trigger className="px-4 py-2 bg-v-green-500 text-v-white rounded hover:bg-v-green-600 transition-colors">
-                        기본적으로 열려있음
-                    </Collapsible.Trigger>
-                    <Collapsible.Panel className="mt-2 p-4 border border-v-gray-200 rounded bg-v-green-50">
-                        이 패널은 처음에 열린 상태로 시작합니다.
-                    </Collapsible.Panel>
-                </Collapsible.Root>
-            </div>
-
-            <div>
-                <h4 className="text-lg font-medium mb-3">Controlled</h4>
-                <div className="flex gap-2 mb-3">
-                    <Button size="sm" onClick={() => setOpen(true)}>
-                        열기
-                    </Button>
-                    <Button size="sm" onClick={() => setOpen(false)}>
-                        닫기
-                    </Button>
-                    <span className="text-sm text-v-gray-600 flex items-center">
-                        현재 상태: {open ? '열림' : '닫힘'}
-                    </span>
-                </div>
-                <Collapsible.Root open={open} onOpenChange={setOpen}>
-                    <Collapsible.Trigger className="px-4 py-2 bg-v-blue-500 text-v-white rounded hover:bg-v-blue-600 transition-colors">
-                        제어되는 Collapsible
-                    </Collapsible.Trigger>
-                    <Collapsible.Panel className="mt-2 p-4 border border-v-gray-200 rounded bg-v-blue-50">
-                        이 패널의 상태는 외부에서 제어됩니다.
-                    </Collapsible.Panel>
-                </Collapsible.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/collapsible-open-state.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Keep Mounted
@@ -99,44 +35,12 @@ export default function CollapsibleOpenState() {
 `keepMounted` 속성을 사용하여 패널이 닫힌 상태에서도 DOM에 유지할 수 있습니다.
 
 <Demo name="collapsible/collapsible-keep-mounted">
-
-```tsx
-import { Collapsible } from '@vapor-ui/core';
-
-export default function CollapsibleKeepMounted() {
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-lg font-medium mb-3">기본 (DOM에서 제거됨)</h4>
-                <Collapsible.Root>
-                    <Collapsible.Trigger className="px-4 py-2 bg-v-purple-500 text-v-white rounded hover:bg-v-purple-600 transition-colors">
-                        기본 동작
-                    </Collapsible.Trigger>
-                    <Collapsible.Panel className="mt-2 p-4 border border-v-gray-200 rounded bg-v-purple-50">
-                        닫힌 상태에서는 DOM에서 제거됩니다.
-                    </Collapsible.Panel>
-                </Collapsible.Root>
-            </div>
-
-            <div>
-                <h4 className="text-lg font-medium mb-3">keepMounted (DOM에 유지됨)</h4>
-                <Collapsible.Root>
-                    <Collapsible.Trigger className="px-4 py-2 bg-v-orange-500 text-v-white rounded hover:bg-v-orange-600 transition-colors">
-                        keepMounted 사용
-                    </Collapsible.Trigger>
-                    <Collapsible.Panel
-                        keepMounted
-                        className="mt-2 p-4 border border-v-gray-200 rounded bg-v-orange-50"
-                    >
-                        닫힌 상태에서도 DOM에 유지됩니다.
-                    </Collapsible.Panel>
-                </Collapsible.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/collapsible-keep-mounted.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Disabled
@@ -144,24 +48,12 @@ export default function CollapsibleKeepMounted() {
 Collapsible을 비활성화하여 사용자 상호작용을 막을 수 있습니다.
 
 <Demo name="collapsible/collapsible-disabled">
-
-```tsx
-import { Collapsible } from '@vapor-ui/core';
-
-export default function CollapsibleDisabled() {
-    return (
-        <Collapsible.Root disabled>
-            <Collapsible.Trigger className="px-4 py-2 bg-v-gray-400 text-v-white rounded cursor-not-allowed">
-                비활성화된 Collapsible
-            </Collapsible.Trigger>
-            <Collapsible.Panel className="mt-2 p-4 border border-v-gray-200 rounded bg-v-gray-50">
-                이 콘텐츠는 토글할 수 없습니다.
-            </Collapsible.Panel>
-        </Collapsible.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/collapsible-disabled.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Props Table

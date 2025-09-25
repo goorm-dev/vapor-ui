@@ -5,20 +5,10 @@ description: 'InputGroup은 입력 필드(TextInput, Textarea)와 관련 요소�
 ---
 
 <Demo name="default-input-group">
-```tsx
-'use client';
-
-import { InputGroup, TextInput } from '@vapor-ui/core';
-
-export default function DefaultInputGroup() {
-    return (
-        <div className="space-y-4">
-            <InputGroup.Root>
-                <TextInput placeholder="메시지를 입력하세요..." maxLength={100} />
-                <InputGroup.Counter />
-            </InputGroup.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-input-group.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -32,28 +22,10 @@ export default function DefaultInputGroup() {
 InputGroup은 입력 컴포넌트(TextInput, Textarea)와 Counter를 조합하여 사용합니다. 입력 컴포넌트에 maxLength가 설정되면 자동으로 "현재글자수/최대글자수" 형태로 표시되고, maxLength가 없으면 현재 글자 수만 표시됩니다.
 
 <Demo name="input-group-basic">
-```tsx
-'use client';
-
-import { InputGroup, TextInput, Textarea } from '@vapor-ui/core';
-
-export default function InputGroupBasic() {
-    return (
-        <div className="space-y-4">
-            <InputGroup.Root>
-                <TextInput placeholder="텍스트 입력 (최대 50자)" maxLength={50} />
-                <InputGroup.Counter />
-            </InputGroup.Root>
-            <InputGroup.Root>
-                <Textarea placeholder="텍스트 영역 (최대 100자)" maxLength={100} rows={3} />
-                <InputGroup.Counter />
-            </InputGroup.Root>
-            <InputGroup.Root>
-                <TextInput placeholder="글자 수 제한 없음" />
-                <InputGroup.Counter />
-            </InputGroup.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/input-group-basic.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -63,24 +35,10 @@ export default function InputGroupBasic() {
 InputGroup은 Textarea와도 함께 사용할 수 있습니다.
 
 <Demo name="input-group-textarea">
-```tsx
-'use client';
-
-import { InputGroup, Textarea } from '@vapor-ui/core';
-
-export default function InputGroupTextarea() {
-    return (
-        <div className="space-y-4">
-            <InputGroup.Root>
-                <Textarea 
-                    placeholder="긴 텍스트를 입력하세요..." 
-                    maxLength={200}
-                    rows={4}
-                />
-                <InputGroup.Counter />
-            </InputGroup.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/input-group-textarea.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -90,41 +48,12 @@ export default function InputGroupTextarea() {
 Counter는 함수형 children을 지원하여 커스텀 카운터 UI를 구현할 수 있습니다.
 
 <Demo name="input-group-custom-counter">
-```tsx
-'use client';
-
-import { InputGroup, TextInput } from '@vapor-ui/core';
-
-export default function InputGroupCustomCounter() {
-    return (
-        <div className="space-y-4">
-            <InputGroup.Root>
-                <TextInput placeholder="커스텀 카운터 예시 1" maxLength={20} />
-                <InputGroup.Counter>
-                    {({ count, maxLength }) => `${count} of ${maxLength} characters`}
-                </InputGroup.Counter>
-            </InputGroup.Root>
-            <InputGroup.Root>
-                <TextInput placeholder="커스텀 카운터 예시 2" maxLength={100} />
-                <InputGroup.Counter>
-                    {({ count, maxLength, value }) => (
-                        <span
-                            className={
-                                maxLength && count > maxLength * 0.8
-                                    ? 'text-red-500'
-                                    : 'text-gray-500'
-                            }
-                        >
-                            {count}/{maxLength} {value.length > 50 && '⚠️'}
-                        </span>
-                    )}
-                </InputGroup.Counter>
-            </InputGroup.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/input-group-custom-counter.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Props Table
