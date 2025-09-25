@@ -18,7 +18,7 @@ export default function MultiSelectStates() {
     );
 }
 
-export const MultiSelectTemplate = (props: MultiSelectRootProps<[]>) => {
+export const MultiSelectTemplate = (props: MultiSelectRootProps<string>) => {
     return (
         <MultiSelect.Root {...props}>
             <MultiSelect.Trigger>
