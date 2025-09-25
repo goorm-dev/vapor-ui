@@ -1,47 +1,77 @@
-import { DARK_BASIC_COLORS, LIGHT_BASIC_COLORS } from './basic-color';
+import { BASE_BASIC_COLORS, DARK_BASIC_COLORS, LIGHT_BASIC_COLORS } from './basic-color';
 
 export const LIGHT_SEMANTIC_COLORS = {
     background: {
-        'rgb-primary': '42, 111, 243',
-        primary: LIGHT_BASIC_COLORS.blue['500'],
-        'rgb-secondary': '232, 232, 238',
-        secondary: LIGHT_BASIC_COLORS.gray['200'],
-        'rgb-success': '10, 134, 114',
-        success: LIGHT_BASIC_COLORS.green['500'],
-        'rgb-warning': '209, 73, 5',
-        warning: LIGHT_BASIC_COLORS.orange['500'],
-        'rgb-danger': '223, 51, 55',
-        danger: LIGHT_BASIC_COLORS.red['500'],
-        'rgb-hint': '108, 110, 126',
-        hint: LIGHT_BASIC_COLORS.gray['600'],
-        'rgb-contrast': '62, 64, 76',
-        contrast: LIGHT_BASIC_COLORS.gray['800'],
-        'rgb-normal': '255, 255, 255',
-        normal: LIGHT_BASIC_COLORS.gray['000'],
-        'normal-lighter': LIGHT_BASIC_COLORS.gray['000'],
-        'normal-darker': LIGHT_BASIC_COLORS.gray['050'],
+        primary: {
+            '100': LIGHT_BASIC_COLORS.blue['100'],
+            '200': LIGHT_BASIC_COLORS.blue['500'],
+        },
+        secondary: {
+            '100': LIGHT_BASIC_COLORS.gray['050'],
+            '200': LIGHT_BASIC_COLORS.gray['100'],
+        },
+        success: {
+            '100': LIGHT_BASIC_COLORS.green['100'],
+            '200': LIGHT_BASIC_COLORS.green['500'],
+        },
+        warning: {
+            '100': LIGHT_BASIC_COLORS.orange['100'],
+            '200': LIGHT_BASIC_COLORS.orange['500'],
+        },
+        danger: {
+            '100': LIGHT_BASIC_COLORS.red['100'],
+            '200': LIGHT_BASIC_COLORS.red['500'],
+        },
+        hint: {
+            '100': LIGHT_BASIC_COLORS.gray['100'],
+            '200': LIGHT_BASIC_COLORS.gray['600'],
+        },
+        contrast: {
+            '100': LIGHT_BASIC_COLORS.gray['200'],
+            '200': LIGHT_BASIC_COLORS.gray['800'],
+        },
+        canvas: '#ffffff',
+        surface: {
+            '100': BASE_BASIC_COLORS.white,
+            '200': LIGHT_BASIC_COLORS.gray['050'],
+        },
     },
     foreground: {
-        primary: LIGHT_BASIC_COLORS.blue['600'],
-        'primary-darker': LIGHT_BASIC_COLORS.blue['700'],
-        secondary: LIGHT_BASIC_COLORS.gray['800'],
-        'secondary-darker': LIGHT_BASIC_COLORS.gray['900'],
-        success: LIGHT_BASIC_COLORS.green['600'],
-        'success-darker': LIGHT_BASIC_COLORS.green['700'],
-        warning: LIGHT_BASIC_COLORS.orange['600'],
-        'warning-darker': LIGHT_BASIC_COLORS.orange['700'],
-        danger: LIGHT_BASIC_COLORS.red['600'],
-        'danger-darker': LIGHT_BASIC_COLORS.red['700'],
-        hint: LIGHT_BASIC_COLORS.gray['600'],
-        'hint-darker': LIGHT_BASIC_COLORS.gray['700'],
-        contrast: LIGHT_BASIC_COLORS.gray['800'],
-        'contrast-darker': LIGHT_BASIC_COLORS.gray['900'],
-        accent: LIGHT_BASIC_COLORS.white,
-        normal: LIGHT_BASIC_COLORS.gray['900'],
-        'normal-lighter': LIGHT_BASIC_COLORS.gray['700'],
+        primary: {
+            '100': LIGHT_BASIC_COLORS.blue['600'],
+            '200': LIGHT_BASIC_COLORS.blue['700'],
+        },
+        secondary: {
+            '100': LIGHT_BASIC_COLORS.gray['800'],
+            '200': LIGHT_BASIC_COLORS.gray['900'],
+        },
+        success: {
+            '100': LIGHT_BASIC_COLORS.green['600'],
+            '200': LIGHT_BASIC_COLORS.green['700'],
+        },
+        warning: {
+            '100': LIGHT_BASIC_COLORS.orange['600'],
+            '200': LIGHT_BASIC_COLORS.orange['700'],
+        },
+        danger: {
+            '100': LIGHT_BASIC_COLORS.red['600'],
+            '200': LIGHT_BASIC_COLORS.red['700'],
+        },
+        hint: {
+            '100': LIGHT_BASIC_COLORS.gray['600'],
+            '200': LIGHT_BASIC_COLORS.gray['700'],
+        },
+        contrast: {
+            '100': LIGHT_BASIC_COLORS.gray['800'],
+            '200': LIGHT_BASIC_COLORS.gray['900'],
+        },
+        normal: {
+            '100': LIGHT_BASIC_COLORS.gray['700'],
+            '200': LIGHT_BASIC_COLORS.gray['900'],
+        },
     },
     border: {
-        normal: LIGHT_BASIC_COLORS.gray['300'],
+        normal: LIGHT_BASIC_COLORS.gray['100'],
         primary: LIGHT_BASIC_COLORS.blue['500'],
         secondary: LIGHT_BASIC_COLORS.gray['200'],
         success: LIGHT_BASIC_COLORS.green['500'],
@@ -53,47 +83,82 @@ export const LIGHT_SEMANTIC_COLORS = {
     logo: {
         normal: LIGHT_BASIC_COLORS.gray['900'],
     },
+    button: {
+        foreground: {
+            primary: BASE_BASIC_COLORS.white,
+        },
+    },
 };
 
 export const DARK_SEMANTIC_COLORS = {
     background: {
-        'rgb-primary': '59, 130, 246',
-        primary: DARK_BASIC_COLORS.blue['500'],
-        'rgb-secondary': '31, 41, 55',
-        secondary: DARK_BASIC_COLORS.gray['200'],
-        'rgb-success': '34, 197, 94',
-        success: DARK_BASIC_COLORS.green['500'],
-        'rgb-warning': '249, 115, 22',
-        warning: DARK_BASIC_COLORS.orange['500'],
-        'rgb-danger': '239, 68, 68',
-        danger: DARK_BASIC_COLORS.red['500'],
-        'rgb-hint': '75, 85, 99',
-        hint: DARK_BASIC_COLORS.gray['600'],
-        'rgb-contrast': '229, 231, 235',
-        contrast: DARK_BASIC_COLORS.gray['300'],
-        'rgb-normal': '17, 24, 39',
-        normal: DARK_BASIC_COLORS.gray['050'],
-        'normal-lighter': DARK_BASIC_COLORS.gray['100'],
-        'normal-darker': DARK_BASIC_COLORS.gray['100'],
+        primary: {
+            '100': DARK_BASIC_COLORS.blue['900'],
+            '200': DARK_BASIC_COLORS.blue['500'],
+        },
+        secondary: {
+            '100': DARK_BASIC_COLORS.gray['800'],
+            '200': DARK_BASIC_COLORS.gray['200'],
+        },
+        success: {
+            '100': DARK_BASIC_COLORS.green['800'],
+            '200': DARK_BASIC_COLORS.green['500'],
+        },
+        warning: {
+            '100': DARK_BASIC_COLORS.orange['800'],
+            '200': DARK_BASIC_COLORS.orange['500'],
+        },
+        danger: {
+            '100': DARK_BASIC_COLORS.red['800'],
+            '200': DARK_BASIC_COLORS.red['500'],
+        },
+        hint: {
+            '100': DARK_BASIC_COLORS.gray['800'],
+            '200': DARK_BASIC_COLORS.gray['600'],
+        },
+        contrast: {
+            '100': DARK_BASIC_COLORS.gray['700'],
+            '200': DARK_BASIC_COLORS.gray['300'],
+        },
+        canvas: '#232323',
+        surface: {
+            '100': DARK_BASIC_COLORS.gray['100'],
+            '200': DARK_BASIC_COLORS.gray['100'],
+        },
     },
     foreground: {
-        primary: DARK_BASIC_COLORS.blue['500'],
-        'primary-darker': DARK_BASIC_COLORS.blue['600'],
-        secondary: DARK_BASIC_COLORS.gray['800'],
-        'secondary-darker': DARK_BASIC_COLORS.gray['900'],
-        success: DARK_BASIC_COLORS.green['500'],
-        'success-darker': DARK_BASIC_COLORS.green['600'],
-        warning: DARK_BASIC_COLORS.orange['500'],
-        'warning-darker': DARK_BASIC_COLORS.orange['600'],
-        danger: DARK_BASIC_COLORS.red['500'],
-        'danger-darker': DARK_BASIC_COLORS.red['600'],
-        hint: DARK_BASIC_COLORS.gray['600'],
-        'hint-darker': DARK_BASIC_COLORS.gray['700'],
-        contrast: DARK_BASIC_COLORS.gray['300'],
-        'contrast-darker': DARK_BASIC_COLORS.gray['400'],
-        accent: DARK_BASIC_COLORS.white,
-        normal: DARK_BASIC_COLORS.gray['900'],
-        'normal-lighter': DARK_BASIC_COLORS.gray['700'],
+        primary: {
+            '100': DARK_BASIC_COLORS.blue['500'],
+            '200': DARK_BASIC_COLORS.blue['600'],
+        },
+        secondary: {
+            '100': DARK_BASIC_COLORS.gray['500'],
+            '200': DARK_BASIC_COLORS.gray['600'],
+        },
+        success: {
+            '100': DARK_BASIC_COLORS.green['500'],
+            '200': DARK_BASIC_COLORS.green['600'],
+        },
+        warning: {
+            '100': DARK_BASIC_COLORS.orange['500'],
+            '200': DARK_BASIC_COLORS.orange['600'],
+        },
+        danger: {
+            '100': DARK_BASIC_COLORS.red['500'],
+            '200': DARK_BASIC_COLORS.red['600'],
+        },
+        hint: {
+            '100': DARK_BASIC_COLORS.gray['600'],
+            '200': DARK_BASIC_COLORS.gray['700'],
+        },
+        contrast: {
+            '100': DARK_BASIC_COLORS.gray['300'],
+            '200': DARK_BASIC_COLORS.gray['400'],
+        },
+        normal: {
+            '100': DARK_BASIC_COLORS.gray['900'],
+            '200': DARK_BASIC_COLORS.gray['700'],
+        },
     },
     border: {
         normal: DARK_BASIC_COLORS.gray['200'],
@@ -106,6 +171,11 @@ export const DARK_SEMANTIC_COLORS = {
         contrast: DARK_BASIC_COLORS.gray['300'],
     },
     logo: {
-        normal: DARK_BASIC_COLORS.white,
+        normal: BASE_BASIC_COLORS.white,
+    },
+    button: {
+        foreground: {
+            primary: BASE_BASIC_COLORS.white,
+        },
     },
 };

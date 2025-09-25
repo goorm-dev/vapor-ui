@@ -2,9 +2,9 @@ import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
-import { generatePageMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
+import { generatePageMetadata } from '~/utils/metadata';
 
 export default async function Page({ params }: { params: Promise<{ slug?: string[] }> }) {
     const { slug = [] } = await params;

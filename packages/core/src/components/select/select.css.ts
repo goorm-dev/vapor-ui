@@ -19,7 +19,7 @@ export const trigger = recipe({
             border: `1px solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
 
-            backgroundColor: vars.color.background['normal-lighter'],
+            backgroundColor: vars.color.background.surface[100],
 
             selectors: {
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
@@ -61,7 +61,7 @@ export const trigger = recipe({
 });
 
 export const value = recipe({
-    base: foregrounds({ color: 'normal' }),
+    base: foregrounds({ color: 'normal-200' }),
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -74,12 +74,12 @@ export const value = recipe({
     },
 });
 
-export const placeholder = style([foregrounds({ color: 'hint' })]);
+export const placeholder = style([foregrounds({ color: 'hint-100' })]);
 
 export const icon = layerStyle('components', { display: 'flex' });
 
 export const triggerIcon = recipe({
-    base: [foregrounds({ color: 'hint' }), icon],
+    base: [foregrounds({ color: 'hint-100' }), icon],
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -104,7 +104,7 @@ export const triggerIcon = recipe({
     },
 });
 
-export const itemIndicator = style([foregrounds({ color: 'normal' }), icon]);
+export const itemIndicator = style([foregrounds({ color: 'normal-200' }), icon]);
 
 export const positioner = layerStyle('components', {
     position: 'relative',
@@ -123,7 +123,7 @@ export const popup = layerStyle('components', {
 
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background['normal'],
+    backgroundColor: vars.color.background.surface[100],
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',
 
@@ -163,7 +163,7 @@ export const separator = layerStyle('components', {
 
 export const groupLabel = style([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'hint' }),
+    foregrounds({ color: 'hint-100' }),
     layerStyle('components', {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],

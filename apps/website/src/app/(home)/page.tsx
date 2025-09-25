@@ -74,7 +74,7 @@ export default function HomePage() {
 
                                     <Text
                                         typography="display4"
-                                        foreground="normal"
+                                        foreground="normal-200"
                                         render={<h1 />}
                                         className="hidden md:block"
                                     >
@@ -84,7 +84,7 @@ export default function HomePage() {
                                     </Text>
                                     <Text
                                         typography="heading2"
-                                        foreground="normal"
+                                        foreground="normal-200"
                                         render={<h1 />}
                                         className="md:hidden"
                                     >
@@ -96,14 +96,18 @@ export default function HomePage() {
 
                                 <Text
                                     typography="body1"
-                                    foreground="normal"
+                                    foreground="normal-200"
                                     className="hidden md:block"
                                 >
                                     Vapor는 디자이너와 개발자가 함께 사용할 수 있는 통일된 디자인
                                     언어와 구성 요소를 제공하여 <br />
                                     생산성을 높이고 사용자 경험을 개선하는 것을 목표로 합니다.
                                 </Text>
-                                <Text typography="body2" foreground="normal" className="md:hidden">
+                                <Text
+                                    typography="body2"
+                                    foreground="normal-200"
+                                    className="md:hidden"
+                                >
                                     Vapor는 디자이너와 개발자가 함께 사용할 수 있는 통일된 디자인
                                     언어와 구성 요소를 제공하여 <br />
                                     생산성을 높이고 사용자 경험을 개선하는 것을 목표로 합니다.
@@ -114,22 +118,22 @@ export default function HomePage() {
                                 className="max-w-[720px] w-full rounded-[var(--vapor-size-borderRadius-400)] flex flex-col items-center gap-4 bg-[rgba(0,0,0,0.16)] border border-[var(--vapor-color-border-normal)] shadow-[var(--vapor-shadow-100)] p-3 md:p-4"
                                 onClick={() => setIsSearchOpen(true)}
                             >
-                                <div className="flex items-center w-full px-6 h-12 justify-between rounded-[var(--vapor-size-borderRadius-300)] border border-[var(--vapor-color-border-normal)] bg-[var(--vapor-color-background-normal-lighter)]">
+                                <div className="flex items-center w-full px-6 h-12 justify-between rounded-[var(--vapor-size-borderRadius-300)] border border-[var(--vapor-color-border-normal)] bg-[var(--vapor-color-background-surface-100)]">
                                     <div className="flex items-center gap-[var(--vapor-size-space-100)]">
                                         <SearchOutlineIcon
                                             size={24}
-                                            color="var(--vapor-color-foreground-hint)"
+                                            color="var(--vapor-color-foreground-hint-100)"
                                         />
                                         <Text
                                             typography="body1"
-                                            foreground="hint"
+                                            foreground="hint-100"
                                             className="hidden md:block"
                                         >
                                             사용할 컴포넌트 이름으로 검색해 보세요
                                         </Text>
                                         <Text
                                             typography="body1"
-                                            foreground="hint"
+                                            foreground="hint-100"
                                             className="md:hidden"
                                         >
                                             컴포넌트 이름으로 검색
@@ -169,19 +173,19 @@ export default function HomePage() {
                                     <ForwardPageOutlineIcon
                                         width="24"
                                         height="24"
-                                        color="var(--vapor-color-foreground-secondary)"
+                                        color="var(--vapor-color-foreground-secondary-100)"
                                     />
                                 </Link>
                             }
                         ></Button>
                     </div>
                 </section>
-                <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-background-normal)]">
+                <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-background-canvas)]">
                     <div className="w-full justify-center flex flex-col items-center gap-[var(--vapor-size-space-200)] ">
                         <div className="flex flex-col items-center gap-[var(--vapor-size-space-100)] text-center">
                             <Text
                                 typography="heading2"
-                                foreground="normal"
+                                foreground="normal-200"
                                 render={<h2 />}
                                 className="max-[575px]:hidden"
                             >
@@ -189,13 +193,13 @@ export default function HomePage() {
                             </Text>
                             <Text
                                 typography="heading3"
-                                foreground="normal"
+                                foreground="normal-200"
                                 render={<h3 />}
                                 className="hidden max-[575px]:block"
                             >
                                 Instantly customize your theme
                             </Text>
-                            <Text typography="body1" foreground="normal">
+                            <Text typography="body1" foreground="normal-200">
                                 샘플 테마를 통해 Vapor가 어떻게 변화하는지 확인하고,
                                 <br />
                                 나만의 테마를 완성해보세요
@@ -206,7 +210,7 @@ export default function HomePage() {
                                 <LocalTab value="tab1">
                                     <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
                                         <RemoteIcon />
-                                        <Text typography="subtitle1" foreground="normal-lighter">
+                                        <Text typography="subtitle1" foreground="normal-100">
                                             Vapor
                                         </Text>
                                     </div>
@@ -214,7 +218,7 @@ export default function HomePage() {
                                 <LocalTab value="tab2">
                                     <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
                                         <AiSmartieIcon />
-                                        <Text typography="subtitle1" foreground="normal-lighter">
+                                        <Text typography="subtitle1" foreground="normal-100">
                                             Aurora
                                         </Text>
                                     </div>
@@ -222,7 +226,7 @@ export default function HomePage() {
                                 <LocalTab value="tab3">
                                     <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
                                         <StarIcon />
-                                        <Text typography="subtitle1" foreground="normal-lighter">
+                                        <Text typography="subtitle1" foreground="normal-100">
                                             Pop
                                         </Text>
                                     </div>
@@ -230,7 +234,7 @@ export default function HomePage() {
                             </LocalTabsList>
                             <LocalTabsContent value="tab1">
                                 <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
-                                    <Text foreground="normal" typography="subtitle1">
+                                    <Text foreground="normal-200" typography="subtitle1">
                                         Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌
                                         디자인을 제공합니다
                                     </Text>
@@ -243,7 +247,7 @@ export default function HomePage() {
                             </LocalTabsContent>
                             <LocalTabsContent value="tab2">
                                 <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
-                                    <Text foreground="normal" typography="subtitle1">
+                                    <Text foreground="normal-200" typography="subtitle1">
                                         Aurora 테마는 신비롭고 미래적인 분위기로,혁신적이고 실험적인
                                         서비스에 적합합니다
                                     </Text>
@@ -256,7 +260,7 @@ export default function HomePage() {
                             </LocalTabsContent>
                             <LocalTabsContent value="tab3">
                                 <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
-                                    <Text foreground="normal" typography="subtitle1">
+                                    <Text foreground="normal-200" typography="subtitle1">
                                         Pop 테마는 활기차고 생동감 있는 디자인으로, 창의적이고
                                         역동적인 서비스에 적합합니다
                                     </Text>
