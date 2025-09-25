@@ -60,7 +60,7 @@ export const trigger = recipe({
 
 export const value = recipe({
     base: [
-        foregrounds({ color: 'normal' }),
+        foregrounds({ color: 'normal-200' }),
         layerStyle('components', {
             display: 'flex',
             flexWrap: 'wrap',
@@ -105,7 +105,7 @@ export const value = recipe({
 });
 
 export const placeholder = recipe({
-    base: [foregrounds({ color: 'hint' })],
+    base: [foregrounds({ color: 'hint-100' })],
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -121,7 +121,7 @@ export const placeholder = recipe({
 const icon = layerStyle('components', { display: 'flex' });
 
 export const triggerIcon = recipe({
-    base: [foregrounds({ color: 'hint' }), icon],
+    base: [foregrounds({ color: 'hint-100' }), icon],
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -146,7 +146,7 @@ export const triggerIcon = recipe({
     },
 });
 
-export const itemIndicator = style([foregrounds({ color: 'normal' }), icon]);
+export const itemIndicator = style([foregrounds({ color: 'normal-200' }), icon]);
 
 export const positioner = layerStyle('components', {
     position: 'relative',
@@ -202,7 +202,7 @@ export const separator = layerStyle('components', {
 
 export const groupLabel = style([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'hint' }),
+    foregrounds({ color: 'hint-100' }),
     layerStyle('components', {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],

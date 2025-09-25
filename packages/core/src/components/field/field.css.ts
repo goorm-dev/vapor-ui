@@ -16,7 +16,7 @@ export const root = recipe({
 export const description = recipe({
     base: [
         typography({ style: 'body2' }),
-        foregrounds({ color: 'hint' }),
+        foregrounds({ color: 'hint-100' }),
         layerStyle('components', {
             display: 'flex',
             alignItems: 'center',
@@ -35,7 +35,7 @@ export const description = recipe({
 export const error = recipe({
     base: [
         typography({ style: 'body2' }),
-        foregrounds({ color: 'danger' }),
+        foregrounds({ color: 'danger-100' }),
         layerStyle('components', {
             display: 'flex',
             alignItems: 'center',
@@ -54,7 +54,7 @@ export const error = recipe({
 export const success = recipe({
     base: [
         typography({ style: 'body2' }),
-        foregrounds({ color: 'success' }),
+        foregrounds({ color: 'success-100' }),
         layerStyle('components', {
             display: 'flex',
             alignItems: 'center',
@@ -73,7 +73,7 @@ export const success = recipe({
 export const label = recipe({
     base: [
         typography({ style: 'subtitle2' }),
-        foregrounds({ color: 'normal-lighter' }),
+        foregrounds({ color: 'normal-100' }),
         layerStyle('components', {
             selectors: {
                 '&:is(:disabled, [data-disabled])': {

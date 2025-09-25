@@ -60,7 +60,7 @@ export const list = recipe({
 });
 
 const triggerBase = style([
-    foregrounds({ color: 'normal' }),
+    foregrounds({ color: 'normal-100' }),
     interaction({ scale: 'light' }),
     layerStyle('components', {
         position: 'relative',
