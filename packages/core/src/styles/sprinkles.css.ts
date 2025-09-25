@@ -23,7 +23,7 @@ const negativeSpaces = Object.keys(spaceTokens).reduce(
 const marginTokens = { ...spaceTokens, ...negativeSpaces };
 const dimensionTokens = vars.size.dimension;
 const radiusTokens = vars.size.borderRadius;
-const { foreground, black, white, logo, ...colors } = vars.color;
+const { foreground, button, black, white, logo, ...colors } = vars.color;
 
 const colorTokens = {
     // Background colors
@@ -200,6 +200,7 @@ const foregroundColorTokens = {
     'contrast-200': foreground.contrast[200],
     'normal-100': foreground.normal[100],
     'normal-200': foreground.normal[200],
+    'button-primary': button.foreground.primary,
 };
 
 const sprinkleProperties = defineProperties({
