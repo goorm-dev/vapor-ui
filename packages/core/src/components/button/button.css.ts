@@ -89,11 +89,11 @@ export const root = recipe({
         color: {
             primary: layerStyle('components', {
                 vars: {
-                    [fg]: vars.color.button.foreground.primary[200],
+                    [fg]: vars.color.button.foreground.primary,
                     [outlineFg]: vars.color.foreground.primary[200],
                     [ghostFg]: vars.color.foreground.primary[100],
-                    [bg]: vars.color.background.primary[200][200],
-                    [outlineBg]: vars.color.background.primary[200][100],
+                    [bg]: vars.color.background.primary[200],
+                    [outlineBg]: vars.color.background.primary[100],
                     [border]: vars.color.border.primary,
                 },
             }),

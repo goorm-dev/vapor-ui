@@ -23,7 +23,7 @@ export const root = recipe({
         color: {
             primary: layerStyle('components', {
                 border: `.0625rem solid ${vars.color.border.primary}`,
-                backgroundColor: vars.color.background.primary[200][100],
+                backgroundColor: vars.color.background.primary[100],
                 color: vars.color.foreground.primary[200],
             }),
             success: layerStyle('components', {
