@@ -200,7 +200,6 @@ const foregroundColorTokens = {
     'contrast-200': foreground.contrast[200],
     'normal-100': foreground.normal[100],
     'normal-200': foreground.normal[200],
-    accent: foreground.accent,
 };
 
 const sprinkleProperties = defineProperties({
