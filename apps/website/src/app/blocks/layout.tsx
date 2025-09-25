@@ -1,5 +1,5 @@
 import { OG_IMAGE_URL } from '~/constants/image-urls';
-import { createMetadata } from '~/lib/metadata';
+import { createMetadata } from '~/utils/metadata';
 
 export const metadata = createMetadata({
     title: 'UI Blocks - Vapor UI',

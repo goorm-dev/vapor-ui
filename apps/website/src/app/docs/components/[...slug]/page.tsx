@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
 import { getComponentOgImageUrl } from '~/constants/image-urls';
-import { createMetadata } from '~/lib/metadata';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
+import { createMetadata } from '~/utils/metadata';
 
 const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
     const { slug = [] } = await params;
