@@ -16,7 +16,7 @@ export const root = recipe({
         color: {
             primary: layerStyle('components', {
                 color: vars.color.foreground.primary[200],
-                backgroundColor: vars.color.background.primary[100],
+                backgroundColor: vars.color.background.primary[200][100],
             }),
             hint: layerStyle('components', {
                 color: vars.color.foreground.hint[200],

@@ -21,7 +21,7 @@ export const control = recipe({
 
             selectors: {
                 '&[data-checked]': {
-                    backgroundColor: vars.color.background.primary,
+                    backgroundColor: vars.color.background.primary[200],
                 },
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray[200],

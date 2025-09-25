@@ -25,7 +25,7 @@ export const root = recipe({
 
             selectors: {
                 '&[data-checked], &[data-indeterminate]': {
-                    backgroundColor: vars.color.background.primary[200],
+                    backgroundColor: vars.color.background.primary[200][200],
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.

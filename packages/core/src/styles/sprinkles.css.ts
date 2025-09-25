@@ -275,6 +275,4 @@ const sprinkleProperties = defineProperties({
 });
 
 export const sprinkles = createRainbowSprinkles(sprinkleProperties);
-export type Sprinkles = Omit<Parameters<typeof sprinkles>[0], 'color'> & {
-    foregroundColor?: `$${keyof typeof foregroundColorTokens}`;
-};
+export type Sprinkles = Parameters<typeof sprinkles>[0];

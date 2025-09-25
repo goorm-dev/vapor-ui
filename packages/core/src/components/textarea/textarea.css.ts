@@ -18,7 +18,7 @@ export const textarea = recipe({
             outline: 0,
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
-            backgroundColor: vars.color.background.normal,
+            backgroundColor: vars.color.background.canvas,
             color: vars.color.foreground.normal,
             width: '100%',
             minHeight: textareaMinHeightVar,

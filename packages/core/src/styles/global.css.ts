@@ -19,7 +19,7 @@ globalStyle('*', {
 globalStyle('html, body', {
     '@layer': {
         [layers.reset]: {
-            backgroundColor: vars.color.background.normal,
+            backgroundColor: vars.color.background.canvas,
             color: vars.color.foreground.normal,
         },
     },

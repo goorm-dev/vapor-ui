@@ -16,7 +16,7 @@ export const popup = layerStyle('components', {
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background.normal,
+    backgroundColor: vars.color.background.surface[100],
     padding: vars.size.space['050'],
     minWidth: '12.5rem',
 
