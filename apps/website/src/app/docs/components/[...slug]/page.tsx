@@ -66,3 +66,12 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
         },
     });
 }
+
+export async function generateStaticParams() {
+    const params = source.generateParams();
+    return params
+        .filter((param) => param.slug?.[0] === 'components')
+        .map((param) => ({
+            slug: param.slug?.slice(1) || [],
+        }));
+}
