@@ -144,9 +144,14 @@ semanticMappings.forEach(({ prefix, property, contractGroup, tokenGroup }) => {
         if (Object.prototype.hasOwnProperty.call(tokenGroup, name)) {
             const tokenValue = (tokenGroup as Record<string, unknown>)[name];
             const contractValue = (contractSemanticGroup as Record<string, unknown>)[name];
-            
+
             // Handle nested color variants (100, 200)
-            if (typeof tokenValue === 'object' && tokenValue !== null && typeof contractValue === 'object' && contractValue !== null) {
+            if (
+                typeof tokenValue === 'object' &&
+                tokenValue !== null &&
+                typeof contractValue === 'object' &&
+                contractValue !== null
+            ) {
                 for (const variant in tokenValue) {
                     if (Object.prototype.hasOwnProperty.call(tokenValue, variant)) {
                         globalStyle(`@utility ${prefix}-v-${name}-${variant}`, {
