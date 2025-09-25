@@ -1,12 +1,12 @@
-import { MultiSelect } from '@vapor-ui/core';
+import { Box, MultiSelect } from '@vapor-ui/core';
 
 export default function MultiSelectGrouping() {
     return (
         <MultiSelect.Root placeholder="개발 기술 선택">
-            <MultiSelect.Trigger>
+            <Box render={<MultiSelect.Trigger />} width="400px">
                 <MultiSelect.Value />
                 <MultiSelect.TriggerIcon />
-            </MultiSelect.Trigger>
+            </Box>
 
             <MultiSelect.Content>
                 <MultiSelect.Group>

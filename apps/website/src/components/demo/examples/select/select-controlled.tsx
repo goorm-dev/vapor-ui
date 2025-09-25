@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Select } from '@vapor-ui/core';
+import { Button, HStack, Select, Text } from '@vapor-ui/core';
 
 export default function SelectControlled() {
     const [value, setValue] = useState<string>('');
@@ -42,24 +42,18 @@ export default function SelectControlled() {
                 </Select.Content>
             </Select.Root>
 
-            <p className="text-sm text-gray-600">
+            <Text typography="body2" foreground="secondary-200">
                 선택된 값: <code className="bg-gray-100 px-1 rounded">{value || '없음'}</code>
-            </p>
+            </Text>
 
-            <div className="flex gap-2">
-                <button
-                    onClick={() => setValue('serif')}
-                    className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
+            <HStack gap="$100">
+                <Button color="primary" onClick={() => setValue('serif')}>
                     Serif 선택
-                </button>
-                <button
-                    onClick={() => setValue('')}
-                    className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
-                >
+                </Button>
+                <Button onClick={() => setValue('')} color="secondary">
                     선택 해제
-                </button>
-            </div>
+                </Button>
+            </HStack>
         </div>
     );
 }

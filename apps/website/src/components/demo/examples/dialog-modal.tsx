@@ -2,7 +2,7 @@ import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogModal() {
     return (
-        <div className="space-x-4">
+        <div className="flex gap-4">
             <Dialog.Root modal={true}>
                 <Dialog.Trigger render={<Button>Modal Dialog</Button>} />
                 <Dialog.Content>
