@@ -23,10 +23,10 @@ const ComingSoonContent = ({ name, description }: { name: string; description: s
         </Card.Header>
         <Card.Body className="p-[var(--vapor-size-space-300)] min-h-[120px] flex flex-col justify-between">
             <div className="flex flex-col gap-[var(--vapor-size-space-150)]">
-                <Text typography="heading5" foreground="normal">
+                <Text typography="heading5" foreground="normal-100">
                     {name}
                 </Text>
-                <Text typography="body2" foreground="normal-lighter">
+                <Text typography="body2" foreground="normal-200">
                     {description}
                 </Text>
             </div>
@@ -56,10 +56,10 @@ const RegularContent = ({
         </Card.Header>
         <Card.Body className="p-[var(--vapor-size-space-300)] min-h-[120px] flex flex-col justify-between">
             <div className="flex flex-col gap-[var(--vapor-size-space-150)]">
-                <Text typography="heading5" foreground="normal">
+                <Text typography="heading5" foreground="normal-100">
                     {name}
                 </Text>
-                <Text typography="body2" foreground="secondary">
+                <Text typography="body2" foreground="secondary-100">
                     {description}
                 </Text>
             </div>

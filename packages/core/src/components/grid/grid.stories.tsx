@@ -86,7 +86,7 @@ const Box = ({ style, ...props }: ComponentProps<'div'>) => {
     return (
         <div
             style={{
-                backgroundColor: vars.color.background.primary,
+                backgroundColor: vars.color.background.primary[200],
                 border: '1px solid red',
                 textAlign: 'center',
                 alignContent: 'center',

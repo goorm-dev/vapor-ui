@@ -20,14 +20,14 @@ export const root = recipe({
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: 9999,
 
-            backgroundColor: vars.color.background.normal,
+            backgroundColor: vars.color.background.canvas,
             cursor: 'pointer',
 
             padding: vars.size.space['000'],
 
             selectors: {
                 '&[data-checked]': {
-                    backgroundColor: vars.color.background.primary,
+                    backgroundColor: vars.color.background.primary[200],
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
@@ -47,7 +47,7 @@ export const root = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('components', { borderColor: vars.color.background['danger'] }),
+            true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },
 
         size: {
@@ -75,7 +75,7 @@ export const indicator = layerStyle('components', {
     height: '50%',
     selectors: {
         '&[data-readonly]': {
-            backgroundColor: vars.color.foreground.hint,
+            backgroundColor: vars.color.foreground.hint[100],
         },
     },
 });

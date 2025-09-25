@@ -19,7 +19,7 @@ export default function BoxVisual() {
                         padding="$400"
                         backgroundColor="$blue-500"
                         borderRadius="$900"
-                        foregroundColor="$contrast"
+                        color="$contrast-100"
                     >
                         Extra Large
                     </Box>
