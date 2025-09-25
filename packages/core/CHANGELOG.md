@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.2
+
+### Patch Changes
+
+- 43cfefb: feat: add font banner
+
 ## 1.0.0-beta.1
 
 ### Patch Changes
