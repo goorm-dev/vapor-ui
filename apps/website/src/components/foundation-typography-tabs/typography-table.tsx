@@ -19,7 +19,7 @@ const TypographyTable = ({ tokens }: TypographyTableProps) => {
                 <thead>
                     <tr className="border-b border-gray-200">
                         <Text
-                            foreground="normal"
+                            foreground="normal-100"
                             typography="subtitle1"
                             render={<th />}
                             className="text-left py-3 px-4 "
@@ -27,7 +27,7 @@ const TypographyTable = ({ tokens }: TypographyTableProps) => {
                             Name
                         </Text>
                         <Text
-                            foreground="normal"
+                            foreground="normal-100"
                             typography="subtitle1"
                             render={<th />}
                             className="text-left py-3 px-4 "
@@ -45,7 +45,7 @@ const TypographyTable = ({ tokens }: TypographyTableProps) => {
                                 </Badge>
                             </td>
                             <Text
-                                foreground="normal"
+                                foreground="normal-100"
                                 typography="subtitle1"
                                 render={<td />}
                                 className="text-left py-3 px-4 "
