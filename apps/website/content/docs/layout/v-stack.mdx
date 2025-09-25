@@ -5,17 +5,10 @@ description: '수직으로 아이템들을 배치하는 레이아웃 컴포넌�
 ---
 
 <Demo name="default-v-stack">
-```tsx
-import { VStack } from '@vapor-ui/core';
-
-export default function DefaultVStack() {
-    return (
-        <VStack gap="4">
-            <div className="bg-blue-100 p-4 rounded">Item 1</div>
-            <div className="bg-blue-100 p-4 rounded">Item 2</div>
-            <div className="bg-blue-100 p-4 rounded">Item 3</div>
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-v-stack.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -29,31 +22,10 @@ export default function DefaultVStack() {
 VStack의 아이템 순서를 역순으로 배치할 수 있습니다.
 
 <Demo name="v-stack-reverse">
-```tsx
-import { VStack } from '@vapor-ui/core';
-
-export default function VStackReverse() {
-    return (
-        <div className="flex gap-8">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Normal Stack</h4>
-                <VStack gap="3">
-                    <div className="bg-green-100 p-3 rounded text-center">First</div>
-                    <div className="bg-green-200 p-3 rounded text-center">Second</div>
-                    <div className="bg-green-300 p-3 rounded text-center">Third</div>
-                </VStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Reverse Stack</h4>
-                <VStack reverse gap="3">
-                    <div className="bg-purple-100 p-3 rounded text-center">First</div>
-                    <div className="bg-purple-200 p-3 rounded text-center">Second</div>
-                    <div className="bg-purple-300 p-3 rounded text-center">Third</div>
-                </VStack>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/v-stack-reverse.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -63,40 +35,10 @@ export default function VStackReverse() {
 VStack 아이템 간의 간격을 조정할 수 있습니다.
 
 <Demo name="v-stack-spacing">
-```tsx
-import { VStack } from '@vapor-ui/core';
-
-export default function VStackSpacing() {
-    return (
-        <div className="flex gap-8">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap $100</h4>
-                <VStack gap="$100">
-                    <div className="bg-red-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-red-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-red-100 p-2 rounded text-sm">C</div>
-                </VStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap $400</h4>
-                <VStack gap="$400">
-                    <div className="bg-orange-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-orange-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-orange-100 p-2 rounded text-sm">C</div>
-                </VStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap $800</h4>
-                <VStack gap="$800">
-                    <div className="bg-teal-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-teal-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-teal-100 p-2 rounded text-sm">C</div>
-                </VStack>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/v-stack-spacing.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -106,40 +48,10 @@ export default function VStackSpacing() {
 VStack 아이템들의 수평 정렬을 조정할 수 있습니다.
 
 <Demo name="v-stack-alignment">
-```tsx
-import { VStack } from '@vapor-ui/core';
-
-export default function VStackAlignment() {
-    return (
-        <div className="flex gap-8">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align Start</h4>
-                <VStack gap="2" alignItems="start" className="w-32 bg-gray-50 p-2 rounded">
-                    <div className="bg-blue-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-blue-200 p-2 rounded text-sm">Medium Width</div>
-                    <div className="bg-blue-300 p-2 rounded text-sm">Tiny</div>
-                </VStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align Center</h4>
-                <VStack gap="2" alignItems="center" className="w-32 bg-gray-50 p-2 rounded">
-                    <div className="bg-green-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-green-200 p-2 rounded text-sm">Medium Width</div>
-                    <div className="bg-green-300 p-2 rounded text-sm">Tiny</div>
-                </VStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align End</h4>
-                <VStack gap="2" alignItems="end" className="w-32 bg-gray-50 p-2 rounded">
-                    <div className="bg-purple-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-purple-200 p-2 rounded text-sm">Medium Width</div>
-                    <div className="bg-purple-300 p-2 rounded text-sm">Tiny</div>
-                </VStack>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/v-stack-alignment.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -149,40 +61,10 @@ export default function VStackAlignment() {
 VStack 아이템들의 수직 분산을 조정할 수 있습니다.
 
 <Demo name="v-stack-justify">
-```tsx
-import { VStack } from '@vapor-ui/core';
-
-export default function VStackJustify() {
-    return (
-        <div className="flex gap-8">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Justify Start</h4>
-                <VStack gap="2" justifyContent="flex-start" className="h-40 bg-gray-50 p-2 rounded">
-                    <div className="bg-red-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-red-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-red-300 p-2 rounded text-sm">C</div>
-                </VStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Justify Center</h4>
-                <VStack gap="2" justifyContent="center" className="h-40 bg-gray-50 p-2 rounded">
-                    <div className="bg-yellow-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-yellow-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-yellow-300 p-2 rounded text-sm">C</div>
-                </VStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Space Between</h4>
-                <VStack gap="2" justifyContent="space-between" className="h-40 bg-gray-50 p-2 rounded">
-                    <div className="bg-indigo-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-indigo-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-indigo-300 p-2 rounded text-sm">C</div>
-                </VStack>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/v-stack-justify.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

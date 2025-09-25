@@ -5,44 +5,12 @@ description: 'Select는 사용자가 여러 옵션 중에서 하나를 선택할
 ---
 
 <Demo name="select/default-select">
-
-```tsx
-import { Select } from '@vapor-ui/core';
-
-export default function DefaultSelect() {
-    return (
-        <Select.Root placeholder="폰트를 선택하세요">
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
-
-            <Select.Content>
-                <Select.Group>
-                    <Select.GroupLabel>폰트</Select.GroupLabel>
-                    <Select.Item value="sans-serif">
-                        Sans-serif
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="serif">
-                        Serif
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="mono">
-                        Monospace
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="cursive">
-                        Cursive
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Group>
-            </Select.Content>
-        </Select.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/select/default-select.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Property
@@ -54,44 +22,12 @@ export default function DefaultSelect() {
 Select의 크기는 sm, md, lg, xl 로 제공합니다.
 
 <Demo name="select/select-size">
-
-```tsx
-import type { SelectRootProps } from '@vapor-ui/core';
-import { Flex, Select } from '@vapor-ui/core';
-
-export default function SelectSize() {
-    return (
-        <Flex maxWidth="800px" width="100%" gap="$250">
-            <SelectTemplate placeholder="Small" size="sm" />
-            <SelectTemplate placeholder="Medium" size="md" />
-            <SelectTemplate placeholder="Large" size="lg" />
-            <SelectTemplate placeholder="Extra Large" size="xl" />
-        </Flex>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/select/select-size.tsx",
+    "codeblock": true
 }
-
-const SelectTemplate = (props: SelectRootProps) => {
-    return (
-        <Select.Root {...props}>
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
-            <Select.Content>
-                <Select.Item value="option1">
-                    옵션 1
-                    <Select.ItemIndicator />
-                </Select.Item>
-                <Select.Item value="option2">
-                    옵션 2
-                    <Select.ItemIndicator />
-                </Select.Item>
-            </Select.Content>
-        </Select.Root>
-    );
-};
 ```
-
 </Demo>
 
 ### Positioning
@@ -99,85 +35,12 @@ const SelectTemplate = (props: SelectRootProps) => {
 Select 드롭다운이 나타날 위치를 설정할 수 있습니다. 기본값은 'bottom'입니다.
 
 <Demo name="select/select-positioning">
-
-```tsx
-import { HStack, Select } from '@vapor-ui/core';
-
-export default function SelectPositioning() {
-    return (
-        <HStack maxWidth="800px" width="100%" gap="$250">
-            <Select.Root placeholder="Top">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content positionerProps={{ side: 'top' }}>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="Right">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content positionerProps={{ side: 'right' }}>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="Bottom">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content positionerProps={{ side: 'bottom' }}>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="Left">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content positionerProps={{ side: 'left' }}>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-        </HStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/select/select-positioning.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Controlled State
@@ -185,69 +48,12 @@ export default function SelectPositioning() {
 Select의 선택 상태를 외부에서 제어할 수 있습니다.
 
 <Demo name="select/select-controlled">
-
-```tsx
-'use client';
-
-import { useState } from 'react';
-
-import { Button, HStack, Select, Text } from '@vapor-ui/core';
-
-export default function SelectControlled() {
-    const [value, setValue] = useState<string>('');
-
-    const handleValueChange = (newValue: unknown) => {
-        setValue(newValue as string);
-    };
-
-    return (
-        <div className="space-y-4">
-            <Select.Root placeholder="폰트 선택" value={value} onValueChange={handleValueChange}>
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-
-                <Select.Content>
-                    <Select.Group>
-                        <Select.GroupLabel>폰트</Select.GroupLabel>
-                        <Select.Item value="sans">
-                            Sans-serif
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        <Select.Item value="serif">
-                            Serif
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        <Select.Item value="mono">
-                            Monospace
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        <Select.Item value="cursive">
-                            Cursive
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                    </Select.Group>
-                </Select.Content>
-            </Select.Root>
-
-            <Text typography="body2" foreground="secondary-darker">
-                선택된 값: <code className="bg-gray-100 px-1 rounded">{value || '없음'}</code>
-            </Text>
-
-            <HStack gap="$100">
-                <Button color="primary" onClick={() => setValue('serif')}>
-                    Serif 선택
-                </Button>
-                <Button onClick={() => setValue('')} color="secondary">
-                    선택 해제
-                </Button>
-            </HStack>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/select/select-controlled.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### States
@@ -255,44 +61,12 @@ export default function SelectControlled() {
 Select의 다양한 상태(비활성화, 읽기 전용, 오류)를 설정할 수 있습니다.
 
 <Demo name="select/select-states">
-
-```tsx
-import type { SelectRootProps } from '@vapor-ui/core';
-import { HStack, Select } from '@vapor-ui/core';
-
-export default function SelectStates() {
-    return (
-        <HStack gap="$200" className="flex-wrap">
-            <SelectTemplate placeholder="기본 상태" />
-            <SelectTemplate placeholder="비활성화" disabled />
-            <SelectTemplate placeholder="읽기 전용" readOnly />
-            <SelectTemplate placeholder="오류 상태" invalid />
-        </HStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/select/select-states.tsx",
+    "codeblock": true
 }
-
-const SelectTemplate = (props: SelectRootProps) => {
-    return (
-        <Select.Root {...props}>
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
-            <Select.Content>
-                <Select.Item value="option1">
-                    옵션 1
-                    <Select.ItemIndicator />
-                </Select.Item>
-                <Select.Item value="option2">
-                    옵션 2
-                    <Select.ItemIndicator />
-                </Select.Item>
-            </Select.Content>
-        </Select.Root>
-    );
-};
 ```
-
 </Demo>
 
 ## Examples
@@ -304,74 +78,12 @@ const SelectTemplate = (props: SelectRootProps) => {
 Select는 배열 형태와 객체 형태의 아이템 데이터를 모두 지원합니다. items prop을 사용하면 자동으로 값이 포맷팅됩니다.
 
 <Demo name="select/select-items">
-
-```tsx
-import { Select, VStack } from '@vapor-ui/core';
-
-const fonts = [
-    { label: 'Sans-serif', value: 'sans' },
-    { label: 'Serif', value: 'serif' },
-    { label: 'Monospace', value: 'mono' },
-    { label: 'Cursive', value: 'cursive' },
-];
-
-const languages = {
-    javascript: 'JavaScript',
-    typescript: 'TypeScript',
-    python: 'Python',
-    java: 'Java',
-    go: 'Go',
-};
-
-export default function SelectItems() {
-    return (
-        <VStack gap="$300" width="400px">
-            <VStack>
-                <h4 className="text-sm font-medium mb-2">배열 형태의 아이템</h4>
-                <Select.Root placeholder="폰트 선택" items={fonts}>
-                    <Select.Trigger>
-                        <Select.Value />
-                        <Select.TriggerIcon />
-                    </Select.Trigger>
-                    <Select.Content>
-                        <Select.Group>
-                            <Select.GroupLabel>폰트</Select.GroupLabel>
-                            {fonts.map((font) => (
-                                <Select.Item key={font.value} value={font.value}>
-                                    {font.label}
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                            ))}
-                        </Select.Group>
-                    </Select.Content>
-                </Select.Root>
-            </VStack>
-
-            <VStack>
-                <h4 className="text-sm font-medium mb-2">객체 형태의 아이템</h4>
-                <Select.Root placeholder="언어 선택" items={languages}>
-                    <Select.Trigger>
-                        <Select.Value />
-                        <Select.TriggerIcon />
-                    </Select.Trigger>
-                    <Select.Content>
-                        <Select.Group>
-                            <Select.GroupLabel>프로그래밍 언어</Select.GroupLabel>
-                            {Object.entries(languages).map(([value, label]) => (
-                                <Select.Item key={value} value={value}>
-                                    {label}
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                            ))}
-                        </Select.Group>
-                    </Select.Content>
-                </Select.Root>
-            </VStack>
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/select/select-items.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Grouping Options
@@ -379,76 +91,12 @@ export default function SelectItems() {
 관련된 옵션들을 그룹으로 묶어 구조화할 수 있습니다. Group과 GroupLabel, Separator를 사용하여 명확한 구조를 만들 수 있습니다.
 
 <Demo name="select/select-grouping">
-
-```tsx
-import { Select } from '@vapor-ui/core';
-
-export default function SelectGrouping() {
-    return (
-        <Select.Root placeholder="개발 도구 선택">
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
-
-            <Select.Content>
-                <Select.Group>
-                    <Select.GroupLabel>프론트엔드</Select.GroupLabel>
-                    <Select.Item value="react">
-                        React
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="vue">
-                        Vue
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="angular">
-                        Angular
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Group>
-
-                <Select.Separator />
-
-                <Select.Group>
-                    <Select.GroupLabel>백엔드</Select.GroupLabel>
-                    <Select.Item value="nodejs">
-                        Node.js
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="python">
-                        Python
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="java">
-                        Java
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Group>
-
-                <Select.Separator />
-
-                <Select.Group>
-                    <Select.GroupLabel>데이터베이스</Select.GroupLabel>
-                    <Select.Item value="mysql">
-                        MySQL
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="postgresql">
-                        PostgreSQL
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="mongodb">
-                        MongoDB
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Group>
-            </Select.Content>
-        </Select.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/select/select-grouping.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Custom Value Display
@@ -456,66 +104,12 @@ export default function SelectGrouping() {
 Select.Value에 함수형 children을 제공하여 선택된 값을 커스터마이징할 수 있습니다.
 
 <Demo name="select/select-custom-value">
-
-```tsx
-import { Select } from '@vapor-ui/core';
-
-const fonts = {
-    sans: 'Sans-serif',
-    serif: 'Serif',
-    mono: 'Monospace',
-    cursive: 'Cursive',
-};
-
-export default function SelectCustomValue() {
-    return (
-        <div className="space-y-4">
-            <div>
-                <h4 className="text-sm font-medium mb-2">기본 값 표시</h4>
-                <Select.Root placeholder="폰트 선택" items={fonts}>
-                    <Select.Trigger>
-                        <Select.Value />
-                        <Select.TriggerIcon />
-                    </Select.Trigger>
-                    <Select.Content>
-                        {Object.entries(fonts).map(([value, label]) => (
-                            <Select.Item key={value} value={value}>
-                                {label}
-                                <Select.ItemIndicator />
-                            </Select.Item>
-                        ))}
-                    </Select.Content>
-                </Select.Root>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">커스텀 값 표시</h4>
-                <Select.Root placeholder="폰트 선택" items={fonts}>
-                    <Select.Trigger>
-                        <Select.Value>
-                            {(value: string) => (
-                                <span style={{ fontFamily: value }}>
-                                    {fonts[value as keyof typeof fonts]}
-                                </span>
-                            )}
-                        </Select.Value>
-                        <Select.TriggerIcon />
-                    </Select.Trigger>
-                    <Select.Content>
-                        {Object.entries(fonts).map(([value, label]) => (
-                            <Select.Item key={value} value={value}>
-                                <span style={{ fontFamily: value }}>{label}</span>
-                                <Select.ItemIndicator />
-                            </Select.Item>
-                        ))}
-                    </Select.Content>
-                </Select.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/select/select-custom-value.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Props Table

@@ -24,7 +24,6 @@ export const replaceBlockDoc = (text: string) => {
                 const config: DocGenFile = JSON.parse(jsonContent.trim());
                 // Remove leading ./ from the file path and resolve from apps/website
                 const normalizedFile = config.file.replace(/^\.\//, '');
-                console.log(__dirname, normalizedFile);
                 const filePath = path.join(path.resolve(__dirname, '../..'), normalizedFile);
 
                 if (!fs.existsSync(filePath)) {

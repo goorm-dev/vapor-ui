@@ -5,37 +5,12 @@ description: 'Tabs는 관련된 콘텐츠를 탭 형태로 구성하여 사용�
 ---
 
 <Demo name="tabs/default-tabs">
-
-```tsx
-import { Tabs } from '@vapor-ui/core';
-import { AiSmartieIcon, AssignmentIcon, ListIcon } from '@vapor-ui/icons';
-
-export default function DefaultTabs() {
-    return (
-        <Tabs.Root defaultValue="overview" className="max-w-[200px] w-full mx-auto">
-            <Tabs.List>
-                <Tabs.Trigger value="overview">개요</Tabs.Trigger>
-                <Tabs.Trigger value="features">기능</Tabs.Trigger>
-                <Tabs.Trigger value="examples">예시</Tabs.Trigger>
-                <Tabs.Indicator />
-            </Tabs.List>
-
-            <Tabs.Panel value="overview" className="h-[100px] flex items-center justify-center">
-                <AssignmentIcon size="32px" />
-            </Tabs.Panel>
-
-            <Tabs.Panel value="features" className="h-[100px] flex items-center justify-center">
-                <AiSmartieIcon size="32px" />
-            </Tabs.Panel>
-
-            <Tabs.Panel value="examples" className="h-[100px] flex items-center justify-center">
-                <ListIcon size="32px" />
-            </Tabs.Panel>
-        </Tabs.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/default-tabs.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Property
@@ -47,57 +22,12 @@ export default function DefaultTabs() {
 Tabs의 크기는 sm, md, lg, xl 로 제공합니다.
 
 <Demo name="tabs/tabs-size">
-
-```tsx
-import { Tabs, VStack } from '@vapor-ui/core';
-
-export default function TabsSize() {
-    return (
-        <VStack gap="$400">
-            <Tabs.Root defaultValue="tab1" size="sm">
-                <h4 className="text-sm font-medium mb-2">Small</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-
-            <Tabs.Root defaultValue="tab1" size="md">
-                <h4 className="text-sm font-medium mb-2">Medium</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-
-            <Tabs.Root defaultValue="tab1" size="lg">
-                <h4 className="text-sm font-medium mb-2">Large</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-
-            <Tabs.Root defaultValue="tab1" size="xl">
-                <h4 className="text-sm font-medium mb-2">Extra Large</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/tabs-size.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Variant
@@ -105,37 +35,12 @@ export default function TabsSize() {
 Tabs는 line과 plain 두 가지 스타일 변형을 제공합니다.
 
 <Demo name="tabs/tabs-variant">
-
-```tsx
-import { Tabs, VStack } from '@vapor-ui/core';
-
-export default function TabsVariant() {
-    return (
-        <VStack gap="$400">
-            <Tabs.Root defaultValue="home" variant="line">
-                <h4 className="text-sm font-medium mb-4">Line 변형</h4>
-                <Tabs.List className={'max-w-[400px] w-full mx-auto'}>
-                    <Tabs.Trigger value="home">홈</Tabs.Trigger>
-                    <Tabs.Trigger value="about">소개</Tabs.Trigger>
-                    <Tabs.Trigger value="services">서비스</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-
-            <Tabs.Root defaultValue="home" variant="plain">
-                <h4 className="text-sm font-medium mb-4">Plain 변형</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="home">홈</Tabs.Trigger>
-                    <Tabs.Trigger value="about">소개</Tabs.Trigger>
-                    <Tabs.Trigger value="services">서비스</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/tabs-variant.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Orientation
@@ -143,41 +48,12 @@ export default function TabsVariant() {
 Tabs는 수평(horizontal)과 수직(vertical) 배치를 지원합니다.
 
 <Demo name="tabs/tabs-orientation">
-
-```tsx
-import { Grid, Tabs } from '@vapor-ui/core';
-
-export default function TabsOrientation() {
-    return (
-        <Grid.Root gap="$500" templateColumns="1fr 1fr">
-            <Grid.Item>
-                <h4 className="text-sm font-medium mb-4">수평 (Horizontal)</h4>
-                <Tabs.Root defaultValue={1} orientation="horizontal">
-                    <Tabs.List>
-                        <Tabs.Trigger value={1}>Tab 1</Tabs.Trigger>
-                        <Tabs.Trigger value={2}>Tab 2</Tabs.Trigger>
-                        <Tabs.Trigger value={3}>Tab 3</Tabs.Trigger>
-                        <Tabs.Indicator />
-                    </Tabs.List>
-                </Tabs.Root>
-            </Grid.Item>
-
-            <Grid.Item>
-                <h4 className="text-sm font-medium mb-4 flex justify-center">수직 (Vertical)</h4>
-                <Tabs.Root defaultValue={1} orientation="vertical" className="flex justify-center">
-                    <Tabs.List>
-                        <Tabs.Trigger value={1}>Tab 1</Tabs.Trigger>
-                        <Tabs.Trigger value={2}>Tab 2</Tabs.Trigger>
-                        <Tabs.Trigger value={3}>Tab 3</Tabs.Trigger>
-                        <Tabs.Indicator />
-                    </Tabs.List>
-                </Tabs.Root>
-            </Grid.Item>
-        </Grid.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/tabs-orientation.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Controlled State
@@ -185,46 +61,12 @@ export default function TabsOrientation() {
 Tabs의 활성 상태를 외부에서 제어할 수 있습니다.
 
 <Demo name="tabs/tabs-controlled">
-
-```tsx
-'use client';
-
-import { useState } from 'react';
-
-import { Button, Tabs, VStack } from '@vapor-ui/core';
-
-export default function TabsControlled() {
-    const [activeTab, setActiveTab] = useState('profile');
-
-    return (
-        <VStack gap="$200">
-            <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-                <Tabs.List>
-                    <Tabs.Trigger value="profile">프로필</Tabs.Trigger>
-                    <Tabs.Trigger value="account">계정</Tabs.Trigger>
-                    <Tabs.Trigger value="security">보안</Tabs.Trigger>
-                    <Tabs.Trigger value="notifications">알림</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-
-            <div className="text-sm text-gray-600">
-                현재 선택된 탭: <code className="bg-gray-100 px-1 rounded">{activeTab}</code>
-            </div>
-
-            <div className="flex gap-2">
-                <Button onClick={() => setActiveTab('account')} className="">
-                    계정 탭으로 이동
-                </Button>
-                <Button color="success" onClick={() => setActiveTab('security')} className="">
-                    보안 탭으로 이동
-                </Button>
-            </div>
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/tabs-controlled.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### States
@@ -232,39 +74,12 @@ export default function TabsControlled() {
 Tabs의 다양한 상태(개별 탭 비활성화, 전체 탭 그룹 비활성화)를 설정할 수 있습니다.
 
 <Demo name="tabs/tabs-states">
-
-```tsx
-import { Tabs, VStack } from '@vapor-ui/core';
-
-export default function TabsStates() {
-    return (
-        <VStack gap="$400">
-            <Tabs.Root defaultValue="enabled">
-                <h4 className="text-sm font-medium mb-4">개별 탭 비활성화</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="enabled">활성화 탭</Tabs.Trigger>
-                    <Tabs.Trigger value="disabled" disabled>
-                        비활성화 탭
-                    </Tabs.Trigger>
-                    <Tabs.Trigger value="normal">일반 탭</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-
-            <Tabs.Root defaultValue="enabled" disabled>
-                <h4 className="text-sm font-medium mb-4">전체 탭 그룹 비활성화</h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="enabled">활성화 탭</Tabs.Trigger>
-                    <Tabs.Trigger value="disabled">비활성화 탭</Tabs.Trigger>
-                    <Tabs.Trigger value="normal">일반 탭</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/tabs-states.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Examples
@@ -276,53 +91,12 @@ export default function TabsStates() {
 Tabs는 완전한 키보드 내비게이션을 지원합니다. 포커스 동작과 순환 내비게이션을 세밀하게 제어할 수 있습니다.
 
 <Demo name="tabs/tabs-keyboard">
-
-```tsx
-import { Tabs, VStack } from '@vapor-ui/core';
-
-export default function TabsKeyboard() {
-    return (
-        <VStack gap="$400">
-            <Tabs.Root defaultValue="tab1" activateOnFocus={true}>
-                <h4 className="text-sm font-medium mb-4">
-                    포커스 시 활성화 <code>(activateOnFocus: true)</code>
-                </h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">탭 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">탭 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">탭 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-
-            <Tabs.Root defaultValue="tab1" activateOnFocus={false}>
-                <h4 className="text-sm font-medium mb-4">
-                    엔터/스페이스로 활성화 <code>(activateOnFocus: false)</code>
-                </h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">탭 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">탭 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">탭 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-
-            <Tabs.Root defaultValue="tab1" loop={true} activateOnFocus={false}>
-                <h4 className="text-sm font-medium mb-4">
-                    순환 내비게이션 <code>(loop: true)</code>
-                </h4>
-                <Tabs.List>
-                    <Tabs.Trigger value="tab1">탭 1</Tabs.Trigger>
-                    <Tabs.Trigger value="tab2">탭 2</Tabs.Trigger>
-                    <Tabs.Trigger value="tab3">탭 3</Tabs.Trigger>
-                    <Tabs.Indicator />
-                </Tabs.List>
-            </Tabs.Root>
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/tabs-keyboard.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Props Table

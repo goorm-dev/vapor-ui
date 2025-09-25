@@ -5,26 +5,10 @@ description: 'RadioGroup는 둘 또는 그 이상의 옵션 중 하나만 선택
 ---
 
 <Demo name="default-radio-group">
-```tsx
-import { RadioGroup } from '@vapor-ui/core';
-
-export default function DefaultRadioGroup() {
-    return (
-        <RadioGroup.Root name="fruits">
-            <label className="flex items-center gap-2">
-                <Radio.Root value="apple" />
-                Apple
-            </label>
-            <label className="flex items-center gap-2">
-                <Radio.Root value="orange" />
-                Orange
-            </label>
-            <label className="flex items-center gap-2">
-                <Radio.Root value="banana" disabled />
-                Banana (Disabled)
-            </label>
-        </RadioGroup.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-radio-group.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -38,45 +22,12 @@ export default function DefaultRadioGroup() {
 RadioGroup 사이즈는 md, lg로 제공합니다.
 
 <Demo name="radio-group-size">
-
-```tsx
-import { RadioGroup } from '@vapor-ui/core';
-
-export default function RadioGroupSize() {
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Medium</h4>
-                <RadioGroup.Root name="size-md" size="md">
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="md1" />
-                        Medium Option 1
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="md2" />
-                        Medium Option 2
-                    </label>
-                </RadioGroup.Root>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">Large</h4>
-                <RadioGroup.Root name="size-lg" size="lg">
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="lg1" />
-                        Large Option 1
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="lg2" />
-                        Large Option 2
-                    </label>
-                </RadioGroup.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio-group-size.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Orientation
@@ -84,53 +35,12 @@ export default function RadioGroupSize() {
 RadioGroup 방향은 vertical, horizontal로 제공합니다.
 
 <Demo name="radio-group-direction">
-
-```tsx
-import { RadioGroup } from '@vapor-ui/core';
-
-export default function RadioGroupDirection() {
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Vertical (기본값)</h4>
-                <RadioGroup.Root name="orientation-vertical" orientation="vertical">
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="v1" />
-                        Option 1
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="v2" />
-                        Option 2
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="v3" />
-                        Option 3
-                    </label>
-                </RadioGroup.Root>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">Horizontal</h4>
-                <RadioGroup.Root name="orientation-horizontal" orientation="horizontal">
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="h1" />
-                        Option 1
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="h2" />
-                        Option 2
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="h3" />
-                        Option 3
-                    </label>
-                </RadioGroup.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio-group-direction.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Disabled
@@ -138,53 +48,12 @@ export default function RadioGroupDirection() {
 사용자가 상호작용할 수 없는 상태입니다. 액션을 수행하기 위한 특정 조건을 충족하지 않았거나 일시적으로 기능을 제한하려는 상황에서 사용합니다.
 
 <Demo name="radio-group-disabled">
-
-```tsx
-import { RadioGroup } from '@vapor-ui/core';
-
-export default function RadioGroupDisabled() {
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">개별 아이템 비활성화</h4>
-                <RadioGroup.Root name="disabled-items" defaultValue="option1">
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="option1" />
-                        Option 1 (Default)
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="option2" />
-                        Option 2 (Default)
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="option3" disabled />
-                        Option 3 (Disabled)
-                    </label>
-                </RadioGroup.Root>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">전체 그룹 비활성화</h4>
-                <RadioGroup.Root name="disabled-group" disabled defaultValue="group1">
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="group1" />
-                        Group 1
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="group2" />
-                        Group 2
-                    </label>
-                    <label className="flex items-center gap-2">
-                        <Radio.Root value="group3" />
-                        Group 3
-                    </label>
-                </RadioGroup.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio-group-disabled.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Read Only
@@ -192,26 +61,12 @@ export default function RadioGroupDisabled() {
 RadioGroup의 읽기 전용 상태입니다. 사용자가 값을 변경할 수 없지만 현재 선택된 상태를 확인할 수 있습니다.
 
 <Demo name="radio-readonly">
-
-```tsx
-import { Radio, RadioGroup } from '@vapor-ui/core';
-
-export default function RadioReadOnly() {
-    return (
-        <RadioGroup.Root name="readonly-fruits" defaultValue="apple">
-            <label className="flex items-center gap-2">
-                <Radio.Root value="apple" readOnly />
-                읽기 전용 (선택됨)
-            </label>
-            <label className="flex items-center gap-2">
-                <Radio.Root value="orange" readOnly />
-                읽기 전용 (선택 안됨)
-            </label>
-        </RadioGroup.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio-readonly.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Examples
@@ -223,30 +78,12 @@ export default function RadioReadOnly() {
 기본적인 RadioGroup 사용법입니다.
 
 <Demo name="radio-group-simple">
-
-```tsx
-import { RadioGroup } from '@vapor-ui/core';
-
-export default function RadioGroupSimple() {
-    return (
-        <RadioGroup.Root name="simple" defaultValue="option1">
-            <label className="flex items-center gap-2">
-                <Radio.Root value="option1" />
-                Option 1
-            </label>
-            <label className="flex items-center gap-2">
-                <Radio.Root value="option2" />
-                Option 2
-            </label>
-            <label className="flex items-center gap-2">
-                <Radio.Root value="option3" />
-                Option 3
-            </label>
-        </RadioGroup.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio-group-simple.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Props Table

@@ -5,38 +5,12 @@ description: 'MultiSelect는 사용자가 여러 옵션 중에서 다중 선택�
 ---
 
 <Demo name="multi-select/default-multi-select">
-
-```tsx
-import { MultiSelect } from '@vapor-ui/core';
-
-const fonts = [
-    { label: 'Sans-serif', value: 'sans' },
-    { label: 'Serif', value: 'serif' },
-    { label: 'Monospace', value: 'mono' },
-    { label: 'Cursive', value: 'cursive' },
-];
-
-export default function DefaultMultiSelect() {
-    return (
-        <MultiSelect.Root placeholder="폰트를 선택하세요" items={fonts}>
-            <MultiSelect.Trigger>
-                <MultiSelect.Value />
-                <MultiSelect.TriggerIcon />
-            </MultiSelect.Trigger>
-
-            <MultiSelect.Content>
-                {fonts.map((font) => (
-                    <MultiSelect.Item key={font.value} value={font.value}>
-                        {font.label}
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                ))}
-            </MultiSelect.Content>
-        </MultiSelect.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/default-multi-select.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Property
@@ -48,83 +22,12 @@ export default function DefaultMultiSelect() {
 MultiSelect의 크기는 sm, md, lg, xl 로 제공합니다. 크기에 따라 선택된 값들의 배지 크기도 자동으로 조정됩니다.
 
 <Demo name="multi-select/multi-select-size">
-
-```tsx
-import { MultiSelect } from '@vapor-ui/core';
-
-const options = [
-    { label: '옵션 1', value: 'option1' },
-    { label: '옵션 2', value: 'option2' },
-    { label: '옵션 3', value: 'option3' },
-];
-
-export default function MultiSelectSize() {
-    return (
-        <div className="flex flex-wrap gap-4">
-            <MultiSelect.Root placeholder="Small" size="sm" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="Medium" size="md" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="Large" size="lg" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-
-            <MultiSelect.Root placeholder="Extra Large" size="xl" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
-                    {options.map((option) => (
-                        <MultiSelect.Item key={option.value} value={option.value}>
-                            {option.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-size.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Controlled State
@@ -132,71 +35,12 @@ export default function MultiSelectSize() {
 MultiSelect의 선택 상태를 외부에서 제어할 수 있습니다. 값은 배열 형태로 관리됩니다.
 
 <Demo name="multi-select/multi-select-controlled">
-
-```tsx
-'use client';
-
-import { useState } from 'react';
-
-import { Button, HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
-
-const fonts = [
-    { label: 'Sans-serif', value: 'sans' },
-    { label: 'Serif', value: 'serif' },
-    { label: 'Monospace', value: 'mono' },
-    { label: 'Cursive', value: 'cursive' },
-];
-
-export default function MultiSelectControlled() {
-    const [value, setValue] = useState<string[]>([]);
-
-    const handleValueChange = (newValue: unknown) => {
-        setValue(newValue as string[]);
-    };
-
-    return (
-        <VStack gap="$200" width="400px">
-            <MultiSelect.Root
-                items={fonts}
-                value={value}
-                onValueChange={handleValueChange}
-                placeholder="폰트 선택"
-            >
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-
-                <MultiSelect.Content>
-                    {fonts.map((font) => (
-                        <MultiSelect.Item key={font.value} value={font.value}>
-                            {font.label}
-                            <MultiSelect.ItemIndicator />
-                        </MultiSelect.Item>
-                    ))}
-                </MultiSelect.Content>
-            </MultiSelect.Root>
-
-            <Text typography="body2" foreground="secondary-darker">
-                선택된 값:{' '}
-                <code className="bg-gray-100 px-1 rounded">
-                    {value.length > 0 ? value.join(', ') : '없음'}
-                </code>
-            </Text>
-
-            <HStack gap="$100">
-                <Button color="primary" onClick={() => setValue(['serif', 'mono'])}>
-                    Serif, Mono 선택
-                </Button>
-                <Button color="secondary" onClick={() => setValue([])}>
-                    모두 해제
-                </Button>
-            </HStack>
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-controlled.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### States
@@ -204,48 +48,12 @@ export default function MultiSelectControlled() {
 MultiSelect의 다양한 상태(비활성화, 읽기 전용, 오류)를 설정할 수 있습니다.
 
 <Demo name="multi-select/multi-select-states">
-
-```tsx
-import type { MultiSelectRootProps } from '@vapor-ui/core';
-import { MultiSelect, VStack } from '@vapor-ui/core';
-
-const options = [
-    { label: '옵션 1', value: 'option1' },
-    { label: '옵션 2', value: 'option2' },
-    { label: '옵션 3', value: 'option3' },
-];
-
-export default function MultiSelectStates() {
-    return (
-        <VStack gap="$200" width="400px">
-            <MultiSelectTemplate placeholder="기본 상태" />
-            <MultiSelectTemplate placeholder="비활성화" disabled />
-            <MultiSelectTemplate placeholder="읽기 전용" readOnly />
-            <MultiSelectTemplate placeholder="오류 상태" invalid />
-        </VStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-states.tsx",
+    "codeblock": true
 }
-
-export const MultiSelectTemplate = (props: MultiSelectRootProps<[]>) => {
-    return (
-        <MultiSelect.Root {...props}>
-            <MultiSelect.Trigger>
-                <MultiSelect.Value />
-                <MultiSelect.TriggerIcon />
-            </MultiSelect.Trigger>
-            <MultiSelect.Content>
-                {options.map((option) => (
-                    <MultiSelect.Item key={option.value} value={option.value}>
-                        {option.label}
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                ))}
-            </MultiSelect.Content>
-        </MultiSelect.Root>
-    );
-};
 ```
-
 </Demo>
 
 ## Examples
@@ -257,68 +65,12 @@ export const MultiSelectTemplate = (props: MultiSelectRootProps<[]>) => {
 MultiSelect는 배열 형태와 객체 형태의 아이템 데이터를 모두 지원합니다. items prop을 사용하면 자동으로 값이 포맷팅되어 배지로 표시됩니다.
 
 <Demo name="multi-select/multi-select-items">
-
-```tsx
-import { HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
-
-const fonts = [
-    { label: 'Sans-serif', value: 'sans' },
-    { label: 'Serif', value: 'serif' },
-    { label: 'Monospace', value: 'mono' },
-    { label: 'Cursive', value: 'cursive' },
-];
-
-const languages = {
-    javascript: 'JavaScript',
-    typescript: 'TypeScript',
-    python: 'Python',
-    java: 'Java',
-    go: 'Go',
-};
-
-export default function MultiSelectItems() {
-    return (
-        <HStack gap="$500">
-            <VStack gap="$100" width="300px">
-                <MultiSelect.Root placeholder="폰트 선택" items={fonts}>
-                    <Text typography="body2">배열 형태의 아이템</Text>
-                    <MultiSelect.Trigger>
-                        <MultiSelect.Value />
-                        <MultiSelect.TriggerIcon />
-                    </MultiSelect.Trigger>
-                    <MultiSelect.Content>
-                        {fonts.map((font) => (
-                            <MultiSelect.Item key={font.value} value={font.value}>
-                                {font.label}
-                                <MultiSelect.ItemIndicator />
-                            </MultiSelect.Item>
-                        ))}
-                    </MultiSelect.Content>
-                </MultiSelect.Root>
-            </VStack>
-
-            <VStack gap="$100" width="300px">
-                <MultiSelect.Root placeholder="언어 선택" items={languages}>
-                    <Text typography="body2">객체 형태의 아이템</Text>
-                    <MultiSelect.Trigger>
-                        <MultiSelect.Value />
-                        <MultiSelect.TriggerIcon />
-                    </MultiSelect.Trigger>
-                    <MultiSelect.Content>
-                        {Object.entries(languages).map(([value, label]) => (
-                            <MultiSelect.Item key={value} value={value}>
-                                {label}
-                                <MultiSelect.ItemIndicator />
-                            </MultiSelect.Item>
-                        ))}
-                    </MultiSelect.Content>
-                </MultiSelect.Root>
-            </VStack>
-        </HStack>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-items.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Grouping Options
@@ -326,88 +78,12 @@ export default function MultiSelectItems() {
 관련된 옵션들을 그룹으로 묶어 구조화할 수 있습니다. Group과 GroupLabel, Separator를 사용하여 명확한 구조를 만들 수 있습니다.
 
 <Demo name="multi-select/multi-select-grouping">
-
-```tsx
-import { MultiSelect } from '@vapor-ui/core';
-
-export default function MultiSelectGrouping() {
-    return (
-        <MultiSelect.Root placeholder="개발 기술 선택">
-            <MultiSelect.Trigger>
-                <MultiSelect.Value />
-                <MultiSelect.TriggerIcon />
-            </MultiSelect.Trigger>
-
-            <MultiSelect.Content>
-                <MultiSelect.Group>
-                    <MultiSelect.GroupLabel>프론트엔드</MultiSelect.GroupLabel>
-                    <MultiSelect.Item value="react">
-                        React
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="vue">
-                        Vue
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="angular">
-                        Angular
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="svelte">
-                        Svelte
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                </MultiSelect.Group>
-
-                <MultiSelect.Separator />
-
-                <MultiSelect.Group>
-                    <MultiSelect.GroupLabel>백엔드</MultiSelect.GroupLabel>
-                    <MultiSelect.Item value="nodejs">
-                        Node.js
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="python">
-                        Python
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="java">
-                        Java
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="go">
-                        Go
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                </MultiSelect.Group>
-
-                <MultiSelect.Separator />
-
-                <MultiSelect.Group>
-                    <MultiSelect.GroupLabel>데이터베이스</MultiSelect.GroupLabel>
-                    <MultiSelect.Item value="mysql">
-                        MySQL
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="postgresql">
-                        PostgreSQL
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="mongodb">
-                        MongoDB
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                    <MultiSelect.Item value="redis">
-                        Redis
-                        <MultiSelect.ItemIndicator />
-                    </MultiSelect.Item>
-                </MultiSelect.Group>
-            </MultiSelect.Content>
-        </MultiSelect.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-grouping.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Custom Value Display
@@ -415,94 +91,12 @@ export default function MultiSelectGrouping() {
 MultiSelect.Value에 함수형 children을 제공하여 선택된 값들의 표시 방법을 커스터마이징할 수 있습니다. 기본적으로는 배지 형태로 표시되지만, 문자열이나 커스텀 컴포넌트로 변경할 수 있습니다.
 
 <Demo name="multi-select/multi-select-custom-value">
-
-```tsx
-import { Badge, Flex, Grid, MultiSelect, Text, VStack } from '@vapor-ui/core';
-
-const languages = {
-    javascript: 'JavaScript',
-    typescript: 'TypeScript',
-    python: 'Python',
-    java: 'Java',
-    go: 'Go',
-    rust: 'Rust',
-};
-
-const renderRestValue = (value: string[]) => {
-    if (!value.length) {
-        return <MultiSelect.Placeholder>언어 선택</MultiSelect.Placeholder>;
-    }
-
-    const displayValues = value.slice(0, 2);
-    const remainingCount = value.length - 2;
-
-    return (
-        <Flex gap="$050" className="flex-wrap">
-            {displayValues.map((val) => (
-                <Badge key={val} size="sm">
-                    {languages[val as keyof typeof languages]}
-                </Badge>
-            ))}
-            {remainingCount > 0 && (
-                <Badge size="sm" color="hint">
-                    +{remainingCount} more
-                </Badge>
-            )}
-        </Flex>
-    );
-};
-
-const renderStringValue = (value: string[]) => {
-    if (!value.length) {
-        return <MultiSelect.Placeholder>언어 선택</MultiSelect.Placeholder>;
-    }
-
-    return value.map((v) => languages[v as keyof typeof languages]).join(', ');
-};
-
-export default function MultiSelectCustomValue() {
-    return (
-        <Grid.Root templateColumns="1fr 1fr" gap="$300">
-            <VStack gap="$100" width="250px">
-                <Text typography="body2">커스텀 값 표시 (최대 2개 + 더보기)</Text>
-                <MultiSelect.Root items={languages} placeholder="언어 선택">
-                    <MultiSelect.Trigger>
-                        <MultiSelect.Value>{renderRestValue}</MultiSelect.Value>
-                        <MultiSelect.TriggerIcon />
-                    </MultiSelect.Trigger>
-                    <MultiSelect.Content>
-                        {Object.entries(languages).map(([value, label]) => (
-                            <MultiSelect.Item key={value} value={value}>
-                                {label}
-                                <MultiSelect.ItemIndicator />
-                            </MultiSelect.Item>
-                        ))}
-                    </MultiSelect.Content>
-                </MultiSelect.Root>
-            </VStack>
-
-            <VStack gap="$100" width="250px">
-                <Text typography="body2">문자열 형태 표시</Text>
-                <MultiSelect.Root items={languages} placeholder="언어 선택">
-                    <MultiSelect.Trigger>
-                        <MultiSelect.Value>{renderStringValue}</MultiSelect.Value>
-                        <MultiSelect.TriggerIcon />
-                    </MultiSelect.Trigger>
-                    <MultiSelect.Content>
-                        {Object.entries(languages).map(([value, label]) => (
-                            <MultiSelect.Item key={value} value={value}>
-                                {label}
-                                <MultiSelect.ItemIndicator />
-                            </MultiSelect.Item>
-                        ))}
-                    </MultiSelect.Content>
-                </MultiSelect.Root>
-            </VStack>
-        </Grid.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-custom-value.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Props Table
