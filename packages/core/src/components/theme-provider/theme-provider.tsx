@@ -181,9 +181,11 @@ const Theme = ({
             const d = document.documentElement;
 
             d.classList.remove(DARK_CLASS_NAME);
+            d.classList.remove('dark');
 
             if (resolved === 'dark') {
                 d.classList.add(DARK_CLASS_NAME);
+                d.classList.add('dark');
             }
 
             if (enableColorScheme) {

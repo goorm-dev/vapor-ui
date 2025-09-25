@@ -31,5 +31,15 @@ export default defineConfig({
             },
         },
         remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({ relative: true })] }]],
+        rehypeCodeOptions: {
+            lazy: true,
+            experimentalJSEngine: true,
+            langs: ['ts', 'js', 'html', 'tsx', 'mdx'],
+            inline: 'tailing-curly-colon',
+            themes: {
+                light: 'github-light',
+                dark: 'slack-dark',
+            },
+        },
     },
 });
