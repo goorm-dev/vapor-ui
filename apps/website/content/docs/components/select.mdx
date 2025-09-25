@@ -56,81 +56,40 @@ Select의 크기는 sm, md, lg, xl 로 제공합니다.
 <Demo name="select/select-size">
 
 ```tsx
-import { Select } from '@vapor-ui/core';
+import type { SelectRootProps } from '@vapor-ui/core';
+import { Flex, Select } from '@vapor-ui/core';
 
 export default function SelectSize() {
     return (
-        <div className="flex flex-wrap gap-4">
-            <Select.Root placeholder="Small" size="sm">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="Medium" size="md">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="Large" size="lg">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="Extra Large" size="xl">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-        </div>
+        <Flex maxWidth="800px" width="100%" gap="$250">
+            <SelectTemplate placeholder="Small" size="sm" />
+            <SelectTemplate placeholder="Medium" size="md" />
+            <SelectTemplate placeholder="Large" size="lg" />
+            <SelectTemplate placeholder="Extra Large" size="xl" />
+        </Flex>
     );
 }
+
+const SelectTemplate = (props: SelectRootProps) => {
+    return (
+        <Select.Root {...props}>
+            <Select.Trigger>
+                <Select.Value />
+                <Select.TriggerIcon />
+            </Select.Trigger>
+            <Select.Content>
+                <Select.Item value="option1">
+                    옵션 1
+                    <Select.ItemIndicator />
+                </Select.Item>
+                <Select.Item value="option2">
+                    옵션 2
+                    <Select.ItemIndicator />
+                </Select.Item>
+            </Select.Content>
+        </Select.Root>
+    );
+};
 ```
 
 </Demo>
@@ -142,11 +101,11 @@ Select 드롭다운이 나타날 위치를 설정할 수 있습니다. 기본값
 <Demo name="select/select-positioning">
 
 ```tsx
-import { Select } from '@vapor-ui/core';
+import { HStack, Select } from '@vapor-ui/core';
 
 export default function SelectPositioning() {
     return (
-        <div className="grid grid-cols-2 gap-4 p-8">
+        <HStack maxWidth="800px" width="100%" gap="$250">
             <Select.Root placeholder="Top">
                 <Select.Trigger>
                     <Select.Value />
@@ -214,7 +173,7 @@ export default function SelectPositioning() {
                     </Select.Item>
                 </Select.Content>
             </Select.Root>
-        </div>
+        </HStack>
     );
 }
 ```
@@ -232,7 +191,7 @@ Select의 선택 상태를 외부에서 제어할 수 있습니다.
 
 import { useState } from 'react';
 
-import { Select } from '@vapor-ui/core';
+import { Button, HStack, Select, Text } from '@vapor-ui/core';
 
 export default function SelectControlled() {
     const [value, setValue] = useState<string>('');
@@ -272,24 +231,18 @@ export default function SelectControlled() {
                 </Select.Content>
             </Select.Root>
 
-            <p className="text-sm text-gray-600">
+            <Text typography="body2" foreground="secondary-darker">
                 선택된 값: <code className="bg-gray-100 px-1 rounded">{value || '없음'}</code>
-            </p>
+            </Text>
 
-            <div className="flex gap-2">
-                <button
-                    onClick={() => setValue('serif')}
-                    className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
+            <HStack gap="$100">
+                <Button color="primary" onClick={() => setValue('serif')}>
                     Serif 선택
-                </button>
-                <button
-                    onClick={() => setValue('')}
-                    className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
-                >
+                </Button>
+                <Button onClick={() => setValue('')} color="secondary">
                     선택 해제
-                </button>
-            </div>
+                </Button>
+            </HStack>
         </div>
     );
 }
@@ -304,81 +257,40 @@ Select의 다양한 상태(비활성화, 읽기 전용, 오류)를 설정할 수
 <Demo name="select/select-states">
 
 ```tsx
-import { Select } from '@vapor-ui/core';
+import type { SelectRootProps } from '@vapor-ui/core';
+import { HStack, Select } from '@vapor-ui/core';
 
 export default function SelectStates() {
     return (
-        <div className="flex flex-wrap gap-4">
-            <Select.Root placeholder="기본 상태">
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="비활성화" disabled>
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="읽기 전용" readOnly>
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-
-            <Select.Root placeholder="오류 상태" invalid>
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="option1">
-                        옵션 1
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                    <Select.Item value="option2">
-                        옵션 2
-                        <Select.ItemIndicator />
-                    </Select.Item>
-                </Select.Content>
-            </Select.Root>
-        </div>
+        <HStack gap="$200" className="flex-wrap">
+            <SelectTemplate placeholder="기본 상태" />
+            <SelectTemplate placeholder="비활성화" disabled />
+            <SelectTemplate placeholder="읽기 전용" readOnly />
+            <SelectTemplate placeholder="오류 상태" invalid />
+        </HStack>
     );
 }
+
+const SelectTemplate = (props: SelectRootProps) => {
+    return (
+        <Select.Root {...props}>
+            <Select.Trigger>
+                <Select.Value />
+                <Select.TriggerIcon />
+            </Select.Trigger>
+            <Select.Content>
+                <Select.Item value="option1">
+                    옵션 1
+                    <Select.ItemIndicator />
+                </Select.Item>
+                <Select.Item value="option2">
+                    옵션 2
+                    <Select.ItemIndicator />
+                </Select.Item>
+            </Select.Content>
+        </Select.Root>
+    );
+};
 ```
 
 </Demo>
@@ -394,7 +306,7 @@ Select는 배열 형태와 객체 형태의 아이템 데이터를 모두 지원
 <Demo name="select/select-items">
 
 ```tsx
-import { Select } from '@vapor-ui/core';
+import { Select, VStack } from '@vapor-ui/core';
 
 const fonts = [
     { label: 'Sans-serif', value: 'sans' },
@@ -413,8 +325,8 @@ const languages = {
 
 export default function SelectItems() {
     return (
-        <div className="space-y-6">
-            <div>
+        <VStack gap="$300" width="400px">
+            <VStack>
                 <h4 className="text-sm font-medium mb-2">배열 형태의 아이템</h4>
                 <Select.Root placeholder="폰트 선택" items={fonts}>
                     <Select.Trigger>
@@ -433,9 +345,9 @@ export default function SelectItems() {
                         </Select.Group>
                     </Select.Content>
                 </Select.Root>
-            </div>
+            </VStack>
 
-            <div>
+            <VStack>
                 <h4 className="text-sm font-medium mb-2">객체 형태의 아이템</h4>
                 <Select.Root placeholder="언어 선택" items={languages}>
                     <Select.Trigger>
@@ -454,8 +366,8 @@ export default function SelectItems() {
                         </Select.Group>
                     </Select.Content>
                 </Select.Root>
-            </div>
-        </div>
+            </VStack>
+        </VStack>
     );
 }
 ```

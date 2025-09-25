@@ -1,12 +1,12 @@
-import { Select } from '@vapor-ui/core';
+import { Box, Select } from '@vapor-ui/core';
 
 export default function DefaultSelect() {
     return (
         <Select.Root placeholder="폰트를 선택하세요">
-            <Select.Trigger>
+            <Box render={<Select.Trigger />} width="400px">
                 <Select.Value />
                 <Select.TriggerIcon />
-            </Select.Trigger>
+            </Box>
 
             <Select.Content>
                 <Select.Group>
