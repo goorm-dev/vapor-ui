@@ -4,7 +4,7 @@ import { HomeLayout } from 'fumadocs-ui/layouts/home';
 
 import { baseOptions } from '~/app/layout.config';
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
-import { createMetadata } from '~/lib/metadata';
+import { createMetadata } from '~/utils/metadata';
 
 export const metadata = createMetadata({});
 
