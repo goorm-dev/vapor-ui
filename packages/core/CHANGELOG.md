@@ -1,5 +1,20 @@
 # @vapor-ui/core
 
+## 0.7.0
+
+### Minor Changes
+
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+- 6c02d6f: unreflected content revisions
+- b581b9f: add `Form` component
+- 7928a67: add subcomponent props to `Content`
+
+### Patch Changes
+
+- 707f705: feat: update color tokens
+- 43cfefb: feat: add font banner
+- d68304a: fix(text-input): add component layer
+
 ## 0.6.0
 
 ### Minor Changes
