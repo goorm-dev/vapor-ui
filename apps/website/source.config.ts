@@ -30,7 +30,7 @@ export default defineConfig({
                 id: 'package-manager',
             },
         },
-        remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({ relative: true })] }]],
+        remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({})] }]],
         rehypeCodeOptions: {
             lazy: true,
             experimentalJSEngine: true,

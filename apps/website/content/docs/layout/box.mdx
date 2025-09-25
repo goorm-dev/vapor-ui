@@ -5,15 +5,10 @@ description: '레이아웃과 스타일링을 위한 기본 컨테이너 컴포�
 ---
 
 <Demo name="default-box">
-```tsx
-import { Box } from '@vapor-ui/core';
-
-export default function DefaultBox() {
-    return (
-        <Box padding="$400" backgroundColor="gray-100" borderRadius="$300">
-            This is a basic Box component with padding, background color, and border radius.
-        </Box>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-box.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -27,121 +22,10 @@ export default function DefaultBox() {
 Box 컴포넌트는 다양한 디스플레이 타입을 지원하여 레이아웃을 유연하게 구성할 수 있습니다.
 
 <Demo name="box-display">
-```tsx
-import { Box, Text } from '@vapor-ui/core';
-
-export default function BoxDisplay() {
-    return (
-        <div className="flex flex-col gap-6">
-            <Text typography="heading4" render={<h4 />}>
-                Display Types
-            </Text>
-            <div className="flex flex-col gap-4">
-                <div>
-                    <Text>Block (default)</Text>
-                    <Box
-                        display="block"
-                        padding="$300"
-                        backgroundColor="$blue-200"
-                        borderRadius="$200"
-                    >
-                        Block element takes full width
-                    </Box>
-                </div>
-                <div>
-                    <Text>Inline</Text>
-                    <Box
-                        display="inline"
-                        padding="$200"
-                        backgroundColor="$green-200"
-                        borderRadius="$200"
-                    >
-                        Inline element
-                    </Box>
-                    <span className="mx-2">flows with text</span>
-                    <Box
-                        display="inline"
-                        padding="$200"
-                        backgroundColor="$green-200"
-                        borderRadius="$200"
-                    >
-                        like this
-                    </Box>
-                </div>
-                <div>
-                    <Text>Flex Container</Text>
-                    <Box
-                        display="flex"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$grape-200"
-                        borderRadius="$200"
-                    >
-                        <Box
-                            padding="$200"
-                            backgroundColor="$grape-400"
-                            borderRadius="$100"
-                            color="$contrast-100"
-                        >
-                            Item 1
-                        </Box>
-                        <Box
-                            padding="$200"
-                            backgroundColor="$grape-400"
-                            borderRadius="$100"
-                            color="$contrast-100"
-                        >
-                            Item 2
-                        </Box>
-                        <Box
-                            padding="$200"
-                            backgroundColor="$grape-400"
-                            borderRadius="$100"
-                            color="$contrast-100"
-                        >
-                            Item 3
-                        </Box>
-                    </Box>
-                </div>
-                <div>
-                    <Text>Grid Container</Text>
-                    <Box
-                        display="grid"
-                        padding="$300"
-                        backgroundColor="$orange-200"
-                        borderRadius="$200"
-                        gap="$200"
-                        style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
-                    >
-                        <Box
-                            padding="$200"
-                            backgroundColor="$orange-400"
-                            borderRadius="$100"
-                            color="$contrast-100"
-                        >
-                            A
-                        </Box>
-                        <Box
-                            padding="$200"
-                            backgroundColor="$orange-400"
-                            borderRadius="$100"
-                            color="$contrast-100"
-                        >
-                            B
-                        </Box>
-                        <Box
-                            padding="$200"
-                            backgroundColor="$orange-400"
-                            borderRadius="$100"
-                            color="$contrast-100"
-                        >
-                            C
-                        </Box>
-                    </Box>
-                </div>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/box-display.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -151,38 +35,10 @@ export default function BoxDisplay() {
 Box 컴포넌트는 시맨틱 색상과 팔레트 색상을 모두 지원합니다.
 
 <Demo name="box-background">
-```tsx
-import { Box } from '@vapor-ui/core';
-
-export default function BoxBackground() {
-    return (
-        <div className="flex flex-wrap items-center gap-4">
-            <Box padding="$400" backgroundColor="primary-200" color="$contrast-100">
-                Primary
-            </Box>
-            <Box padding="$400" backgroundColor="secondary-200" color="$contrast-100">
-                Secondary
-            </Box>
-            <Box padding="$400" backgroundColor="success-200" color="$contrast-100">
-                Success
-            </Box>
-            <Box padding="$400" backgroundColor="warning-200" color="$contrast-100">
-                Warning
-            </Box>
-            <Box padding="$400" backgroundColor="danger-200" color="$contrast-100">
-                Danger
-            </Box>
-            <Box padding="$400" backgroundColor="gray-200" color="$primary-100">
-                Gray 200
-            </Box>
-            <Box padding="$400" backgroundColor="blue-500" color="$contrast-100">
-                Blue 500
-            </Box>
-            <Box padding="$400" backgroundColor="green-300" color="$primary-100">
-                Green 300
-            </Box>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/box-background.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -192,43 +48,10 @@ export default function BoxBackground() {
 패딩과 마진 속성을 사용하여 요소의 내부 및 외부 여백을 조절할 수 있습니다.
 
 <Demo name="box-spacing">
-```tsx
-import { Box } from '@vapor-ui/core';
-
-export default function BoxSpacing() {
-    return (
-        <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-                <Box padding="$400" backgroundColor="$blue-200" borderRadius="$200">
-                    Padding
-                </Box>
-            </div>
-            <div className="flex items-center gap-4">
-                <Box margin="$400" padding="$300" backgroundColor="$green-200" borderRadius="$200">
-                    Margin
-                </Box>
-            </div>
-            <div className="flex items-center gap-4">
-                <Box
-                    paddingX="$500"
-                    paddingY="$200"
-                    backgroundColor="$grape-100"
-                    borderRadius="$200"
-                >
-                    Horizontal Padding
-                </Box>
-                <Box
-                    marginX="$300"
-                    marginY="$100"
-                    padding="$300"
-                    backgroundColor="$grape-200"
-                    borderRadius="$200"
-                >
-                    Asymmetric Margins
-                </Box>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/box-spacing.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -238,146 +61,12 @@ export default function BoxSpacing() {
 플렉스박스 속성을 활용하여 다양한 레이아웃을 구성할 수 있습니다.
 
 <Demo name="box-layout">
-```tsx
-import { Box } from '@vapor-ui/core';
-
-export default function BoxLayout() {
-    return (
-        <div className="flex flex-col gap-6">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Flex Direction</h4>
-                <div className="flex flex-col gap-4">
-                    <Box
-                        display="flex"
-                        flexDirection="row"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
-                            1
-                        </Box>
-                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
-                            2
-                        </Box>
-                        <Box padding="$200" backgroundColor="$blue-300" borderRadius="$100">
-                            3
-                        </Box>
-                    </Box>
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
-                            A
-                        </Box>
-                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
-                            B
-                        </Box>
-                        <Box padding="$200" backgroundColor="$green-300" borderRadius="$100">
-                            C
-                        </Box>
-                    </Box>
-                </div>
-            </div>
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Justify Content</h4>
-                <div className="flex flex-col gap-2">
-                    <Box
-                        display="flex"
-                        justifyContent="flex-start"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Start
-                        </Box>
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Items
-                        </Box>
-                    </Box>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Center
-                        </Box>
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Items
-                        </Box>
-                    </Box>
-                    <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        gap="$200"
-                        padding="$300"
-                        backgroundColor="$gray-100"
-                        borderRadius="$200"
-                    >
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Space
-                        </Box>
-                        <Box padding="$200" backgroundColor="$grape-300" borderRadius="$100">
-                            Between
-                        </Box>
-                    </Box>
-                </div>
-            </div>
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Align Items</h4>
-                <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-around"
-                    gap="$200"
-                    padding="$300"
-                    backgroundColor="$gray-100"
-                    borderRadius="$200"
-                    height="$800"
-                >
-                    <Box
-                        padding="$200"
-                        backgroundColor="$orange-300"
-                        borderRadius="$100"
-                        height="$500"
-                    >
-                        Small
-                    </Box>
-                    <Box
-                        padding="$200"
-                        backgroundColor="$orange-300"
-                        borderRadius="$100"
-                        height="$600"
-                    >
-                        Medium
-                    </Box>
-                    <Box
-                        padding="$200"
-                        backgroundColor="$orange-300"
-                        borderRadius="$100"
-                        height="$700"
-                    >
-                        Aligned
-                    </Box>
-                </Box>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/box-layout.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Dimensions
@@ -385,30 +74,10 @@ export default function BoxLayout() {
 너비와 높이를 설정하거나 최소/최대 크기 제약을 적용할 수 있습니다.
 
 <Demo name="box-dimensions">
-```tsx
-import { Box } from '@vapor-ui/core';
-
-export default function BoxDimensions() {
-    return (
-        <Box display="flex">
-            <div>
-                <div className="flex items-end gap-4">
-                    <Box
-                        width="$800"
-                        height="$800"
-                        backgroundColor="$blue-300"
-                        borderRadius="$200"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        color="$contrast-100"
-                    >
-                        800x800
-                    </Box>
-                </div>
-            </div>
-        </Box>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/box-dimensions.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -418,123 +87,10 @@ export default function BoxDimensions() {
 테두리 둥글기, 투명도, 텍스트 정렬 등의 시각적 속성을 제어할 수 있습니다.
 
 <Demo name="box-visual">
-```tsx
-import { Box } from '@vapor-ui/core';
-
-export default function BoxVisual() {
-    return (
-        <div className="flex flex-col gap-6">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Border Radius</h4>
-                <div className="flex items-center gap-4">
-                    <Box padding="$400" backgroundColor="$blue-200" borderRadius="$100">
-                        Small Radius
-                    </Box>
-                    <Box padding="$400" backgroundColor="$blue-300" borderRadius="$300">
-                        Medium Radius
-                    </Box>
-                    <Box padding="$400" backgroundColor="$blue-400" borderRadius="$600">
-                        Large Radius
-                    </Box>
-                    <Box
-                        padding="$400"
-                        backgroundColor="$blue-500"
-                        borderRadius="$900"
-                        color="$contrast-100"
-                    >
-                        Extra Large
-                    </Box>
-                </div>
-            </div>
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Opacity Levels</h4>
-                <div className="flex items-center gap-4">
-                    <Box
-                        padding="$400"
-                        backgroundColor="$green-500"
-                        opacity="0.3"
-                        borderRadius="$200"
-                    >
-                        30% Opacity
-                    </Box>
-                    <Box
-                        padding="$400"
-                        backgroundColor="$green-500"
-                        opacity="0.6"
-                        borderRadius="$200"
-                    >
-                        60% Opacity
-                    </Box>
-                    <Box
-                        padding="$400"
-                        backgroundColor="$green-500"
-                        opacity="0.9"
-                        borderRadius="$200"
-                    >
-                        90% Opacity
-                    </Box>
-                    <Box padding="$400" backgroundColor="$green-500" borderRadius="$200">
-                        Full Opacity
-                    </Box>
-                </div>
-            </div>
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Text Alignment</h4>
-                <div className="flex flex-col gap-2">
-                    <Box
-                        padding="$400"
-                        backgroundColor="$grape-100"
-                        borderRadius="$200"
-                        textAlign="left"
-                    >
-                        Left aligned text content
-                    </Box>
-                    <Box
-                        padding="$400"
-                        backgroundColor="$grape-200"
-                        borderRadius="$200"
-                        textAlign="center"
-                    >
-                        Center aligned text content
-                    </Box>
-                    <Box
-                        padding="$400"
-                        backgroundColor="$grape-300"
-                        borderRadius="$200"
-                        textAlign="right"
-                    >
-                        Right aligned text content
-                    </Box>
-                </div>
-            </div>
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Overflow Behavior</h4>
-                <div className="flex flex-col gap-4">
-                    <Box
-                        height="$800"
-                        padding="$300"
-                        backgroundColor="$orange-200"
-                        borderRadius="$200"
-                        overflow="hidden"
-                    >
-                        This is a long text that will be clipped when it overflows the container
-                        bounds because overflow is set to hidden.
-                    </Box>
-                    <Box
-                        height="$300"
-                        padding="$300"
-                        backgroundColor="$orange-300"
-                        borderRadius="$200"
-                        overflow="scroll"
-                    >
-                        This is a long text that will show scrollbars when it overflows the
-                        container bounds because overflow is set to scroll. You can scroll to see
-                        the full content.
-                    </Box>
-                </div>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/box-visual.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

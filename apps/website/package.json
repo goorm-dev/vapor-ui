@@ -25,7 +25,7 @@
         "@vapor-ui/icons": "workspace:*",
         "clsx": "^2.1.1",
         "fumadocs-core": "^15.2.15",
-        "fumadocs-docgen": "^2.0.0",
+        "fumadocs-docgen": "^3.0.0",
         "fumadocs-mdx": "^11.6.2",
         "fumadocs-typescript": "^4.0.6",
         "fumadocs-ui": "^15.5.1",

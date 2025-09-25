@@ -12,4 +12,5 @@ export const blockSource = loader({
     baseUrl: '/blocks',
     source: blocks.toFumadocsSource(),
 });
+
 export type Page = InferPageType<typeof source>;

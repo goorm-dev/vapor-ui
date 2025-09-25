@@ -5,11 +5,10 @@ description: 'Checkbox는 여러 항목 중 복수 선택을 가능하게 하는
 ---
 
 <Demo name="default-checkbox">
-```tsx
-import { Checkbox } from '@vapor-ui/core';
-
-export default function DefaultCheckbox() {
-    return <Checkbox.Root />;
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-checkbox.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -23,16 +22,10 @@ export default function DefaultCheckbox() {
 Checkbox 사이즈는 md, lg 로 제공합니다.
 
 <Demo name="checkbox-size">
-```tsx
-import { Checkbox } from '@vapor-ui/core';
-
-export default function CheckboxSize() {
-    return (
-        <div className="flex items-center gap-4">
-            <Checkbox.Root size="md" />
-            <Checkbox.Root size="lg" />
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/checkbox-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -42,17 +35,11 @@ export default function CheckboxSize() {
 비활성화된 상태의 Checkbox입니다. 사용자가 상호작용할 수 없습니다.
 
 <Demo name="checkbox-disabled">
-```tsx
-import { Checkbox } from '@vapor-ui/core';
-
-export default function CheckboxDisabled() {
-    return (
-        <div className="flex items-center gap-4">
-            <Checkbox.Root disabled />
-            <Checkbox.Root disabled checked />
-        </div>
-    );
-};
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/checkbox-disabled.tsx",
+    "codeblock": true
+}
 ```
 </Demo>
 
@@ -61,17 +48,11 @@ export default function CheckboxDisabled() {
 유효하지 않은 상태의 Checkbox입니다. 폼 검증 실패 시 사용됩니다.
 
 <Demo name="checkbox-invalid">
-```tsx
-import { Checkbox } from '@vapor-ui/core';
-
-export default function CheckboxInvalid() {
-    return (
-        <div className="flex items-center gap-4">
-            <Checkbox.Root invalid />
-            <Checkbox.Root invalid checked />
-        </div>
-    );
-};
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/checkbox-invalid.tsx",
+    "codeblock": true
+}
 ```
 </Demo>
 
@@ -80,76 +61,11 @@ export default function CheckboxInvalid() {
 부분적으로 선택된 상태의 Checkbox입니다. 하위 항목 중 일부만 선택되었을 때 사용됩니다.
 
 <Demo name="checkbox-indeterminate">
-```tsx
-import { useState } from 'react';
-import { Checkbox, Text } from '@vapor-ui/core';
-
-export default function CheckboxIndeterminate() {
-    const [checkedItems, setCheckedItems] = useState({
-        apple: false,
-        banana: false,
-        orange: false,
-    });
-    
-    const allChecked = Object.values(checkedItems).every(Boolean);
-    const isIndeterminate = Object.values(checkedItems).some(Boolean) && !allChecked;
-    
-    const handleSelectAll = (checked: boolean) => {
-        setCheckedItems({
-            apple: checked,
-            banana: checked,
-            orange: checked,
-        });
-    };
-    
-    const handleItemChange = (item: keyof typeof checkedItems, checked: boolean) => {
-        setCheckedItems((prev) => ({
-            ...prev,
-            [item]: checked,
-        }));
-    };
-    
-    return (
-        <div className="space-y-3">
-            <Text typography="body2" render={<label />} className="font-medium flex items-center gap-2.5">
-                <Checkbox.Root
-                    checked={allChecked}
-                    indeterminate={isIndeterminate}
-                    onCheckedChange={handleSelectAll}
-                    className="flex items-center gap-3"
-                />
-                Select All Fruits
-            </Text>
-            
-            <div className="ml-6 space-y-2">
-                <Text typography="body2" render={<label />} className="cursor-pointer  flex items-center gap-2.5">
-                    <Checkbox.Root
-                        checked={checkedItems.apple}
-                        onCheckedChange={(checked) => handleItemChange('apple', checked)}
-                        className="flex items-center gap-3"
-                    />
-                    Apple
-                </Text>
-                <Text typography="body2" render={<label />} className="cursor-pointer  flex items-center gap-2.5">
-                    <Checkbox.Root
-                        checked={checkedItems.banana}
-                        onCheckedChange={(checked) => handleItemChange('banana', checked)}
-                        className="flex items-center gap-3"
-                    />
-                    Banana
-                </Text>
-                <Text typography="body2" render={<label />} className="cursor-pointer  flex items-center gap-2.5">
-                    <Checkbox.Root
-                        checked={checkedItems.orange}
-                        onCheckedChange={(checked) => handleItemChange('orange', checked)}
-                        className="flex items-center gap-3"
-                    />
-                    Orange
-                </Text>
-            </div>
-        </div>
-    );
-};
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/checkbox-indeterminate.tsx",
+    "codeblock": true
+}
 ```
 </Demo>
 
@@ -158,32 +74,10 @@ export default function CheckboxIndeterminate() {
 사용자는 체크박스 상태를 변경할 수 없지만, 현재 상태를 확인할 수 있도록 허용하는 상태입니다.
 
 <Demo name="checkbox-readonly">
-```tsx
-import { Checkbox, Flex } from '@vapor-ui/core';
-
-export default function CheckboxReadOnly() {
-    return (
-        <Flex gap="$000" flexDirection="column">
-            <label className="flex items-center gap-2">
-                <Checkbox.Root readOnly defaultChecked>
-                    <Checkbox.Indicator />
-                </Checkbox.Root>
-                읽기 전용 (체크됨)
-            </label>
-            <label className="flex items-center gap-2">
-                <Checkbox.Root readOnly>
-                    <Checkbox.Indicator />
-                </Checkbox.Root>
-                읽기 전용 (체크 안됨)
-            </label>
-            <label className="flex items-center gap-2">
-                <Checkbox.Root readOnly indeterminate>
-                    <Checkbox.Indicator />
-                </Checkbox.Root>
-                읽기 전용 (혼합 상태)
-            </label>
-        </Flex>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/checkbox-readonly.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
