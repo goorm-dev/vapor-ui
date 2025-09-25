@@ -28,7 +28,7 @@
         "fumadocs-docgen": "^2.0.0",
         "fumadocs-mdx": "^11.6.2",
         "fumadocs-typescript": "^4.0.6",
-        "fumadocs-ui": "^15.5.1",
+        "fumadocs-ui": "^15.7.13",
         "lodash-es": "^4.17.21",
         "markdown-table": "^3.0.4",
         "next": "^15.3.4",

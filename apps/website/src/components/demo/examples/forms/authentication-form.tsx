@@ -27,7 +27,7 @@ export default function AuthenticationForm() {
     return (
         <VStack
             gap="$400"
-            width="400px"
+            width="100%"
             padding="$300"
             borderRadius="$300"
             border="1px solid var(--vapor-color-border-normal)"
