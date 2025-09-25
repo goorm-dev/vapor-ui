@@ -16,12 +16,12 @@ export const root = recipe({
             backgroundColor: vars.color.background.canvas,
             paddingBlock: vars.size.space['000'],
 
-            color: vars.color.foreground.normal,
+            color: vars.color.foreground.normal[200],
 
             selectors: {
                 '&:read-only': { backgroundColor: vars.color.gray['200'] },
                 '&:disabled': { pointerEvents: 'none', opacity: 0.32 },
-                '&::placeholder': { color: vars.color.foreground.hint },
+                '&::placeholder': { color: vars.color.foreground.hint[100] },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
         }),

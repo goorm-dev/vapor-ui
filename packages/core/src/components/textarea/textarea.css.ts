@@ -19,7 +19,7 @@ export const textarea = recipe({
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.canvas,
-            color: vars.color.foreground.normal,
+            color: vars.color.foreground.normal[200],
             width: '100%',
             minHeight: textareaMinHeightVar,
 
@@ -29,7 +29,7 @@ export const textarea = recipe({
                     resize: 'none',
                 },
                 '&::placeholder': {
-                    color: vars.color.foreground.hint,
+                    color: vars.color.foreground.hint[100],
                 },
             },
         }),

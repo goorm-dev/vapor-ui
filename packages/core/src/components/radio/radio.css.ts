@@ -47,7 +47,7 @@ export const root = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('components', { borderColor: vars.color.background['danger'] }),
+            true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },
 
         size: {
@@ -75,7 +75,7 @@ export const indicator = layerStyle('components', {
     height: '50%',
     selectors: {
         '&[data-readonly]': {
-            backgroundColor: vars.color.foreground.hint,
+            backgroundColor: vars.color.foreground.hint[100],
         },
     },
 });

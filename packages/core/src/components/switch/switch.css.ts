@@ -80,7 +80,7 @@ export const indicator = recipe({
                 boxShadow: 'none',
             },
             '&[data-readonly][data-checked]': {
-                backgroundColor: vars.color.foreground.hint,
+                backgroundColor: vars.color.foreground.hint[100],
                 boxShadow: 'none',
             },
         },

@@ -14,7 +14,8 @@ export const Default = {
                 flexDirection="column"
                 gap="$500"
                 padding="$800"
-                backgroundColor="$gray-500"                
+                backgroundColor="$gray-500"         
+                className="te"       
             >
                 <Box style={{ backgroundColor: 'red' }} render={<Button>sadfasdf</Button>} />
                 <Box
