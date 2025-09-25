@@ -116,18 +116,11 @@ const DemoPreviewPanel = ({
     showResponsiveToggle,
     selectedDevice,
 }: DemoPreviewPanelProps) => {
-    const previewClassName = 'p-v-300';
-
     if (showResponsiveToggle) {
-        return <IframePreview name={name} device={selectedDevice} className={previewClassName} />;
+        return <IframePreview name={name} device={selectedDevice} />;
     }
 
-    return (
-        <Preview
-            name={name}
-            className={`mx-auto transition-all duration-200 ${previewClassName}`}
-        />
-    );
+    return <Preview name={name} />;
 };
 
 // DemoContent 컴포넌트 분리

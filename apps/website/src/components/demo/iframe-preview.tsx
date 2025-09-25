@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 
-import clsx from 'clsx';
-
 import type { DeviceType } from '~/constants/code-block';
 import { DEVICE_WIDTH_MAP } from '~/constants/code-block';
 
@@ -17,7 +15,7 @@ const getIframeWidth = (device: DeviceType) => {
 };
 
 export function IframePreview(props: IframePreviewProps) {
-    const { name, className, device } = props;
+    const { name, device } = props;
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
     React.useEffect(() => {
@@ -28,7 +26,7 @@ export function IframePreview(props: IframePreviewProps) {
     }, [name]);
 
     return (
-        <div className={clsx('iframe-preview-container flex justify-center', className)}>
+        <div className={'iframe-preview-container flex justify-center p-v-300'}>
             <iframe
                 ref={iframeRef}
                 width={getIframeWidth(device)}

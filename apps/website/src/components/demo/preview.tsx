@@ -2,15 +2,12 @@
 
 import * as React from 'react';
 
-import clsx from 'clsx';
-
 interface PreviewProps {
     name: string;
-    className?: string;
 }
 
 export function Preview(props: PreviewProps) {
-    const { name, className } = props;
+    const { name } = props;
 
     const Preview = React.useMemo(() => {
         const Component = React.lazy(() => import(`./examples/${name}.tsx`));
@@ -25,10 +22,9 @@ export function Preview(props: PreviewProps) {
     return (
         <React.Suspense fallback={null}>
             <div
-                className={clsx(
-                    'not-prose example-reset example-enter min-h-[300px] flex flex-col justify-center items-center',
-                    className,
-                )}
+                className={
+                    'not-prose p-v-300 min-h-[300px] flex flex-col justify-center items-center'
+                }
             >
                 {Preview}
             </div>
