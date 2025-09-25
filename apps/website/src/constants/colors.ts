@@ -19,6 +19,21 @@ export type SemanticColorItem = SemanticColorValue | SemanticColorVariant | Reco
 export type SemanticColorGroup = Record<string, SemanticColorItem>;
 export type SemanticColorDataType = Record<string, SemanticColorGroup>;
 
+// Type guards
+const isSemanticColorValue = (item: unknown): item is SemanticColorValue => {
+    return typeof item === 'object' && item !== null && 'value' in item;
+};
+
+const isSemanticColorVariant = (item: unknown): item is SemanticColorVariant => {
+    return typeof item === 'object' && item !== null && ('100' in item || '200' in item);
+};
+
+const isValidSemanticColorItem = (item: unknown): item is SemanticColorItem => {
+    return isSemanticColorValue(item) || 
+           isSemanticColorVariant(item) || 
+           (typeof item === 'object' && item !== null);
+};
+
 // JSON 데이터를 기반으로 한 새로운 상수들
 
 export const BasicColorData = Object.keys(basicColorData as BasicColorDataType).map((key) => {
@@ -47,7 +62,7 @@ const processSemanticColorItem = (
     item: SemanticColorItem,
 ): Array<{ name: string; value: string; basicToken?: string }> => {
     // Check if it has value property (leaf node)
-    if (item && typeof item === 'object' && 'value' in item) {
+    if (isSemanticColorValue(item)) {
         return [
             {
                 name: `--vapor-color-${key}-${shade}`,
@@ -58,10 +73,9 @@ const processSemanticColorItem = (
     }
 
     // Check if it's a variant object (has 100/200 properties)
-    if (item && typeof item === 'object' && ('100' in item || '200' in item)) {
-        const variant = item as SemanticColorVariant;
-        return Object.keys(variant).map((variantKey) => {
-            const variantItem = variant[variantKey as '100' | '200'];
+    if (isSemanticColorVariant(item)) {
+        return Object.keys(item).map((variantKey) => {
+            const variantItem = item[variantKey as '100' | '200'];
             return {
                 name: `--vapor-color-${key}-${shade}-${variantKey}`,
                 value: variantItem!.value,
@@ -71,10 +85,14 @@ const processSemanticColorItem = (
     }
 
     // Handle deeper nested structures (like button.foreground.primary)
-    if (item && typeof item === 'object') {
-        return Object.keys(item).flatMap((nestedKey) => {
-            const nestedItem = item[nestedKey];
-            return processSemanticColorItem(key, `${shade}-${nestedKey}`, nestedItem);
+    if (typeof item === 'object' && item !== null) {
+        const nestedItem = item as Record<string, unknown>;
+        return Object.keys(nestedItem).flatMap((nestedKey) => {
+            const childItem = nestedItem[nestedKey];
+            if (isValidSemanticColorItem(childItem)) {
+                return processSemanticColorItem(key, `${shade}-${nestedKey}`, childItem);
+            }
+            return [];
         });
     }
 
