@@ -13,12 +13,12 @@ description: Vapor UI를 Tailwind CSS v4 환경에 통합하는 방법을 안내
 /* 1. 파일 최상단에서 전체 Layer 순서를 정의합니다. */
 @layer tw-theme, theme, reset, components, utilities, tw-utilities;
 
+@import '@vapor-ui/core/styles.css';
+@import '@vapor-ui/core/tailwind.css';
+
 /* 2. Tailwind와 Vapor UI 스타일을 불러옵니다. */
 @import 'tailwindcss/theme.css' layer(tw-theme);
 @import 'tailwindcss/utilities.css' layer(tw-utilities);
-
-@import '@vapor-ui/core/styles.css';
-@import '@vapor-ui/core/tailwind.css';
 ```
 
 이 설정만으로 Vapor UI와 Tailwind CSS를 함께 사용하기 위한 모든 준비가 완료됩니다.
