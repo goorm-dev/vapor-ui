@@ -1,0 +1,19 @@
+{
+  "name": "AvatarSimple",
+  "props": {
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "2xl"
+      ],
+      "default": "md",
+      "required": true,
+      "description": "Callback fired when the loading status changes."
+    }
+  },
+  "dataAttributes": {},
+  "cssVariables": {}
+}

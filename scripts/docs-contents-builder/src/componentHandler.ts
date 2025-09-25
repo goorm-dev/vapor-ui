@@ -6,15 +6,17 @@ import * as tae from 'typescript-api-extractor';
 import { formatEnum, formatProperties } from './formatter';
 import memberOrder from './order.json';
 
-function extractDescriptionByLanguage(description: string | undefined, language: string): string | undefined {
+function extractDescriptionByLanguage(
+    description: string | undefined,
+    language: string,
+): string | undefined {
     if (!description) return undefined;
-
     // Remove documentation URLs
     const cleanDescription = description.replace(/\n\nDocumentation: .*$/ms, '');
-    
+
     // Split by lines to find language-specific descriptions
     const lines = cleanDescription.split('\n');
-    
+
     // Look for lines with language prefix (e.g., "ko: 설명", "en: description")
     const languagePrefix = `${language}: `;
     for (const line of lines) {
@@ -23,15 +25,15 @@ function extractDescriptionByLanguage(description: string | undefined, language:
             return trimmedLine.substring(languagePrefix.length).trim();
         }
     }
-    
+
     // If no language-specific description found, try to find the first line that starts with the language prefix
     // or fallback to removing any language prefix from the first meaningful line
-    const firstLine = lines.find(line => line.trim() && !line.trim().startsWith('*'))?.trim();
+    const firstLine = lines.find((line) => line.trim() && !line.trim().startsWith('*'))?.trim();
     if (firstLine) {
         // Remove any language prefix from the first line
         return firstLine.replace(/^[a-z]{2}:\s*/, '').trim();
     }
-    
+
     return undefined;
 }
 
@@ -41,44 +43,48 @@ function extractDefaultVariants(componentFilePath: string): Record<string, any> 
         const dir = path.dirname(componentFilePath);
         const basename = path.basename(componentFilePath, path.extname(componentFilePath));
         const cssFilePath = path.join(dir, `${basename}.css.ts`);
-        
+
         if (!fs.existsSync(cssFilePath)) {
             return undefined;
         }
-        
+
         // Read and parse CSS file
         const cssContent = fs.readFileSync(cssFilePath, 'utf-8');
         const sourceFile = ts.createSourceFile(
             cssFilePath,
             cssContent,
             ts.ScriptTarget.Latest,
-            true
+            true,
         );
-        
+
         let defaultVariants: Record<string, any> | undefined;
-        
+
         function visit(node: ts.Node) {
             // Look for recipe() call
-            if (ts.isCallExpression(node) && 
-                ts.isIdentifier(node.expression) && 
-                node.expression.text === 'recipe') {
-                
+            if (
+                ts.isCallExpression(node) &&
+                ts.isIdentifier(node.expression) &&
+                node.expression.text === 'recipe'
+            ) {
                 // Get the first argument (recipe config object)
                 const configArg = node.arguments[0];
                 if (ts.isObjectLiteralExpression(configArg)) {
                     // Find defaultVariants property
                     for (const property of configArg.properties) {
-                        if (ts.isPropertyAssignment(property) &&
+                        if (
+                            ts.isPropertyAssignment(property) &&
                             ts.isIdentifier(property.name) &&
                             property.name.text === 'defaultVariants' &&
-                            ts.isObjectLiteralExpression(property.initializer)) {
-                            
+                            ts.isObjectLiteralExpression(property.initializer)
+                        ) {
                             // Extract the default values
                             const defaults: Record<string, any> = {};
                             for (const defaultProp of property.initializer.properties) {
-                                if (ts.isPropertyAssignment(defaultProp) &&
+                                if (
+                                    ts.isPropertyAssignment(defaultProp) &&
                                     ts.isIdentifier(defaultProp.name) &&
-                                    ts.isStringLiteral(defaultProp.initializer)) {
+                                    ts.isStringLiteral(defaultProp.initializer)
+                                ) {
                                     defaults[defaultProp.name.text] = defaultProp.initializer.text;
                                 }
                             }
@@ -88,10 +94,10 @@ function extractDefaultVariants(componentFilePath: string): Record<string, any> 
                     }
                 }
             }
-            
+
             ts.forEachChild(node, visit);
         }
-        
+
         visit(sourceFile);
         return defaultVariants;
     } catch (error) {
@@ -100,9 +106,17 @@ function extractDefaultVariants(componentFilePath: string): Record<string, any> 
     }
 }
 
-export function formatComponentData(component: tae.ExportNode, allExports: tae.ExportNode[], language: string = 'ko', sourceFilePath: string = '', displayName?: string) {
-    console.log(component.documentation);
-    const description = extractDescriptionByLanguage(component.documentation?.description, language);
+export function formatComponentData(
+    component: tae.ExportNode,
+    allExports: tae.ExportNode[],
+    language: string = 'ko',
+    sourceFilePath: string = '',
+    displayName?: string,
+) {
+    const description = extractDescriptionByLanguage(
+        component.documentation?.description,
+        language,
+    );
     const dataAttributes = allExports.find(
         (node) => node.name === `${component.name}DataAttributes`,
     );
@@ -112,7 +126,9 @@ export function formatComponentData(component: tae.ExportNode, allExports: tae.E
     const defaultVariants = extractDefaultVariants(sourceFilePath);
 
     const componentName = displayName || component.name;
-    const importPath = displayName ? `import { ${displayName.split('.')[0]} } from '@vapor-ui/react'` : undefined;
+    const importPath = displayName
+        ? `import { ${displayName.split('.')[0]} } from '@vapor-ui/react'`
+        : undefined;
     const usage = displayName ? `<${displayName}>` : undefined;
 
     return {
@@ -121,7 +137,11 @@ export function formatComponentData(component: tae.ExportNode, allExports: tae.E
         usage,
         description,
         props: sortObjectByKeys(
-            formatProperties((component.type as tae.ComponentNode).props, language, defaultVariants),
+            formatProperties(
+                (component.type as tae.ComponentNode).props,
+                language,
+                defaultVariants,
+            ),
             memberOrder.props,
         ),
         dataAttributes: dataAttributes
@@ -156,25 +176,30 @@ export function isNamespaceComponent(exportNode: tae.ExportNode) {
     );
 }
 
-export function extractNamespaceComponents(namespaceNode: tae.ExportNode, allExports: tae.ExportNode[]): Map<string, tae.ExportNode> {
+export function extractNamespaceComponents(
+    namespaceNode: tae.ExportNode,
+    allExports: tae.ExportNode[],
+): Map<string, tae.ExportNode> {
     const components = new Map<string, tae.ExportNode>();
-    
+
     if (!(namespaceNode.type instanceof tae.ObjectNode)) {
         return components;
     }
 
     // Get the object properties (Root, Image, Fallback, etc.)
     const objectType = namespaceNode.type as tae.ObjectNode;
-    
+
     for (const property of objectType.properties) {
         const propertyName = property.name;
-        
+
         // Look for corresponding component exports
         // For Avatar = { Root, Image }, find the Root and Image components
-        const componentExport = allExports.find(exportNode => {
-            return exportNode.type instanceof tae.ComponentNode && 
-                   exportNode.name === propertyName &&
-                   exportNode.isPublic();
+        const componentExport = allExports.find((exportNode) => {
+            return (
+                exportNode.type instanceof tae.ComponentNode &&
+                exportNode.name === propertyName &&
+                exportNode.isPublic()
+            );
         });
 
         if (componentExport) {

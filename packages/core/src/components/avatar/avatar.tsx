@@ -26,10 +26,16 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 /* -----------------------------------------------------------------------------------------------*/
 
 type AvatarRootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
-interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
+interface AvatarRootProps {
+    /**
+     * Callback fired when the loading status changes.
+     */
+    size: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+}
 
 /**
- * Displays a user's profile picture, initials, or fallback icon.
+ * ko: 사용자 프로필 사진, 이니셜 또는 대체 아이콘을 표시합니다.
+ * en: Displays a user's profile picture, initials, or fallback icon.
  * Renders a `<span>` element.
  *
  * Documentation: [Base UI Avatar](https://base-ui.com/react/components/avatar)
@@ -55,6 +61,7 @@ const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props
         </AvatarProvider>
     );
 });
+
 Root.displayName = 'Avatar.Root';
 
 /* -------------------------------------------------------------------------------------------------

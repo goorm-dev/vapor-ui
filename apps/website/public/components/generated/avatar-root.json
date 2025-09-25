@@ -1,0 +1,20 @@
+{
+  "name": "AvatarRoot",
+  "description": "Displays a user's profile picture, initials, or fallback icon.",
+  "props": {
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "2xl"
+      ],
+      "default": "md",
+      "required": true,
+      "description": "Callback fired when the loading status changes."
+    }
+  },
+  "dataAttributes": {},
+  "cssVariables": {}
+}

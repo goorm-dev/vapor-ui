@@ -4,15 +4,18 @@ import sortBy from 'lodash/sortBy';
 import path from 'path';
 import * as tae from 'typescript-api-extractor';
 
-function extractDescriptionByLanguage(description: string | undefined, language: string): string | undefined {
+function extractDescriptionByLanguage(
+    description: string | undefined,
+    language: string,
+): string | undefined {
     if (!description) return undefined;
 
     // Remove documentation URLs
     const cleanDescription = description.replace(/\n\nDocumentation: .*$/ms, '');
-    
+
     // Split by lines to find language-specific descriptions
     const lines = cleanDescription.split('\n');
-    
+
     // Look for lines with language prefix (e.g., "ko: 설명", "en: description")
     const languagePrefix = `${language}: `;
     for (const line of lines) {
@@ -21,25 +24,29 @@ function extractDescriptionByLanguage(description: string | undefined, language:
             return trimmedLine.substring(languagePrefix.length).trim();
         }
     }
-    
+
     // If no language-specific description found, try to find the first line that starts with the language prefix
     // or fallback to removing any language prefix from the first meaningful line
-    const firstLine = lines.find(line => line.trim() && !line.trim().startsWith('*'))?.trim();
+    const firstLine = lines.find((line) => line.trim() && !line.trim().startsWith('*'))?.trim();
     if (firstLine) {
         // Remove any language prefix from the first line
         return firstLine.replace(/^[a-z]{2}:\s*/, '').trim();
     }
-    
+
     return undefined;
 }
 
-export function formatProperties(props: tae.PropertyNode[], language: string = 'ko', defaultVariants?: Record<string, any>) {
+export function formatProperties(
+    props: tae.PropertyNode[],
+    language: string = 'ko',
+    defaultVariants?: Record<string, any>,
+) {
     const result: Record<string, any> = {};
-
+    console.log(props);
     for (const prop of props) {
         // Check if this prop has a default value from CSS variants
         const defaultValue = defaultVariants?.[prop.name] || prop.documentation?.defaultValue;
-        
+
         result[prop.name] = {
             type: formatTypeAsArray(prop.type, prop.optional, prop.documentation?.tags),
             default: defaultValue,
@@ -89,7 +96,7 @@ export function formatTypeAsArray(
     if (typeValue) {
         // Parse union type string into array
         if (typeValue.includes(' | ')) {
-            return typeValue.split(' | ').map(t => t.trim().replace(/^'|'$/g, ''));
+            return typeValue.split(' | ').map((t) => t.trim().replace(/^'|'$/g, ''));
         }
         return typeValue;
     }
@@ -108,23 +115,25 @@ export function formatTypeAsArray(
         }
 
         // Convert union types to array
-        const typeStrings = memberTypes.map(memberType => formatType(memberType, false, undefined, false));
-        
+        const typeStrings = memberTypes.map((memberType) =>
+            formatType(memberType, false, undefined, false),
+        );
+
         // Only return as array if it's actually a union (more than one type)
         if (typeStrings.length > 1) {
             // If all types are literal strings, return as array without quotes
-            if (typeStrings.every(t => t.startsWith("'") && t.endsWith("'"))) {
-                return typeStrings.map(t => t.slice(1, -1)); // Remove quotes
+            if (typeStrings.every((t) => t.startsWith("'") && t.endsWith("'"))) {
+                return typeStrings.map((t) => t.slice(1, -1)); // Remove quotes
             }
             return typeStrings;
         } else if (typeStrings.length === 1) {
             // Single type, return as string
             const singleType = typeStrings[0];
-            return singleType.startsWith("'") && singleType.endsWith("'") 
+            return singleType.startsWith("'") && singleType.endsWith("'")
                 ? singleType.slice(1, -1) // Remove quotes for string literals
                 : singleType;
         }
-        
+
         return typeStrings;
     }
 

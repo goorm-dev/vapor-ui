@@ -33,11 +33,3 @@ export function formatHookData(hook: tae.ExportNode) {
         returnValue: formattedReturnValue,
     };
 }
-
-export function isPublicHook(exportNode: tae.ExportNode) {
-    return (
-        exportNode.type instanceof tae.FunctionNode &&
-        exportNode.name.startsWith('use') &&
-        exportNode.isPublic(true)
-    );
-}
