@@ -9,20 +9,15 @@ import { createCliCommand } from './cli';
 import { ExportProcessor } from './exportProcessor';
 import { FileGenerator } from './fileGenerator';
 import { RunOptions, TsConfig } from './types';
-import { createEnhancedCompilerOptions } from './utils';
 
 async function run(options: RunOptions) {
     const config = tae.loadConfig(options.configPath);
     const files = await getFilesToProcess(options, config);
 
-    // Ensure baseUrl is set for proper path resolution
-    const tsConfigDir = path.dirname(options.configPath);
-    const enhancedOptions = createEnhancedCompilerOptions(config.options, tsConfigDir);
-
-    const program = ts.createProgram(files, enhancedOptions);
+    const program = ts.createProgram(files, config.options);
 
     // Process exports using the new ExportProcessor class
-    const processor = new ExportProcessor(program, enhancedOptions);
+    const processor = new ExportProcessor(program, config.options);
     const { exports, errorCount, fileExportsMap } = processor.processFiles(files);
     // Generate files using the new FileGenerator class
     const generator = new FileGenerator(options.out, options.language, fileExportsMap);
