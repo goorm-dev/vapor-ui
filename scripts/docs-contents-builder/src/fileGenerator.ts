@@ -39,7 +39,6 @@ export class FileGenerator {
             }
 
             fs.writeFileSync(filePath, json);
-            console.log(`✅ Generated ${fileName}`);
         } catch (error) {
             console.error('Full error details:', error);
             console.error('ExportNode that caused error:', {

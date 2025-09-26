@@ -65,7 +65,7 @@ export class ExportProcessor {
             return null;
         }
 
-        return tae.parseFile(absoluteFilePath, this.compilerOptions);
+        return tae.parseFile(file, this.compilerOptions);
     }
 
     private handleError(file: string, error: any): void {

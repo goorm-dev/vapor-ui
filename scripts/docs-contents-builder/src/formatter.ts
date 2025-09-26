@@ -36,13 +36,8 @@ function extractDescriptionByLanguage(
     return undefined;
 }
 
-export function formatProperties(
-    props: tae.PropertyNode[],
-    language: string = 'ko',
-    defaultVariants?: Record<string, any>,
-) {
+export function formatProperties(props: tae.PropertyNode[], defaultVariants?: Record<string, any>) {
     const result: Record<string, any> = {};
-    console.log(props);
     for (const prop of props) {
         // Check if this prop has a default value from CSS variants
         const defaultValue = defaultVariants?.[prop.name] || prop.documentation?.defaultValue;
@@ -51,7 +46,7 @@ export function formatProperties(
             type: formatTypeAsArray(prop.type, prop.optional, prop.documentation?.tags),
             default: defaultValue,
             required: !prop.optional || undefined,
-            description: extractDescriptionByLanguage(prop.documentation?.description, language),
+            description: prop.documentation?.description,
         };
     }
 

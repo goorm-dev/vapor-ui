@@ -101,7 +101,7 @@ function extractDefaultVariants(componentFilePath: string): Record<string, any> 
         visit(sourceFile);
         return defaultVariants;
     } catch (error) {
-        console.warn(`Failed to extract default variants from CSS file: ${error.message}`);
+        console.warn(`Failed to extract default variants from CSS file: ${error}`);
         return undefined;
     }
 }

@@ -1,29 +1,45 @@
 {
-    "name": "Button",
-    "props": {
-        "color": {
-            "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
-            "default": "primary"
-        },
-        "size": {
-            "type": ["sm", "md", "lg", "xl"],
-            "default": "md"
-        },
-        "stretch": {
-            "type": "boolean"
-        },
-        "variant": {
-            "type": ["fill", "outline", "ghost"],
-            "default": "fill"
-        },
-        "className": {
-            "type": "string"
-        },
-        "render": {
-            "type": ["ReactElement", "((props: HTMLProps, state: {}) => ReactElement)"],
-            "description": "Allows you to replace the component’s HTML element"
-        }
+  "name": "Button",
+  "props": {
+    "color": {
+      "type": [
+        "primary",
+        "secondary",
+        "success",
+        "warning",
+        "danger",
+        "contrast"
+      ]
     },
-    "dataAttributes": {},
-    "cssVariables": {}
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg",
+        "xl"
+      ]
+    },
+    "stretch": {
+      "type": "boolean"
+    },
+    "variant": {
+      "type": [
+        "fill",
+        "outline",
+        "ghost"
+      ]
+    },
+    "className": {
+      "type": "string"
+    },
+    "render": {
+      "type": [
+        "ReactElement",
+        "((props: HTMLProps, state: {}) => ReactElement)"
+      ],
+      "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+    }
+  },
+  "dataAttributes": {},
+  "cssVariables": {}
 }
