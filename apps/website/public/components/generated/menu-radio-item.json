@@ -1,0 +1,10 @@
+{
+  "name": "MenuRadioItem",
+  "props": {
+    "closeOnClick": {
+      "type": "boolean"
+    }
+  },
+  "dataAttributes": {},
+  "cssVariables": {}
+}

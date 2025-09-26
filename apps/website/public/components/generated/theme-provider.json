@@ -1,0 +1,14 @@
+{
+  "name": "ThemeProvider",
+  "props": {
+    "config": {
+      "type": "VaporThemeConfig"
+    },
+    "children": {
+      "type": "ReactNode",
+      "required": true
+    }
+  },
+  "dataAttributes": {},
+  "cssVariables": {}
+}

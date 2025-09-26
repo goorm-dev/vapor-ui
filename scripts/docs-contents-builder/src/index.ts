@@ -24,7 +24,7 @@ async function run(options: RunOptions) {
     // Process exports using the new ExportProcessor class
     const processor = new ExportProcessor(program, enhancedOptions);
     const { exports, errorCount, fileExportsMap } = processor.processFiles(files);
-
+    console.log('fileExportsMap:', fileExportsMap);
     // Generate files using the new FileGenerator class
     const generator = new FileGenerator(options.out, options.language, fileExportsMap);
 

@@ -1,0 +1,14 @@
+{
+    "name": "CardBody",
+    "props": {
+        "className": {
+            "type": "string"
+        },
+        "render": {
+            "type": ["ReactElement", "((props: HTMLProps, state: {}) => ReactElement)"],
+            "description": "Allows you to replace the component’s HTML element"
+        }
+    },
+    "dataAttributes": {},
+    "cssVariables": {}
+}

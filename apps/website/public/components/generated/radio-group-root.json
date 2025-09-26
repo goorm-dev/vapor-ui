@@ -1,0 +1,41 @@
+{
+  "name": "RadioGroupRoot",
+  "props": {
+    "size": {
+      "type": [
+        "md",
+        "lg"
+      ]
+    },
+    "visuallyHidden": {
+      "type": "boolean"
+    },
+    "invalid": {
+      "type": "boolean"
+    },
+    "orientation": {
+      "type": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    "className": {
+      "type": [
+        "string",
+        "((state: RadioGroup.State) => string)"
+      ],
+      "description": "CSS class applied to the element, or a function that"
+    },
+    "render": {
+      "type": [
+        "ReactElement",
+        "((props: HTMLProps, state: {}) => ReactElement)",
+        "((props: HTMLProps, state: RadioGroup.State) => ReactElement)",
+        "((props: HTMLProps, state: RadioGroup.State) => ReactElement | (props: HTMLProps, state: {}) => ReactElement)"
+      ],
+      "description": "Allows you to replace the component’s HTML element"
+    }
+  },
+  "dataAttributes": {},
+  "cssVariables": {}
+}

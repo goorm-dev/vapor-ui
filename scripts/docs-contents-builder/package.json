@@ -14,6 +14,6 @@
         "yargs": "^18.0.0"
     },
     "scripts": {
-        "start": "tsx src/index.ts -c ../../packages/core/tsconfig.json -o ../../apps/website/public/components/generated -f ../../packages/core/src/components/avatar/avatar.tsx"
+        "start": "tsx src/index.ts -c ../../packages/core/tsconfig.json -o ../../apps/website/public/components/generated"
     }
 }

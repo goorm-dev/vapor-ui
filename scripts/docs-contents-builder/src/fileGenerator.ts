@@ -4,7 +4,6 @@ import * as path from 'node:path';
 import * as tae from 'typescript-api-extractor';
 
 import { formatComponentData } from './componentHandler';
-import { formatHookData } from './hookHandler';
 
 export class FileGenerator {
     constructor(
@@ -23,8 +22,6 @@ export class FileGenerator {
         try {
             const sourceFilePath = this.findSourceFilePath(exportNode);
 
-            // 디버깅을 위한 로그 추가
-
             const componentApiReference = formatComponentData(
                 exportNode,
                 allExports,
@@ -36,13 +33,17 @@ export class FileGenerator {
             const fileName = `${kebabCase(exportNode.name)}.json`;
             const filePath = path.join(this.outputDir, fileName);
 
+            // 출력 디렉토리가 없는 경우 생성
+            if (!fs.existsSync(this.outputDir)) {
+                fs.mkdirSync(this.outputDir, { recursive: true });
+            }
+
             fs.writeFileSync(filePath, json);
             console.log(`✅ Generated ${fileName}`);
         } catch (error) {
             console.error('Full error details:', error);
             console.error('ExportNode that caused error:', {
                 name: exportNode.name,
-                props: exportNode?.props,
                 type: exportNode.type,
             });
             console.error(

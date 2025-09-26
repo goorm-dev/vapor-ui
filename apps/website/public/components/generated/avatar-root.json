@@ -1,20 +1,38 @@
 {
-  "name": "AvatarRoot",
-  "description": "Displays a user's profile picture, initials, or fallback icon.",
-  "props": {
-    "size": {
-      "type": [
-        "sm",
-        "md",
-        "lg",
-        "xl",
-        "2xl"
-      ],
-      "default": "md",
-      "required": true,
-      "description": "Callback fired when the loading status changes."
-    }
-  },
-  "dataAttributes": {},
-  "cssVariables": {}
+    "name": "AvatarRoot",
+    "description": "Displays a user's profile picture, initials, or fallback icon.",
+    "props": {
+        "alt": {
+            "type": "string",
+            "required": true
+        },
+        "shape": {
+            "type": ["circle", "square"]
+        },
+        "size": {
+            "type": ["sm", "md", "lg", "xl"],
+            "default": "md"
+        },
+        "src": {
+            "type": "string"
+        },
+        "delay": {
+            "type": "number"
+        },
+        "className": {
+            "type": ["string", "((state: AvatarRoot.State) => string)"],
+            "description": "CSS class applied to the element, or a function that"
+        },
+        "render": {
+            "type": [
+                "ReactElement",
+                "((props: HTMLProps, state: {}) => ReactElement)",
+                "((props: HTMLProps, state: AvatarRoot.State) => ReactElement)",
+                "((props: HTMLProps, state: AvatarRoot.State) => ReactElement | (props: HTMLProps, state: {}) => ReactElement)"
+            ],
+            "description": "Allows you to replace the component’s HTML element"
+        }
+    },
+    "dataAttributes": {},
+    "cssVariables": {}
 }

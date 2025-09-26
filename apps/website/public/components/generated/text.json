@@ -1,0 +1,60 @@
+{
+  "name": "Text",
+  "props": {
+    "foreground": {
+      "type": [
+        "primary",
+        "secondary",
+        "success",
+        "warning",
+        "danger",
+        "hint",
+        "contrast",
+        "normal",
+        "normal-lighter",
+        "primary-darker",
+        "secondary-darker",
+        "success-darker",
+        "warning-darker",
+        "danger-darker",
+        "hint-darker",
+        "contrast-darker",
+        "accent"
+      ]
+    },
+    "typography": {
+      "type": [
+        "body1",
+        "display1",
+        "display2",
+        "display3",
+        "display4",
+        "heading1",
+        "heading2",
+        "heading3",
+        "heading4",
+        "heading5",
+        "heading6",
+        "subtitle1",
+        "subtitle2",
+        "body2",
+        "body3",
+        "body4",
+        "code1",
+        "code2"
+      ]
+    },
+    "className": {
+      "type": "string"
+    },
+    "render": {
+      "type": [
+        "ReactElement",
+        "((props: HTMLProps, state: {}) => ReactElement)"
+      ],
+      "description": "Allows you to replace the component’s HTML element"
+    }
+  },
+  "dataAttributes": {},
+  "cssVariables": {}
+}
