@@ -9,7 +9,7 @@ import type { VComponentProps } from '~/utils/types';
 interface BoxProps extends VComponentProps<'div'>, Sprinkles {}
 
 const Box = forwardRef<HTMLDivElement, BoxProps>(
-    ({ render, foregroundColor: color, className, style, ...props }, ref) => {
+    ({ render, color, className, style, ...props }, ref) => {
         const layout = sprinkles({ color, ...props });
 
         return useRender({

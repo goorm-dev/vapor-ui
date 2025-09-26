@@ -1,0 +1,160 @@
+---
+title: 'NavigationMenu'
+site_name: 'NavigationMenu - Vapor Core'
+description: '여러 콘텐츠 섹션 간에 전환할 수 있도록 돕는 요소로 클릭 시 페이지가 이동합니다.'
+---
+
+<Demo name="default-navigation-menu">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-navigation-menu.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Size
+
+NavigationMenu 사이즈는 sm, md, lg, xl로 제공합니다.
+
+<Demo name="navigation-menu-size">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-size.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Direction
+
+NavigationMenu 방향은 horizontal, vertical로 제공합니다.
+
+<Demo name="navigation-menu-direction">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-direction.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Stretch
+
+NavigationMenu 항목의 너비를 컨텐츠 너비에 맞춰 늘릴지 여부를 결정하는 속성입니다.
+
+<Demo name="navigation-menu-stretch">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-stretch.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Disabled
+
+NavigationMenu.Link의 비활성화 상태를 보여주는 예시입니다.
+
+<Demo name="navigation-menu-disabled">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-disabled.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Selected
+
+NavigationMenu.Link의 선택된 상태를 보여주는 예시입니다.
+
+<Demo name="navigation-menu-selected">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-selected.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### Simple Usage
+
+NavigationMenu.LinkItem을 사용한 가장 간단한 형태입니다.
+
+<Demo name="navigation-menu-simple">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-simple.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### With Icons
+
+Nav에 아이콘을 추가한 예시입니다.
+
+<Demo name="navigation-menu-with-icon">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-with-icon.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Composition Pattern
+
+NavigationMenu.Root, NavigationMenu.List, NavigationMenu.Item, NavigationMenu.Link를 조합한 패턴입니다.
+
+<Demo name="navigation-menu-composition">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-composition.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Props Table
+
+---
+
+### NavigationMenu.Root
+
+NavigationMenu의 메인 컨테이너 컴포넌트입니다. 네비게이션의 크기, 모양, 방향 등의 속성을 제공하며, 모든 하위 컴포넌트에서 공통으로 사용할 수 있도록 컨텍스트를 제공합니다. 이 컴포넌트는 `nav` 요소를 기반으로 합니다.
+
+<ComponentPropsTable file="navigation-menu" section="props" />
+
+### NavigationMenu.List
+
+NavigationMenu의 리스트 컨테이너 컴포넌트입니다. 네비게이션 아이템들을 담는 리스트 역할을 합니다. 이 컴포넌트는 `ul` 요소를 기반으로 합니다.
+
+<ComponentPropsTable file="navigation-menu" section="listProps" />
+
+### NavigationMenu.Item
+
+NavigationMenu의 개별 아이템 컴포넌트입니다. 각각의 네비게이션 링크를 감싸는 리스트 아이템 역할을 합니다. 이 컴포넌트는 `li` 요소를 기반으로 합니다.
+
+<ComponentPropsTable file="navigation-menu" section="itemProps" />
+
+### NavigationMenu.Link
+
+NavigationMenu의 링크 컴포넌트입니다. 실제 네비게이션 링크를 표시하며, 선택됨 상태와 비활성화 상태를 관리합니다. 이 컴포넌트는 `a` 요소를 기반으로 합니다.
+
+<ComponentPropsTable file="navigation-menu" section="linkProps" />
+
+### NavigationMenu.LinkItem
+
+NavigationMenu.Item과 NavigationMenu.Link를 하나로 결합한 편의 컴포넌트입니다. 복잡한 구성 없이 기본 네비게이션 링크 기능을 빠르게 사용할 수 있습니다.
+
+<ComponentPropsTable file="navigation-menu" section="linkItemProps" />

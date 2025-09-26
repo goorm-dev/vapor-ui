@@ -2,7 +2,21 @@ import { expect, test } from '@playwright/test';
 
 import manifest from '../../../storybook-static/index.json' with { type: 'json' };
 
-const filterStories = (stories) => stories.filter((story) => story.name === 'Test Bed');
+const targetComponent =
+    process.env.COMPONENT ||
+    process.argv.find((arg) => arg.startsWith('--component='))?.split('=')[1];
+
+const filterStories = (stories) => {
+    let filtered = stories.filter((story) => story.name === 'Test Bed');
+
+    if (targetComponent) {
+        filtered = filtered.filter((story) =>
+            story.title.toLowerCase().includes(targetComponent.toLowerCase()),
+        );
+    }
+
+    return filtered;
+};
 
 function getStoryUrl(storybookUrl: string, id: string): string {
     const params = new URLSearchParams({ id, viewMode: 'story' });
@@ -15,6 +29,7 @@ async function navigate(page, storybookUrl, id) {
         const url = getStoryUrl(storybookUrl, id);
 
         await page.goto(url);
+        await page.waitForFunction(() => document.fonts.ready);
         await page.waitForLoadState('networkidle');
         await page.waitForSelector('#storybook-root');
     } catch (error) {

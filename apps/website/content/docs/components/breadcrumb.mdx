@@ -5,29 +5,10 @@ description: '사용자가 현재 페이지의 위치를 파악하고 이전 페
 ---
 
 <Demo name="default-breadcrumb">
-```tsx
-import { Breadcrumb } from '@vapor-ui/core';
-
-export default function DefaultBreadcrumb() {
-    return (
-        <Breadcrumb.Root size="md">
-            <Breadcrumb.List>
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                </Breadcrumb.Item>
-                <Breadcrumb.Separator />
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="#">Products</Breadcrumb.Link>
-                </Breadcrumb.Item>
-                <Breadcrumb.Separator />
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="#" current>
-                        Current Page
-                    </Breadcrumb.Link>
-                </Breadcrumb.Item>
-            </Breadcrumb.List>
-        </Breadcrumb.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-breadcrumb.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -41,85 +22,12 @@ export default function DefaultBreadcrumb() {
 브레드크럼 사이즈는 sm, md, lg, xl 로 제공합니다.
 
 <Demo name="breadcrumb-size">
-
-```tsx
-import { Breadcrumb } from '@vapor-ui/core';
-
-export default function BreadcrumbSize() {
-    return (
-        <div className="flex flex-col gap-4">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Small</h4>
-                <Breadcrumb.Root size="sm">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>
-                                Current
-                            </Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Medium</h4>
-                <Breadcrumb.Root size="md">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>
-                                Current
-                            </Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Large</h4>
-                <Breadcrumb.Root size="lg">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>
-                                Current
-                            </Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Extra Large</h4>
-                <Breadcrumb.Root size="xl">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>
-                                Current
-                            </Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/breadcrumb-size.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Current
@@ -127,57 +35,12 @@ export default function BreadcrumbSize() {
 현재 페이지를 나타내는 링크의 상태를 설정할 수 있습니다.
 
 <Demo name="breadcrumb-current">
-
-```tsx
-import { Breadcrumb } from '@vapor-ui/core';
-
-export default function BreadcrumbCurrent() {
-    return (
-        <div className="flex flex-col gap-4">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Normal Links</h4>
-                <Breadcrumb.Root size="md">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Products</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-
-            <div>
-                <h4 className="mb-2 text-sm font-medium">With Current Page</h4>
-                <Breadcrumb.Root size="md">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Products</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>
-                                Current Page
-                            </Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/breadcrumb-current.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Examples
@@ -189,40 +52,12 @@ export default function BreadcrumbCurrent() {
 긴 네비게이션 경로에서 중간 단계를 생략 표시로 나타낸 패턴입니다.
 
 <Demo name="breadcrumb-ellipsis">
-```tsx
-import { Breadcrumb } from '@vapor-ui/core';
-
-export default function BreadcrumbEllipsis() {
-    return (
-        <Breadcrumb.Root size="md">
-            <Breadcrumb.List>
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                </Breadcrumb.Item>
-                <Breadcrumb.Separator />
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
-                </Breadcrumb.Item>
-                <Breadcrumb.Separator />
-                <Breadcrumb.Item>
-                    <Breadcrumb.Ellipsis />
-                </Breadcrumb.Item>
-                <Breadcrumb.Separator />
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="#">Subcategory</Breadcrumb.Link>
-                </Breadcrumb.Item>
-                <Breadcrumb.Separator />
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="#" current>
-                        Current Page
-                    </Breadcrumb.Link>
-                </Breadcrumb.Item>
-            </Breadcrumb.List>
-        </Breadcrumb.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/breadcrumb-ellipsis.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Composition Pattern
@@ -230,79 +65,10 @@ export default function BreadcrumbEllipsis() {
 브레드크럼 컴포넌트의 다양한 구성 패턴입니다.
 
 <Demo name="breadcrumb-composition">
-```tsx
-import { Breadcrumb } from '@vapor-ui/core';
-import { ChevronRightOutlineIcon, HomeIcon } from '@vapor-ui/icons';
-
-export default function BreadcrumbComposition() {
-    return (
-        <div className="space-y-6">
-            {/* Basic composition */}
-            <div>
-                <h4 className="mb-2 text-sm font-medium">기본 구성</h4>
-                <Breadcrumb.Root size="md">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Products</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link current>Details</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-            {/* With custom separator */}
-            <div>
-                <h4 className="mb-2 text-sm font-medium">커스텀 구분자</h4>
-                <Breadcrumb.Root size="md">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator>
-                            <ChevronRightOutlineIcon />
-                        </Breadcrumb.Separator>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Products</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator>
-                            <ChevronRightOutlineIcon />
-                        </Breadcrumb.Separator>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link current>Details</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-            {/* With icons in links */}
-            <div>
-                <h4 className="mb-2 text-sm font-medium">링크에 아이콘 포함</h4>
-                <Breadcrumb.Root size="md">
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" className="flex items-center gap-1">
-                                <HomeIcon className="w-4 h-4" />
-                                Home
-                            </Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Dashboard</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link current>Settings</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
-                </Breadcrumb.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/breadcrumb-composition.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

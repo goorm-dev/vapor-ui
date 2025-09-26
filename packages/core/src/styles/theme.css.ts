@@ -18,7 +18,7 @@ import {
 } from './tokens';
 import { vars } from './vars.css';
 
-const DARK_CLASS_NAME = 'vapor-dark-theme';
+export const DARK_CLASS_NAME = 'vapor-dark-theme';
 
 const THEME_TOKENS = {
     color: {

@@ -1,0 +1,79 @@
+---
+title: 'Collapsible'
+site_name: 'Collapsible - Vapor Core'
+description: 'Collapsible은 콘텐츠를 접었다 펼칠 수 있는 대화형 컴포넌트입니다. 아코디언이나 확장 가능한 섹션을 구현할 때 사용합니다.'
+---
+
+<Demo name="collapsible/default-collapsible">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/default-collapsible.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Open State
+
+Collapsible의 열림/닫힘 상태를 제어할 수 있습니다. `defaultOpen`으로 초기 상태를 설정하거나, `open`과 `onOpenChange`로 완전히 제어할 수 있습니다.
+
+<Demo name="collapsible/collapsible-open-state">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/collapsible-open-state.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Keep Mounted
+
+`keepMounted` 속성을 사용하여 패널이 닫힌 상태에서도 DOM에 유지할 수 있습니다.
+
+<Demo name="collapsible/collapsible-keep-mounted">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/collapsible-keep-mounted.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Disabled
+
+Collapsible을 비활성화하여 사용자 상호작용을 막을 수 있습니다.
+
+<Demo name="collapsible/collapsible-disabled">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/collapsible-disabled.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Props Table
+
+---
+
+### Collapsible.Root
+
+이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
+
+<ComponentPropsTable file="collapsible" section="root" />
+
+### Collapsible.Trigger
+
+이 컴포넌트는 `button` 요소를 기반으로, 표준 HTML 속성(`onClick`, `disabled` 등)을 지원합니다.
+
+<ComponentPropsTable file="collapsible" section="trigger" />
+
+### Collapsible.Panel
+
+이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
+
+<ComponentPropsTable file="collapsible" section="panel" />

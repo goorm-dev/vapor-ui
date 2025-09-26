@@ -11,7 +11,8 @@
             "outputs": []
         },
         "test": {
-            "outputs": []
+            "outputs": [],
+            "dependsOn": ["^build"]
         },
         "format": {
             "outputs": [],
@@ -29,7 +30,7 @@
             "outputs": ["dist/**"]
         },
         "typecheck": {
-            "dependsOn": ["^typecheck"]
+            "dependsOn": ["^build"]
         },
         "clean": {
             "cache": false

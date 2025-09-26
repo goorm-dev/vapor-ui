@@ -52,7 +52,7 @@ export const interaction = recipe({
                 selectors: {
                     '&:active::before': { opacity: calc.multiply(ratio, 2) },
                     '&:focus-visible': {
-                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
+                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal[200]}`,
                     },
                 },
 
@@ -61,9 +61,6 @@ export const interaction = recipe({
                         selectors: {
                             '&:hover::before': { opacity: calc.multiply(ratio, 1) },
                             '&:active::before': { opacity: calc.multiply(ratio, 2) },
-                            '&:focus-visible': {
-                                boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
-                            },
                         },
                     },
                 },
@@ -71,16 +68,18 @@ export const interaction = recipe({
             form: layerStyle('components', {
                 transition: 'border-color 150ms cubic-bezier(.4,0,.2,1)',
 
+                selectors: {
+                    '&:focus': { borderColor: vars.color.border.primary },
+                },
+
                 '@media': {
                     '(hover: hover)': {
                         selectors: {
-                            '&:hover': { borderColor: `rgba(0,0,0, 0.24)` },
+                            '&:hover:not(:focus)': {
+                                borderColor: `rgba(${vars.color.gray['rgb-950']}, 0.24)`,
+                            },
                         },
                     },
-                },
-
-                selectors: {
-                    '&:focus-visible': { borderColor: vars.color.border.primary },
                 },
             }),
             roving: {

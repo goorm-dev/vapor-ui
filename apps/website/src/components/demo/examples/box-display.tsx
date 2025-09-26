@@ -53,7 +53,7 @@ export default function BoxDisplay() {
                             padding="$200"
                             backgroundColor="$grape-400"
                             borderRadius="$100"
-                            foregroundColor="$contrast"
+                            color="$contrast-100"
                         >
                             Item 1
                         </Box>
@@ -61,7 +61,7 @@ export default function BoxDisplay() {
                             padding="$200"
                             backgroundColor="$grape-400"
                             borderRadius="$100"
-                            foregroundColor="$contrast"
+                            color="$contrast-100"
                         >
                             Item 2
                         </Box>
@@ -69,7 +69,7 @@ export default function BoxDisplay() {
                             padding="$200"
                             backgroundColor="$grape-400"
                             borderRadius="$100"
-                            foregroundColor="$contrast"
+                            color="$contrast-100"
                         >
                             Item 3
                         </Box>
@@ -90,7 +90,7 @@ export default function BoxDisplay() {
                             padding="$200"
                             backgroundColor="$orange-400"
                             borderRadius="$100"
-                            foregroundColor="$contrast"
+                            color="$contrast-100"
                         >
                             A
                         </Box>
@@ -98,7 +98,7 @@ export default function BoxDisplay() {
                             padding="$200"
                             backgroundColor="$orange-400"
                             borderRadius="$100"
-                            foregroundColor="$contrast"
+                            color="$contrast-100"
                         >
                             B
                         </Box>
@@ -106,7 +106,7 @@ export default function BoxDisplay() {
                             padding="$200"
                             backgroundColor="$orange-400"
                             borderRadius="$100"
-                            foregroundColor="$contrast"
+                            color="$contrast-100"
                         >
                             C
                         </Box>

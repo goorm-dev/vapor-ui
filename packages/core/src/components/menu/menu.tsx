@@ -83,9 +83,19 @@ const Portal = BaseMenu.Portal;
 type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Positioner>;
 interface MenuPositionerProps extends PositionerPrimitiveProps {}
 
-const Positioner = forwardRef<HTMLDivElement, MenuPositionerProps>((props, ref) => {
-    return <BaseMenu.Positioner ref={ref} {...props} />;
-});
+const Positioner = forwardRef<HTMLDivElement, MenuPositionerProps>(
+    ({ side = 'bottom', align = 'start', sideOffset = 8, ...props }, ref) => {
+        return (
+            <BaseMenu.Positioner
+                side={side}
+                align={align}
+                sideOffset={sideOffset}
+                ref={ref}
+                {...props}
+            />
+        );
+    },
+);
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Popup
@@ -106,13 +116,16 @@ Popup.displayName = 'Menu.Popup';
  * -----------------------------------------------------------------------------------------------*/
 
 type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
-interface MenuContentProps extends ContentPrimitiveProps {}
+interface MenuContentProps extends ContentPrimitiveProps {
+    portalProps?: MenuPortalProps;
+    positionerProps?: MenuPositionerProps;
+}
 
 const Content = forwardRef<HTMLDivElement, MenuContentProps>(
-    ({ className, ...props }: MenuContentProps, ref) => {
+    ({ portalProps, positionerProps, className, ...props }: MenuContentProps, ref) => {
         return (
-            <Portal>
-                <Positioner side="bottom" align="start" sideOffset={8}>
+            <Portal {...portalProps}>
+                <Positioner {...positionerProps}>
                     <Popup ref={ref} className={clsx(styles.popup, className)} {...props} />
                 </Positioner>
             </Portal>
@@ -281,16 +294,19 @@ SubmenuPopup.displayName = 'Menu.SubmenuPopup';
  * -----------------------------------------------------------------------------------------------*/
 
 type SubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
-interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {}
+interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {
+    portalProps?: MenuPortalProps;
+    positionerProps?: MenuPositionerProps;
+}
 
 const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>(
-    ({ className, ...props }, ref) => {
+    ({ portalProps, positionerProps, className, ...props }, ref) => {
         const { triggerRef } = useSubmenuContext();
 
         return (
-            <Portal>
-                <Positioner side="right" align="start">
-                    <Popup
+            <Portal {...portalProps}>
+                <Positioner side="right" align="start" sideOffset={0} {...positionerProps}>
+                    <SubmenuPopup
                         ref={ref}
                         finalFocus={triggerRef}
                         className={clsx(styles.subPopup, className)}

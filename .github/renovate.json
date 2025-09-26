@@ -1,0 +1,70 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended", "group:monorepos"],
+    "baseBranches": ["main"],
+    "rebaseWhen": "conflicted",
+    "labels": ["type: dependencies"],
+    "automergeStrategy": "squash",
+    "prHourlyLimit": 2,
+    "prNotPendingHours": 48,
+    "groupName": "all",
+    "vulnerabilityAlerts": {
+        "enabled": true,
+        "labels": ["type: security"],
+        "automerge": false
+    },
+    "packageRules": [
+        {
+            "description": "React and React DOM - Core framework",
+            "groupName": "React Core",
+            "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+            "labels": ["type: dependencies"],
+            "automerge": false,
+            "dependencyDashboardApproval": true
+        },
+        {
+            "description": "Vanilla Extract - CSS-in-TS styling",
+            "groupName": "Vanilla Extract",
+            "matchPackagePatterns": ["@vanilla-extract/*"],
+            "labels": ["type: dependencies"],
+            "automerge": false,
+            "matchUpdateTypes": ["patch", "minor"]
+        },
+        {
+            "description": "Base UI - Unstyled component library",
+            "groupName": "Base UI",
+            "matchPackagePatterns": ["@base-ui-components/*"],
+            "labels": ["type: dependencies"],
+            "automerge": false,
+            "dependencyDashboardApproval": true
+        },
+        {
+            "description": "All other dependencies grouped together",
+            "groupName": "Other Dependencies",
+            "excludePackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+            "excludePackagePatterns": ["@vanilla-extract/*", "@base-ui-components/*"],
+            "labels": ["type: dependencies"],
+            "automerge": true,
+            "matchUpdateTypes": ["patch"]
+        },
+        {
+            "description": "Manual review required for minor and major updates",
+            "matchUpdateTypes": ["minor", "major"],
+            "automerge": false,
+            "dependencyDashboardApproval": true
+        },
+        {
+            "description": "Auto-merge lockfile maintenance",
+            "matchUpdateTypes": ["lockFileMaintenance"],
+            "automerge": true,
+            "automergeType": "branch"
+        },
+        {
+            "description": "Security updates require manual review with alerts",
+            "matchPackagePatterns": ["*"],
+            "isVulnerabilityAlert": true,
+            "automerge": false,
+            "labels": ["type: security"]
+        }
+    ]
+}

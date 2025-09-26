@@ -65,19 +65,19 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                 style={{ tableLayout: 'auto' }}
             >
                 <thead className="flex, items-start self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
-                    <tr className="bg-[var(--vapor-color-background-normal-darker)] border-b border-b-[var(--vapor-color-border-normal)]">
+                    <tr className="bg-[var(--vapor-color-background-surface-200)] border-b border-b-[var(--vapor-color-border-normal)]">
                         <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left rounded-tl-[var(--vapor-size-borderRadius-300)] min-w-[140px] w-px">
-                            <Text typography="subtitle1" foreground="normal-lighter">
+                            <Text typography="subtitle1" foreground="normal-100">
                                 Prop
                             </Text>
                         </th>
                         <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left min-w-[100px] w-px">
-                            <Text typography="subtitle1" foreground="normal-lighter">
+                            <Text typography="subtitle1" foreground="normal-100">
                                 Default
                             </Text>
                         </th>
                         <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left font-medium">
-                            <Text typography="subtitle1" foreground="normal-lighter">
+                            <Text typography="subtitle1" foreground="normal-100">
                                 Type
                             </Text>
                         </th>
@@ -90,7 +90,7 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                                 className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${index === tableProps.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
                             >
                                 <div className="flex items-center gap-[var(--vapor-size-space-100)] w-fit">
-                                    <Text typography="body2" foreground="normal">
+                                    <Text typography="body2" foreground="normal-200">
                                         <span>
                                             {prop.name}
                                             {prop.isOptional && '?'}

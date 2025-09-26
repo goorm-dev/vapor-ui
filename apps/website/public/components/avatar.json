@@ -1,10 +1,10 @@
 {
     "props": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "span",
+            "description": "아바타를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "size",
@@ -31,30 +31,30 @@
             "description": "아바타 이미지의 소스 URL입니다."
         },
         {
-            "prop": "delayMs",
+            "prop": "delay",
             "type": ["number"],
-            "default": "-",
+            "default": "null",
             "description": "폴백을 표시하기 전의 지연 시간(밀리초)입니다."
         },
         {
             "prop": "children",
             "type": ["ReactNode"],
-            "default": "-",
+            "default": "null",
             "description": "자식 컴포넌트(Avatar.Image, Avatar.Fallback)입니다."
         },
         {
             "prop": "className",
-            "type": ["string"],
-            "default": "-",
-            "description": "아바타의 최상위 요소에 적용할 추가 CSS 클래스입니다."
+            "type": ["string", "function"],
+            "default": "null",
+            "description": "아바타의 최상위 요소에 적용할 CSS 클래스명입니다. 함수 형태로 전달하면 상태에 따른 동적 클래스 적용이 가능합니다."
         }
     ],
     "imageProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "img",
+            "description": "이미지를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "src",
@@ -72,24 +72,24 @@
             "prop": "onLoadingStatusChange",
             "type": ["function"],
             "default": "-",
-            "description": "이미지 로딩 상태에 대한 정보를 제공하는 콜백입니다. 이미지 로딩을 더 정밀하게 제어하고 싶을 때 유용합니다."
+            "description": "이미지 로딩 상태 변경 시 호출되는 콜백 함수입니다. (status: 'loading' | 'loaded' | 'error') => void 형태입니다."
         },
         {
             "prop": "className",
-            "type": ["string"],
+            "type": ["string", "function"],
             "default": "-",
-            "description": "이미지에 적용할 추가 CSS 클래스입니다."
+            "description": "이미지에 적용할 CSS 클래스입니다. 함수 형태로 전달하면 상태에 따른 동적 클래스 적용이 가능합니다."
         }
     ],
     "fallbackProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "span",
+            "description": "폴백 콘텐츠를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
-            "prop": "delayMs",
+            "prop": "delay",
             "type": ["number"],
             "default": "-",
             "description": "폴백을 표시하기 전의 지연 시간(밀리초)입니다. 느린 연결에서만 표시되도록 지연시키는데 유용합니다."
@@ -102,9 +102,9 @@
         },
         {
             "prop": "className",
-            "type": ["string"],
+            "type": ["string", "function"],
             "default": "-",
-            "description": "폴백에 적용할 추가 CSS 클래스입니다."
+            "description": "폴백에 적용할 CSS 클래스입니다. 함수 형태로 전달하면 상태에 따른 동적 클래스 적용이 가능합니다."
         }
     ],
     "simpleProps": [
@@ -133,7 +133,7 @@
             "description": "아바타 이미지의 대체 텍스트입니다."
         },
         {
-            "prop": "delayMs",
+            "prop": "delay",
             "type": ["number"],
             "default": "-",
             "description": "폴백을 표시하기 전의 지연 시간(밀리초)입니다."

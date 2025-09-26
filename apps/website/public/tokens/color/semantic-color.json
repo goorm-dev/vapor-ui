@@ -1,154 +1,217 @@
 {
     "background": {
         "primary": {
-            "value": "#2a6ff3",
-            "basicToken": "blue-500"
+            "100": {
+                "value": "#cee3ff",
+                "basicToken": "blue-100"
+            },
+            "200": {
+                "value": "#3174dc",
+                "basicToken": "blue-500"
+            }
         },
         "secondary": {
-            "value": "#e8e8ee",
-            "basicToken": "gray-200"
+            "100": {
+                "value": "#f7f7f7",
+                "basicToken": "gray-050"
+            },
+            "200": {
+                "value": "#e1e1e1",
+                "basicToken": "gray-100"
+            }
         },
         "success": {
-            "value": "#0a8672",
-            "basicToken": "green-500"
+            "100": {
+                "value": "#cde8dd",
+                "basicToken": "green-100"
+            },
+            "200": {
+                "value": "#058765",
+                "basicToken": "green-500"
+            }
         },
         "warning": {
-            "value": "#d14905",
-            "basicToken": "orange-500"
+            "100": {
+                "value": "#ffd9c8",
+                "basicToken": "orange-100"
+            },
+            "200": {
+                "value": "#cd4d0a",
+                "basicToken": "orange-500"
+            }
         },
         "danger": {
-            "value": "#df3337",
-            "basicToken": "red-500"
+            "100": {
+                "value": "#ffd8d7",
+                "basicToken": "red-100"
+            },
+            "200": {
+                "value": "#d54049",
+                "basicToken": "red-500"
+            }
         },
         "hint": {
-            "value": "#6c6e7e",
-            "basicToken": "gray-600"
+            "100": {
+                "value": "#e1e1e1",
+                "basicToken": "gray-100"
+            },
+            "200": {
+                "value": "#5d5d5d",
+                "basicToken": "gray-600"
+            }
         },
         "contrast": {
-            "value": "#3e404c",
-            "basicToken": "gray-800"
+            "100": {
+                "value": "#c6c6c6",
+                "basicToken": "gray-200"
+            },
+            "200": {
+                "value": "#393939",
+                "basicToken": "gray-800"
+            }
         },
-        "normal": {
-            "value": "#ffffff",
-            "basicToken": "gray-000"
+        "canvas": {
+            "value": "#ffffff"
         },
-        "normal-lighter": {
-            "value": "#ffffff",
-            "basicToken": "gray-000"
-        },
-        "normal-darker": {
-            "value": "#f7f7fa",
-            "basicToken": "gray-050"
+        "surface": {
+            "100": {
+                "value": "#ffffff",
+                "basicToken": "white"
+            },
+            "200": {
+                "value": "#f7f7f7",
+                "basicToken": "gray-050"
+            }
         }
     },
     "foreground": {
         "primary": {
-            "value": "#245ecf",
-            "basicToken": "blue-600"
-        },
-        "primary-darker": {
-            "value": "#1d4eaa",
-            "basicToken": "blue-700"
+            "100": {
+                "value": "#1d5aba",
+                "basicToken": "blue-600"
+            },
+            "200": {
+                "value": "#0e47a3",
+                "basicToken": "blue-700"
+            }
         },
         "secondary": {
-            "value": "#3e404c",
-            "basicToken": "gray-800"
-        },
-        "secondary-darker": {
-            "value": "#2b2d36",
-            "basicToken": "gray-900"
+            "100": {
+                "value": "#393939",
+                "basicToken": "gray-800"
+            },
+            "200": {
+                "value": "#262626",
+                "basicToken": "gray-900"
+            }
         },
         "success": {
-            "value": "#097261",
-            "basicToken": "green-600"
-        },
-        "success-darker": {
-            "value": "#075e50",
-            "basicToken": "green-700"
+            "100": {
+                "value": "#046b4c",
+                "basicToken": "green-600"
+            },
+            "200": {
+                "value": "#01583c",
+                "basicToken": "green-700"
+            }
         },
         "warning": {
-            "value": "#b23e04",
-            "basicToken": "orange-600"
-        },
-        "warning-darker": {
-            "value": "#923304",
-            "basicToken": "orange-700"
+            "100": {
+                "value": "#ab3406",
+                "basicToken": "orange-600"
+            },
+            "200": {
+                "value": "#932103",
+                "basicToken": "orange-700"
+            }
         },
         "danger": {
-            "value": "#be2b2f",
-            "basicToken": "red-600"
-        },
-        "danger-darker": {
-            "value": "#9c2427",
-            "basicToken": "red-700"
+            "100": {
+                "value": "#b12932",
+                "basicToken": "red-600"
+            },
+            "200": {
+                "value": "#971622",
+                "basicToken": "red-700"
+            }
         },
         "hint": {
-            "value": "#6c6e7e",
-            "basicToken": "gray-600"
-        },
-        "hint-darker": {
-            "value": "#525463",
-            "basicToken": "gray-700"
+            "100": {
+                "value": "#5d5d5d",
+                "basicToken": "gray-600"
+            },
+            "200": {
+                "value": "#4c4c4c",
+                "basicToken": "gray-700"
+            }
         },
         "contrast": {
-            "value": "#3e404c",
-            "basicToken": "gray-800"
-        },
-        "contrast-darker": {
-            "value": "#2b2d36",
-            "basicToken": "gray-900"
-        },
-        "accent": {
-            "value": "#ffffff",
-            "basicToken": "white"
+            "100": {
+                "value": "#393939",
+                "basicToken": "gray-800"
+            },
+            "200": {
+                "value": "#262626",
+                "basicToken": "gray-900"
+            }
         },
         "normal": {
-            "value": "#2b2d36",
-            "basicToken": "gray-900"
-        },
-        "normal-lighter": {
-            "value": "#525463",
-            "basicToken": "gray-700"
+            "100": {
+                "value": "#4c4c4c",
+                "basicToken": "gray-700"
+            },
+            "200": {
+                "value": "#262626",
+                "basicToken": "gray-900"
+            }
         }
     },
     "border": {
         "normal": {
-            "value": "#e1e1e8",
-            "basicToken": "gray-300"
+            "value": "#e1e1e1",
+            "basicToken": "gray-100"
         },
         "primary": {
-            "value": "#2a6ff3",
+            "value": "#3174dc",
             "basicToken": "blue-500"
         },
         "secondary": {
-            "value": "#e8e8ee",
+            "value": "#c6c6c6",
             "basicToken": "gray-200"
         },
         "success": {
-            "value": "#0a8672",
+            "value": "#058765",
             "basicToken": "green-500"
         },
         "warning": {
-            "value": "#d14905",
+            "value": "#cd4d0a",
             "basicToken": "orange-500"
         },
         "danger": {
-            "value": "#df3337",
+            "value": "#d54049",
             "basicToken": "red-500"
         },
         "hint": {
-            "value": "#6c6e7e",
+            "value": "#5d5d5d",
             "basicToken": "gray-600"
         },
         "contrast": {
-            "value": "#3e404c",
+            "value": "#393939",
             "basicToken": "gray-800"
         }
     },
     "logo": {
         "normal": {
-            "value": "#2b2d36",
+            "value": "#262626",
             "basicToken": "gray-900"
+        }
+    },
+    "button": {
+        "foreground": {
+            "primary": {
+                "value": "#ffffff",
+                "basicToken": "white"
+            }
         }
     }
 }

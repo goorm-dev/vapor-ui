@@ -1,13 +1,13 @@
 import { render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
-import type { CalloutProps } from './callout';
+import type { CalloutRootProps } from './callout';
 import { Callout } from './callout';
 
 const CALLOUT_CONTENT = 'This is a callout message';
 
-const CalloutTest = (props: CalloutProps) => {
-    return <Callout {...props}>{CALLOUT_CONTENT}</Callout>;
+const CalloutTest = (props: CalloutRootProps) => {
+    return <Callout.Root {...props}>{CALLOUT_CONTENT}</Callout.Root>;
 };
 
 describe('Callout', () => {

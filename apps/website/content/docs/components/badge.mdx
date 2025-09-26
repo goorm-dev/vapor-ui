@@ -5,11 +5,10 @@ description: 'Badge는 이미지, 컨텐츠 등의 상태 또는 분류를 시�
 ---
 
 <Demo name="default-badge">
-```tsx
-import { Badge } from '@vapor-ui/core';
-
-export default function DefaultBadge() {
-    return <Badge>Hello</Badge>;
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-badge.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -23,20 +22,10 @@ export default function DefaultBadge() {
 Badge 색상은 primary, success, warning, danger, contrast, hint 로 제공합니다.
 
 <Demo name="badge-color">
-```tsx
-import { Badge } from '@vapor-ui/core';
-
-export default function BadgeColor() {
-    return (
-        <div className="flex flex-wrap gap-2">
-            <Badge color="primary">Primary</Badge>
-            <Badge color="hint">Hint</Badge>
-            <Badge color="danger">Danger</Badge>
-            <Badge color="success">Success</Badge>
-            <Badge color="warning">Warning</Badge>
-            <Badge color="contrast">Contrast</Badge>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/badge-color.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -46,16 +35,10 @@ export default function BadgeColor() {
 Badge 모양은 square, pill 로 제공합니다.
 
 <Demo name="badge-shape">
-```tsx
-import { Badge } from '@vapor-ui/core';
-
-export default function BadgeShape() {
-    return (
-        <div className="flex flex-wrap gap-2">
-            <Badge shape="square">Rectangle</Badge>
-            <Badge shape="pill">Pill</Badge>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/badge-shape.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -65,17 +48,10 @@ export default function BadgeShape() {
 Badge 사이즈는 sm, md, lg 로 제공합니다.
 
 <Demo name="badge-size">
-```tsx
-import { Badge } from '@vapor-ui/core';
-
-export default function BadgeSize() {
-    return (
-        <div className="flex flex-wrap items-center gap-2">
-            <Badge size="sm">Small</Badge>
-            <Badge size="md">Medium</Badge>
-            <Badge size="lg">Large</Badge>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/badge-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

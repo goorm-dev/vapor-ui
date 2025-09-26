@@ -140,7 +140,7 @@ export async function updateReleasesFile() {
     let content =
         `---\n` +
         `title: Releases\n` +
-        `description: 각 Vapor UI 릴리스의 Chanagelogs입니다.\n` +
+        `description: 각 Vapor UI 릴리스의 Changelogs입니다.\n` +
         `---\n\n`;
 
     for (const version of versions) {

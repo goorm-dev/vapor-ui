@@ -24,7 +24,11 @@ export function Demo(props: DemoProps) {
 
     return (
         <ErrorBoundary>
-            <Tabs items={['Preview', 'Code']} defaultIndex={0} className="my-0 w-full">
+            <Tabs
+                items={['Preview', 'Code']}
+                defaultIndex={0}
+                className="my-0 w-full bg-[var(--vapor-color-background-surface-100)] ]"
+            >
                 <Tab value="Preview" className="rounded-t-none">
                     <Preview name={name} />
                 </Tab>

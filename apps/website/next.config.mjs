@@ -9,7 +9,11 @@ const config = {
         return [
             {
                 source: '/docs/:path*.mdx',
-                destination: '/llms.mdx/:path*',
+                destination: '/llms.mdx/docs/:path*',
+            },
+            {
+                source: '/blocks/:path*.mdx',
+                destination: '/llms.mdx/blocks/:path*',
             },
         ];
     },

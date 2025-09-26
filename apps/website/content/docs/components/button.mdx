@@ -5,11 +5,10 @@ description: 'Button은 사용자가 주요 작업을 수행하도록 돕는 핵
 ---
 
 <Demo name="default-button">
-```tsx
-import { Button } from '@vapor-ui/core';
-
-export default function DefaultButton() {
-    return <Button>Button</Button>;
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-button.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -23,20 +22,10 @@ export default function DefaultButton() {
 Button 색상은 primary, secondary, success, warning, danger, contrast 로 제공합니다.
 
 <Demo name="button-color">
-```tsx
-import { Button } from '@vapor-ui/core';
-
-export default function ButtonColor() {
-    return (
-        <div className="flex flex-wrap gap-2">
-            <Button color="primary">Primary</Button>
-            <Button color="secondary">Secondary</Button>
-            <Button color="success">Success</Button>
-            <Button color="warning">Warning</Button>
-            <Button color="danger">Danger</Button>
-            <Button color="contrast">Contrast</Button>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/button-color.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -46,18 +35,10 @@ export default function ButtonColor() {
 Button 사이즈는 sm, md, lg, xl 로 제공합니다.
 
 <Demo name="button-size">
-```tsx
-import { Button } from '@vapor-ui/core';
-
-export default function ButtonSize() {
-    return (
-        <div className="flex items-center gap-2">
-            <Button size="sm">SM</Button>
-            <Button size="md">MD</Button>
-            <Button size="lg">LG</Button>
-            <Button size="xl">XL</Button>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/button-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -67,17 +48,10 @@ export default function ButtonSize() {
 Button 스타일은 fill, outline, ghost 로 제공합니다.
 
 <Demo name="button-variant">
-```tsx
-import { Button } from '@vapor-ui/core';
-
-export default function ButtonVariant() {
-    return (
-        <div className="flex items-center gap-2">
-            <Button variant="fill">Fill</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/button-variant.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -87,16 +61,10 @@ export default function ButtonVariant() {
 `stretch`가 true일 경우 버튼이 컨테이너의 전체 너비를 차지합니다.
 
 <Demo name="button-stretch">
-```tsx
-import { Button } from '@vapor-ui/core';
-
-export default function ButtonStretch() {
-    return (
-        <div className="w-full space-y-2">
-            <Button stretch>Stretch</Button>
-            <Button>Normal</Button>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/button-stretch.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -106,16 +74,10 @@ export default function ButtonStretch() {
 `disabled` 속성을 사용하여 버튼을 비활성화할 수 있습니다.
 
 <Demo name="button-disabled">
-```tsx
-import { Button } from '@vapor-ui/core';
-
-export default function ButtonDisabled() {
-    return (
-        <div className="flex items-center gap-2">
-            <Button disabled>Disabled</Button>
-            <Button>Enabled</Button>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/button-disabled.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -129,23 +91,10 @@ export default function ButtonDisabled() {
 아이콘과 함께 사용하는 버튼 예제입니다.
 
 <Demo name="button-with-icon">
-```tsx
-import { Button } from '@vapor-ui/core';
-import { CheckCircleIcon, ChevronRightOutlineIcon } from '@vapor-ui/icons';
-
-export default function ButtonWithIcon() {
-    return (
-        <div className="flex items-center gap-2">
-            <Button>
-                <CheckCircleIcon />
-                Complete
-            </Button>
-            <Button variant="outline">
-                Next
-                <ChevronRightOutlineIcon />
-            </Button>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/button-with-icon.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

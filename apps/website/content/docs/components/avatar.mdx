@@ -5,20 +5,10 @@ description: 'Avatar는 사용자가 설정한 프로필 이미지 혹은 텍스
 ---
 
 <Demo name="default-avatar">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function DefaultAvatar() {
-    return (
-        <Avatar.Root
-            size="md"
-            alt="vapor"
-            src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-        >
-            <Avatar.Image />
-            <Avatar.Fallback>Vapor</Avatar.Fallback>
-        </Avatar.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-avatar.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -32,46 +22,10 @@ export default function DefaultAvatar() {
 Avatar 사이즈는 sm, md, lg, xl 로 제공합니다.
 
 <Demo name="avatar-size">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarSize() {
-    return (
-        <div className="flex flex-wrap items-center gap-4">
-            <Avatar.Root
-                size="sm"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>SM</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root
-                size="md"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>MD</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root
-                size="lg"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>LG</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root
-                size="xl"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>XL</Avatar.Fallback>
-            </Avatar.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -81,32 +35,10 @@ export default function AvatarSize() {
 Avatar 모양은 circle, square 로 제공합니다.
 
 <Demo name="avatar-shape">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarShape() {
-    return (
-        <div className="flex flex-wrap items-center gap-4">
-            <Avatar.Root
-                size="lg"
-                shape="circle"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>Circle</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root
-                size="lg"
-                shape="square"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>Square</Avatar.Fallback>
-            </Avatar.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar-shape.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -120,81 +52,34 @@ export default function AvatarShape() {
 Avatar.Simple을 사용한 가장 간단한 형태입니다.
 
 <Demo name="avatar-simple">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarSimple() {
-    return (
-        <div className="flex gap-4">
-            <Avatar.Simple
-                size="md"
-                shape="circle"
-                alt="Vapor UI"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Simple size="md" alt="Vapor Core" src="/invalid-image.jpg" />
-            <Avatar.Simple size="md" alt="Vapor Design" />
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar-simple.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
-
 ### Composition Pattern
 
 Avatar.Root, Avatar.Image, Avatar.Fallback을 조합한 패턴입니다.
 
 <Demo name="avatar-composition">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarComposition() {
-    return (
-        <div className="flex gap-4">
-            <Avatar.Root
-                size="md"
-                alt="Vapor System"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback />
-            </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Components" src="/invalid-image.jpg">
-                <Avatar.Image />
-                <Avatar.Fallback />
-            </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Theme">
-                <Avatar.Image />
-                <Avatar.Fallback />
-            </Avatar.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar-composition.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
-
 ### Fallback Only
 
 이미지 로드 실패 시 표시되는 Fallback 텍스트나 이니셜을 사용하는 패턴입니다.
 
 <Demo name="avatar-fallback-only">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarFallbackOnly() {
-    return (
-        <div className="flex gap-4">
-            <Avatar.Root size="md" alt="Vapor Library">
-                <Avatar.Fallback />
-            </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor tokens">
-                <Avatar.Fallback>VT</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Delay" delayMs={600}>
-                <Avatar.Fallback>VD</Avatar.Fallback>
-            </Avatar.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar-fallback-only.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -204,38 +89,10 @@ export default function AvatarFallbackOnly() {
 다양한 크기와 모양을 조합한 예시입니다.
 
 <Demo name="avatar-variants">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarVariants() {
-    return (
-        <div className="flex items-center gap-4">
-            <Avatar.Simple
-                size="sm"
-                shape="circle"
-                alt="Vapor Small"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Simple
-                size="md"
-                shape="square"
-                alt="Vapor Medium"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Simple
-                size="lg"
-                shape="circle"
-                alt="Vapor Large"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Simple
-                size="xl"
-                shape="square"
-                alt="Vapor Extra"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar-variants.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

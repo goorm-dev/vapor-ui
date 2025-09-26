@@ -31,5 +31,10 @@ export const navLinks = [
         url: '/playground',
         label: 'Playground for theme customization',
     },
+    {
+        text: 'Blocks',
+        url: '/blocks',
+        label: 'UI Blocks',
+    },
     ...externalLinks,
 ];

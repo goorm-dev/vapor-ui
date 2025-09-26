@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@vapor-ui/core';
+import { Badge, Text } from '@vapor-ui/core';
 
 type TypographyToken = {
     name: string;
@@ -18,25 +18,40 @@ const TypographyTable = ({ tokens }: TypographyTableProps) => {
             <table className="mt-0">
                 <thead>
                     <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4 font-medium text-sm text-gray-700">
+                        <Text
+                            foreground="normal-100"
+                            typography="subtitle1"
+                            render={<th />}
+                            className="text-left py-3 px-4 "
+                        >
                             Name
-                        </th>
-                        <th className="text-left py-3 px-4 font-medium text-sm text-gray-700">
+                        </Text>
+                        <Text
+                            foreground="normal-100"
+                            typography="subtitle1"
+                            render={<th />}
+                            className="text-left py-3 px-4 "
+                        >
                             Value
-                        </th>
+                        </Text>
                     </tr>
                 </thead>
                 <tbody>
                     {tokens.map((token) => (
-                        <tr key={token.name} className="border-b border-gray-100 hover:bg-gray-50">
+                        <tr key={token.name} className="border-b border-gray-100">
                             <td className="py-3 px-4">
                                 <Badge size="sm" color="hint">
                                     {token.cssVariable}
                                 </Badge>
                             </td>
-                            <td className="py-3 px-4 font-mono text-sm text-gray-600">
+                            <Text
+                                foreground="normal-100"
+                                typography="subtitle1"
+                                render={<td />}
+                                className="text-left py-3 px-4 "
+                            >
                                 {token.value}
-                            </td>
+                            </Text>
                         </tr>
                     ))}
                 </tbody>

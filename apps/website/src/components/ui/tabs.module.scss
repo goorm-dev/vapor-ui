@@ -98,7 +98,7 @@
 .tab {
     position: relative;
 
-    color: var(--vapor-color-foreground-hint-darker, #525463);
+    color: var(--vapor-color-foreground-hint-200, #525463);
     background-color: transparent;
     border: none;
 
@@ -136,7 +136,7 @@
 
     &:disabled {
         opacity: 0.32;
-        color: var(--vapor-color-foreground-hint-darker, rgba(82, 84, 99, 1));
+        color: var(--vapor-color-foreground-hint-200, rgba(82, 84, 99, 1));
         pointer-events: none;
     }
 
@@ -165,10 +165,10 @@
         &:hover,
         &:focus-visible,
         &[data-state='active'] {
-            color: var(--vapor-color-foreground-primary, #1d6ce0);
+            color: var(--vapor-color-foreground-primary-100, #1d6ce0);
 
             &::after {
-                @include horizontal-effect(var(--vapor-color-foreground-primary, #448efe));
+                @include horizontal-effect(var(--vapor-color-foreground-primary-100, #448efe));
             }
         }
     }
@@ -184,10 +184,10 @@
         &:hover,
         &:focus-visible,
         &[data-state='active'] {
-            color: var(--vapor-color-foreground-primary, #1d6ce0);
+            color: var(--vapor-color-foreground-primary-100, #1d6ce0);
 
             &::after {
-                @include vertical-effect(var(--vapor-color-foreground-primary, #448efe));
+                @include vertical-effect(var(--vapor-color-foreground-primary-100, #448efe));
             }
         }
     }

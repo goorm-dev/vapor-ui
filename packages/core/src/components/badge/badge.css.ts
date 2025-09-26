@@ -15,28 +15,28 @@ export const root = recipe({
     variants: {
         color: {
             primary: layerStyle('components', {
-                color: vars.color.foreground['primary-darker'],
-                backgroundColor: `rgba(${vars.color.background['rgb-primary']}, 0.16)`,
+                color: vars.color.foreground.primary[200],
+                backgroundColor: vars.color.background.primary[100],
             }),
             hint: layerStyle('components', {
-                color: vars.color.foreground['hint-darker'],
-                backgroundColor: `rgba(${vars.color.background['rgb-hint']}, 0.16)`,
+                color: vars.color.foreground.hint[200],
+                backgroundColor: vars.color.background.hint[100],
             }),
             danger: layerStyle('components', {
-                color: vars.color.foreground['danger-darker'],
-                backgroundColor: `rgba(${vars.color.background['rgb-danger']}, 0.16)`,
+                color: vars.color.foreground.danger[200],
+                backgroundColor: vars.color.background.danger[100],
             }),
             success: layerStyle('components', {
-                color: vars.color.foreground['success-darker'],
-                backgroundColor: `rgba(${vars.color.background['rgb-success']}, 0.16)`,
+                color: vars.color.foreground.success[200],
+                backgroundColor: vars.color.background.success[100],
             }),
             warning: layerStyle('components', {
-                color: vars.color.foreground['warning-darker'],
-                backgroundColor: `rgba(${vars.color.background['rgb-warning']}, 0.16)`,
+                color: vars.color.foreground.warning[200],
+                backgroundColor: vars.color.background.warning[100],
             }),
             contrast: layerStyle('components', {
-                color: vars.color.foreground['contrast-darker'],
-                backgroundColor: `rgba(${vars.color.background['rgb-contrast']}, 0.16)`,
+                color: vars.color.foreground.contrast[200],
+                backgroundColor: vars.color.background.contrast[100],
             }),
         },
 

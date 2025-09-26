@@ -4,7 +4,7 @@ export default function DialogSimple() {
     return (
         <Dialog.Root>
             <Dialog.Trigger render={<Button>단순 다이얼로그 열기</Button>} />
-            <Dialog.CombinedContent>
+            <Dialog.Content>
                 <Dialog.Header>
                     <Dialog.Title>알림</Dialog.Title>
                 </Dialog.Header>
@@ -17,7 +17,7 @@ export default function DialogSimple() {
                 <Dialog.Footer>
                     <Dialog.Close render={<Button>확인</Button>} />
                 </Dialog.Footer>
-            </Dialog.CombinedContent>
+            </Dialog.Content>
         </Dialog.Root>
     );
 }

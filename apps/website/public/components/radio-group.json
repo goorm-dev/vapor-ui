@@ -1,10 +1,10 @@
 {
     "props": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "div",
+            "description": "라디오 그룹을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "defaultValue",
@@ -81,10 +81,10 @@
     ],
     "itemProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "button",
+            "description": "라디오 아이템을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "value",
@@ -125,10 +125,10 @@
     ],
     "controlProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "button",
+            "description": "라디오 컨트롤을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "forceMount",
@@ -145,10 +145,10 @@
     ],
     "labelProps": [
         {
-            "prop": "asChild",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "자식 요소와 속성 및 동작을 병합하여 기본 렌더링 요소를 변경합니다."
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "label",
+            "description": "라디오 레이블을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
             "prop": "htmlFor",

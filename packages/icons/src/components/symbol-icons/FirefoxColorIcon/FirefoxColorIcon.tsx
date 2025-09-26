@@ -131,8 +131,8 @@ const FirefoxColorIcon: IconType = (props) => (
                 cx="0"
                 cy="0"
                 r="1"
+                gradientTransform="matrix(3.58556 -0.866879 1.01443 4.19791 8.39648 7.34371)"
                 gradientUnits="userSpaceOnUse"
-                gradientTransform="translate(8.39648 7.34371) rotate(-13.5916) scale(3.68886 4.31874)"
             >
                 <stop offset="0.206" stopColor="#9059FF" stopOpacity="0" />
                 <stop offset="0.278" stopColor="#8C4FF3" stopOpacity="0.064" />
@@ -173,8 +173,8 @@ const FirefoxColorIcon: IconType = (props) => (
                 cx="0"
                 cy="0"
                 r="1"
+                gradientTransform="matrix(1.64235 15.5632 -10.2139 1.07926 9.71217 0.0173773)"
                 gradientUnits="userSpaceOnUse"
-                gradientTransform="translate(9.71217 0.0173773) rotate(83.976) scale(15.6496 10.2707)"
             >
                 <stop stopColor="#FFF44F" />
                 <stop offset="0.06" stopColor="#FFE847" />
