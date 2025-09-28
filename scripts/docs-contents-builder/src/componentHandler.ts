@@ -113,10 +113,8 @@ export function formatComponentData(
     sourceFilePath: string = '',
     displayName?: string,
 ) {
-    const description = extractDescriptionByLanguage(
-        component.documentation?.description,
-        language,
-    );
+    const description = component.documentation?.description?.replace(/\n\n{@see .*$/ms, '');
+
     const dataAttributes = allExports.find(
         (node) => node.name === `${component.name}DataAttributes`,
     );
@@ -137,11 +135,7 @@ export function formatComponentData(
         usage,
         description,
         props: sortObjectByKeys(
-            formatProperties(
-                (component.type as tae.ComponentNode).props,
-                language,
-                defaultVariants,
-            ),
+            formatProperties((component.type as tae.ComponentNode).props, defaultVariants),
             memberOrder.props,
         ),
         dataAttributes: dataAttributes

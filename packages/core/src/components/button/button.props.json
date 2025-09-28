@@ -1,0 +1,51 @@
+[
+    {
+        "tags": {},
+        "filePath": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/button/button.tsx",
+        "description": "Button 컴포넌트는 사용자가 클릭할 수 있는 인터랙티브한 요소입니다.\nbutton 태그를 기본으로 사용합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/button Button Documentation}",
+        "displayName": "Button",
+        "methods": [],
+        "props": {
+            "size": {
+                "defaultValue": null,
+                "description": "",
+                "name": "size",
+                "declarations": [],
+                "required": false,
+                "type": {
+                    "name": "\"md\" | \"sm\" | \"lg\" | \"xl\""
+                }
+            },
+            "color": {
+                "defaultValue": null,
+                "description": "",
+                "name": "color",
+                "declarations": [],
+                "required": false,
+                "type": {
+                    "name": "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\""
+                }
+            },
+            "variant": {
+                "defaultValue": null,
+                "description": "",
+                "name": "variant",
+                "declarations": [],
+                "required": false,
+                "type": {
+                    "name": "\"outline\" | \"fill\" | \"ghost\""
+                }
+            },
+            "stretch": {
+                "defaultValue": null,
+                "description": "",
+                "name": "stretch",
+                "declarations": [],
+                "required": false,
+                "type": {
+                    "name": "boolean"
+                }
+            }
+        }
+    }
+]

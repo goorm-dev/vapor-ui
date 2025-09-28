@@ -4,38 +4,6 @@ import sortBy from 'lodash/sortBy';
 import path from 'path';
 import * as tae from 'typescript-api-extractor';
 
-function extractDescriptionByLanguage(
-    description: string | undefined,
-    language: string,
-): string | undefined {
-    if (!description) return undefined;
-
-    // Remove documentation URLs
-    const cleanDescription = description.replace(/\n\nDocumentation: .*$/ms, '');
-
-    // Split by lines to find language-specific descriptions
-    const lines = cleanDescription.split('\n');
-
-    // Look for lines with language prefix (e.g., "ko: 설명", "en: description")
-    const languagePrefix = `${language}: `;
-    for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (trimmedLine.startsWith(languagePrefix)) {
-            return trimmedLine.substring(languagePrefix.length).trim();
-        }
-    }
-
-    // If no language-specific description found, try to find the first line that starts with the language prefix
-    // or fallback to removing any language prefix from the first meaningful line
-    const firstLine = lines.find((line) => line.trim() && !line.trim().startsWith('*'))?.trim();
-    if (firstLine) {
-        // Remove any language prefix from the first line
-        return firstLine.replace(/^[a-z]{2}:\s*/, '').trim();
-    }
-
-    return undefined;
-}
-
 export function formatProperties(props: tae.PropertyNode[], defaultVariants?: Record<string, any>) {
     const result: Record<string, any> = {};
     for (const prop of props) {

@@ -1,0 +1,1182 @@
+[
+  {
+    "name": "Button",
+    "type": {
+      "kind": "component",
+      "typeName": {
+        "name": "ForwardRefExoticComponent",
+        "namespaces": [
+          "React"
+        ],
+        "typeArguments": [
+          {
+            "type": {
+              "kind": "intersection",
+              "types": [
+                {
+                  "kind": "object",
+                  "typeName": {
+                    "name": "Omit",
+                    "typeArguments": [
+                      {
+                        "type": {
+                          "kind": "object",
+                          "typeName": {
+                            "name": "ButtonProps"
+                          },
+                          "properties": [
+                            {
+                              "name": "className",
+                              "type": {
+                                "kind": "union",
+                                "types": [
+                                  {
+                                    "kind": "intrinsic",
+                                    "intrinsic": "string"
+                                  },
+                                  {
+                                    "kind": "intrinsic",
+                                    "intrinsic": "undefined"
+                                  }
+                                ]
+                              },
+                              "optional": true
+                            },
+                            {
+                              "name": "render",
+                              "type": {
+                                "kind": "union",
+                                "types": [
+                                  {
+                                    "typeName": {
+                                      "name": "ReactElement",
+                                      "namespaces": [
+                                        "React"
+                                      ],
+                                      "typeArguments": [
+                                        {
+                                          "type": {
+                                            "typeName": {
+                                              "name": "Record",
+                                              "typeArguments": [
+                                                {
+                                                  "type": {
+                                                    "kind": "intrinsic",
+                                                    "intrinsic": "string"
+                                                  },
+                                                  "equalToDefault": false
+                                                },
+                                                {
+                                                  "type": {
+                                                    "kind": "intrinsic",
+                                                    "intrinsic": "unknown"
+                                                  },
+                                                  "equalToDefault": false
+                                                }
+                                              ]
+                                            },
+                                            "kind": "external"
+                                          },
+                                          "equalToDefault": false
+                                        },
+                                        {
+                                          "type": {
+                                            "kind": "union",
+                                            "types": [
+                                              {
+                                                "kind": "intrinsic",
+                                                "intrinsic": "string"
+                                              },
+                                              {
+                                                "typeName": {
+                                                  "name": "JSXElementConstructor",
+                                                  "namespaces": [
+                                                    "React"
+                                                  ],
+                                                  "typeArguments": [
+                                                    {
+                                                      "type": {
+                                                        "kind": "intrinsic",
+                                                        "intrinsic": "any"
+                                                      },
+                                                      "equalToDefault": false
+                                                    }
+                                                  ]
+                                                },
+                                                "kind": "external"
+                                              }
+                                            ]
+                                          },
+                                          "equalToDefault": true
+                                        }
+                                      ]
+                                    },
+                                    "kind": "external"
+                                  },
+                                  {
+                                    "kind": "function",
+                                    "callSignatures": [
+                                      {
+                                        "parameters": [
+                                          {
+                                            "type": {
+                                              "typeName": {
+                                                "name": "HTMLProps"
+                                              },
+                                              "kind": "external"
+                                            },
+                                            "name": "props",
+                                            "optional": false
+                                          },
+                                          {
+                                            "type": {
+                                              "kind": "object",
+                                              "properties": []
+                                            },
+                                            "name": "state",
+                                            "optional": false
+                                          }
+                                        ],
+                                        "returnValueType": {
+                                          "typeName": {
+                                            "name": "ReactElement",
+                                            "namespaces": [
+                                              "React"
+                                            ],
+                                            "typeArguments": [
+                                              {
+                                                "type": {
+                                                  "kind": "intrinsic",
+                                                  "intrinsic": "unknown"
+                                                },
+                                                "equalToDefault": false
+                                              },
+                                              {
+                                                "type": {
+                                                  "kind": "union",
+                                                  "types": [
+                                                    {
+                                                      "kind": "intrinsic",
+                                                      "intrinsic": "string"
+                                                    },
+                                                    {
+                                                      "typeName": {
+                                                        "name": "JSXElementConstructor",
+                                                        "namespaces": [
+                                                          "React"
+                                                        ],
+                                                        "typeArguments": [
+                                                          {
+                                                            "type": {
+                                                              "kind": "intrinsic",
+                                                              "intrinsic": "any"
+                                                            },
+                                                            "equalToDefault": false
+                                                          }
+                                                        ]
+                                                      },
+                                                      "kind": "external"
+                                                    }
+                                                  ]
+                                                },
+                                                "equalToDefault": true
+                                              }
+                                            ]
+                                          },
+                                          "kind": "external"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "kind": "intrinsic",
+                                    "intrinsic": "undefined"
+                                  }
+                                ]
+                              },
+                              "documentation": {
+                                "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.",
+                                "tags": []
+                              },
+                              "optional": true
+                            }
+                          ]
+                        },
+                        "equalToDefault": false
+                      },
+                      {
+                        "type": {
+                          "kind": "literal",
+                          "value": "\"ref\""
+                        },
+                        "equalToDefault": false
+                      }
+                    ]
+                  },
+                  "properties": [
+                    {
+                      "name": "color",
+                      "type": {
+                        "kind": "union",
+                        "types": [
+                          {
+                            "kind": "literal",
+                            "value": "\"primary\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"secondary\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"success\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"warning\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"danger\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"contrast\""
+                          },
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "undefined"
+                          }
+                        ]
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "className",
+                      "type": {
+                        "kind": "union",
+                        "types": [
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "string"
+                          },
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "undefined"
+                          }
+                        ]
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "size",
+                      "type": {
+                        "kind": "union",
+                        "types": [
+                          {
+                            "kind": "literal",
+                            "value": "\"sm\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"md\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"lg\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"xl\""
+                          },
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "undefined"
+                          }
+                        ]
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "render",
+                      "type": {
+                        "kind": "union",
+                        "types": [
+                          {
+                            "typeName": {
+                              "name": "ReactElement",
+                              "namespaces": [
+                                "React"
+                              ],
+                              "typeArguments": [
+                                {
+                                  "type": {
+                                    "typeName": {
+                                      "name": "Record",
+                                      "typeArguments": [
+                                        {
+                                          "type": {
+                                            "kind": "intrinsic",
+                                            "intrinsic": "string"
+                                          },
+                                          "equalToDefault": false
+                                        },
+                                        {
+                                          "type": {
+                                            "kind": "intrinsic",
+                                            "intrinsic": "unknown"
+                                          },
+                                          "equalToDefault": false
+                                        }
+                                      ]
+                                    },
+                                    "kind": "external"
+                                  },
+                                  "equalToDefault": false
+                                },
+                                {
+                                  "type": {
+                                    "kind": "union",
+                                    "types": [
+                                      {
+                                        "kind": "intrinsic",
+                                        "intrinsic": "string"
+                                      },
+                                      {
+                                        "typeName": {
+                                          "name": "JSXElementConstructor",
+                                          "namespaces": [
+                                            "React"
+                                          ],
+                                          "typeArguments": [
+                                            {
+                                              "type": {
+                                                "kind": "intrinsic",
+                                                "intrinsic": "any"
+                                              },
+                                              "equalToDefault": false
+                                            }
+                                          ]
+                                        },
+                                        "kind": "external"
+                                      }
+                                    ]
+                                  },
+                                  "equalToDefault": true
+                                }
+                              ]
+                            },
+                            "kind": "external"
+                          },
+                          {
+                            "kind": "function",
+                            "callSignatures": [
+                              {
+                                "parameters": [
+                                  {
+                                    "type": {
+                                      "typeName": {
+                                        "name": "HTMLProps"
+                                      },
+                                      "kind": "external"
+                                    },
+                                    "name": "props",
+                                    "optional": false
+                                  },
+                                  {
+                                    "type": {
+                                      "kind": "object",
+                                      "properties": []
+                                    },
+                                    "name": "state",
+                                    "optional": false
+                                  }
+                                ],
+                                "returnValueType": {
+                                  "typeName": {
+                                    "name": "ReactElement",
+                                    "namespaces": [
+                                      "React"
+                                    ],
+                                    "typeArguments": [
+                                      {
+                                        "type": {
+                                          "kind": "intrinsic",
+                                          "intrinsic": "unknown"
+                                        },
+                                        "equalToDefault": false
+                                      },
+                                      {
+                                        "type": {
+                                          "kind": "union",
+                                          "types": [
+                                            {
+                                              "kind": "intrinsic",
+                                              "intrinsic": "string"
+                                            },
+                                            {
+                                              "typeName": {
+                                                "name": "JSXElementConstructor",
+                                                "namespaces": [
+                                                  "React"
+                                                ],
+                                                "typeArguments": [
+                                                  {
+                                                    "type": {
+                                                      "kind": "intrinsic",
+                                                      "intrinsic": "any"
+                                                    },
+                                                    "equalToDefault": false
+                                                  }
+                                                ]
+                                              },
+                                              "kind": "external"
+                                            }
+                                          ]
+                                        },
+                                        "equalToDefault": true
+                                      }
+                                    ]
+                                  },
+                                  "kind": "external"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "undefined"
+                          }
+                        ]
+                      },
+                      "documentation": {
+                        "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.",
+                        "tags": []
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "stretch",
+                      "type": {
+                        "kind": "union",
+                        "types": [
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "boolean"
+                          },
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "undefined"
+                          }
+                        ]
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "variant",
+                      "type": {
+                        "kind": "union",
+                        "types": [
+                          {
+                            "kind": "literal",
+                            "value": "\"fill\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"outline\""
+                          },
+                          {
+                            "kind": "literal",
+                            "value": "\"ghost\""
+                          },
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "undefined"
+                          }
+                        ]
+                      },
+                      "optional": true
+                    }
+                  ]
+                },
+                {
+                  "typeName": {
+                    "name": "RefAttributes",
+                    "namespaces": [
+                      "React"
+                    ],
+                    "typeArguments": [
+                      {
+                        "type": {
+                          "typeName": {
+                            "name": "HTMLButtonElement"
+                          },
+                          "kind": "external"
+                        },
+                        "equalToDefault": false
+                      }
+                    ]
+                  },
+                  "kind": "external"
+                }
+              ],
+              "properties": [
+                {
+                  "name": "className",
+                  "type": {
+                    "kind": "union",
+                    "types": [
+                      {
+                        "kind": "intrinsic",
+                        "intrinsic": "string"
+                      },
+                      {
+                        "kind": "intrinsic",
+                        "intrinsic": "undefined"
+                      }
+                    ]
+                  },
+                  "optional": true
+                },
+                {
+                  "name": "render",
+                  "type": {
+                    "kind": "union",
+                    "types": [
+                      {
+                        "typeName": {
+                          "name": "ReactElement",
+                          "namespaces": [
+                            "React"
+                          ],
+                          "typeArguments": [
+                            {
+                              "type": {
+                                "typeName": {
+                                  "name": "Record",
+                                  "typeArguments": [
+                                    {
+                                      "type": {
+                                        "kind": "intrinsic",
+                                        "intrinsic": "string"
+                                      },
+                                      "equalToDefault": false
+                                    },
+                                    {
+                                      "type": {
+                                        "kind": "intrinsic",
+                                        "intrinsic": "unknown"
+                                      },
+                                      "equalToDefault": false
+                                    }
+                                  ]
+                                },
+                                "kind": "external"
+                              },
+                              "equalToDefault": false
+                            },
+                            {
+                              "type": {
+                                "kind": "union",
+                                "types": [
+                                  {
+                                    "kind": "intrinsic",
+                                    "intrinsic": "string"
+                                  },
+                                  {
+                                    "typeName": {
+                                      "name": "JSXElementConstructor",
+                                      "namespaces": [
+                                        "React"
+                                      ],
+                                      "typeArguments": [
+                                        {
+                                          "type": {
+                                            "kind": "intrinsic",
+                                            "intrinsic": "any"
+                                          },
+                                          "equalToDefault": false
+                                        }
+                                      ]
+                                    },
+                                    "kind": "external"
+                                  }
+                                ]
+                              },
+                              "equalToDefault": true
+                            }
+                          ]
+                        },
+                        "kind": "external"
+                      },
+                      {
+                        "kind": "function",
+                        "callSignatures": [
+                          {
+                            "parameters": [
+                              {
+                                "type": {
+                                  "typeName": {
+                                    "name": "HTMLProps"
+                                  },
+                                  "kind": "external"
+                                },
+                                "name": "props",
+                                "optional": false
+                              },
+                              {
+                                "type": {
+                                  "kind": "object",
+                                  "properties": []
+                                },
+                                "name": "state",
+                                "optional": false
+                              }
+                            ],
+                            "returnValueType": {
+                              "typeName": {
+                                "name": "ReactElement",
+                                "namespaces": [
+                                  "React"
+                                ],
+                                "typeArguments": [
+                                  {
+                                    "type": {
+                                      "kind": "intrinsic",
+                                      "intrinsic": "unknown"
+                                    },
+                                    "equalToDefault": false
+                                  },
+                                  {
+                                    "type": {
+                                      "kind": "union",
+                                      "types": [
+                                        {
+                                          "kind": "intrinsic",
+                                          "intrinsic": "string"
+                                        },
+                                        {
+                                          "typeName": {
+                                            "name": "JSXElementConstructor",
+                                            "namespaces": [
+                                              "React"
+                                            ],
+                                            "typeArguments": [
+                                              {
+                                                "type": {
+                                                  "kind": "intrinsic",
+                                                  "intrinsic": "any"
+                                                },
+                                                "equalToDefault": false
+                                              }
+                                            ]
+                                          },
+                                          "kind": "external"
+                                        }
+                                      ]
+                                    },
+                                    "equalToDefault": true
+                                  }
+                                ]
+                              },
+                              "kind": "external"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "intrinsic",
+                        "intrinsic": "undefined"
+                      }
+                    ]
+                  },
+                  "documentation": {
+                    "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.",
+                    "tags": []
+                  },
+                  "optional": true
+                }
+              ]
+            },
+            "equalToDefault": false
+          }
+        ]
+      },
+      "props": [
+        {
+          "name": "color",
+          "type": {
+            "kind": "union",
+            "types": [
+              {
+                "kind": "literal",
+                "value": "\"primary\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"secondary\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"success\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"warning\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"danger\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"contrast\""
+              },
+              {
+                "kind": "intrinsic",
+                "intrinsic": "undefined"
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": {
+            "kind": "union",
+            "types": [
+              {
+                "kind": "intrinsic",
+                "intrinsic": "string"
+              },
+              {
+                "kind": "intrinsic",
+                "intrinsic": "undefined"
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "size",
+          "type": {
+            "kind": "union",
+            "types": [
+              {
+                "kind": "literal",
+                "value": "\"sm\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"md\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"lg\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"xl\""
+              },
+              {
+                "kind": "intrinsic",
+                "intrinsic": "undefined"
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "render",
+          "type": {
+            "kind": "union",
+            "types": [
+              {
+                "typeName": {
+                  "name": "ReactElement",
+                  "namespaces": [
+                    "React"
+                  ],
+                  "typeArguments": [
+                    {
+                      "type": {
+                        "typeName": {
+                          "name": "Record",
+                          "typeArguments": [
+                            {
+                              "type": {
+                                "kind": "intrinsic",
+                                "intrinsic": "string"
+                              },
+                              "equalToDefault": false
+                            },
+                            {
+                              "type": {
+                                "kind": "intrinsic",
+                                "intrinsic": "unknown"
+                              },
+                              "equalToDefault": false
+                            }
+                          ]
+                        },
+                        "kind": "external"
+                      },
+                      "equalToDefault": false
+                    },
+                    {
+                      "type": {
+                        "kind": "union",
+                        "types": [
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "string"
+                          },
+                          {
+                            "typeName": {
+                              "name": "JSXElementConstructor",
+                              "namespaces": [
+                                "React"
+                              ],
+                              "typeArguments": [
+                                {
+                                  "type": {
+                                    "kind": "intrinsic",
+                                    "intrinsic": "any"
+                                  },
+                                  "equalToDefault": false
+                                }
+                              ]
+                            },
+                            "kind": "external"
+                          }
+                        ]
+                      },
+                      "equalToDefault": true
+                    }
+                  ]
+                },
+                "kind": "external"
+              },
+              {
+                "kind": "function",
+                "callSignatures": [
+                  {
+                    "parameters": [
+                      {
+                        "type": {
+                          "typeName": {
+                            "name": "HTMLProps"
+                          },
+                          "kind": "external"
+                        },
+                        "name": "props",
+                        "optional": false
+                      },
+                      {
+                        "type": {
+                          "kind": "object",
+                          "properties": []
+                        },
+                        "name": "state",
+                        "optional": false
+                      }
+                    ],
+                    "returnValueType": {
+                      "typeName": {
+                        "name": "ReactElement",
+                        "namespaces": [
+                          "React"
+                        ],
+                        "typeArguments": [
+                          {
+                            "type": {
+                              "kind": "intrinsic",
+                              "intrinsic": "unknown"
+                            },
+                            "equalToDefault": false
+                          },
+                          {
+                            "type": {
+                              "kind": "union",
+                              "types": [
+                                {
+                                  "kind": "intrinsic",
+                                  "intrinsic": "string"
+                                },
+                                {
+                                  "typeName": {
+                                    "name": "JSXElementConstructor",
+                                    "namespaces": [
+                                      "React"
+                                    ],
+                                    "typeArguments": [
+                                      {
+                                        "type": {
+                                          "kind": "intrinsic",
+                                          "intrinsic": "any"
+                                        },
+                                        "equalToDefault": false
+                                      }
+                                    ]
+                                  },
+                                  "kind": "external"
+                                }
+                              ]
+                            },
+                            "equalToDefault": true
+                          }
+                        ]
+                      },
+                      "kind": "external"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "intrinsic",
+                "intrinsic": "undefined"
+              }
+            ]
+          },
+          "documentation": {
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.",
+            "tags": []
+          },
+          "optional": true
+        },
+        {
+          "name": "stretch",
+          "type": {
+            "kind": "union",
+            "types": [
+              {
+                "kind": "intrinsic",
+                "intrinsic": "boolean"
+              },
+              {
+                "kind": "intrinsic",
+                "intrinsic": "undefined"
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "variant",
+          "type": {
+            "kind": "union",
+            "types": [
+              {
+                "kind": "literal",
+                "value": "\"fill\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"outline\""
+              },
+              {
+                "kind": "literal",
+                "value": "\"ghost\""
+              },
+              {
+                "kind": "intrinsic",
+                "intrinsic": "undefined"
+              }
+            ]
+          },
+          "optional": true
+        }
+      ]
+    },
+    "documentation": {
+      "description": "Button 컴포넌트는 사용자가 클릭할 수 있는 인터랙티브한 요소입니다.\nbutton 태그를 기본으로 사용합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/button Button Documentation}",
+      "tags": []
+    }
+  },
+  {
+    "name": "ButtonProps",
+    "type": {
+      "kind": "object",
+      "typeName": {
+        "name": "ButtonProps"
+      },
+      "properties": [
+        {
+          "name": "className",
+          "type": {
+            "kind": "union",
+            "types": [
+              {
+                "kind": "intrinsic",
+                "intrinsic": "string"
+              },
+              {
+                "kind": "intrinsic",
+                "intrinsic": "undefined"
+              }
+            ]
+          },
+          "optional": true
+        },
+        {
+          "name": "render",
+          "type": {
+            "kind": "union",
+            "types": [
+              {
+                "typeName": {
+                  "name": "ReactElement",
+                  "namespaces": [
+                    "React"
+                  ],
+                  "typeArguments": [
+                    {
+                      "type": {
+                        "typeName": {
+                          "name": "Record",
+                          "typeArguments": [
+                            {
+                              "type": {
+                                "kind": "intrinsic",
+                                "intrinsic": "string"
+                              },
+                              "equalToDefault": false
+                            },
+                            {
+                              "type": {
+                                "kind": "intrinsic",
+                                "intrinsic": "unknown"
+                              },
+                              "equalToDefault": false
+                            }
+                          ]
+                        },
+                        "kind": "external"
+                      },
+                      "equalToDefault": false
+                    },
+                    {
+                      "type": {
+                        "kind": "union",
+                        "types": [
+                          {
+                            "kind": "intrinsic",
+                            "intrinsic": "string"
+                          },
+                          {
+                            "typeName": {
+                              "name": "JSXElementConstructor",
+                              "namespaces": [
+                                "React"
+                              ],
+                              "typeArguments": [
+                                {
+                                  "type": {
+                                    "kind": "intrinsic",
+                                    "intrinsic": "any"
+                                  },
+                                  "equalToDefault": false
+                                }
+                              ]
+                            },
+                            "kind": "external"
+                          }
+                        ]
+                      },
+                      "equalToDefault": true
+                    }
+                  ]
+                },
+                "kind": "external"
+              },
+              {
+                "kind": "function",
+                "callSignatures": [
+                  {
+                    "parameters": [
+                      {
+                        "type": {
+                          "typeName": {
+                            "name": "HTMLProps"
+                          },
+                          "kind": "external"
+                        },
+                        "name": "props",
+                        "optional": false
+                      },
+                      {
+                        "type": {
+                          "kind": "object",
+                          "properties": []
+                        },
+                        "name": "state",
+                        "optional": false
+                      }
+                    ],
+                    "returnValueType": {
+                      "typeName": {
+                        "name": "ReactElement",
+                        "namespaces": [
+                          "React"
+                        ],
+                        "typeArguments": [
+                          {
+                            "type": {
+                              "kind": "intrinsic",
+                              "intrinsic": "unknown"
+                            },
+                            "equalToDefault": false
+                          },
+                          {
+                            "type": {
+                              "kind": "union",
+                              "types": [
+                                {
+                                  "kind": "intrinsic",
+                                  "intrinsic": "string"
+                                },
+                                {
+                                  "typeName": {
+                                    "name": "JSXElementConstructor",
+                                    "namespaces": [
+                                      "React"
+                                    ],
+                                    "typeArguments": [
+                                      {
+                                        "type": {
+                                          "kind": "intrinsic",
+                                          "intrinsic": "any"
+                                        },
+                                        "equalToDefault": false
+                                      }
+                                    ]
+                                  },
+                                  "kind": "external"
+                                }
+                              ]
+                            },
+                            "equalToDefault": true
+                          }
+                        ]
+                      },
+                      "kind": "external"
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "intrinsic",
+                "intrinsic": "undefined"
+              }
+            ]
+          },
+          "documentation": {
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.",
+            "tags": []
+          },
+          "optional": true
+        }
+      ]
+    }
+  }
+]

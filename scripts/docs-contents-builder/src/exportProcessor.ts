@@ -1,3 +1,4 @@
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 import ts from 'typescript';
 import * as tae from 'typescript-api-extractor';
@@ -10,10 +11,7 @@ export class ExportProcessor {
     private fileExportsMap = new Map<string, tae.ExportNode[]>();
     private errorCounter = 0;
 
-    constructor(
-        private program: ts.Program,
-        private compilerOptions: ts.CompilerOptions,
-    ) {}
+    constructor(private program: ts.Program) {}
 
     processFiles(sourceFiles: string[]): ExportProcessingResult {
         for (const file of sourceFiles) {
@@ -65,7 +63,9 @@ export class ExportProcessor {
             return null;
         }
 
-        return tae.parseFile(file, this.compilerOptions);
+        const result = tae.parseFromProgram(file, this.program);
+        fs.writeFileSync('docs.json', JSON.stringify(result, null, 2));
+        return result;
     }
 
     private handleError(file: string, error: any): void {

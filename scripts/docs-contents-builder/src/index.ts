@@ -1,4 +1,7 @@
+import { PropItem, parse } from 'react-docgen-typescript';
+
 import { globby } from 'globby';
+import * as fs from 'node:fs';
 /* eslint-disable prefer-template */
 /* eslint-disable no-console */
 import * as path from 'node:path';
@@ -10,25 +13,30 @@ import { ExportProcessor } from './exportProcessor';
 import { FileGenerator } from './fileGenerator';
 import { RunOptions, TsConfig } from './types';
 
+const reactDocGenTyepscriptOptions = {
+    propFilter: (prop: PropItem) => {
+        if (prop.declarations !== undefined && prop.declarations.length > 0) {
+            // node_modules에서 온 props 제외 (HTML attributes 포함)[web:83]
+            const hasPropAdditionalDescription = prop.declarations.find((declaration) => {
+                return !declaration.fileName.includes('node_modules');
+            });
+            return Boolean(hasPropAdditionalDescription);
+        }
+        return true;
+    },
+};
 async function run(options: RunOptions) {
     const config = tae.loadConfig(options.configPath);
     const files = await getFilesToProcess(options, config);
 
-    const program = ts.createProgram(files, config.options);
-
-    // Process exports using the new ExportProcessor class
-    const processor = new ExportProcessor(program, config.options);
-    const { exports, errorCount, fileExportsMap } = processor.processFiles(files);
-    // Generate files using the new FileGenerator class
-    const generator = new FileGenerator(options.out, options.language, fileExportsMap);
-
-    generator.generateComponentFiles(exports);
-
-    console.log(`\nProcessed ${files.length} files.`);
-    if (errorCount > 0) {
-        console.log(`❌ Found ${errorCount} errors.`);
-        process.exit(1);
-    }
+    files.map((file) => {
+        const ast = parse(file, reactDocGenTyepscriptOptions);
+        fs.writeFileSync(
+            file.replace(/\.tsx?$/, '.props.json'),
+            JSON.stringify(ast, null, 2),
+            'utf-8',
+        );
+    });
 }
 
 async function getFilesToProcess(options: RunOptions, config: TsConfig): Promise<string[]> {
