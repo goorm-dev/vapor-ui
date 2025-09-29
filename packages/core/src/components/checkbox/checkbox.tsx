@@ -29,6 +29,13 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
 type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
 interface CheckboxRootProps extends RootPrimitiveProps, CheckboxSharedProps {}
 
+/**
+ * 다중 선택이 가능한 체크박스 입력 컨트롤입니다.
+ *
+ * `<button>` 요소와 그 옆에 숨겨진 `<input>`을 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/checkbox Checkbox Documentation}
+ */
 const Root = forwardRef<HTMLButtonElement, CheckboxRootProps>(
     ({ render, className, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(props, [
@@ -65,6 +72,11 @@ Root.displayName = 'Checkbox.Root';
 type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
 interface CheckboxIndicatorProps extends IndicatorPrimitiveProps {}
 
+/**
+ * 체크박스의 체크 표시 및 불확정 상태 표시를 담당합니다.
+ *
+ * `<span>` 요소를 렌더링합니다.
+ */
 const Indicator = forwardRef<HTMLDivElement, CheckboxIndicatorProps>(
     ({ className, ...props }, ref) => {
         const { size, indeterminate } = useCheckboxContext();

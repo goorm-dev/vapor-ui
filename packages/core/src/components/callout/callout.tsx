@@ -16,6 +16,13 @@ import * as styles from './callout.css';
 type CalloutRootPrimitiveProps = VComponentProps<'div'>;
 interface CalloutRootProps extends CalloutRootPrimitiveProps, CalloutVariants {}
 
+/**
+ * 중요한 정보나 메시지를 강조하여 사용자의 주의를 끄는 콘텐츠 영역입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/callout Callout Documentation}
+ */
 const CalloutRoot = forwardRef<HTMLDivElement, CalloutRootProps>(
     ({ render, className, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(props, ['color']);
@@ -39,6 +46,11 @@ CalloutRoot.displayName = 'CalloutRoot';
 type CalloutIconPrimitiveProps = VComponentProps<'div'>;
 interface CalloutIconProps extends CalloutIconPrimitiveProps {}
 
+/**
+ * 콜아웃의 아이콘 영역을 담당합니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const CalloutIcon = forwardRef<HTMLDivElement, CalloutIconProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -57,10 +69,10 @@ CalloutIcon.displayName = 'CalloutIcon';
  * Callout Compound Component
  * -----------------------------------------------------------------------------------------------*/
 
-const Callout = {
+export const Callout = {
     Root: CalloutRoot,
     Icon: CalloutIcon,
 };
 
-export { Callout, CalloutRoot, CalloutIcon };
+export { CalloutRoot, CalloutIcon };
 export type { CalloutRootProps, CalloutIconProps };

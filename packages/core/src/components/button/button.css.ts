@@ -43,6 +43,9 @@ export const root = recipe({
     },
 
     variants: {
+        /**
+         * 버튼의 크기를 결정합니다.
+         */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['050'],
@@ -86,6 +89,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * 버튼의 색상을 결정합니다.
+         */
         color: {
             primary: layerStyle('components', {
                 vars: {
@@ -149,6 +155,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * 버튼의 스타일 변형을 결정합니다.
+         */
         variant: {
             fill: layerStyle('components', {
                 backgroundColor: bg,
@@ -167,6 +176,9 @@ export const root = recipe({
             ],
         },
 
+        /**
+         * 버튼의 너비 확장 여부를 결정합니다.
+         */
         stretch: { true: layerStyle('components', { width: '100%' }) },
     },
 });

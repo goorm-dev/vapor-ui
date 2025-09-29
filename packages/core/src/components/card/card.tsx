@@ -15,6 +15,13 @@ import * as styles from './card.css';
 
 interface CardRootProps extends VComponentProps<'div'> {}
 
+/**
+ * 관련된 정보를 그룹화하여 표시하는 컨테이너 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/card Card Documentation}
+ */
 const Root = forwardRef<HTMLDivElement, CardRootProps>(({ render, className, ...props }, ref) => {
     return useRender({
         ref,
@@ -33,6 +40,11 @@ Root.displayName = 'Card';
 
 interface CardHeaderProps extends VComponentProps<'div'> {}
 
+/**
+ * 카드의 헤더 영역을 담당합니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Header = forwardRef<HTMLDivElement, CardHeaderProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -53,6 +65,11 @@ Header.displayName = 'Card.Header';
 
 interface CardBodyProps extends VComponentProps<'div'> {}
 
+/**
+ * 카드의 주요 콘텐츠 영역을 담당합니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Body = forwardRef<HTMLDivElement, CardBodyProps>(({ render, className, ...props }, ref) => {
     return useRender({
         ref,
@@ -71,6 +88,11 @@ Body.displayName = 'Card.Body';
 
 interface CardFooterProps extends VComponentProps<'div'> {}
 
+/**
+ * 카드의 푸터 영역을 담당합니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Footer = forwardRef<HTMLDivElement, CardFooterProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({

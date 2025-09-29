@@ -1,0 +1,77 @@
+{
+    "name": "DialogRoot",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "children",
+            "type": "ReactNode",
+            "required": false
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the dialog is currently open."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string",
+                "JSXElementConstructor<any>>",
+                "(ComponentRenderFn<HTMLProps, {}> & ReactElement<...>)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.\n구성 요소의 HTML 요소를 다른 태그로 교체하거나 다른 구성 요소와 조합할 수 있게 합니다.\n\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받아들입니다."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "modal",
+            "type": ["boolean", "trap-focus"],
+            "required": false,
+            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChange",
+            "type": [
+                "((open: boolean, event: Event",
+                "undefined, reason: OpenChangeReason",
+                "undefined) => void)"
+            ],
+            "required": false,
+            "description": "Event handler called when the dialog is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["((open: boolean) => void)"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the dialog is opened or closed."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the dialog will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the dialog manually.\nUseful when the dialog's animation is controlled by an external library."
+        },
+        {
+            "name": "size",
+            "type": ["md", "lg", "xl"],
+            "required": false,
+            "description": "다이얼로그의 크기를 결정합니다.",
+            "defaultValue": "md"
+        }
+    ],
+    "generatedAt": "2025-09-29T06:17:56.738Z",
+    "sourceFile": "../../packages/core/src/components/dialog/dialog.tsx"
+}

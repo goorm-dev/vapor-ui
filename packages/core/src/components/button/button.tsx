@@ -13,8 +13,9 @@ type ButtonPrimitiveProps = VComponentProps<'button'>;
 interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {}
 
 /**
- * Button 컴포넌트는 사용자가 클릭할 수 있는 인터랙티브한 요소입니다.
- * button 태그를 기본으로 사용합니다.
+ * 양식 제출이나 특정 작업을 실행하는 데 사용되는 클릭 가능한 버튼입니다.
+ *
+ * `<button>` 요소를 렌더링합니다.
  *
  * {@see https://vapor-ui.goorm.io/docs/components/button Button Documentation}
  */

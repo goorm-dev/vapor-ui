@@ -20,6 +20,9 @@ export const root = recipe({
 
     defaultVariants: { color: 'primary' },
     variants: {
+        /**
+         * 콜아웃의 색상을 결정합니다.
+         */
         color: {
             primary: layerStyle('components', {
                 border: `.0625rem solid ${vars.color.border.primary}`,

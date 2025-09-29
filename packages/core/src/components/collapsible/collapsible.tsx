@@ -13,6 +13,13 @@ import * as styles from './collapsible.css';
  * Collapsible.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Collapsible 컴포넌트의 루트 컨테이너로, 콘텐츠의 열림/닫힘 상태를 관리합니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/collapsible Collapsible Documentation}
+ */
 interface CollapsibleRootProps extends VComponentProps<typeof BaseCollapsible.Root> {}
 
 const Root = forwardRef<HTMLDivElement, CollapsibleRootProps>((props, ref) => {
@@ -24,6 +31,11 @@ Root.displayName = 'Collapsible.Root';
  * Collapsible.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Collapsible 콘텐츠의 열림/닫힘을 토글하는 트리거 버튼입니다.
+ *
+ * `<button>` 요소를 렌더링합니다.
+ */
 interface CollapsibleTriggerProps extends VComponentProps<typeof BaseCollapsible.Trigger> {}
 
 const Trigger = forwardRef<HTMLButtonElement, CollapsibleTriggerProps>((props, ref) => {
@@ -35,6 +47,11 @@ Trigger.displayName = 'Collapsible.Trigger';
  * Collapsible.Panel
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Collapsible 콘텐츠의 패널로, 열림/닫힘 상태에 따라 높이가 애니메이션됩니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 interface CollapsiblePanelProps extends VComponentProps<typeof BaseCollapsible.Panel> {}
 
 const Panel = forwardRef<HTMLDivElement, CollapsiblePanelProps>(({ className, ...props }, ref) => {

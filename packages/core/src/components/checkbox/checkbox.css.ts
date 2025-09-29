@@ -44,10 +44,16 @@ export const root = recipe({
     },
 
     variants: {
+        /**
+         * 유효성 검증 실패 상태를 결정합니다.
+         */
         invalid: {
             true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },
 
+        /**
+         * 체크박스의 크기를 결정합니다.
+         */
         size: {
             md: layerStyle('components', {
                 borderRadius: vars.size.borderRadius[100],
@@ -78,6 +84,9 @@ export const indicator = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * 인디케이터의 크기를 결정합니다.
+         */
         size: {
             md: layerStyle('components', {
                 width: vars.size.dimension[100],

@@ -49,6 +49,9 @@ export const content = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * 다이얼로그의 크기를 결정합니다.
+         */
         size: {
             md: layerStyle('components', { width: '31.25rem' }),
             lg: layerStyle('components', { width: '50rem' }),
