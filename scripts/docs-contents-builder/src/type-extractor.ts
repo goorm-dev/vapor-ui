@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 
@@ -39,9 +40,14 @@ export class TypeExtractor {
             sourceFiles = [...parsedConfig.fileNames, ...additionalFiles];
         }
 
+        // Base UI 타입 정의 파일들도 포함 (필요한 것들만)
+        const baseUIFiles = this.findRelevantBaseUITypeFiles(sourceFiles);
+        sourceFiles = [...sourceFiles, ...baseUIFiles];
+
         console.log('설정 디렉토리:', configDir);
         console.log('tsconfig에서 찾은 파일 수:', parsedConfig.fileNames.length);
         console.log('추가 분석 파일들:', files || []);
+        console.log('Base UI 타입 파일 수:', baseUIFiles.length);
         console.log('전체 분석할 파일 수:', sourceFiles.length);
 
         this.program = ts.createProgram(sourceFiles, parsedConfig.options);
@@ -267,8 +273,13 @@ export class TypeExtractor {
             const typeString = this.checker.typeToString(propType);
 
             const isRequired = !prop.flags || !(prop.flags & ts.SymbolFlags.Optional);
-            const description = this.getJSDocDescription(prop);
+            let description = this.getJSDocDescription(prop);
             const defaultValue = this.getDefaultValue(prop, propName, sourceFile);
+
+            // Base UI 컴포넌트에서 설명 가져오기 시도
+            if (!description) {
+                description = this.getBaseUIDescription(prop, propName, sourceFile);
+            }
 
             props.push({
                 name: propName,
@@ -318,7 +329,11 @@ export class TypeExtractor {
         return undefined;
     }
 
-    private getDefaultValue(symbol: ts.Symbol, propName: string, sourceFile: ts.SourceFile): string | undefined {
+    private getDefaultValue(
+        symbol: ts.Symbol,
+        propName: string,
+        sourceFile: ts.SourceFile,
+    ): string | undefined {
         // CSS 파일에서 defaultVariants 찾아서 기본값 추출
         const cssFilePath = this.findCssFile(sourceFile.fileName);
         if (cssFilePath) {
@@ -330,9 +345,9 @@ export class TypeExtractor {
 
         // JSDoc에서 @default 태그 찾기
         const jsDocTags = symbol.getJsDocTags();
-        const defaultTag = jsDocTags?.find(tag => tag.name === 'default');
+        const defaultTag = jsDocTags?.find((tag) => tag.name === 'default');
         if (defaultTag && defaultTag.text) {
-            return defaultTag.text.map(part => part.text).join('');
+            return defaultTag.text.map((part) => part.text).join('');
         }
 
         return undefined;
@@ -342,7 +357,7 @@ export class TypeExtractor {
         // button.tsx -> button.css.ts 형태로 CSS 파일 찾기
         const dir = path.dirname(componentFilePath);
         const baseName = path.basename(componentFilePath, path.extname(componentFilePath));
-        
+
         const possibleCssFiles = [
             path.join(dir, `${baseName}.css.ts`),
             path.join(dir, `${baseName}.styles.ts`),
@@ -379,18 +394,20 @@ export class TypeExtractor {
 
         const visit = (node: ts.Node) => {
             // recipe({ defaultVariants: { ... } }) 패턴 찾기
-            if (ts.isCallExpression(node) && 
-                ts.isIdentifier(node.expression) && 
-                node.expression.text === 'recipe') {
-                
+            if (
+                ts.isCallExpression(node) &&
+                ts.isIdentifier(node.expression) &&
+                node.expression.text === 'recipe'
+            ) {
                 const arg = node.arguments[0];
                 if (ts.isObjectLiteralExpression(arg)) {
-                    const defaultVariantsProp = arg.properties.find(prop => 
-                        ts.isPropertyAssignment(prop) && 
-                        ts.isIdentifier(prop.name) && 
-                        prop.name.text === 'defaultVariants'
+                    const defaultVariantsProp = arg.properties.find(
+                        (prop) =>
+                            ts.isPropertyAssignment(prop) &&
+                            ts.isIdentifier(prop.name) &&
+                            prop.name.text === 'defaultVariants',
                     );
-                    
+
                     if (defaultVariantsProp && ts.isPropertyAssignment(defaultVariantsProp)) {
                         defaultVariants = this.parseObjectLiteral(defaultVariantsProp.initializer);
                     }
@@ -398,10 +415,11 @@ export class TypeExtractor {
             }
 
             // export const root = recipe({ ... }) 패턴도 확인
-            if (ts.isVariableDeclaration(node) && 
-                node.initializer && 
-                ts.isCallExpression(node.initializer)) {
-                
+            if (
+                ts.isVariableDeclaration(node) &&
+                node.initializer &&
+                ts.isCallExpression(node.initializer)
+            ) {
                 visit(node.initializer);
             }
 
@@ -416,7 +434,7 @@ export class TypeExtractor {
         const result: Record<string, any> = {};
 
         if (ts.isObjectLiteralExpression(node)) {
-            node.properties.forEach(prop => {
+            node.properties.forEach((prop) => {
                 if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)) {
                     const key = prop.name.text;
                     const value = this.getLiteralValue(prop.initializer);
@@ -490,11 +508,15 @@ export class TypeExtractor {
 
             if (targetNode && ts.isCallExpression(targetNode)) {
                 // forwardRef 호출인지 확인
-                if (ts.isIdentifier(targetNode.expression) && 
-                    targetNode.expression.text === 'forwardRef') {
-                    
+                if (
+                    ts.isIdentifier(targetNode.expression) &&
+                    targetNode.expression.text === 'forwardRef'
+                ) {
                     const arrowFunction = targetNode.arguments[0];
-                    if (ts.isArrowFunction(arrowFunction) || ts.isFunctionExpression(arrowFunction)) {
+                    if (
+                        ts.isArrowFunction(arrowFunction) ||
+                        ts.isFunctionExpression(arrowFunction)
+                    ) {
                         const defaultElement = this.findDefaultElementInFunction(arrowFunction);
                         if (defaultElement) {
                             return defaultElement;
@@ -507,41 +529,52 @@ export class TypeExtractor {
         return undefined;
     }
 
-    private findDefaultElementInFunction(func: ts.ArrowFunction | ts.FunctionExpression): string | undefined {
+    private findDefaultElementInFunction(
+        func: ts.ArrowFunction | ts.FunctionExpression,
+    ): string | undefined {
         let defaultElement: string | undefined;
 
         const visit = (node: ts.Node) => {
             // useRender 호출을 찾습니다
-            if (ts.isCallExpression(node) && 
-                ts.isIdentifier(node.expression) && 
-                node.expression.text === 'useRender') {
-                
+            if (
+                ts.isCallExpression(node) &&
+                ts.isIdentifier(node.expression) &&
+                node.expression.text === 'useRender'
+            ) {
                 const arg = node.arguments[0];
                 if (ts.isObjectLiteralExpression(arg)) {
                     // render 프로퍼티를 찾습니다
-                    const renderProp = arg.properties.find(prop => 
-                        ts.isPropertyAssignment(prop) && 
-                        ts.isIdentifier(prop.name) && 
-                        prop.name.text === 'render'
+                    const renderProp = arg.properties.find(
+                        (prop) =>
+                            ts.isPropertyAssignment(prop) &&
+                            ts.isIdentifier(prop.name) &&
+                            prop.name.text === 'render',
                     );
-                    
+
                     if (renderProp && ts.isPropertyAssignment(renderProp)) {
                         // render || <element /> 패턴을 찾습니다
-                        if (ts.isBinaryExpression(renderProp.initializer) && 
-                            renderProp.initializer.operatorToken.kind === ts.SyntaxKind.BarBarToken) {
-                            
+                        if (
+                            ts.isBinaryExpression(renderProp.initializer) &&
+                            renderProp.initializer.operatorToken.kind === ts.SyntaxKind.BarBarToken
+                        ) {
                             const rightSide = renderProp.initializer.right;
-                            if (ts.isJsxElement(rightSide) || ts.isJsxSelfClosingElement(rightSide)) {
-                                const tagName = ts.isJsxElement(rightSide) 
+                            if (
+                                ts.isJsxElement(rightSide) ||
+                                ts.isJsxSelfClosingElement(rightSide)
+                            ) {
+                                const tagName = ts.isJsxElement(rightSide)
                                     ? rightSide.openingElement.tagName
                                     : rightSide.tagName;
-                                
+
                                 if (ts.isIdentifier(tagName)) {
                                     // 동적 컴포넌트인 경우 변수 추적
                                     const componentName = tagName.text;
                                     if (componentName === 'Component') {
                                         // const Component = current ? 'span' : 'a' 패턴 찾기
-                                        const dynamicElement = this.findDynamicComponent(func, componentName);
+                                        const dynamicElement = this.findDynamicComponent(
+                                            func,
+                                            componentName,
+                                        );
                                         if (dynamicElement) {
                                             defaultElement = dynamicElement;
                                         }
@@ -562,16 +595,20 @@ export class TypeExtractor {
         return defaultElement;
     }
 
-    private findDynamicComponent(func: ts.ArrowFunction | ts.FunctionExpression, variableName: string): string | undefined {
+    private findDynamicComponent(
+        func: ts.ArrowFunction | ts.FunctionExpression,
+        variableName: string,
+    ): string | undefined {
         let dynamicElement: string | undefined;
 
         const visit = (node: ts.Node) => {
             // const Component = condition ? 'element1' : 'element2' 패턴 찾기
-            if (ts.isVariableDeclaration(node) && 
-                ts.isIdentifier(node.name) && 
+            if (
+                ts.isVariableDeclaration(node) &&
+                ts.isIdentifier(node.name) &&
                 node.name.text === variableName &&
-                node.initializer) {
-                
+                node.initializer
+            ) {
                 // 조건부 표현식 (삼항 연산자) 처리
                 if (ts.isConditionalExpression(node.initializer)) {
                     const whenFalse = node.initializer.whenFalse;
@@ -591,6 +628,446 @@ export class TypeExtractor {
 
         visit(func);
         return dynamicElement;
+    }
+
+    private getBaseUIDescription(
+        prop: ts.Symbol,
+        propName: string,
+        sourceFile: ts.SourceFile,
+    ): string | undefined {
+        // AST를 통해 실제 사용되는 Base UI 컴포넌트 찾기
+        const usedBaseUIComponents = this.findUsedBaseUIComponents(sourceFile);
+
+        if (usedBaseUIComponents.length === 0) {
+            return undefined;
+        }
+
+        // 각 사용된 Base UI 컴포넌트에서 prop 설명 찾기
+        for (const baseUIComponent of usedBaseUIComponents) {
+            try {
+                const description = this.getBaseUIPropertyDescription(baseUIComponent, propName);
+                if (description) {
+                    return description;
+                }
+            } catch (error) {
+                // 오류 발생 시 다음 컴포넌트 시도
+                continue;
+            }
+        }
+
+        return undefined;
+    }
+
+    private findUsedBaseUIComponents(
+        sourceFile: ts.SourceFile,
+    ): Array<{ modulePath: string; componentName: string }> {
+        const usedComponents: Array<{ modulePath: string; componentName: string }> = [];
+
+        const visit = (node: ts.Node) => {
+            // Base UI import 구문 찾기: import { Avatar as BaseAvatar } from '@base-ui-components/react/avatar'
+            if (
+                ts.isImportDeclaration(node) &&
+                node.moduleSpecifier &&
+                ts.isStringLiteral(node.moduleSpecifier)
+            ) {
+                const moduleName = node.moduleSpecifier.text;
+                if (moduleName.startsWith('@base-ui-components/react/')) {
+                    const componentPath = moduleName.replace('@base-ui-components/react/', '');
+
+                    if (
+                        node.importClause &&
+                        node.importClause.namedBindings &&
+                        ts.isNamedImports(node.importClause.namedBindings)
+                    ) {
+                        node.importClause.namedBindings.elements.forEach((element) => {
+                            // import { Avatar as BaseAvatar } 패턴에서:
+                            // - element.propertyName?.text = "Avatar" (실제 import된 이름)
+                            // - element.name.text = "BaseAvatar" (로컬에서 사용하는 이름)
+                            const importedName = element.propertyName?.text || element.name.text;
+                            const localName = element.name.text;
+
+                            console.log(`[DEBUG] Base UI import 발견: ${importedName} as ${localName} from ${moduleName}`);
+
+                            // JSX에서 실제 사용되는지 확인 - 로컬 이름으로 사용되는 패턴 확인
+                            // <BaseAvatar.Root>, <BaseAvatar.Image> 등
+                            const isUsed = this.isComponentUsedInJSX(sourceFile, localName);
+                            
+                            if (isUsed) {
+                                console.log(`[DEBUG] JSX에서 사용됨: ${localName}`);
+                                usedComponents.push({
+                                    modulePath: componentPath,
+                                    componentName: importedName,
+                                });
+                            } else {
+                                console.log(`[DEBUG] JSX에서 사용되지 않음: ${localName}`);
+                            }
+                        });
+                    }
+                }
+            }
+
+            ts.forEachChild(node, visit);
+        };
+
+        visit(sourceFile);
+        return usedComponents;
+    }
+
+    private isComponentUsedInJSX(sourceFile: ts.SourceFile, componentName: string): boolean {
+        let isUsed = false;
+
+        const visit = (node: ts.Node) => {
+            // JSX 요소에서 사용 확인
+            if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
+                const tagName = node.tagName;
+                
+                // 속성 접근 패턴: <BaseAvatar.Root>, <BaseAvatar.Image> 등
+                if (ts.isPropertyAccessExpression(tagName)) {
+                    if (
+                        ts.isIdentifier(tagName.expression) &&
+                        tagName.expression.text === componentName
+                    ) {
+                        console.log(`[DEBUG] JSX에서 속성 접근 패턴 발견: ${componentName}.${tagName.name.text}`);
+                        isUsed = true;
+                    }
+                }
+                // 단순 컴포넌트 패턴: <Avatar>
+                else if (ts.isIdentifier(tagName) && tagName.text === componentName) {
+                    console.log(`[DEBUG] JSX에서 단순 컴포넌트 패턴 발견: ${componentName}`);
+                    isUsed = true;
+                }
+            }
+
+            ts.forEachChild(node, visit);
+        };
+
+        visit(sourceFile);
+        return isUsed;
+    }
+
+    private getBaseUIPropertyDescription(
+        baseUIComponent: { modulePath: string; componentName: string },
+        propName: string,
+    ): string | undefined {
+        try {
+            // JSX에서 사용되는 컴포넌트 하위 타입들을 모두 확인
+            const typeFiles = this.getAllBaseUITypeFiles(
+                baseUIComponent.modulePath,
+                baseUIComponent.componentName,
+            );
+
+            for (const typePath of typeFiles) {
+                const typeSourceFile = this.program.getSourceFile(typePath);
+                if (!typeSourceFile) {
+                    continue;
+                }
+
+                // 타입 정의 파일에서 Props 인터페이스의 해당 prop JSDoc 찾기
+                const description = this.extractBaseUIJSDoc(typeSourceFile, propName);
+                if (description) {
+                    return description;
+                }
+            }
+
+            return undefined;
+        } catch (error) {
+            return undefined;
+        }
+    }
+
+    private getAllBaseUITypeFiles(modulePath: string, componentName: string): string[] {
+        // PNPM을 고려한 실제 Base UI 타입 정의 파일 경로 해석
+        // 현재 작업 디렉토리가 scripts/docs-contents-builder이므로 프로젝트 루트로 이동
+        const projectRoot = path.resolve(process.cwd(), '../../');
+        const possibleRoots = [
+            // PNMP 경로
+            path.resolve(projectRoot, 'node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.2_@types+react@18.3.24_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm'),
+            // 일반 경로
+            path.resolve(projectRoot, 'node_modules/@base-ui-components/react/esm'),
+        ];
+
+        const typeFiles: string[] = [];
+        const possibleSubDirs = ['root', 'image', 'fallback'];
+
+        for (const baseUIRoot of possibleRoots) {
+            for (const subDir of possibleSubDirs) {
+                const capitalizedComponentName = componentName.charAt(0).toUpperCase() + componentName.slice(1);
+                const capitalizedSubDir = subDir.charAt(0).toUpperCase() + subDir.slice(1);
+                const fileName = `${capitalizedComponentName}${capitalizedSubDir}.d.ts`;
+                const typePath = path.join(baseUIRoot, modulePath, subDir, fileName);
+                
+                if (fs.existsSync(typePath)) {
+                    console.log(`[DEBUG] Base UI 타입 파일 추가:`, typePath);
+                    typeFiles.push(typePath);
+                }
+            }
+        }
+
+        return typeFiles;
+    }
+
+    private resolveBaseUITypePath(modulePath: string, componentName: string): string | undefined {
+        // PNPM을 고려한 실제 Base UI 타입 정의 파일 경로 해석
+        // 현재 작업 디렉토리가 scripts/docs-contents-builder이므로 프로젝트 루트로 이동
+        const projectRoot = path.resolve(process.cwd(), '../../');
+        const possibleRoots = [
+            // PNPM 경로
+            path.resolve(projectRoot, 'node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.2_@types+react@18.3.24_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm'),
+            // 일반 경로
+            path.resolve(projectRoot, 'node_modules/@base-ui-components/react/esm'),
+        ];
+
+        // Base UI 컴포넌트의 실제 파일 패턴 확인
+        // Avatar -> AvatarRoot.d.ts, AvatarImage.d.ts, AvatarFallback.d.ts
+        const possibleSubDirs = [
+            'root',
+            'image', 
+            'fallback',
+        ];
+
+        for (const baseUIRoot of possibleRoots) {
+            for (const subDir of possibleSubDirs) {
+                // Avatar -> root/AvatarRoot.d.ts 패턴으로 확인
+                const capitalizedComponentName = componentName.charAt(0).toUpperCase() + componentName.slice(1);
+                const capitalizedSubDir = subDir.charAt(0).toUpperCase() + subDir.slice(1);
+                const fileName = `${capitalizedComponentName}${capitalizedSubDir}.d.ts`;
+                const typePath = path.join(baseUIRoot, modulePath, subDir, fileName);
+                
+                console.log(`[DEBUG] 타입 파일 확인 중:`, typePath);
+                if (fs.existsSync(typePath)) {
+                    console.log(`[DEBUG] 타입 파일 찾음:`, typePath);
+                    return typePath;
+                }
+            }
+        }
+
+        console.log(`[DEBUG] ${modulePath}/${componentName}에 대한 타입 파일을 찾지 못함`);
+        return undefined;
+    }
+
+    private findBaseUITypePath(componentName: string, propName: string): string | undefined {
+        // Base UI 컴포넌트의 타입 정의 파일 경로 패턴들
+        const possiblePaths = [
+            `node_modules/@base-ui-components/react/esm/${componentName}/root/${componentName.charAt(0).toUpperCase() + componentName.slice(1)}Root.d.ts`,
+            `node_modules/@base-ui-components/react/esm/${componentName}/fallback/${componentName.charAt(0).toUpperCase() + componentName.slice(1)}Fallback.d.ts`,
+            `node_modules/@base-ui-components/react/esm/${componentName}/image/${componentName.charAt(0).toUpperCase() + componentName.slice(1)}Image.d.ts`,
+        ];
+
+        for (const relativePath of possiblePaths) {
+            const fullPath = path.resolve(process.cwd(), relativePath);
+            const sourceFile = this.program.getSourceFile(fullPath);
+            if (sourceFile) {
+                // 이 파일에서 해당 prop을 찾을 수 있는지 확인
+                if (this.hasPropertyInFile(sourceFile, propName)) {
+                    return fullPath;
+                }
+            }
+        }
+
+        return undefined;
+    }
+
+    private hasPropertyInFile(sourceFile: ts.SourceFile, propName: string): boolean {
+        let found = false;
+
+        const visit = (node: ts.Node) => {
+            // interface Props에서 propName을 찾기
+            if (ts.isInterfaceDeclaration(node) && node.name.text === 'Props') {
+                node.members.forEach((member) => {
+                    if (
+                        ts.isPropertySignature(member) &&
+                        ts.isIdentifier(member.name) &&
+                        member.name.text === propName
+                    ) {
+                        found = true;
+                    }
+                });
+            }
+            ts.forEachChild(node, visit);
+        };
+
+        visit(sourceFile);
+        return found;
+    }
+
+    private extractBaseUIJSDoc(sourceFile: ts.SourceFile, propName: string): string | undefined {
+        let description: string | undefined;
+
+        const visit = (node: ts.Node) => {
+            // namespace AvatarFallback { interface Props } 패턴 찾기
+            if (ts.isModuleDeclaration(node) && node.body && ts.isModuleBlock(node.body)) {
+                node.body.statements.forEach((statement) => {
+                    if (ts.isInterfaceDeclaration(statement) && statement.name.text === 'Props') {
+                        statement.members.forEach((member) => {
+                            if (
+                                ts.isPropertySignature(member) &&
+                                ts.isIdentifier(member.name) &&
+                                member.name.text === propName
+                            ) {
+                                console.log(`[DEBUG] Base UI prop 발견: ${propName}`);
+                                // JSDoc 주석 추출 - 설명이 있는 경우만
+                                const jsDocComments = ts.getJSDocCommentsAndTags(member);
+                                if (jsDocComments.length > 0) {
+                                    const comment = jsDocComments[0];
+                                    if (ts.isJSDoc(comment) && comment.comment) {
+                                        let extractedComment: string;
+                                        if (typeof comment.comment === 'string') {
+                                            extractedComment = comment.comment.trim();
+                                        } else {
+                                            extractedComment = comment.comment
+                                                .map((part) => part.text)
+                                                .join('')
+                                                .trim();
+                                        }
+
+                                        // 설명이 실제로 존재하고 의미있는 내용인 경우만 반환
+                                        if (
+                                            extractedComment &&
+                                            extractedComment.length > 0 &&
+                                            !extractedComment.match(/^@\w+/)
+                                        ) {
+                                            console.log(`[DEBUG] Base UI JSDoc 발견: ${extractedComment}`);
+                                            description = extractedComment;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // 일반적인 interface Props 패턴도 확인 (혹시 다른 형태가 있을 경우)
+            if (ts.isInterfaceDeclaration(node) && node.name.text === 'Props') {
+                node.members.forEach((member) => {
+                    if (
+                        ts.isPropertySignature(member) &&
+                        ts.isIdentifier(member.name) &&
+                        member.name.text === propName
+                    ) {
+                        console.log(`[DEBUG] Base UI prop 발견 (직접): ${propName}`);
+                        // JSDoc 주석 추출 - 설명이 있는 경우만
+                        const jsDocComments = ts.getJSDocCommentsAndTags(member);
+                        if (jsDocComments.length > 0) {
+                            const comment = jsDocComments[0];
+                            if (ts.isJSDoc(comment) && comment.comment) {
+                                let extractedComment: string;
+                                if (typeof comment.comment === 'string') {
+                                    extractedComment = comment.comment.trim();
+                                } else {
+                                    extractedComment = comment.comment
+                                        .map((part) => part.text)
+                                        .join('')
+                                        .trim();
+                                }
+
+                                // 설명이 실제로 존재하고 의미있는 내용인 경우만 반환
+                                if (
+                                    extractedComment &&
+                                    extractedComment.length > 0 &&
+                                    !extractedComment.match(/^@\w+/)
+                                ) {
+                                    console.log(`[DEBUG] Base UI JSDoc 발견 (직접): ${extractedComment}`);
+                                    description = extractedComment;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            ts.forEachChild(node, visit);
+        };
+
+        visit(sourceFile);
+        return description;
+    }
+
+    private findRelevantBaseUITypeFiles(sourceFiles: string[]): string[] {
+        const relevantBaseUIFiles: string[] = [];
+
+        // 각 소스 파일에서 사용되는 Base UI 컴포넌트들 수집
+        for (const sourceFile of sourceFiles) {
+            if (fs.existsSync(sourceFile)) {
+                const content = fs.readFileSync(sourceFile, 'utf-8');
+
+                // Base UI import가 있는지 확인
+                if (content.includes('@base-ui-components/react/')) {
+                    const tempSourceFile = ts.createSourceFile(
+                        sourceFile,
+                        content,
+                        ts.ScriptTarget.Latest,
+                        true,
+                    );
+                    const usedComponents = this.findUsedBaseUIComponents(tempSourceFile);
+                    console.log(
+                        usedComponents.length,
+                        '개의 Base UI 컴포넌트가',
+                        sourceFile,
+                        '에서 사용됨',
+                    );
+                    // 사용되는 Base UI 컴포넌트의 타입 정의 파일들 추가
+                    for (const component of usedComponents) {
+                        const typePath = this.resolveBaseUITypePath(
+                            component.modulePath,
+                            component.componentName,
+                        );
+                        if (typePath && !relevantBaseUIFiles.includes(typePath)) {
+                            relevantBaseUIFiles.push(typePath);
+                        }
+                    }
+                }
+            }
+        }
+
+        return relevantBaseUIFiles;
+    }
+
+    private findBaseUITypeFiles(configDir: string): string[] {
+        const baseUITypeFiles: string[] = [];
+
+        try {
+            // node_modules/@base-ui-components/react/esm 경로에서 직접 찾기
+            const baseUIPath = path.resolve(
+                configDir,
+                '../../node_modules/@base-ui-components/react/esm',
+            );
+
+            if (fs.existsSync(baseUIPath)) {
+                // avatar, dialog 등 컴포넌트 디렉토리들을 순회
+                const componentDirs = fs.readdirSync(baseUIPath).filter((item: string) => {
+                    const itemPath = path.join(baseUIPath, item);
+                    return fs.statSync(itemPath).isDirectory();
+                });
+
+                for (const componentDir of componentDirs) {
+                    const componentPath = path.join(baseUIPath, componentDir);
+                    this.collectTypeFiles(componentPath, baseUITypeFiles);
+                }
+            }
+        } catch (error) {
+            console.log('Base UI 타입 파일을 찾는 중 오류:', error);
+        }
+
+        return baseUITypeFiles;
+    }
+
+    private collectTypeFiles(dir: string, files: string[]): void {
+        try {
+            const items = fs.readdirSync(dir);
+
+            for (const item of items) {
+                const fullPath = path.join(dir, item);
+                const stat = fs.statSync(fullPath);
+
+                if (stat.isDirectory()) {
+                    this.collectTypeFiles(fullPath, files);
+                } else if (item.endsWith('.d.ts')) {
+                    files.push(fullPath);
+                }
+            }
+        } catch (error) {
+            // 디렉토리 읽기 실패시 무시
+        }
     }
 }
 

@@ -1,0 +1,46 @@
+{
+  "name": "Button",
+  "displayName": "Button",
+  "description": "Button 컴포넌트는 사용자가 클릭할 수 있는 인터랙티브한 요소입니다.\nbutton 태그를 기본으로 사용합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/button Button Documentation}",
+  "props": [
+    {
+      "name": "color",
+      "type": "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
+      "required": false,
+      "defaultValue": "primary"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+    },
+    {
+      "name": "size",
+      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+      "required": false,
+      "defaultValue": "md"
+    },
+    {
+      "name": "render",
+      "type": "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> | (ComponentRenderFn<HTMLProps, {}> & ReactElement<...>) | undefined",
+      "required": false,
+      "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+    },
+    {
+      "name": "stretch",
+      "type": "boolean | undefined",
+      "required": false,
+      "defaultValue": "false"
+    },
+    {
+      "name": "variant",
+      "type": "\"fill\" | \"outline\" | \"ghost\" | undefined",
+      "required": false,
+      "defaultValue": "fill"
+    }
+  ],
+  "defaultElement": "button",
+  "generatedAt": "2025-09-29T01:27:47.385Z",
+  "sourceFile": "../../packages/core/src/components/button/button.tsx"
+}

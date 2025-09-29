@@ -16,5 +16,9 @@
     },
     "scripts": {
         "start": "tsx src/index.ts -c ../../packages/core/tsconfig.json -o ../../apps/website/public/components/generated -f ../../packages/core/src/components/button/button.tsx"
+    },
+    "devDependencies": {
+        "@types/glob": "^9.0.0",
+        "glob": "^11.0.3"
     }
 }
