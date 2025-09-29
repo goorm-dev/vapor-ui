@@ -37,6 +37,6 @@
             "description": "Determines the element to focus when the dialog is closed.\nBy default, focus returns to the trigger."
         }
     ],
-    "generatedAt": "2025-09-29T06:17:57.034Z",
+    "generatedAt": "2025-09-29T06:38:39.790Z",
     "sourceFile": "../../packages/core/src/components/dialog/dialog.tsx"
 }

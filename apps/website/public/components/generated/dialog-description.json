@@ -20,6 +20,6 @@
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.\n구성 요소의 HTML 요소를 다른 태그로 교체하거나 다른 구성 요소와 조합할 수 있게 합니다.\n\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받아들입니다."
         }
     ],
-    "generatedAt": "2025-09-29T06:17:57.042Z",
+    "generatedAt": "2025-09-29T06:38:39.800Z",
     "sourceFile": "../../packages/core/src/components/dialog/dialog.tsx"
 }

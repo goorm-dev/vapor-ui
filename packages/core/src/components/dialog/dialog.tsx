@@ -49,16 +49,22 @@ const Root = ({ size, closeOnClickOverlay, children, ...props }: DialogRootProps
     );
 };
 
+Root.displayName = 'Dialog.Root';
+
 /* -------------------------------------------------------------------------------------------------
  * Dialog.Portal
  * -----------------------------------------------------------------------------------------------*/
 
+interface DialogPortalProps extends VComponentProps<typeof BaseDialog.Portal> {}
+
 /**
  * 팝업을 DOM의 다른 부분으로 이동시키는 포털 요소입니다. 기본적으로 포털 요소는 <body>에 추가됩니다.
  */
-interface DialogPortalProps extends VComponentProps<typeof BaseDialog.Portal> {}
+const Portal = ({ ...props }: DialogPortalProps) => {
+    return <BaseDialog.Portal {...props} />;
+};
 
-const Portal = BaseDialog.Portal;
+Portal.displayName = 'Dialog.Portal';
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog.Overlay

@@ -53,6 +53,8 @@ const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
     },
 );
 
+Root.displayName = 'Breadcrumb.Root';
+
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.List
  * -----------------------------------------------------------------------------------------------*/
@@ -78,6 +80,7 @@ const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
     },
 );
 
+List.displayName = 'Breadcrumb.List';
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Item
  * -----------------------------------------------------------------------------------------------*/
@@ -101,6 +104,8 @@ const Item = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
         });
     },
 );
+
+Item.displayName = 'Breadcrumb.Item';
 
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Link
@@ -136,6 +141,7 @@ const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
     },
 );
 
+Link.displayName = 'Breadcrumb.Link';
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Separator
  * -----------------------------------------------------------------------------------------------*/
@@ -166,6 +172,7 @@ const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
     },
 );
 
+Separator.displayName = 'Breadcrumb.Separator';
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Ellipsis
  * -----------------------------------------------------------------------------------------------*/
@@ -196,6 +203,8 @@ const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
         });
     },
 );
+
+Ellipsis.displayName = 'Breadcrumb.Ellipsis';
 
 /* -----------------------------------------------------------------------------------------------*/
 

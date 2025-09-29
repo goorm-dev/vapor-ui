@@ -1,5 +1,6 @@
 {
     "name": "BreadcrumbRoot",
+    "displayName": "Breadcrumb.Root",
     "description": "사용자의 현재 위치를 계층적으로 표시하는 탐색 도구입니다.\n\n`<nav>` 요소를 렌더링합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/breadcrumb Breadcrumb Documentation}",
     "props": [
         {
@@ -27,6 +28,6 @@
         }
     ],
     "defaultElement": "nav",
-    "generatedAt": "2025-09-29T05:38:40.147Z",
+    "generatedAt": "2025-09-29T06:51:28.295Z",
     "sourceFile": "../../packages/core/src/components/breadcrumb/breadcrumb.tsx"
 }

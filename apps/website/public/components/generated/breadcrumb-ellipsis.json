@@ -1,5 +1,6 @@
 {
     "name": "BreadcrumbEllipsis",
+    "displayName": "Breadcrumb.Ellipsis",
     "description": "생략된 브레드크럼 항목들을 나타내는 줄임표를 표시합니다.\n\n`<span>` 요소를 렌더링합니다.",
     "props": [
         {
@@ -20,6 +21,6 @@
         }
     ],
     "defaultElement": "span",
-    "generatedAt": "2025-09-29T05:38:40.384Z",
+    "generatedAt": "2025-09-29T06:51:28.578Z",
     "sourceFile": "../../packages/core/src/components/breadcrumb/breadcrumb.tsx"
 }

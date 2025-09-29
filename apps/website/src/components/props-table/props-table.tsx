@@ -4,31 +4,20 @@ import { Badge, Text } from '@vapor-ui/core';
 
 import { ComponentDocsMap } from '~/constants/components';
 
-interface PropItem {
-    prop: string;
-    type: string;
-    defaultValue: string | number | null;
-    description: string;
-}
-
 export interface PropsTableProps {
     /**
      * The base filename located under `/public/components` without extension.
      * For example, passing `"avatar"` will load `/components/avatar.json`.
      */
     file: string;
-    /**
-     * The key inside the JSON to be displayed.
-     * Defaults to `"props"`.
-     */
-    section?: 'props' | 'imageProps' | 'fallbackProps' | 'simpleProps';
+
     /**
      * Additional classname to add to the table element.
      */
     className?: string;
 }
 
-const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => {
+const PropsTable = ({ file, className }: PropsTableProps) => {
     const doc = ComponentDocsMap[file];
 
     if (!doc) {
@@ -36,7 +25,7 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
         return null;
     }
 
-    const items = (doc[section] as PropItem[]) ?? [];
+    const items = doc.props ?? [];
 
     if (items.length === 0) {
         return <p>표시할 데이터가 없습니다.</p>;
@@ -53,28 +42,30 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
                 </tr>
             </thead>
             <tbody>
-                {items.map(({ prop, type, defaultValue, description }) => (
-                    <tr key={prop}>
+                {items.map(({ name, type, defaultValue, description }) => (
+                    <tr key={name}>
                         <td>
                             <Text typography="body2" foreground="normal-200">
-                                {prop}
+                                {name}
                             </Text>
                         </td>
                         <td>
                             <div className="flex flex-col gap-[var(--vapor-size-space-100)]">
-                                {type.split('|').map((segment, index) => {
-                                    const value = segment.trim();
-                                    return (
-                                        <Badge
-                                            key={index}
-                                            color="hint"
-                                            shape="square"
-                                            className="w-max"
-                                        >
-                                            {value}
-                                        </Badge>
-                                    );
-                                })}
+                                {(Array.isArray(type) ? type : type.split('|')).map(
+                                    (segment, index) => {
+                                        const value = segment.trim ? segment.trim() : segment;
+                                        return (
+                                            <Badge
+                                                key={index}
+                                                color="hint"
+                                                shape="square"
+                                                className="w-max"
+                                            >
+                                                {value}
+                                            </Badge>
+                                        );
+                                    },
+                                )}
                             </div>
                         </td>
                         <td>

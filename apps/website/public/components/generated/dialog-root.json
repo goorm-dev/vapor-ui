@@ -1,5 +1,6 @@
 {
     "name": "DialogRoot",
+    "displayName": "Dialog.Root",
     "props": [
         {
             "name": "className",
@@ -9,7 +10,7 @@
         },
         {
             "name": "children",
-            "type": "ReactNode",
+            "type": ["ReactNode"],
             "required": false
         },
         {
@@ -72,6 +73,6 @@
             "defaultValue": "md"
         }
     ],
-    "generatedAt": "2025-09-29T06:17:56.738Z",
+    "generatedAt": "2025-09-29T06:38:39.554Z",
     "sourceFile": "../../packages/core/src/components/dialog/dialog.tsx"
 }

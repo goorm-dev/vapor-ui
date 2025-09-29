@@ -7,56 +7,20 @@ import { Badge, Text } from '@vapor-ui/core';
 import { InfoPopover } from '~/components/Info';
 import { ComponentDocsMap } from '~/constants/components';
 
-interface PropDefinition {
-    name: string;
-    type: string[];
-    allowedValues?: string[];
-    defaultValue?: string;
-    description: string;
-    isOptional?: boolean;
-}
-
-interface PropItem {
-    prop: string;
-    type: string[];
-    defaultValue: string | number | null;
-    description: string;
-}
-
 interface ComponentPropsTableProps {
-    props?: PropDefinition[];
-    file?: string;
-    section?: 'props' | 'imageProps' | 'fallbackProps' | 'simpleProps';
+    file: string;
 }
 
-const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
-    props,
-    file,
-    section = 'props',
-}) => {
-    let tableProps: PropDefinition[] = [];
+const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ file }) => {
+    const doc = ComponentDocsMap[file];
 
-    if (file) {
-        const doc = ComponentDocsMap[file];
-        if (!doc) {
-            console.error(`ComponentPropsTable: No documentation preloaded for file "${file}"`);
-            return null;
-        }
-
-        const items = (doc[section] as PropItem[]) ?? [];
-        tableProps = items.map((item) => ({
-            name: item.prop,
-            type: item.type,
-            defaultValue: item.defaultValue !== null ? String(item.defaultValue) : undefined,
-            description: item.description,
-            isOptional: item.defaultValue !== null || item.type.includes('undefined'),
-        }));
-    } else if (props) {
-        tableProps = props;
+    if (!doc) {
+        console.error(`ComponentPropsTable: No documentation preloaded for file "${file}"`);
+        return <p>문서를 찾을 수 없습니다: {file}</p>;
     }
 
-    if (tableProps.length === 0) {
-        return <p>표시할 데이터가 없습니다.</p>;
+    if (!doc.props || doc.props.length === 0) {
+        return <p>표시할 속성이 없습니다.</p>;
     }
     return (
         <div className="w-full not-prose overflow-auto flex flex-col items-start gap-0 self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
@@ -84,47 +48,57 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {tableProps.map((prop, index) => (
-                        <tr key={prop.name} className="">
-                            <td
-                                className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${index === tableProps.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
-                            >
-                                <div className="flex items-center gap-[var(--vapor-size-space-100)] w-fit">
-                                    <Text typography="body2" foreground="normal-200">
-                                        <span>
-                                            {prop.name}
-                                            {prop.isOptional && '?'}
-                                        </span>
-                                    </Text>
-                                    <InfoPopover>{prop.description}</InfoPopover>
-                                </div>
-                            </td>
-                            <td
-                                className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[100px] w-px ${index === tableProps.length - 1 ? 'border-b-0' : ''}`}
-                            >
-                                {prop.defaultValue ? (
-                                    <Badge color="hint" size="md">
-                                        {prop.defaultValue}
-                                    </Badge>
-                                ) : prop.isOptional ? (
-                                    '-'
-                                ) : (
-                                    '-'
-                                )}
-                            </td>
-                            <td
-                                className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${index === tableProps.length - 1 ? 'rounded-br-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
-                            >
-                                <div className="flex flex-wrap gap-[var(--vapor-size-space-100)]">
-                                    {prop.type.map((typeValue) => (
-                                        <Badge key={typeValue} color="hint" size="md">
-                                            {typeValue}
+                    {doc.props.map((prop, index) => {
+                        const types = Array.isArray(prop.type) ? prop.type : [prop.type];
+                        const isOptional = !prop.required;
+                        const isLastRow = index === doc.props.length - 1;
+
+                        return (
+                            <tr key={prop.name} className="">
+                                <td
+                                    className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${isLastRow ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
+                                >
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] w-fit">
+                                        <Text typography="body2" foreground="normal-200">
+                                            <span>
+                                                {prop.name}
+                                                {isOptional && '?'}
+                                            </span>
+                                        </Text>
+                                        {prop.description && (
+                                            <InfoPopover>{prop.description}</InfoPopover>
+                                        )}
+                                    </div>
+                                </td>
+                                <td
+                                    className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[100px] w-px ${isLastRow ? 'border-b-0' : ''}`}
+                                >
+                                    {prop.defaultValue ? (
+                                        <Badge color="hint" size="md">
+                                            {prop.defaultValue}
                                         </Badge>
-                                    ))}
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
+                                    ) : (
+                                        '-'
+                                    )}
+                                </td>
+                                <td
+                                    className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${isLastRow ? 'rounded-br-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
+                                >
+                                    <div className="flex flex-wrap gap-[var(--vapor-size-space-100)]">
+                                        {types.map((typeValue, typeIndex) => (
+                                            <Badge
+                                                key={`${prop.name}-type-${typeIndex}`}
+                                                color="hint"
+                                                size="md"
+                                            >
+                                                {typeValue}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>
