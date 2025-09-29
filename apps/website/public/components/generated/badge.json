@@ -1,0 +1,48 @@
+{
+    "name": "Badge",
+    "displayName": "Badge",
+    "description": "이미지, 콘텐츠 등의 상태 또는 분류를 시각적으로 표시합니다.\n`span` 태그를 기본으로 사용합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/badge Badge Documentation}",
+    "props": [
+        {
+            "name": "color",
+            "type": ["primary", "success", "warning", "danger", "hint", "contrast", "undefined"],
+            "required": false,
+            "description": "Badge 색상은 primary, success, warning, danger, contrast, hint 로 제공합니다.",
+            "defaultValue": "primary"
+        },
+        {
+            "name": "className",
+            "type": ["string", "undefined"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "shape",
+            "type": ["square", "pill", "undefined"],
+            "required": false,
+            "description": "Badge의 모양은 square, pill 로 제공합니다.",
+            "defaultValue": "square"
+        },
+        {
+            "name": "size",
+            "type": ["md", "sm", "lg", "undefined"],
+            "required": false,
+            "description": "Badge의 크기는 sm, md, lg 로 제공합니다.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string",
+                "JSXElementConstructor<any>>",
+                "(ComponentRenderFn<HTMLProps, {}> & ReactElement<...>)",
+                "undefined"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "defaultElement": "span",
+    "generatedAt": "2025-09-29T02:28:10.500Z",
+    "sourceFile": "../../packages/core/src/components/badge/badge.tsx"
+}

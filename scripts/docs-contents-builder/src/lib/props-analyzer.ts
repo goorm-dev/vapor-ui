@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import type { PropInfo } from './types';
-import { shouldExcludeProp, getJSDocDescription, getJSDocDefaultValue } from './utils';
+import { shouldExcludeProp, getJSDocDescription, getJSDocDefaultValue, parseTypeToArray } from './utils';
 import type { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
 import type { BaseUIAnalyzer } from './base-ui-analyzer';
 
@@ -53,7 +53,7 @@ export class PropsAnalyzer {
 
             props.push({
                 name: propName,
-                type: typeString,
+                type: parseTypeToArray(typeString),
                 required: isRequired,
                 description,
                 defaultValue,

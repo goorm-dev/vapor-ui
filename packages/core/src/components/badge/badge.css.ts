@@ -13,6 +13,9 @@ export const root = recipe({
 
     defaultVariants: { color: 'primary', size: 'md', shape: 'square' },
     variants: {
+        /**
+         * Badge 색상은 primary, success, warning, danger, contrast, hint 로 제공합니다.
+         */
         color: {
             primary: layerStyle('components', {
                 color: vars.color.foreground.primary[200],
@@ -40,6 +43,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * Badge의 모양은 square, pill 로 제공합니다.
+         */
         shape: {
             square: layerStyle('components', {
                 borderRadius: vars.size.borderRadius['300'],
@@ -49,6 +55,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * Badge의 크기는 sm, md, lg 로 제공합니다.
+         */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['025'],

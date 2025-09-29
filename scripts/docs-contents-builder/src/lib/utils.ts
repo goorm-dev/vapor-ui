@@ -110,3 +110,33 @@ export function getLiteralValue(node: ts.Node): any {
     }
     return undefined;
 }
+
+/**
+ * Parses TypeScript union types into array format
+ * Converts '"primary" | "success" | "warning" | undefined' to ["primary", "success", "warning", "undefined"]
+ */
+export function parseTypeToArray(typeString: string): string[] | string {
+    // Check if it's a union type
+    if (!typeString.includes(' | ')) {
+        return typeString;
+    }
+
+    // Split by union separator and clean up each type
+    const types = typeString
+        .split(' | ')
+        .map(type => type.trim())
+        .map(type => {
+            // Remove quotes from string literals: "primary" -> primary
+            if (type.startsWith('"') && type.endsWith('"')) {
+                return type.slice(1, -1);
+            }
+            // Remove quotes from string literals: 'primary' -> primary  
+            if (type.startsWith("'") && type.endsWith("'")) {
+                return type.slice(1, -1);
+            }
+            // Keep other types as is: undefined, number, boolean, etc.
+            return type;
+        });
+
+    return types;
+}

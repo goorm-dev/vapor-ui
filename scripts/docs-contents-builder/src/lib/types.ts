@@ -12,7 +12,7 @@ export interface ComponentTypeInfo {
 
 export interface PropInfo {
     name: string;
-    type: string;
+    type: string | string[];
     required: boolean;
     description?: string;
     defaultValue?: string;

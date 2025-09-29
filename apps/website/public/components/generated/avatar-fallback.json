@@ -1,0 +1,20 @@
+{
+  "name": "AvatarFallback",
+  "displayName": "Avatar.Fallback",
+  "props": [
+    {
+      "name": "className",
+      "type": "string | (((state: State) => string) & string) | undefined",
+      "required": false,
+      "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+    },
+    {
+      "name": "render",
+      "type": "(((ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps<any>, State>) & (ReactElement<...> | ComponentRenderFn<...>)) & ReactElement<...>) | undefined",
+      "required": false,
+      "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+    }
+  ],
+  "generatedAt": "2025-09-29T02:11:59.056Z",
+  "sourceFile": "../../packages/core/src/components/avatar/avatar.tsx"
+}

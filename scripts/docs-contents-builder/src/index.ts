@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { kebabCase } from 'lodash-es';
 import * as path from 'path';
+import prettier from 'prettier';
 
 import { createCliCommand } from './cli.js';
 import { extractComponentTypesFromFile } from './lib/type-extractor-refactored.js';
@@ -37,7 +38,7 @@ async function run(options: RunOptions) {
                     console.log(`출력 디렉토리 생성: ${outputPath}`);
                 }
 
-                components.forEach((component, index) => {
+                for (const [index, component] of components.entries()) {
                     console.log(`\n${index + 1}. 컴포넌트: ${component.name}`);
                     console.log(`   Display Name: ${component.displayName || 'N/A'}`);
                     console.log(`   설명: ${component.description || 'N/A'}`);
@@ -78,13 +79,20 @@ async function run(options: RunOptions) {
                         sourceFile: file,
                     };
 
+                    const jsonString = JSON.stringify(componentData, null, 2);
+                    const prettierOptions = await prettier.resolveConfig(componentOutputPath) || {};
+                    const formattedJson = await prettier.format(jsonString, { 
+                        ...prettierOptions,
+                        parser: 'json'
+                    });
+                    
                     fs.writeFileSync(
                         componentOutputPath,
-                        JSON.stringify(componentData, null, 2),
+                        formattedJson,
                         'utf8',
                     );
                     console.log(`   → JSON 저장: ${componentOutputPath}`);
-                });
+                }
             }
         } else {
             console.log(
