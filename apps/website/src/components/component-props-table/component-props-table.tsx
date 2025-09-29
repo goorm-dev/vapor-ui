@@ -19,7 +19,7 @@ interface PropDefinition {
 interface PropItem {
     prop: string;
     type: string[];
-    default: string | number | null;
+    defaultValue: string | number | null;
     description: string;
 }
 
@@ -47,9 +47,9 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
         tableProps = items.map((item) => ({
             name: item.prop,
             type: item.type,
-            defaultValue: item.default !== null ? String(item.default) : undefined,
+            defaultValue: item.defaultValue !== null ? String(item.defaultValue) : undefined,
             description: item.description,
-            isOptional: item.default !== null || item.type.includes('undefined'),
+            isOptional: item.defaultValue !== null || item.type.includes('undefined'),
         }));
     } else if (props) {
         tableProps = props;

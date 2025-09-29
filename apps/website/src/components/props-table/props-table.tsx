@@ -7,7 +7,7 @@ import { ComponentDocsMap } from '~/constants/components';
 interface PropItem {
     prop: string;
     type: string;
-    default: string | number | null;
+    defaultValue: string | number | null;
     description: string;
 }
 
@@ -53,7 +53,7 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
                 </tr>
             </thead>
             <tbody>
-                {items.map(({ prop, type, default: defaultValue, description }) => (
+                {items.map(({ prop, type, defaultValue, description }) => (
                     <tr key={prop}>
                         <td>
                             <Text typography="body2" foreground="normal-200">

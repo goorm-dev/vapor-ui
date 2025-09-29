@@ -53,7 +53,7 @@ export class PropsAnalyzer {
 
             props.push({
                 name: propName,
-                type: parseTypeToArray(typeString),
+                type: parseTypeToArray(typeString, isRequired),
                 required: isRequired,
                 description,
                 defaultValue,

@@ -5,27 +5,27 @@
     "props": [
         {
             "name": "color",
-            "type": ["primary", "success", "warning", "danger", "hint", "contrast", "undefined"],
+            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
             "required": false,
             "description": "Badge 색상은 primary, success, warning, danger, contrast, hint 로 제공합니다.",
             "defaultValue": "primary"
         },
         {
             "name": "className",
-            "type": ["string", "undefined"],
+            "type": ["string"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "shape",
-            "type": ["square", "pill", "undefined"],
+            "type": ["square", "pill"],
             "required": false,
             "description": "Badge의 모양은 square, pill 로 제공합니다.",
             "defaultValue": "square"
         },
         {
             "name": "size",
-            "type": ["md", "sm", "lg", "undefined"],
+            "type": ["md", "sm", "lg"],
             "required": false,
             "description": "Badge의 크기는 sm, md, lg 로 제공합니다.",
             "defaultValue": "md"
@@ -35,14 +35,13 @@
             "type": [
                 "ReactElement<Record<string, unknown>, string",
                 "JSXElementConstructor<any>>",
-                "(ComponentRenderFn<HTMLProps, {}> & ReactElement<...>)",
-                "undefined"
+                "(ComponentRenderFn<HTMLProps, {}> & ReactElement<...>)"
             ],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.\n구성 요소의 HTML 요소를 다른 태그로 교체하거나 다른 구성 요소와 조합할 수 있게 합니다.\n\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받아들입니다."
         }
     ],
     "defaultElement": "span",
-    "generatedAt": "2025-09-29T02:28:10.500Z",
+    "generatedAt": "2025-09-29T02:46:03.453Z",
     "sourceFile": "../../packages/core/src/components/badge/badge.tsx"
 }

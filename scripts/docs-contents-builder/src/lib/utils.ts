@@ -113,16 +113,17 @@ export function getLiteralValue(node: ts.Node): any {
 
 /**
  * Parses TypeScript union types into array format
- * Converts '"primary" | "success" | "warning" | undefined' to ["primary", "success", "warning", "undefined"]
+ * Converts '"primary" | "success" | "warning" | undefined' to ["primary", "success", "warning"]
+ * Removes "undefined" from union types for optional props
  */
-export function parseTypeToArray(typeString: string): string[] | string {
+export function parseTypeToArray(typeString: string, isRequired: boolean = false): string[] | string {
     // Check if it's a union type
     if (!typeString.includes(' | ')) {
         return typeString;
     }
 
     // Split by union separator and clean up each type
-    const types = typeString
+    let types = typeString
         .split(' | ')
         .map(type => type.trim())
         .map(type => {
@@ -137,6 +138,11 @@ export function parseTypeToArray(typeString: string): string[] | string {
             // Keep other types as is: undefined, number, boolean, etc.
             return type;
         });
+
+    // Remove "undefined" for optional props (not required)
+    if (!isRequired) {
+        types = types.filter(type => type !== 'undefined');
+    }
 
     return types;
 }

@@ -2,21 +2,41 @@
     "props": [
         {
             "prop": "color",
-            "type": ["primary", "hint", "danger", "success", "warning", "contrast"],
-            "default": "primary",
-            "description": "배지의 색상(의미)을 설정합니다. 예컨대 success는 성공 상태를, danger는 오류 상태를 나타냅니다."
+            "type": ["primary", "success", "warning", "danger", "hint", "contrast", "undefined"],
+            "required": false,
+            "description": "Badge 색상은 primary, success, warning, danger, contrast, hint 로 제공합니다.",
+            "defaultValue": "primary"
         },
         {
-            "prop": "size",
-            "type": ["sm", "md", "lg"],
-            "default": "md",
-            "description": "배지의 크기를 설정합니다. sm은 작은 크기, lg는 큰 크기를 의미합니다."
+            "prop": "className",
+            "type": ["string", "undefined"],
+            "required": false,
+            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "prop": "shape",
-            "type": ["square", "pill"],
-            "default": "square",
-            "description": "배지의 모양을 설정합니다. square는 둥근 사각형, pill은 완전히 둥근 알약 형태입니다."
+            "type": ["square", "pill", "undefined"],
+            "required": false,
+            "description": "Badge의 모양은 square, pill 로 제공합니다.",
+            "defaultValue": "square"
+        },
+        {
+            "prop": "size",
+            "type": ["md", "sm", "lg", "undefined"],
+            "required": false,
+            "description": "Badge의 크기는 sm, md, lg 로 제공합니다.",
+            "defaultValue": "md"
+        },
+        {
+            "prop": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string",
+                "JSXElementConstructor<any>>",
+                "(ComponentRenderFn<HTMLProps, {}> & ReactElement<...>)",
+                "undefined"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.\n구성 요소의 HTML 요소를 다른 태그로 교체하거나 다른 구성 요소와 조합할 수 있게 합니다.\n\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받아들입니다."
         }
     ]
 }

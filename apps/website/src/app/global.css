@@ -1,4 +1,5 @@
 @layer reset, tw-base, base, tw-theme, theme, components, utilities, tw-utilities;
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
 
 @import '@vapor-ui/core/styles.css';
 @import '@vapor-ui/core/tailwind.css';
