@@ -42,11 +42,5 @@ function buildCommandOptions(command: any) {
             type: 'boolean',
             default: false,
             description: 'Include props defined outside of the project',
-        })
-        .option('language', {
-            alias: 'l',
-            type: 'string',
-            default: 'ko',
-            description: 'Language for component descriptions (default: ko)',
         });
 }
