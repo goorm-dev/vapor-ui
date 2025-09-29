@@ -1,7 +1,7 @@
 {
     "name": "AvatarRoot",
     "displayName": "Avatar.Root",
-    "description": "사용자의 프로필 사진, 이니셜 또는 대체 아이콘을 표시합니다.\nRenders a `<span>` element.\n\n{@see https://vapor-ui.goorm.io/docs/components/avatar Avatar Documentation}",
+    "description": "사용자의 프로필 사진, 이니셜 또는 대체 아이콘을 표시합니다.\n\n`<span>` 요소를 렌더링합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/avatar Avatar Documentation}",
     "props": [
         {
             "name": "className",
@@ -17,7 +17,8 @@
         {
             "name": "shape",
             "type": ["circle", "square"],
-            "required": false
+            "required": false,
+            "description": "아바타의 모양을 결정합니다."
         },
         {
             "name": "src",
@@ -28,6 +29,7 @@
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
+            "description": "아바타의 크기를 결정합니다.\n폴백 텍스트의 크기를 결정합니다.",
             "defaultValue": "md"
         },
         {
@@ -48,6 +50,6 @@
             "description": "How long to wait before showing the fallback. Specified in milliseconds."
         }
     ],
-    "generatedAt": "2025-09-29T04:15:25.758Z",
+    "generatedAt": "2025-09-29T05:34:12.938Z",
     "sourceFile": "../../packages/core/src/components/avatar/avatar.tsx"
 }

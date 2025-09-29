@@ -35,10 +35,10 @@ export class TypeExtractor {
      * Extracts component type information from a file
      */
     extractComponentTypes(filePath: string): ComponentTypeInfo[] {
-        const absolutePath = path.resolve(filePath);
-        const sourceFile = this.program.getSourceFile(absolutePath);
+        const sourceFilePath = path.resolve(filePath);
+        const sourceFile = this.program.getSourceFile(sourceFilePath);
         if (!sourceFile) {
-            throw new Error(`파일을 찾을 수 없습니다: ${absolutePath}`);
+            throw new Error(`Cannot find file: ${sourceFilePath}`);
         }
 
         const components: ComponentTypeInfo[] = [];
@@ -47,10 +47,6 @@ export class TypeExtractor {
         const moduleSymbol = this.checker.getSymbolAtLocation(sourceFile);
         if (moduleSymbol) {
             const exports = this.checker.getExportsOfModule(moduleSymbol);
-            console.log(
-                '찾은 exports:',
-                exports.map((e) => e.name),
-            );
 
             for (const exportSymbol of exports) {
                 const exportResults = this.parseExport(exportSymbol, sourceFile);
@@ -131,7 +127,7 @@ export class TypeExtractor {
                     ts.isExportDeclaration(exportDeclaration.parent.parent) &&
                     exportDeclaration.parent.parent.moduleSpecifier !== undefined
                 ) {
-                    // Skip re-exports
+                    // Skip re-exports e.g., export { Button } from './Button';
                     return;
                 }
 

@@ -1,8 +1,16 @@
+import * as fs from 'node:fs';
 import * as ts from 'typescript';
-import type { PropInfo } from './types';
-import { shouldExcludeProp, getJSDocDescription, getJSDocDefaultValue, parseTypeToArray, shouldIncludePropBySource } from './utils';
-import type { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
+
 import type { BaseUIAnalyzer } from './base-ui-analyzer';
+import type { PropInfo } from './types';
+import {
+    getJSDocDefaultValue,
+    getJSDocDescription,
+    parseTypeToArray,
+    shouldExcludeProp,
+    shouldIncludePropBySource,
+} from './utils';
+import type { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
 
 /**
  * Analyzes TypeScript props and extracts prop information
@@ -38,14 +46,9 @@ export class PropsAnalyzer {
                 return;
             }
 
-            // Filter out built-in HTML/React attributes by name
-            if (shouldExcludeProp(propName)) {
-                return;
-            }
-
             // Extract type information
             const propType = this.checker.getTypeOfSymbol(prop);
-            
+
             const typeString = this.checker.typeToString(propType);
 
             const isRequired = !prop.flags || !(prop.flags & ts.SymbolFlags.Optional);
@@ -149,7 +152,10 @@ export class PropsAnalyzer {
         // Try CSS file first
         const cssFilePath = this.vanillaExtractAnalyzer.findCssFile(sourceFile.fileName);
         if (cssFilePath) {
-            const defaultValue = this.vanillaExtractAnalyzer.extractDefaultValue(cssFilePath, propName);
+            const defaultValue = this.vanillaExtractAnalyzer.extractDefaultValue(
+                cssFilePath,
+                propName,
+            );
             if (defaultValue !== undefined) {
                 return defaultValue;
             }
@@ -176,7 +182,10 @@ export class PropsAnalyzer {
         // Try each Base UI component
         for (const baseUIComponent of usedBaseUIComponents) {
             try {
-                const description = this.baseUIAnalyzer.getBaseUIPropertyDescription(baseUIComponent, propName);
+                const description = this.baseUIAnalyzer.getBaseUIPropertyDescription(
+                    baseUIComponent,
+                    propName,
+                );
                 if (description) {
                     return description;
                 }

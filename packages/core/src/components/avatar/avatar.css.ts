@@ -22,6 +22,9 @@ export const root = recipe({
 
     defaultVariants: { size: 'md', shape: 'square' },
     variants: {
+        /**
+         * 아바타의 크기를 결정합니다.
+         */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension[300],
@@ -44,6 +47,9 @@ export const root = recipe({
                 vars: { [radii]: vars.size.borderRadius[400] },
             }),
         },
+        /**
+         * 아바타의 모양을 결정합니다.
+         */
         shape: {
             square: layerStyle('components', { borderRadius: radii }),
             circle: layerStyle('components', { borderRadius: '50%' }),
@@ -67,6 +73,9 @@ export const fallback = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * 폴백 텍스트의 크기를 결정합니다.
+         */
         size: {
             sm: layerStyle('components', {
                 fontSize: vars.typography.fontSize['050'],

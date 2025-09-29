@@ -1,7 +1,7 @@
 {
     "name": "AvatarSimple",
     "displayName": "Avatar.Simple",
-    "description": "`Avatar.Root`, `Avatar.Image`, `Avatar.Fallback`를 조합한 단순화된 컴포넌트입니다.\n`Avatar.Root`를 래핑하며, 내부에 `Avatar.Image`와 `Avatar.Fallback`를 포함합니다.\n\n`span` 태그를 기본으로 사용합니다.",
+    "description": "`Avatar.Root`, `Avatar.Image`, `Avatar.Fallback`를 조합한 단순화된 컴포넌트입니다.\n`Avatar.Root`를 래핑하며, 내부에 `Avatar.Image`와 `Avatar.Fallback`를 포함합니다.\n\n`<span>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "className",
@@ -17,7 +17,8 @@
         {
             "name": "shape",
             "type": ["circle", "square"],
-            "required": false
+            "required": false,
+            "description": "아바타의 모양을 결정합니다."
         },
         {
             "name": "src",
@@ -28,6 +29,7 @@
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
+            "description": "아바타의 크기를 결정합니다.\n폴백 텍스트의 크기를 결정합니다.",
             "defaultValue": "md"
         },
         {
@@ -48,6 +50,6 @@
             "description": "How long to wait before showing the fallback. Specified in milliseconds."
         }
     ],
-    "generatedAt": "2025-09-29T04:15:25.990Z",
+    "generatedAt": "2025-09-29T05:34:13.192Z",
     "sourceFile": "../../packages/core/src/components/avatar/avatar.tsx"
 }

@@ -4,7 +4,6 @@ import * as ts from 'typescript';
  * Utility functions for TypeScript analysis and component extraction
  */
 
-
 /**
  * Checks if a prop should be included based on its source location
  * Only includes props from: component files, Base UI d.ts files, and Vanilla Extract files
@@ -12,40 +11,45 @@ import * as ts from 'typescript';
 export function shouldIncludePropBySource(
     prop: ts.Symbol,
     checker: ts.TypeChecker,
-    sourceFile: ts.SourceFile
+    sourceFile: ts.SourceFile,
 ): boolean {
-    const symbol = prop.valueDeclaration ? checker.getSymbolAtLocation(prop.valueDeclaration) : prop;
-    
+    const symbol = prop.valueDeclaration
+        ? checker.getSymbolAtLocation(prop.valueDeclaration)
+        : prop;
+
     if (!symbol || !symbol.declarations) {
         return false;
     }
 
     for (const declaration of symbol.declarations) {
-        const declarationFileName = declaration.getSourceFile().fileName;
-        
+        const { fileName: declarationFileName } = declaration.getSourceFile();
         // 1. Component file itself (current source file)
         if (declarationFileName === sourceFile.fileName) {
             return true;
         }
-        
+
         // 2. Base UI component d.ts files
-        if (declarationFileName.includes('node_modules/@base-ui-components') && 
-            declarationFileName.endsWith('.d.ts')) {
+        if (
+            declarationFileName.includes('node_modules/@base-ui-components/react/esm') &&
+            declarationFileName.endsWith('.d.ts')
+        ) {
             return true;
         }
-        
+
         // 3. Vanilla Extract files (.css.ts)
         if (declarationFileName.endsWith('.css.ts')) {
             return true;
         }
-        
+
         // 4. Project's own type definition files (packages/core/src)
-        if (declarationFileName.includes('packages/core/src') && 
-            (declarationFileName.endsWith('.ts') || declarationFileName.endsWith('.tsx'))) {
+        if (
+            declarationFileName.includes('packages/core/src') &&
+            (declarationFileName.endsWith('.ts') || declarationFileName.endsWith('.tsx'))
+        ) {
             return true;
         }
     }
-    
+
     return false;
 }
 
@@ -84,7 +88,7 @@ export function shouldExcludeProp(propName: string): boolean {
 export function isReactComponent(type: ts.Type, checker: ts.TypeChecker): boolean {
     const typeString = checker.typeToString(type);
     console.log(`컴포넌트 타입 확인: ${typeString}`);
-    
+
     // ForwardRefExoticComponent pattern
     if (typeString.includes('ForwardRefExoticComponent')) {
         return true;
@@ -112,7 +116,10 @@ export function isReactComponent(type: ts.Type, checker: ts.TypeChecker): boolea
 /**
  * Extracts JSDoc description from a TypeScript symbol
  */
-export function getJSDocDescription(symbol: ts.Symbol, checker: ts.TypeChecker): string | undefined {
+export function getJSDocDescription(
+    symbol: ts.Symbol,
+    checker: ts.TypeChecker,
+): string | undefined {
     const documentation = symbol.getDocumentationComment(checker);
 
     if (documentation.length > 0) {
@@ -161,7 +168,10 @@ export function getLiteralValue(node: ts.Node): any {
  * Converts '"primary" | "success" | "warning" | undefined' to ["primary", "success", "warning"]
  * Removes "undefined" from union types for optional props
  */
-export function parseTypeToArray(typeString: string, isRequired: boolean = false): string[] | string {
+export function parseTypeToArray(
+    typeString: string,
+    isRequired: boolean = false,
+): string[] | string {
     // Check if it's a union type
     if (!typeString.includes(' | ')) {
         return typeString;
@@ -170,13 +180,13 @@ export function parseTypeToArray(typeString: string, isRequired: boolean = false
     // Split by union separator and clean up each type
     let types = typeString
         .split(' | ')
-        .map(type => type.trim())
-        .map(type => {
+        .map((type) => type.trim())
+        .map((type) => {
             // Remove quotes from string literals: "primary" -> primary
             if (type.startsWith('"') && type.endsWith('"')) {
                 return type.slice(1, -1);
             }
-            // Remove quotes from string literals: 'primary' -> primary  
+            // Remove quotes from string literals: 'primary' -> primary
             if (type.startsWith("'") && type.endsWith("'")) {
                 return type.slice(1, -1);
             }
@@ -186,7 +196,7 @@ export function parseTypeToArray(typeString: string, isRequired: boolean = false
 
     // Remove "undefined" for optional props (not required)
     if (!isRequired) {
-        types = types.filter(type => type !== 'undefined');
+        types = types.filter((type) => type !== 'undefined');
     }
 
     return types;

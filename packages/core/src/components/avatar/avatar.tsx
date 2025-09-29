@@ -30,7 +30,8 @@ interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
 
 /**
  * 사용자의 프로필 사진, 이니셜 또는 대체 아이콘을 표시합니다.
- * Renders a `<span>` element.
+ *
+ * `<span>` 요소를 렌더링합니다.
  *
  * {@see https://vapor-ui.goorm.io/docs/components/avatar Avatar Documentation}
  */
@@ -67,7 +68,7 @@ interface AvatarImageProps extends Omit<AvatarImagePrimitiveProps, keyof AvatarS
 /**
  * 아바타의 이미지 부분을 나타냅니다.
  *
- * Renders an `<img>` element.
+ * `<img>` 요소를 렌더링합니다.
  */
 const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...props }, ref) => {
     const { src, alt } = useAvatarContext();
@@ -94,7 +95,7 @@ interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof A
 /**
  * 이미지 로드에 실패하거나 이미지가 제공되지 않을 때 표시됩니다.
  *
- * Renders a `<span>` element.
+ * `<span>` 요소를 렌더링합니다.
  */
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
     ({ className, style, children, ...props }, ref) => {
@@ -129,7 +130,7 @@ interface AvatarSimpleProps extends AvatarRootProps {}
  * `Avatar.Root`, `Avatar.Image`, `Avatar.Fallback`를 조합한 단순화된 컴포넌트입니다.
  * `Avatar.Root`를 래핑하며, 내부에 `Avatar.Image`와 `Avatar.Fallback`를 포함합니다.
  *
- * `span` 태그를 기본으로 사용합니다.
+ * `<span>` 요소를 렌더링합니다.
  */
 const Simple = forwardRef<HTMLSpanElement, AvatarSimpleProps>((props, ref) => {
     return (

@@ -8,25 +8,13 @@ import { extractComponentTypesFromFile } from './lib/type-extractor';
 import type { RunOptions } from './types';
 
 async function run(options: RunOptions) {
-    console.log('TypeScript Compiler API를 사용한 컴포넌트 타입 추출 시작...');
-    console.log('옵션:', options);
-    console.log('---');
-
     try {
+        const { configPath, out: outputPath } = options;
         // Get only unique files to avoid processing duplicates from previous runs
         const files = options.files ? [...new Set(options.files)] : [];
-        console.log('처리할 파일들:', files);
 
-        // files 옵션이 있으면 각 파일에 대해 타입 추출 실행
         if (files && files.length > 0) {
             for (const file of files) {
-                console.log(`\n파일 분석 중: ${file}`);
-                console.log('='.repeat(50));
-
-                const configPath = Array.isArray(options.configPath)
-                    ? options.configPath[0]
-                    : options.configPath;
-                const outputPath = Array.isArray(options.out) ? options.out[0] : options.out;
                 const fullPath = path.resolve(path.dirname(configPath), file);
                 const components = extractComponentTypesFromFile(configPath, fullPath);
 
