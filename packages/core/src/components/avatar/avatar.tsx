@@ -29,10 +29,10 @@ type AvatarRootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
 interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
 
 /**
- * Displays a user's profile picture, initials, or fallback icon.
+ * 사용자의 프로필 사진, 이니셜 또는 대체 아이콘을 표시합니다.
  * Renders a `<span>` element.
  *
- * Documentation: [Base UI Avatar](https://base-ui.com/react/components/avatar)
+ * {@see https://vapor-ui.goorm.io/docs/components/avatar Avatar Documentation}
  */
 const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
@@ -64,6 +64,11 @@ Root.displayName = 'Avatar.Root';
 type AvatarImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
 interface AvatarImageProps extends Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps> {}
 
+/**
+ * 아바타의 이미지 부분을 나타냅니다.
+ *
+ * Renders an `<img>` element.
+ */
 const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...props }, ref) => {
     const { src, alt } = useAvatarContext();
 
@@ -86,6 +91,11 @@ Image.displayName = 'Avatar.Image';
 type AvatarFallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
 interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
 
+/**
+ * 이미지 로드에 실패하거나 이미지가 제공되지 않을 때 표시됩니다.
+ *
+ * Renders a `<span>` element.
+ */
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
     ({ className, style, children, ...props }, ref) => {
         const { size, alt, delay } = useAvatarContext();
@@ -115,6 +125,12 @@ Fallback.displayName = 'Avatar.Fallback';
 
 interface AvatarSimpleProps extends AvatarRootProps {}
 
+/**
+ * `Avatar.Root`, `Avatar.Image`, `Avatar.Fallback`를 조합한 단순화된 컴포넌트입니다.
+ * `Avatar.Root`를 래핑하며, 내부에 `Avatar.Image`와 `Avatar.Fallback`를 포함합니다.
+ *
+ * `span` 태그를 기본으로 사용합니다.
+ */
 const Simple = forwardRef<HTMLSpanElement, AvatarSimpleProps>((props, ref) => {
     return (
         <Root ref={ref} {...props}>

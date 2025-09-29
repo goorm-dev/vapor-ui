@@ -4,6 +4,51 @@ import * as ts from 'typescript';
  * Utility functions for TypeScript analysis and component extraction
  */
 
+
+/**
+ * Checks if a prop should be included based on its source location
+ * Only includes props from: component files, Base UI d.ts files, and Vanilla Extract files
+ */
+export function shouldIncludePropBySource(
+    prop: ts.Symbol,
+    checker: ts.TypeChecker,
+    sourceFile: ts.SourceFile
+): boolean {
+    const symbol = prop.valueDeclaration ? checker.getSymbolAtLocation(prop.valueDeclaration) : prop;
+    
+    if (!symbol || !symbol.declarations) {
+        return false;
+    }
+
+    for (const declaration of symbol.declarations) {
+        const declarationFileName = declaration.getSourceFile().fileName;
+        
+        // 1. Component file itself (current source file)
+        if (declarationFileName === sourceFile.fileName) {
+            return true;
+        }
+        
+        // 2. Base UI component d.ts files
+        if (declarationFileName.includes('node_modules/@base-ui-components') && 
+            declarationFileName.endsWith('.d.ts')) {
+            return true;
+        }
+        
+        // 3. Vanilla Extract files (.css.ts)
+        if (declarationFileName.endsWith('.css.ts')) {
+            return true;
+        }
+        
+        // 4. Project's own type definition files (packages/core/src)
+        if (declarationFileName.includes('packages/core/src') && 
+            (declarationFileName.endsWith('.ts') || declarationFileName.endsWith('.tsx'))) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 /**
  * Checks if a property should be excluded from component props
  * Filters out HTML attributes, React built-ins, and ARIA attributes

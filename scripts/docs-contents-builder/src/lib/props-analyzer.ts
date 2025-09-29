@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import type { PropInfo } from './types';
-import { shouldExcludeProp, getJSDocDescription, getJSDocDefaultValue, parseTypeToArray } from './utils';
+import { shouldExcludeProp, getJSDocDescription, getJSDocDefaultValue, parseTypeToArray, shouldIncludePropBySource } from './utils';
 import type { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
 import type { BaseUIAnalyzer } from './base-ui-analyzer';
 
@@ -33,13 +33,19 @@ export class PropsAnalyzer {
         properties.forEach((prop) => {
             const propName = prop.getName();
 
-            // Filter out built-in HTML/React attributes
+            // Only include props from allowed sources (component files, Base UI, Vanilla Extract)
+            if (!shouldIncludePropBySource(prop, this.checker, sourceFile)) {
+                return;
+            }
+
+            // Filter out built-in HTML/React attributes by name
             if (shouldExcludeProp(propName)) {
                 return;
             }
 
             // Extract type information
             const propType = this.checker.getTypeOfSymbol(prop);
+            
             const typeString = this.checker.typeToString(propType);
 
             const isRequired = !prop.flags || !(prop.flags & ts.SymbolFlags.Optional);
@@ -157,7 +163,7 @@ export class PropsAnalyzer {
      * Gets Base UI description for a prop
      */
     private getBaseUIDescription(
-        prop: ts.Symbol,
+        _prop: ts.Symbol,
         propName: string,
         sourceFile: ts.SourceFile,
     ): string | undefined {

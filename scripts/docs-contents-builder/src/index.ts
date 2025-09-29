@@ -4,7 +4,7 @@ import * as path from 'path';
 import prettier from 'prettier';
 
 import { createCliCommand } from './cli.js';
-import { extractComponentTypesFromFile } from './lib/type-extractor-refactored.js';
+import { extractComponentTypesFromFile } from './lib/type-extractor';
 import type { RunOptions } from './types';
 
 async function run(options: RunOptions) {
@@ -80,17 +80,14 @@ async function run(options: RunOptions) {
                     };
 
                     const jsonString = JSON.stringify(componentData, null, 2);
-                    const prettierOptions = await prettier.resolveConfig(componentOutputPath) || {};
-                    const formattedJson = await prettier.format(jsonString, { 
+                    const prettierOptions =
+                        (await prettier.resolveConfig(componentOutputPath)) || {};
+                    const formattedJson = await prettier.format(jsonString, {
                         ...prettierOptions,
-                        parser: 'json'
+                        parser: 'json',
                     });
-                    
-                    fs.writeFileSync(
-                        componentOutputPath,
-                        formattedJson,
-                        'utf8',
-                    );
+
+                    fs.writeFileSync(componentOutputPath, formattedJson, 'utf8');
                     console.log(`   → JSON 저장: ${componentOutputPath}`);
                 }
             }

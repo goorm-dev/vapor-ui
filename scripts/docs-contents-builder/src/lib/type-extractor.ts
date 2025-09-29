@@ -2,29 +2,28 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 
-import type { ComponentTypeInfo, TypeExtractorConfig } from './types';
-import { isReactComponent, getJSDocDescription } from './utils';
-import { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
 import { BaseUIAnalyzer } from './base-ui-analyzer';
 import { ComponentAnalyzer } from './component-analyzer';
 import { PropsAnalyzer } from './props-analyzer';
+import type { ComponentTypeInfo, TypeExtractorConfig } from './types';
+import { getJSDocDescription, isReactComponent } from './utils';
+import { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
 
 /**
  * Refactored TypeExtractor with separated concerns and modular architecture
- * 
+ *
  * This class orchestrates the various analyzers to extract comprehensive
  * component type information including props, default values, and Base UI integration
  */
 export class TypeExtractor {
-    private program: ts.Program;
-    private checker: ts.TypeChecker;
+    private program!: ts.Program;
+    private checker!: ts.TypeChecker;
     private config: TypeExtractorConfig;
-
     // Specialized analyzers
-    private vanillaExtractAnalyzer: VanillaExtractAnalyzer;
-    private baseUIAnalyzer: BaseUIAnalyzer;
-    private componentAnalyzer: ComponentAnalyzer;
-    private propsAnalyzer: PropsAnalyzer;
+    private vanillaExtractAnalyzer!: VanillaExtractAnalyzer;
+    private baseUIAnalyzer!: BaseUIAnalyzer;
+    private componentAnalyzer!: ComponentAnalyzer;
+    private propsAnalyzer!: PropsAnalyzer;
 
     constructor(config: TypeExtractorConfig) {
         this.config = config;
@@ -48,7 +47,10 @@ export class TypeExtractor {
         const moduleSymbol = this.checker.getSymbolAtLocation(sourceFile);
         if (moduleSymbol) {
             const exports = this.checker.getExportsOfModule(moduleSymbol);
-            console.log('찾은 exports:', exports.map((e) => e.name));
+            console.log(
+                '찾은 exports:',
+                exports.map((e) => e.name),
+            );
 
             for (const exportSymbol of exports) {
                 const exportResults = this.parseExport(exportSymbol, sourceFile);
@@ -145,7 +147,7 @@ export class TypeExtractor {
                 } else {
                     type = this.checker.getTypeOfSymbol(targetSymbol);
                 }
-                
+
                 return this.createComponentInfo(exportSymbol.name, targetSymbol, type, sourceFile);
             }
         } catch (error) {
@@ -211,7 +213,7 @@ export function extractComponentTypesFromFile(
         configPath,
         files: includeFiles,
     };
-    
+
     const extractor = new TypeExtractor(config);
     return extractor.extractComponentTypes(filePath);
 }
