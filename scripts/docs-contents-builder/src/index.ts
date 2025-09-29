@@ -1,17 +1,10 @@
 import * as fs from 'fs';
+import { kebabCase } from 'lodash-es';
 import * as path from 'path';
 
 import { createCliCommand } from './cli.js';
-import { extractComponentTypesFromFile } from './type-extractor.js';
+import { extractComponentTypesFromFile } from './lib/type-extractor-refactored.js';
 import type { RunOptions } from './types';
-
-function formatComponentFileName(componentName: string): string {
-    // BreadcrumbRoot -> breadcrumb-root.json
-    // Button -> button.json
-    return componentName
-        .replace(/([a-z])([A-Z])/g, '$1-$2') // camelCase를 kebab-case로 변환
-        .toLowerCase() + '.json';
-}
 
 async function run(options: RunOptions) {
     console.log('TypeScript Compiler API를 사용한 컴포넌트 타입 추출 시작...');
@@ -19,13 +12,19 @@ async function run(options: RunOptions) {
     console.log('---');
 
     try {
+        // Get only unique files to avoid processing duplicates from previous runs
+        const files = options.files ? [...new Set(options.files)] : [];
+        console.log('처리할 파일들:', files);
+
         // files 옵션이 있으면 각 파일에 대해 타입 추출 실행
-        if (options.files && options.files.length > 0) {
-            for (const file of options.files) {
+        if (files && files.length > 0) {
+            for (const file of files) {
                 console.log(`\n파일 분석 중: ${file}`);
                 console.log('='.repeat(50));
 
-                const configPath = Array.isArray(options.configPath) ? options.configPath[0] : options.configPath;
+                const configPath = Array.isArray(options.configPath)
+                    ? options.configPath[0]
+                    : options.configPath;
                 const outputPath = Array.isArray(options.out) ? options.out[0] : options.out;
                 const fullPath = path.resolve(path.dirname(configPath), file);
                 const components = extractComponentTypesFromFile(configPath, fullPath);
@@ -60,26 +59,30 @@ async function run(options: RunOptions) {
                     }
 
                     // JSON 파일로 저장 - componentname-subcomponent.json 형식
-                    const fileName = formatComponentFileName(component.name);
+                    const fileName = `${kebabCase(component.name)}.json`;
                     const componentOutputPath = path.join(outputPath, fileName);
-                    
+
                     const componentData = {
                         name: component.name,
                         displayName: component.displayName,
                         description: component.description,
-                        props: component.props.map(prop => ({
+                        props: component.props.map((prop) => ({
                             name: prop.name,
                             type: prop.type,
                             required: prop.required,
                             description: prop.description,
-                            defaultValue: prop.defaultValue
+                            defaultValue: prop.defaultValue,
                         })),
                         defaultElement: component.defaultElement,
                         generatedAt: new Date().toISOString(),
-                        sourceFile: file
+                        sourceFile: file,
                     };
 
-                    fs.writeFileSync(componentOutputPath, JSON.stringify(componentData, null, 2), 'utf8');
+                    fs.writeFileSync(
+                        componentOutputPath,
+                        JSON.stringify(componentData, null, 2),
+                        'utf8',
+                    );
                     console.log(`   → JSON 저장: ${componentOutputPath}`);
                 });
             }

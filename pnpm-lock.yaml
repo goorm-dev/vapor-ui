@@ -633,6 +633,9 @@ importers:
       '@types/glob':
         specifier: ^9.0.0
         version: 9.0.0
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
       glob:
         specifier: ^11.0.3
         version: 11.0.3
