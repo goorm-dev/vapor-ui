@@ -29,6 +29,13 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
 type BreadcrumbPrimitiveProps = VComponentProps<'nav'>;
 interface BreadcrumbRootProps extends BreadcrumbPrimitiveProps, BreadcrumbVariants {}
 
+/**
+ * 사용자의 현재 위치를 계층적으로 표시하는 탐색 도구입니다.
+ *
+ * `<nav>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/breadcrumb Breadcrumb Documentation}
+ */
 const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
     ({ render, className, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(props, ['size']);
@@ -53,6 +60,11 @@ const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
 type BreadcrumbListPrimitiveProps = VComponentProps<'ol'>;
 interface BreadcrumbListProps extends BreadcrumbListPrimitiveProps {}
 
+/**
+ * 브레드크럼 항목들을 감싸는 목록 컨테이너입니다.
+ *
+ * `<ol>` 요소를 렌더링합니다.
+ */
 const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -72,6 +84,11 @@ const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
 
 interface BreadcrumbItemProps extends VComponentProps<'li'> {}
 
+/**
+ * 개별 브레드크럼 항목을 나타냅니다.
+ *
+ * `<li>` 요소를 렌더링합니다.
+ */
 const Item = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -94,6 +111,11 @@ interface BreadcrumbLinkProps extends BreadcrumbLinkPrimitiveProps {
     current?: boolean;
 }
 
+/**
+ * 브레드크럼 항목의 클릭 가능한 링크 또는 현재 페이지 표시를 담당합니다.
+ *
+ * `<a>` 또는 `<span>` 요소를 렌더링합니다.
+ */
 const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
     ({ render, current, className, ...props }, ref) => {
         const Component = current ? 'span' : 'a';
@@ -120,6 +142,11 @@ const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
 
 interface BreadcrumbSeparatorProps extends VComponentProps<'li'> {}
 
+/**
+ * 브레드크럼 항목들 사이의 구분자를 표시합니다.
+ *
+ * `<li>` 요소를 렌더링합니다.
+ */
 const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
     ({ render, className, children, ...props }, ref) => {
         const { size } = useBreadcrumbContext();
@@ -146,6 +173,11 @@ const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
 type BreadcrumbEllipsisPrimitiveProps = VComponentProps<'span'>;
 interface BreadcrumbEllipsisProps extends BreadcrumbEllipsisPrimitiveProps {}
 
+/**
+ * 생략된 브레드크럼 항목들을 나타내는 줄임표를 표시합니다.
+ *
+ * `<span>` 요소를 렌더링합니다.
+ */
 const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
     ({ render, className, children, ...props }, ref) => {
         const { size } = useBreadcrumbContext();

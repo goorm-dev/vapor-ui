@@ -14,7 +14,7 @@ export const root = recipe({
     defaultVariants: { color: 'primary', size: 'md', shape: 'square' },
     variants: {
         /**
-         * Badge 색상은 primary, success, warning, danger, contrast, hint 로 제공합니다.
+         * 배지의 색상을 결정합니다.
          */
         color: {
             primary: layerStyle('components', {
@@ -44,7 +44,7 @@ export const root = recipe({
         },
 
         /**
-         * Badge의 모양은 square, pill 로 제공합니다.
+         * 배지의 모양을 결정합니다.
          */
         shape: {
             square: layerStyle('components', {
@@ -56,7 +56,7 @@ export const root = recipe({
         },
 
         /**
-         * Badge의 크기는 sm, md, lg 로 제공합니다.
+         * 배지의 크기를 결정합니다.
          */
         size: {
             sm: layerStyle('components', {

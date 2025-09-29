@@ -14,7 +14,8 @@ interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
 
 /**
  * 이미지, 콘텐츠 등의 상태 또는 분류를 시각적으로 표시합니다.
- * `span` 태그를 기본으로 사용합니다.
+ *
+ * `<span>` 요소를 렌더링합니다.
  *
  * {@see https://vapor-ui.goorm.io/docs/components/badge Badge Documentation}
  */

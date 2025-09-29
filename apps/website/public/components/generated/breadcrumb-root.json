@@ -1,15 +1,7 @@
 {
-    "name": "Badge",
-    "displayName": "Badge",
-    "description": "이미지, 콘텐츠 등의 상태 또는 분류를 시각적으로 표시합니다.\n\n`<span>` 요소를 렌더링합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/badge Badge Documentation}",
+    "name": "BreadcrumbRoot",
+    "description": "사용자의 현재 위치를 계층적으로 표시하는 탐색 도구입니다.\n\n`<nav>` 요소를 렌더링합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/breadcrumb Breadcrumb Documentation}",
     "props": [
-        {
-            "name": "color",
-            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
-            "required": false,
-            "description": "배지의 색상을 결정합니다.",
-            "defaultValue": "primary"
-        },
         {
             "name": "className",
             "type": ["string"],
@@ -17,17 +9,10 @@
             "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
-            "name": "shape",
-            "type": ["square", "pill"],
-            "required": false,
-            "description": "배지의 모양을 결정합니다.",
-            "defaultValue": "square"
-        },
-        {
             "name": "size",
-            "type": ["md", "sm", "lg"],
+            "type": ["md", "sm", "lg", "xl"],
             "required": false,
-            "description": "배지의 크기를 결정합니다.",
+            "description": "브레드크럼 링크의 크기를 결정합니다.",
             "defaultValue": "md"
         },
         {
@@ -41,7 +26,7 @@
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.\n구성 요소의 HTML 요소를 다른 태그로 교체하거나 다른 구성 요소와 조합할 수 있게 합니다.\n\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받아들입니다."
         }
     ],
-    "defaultElement": "span",
-    "generatedAt": "2025-09-29T05:36:28.778Z",
-    "sourceFile": "../../packages/core/src/components/badge/badge.tsx"
+    "defaultElement": "nav",
+    "generatedAt": "2025-09-29T05:38:40.147Z",
+    "sourceFile": "../../packages/core/src/components/breadcrumb/breadcrumb.tsx"
 }
