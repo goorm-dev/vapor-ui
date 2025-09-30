@@ -8,7 +8,9 @@ export default defineConfig({
     outputDir: `./__tests__/results/`,
 
     reporter: [
-        [process.env.CI ? 'blob' : 'html', { outputFolder: './__tests__/report' }],
+        process.env.CI
+            ? ['blob', { outputFolder: './__tests__/blob' }]
+            : ['html', { outputFolder: './__tests__/report' }],
         ['json', { outputFile: './__tests__/report/index.json' }],
     ],
     use: { baseURL: BASE_URL, trace: 'on' },
@@ -19,7 +21,8 @@ export default defineConfig({
         { name: 'Microsoft Edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
     ],
 
-    workers: 1,
+    fullyParallel: true,
+    workers: process.env.CI ? 2 : undefined,
 
     webServer: {
         command: 'cd ../../ && npx http-server -p 9999 ./storybook-static',
