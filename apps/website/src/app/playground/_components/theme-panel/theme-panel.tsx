@@ -6,10 +6,27 @@ import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 import cx from 'clsx';
 
 import ColorBoard from '../color-board';
-import Mode from '../panel-mode';
 import Radius from '../panel-radius';
 import Scaling from '../panel-scaling';
+import Theme from '../panel-theme';
 import styles from './theme-panel.module.scss';
+
+const parseThemes = (nodes: NodeListOf<HTMLButtonElement>) => {
+    let attributes = '';
+
+    nodes.forEach((node) => {
+        const category = node.getAttribute('data-theme-category');
+        if (category === 'border-radius') {
+            attributes += `borderRadiusFactor="${node.value}" `;
+        } else {
+            attributes += `${category}="${node.value}" `;
+        }
+    });
+
+    return `createThemeConfig({
+	primaryColor: "${attributes}",
+});`;
+};
 
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
@@ -65,7 +82,7 @@ const ThemePanel = () => {
             <Card.Body className={styles.panel_body}>
                 <form id="theme-panel" className={styles.sections} onSubmit={handleSubmit}>
                     <ColorBoard />
-                    <Mode />
+                    <Theme />
                     <Radius />
                     <Scaling />
                 </form>
@@ -73,7 +90,6 @@ const ThemePanel = () => {
 
             <Card.Footer>
                 <Button stretch type="submit" form="theme-panel">
-                    {/* onClick={onClickCopy} */}
                     {isCopied ? <ConfirmOutlineIcon /> : 'Copy Theme'}
                 </Button>
             </Card.Footer>
@@ -82,20 +98,3 @@ const ThemePanel = () => {
 };
 
 export default ThemePanel;
-
-function parseThemes(nodes: NodeListOf<HTMLButtonElement>) {
-    let attributes = '';
-
-    nodes.forEach((node) => {
-        const category = node.getAttribute('data-theme-category');
-        if (category === 'border-radius') {
-            attributes += `borderRadiusFactor="${node.value}" `;
-        } else {
-            attributes += `${category}="${node.value}" `;
-        }
-    });
-
-    return `createThemeConfig({
-	primaryColor: "${attributes}",
-});`;
-}
