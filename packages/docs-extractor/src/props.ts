@@ -7,7 +7,7 @@ import {
     parseTypeToArray,
     shouldIncludePropBySource,
 } from './utils';
-import type { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
+import type { VanillaExtractAnalyzer } from './vanilla-extract';
 
 /**
  * Analyzes TypeScript props and extracts prop information

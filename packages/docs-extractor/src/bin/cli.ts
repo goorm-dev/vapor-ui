@@ -3,9 +3,60 @@ import { globby } from 'globby';
 import { kebabCase } from 'lodash-es';
 import * as path from 'path';
 import prettier from 'prettier';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
-import { extractComponentTypesFromFile } from './lib/type-extractor';
-import type { RunOptions } from './types';
+import { extractComponentTypesFromFile } from '~/type';
+
+import { RunOptions } from '../types';
+
+export function createCliCommand(runFunction: (options: RunOptions) => Promise<void>) {
+    return yargs(hideBin(process.argv))
+        .command<RunOptions>(
+            '$0',
+            'Extracts the API descriptions from a set of files',
+            buildCommandOptions,
+            runFunction,
+        )
+        .help()
+        .strict()
+        .version(false);
+}
+
+function buildCommandOptions(command: any) {
+    return command
+        .option('configPath', {
+            alias: 'c',
+            type: 'string',
+            demandOption: true,
+            description: 'The path to the tsconfig.json file',
+        })
+        .option('out', {
+            alias: 'o',
+            demandOption: true,
+            type: 'string',
+            description: 'The output directory.',
+        })
+        .option('files', {
+            alias: 'f',
+            type: 'array',
+            demandOption: false,
+            description:
+                'The files to extract the API descriptions from. If not provided, all files in the tsconfig.json are used. You can use globs like `src/**/*.{ts,tsx}` and `!**/*.test.*`. Paths are relative to the tsconfig.json file.',
+        })
+        .option('includeExternal', {
+            alias: 'e',
+            type: 'boolean',
+            default: false,
+            description: 'Include props defined outside of the project',
+        })
+        .option('externalTypePaths', {
+            alias: 'x',
+            type: 'array',
+            default: ['@base-ui-components/react:esm/index.d.ts'],
+            description: 'External type definition files to include (format: package:subpath)',
+        });
+}
 
 export async function main(options: RunOptions) {
     try {
@@ -26,7 +77,12 @@ export async function main(options: RunOptions) {
         if (resolvedFiles.length > 0) {
             for (const file of resolvedFiles) {
                 const fullPath = path.resolve(configDir, file);
-                const components = extractComponentTypesFromFile(configPath, fullPath);
+                const components = extractComponentTypesFromFile(
+                    configPath,
+                    fullPath,
+                    undefined,
+                    options.externalTypePaths,
+                );
 
                 console.log(`발견된 컴포넌트 수: ${components.length}`);
 
@@ -80,3 +136,5 @@ export async function main(options: RunOptions) {
         process.exit(1);
     }
 }
+
+createCliCommand(main).parse();

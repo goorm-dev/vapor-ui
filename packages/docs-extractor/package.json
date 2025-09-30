@@ -5,7 +5,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "bin": {
-        "docs-extractor": "dist/cli-standalone.js"
+        "docs-extractor": "dist/bin/cli.js"
     },
     "scripts": {
         "build": "tsc",

@@ -31,6 +31,23 @@ export class ExternalTypeResolver {
     }
 
     /**
+     * Resolves external type files based on configuration paths
+     * Format: ['package:subpath', 'package2:subpath2']
+     */
+    resolveExternalTypeFiles(externalTypePaths?: string[]): string[] {
+        const typeFiles: string[] = [];
+        const typePaths = externalTypePaths || ['@base-ui-components/react:esm/index.d.ts'];
+
+        for (const typePath of typePaths) {
+            const [packageName, subPath] = typePath.split(':');
+            const files = this.getPackageTypeFiles(packageName, [subPath || 'index.d.ts']);
+            typeFiles.push(...files);
+        }
+
+        return typeFiles;
+    }
+
+    /**
      * Gets Base UI main type definition file
      * Legacy method for backward compatibility
      */

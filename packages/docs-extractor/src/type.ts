@@ -2,12 +2,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 
-import { ComponentAnalyzer } from './component-analyzer';
-import { ExternalTypeResolver } from './external-type-resolver';
-import { PropsAnalyzer } from './props-analyzer';
+import { ComponentAnalyzer } from './component';
+import { ExternalTypeResolver } from './external';
+import { PropsAnalyzer } from './props';
 import type { ComponentTypeInfo, TypeExtractorConfig } from './types';
 import { getJSDocDescription, isReactReturnType } from './utils';
-import { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
+import { VanillaExtractAnalyzer } from './vanilla-extract';
 
 /**
  * Refactored TypeExtractor with separated concerns and modular architecture
@@ -91,7 +91,9 @@ export class TypeExtractor {
             this.config.projectRoot || projectDirectory,
         );
 
-        const externalTypeFiles = this.externalTypeResolver.getBaseUIMainTypeFile();
+        const externalTypeFiles = this.externalTypeResolver.resolveExternalTypeFiles(
+            this.config.externalTypePaths,
+        );
 
         this.program = ts.createProgram([...fileNames, ...externalTypeFiles], options);
         this.checker = this.program.getTypeChecker();
@@ -193,10 +195,12 @@ export function extractComponentTypesFromFile(
     configPath: string,
     filePath: string,
     includeFiles?: string[],
+    externalTypePaths?: string[],
 ): ComponentTypeInfo[] {
     const config: TypeExtractorConfig = {
         configPath,
         files: includeFiles,
+        externalTypePaths,
     };
 
     const extractor = new TypeExtractor(config);
