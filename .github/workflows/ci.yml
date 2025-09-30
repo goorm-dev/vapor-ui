@@ -57,7 +57,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: blob-report-${{ matrix.shardIndex }}
-                  path: blob-report
+                  path: packages/core/blob-report
                   retention-days: 1
 
             # - uses: actions/upload-artifact@v4
@@ -84,13 +84,13 @@ jobs:
                   merge-multiple: true
 
             - name: Merge into HTML Report
-              run: npx playwright merge-reports --reporter html ./all-blob-reports
+              run: pnpm core exec playwright merge-reports -c ./playwright.merge.ts ./all-blob-reports
 
             - name: Upload HTML report
               uses: actions/upload-artifact@v4
               with:
                   name: html-report--attempt-${{ github.run_attempt }}
-                  path: playwright-report
+                  path: ./packages/core/__tests__/report/
                   retention-days: 14
 
     deploy-report:
@@ -101,7 +101,7 @@ jobs:
             - uses: actions/download-artifact@v4
               with:
                   name: html-report--attempt-${{ github.run_attempt }}
-                  path: playwright-report
+                  path: ./report/
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4
