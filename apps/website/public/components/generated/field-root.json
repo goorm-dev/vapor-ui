@@ -1,0 +1,72 @@
+{
+    "name": "FieldRoot",
+    "displayName": "Field.Root",
+    "description": "폼 필드를 구성하는 컨테이너 컴포넌트입니다.\n\n`<div>` 요소를 렌더링합니다.\n\n{@see https://vapor-ui.goorm.io/docs/components/field Field Documentation}",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(((state: State) => string) & string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state.\n요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "Identifies the field when a form is submitted.\nTakes precedence over the `name` prop on the `<Field.Control>` component."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.\nTakes precedence over the `disabled` prop on the `<Field.Control>` component.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": [
+                "(((ReactElement<Record<string, unknown>, string",
+                "JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State>) & (ReactElement<...>",
+                "ComponentRenderFn<...>)) & ReactElement<...>)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.\n구성 요소의 HTML 요소를 다른 태그로 교체하거나 다른 구성 요소와 조합할 수 있게 합니다.\n\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받아들입니다."
+        },
+        {
+            "name": "validate",
+            "type": [
+                "((value: unknown, formValues: Record<string, unknown>) => string",
+                "string[]",
+                "Promise<string",
+                "string[]",
+                "null>",
+                "null)"
+            ],
+            "required": false,
+            "description": "A function for custom validation. Return a string or an array of strings with\nthe error message(s) if the value is invalid, or `null` if the value is valid."
+        },
+        {
+            "name": "validationMode",
+            "type": ["onBlur", "onChange"],
+            "required": false,
+            "description": "Determines when the field should be validated.\n\n- **onBlur** triggers validation when the control loses focus\n- **onChange** triggers validation on every change to the control value",
+            "defaultValue": "'onBlur'"
+        },
+        {
+            "name": "validationDebounceTime",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait between `validate` callbacks if\n`validationMode=\"onChange\"` is used. Specified in milliseconds.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the field is forcefully marked as invalid."
+        }
+    ],
+    "generatedAt": "2025-09-30T00:01:07.537Z",
+    "sourceFile": "../../packages/core/src/components/field/field.tsx"
+}

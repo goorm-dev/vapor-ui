@@ -40,6 +40,13 @@ const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 화면 가장자리에서 슬라이드되어 나타나는 시트 컨테이너 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/sheet Sheet Documentation}
+ */
 type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
 interface SheetRootProps extends RootPrimitiveProps {}
 
@@ -193,6 +200,11 @@ interface SheetContentProps extends VComponentProps<typeof BaseDialog.Popup> {
     positionerProps?: SheetPositionerProps;
 }
 
+/**
+ * 시트의 주요 콘텐츠를 담는 컨테이너 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Content = forwardRef<HTMLDivElement, SheetContentProps>(
     ({ portalProps, overlayProps, positionerProps, className, ...props }, ref) => {
         return (
@@ -213,6 +225,11 @@ Content.displayName = 'Sheet.Content';
 
 interface SheetHeaderProps extends VComponentProps<typeof Dialog.Header> {}
 
+/**
+ * 시트의 헤더 영역을 나타내는 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Header = forwardRef<HTMLDivElement, SheetHeaderProps>(({ className, ...props }, ref) => {
     return <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...props} />;
 });
@@ -224,6 +241,11 @@ Header.displayName = 'Sheet.Header';
 
 interface SheetBodyProps extends VComponentProps<typeof Dialog.Body> {}
 
+/**
+ * 시트의 본문 콘텐츠 영역을 나타내는 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Body = forwardRef<HTMLDivElement, SheetBodyProps>(({ className, ...props }, ref) => {
     return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...props} />;
 });
@@ -235,6 +257,11 @@ Body.displayName = 'Sheet.Body';
 
 interface SheetFooterProps extends VComponentProps<typeof Dialog.Footer> {}
 
+/**
+ * 시트의 푸터 영역을 나타내는 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Footer = forwardRef<HTMLDivElement, SheetFooterProps>(({ className, ...props }, ref) => {
     return <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...props} />;
 });

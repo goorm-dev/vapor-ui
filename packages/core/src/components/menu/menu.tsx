@@ -32,6 +32,13 @@ const [MenuProvider, useMenuContext] = createContext<MenuContext>({
 type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Root>;
 interface MenuRootProps extends RootPrimitiveProps, MenuSharedProps {}
 
+/**
+ * 드롭다운 메뉴를 구성하는 루트 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/menu Menu Documentation}
+ */
 const Root = ({ ...props }: MenuRootProps) => {
     const [sharedProps, otherProps] = createSplitProps<MenuSharedProps>()(props, ['disabled']);
 
@@ -52,6 +59,11 @@ Root.displayName = 'Menu.Root';
 type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Trigger>;
 interface MenuTriggerProps extends TriggerPrimitiveProps {}
 
+/**
+ * 메뉴를 열고 닫는 트리거 버튼 컴포넌트입니다.
+ *
+ * `<button>` 요소를 렌더링합니다.
+ */
 const Trigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
     ({ disabled: disabledProp, className, children, ...props }, ref) => {
         const { disabled: contextDisabled } = useMenuContext();
@@ -121,6 +133,11 @@ interface MenuContentProps extends ContentPrimitiveProps {
     positionerProps?: MenuPositionerProps;
 }
 
+/**
+ * 메뉴 항목들을 담는 콘텐츠 컨테이너 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Content = forwardRef<HTMLDivElement, MenuContentProps>(
     ({ portalProps, positionerProps, className, ...props }: MenuContentProps, ref) => {
         return (
@@ -141,6 +158,11 @@ Content.displayName = 'Menu.Content';
 type ItemPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Item>;
 interface MenuItemProps extends ItemPrimitiveProps {}
 
+/**
+ * 메뉴의 개별 항목을 나타내는 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Item = forwardRef<HTMLDivElement, MenuItemProps>(
     ({ disabled: disabledProp, className, ...props }, ref) => {
         const { disabled: contextDisabled } = useMenuContext();
@@ -165,6 +187,11 @@ Item.displayName = 'Menu.Item';
 type SeparatorPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Separator>;
 interface MenuSeparatorProps extends SeparatorPrimitiveProps {}
 
+/**
+ * 메뉴 항목들 사이의 구분선을 나타내는 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const Separator = forwardRef<HTMLDivElement, MenuSeparatorProps>(({ className, ...props }, ref) => {
     return (
         <BaseMenu.Separator ref={ref} className={clsx(styles.separator, className)} {...props} />
@@ -326,6 +353,11 @@ SubmenuContent.displayName = 'Menu.SubmenuContent';
 type CheckboxPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.CheckboxItem>;
 interface MenuCheckboxItemProps extends CheckboxPrimitiveProps {}
 
+/**
+ * 체크박스 기능이 있는 메뉴 항목 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ */
 const CheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>(
     ({ disabled: disabledProp, className, children, ...props }, ref) => {
         const { disabled: contextDisabled } = useMenuContext();

@@ -25,6 +25,13 @@ type BaseProps = TextInputVariants & {
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 사용자로부터 텍스트 입력을 받는 입력 필드 컴포넌트입니다.
+ *
+ * `<input>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/text-input TextInput Documentation}
+ */
 type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
 interface TextInputProps extends Assign<TextInputPrimitiveProps, BaseProps> {}
 

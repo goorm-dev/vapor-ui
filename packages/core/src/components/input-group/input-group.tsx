@@ -71,6 +71,13 @@ export function useInputGroup({ value, maxLength }: UseInputGroupSyncOptions) {
 
 interface InputGroupRootProps extends VComponentProps<'div'> {}
 
+/**
+ * 입력 필드와 관련된 추가 정보를 그룹화하는 컨테이너 컴포넌트입니다.
+ *
+ * `<div>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/input-group InputGroup Documentation}
+ */
 const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
     ({ className, render, ...props }, ref) => {
         const [value, setValue] = useState<FieldValue>('');
@@ -129,6 +136,11 @@ const generateCounterContent = (
     return maxLength !== undefined ? `${count}/${maxLength}` : `${count}`;
 };
 
+/**
+ * 입력 필드의 문자 개수를 표시하는 카운터 컴포넌트입니다.
+ *
+ * `<span>` 요소를 렌더링합니다.
+ */
 const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>(
     ({ className, children, render, ...props }, ref) => {
         const { value, maxLength } = useInputGroupContext();

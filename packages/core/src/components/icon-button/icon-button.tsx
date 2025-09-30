@@ -10,6 +10,13 @@ import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
+/**
+ * 아이콘만을 표시하는 클릭 가능한 버튼 컴포넌트입니다.
+ *
+ * `<button>` 요소를 렌더링합니다.
+ *
+ * {@see https://vapor-ui.goorm.io/docs/components/icon-button IconButton Documentation}
+ */
 type IconButtonPrimitiveProps = Omit<VComponentProps<typeof Button>, 'stretch'>;
 interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {
     'aria-label': string;

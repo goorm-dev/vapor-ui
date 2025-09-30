@@ -54,6 +54,9 @@ export const item = recipe({
     ],
 
     variants: {
+        /**
+         * 메뉴 항목의 비활성화 상태를 결정합니다.
+         */
         disabled: {
             true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
         },

@@ -1,4 +1,5 @@
 import * as ts from 'typescript';
+import { type ExternalTypeNode } from 'typescript-api-extractor';
 
 /**
  * Utility functions for TypeScript analysis and component extraction
@@ -85,32 +86,13 @@ export function shouldExcludeProp(propName: string): boolean {
 /**
  * Checks if a TypeScript type represents a React component
  */
-export function isReactComponent(type: ts.Type, checker: ts.TypeChecker): boolean {
+
+const componentReturnTypes = [/Element/, /ReactNode/, /ReactElement(<.*>)?/];
+
+export function isReactReturnType(type: ts.Type, checker: ts.TypeChecker) {
     const typeString = checker.typeToString(type);
-    console.log(`컴포넌트 타입 확인: ${typeString}`);
 
-    // ForwardRefExoticComponent pattern
-    if (typeString.includes('ForwardRefExoticComponent')) {
-        return true;
-    }
-
-    // MemoExoticComponent pattern
-    if (typeString.includes('MemoExoticComponent')) {
-        return true;
-    }
-
-    // Regular functional component check
-    const signatures = type.getCallSignatures();
-    if (signatures.length === 0) return false;
-
-    const returnType = signatures[0].getReturnType();
-    const returnTypeString = checker.typeToString(returnType);
-
-    return (
-        returnTypeString.includes('ReactElement') ||
-        returnTypeString.includes('JSX.Element') ||
-        returnTypeString.includes('Element')
-    );
+    return componentReturnTypes.some((regex) => regex.test(typeString));
 }
 
 /**

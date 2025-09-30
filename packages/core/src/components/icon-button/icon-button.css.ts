@@ -12,6 +12,9 @@ export const root = recipe({
     }),
 
     defaultVariants: { shape: 'square' },
+    /**
+     * 아이콘 버튼의 모양을 결정합니다.
+     */
     variants: {
         shape: {
             square: {},
@@ -21,6 +24,11 @@ export const root = recipe({
 });
 
 export const icon = recipe({
+    /**
+     * 아이콘의 크기를 결정합니다.
+     */
+
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
             sm: layerStyle('components', {

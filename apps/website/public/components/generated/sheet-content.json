@@ -1,0 +1,58 @@
+{
+    "name": "SheetContent",
+    "displayName": "Sheet.Content",
+    "description": "시트의 주요 콘텐츠를 담는 컨테이너 컴포넌트입니다.\n\n`<div>` 요소를 렌더링합니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(((state: State) => string) & string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state.\n요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": [
+                "(((ReactElement<Record<string, unknown>, string",
+                "JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State>) & (ReactElement<...>",
+                "ComponentRenderFn<...>)) & ReactElement<...>)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.\n구성 요소의 HTML 요소를 다른 태그로 교체하거나 다른 구성 요소와 조합할 수 있게 합니다.\n\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받아들입니다."
+        },
+        {
+            "name": "initialFocus",
+            "type": [
+                "RefObject<HTMLElement",
+                "null>",
+                "((interactionType: InteractionType) => RefObject<HTMLElement",
+                "null>)"
+            ],
+            "required": false,
+            "description": "Determines the element to focus when the dialog is opened.\nBy default, the first focusable element is focused."
+        },
+        {
+            "name": "finalFocus",
+            "type": ["RefObject<HTMLElement", "null>"],
+            "required": false,
+            "description": "Determines the element to focus when the dialog is closed.\nBy default, focus returns to the trigger."
+        },
+        {
+            "name": "portalProps",
+            "type": ["SheetPortalProps"],
+            "required": false
+        },
+        {
+            "name": "overlayProps",
+            "type": ["SheetOverlayProps"],
+            "required": false
+        },
+        {
+            "name": "positionerProps",
+            "type": ["SheetPositionerProps"],
+            "required": false
+        }
+    ],
+    "generatedAt": "2025-09-30T05:43:20.766Z",
+    "sourceFile": "../../packages/core/src/components/sheet/sheet.tsx"
+}

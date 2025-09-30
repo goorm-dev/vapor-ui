@@ -2,11 +2,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 
-import { BaseUIAnalyzer } from './base-ui-analyzer';
 import { ComponentAnalyzer } from './component-analyzer';
+import { ExternalTypeResolver } from './external-type-resolver';
 import { PropsAnalyzer } from './props-analyzer';
 import type { ComponentTypeInfo, TypeExtractorConfig } from './types';
-import { getJSDocDescription, isReactComponent } from './utils';
+import { getJSDocDescription, isReactReturnType } from './utils';
 import { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
 
 /**
@@ -21,9 +21,9 @@ export class TypeExtractor {
     private config: TypeExtractorConfig;
     // Specialized analyzers
     private vanillaExtractAnalyzer!: VanillaExtractAnalyzer;
-    private baseUIAnalyzer!: BaseUIAnalyzer;
     private componentAnalyzer!: ComponentAnalyzer;
     private propsAnalyzer!: PropsAnalyzer;
+    private externalTypeResolver!: ExternalTypeResolver;
 
     constructor(config: TypeExtractorConfig) {
         this.config = config;
@@ -36,7 +36,9 @@ export class TypeExtractor {
      */
     extractComponentTypes(filePath: string): ComponentTypeInfo[] {
         const sourceFilePath = path.resolve(filePath);
+
         const sourceFile = this.program.getSourceFile(sourceFilePath);
+
         if (!sourceFile) {
             throw new Error(`Cannot find file: ${sourceFilePath}`);
         }
@@ -63,34 +65,35 @@ export class TypeExtractor {
      * Initializes the TypeScript program with configuration
      */
     private initializeTypeScriptProgram(): void {
-        const absoluteConfigPath = path.resolve(this.config.configPath);
-        const configDir = path.dirname(absoluteConfigPath);
-        const configFile = ts.readConfigFile(absoluteConfigPath, ts.sys.readFile);
+        const resolvedConfigPath = path.resolve(this.config.configPath);
+        const projectDirectory = path.dirname(resolvedConfigPath);
 
-        if (configFile.error) {
-            throw new Error(`tsconfig.json 읽기 실패: ${configFile.error.messageText}`);
+        const { config, error } = ts.readConfigFile(this.config.configPath, (filePath) =>
+            fs.readFileSync(filePath).toString(),
+        );
+
+        if (error) {
+            throw error;
         }
 
-        const parsedConfig = ts.parseJsonConfigFileContent(configFile.config, ts.sys, configDir);
+        const { options, errors, fileNames } = ts.parseJsonConfigFileContent(
+            config,
+            ts.sys,
+            projectDirectory,
+        );
+
+        if (errors.length > 0) throw errors[0];
 
         // Include additional files if specified
-        let sourceFiles = parsedConfig.fileNames;
-        if (this.config.files && this.config.files.length > 0) {
-            const additionalFiles = this.config.files.map((f) => path.resolve(configDir, f));
-            sourceFiles = [...parsedConfig.fileNames, ...additionalFiles];
-        }
 
-        // Include relevant Base UI type files
-        const baseUIFiles = this.findRelevantBaseUITypeFiles(sourceFiles);
-        sourceFiles = [...sourceFiles, ...baseUIFiles];
+        // Include external type files (Base UI, React types, etc.)
+        this.externalTypeResolver = new ExternalTypeResolver(
+            this.config.projectRoot || projectDirectory,
+        );
 
-        console.log('설정 디렉토리:', configDir);
-        console.log('tsconfig에서 찾은 파일 수:', parsedConfig.fileNames.length);
-        console.log('추가 분석 파일들:', this.config.files || []);
-        console.log('Base UI 타입 파일 수:', baseUIFiles.length);
-        console.log('전체 분석할 파일 수:', sourceFiles.length);
+        const externalTypeFiles = this.externalTypeResolver.getBaseUIMainTypeFile();
 
-        this.program = ts.createProgram(sourceFiles, parsedConfig.options);
+        this.program = ts.createProgram([...fileNames, ...externalTypeFiles], options);
         this.checker = this.program.getTypeChecker();
     }
 
@@ -99,13 +102,8 @@ export class TypeExtractor {
      */
     private initializeAnalyzers(): void {
         this.vanillaExtractAnalyzer = new VanillaExtractAnalyzer(this.program);
-        this.baseUIAnalyzer = new BaseUIAnalyzer(this.program, this.config.projectRoot);
         this.componentAnalyzer = new ComponentAnalyzer();
-        this.propsAnalyzer = new PropsAnalyzer(
-            this.checker,
-            this.vanillaExtractAnalyzer,
-            this.baseUIAnalyzer,
-        );
+        this.propsAnalyzer = new PropsAnalyzer(this.checker, this.vanillaExtractAnalyzer);
     }
 
     /**
@@ -161,7 +159,7 @@ export class TypeExtractor {
         sourceFile: ts.SourceFile,
     ): ComponentTypeInfo[] | undefined {
         // Check if it's a React component
-        if (!isReactComponent(type, this.checker)) {
+        if (!isReactReturnType(type, this.checker)) {
             return;
         }
 
@@ -185,15 +183,6 @@ export class TypeExtractor {
                 defaultElement,
             },
         ];
-    }
-
-    /**
-     * Finds relevant Base UI type files for the source files being analyzed
-     */
-    private findRelevantBaseUITypeFiles(sourceFiles: string[]): string[] {
-        // Initialize temporary Base UI analyzer for discovery
-        const tempBaseUIAnalyzer = new BaseUIAnalyzer(this.program, this.config.projectRoot);
-        return tempBaseUIAnalyzer.findRelevantBaseUITypeFiles(sourceFiles);
     }
 }
 

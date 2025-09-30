@@ -1,13 +1,10 @@
-import * as fs from 'node:fs';
 import * as ts from 'typescript';
 
-import type { BaseUIAnalyzer } from './base-ui-analyzer';
 import type { PropInfo } from './types';
 import {
     getJSDocDefaultValue,
     getJSDocDescription,
     parseTypeToArray,
-    shouldExcludeProp,
     shouldIncludePropBySource,
 } from './utils';
 import type { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
@@ -19,16 +16,10 @@ import type { VanillaExtractAnalyzer } from './vanilla-extract-analyzer';
 export class PropsAnalyzer {
     private checker: ts.TypeChecker;
     private vanillaExtractAnalyzer: VanillaExtractAnalyzer;
-    private baseUIAnalyzer: BaseUIAnalyzer;
 
-    constructor(
-        checker: ts.TypeChecker,
-        vanillaExtractAnalyzer: VanillaExtractAnalyzer,
-        baseUIAnalyzer: BaseUIAnalyzer,
-    ) {
+    constructor(checker: ts.TypeChecker, vanillaExtractAnalyzer: VanillaExtractAnalyzer) {
         this.checker = checker;
         this.vanillaExtractAnalyzer = vanillaExtractAnalyzer;
-        this.baseUIAnalyzer = baseUIAnalyzer;
     }
 
     /**
@@ -55,11 +46,6 @@ export class PropsAnalyzer {
             let description = getJSDocDescription(prop, this.checker);
             const defaultValue = this.getDefaultValue(prop, propName, sourceFile);
 
-            // Try to get description from Base UI if not found
-            if (!description) {
-                description = this.getBaseUIDescription(prop, propName, sourceFile);
-            }
-
             props.push({
                 name: propName,
                 type: parseTypeToArray(typeString, isRequired),
@@ -77,7 +63,6 @@ export class PropsAnalyzer {
      */
     extractPropsType(componentType: ts.Type): ts.Type | null {
         const typeString = this.checker.typeToString(componentType);
-
         // ForwardRefExoticComponent
         if (typeString.includes('ForwardRefExoticComponent')) {
             const forwardRefTypes = this.extractForwardRefTypes(componentType);
@@ -163,37 +148,5 @@ export class PropsAnalyzer {
 
         // Try JSDoc @default tag
         return getJSDocDefaultValue(symbol);
-    }
-
-    /**
-     * Gets Base UI description for a prop
-     */
-    private getBaseUIDescription(
-        _prop: ts.Symbol,
-        propName: string,
-        sourceFile: ts.SourceFile,
-    ): string | undefined {
-        const usedBaseUIComponents = this.baseUIAnalyzer.findUsedBaseUIComponents(sourceFile);
-
-        if (usedBaseUIComponents.length === 0) {
-            return undefined;
-        }
-
-        // Try each Base UI component
-        for (const baseUIComponent of usedBaseUIComponents) {
-            try {
-                const description = this.baseUIAnalyzer.getBaseUIPropertyDescription(
-                    baseUIComponent,
-                    propName,
-                );
-                if (description) {
-                    return description;
-                }
-            } catch (error) {
-                continue;
-            }
-        }
-
-        return undefined;
     }
 }

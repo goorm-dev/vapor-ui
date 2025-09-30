@@ -1,0 +1,26 @@
+{
+    "name": "SheetHeader",
+    "displayName": "Sheet.Header",
+    "description": "시트의 헤더 영역을 나타내는 컴포넌트입니다.\n\n`<div>` 요소를 렌더링합니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string",
+                "JSXElementConstructor<any>>",
+                "(ComponentRenderFn<HTMLProps, {}> & ReactElement<...>)",
+                "(ReactElement<...> & ComponentRenderFn<...>)"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render.\n구성 요소의 HTML 요소를 다른 태그로 교체하거나 다른 구성 요소와 조합할 수 있게 합니다.\n\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받아들입니다."
+        }
+    ],
+    "generatedAt": "2025-09-30T05:43:20.768Z",
+    "sourceFile": "../../packages/core/src/components/sheet/sheet.tsx"
+}

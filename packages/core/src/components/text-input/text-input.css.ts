@@ -30,12 +30,18 @@ export const root = recipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /**
+         * 입력 필드의 유효성 검증 상태를 결정합니다.
+         */
         invalid: {
             true: layerStyle('components', {
                 borderColor: vars.color.border.danger,
             }),
         },
 
+        /**
+         * 입력 필드의 크기를 결정합니다.
+         */
         size: {
             sm: layerStyle('components', {
                 paddingInline: vars.size.space[100],

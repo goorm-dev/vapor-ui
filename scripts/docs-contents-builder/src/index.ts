@@ -26,28 +26,7 @@ async function run(options: RunOptions) {
                     console.log(`출력 디렉토리 생성: ${outputPath}`);
                 }
 
-                for (const [index, component] of components.entries()) {
-                    console.log(`\n${index + 1}. 컴포넌트: ${component.name}`);
-                    console.log(`   Display Name: ${component.displayName || 'N/A'}`);
-                    console.log(`   설명: ${component.description || 'N/A'}`);
-                    console.log(`   Props 수: ${component.props.length}`);
-
-                    if (component.props.length > 0) {
-                        console.log('   Props:');
-                        component.props.forEach((prop) => {
-                            console.log(
-                                `     - ${prop.name}: ${prop.type}${prop.required ? ' (필수)' : ' (선택)'}`,
-                            );
-                            if (prop.description) {
-                                console.log(`       설명: ${prop.description}`);
-                            }
-                            if (prop.defaultValue) {
-                                console.log(`       기본값: ${prop.defaultValue}`);
-                            }
-                        });
-                    }
-
-                    // JSON 파일로 저장 - componentname-subcomponent.json 형식
+                for (const [_, component] of components.entries()) {
                     const fileName = `${kebabCase(component.name)}.json`;
                     const componentOutputPath = path.join(outputPath, fileName);
 
