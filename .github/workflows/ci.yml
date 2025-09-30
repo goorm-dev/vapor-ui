@@ -163,7 +163,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ needs.visual-regression.result == 'failure' && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ contains(needs.visual-regression.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |
