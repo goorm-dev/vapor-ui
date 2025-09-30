@@ -3,13 +3,14 @@
     "version": "0.0.8",
     "private": true,
     "scripts": {
-        "build": "next build",
+        "build": "pnpm docs:generate && next build",
         "dev": "next dev --turbo",
         "start": "next start",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
+        "docs:generate": "docs-extractor -c ../../packages/core/tsconfig.json -o ./public/components/generated -f 'src/components/**/*.tsx'",
         "clean": "rm -rf node_modules .next .turbo .source",
         "typecheck": "tsc --noEmit"
     },
@@ -22,6 +23,7 @@
         "@radix-ui/react-radio-group": "^1.2.3",
         "@radix-ui/react-tabs": "^1.1.1",
         "@vapor-ui/core": "workspace:*",
+        "@vapor-ui/docs-extractor": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
         "clsx": "^2.1.1",
         "fumadocs-core": "^15.2.15",
