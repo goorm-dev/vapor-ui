@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { kebabCase } from 'lodash-es';
 import * as path from 'path';
 import prettier from 'prettier';
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 import { ComponentTypeInfo } from './types/types';
 
@@ -193,7 +193,47 @@ export function getLiteralValue(node: ts.Node): any {
 }
 
 /**
- * Parses TypeScript union types into array format
+ * Extracts the full union types directly from TypeScript type structure
+ * This avoids the truncation issue with checker.typeToString()
+ */
+export function extractFullUnionTypes(
+    type: ts.Type,
+    checker: ts.TypeChecker,
+    isRequired: boolean = false,
+): string[] | string {
+    // Check if it's a union type
+    if (type.isUnion()) {
+        let types = type.types.map((unionType) => {
+            // Handle string literal types
+            if (unionType.isStringLiteral()) {
+                return unionType.value;
+            }
+            // Handle numeric literal types
+            if (unionType.isNumberLiteral()) {
+                return unionType.value.toString();
+            }
+            // Handle boolean literal types
+            if (unionType.flags & ts.TypeFlags.BooleanLiteral) {
+                return checker.typeToString(unionType);
+            }
+            // Handle other types (including complex types)
+            return checker.typeToString(unionType);
+        });
+
+        // Remove "undefined" for optional props (not required)
+        if (!isRequired) {
+            types = types.filter((type) => type !== 'undefined');
+        }
+
+        return types;
+    }
+
+    // Not a union type, return as string
+    return checker.typeToString(type);
+}
+
+/**
+ * Parses TypeScript union types into array format (legacy function)
  * Converts '"primary" | "success" | "warning" | undefined' to ["primary", "success", "warning"]
  * Removes "undefined" from union types for optional props
  */

@@ -2,9 +2,9 @@ import * as ts from 'typescript';
 
 import type { PropInfo } from './types/types';
 import {
+    extractFullUnionTypes,
     getJSDocDefaultValue,
     getJSDocDescription,
-    parseTypeToArray,
     shouldIncludePropBySource,
 } from './utils';
 import { findCssFile, extractDefaultValue } from './vanilla-extract-analyzer';
@@ -31,14 +31,13 @@ export function extractProps(
 
         // Extract type information
         const propType = checker.getTypeOfSymbol(prop);
-        const typeString = checker.typeToString(propType);
         const isRequired = !prop.flags || !(prop.flags & ts.SymbolFlags.Optional);
         let description = getJSDocDescription(prop, checker);
         const defaultValue = getDefaultValue(program, prop, propName, sourceFile);
 
         props.push({
             name: propName,
-            type: parseTypeToArray(typeString, isRequired),
+            type: extractFullUnionTypes(propType, checker, isRequired),
             required: isRequired,
             description,
             defaultValue,
