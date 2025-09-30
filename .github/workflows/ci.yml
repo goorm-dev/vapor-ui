@@ -1,6 +1,6 @@
-name: 'Run Visual Regression Tests'
+name: "Run Visual Regression Tests"
 
-'on':
+"on":
     workflow_dispatch:
     pull_request:
         types:
@@ -18,11 +18,19 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ''
+    REPORT_PATH: ""
 
 jobs:
     visual-regression:
-        runs-on: macos-latest
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                shardIndex: [1, 2, 3, 4]
+                shardTotal: [4]
+        container:
+            image: mcr.microsoft.com/playwright:v1.55.0-noble
+            options: --user 1001
         steps:
             - name: Git clone the repository
               uses: actions/checkout@v4
@@ -32,13 +40,13 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
-            - name: Install Playwright Browsers
-              uses: ./.github/composite/browser-install
-              with:
-                  working-directory: packages/core
+            # - name: Install Playwright Browsers
+            #   uses: ./.github/composite/browser-install
+            #   with:
+            #       working-directory: packages/core
 
             - name: Build Icons
-              run: pnpm icons build
+              run: pnpm build --filter=@vapor-ui/icons
 
             - name: Build Storybook
               run: pnpm build-storybook
@@ -46,21 +54,59 @@ jobs:
             - name: Run Snapshot Tests
               run: pnpm core test:visual
 
-            - uses: actions/upload-artifact@v4
-              if: '${{ !cancelled() }}'
+            - name: Run Playwright tests
+              run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
+            - name: Upload blob report to GitHub Actions Artifacts
+              if: ${{ !cancelled() }}
+              uses: actions/upload-artifact@v4
               with:
-                  name: test-results
-                  path: ./packages/core/__tests__/report/
+                  name: blob-report-${{ matrix.shardIndex }}
+                  path: blob-report
+                  retention-days: 1
+
+            # - uses: actions/upload-artifact@v4
+            #   if: "${{ !cancelled() }}"
+            #   with:
+            #       name: test-results
+            #       path: ./packages/core/__tests__/report/
+
+    merge-reports:
+        if: ${{ !cancelled() }}
+        needs: [visual-regression]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              uses: ./.github/composite/install
+
+            - name: Download blob reports from GitHub Actions Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  path: all-blob-reports
+                  pattern: blob-report-*
+                  merge-multiple: true
+
+            - name: Merge into HTML Report
+              run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+            - name: Upload HTML report
+              uses: actions/upload-artifact@v4
+              with:
+                  name: html-report--attempt-${{ github.run_attempt }}
+                  path: playwright-report
+                  retention-days: 14
 
     deploy-report:
-        needs: visual-regression
+        needs: merge-reports
         if: always()
         runs-on: ubuntu-latest
         steps:
             - uses: actions/download-artifact@v4
               with:
-                  name: test-results
-                  path: ./report/
+                  name: html-report--attempt-${{ github.run_attempt }}
+                  path: playwright-report
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4
@@ -122,7 +168,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ needs.visual-regression.result == 'failure' && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ needs.merge-reports.result == 'failure' && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |
