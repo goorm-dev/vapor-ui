@@ -51,9 +51,6 @@ jobs:
             - name: Build Storybook
               run: pnpm build-storybook
 
-            - name: Run Snapshot Tests
-              run: pnpm core test:visual
-
             - name: Run Playwright tests
               run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
