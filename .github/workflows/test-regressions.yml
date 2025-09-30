@@ -1,4 +1,4 @@
-name: "Visual Regression Tests"
+name: "Tests"
 
 "on":
     workflow_dispatch:
@@ -21,7 +21,7 @@ env:
     REPORT_PATH: ""
 
 jobs:
-    visual-regression:
+    regressions:
         runs-on: macos-latest
         strategy:
             fail-fast: false
@@ -74,7 +74,7 @@ jobs:
 
     merge-reports:
         if: ${{ !cancelled() }}
-        needs: [visual-regression]
+        needs: [regressions]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -100,7 +100,7 @@ jobs:
                   retention-days: 14
 
     deploy-report:
-        needs: [visual-regression, merge-reports]
+        needs: [regressions, merge-reports]
         if: always()
         runs-on: ubuntu-latest
         steps:
@@ -169,7 +169,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ contains(needs.visual-regression.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ contains(needs.regressions.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |
