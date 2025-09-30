@@ -28,9 +28,6 @@ jobs:
             matrix:
                 shardIndex: [1, 2, 3, 4]
                 shardTotal: [4]
-        container:
-            image: mcr.microsoft.com/playwright:v1.55.0-noble
-            options: --user 1001
         steps:
             - name: Git clone the repository
               uses: actions/checkout@v4
@@ -40,10 +37,11 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
-            # - name: Install Playwright Browsers
-            #   uses: ./.github/composite/browser-install
-            #   with:
-            #       working-directory: packages/core
+            - name: Install Playwright Browsers
+
+              uses: ./.github/composite/browser-install
+              with:
+                  working-directory: packages/core
 
             - name: Build Icons
               run: pnpm build --filter=@vapor-ui/icons
