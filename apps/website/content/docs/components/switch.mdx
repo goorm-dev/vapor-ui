@@ -5,11 +5,10 @@ description: 'Switch는 사용자가 설정을 on/off로 전환할 수 있게 �
 ---
 
 <Demo name="default-switch">
-```tsx
-import { Switch } from '@vapor-ui/core';
-
-export default function DefaultSwitch() {
-    return <Switch.Root />;
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-switch.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -23,17 +22,10 @@ export default function DefaultSwitch() {
 Switch 크기는 sm, md, lg 로 제공합니다.
 
 <Demo name="switch-size">
-```tsx
-import { Switch } from '@vapor-ui/core';
-
-export default function SwitchSize() {
-    return (
-        <div className="flex gap-8">
-            <Switch.Root size="sm" />
-            <Switch.Root size="md" />
-            <Switch.Root size="lg" />
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/switch-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -43,16 +35,10 @@ export default function SwitchSize() {
 기능이 활성화된 상태를 의미합니다.
 
 <Demo name="switch-checked">
-```tsx
-import { Switch } from '@vapor-ui/core';
-
-export default function SwitchChecked() {
-    return (
-        <div className="space-y-3">
-            <Switch.Root />
-            <Switch.Root defaultChecked />
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/switch-checked.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -62,22 +48,10 @@ export default function SwitchChecked() {
 사용자가 상호작용할 수 없는 상태입니다. 액션을 수행하기 위한 특정 조건을 충족하지 않았거나 일시적으로 기능을 제한하려는 상황에서 사용합니다.
 
 <Demo name="switch-disabled">
-```tsx
-import { Switch } from '@vapor-ui/core';
-
-export default function SwitchDisabled() {
-    return (
-        <div className="space-y-3">
-            <Switch.Root disabled>
-                <Switch.Label>비활성화 - Off</Switch.Label>
-                <Switch.Control />
-            </Switch.Root>
-            <Switch.Root disabled defaultChecked>
-                <Switch.Label>비활성화 - On</Switch.Label>
-                <Switch.Control />
-            </Switch.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/switch-disabled.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -87,22 +61,10 @@ export default function SwitchDisabled() {
 사용자는 스위치 상태를 변경할 수 없지만, 현재 상태를 확인할 수 있도록 허용하는 상태입니다.
 
 <Demo name="switch-readonly">
-```tsx
-import { Switch } from '@vapor-ui/core';
-
-export default function SwitchReadOnly() {
-    return (
-        <div className="space-y-3">
-            <Switch.Root readOnly defaultChecked>
-                <Switch.Label>읽기 전용 (켜짐)</Switch.Label>
-                <Switch.Control />
-            </Switch.Root>
-            <Switch.Root readOnly>
-                <Switch.Label>읽기 전용 (꺼짐)</Switch.Label>
-                <Switch.Control />
-            </Switch.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/switch-readonly.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -116,18 +78,10 @@ export default function SwitchReadOnly() {
 Switch의 다양한 상태를 보여줍니다.
 
 <Demo name="switch-states">
-```tsx
-import { Switch } from '@vapor-ui/core';
-
-export default function SwitchStates() {
-    return (
-        <div className="flex gap-8">
-            <Switch.Root />
-            <Switch.Root defaultChecked />
-            <Switch.Root disabled />
-            <Switch.Root disabled defaultChecked />
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/switch-states.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -137,16 +91,10 @@ export default function SwitchStates() {
 제어되는 Switch 컴포넌트의 사용 예시입니다.
 
 <Demo name="switch-controlled">
-```tsx
-import { Switch } from '@vapor-ui/core';
-
-export default function SwitchControlled() {
-    return (
-        <div className="space-y-3">
-            <Switch.Root />
-            <Switch.Root defaultChecked />
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/switch-controlled.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

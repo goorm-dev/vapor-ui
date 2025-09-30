@@ -1,14 +1,14 @@
 @layer reset, tw-base, base, tw-theme, theme, components, utilities, tw-utilities;
 
+@import '@vapor-ui/core/styles.css';
+@import '@vapor-ui/core/tailwind.css';
+
 @import 'tailwindcss/preflight' layer(tw-base);
 @import 'tailwindcss/theme' layer(tw-theme);
 @import 'tailwindcss/utilities' layer(tw-utilities);
 
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
-
-@import '@vapor-ui/core/styles.css';
-@import '@vapor-ui/core/tailwind.css';
 
 @theme {
     /* Custom Breakpoints */
@@ -19,24 +19,25 @@
     --breakpoint-xxl: 1441px;
 
     /* Fumadocs Theme Variables */
-    --color-fd-background: var(--vapor-color-background-normal);
-    --color-fd-primary: var(--vapor-color-background-primary);
+    --color-fd-background: var(--vapor-color-background-canvas);
+    --color-fd-primary: var(--vapor-color-foreground-primary-100);
     --color-fd-border: var(--vapor-color-border-normal);
-    --color-fd-accent: var(--vapor-color-background-secondary);
-    --color-fd-accent-foreground: var(--vapor-color-foreground-secondary);
-    --color-fd-muted: var(--vapor-color-secondary);
-    --color-fd-muted-foreground: var(--vapor-color-foreground-secondary);
-    --color-fd-foreground: var(--vapor-color-foreground-secondary);
-    --color-fd-secondary: var(--vapor-color-secondary);
-    --color-fd-secondary-foreground: var(--vapor-color-foreground-secondary);
-    --color-fd-card: var(--vapor-color-background-normal);
-    --color-fd-card-foreground: var(--vapor-color-foreground-secondary);
-    --color-fd-popover-foreground: var(--vapor-color-foreground-secondary);
-    --color-fd-popover: var(--vapor-color-background-normal);
-    --color-fd-primary-foreground: var(--vapor-color-foreground-primary);
-    --color-fd-foreground: var(--vapor-color-foreground-normal);
+    --color-fd-accent: var(--vapor-color-background-secondary-100);
+    --color-fd-accent-foreground: var(--vapor-color-foreground-secondary-100);
+    --color-fd-muted: var(--vapor-color-background-secondary-200);
+    --color-fd-muted-foreground: var(--vapor-color-foreground-secondary-100);
+    --color-fd-foreground: var(--vapor-color-foreground-secondary-100);
+    --color-fd-secondary: var(--vapor-color-background-secondary-200);
+    --color-fd-secondary-foreground: var(--vapor-color-foreground-secondary-100);
+    --color-fd-card: var(--vapor-color-background-surface-100);
+    --color-fd-card-foreground: var(--vapor-color-foreground-secondary-100);
+    --color-fd-popover-foreground: var(--vapor-color-foreground-secondary-100);
+    --color-fd-popover: var(--vapor-color-background-surface-100);
+    --color-fd-primary-foreground: var(--vapor-color-foreground-primary-100);
+    --color-fd-foreground: var(--vapor-color-foreground-normal-100);
+    --fd-nav-height: 64px;
 }
 
 a[data-active='true'] {
-    color: var(--vapor-color-foreground-primary);
+    color: var(--vapor-color-foreground-primary-100);
 }

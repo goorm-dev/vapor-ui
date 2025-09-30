@@ -22,7 +22,7 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
                             </h1>
                         }
                         typography="heading1"
-                        foreground="normal"
+                        foreground="normal-200"
                     />
 
                     {description && (
@@ -37,7 +37,7 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
                                 </div>
                             }
                             typography="body1"
-                            foreground="normal"
+                            foreground="normal-200"
                         />
                     )}
                 </div>
@@ -47,7 +47,7 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
             {/* Preview Section */}
 
             {previewImageUrl && (
-                <div className="bg-[var(--vapor-color-background-normal-darker)] flex items-center justify-center px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-400)] rounded-[var(--vapor-size-borderRadius-500)] border border-[var(--vapor-color-border-normal)] w-full">
+                <div className="bg-[var(--vapor-color-background-surface-200)] flex items-center justify-center px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-400)] rounded-[var(--vapor-size-borderRadius-500)] border border-[var(--vapor-color-border-normal)] w-full">
                     <div className="flex flex-col items-center justify-center overflow-hidden rounded-[8px] w-full">
                         <Image
                             src={previewImageUrl}

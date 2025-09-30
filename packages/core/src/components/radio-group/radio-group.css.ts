@@ -24,6 +24,6 @@ export const root = recipe({
     },
 });
 
-export const label = [foregrounds({ color: 'normal-lighter' }), typography({ style: 'subtitle2' })];
+export const label = [foregrounds({ color: 'normal-100' }), typography({ style: 'subtitle2' })];
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

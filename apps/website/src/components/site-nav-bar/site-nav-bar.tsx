@@ -96,7 +96,7 @@ export const SiteNavBar = () => {
             <header
                 className={`z-10 flex w-full py-3 px-4 md:px-8 justify-between items-center fixed top-0 transition-all duration-300 ${
                     isScrolled
-                        ? 'bg-[var(--vapor-color-background-normal)] shadow-lg backdrop-blur-sm z-20'
+                        ? 'bg-[var(--vapor-color-background-canvas)] shadow-lg backdrop-blur-sm z-20'
                         : 'bg-transparent'
                 }`}
             >
@@ -193,7 +193,7 @@ export const SiteNavBar = () => {
                 <Dialog.Overlay className="fixed z-10 inset-0 bg-black/40 md:hidden" />
 
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
+                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-canvas)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >

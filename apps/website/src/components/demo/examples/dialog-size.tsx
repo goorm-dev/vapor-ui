@@ -2,7 +2,7 @@ import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogSize() {
     return (
-        <div className="space-x-4">
+        <div className="flex gap-4">
             <Dialog.Root size="md">
                 <Dialog.Trigger render={<Button>Medium Dialog</Button>} />
                 <Dialog.Content>
