@@ -26,6 +26,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
+                shardProject: [firefox, webkit, chromium, msedge]
                 shardIndex: [1, 2, 3, 4]
                 shardTotal: [4]
         steps:
@@ -38,10 +39,10 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Install Playwright Browsers
-
-              uses: ./.github/composite/browser-install
-              with:
-                  working-directory: packages/core
+              run: pnpm exec playwright install ${{ matrix.shardProject }}
+            #   uses: ./.github/composite/browser-install
+            #   with:
+            #       working-directory: packages/core
 
             - name: Build Icons
               run: pnpm build --filter=@vapor-ui/icons
@@ -50,13 +51,13 @@ jobs:
               run: pnpm build-storybook
 
             - name: Run Playwright tests
-              run: pnpm core exec playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+              run: pnpm core exec playwright test --project=${{ matrix.shardProject }}
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
               uses: actions/upload-artifact@v4
               with:
-                  name: blob-report-${{ matrix.shardIndex }}
+                  name: blob-report-${{ matrix.shardProject }}
                   path: packages/core/blob-report
                   retention-days: 1
 
