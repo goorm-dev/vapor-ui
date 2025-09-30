@@ -131,35 +131,6 @@ export function shouldIncludePropBySource(
 }
 
 /**
- * Checks if a property should be excluded from component props
- * Filters out HTML attributes, React built-ins, and ARIA attributes
- */
-export function shouldExcludeProp(propName: string): boolean {
-    const excludedPatterns = [
-        // Event handlers
-        /^on[A-Z]/,
-        // ARIA attributes
-        /^aria-/,
-        // HTML global attributes
-        /^(id|style|title|lang|dir|hidden|tabIndex|role|slot|key|ref)$/,
-        // HTML form attributes
-        /^(form|formAction|formEncType|formMethod|formNoValidate|formTarget|name|type|value|defaultValue|defaultChecked|autoFocus|disabled)$/,
-        // React specific
-        /^(children|dangerouslySetInnerHTML|suppressHydrationWarning|suppressContentEditableWarning)$/,
-        // Accessibility and meta attributes
-        /^(accessKey|autoCapitalize|autoCorrect|autoSave|contentEditable|contextMenu|draggable|enterKeyHint|inputMode|is|nonce|spellCheck|translate|unselectable|radioGroup)$/,
-        // RDFa attributes
-        /^(about|content|datatype|inlist|prefix|property|rel|resource|rev|typeof|vocab)$/,
-        // Microdata attributes
-        /^(itemProp|itemScope|itemType|itemID|itemRef)$/,
-        // Other attributes
-        /^(results|security|exportparts|part)$/,
-    ];
-
-    return excludedPatterns.some((pattern) => pattern.test(propName));
-}
-
-/**
  * Checks if a TypeScript type represents a React component
  */
 

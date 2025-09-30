@@ -1,14 +1,13 @@
 // Type Extraction Core
-export * from './type';
+export * from './type-extractor';
 
 // Specialized Analyzers
-
-export * from './component';
-export * from './props';
-export * from './vanilla-extract';
+export * from './component-analyzer';
+export * from './props-analyzer';
+export * from './vanilla-extract-analyzer';
 
 // External Type Resolution
-export * from './external';
+export * from './external-resolver';
 
 // Types and Interfaces
 export * from './types/types';

@@ -12,7 +12,7 @@
         "skipLibCheck": true,
 
         "outDir": "./dist",
-        "baseUrl": "./", // src를 기준으로 경로 해석
+        "baseUrl": "./",
         "paths": {
             "~/*": ["./src/*"]
         }
