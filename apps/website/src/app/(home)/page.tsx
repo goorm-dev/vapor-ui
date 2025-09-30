@@ -26,7 +26,7 @@ export default function HomePage() {
     const [mounted, setMounted] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-    const { theme } = useTheme();
+    const { resolvedTheme } = useTheme();
 
     useEffect(() => {
         setMounted(true);
@@ -57,7 +57,7 @@ export default function HomePage() {
                         className="absolute bottom-0 left-0 w-full h-[162px]"
                         style={{
                             background:
-                                theme === 'light'
+                                resolvedTheme === 'light'
                                     ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--color-background-normal, #FFF) 100%)'
                                     : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--color-background-normal, #23272E) 100%)',
                         }}

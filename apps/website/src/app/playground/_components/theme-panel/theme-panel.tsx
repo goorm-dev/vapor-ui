@@ -11,22 +11,23 @@ import Scaling from '../panel-scaling';
 import Theme from '../panel-theme';
 import styles from './theme-panel.module.scss';
 
-const parseThemes = (nodes: NodeListOf<HTMLButtonElement>) => {
-    let attributes = '';
+// TODO: 관련 로직 제거
+// const parseThemes = (nodes: NodeListOf<HTMLButtonElement>) => {
+//     let attributes = '';
 
-    nodes.forEach((node) => {
-        const category = node.getAttribute('data-theme-category');
-        if (category === 'border-radius') {
-            attributes += `borderRadiusFactor="${node.value}" `;
-        } else {
-            attributes += `${category}="${node.value}" `;
-        }
-    });
+//     nodes.forEach((node) => {
+//         const category = node.getAttribute('data-theme-category');
+//         if (category === 'border-radius') {
+//             attributes += `borderRadiusFactor="${node.value}" `;
+//         } else {
+//             attributes += `${category}="${node.value}" `;
+//         }
+//     });
 
-    return `createThemeConfig({
-	primaryColor: "${attributes}",
-});`;
-};
+//     return `createThemeConfig({
+// 	primaryColor: "${attributes}",
+// });`;
+// };
 
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
@@ -47,8 +48,9 @@ const ThemePanel = () => {
             'button[role="radio"][aria-checked=true]',
         ) satisfies NodeListOf<HTMLButtonElement>;
 
-        const providerTemplate = parseThemes(nodes);
-        onClickCopy(providerTemplate);
+        // TODO: 관련 로직 제거
+        // const providerTemplate = () => void
+        // onClickCopy(providerTemplate);
     };
 
     useEffect(() => {
