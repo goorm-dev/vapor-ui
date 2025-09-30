@@ -8,9 +8,7 @@ export default defineConfig({
     outputDir: `./__tests__/results/`,
 
     reporter: [
-        process.env.CI
-            ? ['blob', { outputFolder: './__tests__/blob' }]
-            : ['html', { outputFolder: './__tests__/report' }],
+        process.env.CI ? ['blob'] : ['html', { outputFolder: './__tests__/report' }],
         ['json', { outputFile: './__tests__/report/index.json' }],
     ],
     use: { baseURL: BASE_URL, trace: 'on' },
