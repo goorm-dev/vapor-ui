@@ -1,9 +1,85 @@
+import * as fs from 'fs';
+import { kebabCase } from 'lodash-es';
+import * as path from 'path';
+import prettier from 'prettier';
 import * as ts from 'typescript';
-import { type ExternalTypeNode } from 'typescript-api-extractor';
+
+import { ComponentTypeInfo } from './types';
 
 /**
  * Utility functions for TypeScript analysis and component extraction
  */
+
+export interface ComponentData {
+    name: string;
+    displayName?: string;
+    description?: string;
+    props: Array<{
+        name: string;
+        type: string | string[];
+        required: boolean;
+        description?: string;
+        defaultValue?: string;
+    }>;
+    defaultElement?: string;
+    generatedAt: string;
+    sourceFile: string;
+}
+
+/**
+ * Creates component data structure from ComponentTypeInfo
+ */
+export function createComponentData(
+    component: ComponentTypeInfo,
+    sourceFile: string,
+): ComponentData {
+    return {
+        name: component.name,
+        displayName: component.displayName,
+        description: component.description,
+        props: component.props.map((prop) => ({
+            name: prop.name,
+            type: prop.type,
+            required: prop.required,
+            description: prop.description,
+            defaultValue: prop.defaultValue,
+        })),
+        defaultElement: component.defaultElement,
+        generatedAt: new Date().toISOString(),
+        sourceFile,
+    };
+}
+
+/**
+ * Writes component data to a JSON file with prettier formatting
+ */
+export async function writeComponentDataToFile(
+    componentData: ComponentData,
+    outputPath: string,
+): Promise<void> {
+    const fileName = `${kebabCase(componentData.name)}.json`;
+    const componentOutputPath = path.join(outputPath, fileName);
+
+    const jsonString = JSON.stringify(componentData, null, 2);
+    const prettierOptions = (await prettier.resolveConfig(componentOutputPath)) || {};
+    const formattedJson = await prettier.format(jsonString, {
+        ...prettierOptions,
+        parser: 'json',
+    });
+
+    fs.writeFileSync(componentOutputPath, formattedJson, 'utf8');
+    console.log(`   → JSON 저장: ${componentOutputPath}`);
+}
+
+/**
+ * Ensures output directory exists, creates if necessary
+ */
+export function ensureOutputDirectory(outputPath: string): void {
+    if (!fs.existsSync(outputPath)) {
+        fs.mkdirSync(outputPath, { recursive: true });
+        console.log(`출력 디렉토리 생성: ${outputPath}`);
+    }
+}
 
 /**
  * Checks if a prop should be included based on its source location

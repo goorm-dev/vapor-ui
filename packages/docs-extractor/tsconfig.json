@@ -2,17 +2,18 @@
     "extends": "@repo/typescript-config/base",
     "compilerOptions": {
         "target": "ES2022",
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "strict": true,
+        "moduleResolution": "node",
+        "module": "es2022",
+
         "esModuleInterop": true,
+        "isolatedModules": true,
+
+        "strict": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
         "declaration": true,
         "declarationMap": true,
-        "sourceMap": true,
-        "resolveJsonModule": true,
-        "moduleResolution": "node",
+        "outDir": "./dist",
+        "baseUrl": "./", // src를 기준으로 경로 해석
         "paths": {
             "~/*": ["./src/*"]
         }

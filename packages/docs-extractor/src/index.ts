@@ -1,26 +1,17 @@
 // Type Extraction Core
-export { TypeExtractor, extractComponentTypesFromFile } from '~/type';
+export * from './type';
 
 // Specialized Analyzers
 
-export { ComponentAnalyzer } from '~/component';
-export { PropsAnalyzer } from '~/props';
-export { VanillaExtractAnalyzer } from '~/vanilla-extract';
+export * from './component';
+export * from './props';
+export * from './vanilla-extract';
 
 // External Type Resolution
-export { ExternalTypeResolver } from '~/external';
-export type { ExternalPackageConfig } from '~/external';
+export * from './external';
 
 // Types and Interfaces
-export type { ComponentTypeInfo, PropInfo, TypeExtractorConfig } from '~/types';
+export * from './types';
 
 // Utilities
-export {
-    shouldIncludePropBySource,
-    shouldExcludeProp,
-    isReactReturnType,
-    getJSDocDescription,
-    getJSDocDefaultValue,
-    getLiteralValue,
-    parseTypeToArray,
-} from '~/utils';
+export * from './utils';

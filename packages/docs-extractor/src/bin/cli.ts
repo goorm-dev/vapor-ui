@@ -1,14 +1,11 @@
-import * as fs from 'fs';
 import { globby } from 'globby';
-import { kebabCase } from 'lodash-es';
 import * as path from 'path';
-import prettier from 'prettier';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { extractComponentTypesFromFile } from '~/type';
-
-import { RunOptions } from '../types';
+import { RunOptions } from '~/types';
+import { createComponentData, ensureOutputDirectory, writeComponentDataToFile } from '~/utils';
 
 export function createCliCommand(runFunction: (options: RunOptions) => Promise<void>) {
     return yargs(hideBin(process.argv))
@@ -86,42 +83,11 @@ export async function main(options: RunOptions) {
 
                 console.log(`발견된 컴포넌트 수: ${components.length}`);
 
-                // 출력 디렉토리 생성
-                if (!fs.existsSync(outputPath)) {
-                    fs.mkdirSync(outputPath, { recursive: true });
-                    console.log(`출력 디렉토리 생성: ${outputPath}`);
-                }
+                ensureOutputDirectory(outputPath);
 
                 for (const [_, component] of components.entries()) {
-                    const fileName = `${kebabCase(component.name)}.json`;
-                    const componentOutputPath = path.join(outputPath, fileName);
-
-                    const componentData = {
-                        name: component.name,
-                        displayName: component.displayName,
-                        description: component.description,
-                        props: component.props.map((prop) => ({
-                            name: prop.name,
-                            type: prop.type,
-                            required: prop.required,
-                            description: prop.description,
-                            defaultValue: prop.defaultValue,
-                        })),
-                        defaultElement: component.defaultElement,
-                        generatedAt: new Date().toISOString(),
-                        sourceFile: file,
-                    };
-
-                    const jsonString = JSON.stringify(componentData, null, 2);
-                    const prettierOptions =
-                        (await prettier.resolveConfig(componentOutputPath)) || {};
-                    const formattedJson = await prettier.format(jsonString, {
-                        ...prettierOptions,
-                        parser: 'json',
-                    });
-
-                    fs.writeFileSync(componentOutputPath, formattedJson, 'utf8');
-                    console.log(`   → JSON 저장: ${componentOutputPath}`);
+                    const componentData = createComponentData(component, file);
+                    await writeComponentDataToFile(componentData, outputPath);
                 }
             }
         } else {
