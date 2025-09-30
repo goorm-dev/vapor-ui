@@ -26,9 +26,13 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                shardChannel: [firefox, webkit, chromium, msedge]
-                shardProject:
-                    ["firefox", "webkit", "chromium", "Microsoft Edge"]
+                shard:
+                    [
+                        { name: firefox, project: firefox },
+                        { name: webkit, project: webkit },
+                        { name: chromium, project: chromium },
+                        { name: "Microsoft Edge", project: msedge },
+                    ]
 
         steps:
             - name: Git clone the repository
@@ -40,7 +44,7 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Install Playwright Browsers
-              run: pnpm core exec playwright install ${{ matrix.shardProject }}
+              run: pnpm core exec playwright install ${{ matrix.shard.project }}
             #   uses: ./.github/composite/browser-install
             #   with:
             #       working-directory: packages/core
@@ -52,13 +56,13 @@ jobs:
               run: pnpm build-storybook
 
             - name: Run Playwright tests
-              run: pnpm core exec playwright test --project=${{ matrix.shardProject }}
+              run: pnpm core exec playwright test --project=${{ matrix.shard.name }}
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
               uses: actions/upload-artifact@v4
               with:
-                  name: blob-report-${{ matrix.shardChannel }}
+                  name: blob-report-${{ matrix.shard.project }}
                   path: packages/core/blob-report
                   retention-days: 1
 
