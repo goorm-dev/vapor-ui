@@ -94,7 +94,7 @@ jobs:
                   retention-days: 14
 
     deploy-report:
-        needs: merge-reports
+        needs: [visual-regression, merge-reports]
         if: always()
         runs-on: ubuntu-latest
         steps:
@@ -163,7 +163,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ needs.merge-reports.result == 'failure' && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ needs.visual-regression.result == 'failure' && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |
