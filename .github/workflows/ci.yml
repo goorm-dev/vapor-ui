@@ -26,7 +26,10 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                shardProject: [firefox, webkit, chromium, msedge]
+                shardChannel: [firefox, webkit, chromium, msedge]
+                shardProject:
+                    ["firefox", "webkit", "chromium", "Microsoft Edge"]
+
         steps:
             - name: Git clone the repository
               uses: actions/checkout@v4
@@ -55,7 +58,7 @@ jobs:
               if: ${{ !cancelled() }}
               uses: actions/upload-artifact@v4
               with:
-                  name: blob-report-${{ matrix.shardProject }}
+                  name: blob-report-${{ matrix.shardChannel }}
                   path: packages/core/blob-report
                   retention-days: 1
 
