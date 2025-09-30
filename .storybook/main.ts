@@ -30,9 +30,9 @@ const config: StorybookConfig = {
         },
     },
 
-    // previewHead: (head) => `
-    // ${head}
-    // ${'<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />'}`,
+    previewHead: (head) => `
+    ${head}
+    ${'<link rel="preload" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />'}`,
 
     viteFinal: async (config) => {
         const mergedConfig = mergeConfig(config, {
