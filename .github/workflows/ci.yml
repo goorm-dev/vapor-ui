@@ -52,7 +52,7 @@ jobs:
               run: pnpm build-storybook
 
             - name: Run Playwright tests
-              run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+              run: pnpm core exec playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
