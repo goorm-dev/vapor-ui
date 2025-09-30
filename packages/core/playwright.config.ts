@@ -20,7 +20,7 @@ export default defineConfig({
     ],
 
     fullyParallel: true,
-    workers: process.env.CI ? 2 : undefined,
+    workers: 1,
 
     webServer: {
         command: 'cd ../../ && npx http-server -p 9999 ./storybook-static',
