@@ -4,7 +4,6 @@ const DIST_DIR = 'dist';
 
 const commonConfig: Options = {
     target: 'es6',
-    sourcemap: true,
     minify: false,
     dts: true,
     format: ['esm', 'cjs'],

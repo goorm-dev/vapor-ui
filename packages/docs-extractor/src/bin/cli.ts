@@ -41,12 +41,6 @@ function buildCommandOptions(command: any) {
             description:
                 'The files to extract the API descriptions from. If not provided, all files in the tsconfig.json are used. You can use globs like `src/**/*.{ts,tsx}` and `!**/*.test.*`. Paths are relative to the tsconfig.json file.',
         })
-        .option('includeExternal', {
-            alias: 'e',
-            type: 'boolean',
-            default: false,
-            description: 'Include props defined outside of the project',
-        })
         .option('externalTypePaths', {
             alias: 'x',
             type: 'array',
@@ -68,12 +62,13 @@ export async function main(options: RunOptions) {
                 cwd: configDir,
                 absolute: false,
                 onlyFiles: true,
+                ignore: ['**/*.stories.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
             });
         }
 
         if (resolvedFiles.length > 0) {
-            for (const file of resolvedFiles) {
-                const fullPath = path.resolve(configDir, file);
+            for (const filePath of resolvedFiles) {
+                const fullPath = path.resolve(configDir, filePath);
                 const components = extractComponentTypesFromFile(
                     configPath,
                     fullPath,
@@ -81,24 +76,24 @@ export async function main(options: RunOptions) {
                     options.externalTypePaths,
                 );
 
-                console.log(`발견된 컴포넌트 수: ${components.length}`);
+                console.log(`In "${filePath}" found ${components.length} components.`);
 
                 ensureOutputDirectory(outputPath);
 
                 for (const [_, component] of components.entries()) {
-                    const componentData = createComponentData(component, file);
+                    const componentData = createComponentData(component, fullPath);
                     await writeComponentDataToFile(componentData, outputPath);
                 }
             }
         } else {
             console.log(
-                '분석할 파일이 지정되지 않았습니다. -f 옵션을 사용하여 파일을 지정해주세요.',
+                'The files to analyze were not specified. Please use the -f option to specify files.',
             );
         }
 
-        console.log('\n타입 추출 완료!');
+        console.log('\nType extraction complete!');
     } catch (error) {
-        console.error('타입 추출 중 오류 발생:', error);
+        console.error('Error occurred during type extraction:', error);
         process.exit(1);
     }
 }
