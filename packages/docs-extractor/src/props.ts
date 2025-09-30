@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 
-import type { PropInfo } from './types';
+import type { PropInfo } from './types/types';
 import {
     getJSDocDefaultValue,
     getJSDocDescription,

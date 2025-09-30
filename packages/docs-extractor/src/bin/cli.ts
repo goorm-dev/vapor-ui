@@ -4,7 +4,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { extractComponentTypesFromFile } from '~/type';
-import { RunOptions } from '~/types';
+import { RunOptions } from '~/types/types';
 import { createComponentData, ensureOutputDirectory, writeComponentDataToFile } from '~/utils';
 
 export function createCliCommand(runFunction: (options: RunOptions) => Promise<void>) {

@@ -5,7 +5,7 @@ import * as ts from 'typescript';
 import { ComponentAnalyzer } from './component';
 import { ExternalTypeResolver } from './external';
 import { PropsAnalyzer } from './props';
-import type { ComponentTypeInfo, TypeExtractorConfig } from './types';
+import type { ComponentTypeInfo, TypeExtractorConfig } from './types/types';
 import { getJSDocDescription, isReactReturnType } from './utils';
 import { VanillaExtractAnalyzer } from './vanilla-extract';
 

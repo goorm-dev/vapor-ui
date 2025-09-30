@@ -11,7 +11,7 @@ export * from './vanilla-extract';
 export * from './external';
 
 // Types and Interfaces
-export * from './types';
+export * from './types/types';
 
 // Utilities
 export * from './utils';

@@ -4,7 +4,7 @@ import * as path from 'path';
 import prettier from 'prettier';
 import * as ts from 'typescript';
 
-import { ComponentTypeInfo } from './types';
+import { ComponentTypeInfo } from './types/types';
 
 /**
  * Utility functions for TypeScript analysis and component extraction
