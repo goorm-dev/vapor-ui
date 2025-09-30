@@ -22,6 +22,7 @@ export const root = recipe({
 
             backgroundColor: vars.color.background.canvas,
             padding: vars.size.space['000'],
+            overflow: 'hidden',
 
             selectors: {
                 '&[data-checked], &[data-indeterminate]': {
@@ -29,6 +30,9 @@ export const root = recipe({
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
+                '&::before': {
+                    borderRadius: '0',
+                },
                 '&:disabled::before': { opacity: 0 },
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
