@@ -86,23 +86,6 @@ jobs:
             - name: Merge into HTML Report
               run: pnpm core exec playwright merge-reports -c ./playwright.merge.ts ../../all-blob-reports
 
-            - name: Upload HTML report
-              uses: actions/upload-artifact@v4
-              with:
-                  name: html-report--attempt-${{ github.run_attempt }}
-                  path: ./packages/core/__tests__/report/
-                  retention-days: 14
-
-    deploy-report:
-        needs: [visual-regression, merge-reports]
-        if: always()
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/download-artifact@v4
-              with:
-                  name: html-report--attempt-${{ github.run_attempt }}
-                  path: ./report/
-
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
@@ -118,13 +101,13 @@ jobs:
             - name: Upload Report to S3
               run: |
                   aws s3 rm s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
-                  aws s3 cp './report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
+                  aws s3 cp './packages/core/__tests__/report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
 
             - name: Post Test Result
               id: playwright-summary
               uses: daun/playwright-report-summary@v3
               with:
-                  report-file: ./report/index.json
+                  report-file: ./packages/core/__tests__/report/index.json
                   report-url: http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html
                   create-comment: false
 
@@ -172,3 +155,90 @@ jobs:
                       [Click here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) if you need to update snapshots.
 
                   GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
+
+            # - name: Upload HTML report
+            #   uses: actions/upload-artifact@v4
+            #   with:
+            #       name: html-report--attempt-${{ github.run_attempt }}
+            #       path: ./packages/core/__tests__/report/
+            #       retention-days: 14
+
+    # deploy-report:
+    #     needs: [visual-regression, merge-reports]
+    #     if: always()
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - uses: actions/download-artifact@v4
+    #           with:
+    #               name: html-report--attempt-${{ github.run_attempt }}
+    #               path: ./report/
+
+    #         - name: Configure AWS Credentials
+    #           uses: aws-actions/configure-aws-credentials@v4
+    #           with:
+    #               role-to-assume: ${{ env.AWS_IAM_ROLE_NAME }}
+    #               role-session-name: ${{ env.AWS_IAM_ROLE_SESSION_NAME }}
+    #               aws-region: ${{ env.AWS_REGION }}
+
+    #         - name: Set report path
+    #           run: |
+    #               FORMATTED_BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
+    #               echo "REPORT_PATH=${FORMATTED_BRANCH_NAME}" >> $GITHUB_ENV
+
+    #         - name: Upload Report to S3
+    #           run: |
+    #               aws s3 rm s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
+    #               aws s3 cp './report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
+
+    #         - name: Post Test Result
+    #           id: playwright-summary
+    #           uses: daun/playwright-report-summary@v3
+    #           with:
+    #               report-file: ./report/index.json
+    #               report-url: http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html
+    #               create-comment: false
+
+    #         - name: Parse test results
+    #           id: parse-results
+    #           run: |
+    #               # Parse the summary output to extract test statistics
+    #               SUMMARY="${{ steps.playwright-summary.outputs.summary }}"
+
+    #               # Extract passed count
+    #               PASSED=$(echo "$SUMMARY" | grep -oE '\*\*[0-9]+ passed\*\*' | grep -oE '[0-9]+' || echo "0")
+
+    #               # Extract failed count
+    #               FAILED=$(echo "$SUMMARY" | grep -oE '\*\*[0-9]+ failed\*\*' | grep -oE '[0-9]+' || echo "0")
+
+    #               # Calculate total
+    #               TOTAL=$((PASSED + FAILED))
+
+    #               # Extract duration
+    #               DURATION_RAW=$(echo "$SUMMARY" | grep -oE '[0-9]+ minute[s]?, [0-9]+ second[s]?' | head -1 || echo "Unknown")
+
+    #               # Format duration
+    #               if [[ "$DURATION_RAW" != "Unknown" ]]; then
+    #                   MINUTES=$(echo "$DURATION_RAW" | grep -oE '[0-9]+' | head -1)
+    #                   SECONDS=$(echo "$DURATION_RAW" | grep -oE '[0-9]+' | tail -1)
+    #                   DURATION="${MINUTES}m ${SECONDS}s"
+    #               else
+    #                   DURATION="Unknown"
+    #               fi
+
+    #               echo "passed=$PASSED" >> $GITHUB_OUTPUT
+    #               echo "failed=$FAILED" >> $GITHUB_OUTPUT
+    #               echo "total=$TOTAL" >> $GITHUB_OUTPUT
+    #               echo "duration=$DURATION" >> $GITHUB_OUTPUT
+
+    #         - uses: marocchino/sticky-pull-request-comment@v2
+    #           with:
+    #               message: |
+    #                   ${{ contains(needs.visual-regression.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+
+    #                   | Tests | Passed | Failed | Duration | Report |
+    #                   | :---- | :----- | :----- | :------- | :----- |
+    #                   | ${{ steps.parse-results.outputs.total }} | ${{ steps.parse-results.outputs.passed }} | ${{ steps.parse-results.outputs.failed }} | ${{ steps.parse-results.outputs.duration }} | [Open report ↗︎](http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html) |
+
+    #                   [Click here](https://github.com/goorm-dev/vapor-ui/actions/workflows/update-snapshots.yml) if you need to update snapshots.
+
+    #               GITHUB_TOKEN: ${{ secrets.VAPOR_BOT_TOKEN }}
