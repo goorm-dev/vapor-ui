@@ -56,7 +56,7 @@ jobs:
               run: pnpm build-storybook
 
             - name: Run Playwright tests
-              run: pnpm core exec playwright test --project=${{ matrix.shard.name }}
+              run: pnpm core exec playwright test --project="${{ matrix.shard.name }}"
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
