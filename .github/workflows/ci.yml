@@ -1,4 +1,4 @@
-name: "Run Visual Regression Tests"
+name: "Visual Regression Tests"
 
 "on":
     workflow_dispatch:
