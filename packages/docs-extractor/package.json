@@ -34,7 +34,9 @@
         "@types/node": "^20.0.0",
         "@types/lodash-es": "^4.17.12",
         "@types/yargs": "^17.0.0",
-        "rimraf": "^5.0.0"
+        "rimraf": "^5.0.0",
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*"
     },
     "engines": {
         "node": ">=18.0.0"
