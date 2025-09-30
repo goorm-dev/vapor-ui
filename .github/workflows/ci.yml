@@ -27,8 +27,6 @@ jobs:
             fail-fast: false
             matrix:
                 shardProject: [firefox, webkit, chromium, msedge]
-                shardIndex: [1, 2, 3, 4]
-                shardTotal: [4]
         steps:
             - name: Git clone the repository
               uses: actions/checkout@v4
@@ -39,7 +37,7 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Install Playwright Browsers
-              run: pnpm exec playwright install ${{ matrix.shardProject }}
+              run: pnpm core exec playwright install ${{ matrix.shardProject }}
             #   uses: ./.github/composite/browser-install
             #   with:
             #       working-directory: packages/core
