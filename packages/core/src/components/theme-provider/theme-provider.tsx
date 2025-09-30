@@ -83,6 +83,9 @@ interface UseThemeProps {
 
     /** Current system theme (only provided when enableSystem=true) */
     systemTheme?: 'light' | 'dark';
+
+    /** Whether the ThemeProvider has mounted */
+    mounted?: boolean;
 }
 
 interface ThemeProviderProps extends ThemeConfig {
@@ -162,6 +165,7 @@ const Theme = ({
     enableColorScheme = true,
     nonce,
 }: ThemeProviderProps) => {
+    const [mounted, setMounted] = useState(false);
     const [theme, setThemeState] = useState(
         () => getTheme(storageKey, defaultTheme) || defaultTheme,
     );
@@ -169,6 +173,10 @@ const Theme = ({
         const initialTheme = getTheme(storageKey, defaultTheme) || defaultTheme;
         return initialTheme === 'system' ? getSystemTheme() : initialTheme;
     });
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const applyTheme = useCallback(
         (newTheme: string) => {
@@ -255,15 +263,16 @@ const Theme = ({
 
     const contextValue = useMemo(
         () => ({
-            theme,
+            theme: mounted ? theme : undefined,
             setTheme,
             resetTheme,
             forcedTheme,
-            resolvedTheme: theme === 'system' ? resolvedTheme : theme,
+            resolvedTheme: mounted ? (theme === 'system' ? resolvedTheme : theme) : undefined,
             themes: enableSystem ? [...THEME_LIST, 'system'] : THEME_LIST,
-            systemTheme: enableSystem ? (resolvedTheme as 'light' | 'dark') : undefined,
+            systemTheme: mounted && enableSystem ? (resolvedTheme as 'light' | 'dark') : undefined,
+            mounted,
         }),
-        [theme, setTheme, resetTheme, forcedTheme, resolvedTheme, enableSystem],
+        [theme, setTheme, resetTheme, forcedTheme, resolvedTheme, enableSystem, mounted],
     );
 
     return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
@@ -274,9 +283,11 @@ const Theme = ({
  * -----------------------------------------------------------------------------------------------*/
 const useTheme = (): UseThemeProps => {
     const context = useContext(ThemeContext);
+
     if (!context) {
         throw new Error('useTheme must be used within a ThemeProvider');
     }
+
     return context;
 };
 
