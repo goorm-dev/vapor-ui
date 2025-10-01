@@ -1,16 +1,54 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 
-import type { PropInfo } from './types/types';
+import { extractDefaultValue, findCssFile } from '~/parsers/vanilla-extract-parser';
+import type { PropInfo } from '~/types/types';
 import {
     extractFullUnionTypes,
     getJSDocDefaultValue,
     getJSDocDescription,
     shouldIncludePropBySource,
-} from './utils';
-import { extractDefaultValue, findCssFile } from './vanilla-extract-analyzer';
+} from '~/utils';
 
 /**
- * Extracts props information from a TypeScript type
+ * Props parsing utilities
+ * Handles extraction and analysis of component props
+ */
+
+/**
+ * Extracts props type from a component type
+ */
+export function extractPropsType(checker: ts.TypeChecker, componentType: ts.Type): ts.Type | null {
+    const typeString = checker.typeToString(componentType);
+
+    // ForwardRefExoticComponent
+    if (typeString.includes('ForwardRefExoticComponent')) {
+        const forwardRefTypes = extractForwardRefTypes(checker, componentType);
+        if (forwardRefTypes.propsType) {
+            return forwardRefTypes.propsType;
+        }
+    }
+
+    // MemoExoticComponent
+    if (typeString.includes('MemoExoticComponent')) {
+        const typeArgs = checker.getTypeArguments(componentType as ts.TypeReference);
+        if (typeArgs && typeArgs.length > 0) {
+            const componentTypeArg = typeArgs[0];
+            return extractPropsType(checker, componentTypeArg);
+        }
+    }
+
+    // Regular functional component
+    const signatures = componentType.getCallSignatures();
+    if (signatures.length === 0) return null;
+
+    const firstParam = signatures[0].getParameters()[0];
+    if (!firstParam) return null;
+
+    return checker.getTypeOfSymbolAtLocation(firstParam, firstParam.valueDeclaration!);
+}
+
+/**
+ * Extracts props information from props type
  */
 export function extractProps(
     checker: ts.TypeChecker,
@@ -45,39 +83,6 @@ export function extractProps(
     });
 
     return props;
-}
-
-/**
- * Extracts props type from a component type
- */
-export function extractPropsType(checker: ts.TypeChecker, componentType: ts.Type): ts.Type | null {
-    const typeString = checker.typeToString(componentType);
-
-    // ForwardRefExoticComponent
-    if (typeString.includes('ForwardRefExoticComponent')) {
-        const forwardRefTypes = extractForwardRefTypes(checker, componentType);
-        if (forwardRefTypes.propsType) {
-            return forwardRefTypes.propsType;
-        }
-    }
-
-    // MemoExoticComponent
-    if (typeString.includes('MemoExoticComponent')) {
-        const typeArgs = checker.getTypeArguments(componentType as ts.TypeReference);
-        if (typeArgs && typeArgs.length > 0) {
-            const componentTypeArg = typeArgs[0];
-            return extractPropsType(checker, componentTypeArg);
-        }
-    }
-
-    // Regular functional component
-    const signatures = componentType.getCallSignatures();
-    if (signatures.length === 0) return null;
-
-    const firstParam = signatures[0].getParameters()[0];
-    if (!firstParam) return null;
-
-    return checker.getTypeOfSymbolAtLocation(firstParam, firstParam.valueDeclaration!);
 }
 
 /**

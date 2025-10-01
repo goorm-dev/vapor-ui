@@ -1,13 +1,17 @@
-// Type Extraction Core
-export * from './type-extractor';
+// Entry point for the documentation extractor module
+// Re-exports all necessary functionalities from sub-modules
 
-// Specialized Analyzers
-export * from './component-analyzer';
-export * from './props-analyzer';
-export * from './vanilla-extract-analyzer';
+// Parsers
+export * from './parsers/export-parser';
+export * from './parsers/module-parser';
+export * from './parsers/component-parser';
+export * from './parsers/props-parser';
+export * from './parsers/vanilla-extract-parser';
 
-// External Type Resolution
-export * from './external-resolver';
+// Handlers
+export * from './handler/component-handler';
+export * from './handler/external-packages-handler';
+export * from './handler/vanilla-extract-handler';
 
 // Types and Interfaces
 export * from './types/types';

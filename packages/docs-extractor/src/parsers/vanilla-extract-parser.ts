@@ -1,7 +1,7 @@
 import * as path from 'path';
 import ts from 'typescript';
 
-import { getLiteralValue } from './utils';
+import { getLiteralValue } from '~/utils';
 
 /**
  * Finds the CSS file associated with a component file

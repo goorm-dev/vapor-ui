@@ -4,8 +4,9 @@ import * as path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { processComponentExportedSymbols } from '~/handler/componentHandler';
-import { createTypeScriptProgram, getModuleSymbol } from '~/type-extractor';
+import { processComponentExportedSymbols } from '~/handler/component-handler';
+import { getModuleSymbol } from '~/parsers/module-parser';
+import { createTypeScriptProgram } from '~/parsers/program-parser';
 
 import type { RunOptions } from '../types/types';
 import { createComponentData, ensureOutputDirectory, writeComponentDataToFile } from '../utils';

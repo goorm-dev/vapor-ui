@@ -1,4 +1,52 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
+
+import type { ComponentTypeInfo } from '~/types/types';
+import { getJSDocDescription, isReactReturnType } from '~/utils';
+
+import { extractProps, extractPropsType } from './props-parser';
+
+/**
+ * Component parsing utilities
+ * Handles React component analysis and extraction
+ */
+
+/**
+ * Creates component type information from symbol and type data
+ */
+export function createComponentInfo(
+    program: ts.Program,
+    checker: ts.TypeChecker,
+    name: string,
+    symbol: ts.Symbol,
+    type: ts.Type,
+    sourceFile: ts.SourceFile,
+): ComponentTypeInfo[] | undefined {
+    // Check if it's a React component
+    if (!isReactReturnType(type, checker)) {
+        return;
+    }
+
+    const componentName = name;
+    const description = getJSDocDescription(symbol, checker);
+
+    // Extract props
+    const propsType = extractPropsType(checker, type);
+    const props = propsType ? extractProps(checker, program, propsType, sourceFile) : [];
+
+    // Extract display name and default element
+    const displayName = extractDisplayName(symbol);
+    const defaultElement = extractDefaultElement(symbol);
+
+    return [
+        {
+            name: componentName,
+            displayName,
+            description,
+            props,
+            defaultElement,
+        },
+    ];
+}
 
 /**
  * Extracts the display name from a component symbol
@@ -49,10 +97,7 @@ export function extractDefaultElement(symbol: ts.Symbol): string | undefined {
                 targetNode.expression.text === 'forwardRef'
             ) {
                 const arrowFunction = targetNode.arguments[0];
-                if (
-                    ts.isArrowFunction(arrowFunction) ||
-                    ts.isFunctionExpression(arrowFunction)
-                ) {
+                if (ts.isArrowFunction(arrowFunction) || ts.isFunctionExpression(arrowFunction)) {
                     const defaultElement = findDefaultElementInFunction(arrowFunction);
                     if (defaultElement) {
                         return defaultElement;
@@ -96,10 +141,7 @@ function findDefaultElementInFunction(
                         renderProp.initializer.operatorToken.kind === ts.SyntaxKind.BarBarToken
                     ) {
                         const rightSide = renderProp.initializer.right;
-                        if (
-                            ts.isJsxElement(rightSide) ||
-                            ts.isJsxSelfClosingElement(rightSide)
-                        ) {
+                        if (ts.isJsxElement(rightSide) || ts.isJsxSelfClosingElement(rightSide)) {
                             const tagName = ts.isJsxElement(rightSide)
                                 ? rightSide.openingElement.tagName
                                 : rightSide.tagName;
