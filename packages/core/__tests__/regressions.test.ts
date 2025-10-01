@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { expect, test } from '@playwright/test';
 
-import manifest from '../../../storybook-static/index.json' with { type: 'json' };
+import manifest from '../../../apps/storybook/storybook-static/index.json' with { type: 'json' };
 
 const targetComponent =
     process.env.COMPONENT ||
