@@ -1,31 +1,56 @@
-# @packages/docs-extractor
+# @vapor-ui/docs-extractor
 
 A TypeScript-based tool for extracting component API documentation from React components. This package analyzes TypeScript files to generate comprehensive documentation including props, types, default values, and component metadata.
 
 ## Features
 
+- **Modular Parser System**: Building-block architecture with selectively enabled parser modules
+- **Step-by-Step Configuration**: Configurable CLI with presets and custom setups
 - **TypeScript Analysis**: Extracts props, types, and JSDoc comments from TypeScript React components
 - **Vanilla Extract Support**: Reads default values from Vanilla Extract CSS-in-JS recipe files
 - **External Type Resolution**: Includes types from external packages like Base UI
 - **Flexible Input**: Supports glob patterns for file selection
 - **JSON Output**: Generates structured JSON documentation files
-- **Function-based API**: Modular functions for custom integration
+- **Dual API**: Legacy functions + new modular parser orchestrator
 
 ## Installation
 
 ```bash
-npm install @packages/docs-extractor
+npm install @vapor-ui/docs-extractor
 ```
 
 ## CLI Usage
 
-### Basic Usage
+### Modular CLI (Recommended)
+
+The new modular CLI supports presets and step-by-step configuration:
+
+```bash
+# Using design-system preset
+docs-extractor-modular -c tsconfig.json -o ./docs --preset design-system -f "src/**/*.{ts,tsx}"
+
+# Using react preset
+docs-extractor-modular -c tsconfig.json -o ./docs --preset react -f "src/**/*.{ts,tsx}"
+
+# Using minimal preset
+docs-extractor-modular -c tsconfig.json -o ./docs --preset minimal -f "src/**/*.{ts,tsx}"
+```
+
+#### Preset Options
+
+- **`design-system`**: All parsers enabled (components, props, external types, Vanilla Extract)
+- **`react`**: Component and props parsing only
+- **`minimal`**: Component parsing only
+
+### Legacy CLI
+
+The original CLI is still available for backward compatibility:
 
 ```bash
 docs-extractor -c tsconfig.json -o ./docs -f "src/**/*.{ts,tsx}"
 ```
 
-### Command Options
+#### Command Options
 
 - `-c, --configPath`: Path to tsconfig.json file (required)
 - `-o, --out`: Output directory for generated documentation (required)
@@ -35,13 +60,13 @@ docs-extractor -c tsconfig.json -o ./docs -f "src/**/*.{ts,tsx}"
 ### Examples
 
 ```bash
-# Extract docs for all component files
-docs-extractor -c ./tsconfig.json -o ./api-docs -f "src/components/**/*.{ts,tsx}"
+# Modern approach with design-system preset
+docs-extractor-modular -c ./tsconfig.json -o ./api-docs --preset design-system -f "src/components/**/*.{ts,tsx}"
 
-# Include specific external types
+# Legacy approach with external types
 docs-extractor -c ./tsconfig.json -o ./docs -f "src/**/*.{ts,tsx}" -x "@base-ui-components/react:esm/index.d.ts"
 
-# Extract from multiple patterns
+# Multiple patterns (both CLIs support this)
 docs-extractor -c ./tsconfig.json -o ./docs -f "src/components/**/*.{ts,tsx}" -f "src/widgets/**/*.{ts,tsx}"
 ```
 
@@ -50,12 +75,9 @@ docs-extractor -c ./tsconfig.json -o ./docs -f "src/components/**/*.{ts,tsx}" -f
 ### Basic Usage
 
 ```typescript
-import { extractComponentTypesFromFile } from '@packages/docs-extractor';
+import { extractComponentTypesFromFile } from '@vapor-ui/docs-extractor';
 
-const components = extractComponentTypesFromFile(
-  './tsconfig.json',
-  './src/components/Button.tsx'
-);
+const components = extractComponentTypesFromFile('./tsconfig.json', './src/components/Button.tsx');
 
 console.log(components);
 ```
@@ -64,23 +86,23 @@ console.log(components);
 
 ```typescript
 import {
-  createTypeScriptProgram,
-  extractComponentTypes,
-  extractDisplayName,
-  extractProps
-} from '@packages/docs-extractor';
+    createTypeScriptProgram,
+    extractComponentTypes,
+    extractDisplayName,
+    extractProps,
+} from '@vapor-ui/docs-extractor';
 
 // Create TypeScript program
 const { program, checker } = createTypeScriptProgram({
-  configPath: './tsconfig.json',
-  externalTypePaths: ['@base-ui-components/react:esm/index.d.ts']
+    configPath: './tsconfig.json',
+    externalTypePaths: ['@base-ui-components/react:esm/index.d.ts'],
 });
 
 // Extract components from multiple files
 const allComponents = [];
 for (const filePath of filePaths) {
-  const components = extractComponentTypes(program, checker, filePath);
-  allComponents.push(...components);
+    const components = extractComponentTypes(program, checker, filePath);
+    allComponents.push(...components);
 }
 ```
 
@@ -115,33 +137,34 @@ The tool generates JSON files with the following structure:
 
 ```json
 {
-  "name": "Button",
-  "displayName": "Button",
-  "description": "A customizable button component",
-  "props": [
-    {
-      "name": "variant",
-      "type": ["primary", "secondary", "danger"],
-      "required": false,
-      "description": "Visual style variant",
-      "defaultValue": "primary"
-    },
-    {
-      "name": "children",
-      "type": "React.ReactNode",
-      "required": true,
-      "description": "Button content"
-    }
-  ],
-  "defaultElement": "button",
-  "generatedAt": "2024-01-01T00:00:00.000Z",
-  "sourceFile": "/path/to/Button.tsx"
+    "name": "Button",
+    "displayName": "Button",
+    "description": "A customizable button component",
+    "props": [
+        {
+            "name": "variant",
+            "type": ["primary", "secondary", "danger"],
+            "required": false,
+            "description": "Visual style variant",
+            "defaultValue": "primary"
+        },
+        {
+            "name": "children",
+            "type": "React.ReactNode",
+            "required": true,
+            "description": "Button content"
+        }
+    ],
+    "defaultElement": "button",
+    "generatedAt": "2024-01-01T00:00:00.000Z",
+    "sourceFile": "/path/to/Button.tsx"
 }
 ```
 
 ## Supported Features
 
 ### Component Analysis
+
 - React functional components
 - ForwardRef components
 - Memo wrapped components
@@ -149,6 +172,7 @@ The tool generates JSON files with the following structure:
 - Default rendering elements
 
 ### Props Analysis
+
 - TypeScript interface props
 - Union types (converted to arrays)
 - Optional vs required props
@@ -156,11 +180,13 @@ The tool generates JSON files with the following structure:
 - JSDoc @default tags
 
 ### Vanilla Extract Integration
+
 - Automatic CSS file detection
 - Recipe defaultVariants extraction
 - Default value inheritance
 
 ### External Types
+
 - Base UI components
 - Custom external packages
 - Multiple package managers (npm, pnpm, yarn)
@@ -173,12 +199,12 @@ Ensure your `tsconfig.json` includes the files you want to analyze:
 
 ```json
 {
-  "compilerOptions": {
-    "strict": true,
-    "jsx": "react-jsx"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.*", "**/*.stories.*"]
+    "compilerOptions": {
+        "strict": true,
+        "jsx": "react-jsx"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["**/*.test.*", "**/*.stories.*"]
 }
 ```
 
@@ -206,7 +232,7 @@ src/
 │   └── cli.ts                    # CLI entry point
 ├── component-analyzer.ts         # Component analysis functions
 ├── external-resolver.ts          # External type resolution
-├── props-analyzer.ts            # Props extraction functions  
+├── props-analyzer.ts            # Props extraction functions
 ├── type-extractor.ts            # Main extraction logic
 ├── vanilla-extract-analyzer.ts  # CSS-in-JS analysis
 ├── utils.ts                     # Utility functions
@@ -220,6 +246,7 @@ src/
 ### Extracting Button Component
 
 Input TypeScript file:
+
 ```typescript
 interface ButtonProps {
   /** Visual style variant */
@@ -240,25 +267,26 @@ Button.displayName = 'Button';
 ```
 
 Generated documentation:
+
 ```json
 {
-  "name": "Button",
-  "displayName": "Button", 
-  "props": [
-    {
-      "name": "variant",
-      "type": ["primary", "secondary", "danger"],
-      "required": false,
-      "description": "Visual style variant"
-    },
-    {
-      "name": "children", 
-      "type": "React.ReactNode",
-      "required": true,
-      "description": "Button content"
-    }
-  ],
-  "defaultElement": "button"
+    "name": "Button",
+    "displayName": "Button",
+    "props": [
+        {
+            "name": "variant",
+            "type": ["primary", "secondary", "danger"],
+            "required": false,
+            "description": "Visual style variant"
+        },
+        {
+            "name": "children",
+            "type": "React.ReactNode",
+            "required": true,
+            "description": "Button content"
+        }
+    ],
+    "defaultElement": "button"
 }
 ```
 

@@ -232,45 +232,6 @@ export function extractFullUnionTypes(
 }
 
 /**
- * Parses TypeScript union types into array format (legacy function)
- * Converts '"primary" | "success" | "warning" | undefined' to ["primary", "success", "warning"]
- * Removes "undefined" from union types for optional props
- */
-export function parseTypeToArray(
-    typeString: string,
-    isRequired: boolean = false,
-): string[] | string {
-    // Check if it's a union type
-    if (!typeString.includes(' | ')) {
-        return typeString;
-    }
-
-    // Split by union separator and clean up each type
-    let types = typeString
-        .split(' | ')
-        .map((type) => type.trim())
-        .map((type) => {
-            // Remove quotes from string literals: "primary" -> primary
-            if (type.startsWith('"') && type.endsWith('"')) {
-                return type.slice(1, -1);
-            }
-            // Remove quotes from string literals: 'primary' -> primary
-            if (type.startsWith("'") && type.endsWith("'")) {
-                return type.slice(1, -1);
-            }
-            // Keep other types as is: undefined, number, boolean, etc.
-            return type;
-        });
-
-    // Remove "undefined" for optional props (not required)
-    if (!isRequired) {
-        types = types.filter((type) => type !== 'undefined');
-    }
-
-    return types;
-}
-
-/**
  * Returns the first array if it's not empty, otherwise returns the second array
  */
 export function selectNonEmptyArray<T>(firstArray: T[] | undefined, secondArray: T[]): T[] {

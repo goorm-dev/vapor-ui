@@ -8,7 +8,6 @@ export interface RunOptions {
     files?: string[];
     configPath: string;
     out: string;
-    language: string;
     externalTypePaths?: string[];
 }
 

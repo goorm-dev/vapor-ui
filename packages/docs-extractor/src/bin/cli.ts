@@ -78,13 +78,12 @@ export async function main(options: RunOptions) {
             for (const filePath of resolvedFiles) {
                 const fullPath = path.resolve(configDir, filePath);
 
-                const { moduleSymbol, sourceFile } =
-                    getModuleSymbol(checker, program, fullPath) || {};
+                const moduleInfo = getModuleSymbol(checker, program, fullPath);
 
-                if (!moduleSymbol || !sourceFile) {
-                    console.warn(`No module symbol found for file: ${fullPath}`);
-                    continue;
+                if (!moduleInfo) {
+                    throw new Error(`No module symbol found for file: ${fullPath}`);
                 }
+                const { moduleSymbol, sourceFile } = moduleInfo;
 
                 const components = processComponentExportedSymbols({
                     program,
