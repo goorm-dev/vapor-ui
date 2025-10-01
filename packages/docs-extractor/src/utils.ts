@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { kebabCase } from 'lodash-es';
+import { isEmpty, kebabCase } from 'lodash-es';
 import * as path from 'path';
 import prettier from 'prettier';
 import ts from 'typescript';
@@ -268,4 +268,11 @@ export function parseTypeToArray(
     }
 
     return types;
+}
+
+/**
+ * Returns the first array if it's not empty, otherwise returns the second array
+ */
+export function selectNonEmptyArray<T>(firstArray: T[] | undefined, secondArray: T[]): T[] {
+    return firstArray && firstArray.length > 0 ? firstArray : secondArray;
 }

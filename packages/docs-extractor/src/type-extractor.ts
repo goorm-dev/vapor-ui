@@ -2,11 +2,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 
-import { extractDisplayName, extractDefaultElement } from './component-analyzer';
+import { extractDefaultElement, extractDisplayName } from './component-analyzer';
 import { resolveExternalTypeFiles } from './external-resolver';
 import { extractProps, extractPropsType } from './props-analyzer';
 import type { ComponentTypeInfo, TypeExtractorConfig } from './types/types';
-import { getJSDocDescription, isReactReturnType } from './utils';
+import { getJSDocDescription, isReactReturnType, selectNonEmptyArray } from './utils';
 
 /**
  * Creates a TypeScript program with external type files included
@@ -15,10 +15,11 @@ export function createTypeScriptProgram(config: TypeExtractorConfig): {
     program: ts.Program;
     checker: ts.TypeChecker;
 } {
-    const resolvedConfigPath = path.resolve(config.configPath);
+    const { configPath, files, externalTypePaths, projectRoot } = config;
+    const resolvedConfigPath = path.resolve(configPath);
     const projectDirectory = path.dirname(resolvedConfigPath);
 
-    const { config: tsConfig, error } = ts.readConfigFile(config.configPath, (filePath) =>
+    const { config: tsConfig, error } = ts.readConfigFile(configPath, (filePath) =>
         fs.readFileSync(filePath).toString(),
     );
 
@@ -35,10 +36,11 @@ export function createTypeScriptProgram(config: TypeExtractorConfig): {
     if (errors.length > 0) throw errors[0];
 
     // Include external type files (Base UI, React types, etc.)
-    const projectRoot = config.projectRoot || projectDirectory;
-    const externalTypeFiles = resolveExternalTypeFiles(projectRoot, config.externalTypePaths);
+    const rootDirectory = projectRoot || projectDirectory;
+    const externalTypeFiles = resolveExternalTypeFiles(rootDirectory, config.externalTypePaths);
+    const resolvedFiles = [...selectNonEmptyArray(files, fileNames), ...externalTypeFiles];
 
-    const program = ts.createProgram([...fileNames, ...externalTypeFiles], options);
+    const program = ts.createProgram(resolvedFiles, options);
     const checker = program.getTypeChecker();
 
     return { program, checker };
@@ -50,7 +52,7 @@ export function createTypeScriptProgram(config: TypeExtractorConfig): {
 export function extractComponentTypes(
     program: ts.Program,
     checker: ts.TypeChecker,
-    filePath: string
+    filePath: string,
 ): ComponentTypeInfo[] {
     const sourceFilePath = path.resolve(filePath);
     const sourceFile = program.getSourceFile(sourceFilePath);
@@ -102,8 +104,7 @@ function parseExport(
                 return;
             }
 
-            const targetSymbol =
-                checker.getExportSpecifierLocalTargetSymbol(exportDeclaration);
+            const targetSymbol = checker.getExportSpecifierLocalTargetSymbol(exportDeclaration);
             if (!targetSymbol) {
                 return;
             }
@@ -115,7 +116,14 @@ function parseExport(
                 type = checker.getTypeOfSymbol(targetSymbol);
             }
 
-            return createComponentInfo(program, checker, exportSymbol.name, targetSymbol, type, sourceFile);
+            return createComponentInfo(
+                program,
+                checker,
+                exportSymbol.name,
+                targetSymbol,
+                type,
+                sourceFile,
+            );
         }
     } catch (error) {
         console.error('Export parsing error:', error);
