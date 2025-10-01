@@ -9,7 +9,7 @@ const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
     stories: ['../../../packages/**/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-    addons: [getAbsolutePath('@storybook/addon-essentials')],
+    addons: [getAbsolutePath('@storybook/addon-docs')],
 
     core: {
         builder: getAbsolutePath('@storybook/builder-vite'),
