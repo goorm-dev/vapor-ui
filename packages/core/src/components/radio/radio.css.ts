@@ -20,19 +20,22 @@ export const root = recipe({
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: 9999,
 
-            backgroundColor: vars.color.background.normal,
+            backgroundColor: vars.color.background.canvas,
             cursor: 'pointer',
 
             padding: vars.size.space['000'],
 
             selectors: {
                 '&[data-checked]': {
-                    backgroundColor: vars.color.background.primary,
+                    backgroundColor: vars.color.background.primary[200],
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
                 '&:disabled::before': { opacity: 0 },
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+
+                '&[data-readonly]:active::before': { opacity: 0.08 },
             },
         }),
     ],
@@ -44,7 +47,7 @@ export const root = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('components', { borderColor: vars.color.background['danger'] }),
+            true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },
 
         size: {
@@ -70,6 +73,11 @@ export const indicator = layerStyle('components', {
     backgroundColor: vars.color.white,
     width: '50%',
     height: '50%',
+    selectors: {
+        '&[data-readonly]': {
+            backgroundColor: vars.color.foreground.hint[100],
+        },
+    },
 });
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

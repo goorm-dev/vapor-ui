@@ -244,17 +244,22 @@ Popup.displayName = 'MultiSelect.Popup';
  * -----------------------------------------------------------------------------------------------*/
 
 type ContentPrimitiveProps = VComponentProps<typeof Popup>;
-interface MultiSelectContentProps extends ContentPrimitiveProps {}
+interface MultiSelectContentProps extends ContentPrimitiveProps {
+    portalProps?: MultiSelectPortalProps;
+    positionerProps?: MultiSelectPositionerProps;
+}
 
-const Content = forwardRef<HTMLDivElement, MultiSelectContentProps>((props, ref) => {
-    return (
-        <Portal>
-            <Positioner>
-                <Popup ref={ref} {...props} />
-            </Positioner>
-        </Portal>
-    );
-});
+const Content = forwardRef<HTMLDivElement, MultiSelectContentProps>(
+    ({ portalProps, positionerProps, ...props }, ref) => {
+        return (
+            <Portal {...portalProps}>
+                <Positioner {...positionerProps}>
+                    <Popup ref={ref} {...props} />
+                </Positioner>
+            </Portal>
+        );
+    },
+);
 Content.displayName = 'MultiSelect.Content';
 
 /* -------------------------------------------------------------------------------------------------

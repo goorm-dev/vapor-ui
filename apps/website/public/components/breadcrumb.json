@@ -1,6 +1,12 @@
 {
     "props": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "nav",
+            "description": "브레드크럼을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "size",
             "type": ["sm", "md", "lg", "xl"],
             "default": "md",
@@ -21,6 +27,12 @@
     ],
     "listProps": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "ol",
+            "description": "리스트를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "className",
             "type": ["string"],
             "default": "undefined",
@@ -35,6 +47,12 @@
     ],
     "itemProps": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "li",
+            "description": "아이템을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "className",
             "type": ["string"],
             "default": "undefined",
@@ -48,6 +66,12 @@
         }
     ],
     "linkProps": [
+        {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "a | span",
+            "description": "링크를 렌더링할 때 사용할 커스텀 렌더링 요소입니다. current prop에 따라 기본값이 달라집니다."
+        },
         {
             "prop": "current",
             "type": ["boolean"],
@@ -75,6 +99,12 @@
     ],
     "separatorProps": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "li",
+            "description": "구분자를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "className",
             "type": ["string"],
             "default": "undefined",
@@ -88,6 +118,12 @@
         }
     ],
     "ellipsisProps": [
+        {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "span",
+            "description": "생략 표시를 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
         {
             "prop": "className",
             "type": ["string"],

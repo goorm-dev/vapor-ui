@@ -16,7 +16,7 @@ export const popup = layerStyle('components', {
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background.normal,
+    backgroundColor: vars.color.background.surface[100],
     padding: vars.size.space['050'],
     minWidth: '12.5rem',
 
@@ -31,7 +31,7 @@ export const item = recipe({
     base: [
         interaction({ type: 'roving' }),
         typography({ style: 'body2' }),
-        foregrounds({ color: 'normal' }),
+        foregrounds({ color: 'normal-200' }),
         layerStyle('components', {
             position: 'relative',
 
@@ -71,7 +71,7 @@ export const subTrigger = item;
 
 export const groupLabel = style([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'hint' }),
+    foregrounds({ color: 'hint-200' }),
     layerStyle('components', {
         paddingTop: vars.size.space['100'],
         paddingRight: vars.size.space['050'],
@@ -81,7 +81,7 @@ export const groupLabel = style([
 ]);
 
 export const indicator = style([
-    foregrounds({ color: 'normal' }),
+    foregrounds({ color: 'normal-200' }),
     layerStyle('components', {
         position: 'absolute',
         top: '50%',

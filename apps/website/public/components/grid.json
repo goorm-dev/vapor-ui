@@ -1,42 +1,42 @@
 {
-  "props": [
-    {
-      "prop": "inline",
-      "type": ["boolean"],
-      "default": "false",
-      "description": "그리드를 인라인 그리드로 표시할지 여부를 설정합니다."
-    },
-    {
-      "prop": "templateRows",
-      "type": ["string"],
-      "default": "undefined",
-      "description": "그리드의 행 템플릿을 정의합니다. (예: '1fr 1fr' 또는 'repeat(3, 1fr)')"
-    },
-    {
-      "prop": "templateColumns",
-      "type": ["string"],
-      "default": "undefined",
-      "description": "그리드의 열 템플릿을 정의합니다. (예: '1fr 1fr' 또는 'repeat(3, 1fr)')"
-    },
-    {
-      "prop": "flow",
-      "type": ["row", "column", "row dense", "column dense"],
-      "default": "row",
-      "description": "그리드 아이템들의 자동 배치 흐름을 설정합니다."
-    }
-  ],
-  "subComponentProps": [
-    {
-      "prop": "rowSpan",
-      "type": ["string"],
-      "default": "undefined",
-      "description": "그리드 아이템이 차지할 행의 개수를 설정합니다. (예: '2' 또는 'span 2')"
-    },
-    {
-      "prop": "colSpan",
-      "type": ["string"],
-      "default": "undefined",
-      "description": "그리드 아이템이 차지할 열의 개수를 설정합니다. (예: '2' 또는 'span 2')"
-    }
-  ]
+    "props": [
+        {
+            "prop": "inline",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "그리드를 인라인 그리드로 표시할지 여부를 설정합니다."
+        },
+        {
+            "prop": "templateRows",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "그리드의 행 템플릿을 정의합니다. (예: '1fr 1fr' 또는 'repeat(3, 1fr)')"
+        },
+        {
+            "prop": "templateColumns",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "그리드의 열 템플릿을 정의합니다. (예: '1fr 1fr' 또는 'repeat(3, 1fr)')"
+        },
+        {
+            "prop": "flow",
+            "type": ["row", "column", "row dense", "column dense"],
+            "default": "row",
+            "description": "그리드 아이템들의 자동 배치 흐름을 설정합니다."
+        }
+    ],
+    "subComponentProps": [
+        {
+            "prop": "rowSpan",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "그리드 아이템이 차지할 행의 개수를 설정합니다. (예: '2' 또는 'span 2')"
+        },
+        {
+            "prop": "colSpan",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "그리드 아이템이 차지할 열의 개수를 설정합니다. (예: '2' 또는 'span 2')"
+        }
+    ]
 }

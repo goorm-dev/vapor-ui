@@ -24,6 +24,7 @@
         "hooks": "pnpm --filter @vapor-ui/hooks",
         "icons": "pnpm --filter @vapor-ui/icons",
         "color-generator": "pnpm --filter @vapor-ui/color-generator",
+        "css-generator": "pnpm --filter @vapor-ui/css-generator",
         "website": "pnpm --filter website",
         "figma-plugin": "pnpm --filter figma-plugin",
         "dev": "turbo dev",
