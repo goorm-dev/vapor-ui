@@ -41,37 +41,28 @@ export const Default: StoryObj<SelectProps> = {
                     <Select.TriggerIcon />
                 </Select.Trigger>
 
-                <Select.Portal>
-                    <Select.Positioner
-                        side={side}
-                        align={align}
-                        sideOffset={sideOffset}
-                        alignOffset={alignOffset}
-                    >
-                        <Select.Popup>
-                            <Select.Group>
-                                <Select.GroupLabel>Font</Select.GroupLabel>
-                                <Select.Item value="sans">
-                                    Sans-serif
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="serif">
-                                    Serif
-                                    <Select.ItemIndicator />
-                                </Select.Item>
+                <Select.Content positionerProps={{ side, align, sideOffset, alignOffset }}>
+                    <Select.Group>
+                        <Select.GroupLabel>Font</Select.GroupLabel>
+                        <Select.Item value="sans">
+                            Sans-serif
+                            <Select.ItemIndicator />
+                        </Select.Item>
+                        <Select.Item value="serif">
+                            Serif
+                            <Select.ItemIndicator />
+                        </Select.Item>
 
-                                <Select.Item value="mono">
-                                    Monospace
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="cursive">
-                                    Cursive
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                            </Select.Group>
-                        </Select.Popup>
-                    </Select.Positioner>
-                </Select.Portal>
+                        <Select.Item value="mono">
+                            Monospace
+                            <Select.ItemIndicator />
+                        </Select.Item>
+                        <Select.Item value="cursive">
+                            Cursive
+                            <Select.ItemIndicator />
+                        </Select.Item>
+                    </Select.Group>
+                </Select.Content>
             </Select.Root>
         </Box>
     ),

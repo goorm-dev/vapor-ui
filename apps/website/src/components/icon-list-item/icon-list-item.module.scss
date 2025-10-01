@@ -8,13 +8,13 @@
     gap: var(--vapor-size-space-100, 0.5rem);
     border-radius: var(--vapor-size-borderRadius-300, 0.5rem);
     border: 1px solid var(--vapor-color-border-normal, #e1e1e8);
-    background: var(--vapor-color-background-normal, #fff);
+    background: var(--vapor-color-background-canvas, #fff);
     position: relative;
     cursor: auto;
 }
 
 .iconContainer {
-    color: var(--vapor-color-foreground-normal);
+    color: var(--vapor-color-foreground-normal-100);
 }
 
 .dim {

@@ -2,10 +2,10 @@ import { Button, Dialog } from '@vapor-ui/core';
 
 export default function DialogModal() {
     return (
-        <div className="space-x-4">
+        <div className="flex gap-4">
             <Dialog.Root modal={true}>
                 <Dialog.Trigger render={<Button>Modal Dialog</Button>} />
-                <Dialog.CombinedContent>
+                <Dialog.Content>
                     <Dialog.Header>
                         <Dialog.Title>Modal Dialog</Dialog.Title>
                     </Dialog.Header>
@@ -17,12 +17,12 @@ export default function DialogModal() {
                     <Dialog.Footer>
                         <Dialog.Close render={<Button>확인</Button>} />
                     </Dialog.Footer>
-                </Dialog.CombinedContent>
+                </Dialog.Content>
             </Dialog.Root>
 
             <Dialog.Root modal={false}>
                 <Dialog.Trigger render={<Button>Non-Modal Dialog</Button>} />
-                <Dialog.CombinedContent>
+                <Dialog.Content>
                     <Dialog.Header>
                         <Dialog.Title>Non-Modal Dialog</Dialog.Title>
                     </Dialog.Header>
@@ -34,7 +34,7 @@ export default function DialogModal() {
                     <Dialog.Footer>
                         <Dialog.Close render={<Button>확인</Button>} />
                     </Dialog.Footer>
-                </Dialog.CombinedContent>
+                </Dialog.Content>
             </Dialog.Root>
         </div>
     );

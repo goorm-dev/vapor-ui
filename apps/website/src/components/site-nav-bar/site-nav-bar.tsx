@@ -22,7 +22,7 @@ import LogoVapor from '../../../public/icons/logo-vapor.svg';
 const NAVIGATION_LINKS = [
     { href: '/docs', label: 'Docs' },
     { href: '/playground', label: 'Playground' },
-    // { href: '/blocks', label: 'UI Blocks' }, // TODO : when blocks page is ready
+    { href: '/blocks', label: 'Blocks' },
 ];
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
@@ -61,10 +61,10 @@ export const SiteNavBar = () => {
     const [mounted, setMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const { appearance, setTheme } = useTheme();
+    const { theme, setTheme } = useTheme();
 
     const toggleTheme = () => {
-        setTheme({ appearance: appearance === 'light' ? 'dark' : 'light' });
+        setTheme(theme === 'dark' ? 'light' : 'dark');
     };
 
     useEffect(() => {
@@ -96,7 +96,7 @@ export const SiteNavBar = () => {
             <header
                 className={`z-10 flex w-full py-3 px-4 md:px-8 justify-between items-center fixed top-0 transition-all duration-300 ${
                     isScrolled
-                        ? 'bg-[var(--vapor-color-background-normal)] shadow-lg backdrop-blur-sm z-20'
+                        ? 'bg-[var(--vapor-color-background-canvas)] shadow-lg backdrop-blur-sm z-20'
                         : 'bg-transparent'
                 }`}
             >
@@ -167,10 +167,10 @@ export const SiteNavBar = () => {
                                         size="lg"
                                         color="secondary"
                                         variant="ghost"
-                                        aria-label={`Switch to ${appearance} mode`}
+                                        aria-label={`Switch to ${theme} mode`}
                                         onClick={toggleTheme}
                                     >
-                                        {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                        {theme === 'dark' ? <LightIcon /> : <DarkIcon />}
                                     </IconButton>
                                 </NavigationMenu.Item>
                             </NavigationMenu.List>
@@ -193,7 +193,7 @@ export const SiteNavBar = () => {
                 <Dialog.Overlay className="fixed z-10 inset-0 bg-black/40 md:hidden" />
 
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-normal)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
+                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-canvas)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >
@@ -248,21 +248,21 @@ export const SiteNavBar = () => {
                             }}
                         >
                             <Text className="flex items-center gap-2 text-base" render={<h6 />}>
-                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
-                                {appearance === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                                {theme === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                             </Text>
                             <IconButton
                                 size="md"
                                 color="secondary"
                                 variant="fill"
                                 aria-label={
-                                    appearance
-                                        ? `Switch to ${appearance === 'light' ? 'dark' : 'light'} mode`
+                                    theme
+                                        ? `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`
                                         : 'Toggle theme'
                                 }
                                 onClick={toggleTheme}
                             >
-                                {appearance === 'dark' ? <LightIcon /> : <DarkIcon />}
+                                {theme === 'dark' ? <LightIcon /> : <DarkIcon />}
                             </IconButton>
                         </li>
                     </ul>
