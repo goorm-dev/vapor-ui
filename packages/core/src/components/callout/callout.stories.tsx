@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CheckboxIcon, CloseOutlineIcon } from '@vapor-ui/icons';
 
 import { Flex } from '../flex';

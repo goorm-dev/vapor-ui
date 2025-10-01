@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { HeartIcon } from '@vapor-ui/icons';
 
 import { IconButton, type IconButtonProps } from './icon-button';
