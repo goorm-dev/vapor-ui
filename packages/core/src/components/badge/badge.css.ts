@@ -13,6 +13,7 @@ export const root = recipe({
 
     defaultVariants: { color: 'primary', size: 'md', shape: 'square' },
     variants: {
+        /** Use the color prop to change the color scheme of the badge */
         color: {
             primary: layerStyle('components', {
                 color: vars.color.foreground.primary[200],
@@ -40,6 +41,7 @@ export const root = recipe({
             }),
         },
 
+        /** Use the shape prop to change the shape of the badge */
         shape: {
             square: layerStyle('components', {
                 borderRadius: vars.size.borderRadius['300'],
@@ -49,6 +51,7 @@ export const root = recipe({
             }),
         },
 
+        /** Use the size prop to change the size of the badge */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['025'],

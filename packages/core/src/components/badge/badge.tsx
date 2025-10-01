@@ -12,6 +12,11 @@ import * as styles from './badge.css';
 type BadgePrimitiveProps = VComponentProps<'span'>;
 interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
 
+/**
+ * Displays a small status descriptor for UI elements. Renders a <span> element.
+ *
+ * Documentation: [Badge Documentation](https://vapor-ui.goorm.io/docs/components/badge)
+ */
 const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ render, className, ...props }, ref) => {
     const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(props, [
         'color',
