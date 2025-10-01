@@ -1,13 +1,9 @@
 import ts from 'typescript';
 
+import { shouldIncludeExternalProp } from '~/handler/external-packages-handler';
 import { extractDefaultValue, findCssFile } from '~/parsers/vanilla-extract-parser';
 import type { PropInfo } from '~/types/types';
-import {
-    extractFullUnionTypes,
-    getJSDocDefaultValue,
-    getJSDocDescription,
-    shouldIncludePropBySource,
-} from '~/utils';
+import { extractFullUnionTypes, getJSDocDefaultValue, getJSDocDescription } from '~/utils';
 
 /**
  * Props parsing utilities
@@ -63,7 +59,7 @@ export function extractProps(
         const propName = prop.getName();
 
         // Only include props from allowed sources (component files, Base UI, Vanilla Extract)
-        if (!shouldIncludePropBySource(prop, checker, sourceFile)) {
+        if (!shouldIncludeExternalProp(prop, checker, sourceFile)) {
             return;
         }
 
