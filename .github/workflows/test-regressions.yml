@@ -53,7 +53,7 @@ jobs:
               run: pnpm build --filter=@vapor-ui/icons
 
             - name: Build Storybook
-              run: pnpm build-storybook
+              run: pnpm build:storybook
 
             - name: Run Playwright tests
               run: pnpm core exec playwright test --project="${{ matrix.shard.name }}"
