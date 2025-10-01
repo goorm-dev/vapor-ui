@@ -29,6 +29,11 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
 type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
 interface CheckboxRootProps extends RootPrimitiveProps, CheckboxSharedProps {}
 
+/**
+ * Allows users to select multiple options from a set of choices. Renders a <button> element.
+ *
+ * Documentation: [Checkbox Documentation](https://vapor-ui.goorm.io/docs/components/checkbox)
+ */
 const Root = forwardRef<HTMLButtonElement, CheckboxRootProps>(
     ({ render, className, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(props, [
@@ -65,6 +70,9 @@ Root.displayName = 'Checkbox.Root';
 type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
 interface CheckboxIndicatorProps extends IndicatorPrimitiveProps {}
 
+/**
+ * Displays the visual indicator for checkbox state (checked, unchecked, or indeterminate). Renders a <div> element.
+ */
 const Indicator = forwardRef<HTMLDivElement, CheckboxIndicatorProps>(
     ({ className, ...props }, ref) => {
         const { size, indeterminate } = useCheckboxContext();

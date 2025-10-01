@@ -43,6 +43,7 @@ export const root = recipe({
     },
 
     variants: {
+        /** Use the size prop to change the size of the button */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['050'],
@@ -86,6 +87,7 @@ export const root = recipe({
             }),
         },
 
+        /** Use the color prop to change the color scheme of the button */
         color: {
             primary: layerStyle('components', {
                 vars: {
@@ -149,6 +151,7 @@ export const root = recipe({
             }),
         },
 
+        /** Use the variant prop to change the visual style of the button */
         variant: {
             fill: layerStyle('components', {
                 backgroundColor: bg,
@@ -167,6 +170,7 @@ export const root = recipe({
             ],
         },
 
+        /** Use the stretch prop to make the button take full width */
         stretch: { true: layerStyle('components', { width: '100%' }) },
     },
 });

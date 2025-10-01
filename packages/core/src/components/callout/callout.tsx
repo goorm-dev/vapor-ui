@@ -16,6 +16,11 @@ import * as styles from './callout.css';
 type CalloutRootPrimitiveProps = VComponentProps<'div'>;
 interface CalloutRootProps extends CalloutRootPrimitiveProps, CalloutVariants {}
 
+/**
+ * Displays important information with visual emphasis and color coding. Renders a <div> element.
+ *
+ * Documentation: [Callout Documentation](https://vapor-ui.goorm.io/docs/components/callout)
+ */
 const CalloutRoot = forwardRef<HTMLDivElement, CalloutRootProps>(
     ({ render, className, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(props, ['color']);
@@ -39,6 +44,9 @@ CalloutRoot.displayName = 'CalloutRoot';
 type CalloutIconPrimitiveProps = VComponentProps<'div'>;
 interface CalloutIconProps extends CalloutIconPrimitiveProps {}
 
+/**
+ * Displays icons within callout messages with consistent sizing and positioning. Renders a <div> element.
+ */
 const CalloutIcon = forwardRef<HTMLDivElement, CalloutIconProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({

@@ -15,6 +15,11 @@ import * as styles from './card.css';
 
 interface CardRootProps extends VComponentProps<'div'> {}
 
+/**
+ * Displays a card container with structured layout sections. Renders a <div> element.
+ *
+ * Documentation: [Card Documentation](https://vapor-ui.goorm.io/docs/components/card)
+ */
 const Root = forwardRef<HTMLDivElement, CardRootProps>(({ render, className, ...props }, ref) => {
     return useRender({
         ref,
@@ -33,6 +38,9 @@ Root.displayName = 'Card';
 
 interface CardHeaderProps extends VComponentProps<'div'> {}
 
+/**
+ * Displays the header section of a card with title or meta information. Renders a <div> element.
+ */
 const Header = forwardRef<HTMLDivElement, CardHeaderProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -53,6 +61,9 @@ Header.displayName = 'Card.Header';
 
 interface CardBodyProps extends VComponentProps<'div'> {}
 
+/**
+ * Displays the main content area of a card. Renders a <div> element.
+ */
 const Body = forwardRef<HTMLDivElement, CardBodyProps>(({ render, className, ...props }, ref) => {
     return useRender({
         ref,
@@ -71,6 +82,9 @@ Body.displayName = 'Card.Body';
 
 interface CardFooterProps extends VComponentProps<'div'> {}
 
+/**
+ * Displays the footer section of a card with actions or additional information. Renders a <div> element.
+ */
 const Footer = forwardRef<HTMLDivElement, CardFooterProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({

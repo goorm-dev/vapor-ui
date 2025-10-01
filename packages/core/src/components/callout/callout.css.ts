@@ -20,6 +20,7 @@ export const root = recipe({
 
     defaultVariants: { color: 'primary' },
     variants: {
+        /** Use the color prop to change the color scheme of the callout */
         color: {
             primary: layerStyle('components', {
                 border: `.0625rem solid ${vars.color.border.primary}`,

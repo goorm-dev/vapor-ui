@@ -1,0 +1,26 @@
+{
+    "name": "CalloutRoot",
+    "displayName": "CalloutRoot",
+    "description": "Displays important information with visual emphasis and color coding. Renders a <div> element.\n\nDocumentation: [Callout Documentation](https://vapor-ui.goorm.io/docs/components/callout)",
+    "props": [
+        {
+            "name": "color",
+            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
+            "required": false,
+            "description": "Use the color prop to change the color scheme of the callout",
+            "defaultValue": "primary"
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "defaultElement": "div",
+    "generatedAt": "2025-10-01T06:54:01.430Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/callout/callout.tsx"
+}

@@ -1,0 +1,52 @@
+{
+    "name": "CollapsibleRoot",
+    "displayName": "Collapsible.Root",
+    "description": "Provides a collapsible container that can show or hide content. Renders a <div> element.\n\nDocumentation: [Collapsible Documentation](https://vapor-ui.goorm.io/docs/components/collapsible)",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "open",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the collapsible panel is currently open.\n\nTo render an uncontrolled collapsible, use the `defaultOpen` prop instead."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
+                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the collapsible panel is initially open.\n\nTo render a controlled collapsible, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called when the panel is opened or closed."
+        }
+    ],
+    "generatedAt": "2025-10-01T07:00:05.765Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/collapsible/collapsible.tsx"
+}

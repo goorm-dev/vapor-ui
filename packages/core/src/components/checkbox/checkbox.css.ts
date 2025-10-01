@@ -48,10 +48,12 @@ export const root = recipe({
     },
 
     variants: {
+        /** Use the invalid prop to mark the checkbox as invalid */
         invalid: {
             true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },
 
+        /** Use the size prop to change the size of the checkbox */
         size: {
             md: layerStyle('components', {
                 borderRadius: vars.size.borderRadius[100],
@@ -82,6 +84,7 @@ export const indicator = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /** Use the size prop to change the size of the indicator */
         size: {
             md: layerStyle('components', {
                 width: vars.size.dimension[100],

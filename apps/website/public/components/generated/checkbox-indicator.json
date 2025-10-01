@@ -1,0 +1,33 @@
+{
+    "name": "CheckboxIndicator",
+    "displayName": "Checkbox.Indicator",
+    "description": "Displays the visual indicator for checkbox state (checked, unchecked, or indeterminate). Renders a <div> element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
+                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether to keep the element in the DOM when the checkbox is not checked.",
+            "defaultValue": "false"
+        }
+    ],
+    "generatedAt": "2025-10-01T06:57:14.230Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/checkbox/checkbox.tsx"
+}

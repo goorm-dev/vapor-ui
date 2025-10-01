@@ -49,6 +49,7 @@ export const content = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /** Use the size prop to change the width of the dialog */
         size: {
             md: layerStyle('components', { width: '31.25rem' }),
             lg: layerStyle('components', { width: '50rem' }),

@@ -1,0 +1,130 @@
+{
+    "name": "CheckboxRoot",
+    "displayName": "Checkbox.Root",
+    "description": "Allows users to select multiple options from a set of choices. Renders a <button> element.\n\nDocumentation: [Checkbox Documentation](https://vapor-ui.goorm.io/docs/components/checkbox)",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "The id of the input element."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "Identifies the field when a form is submitted.",
+            "defaultValue": "undefined"
+        },
+        {
+            "name": "defaultChecked",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the checkbox is initially ticked.\n\nTo render a controlled checkbox, use the `checked` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false,
+            "description": "The value of the selected checkbox."
+        },
+        {
+            "name": "checked",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the checkbox is currently ticked.\n\nTo render an uncontrolled checkbox, use the `defaultChecked` prop instead.",
+            "defaultValue": "undefined"
+        },
+        {
+            "name": "readOnly",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the user should be unable to tick or untick the checkbox.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "required",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the user must tick the checkbox before submitting a form.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["md", "lg"],
+            "required": false,
+            "description": "Use the size prop to change the size of the checkbox",
+            "defaultValue": "md"
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
+                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "onCheckedChange",
+            "type": ["(checked: boolean, event: Event) => void"],
+            "required": false,
+            "description": "Event handler called when the checkbox is ticked or unticked."
+        },
+        {
+            "name": "indeterminate",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the checkbox is in a mixed state: neither ticked, nor unticked.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "inputRef",
+            "type": [
+                "null",
+                "(instance: HTMLInputElement | null) => void",
+                "RefObject<HTMLInputElement>"
+            ],
+            "required": false,
+            "description": "A ref to access the hidden `<input>` element."
+        },
+        {
+            "name": "parent",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the checkbox controls a group of child checkboxes.\n\nMust be used in a [Checkbox Group](https://base-ui.com/react/components/checkbox-group).",
+            "defaultValue": "false"
+        },
+        {
+            "name": "nativeButton",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
+            "defaultValue": "true"
+        },
+        {
+            "name": "invalid",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Use the invalid prop to mark the checkbox as invalid"
+        }
+    ],
+    "generatedAt": "2025-10-01T06:57:14.038Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/checkbox/checkbox.tsx"
+}
