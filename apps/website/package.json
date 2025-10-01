@@ -3,7 +3,7 @@
     "version": "0.0.8",
     "private": true,
     "scripts": {
-        "build": "pnpm docs:generate && next build",
+        "build": "next build",
         "dev": "next dev --turbo",
         "start": "next start",
         "postinstall": "fumadocs-mdx",
