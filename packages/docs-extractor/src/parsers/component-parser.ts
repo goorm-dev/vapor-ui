@@ -49,25 +49,51 @@ export function createComponentInfo(
 }
 
 /**
- * Extracts the display name from a component symbol
+ * Extracts the display name from a component symbol using AST traversal
  */
 export function extractDisplayName(symbol: ts.Symbol): string | undefined {
     const declarations = symbol.getDeclarations();
     if (!declarations) return undefined;
 
+    const symbolName = symbol.getName();
+
     for (const decl of declarations) {
         const sourceFile = decl.getSourceFile();
-        const text = sourceFile.getFullText();
-        const symbolName = symbol.getName();
+        let displayName: string | undefined;
 
-        // Component.displayName = 'ComponentName' pattern
-        const displayNamePattern = new RegExp(
-            `${symbolName}\\.displayName\\s*=\\s*['"]([^'"]+)['"]`,
-        );
-        const match = text.match(displayNamePattern);
+        const visit = (node: ts.Node) => {
+            // Look for PropertyAccessExpression: Component.displayName = 'value'
+            if (ts.isExpressionStatement(node) && ts.isBinaryExpression(node.expression)) {
+                const { left, operatorToken, right } = node.expression;
 
-        if (match) {
-            return match[1];
+                // Check if it's an assignment (=)
+                if (operatorToken.kind === ts.SyntaxKind.EqualsToken) {
+                    // Check if left side is Component.displayName
+                    if (
+                        ts.isPropertyAccessExpression(left) &&
+                        ts.isIdentifier(left.expression) &&
+                        left.expression.text === symbolName &&
+                        ts.isIdentifier(left.name) &&
+                        left.name.text === 'displayName'
+                    ) {
+                        // Extract string literal value from right side
+                        if (ts.isStringLiteral(right)) {
+                            displayName = right.text;
+                        }
+                    }
+                }
+            }
+
+            // Continue traversing if not found yet
+            if (!displayName) {
+                ts.forEachChild(node, visit);
+            }
+        };
+
+        visit(sourceFile);
+
+        if (displayName) {
+            return displayName;
         }
     }
 
