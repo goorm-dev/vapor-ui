@@ -66,18 +66,17 @@ export async function main(options: RunOptions) {
             onlyFiles: true,
             ignore: ['**/*.stories.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
         });
+        const extractorConfig = {
+            configPath,
+            files: resolvedFiles,
+            projectRoot: configDir,
+            externalTypePaths,
+        };
+        const program = createTypeScriptProgram(extractorConfig);
+        const checker = program.getTypeChecker();
         if (!isEmpty(resolvedFiles)) {
             for (const filePath of resolvedFiles) {
                 const fullPath = path.resolve(configDir, filePath);
-                const extractorConfig = {
-                    configPath,
-                    files: resolvedFiles,
-                    projectRoot: configDir,
-                    externalTypePaths,
-                };
-
-                const program = createTypeScriptProgram(extractorConfig);
-                const checker = program.getTypeChecker();
 
                 const { moduleSymbol, sourceFile } =
                     getModuleSymbol(checker, program, fullPath) || {};
