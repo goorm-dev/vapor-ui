@@ -16,7 +16,7 @@ export default {
         shape: { control: 'inline-radio', options: ['square', 'circle'] },
         disabled: { control: 'boolean' },
     },
-} satisfies Meta<IconButtonProps>;
+} satisfies Meta<typeof IconButton>;
 
 type Story = StoryObj<IconButtonProps>;
 
