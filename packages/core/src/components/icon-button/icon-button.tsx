@@ -15,6 +15,11 @@ interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {
     'aria-label': string;
 }
 
+/**
+ * Triggers actions using only an icon without text labels. Renders a <button> element.
+ *
+ * Documentation: [IconButton Documentation](https://vapor-ui.goorm.io/docs/components/icon-button)
+ */
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     ({ 'aria-label': ariaLabel, className, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, ['shape']);

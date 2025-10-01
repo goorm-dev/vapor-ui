@@ -13,6 +13,7 @@ export const root = recipe({
 
     defaultVariants: { shape: 'square' },
     variants: {
+        /** Use the shape prop to change the shape of the icon button */
         shape: {
             square: {},
             circle: layerStyle('components', { borderRadius: '9999px' }),
@@ -21,7 +22,9 @@ export const root = recipe({
 });
 
 export const icon = recipe({
+    defaultVariants: { size: 'md' },
     variants: {
+        /** Use the size prop to change the size of the icon */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension[200],

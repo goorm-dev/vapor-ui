@@ -92,72 +92,44 @@ Dialog.Root, Dialog.Trigger, Dialog.CombinedContent, Dialog.Header, Dialog.Body,
 
 ### Dialog.Root
 
-Dialog의 루트 컨테이너로, 다이얼로그의 상태와 동작을 관리합니다. 크기, 모달 동작, 열림/닫힘 상태를 제어할 수 있습니다.
-
-<ComponentPropsTable file="dialog" section="props" />
+<NewComponentPropsTable componentName="dialog-root" />
 
 ### Dialog.Portal
 
-Dialog 콘텐츠를 document.body 또는 지정된 컨테이너에 렌더링합니다. 다이얼로그가 다른 요소들 위에 표시되도록 보장합니다.
-
-<ComponentPropsTable file="dialog" section="portalProps" />
+<NewComponentPropsTable componentName="dialog-portal" />
 
 ### Dialog.Overlay
 
-Dialog의 배경 오버레이입니다. 다이얼로그 외부 영역을 어둡게 하고 클릭 이벤트를 처리합니다.
-
-<ComponentPropsTable file="dialog" section="overlayProps" />
+<NewComponentPropsTable componentName="dialog-overlay" />
 
 ### Dialog.Content
 
-Dialog의 실제 콘텐츠 영역입니다. Portal과 Overlay를 별도로 구성해야 합니다. 세밀한 제어가 필요할 때 사용합니다.
-
-<ComponentPropsTable file="dialog" section="contentProps" />
-
-### Dialog.CombinedContent
-
-Portal, Overlay, Content가 통합된 편의 컴포넌트입니다. 대부분의 경우 이 컴포넌트를 사용하는 것을 권장합니다.
-
-<ComponentPropsTable file="dialog" section="combinedContentProps" />
+<NewComponentPropsTable componentName="dialog-content" />
 
 ### Dialog.Trigger
 
-Dialog를 여는 트리거 버튼입니다. render prop을 통해 커스텀 요소로 렌더링할 수 있습니다.
-
-<ComponentPropsTable file="dialog" section="triggerProps" />
+<NewComponentPropsTable componentName="dialog-trigger" />
 
 ### Dialog.Close
 
-Dialog를 닫는 버튼입니다. 다이얼로그 내 어디든 배치할 수 있으며, render prop을 통해 커스텀 요소로 사용할 수 있습니다.
-
-<ComponentPropsTable file="dialog" section="closeProps" />
+<NewComponentPropsTable componentName="dialog-close" />
 
 ### Dialog.Title
 
-Dialog의 제목입니다. 접근성을 위해 필수로 포함해야 하며, 스크린 리더가 다이얼로그를 식별할 때 사용됩니다.
-
-<ComponentPropsTable file="dialog" section="titleProps" />
+<NewComponentPropsTable componentName="dialog-title" />
 
 ### Dialog.Description
 
-Dialog의 설명 텍스트입니다. 스크린 리더 사용자에게 추가 컨텍스트를 제공하기 위해 사용하는 것을 권장합니다.
-
-<ComponentPropsTable file="dialog" section="descriptionProps" />
+<NewComponentPropsTable componentName="dialog-description" />
 
 ### Dialog.Header
 
-Dialog의 상단 영역입니다. 일반적으로 Title과 Close 버튼을 배치합니다.
-
-<ComponentPropsTable file="dialog" section="headerProps" />
+<NewComponentPropsTable componentName="dialog-header" />
 
 ### Dialog.Body
 
-Dialog의 중앙 콘텐츠 영역입니다. Description과 주요 내용을 배치합니다.
-
-<ComponentPropsTable file="dialog" section="bodyProps" />
+<NewComponentPropsTable componentName="dialog-body" />
 
 ### Dialog.Footer
 
-Dialog의 하단 영역입니다. 확인, 취소 등의 액션 버튼들을 배치합니다.
-
-<ComponentPropsTable file="dialog" section="footerProps" />
+<NewComponentPropsTable componentName="dialog-footer" />

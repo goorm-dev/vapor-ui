@@ -1,7 +1,7 @@
 {
-    "name": "DialogPopup",
-    "displayName": "Dialog.Popup",
-    "description": "Contains the main dialog content with positioning and styling. Renders a <div> element.",
+    "name": "FieldError",
+    "displayName": "Field.Error",
+    "description": "Displays validation error messages when field validation fails. Renders a <div> element.",
     "props": [
         {
             "name": "className",
@@ -21,21 +21,25 @@
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
-            "name": "initialFocus",
+            "name": "match",
             "type": [
-                "RefObject<HTMLElement | null>",
-                "(interactionType: InteractionType) => RefObject<HTMLElement | null>"
+                "false",
+                "true",
+                "badInput",
+                "customError",
+                "patternMismatch",
+                "rangeOverflow",
+                "rangeUnderflow",
+                "stepMismatch",
+                "tooLong",
+                "tooShort",
+                "typeMismatch",
+                "valueMissing"
             ],
             "required": false,
-            "description": "Determines the element to focus when the dialog is opened.\nBy default, the first focusable element is focused."
-        },
-        {
-            "name": "finalFocus",
-            "type": ["RefObject<HTMLElement | null>"],
-            "required": false,
-            "description": "Determines the element to focus when the dialog is closed.\nBy default, focus returns to the trigger."
+            "description": "Determines whether to show the error message according to the field’s ValidityState. Specifying true will always show the error message, and lets external libraries control the visibility."
         }
     ],
-    "generatedAt": "2025-10-01T07:08:39.633Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/dialog/dialog.tsx"
+    "generatedAt": "2025-10-01T07:13:25.585Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/field/field.tsx"
 }

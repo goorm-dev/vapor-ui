@@ -29,6 +29,9 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
 
 type DialogPrimitiveProps = Omit<VComponentProps<typeof BaseDialog.Root>, 'dismissible'>;
 interface DialogRootProps extends DialogPrimitiveProps, DialogSharedProps {
+    /**
+     * Whether to close the dialog when clicking on the overlay
+     */
     closeOnClickOverlay?: boolean;
 }
 
@@ -53,7 +56,14 @@ const Root = ({ size, closeOnClickOverlay, children, ...props }: DialogRootProps
 
 interface DialogPortalProps extends VComponentProps<typeof BaseDialog.Portal> {}
 
-const Portal = BaseDialog.Portal;
+/**
+ * A portal element that moves the popup to a different part of the DOM. By default, the portal element is appended to <body>.
+ */
+const Portal = ({ ...props }: DialogPortalProps) => {
+    return <BaseDialog.Portal {...props} />;
+};
+
+Portal.displayName = 'Dialog.Portal';
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog.Overlay
