@@ -28,6 +28,7 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ render, className, ...p
         },
     });
 });
+
 Badge.displayName = 'Badge';
 
 export { Badge };

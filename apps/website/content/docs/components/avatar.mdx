@@ -103,24 +103,16 @@ Avatar.Root, Avatar.Image, Avatar.Fallback을 조합한 패턴입니다.
 
 ### Avatar.Root
 
-Avatar의 메인 컨테이너 컴포넌트입니다. size와 shape 속성을 제공하며, 모든 하위 컴포넌트에서 공통으로 사용할 수 있도록 컨텍스트를 제공합니다.
-
-<ComponentPropsTable file="avatar" section="props" />
+<NewComponentPropsTable componentName="avatar-root" />
 
 ### Avatar.Image
 
-Avatar 이미지를 표시하는 컴포넌트입니다. src가 로드되지 않거나 오류가 발생할 경우 자동으로 Fallback 컴포넌트가 표시됩니다.
-
-<ComponentPropsTable file="avatar" section="imageProps" />
+<NewComponentPropsTable componentName="avatar-image" />
 
 ### Avatar.Fallback
 
-이미지가 로드되지 않을 때 표시되는 대체 컴포넌트입니다. alt 속성을 기반으로 자동으로 이니셜을 생성하고, Linear Congruential Generator 알고리즘을 사용해 일관된 배경 색상을 제공합니다.
-
-<ComponentPropsTable file="avatar" section="fallbackProps" />
+<NewComponentPropsTable componentName="avatar-fallback" />
 
 ### Avatar.Simple
 
-Avatar.Root, Avatar.Image, Avatar.Fallback을 하나로 결합한 단순화된 컴포넌트입니다. 복잡한 구성 없이 기본 Avatar 기능을 빠르게 사용할 수 있습니다.
-
-<ComponentPropsTable file="avatar" section="simpleProps" />
+<NewComponentPropsTable componentName="avatar-simple" />

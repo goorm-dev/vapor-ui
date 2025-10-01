@@ -15,7 +15,20 @@ import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
 
 type AvatarVariants = RootVariants & FallbackVariants;
-type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delay?: number };
+type AvatarSharedProps = AvatarVariants & {
+    /**
+     * The image URL for the avatar. If the image fails to load, the fallback will be displayed.
+     */
+    src?: string;
+    /**
+     * Alternative text description of the avatar image.
+     */
+    alt: string;
+    /**
+     * How long to wait before showing the fallback. Specified in milliseconds.
+     */
+    delay?: number;
+};
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     name: 'AvatarContext',
@@ -27,7 +40,11 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 
 type AvatarRootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
 interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
-
+/**
+ * Displays a user's profile picture, initials, or fallback icon. Renders a <span> element.
+ *
+ * Documentation: [Avatar Documentation](https://vapor-ui.goorm.io/docs/components/avatar)
+ */
 const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
         'src',
@@ -58,6 +75,9 @@ Root.displayName = 'Avatar.Root';
 type AvatarImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
 interface AvatarImageProps extends Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps> {}
 
+/**
+ * Displays the avatar image. Renders an <img> element.
+ */
 const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...props }, ref) => {
     const { src, alt } = useAvatarContext();
 
@@ -80,6 +100,9 @@ Image.displayName = 'Avatar.Image';
 type AvatarFallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
 interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
 
+/**
+ * Shows fallback content when image fails to load. Renders a <span> element.
+ */
 const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
     ({ className, style, children, ...props }, ref) => {
         const { size, alt, delay } = useAvatarContext();
@@ -109,6 +132,9 @@ Fallback.displayName = 'Avatar.Fallback';
 
 interface AvatarSimpleProps extends AvatarRootProps {}
 
+/**
+ * Convenience component that combines Root, Fallback, and Image. Renders a <span> element.
+ */
 const Simple = forwardRef<HTMLSpanElement, AvatarSimpleProps>((props, ref) => {
     return (
         <Root ref={ref} {...props}>

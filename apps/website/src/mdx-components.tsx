@@ -8,6 +8,7 @@ import Image from 'next/image';
 import AllComponentsContainer from '~/components/all-components-container';
 import ComponentsCard from '~/components/component-card/component-card';
 import ComponentPropsTable from '~/components/component-props-table';
+import NewComponentPropsTable from '~/components/component-props-table/new-component-props-table';
 import { Demo } from '~/components/demo/demo';
 import FoundationColorTabs from '~/components/foundation-color-tabs';
 import FoundationSizeTabs from '~/components/foundation-size-tabs';
@@ -41,6 +42,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         IconList,
         PropsTable,
         LiveCodeBlock,
+        NewComponentPropsTable,
 
         Image,
         IntroLinkCardContainer,
