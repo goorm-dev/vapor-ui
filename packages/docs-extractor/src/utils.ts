@@ -77,7 +77,6 @@ export async function writeComponentDataToFile(
 export function ensureOutputDirectory(outputPath: string): void {
     if (!fs.existsSync(outputPath)) {
         fs.mkdirSync(outputPath, { recursive: true });
-        console.log(`출력 디렉토리 생성: ${outputPath}`);
     }
 }
 

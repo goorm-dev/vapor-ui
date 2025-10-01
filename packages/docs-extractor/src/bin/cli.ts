@@ -75,11 +75,12 @@ export async function main(options: RunOptions) {
                     options.externalTypePaths,
                 );
 
-                ensureOutputDirectory(outputPath);
-
-                for (const [_, component] of components.entries()) {
+                for (const component of components) {
                     const componentData = createComponentData(component, fullPath);
-                    await writeComponentDataToFile(componentData, outputPath);
+                    if (componentData !== null) {
+                        ensureOutputDirectory(outputPath);
+                        await writeComponentDataToFile(componentData, outputPath);
+                    }
                 }
             }
         } else {
