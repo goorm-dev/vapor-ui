@@ -1,4 +1,5 @@
 import { globby } from 'globby';
+import { isEmpty } from 'lodash-es';
 import * as path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
@@ -51,22 +52,20 @@ function buildCommandOptions(command: any) {
 
 export async function main(options: RunOptions) {
     try {
-        const { configPath, out: outputPath } = options;
+        const { configPath, out: outputPath, files } = options;
         const configDir = path.dirname(configPath);
 
         // Resolve glob patterns to actual file paths
-        let resolvedFiles: string[] = [];
-        if (options.files && options.files.length > 0) {
-            const patterns = options.files;
-            resolvedFiles = await globby(patterns, {
-                cwd: configDir,
-                absolute: false,
-                onlyFiles: true,
-                ignore: ['**/*.stories.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
-            });
-        }
+        let patterns: string[] = files && files.length > 0 ? files : ['**/*.{ts,tsx}'];
 
-        if (resolvedFiles.length > 0) {
+        const resolvedFiles = await globby(patterns, {
+            cwd: configDir,
+            absolute: false,
+            onlyFiles: true,
+            ignore: ['**/*.stories.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
+        });
+
+        if (!isEmpty(resolvedFiles)) {
             for (const filePath of resolvedFiles) {
                 const fullPath = path.resolve(configDir, filePath);
                 const components = extractComponentTypesFromFile(
@@ -75,8 +74,6 @@ export async function main(options: RunOptions) {
                     undefined,
                     options.externalTypePaths,
                 );
-
-                console.log(`In "${filePath}" found ${components.length} components.`);
 
                 ensureOutputDirectory(outputPath);
 
