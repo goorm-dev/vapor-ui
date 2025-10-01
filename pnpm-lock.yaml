@@ -521,6 +521,9 @@ importers:
       '@types/yargs':
         specifier: ^17.0.0
         version: 17.0.33
+      eslint:
+        specifier: ^9.36.0
+        version: 9.36.0(jiti@2.6.0)
       rimraf:
         specifier: ^5.0.0
         version: 5.0.10

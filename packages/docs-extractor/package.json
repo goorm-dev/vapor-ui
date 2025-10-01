@@ -11,7 +11,10 @@
     "scripts": {
         "build": "rimraf dist && tsup",
         "dev": "tsc --watch",
-        "clean": "rimraf dist"
+        "lint": "eslint ./src",
+        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
+        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
+        "clean": "rimraf dist node_modules .turbo"
     },
     "files": [
         "dist",
@@ -37,6 +40,7 @@
         "@types/lodash-es": "^4.17.12",
         "@types/node": "^20.0.0",
         "@types/yargs": "^17.0.0",
+        "eslint": "^9.36.0",
         "rimraf": "^5.0.0",
         "tsup": "^8.3.6"
     },

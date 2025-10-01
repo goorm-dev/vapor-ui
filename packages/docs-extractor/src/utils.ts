@@ -1,10 +1,10 @@
 import * as fs from 'fs';
-import { isEmpty, kebabCase } from 'lodash-es';
+import { kebabCase } from 'lodash-es';
 import * as path from 'path';
 import prettier from 'prettier';
 import ts from 'typescript';
 
-import { ComponentTypeInfo } from './types/types';
+import type { ComponentTypeInfo } from './types/types';
 
 /**
  * Utility functions for TypeScript analysis and component extraction
@@ -172,7 +172,7 @@ export function getJSDocDefaultValue(symbol: ts.Symbol): string | undefined {
 /**
  * Parses a literal value from a TypeScript AST node
  */
-export function getLiteralValue(node: ts.Node): any {
+export function getLiteralValue(node: ts.Node): string | number | boolean | null | undefined {
     if (ts.isStringLiteral(node)) {
         return node.text;
     }

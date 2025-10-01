@@ -1,5 +1,6 @@
 import * as path from 'path';
 import ts from 'typescript';
+
 import { getLiteralValue } from './utils';
 
 /**
@@ -28,7 +29,11 @@ export function findCssFile(program: ts.Program, componentFilePath: string): str
 /**
  * Extracts default value for a prop from CSS defaultVariants
  */
-export function extractDefaultValue(program: ts.Program, cssFilePath: string, propName: string): string | undefined {
+export function extractDefaultValue(
+    program: ts.Program,
+    cssFilePath: string,
+    propName: string,
+): string | undefined {
     const cssSourceFile = program.getSourceFile(cssFilePath);
     if (!cssSourceFile) {
         return undefined;
@@ -45,8 +50,10 @@ export function extractDefaultValue(program: ts.Program, cssFilePath: string, pr
 /**
  * Finds defaultVariants object in a Vanilla Extract recipe
  */
-function findDefaultVariants(sourceFile: ts.SourceFile): Record<string, any> | undefined {
-    let defaultVariants: Record<string, any> | undefined;
+function findDefaultVariants(
+    sourceFile: ts.SourceFile,
+): Record<string, string | number | boolean | null> | undefined {
+    let defaultVariants: Record<string, string | number | boolean | null> | undefined;
 
     const visit = (node: ts.Node) => {
         // recipe({ defaultVariants: { ... } }) pattern
@@ -89,8 +96,8 @@ function findDefaultVariants(sourceFile: ts.SourceFile): Record<string, any> | u
 /**
  * Parses an object literal expression into a plain JavaScript object
  */
-function parseObjectLiteral(node: ts.Node): Record<string, any> {
-    const result: Record<string, any> = {};
+function parseObjectLiteral(node: ts.Node): Record<string, string | number | boolean | null> {
+    const result: Record<string, string | number | boolean | null> = {};
 
     if (ts.isObjectLiteralExpression(node)) {
         node.properties.forEach((prop) => {

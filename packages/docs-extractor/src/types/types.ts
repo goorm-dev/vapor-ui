@@ -1,8 +1,8 @@
 /**
  * Common types and interfaces for the type extraction system
  */
-import ts from 'typescript';
-import * as tae from 'typescript-api-extractor';
+import type ts from 'typescript';
+import type * as tae from 'typescript-api-extractor';
 
 export interface RunOptions {
     files?: string[];

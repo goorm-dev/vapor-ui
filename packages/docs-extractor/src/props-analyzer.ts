@@ -7,7 +7,7 @@ import {
     getJSDocDescription,
     shouldIncludePropBySource,
 } from './utils';
-import { findCssFile, extractDefaultValue } from './vanilla-extract-analyzer';
+import { extractDefaultValue, findCssFile } from './vanilla-extract-analyzer';
 
 /**
  * Extracts props information from a TypeScript type
@@ -16,7 +16,7 @@ export function extractProps(
     checker: ts.TypeChecker,
     program: ts.Program,
     propsType: ts.Type,
-    sourceFile: ts.SourceFile
+    sourceFile: ts.SourceFile,
 ): PropInfo[] {
     const props: PropInfo[] = [];
     const properties = propsType.getProperties();
@@ -32,7 +32,7 @@ export function extractProps(
         // Extract type information
         const propType = checker.getTypeOfSymbol(prop);
         const isRequired = !prop.flags || !(prop.flags & ts.SymbolFlags.Optional);
-        let description = getJSDocDescription(prop, checker);
+        const description = getJSDocDescription(prop, checker);
         const defaultValue = getDefaultValue(program, prop, propName, sourceFile);
 
         props.push({
@@ -52,7 +52,7 @@ export function extractProps(
  */
 export function extractPropsType(checker: ts.TypeChecker, componentType: ts.Type): ts.Type | null {
     const typeString = checker.typeToString(componentType);
-    
+
     // ForwardRefExoticComponent
     if (typeString.includes('ForwardRefExoticComponent')) {
         const forwardRefTypes = extractForwardRefTypes(checker, componentType);
@@ -85,7 +85,7 @@ export function extractPropsType(checker: ts.TypeChecker, componentType: ts.Type
  */
 function extractForwardRefTypes(
     checker: ts.TypeChecker,
-    type: ts.Type
+    type: ts.Type,
 ): { propsType?: ts.Type; refType?: ts.Type } {
     const result: { propsType?: ts.Type; refType?: ts.Type } = {};
 
