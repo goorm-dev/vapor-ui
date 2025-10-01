@@ -4,7 +4,8 @@ import * as path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { createTypeScriptProgram, extractComponentTypes } from '~/type-extractor';
+import { processComponentExportedSymbols } from '~/handler/componentHandler';
+import { createTypeScriptProgram, getModuleSymbol } from '~/type-extractor';
 
 import type { RunOptions } from '../types/types';
 import { createComponentData, ensureOutputDirectory, writeComponentDataToFile } from '../utils';
@@ -76,7 +77,21 @@ export async function main(options: RunOptions) {
 
                 const program = createTypeScriptProgram(extractorConfig);
                 const checker = program.getTypeChecker();
-                const components = extractComponentTypes(program, checker, fullPath);
+
+                const { moduleSymbol, sourceFile } =
+                    getModuleSymbol(checker, program, fullPath) || {};
+
+                if (!moduleSymbol || !sourceFile) {
+                    console.warn(`No module symbol found for file: ${fullPath}`);
+                    continue;
+                }
+
+                const components = processComponentExportedSymbols({
+                    program,
+                    checker,
+                    moduleSymbol,
+                    sourceFile,
+                });
 
                 for (const component of components) {
                     const componentData = createComponentData(component, fullPath);

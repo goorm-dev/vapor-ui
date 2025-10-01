@@ -46,25 +46,9 @@ export const createTypeScriptProgram = (config: TypeExtractorConfig): ts.Program
 };
 
 /**
- * Extracts component type information from a file
- */
-/**
- * Processes export results and adds them to components array
- */
-function processExportResults(
-    exportResults: ComponentTypeInfo[] | undefined,
-    components: ComponentTypeInfo[],
-): ComponentTypeInfo[] {
-    if (exportResults) {
-        return [...components, ...exportResults];
-    }
-    return components;
-}
-
-/**
  * Gets module symbol from source file
  */
-function getModuleSymbol(
+export function getModuleSymbol(
     checker: ts.TypeChecker,
     program: ts.Program,
     filePath: string,
@@ -85,58 +69,53 @@ function getModuleSymbol(
 }
 
 /**
- * Processes exported symbols to extract component information
+ * Pure function to get export declaration from symbol
  */
-function processExportedSymbols(
-    program: ts.Program,
-    checker: ts.TypeChecker,
-    moduleSymbol: ts.Symbol,
-    sourceFile: ts.SourceFile,
-): ComponentTypeInfo[] {
-    const exports = checker.getExportsOfModule(moduleSymbol);
-    let components: ComponentTypeInfo[] = [];
-
-    for (const exportSymbol of exports) {
-        const exportResults = parseExport(program, checker, exportSymbol, sourceFile);
-        components = processExportResults(exportResults, components);
-    }
-
-    return components;
-}
-
-export function extractComponentTypes(
-    program: ts.Program,
-    checker: ts.TypeChecker,
-    filePath: string,
-): ComponentTypeInfo[] {
-    const moduleInfo = getModuleSymbol(checker, program, filePath);
-    if (!moduleInfo) {
-        return [];
-    }
-
-    return processExportedSymbols(program, checker, moduleInfo.moduleSymbol, moduleInfo.sourceFile);
+export function getExportDeclaration(exportSymbol: ts.Symbol): ts.Declaration | undefined {
+    return exportSymbol.declarations?.[0];
 }
 
 /**
- * Parses an exported symbol to extract component information
+ * Pure function to check if declaration is export specifier
  */
-function parseExport(
+export function isExportSpecifierDeclaration(
+    declaration: ts.Declaration,
+): declaration is ts.ExportSpecifier {
+    return ts.isExportSpecifier(declaration);
+}
+
+/**
+ * Parse an exported symbol to extract component information
+ * Returns Result type to handle errors without side effects
+ */
+export function parseExport(
     program: ts.Program,
     checker: ts.TypeChecker,
     exportSymbol: ts.Symbol,
     sourceFile: ts.SourceFile,
-): ComponentTypeInfo[] | undefined {
-    try {
-        const exportDeclaration = exportSymbol.declarations?.[0];
-        if (!exportDeclaration) {
-            return;
-        }
-
-        if (ts.isExportSpecifier(exportDeclaration)) {
-            return handleExportSpecifier(program, checker, exportDeclaration, exportSymbol, sourceFile);
-        }
-    } catch (error) {
-        console.error('Export parsing error:', error);
+): { success: true; data: ComponentTypeInfo[] } | { success: false; error: string } | undefined {
+    const exportDeclaration = getExportDeclaration(exportSymbol);
+    if (!exportDeclaration) {
+        return undefined;
     }
-}
 
+    if (isExportSpecifierDeclaration(exportDeclaration)) {
+        try {
+            const result = handleExportSpecifier(
+                program,
+                checker,
+                exportDeclaration,
+                exportSymbol,
+                sourceFile,
+            );
+            return result ? { success: true, data: result } : undefined;
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'Unknown export parsing error',
+            };
+        }
+    }
+
+    return undefined;
+}
