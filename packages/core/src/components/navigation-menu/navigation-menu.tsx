@@ -20,7 +20,12 @@ import type { ItemVariants, LinkVariants, ListVariants } from './navigation-menu
 import * as styles from './navigation-menu.css';
 
 type NavigationMenuVariants = ListVariants & ItemVariants & LinkVariants;
-type NavigationMenuSharedProps = NavigationMenuVariants & { disabled?: boolean };
+type NavigationMenuSharedProps = NavigationMenuVariants & {
+    /**
+     * Whether the link is disabled, preventing interaction and applying disabled styles.
+     * */
+    disabled?: boolean;
+};
 type NavigationMenuContextType = NavigationMenuSharedProps;
 
 const [NavigationMenuProvider, useNavigationMenuContext] = createContext<NavigationMenuContextType>(
@@ -38,9 +43,17 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
 type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
 
 interface NavigationMenuRootProps extends RootPrimitiveProps, NavigationMenuSharedProps {
+    /**
+     * Accessible label for the navigation menu, describing its purpose.
+     */
     'aria-label': string;
 }
 
+/**
+ * Provides the root context for a navigation menu with hierarchical navigation options. Renders a <nav> element.
+ *
+ * Documentation: [NavigationMenu Documentation](https://vapor-ui.goorm.io/docs/components/navigation-menu)
+ */
 const Root = forwardRef<HTMLElement, NavigationMenuRootProps>(
     ({ 'aria-label': ariaLabel, className, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(props, [
@@ -74,6 +87,9 @@ Root.displayName = 'NavigationMenu.Root';
 type ListPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.List>;
 interface NavigationMenuListProps extends ListPrimitiveProps {}
 
+/**
+ * Contains a list of navigation menu items with proper accessibility support. Renders a <div> element.
+ */
 const List = forwardRef<HTMLDivElement, NavigationMenuListProps>(({ className, ...props }, ref) => {
     const { direction } = useNavigationMenuContext();
 
@@ -95,6 +111,9 @@ List.displayName = 'NavigationMenu.List';
 type ItemPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Item>;
 interface NavigationMenuItemProps extends ItemPrimitiveProps {}
 
+/**
+ * Represents an individual navigation item that can contain links or triggers. Renders a <div> element.
+ */
 const Item = forwardRef<HTMLDivElement, NavigationMenuItemProps>(({ className, ...props }, ref) => {
     const { stretch } = useNavigationMenuContext();
 
@@ -114,10 +133,19 @@ Item.displayName = 'NavigationMenu.Item';
 
 type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNavigationMenu.Link>, 'active'>;
 interface NavigationMenuLinkProps extends LinkPrimitiveProps {
+    /**
+     * Whether the link is currently selected, applying active styles and `aria-current="page"`.
+     */
     selected?: boolean;
+    /**
+     * Whether the link is disabled, preventing interaction and applying disabled styles.
+     */
     disabled?: boolean;
 }
 
+/**
+ * Displays a clickable navigation link with selection and disabled states. Renders an <a> element.
+ */
 const Link = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
     ({ selected, href, disabled: disabledProp, className, ...props }, ref) => {
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
@@ -149,6 +177,9 @@ Link.displayName = 'NavigationMenu.Link';
 
 interface NavigationMenuLinkItemProps extends VComponentProps<typeof Link> {}
 
+/**
+ * Combines Item and Link into a convenient wrapper for simple navigation links. Renders an <a> element.
+ */
 const LinkItem = forwardRef<HTMLAnchorElement, NavigationMenuLinkItemProps>((props, ref) => {
     return (
         <NavigationMenu.Item>
@@ -165,6 +196,9 @@ LinkItem.displayName = 'NavigationMenu.LinkItem';
 type TriggerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Trigger>;
 interface NavigationMenuTriggerProps extends TriggerPrimitiveProps {}
 
+/**
+ * Activates a navigation submenu when clicked or focused. Renders a <button> element.
+ */
 const Trigger = forwardRef<HTMLButtonElement, NavigationMenuTriggerProps>(
     ({ disabled: disabledProp, className, ...props }, ref) => {
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
@@ -192,6 +226,9 @@ Trigger.displayName = 'NavigationMenu.Trigger';
 type TriggerIndicatorPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Icon>;
 interface NavigationMenuTriggerIndicatorProps extends TriggerIndicatorPrimitiveProps {}
 
+/**
+ * Shows a visual indicator icon for navigation triggers to indicate expandable content. Renders a <div> element.
+ */
 const TriggerIndicator = forwardRef<HTMLDivElement, NavigationMenuTriggerIndicatorProps>(
     ({ className, children, ...props }, ref) => {
         const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
@@ -212,6 +249,9 @@ TriggerIndicator.displayName = 'NavigationMenu.TriggerIndicator';
 type PanelPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Content>;
 interface NavigationMenuPanelProps extends PanelPrimitiveProps {}
 
+/**
+ * Contains the content of a navigation submenu panel. Renders a <div> element.
+ */
 const Panel = forwardRef<HTMLDivElement, NavigationMenuPanelProps>(
     ({ className, ...props }, ref) => {
         return (
@@ -232,6 +272,9 @@ Panel.displayName = 'NavigationMenu.Panel';
 type PortalPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Portal>;
 interface NavigationMenuPortalProps extends PortalPrimitiveProps {}
 
+/**
+ * Renders navigation menu content in a React Portal to avoid z-index and overflow issues. Does not render any DOM element itself.
+ */
 const Portal = (props: NavigationMenuPortalProps) => {
     return <BaseNavigationMenu.Portal {...props} />;
 };
@@ -244,6 +287,9 @@ Portal.displayName = 'NavigationMenu.Portal';
 type PositionerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Positioner>;
 interface NavigationMenuPositionerProps extends PositionerPrimitiveProps {}
 
+/**
+ * Positions the navigation menu popup relative to its trigger element. Renders a <div> element.
+ */
 const Positioner = forwardRef<HTMLDivElement, NavigationMenuPositionerProps>(
     (
         {
@@ -281,6 +327,9 @@ const DATA_ALIGN = 'data-align';
 type PopupPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Popup>;
 interface NavigationMenuPopupProps extends PopupPrimitiveProps {}
 
+/**
+ * Contains the navigation menu popup with arrow indicator. Renders a <div> element.
+ */
 const Popup = forwardRef<HTMLElement, NavigationMenuPopupProps>(
     ({ className, children, ...props }, ref) => {
         const [side, setSide] = useState<PositionerPrimitiveProps['side']>();
@@ -394,6 +443,9 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
 type ViewportPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Viewport>;
 interface NavigationMenuViewportProps extends ViewportPrimitiveProps {}
 
+/**
+ * Provides a viewport container for navigation menu content with animation support. Renders a <div> element.
+ */
 const Viewport = forwardRef<HTMLDivElement, NavigationMenuViewportProps>(
     ({ className, ...props }, ref) => {
         return (
@@ -418,6 +470,9 @@ interface NavigationMenuContentProps extends ContentPrimitiveProps {
     popupProps?: NavigationMenuPopupProps;
 }
 
+/**
+ * Combines Portal, Positioner, Popup, and Viewport into a convenient wrapper component. Renders a <div> element.
+ */
 const Content = forwardRef<HTMLDivElement, NavigationMenuContentProps>(
     ({ portalProps, positionerProps, popupProps, className, ...props }, ref) => {
         return (

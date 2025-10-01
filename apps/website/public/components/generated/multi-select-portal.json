@@ -1,0 +1,43 @@
+{
+    "name": "MultiSelectPortal",
+    "displayName": "MultiSelect.Portal",
+    "description": "Renders multi-select content in a React Portal to avoid z-index and overflow issues. Does not render any DOM element itself.",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "container",
+            "type": [
+                "null",
+                "HTMLElement",
+                "ShadowRoot",
+                "RefObject<HTMLElement | ShadowRoot | null>"
+            ],
+            "required": false,
+            "description": "A parent element to render the portal element into."
+        }
+    ],
+    "generatedAt": "2025-10-01T07:29:46.911Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/multi-select/multi-select.tsx"
+}

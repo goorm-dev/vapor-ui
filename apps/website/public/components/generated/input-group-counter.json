@@ -1,0 +1,34 @@
+{
+    "name": "InputGroupCounter",
+    "displayName": "InputGroup.Counter",
+    "description": "Displays character count information for input fields with customizable formatting. Renders a <span> element.",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "Iterable<ReactNode>",
+                "ReactPortal",
+                "(props: CounterRenderProps) => ReactNode"
+            ],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "defaultElement": "span",
+    "generatedAt": "2025-10-01T07:17:47.829Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/input-group/input-group.tsx"
+}

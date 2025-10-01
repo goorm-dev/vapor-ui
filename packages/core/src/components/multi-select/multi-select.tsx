@@ -37,6 +37,11 @@ interface MultiSelectRootProps<Value>
     extends Omit<RootPrimitiveProps<Value>, 'multiple'>,
         MultiSelectSharedProps {}
 
+/**
+ * Provides the root context for a multi-select dropdown with multiple selectable options. Renders a <div> element.
+ *
+ * Documentation: [MultiSelect Documentation](https://vapor-ui.goorm.io/docs/components/multi-select)
+ */
 const Root = <Value,>({ items, ...props }: MultiSelectRootProps<Value>) => {
     const [sharedProps, otherProps] = createSplitProps<MultiSelectSharedProps>()(props, [
         'placeholder',
@@ -59,6 +64,9 @@ Root.displayName = 'MultiSelect.Root';
 type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
 interface MultiSelectTriggerProps extends TriggerPrimitiveProps {}
 
+/**
+ * Activates the multi-select dropdown when clicked or focused. Renders a <button> element.
+ */
 const Trigger = forwardRef<HTMLButtonElement, MultiSelectTriggerProps>(
     ({ render = <button />, nativeButton = true, className, ...props }, ref) => {
         const { size, invalid } = useMultiSelectContext();
@@ -83,6 +91,9 @@ Trigger.displayName = 'MultiSelect.Trigger';
 type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
 interface MultiSelectValueProps extends ValuePrimitiveProps {}
 
+/**
+ * Displays the currently selected values as badges with customizable rendering. Renders a <span> element.
+ */
 const Value = forwardRef<HTMLSpanElement, MultiSelectValueProps>(
     ({ className, children: childrenProp, ...props }, ref) => {
         const { size = 'md', items, placeholder } = useMultiSelectContext();
@@ -144,6 +155,9 @@ const badgeSizeMap: Record<
 type PlaceholderPrimitiveProps = VComponentProps<'span'>;
 interface MultiSelectPlaceholderProps extends PlaceholderPrimitiveProps {}
 
+/**
+ * Shows placeholder text when no values are selected. Renders a <span> element.
+ */
 const Placeholder = forwardRef<HTMLSpanElement, MultiSelectPlaceholderProps>(
     ({ render, className, ...props }, ref) => {
         const { size } = useMultiSelectContext();
@@ -165,6 +179,9 @@ const Placeholder = forwardRef<HTMLSpanElement, MultiSelectPlaceholderProps>(
 type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
 interface MultiSelectTriggerIconProps extends TriggerIconPrimitiveProps {}
 
+/**
+ * Displays an icon within the trigger to indicate dropdown functionality. Renders a <div> element.
+ */
 const TriggerIcon = forwardRef<HTMLDivElement, MultiSelectTriggerIconProps>(
     ({ className, children, ...props }, ref) => {
         const { size } = useMultiSelectContext();
@@ -191,6 +208,9 @@ TriggerIcon.displayName = 'MultiSelect.TriggerIcon';
 type PortalPrimitiveProps = VComponentProps<typeof BaseSelect.Portal>;
 interface MultiSelectPortalProps extends PortalPrimitiveProps {}
 
+/**
+ * Renders multi-select content in a React Portal to avoid z-index and overflow issues. Does not render any DOM element itself.
+ */
 const Portal = (props: MultiSelectPortalProps) => {
     return <BaseSelect.Portal {...props} />;
 };
@@ -203,6 +223,9 @@ Portal.displayName = 'MultiSelect.Portal';
 type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
 interface MultiSelectPositionerProps extends PositionerPrimitiveProps {}
 
+/**
+ * Positions the multi-select popup relative to its trigger element. Renders a <div> element.
+ */
 const Positioner = forwardRef<HTMLDivElement, MultiSelectPositionerProps>((props, ref) => {
     const {
         side = 'bottom',
@@ -234,6 +257,9 @@ Positioner.displayName = 'MultiSelect.Positioner';
 type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
 interface MultiSelectPopupProps extends PopupPrimitiveProps {}
 
+/**
+ * Contains the multi-select items and content. Renders a <div> element.
+ */
 const Popup = forwardRef<HTMLDivElement, MultiSelectPopupProps>(({ className, ...props }, ref) => {
     return <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...props} />;
 });
@@ -249,6 +275,9 @@ interface MultiSelectContentProps extends ContentPrimitiveProps {
     positionerProps?: MultiSelectPositionerProps;
 }
 
+/**
+ * Combines Portal, Positioner, and Popup into a convenient wrapper component. Renders a <div> element.
+ */
 const Content = forwardRef<HTMLDivElement, MultiSelectContentProps>(
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
@@ -269,6 +298,9 @@ Content.displayName = 'MultiSelect.Content';
 type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
 interface MultiSelectItemProps extends ItemPrimitiveProps {}
 
+/**
+ * Displays an individual selectable multi-select item. Renders a <div> element.
+ */
 const Item = forwardRef<HTMLDivElement, MultiSelectItemProps>(({ className, ...props }, ref) => {
     return <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...props} />;
 });
@@ -281,6 +313,9 @@ Item.displayName = 'MultiSelect.Item';
 type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
 interface MultiSelectItemIndicatorProps extends ItemIndicatorPrimitiveProps {}
 
+/**
+ * Shows a visual indicator when an item is selected in the multi-select. Renders a <span> element.
+ */
 const ItemIndicator = forwardRef<HTMLSpanElement, MultiSelectItemIndicatorProps>(
     ({ className, children, ...props }, ref) => {
         const IconElement = createSlot(children || <ConfirmOutlineIcon />);
@@ -305,6 +340,9 @@ ItemIndicator.displayName = 'MultiSelect.ItemIndicator';
 type GroupPrimitiveProps = VComponentProps<typeof BaseSelect.Group>;
 interface MultiSelectGroupProps extends GroupPrimitiveProps {}
 
+/**
+ * Groups related multi-select items together with semantic organization. Renders a <div> element.
+ */
 const Group = forwardRef<HTMLDivElement, MultiSelectGroupProps>((props, ref) => {
     return <BaseSelect.Group ref={ref} {...props} />;
 });
@@ -317,6 +355,9 @@ Group.displayName = 'MultiSelect.Group';
 type GroupLabelPrimitiveProps = VComponentProps<typeof BaseSelect.GroupLabel>;
 interface MultiSelectGroupLabelProps extends GroupLabelPrimitiveProps {}
 
+/**
+ * Provides a descriptive label for multi-select item groups. Renders a <div> element.
+ */
 const GroupLabel = forwardRef<HTMLDivElement, MultiSelectGroupLabelProps>(
     ({ className, ...props }, ref) => {
         return (
@@ -337,6 +378,9 @@ GroupLabel.displayName = 'MultiSelect.GroupLabel';
 type SeparatorPrimitiveProps = VComponentProps<typeof BaseSelect.Separator>;
 interface MultiSelectSeparatorProps extends SeparatorPrimitiveProps {}
 
+/**
+ * Displays a visual divider between multi-select items or groups. Renders a <div> element.
+ */
 const Separator = forwardRef<HTMLDivElement, MultiSelectSeparatorProps>(
     ({ className, ...props }, ref) => {
         return (

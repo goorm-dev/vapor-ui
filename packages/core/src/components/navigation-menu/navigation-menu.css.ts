@@ -9,6 +9,7 @@ import { vars } from '~/styles/vars.css';
 export const root = recipe({
     defaultVariants: { stretch: false },
     variants: {
+        /** Use the stretch prop to make the navigation menu take full width */
         stretch: {
             true: layerStyle('components', { width: '100%' }),
             false: layerStyle('components', { width: 'fit-content' }),
@@ -26,6 +27,7 @@ export const list = recipe({
 
     defaultVariants: { direction: 'horizontal' },
     variants: {
+        /** Use the direction prop to change the orientation of navigation items */
         direction: {
             horizontal: layerStyle('components', { flexDirection: 'row' }),
             vertical: layerStyle('components', { flexDirection: 'column' }),
@@ -34,7 +36,10 @@ export const list = recipe({
 });
 
 export const item = recipe({
-    variants: { stretch: { true: layerStyle('components', { flex: 1 }) } },
+    variants: {
+        /** Use the stretch prop to make navigation items take full width */
+        stretch: { true: layerStyle('components', { flex: 1 }) },
+    },
 });
 
 export const link = recipe({
@@ -69,6 +74,7 @@ export const link = recipe({
         size: 'md',
     },
     variants: {
+        /** Use the size prop to change the size of navigation links */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['075'],

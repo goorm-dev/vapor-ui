@@ -1,0 +1,19 @@
+{
+    "name": "InputGroupRoot",
+    "displayName": "InputGroup.Root",
+    "description": "Provides a container for input components with additional functionality like character counters. Renders a <div> element.\n\nDocumentation: [InputGroup Documentation](https://vapor-ui.goorm.io/docs/components/input-group)",
+    "props": [
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "defaultElement": "div",
+    "generatedAt": "2025-10-01T07:17:48.017Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/input-group/input-group.tsx"
+}

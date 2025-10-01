@@ -1,0 +1,112 @@
+{
+    "name": "NavigationMenuRoot",
+    "displayName": "NavigationMenu.Root",
+    "description": "Provides the root context for a navigation menu with hierarchical navigation options. Renders a <nav> element.\n\nDocumentation: [NavigationMenu Documentation](https://vapor-ui.goorm.io/docs/components/navigation-menu)",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "direction",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "Use the direction prop to change the orientation of navigation items"
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "The orientation of the navigation menu.",
+            "defaultValue": "'horizontal'"
+        },
+        {
+            "name": "aria-label",
+            "type": "string",
+            "required": true,
+            "description": "Accessible label for the navigation menu, describing its purpose."
+        },
+        {
+            "name": "defaultValue",
+            "type": "any",
+            "required": false,
+            "description": "The uncontrolled value of the item that should be initially selected.\n\nTo render a controlled navigation menu, use the `value` prop instead.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the link is disabled, preventing interaction and applying disabled styles."
+        },
+        {
+            "name": "value",
+            "type": "any",
+            "required": false,
+            "description": "The controlled value of the navigation menu item that should be currently open.\nWhen non-nullish, the menu will be open. When nullish, the menu will be closed.\n\nTo render an uncontrolled navigation menu, use the `defaultValue` prop instead.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Use the size prop to change the size of navigation links",
+            "defaultValue": "md"
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
+                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "A ref to imperative actions."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the navigation menu is closed."
+        },
+        {
+            "name": "onValueChange",
+            "type": [
+                "(value: any, event: Event | undefined, reason: BaseOpenChangeReason | undefined) => void"
+            ],
+            "required": false,
+            "description": "Callback fired when the value changes."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before opening the navigation menu. Specified in milliseconds.",
+            "defaultValue": "50"
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the navigation menu. Specified in milliseconds.",
+            "defaultValue": "50"
+        },
+        {
+            "name": "stretch",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Use the stretch prop to make navigation items take full width"
+        }
+    ],
+    "generatedAt": "2025-10-01T07:38:02.334Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/navigation-menu/navigation-menu.tsx"
+}

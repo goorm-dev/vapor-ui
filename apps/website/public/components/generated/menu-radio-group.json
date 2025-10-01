@@ -1,0 +1,65 @@
+{
+    "name": "MenuRadioGroup",
+    "displayName": "Menu.RadioGroup",
+    "description": "Provides a group container for radio button menu items with mutual exclusivity. Renders a <div> element.",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false,
+            "description": "The content of the component."
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "defaultValue",
+            "type": "any",
+            "required": false,
+            "description": "The uncontrolled value of the radio item that should be initially selected.\n\nTo render a controlled radio group, use the `value` prop instead."
+        },
+        {
+            "name": "value",
+            "type": "any",
+            "required": false,
+            "description": "The controlled value of the radio item that should be currently selected.\n\nTo render an uncontrolled radio group, use the `defaultValue` prop instead."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: any, event: Event) => void"],
+            "required": false,
+            "description": "Function called when the selected value changes.",
+            "defaultValue": "() => {}"
+        }
+    ],
+    "generatedAt": "2025-10-01T07:23:22.877Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/menu.tsx"
+}

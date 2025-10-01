@@ -1,0 +1,49 @@
+{
+    "name": "MenuContent",
+    "displayName": "Menu.Content",
+    "description": "Combines Portal, Positioner, and Popup into a convenient wrapper component. Renders a <div> element.",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "finalFocus",
+            "type": ["RefObject<HTMLElement | null>"],
+            "required": false,
+            "description": "Determines the element to focus when the menu is closed.\nBy default, focus returns to the trigger."
+        }
+    ],
+    "generatedAt": "2025-10-01T07:23:22.857Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/menu.tsx"
+}

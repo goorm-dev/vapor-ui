@@ -54,6 +54,7 @@ export const item = recipe({
     ],
 
     variants: {
+        /** Use the disabled prop to disable menu item interactions */
         disabled: {
             true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
         },

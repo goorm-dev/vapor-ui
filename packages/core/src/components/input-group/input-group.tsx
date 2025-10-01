@@ -71,6 +71,11 @@ export function useInputGroup({ value, maxLength }: UseInputGroupSyncOptions) {
 
 interface InputGroupRootProps extends VComponentProps<'div'> {}
 
+/**
+ * Provides a container for input components with additional functionality like character counters. Renders a <div> element.
+ *
+ * Documentation: [InputGroup Documentation](https://vapor-ui.goorm.io/docs/components/input-group)
+ */
 const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
     ({ className, render, ...props }, ref) => {
         const [value, setValue] = useState<FieldValue>('');
@@ -129,6 +134,9 @@ const generateCounterContent = (
     return maxLength !== undefined ? `${count}/${maxLength}` : `${count}`;
 };
 
+/**
+ * Displays character count information for input fields with customizable formatting. Renders a <span> element.
+ */
 const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>(
     ({ className, children, render, ...props }, ref) => {
         const { value, maxLength } = useInputGroupContext();
