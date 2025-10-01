@@ -1,0 +1,18 @@
+{
+    "name": "BreadcrumbSeparator",
+    "description": "Shows visual separators between breadcrumb items. Renders a <li> element.",
+    "props": [
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "defaultElement": "li",
+    "generatedAt": "2025-10-01T06:50:59.532Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/breadcrumb/breadcrumb.tsx"
+}

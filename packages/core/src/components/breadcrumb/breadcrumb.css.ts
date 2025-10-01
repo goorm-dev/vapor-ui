@@ -18,6 +18,7 @@ export const item = layerStyle('components', {
 export const link = recipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
+        /** Use the size prop to change the size of the breadcrumb */
         size: {
             sm: typography({ style: 'body4' }),
             md: typography({ style: 'body3' }),
@@ -59,8 +60,8 @@ export const icon = recipe({
         justifyContent: 'center',
     }),
 
-    defaultVariants: { size: 'md' },
     variants: {
+        /** Use the size prop to change the size of icons */
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },
             md: { width: vars.size.dimension[200], height: vars.size.dimension[200] },

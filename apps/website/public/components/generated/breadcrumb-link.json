@@ -1,0 +1,25 @@
+{
+    "name": "BreadcrumbLink",
+    "description": "Displays clickable links in the breadcrumb navigation. Renders an <a> element or <span> when current.",
+    "props": [
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "current",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Use the current prop to mark the current page",
+            "defaultValue": "false"
+        }
+    ],
+    "defaultElement": "a",
+    "generatedAt": "2025-10-01T06:50:59.531Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/breadcrumb/breadcrumb.tsx"
+}

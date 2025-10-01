@@ -29,6 +29,11 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
 type BreadcrumbPrimitiveProps = VComponentProps<'nav'>;
 interface BreadcrumbRootProps extends BreadcrumbPrimitiveProps, BreadcrumbVariants {}
 
+/**
+ * Displays a hierarchical list of links that help users navigate through the site structure. Renders a <nav> element.
+ *
+ * Documentation: [Breadcrumb Documentation](https://vapor-ui.goorm.io/docs/components/breadcrumb)
+ */
 const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
     ({ render, className, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(props, ['size']);
@@ -53,6 +58,9 @@ const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
 type BreadcrumbListPrimitiveProps = VComponentProps<'ol'>;
 interface BreadcrumbListProps extends BreadcrumbListPrimitiveProps {}
 
+/**
+ * Contains breadcrumb items in an ordered list structure. Renders an <ol> element.
+ */
 const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -72,6 +80,9 @@ const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
 
 interface BreadcrumbItemProps extends VComponentProps<'li'> {}
 
+/**
+ * Wraps individual breadcrumb links or separators. Renders a <li> element.
+ */
 const Item = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -91,9 +102,15 @@ const Item = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
 
 type BreadcrumbLinkPrimitiveProps = VComponentProps<'a'>;
 interface BreadcrumbLinkProps extends BreadcrumbLinkPrimitiveProps {
+    /**
+     * Use the current prop to mark the current page
+     */
     current?: boolean;
 }
 
+/**
+ * Displays clickable links in the breadcrumb navigation. Renders an <a> element or <span> when current.
+ */
 const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
     ({ render, current, className, ...props }, ref) => {
         const Component = current ? 'span' : 'a';
@@ -120,6 +137,9 @@ const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
 
 interface BreadcrumbSeparatorProps extends VComponentProps<'li'> {}
 
+/**
+ * Shows visual separators between breadcrumb items. Renders a <li> element.
+ */
 const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
     ({ render, className, children, ...props }, ref) => {
         const { size } = useBreadcrumbContext();
@@ -146,6 +166,9 @@ const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
 type BreadcrumbEllipsisPrimitiveProps = VComponentProps<'span'>;
 interface BreadcrumbEllipsisProps extends BreadcrumbEllipsisPrimitiveProps {}
 
+/**
+ * Displays an ellipsis indicator for collapsed breadcrumb paths. Renders a <span> element.
+ */
 const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
     ({ render, className, children, ...props }, ref) => {
         const { size } = useBreadcrumbContext();
