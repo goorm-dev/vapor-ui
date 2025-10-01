@@ -17,6 +17,7 @@
         },
         "typecheck": { "dependsOn": ["^build"] },
         "test": { "outputs": [], "dependsOn": ["^build"] },
+        "test:regressions": { "dependsOn": ["storybook#build:storybook"] },
         "lint": { "outputs": [] },
         "format": { "outputs": [], "cache": false },
         "format:check": { "outputs": [] },
