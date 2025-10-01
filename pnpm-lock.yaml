@@ -45,10 +45,10 @@ importers:
         specifier: ^22.15.4
         version: 22.18.6
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.2
         version: 18.3.24
       '@types/react-dom':
-        specifier: ^18.3.1
+        specifier: ^18.3.2
         version: 18.3.7(@types/react@18.3.24)
       '@vanilla-extract/vite-plugin':
         specifier: ^5.0.1
@@ -223,7 +223,7 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
-        specifier: ^18
+        specifier: ^18.1.0
         version: 18.3.1(react@18.3.1)
       react-error-boundary:
         specifier: ^6.0.0
@@ -275,10 +275,10 @@ importers:
         specifier: ^22.15.4
         version: 22.18.6
       '@types/react':
-        specifier: ^18.0.0
+        specifier: ^18.0.1
         version: 18.3.24
       '@types/react-dom':
-        specifier: ^18.0.0
+        specifier: ^18.0.1
         version: 18.3.7(@types/react@18.3.24)
       eslint:
         specifier: ^9.20.1
@@ -397,7 +397,7 @@ importers:
         specifier: ^22.15.4
         version: 22.18.6
       '@types/react':
-        specifier: ^18.3.23
+        specifier: ^18.3.24
         version: 18.3.24
       '@types/react-dom':
         specifier: ^18.3.7
@@ -543,7 +543,7 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
       '@types/react':
-        specifier: ^17.0.0
+        specifier: ^17.0.1
         version: 17.0.88
       eslint:
         specifier: ^9.1.0
@@ -571,19 +571,19 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
       '@types/react':
-        specifier: ^17.0.0
+        specifier: ^17.0.1
         version: 17.0.88
       '@types/react-dom':
-        specifier: ^17.0.0
+        specifier: ^17.0.1
         version: 17.0.26(@types/react@17.0.88)
       eslint:
         specifier: ^9.1.0
         version: 9.36.0(jiti@2.6.0)
       react:
-        specifier: ^17.0.0
+        specifier: ^17.0.1
         version: 17.0.2
       react-dom:
-        specifier: ^17.0.0
+        specifier: ^17.0.1
         version: 17.0.2(react@17.0.2)
       rimraf:
         specifier: ^6.0.1
@@ -7990,11 +7990,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mdx-js/react@3.1.1(@types/react@18.3.24)(react@18.3.1)':
+  '@mdx-js/react@3.1.1(@types/react@18.3.24)(react@17.0.2)':
     dependencies:
       '@types/mdx': 2.0.13
       '@types/react': 18.3.24
-      react: 18.3.1
+      react: 17.0.2
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
@@ -8708,12 +8708,12 @@ snapshots:
 
   '@storybook/addon-docs@8.6.14(@types/react@18.3.24)(storybook@8.6.14(prettier@3.6.2))':
     dependencies:
-      '@mdx-js/react': 3.1.1(@types/react@18.3.24)(react@18.3.1)
-      '@storybook/blocks': 8.6.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.6.2))
+      '@mdx-js/react': 3.1.1(@types/react@18.3.24)(react@17.0.2)
+      '@storybook/blocks': 8.6.14(react-dom@18.3.1(react@18.3.1))(react@17.0.2)(storybook@8.6.14(prettier@3.6.2))
       '@storybook/csf-plugin': 8.6.14(storybook@8.6.14(prettier@3.6.2))
-      '@storybook/react-dom-shim': 8.6.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.6.2))
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      '@storybook/react-dom-shim': 8.6.14(react-dom@18.3.1(react@18.3.1))(react@17.0.2)(storybook@8.6.14(prettier@3.6.2))
+      react: 17.0.2
+      react-dom: 18.3.1(react@17.0.2)
       storybook: 8.6.14(prettier@3.6.2)
       ts-dedent: 2.2.0
     transitivePeerDependencies:
@@ -8777,6 +8777,15 @@ snapshots:
       memoizerific: 1.11.3
       storybook: 8.6.14(prettier@3.6.2)
 
+  '@storybook/blocks@8.6.14(react-dom@18.3.1(react@18.3.1))(react@17.0.2)(storybook@8.6.14(prettier@3.6.2))':
+    dependencies:
+      '@storybook/icons': 1.6.0(react-dom@18.3.1(react@18.3.1))(react@17.0.2)
+      storybook: 8.6.14(prettier@3.6.2)
+      ts-dedent: 2.2.0
+    optionalDependencies:
+      react: 17.0.2
+      react-dom: 18.3.1(react@18.3.1)
+
   '@storybook/blocks@8.6.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.6.2))':
     dependencies:
       '@storybook/icons': 1.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -8830,6 +8839,11 @@ snapshots:
 
   '@storybook/global@5.0.0': {}
 
+  '@storybook/icons@1.6.0(react-dom@18.3.1(react@18.3.1))(react@17.0.2)':
+    dependencies:
+      react: 17.0.2
+      react-dom: 18.3.1(react@18.3.1)
+
   '@storybook/icons@1.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
@@ -8847,6 +8861,12 @@ snapshots:
 
   '@storybook/preview-api@8.6.14(storybook@8.6.14(prettier@3.6.2))':
     dependencies:
+      storybook: 8.6.14(prettier@3.6.2)
+
+  '@storybook/react-dom-shim@8.6.14(react-dom@18.3.1(react@18.3.1))(react@17.0.2)(storybook@8.6.14(prettier@3.6.2))':
+    dependencies:
+      react: 17.0.2
+      react-dom: 18.3.1(react@18.3.1)
       storybook: 8.6.14(prettier@3.6.2)
 
   '@storybook/react-dom-shim@8.6.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.14(prettier@3.6.2))':
@@ -10442,7 +10462,7 @@ snapshots:
       '@typescript-eslint/parser': 8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2)
       eslint: 9.36.0(jiti@2.6.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0(jiti@2.6.0)))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint@9.36.0(jiti@2.6.0)))(eslint@9.36.0(jiti@2.6.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0(jiti@2.6.0)))(eslint-plugin-import@2.32.0)(eslint@9.36.0(jiti@2.6.0))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.36.0(jiti@2.6.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.36.0(jiti@2.6.0))
       eslint-plugin-react: 7.37.5(eslint@9.36.0(jiti@2.6.0))
@@ -10475,7 +10495,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0(jiti@2.6.0)))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint@9.36.0(jiti@2.6.0)))(eslint@9.36.0(jiti@2.6.0)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0(jiti@2.6.0)))(eslint-plugin-import@2.32.0)(eslint@9.36.0(jiti@2.6.0)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.3
@@ -10498,7 +10518,7 @@ snapshots:
       '@typescript-eslint/parser': 8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2)
       eslint: 9.36.0(jiti@2.6.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0(jiti@2.6.0)))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint@9.36.0(jiti@2.6.0)))(eslint@9.36.0(jiti@2.6.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0(jiti@2.6.0))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0(jiti@2.6.0)))(eslint-plugin-import@2.32.0)(eslint@9.36.0(jiti@2.6.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -12426,6 +12446,12 @@ snapshots:
       object-assign: 4.1.1
       react: 17.0.2
       scheduler: 0.20.2
+
+  react-dom@18.3.1(react@17.0.2):
+    dependencies:
+      loose-envify: 1.4.0
+      react: 17.0.2
+      scheduler: 0.23.2
 
   react-dom@18.3.1(react@18.3.1):
     dependencies:
