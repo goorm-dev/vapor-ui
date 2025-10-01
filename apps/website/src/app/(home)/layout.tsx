@@ -1,27 +1,24 @@
 import type { ReactNode } from 'react';
 
-import { ThemeProvider } from '@vapor-ui/core';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 
 import { baseOptions } from '~/app/layout.config';
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
-import { createMetadata } from '~/lib/metadata';
+import { createMetadata } from '~/utils/metadata';
 
 export const metadata = createMetadata({});
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
-        <ThemeProvider>
-            <HomeLayout
-                {...baseOptions}
-                nav={{
-                    enabled: false,
-                }}
-            >
-                <SiteNavBar />
+        <HomeLayout
+            {...baseOptions}
+            nav={{
+                enabled: false,
+            }}
+        >
+            <SiteNavBar />
 
-                {children}
-            </HomeLayout>
-        </ThemeProvider>
+            {children}
+        </HomeLayout>
     );
 }

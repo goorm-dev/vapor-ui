@@ -1,0 +1,60 @@
+---
+title: 'Radio'
+site_name: 'Radio - Vapor Core'
+description: 'Radio는 여러 옵션 중 하나만 선택할 수 있는 입력 컴포넌트입니다. 개별 라디오 버튼으로 사용되며 선택 상태를 시각적으로 표현합니다.'
+---
+
+<Demo name="radio/default-radio">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio/default-radio.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Size
+
+Radio 버튼의 크기는 `md`와 `lg` 두 가지 크기로 제공합니다.
+
+<Demo name="radio/radio-size">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio/radio-size.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### States
+
+Radio는 다양한 상태를 지원하여 사용자 인터페이스에서 적절한 피드백을 제공합니다.
+
+<Demo name="radio/radio-states">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio/radio-states.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Props Table
+
+---
+
+### Radio.Root
+
+Radio의 루트 컴포넌트로, 실제 라디오 버튼 요소를 렌더링합니다. 개별 라디오 선택 옵션을 제공합니다.
+
+<ComponentPropsTable file="radio" section="radioRootProps" />
+
+### Radio.Indicator
+
+라디오 버튼의 선택 상태를 시각적으로 표시하는 인디케이터 컴포넌트입니다.
+
+<ComponentPropsTable file="radio" section="radioIndicatorProps" />

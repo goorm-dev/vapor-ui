@@ -149,17 +149,22 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Tooltip.Content
  * -----------------------------------------------------------------------------------------------*/
 
-interface TooltipContentProps extends VComponentProps<typeof Popup> {}
+interface TooltipContentProps extends VComponentProps<typeof Popup> {
+    portalProps?: TooltipPortalProps;
+    positionerProps?: TooltipPositionerProps;
+}
 
-const Content = forwardRef<HTMLDivElement, TooltipContentProps>((props, ref) => {
-    return (
-        <Portal>
-            <Positioner>
-                <Popup ref={ref} {...props} />
-            </Positioner>
-        </Portal>
-    );
-});
+const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
+    ({ portalProps, positionerProps, ...props }, ref) => {
+        return (
+            <Portal {...portalProps}>
+                <Positioner {...positionerProps}>
+                    <Popup ref={ref} {...props} />
+                </Positioner>
+            </Portal>
+        );
+    },
+);
 
 /* -----------------------------------------------------------------------------------------------*/
 

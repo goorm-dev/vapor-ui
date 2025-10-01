@@ -62,12 +62,12 @@ const Overlay = forwardRef<HTMLDivElement, DialogOverlayProps>(({ className, ...
 Overlay.displayName = 'Dialog.Overlay';
 
 /* -------------------------------------------------------------------------------------------------
- * Dialog.Content
+ * Dialog.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-interface DialogContentProps extends VComponentProps<typeof BaseDialog.Popup> {}
+interface DialogPopupProps extends VComponentProps<typeof BaseDialog.Popup> {}
 
-const Content = forwardRef<HTMLDivElement, DialogContentProps>(({ className, ...props }, ref) => {
+const Popup = forwardRef<HTMLDivElement, DialogPopupProps>(({ className, ...props }, ref) => {
     const { size } = useDialogContext();
 
     return (
@@ -78,23 +78,28 @@ const Content = forwardRef<HTMLDivElement, DialogContentProps>(({ className, ...
         />
     );
 });
-Content.displayName = 'Dialog.Content';
+Popup.displayName = 'Dialog.Popup';
 
 /* -------------------------------------------------------------------------------------------------
- * Dialog.CombinedContent
+ * Dialog.Content
  * -----------------------------------------------------------------------------------------------*/
 
-interface DialogCombinedContentProps extends DialogContentProps {}
+interface DialogContentProps extends DialogPopupProps {
+    portalProps?: DialogPortalProps;
+    overlayProps?: DialogOverlayProps;
+}
 
-const CombinedContent = forwardRef<HTMLDivElement, DialogCombinedContentProps>((props, ref) => {
-    return (
-        <Portal>
-            <Overlay />
-            <Content ref={ref} {...props} />
-        </Portal>
-    );
-});
-CombinedContent.displayName = 'Dialog.CombinedContent';
+const Content = forwardRef<HTMLDivElement, DialogContentProps>(
+    ({ portalProps, overlayProps, ...props }, ref) => {
+        return (
+            <Portal {...portalProps}>
+                <Overlay {...overlayProps} />
+                <Popup ref={ref} {...props} />
+            </Portal>
+        );
+    },
+);
+Content.displayName = 'Dialog.Content';
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog.Trigger
@@ -212,8 +217,8 @@ export {
     Root as DialogRoot,
     Portal as DialogPortal,
     Overlay as DialogOverlay,
+    Popup as DialogPopup,
     Content as DialogContent,
-    CombinedContent as DialogCombinedContent,
     Trigger as DialogTrigger,
     Close as DialogClose,
     Title as DialogTitle,
@@ -227,8 +232,8 @@ export type {
     DialogRootProps,
     DialogPortalProps,
     DialogOverlayProps,
+    DialogPopupProps,
     DialogContentProps,
-    DialogCombinedContentProps,
     DialogTriggerProps,
     DialogCloseProps,
     DialogTitleProps,
@@ -241,8 +246,8 @@ export type {
 export const Dialog = {
     Root,
     Overlay,
+    Popup,
     Content,
-    CombinedContent,
     Portal,
     Trigger,
     Close,

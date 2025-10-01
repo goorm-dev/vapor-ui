@@ -1,0 +1,72 @@
+{
+    "radioRootProps": [
+        {
+            "prop": "value",
+            "type": ["string", "number", "null"],
+            "default": "null",
+            "description": "라디오 버튼의 값입니다. RadioGroup 내에서 선택된 값을 식별하는 데 사용됩니다."
+        },
+        {
+            "prop": "size",
+            "type": ["\"md\"", "\"lg\""],
+            "default": "\"md\"",
+            "description": "라디오 버튼의 크기를 설정합니다."
+        },
+        {
+            "prop": "invalid",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "라디오 버튼이 유효하지 않은 상태인지 여부를 설정합니다. RadioGroup의 invalid 속성에 의해 상속될 수 있습니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "라디오 버튼을 비활성화할지 여부를 설정합니다."
+        },
+        {
+            "prop": "readOnly",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "라디오 버튼을 읽기 전용으로 설정할지 여부를 결정합니다."
+        },
+        {
+            "prop": "required",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "라디오 버튼이 필수 선택 항목인지 여부를 설정합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "null",
+            "description": "라디오 버튼 요소에 적용할 CSS 클래스명입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "button",
+            "description": "라디오 버튼 요소를 렌더링할 때 사용할 커스텀 렌더링 prop입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": "Radio.Indicator",
+            "description": "라디오 버튼 내부에 렌더링할 자식 요소입니다. 기본적으로 Radio.Indicator가 렌더링됩니다."
+        }
+    ],
+    "radioIndicatorProps": [
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "null",
+            "description": "라디오 인디케이터 요소에 적용할 CSS 클래스명입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "div",
+            "description": "라디오 인디케이터 요소를 렌더링할 때 사용할 커스텀 렌더링 prop입니다."
+        }
+    ]
+}
