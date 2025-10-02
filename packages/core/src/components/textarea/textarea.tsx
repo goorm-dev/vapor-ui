@@ -29,6 +29,9 @@ interface TextareaProps extends Assign<Omit<TextareaPrimitiveProps, 'size'>, Bas
     defaultValue?: string;
 }
 
+/**
+ * Renders a multi-line text input with auto-resize support. Renders a <textarea> element.
+ */
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     (
         {

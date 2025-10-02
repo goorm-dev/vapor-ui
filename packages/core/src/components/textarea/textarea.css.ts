@@ -38,11 +38,13 @@ export const textarea = recipe({
     defaultVariants: { invalid: false, size: 'md', autoResize: false },
 
     variants: {
+        /** Use the invalid prop to indicate validation errors */
         invalid: {
             true: {
                 borderColor: vars.color.border.danger,
             },
         },
+        /** Use the autoResize prop to enable automatic height adjustment */
         autoResize: {
             true: {
                 boxSizing: 'border-box',
@@ -63,6 +65,7 @@ export const textarea = recipe({
             false: {},
         },
 
+        /** Use the size prop to change the size of the textarea */
         size: {
             sm: [
                 typography({ style: 'body3' }),
