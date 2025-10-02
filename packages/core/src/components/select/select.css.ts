@@ -32,6 +32,7 @@ export const trigger = recipe({
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
+        /** Use the size prop to change the size of the select trigger */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['100'],
@@ -54,6 +55,7 @@ export const trigger = recipe({
                 height: vars.size.space['600'],
             }),
         },
+        /** Use the invalid prop to indicate validation errors */
         invalid: {
             true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },

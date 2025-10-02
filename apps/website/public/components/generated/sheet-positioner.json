@@ -1,0 +1,23 @@
+{
+    "name": "SheetPositioner",
+    "description": "Positions the sheet on a specific side of the screen. Renders a <div> element.",
+    "props": [
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "side",
+            "type": ["bottom", "left", "right", "top"],
+            "required": false
+        }
+    ],
+    "defaultElement": "div",
+    "generatedAt": "2025-10-02T01:29:25.736Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/sheet.tsx"
+}

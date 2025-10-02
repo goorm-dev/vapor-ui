@@ -35,6 +35,9 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
 type RootPrimitiveProps = Omit<VComponentProps<typeof BaseSelect.Root>, 'multiple'>;
 interface SelectRootProps extends RootPrimitiveProps, SelectSharedProps {}
 
+/**
+ * Provides the root context for a select dropdown with single selection. Renders a <div> element.
+ */
 const Root = ({ items, ...props }: SelectRootProps) => {
     const [sharedProps, otherProps] = createSplitProps<SelectSharedProps>()(props, [
         'placeholder',
@@ -56,6 +59,9 @@ const Root = ({ items, ...props }: SelectRootProps) => {
 type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
 interface SelectTriggerProps extends TriggerPrimitiveProps {}
 
+/**
+ * Renders the select trigger button. Renders a <button> element.
+ */
 const Trigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
     ({ render = <button />, nativeButton = true, className, ...props }, ref) => {
         const { size, invalid } = useSelectContext();
@@ -80,6 +86,9 @@ const Trigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
 type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
 interface SelectValueProps extends ValuePrimitiveProps {}
 
+/**
+ * Renders the selected value or placeholder text. Renders a <span> element.
+ */
 const Value = forwardRef<HTMLSpanElement, SelectValueProps>(
     ({ className, children: childrenProp, ...props }, ref) => {
         const { items, size, placeholder } = useSelectContext();
@@ -115,6 +124,9 @@ const Value = forwardRef<HTMLSpanElement, SelectValueProps>(
 type PlaceholderPrimitiveProps = VComponentProps<'span'>;
 interface SelectPlaceholderProps extends PlaceholderPrimitiveProps {}
 
+/**
+ * Renders placeholder text when no value is selected. Renders a <span> element.
+ */
 const Placeholder = forwardRef<HTMLSpanElement, SelectPlaceholderProps>(
     ({ render, className, ...props }, ref) => {
         return (
@@ -134,6 +146,9 @@ const Placeholder = forwardRef<HTMLSpanElement, SelectPlaceholderProps>(
 type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
 interface SelectTriggerIconProps extends TriggerIconPrimitiveProps {}
 
+/**
+ * Renders the dropdown arrow icon in the trigger. Renders a <div> element.
+ */
 const TriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIconProps>(
     ({ className, children, ...props }, ref) => {
         const { size } = useSelectContext();
@@ -159,6 +174,9 @@ const TriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIconProps>(
 type PortalPrimitiveProps = VComponentProps<typeof BaseSelect.Portal>;
 interface SelectPortalProps extends PortalPrimitiveProps {}
 
+/**
+ * Renders select content in a portal outside the normal DOM tree.
+ */
 const Portal = (props: SelectPortalProps) => {
     return <BaseSelect.Portal {...props} />;
 };
@@ -170,6 +188,9 @@ const Portal = (props: SelectPortalProps) => {
 type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
 interface SelectPositionerProps extends PositionerPrimitiveProps {}
 
+/**
+ * Positions the select dropdown relative to the trigger. Renders a <div> element.
+ */
 const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref) => {
     const {
         side = 'bottom',
@@ -200,6 +221,9 @@ const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref
 type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
 interface SelectPopupProps extends PopupPrimitiveProps {}
 
+/**
+ * Renders the select dropdown content container. Renders a <div> element.
+ */
 const Popup = forwardRef<HTMLDivElement, SelectPopupProps>(({ className, ...props }, ref) => {
     return <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...props} />;
 });
@@ -214,6 +238,9 @@ interface SelectContentProps extends ContentPrimitiveProps {
     positionerProps?: SelectPositionerProps;
 }
 
+/**
+ * Combines Portal, Positioner, and Popup components for easy select dropdown rendering. Renders a <div> element.
+ */
 const Content = forwardRef<HTMLDivElement, SelectContentProps>(
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
@@ -233,6 +260,9 @@ const Content = forwardRef<HTMLDivElement, SelectContentProps>(
 type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
 interface SelectItemProps extends ItemPrimitiveProps {}
 
+/**
+ * Renders an individual selectable option in the dropdown. Renders a <div> element.
+ */
 const Item = forwardRef<HTMLDivElement, SelectItemProps>(({ className, ...props }, ref) => {
     return <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...props} />;
 });
@@ -244,6 +274,9 @@ const Item = forwardRef<HTMLDivElement, SelectItemProps>(({ className, ...props 
 type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
 interface SelectItemIndicatorProps extends ItemIndicatorPrimitiveProps {}
 
+/**
+ * Renders the check mark indicator for selected items. Renders a <span> element.
+ */
 const ItemIndicator = forwardRef<HTMLSpanElement, SelectItemIndicatorProps>(
     ({ className, children, ...props }, ref) => {
         const IconElement = createSlot(children || <ConfirmOutlineIcon />);
@@ -267,6 +300,9 @@ const ItemIndicator = forwardRef<HTMLSpanElement, SelectItemIndicatorProps>(
 type GroupPrimitiveProps = VComponentProps<typeof BaseSelect.Group>;
 interface SelectGroupProps extends GroupPrimitiveProps {}
 
+/**
+ * Groups related select options together. Renders a <div> element.
+ */
 const Group = forwardRef<HTMLDivElement, SelectGroupProps>((props, ref) => {
     return <BaseSelect.Group ref={ref} {...props} />;
 });
@@ -278,6 +314,9 @@ const Group = forwardRef<HTMLDivElement, SelectGroupProps>((props, ref) => {
 type GroupLabelPrimitiveProps = VComponentProps<typeof BaseSelect.GroupLabel>;
 interface SelectGroupLabelProps extends GroupLabelPrimitiveProps {}
 
+/**
+ * Renders a label for a group of select options. Renders a <div> element.
+ */
 const GroupLabel = forwardRef<HTMLDivElement, SelectGroupLabelProps>(
     ({ className, ...props }, ref) => {
         return (
@@ -297,6 +336,9 @@ const GroupLabel = forwardRef<HTMLDivElement, SelectGroupLabelProps>(
 type SeparatorPrimitiveProps = VComponentProps<typeof BaseSelect.Separator>;
 interface SelectSeparatorProps extends SeparatorPrimitiveProps {}
 
+/**
+ * Renders a visual separator between select options or groups. Renders a <div> element.
+ */
 const Separator = forwardRef<HTMLDivElement, SelectSeparatorProps>(
     ({ className, ...props }, ref) => {
         return (

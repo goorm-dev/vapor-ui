@@ -1,0 +1,18 @@
+{
+    "name": "SheetFooter",
+    "displayName": "Sheet.Footer",
+    "description": "Renders the footer section of the sheet with action buttons. Renders a <div> element.",
+    "props": [
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "generatedAt": "2025-10-02T01:29:25.747Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/sheet.tsx"
+}

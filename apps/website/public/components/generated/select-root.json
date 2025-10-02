@@ -1,0 +1,152 @@
+{
+    "name": "SelectRoot",
+    "description": "Provides the root context for a select dropdown with single selection. Renders a <div> element.",
+    "props": [
+        {
+            "name": "items",
+            "type": ["Record<string, ReactNode>", "{ label: ReactNode; value: unknown; }[]"],
+            "required": false,
+            "description": "Data structure of the items rendered in the select menu.\nWhen specified, `<Select.Value>` renders the label of the selected item instead of the raw value."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "The id of the Select."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "defaultValue",
+            "type": "unknown",
+            "required": false,
+            "description": "The uncontrolled value of the select when it’s initially rendered.\n\nTo render a controlled select, use the `value` prop instead.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "value",
+            "type": "unknown",
+            "required": false,
+            "description": "The value of the select."
+        },
+        {
+            "name": "open",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the select menu is currently open."
+        },
+        {
+            "name": "readOnly",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the user should be unable to choose a different option from the select menu.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "required",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the user must choose a value before submitting a form.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: unknown, event?: Event | undefined) => void"],
+            "required": false,
+            "description": "Callback fired when the value of the select changes. Use when controlled."
+        },
+        {
+            "name": "inputRef",
+            "type": [
+                "null",
+                "(instance: HTMLInputElement | null) => void",
+                "RefObject<HTMLInputElement>"
+            ],
+            "required": false,
+            "description": "A ref to access the hidden input element."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the select menu is initially open.\n\nTo render a controlled select menu, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": [
+                "(open: boolean, event: Event | undefined, reason: OpenChangeReason | undefined) => void"
+            ],
+            "required": false,
+            "description": "Event handler called when the select menu is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the select menu is opened or closed."
+        },
+        {
+            "name": "modal",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Determines if the select enters a modal state when open.\n- `true`: user interaction is limited to the select: document page scroll is locked and and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the select will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the select manually.\nUseful when the select's animation is controlled by an external library."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Use the size prop to change the size of the select trigger",
+            "defaultValue": "md"
+        },
+        {
+            "name": "invalid",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Use the invalid prop to indicate validation errors"
+        }
+    ],
+    "generatedAt": "2025-10-02T01:26:35.233Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/select/select.tsx"
+}
