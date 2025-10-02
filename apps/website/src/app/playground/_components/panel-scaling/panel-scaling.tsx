@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-import { SCALE_VALUES, type ScaleValue, useThemeVariables } from '~/hooks/use-theme-variables';
+import { SCALE_VALUES, type ScaleValue, useCustomTheme } from '~/hooks/use-custom-theme';
 
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
 
 function Scaling() {
     const [checked, setChecked] = useState<ScaleValue>('1');
-    const { setThemeVariable } = useThemeVariables();
+    const { applyScaling } = useCustomTheme({ scope: '[data-playground-scope]' });
 
     return (
         <Section title="Scaling">
@@ -24,7 +24,7 @@ function Scaling() {
                             stretch
                             color={scale === checked ? 'primary' : 'secondary'}
                             variant="outline"
-                            onClick={() => setThemeVariable('scale', scale)}
+                            onClick={() => applyScaling(parseFloat(scale))}
                         >
                             <span>{scaleToPercent(scale)}</span>
                         </RadioButtonGroup.Button>

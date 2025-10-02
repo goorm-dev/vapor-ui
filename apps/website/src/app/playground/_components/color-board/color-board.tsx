@@ -1,11 +1,12 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { getColorLightness } from '@vapor-ui/color-generator';
 import { Text } from '@vapor-ui/core';
-import { generateColorCSS } from '@vapor-ui/css-generator';
+
+import { useCustomTheme } from '~/hooks/use-custom-theme';
 
 import { ColorPicker } from '../color-picker';
 import Section from '../section';
@@ -15,7 +16,9 @@ const ColorBoard = () => {
     const [backgroundColor, setBackgroundColor] = useState('#ffffff');
     const [backgroundLightness, setBackgroundLightness] = useState(100);
 
-    const applyColorsToCSS = useCallback(() => {
+    const { applyColors } = useCustomTheme({ scope: '[data-playground-scope]' });
+
+    const applyColorsToCSS = () => {
         const colorConfig: SemanticMappingConfig = {
             primary: {
                 name: 'primary',
@@ -30,19 +33,8 @@ const ColorBoard = () => {
                 },
             },
         };
-
-        const generatedCSS = generateColorCSS(colorConfig);
-
-        const existingStyle = document.getElementById('vapor-dynamic-theme');
-        if (existingStyle) {
-            existingStyle.remove();
-        }
-
-        const styleElement = document.createElement('style');
-        styleElement.id = 'vapor-dynamic-theme';
-        styleElement.textContent = generatedCSS;
-        document.head.appendChild(styleElement);
-    }, [primaryColor, backgroundColor, backgroundLightness]);
+        applyColors(colorConfig);
+    };
 
     const handleBackgroundColorChange = (color: string) => {
         setBackgroundColor(color);
@@ -56,7 +48,7 @@ const ColorBoard = () => {
         <Section title="Color">
             <div className="flex flex-col gap-v-100">
                 <div>
-                    <Text typography="body3" foreground="secondary">
+                    <Text typography="body3" foreground="secondary-100">
                         Primary Color
                     </Text>
                     <ColorPicker
@@ -69,7 +61,7 @@ const ColorBoard = () => {
                 </div>
 
                 <div>
-                    <Text typography="body3" foreground="secondary">
+                    <Text typography="body3" foreground="secondary-100">
                         Background Color
                     </Text>
 

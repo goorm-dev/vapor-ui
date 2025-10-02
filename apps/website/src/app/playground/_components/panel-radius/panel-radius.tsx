@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-import { RADIUS_VALUES, type RadiusValue, useThemeVariables } from '~/hooks/use-theme-variables';
+import { RADIUS_VALUES, type RadiusValue, useCustomTheme } from '~/hooks/use-custom-theme';
 
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
 
 function Radius() {
     const [checked, setChecked] = useState<RadiusValue>('md');
-    const { setThemeVariable } = useThemeVariables();
+    const { applyRadius } = useCustomTheme({ scope: '[data-playground-scope]' });
 
     return (
         <Section title="Border Radius">
@@ -24,7 +24,7 @@ function Radius() {
                             stretch
                             color={r === checked ? 'primary' : 'secondary'}
                             variant="outline"
-                            onClick={() => setThemeVariable('radius', r)}
+                            onClick={() => applyRadius(r)}
                         >
                             <span>{r}</span>
                         </RadioButtonGroup.Button>

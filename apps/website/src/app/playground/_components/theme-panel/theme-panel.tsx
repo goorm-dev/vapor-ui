@@ -11,23 +11,6 @@ import Scaling from '../panel-scaling';
 import Theme from '../panel-theme';
 import styles from './theme-panel.module.scss';
 
-// TODO: 관련 로직 제거
-// const parseThemes = (nodes: NodeListOf<HTMLButtonElement>) => {
-//     let attributes = '';
-
-//     nodes.forEach((node) => {
-//         const category = node.getAttribute('data-theme-category');
-//         if (category === 'border-radius') {
-//             attributes += `borderRadiusFactor="${node.value}" `;
-//         } else {
-//             attributes += `${category}="${node.value}" `;
-//         }
-//     });
-
-//     return `createThemeConfig({
-// 	primaryColor: "${attributes}",
-// });`;
-// };
 
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);

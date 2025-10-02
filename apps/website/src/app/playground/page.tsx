@@ -16,7 +16,7 @@ import { HeartIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'next/link';
 
 import { getCartesianProduct } from '../../utils/array';
-import PageWrapper from './_components/page-wrapper';
+import PageWrapper from './_components2/page-wrapper';
 import RenderingTemplate from './_components/rendering-template';
 
 const AVATAR_PROPS = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Badge, Button, Text, useTheme } from '@vapor-ui/core';
 import {
@@ -23,23 +23,11 @@ import DefaultSearchDialog from '~/components/search/search';
 import { VAPOR_BANNER_URL } from '~/constants/image-urls';
 
 export default function HomePage() {
-    const [mounted, setMounted] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const { resolvedTheme } = useTheme();
 
-    useEffect(() => {
-        setMounted(true);
-        // Reset to default tab1 theme on page load
-    }, []);
-
-    if (!mounted) {
-        return null;
-    }
-
-    const handleTabChange = () => {
-        // TODO: update theme
-    };
+    const handleTabChange = (value: string) => {};
 
     return (
         <>
@@ -205,9 +193,9 @@ export default function HomePage() {
                                 나만의 테마를 완성해보세요
                             </Text>
                         </div>
-                        <LocalTabs defaultValue="tab1" onValueChange={handleTabChange}>
+                        <LocalTabs defaultValue="vapor" onValueChange={handleTabChange}>
                             <LocalTabsList>
-                                <LocalTab value="tab1">
+                                <LocalTab value="vapor">
                                     <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
                                         <RemoteIcon />
                                         <Text typography="subtitle1" foreground="normal-100">
@@ -215,7 +203,7 @@ export default function HomePage() {
                                         </Text>
                                     </div>
                                 </LocalTab>
-                                <LocalTab value="tab2">
+                                <LocalTab value="aurora">
                                     <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
                                         <AiSmartieIcon />
                                         <Text typography="subtitle1" foreground="normal-100">
@@ -223,7 +211,7 @@ export default function HomePage() {
                                         </Text>
                                     </div>
                                 </LocalTab>
-                                <LocalTab value="tab3">
+                                <LocalTab value="pop">
                                     <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
                                         <StarIcon />
                                         <Text typography="subtitle1" foreground="normal-100">
@@ -232,7 +220,7 @@ export default function HomePage() {
                                     </div>
                                 </LocalTab>
                             </LocalTabsList>
-                            <LocalTabsContent value="tab1">
+                            <LocalTabsContent value="vapor">
                                 <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
                                     <Text foreground="normal-200" typography="subtitle1">
                                         Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌
@@ -245,7 +233,7 @@ export default function HomePage() {
                                     </div>
                                 </div>
                             </LocalTabsContent>
-                            <LocalTabsContent value="tab2">
+                            <LocalTabsContent value="aurora">
                                 <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
                                     <Text foreground="normal-200" typography="subtitle1">
                                         Aurora 테마는 신비롭고 미래적인 분위기로,혁신적이고 실험적인
@@ -258,7 +246,7 @@ export default function HomePage() {
                                     </div>
                                 </div>
                             </LocalTabsContent>
-                            <LocalTabsContent value="tab3">
+                            <LocalTabsContent value="pop">
                                 <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
                                     <Text foreground="normal-200" typography="subtitle1">
                                         Pop 테마는 활기차고 생동감 있는 디자인으로, 창의적이고
