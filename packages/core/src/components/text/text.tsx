@@ -14,6 +14,9 @@ interface TextProps extends TextPrimitiveProps {
     typography?: Typography['style'];
 }
 
+/**
+ * Renders text with customizable typography and color styles. Renders a <span> element by default.
+ */
 const Text = forwardRef<HTMLSpanElement, TextProps>(
     ({ render, typography: typographyStyle, foreground, className, ...props }, ref) => {
         return useRender({
