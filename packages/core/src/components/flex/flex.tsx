@@ -10,6 +10,9 @@ type FlexPrimitiveProps = VComponentProps<typeof Box>;
 
 interface FlexProps extends FlexPrimitiveProps, FlexVariants {}
 
+/**
+ * Renders a flexible container with flexbox layout. Renders a <div> element with display flex.
+ */
 const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {
     const [variantProps, otherProps] = createSplitProps<FlexVariants>()(props, ['inline']);
 
