@@ -30,12 +30,14 @@ export const root = recipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /** Use the invalid prop to indicate validation errors */
         invalid: {
             true: layerStyle('components', {
                 borderColor: vars.color.border.danger,
             }),
         },
 
+        /** Use the size prop to change the size of the text input */
         size: {
             sm: layerStyle('components', {
                 paddingInline: vars.size.space[100],

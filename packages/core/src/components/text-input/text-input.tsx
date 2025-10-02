@@ -28,6 +28,9 @@ type BaseProps = TextInputVariants & {
 type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
 interface TextInputProps extends Assign<TextInputPrimitiveProps, BaseProps> {}
 
+/**
+ * Renders a text input field with various input types support. Renders an <input> element.
+ */
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ({ onValueChange, value: valueProp, defaultValue = '', className, ...props }, ref) => {
         const [textInputRootProps, otherProps] = createSplitProps<TextInputVariants>()(props, [
