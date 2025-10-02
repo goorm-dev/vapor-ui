@@ -10,6 +10,9 @@ type VStackPrimitiveProps = VComponentProps<typeof Flex>;
 
 interface VStackProps extends VStackPrimitiveProps, VStackVariants {}
 
+/**
+ * Renders a vertical stack container that arranges children in a column layout. Renders a <div> element with flex column direction.
+ */
 const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...props }, ref) => {
     const [vStackProps, otherProps] = createSplitProps<VStackVariants>()(props, ['reverse']);
 
