@@ -13,6 +13,7 @@ export const root = recipe({
 
     defaultVariants: { orientation: 'horizontal' },
     variants: {
+        /** Use the orientation prop to change the layout direction of tabs */
         orientation: {
             horizontal: layerStyle('components', {
                 flexDirection: 'column',
@@ -32,7 +33,9 @@ export const list = recipe({
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
     variants: {
+        /** Use the variant prop to change the visual style of the tab list */
         variant: { line: {}, plain: {} },
+        /** Use the orientation prop to change the layout direction */
         orientation: {
             horizontal: layerStyle('components', {
                 display: 'flex',
@@ -81,6 +84,7 @@ export const trigger = recipe({
 
     defaultVariants: { size: 'md', disabled: false, orientation: 'horizontal' },
     variants: {
+        /** Use the size prop to change the size of tab triggers */
         size: {
             sm: [
                 typography({ style: 'subtitle2' }),
@@ -100,10 +104,12 @@ export const trigger = recipe({
             ],
         },
 
+        /** Use the disabled prop to disable tab triggers */
         disabled: {
             true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
         },
 
+        /** Use the orientation prop to change the layout direction */
         orientation: {
             horizontal: layerStyle('components', {
                 paddingInline: vars.size.space['050'],

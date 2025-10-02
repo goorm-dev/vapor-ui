@@ -28,6 +28,9 @@ const [TabsProvider, useTabsContext] = createContext<TabsContext>({
 type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Root>;
 interface TabsRootProps extends RootPrimitiveProps, TabsSharedProps {}
 
+/**
+ * Provides the root context for a tabbed interface with multiple panels. Renders a <div> element.
+ */
 const Root = forwardRef<HTMLDivElement, TabsRootProps>(({ className, ...props }, ref) => {
     const [sharedProps, otherProps] = createSplitProps<TabsSharedProps>()(props, [
         'activateOnFocus',
@@ -60,6 +63,9 @@ Root.displayName = 'Tabs.Root';
 type ListPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.List>;
 interface TabsListProps extends Omit<ListPrimitiveProps, keyof TabsSharedProps> {}
 
+/**
+ * Renders the container for tab trigger buttons. Renders a <div> element.
+ */
 const List = forwardRef<HTMLDivElement, TabsListProps>(({ className, ...props }, ref) => {
     const { activateOnFocus, loop, variant, orientation } = useTabsContext();
 
@@ -82,6 +88,9 @@ List.displayName = 'Tabs.List';
 type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Tab>;
 interface TabsTriggerProps extends TriggerPrimitiveProps {}
 
+/**
+ * Renders a tab trigger button that activates its associated panel. Renders a <button> element.
+ */
 const Trigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
     ({ disabled: disabledProp, className, ...props }, ref) => {
         const { disabled: rootDisabled, size, orientation } = useTabsContext();
@@ -107,6 +116,9 @@ Trigger.displayName = 'Tabs.Trigger';
 type IndicatorPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Indicator>;
 interface TabsIndicatorProps extends IndicatorPrimitiveProps {}
 
+/**
+ * Renders a visual indicator that highlights the active tab. Renders a <div> element.
+ */
 const Indicator = forwardRef<HTMLDivElement, TabsIndicatorProps>(({ className, ...props }, ref) => {
     const { orientation } = useTabsContext();
 
@@ -127,6 +139,9 @@ Indicator.displayName = 'Tabs.Indicator';
 type PanelPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Panel>;
 interface TabsPanelProps extends PanelPrimitiveProps {}
 
+/**
+ * Renders the content panel associated with a tab trigger. Renders a <div> element.
+ */
 const Panel = forwardRef<HTMLDivElement, TabsPanelProps>((props, ref) => {
     return <BaseTabs.Panel ref={ref} {...props} />;
 });

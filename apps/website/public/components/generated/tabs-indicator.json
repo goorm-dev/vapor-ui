@@ -1,0 +1,31 @@
+{
+    "name": "TabsIndicator",
+    "displayName": "Tabs.Indicator",
+    "description": "Renders a visual indicator that highlights the active tab. Renders a <div> element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps<any>, State>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "renderBeforeHydration",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether to render itself before React hydrates.\nThis minimizes the time that the indicator isn’t visible after server-side rendering.",
+            "defaultValue": "false"
+        }
+    ],
+    "generatedAt": "2025-10-02T01:32:41.669Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tabs/tabs.tsx"
+}
