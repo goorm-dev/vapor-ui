@@ -22,6 +22,9 @@ import * as styles from './tooltip.css';
 type RootPrimitiveProps = VComponentProps<typeof BaseTooltip.Root>;
 interface TooltipRootProps extends RootPrimitiveProps {}
 
+/**
+ * Provides the root context for a tooltip overlay. Renders a <div> element.
+ */
 const Root = (props: TooltipRootProps) => {
     return <BaseTooltip.Root {...props} />;
 };
@@ -33,6 +36,9 @@ const Root = (props: TooltipRootProps) => {
 type TriggerPrimitiveProps = VComponentProps<typeof BaseTooltip.Trigger>;
 interface TooltipTriggerProps extends TriggerPrimitiveProps {}
 
+/**
+ * Renders an element that triggers the tooltip on hover or focus. Renders a <button> element.
+ */
 const Trigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>((props, ref) => {
     return <BaseTooltip.Trigger ref={ref} {...props} />;
 });
@@ -44,6 +50,9 @@ const Trigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>((props, ref) 
 type PortalPrimitiveProps = VComponentProps<typeof BaseTooltip.Portal>;
 interface TooltipPortalProps extends PortalPrimitiveProps {}
 
+/**
+ * Renders tooltip content in a portal outside the normal DOM tree.
+ */
 const Portal = (props: TooltipPortalProps) => {
     return <BaseTooltip.Portal {...props} />;
 };
@@ -55,6 +64,9 @@ const Portal = (props: TooltipPortalProps) => {
 type PositionerPrimitiveProps = VComponentProps<typeof BaseTooltip.Positioner>;
 interface TooltipPositionerProps extends PositionerPrimitiveProps {}
 
+/**
+ * Positions the tooltip relative to the trigger element. Renders a <div> element.
+ */
 const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(
     ({ side = 'top', align = 'center', sideOffset = 8, collisionAvoidance, ...props }, ref) => {
         return (
@@ -80,6 +92,9 @@ const DATA_ALIGN = 'data-align';
 type PopupPrimitiveProps = VComponentProps<typeof BaseTooltip.Popup>;
 interface TooltipPopupProps extends PopupPrimitiveProps {}
 
+/**
+ * Renders the tooltip content container with an arrow. Renders a <div> element.
+ */
 const Popup = forwardRef<HTMLDivElement, TooltipPopupProps>(
     ({ className, children, ...props }, ref) => {
         const [side, setSide] = useState<PositionerPrimitiveProps['side']>('bottom');
@@ -154,6 +169,9 @@ interface TooltipContentProps extends VComponentProps<typeof Popup> {
     positionerProps?: TooltipPositionerProps;
 }
 
+/**
+ * Combines Portal, Positioner, and Popup components for easy tooltip rendering. Renders a <div> element.
+ */
 const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
