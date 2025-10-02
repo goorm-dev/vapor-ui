@@ -27,6 +27,9 @@ type GridVariants = RootVariants & {
 
 interface GridRootProps extends GridPrimitiveProps, GridVariants {}
 
+/**
+ * Renders a grid container with CSS Grid layout. Renders a <div> element with display grid.
+ */
 const Root = forwardRef<HTMLDivElement, GridRootProps>(
     ({ className, style, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<GridVariants>()(props, [
@@ -67,6 +70,9 @@ type GridItemVariants = { rowSpan?: string; colSpan?: string };
 
 interface GridItemProps extends GridItemPrimitiveProps, GridItemVariants {}
 
+/**
+ * Renders a grid item that can span multiple rows or columns. Renders a <div> element.
+ */
 const Item = forwardRef<HTMLDivElement, GridItemProps>(
     ({ rowSpan, colSpan, className, style, children, ...props }, ref) => {
         const cssVariables = assignInlineVars({

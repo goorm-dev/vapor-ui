@@ -15,6 +15,7 @@ export const root = recipe({
 
     defaultVariants: { flow: 'row' },
     variants: {
+        /** Use the flow prop to control the auto-placement algorithm of grid items */
         flow: {
             row: layerStyle('components', { gridAutoFlow: 'row' }),
             column: layerStyle('components', { gridAutoFlow: 'column' }),
