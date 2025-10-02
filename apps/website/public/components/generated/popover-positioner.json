@@ -1,5 +1,6 @@
 {
     "name": "PopoverPositioner",
+    "displayName": "Popover.Positioner",
     "description": "Positions the popover content relative to the trigger. Renders a <div> element.",
     "props": [
         {
@@ -116,6 +117,6 @@
             "description": "Determines how to handle collisions when positioning the popup."
         }
     ],
-    "generatedAt": "2025-10-02T01:14:20.538Z",
+    "generatedAt": "2025-10-02T04:03:08.939Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/popover/popover.tsx"
 }

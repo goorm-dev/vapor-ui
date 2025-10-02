@@ -1,7 +1,6 @@
 {
     "name": "PopoverContent",
     "displayName": "Popover.Content",
-    "description": "Combines Portal, Positioner, and Popup components for easy popover content rendering. Renders a <div> element.",
     "props": [
         {
             "name": "className",
@@ -48,6 +47,6 @@
             "required": false
         }
     ],
-    "generatedAt": "2025-10-02T01:14:20.550Z",
+    "generatedAt": "2025-10-02T04:03:08.945Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/popover/popover.tsx"
 }

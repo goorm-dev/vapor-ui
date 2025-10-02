@@ -1,6 +1,6 @@
 {
     "name": "PopoverDescription",
-    "description": "Renders the popover description for accessibility. Renders a <p> element.",
+    "displayName": "Popover.Description",
     "props": [
         {
             "name": "className",
@@ -20,6 +20,6 @@
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ],
-    "generatedAt": "2025-10-02T01:14:20.557Z",
+    "generatedAt": "2025-10-02T04:03:08.950Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/popover/popover.tsx"
 }

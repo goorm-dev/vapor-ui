@@ -40,6 +40,7 @@ interface PopoverTriggerProps extends TriggerPrimitiveProps {}
 const Trigger = forwardRef<HTMLButtonElement, PopoverTriggerProps>((props, ref) => {
     return <BasePopover.Trigger ref={ref} {...props} />;
 });
+Trigger.displayName = 'Popover.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Close
@@ -93,6 +94,7 @@ const Positioner = forwardRef<HTMLDivElement, PopoverPositionerProps>(
         );
     },
 );
+Positioner.displayName = 'Popover.Positioner';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Popup
@@ -157,6 +159,7 @@ const Popup = forwardRef<HTMLDivElement, PopoverPopupProps>(
         );
     },
 );
+Popup.displayName = 'Popover.Popup';
 
 const extractPositions = (dataset: DOMStringMap) => {
     const currentSide = dataset.side as PositionerPrimitiveProps['side'];
@@ -168,14 +171,14 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Popover.Content
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combines Portal, Positioner, and Popup components for easy popover content rendering. Renders a <div> element.
+ */
 interface PopoverContentProps extends VComponentProps<typeof Popup> {
     portalProps?: PopoverPortalProps;
     positionerProps?: PopoverPositionerProps;
 }
 
-/**
- * Combines Portal, Positioner, and Popup components for easy popover content rendering. Renders a <div> element.
- */
 const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
@@ -194,30 +197,32 @@ Content.displayName = 'Popover.Content';
  * -----------------------------------------------------------------------------------------------*/
 
 type TitlePrimitiveProps = VComponentProps<typeof BasePopover.Title>;
-interface PopoverTitleProps extends TitlePrimitiveProps {}
-
 /**
  * Renders the popover title for accessibility. Renders an <h2> element.
  */
+interface PopoverTitleProps extends TitlePrimitiveProps {}
+
 const Title = forwardRef<HTMLHeadingElement, PopoverTitleProps>((props, ref) => {
     // NOTE: Consider whether to add styles for the Title component
     return <BasePopover.Title ref={ref} {...props} />;
 });
+Title.displayName = 'Popover.Title';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Description
  * -----------------------------------------------------------------------------------------------*/
 
 type DescriptionPrimitiveProps = VComponentProps<typeof BasePopover.Description>;
-interface PopoverDescriptionProps extends DescriptionPrimitiveProps {}
-
 /**
  * Renders the popover description for accessibility. Renders a <p> element.
  */
+interface PopoverDescriptionProps extends DescriptionPrimitiveProps {}
+
 const Description = forwardRef<HTMLParagraphElement, PopoverDescriptionProps>((props, ref) => {
     // NOTE: Consider whether to add styles for the Description component
     return <BasePopover.Description ref={ref} {...props} />;
 });
+Description.displayName = 'Popover.Description';
 
 /* -----------------------------------------------------------------------------------------------*/
 
