@@ -22,6 +22,9 @@ type RadioVariants = RootVariants;
 type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
 interface RadioRootProps extends RootPrimitiveProps, RadioVariants {}
 
+/**
+ * Renders a radio button input with visual indicator. Renders a <button> element.
+ */
 const Root = forwardRef<HTMLButtonElement, RadioRootProps>(
     ({ className, children, ...props }, ref) => {
         const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
@@ -58,6 +61,9 @@ Root.displayName = 'RadioGroup.Root';
 type IndicatorPrimitiveProps = VComponentProps<typeof BaseRadio.Indicator>;
 interface RadioIndicatorProps extends IndicatorPrimitiveProps {}
 
+/**
+ * Renders the visual indicator for the radio button selection state. Renders a <div> element.
+ */
 const Indicator = forwardRef<HTMLDivElement, RadioIndicatorProps>(
     ({ className, ...props }, ref) => {
         return (

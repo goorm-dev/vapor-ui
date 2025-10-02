@@ -36,6 +36,9 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
 type RootPrimitiveProps = VComponentProps<typeof BaseRadioGroup>;
 interface RadioGroupRootProps extends RootPrimitiveProps, RadioGroupSharedProps {}
 
+/**
+ * Provides the root context for a radio group with selectable radio buttons. Renders a <div> element.
+ */
 const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...props }, ref) => {
     const [labelElementId, setLabelElementId] = useState<string | undefined>(undefined);
 
@@ -69,6 +72,9 @@ Root.displayName = 'RadioGroup.Root';
 type LabelPrimitiveProps = VComponentProps<'span'>;
 interface RadioGroupLabelProps extends LabelPrimitiveProps {}
 
+/**
+ * Renders the label for the radio group. Renders a <span> element.
+ */
 const Label = forwardRef<HTMLSpanElement, RadioGroupLabelProps>(
     ({ render, className, ...props }, ref) => {
         const { setLabelElementId } = useRadioGroupContext();

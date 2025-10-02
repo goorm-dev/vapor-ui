@@ -13,10 +13,12 @@ export const root = recipe({
 
     defaultVariants: { size: 'md', orientation: 'vertical' },
     variants: {
+        /** Use the size prop to change the gap between radio buttons */
         size: {
             md: layerStyle('components', { gap: vars.size.space['050'] }),
             lg: layerStyle('components', { gap: vars.size.space['100'] }),
         },
+        /** Use the orientation prop to change the layout direction of the radio group */
         orientation: {
             horizontal: layerStyle('components', { flexDirection: 'row' }),
             vertical: layerStyle('components', { flexDirection: 'column' }),

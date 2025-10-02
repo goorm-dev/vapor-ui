@@ -46,10 +46,12 @@ export const root = recipe({
     },
 
     variants: {
+        /** Use the invalid prop to indicate validation errors */
         invalid: {
             true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },
 
+        /** Use the size prop to change the size of the radio button */
         size: {
             md: layerStyle('components', {
                 width: vars.size.dimension[200],
