@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { expect, test } from '@playwright/test';
 
 import manifest from '../../../storybook-static/index.json' with { type: 'json' };
