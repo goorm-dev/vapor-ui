@@ -39,12 +39,12 @@ const SectionColor = () => {
         applyColors(colorConfig);
     };
 
-    const handlePrimaryColorChange = (color: string) => {
+    const onPrimaryColorChange = (color: string) => {
         setPrimaryColor(color);
         applyColorsToCSS({ selectedPrimary: color });
     };
 
-    const handleBackgroundColorChange = (color: string) => {
+    const onBackgroundColorChange = (color: string) => {
         setBackgroundColor(color);
         const lightness = getColorLightness(color);
         if (lightness !== null) {
@@ -62,20 +62,12 @@ const SectionColor = () => {
                 <ColorPicker.Root
                     width="100%"
                     defaultValue={primaryColor}
-                    onSaturationChange={(color) => {
-                        handlePrimaryColorChange(color);
-                    }}
-                    onHueChange={(color) => {
-                        handlePrimaryColorChange(color);
-                    }}
+                    onSaturationChange={onPrimaryColorChange}
+                    onHueChange={onPrimaryColorChange}
                 >
                     <ColorPicker.Saturation height={150} />
                     <ColorPicker.Hue />
-                    <ColorPicker.Input
-                        onColorChange={(color) => {
-                            console.log('Input Change:', color);
-                        }}
-                    />
+                    <ColorPicker.Input onColorChange={onPrimaryColorChange} />
                 </ColorPicker.Root>
             </PanelSection.Contents>
 
@@ -84,20 +76,12 @@ const SectionColor = () => {
                 <ColorPicker.Root
                     width="100%"
                     defaultValue={backgroundColor}
-                    onSaturationChange={(color) => {
-                        handleBackgroundColorChange(color);
-                    }}
-                    onHueChange={(color) => {
-                        handleBackgroundColorChange(color);
-                    }}
+                    onSaturationChange={onBackgroundColorChange}
+                    onHueChange={onBackgroundColorChange}
                 >
                     <ColorPicker.Saturation height={150} />
                     <ColorPicker.Hue />
-                    <ColorPicker.Input
-                        onColorChange={(color) => {
-                            console.log('Input Change:', color);
-                        }}
-                    />
+                    <ColorPicker.Input onColorChange={onBackgroundColorChange} />
                 </ColorPicker.Root>
             </PanelSection.Contents>
         </PanelSection.Root>

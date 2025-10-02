@@ -82,6 +82,7 @@ interface ColorPickerContextValue {
     hueRef: React.RefObject<HTMLDivElement>;
     onSaturationChange?: (color: string) => void;
     onHueChange?: (color: string) => void;
+    updateColorDirectly: (color: string) => void;
 }
 
 const ColorPickerContext = createContext<ColorPickerContextValue | null>(null);
@@ -163,6 +164,16 @@ const ColorPickerRoot = ({
         [hsv],
     );
 
+    const updateColorDirectly = useCallback((newColor: string) => {
+        try {
+            const newHsv = hexToHsv(newColor);
+            setHsv(newHsv);
+            setColor(newColor);
+        } catch {
+            // Invalid color, ignore
+        }
+    }, []);
+
     const contextValue: ColorPickerContextValue = useMemo(
         () => ({
             color,
@@ -179,6 +190,7 @@ const ColorPickerRoot = ({
             hueRef,
             onSaturationChange,
             onHueChange,
+            updateColorDirectly,
         }),
         [
             color,
@@ -191,6 +203,7 @@ const ColorPickerRoot = ({
             updateHueValue,
             onSaturationChange,
             onHueChange,
+            updateColorDirectly,
         ],
     );
 
@@ -225,7 +238,7 @@ const ColorPickerRoot = ({
     return (
         <ColorPickerContext.Provider value={contextValue}>
             <div
-                className={`flex flex-col select-none gap-v-100 ${className} ${disabled ? 'opacity-60 pointer-events-none' : ''}`}
+                className={`flex flex-col select-none gap-v-50 ${className} ${disabled ? 'opacity-60 pointer-events-none' : ''}`}
                 style={{ width }}
             >
                 {children}
@@ -349,26 +362,86 @@ interface ColorPickerInputProps {
     onColorChange?: (color: string) => void;
 }
 
+const isValidHexColor = (hex: string): boolean => {
+    return /^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(hex);
+};
+
+const expandShortHex = (hex: string): string => {
+    if (hex.length === 4) {
+        return '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
+    }
+    return hex;
+};
+
 const ColorPickerInput = ({ onColorChange }: ColorPickerInputProps) => {
-    const { color, disabled } = useColorPickerContext();
-    const [inputValue, setInputValue] = useState(color.slice(1));
+    const { color, disabled, updateColorDirectly } = useColorPickerContext();
+    const [inputValue, setInputValue] = useState(color);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        setInputValue(color.slice(1));
-    }, [color]);
+        if (!isEditing) {
+            setInputValue(color);
+        }
+    }, [color, isEditing]);
 
     const handleInputChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            const value = e.target.value.toUpperCase();
-            if (/^[0-9A-F]{0,6}$/.test(value)) {
-                setInputValue(value);
-                if (value.length === 6) {
-                    const hexValue = `#${value}`;
-                    onColorChange?.(hexValue);
+            let value = e.target.value;
+            
+            // Ensure it starts with #
+            if (!value.startsWith('#')) {
+                value = '#' + value;
+            }
+            
+            // Remove non-hex characters (except #)
+            value = value.replace(/[^#0-9A-Fa-f]/g, '');
+            
+            // Limit length to 7 characters (#RRGGBB)
+            if (value.length > 7) {
+                value = value.slice(0, 7);
+            }
+            
+            setInputValue(value.toUpperCase());
+            
+            // Auto-apply for valid 3 or 6 digit hex codes
+            if (value.length === 4 || value.length === 7) {
+                if (isValidHexColor(value)) {
+                    const expandedHex = expandShortHex(value);
+                    updateColorDirectly(expandedHex);
+                    onColorChange?.(expandedHex);
                 }
             }
         },
-        [onColorChange],
+        [updateColorDirectly, onColorChange],
+    );
+
+    const handleFocus = useCallback(() => {
+        setIsEditing(true);
+    }, []);
+
+    const handleBlur = useCallback(() => {
+        setIsEditing(false);
+        // Revert to current color if input is invalid
+        if (!isValidHexColor(inputValue)) {
+            setInputValue(color);
+        }
+    }, [inputValue, color]);
+
+    const handleKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === 'Enter') {
+                if (isValidHexColor(inputValue)) {
+                    const expandedHex = expandShortHex(inputValue);
+                    updateColorDirectly(expandedHex);
+                    onColorChange?.(expandedHex);
+                }
+                e.currentTarget.blur();
+            } else if (e.key === 'Escape') {
+                setInputValue(color);
+                e.currentTarget.blur();
+            }
+        },
+        [inputValue, updateColorDirectly, onColorChange, color],
     );
 
     return (
@@ -376,9 +449,13 @@ const ColorPickerInput = ({ onColorChange }: ColorPickerInputProps) => {
             <TextInput
                 value={inputValue}
                 onChange={handleInputChange}
-                maxLength={6}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                maxLength={7}
                 disabled={disabled}
-                className="w-full pl-v-400"
+                className="w-full pl-v-400 font-mono"
+                placeholder="#000000"
             />
             <div
                 className="w-4 h-4 rounded border border-gray-300 flex-shrink-0 absolute left-v-150 top-v-100"
