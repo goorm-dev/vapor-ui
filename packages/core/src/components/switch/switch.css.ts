@@ -40,6 +40,7 @@ export const control = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /** Use the size prop to change the size of the switch */
         size: {
             sm: layerStyle('components', {
                 padding: vars.size.space['025'],

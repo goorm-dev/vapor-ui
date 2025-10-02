@@ -29,6 +29,9 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
 type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
 interface SwitchRootProps extends RootPrimitiveProps, SwitchSharedProps {}
 
+/**
+ * Renders a toggle switch for boolean input. Renders a <button> element.
+ */
 const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
     ({ className, children: childrenProp, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, ['size']);
@@ -59,6 +62,9 @@ const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
 type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
 interface SwitchThumbProps extends ThumbPrimitiveProps {}
 
+/**
+ * Renders the movable thumb indicator of the switch. Renders a <div> element.
+ */
 const Thumb = forwardRef<HTMLDivElement, SwitchThumbProps>(({ className, ...props }, ref) => {
     const { size } = useSwitchContext();
 
