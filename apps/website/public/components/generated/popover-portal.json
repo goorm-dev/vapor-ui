@@ -1,0 +1,49 @@
+{
+    "name": "PopoverPortal",
+    "description": "Renders popover content in a portal outside the normal DOM tree.",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                "ComponentRenderFn<HTMLProps, {}>"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether to keep the portal mounted in the DOM while the popup is hidden.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "container",
+            "type": [
+                "null",
+                "HTMLElement",
+                "ShadowRoot",
+                "RefObject<HTMLElement | ShadowRoot | null>"
+            ],
+            "required": false,
+            "description": "A parent element to render the portal element into."
+        }
+    ],
+    "generatedAt": "2025-10-02T01:14:20.535Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/popover/popover.tsx"
+}
