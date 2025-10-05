@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useId, useMemo, useRef } from 're
 
 import { Text } from '@vapor-ui/core';
 
-interface PanelSectionContextValue {
+interface PanelSectionWrapperContextValue {
     titleId: string;
     registerTitle: () => void;
     setCurrentSubTitleId: (id: string) => void;
@@ -13,30 +13,32 @@ interface PanelSectionContextValue {
     };
 }
 
-const PanelSectionContext = createContext<PanelSectionContextValue | null>(null);
+const PanelSectionWrapperContext = createContext<PanelSectionWrapperContextValue | null>(null);
 
-const usePanelSectionContext = () => {
-    const context = useContext(PanelSectionContext);
+const usePanelSectionWrapperContext = () => {
+    const context = useContext(PanelSectionWrapperContext);
     if (!context) {
-        throw new Error('PanelSection compound components must be used within PanelSection');
+        throw new Error(
+            'PanelSectionWrapper compound components must be used within PanelSectionWrapper',
+        );
     }
     return context;
 };
 
 /* -------------------------------------------------------------------------------------------------
- * PanelSection.Root
+ * PanelSectionWrapper.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface PanelSectionRootProps {
+interface PanelSectionWrapperRootProps {
     children: ReactNode;
 }
 
-const PanelSectionRoot = ({ children }: PanelSectionRootProps) => {
+const PanelSectionWrapperRoot = ({ children }: PanelSectionWrapperRootProps) => {
     const titleId = useId();
     const hasTitleRef = useRef(false);
     const currentSubTitleIdRef = useRef<string | null>(null);
 
-    const contextValue: PanelSectionContextValue = useMemo(
+    const contextValue: PanelSectionWrapperContextValue = useMemo(
         () => ({
             titleId,
             registerTitle: () => {
@@ -64,22 +66,22 @@ const PanelSectionRoot = ({ children }: PanelSectionRootProps) => {
     );
 
     return (
-        <PanelSectionContext.Provider value={contextValue}>
+        <PanelSectionWrapperContext.Provider value={contextValue}>
             <section className="flex flex-col gap-v-100">{children}</section>
-        </PanelSectionContext.Provider>
+        </PanelSectionWrapperContext.Provider>
     );
 };
 
 /* -------------------------------------------------------------------------------------------------
- * PanelSection.Title
+ * PanelSectionWrapper.Title
  * -----------------------------------------------------------------------------------------------*/
 
-interface PanelSectionTitleProps {
+interface PanelSectionWrapperTitleProps {
     children: ReactNode;
 }
 
-const PanelSectionTitle = ({ children }: PanelSectionTitleProps) => {
-    const { titleId, registerTitle } = usePanelSectionContext();
+const PanelSectionWrapperTitle = ({ children }: PanelSectionWrapperTitleProps) => {
+    const { titleId, registerTitle } = usePanelSectionWrapperContext();
 
     registerTitle();
 
@@ -91,16 +93,16 @@ const PanelSectionTitle = ({ children }: PanelSectionTitleProps) => {
 };
 
 /* -------------------------------------------------------------------------------------------------
- * PanelSection.SubTitle
+ * PanelSectionWrapper.SubTitle
  * -----------------------------------------------------------------------------------------------*/
 
-interface PanelSectionSubTitleProps {
+interface PanelSectionWrapperSubTitleProps {
     children: ReactNode;
 }
 
-const PanelSectionSubTitle = ({ children }: PanelSectionSubTitleProps) => {
+const PanelSectionWrapperSubTitle = ({ children }: PanelSectionWrapperSubTitleProps) => {
     const subTitleId = useId();
-    const { setCurrentSubTitleId } = usePanelSectionContext();
+    const { setCurrentSubTitleId } = usePanelSectionWrapperContext();
 
     useEffect(() => {
         setCurrentSubTitleId(subTitleId);
@@ -114,26 +116,24 @@ const PanelSectionSubTitle = ({ children }: PanelSectionSubTitleProps) => {
 };
 
 /* -------------------------------------------------------------------------------------------------
- * PanelSection.Contents
+ * PanelSectionWrapper.Contents
  * -----------------------------------------------------------------------------------------------*/
 
-interface PanelSectionContentsProps {
+interface PanelSectionWrapperContentsProps {
     children: ReactNode;
 }
 
-const PanelSectionContents = ({ children }: PanelSectionContentsProps) => {
-    const { getAriaProps } = usePanelSectionContext();
+const PanelSectionWrapperContents = ({ children }: PanelSectionWrapperContentsProps) => {
+    const { getAriaProps } = usePanelSectionWrapperContext();
 
     return <div {...getAriaProps()}>{children}</div>;
 };
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const PanelSection = {
-    Root: PanelSectionRoot,
-    Title: PanelSectionTitle,
-    SubTitle: PanelSectionSubTitle,
-    Contents: PanelSectionContents,
+export const PanelSectionWrapper = {
+    Root: PanelSectionWrapperRoot,
+    Title: PanelSectionWrapperTitle,
+    SubTitle: PanelSectionWrapperSubTitle,
+    Contents: PanelSectionWrapperContents,
 };
-
-export default PanelSection;

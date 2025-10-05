@@ -126,7 +126,6 @@ const ColorPickerRoot = ({
     const saturationRef = useRef<HTMLDivElement>(null);
     const hueRef = useRef<HTMLDivElement>(null);
 
-
     const updateSaturationValue = useCallback(
         (e: React.MouseEvent | MouseEvent) => {
             if (!saturationRef.current) return;
@@ -233,7 +232,15 @@ const ColorPickerRoot = ({
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [isDragging, isHueDragging, updateSaturationValue, updateHueValue, color, onSaturationChange, onHueChange]);
+    }, [
+        isDragging,
+        isHueDragging,
+        updateSaturationValue,
+        updateHueValue,
+        color,
+        onSaturationChange,
+        onHueChange,
+    ]);
 
     return (
         <ColorPickerContext.Provider value={contextValue}>
@@ -387,22 +394,22 @@ const ColorPickerInput = ({ onColorChange }: ColorPickerInputProps) => {
     const handleInputChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             let value = e.target.value;
-            
+
             // Ensure it starts with #
             if (!value.startsWith('#')) {
                 value = '#' + value;
             }
-            
+
             // Remove non-hex characters (except #)
             value = value.replace(/[^#0-9A-Fa-f]/g, '');
-            
+
             // Limit length to 7 characters (#RRGGBB)
             if (value.length > 7) {
                 value = value.slice(0, 7);
             }
-            
+
             setInputValue(value.toUpperCase());
-            
+
             // Auto-apply for valid 3 or 6 digit hex codes
             if (value.length === 4 || value.length === 7) {
                 if (isValidHexColor(value)) {
@@ -468,12 +475,9 @@ const ColorPickerInput = ({ onColorChange }: ColorPickerInputProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const ColorPicker = {
+export const ColorPicker = {
     Root: ColorPickerRoot,
     Saturation: ColorPickerSaturation,
     Hue: ColorPickerHue,
     Input: ColorPickerInput,
 };
-
-export default ColorPicker;
-export type { ColorPickerRootProps, ColorPickerSaturationProps, ColorPickerInputProps };

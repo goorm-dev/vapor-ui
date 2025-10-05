@@ -21,4 +21,4 @@ const PageWrapper = ({ children }: PageWrapperProps) => {
     );
 };
 
-export default PageWrapper;
+export { PageWrapper };

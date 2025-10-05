@@ -8,7 +8,7 @@ import { getColorLightness } from '@vapor-ui/color-generator';
 import { useCustomTheme } from '~/hooks/use-custom-theme';
 
 import { ColorPicker } from '../color-picker';
-import PanelSection from '../panel-section/panel-section';
+import { PanelSectionWrapper } from '../panel-section-wrapper';
 
 const SectionColor = () => {
     const [primaryColor, setPrimaryColor] = useState('#2a6ff3');
@@ -55,10 +55,10 @@ const SectionColor = () => {
     };
 
     return (
-        <PanelSection.Root>
-            <PanelSection.Title>Color</PanelSection.Title>
-            <PanelSection.SubTitle>Pick Primary Color</PanelSection.SubTitle>
-            <PanelSection.Contents>
+        <PanelSectionWrapper.Root>
+            <PanelSectionWrapper.Title>Color</PanelSectionWrapper.Title>
+            <PanelSectionWrapper.SubTitle>Pick Primary Color</PanelSectionWrapper.SubTitle>
+            <PanelSectionWrapper.Contents>
                 <ColorPicker.Root
                     width="100%"
                     defaultValue={primaryColor}
@@ -69,10 +69,10 @@ const SectionColor = () => {
                     <ColorPicker.Hue />
                     <ColorPicker.Input onColorChange={onPrimaryColorChange} />
                 </ColorPicker.Root>
-            </PanelSection.Contents>
+            </PanelSectionWrapper.Contents>
 
-            <PanelSection.SubTitle>Pick Background Color</PanelSection.SubTitle>
-            <PanelSection.Contents>
+            <PanelSectionWrapper.SubTitle>Pick Background Color</PanelSectionWrapper.SubTitle>
+            <PanelSectionWrapper.Contents>
                 <ColorPicker.Root
                     width="100%"
                     defaultValue={backgroundColor}
@@ -83,9 +83,9 @@ const SectionColor = () => {
                     <ColorPicker.Hue />
                     <ColorPicker.Input onColorChange={onBackgroundColorChange} />
                 </ColorPicker.Root>
-            </PanelSection.Contents>
-        </PanelSection.Root>
+            </PanelSectionWrapper.Contents>
+        </PanelSectionWrapper.Root>
     );
 };
 
-export default SectionColor;
+export { SectionColor };

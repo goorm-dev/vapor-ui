@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 
 import { Badge, Card, Text } from '@vapor-ui/core';
 
-import SectionColor from '../section-color';
+import { SectionColor } from '../section-color';
+import { SectionMode } from '../section-mode';
 
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
@@ -45,6 +46,7 @@ const ThemePanel = () => {
             <Card.Body className="pt-0">
                 <div className="flex flex-col gap-[var(--vapor-size-space-250)]">
                     <SectionColor />
+                    <SectionMode />
                 </div>
             </Card.Body>
         </Card.Root>
