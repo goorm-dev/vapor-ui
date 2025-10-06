@@ -188,7 +188,6 @@ const Theme = ({
             const enableTransition = disableTransitionOnChange ? disableAnimation(nonce) : null;
             const d = document.documentElement;
 
-            // [MODIFIED] classList 대신 data-vapor-theme 속성을 사용하여 테마 적용
             if (resolved === 'dark') {
                 d.setAttribute('data-vapor-theme', 'dark');
             } else {
