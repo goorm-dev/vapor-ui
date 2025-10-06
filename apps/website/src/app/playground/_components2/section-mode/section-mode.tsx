@@ -3,7 +3,7 @@ import { RadioCard, RadioCardGroup, useTheme } from '@vapor-ui/core';
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
 const SectionMode = () => {
-    const { setTheme } = useTheme();
+    const { setTheme, resolvedTheme } = useTheme();
 
     const handleModeChange = (value: unknown) => {
         const isValidTheme = (v: unknown): v is 'light' | 'dark' =>
@@ -16,12 +16,14 @@ const SectionMode = () => {
             setTheme('light');
         }
     };
+
     return (
         <PanelSectionWrapper.Root>
             <PanelSectionWrapper.Title>Color</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
                 <RadioCardGroup.Root
-                    defaultValue="light"
+                    key={resolvedTheme}
+                    defaultValue={resolvedTheme ?? 'light'}
                     orientation="horizontal"
                     size="md"
                     onValueChange={handleModeChange}
