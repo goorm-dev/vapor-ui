@@ -1,23 +1,34 @@
-import { Radio, RadioGroup } from '@base-ui-components/react';
-import { Button } from '@vapor-ui/core';
+import { RadioCard, RadioCardGroup, useTheme } from '@vapor-ui/core';
 
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
-const MODES = [
-    { label: 'Light', value: 'light' },
-    { label: 'Dark', value: 'dark' },
-];
 const SectionMode = () => {
+    const { setTheme } = useTheme();
+
+    const handleModeChange = (value: unknown) => {
+        const isValidTheme = (v: unknown): v is 'light' | 'dark' =>
+            typeof v === 'string' && ['light', 'dark'].includes(v);
+
+        if (isValidTheme(value)) {
+            setTheme(value);
+        } else {
+            console.warn(`Invalid theme value received: ${value}, falling back to 'light'`);
+            setTheme('light');
+        }
+    };
     return (
         <PanelSectionWrapper.Root>
             <PanelSectionWrapper.Title>Color</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
-                <label>
-                    <Radio.Root value="fuji-apple">
-                        <Radio.Indicator />
-                    </Radio.Root>
-                    Fuji
-                </label>
+                <RadioCardGroup.Root
+                    defaultValue="light"
+                    orientation="horizontal"
+                    size="md"
+                    onValueChange={handleModeChange}
+                >
+                    <RadioCard.Root value="light">Light</RadioCard.Root>
+                    <RadioCard.Root value="dark">Dark</RadioCard.Root>
+                </RadioCardGroup.Root>
             </PanelSectionWrapper.Contents>
         </PanelSectionWrapper.Root>
     );
