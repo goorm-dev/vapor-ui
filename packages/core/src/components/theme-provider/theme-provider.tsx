@@ -2,8 +2,6 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-const DARK_CLASS_NAME = 'vapor-dark-theme';
-
 /* -------------------------------------------------------------------------------------------------
  * NOTE: Theme Priority Order (highest to lowest):
  *
@@ -151,6 +149,8 @@ const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
 
 const ThemeProvider = (props: ThemeProviderProps) => {
     const context = useContext(ThemeContext);
+
+    // NOTE: Preventing nested ThemeProviders
     if (context) return <>{props.children}</>;
     return <Theme {...props} />;
 };
@@ -188,12 +188,11 @@ const Theme = ({
             const enableTransition = disableTransitionOnChange ? disableAnimation(nonce) : null;
             const d = document.documentElement;
 
-            d.classList.remove(DARK_CLASS_NAME);
-            d.classList.remove('dark');
-
+            // [MODIFIED] classList 대신 data-vapor-theme 속성을 사용하여 테마 적용
             if (resolved === 'dark') {
-                d.classList.add(DARK_CLASS_NAME);
-                d.classList.add('dark');
+                d.setAttribute('data-vapor-theme', 'dark');
+            } else {
+                d.setAttribute('data-vapor-theme', 'light');
             }
 
             if (enableColorScheme) {
@@ -219,9 +218,7 @@ const Theme = ({
     const resetTheme = useCallback(() => {
         try {
             localStorage.removeItem(storageKey);
-        } catch {
-            // Storage not available
-        }
+        } catch {}
         setThemeState(defaultTheme);
     }, [storageKey, defaultTheme]);
 
@@ -229,7 +226,6 @@ const Theme = ({
         (e: MediaQueryListEvent | MediaQueryList) => {
             const systemTheme = getSystemTheme(e);
             setResolvedTheme(systemTheme);
-
             if (enableSystem && !forcedTheme) {
                 applyTheme(systemTheme);
             }
@@ -241,7 +237,6 @@ const Theme = ({
         const media = window.matchMedia(MEDIA_QUERY);
         media.addEventListener('change', handleMediaQuery);
         handleMediaQuery(media);
-
         return () => media.removeEventListener('change', handleMediaQuery);
     }, [handleMediaQuery]);
 
@@ -252,7 +247,6 @@ const Theme = ({
                 setThemeState(newTheme);
             }
         };
-
         window.addEventListener('storage', handleStorage);
         return () => window.removeEventListener('storage', handleStorage);
     }, [defaultTheme, storageKey]);
@@ -291,7 +285,30 @@ const useTheme = (): UseThemeProps => {
     return context;
 };
 
+/* -------------------------------------------------------------------------------------------------
+ * Local Theme Scope
+ * -----------------------------------------------------------------------------------------------*/
+interface ThemeScopeProps extends React.HTMLAttributes<HTMLDivElement> {
+    children: React.ReactNode;
+    /**
+     * The theme to force upon this scope, ignoring the global theme.
+     */
+    forcedTheme: 'light' | 'dark';
+}
+
+const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) => {
+    return (
+        <div
+            data-vapor-theme={forcedTheme}
+            style={{ colorScheme: forcedTheme, ...style }}
+            {...rest}
+        >
+            {children}
+        </div>
+    );
+};
+
 /* -----------------------------------------------------------------------------------------------*/
-export { ThemeProvider, useTheme };
-export type { ThemeConfig, UseThemeProps, ThemeProviderProps };
+export { ThemeProvider, ThemeScope, useTheme };
+export type { ThemeConfig, UseThemeProps, ThemeProviderProps, ThemeScopeProps };
 export type UseThemeReturn = UseThemeProps;
