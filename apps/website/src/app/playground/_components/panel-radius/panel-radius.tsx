@@ -2,12 +2,13 @@ import { useState } from 'react';
 
 import { RADIUS_VALUES, type RadiusValue, useCustomTheme } from '~/hooks/use-custom-theme';
 
+import { CUSTOM_THEME_DATA_ATTRIBUTES } from '../../_constants';
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
 
 function Radius() {
     const [checked, setChecked] = useState<RadiusValue>('md');
-    const { applyRadius } = useCustomTheme({ scope: '[data-playground-scope]' });
+    const { applyRadius } = useCustomTheme({ scope: `[${CUSTOM_THEME_DATA_ATTRIBUTES}]` });
 
     return (
         <Section title="Border Radius">

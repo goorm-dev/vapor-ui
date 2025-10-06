@@ -30,7 +30,6 @@ const ThemePanel = () => {
                 transform transition-transform duration-200 ease-in
                 ${open ? 'translate-x-0' : 'translate-x-[105%]'}
             `}
-            data-vapor-scaling="1"
         >
             <Card.Header className="flex justify-between items-center border-b-0">
                 <Text typography="heading5">Theme Setting</Text>

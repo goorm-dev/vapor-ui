@@ -7,6 +7,7 @@ import { getColorLightness } from '@vapor-ui/color-generator';
 
 import { useCustomTheme } from '~/hooks/use-custom-theme';
 
+import { CUSTOM_THEME_DATA_ATTRIBUTES } from '../../_constants';
 import { ColorPicker } from '../color-picker';
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
@@ -15,7 +16,7 @@ const SectionColor = () => {
     const [backgroundColor, setBackgroundColor] = useState('#ffffff');
     const [backgroundLightness, setBackgroundLightness] = useState(100);
 
-    const { applyColors } = useCustomTheme({ scope: '[data-playground-scope]' });
+    const { applyColors } = useCustomTheme({ scope: `[${CUSTOM_THEME_DATA_ATTRIBUTES}]` });
 
     const applyColorsToCSS = ({
         selectedPrimary = primaryColor,

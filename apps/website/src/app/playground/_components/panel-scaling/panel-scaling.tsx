@@ -2,12 +2,13 @@ import { useState } from 'react';
 
 import { SCALE_VALUES, type ScaleValue, useCustomTheme } from '~/hooks/use-custom-theme';
 
+import { CUSTOM_THEME_DATA_ATTRIBUTES } from '../../_constants';
 import RadioButtonGroup from '../radio-button-group';
 import Section from '../section';
 
 function Scaling() {
     const [checked, setChecked] = useState<ScaleValue>('1');
-    const { applyScaling } = useCustomTheme({ scope: '[data-playground-scope]' });
+    const { applyScaling } = useCustomTheme({ scope: `[${CUSTOM_THEME_DATA_ATTRIBUTES}]` });
 
     return (
         <Section title="Scaling">

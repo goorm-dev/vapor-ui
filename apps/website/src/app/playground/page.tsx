@@ -16,7 +16,6 @@ import { HeartIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'next/link';
 
 import { getCartesianProduct } from '../../utils/array';
-import { PageWrapper } from './_components2/page-wrapper';
 import RenderingTemplate from './_components/rendering-template';
 
 const AVATAR_PROPS = {
@@ -156,110 +155,112 @@ const renderTextElements = (typographies: readonly string[], title: string) => (
 
 const Page = () => {
     return (
-        <PageWrapper>
-            <header>
-                <Text typography="heading1">Theme Playground</Text>
-                <Link href="/docs/getting-started/theming">
-                    <Button variant="outline" color="secondary">
-                        <OpenInNewOutlineIcon />
-                        Theme Provider Usage 보러가기
-                    </Button>
-                </Link>
-            </header>
-            <section>
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Button" />
-                    <RenderingTemplate.Component cols={6} rows={8} gap="1.5rem">
-                        {renderButtons()}
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+        <div className="px-8 py-16 min-h-screen bg-[var(--vapor-color-background-canvas)]">
+            <div className="w-max flex flex-col gap-12 [&>header]:flex [&>header]:flex-col [&>header]:gap-4 [&>section]:flex [&>section]:flex-col [&>section]:gap-[var(--vapor-size-space-800)]">
+                <header>
+                    <Text typography="heading1">Theme Playground</Text>
+                    <Link href="/docs/getting-started/theming">
+                        <Button variant="outline" color="secondary">
+                            <OpenInNewOutlineIcon />
+                            Theme Provider Usage 보러가기
+                        </Button>
+                    </Link>
+                </header>
+                <section>
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="Button" />
+                        <RenderingTemplate.Component cols={6} rows={8} gap="1.5rem">
+                            {renderButtons()}
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="IconButton" />
-                    <RenderingTemplate.Component cols={6} rows={8} gap="1.5rem">
-                        {renderIconButtons()}
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="IconButton" />
+                        <RenderingTemplate.Component cols={6} rows={8} gap="1.5rem">
+                            {renderIconButtons()}
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Switch" />
-                    <RenderingTemplate.Component cols={3} rows={3} gap="1.5rem">
-                        {renderSwitches()}
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="Switch" />
+                        <RenderingTemplate.Component cols={3} rows={3} gap="1.5rem">
+                            {renderSwitches()}
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Checkbox" />
-                    <RenderingTemplate.Component rows={2} gap="1rem">
-                        <Text render={<label />} typography="body2">
-                            <Checkbox.Root defaultChecked />
-                            Checkbox
-                        </Text>
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="Checkbox" />
+                        <RenderingTemplate.Component rows={2} gap="1rem">
+                            <Text render={<label />} typography="body2">
+                                <Checkbox.Root defaultChecked />
+                                Checkbox
+                            </Text>
 
-                        <Text render={<label />} typography="body2">
-                            <Checkbox.Root id="checkbox-lg" defaultChecked size="lg" />
-                            Checkbox
-                        </Text>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                            <Text render={<label />} typography="body2">
+                                <Checkbox.Root id="checkbox-lg" defaultChecked size="lg" />
+                                Checkbox
+                            </Text>
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="TextInput" />
-                    <RenderingTemplate.Component cols={2} rows={4} gap="1.5rem">
-                        {renderTextInputs()}
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="TextInput" />
+                        <RenderingTemplate.Component cols={2} rows={4} gap="1.5rem">
+                            {renderTextInputs()}
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Avatar" />
-                    <RenderingTemplate.Component cols={4} rows={2} gap="1.5rem">
-                        {renderAvatars()}
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="Avatar" />
+                        <RenderingTemplate.Component cols={4} rows={2} gap="1.5rem">
+                            {renderAvatars()}
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Badge" />
-                    <RenderingTemplate.Component cols={6} rows={6} gap="1.5rem">
-                        {renderBadges()}
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="Badge" />
+                        <RenderingTemplate.Component cols={6} rows={6} gap="1.5rem">
+                            {renderBadges()}
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Card" />
-                    <RenderingTemplate.Component>
-                        <Card.Root style={{ maxWidth: '400px' }}>
-                            <Card.Header>Card Header</Card.Header>
-                            <Card.Body>Card Body</Card.Body>
-                            <Card.Footer>Card Footer</Card.Footer>
-                        </Card.Root>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="Card" />
+                        <RenderingTemplate.Component>
+                            <Card.Root style={{ maxWidth: '400px' }}>
+                                <Card.Header>Card Header</Card.Header>
+                                <Card.Body>Card Body</Card.Body>
+                                <Card.Footer>Card Footer</Card.Footer>
+                            </Card.Root>
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                <RenderingTemplate>
-                    <RenderingTemplate.Title title="Dialog" />
-                    <RenderingTemplate.Component>
-                        <Dialog.Root>
-                            <Dialog.Trigger render={<Button>트리거</Button>} />
+                    <RenderingTemplate>
+                        <RenderingTemplate.Title title="Dialog" />
+                        <RenderingTemplate.Component>
+                            <Dialog.Root>
+                                <Dialog.Trigger render={<Button>트리거</Button>} />
 
-                            <Dialog.Portal>
-                                <Dialog.Overlay />
-                                <Dialog.Content>
-                                    <Dialog.Header>Header</Dialog.Header>
-                                    <Dialog.Body>Body</Dialog.Body>
-                                    <Dialog.Footer>Footer</Dialog.Footer>
-                                </Dialog.Content>
-                            </Dialog.Portal>
-                        </Dialog.Root>
-                    </RenderingTemplate.Component>
-                </RenderingTemplate>
+                                <Dialog.Portal>
+                                    <Dialog.Overlay />
+                                    <Dialog.Content>
+                                        <Dialog.Header>Header</Dialog.Header>
+                                        <Dialog.Body>Body</Dialog.Body>
+                                        <Dialog.Footer>Footer</Dialog.Footer>
+                                    </Dialog.Content>
+                                </Dialog.Portal>
+                            </Dialog.Root>
+                        </RenderingTemplate.Component>
+                    </RenderingTemplate>
 
-                {renderTextElements(TEXT_HEADINGS, 'Text - heading')}
+                    {renderTextElements(TEXT_HEADINGS, 'Text - heading')}
 
-                {renderTextElements(TEXT_BODIES, 'Text - body')}
+                    {renderTextElements(TEXT_BODIES, 'Text - body')}
 
-                {renderTextElements(TEXT_SUBTITLES, 'Text - subtitle')}
-            </section>
-        </PageWrapper>
+                    {renderTextElements(TEXT_SUBTITLES, 'Text - subtitle')}
+                </section>
+            </div>
+        </div>
     );
 };
 

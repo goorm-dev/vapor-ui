@@ -10,13 +10,14 @@ import { useCustomTheme } from '~/hooks/use-custom-theme';
 
 import { ColorPicker } from '../color-picker';
 import Section from '../section';
+import { CUSTOM_THEME_DATA_ATTRIBUTES } from '../../_constants';
 
 const ColorBoard = () => {
     const [primaryColor, setPrimaryColor] = useState('#2a6ff3');
     const [backgroundColor, setBackgroundColor] = useState('#ffffff');
     const [backgroundLightness, setBackgroundLightness] = useState(100);
 
-    const { applyColors } = useCustomTheme({ scope: '[data-playground-scope]' });
+    const { applyColors } = useCustomTheme({ scope: `[${CUSTOM_THEME_DATA_ATTRIBUTES}]` });
 
     const applyColorsToCSS = () => {
         const colorConfig: SemanticMappingConfig = {
