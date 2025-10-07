@@ -31,7 +31,7 @@ export const generateRadiusCSS = (radius: RadiusKey, options: RadiusCSSOptions =
     const radiusVariable = createCSSVariable(`${prefix}-radius-factor`, String(radiusValue));
 
     const rule: CSSRule = {
-        selector: ':root',
+        selector: ':root, [data-vapor-theme=light]',
         properties: [radiusVariable],
     };
 

@@ -8,13 +8,7 @@ export interface CompleteCSSConfig {
     radius: RadiusKey;
 }
 
-export interface ThemeClassNames {
-    light: string;
-    dark: string;
-}
-
 export interface CSSGeneratorOptions {
-    classNames?: ThemeClassNames;
     prefix?: string;
     format?: 'compact' | 'readable';
 }
