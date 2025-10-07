@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { getColorLightness } from '@vapor-ui/color-generator';
 
-import { useCustomTheme } from '~/hooks/use-custom-theme';
+import { useCustomThemeContext } from '~/hooks/use-custom-theme';
 
 import { ColorPicker } from '../color-picker';
 import { PanelSectionWrapper } from '../panel-section-wrapper';
@@ -15,7 +15,7 @@ const SectionColor = () => {
     const [backgroundColor, setBackgroundColor] = useState('#ffffff');
     const [backgroundLightness, setBackgroundLightness] = useState(100);
 
-    const { applyColors } = useCustomTheme();
+    const { applyColors } = useCustomThemeContext();
 
     const applyColorsToCSS = ({
         selectedPrimary = primaryColor,

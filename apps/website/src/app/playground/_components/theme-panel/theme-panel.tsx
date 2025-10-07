@@ -1,40 +1,16 @@
-import type { FormEvent } from 'react';
+'use client';
+
 import { useEffect, useState } from 'react';
 
-import { Badge, Button, Card, Text } from '@vapor-ui/core';
-import { ConfirmOutlineIcon } from '@vapor-ui/icons';
-import cx from 'clsx';
+import { Badge, Card, Text } from '@vapor-ui/core';
 
-import ColorBoard from '../color-board';
-import Radius from '../panel-radius';
-import Scaling from '../panel-scaling';
-import Theme from '../panel-theme';
-import styles from './theme-panel.module.scss';
-
+import { SectionColor } from '../section-color';
+import { SectionMode } from '../section-mode';
+import { SectionRadius } from '../section-radius';
+import { SectionScaling } from '../section-scaling';
 
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
-    const [isCopied, setIsCopied] = useState(false);
-
-    const onClickCopy = async (text: string) => {
-        await navigator.clipboard.writeText(text);
-        setIsCopied(true);
-        setTimeout(() => {
-            setIsCopied(false);
-        }, 3000);
-    };
-
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const nodes = e.currentTarget.querySelectorAll(
-            'button[role="radio"][aria-checked=true]',
-        ) satisfies NodeListOf<HTMLButtonElement>;
-
-        // TODO: 관련 로직 제거
-        // const providerTemplate = () => void
-        // onClickCopy(providerTemplate);
-    };
 
     useEffect(() => {
         const clickV = (e: KeyboardEvent) => {
@@ -48,38 +24,36 @@ const ThemePanel = () => {
 
     return (
         <Card.Root
-            className={cx(styles.panel, 'vapor-core', {
-                [styles.panel_open]: open,
-            })}
-            data-vapor-scaling="1"
+            className={`
+                fixed right-4 top-8 
+                flex flex-col justify-center
+                shadow-[0px_4px_16px_0px_rgba(0,0,0,0.2)]
+                z-[9999] overflow-hidden
+                transform transition-transform duration-200 ease-in
+                ${open ? 'translate-x-0' : 'translate-x-[105%]'}
+            `}
         >
-            <Card.Header className={styles.panel_header}>
+            <Card.Header className="flex justify-between items-center border-b-0">
                 <Text typography="heading5">Theme Setting</Text>
 
-                <div className={styles['panel_hot-key']}>
+                <div className="flex items-center gap-[var(--vapor-size-space-050)]">
                     <Badge color="hint">V</Badge>
-                    <Text typography="subtitle2" foreground="hint">
+                    <Text typography="subtitle2" foreground="hint-100">
                         로 열기/닫기
                     </Text>
                 </div>
             </Card.Header>
 
-            <Card.Body className={styles.panel_body}>
-                <form id="theme-panel" className={styles.sections} onSubmit={handleSubmit}>
-                    <ColorBoard />
-                    <Theme />
-                    <Radius />
-                    <Scaling />
-                </form>
+            <Card.Body className="pt-0">
+                <div className="flex flex-col gap-[var(--vapor-size-space-250)]">
+                    <SectionColor />
+                    <SectionMode />
+                    <SectionRadius />
+                    <SectionScaling />
+                </div>
             </Card.Body>
-
-            <Card.Footer>
-                <Button stretch type="submit" form="theme-panel">
-                    {isCopied ? <ConfirmOutlineIcon /> : 'Copy Theme'}
-                </Button>
-            </Card.Footer>
         </Card.Root>
     );
 };
 
-export default ThemePanel;
+export { ThemePanel };

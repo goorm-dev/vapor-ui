@@ -1,6 +1,6 @@
 import { RadioCard, RadioCardGroup } from '@vapor-ui/core';
 
-import { useCustomTheme } from '~/hooks/use-custom-theme';
+import { useCustomThemeContext } from '~/hooks/use-custom-theme';
 
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
@@ -13,7 +13,7 @@ const SCALE_OPTIONS = [
 ] as const;
 
 const SectionScaling = () => {
-    const { applyScaling } = useCustomTheme();
+    const { applyScaling } = useCustomThemeContext();
 
     const handleValueChange = (value: unknown) => {
         const numericValue = Number(value);

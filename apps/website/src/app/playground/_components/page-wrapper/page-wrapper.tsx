@@ -2,6 +2,8 @@
 
 import type { ReactNode } from 'react';
 
+import { CustomThemeProvider } from '~/hooks/use-custom-theme';
+
 import SiteNavBar from '~/components/site-nav-bar/site-nav-bar';
 
 import { ThemePanel } from '../theme-panel';
@@ -11,12 +13,12 @@ interface PageWrapperProps {
 }
 const PageWrapper = ({ children }: PageWrapperProps) => {
     return (
-        <>
+        <CustomThemeProvider>
             <SiteNavBar />
             <ThemePanel />
 
             {children}
-        </>
+        </CustomThemeProvider>
     );
 };
 

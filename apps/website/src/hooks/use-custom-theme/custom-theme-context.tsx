@@ -1,21 +1,13 @@
-import { useCallback, useState } from 'react';
+'use client';
+
+import type { ReactNode } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { generateCompleteCSS } from '@vapor-ui/css-generator';
 import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
 
 const DYNAMIC_THEME_STYLE_ID = 'vapor-custom-theme';
-const RADIUS_VALUES: RadiusKey[] = ['none', 'sm', 'md', 'lg', 'xl', 'full'];
-const SCALE_VALUES = [0.8, 0.9, 1, 1.2, 1.5] as const;
-
-type RadiusValue = RadiusKey;
-type ScaleValue = (typeof SCALE_VALUES)[number];
-
-interface CustomThemeConfig {
-    colors?: SemanticMappingConfig;
-    scaling?: number;
-    radius?: RadiusKey;
-}
 
 const DEFAULT_COLORS: SemanticMappingConfig = {
     primary: {
@@ -71,7 +63,28 @@ const addImportantFlags = (css: string): string => {
         .replace(/(--vapor-radius-factor:\s*[^;]+)/g, '$1 !important');
 };
 
-const useCustomTheme = () => {
+interface CustomThemeConfig {
+    colors?: SemanticMappingConfig;
+    scaling?: number;
+    radius?: RadiusKey;
+}
+
+interface CustomThemeContextValue {
+    applyTheme: (partialConfig: CustomThemeConfig) => void;
+    applyColors: (colors: SemanticMappingConfig) => void;
+    applyScaling: (scaling: number) => void;
+    applyRadius: (radius: RadiusKey) => void;
+    removeTheme: () => void;
+    currentConfig: Partial<CompleteCSSConfig>;
+}
+
+const CustomThemeContext = createContext<CustomThemeContextValue | null>(null);
+
+interface CustomThemeProviderProps {
+    children: ReactNode;
+}
+
+export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     const [currentConfig, setCurrentConfig] = useState<Partial<CompleteCSSConfig>>({});
 
     const applyTheme = useCallback((partialConfig: CustomThemeConfig) => {
@@ -109,7 +122,7 @@ const useCustomTheme = () => {
         setCurrentConfig({});
     }, []);
 
-    return {
+    const value: CustomThemeContextValue = {
         applyTheme,
         applyColors,
         applyScaling,
@@ -117,7 +130,14 @@ const useCustomTheme = () => {
         removeTheme,
         currentConfig,
     };
+
+    return <CustomThemeContext.Provider value={value}>{children}</CustomThemeContext.Provider>;
 };
 
-export { RADIUS_VALUES, SCALE_VALUES, useCustomTheme };
-export type { RadiusValue, ScaleValue, CustomThemeConfig };
+export const useCustomThemeContext = (): CustomThemeContextValue => {
+    const context = useContext(CustomThemeContext);
+    if (!context) {
+        throw new Error('useCustomThemeContext must be used within CustomThemeProvider');
+    }
+    return context;
+};

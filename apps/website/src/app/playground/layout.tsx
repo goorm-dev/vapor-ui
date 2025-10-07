@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import type { Metadata } from 'next';
 
-import { PageWrapper } from './_components2/page-wrapper';
+import { PageWrapper } from './_components/page-wrapper';
 
 export const metadata: Metadata = {
     title: 'Playground - Vapor UI',
