@@ -6,7 +6,7 @@ import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
 
 const DYNAMIC_THEME_STYLE_ID = 'vapor-custom-theme';
 const RADIUS_VALUES: RadiusKey[] = ['none', 'sm', 'md', 'lg', 'xl', 'full'];
-const SCALE_VALUES = ['0.8', '0.9', '1', '1.15', '1.2'] as const;
+const SCALE_VALUES = [0.8, 0.9, 1, 1.2, 1.5] as const;
 
 type RadiusValue = RadiusKey;
 type ScaleValue = (typeof SCALE_VALUES)[number];

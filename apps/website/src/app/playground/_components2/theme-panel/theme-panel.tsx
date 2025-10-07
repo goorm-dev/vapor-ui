@@ -7,6 +7,7 @@ import { Badge, Card, Text } from '@vapor-ui/core';
 import { SectionColor } from '../section-color';
 import { SectionMode } from '../section-mode';
 import { SectionRadius } from '../section-radius';
+import { SectionScaling } from '../section-scaling';
 
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
@@ -48,6 +49,7 @@ const ThemePanel = () => {
                     <SectionColor />
                     <SectionMode />
                     <SectionRadius />
+                    <SectionScaling />
                 </div>
             </Card.Body>
         </Card.Root>
