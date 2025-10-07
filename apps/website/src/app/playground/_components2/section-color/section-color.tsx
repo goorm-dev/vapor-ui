@@ -7,7 +7,6 @@ import { getColorLightness } from '@vapor-ui/color-generator';
 
 import { useCustomTheme } from '~/hooks/use-custom-theme';
 
-import { CUSTOM_THEME_DATA_ATTRIBUTES } from '../../_constants';
 import { ColorPicker } from '../color-picker';
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
@@ -16,7 +15,7 @@ const SectionColor = () => {
     const [backgroundColor, setBackgroundColor] = useState('#ffffff');
     const [backgroundLightness, setBackgroundLightness] = useState(100);
 
-    const { applyColors } = useCustomTheme({ scope: `[${CUSTOM_THEME_DATA_ATTRIBUTES}]` });
+    const { applyColors } = useCustomTheme();
 
     const applyColorsToCSS = ({
         selectedPrimary = primaryColor,
@@ -40,12 +39,12 @@ const SectionColor = () => {
         applyColors(colorConfig);
     };
 
-    const onPrimaryColorChange = (color: string) => {
+    const handlePrimaryColorChange = (color: string) => {
         setPrimaryColor(color);
         applyColorsToCSS({ selectedPrimary: color });
     };
 
-    const onBackgroundColorChange = (color: string) => {
+    const handleBackgroundColorChange = (color: string) => {
         setBackgroundColor(color);
         const lightness = getColorLightness(color);
         if (lightness !== null) {
@@ -63,12 +62,12 @@ const SectionColor = () => {
                 <ColorPicker.Root
                     width="100%"
                     defaultValue={primaryColor}
-                    onSaturationChange={onPrimaryColorChange}
-                    onHueChange={onPrimaryColorChange}
+                    onSaturationChange={handlePrimaryColorChange}
+                    onHueChange={handlePrimaryColorChange}
                 >
                     <ColorPicker.Saturation height={150} />
                     <ColorPicker.Hue />
-                    <ColorPicker.Input onColorChange={onPrimaryColorChange} />
+                    <ColorPicker.Input onColorChange={handlePrimaryColorChange} />
                 </ColorPicker.Root>
             </PanelSectionWrapper.Contents>
 
@@ -77,12 +76,12 @@ const SectionColor = () => {
                 <ColorPicker.Root
                     width="100%"
                     defaultValue={backgroundColor}
-                    onSaturationChange={onBackgroundColorChange}
-                    onHueChange={onBackgroundColorChange}
+                    onSaturationChange={handleBackgroundColorChange}
+                    onHueChange={handleBackgroundColorChange}
                 >
                     <ColorPicker.Saturation height={150} />
                     <ColorPicker.Hue />
-                    <ColorPicker.Input onColorChange={onBackgroundColorChange} />
+                    <ColorPicker.Input onColorChange={handleBackgroundColorChange} />
                 </ColorPicker.Root>
             </PanelSectionWrapper.Contents>
         </PanelSectionWrapper.Root>

@@ -4,16 +4,12 @@ import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { generateCompleteCSS } from '@vapor-ui/css-generator';
 import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
 
-const DYNAMIC_THEME_STYLE_ID = 'vapor-complete-theme';
+const DYNAMIC_THEME_STYLE_ID = 'vapor-custom-theme';
 const RADIUS_VALUES: RadiusKey[] = ['none', 'sm', 'md', 'lg', 'xl', 'full'];
 const SCALE_VALUES = ['0.8', '0.9', '1', '1.15', '1.2'] as const;
 
 type RadiusValue = RadiusKey;
 type ScaleValue = (typeof SCALE_VALUES)[number];
-
-interface UseCustomThemeOptions {
-    scope?: string;
-}
 
 interface CustomThemeConfig {
     colors?: SemanticMappingConfig;
@@ -39,15 +35,13 @@ const DEFAULT_COLORS: SemanticMappingConfig = {
 const DEFAULT_SCALING = 1;
 const DEFAULT_RADIUS: RadiusKey = 'md';
 
-const useCustomTheme = (options?: UseCustomThemeOptions) => {
-    const { scope } = options || {};
+const useCustomTheme = () => {
     const [currentConfig, setCurrentConfig] = useState<Partial<CompleteCSSConfig>>({});
 
     const applyTheme = useCallback(
         (partialConfig: CustomThemeConfig) => {
             const updatedConfig = { ...currentConfig, ...partialConfig };
 
-            // Use defaults for missing values
             const completeConfig: CompleteCSSConfig = {
                 colors: updatedConfig.colors || DEFAULT_COLORS,
                 scaling: updatedConfig.scaling ?? DEFAULT_SCALING,
@@ -55,7 +49,10 @@ const useCustomTheme = (options?: UseCustomThemeOptions) => {
             };
 
             const generatedCSS = generateCompleteCSS(completeConfig);
-            const scopedCSS = scope ? generatedCSS.replace(/:root/g, scope) : generatedCSS;
+
+            const cssWithImportant = generatedCSS
+                .replace(/(--vapor-scale-factor:\s*[^;]+)/g, '$1 !important')
+                .replace(/(--vapor-radius-factor:\s*[^;]+)/g, '$1 !important');
 
             const existingStyle = document.getElementById(DYNAMIC_THEME_STYLE_ID);
             if (existingStyle) {
@@ -64,12 +61,12 @@ const useCustomTheme = (options?: UseCustomThemeOptions) => {
 
             const styleElement = document.createElement('style');
             styleElement.id = DYNAMIC_THEME_STYLE_ID;
-            styleElement.textContent = scopedCSS;
+            styleElement.textContent = cssWithImportant;
             document.head.appendChild(styleElement);
 
             setCurrentConfig(completeConfig);
         },
-        [currentConfig, scope],
+        [currentConfig],
     );
 
     const applyColors = useCallback(
@@ -112,4 +109,4 @@ const useCustomTheme = (options?: UseCustomThemeOptions) => {
 };
 
 export { RADIUS_VALUES, SCALE_VALUES, useCustomTheme };
-export type { RadiusValue, ScaleValue, CustomThemeConfig, UseCustomThemeOptions };
+export type { RadiusValue, ScaleValue, CustomThemeConfig };

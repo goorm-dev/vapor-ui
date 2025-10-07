@@ -6,6 +6,7 @@ import { Badge, Card, Text } from '@vapor-ui/core';
 
 import { SectionColor } from '../section-color';
 import { SectionMode } from '../section-mode';
+import { SectionRadius } from '../section-radius';
 
 const ThemePanel = () => {
     const [open, setOpen] = useState(true);
@@ -46,6 +47,7 @@ const ThemePanel = () => {
                 <div className="flex flex-col gap-[var(--vapor-size-space-250)]">
                     <SectionColor />
                     <SectionMode />
+                    <SectionRadius />
                 </div>
             </Card.Body>
         </Card.Root>
