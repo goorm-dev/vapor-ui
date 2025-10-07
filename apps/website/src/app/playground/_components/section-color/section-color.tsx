@@ -11,7 +11,7 @@ import { ColorPicker } from '../color-picker';
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
 const SectionColor = () => {
-    const [primaryColor, setPrimaryColor] = useState('#2a6ff3');
+    const [primaryColor, setPrimaryColor] = useState('#3174dc');
     const [backgroundColor, setBackgroundColor] = useState('#ffffff');
     const [backgroundLightness, setBackgroundLightness] = useState(100);
 

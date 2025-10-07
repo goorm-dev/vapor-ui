@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useState } from 'react';
 
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
-import { generateCompleteCSS } from '@vapor-ui/css-generator';
+import { generateColorCSS, generateRadiusCSS, generateScalingCSS } from '@vapor-ui/css-generator';
 import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
 
 /* -------------------------------------------------------------------------------------------------
@@ -13,25 +13,7 @@ import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
 
 const DYNAMIC_THEME_STYLE_ID = 'vapor-custom-theme';
 export const RADIUS_VALUES: RadiusKey[] = ['none', 'sm', 'md', 'lg', 'xl', 'full'];
-export const SCALE_VALUES = [0.8, 0.9, 1, 1.2, 1.5] as const;
-
-const DEFAULT_COLORS: SemanticMappingConfig = {
-    primary: {
-        name: 'primary',
-        color: '#3174dc',
-    },
-    background: {
-        name: 'neutral',
-        color: '#ffffff',
-        lightness: {
-            light: 100,
-            dark: 0,
-        },
-    },
-};
-
-const DEFAULT_SCALING = 1;
-const DEFAULT_RADIUS: RadiusKey = 'md';
+export const SCALE_VALUES = [0.8, 0.9, 1, 1.1, 1.2] as const;
 
 /* -------------------------------------------------------------------------------------------------
  * Types
@@ -60,20 +42,70 @@ interface CustomThemeContextValue {
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * DOM에 동적 스타일을 주입하는 유틸리티 함수
- * @param css - 주입할 CSS 문자열
+ * 각 CSS 타입별 저장소
  */
-const injectDynamicStyle = (css: string): void => {
+interface GeneratedCSSStore {
+    colors?: string;
+    scaling?: string;
+    radius?: string;
+}
+
+/**
+ * DOM에 동적 스타일을 주입하는 유틸리티 함수
+ * @param cssStore - CSS 타입별 문자열 객체
+ */
+const injectDynamicStyle = (cssStore: GeneratedCSSStore): void => {
+    const cssArray: string[] = [];
+
+    if (cssStore.colors) cssArray.push(cssStore.colors);
+    if (cssStore.scaling) cssArray.push(cssStore.scaling);
+    if (cssStore.radius) cssArray.push(cssStore.radius);
+
+    const mergedCSS = mergeCSSRules(cssArray);
+    const cssWithImportant = addImportantFlags(mergedCSS);
+
     const existingStyle = document.getElementById(DYNAMIC_THEME_STYLE_ID);
     if (existingStyle) {
-        existingStyle.textContent = css;
+        existingStyle.textContent = cssWithImportant;
         return;
     }
 
     const styleElement = document.createElement('style');
     styleElement.id = DYNAMIC_THEME_STYLE_ID;
-    styleElement.textContent = css;
+    styleElement.textContent = cssWithImportant;
     document.head.appendChild(styleElement);
+};
+
+/**
+ * 여러 CSS 규칙을 병합하는 함수
+ * @param cssArray - CSS 문자열 배열
+ * @returns 병합된 CSS 문자열
+ */
+const mergeCSSRules = (cssArray: string[]): string => {
+    if (cssArray.length === 0) return '';
+
+    const properties: string[] = [];
+    const otherRules: string[] = [];
+
+    cssArray.forEach((css) => {
+        const rootMatch = css.match(/:root\s*\{([^}]+)\}/);
+        if (rootMatch) {
+            const props = rootMatch[1]
+                .split(';')
+                .map((p) => p.trim())
+                .filter((p) => p.length > 0);
+            properties.push(...props);
+        }
+
+        const withoutRoot = css.replace(/:root\s*\{[^}]+\}/g, '').trim();
+        if (withoutRoot) {
+            otherRules.push(withoutRoot);
+        }
+    });
+
+    const rootRule = `:root {\n  ${properties.join(';\n  ')};\n}`;
+
+    return [rootRule, ...otherRules].filter(Boolean).join('\n\n');
 };
 
 /**
@@ -107,22 +139,35 @@ interface CustomThemeProviderProps {
 
 export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     const [currentConfig, setCurrentConfig] = useState<Partial<CompleteCSSConfig>>({});
+    const [_generatedCSS, setGeneratedCSS] = useState<GeneratedCSSStore>({});
 
     const applyTheme = useCallback((partialConfig: CustomThemeConfig) => {
         setCurrentConfig((prevConfig) => {
             const updatedConfig = { ...prevConfig, ...partialConfig };
-
-            const completeConfig: CompleteCSSConfig = {
-                colors: updatedConfig.colors ?? DEFAULT_COLORS,
-                scaling: updatedConfig.scaling ?? DEFAULT_SCALING,
-                radius: updatedConfig.radius ?? DEFAULT_RADIUS,
-            };
-
-            const generatedCSS = generateCompleteCSS(completeConfig);
-            const cssWithImportant = addImportantFlags(generatedCSS);
-            injectDynamicStyle(cssWithImportant);
-
             return updatedConfig;
+        });
+
+        setGeneratedCSS((prevCSS) => {
+            const newCSS: GeneratedCSSStore = { ...prevCSS };
+
+            if (partialConfig.colors) {
+                const colorCSS = generateColorCSS(partialConfig.colors);
+                newCSS.colors = colorCSS;
+            }
+
+            if (partialConfig.scaling !== undefined) {
+                const scalingCSS = generateScalingCSS(partialConfig.scaling);
+                newCSS.scaling = scalingCSS;
+            }
+
+            if (partialConfig.radius !== undefined) {
+                const radiusCSS = generateRadiusCSS(partialConfig.radius);
+                newCSS.radius = radiusCSS;
+            }
+
+            injectDynamicStyle(newCSS);
+
+            return newCSS;
         });
     }, []);
 
@@ -138,6 +183,7 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     const removeTheme = useCallback(() => {
         removeDynamicStyle();
         setCurrentConfig({});
+        setGeneratedCSS({});
     }, []);
 
     const value: CustomThemeContextValue = {

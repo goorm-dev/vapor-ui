@@ -1,16 +1,13 @@
 import { RadioCard, RadioCardGroup } from '@vapor-ui/core';
 
-import { useCustomTheme } from '~/providers/theme';
+import { SCALE_VALUES, useCustomTheme } from '~/providers/theme';
 
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
-const SCALE_OPTIONS = [
-    { value: 0.8, label: '80%' },
-    { value: 0.9, label: '90%' },
-    { value: 1, label: '100%' },
-    { value: 1.2, label: '120%' },
-    { value: 1.5, label: '150%' },
-] as const;
+const SCALE_OPTIONS = SCALE_VALUES.map((value) => ({
+    value,
+    label: `${(value * 100).toFixed(0)}%`,
+}));
 
 const SectionScaling = () => {
     const { applyScaling } = useCustomTheme();

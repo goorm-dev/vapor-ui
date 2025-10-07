@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 
 import { Badge, Card, Text } from '@vapor-ui/core';
 
+import { CustomThemeProvider } from '~/providers';
+
 import { SectionColor } from '../section-color';
 import { SectionMode } from '../section-mode';
 import { SectionRadius } from '../section-radius';
@@ -46,10 +48,12 @@ const ThemePanel = () => {
 
             <Card.Body className="pt-0">
                 <div className="flex flex-col gap-[var(--vapor-size-space-250)]">
-                    <SectionColor />
-                    <SectionMode />
-                    <SectionRadius />
-                    <SectionScaling />
+                    <CustomThemeProvider>
+                        <SectionColor />
+                        <SectionMode />
+                        <SectionRadius />
+                        <SectionScaling />
+                    </CustomThemeProvider>
                 </div>
             </Card.Body>
         </Card.Root>
