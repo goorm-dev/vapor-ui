@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 
-import { CustomThemeProvider } from '~/hooks/use-custom-theme';
+import { CustomThemeProvider } from '~/providers/theme';
 
 import SiteNavBar from '~/components/site-nav-bar/site-nav-bar';
 

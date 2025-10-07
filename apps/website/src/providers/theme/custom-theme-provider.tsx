@@ -7,7 +7,13 @@ import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { generateCompleteCSS } from '@vapor-ui/css-generator';
 import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
 
+/* -------------------------------------------------------------------------------------------------
+ * Constants
+ * -----------------------------------------------------------------------------------------------*/
+
 const DYNAMIC_THEME_STYLE_ID = 'vapor-custom-theme';
+export const RADIUS_VALUES: RadiusKey[] = ['none', 'sm', 'md', 'lg', 'xl', 'full'];
+export const SCALE_VALUES = [0.8, 0.9, 1, 1.2, 1.5] as const;
 
 const DEFAULT_COLORS: SemanticMappingConfig = {
     primary: {
@@ -26,6 +32,32 @@ const DEFAULT_COLORS: SemanticMappingConfig = {
 
 const DEFAULT_SCALING = 1;
 const DEFAULT_RADIUS: RadiusKey = 'md';
+
+/* -------------------------------------------------------------------------------------------------
+ * Types
+ * -----------------------------------------------------------------------------------------------*/
+
+export type RadiusValue = RadiusKey;
+export type ScaleValue = (typeof SCALE_VALUES)[number];
+
+export interface CustomThemeConfig {
+    colors?: SemanticMappingConfig;
+    scaling?: number;
+    radius?: RadiusKey;
+}
+
+interface CustomThemeContextValue {
+    applyTheme: (partialConfig: CustomThemeConfig) => void;
+    applyColors: (colors: SemanticMappingConfig) => void;
+    applyScaling: (scaling: number) => void;
+    applyRadius: (radius: RadiusKey) => void;
+    removeTheme: () => void;
+    currentConfig: Partial<CompleteCSSConfig>;
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Utilities
+ * -----------------------------------------------------------------------------------------------*/
 
 /**
  * DOM에 동적 스타일을 주입하는 유틸리티 함수
@@ -63,20 +95,9 @@ const addImportantFlags = (css: string): string => {
         .replace(/(--vapor-radius-factor:\s*[^;]+)/g, '$1 !important');
 };
 
-interface CustomThemeConfig {
-    colors?: SemanticMappingConfig;
-    scaling?: number;
-    radius?: RadiusKey;
-}
-
-interface CustomThemeContextValue {
-    applyTheme: (partialConfig: CustomThemeConfig) => void;
-    applyColors: (colors: SemanticMappingConfig) => void;
-    applyScaling: (scaling: number) => void;
-    applyRadius: (radius: RadiusKey) => void;
-    removeTheme: () => void;
-    currentConfig: Partial<CompleteCSSConfig>;
-}
+/* -------------------------------------------------------------------------------------------------
+ * Context & Provider
+ * -----------------------------------------------------------------------------------------------*/
 
 const CustomThemeContext = createContext<CustomThemeContextValue | null>(null);
 
@@ -89,22 +110,19 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
 
     const applyTheme = useCallback((partialConfig: CustomThemeConfig) => {
         setCurrentConfig((prevConfig) => {
-            // 이전 설정과 새로운 설정을 병합
             const updatedConfig = { ...prevConfig, ...partialConfig };
 
-            // 각 속성이 존재하면 그대로 사용하고, 없으면 기본값 사용
             const completeConfig: CompleteCSSConfig = {
                 colors: updatedConfig.colors ?? DEFAULT_COLORS,
                 scaling: updatedConfig.scaling ?? DEFAULT_SCALING,
                 radius: updatedConfig.radius ?? DEFAULT_RADIUS,
             };
 
-            // DOM 조작을 state 업데이트와 분리 (side effect)
             const generatedCSS = generateCompleteCSS(completeConfig);
             const cssWithImportant = addImportantFlags(generatedCSS);
             injectDynamicStyle(cssWithImportant);
 
-            return updatedConfig; // completeConfig가 아닌 updatedConfig 반환
+            return updatedConfig;
         });
     }, []);
 
@@ -134,10 +152,14 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     return <CustomThemeContext.Provider value={value}>{children}</CustomThemeContext.Provider>;
 };
 
-export const useCustomThemeContext = (): CustomThemeContextValue => {
+/* -------------------------------------------------------------------------------------------------
+ * Hooks
+ * -----------------------------------------------------------------------------------------------*/
+
+export const useCustomTheme = (): CustomThemeContextValue => {
     const context = useContext(CustomThemeContext);
     if (!context) {
-        throw new Error('useCustomThemeContext must be used within CustomThemeProvider');
+        throw new Error('useCustomTheme must be used within CustomThemeProvider');
     }
     return context;
 };

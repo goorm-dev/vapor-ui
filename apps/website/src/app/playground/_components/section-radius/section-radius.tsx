@@ -1,7 +1,7 @@
 import { RadioCard, RadioCardGroup } from '@vapor-ui/core';
 
-import type { RadiusValue } from '~/hooks/use-custom-theme';
-import { useCustomThemeContext } from '~/hooks/use-custom-theme';
+import type { RadiusValue } from '~/providers/theme';
+import { useCustomTheme } from '~/providers/theme';
 
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
@@ -15,7 +15,7 @@ const RADIUS_OPTIONS: ReadonlyArray<{ value: RadiusValue; label: string }> = [
 ] as const;
 
 const SectionRadius = () => {
-    const { applyRadius } = useCustomThemeContext();
+    const { applyRadius } = useCustomTheme();
 
     const handleValueChange = (value: unknown) => {
         const radiusValue = String(value) as RadiusValue;
