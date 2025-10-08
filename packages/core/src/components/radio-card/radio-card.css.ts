@@ -19,6 +19,7 @@ export const root = recipe({
             border: `0.0625rem solid ${vars.color.border.secondary}`,
             borderRadius: vars.size.borderRadius[300],
             backgroundColor: vars.color.background.secondary[100],
+            color: vars.color.foreground.secondary[200],
             cursor: 'pointer',
             transition: 'border-color 200ms',
 

@@ -20,10 +20,17 @@ interface LightnessSliderProps {
     icon: ReactNode;
     value: number;
     onValueChange: (value: number) => void;
+    onValueCommitted?: (value: number) => void;
     ariaLabel: string;
 }
 
-const LightnessSlider = ({ icon, value, onValueChange, ariaLabel }: LightnessSliderProps) => {
+const LightnessSlider = ({
+    icon,
+    value,
+    onValueChange,
+    onValueCommitted,
+    ariaLabel,
+}: LightnessSliderProps) => {
     return (
         <div className="flex-1 space-y-3">
             <div className="flex items-center gap-2">
@@ -33,6 +40,7 @@ const LightnessSlider = ({ icon, value, onValueChange, ariaLabel }: LightnessSli
             <Slider.Root
                 value={value}
                 onValueChange={onValueChange}
+                onValueCommitted={onValueCommitted}
                 min={0}
                 max={100}
                 aria-label={ariaLabel}
@@ -128,12 +136,20 @@ const SectionColor = () => {
     const handleLightLightnessChange = (value: number) => {
         const lightness = Math.min(100, Math.max(0, value));
         setBackgroundLightness(lightness);
+    };
+
+    const handleLightLightnessCommit = (value: number) => {
+        const lightness = Math.min(100, Math.max(0, value));
         applyColorsToCSS({ selectedLightness: lightness });
     };
 
     const handleDarkLightnessChange = (value: number) => {
         const lightness = Math.min(100, Math.max(0, value));
         setDarkBackgroundLightness(lightness);
+    };
+
+    const handleDarkLightnessCommit = (value: number) => {
+        const lightness = Math.min(100, Math.max(0, value));
         applyColorsToCSS({ selectedDarkLightness: lightness });
     };
 
@@ -164,12 +180,14 @@ const SectionColor = () => {
                         icon={<LightIcon />}
                         value={backgroundLightness}
                         onValueChange={handleLightLightnessChange}
+                        onValueCommitted={handleLightLightnessCommit}
                         ariaLabel="Light mode background lightness"
                     />
                     <LightnessSlider
                         icon={<DarkIcon />}
                         value={darkBackgroundLightness}
                         onValueChange={handleDarkLightnessChange}
+                        onValueCommitted={handleDarkLightnessCommit}
                         ariaLabel="Dark mode background lightness"
                     />
                 </div>

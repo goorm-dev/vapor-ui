@@ -112,13 +112,19 @@ const renderSwitches = () => {
 };
 
 const renderTextInputs = () => {
-    const inputTypes = ['text', 'password'] as const;
-    const combinations = getCartesianProduct(SIZES, inputTypes);
+    const inputVariants = ['default', 'disabled', 'invalid', 'readOnly'] as const;
+    const combinations = getCartesianProduct(SIZES, inputVariants);
 
-    return combinations.map(([size, type]) => (
-        <label key={`${size}-${type}`}>
-            type {type} 입니다.
-            <TextInput size={size} type={type} />
+    return combinations.map(([size, variant]) => (
+        <label key={`${size}-${variant}`} className="flex flex-col gap-v-100">
+            "{variant}" Input
+            <TextInput 
+                size={size} 
+                disabled={variant === 'disabled'} 
+                invalid={variant === 'invalid'} 
+                readOnly={variant === 'readOnly'}
+                placeholder={`${size} ${variant}`}
+            />
         </label>
     ));
 };
@@ -205,7 +211,7 @@ const Page = () => {
 
                     <RenderingTemplate>
                         <RenderingTemplate.Title title="TextInput" />
-                        <RenderingTemplate.Component cols={2} rows={4} gap="1.5rem">
+                        <RenderingTemplate.Component cols={4} rows={4} gap="1.5rem">
                             {renderTextInputs()}
                         </RenderingTemplate.Component>
                     </RenderingTemplate>
