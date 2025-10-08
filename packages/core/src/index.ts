@@ -13,6 +13,7 @@ export * from './components/flex';
 export * from './components/form';
 export * from './components/grid';
 export * from './components/h-stack';
+export * from './components/v-stack';
 export * from './components/icon-button';
 export * from './components/input-group';
 export * from './components/menu';

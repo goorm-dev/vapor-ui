@@ -21,13 +21,146 @@ import {
 } from '~/components/local-tabs/local-tabs';
 import DefaultSearchDialog from '~/components/search/search';
 import { VAPOR_BANNER_URL } from '~/constants/image-urls';
+import { CustomThemeProvider, useCustomTheme } from '~/providers';
 
+const ThemeSection = () => {
+    const { applyTheme } = useCustomTheme();
+
+    const handleTabChange = (value: string) => {
+        if (value === 'vapor') {
+            applyTheme({
+                colors: {
+                    primary: {
+                        name: 'my-blue',
+                        color: '#3174dc',
+                    },
+                    background: {
+                        name: 'my-bg',
+                        color: '#ffffff',
+                        lightness: {
+                            light: 100,
+                            dark: 14,
+                        },
+                    },
+                },
+                radius: 'md',
+                scaling: 1,
+            });
+        }
+        if (value === 'aurora') {
+            applyTheme({
+                colors: {
+                    primary: {
+                        name: 'my-violet',
+                        color: '#8b5cf6',
+                    },
+                    background: {
+                        name: 'my-bg',
+                        color: '#ffffff',
+                        lightness: {
+                            light: 100,
+                            dark: 14,
+                        },
+                    },
+                },
+                radius: 'xl',
+                scaling: 1,
+            });
+        }
+        if (value === 'pop') {
+            applyTheme({
+                colors: {
+                    primary: {
+                        name: 'my-pink',
+                        color: '#ec4899',
+                    },
+                    background: {
+                        name: 'my-bg',
+                        color: '#ffffff',
+                        lightness: {
+                            light: 100,
+                            dark: 14,
+                        },
+                    },
+                },
+                radius: 'full',
+                scaling: 1.2,
+            });
+        }
+    };
+
+    return (
+        <LocalTabs defaultValue="vapor" onValueChange={handleTabChange}>
+            <LocalTabsList>
+                <LocalTab value="vapor">
+                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                        <RemoteIcon />
+                        <Text typography="subtitle1" foreground="normal-100">
+                            Vapor
+                        </Text>
+                    </div>
+                </LocalTab>
+                <LocalTab value="aurora">
+                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                        <AiSmartieIcon />
+                        <Text typography="subtitle1" foreground="normal-100">
+                            Aurora
+                        </Text>
+                    </div>
+                </LocalTab>
+                <LocalTab value="pop">
+                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                        <StarIcon />
+                        <Text typography="subtitle1" foreground="normal-100">
+                            Pop
+                        </Text>
+                    </div>
+                </LocalTab>
+            </LocalTabsList>
+            <LocalTabsContent value="vapor">
+                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                    <Text foreground="normal-200" typography="subtitle1">
+                        Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌 디자인을 제공합니다
+                    </Text>
+                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
+                        <Badge color="hint">Primary: #3174dc</Badge>
+                        <Badge color="hint">Border-radius: md</Badge>
+                        <Badge color="hint">Scaling: 100%</Badge>
+                    </div>
+                </div>
+            </LocalTabsContent>
+            <LocalTabsContent value="aurora">
+                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                    <Text foreground="normal-200" typography="subtitle1">
+                        Aurora 테마는 신비롭고 미래적인 분위기로,혁신적이고 실험적인 서비스에
+                        적합합니다
+                    </Text>
+                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
+                        <Badge color="hint">Primary: #8b5cf6</Badge>
+                        <Badge color="hint">Border-radius: xl</Badge>
+                        <Badge color="hint">Scaling: 100%</Badge>
+                    </div>
+                </div>
+            </LocalTabsContent>
+            <LocalTabsContent value="pop">
+                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                    <Text foreground="normal-200" typography="subtitle1">
+                        Pop 테마는 활기차고 생동감 있는 디자인으로, 창의적이고 역동적인 서비스에
+                        적합합니다
+                    </Text>
+                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
+                        <Badge color="hint">Primary: #ec4899</Badge>
+                        <Badge color="hint">Border-radius: full</Badge>
+                        <Badge color="hint">Scaling: 120%</Badge>
+                    </div>
+                </div>
+            </LocalTabsContent>
+        </LocalTabs>
+    );
+};
 export default function HomePage() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
-
     const { resolvedTheme } = useTheme();
-
-    const handleTabChange = (value: string) => {};
 
     return (
         <>
@@ -193,73 +326,9 @@ export default function HomePage() {
                                 나만의 테마를 완성해보세요
                             </Text>
                         </div>
-                        <LocalTabs defaultValue="vapor" onValueChange={handleTabChange}>
-                            <LocalTabsList>
-                                <LocalTab value="vapor">
-                                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
-                                        <RemoteIcon />
-                                        <Text typography="subtitle1" foreground="normal-100">
-                                            Vapor
-                                        </Text>
-                                    </div>
-                                </LocalTab>
-                                <LocalTab value="aurora">
-                                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
-                                        <AiSmartieIcon />
-                                        <Text typography="subtitle1" foreground="normal-100">
-                                            Aurora
-                                        </Text>
-                                    </div>
-                                </LocalTab>
-                                <LocalTab value="pop">
-                                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
-                                        <StarIcon />
-                                        <Text typography="subtitle1" foreground="normal-100">
-                                            Pop
-                                        </Text>
-                                    </div>
-                                </LocalTab>
-                            </LocalTabsList>
-                            <LocalTabsContent value="vapor">
-                                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
-                                    <Text foreground="normal-200" typography="subtitle1">
-                                        Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌
-                                        디자인을 제공합니다
-                                    </Text>
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
-                                        <Badge color="hint">Primary: blue-500</Badge>
-                                        <Badge color="hint">Border-radius: md</Badge>
-                                        <Badge color="hint">Scaling: 100%</Badge>
-                                    </div>
-                                </div>
-                            </LocalTabsContent>
-                            <LocalTabsContent value="aurora">
-                                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
-                                    <Text foreground="normal-200" typography="subtitle1">
-                                        Aurora 테마는 신비롭고 미래적인 분위기로,혁신적이고 실험적인
-                                        서비스에 적합합니다
-                                    </Text>
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
-                                        <Badge color="hint">Primary: violet-500</Badge>
-                                        <Badge color="hint">Border-radius: lg</Badge>
-                                        <Badge color="hint">Scaling: 100%</Badge>
-                                    </div>
-                                </div>
-                            </LocalTabsContent>
-                            <LocalTabsContent value="pop">
-                                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
-                                    <Text foreground="normal-200" typography="subtitle1">
-                                        Pop 테마는 활기차고 생동감 있는 디자인으로, 창의적이고
-                                        역동적인 서비스에 적합합니다
-                                    </Text>
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
-                                        <Badge color="hint">Primary: pink-500</Badge>
-                                        <Badge color="hint">Border-radius: full</Badge>
-                                        <Badge color="hint">Scaling: 120%</Badge>
-                                    </div>
-                                </div>
-                            </LocalTabsContent>
-                        </LocalTabs>
+                        <CustomThemeProvider>
+                            <ThemeSection />
+                        </CustomThemeProvider>
                     </div>
                     <main className="w-full">
                         <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center">
