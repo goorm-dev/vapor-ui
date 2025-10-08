@@ -19,7 +19,6 @@ export const SCALE_VALUES = [0.8, 0.9, 1, 1.1, 1.2] as const;
  * Types
  * -----------------------------------------------------------------------------------------------*/
 
-export type RadiusValue = RadiusKey;
 export type ScaleValue = (typeof SCALE_VALUES)[number];
 
 export interface CustomThemeConfig {
@@ -41,86 +40,65 @@ interface CustomThemeContextValue {
  * Utilities
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 각 CSS 타입별 저장소
- */
 interface GeneratedCSSStore {
     colors?: string;
     scaling?: string;
     radius?: string;
 }
 
-/**
- * DOM에 동적 스타일을 주입하는 유틸리티 함수
- * @param cssStore - CSS 타입별 문자열 객체
- */
 const injectDynamicStyle = (cssStore: GeneratedCSSStore): void => {
-    const cssArray: string[] = [];
-
-    if (cssStore.colors) cssArray.push(cssStore.colors);
-    if (cssStore.scaling) cssArray.push(cssStore.scaling);
-    if (cssStore.radius) cssArray.push(cssStore.radius);
-
+    const cssArray = Object.values(cssStore).filter(Boolean) as string[];
     const mergedCSS = mergeCSSRules(cssArray);
     const cssWithImportant = addImportantFlags(mergedCSS);
 
-    const existingStyle = document.getElementById(DYNAMIC_THEME_STYLE_ID);
-    if (existingStyle) {
-        existingStyle.textContent = cssWithImportant;
-        return;
+    let styleElement = document.getElementById(DYNAMIC_THEME_STYLE_ID) as HTMLStyleElement;
+
+    if (!styleElement) {
+        styleElement = document.createElement('style');
+        styleElement.id = DYNAMIC_THEME_STYLE_ID;
+        document.head.appendChild(styleElement);
     }
 
-    const styleElement = document.createElement('style');
-    styleElement.id = DYNAMIC_THEME_STYLE_ID;
     styleElement.textContent = cssWithImportant;
-    document.head.appendChild(styleElement);
 };
 
-/**
- * 여러 CSS 규칙을 병합하는 함수
- * @param cssArray - CSS 문자열 배열
- * @returns 병합된 CSS 문자열
- */
 const mergeCSSRules = (cssArray: string[]): string => {
     if (cssArray.length === 0) return '';
 
-    const properties: string[] = [];
+    const lightThemeProperties: string[] = [];
     const otherRules: string[] = [];
 
     cssArray.forEach((css) => {
-        const rootMatch = css.match(/:root\s*\{([^}]+)\}/);
-        if (rootMatch) {
-            const props = rootMatch[1]
+        const lightThemeMatch = css.match(/:root,\s*\[data-vapor-theme=light\]\s*\{([^}]+)\}/);
+        if (lightThemeMatch) {
+            const props = lightThemeMatch[1]
                 .split(';')
                 .map((p) => p.trim())
-                .filter((p) => p.length > 0);
-            properties.push(...props);
+                .filter(Boolean);
+            lightThemeProperties.push(...props);
         }
 
-        const withoutRoot = css.replace(/:root\s*\{[^}]+\}/g, '').trim();
-        if (withoutRoot) {
-            otherRules.push(withoutRoot);
+        const withoutLightTheme = css
+            .replace(/:root,\s*\[data-vapor-theme=light\]\s*\{[^}]+\}/g, '')
+            .trim();
+        if (withoutLightTheme) {
+            otherRules.push(withoutLightTheme);
         }
     });
 
-    const rootRule = `:root {\n  ${properties.join(';\n  ')};\n}`;
+    const lightThemeRule =
+        lightThemeProperties.length > 0
+            ? `:root, [data-vapor-theme=light] {\n  ${lightThemeProperties.join(';\n  ')};\n}`
+            : '';
 
-    return [rootRule, ...otherRules].filter(Boolean).join('\n\n');
+    return [lightThemeRule, ...otherRules].filter(Boolean).join('\n\n');
 };
 
-/**
- * DOM에서 동적 스타일을 제거하는 유틸리티 함수
- */
 const removeDynamicStyle = (): void => {
     const existingStyle = document.getElementById(DYNAMIC_THEME_STYLE_ID);
     existingStyle?.remove();
 };
 
-/**
- * CSS 변수에 !important 플래그를 추가하는 유틸리티 함수
- * @param css - 원본 CSS 문자열
- * @returns !important가 추가된 CSS 문자열
- */
 const addImportantFlags = (css: string): string => {
     return css
         .replace(/(--vapor-scale-factor:\s*[^;]+)/g, '$1 !important')
@@ -142,32 +120,25 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     const [_generatedCSS, setGeneratedCSS] = useState<GeneratedCSSStore>({});
 
     const applyTheme = useCallback((partialConfig: CustomThemeConfig) => {
-        setCurrentConfig((prevConfig) => {
-            const updatedConfig = { ...prevConfig, ...partialConfig };
-            return updatedConfig;
-        });
+        setCurrentConfig((prev) => ({ ...prev, ...partialConfig }));
 
-        setGeneratedCSS((prevCSS) => {
-            const newCSS: GeneratedCSSStore = { ...prevCSS };
+        setGeneratedCSS((prev) => {
+            const updated: GeneratedCSSStore = { ...prev };
 
             if (partialConfig.colors) {
-                const colorCSS = generateColorCSS(partialConfig.colors);
-                newCSS.colors = colorCSS;
+                updated.colors = generateColorCSS(partialConfig.colors);
             }
 
             if (partialConfig.scaling !== undefined) {
-                const scalingCSS = generateScalingCSS(partialConfig.scaling);
-                newCSS.scaling = scalingCSS;
+                updated.scaling = generateScalingCSS(partialConfig.scaling);
             }
 
             if (partialConfig.radius !== undefined) {
-                const radiusCSS = generateRadiusCSS(partialConfig.radius);
-                newCSS.radius = radiusCSS;
+                updated.radius = generateRadiusCSS(partialConfig.radius);
             }
 
-            injectDynamicStyle(newCSS);
-
-            return newCSS;
+            injectDynamicStyle(updated);
+            return updated;
         });
     }, []);
 
@@ -186,16 +157,20 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
         setGeneratedCSS({});
     }, []);
 
-    const value: CustomThemeContextValue = {
-        applyTheme,
-        applyColors,
-        applyScaling,
-        applyRadius,
-        removeTheme,
-        currentConfig,
-    };
-
-    return <CustomThemeContext.Provider value={value}>{children}</CustomThemeContext.Provider>;
+    return (
+        <CustomThemeContext.Provider
+            value={{
+                applyTheme,
+                applyColors,
+                applyScaling,
+                applyRadius,
+                removeTheme,
+                currentConfig,
+            }}
+        >
+            {children}
+        </CustomThemeContext.Provider>
+    );
 };
 
 /* -------------------------------------------------------------------------------------------------
