@@ -118,10 +118,10 @@ const renderTextInputs = () => {
     return combinations.map(([size, variant]) => (
         <label key={`${size}-${variant}`} className="flex flex-col gap-v-100">
             "{variant}" Input
-            <TextInput 
-                size={size} 
-                disabled={variant === 'disabled'} 
-                invalid={variant === 'invalid'} 
+            <TextInput
+                size={size}
+                disabled={variant === 'disabled'}
+                invalid={variant === 'invalid'}
                 readOnly={variant === 'readOnly'}
                 placeholder={`${size} ${variant}`}
             />
@@ -165,7 +165,8 @@ const Page = () => {
             <div className="w-max flex flex-col gap-12 [&>header]:flex [&>header]:flex-col [&>header]:gap-4 [&>section]:flex [&>section]:flex-col [&>section]:gap-[var(--vapor-size-space-800)]">
                 <header>
                     <Text typography="heading1">Theme Playground</Text>
-                    <Link href="/docs/getting-started/theming">
+                    {/* TODO: docs/getting-started/theming 완성되면 hidden 제거 */}
+                    <Link href="/docs/getting-started/theming" className="hidden">
                         <Button variant="outline" color="secondary">
                             <OpenInNewOutlineIcon />
                             Theme Provider Usage 보러가기
