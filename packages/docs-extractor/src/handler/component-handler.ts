@@ -1,12 +1,7 @@
-import type ts from 'typescript';
+import * as ts from 'typescript';
 
 import { createComponentInfo } from '~/parsers/component-parser';
-import {
-    getExportDeclaration,
-    isExportSpecifierDeclaration,
-    processExportSpecifier,
-} from '~/parsers/export-parser';
-import { getModuleExports } from '~/parsers/module-parser';
+import { processExportSpecifier } from '~/parsers/export-parser';
 import type { ComponentTypeInfo } from '~/types/types';
 
 /**
@@ -25,6 +20,7 @@ export function handleExportSpecifier(
     sourceFile: ts.SourceFile,
 ): ComponentTypeInfo[] | undefined {
     const result = processExportSpecifier(checker, exportDeclaration);
+
     if (!result) {
         return;
     }
@@ -39,49 +35,59 @@ export function handleExportSpecifier(
 export const processComponentExportedSymbols = ({
     program,
     checker,
-    moduleSymbol,
     sourceFile,
 }: {
     program: ts.Program;
     checker: ts.TypeChecker;
-    moduleSymbol: ts.Symbol;
     sourceFile: ts.SourceFile;
 }) => {
-    const exportsSymbol = getModuleExports(checker, moduleSymbol);
     let components: ComponentTypeInfo[] = [];
     const errors: string[] = [];
 
-    for (const symbol of exportsSymbol) {
-        const exportDeclaration = getExportDeclaration(symbol);
-        if (!exportDeclaration) {
-            continue;
+    try {
+        const sourceFileSymbol = checker.getSymbolAtLocation(sourceFile);
+
+        if (!sourceFileSymbol) {
+            throw new Error('Failed to get the source file symbol');
         }
 
-        if (isExportSpecifierDeclaration(exportDeclaration)) {
-            try {
-                const result = handleExportSpecifier(
-                    program,
-                    checker,
-                    exportDeclaration,
-                    symbol,
-                    sourceFile,
-                );
-                if (result) {
-                    components = components.concat(result);
+        const exportedSymbols = checker.getExportsOfModule(sourceFileSymbol);
+
+        for (const symbol of exportedSymbols) {
+            const exportDeclaration = symbol.declarations?.[0];
+
+            if (!exportDeclaration) {
+                throw new Error(`No declaration found for symbol: ${symbol.name}`);
+            }
+
+            if (ts.isExportSpecifier(exportDeclaration)) {
+                try {
+                    const result = handleExportSpecifier(
+                        program,
+                        checker,
+                        exportDeclaration,
+                        symbol,
+                        sourceFile,
+                    );
+                    if (result) {
+                        components = components.concat(result);
+                    }
+                } catch (error) {
+                    errors.push(
+                        `Error processing ${symbol.name}: ${
+                            error instanceof Error ? error.message : 'Unknown export parsing error'
+                        }`,
+                    );
                 }
-            } catch (error) {
-                errors.push(
-                    `Error processing ${symbol.name}: ${
-                        error instanceof Error ? error.message : 'Unknown export parsing error'
-                    }`,
-                );
             }
         }
-    }
 
-    // Log errors if any occurred (side effect moved to caller)
-    if (errors.length > 0) {
-        console.error('Export parsing errors:', errors.join(', '));
+        // Log errors if any occurred (side effect moved to caller)
+        if (errors.length > 0) {
+            console.error('Export parsing errors:', errors.join(', '));
+        }
+    } catch (error) {
+        throw error;
     }
 
     return components;

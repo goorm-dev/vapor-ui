@@ -5,7 +5,6 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { processComponentExportedSymbols } from '~/handler/component-handler';
-import { getModuleSymbol } from '~/parsers/module-parser';
 import { createTypeScriptProgram } from '~/parsers/program-parser';
 
 import type { RunOptions } from '../types/types';
@@ -55,6 +54,7 @@ export function createCliCommand(runFunction: (options: RunOptions) => Promise<v
 export async function main(options: RunOptions) {
     try {
         const { configPath, out: outputPath, files, externalTypePaths } = options;
+
         const configDir = path.dirname(configPath);
 
         // Resolve glob patterns to actual file paths
@@ -74,21 +74,19 @@ export async function main(options: RunOptions) {
         };
         const program = createTypeScriptProgram(extractorConfig);
         const checker = program.getTypeChecker();
+
         if (!isEmpty(resolvedFiles)) {
             for (const filePath of resolvedFiles) {
                 const fullPath = path.resolve(configDir, filePath);
+                const sourceFile = program.getSourceFile(filePath);
 
-                const moduleInfo = getModuleSymbol(checker, program, fullPath);
-
-                if (!moduleInfo) {
-                    throw new Error(`No module symbol found for file: ${fullPath}`);
+                if (!sourceFile) {
+                    throw new Error(`Program doesn't contain file: "${filePath}"`);
                 }
-                const { moduleSymbol, sourceFile } = moduleInfo;
 
                 const components = processComponentExportedSymbols({
                     program,
                     checker,
-                    moduleSymbol,
                     sourceFile,
                 });
 
