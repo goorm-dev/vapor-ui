@@ -15,7 +15,7 @@
         "lint": "turbo run lint",
         "clean": "turbo run clean && rimraf node_modules .turbo",
         "start": "turbo run start",
-        "test": "turbo run test",
+        "test": "turbo run test -- --run",
         "storybook": "storybook dev -p 9009",
         "build-storybook": "storybook build",
         "format": "turbo run format",
