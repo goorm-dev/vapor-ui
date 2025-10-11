@@ -1,11 +1,12 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { generateColorCSS, generateRadiusCSS, generateScalingCSS } from '@vapor-ui/css-generator';
 import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
+import { usePathname } from 'next/navigation';
 
 /* -------------------------------------------------------------------------------------------------
  * Constants
@@ -116,6 +117,7 @@ interface CustomThemeProviderProps {
 }
 
 export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
+    const pathname = usePathname();
     const [currentConfig, setCurrentConfig] = useState<Partial<CompleteCSSConfig>>({});
     const [_generatedCSS, setGeneratedCSS] = useState<GeneratedCSSStore>({});
 
@@ -156,6 +158,10 @@ export const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
         setCurrentConfig({});
         setGeneratedCSS({});
     }, []);
+
+    useEffect(() => {
+        removeTheme();
+    }, [pathname, removeTheme]);
 
     return (
         <CustomThemeContext.Provider
