@@ -154,14 +154,15 @@ The `generateRadiusCSS` function accepts predefined radius keys:
 ## Output Example
 
 ```css
-:root, [data-vapor-theme=light] {
+:root,
+[data-vapor-theme='light'] {
     --vapor-color-mint-500: #6af574ff;
     --vapor-color-background-canvas: #f8fafc;
     --vapor-scale-factor: 1.15;
     --vapor-radius-factor: 1.5;
 }
 
-[data-vapor-theme=dark] {
+[data-vapor-theme='dark'] {
     --vapor-color-mint-800: #62e96b;
     --vapor-color-background-canvas: #161717;
 }

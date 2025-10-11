@@ -57,7 +57,8 @@ const generateRootThemeCSS = (
         ...generateSemanticVariables(componentData, prefix),
     ];
 
-    const selector = variant === 'light' ? ':root, [data-vapor-theme=light]' : '[data-vapor-theme=dark]';
+    const selector =
+        variant === 'light' ? ':root, [data-vapor-theme=light]' : '[data-vapor-theme=dark]';
 
     return {
         selector,
