@@ -10,11 +10,18 @@ export function findCssFile(program: ts.Program, componentFilePath: string): str
     const dir = path.dirname(componentFilePath);
     const baseName = path.basename(componentFilePath, path.extname(componentFilePath));
 
+    // For index.ts files, also check for sibling component files
     const possibleCssFiles = [
         path.join(dir, `${baseName}.css.ts`),
         path.join(dir, `${baseName}.styles.ts`),
         path.join(dir, `${baseName}.css.js`),
     ];
+
+    // If this is an index.ts file, also check for CSS files with the directory name
+    if (baseName === 'index') {
+        const dirName = path.basename(dir);
+        possibleCssFiles.push(path.join(dir, `${dirName}.css.ts`));
+    }
 
     for (const cssFile of possibleCssFiles) {
         const cssSourceFile = program.getSourceFile(cssFile);
@@ -40,6 +47,7 @@ export function extractDefaultValue(
     }
 
     const defaultVariants = findDefaultVariants(cssSourceFile);
+
     if (defaultVariants && defaultVariants[propName] !== undefined) {
         return String(defaultVariants[propName]);
     }
@@ -56,13 +64,18 @@ function findDefaultVariants(
     let defaultVariants: Record<string, string | number | boolean | null> | undefined;
 
     const visit = (node: ts.Node) => {
-        // recipe({ defaultVariants: { ... } }) pattern
+        // export const root = recipe({ ... }) pattern - only check root variable
         if (
-            ts.isCallExpression(node) &&
-            ts.isIdentifier(node.expression) &&
-            node.expression.text === 'recipe'
+            ts.isVariableDeclaration(node) &&
+            node.name &&
+            ts.isIdentifier(node.name) &&
+            node.name.text === 'root' &&
+            node.initializer &&
+            ts.isCallExpression(node.initializer) &&
+            ts.isIdentifier(node.initializer.expression) &&
+            node.initializer.expression.text === 'recipe'
         ) {
-            const arg = node.arguments[0];
+            const arg = node.initializer.arguments[0];
             if (ts.isObjectLiteralExpression(arg)) {
                 const defaultVariantsProp = arg.properties.find(
                     (prop) =>
@@ -73,17 +86,9 @@ function findDefaultVariants(
 
                 if (defaultVariantsProp && ts.isPropertyAssignment(defaultVariantsProp)) {
                     defaultVariants = parseObjectLiteral(defaultVariantsProp.initializer);
+                    return; // Stop visiting once we find the root defaultVariants
                 }
             }
-        }
-
-        // export const root = recipe({ ... }) pattern
-        if (
-            ts.isVariableDeclaration(node) &&
-            node.initializer &&
-            ts.isCallExpression(node.initializer)
-        ) {
-            visit(node.initializer);
         }
 
         ts.forEachChild(node, visit);

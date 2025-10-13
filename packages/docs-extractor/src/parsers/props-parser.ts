@@ -74,7 +74,7 @@ export function extractProps(
             type: extractFullUnionTypes(propType, checker, isRequired),
             required: isRequired,
             description,
-            defaultValue,
+            ...(defaultValue !== undefined && { defaultValue }),
         });
     });
 
@@ -131,6 +131,7 @@ function getDefaultValue(
 ): string | undefined {
     // Try CSS file first
     const cssFilePath = findCssFile(program, sourceFile.fileName);
+    
     if (cssFilePath) {
         const defaultValue = extractDefaultValue(program, cssFilePath, propName);
         if (defaultValue !== undefined) {
