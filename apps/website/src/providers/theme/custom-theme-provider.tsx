@@ -6,7 +6,6 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { generateColorCSS, generateRadiusCSS, generateScalingCSS } from '@vapor-ui/css-generator';
 import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
-import { usePathname } from 'next/navigation';
 
 /* -------------------------------------------------------------------------------------------------
  * Constants
@@ -117,7 +116,6 @@ interface CustomThemeProviderProps {
 }
 
 const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
-    const pathname = usePathname();
     const [currentConfig, setCurrentConfig] = useState<Partial<CompleteCSSConfig>>({});
     const [_generatedCSS, setGeneratedCSS] = useState<GeneratedCSSStore>({});
 
@@ -160,8 +158,10 @@ const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     }, []);
 
     useEffect(() => {
-        removeTheme();
-    }, [pathname, removeTheme]);
+        return () => {
+            removeDynamicStyle();
+        };
+    }, []);
 
     return (
         <CustomThemeContext.Provider
