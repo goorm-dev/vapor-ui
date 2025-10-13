@@ -18,21 +18,9 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
-        },
-        {
-            "name": "sticky",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "Whether to maintain the popup in the viewport after\nthe anchor element was scrolled out of view.",
-            "defaultValue": "false"
         },
         {
             "name": "anchor",
@@ -47,15 +35,15 @@
             "description": "An element to position the popup against.\nBy default, the popup will be positioned against the trigger."
         },
         {
-            "name": "alignItemWithTrigger",
+            "name": "sticky",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the positioner overlaps the trigger so the selected item's text is aligned with the trigger's value text. This only applies to mouse input and is automatically disabled if there is not enough space.",
-            "defaultValue": "true"
+            "description": "Whether to maintain the popup in the viewport after\nthe anchor element was scrolled out of view.",
+            "defaultValue": "false"
         },
         {
             "name": "positionMethod",
-            "type": ["absolute", "fixed"],
+            "type": ["fixed", "absolute"],
             "required": false,
             "description": "Determines which CSS `position` property to use.",
             "defaultValue": "'absolute'"
@@ -122,8 +110,15 @@
             "type": ["SideFlipMode", "SideShiftMode"],
             "required": false,
             "description": "Determines how to handle collisions when positioning the popup."
+        },
+        {
+            "name": "alignItemWithTrigger",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the positioner overlaps the trigger so the selected item's text is aligned with the trigger's value text. This only applies to mouse input and is automatically disabled if there is not enough space.",
+            "defaultValue": "true"
         }
     ],
-    "generatedAt": "2025-10-01T07:29:46.912Z",
+    "generatedAt": "2025-10-13T00:43:17.366Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/multi-select/multi-select.tsx"
 }

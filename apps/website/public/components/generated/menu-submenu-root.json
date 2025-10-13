@@ -4,6 +4,13 @@
     "description": "Provides the root context for a nested submenu within a menu. Renders a <div> element.",
     "props": [
         {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys.",
+            "defaultValue": "'vertical'"
+        },
+        {
             "name": "children",
             "type": [
                 "undefined",
@@ -12,18 +19,11 @@
                 "number",
                 "false",
                 "true",
-                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "ReactElement",
                 "Iterable<ReactNode>",
                 "ReactPortal"
             ],
             "required": true
-        },
-        {
-            "name": "defaultOpen",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "Whether the menu is initially open.\n\nTo render a controlled menu, use the `open` prop instead.",
-            "defaultValue": "false"
         },
         {
             "name": "loop",
@@ -31,6 +31,33 @@
             "required": false,
             "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
             "defaultValue": "true"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "open",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the menu is currently open."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before the menu may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "defaultValue": "100"
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the menu is initially open.\n\nTo render a controlled menu, use the `open` prop instead.",
+            "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
@@ -47,24 +74,10 @@
             "description": "Event handler called after any animations complete when the menu is closed."
         },
         {
-            "name": "open",
-            "type": ["false", "true"],
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
             "required": false,
-            "description": "Whether the menu is currently open."
-        },
-        {
-            "name": "orientation",
-            "type": ["horizontal", "vertical"],
-            "required": false,
-            "description": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys.",
-            "defaultValue": "'vertical'"
-        },
-        {
-            "name": "disabled",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "Whether the component should ignore user interaction.",
-            "defaultValue": "false"
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the menu will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the menu manually.\nUseful when the menu's animation is controlled by an external library."
         },
         {
             "name": "closeParentOnEsc",
@@ -74,26 +87,13 @@
             "defaultValue": "true"
         },
         {
-            "name": "delay",
-            "type": ["number"],
-            "required": false,
-            "description": "How long to wait before the menu may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
-            "defaultValue": "100"
-        },
-        {
             "name": "closeDelay",
             "type": ["number"],
             "required": false,
             "description": "How long to wait before closing the menu that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop.",
             "defaultValue": "0"
-        },
-        {
-            "name": "actionsRef",
-            "type": ["RefObject<Actions>"],
-            "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: When specified, the menu will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the menu manually.\nUseful when the menu's animation is controlled by an external library."
         }
     ],
-    "generatedAt": "2025-10-01T07:23:22.867Z",
+    "generatedAt": "2025-10-13T00:43:17.230Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/menu.tsx"
 }

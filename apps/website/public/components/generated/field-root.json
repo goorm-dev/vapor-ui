@@ -24,14 +24,15 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "invalid",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the field is forcefully marked as invalid."
         },
         {
             "name": "validate",
@@ -54,14 +55,8 @@
             "required": false,
             "description": "How long to wait between `validate` callbacks if\n`validationMode=\"onChange\"` is used. Specified in milliseconds.",
             "defaultValue": "0"
-        },
-        {
-            "name": "invalid",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "Whether the field is forcefully marked as invalid."
         }
     ],
-    "generatedAt": "2025-10-01T07:13:25.409Z",
+    "generatedAt": "2025-10-13T00:43:16.913Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/field/field.tsx"
 }

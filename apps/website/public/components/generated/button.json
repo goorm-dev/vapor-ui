@@ -7,22 +7,17 @@
             "name": "color",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "required": false,
-            "description": "Use the color prop to change the color scheme of the button",
-            "defaultValue": "primary"
+            "description": "Use the color prop to change the color scheme of the button"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "Use the size prop to change the size of the button",
-            "defaultValue": "md"
+            "description": "Use the size prop to change the size of the button"
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
@@ -30,18 +25,16 @@
             "name": "stretch",
             "type": ["false", "true"],
             "required": false,
-            "description": "Use the stretch prop to make the button take full width",
-            "defaultValue": "false"
+            "description": "Use the stretch prop to make the button take full width"
         },
         {
             "name": "variant",
             "type": ["fill", "outline", "ghost"],
             "required": false,
-            "description": "Use the variant prop to change the visual style of the button",
-            "defaultValue": "fill"
+            "description": "Use the variant prop to change the visual style of the button"
         }
     ],
     "defaultElement": "button",
-    "generatedAt": "2025-10-01T06:52:26.876Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/button/button.tsx"
+    "generatedAt": "2025-10-13T00:43:16.708Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/button/index.ts"
 }

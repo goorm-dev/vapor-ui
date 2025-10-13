@@ -3,12 +3,6 @@
     "description": "Provides the root context for a sheet dialog that slides in from screen edges. Renders a <div> element.",
     "props": [
         {
-            "name": "open",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "Whether the dialog is currently open."
-        },
-        {
             "name": "children",
             "type": [
                 "null",
@@ -16,18 +10,21 @@
                 "number",
                 "false",
                 "true",
-                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "ReactElement",
                 "Iterable<ReactNode>",
                 "ReactPortal"
             ],
             "required": false
         },
         {
+            "name": "open",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the dialog is currently open."
+        },
+        {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
@@ -39,19 +36,19 @@
             "defaultValue": "false"
         },
         {
-            "name": "modal",
-            "type": ["false", "true", "trap-focus"],
-            "required": false,
-            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
-            "defaultValue": "true"
-        },
-        {
             "name": "onOpenChange",
             "type": [
                 "(open: boolean, event: Event | undefined, reason: OpenChangeReason | undefined) => void"
             ],
             "required": false,
             "description": "Event handler called when the dialog is opened or closed."
+        },
+        {
+            "name": "modal",
+            "type": ["false", "true", "trap-focus"],
+            "required": false,
+            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
+            "defaultValue": "true"
         },
         {
             "name": "onOpenChangeComplete",
@@ -72,6 +69,6 @@
             "description": "Whether to close the dialog when clicking on the overlay"
         }
     ],
-    "generatedAt": "2025-10-02T01:29:25.717Z",
+    "generatedAt": "2025-10-13T00:43:17.907Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/sheet.tsx"
 }

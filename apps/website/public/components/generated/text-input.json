@@ -11,7 +11,7 @@
         },
         {
             "name": "type",
-            "type": ["search", "text", "email", "password", "url", "tel"],
+            "type": ["search", "text", "tel", "url", "email", "password"],
             "required": false
         },
         {
@@ -33,19 +33,9 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
-        },
-        {
-            "name": "onValueChange",
-            "type": ["(value: string, event: Event) => void"],
-            "required": false
         },
         {
             "name": "invalid",
@@ -53,8 +43,13 @@
             "required": false,
             "description": "Use the invalid prop to indicate validation errors",
             "defaultValue": "false"
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: string, event: Event) => void"],
+            "required": false
         }
     ],
-    "generatedAt": "2025-10-02T01:36:27.674Z",
+    "generatedAt": "2025-10-13T00:43:18.053Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/text-input/text-input.tsx"
 }

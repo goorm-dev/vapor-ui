@@ -4,12 +4,6 @@
     "description": "Provides the root context for a multi-select dropdown with multiple selectable options. Renders a <div> element.\n\nDocumentation: [MultiSelect Documentation](https://vapor-ui.goorm.io/docs/components/multi-select)",
     "props": [
         {
-            "name": "items",
-            "type": ["Record<string, ReactNode>", "{ label: ReactNode; value: Value; }[]"],
-            "required": false,
-            "description": "Data structure of the items rendered in the select menu.\nWhen specified, `<Select.Value>` renders the label of the selected item instead of the raw value."
-        },
-        {
             "name": "id",
             "type": ["string"],
             "required": false,
@@ -29,7 +23,7 @@
                 "number",
                 "false",
                 "true",
-                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "ReactElement",
                 "Iterable<ReactNode>",
                 "ReactPortal"
             ],
@@ -77,18 +71,9 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
-        },
-        {
-            "name": "onValueChange",
-            "type": ["(value: Value[], event?: Event | undefined) => void"],
-            "required": false,
-            "description": "Callback fired when the value of the select changes. Use when controlled."
         },
         {
             "name": "inputRef",
@@ -116,12 +101,6 @@
             "description": "Event handler called when the select menu is opened or closed."
         },
         {
-            "name": "onOpenChangeComplete",
-            "type": ["(open: boolean) => void"],
-            "required": false,
-            "description": "Event handler called after any animations complete when the select menu is opened or closed."
-        },
-        {
             "name": "modal",
             "type": ["false", "true"],
             "required": false,
@@ -129,10 +108,28 @@
             "defaultValue": "true"
         },
         {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the select menu is opened or closed."
+        },
+        {
             "name": "actionsRef",
             "type": ["RefObject<Actions>"],
             "required": false,
             "description": "A ref to imperative actions.\n- `unmount`: When specified, the select will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the select manually.\nUseful when the select's animation is controlled by an external library."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: Value[], event?: Event | undefined) => void"],
+            "required": false,
+            "description": "Callback fired when the value of the select changes. Use when controlled."
+        },
+        {
+            "name": "items",
+            "type": ["Record<string, ReactNode>", "{ label: ReactNode; value: Value; }[]"],
+            "required": false,
+            "description": "Data structure of the items rendered in the select menu.\nWhen specified, `<Select.Value>` renders the label of the selected item instead of the raw value."
         },
         {
             "name": "size",
@@ -148,6 +145,6 @@
             "description": "Use the invalid prop to indicate validation errors"
         }
     ],
-    "generatedAt": "2025-10-01T07:29:46.727Z",
+    "generatedAt": "2025-10-13T00:43:17.360Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/multi-select/multi-select.tsx"
 }

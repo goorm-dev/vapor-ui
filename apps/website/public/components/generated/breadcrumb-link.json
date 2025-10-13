@@ -4,10 +4,7 @@
     "props": [
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
@@ -15,11 +12,10 @@
             "name": "current",
             "type": ["false", "true"],
             "required": false,
-            "description": "Use the current prop to mark the current page",
-            "defaultValue": "false"
+            "description": "Use the current prop to mark the current page"
         }
     ],
     "defaultElement": "a",
-    "generatedAt": "2025-10-01T06:50:59.531Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/breadcrumb/breadcrumb.tsx"
+    "generatedAt": "2025-10-13T00:43:16.597Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/breadcrumb/index.ts"
 }

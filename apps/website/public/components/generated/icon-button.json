@@ -4,23 +4,10 @@
     "description": "Triggers actions using only an icon without text labels. Renders a <button> element.\n\nDocumentation: [IconButton Documentation](https://vapor-ui.goorm.io/docs/components/icon-button)",
     "props": [
         {
-            "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
-            "required": false,
-            "description": "Use the size prop to change the size of the button",
-            "defaultValue": "md"
-        },
-        {
             "name": "color",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "required": false,
             "description": "Use the color prop to change the color scheme of the button"
-        },
-        {
-            "name": "shape",
-            "type": ["circle", "square"],
-            "required": false,
-            "description": "Use the shape prop to change the shape of the icon button"
         },
         {
             "name": "aria-label",
@@ -29,21 +16,30 @@
             "description": "Defines a string value that labels the current element."
         },
         {
+            "name": "shape",
+            "type": ["circle", "square"],
+            "required": false,
+            "description": "Use the shape prop to change the shape of the icon button"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Use the size prop to change the size of the button"
+        },
+        {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
             "name": "variant",
-            "type": ["outline", "fill", "ghost"],
+            "type": ["fill", "outline", "ghost"],
             "required": false,
             "description": "Use the variant prop to change the visual style of the button"
         }
     ],
-    "generatedAt": "2025-10-01T07:15:15.660Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/icon-button/icon-button.tsx"
+    "generatedAt": "2025-10-13T00:43:17.081Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/icon-button/index.ts"
 }

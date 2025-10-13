@@ -11,12 +11,7 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
@@ -27,6 +22,6 @@
             "description": "Callback fired when the loading status changes."
         }
     ],
-    "generatedAt": "2025-10-01T06:41:08.686Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/avatar.tsx"
+    "generatedAt": "2025-10-13T00:43:16.183Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.ts"
 }

@@ -7,34 +7,28 @@
             "name": "color",
             "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
             "required": false,
-            "description": "Use the color prop to change the color scheme of the badge",
-            "defaultValue": "primary"
+            "description": "Use the color prop to change the color scheme of the badge"
         },
         {
             "name": "shape",
             "type": ["square", "pill"],
             "required": false,
-            "description": "Use the shape prop to change the shape of the badge",
-            "defaultValue": "square"
+            "description": "Use the shape prop to change the shape of the badge"
         },
         {
             "name": "size",
-            "type": ["md", "sm", "lg"],
+            "type": ["sm", "md", "lg"],
             "required": false,
-            "description": "Use the size prop to change the size of the badge",
-            "defaultValue": "md"
+            "description": "Use the size prop to change the size of the badge"
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ],
     "defaultElement": "span",
-    "generatedAt": "2025-10-01T06:44:23.414Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/badge/badge.tsx"
+    "generatedAt": "2025-10-13T00:43:16.264Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/badge/index.ts"
 }

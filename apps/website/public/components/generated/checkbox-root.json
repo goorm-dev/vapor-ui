@@ -67,17 +67,11 @@
             "name": "size",
             "type": ["md", "lg"],
             "required": false,
-            "description": "Use the size prop to change the size of the checkbox",
-            "defaultValue": "md"
+            "description": "Use the size prop to change the size of the checkbox"
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
@@ -125,6 +119,6 @@
             "description": "Use the invalid prop to mark the checkbox as invalid"
         }
     ],
-    "generatedAt": "2025-10-01T06:57:14.038Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/checkbox/checkbox.tsx"
+    "generatedAt": "2025-10-13T00:43:16.739Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/checkbox/index.ts"
 }

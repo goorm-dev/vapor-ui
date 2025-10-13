@@ -11,21 +11,9 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
-        },
-        {
-            "name": "hiddenUntilFound",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "Allows the browser’s built-in page search to find and expand the panel contents.\n\nOverrides the `keepMounted` prop and uses `hidden=\"until-found\"`\nto hide the element without removing it from the DOM.",
-            "defaultValue": "false"
         },
         {
             "name": "keepMounted",
@@ -33,8 +21,15 @@
             "required": false,
             "description": "Whether to keep the element in the DOM while the panel is hidden.\nThis prop is ignored when `hiddenUntilFound` is used.",
             "defaultValue": "false"
+        },
+        {
+            "name": "hiddenUntilFound",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Allows the browser’s built-in page search to find and expand the panel contents.\n\nOverrides the `keepMounted` prop and uses `hidden=\"until-found\"`\nto hide the element without removing it from the DOM.",
+            "defaultValue": "false"
         }
     ],
-    "generatedAt": "2025-10-01T07:00:05.957Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/collapsible/collapsible.tsx"
+    "generatedAt": "2025-10-13T00:43:16.769Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/collapsible/index.ts"
 }

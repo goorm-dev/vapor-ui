@@ -5,21 +5,16 @@
     "props": [
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
             "name": "foreground",
             "type": [
-                "normal-200",
                 "primary-100",
                 "primary-200",
                 "secondary-100",
-                "secondary-200",
                 "success-100",
                 "success-200",
                 "warning-100",
@@ -30,7 +25,9 @@
                 "hint-200",
                 "contrast-100",
                 "contrast-200",
-                "normal-100"
+                "secondary-200",
+                "normal-100",
+                "normal-200"
             ],
             "required": false
         },
@@ -60,6 +57,6 @@
         }
     ],
     "defaultElement": "span",
-    "generatedAt": "2025-10-02T01:37:10.418Z",
+    "generatedAt": "2025-10-13T00:43:18.025Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/text/text.tsx"
 }

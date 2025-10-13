@@ -10,7 +10,7 @@
                 "number",
                 "false",
                 "true",
-                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "ReactElement",
                 "Iterable<ReactNode>",
                 "ReactPortal"
             ],
@@ -24,12 +24,16 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before the popover may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "defaultValue": "300"
         },
         {
             "name": "defaultOpen",
@@ -47,24 +51,23 @@
             "description": "Event handler called when the popover is opened or closed."
         },
         {
+            "name": "modal",
+            "type": ["false", "true", "trap-focus"],
+            "required": false,
+            "description": "Determines if the popover enters a modal state when open.\n- `true`: user interaction is limited to the popover: document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the popover, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
+            "defaultValue": "false"
+        },
+        {
             "name": "onOpenChangeComplete",
             "type": ["(open: boolean) => void"],
             "required": false,
             "description": "Event handler called after any animations complete when the popover is opened or closed."
         },
         {
-            "name": "openOnHover",
-            "type": ["false", "true"],
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
             "required": false,
-            "description": "Whether the popover should also open when the trigger is hovered.",
-            "defaultValue": "false"
-        },
-        {
-            "name": "delay",
-            "type": ["number"],
-            "required": false,
-            "description": "How long to wait before the popover may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
-            "defaultValue": "300"
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the popover will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the popover manually.\nUseful when the popover's animation is controlled by an external library."
         },
         {
             "name": "closeDelay",
@@ -74,19 +77,13 @@
             "defaultValue": "0"
         },
         {
-            "name": "actionsRef",
-            "type": ["RefObject<Actions>"],
+            "name": "openOnHover",
+            "type": ["false", "true"],
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: When specified, the popover will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the popover manually.\nUseful when the popover's animation is controlled by an external library."
-        },
-        {
-            "name": "modal",
-            "type": ["false", "true", "trap-focus"],
-            "required": false,
-            "description": "Determines if the popover enters a modal state when open.\n- `true`: user interaction is limited to the popover: document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the popover, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
+            "description": "Whether the popover should also open when the trigger is hovered.",
             "defaultValue": "false"
         }
     ],
-    "generatedAt": "2025-10-02T04:03:08.923Z",
+    "generatedAt": "2025-10-13T00:43:17.657Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/popover/popover.tsx"
 }

@@ -57,34 +57,15 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>> & ComponentRenderFn<HTMLProps, {}>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps<any>, State> & ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
-            "name": "actionsRef",
-            "type": ["RefObject<Actions>"],
+            "name": "stretch",
+            "type": ["false", "true"],
             "required": false,
-            "description": "A ref to imperative actions."
-        },
-        {
-            "name": "onOpenChangeComplete",
-            "type": ["(open: boolean) => void"],
-            "required": false,
-            "description": "Event handler called after any animations complete when the navigation menu is closed."
-        },
-        {
-            "name": "onValueChange",
-            "type": [
-                "(value: any, event: Event | undefined, reason: BaseOpenChangeReason | undefined) => void"
-            ],
-            "required": false,
-            "description": "Callback fired when the value changes."
+            "description": "Use the stretch prop to make navigation items take full width"
         },
         {
             "name": "delay",
@@ -94,6 +75,18 @@
             "defaultValue": "50"
         },
         {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the navigation menu is closed."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "A ref to imperative actions."
+        },
+        {
             "name": "closeDelay",
             "type": ["number"],
             "required": false,
@@ -101,12 +94,14 @@
             "defaultValue": "50"
         },
         {
-            "name": "stretch",
-            "type": ["false", "true"],
+            "name": "onValueChange",
+            "type": [
+                "(value: any, event: Event | undefined, reason: BaseOpenChangeReason | undefined) => void"
+            ],
             "required": false,
-            "description": "Use the stretch prop to make navigation items take full width"
+            "description": "Callback fired when the value changes."
         }
     ],
-    "generatedAt": "2025-10-01T07:38:02.334Z",
+    "generatedAt": "2025-10-13T00:43:17.577Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/navigation-menu/navigation-menu.tsx"
 }

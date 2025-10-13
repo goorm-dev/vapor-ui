@@ -10,7 +10,7 @@
                 "number",
                 "false",
                 "true",
-                "ReactElement<any, string | JSXElementConstructor<any>>",
+                "ReactElement",
                 "Iterable<ReactNode>",
                 "ReactPortal"
             ],
@@ -31,12 +31,16 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
-                "ComponentRenderFn<HTMLProps, {}>"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before opening the tooltip. Specified in milliseconds.",
+            "defaultValue": "600"
         },
         {
             "name": "defaultOpen",
@@ -60,6 +64,19 @@
             "description": "Event handler called after any animations complete when the tooltip is opened or closed."
         },
         {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the tooltip will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the tooltip manually.\nUseful when the tooltip's animation is controlled by an external library."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the tooltip. Specified in milliseconds.",
+            "defaultValue": "0"
+        },
+        {
             "name": "hoverable",
             "type": ["false", "true"],
             "required": false,
@@ -72,28 +89,8 @@
             "required": false,
             "description": "Determines which axis the tooltip should track the cursor on.",
             "defaultValue": "'none'"
-        },
-        {
-            "name": "delay",
-            "type": ["number"],
-            "required": false,
-            "description": "How long to wait before opening the tooltip. Specified in milliseconds.",
-            "defaultValue": "600"
-        },
-        {
-            "name": "closeDelay",
-            "type": ["number"],
-            "required": false,
-            "description": "How long to wait before closing the tooltip. Specified in milliseconds.",
-            "defaultValue": "0"
-        },
-        {
-            "name": "actionsRef",
-            "type": ["RefObject<Actions>"],
-            "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: When specified, the tooltip will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the tooltip manually.\nUseful when the tooltip's animation is controlled by an external library."
         }
     ],
-    "generatedAt": "2025-10-02T01:39:46.821Z",
+    "generatedAt": "2025-10-13T00:43:18.158Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tooltip/tooltip.tsx"
 }
