@@ -35,6 +35,6 @@
             "description": "Determines whether to show the error message according to the field’s ValidityState. Specifying true will always show the error message, and lets external libraries control the visibility."
         }
     ],
-    "generatedAt": "2025-10-13T00:43:16.918Z",
+    "generatedAt": "2025-10-13T01:02:05.228Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/field/field.tsx"
 }

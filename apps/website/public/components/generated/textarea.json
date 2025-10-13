@@ -17,8 +17,7 @@
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "Use the size prop to change the size of the textarea",
-            "defaultValue": "md"
+            "description": "Use the size prop to change the size of the textarea"
         },
         {
             "name": "render",
@@ -30,8 +29,7 @@
             "name": "invalid",
             "type": ["false", "true"],
             "required": false,
-            "description": "Use the invalid prop to indicate validation errors",
-            "defaultValue": "false"
+            "description": "Use the invalid prop to indicate validation errors"
         },
         {
             "name": "onValueChange",
@@ -42,10 +40,9 @@
             "name": "autoResize",
             "type": ["false", "true"],
             "required": false,
-            "description": "Use the autoResize prop to enable automatic height adjustment",
-            "defaultValue": "false"
+            "description": "Use the autoResize prop to enable automatic height adjustment"
         }
     ],
-    "generatedAt": "2025-10-13T00:43:18.116Z",
+    "generatedAt": "2025-10-13T01:02:06.109Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/textarea/textarea.tsx"
 }

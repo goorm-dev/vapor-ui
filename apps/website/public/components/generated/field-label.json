@@ -16,6 +16,6 @@
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ],
-    "generatedAt": "2025-10-13T00:43:16.916Z",
+    "generatedAt": "2025-10-13T01:02:05.226Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/field/field.tsx"
 }

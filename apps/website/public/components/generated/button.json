@@ -7,13 +7,15 @@
             "name": "color",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "required": false,
-            "description": "Use the color prop to change the color scheme of the button"
+            "description": "Use the color prop to change the color scheme of the button",
+            "defaultValue": "primary"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "Use the size prop to change the size of the button"
+            "description": "Use the size prop to change the size of the button",
+            "defaultValue": "md"
         },
         {
             "name": "render",
@@ -25,16 +27,18 @@
             "name": "stretch",
             "type": ["false", "true"],
             "required": false,
-            "description": "Use the stretch prop to make the button take full width"
+            "description": "Use the stretch prop to make the button take full width",
+            "defaultValue": "false"
         },
         {
             "name": "variant",
             "type": ["fill", "outline", "ghost"],
             "required": false,
-            "description": "Use the variant prop to change the visual style of the button"
+            "description": "Use the variant prop to change the visual style of the button",
+            "defaultValue": "fill"
         }
     ],
     "defaultElement": "button",
-    "generatedAt": "2025-10-13T00:43:16.708Z",
+    "generatedAt": "2025-10-13T01:02:05.021Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/button/index.ts"
 }
