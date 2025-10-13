@@ -86,8 +86,8 @@ try {
             newIconNameArr.push(iconName);
         } else {
             // Check if existing icon content will be updated
-            const iconFileStat = access(iconFilePath, constants.F_OK);
-            if (iconFileStat.is) {
+            const isIconFileAccessible = await fs.access(iconFilePath, constants.F_OK);
+            if (isIconFileAccessible) {
                 const existingContent = await fs.readFile(iconFilePath, 'utf8');
 
                 // Format both existing and new content for accurate comparison
