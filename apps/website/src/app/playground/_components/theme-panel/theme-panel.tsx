@@ -11,6 +11,7 @@ import {
 } from '@vapor-ui/css-generator';
 import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
+import { useClipboard } from '~/hooks/use-clipboard';
 import { CustomThemeProvider, useCustomTheme } from '~/providers';
 
 import { SectionColor } from '../section-color';
@@ -20,10 +21,18 @@ import { SectionScaling } from '../section-scaling';
 
 const ThemePanelContent = () => {
     const [open, setOpen] = useState(true);
-    const [isCopied, setIsCopied] = useState(false);
     const { currentConfig } = useCustomTheme();
+    const { copyToClipboard, copied, reset } = useClipboard({
+        onSuccess: () => {
+            setTimeout(() => {
+                reset();
+            }, 1000);
+        },
+        onError: (error) => {
+            console.error('Failed to copy theme:', error);
+        },
+    });
 
-    // 최소 하나 이상의 설정이 있는지 확인
     const hasAnyConfig =
         Boolean(currentConfig.colors) ||
         Boolean(currentConfig.scaling) ||
@@ -40,50 +49,35 @@ const ThemePanelContent = () => {
     }, []);
 
     const handleCopyTheme = async () => {
-        try {
-            const { colors, scaling, radius } = currentConfig;
+        const { colors, scaling, radius } = currentConfig;
 
-            let css = '';
+        let css = '';
 
-            // 모든 설정이 있으면 generateCompleteCSS 사용
-            if (colors && scaling && radius) {
-                css = generateCompleteCSS({
-                    colors,
-                    scaling,
-                    radius,
-                });
-            } else {
-                // 부분적인 설정만 있으면 개별 generator 사용
-                const cssBlocks: string[] = [];
+        if (colors && scaling && radius) {
+            css = generateCompleteCSS({
+                colors,
+                scaling,
+                radius,
+            });
+        } else {
+            const cssBlocks: string[] = [];
 
-                if (colors) {
-                    cssBlocks.push(generateColorCSS(colors));
-                }
-
-                if (scaling) {
-                    cssBlocks.push(generateScalingCSS(scaling));
-                }
-
-                if (radius) {
-                    cssBlocks.push(generateRadiusCSS(radius));
-                }
-
-                css = cssBlocks.join('\n\n');
+            if (colors) {
+                cssBlocks.push(generateColorCSS(colors));
             }
 
-            // 클립보드에 복사
-            await navigator.clipboard.writeText(css);
+            if (scaling) {
+                cssBlocks.push(generateScalingCSS(scaling));
+            }
 
-            // 아이콘 표시
-            setIsCopied(true);
+            if (radius) {
+                cssBlocks.push(generateRadiusCSS(radius));
+            }
 
-            // 1초 후 원래 상태로 복귀
-            setTimeout(() => {
-                setIsCopied(false);
-            }, 1000);
-        } catch (error) {
-            console.error('Failed to copy theme:', error);
+            css = cssBlocks.join('\n\n');
         }
+
+        await copyToClipboard(css);
     };
 
     return (
@@ -124,7 +118,7 @@ const ThemePanelContent = () => {
             </Card.Body>
             <Card.Footer className="flex-shrink-0">
                 <Button stretch size="lg" onClick={handleCopyTheme} disabled={!hasAnyConfig}>
-                    {isCopied ? <ConfirmOutlineIcon /> : 'Copy Theme'}
+                    {copied ? <ConfirmOutlineIcon /> : 'Copy Theme'}
                 </Button>
             </Card.Footer>
         </Card.Root>
