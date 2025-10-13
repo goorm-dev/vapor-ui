@@ -21,7 +21,7 @@
         "@radix-ui/react-dialog": "^1.1.2",
         "@radix-ui/react-radio-group": "^1.2.4",
         "@radix-ui/react-tabs": "^1.1.2",
-        "@vapor-ui/core": "workspace:*",
+        "@vapor-ui/core": "file:./vapor-ui-core-0.6.0.tgz",
         "@vapor-ui/icons": "workspace:*",
         "@vapor-ui/css-generator": "workspace:*",
         "@vapor-ui/color-generator": "workspace:*",
