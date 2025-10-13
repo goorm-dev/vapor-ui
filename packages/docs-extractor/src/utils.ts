@@ -153,33 +153,59 @@ export function extractFullUnionTypes(
 ): string[] | string {
     // Check if it's a union type
     if (type.isUnion()) {
-        let types = type.types.map((unionType) => {
+        let types: string[] = [];
+        const seenTypes = new Set<string>();
+
+        for (const unionType of type.types) {
             // Handle string literal types
             if (unionType.isStringLiteral()) {
-                return unionType.value;
+                types.push(unionType.value);
+                continue;
             }
             // Handle numeric literal types
             if (unionType.isNumberLiteral()) {
-                return unionType.value.toString();
+                types.push(unionType.value.toString());
+                continue;
             }
             // Handle boolean literal types
             if (unionType.flags & ts.TypeFlags.BooleanLiteral) {
-                return checker.typeToString(unionType);
+                types.push(checker.typeToString(unionType));
+                continue;
             }
-            // Handle other types (including complex types)
-            return checker.typeToString(unionType);
-        });
+
+            const typeString = checker.typeToString(unionType);
+
+            // Simplify render prop types to be more user-friendly - show only ReactElement
+            if (typeString.includes('ReactElement') || typeString.includes('ComponentRenderFn')) {
+                if (!seenTypes.has('ReactElement')) {
+                    types.push('ReactElement');
+                    seenTypes.add('ReactElement');
+                }
+                continue;
+            }
+
+            // For other types, use the full type string
+            types.push(typeString);
+        }
 
         // Remove "undefined" for optional props (not required)
         if (!isRequired) {
             types = types.filter((type) => type !== 'undefined');
         }
 
-        return types;
+        // Remove duplicates while preserving order
+        return Array.from(new Set(types));
     }
 
     // Not a union type, return as string
-    return checker.typeToString(type);
+    const typeString = checker.typeToString(type);
+
+    // Simplify single complex render prop types - show only ReactElement
+    if (typeString.includes('ReactElement') || typeString.includes('ComponentRenderFn')) {
+        return 'ReactElement';
+    }
+
+    return typeString;
 }
 
 /**
