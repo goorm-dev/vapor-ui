@@ -286,6 +286,9 @@ importers:
       eslint:
         specifier: ^9.20.1
         version: 9.36.0(jiti@2.6.0)
+      globby:
+        specifier: ^14.0.0
+        version: 14.1.0
       postcss:
         specifier: ^8.5.4
         version: 8.5.6
@@ -295,9 +298,15 @@ importers:
       tailwindcss:
         specifier: ^4.1.6
         version: 4.1.13
+      tsx:
+        specifier: ^4.19.2
+        version: 4.20.5
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
+      typescript-api-extractor:
+        specifier: 1.0.0-alpha.8
+        version: 1.0.0-alpha.8(typescript@5.9.2)
 
   packages/color-generator:
     dependencies:

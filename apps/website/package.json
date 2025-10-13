@@ -2,6 +2,7 @@
     "name": "website",
     "version": "0.0.8",
     "private": true,
+    "type": "module",
     "scripts": {
         "build": "next build",
         "dev": "next dev --turbo",
@@ -12,7 +13,8 @@
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
         "docs:generate": "docs-extractor -c ../../packages/core/tsconfig.json -o ./public/components/generated",
         "clean": "rm -rf node_modules .next .turbo .source",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "docs-api-build": "tsx scripts/docs-api-builder.ts"
     },
     "dependencies": {
         "@base-ui-components/react": "1.0.0-beta.2",
@@ -57,9 +59,12 @@
         "@types/react": "^18.0.1",
         "@types/react-dom": "^18.0.1",
         "eslint": "^9.20.1",
+        "globby": "^14.0.0",
         "postcss": "^8.5.4",
         "shiki": "^3.7.0",
         "tailwindcss": "^4.1.6",
-        "typescript": "^5.9.2"
+        "tsx": "^4.19.2",
+        "typescript": "^5.9.2",
+        "typescript-api-extractor": "1.0.0-alpha.8"
     }
 }
