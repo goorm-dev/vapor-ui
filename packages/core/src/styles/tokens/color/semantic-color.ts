@@ -113,7 +113,7 @@ export const DARK_SEMANTIC_COLORS = {
             '200': DARK_BASIC_COLORS.red['500'],
         },
         hint: {
-            '100': DARK_BASIC_COLORS.gray['800'],
+            '100': DARK_BASIC_COLORS.gray['100'],
             '200': DARK_BASIC_COLORS.gray['600'],
         },
         contrast: {
