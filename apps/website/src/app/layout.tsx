@@ -2,7 +2,7 @@ import './global.css';
 
 import type { ReactNode } from 'react';
 
-import { ThemeProvider } from '@vapor-ui/core';
+import { ThemeProvider } from '@vapor-ui/core/theme-provider';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
@@ -32,16 +32,16 @@ export default function Layout({ children }: { children: ReactNode }) {
                 />
             </head>
             <body className="flex flex-col min-h-screen bg-[var(--vapor-color-background-canvas)]">
-                <RootProvider
-                    search={{
-                        SearchDialog: DefaultSearchDialog,
-                    }}
-                    theme={{ enabled: false }}
-                >
-                    <ThemeProvider defaultTheme="system" enableSystem>
+                <ThemeProvider defaultTheme="system" enableSystem storageKey="vapor-docs-default">
+                    <RootProvider
+                        search={{
+                            SearchDialog: DefaultSearchDialog,
+                        }}
+                        theme={{ enabled: false }}
+                    >
                         {children}
-                    </ThemeProvider>
-                </RootProvider>
+                    </RootProvider>
+                </ThemeProvider>
             </body>
         </html>
     );
