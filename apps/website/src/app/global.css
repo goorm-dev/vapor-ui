@@ -41,3 +41,15 @@
 a[data-active='true'] {
     color: var(--vapor-color-foreground-primary-100);
 }
+
+/* Prevent layout shift from scrollbar appearance */
+html {
+    scrollbar-gutter: stable; /* Modern browsers - reserves space for scrollbar */
+}
+
+/* Fallback for older browsers */
+@supports not (scrollbar-gutter: stable) {
+    html {
+        overflow-y: scroll; /* Always show scrollbar space */
+    }
+}
