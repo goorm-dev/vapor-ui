@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import { getFileNodes, getImage } from '../apis/figma.js';
 import { makeFlexibleColorIcon, remakeMaskStyle, svgToIconComponent } from '../utils/figma.js';
 
@@ -53,7 +51,7 @@ const getNodesWithUrl = async ({ nodes, fileKey }) => {
  * Convert svg files from Figma to React components.
  */
 const getIconJsx = async ({ url, isColorIcon }) => {
-    const { data: svgDom } = await axios.get(url);
+    const { data: svgDom } = await fetch(url);
     const IconComponent = svgToIconComponent(svgDom);
     const NewIconComponent = remakeMaskStyle(IconComponent);
 
