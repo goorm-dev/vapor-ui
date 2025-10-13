@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { Select } from '.';
 import { Box } from '../box';
 import { Grid } from '../grid';
-import type { SelectPositionerProps, SelectRootProps } from './select';
-import { Select } from './select';
 
-type SelectProps = SelectRootProps &
-    Pick<SelectPositionerProps, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
+type SelectProps = Select.Root.Props &
+    Pick<Select.Positioner.Props, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
 
 export default {
     title: 'Select',

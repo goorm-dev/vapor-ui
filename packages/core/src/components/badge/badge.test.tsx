@@ -1,10 +1,9 @@
 import { cleanup, render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
-import type { BadgeProps } from './badge';
 import { Badge } from './badge';
 
-const BadgeTest = (props: BadgeProps) => {
+const BadgeTest = (props: Badge.Props) => {
     return <Badge {...props}>Badge</Badge>;
 };
 
