@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as ts from 'typescript';
 
 import type { TypeExtractorConfig } from '~/types/types';
-import { selectNonEmptyArray } from '~/utils';
 
 import { resolveExternalTypeFiles } from './external-type-parser';
 
@@ -39,7 +38,7 @@ export function createTypeScriptProgram(config: TypeExtractorConfig): ts.Program
     // Include external type files (Base UI, React types, etc.)
     const rootDirectory = projectRoot || projectDirectory;
     const externalTypeFiles = resolveExternalTypeFiles(rootDirectory, externalTypePaths);
-    const selectedFiles = selectNonEmptyArray(files, fileNames);
+    const selectedFiles = files || fileNames;
     const absoluteFiles = selectedFiles.map((file) =>
         path.isAbsolute(file) ? file : path.resolve(projectDirectory, file),
     );

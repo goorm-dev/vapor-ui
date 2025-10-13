@@ -3,7 +3,6 @@
 
 // Parsers
 export * from './parsers/export-parser';
-export * from './parsers/module-parser';
 export * from './parsers/component-parser';
 export * from './parsers/props-parser';
 export * from './parsers/vanilla-extract-parser';
