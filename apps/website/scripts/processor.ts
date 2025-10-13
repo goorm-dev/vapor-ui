@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash-es';
+import { isEmpty, kebabCase } from 'lodash-es';
 import * as fs from 'node:fs';
 import * as path from 'path';
 import * as prettier from 'prettier';
@@ -82,7 +82,7 @@ async function generateComponentOutput(
     outputPath: string,
 ): Promise<void> {
     const componentData = createComponentData(component, fullPath);
-    const outputFile = path.join(outputPath, `${componentData.name}.json`);
+    const outputFile = path.join(outputPath, `${kebabCase(componentData.name)}.json`);
 
     // Ensure output directory exists
     fs.mkdirSync(path.dirname(outputFile), { recursive: true });

@@ -1,0 +1,46 @@
+{
+    "name": "AvatarRoot",
+    "displayName": "Avatar.Root",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "alt",
+            "type": "string",
+            "required": true
+        },
+        {
+            "name": "shape",
+            "type": ["circle", "square"],
+            "required": false,
+            "defaultValue": "square"
+        },
+        {
+            "name": "src",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "defaultValue": "md"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false
+        }
+    ],
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.ts"
+}
