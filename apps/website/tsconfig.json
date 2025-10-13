@@ -18,11 +18,7 @@
         "paths": {
             "~/.source": ["./.source/index.ts"],
             "~/*": ["./src/*"],
-            "~public/*": ["./public/*"],
-            "~/parsers/*": ["../../packages/docs-extractor/src/parsers/*"],
-            "~/handler/*": ["../../packages/docs-extractor/src/handler/*"],
-            "~/types/*": ["../../packages/docs-extractor/src/types/*"],
-            "~/utils/*": ["../../packages/docs-extractor/src/utils/*"]
+            "~public/*": ["./public/*"]
         },
         "plugins": [
             {

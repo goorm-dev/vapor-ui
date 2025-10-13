@@ -25,7 +25,6 @@
         "icons": "pnpm --filter @vapor-ui/icons",
         "color-generator": "pnpm --filter @vapor-ui/color-generator",
         "css-generator": "pnpm --filter @vapor-ui/css-generator",
-        "docs-extractor": "pnpm --filter @vapor-ui/docs-extractor",
         "website": "pnpm --filter website",
         "figma-plugin": "pnpm --filter figma-plugin",
         "dev": "turbo dev",
