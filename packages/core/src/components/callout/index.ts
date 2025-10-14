@@ -1,1 +1,1 @@
-export * from './callout';
+export * as Callout from './index.parts';

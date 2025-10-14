@@ -1,10 +1,9 @@
 import { cleanup, render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
-import type { AvatarRootProps } from './avatar';
-import { Avatar } from './avatar';
+import { Avatar } from '.';
 
-const AvatarTest = (props: AvatarRootProps) => {
+const AvatarTest = (props: Avatar.Root.Props) => {
     return (
         <Avatar.Root {...props}>
             <Avatar.Image />
@@ -109,7 +108,7 @@ describe('Avatar', () => {
     });
 });
 
-const AvatarFallbackTest = (props: AvatarRootProps) => {
+const AvatarFallbackTest = (props: Avatar.Root.Props) => {
     return (
         <Avatar.Root {...props}>
             <Avatar.Fallback />

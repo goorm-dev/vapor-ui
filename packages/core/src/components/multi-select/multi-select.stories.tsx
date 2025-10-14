@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { MultiSelect } from '.';
 import { Badge } from '../badge';
 import { Grid } from '../grid';
 import { HStack } from '../h-stack';
 import { VStack } from '../v-stack';
-import { MultiSelect } from './multi-select';
 
 export default {
     title: 'MultiSelect',

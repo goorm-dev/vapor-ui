@@ -1,1 +1,1 @@
-export * from './tooltip';
+export * as Tooltip from './index.parts';

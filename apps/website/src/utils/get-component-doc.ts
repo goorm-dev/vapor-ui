@@ -18,7 +18,7 @@ interface PropItem {
  */
 export const replaceComponentDoc = (text: string) => {
     // Replace PropsTable tags
-    let result = text.replace(
+    return text.replace(
         /<ComponentPropsTable\s+file="([^"]+)"(?:\s+section="([^"]+)")?\s*\/>/g,
         (_, file: string, section: string | undefined) => {
             try {
@@ -52,6 +52,4 @@ export const replaceComponentDoc = (text: string) => {
             }
         },
     );
-
-    return result;
 };

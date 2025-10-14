@@ -3,10 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
-import { TextInput, type TextInputProps } from './text-input';
+import { TextInput } from './text-input';
 
 const LABEL_TEXT = 'Label';
-const TextInputTest = (props: TextInputProps) => {
+const TextInputTest = (props: TextInput.Props) => {
     return (
         <label>
             {LABEL_TEXT}

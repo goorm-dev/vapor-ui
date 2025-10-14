@@ -1,1 +1,1 @@
-export * from './breadcrumb';
+export * as Breadcrumb from './index.parts';

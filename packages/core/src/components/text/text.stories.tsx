@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { Text } from '.';
 import { VStack } from '../v-stack';
-import { Text } from './text';
 
 export default {
     title: 'Text',

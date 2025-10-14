@@ -1,1 +1,1 @@
-export * from './menu';
+export * as Menu from './index.parts';

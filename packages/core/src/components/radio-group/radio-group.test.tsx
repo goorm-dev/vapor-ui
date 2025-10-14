@@ -5,13 +5,12 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { RadioGroupRootProps } from './radio-group';
-import { RadioGroup } from './radio-group';
+import { RadioGroup } from '.';
 
 const OPTION_1 = 'Option 1';
 const OPTION_2 = 'Option 2';
 
-const RadioGroupTest = (props: RadioGroupRootProps) => {
+const RadioGroupTest = (props: RadioGroup.Root.Props) => {
     return (
         <RadioGroup.Root {...props}>
             <Radio.Root id="option1" value="option1" />

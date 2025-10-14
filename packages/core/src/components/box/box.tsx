@@ -6,9 +6,7 @@ import clsx from 'clsx';
 import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
 import type { VComponentProps } from '~/utils/types';
 
-interface BoxProps extends VComponentProps<'div'>, Sprinkles {}
-
-const Box = forwardRef<HTMLDivElement, BoxProps>(
+export const Box = forwardRef<HTMLDivElement, Box.Props>(
     ({ render, color, className, style, ...props }, ref) => {
         const layout = sprinkles({ color, ...props });
 
@@ -25,5 +23,6 @@ const Box = forwardRef<HTMLDivElement, BoxProps>(
 );
 Box.displayName = 'Box';
 
-export { Box };
-export type { BoxProps };
+export namespace Box {
+    export interface Props extends VComponentProps<'div'>, Sprinkles {}
+}

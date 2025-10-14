@@ -10,12 +10,7 @@ import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
-type IconButtonPrimitiveProps = Omit<VComponentProps<typeof Button>, 'stretch'>;
-interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {
-    'aria-label': string;
-}
-
-const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
+export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>(
     ({ 'aria-label': ariaLabel, className, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, ['shape']);
 
@@ -36,5 +31,10 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
 );
 IconButton.displayName = 'IconButton';
 
-export { IconButton };
-export type { IconButtonProps };
+export namespace IconButton {
+    type IconButtonPrimitiveProps = Omit<VComponentProps<typeof Button>, 'stretch'>;
+
+    export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {
+        'aria-label': string;
+    }
+}

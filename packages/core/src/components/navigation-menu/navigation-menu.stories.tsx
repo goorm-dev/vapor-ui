@@ -2,9 +2,9 @@ import type { ComponentProps } from 'react';
 
 import type { StoryObj } from '@storybook/react';
 
+import { NavigationMenu } from '.';
 import { HStack } from '../h-stack';
 import { VStack } from '../v-stack';
-import { NavigationMenu } from './navigation-menu';
 
 type RootProps = ComponentProps<typeof NavigationMenu.Root>;
 type PositionerProps = ComponentProps<typeof NavigationMenu.Positioner>;

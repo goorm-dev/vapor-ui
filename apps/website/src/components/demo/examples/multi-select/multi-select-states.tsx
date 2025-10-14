@@ -1,4 +1,3 @@
-import type { MultiSelectRootProps } from '@vapor-ui/core';
 import { MultiSelect, VStack } from '@vapor-ui/core';
 
 const options = [
@@ -18,7 +17,7 @@ export default function MultiSelectStates() {
     );
 }
 
-export const MultiSelectTemplate = (props: MultiSelectRootProps<string>) => {
+export const MultiSelectTemplate = (props: MultiSelect.Root.Props<string>) => {
     return (
         <MultiSelect.Root {...props}>
             <MultiSelect.Trigger>

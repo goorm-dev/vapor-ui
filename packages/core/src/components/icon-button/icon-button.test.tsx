@@ -5,12 +5,11 @@ import user from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 import { axe } from 'vitest-axe';
 
-import type { IconButtonProps } from './icon-button';
-import { IconButton } from './icon-button';
+import { IconButton } from '.';
 
 const ARIA_LABEL = 'Like';
 
-const IconButtonTest = (props: IconButtonProps) => {
+const IconButtonTest = (props: IconButton.Props) => {
     return (
         <IconButton {...props}>
             <HeartIcon data-testid="icon" />

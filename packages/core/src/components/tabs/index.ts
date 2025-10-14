@@ -1,1 +1,1 @@
-export * from './tabs';
+export * as Tabs from './index.parts';

@@ -1,1 +1,1 @@
-export * from './avatar';
+export * as Avatar from './index.parts';

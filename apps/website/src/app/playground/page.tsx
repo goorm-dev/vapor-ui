@@ -1,7 +1,7 @@
 'use client';
 
 import {
-    AvatarSimple,
+    Avatar,
     Badge,
     Button,
     Card,
@@ -45,7 +45,7 @@ const renderAvatars = () => {
     const combinations = getCartesianProduct(AVATAR_SHAPES, SIZES);
 
     return combinations.map(([shape, size]) => (
-        <AvatarSimple key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
+        <Avatar.Simple key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
     ));
 };
 

@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import { Sheet, type SheetRootProps } from './sheet';
+import { Sheet } from '.';
 
 describe('Sheet', () => {
     const consoleWarnMockFunction = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -163,7 +163,7 @@ const TITLE_TEXT = 'Sheet Title';
 const DESCRIPTION_TEXT = 'This is a description of the Sheet.';
 const OVERLAY_TEXT = 'Overlay';
 
-const SheetTest = (props: SheetRootProps) => {
+const SheetTest = (props: Sheet.Root.Props) => {
     return (
         <Sheet.Root {...props}>
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
@@ -225,7 +225,7 @@ const SheetTest = (props: SheetRootProps) => {
 //     );
 // };
 
-const UndefinedDescriptionSheetTest = (props: SheetRootProps) => {
+const UndefinedDescriptionSheetTest = (props: Sheet.Root.Props) => {
     return (
         <Sheet.Root {...props}>
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>

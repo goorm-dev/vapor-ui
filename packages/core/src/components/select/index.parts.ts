@@ -1,14 +1,16 @@
-export { SelectRoot as Root } from './select';
-export { SelectTrigger as Trigger } from './select';
-export { SelectValue as Value } from './select';
-export { SelectPlaceholder as Placeholder } from './select';
-export { SelectTriggerIcon as TriggerIcon } from './select';
-export { SelectPortal as Portal } from './select';
-export { SelectPositioner as Positioner } from './select';
-export { SelectPopup as Popup } from './select';
-export { SelectContent as Content } from './select';
-export { SelectItem as Item } from './select';
-export { SelectItemIndicator as ItemIndicator } from './select';
-export { SelectGroup as Group } from './select';
-export { SelectGroupLabel as GroupLabel } from './select';
-export { SelectSeparator as Separator } from './select';
+export {
+    SelectRoot as Root,
+    SelectTrigger as Trigger,
+    SelectValue as Value,
+    SelectPlaceholder as Placeholder,
+    SelectTriggerIcon as TriggerIcon,
+    SelectPortal as Portal,
+    SelectPositioner as Positioner,
+    SelectPopup as Popup,
+    SelectContent as Content,
+    SelectItem as Item,
+    SelectItemIndicator as ItemIndicator,
+    SelectGroup as Group,
+    SelectGroupLabel as GroupLabel,
+    SelectSeparator as Separator,
+} from './select';

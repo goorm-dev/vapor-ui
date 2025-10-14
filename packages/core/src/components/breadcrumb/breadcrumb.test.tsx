@@ -2,10 +2,9 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { BreadcrumbRootProps } from './breadcrumb';
-import { Breadcrumb } from './breadcrumb';
+import { Breadcrumb } from '.';
 
-const BreadcrumbTest = (props: BreadcrumbRootProps) => {
+const BreadcrumbTest = (props: Breadcrumb.Root.Props) => {
     return (
         <Breadcrumb.Root {...props}>
             <Breadcrumb.List>

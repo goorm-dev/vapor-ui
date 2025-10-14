@@ -8,9 +8,7 @@ import { Flex } from '../flex';
 type VStackVariants = { reverse?: boolean };
 type VStackPrimitiveProps = VComponentProps<typeof Flex>;
 
-interface VStackProps extends VStackPrimitiveProps, VStackVariants {}
-
-const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...props }, ref) => {
+export const VStack = forwardRef<HTMLDivElement, VStack.Props>(({ children, ...props }, ref) => {
     const [vStackProps, otherProps] = createSplitProps<VStackVariants>()(props, ['reverse']);
 
     return (
@@ -23,6 +21,8 @@ const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...props }, 
         </Flex>
     );
 });
+VStack.displayName = 'VStack';
 
-export { VStack };
-export type { VStackProps };
+export namespace VStack {
+    export interface Props extends VStackPrimitiveProps, VStackVariants {}
+}

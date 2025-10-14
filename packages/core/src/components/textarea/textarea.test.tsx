@@ -73,7 +73,7 @@ describe('Textarea', () => {
     test('supports invalid state', () => {
         render(<Textarea invalid />);
 
-        expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
+        expect(screen.getByRole('textbox')).toBeInvalid();
     });
 
     test('supports custom rows and cols', () => {
@@ -105,7 +105,7 @@ describe('Textarea', () => {
         render(<Textarea required />);
 
         const textarea = screen.getByRole('textbox');
-        expect(textarea).toHaveAttribute('aria-required', 'true');
+        expect(textarea).toBeRequired();
     });
 
     describe('autoResize functionality', () => {

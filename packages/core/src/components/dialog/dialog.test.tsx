@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import { Dialog, type DialogRootProps } from './dialog';
+import { Dialog } from '.';
 
 describe('Dialog', () => {
     const consoleWarnMockFunction = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -136,7 +136,7 @@ const TITLE_TEXT = 'Dialog Title';
 const DESCRIPTION_TEXT = 'This is a description of the dialog.';
 const OVERLAY_TEXT = 'Overlay';
 
-const DialogTest = (props: DialogRootProps) => {
+const DialogTest = (props: Dialog.Root.Props) => {
     return (
         <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
@@ -196,7 +196,7 @@ const DialogTest = (props: DialogRootProps) => {
 //     );
 // };
 
-const UndefinedDescriptionDialogTest = (props: DialogRootProps) => {
+const UndefinedDescriptionDialogTest = (props: Dialog.Root.Props) => {
     return (
         <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>

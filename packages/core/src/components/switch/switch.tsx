@@ -26,16 +26,13 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
-interface SwitchRootProps extends RootPrimitiveProps, SwitchSharedProps {}
-
-const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
+export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>(
     ({ className, children: childrenProp, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, ['size']);
 
         const { size } = variantProps;
 
-        const ThumbElement = useMemo(() => createSlot(<Thumb />), []);
+        const ThumbElement = useMemo(() => createSlot(<SwitchThumb />), []);
         const children = childrenProp || <ThumbElement />;
 
         return (
@@ -51,24 +48,29 @@ const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
         );
     },
 );
+SwitchRoot.displayName = 'Switch.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Switch.Thumb
  * -----------------------------------------------------------------------------------------------*/
 
-type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
-interface SwitchThumbProps extends ThumbPrimitiveProps {}
+export const SwitchThumb = forwardRef<HTMLDivElement, SwitchThumb.Props>(
+    ({ className, ...props }, ref) => {
+        const { size } = useSwitchContext();
 
-const Thumb = forwardRef<HTMLDivElement, SwitchThumbProps>(({ className, ...props }, ref) => {
-    const { size } = useSwitchContext();
-
-    return <BaseSwitch.Thumb ref={ref} className={styles.indicator({ size })} {...props} />;
-});
-Thumb.displayName = 'Switch.Thumb';
+        return <BaseSwitch.Thumb ref={ref} className={styles.indicator({ size })} {...props} />;
+    },
+);
+SwitchThumb.displayName = 'Switch.Thumb';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as SwitchRoot, Thumb as SwitchThumb };
-export type { SwitchRootProps, SwitchThumbProps };
+export namespace SwitchRoot {
+    type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
+    export interface Props extends RootPrimitiveProps, SwitchSharedProps {}
+}
 
-export const Switch = { Root, Thumb };
+export namespace SwitchThumb {
+    type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
+    export interface Props extends ThumbPrimitiveProps {}
+}

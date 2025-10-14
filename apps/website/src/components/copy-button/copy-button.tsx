@@ -1,12 +1,12 @@
 'use client';
 
-import { Button, type ButtonProps } from '@vapor-ui/core';
+import { Button } from '@vapor-ui/core';
 import { CopyAsMarkdownOutlineIcon, CopyIcon } from '@vapor-ui/icons';
 import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 
 const cache = new Map<string, string>();
 
-type CopyButtonProps = Omit<ButtonProps, 'onClick' | 'disabled'> & {
+type CopyButtonProps = Omit<Button.Props, 'onClick' | 'disabled'> & {
     markdownUrl: string;
 };
 
