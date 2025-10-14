@@ -33,7 +33,4 @@ const getImage = async ({ fileKey, nodeIds, format = 'svg' }) => {
     return data;
 };
 
-export {
-    getFileNodes,
-    getImage,
-};
+export { getFileNodes, getImage };

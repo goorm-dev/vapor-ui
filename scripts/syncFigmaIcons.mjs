@@ -1,7 +1,7 @@
+import { camelCase, startCase } from 'lodash-es';
 import fs, { constants } from 'node:fs/promise';
 import path from 'node:path';
-import process from 'node:process'
-import { camelCase, startCase } from 'lodash-es';
+import process from 'node:process';
 import prettier from 'prettier';
 
 import {
@@ -14,7 +14,6 @@ import { filterDocumentByNodeType, getIconJsx, getNodesWithUrl } from './libs/fi
 import getIconComponent from './templates/icon/IconComponent.js';
 import getIconComponentIndex from './templates/icon/iconComponentIndex.js';
 import getIconsIndex from './templates/icon/iconsIndex.js';
-
 
 const TYPE = process.env.TYPE;
 const CURRENT_DIRECTORY = process.cwd();

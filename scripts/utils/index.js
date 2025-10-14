@@ -42,7 +42,4 @@ const getSubfolders = async (parentFolder) => {
     }
 };
 
-export {
-    getFilesInFolder,
-    getSubfolders,
-};
+export { getFilesInFolder, getSubfolders };
