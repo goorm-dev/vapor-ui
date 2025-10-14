@@ -19,7 +19,7 @@ export const root = recipe({
             color: vars.color.foreground.normal[200],
 
             selectors: {
-                '&:read-only': { backgroundColor: vars.color.gray['200'] },
+                '&[readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&:disabled': { pointerEvents: 'none', opacity: 0.32 },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
                 '&::-webkit-search-cancel-button': { display: 'none' },
