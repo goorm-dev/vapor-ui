@@ -1,5 +1,5 @@
 import { camelCase, startCase } from 'lodash-es';
-import fs, { constants } from 'node:fs/promise';
+import fs, { constants } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import prettier from 'prettier';
