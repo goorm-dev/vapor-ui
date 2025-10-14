@@ -45,8 +45,6 @@ function getComponentEntries() {
         });
     }
 
-    console.log(entries);
-
     return entries;
 }
 
@@ -194,7 +192,7 @@ const dtsBuild = {
     input: componentEntries,
     plugins: [...commonPlugins.slice(0, 3), getDtsPlugins(compilerOptions)],
     output: [
-        createOutput('dist/', ['esm'], 'd.ts', {
+        createOutput('dist/', 'esm', 'd.ts', {
             preserveModulesRoot: 'src',
             assetFileNames: undefined,
             exports: undefined, // TypeScript 선언 파일은 exports 옵션 불필요
