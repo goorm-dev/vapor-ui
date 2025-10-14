@@ -73,7 +73,13 @@ try {
         const saveTargetPath = path.join(parentIconPath, iconName);
         const iconFilePath = path.resolve(saveTargetPath, `${iconName}.tsx`);
 
-        const isNewIcon = !(await fs.access(saveTargetPath, constants.F_OK));
+        let isNewIcon = false;
+        try {
+            await fs.access(saveTargetPath, constants.F_OK);
+            isNewIcon = false;
+        } catch {
+            isNewIcon = true;
+        }
         const isColorIcon = parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID);
 
         // Fetch icon JSX once
@@ -84,8 +90,14 @@ try {
             await fs.mkdir(saveTargetPath);
             newIconNameArr.push(iconName);
         } else {
-            // Check if existing icon content will be updated
-            const isIconFileAccessible = await fs.access(iconFilePath, constants.F_OK);
+            let isIconFileAccessible = false;
+            try {
+                await fs.access(iconFilePath, constants.F_OK);
+                isIconFileAccessible = true;
+            } catch {
+                isIconFileAccessible = false;
+            }
+
             if (isIconFileAccessible) {
                 const existingContent = await fs.readFile(iconFilePath, 'utf8');
 
