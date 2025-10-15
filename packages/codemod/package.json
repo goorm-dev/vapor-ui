@@ -3,9 +3,7 @@
     "version": "1.0.0",
     "description": "Code migration tools using jscodeshift",
     "main": "dist/index.js",
-    "bin": {
-        "vapor-migrate": "dist/cli.js"
-    },
+    "bin": "./dist/bin/cli.js",
     "jest": {
         "globals": {
             "baseDir": "../"
@@ -20,8 +18,10 @@
         }
     },
     "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
         "test": "jest",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --watchAll"
     },
     "dependencies": {
         "@vapor-ui/core": "1.0.0-beta.0",
@@ -36,7 +36,9 @@
         "@types/node": "^20.0.0",
         "eslint": "^9.37.0",
         "jest": "^30.2.0",
-        "ts-jest": "^29.1.0"
+        "prettier": "^2.8.8",
+        "ts-jest": "^29.1.0",
+        "tsup": "^8.5.0"
     },
     "files": [
         "dist",

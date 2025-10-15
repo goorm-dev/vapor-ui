@@ -1,1 +1,1 @@
-export * from './update-callout';
+export * from "./update-callout";
