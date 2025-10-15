@@ -10,17 +10,18 @@ npx @vapor-ui/codemod update-callout src/
 
 ## What Changes
 
-| Change Type | Before | After |
-|------------|--------|-------|
-| **Component name** | `<Alert>` | `<Callout.Root>` |
-| **Icon wrapper** | Direct child | `<Callout.Icon>` wrapper |
-| **Prop name** | `asChild` | `render` |
+| Change Type        | Before       | After                    |
+| ------------------ | ------------ | ------------------------ |
+| **Component name** | `<Alert>`    | `<Callout.Root>`         |
+| **Icon wrapper**   | Direct child | `<Callout.Icon>` wrapper |
+| **Prop name**      | `asChild`    | `render`                 |
 
 ## Supported Transformations
 
 ### 1. Basic Alert with Icon
 
 **Before:**
+
 ```tsx
 <Alert>
   <InfoIcon />
@@ -29,6 +30,7 @@ npx @vapor-ui/codemod update-callout src/
 ```
 
 **After:**
+
 ```tsx
 <Callout.Root>
   <Callout.Icon>
@@ -41,6 +43,7 @@ npx @vapor-ui/codemod update-callout src/
 ### 2. Alert with asChild prop
 
 **Before:**
+
 ```tsx
 <Alert asChild>
   <div>
@@ -51,6 +54,7 @@ npx @vapor-ui/codemod update-callout src/
 ```
 
 **After:**
+
 ```tsx
 <Callout.Root
   render={
@@ -65,11 +69,13 @@ npx @vapor-ui/codemod update-callout src/
 ### 3. Alert without Icon
 
 **Before:**
+
 ```tsx
 <Alert>Plain text without icon</Alert>
 ```
 
 **After:**
+
 ```tsx
 <Callout.Root>Plain text without icon</Callout.Root>
 ```
@@ -77,6 +83,7 @@ npx @vapor-ui/codemod update-callout src/
 ### 4. Alert with Dynamic Content
 
 **Before:**
+
 ```tsx
 <Alert>
   <WarningIcon />
@@ -85,6 +92,7 @@ npx @vapor-ui/codemod update-callout src/
 ```
 
 **After:**
+
 ```tsx
 <Callout.Root>
   <Callout.Icon>
@@ -92,16 +100,4 @@ npx @vapor-ui/codemod update-callout src/
   </Callout.Icon>
   {message}
 </Callout.Root>
-```
-
-### 5. Self-closing Alert
-
-**Before:**
-```tsx
-<Alert />
-```
-
-**After:**
-```tsx
-<Callout.Root />
 ```
