@@ -298,12 +298,6 @@ importers:
 
   packages/codemod:
     dependencies:
-      '@vapor-ui/core':
-        specifier: 1.0.0-beta.0
-        version: 1.0.0-beta.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@vapor-ui/icons':
-        specifier: 1.0.0-beta.0
-        version: 1.0.0-beta.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       jscodeshift:
         specifier: ^17.3.0
         version: 17.3.0(@babel/preset-env@7.28.3(@babel/core@7.28.4))
@@ -323,6 +317,12 @@ importers:
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.17
+      '@vapor-ui/core':
+        specifier: 1.0.0-beta.0
+        version: 1.0.0-beta.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@vapor-ui/icons':
+        specifier: 1.0.0-beta.0
+        version: 1.0.0-beta.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       eslint:
         specifier: ^9.37.0
         version: 9.37.0(jiti@2.6.0)
