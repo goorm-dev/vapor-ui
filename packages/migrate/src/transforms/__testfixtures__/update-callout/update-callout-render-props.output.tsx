@@ -6,9 +6,7 @@ export const App = () => {
         <Callout.Root
             render={
                 <div>
-                    <Callout.Icon>
-                        <HeartIcon />
-                    </Callout.Icon>
+                    <HeartIcon />
                     Custom alert with asChild prop
                 </div>
             }

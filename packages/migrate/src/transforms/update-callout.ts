@@ -1,6 +1,6 @@
-import { API, FileInfo, Options, Transform } from 'jscodeshift';
+import { type API, FileInfo, Transform } from 'jscodeshift';
 
-const transform: Transform = (fileInfo: FileInfo, api: API, options: Options) => {
+const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
@@ -93,7 +93,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API, options: Options) =>
                 const children = element.children;
                 if (children && children.length > 0) {
                     const newChildren = [];
-                    let textContent = [];
+                    let textContent: any[] = [];
 
                     // Separate icon and text content
                     children.forEach((child) => {
@@ -166,14 +166,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API, options: Options) =>
         }
     });
 
-    return root.toSource({
-        quote: 'single',
-        trailingComma: true,
-        tabWidth: 4,
-        useTabs: false,
-        reuseWhitespace: true,
-    });
+    return root.toSource({});
 };
 
 export default transform;
-module.exports.parser = 'tsx';
+export const parset = 'tsx';

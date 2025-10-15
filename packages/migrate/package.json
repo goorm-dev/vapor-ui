@@ -20,31 +20,22 @@
         }
     },
     "scripts": {
-        "build": "tsc",
-        "dev": "tsc --watch",
         "test": "jest",
-        "test:watch": "jest --watch",
-        "prepublish": "npm run build"
+        "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@types/react": "^19.2.2",
-        "@types/react-dom": "^19.2.2",
         "@vapor-ui/core": "1.0.0-beta.0",
         "@vapor-ui/icons": "1.0.0-beta.0",
-        "commander": "^11.1.0",
-        "jscodeshift": "^17.3.0",
-        "react": "^19.2.0",
-        "react-dom": "^19.2.0"
+        "jscodeshift": "^17.3.0"
     },
     "devDependencies": {
         "@repo/typescript-config": "workspace:*",
+        "@repo/eslint-config": "workspace:*",
         "@types/jest": "^29.5.0",
         "@types/jscodeshift": "^17.3.0",
         "@types/node": "^20.0.0",
-        "jest": "^29.7.0",
-        "prettier": "^3.3.0",
-        "ts-jest": "^29.1.0",
-        "typescript": "^5.0.0"
+        "jest": "^30.2.0",
+        "ts-jest": "^29.1.0"
     },
     "files": [
         "dist",
