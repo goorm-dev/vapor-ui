@@ -2,8 +2,8 @@
   "name": "@vapor-ui/codemod",
   "version": "1.0.0",
   "description": "Code migration tools using jscodeshift",
-  "main": "dist/index.js",
-  "bin": "./dist/bin/cli.js",
+  "main": "dist/src/index.mjs",
+  "bin": "./dist/bin/cli.mjs",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -11,16 +11,25 @@
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
-    "jscodeshift": "^17.3.0"
+    "@inquirer/prompts": "^7.9.0",
+    "chalk": "4",
+    "globby": "^15.0.0",
+    "is-git-clean": "^1.1.0",
+    "jscodeshift": "^17.3.0",
+    "meow": "^14.0.0"
   },
   "devDependencies": {
-    "@vapor-ui/core": "1.0.0-beta.0",
-    "@vapor-ui/icons": "1.0.0-beta.0",
+    "@babel/parser": "^7.28.4",
+    "@babel/traverse": "^7.28.4",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@types/babel__traverse": "^7.28.0",
+    "@types/is-git-clean": "^1.1.2",
     "@types/jest": "^29.5.0",
     "@types/jscodeshift": "^17.3.0",
     "@types/node": "^20.0.0",
+    "@vapor-ui/core": "1.0.0-beta.0",
+    "@vapor-ui/icons": "1.0.0-beta.0",
     "eslint": "^9.37.0",
     "jest": "^30.2.0",
     "prettier": "^2.8.8",

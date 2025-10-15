@@ -27,7 +27,7 @@
         "css-generator": "pnpm --filter @vapor-ui/css-generator",
         "website": "pnpm --filter website",
         "figma-plugin": "pnpm --filter figma-plugin",
-        "migrate": "pnpm --filter @vapor-ui/migrate",
+        "codemod": "pnpm --filter @vapor-ui/codemod",
         "dev": "turbo dev",
         "prepare": "husky",
         "typecheck": "turbo typecheck",
