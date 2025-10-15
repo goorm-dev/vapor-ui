@@ -9,45 +9,40 @@ import { createSplitProps } from '~/utils/create-split-props';
 import type { VComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
-import type { RootVariants } from './radio-card.css';
+import type { RadioCardVariants } from './radio-card.css';
 import * as styles from './radio-card.css';
 
-/* -------------------------------------------------------------------------------------------------
- * RadioCard.Root
- * -----------------------------------------------------------------------------------------------*/
-
-type RadioCardVariants = Omit<RootVariants, 'size'>;
-
 type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-interface RadioCardRootProps extends RootPrimitiveProps, RadioCardVariants {}
+interface RadioCardProps extends RootPrimitiveProps, RadioCardVariants {}
 
-const Root = forwardRef<HTMLButtonElement, RadioCardRootProps>(
+const RadioCard = forwardRef<HTMLButtonElement, RadioCardProps>(
     ({ className, children, ...props }, ref) => {
-        const { size, invalid: contextInvalid } = useRadioGroupContext();
+        const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
         const [variantProps, otherProps] = createSplitProps<RadioCardVariants>()(props, [
             'invalid',
+            'size',
         ]);
-        const { invalid: invalidProp } = variantProps;
+        const { size: sizeProp, invalid: invalidProp } = variantProps;
 
         const invalid = invalidProp || contextInvalid;
+        const size = sizeProp || contextSize;
 
         return (
-            <BaseRadio.Root
-                ref={ref}
-                aria-invalid={invalid}
-                className={clsx(styles.root({ size, invalid }), className)}
-                {...otherProps}
-            >
-                {children}
-            </BaseRadio.Root>
+            <label>
+                <BaseRadio.Root
+                    ref={ref}
+                    aria-invalid={invalid}
+                    className={clsx(styles.root({ size, invalid }), className)}
+                    {...otherProps}
+                >
+                    {children}
+                </BaseRadio.Root>
+            </label>
         );
     },
 );
-Root.displayName = 'RadioCard.Root';
+RadioCard.displayName = 'RadioCard';
 
-/* -----------------------------------------------------------------------------------------------*/
-
-export { Root as RadioCardRoot };
-export type { RadioCardRootProps };
-export const RadioCard = { Root };
+export { RadioCard };
+export type { RadioCardProps };

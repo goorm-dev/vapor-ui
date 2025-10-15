@@ -72,4 +72,4 @@ export const root = recipe({
     },
 });
 
-export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
+export type RadioCardVariants = NonNullable<RecipeVariants<typeof root>>;
