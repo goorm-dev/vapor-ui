@@ -6,9 +6,9 @@ import * as prettier from "prettier";
 
 const prettierOptions = {
   parser: "typescript" as const,
-  tabWidth: 4,
+  tabWidth: 2,
   semi: true,
-  singleQuote: true,
+  singleQuote: false,
   printWidth: 100,
 };
 
