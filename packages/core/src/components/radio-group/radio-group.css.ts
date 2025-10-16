@@ -16,12 +16,10 @@ export const root = recipe({
     variants: {
         size: {
             md: layerStyle('components', {
-                gap: vars.size.space['050'],
                 rowGap: vars.size.space['050'],
                 columnGap: vars.size.space['050'],
             }),
             lg: layerStyle('components', {
-                gap: vars.size.space['100'],
                 rowGap: vars.size.space['100'],
                 columnGap: vars.size.space['100'],
             }),
