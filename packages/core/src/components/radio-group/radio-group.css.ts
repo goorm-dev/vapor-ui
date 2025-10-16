@@ -9,21 +9,43 @@ import { vars } from '~/styles/vars.css';
 export const root = recipe({
     base: layerStyle('components', {
         display: 'flex',
+        flexWrap: 'wrap',
     }),
 
     defaultVariants: { size: 'md', orientation: 'vertical' },
     variants: {
         size: {
-            md: layerStyle('components', { gap: vars.size.space['050'] }),
-            lg: layerStyle('components', { gap: vars.size.space['100'] }),
+            md: layerStyle('components', {
+                gap: vars.size.space['050'],
+                rowGap: vars.size.space['050'],
+                columnGap: vars.size.space['050'],
+            }),
+            lg: layerStyle('components', {
+                gap: vars.size.space['100'],
+                rowGap: vars.size.space['100'],
+                columnGap: vars.size.space['100'],
+            }),
         },
         orientation: {
-            horizontal: layerStyle('components', { flexDirection: 'row' }),
-            vertical: layerStyle('components', { flexDirection: 'column' }),
+            horizontal: layerStyle('components', {
+                flexDirection: 'row',
+                alignContent: 'flex-start',
+                columnGap: vars.size.space['200'],
+            }),
+            vertical: layerStyle('components', {
+                flexDirection: 'column',
+            }),
         },
     },
 });
 
-export const label = [foregrounds({ color: 'normal-100' }), typography({ style: 'subtitle2' })];
+export const label = [
+    foregrounds({ color: 'normal-100' }),
+    typography({ style: 'subtitle2' }),
+    layerStyle('components', {
+        flexBasis: '100%',
+        order: -1,
+    }),
+];
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;
