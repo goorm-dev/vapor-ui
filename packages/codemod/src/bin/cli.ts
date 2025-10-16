@@ -1,116 +1,108 @@
 #!/usr/bin/env node
-
-import meow from "meow";
-import isGitClean from "is-git-clean";
-import chalk from "chalk";
-import { globbySync } from "globby";
-import { input, select } from "@inquirer/prompts";
-import { execSync } from "child_process";
-import path from "path";
-import { fileURLToPath } from "node:url";
-import { createRequire } from "node:module";
+import { input, select } from '@inquirer/prompts';
+import chalk from 'chalk';
+import { execSync } from 'child_process';
+import { globbySync } from 'globby';
+import isGitClean from 'is-git-clean';
+import meow from 'meow';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import path from 'path';
 
 const fileName = fileURLToPath(import.meta.url);
 const dirName = path.dirname(fileName);
 const require = createRequire(import.meta.url);
-const transformerDirectory = path.join(dirName, "../src", "transforms");
+const transformerDirectory = path.join(dirName, '../src', 'transforms');
 
 function checkGitStatus(force: boolean) {
-  let clean = false;
-  let errorMessage = "Unable to determine if git directory is clean";
+    let clean = false;
+    let errorMessage = 'Unable to determine if git directory is clean';
 
-  try {
-    clean = isGitClean.sync();
-    errorMessage = "Git directory is not clean";
-  } catch (err: any) {
-    if (err && err.stderr && err.stderr.indexOf("Not a git repository") >= 0) {
-      clean = true;
+    try {
+        clean = isGitClean.sync();
+        errorMessage = 'Git directory is not clean';
+    } catch (err: any) {
+        if (err && err.stderr && err.stderr.indexOf('Not a git repository') >= 0) {
+            clean = true;
+        }
     }
-  }
 
-  if (!clean) {
-    if (force) {
-      console.log(`WARNING: ${errorMessage}. Forcibly continuing.`);
-    } else {
-      console.log("Thank you for using vapor-ui!");
-      console.log(
-        chalk.yellow(
-          "\nERROR: For safety, codemods can only be run on a clean git directory."
-        )
-      );
-      console.log(
-        "\nIf you understand the risks, you may use the --force flag to override this safety check."
-      );
-      process.exit(1);
+    if (!clean) {
+        if (force) {
+            console.log(`WARNING: ${errorMessage}. Forcibly continuing.`);
+        } else {
+            console.log('Thank you for using vapor-ui!');
+            console.log(
+                chalk.yellow(
+                    '\nERROR: For safety, codemods can only be run on a clean git directory.'
+                )
+            );
+            console.log(
+                '\nIf you understand the risks, you may use the --force flag to override this safety check.'
+            );
+            process.exit(1);
+        }
     }
-  }
 }
 
 function resolveTransformer(transformerDirectory: string, transformer: string) {
-  return (
-    globbySync(`${transformerDirectory}/${transformer}/index.{mjs,js}`)[0] ||
-    null
-  );
+    return globbySync(`${transformerDirectory}/${transformer}/index.{mjs,js}`)[0] || null;
 }
 function runTransform({
-  files,
-  flags,
-  parser,
-  transformer,
+    files,
+    flags,
+    parser,
+    transformer,
 }: {
-  files: string[];
-  flags: any;
-  parser: string;
-  transformer: string;
+    files: string[];
+    flags: any;
+    parser: string;
+    transformer: string;
 }) {
-  const transformerPath = resolveTransformer(transformerDirectory, transformer);
+    const transformerPath = resolveTransformer(transformerDirectory, transformer);
 
-  let args: string[] = [];
+    let args: string[] = [];
 
-  const { dry, jscodeshift } = flags;
+    const { dry, jscodeshift } = flags;
 
-  args.push(`--parser=${parser}`);
-  if (dry) {
-    args.push(`--dry`);
-  }
+    args.push(`--parser=${parser}`);
+    if (dry) {
+        args.push(`--dry`);
+    }
 
-  if (parser === "tsx") {
-    args.push(`--extensions=tsx,ts,jsx,js`);
-  } else {
-    args.push(`--extensions=jsx,js`);
-  }
+    if (parser === 'tsx') {
+        args.push(`--extensions=tsx,ts,jsx,js`);
+    } else {
+        args.push(`--extensions=jsx,js`);
+    }
 
-  args = args.concat([`--transform=${transformerPath || ""}`]);
+    args = args.concat([`--transform=${transformerPath || ''}`]);
 
-  if (jscodeshift) {
-    args = args.concat(jscodeshift);
-  }
+    if (jscodeshift) {
+        args = args.concat(jscodeshift);
+    }
 
-  args = args.concat(files);
+    args = args.concat(files);
 
-  const jscodeshiftExecutable = require.resolve(
-    "jscodeshift/bin/jscodeshift.js"
-  );
-  const command = `node ${jscodeshiftExecutable} ${args.join(" ")}`;
+    const jscodeshiftExecutable = require.resolve('jscodeshift/bin/jscodeshift.js');
+    const command = `node ${jscodeshiftExecutable} ${args.join(' ')}`;
 
-  console.log(`Executing command: ${command}`);
-
-  try {
-    execSync(command, { stdio: "inherit" });
-  } catch (error) {
-    throw error;
-  }
+    try {
+        execSync(command, { stdio: 'inherit' });
+    } catch (error) {
+        throw error;
+    }
 }
 
 const TRANSFORMER_INQUIRER_CHOICES = [
-  {
-    name: "update-callout: Update Callout component usage to new API",
-    value: "update-callout",
-  },
+    {
+        name: 'update-callout: Update Callout component usage to new API',
+        value: 'update-callout',
+    },
 ];
 const run = async () => {
-  const cli = meow(
-    `Usage
+    const cli = meow(
+        `Usage
       $ npx @vapor-ui/migrate <transform> <files> [...options]
     
         transform    One of the choices from https://github.com/goorm-dev/vapor-ui/tree/main/packages/codemod
@@ -123,77 +115,77 @@ const run = async () => {
       --jscodeshift      (Advanced) Pass options directly to jscodeshift.
                         See more options: https://jscodeshift.com/run/cli
     `,
-    {
-      importMeta: import.meta,
-      flags: {
-        force: {
-          type: "boolean",
-          default: false,
-          aliases: ["f"],
-        },
-        dry: {
-          type: "boolean",
-          default: false,
-          aliases: ["d"],
-        },
-        parser: {
-          type: "string",
-          default: "",
-          aliases: ["p"],
-        },
-        jscodeshift: {
-          type: "string",
-          default: "",
-          aliases: ["j"],
-        },
-      },
+        {
+            importMeta: import.meta,
+            flags: {
+                force: {
+                    type: 'boolean',
+                    default: false,
+                    aliases: ['f'],
+                },
+                dry: {
+                    type: 'boolean',
+                    default: false,
+                    aliases: ['d'],
+                },
+                parser: {
+                    type: 'string',
+                    default: '',
+                    aliases: ['p'],
+                },
+                jscodeshift: {
+                    type: 'string',
+                    default: '',
+                    aliases: ['j'],
+                },
+            },
+        }
+    );
+
+    if (!cli.flags.dry) {
+        checkGitStatus(cli.flags.force);
     }
-  );
 
-  if (!cli.flags.dry) {
-    checkGitStatus(cli.flags.force);
-  }
+    const answers: { [key: string]: string } = {};
 
-  const answers: { [key: string]: string } = {};
+    if (!cli.input[1]) {
+        answers.files = await input({
+            message: 'On which files or directory should the codemods be applied?',
+            default: '.',
+            transformer: (value) => value.trim(),
+        });
+    }
 
-  if (!cli.input[1]) {
-    answers.files = await input({
-      message: "On which files or directory should the codemods be applied?",
-      default: ".",
-      transformer: (value) => value.trim(),
+    if (!cli.input[0]) {
+        answers.transformer = await select({
+            message: 'Which transform would you like to apply?',
+            choices: TRANSFORMER_INQUIRER_CHOICES,
+        });
+    }
+    if (!cli.flags.parser) {
+        answers.parser = await select({
+            message: 'Which parser should be used?',
+            choices: [
+                { name: 'tsx (for .tsx, .ts, .jsx, .js files)', value: 'tsx' },
+                { name: 'babel (for .jsx, .js files)', value: 'babel' },
+            ],
+            default: 'tsx',
+        });
+    }
+
+    const files = globbySync(cli.input[1] || answers.files);
+
+    if (!files.length) {
+        console.log(chalk.red(`No files found matching ${files.join(' ')}`));
+        return null;
+    }
+
+    return runTransform({
+        files: globbySync(cli.input[1] || answers.files),
+        flags: cli.flags,
+        parser: (cli.flags.parser as string) || answers.parser,
+        transformer: cli.input[0] || answers.transformer,
     });
-  }
-
-  if (!cli.input[0]) {
-    answers.transformer = await select({
-      message: "Which transform would you like to apply?",
-      choices: TRANSFORMER_INQUIRER_CHOICES,
-    });
-  }
-  if (!cli.flags.parser) {
-    answers.parser = await select({
-      message: "Which parser should be used?",
-      choices: [
-        { name: "tsx (for .tsx, .ts, .jsx, .js files)", value: "tsx" },
-        { name: "babel (for .jsx, .js files)", value: "babel" },
-      ],
-      default: "tsx",
-    });
-  }
-
-  const files = globbySync(cli.input[1] || answers.files);
-
-  if (!files.length) {
-    console.log(chalk.red(`No files found matching ${files.join(" ")}`));
-    return null;
-  }
-
-  return runTransform({
-    files: globbySync(cli.input[1] || answers.files),
-    flags: cli.flags,
-    parser: (cli.flags.parser as string) || answers.parser,
-    transformer: cli.input[0] || answers.transformer,
-  });
 };
 
 run();

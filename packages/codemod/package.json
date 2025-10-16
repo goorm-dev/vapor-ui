@@ -8,7 +8,9 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"./**/*.{ts,tsx,md}\""
   },
   "dependencies": {
     "@inquirer/prompts": "^7.9.0",
@@ -17,7 +19,7 @@
     "is-git-clean": "^1.1.0",
     "jscodeshift": "^17.3.0",
     "meow": "^14.0.0",
-    "prettier": "^2.8.8"
+    "prettier": "2"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

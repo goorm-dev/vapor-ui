@@ -10,9 +10,9 @@ npx @vapor-ui/codemod <transform-name> <path> <...options>
 
 ### Options
 
-- `--dry` - Dry run (no changes, print only)
-- `--parser <parser>` - Parser to use (default: tsx)
-- `--extensions <ext>` - File extensions to transform (default: js,jsx,ts,tsx)
+-   `--dry` - Dry run (no changes, print only)
+-   `--parser <parser>` - Parser to use (default: tsx)
+-   `--extensions <ext>` - File extensions to transform (default: js,jsx,ts,tsx)
 
 ### Examples
 

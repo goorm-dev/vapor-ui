@@ -24,8 +24,8 @@ npx @vapor-ui/codemod update-callout src/
 
 ```tsx
 <Alert>
-  <InfoIcon />
-  This is a basic alert message
+    <InfoIcon />
+    This is a basic alert message
 </Alert>
 ```
 
@@ -33,10 +33,10 @@ npx @vapor-ui/codemod update-callout src/
 
 ```tsx
 <Callout.Root>
-  <Callout.Icon>
-    <InfoIcon />
-  </Callout.Icon>
-  This is a basic alert message
+    <Callout.Icon>
+        <InfoIcon />
+    </Callout.Icon>
+    This is a basic alert message
 </Callout.Root>
 ```
 
@@ -46,10 +46,10 @@ npx @vapor-ui/codemod update-callout src/
 
 ```tsx
 <Alert asChild>
-  <div>
-    <HeartIcon />
-    Custom alert with asChild prop
-  </div>
+    <div>
+        <HeartIcon />
+        Custom alert with asChild prop
+    </div>
 </Alert>
 ```
 
@@ -57,12 +57,12 @@ npx @vapor-ui/codemod update-callout src/
 
 ```tsx
 <Callout.Root
-  render={
-    <div>
-      <HeartIcon />
-      Custom alert with asChild prop
-    </div>
-  }
+    render={
+        <div>
+            <HeartIcon />
+            Custom alert with asChild prop
+        </div>
+    }
 />
 ```
 
@@ -86,8 +86,8 @@ npx @vapor-ui/codemod update-callout src/
 
 ```tsx
 <Alert>
-  <WarningIcon />
-  {message}
+    <WarningIcon />
+    {message}
 </Alert>
 ```
 
@@ -95,9 +95,9 @@ npx @vapor-ui/codemod update-callout src/
 
 ```tsx
 <Callout.Root>
-  <Callout.Icon>
-    <WarningIcon />
-  </Callout.Icon>
-  {message}
+    <Callout.Icon>
+        <WarningIcon />
+    </Callout.Icon>
+    {message}
 </Callout.Root>
 ```
