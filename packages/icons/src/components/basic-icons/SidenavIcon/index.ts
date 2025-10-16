@@ -1,3 +1,3 @@
-import SidenavIcon from './SidenavIcon';
+import SideNavIcon from './SideNavIcon';
 
-export default SidenavIcon;
+export default SideNavIcon;
