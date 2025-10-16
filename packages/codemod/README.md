@@ -43,3 +43,11 @@ Converts `Alert` component to `Callout` component.
 ```bash
 npx @vapor-ui/codemod update-callout path
 ```
+
+### For internal
+
+Converts `@goorm-dev/vapor-icons` to `@vapor-ui/icons` component.
+
+```bash
+npx @vapor-ui/codemod internal/icons/migrate-icons-import path
+```
