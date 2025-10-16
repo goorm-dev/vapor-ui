@@ -1,14 +1,15 @@
-import { WarningIcon } from '@vapor-ui/icons';
+// @ts-nocheck
+
+import { HeartIcon } from '@vapor-ui/icons';
 import { Callout } from '@vapor-ui/core';
 
 export const App = () => {
-    const message = 'Dynamic message';
     return (
         <Callout.Root>
             <Callout.Icon>
-                <WarningIcon />
+                <HeartIcon />
             </Callout.Icon>
-            {message}
+            This is an alert message
         </Callout.Root>
     );
 };

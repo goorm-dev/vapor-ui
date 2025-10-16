@@ -1,4 +1,6 @@
-import { Alert } from '@vapor-ui/core';
+// @ts-nocheck
+
+import { Alert } from '@goorm-dev/vapor-core';
 import { WarningIcon } from '@vapor-ui/icons';
 
 export const App = () => {

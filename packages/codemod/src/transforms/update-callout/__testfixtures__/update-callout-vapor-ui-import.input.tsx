@@ -1,13 +1,13 @@
 // @ts-nocheck
 
-import { Alert } from '@goorm-dev/vapor-core';
 import { HeartIcon } from '@vapor-ui/icons';
+import { Alert } from '@vapor-ui/core';
 
 export const App = () => {
     return (
         <Alert>
             <HeartIcon />
-            This is a basic alert message
+            This is an alert message
         </Alert>
     );
 };

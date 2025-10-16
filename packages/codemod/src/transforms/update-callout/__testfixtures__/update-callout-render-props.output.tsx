@@ -1,5 +1,5 @@
-import { Callout } from '@vapor-ui/core';
 import { HeartIcon } from '@vapor-ui/icons';
+import { Callout } from '@vapor-ui/core';
 
 export const App = () => {
     return (

@@ -8,22 +8,75 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     root.find(j.ImportDeclaration).forEach((path) => {
         const importDeclaration = path.value;
 
-        // Check if this import is from a vapor-ui package and imports Alert
+        // Check if this import is from @goorm-dev/vapor-core or @vapor-ui/core and imports Alert
         if (
             importDeclaration.source.value &&
             typeof importDeclaration.source.value === 'string' &&
-            importDeclaration.source.value.includes('@vapor-ui')
+            (importDeclaration.source.value === '@goorm-dev/vapor-core' ||
+                importDeclaration.source.value === '@vapor-ui/core')
         ) {
+            let hasAlert = false;
+            const otherSpecifiers: typeof importDeclaration.specifiers = [];
+
             importDeclaration.specifiers?.forEach((specifier) => {
                 if (specifier.type === 'ImportSpecifier' && specifier.imported.name === 'Alert') {
-                    specifier.imported.name = 'Callout';
-                    if (specifier.local) {
-                        specifier.local.name = 'Callout';
-                    }
+                    hasAlert = true;
+                } else {
+                    otherSpecifiers.push(specifier);
                 }
             });
+
+            // If Alert was imported from @goorm-dev/vapor-core
+            if (hasAlert && importDeclaration.source.value === '@goorm-dev/vapor-core') {
+                // Keep other imports from @goorm-dev/vapor-core
+                if (otherSpecifiers.length > 0) {
+                    importDeclaration.specifiers = otherSpecifiers;
+                } else {
+                    // Remove the entire import if only Alert was imported
+                    j(path).remove();
+                }
+            } else if (hasAlert && importDeclaration.source.value === '@vapor-ui/core') {
+                // Just rename Alert to Callout in existing @vapor-ui/core import
+                importDeclaration.specifiers?.forEach((specifier) => {
+                    if (specifier.type === 'ImportSpecifier' && specifier.imported.name === 'Alert') {
+                        specifier.imported.name = 'Callout';
+                        if (specifier.local) {
+                            specifier.local.name = 'Callout';
+                        }
+                    }
+                });
+            }
         }
     });
+
+    // Add Callout import from @vapor-ui/core if it was removed from @goorm-dev/vapor-core
+    const hasCalloutImport = root
+        .find(j.ImportDeclaration, {
+            source: { value: '@vapor-ui/core' },
+        })
+        .filter((path) => {
+            return (
+                path.value.specifiers?.some(
+                    (spec) => spec.type === 'ImportSpecifier' && spec.imported.name === 'Callout'
+                ) || false
+            );
+        })
+        .length > 0;
+
+    if (!hasCalloutImport) {
+        const calloutImport = j.importDeclaration(
+            [j.importSpecifier(j.identifier('Callout'))],
+            j.literal('@vapor-ui/core')
+        );
+
+        // Insert after the last import or at the beginning
+        const lastImport = root.find(j.ImportDeclaration).at(-1);
+        if (lastImport.length > 0) {
+            lastImport.insertAfter(calloutImport);
+        } else {
+            root.find(j.Program).get('body', 0).insertBefore(calloutImport);
+        }
+    }
 
     // Find JSX elements with Alert tag and transform them to Callout
     root.find(j.JSXElement).forEach((path) => {
