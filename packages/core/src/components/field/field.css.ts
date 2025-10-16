@@ -62,15 +62,24 @@ export const success = style([
     }),
 ]);
 
-export const label = style([
+const label = layerStyle('components', {
+    display: 'flex',
+    gap: vars.size.space['100'],
+    selectors: {
+        '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+    },
+});
+
+export const verticalLabel = style([
+    label,
     typography({ style: 'subtitle2' }),
     foregrounds({ color: 'normal-100' }),
-    layerStyle('components', {
-        selectors: {
-            '&:is(:disabled, [data-disabled])': {
-                opacity: 0.32,
-                pointerEvents: 'none',
-            },
-        },
-    }),
+    layerStyle('components', { flexDirection: 'column' }),
+]);
+
+export const horizontalLabel = style([
+    label,
+    typography({ style: 'body2' }),
+    foregrounds({ color: 'normal-200' }),
+    layerStyle('components', { alignItems: 'center' }),
 ]);

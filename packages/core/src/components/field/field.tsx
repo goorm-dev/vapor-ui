@@ -23,16 +23,32 @@ const Root = forwardRef<HTMLDivElement, FieldRootProps>(({ className, ...props }
 Root.displayName = 'Field.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Field.Label
+ * Field.VLabel
  * -----------------------------------------------------------------------------------------------*/
 
 type PrimitiveLabelProps = VComponentProps<typeof BaseField.Label>;
-interface FieldLabelProps extends PrimitiveLabelProps {}
 
-const Label = forwardRef<HTMLLabelElement, FieldLabelProps>(({ className, ...props }, ref) => {
-    return <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...props} />;
+interface FieldHLabelProps extends PrimitiveLabelProps {}
+
+const HLabel = forwardRef<HTMLLabelElement, FieldHLabelProps>(({ className, ...props }, ref) => {
+    return (
+        <BaseField.Label ref={ref} className={clsx(styles.horizontalLabel, className)} {...props} />
+    );
 });
-Label.displayName = 'Field.Label';
+HLabel.displayName = 'Field.HLabel';
+
+/* -------------------------------------------------------------------------------------------------
+ * Field.VLabel
+ * -----------------------------------------------------------------------------------------------*/
+
+interface FieldVLabelProps extends PrimitiveLabelProps {}
+
+const VLabel = forwardRef<HTMLLabelElement, FieldVLabelProps>(({ className, ...props }, ref) => {
+    return (
+        <BaseField.Label ref={ref} className={clsx(styles.verticalLabel, className)} {...props} />
+    );
+});
+VLabel.displayName = 'Field.VLabel';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Description
@@ -103,17 +119,19 @@ Success.displayName = 'Field.Success';
 
 export {
     Root as FieldRoot,
-    Label as FieldLabel,
+    HLabel as FieldHLabel,
+    VLabel as FieldVLabel,
     Description as FieldDescription,
     Error as FieldError,
     Success as FieldSuccess,
 };
 export type {
     FieldRootProps,
-    FieldLabelProps,
+    FieldHLabelProps,
+    FieldVLabelProps,
     FieldDescriptionProps,
     FieldErrorProps,
     FieldSuccessProps,
 };
 
-export const Field = { Root, Label, Description, Error, Success };
+export const Field = { Root, HLabel, VLabel, Description, Error, Success };
