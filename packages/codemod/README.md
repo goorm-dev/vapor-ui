@@ -5,7 +5,7 @@ Automated code migration tools for Vapor UI using jscodeshift. This package help
 ## Usage
 
 ```bash
-npx @vapor-ui/codemod <transform-name> <path>
+npx @vapor-ui/codemod <transform-name> <path> <...options>
 ```
 
 ### Options

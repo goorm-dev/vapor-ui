@@ -62,41 +62,28 @@ function runTransform({
   flags: any;
   parser: string;
   transformer: string;
-  answers: any;
 }) {
   const transformerPath = resolveTransformer(transformerDirectory, transformer);
 
   let args: string[] = [];
 
-  const { dry, print, explicitRequire } = flags;
+  const { dry, jscodeshift } = flags;
 
+  args.push(`--parser=${parser}`);
   if (dry) {
-    args.push("--dry");
+    args.push(`--dry`);
   }
-  if (print) {
-    args.push("--print");
-  }
-
-  if (explicitRequire === "false") {
-    args.push("--explicit-require=false");
-  }
-
-  args.push("--verbose=2");
-
-  args.push("--ignore-pattern=**/node_modules/**");
-
-  args.push("--parser", parser);
 
   if (parser === "tsx") {
-    args.push("--extensions=tsx,ts,jsx,js");
+    args.push(`--extensions=tsx,ts,jsx,js`);
   } else {
-    args.push("--extensions=jsx,js");
+    args.push(`--extensions=jsx,js`);
   }
 
-  args = args.concat(["--transform", transformerPath || ""]);
+  args = args.concat([`--transform=${transformerPath || ""}`]);
 
-  if (flags.jscodeshift) {
-    args = args.concat(flags.jscodeshift);
+  if (jscodeshift) {
+    args = args.concat(jscodeshift);
   }
 
   args = args.concat(files);
@@ -124,18 +111,17 @@ const TRANSFORMER_INQUIRER_CHOICES = [
 const run = async () => {
   const cli = meow(
     `Usage
-      $ npx @vapor-ui/migrate <transform> <path> <...options>
+      $ npx @vapor-ui/migrate <transform> <files> [...options]
     
         transform    One of the choices from https://github.com/goorm-dev/vapor-ui/tree/main/packages/codemod
-        path         Files or directory to transform. Can be a glob like src/**.test.js
+        files       Files or directory to transform. Can be a glob like src/**.test.js
 
     Options
       --force            Bypass Git safety checks and forcibly run codemods
-      --dry              Dry run (no changes are made to files)
-      --print            Print transformed files to your terminal
-      --explicit-require Transform only if React is imported in the file (default: true)
-
-      --jscodeshift  (Advanced) Pass options directly to jscodeshift
+      --parser           Specify the parser to be used. One of: tsx, babel
+      --dry              (Advanced) Dry run. Changes are not written to files.
+      --jscodeshift      (Advanced) Pass options directly to jscodeshift.
+                        See more options: https://jscodeshift.com/run/cli
     `,
     {
       importMeta: import.meta,
@@ -150,14 +136,10 @@ const run = async () => {
           default: false,
           aliases: ["d"],
         },
-        print: {
-          type: "boolean",
-          default: false,
+        parser: {
+          type: "string",
+          default: "",
           aliases: ["p"],
-        },
-        explicitRequire: {
-          type: "boolean",
-          default: true,
         },
         jscodeshift: {
           type: "string",
@@ -201,20 +183,16 @@ const run = async () => {
 
   const files = globbySync(cli.input[1] || answers.files);
 
-  const selectedTransformer = cli.input[0] || answers.transformer;
-  const selectedParser: string = (cli.flags.parser as string) || answers.parser;
-
   if (!files.length) {
     console.log(chalk.red(`No files found matching ${files.join(" ")}`));
     return null;
   }
 
   return runTransform({
-    files,
+    files: globbySync(cli.input[1] || answers.files),
     flags: cli.flags,
-    parser: selectedParser,
-    transformer: selectedTransformer,
-    answers: answers,
+    parser: (cli.flags.parser as string) || answers.parser,
+    transformer: cli.input[0] || answers.transformer,
   });
 };
 
