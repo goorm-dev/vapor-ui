@@ -35,40 +35,41 @@ export default function AuthenticationForm() {
         >
             <VStack gap="$200">
                 <Field.Root render={<VStack gap="$100" />}>
-                    <Field.Label className="input-label">핸드폰 번호</Field.Label>
+                    <Field.VLabel className="input-label" htmlFor="auth-phone">
+                        핸드폰 번호
+                        <Select.Root defaultValue={codes['+82']} size="lg">
+                            <Group attached>
+                                <Select.Trigger>
+                                    <Select.Value />
+                                    <Select.TriggerIcon />
+                                </Select.Trigger>
 
-                    <Select.Root defaultValue={codes['+82']} size="lg">
-                        <Group attached>
-                            <Select.Trigger>
-                                <Select.Value />
-                                <Select.TriggerIcon />
-                            </Select.Trigger>
+                                <Select.Content>
+                                    {Object.entries(codes).map(([value, label]) => (
+                                        <Select.Item key={value} value={value}>
+                                            {label}
+                                            <Select.ItemIndicator />
+                                        </Select.Item>
+                                    ))}
+                                </Select.Content>
 
-                            <Select.Content>
-                                {Object.entries(codes).map(([value, label]) => (
-                                    <Select.Item key={value} value={value}>
-                                        {label}
-                                        <Select.ItemIndicator />
-                                    </Select.Item>
-                                ))}
-                            </Select.Content>
+                                <TextInput
+                                    style={{ flex: 1, width: '100%' }}
+                                    id="auth-phone"
+                                    type="tel"
+                                    value={phoneNumber}
+                                    onChange={handleChange}
+                                    required
+                                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                    size="lg"
+                                />
 
-                            <TextInput
-                                style={{ flex: 1, width: '100%' }}
-                                id="auth-phone"
-                                type="tel"
-                                value={phoneNumber}
-                                onChange={handleChange}
-                                required
-                                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                size="lg"
-                            />
-
-                            <Button type="button" size="lg" disabled={!regex.test(phoneNumber)}>
-                                인증번호 받기
-                            </Button>
-                        </Group>
-                    </Select.Root>
+                                <Button type="button" size="lg" disabled={!regex.test(phoneNumber)}>
+                                    인증번호 받기
+                                </Button>
+                            </Group>
+                        </Select.Root>
+                    </Field.VLabel>
 
                     <Field.Error match="valueMissing">핸드폰 번호를 입력해주세요.</Field.Error>
                     <Field.Error match="patternMismatch">
@@ -77,8 +78,10 @@ export default function AuthenticationForm() {
                 </Field.Root>
 
                 <Field.Root render={<VStack gap="$100" />}>
-                    <Field.Label className="input-label">인증번호</Field.Label>
-                    <TextInput id="auth-verification-code" size="lg" required />
+                    <Field.VLabel className="input-label">
+                        인증번호
+                        <TextInput id="auth-verification-code" size="lg" required />
+                    </Field.VLabel>
                     <Field.Error match="valueMissing">인증번호를 입력해주세요.</Field.Error>
                 </Field.Root>
             </VStack>

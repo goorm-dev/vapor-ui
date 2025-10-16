@@ -135,24 +135,14 @@ export default function FilterForm() {
                                     handleRadioChange('view', value as string)
                                 }
                             >
-                                <HStack
-                                    render={<Field.Label />}
-                                    gap="$100"
-                                    alignItems="center"
-                                    className="radio-label"
-                                >
+                                <Field.HLabel className="radio-label">
                                     <Radio.Root id="filter-recent" value="recent" />
                                     Recent
-                                </HStack>
-                                <HStack
-                                    render={<Field.Label />}
-                                    gap="$100"
-                                    alignItems="center"
-                                    className="radio-label"
-                                >
+                                </Field.HLabel>
+                                <Field.HLabel className="radio-label">
                                     <Radio.Root id="filter-popular" value="popular" />
                                     Most Popular
-                                </HStack>
+                                </Field.HLabel>
                             </RadioGroup.Root>
                         </Field.Root>
                     </Collapsible.Panel>
@@ -170,65 +160,79 @@ export default function FilterForm() {
                         <Field.Root
                             render={<HStack alignItems="center" gap="$100" marginTop="$150" />}
                         >
-                            <Checkbox.Root
-                                id="filter-feedback"
-                                checked={getFieldValues('sort').feedback}
-                                onCheckedChange={handleCheckboxChange('sort', 'feedback')}
-                            />
-                            <Field.Label className="checkbox-label">Feedback</Field.Label>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-feedback"
+                                    checked={getFieldValues('sort').feedback}
+                                    onCheckedChange={handleCheckboxChange('sort', 'feedback')}
+                                />
+                                Feedback
+                            </Field.HLabel>
                         </Field.Root>
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-buttons"
-                                checked={getFieldValues('sort').buttons}
-                                onCheckedChange={handleCheckboxChange('sort', 'buttons')}
-                            />
-                            <Field.Label className="checkbox-label">Buttons</Field.Label>
-                        </Field.Root>
-
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-data-display"
-                                checked={getFieldValues('sort')['data-display']}
-                                onCheckedChange={handleCheckboxChange('sort', 'data-display')}
-                            />
-                            <Field.Label className="checkbox-label">Data Display</Field.Label>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-buttons"
+                                    checked={getFieldValues('sort').buttons}
+                                    onCheckedChange={handleCheckboxChange('sort', 'buttons')}
+                                />
+                                Buttons
+                            </Field.HLabel>
                         </Field.Root>
 
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-overlay"
-                                checked={getFieldValues('sort').overlay}
-                                onCheckedChange={handleCheckboxChange('sort', 'overlay')}
-                            />
-                            <Field.Label className="checkbox-label">Overlay</Field.Label>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-data-display"
+                                    checked={getFieldValues('sort')['data-display']}
+                                    onCheckedChange={handleCheckboxChange('sort', 'data-display')}
+                                />
+                                Data Display
+                            </Field.HLabel>
                         </Field.Root>
 
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-inputs"
-                                checked={getFieldValues('sort').inputs}
-                                onCheckedChange={handleCheckboxChange('sort', 'inputs')}
-                            />
-                            <Field.Label className="checkbox-label">Inputs</Field.Label>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-overlay"
+                                    checked={getFieldValues('sort').overlay}
+                                    onCheckedChange={handleCheckboxChange('sort', 'overlay')}
+                                />
+                                Overlay
+                            </Field.HLabel>
                         </Field.Root>
 
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-navigation"
-                                checked={getFieldValues('sort').navigation}
-                                onCheckedChange={handleCheckboxChange('sort', 'navigation')}
-                            />
-                            <Field.Label className="checkbox-label">Navigation</Field.Label>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-inputs"
+                                    checked={getFieldValues('sort').inputs}
+                                    onCheckedChange={handleCheckboxChange('sort', 'inputs')}
+                                />
+                                Inputs
+                            </Field.HLabel>
                         </Field.Root>
 
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-utils"
-                                checked={getFieldValues('sort').utils}
-                                onCheckedChange={handleCheckboxChange('sort', 'utils')}
-                            />
-                            <Field.Label className="checkbox-label">Utils</Field.Label>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-navigation"
+                                    checked={getFieldValues('sort').navigation}
+                                    onCheckedChange={handleCheckboxChange('sort', 'navigation')}
+                                />
+                                Navigation
+                            </Field.HLabel>
+                        </Field.Root>
+
+                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-utils"
+                                    checked={getFieldValues('sort').utils}
+                                    onCheckedChange={handleCheckboxChange('sort', 'utils')}
+                                />
+                                Utils
+                            </Field.HLabel>
                         </Field.Root>
                     </Collapsible.Panel>
                 </Collapsible.Root>
@@ -240,41 +244,41 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root
-                            render={<HStack alignItems="center" gap="$100" marginTop="$150" />}
-                        >
-                            <Checkbox.Root
-                                id="filter-goorm-dev/vapor-core"
-                                checked={getFieldValues('packs')['goorm-dev/vapor-core']}
-                                onCheckedChange={handleCheckboxChange(
-                                    'packs',
-                                    'goorm-dev/vapor-core',
-                                )}
-                            />
-                            <Field.Label className="checkbox-label">
+                        <Field.Root render={<HStack marginTop="$150" />}>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-goorm-dev/vapor-core"
+                                    checked={getFieldValues('packs')['goorm-dev/vapor-core']}
+                                    onCheckedChange={handleCheckboxChange(
+                                        'packs',
+                                        'goorm-dev/vapor-core',
+                                    )}
+                                />
                                 goorm-dev/vapor-core
-                            </Field.Label>
+                            </Field.HLabel>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-goorm-dev/vapor-component"
-                                checked={getFieldValues('packs')['goorm-dev/vapor-component']}
-                                onCheckedChange={handleCheckboxChange(
-                                    'packs',
-                                    'goorm-dev/vapor-component',
-                                )}
-                            />
-                            <Field.Label className="checkbox-label">
+                        <Field.Root>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-goorm-dev/vapor-component"
+                                    checked={getFieldValues('packs')['goorm-dev/vapor-component']}
+                                    onCheckedChange={handleCheckboxChange(
+                                        'packs',
+                                        'goorm-dev/vapor-component',
+                                    )}
+                                />
                                 goorm-dev/vapor-component
-                            </Field.Label>
+                            </Field.HLabel>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-vapor-ui/core"
-                                checked={getFieldValues('packs')['vapor-ui/core']}
-                                onCheckedChange={handleCheckboxChange('packs', 'vapor-ui/core')}
-                            />
-                            <Field.Label className="checkbox-label">vapor-ui/core</Field.Label>
+                        <Field.Root>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-vapor-ui/core"
+                                    checked={getFieldValues('packs')['vapor-ui/core']}
+                                    onCheckedChange={handleCheckboxChange('packs', 'vapor-ui/core')}
+                                />
+                                vapor-ui/core
+                            </Field.HLabel>
                         </Field.Root>
                     </Collapsible.Panel>
                 </Collapsible.Root>
@@ -286,31 +290,35 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root
-                            render={<HStack alignItems="center" gap="$100" marginTop="$150" />}
-                        >
-                            <Checkbox.Root
-                                id="filter-active"
-                                checked={getFieldValues('status').active}
-                                onCheckedChange={handleCheckboxChange('status', 'active')}
-                            />
-                            <Field.Label className="checkbox-label">Active</Field.Label>
+                        <Field.Root render={<HStack marginTop="$150" />}>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-active"
+                                    checked={getFieldValues('status').active}
+                                    onCheckedChange={handleCheckboxChange('status', 'active')}
+                                />
+                                Active
+                            </Field.HLabel>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-inactive"
-                                checked={getFieldValues('status').inactive}
-                                onCheckedChange={handleCheckboxChange('status', 'inactive')}
-                            />
-                            <Field.Label className="checkbox-label">Inactive</Field.Label>
+                        <Field.Root>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-inactive"
+                                    checked={getFieldValues('status').inactive}
+                                    onCheckedChange={handleCheckboxChange('status', 'inactive')}
+                                />
+                                Inactive
+                            </Field.HLabel>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-draft"
-                                checked={getFieldValues('status').draft}
-                                onCheckedChange={handleCheckboxChange('status', 'draft')}
-                            />
-                            <Field.Label className="checkbox-label">Draft</Field.Label>
+                        <Field.Root>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-draft"
+                                    checked={getFieldValues('status').draft}
+                                    onCheckedChange={handleCheckboxChange('status', 'draft')}
+                                />
+                                Draft
+                            </Field.HLabel>
                         </Field.Root>
                     </Collapsible.Panel>
                 </Collapsible.Root>
@@ -325,28 +333,34 @@ export default function FilterForm() {
                         <Field.Root
                             render={<HStack alignItems="center" gap="$100" marginTop="$150" />}
                         >
-                            <Checkbox.Root
-                                id="filter-ui"
-                                checked={getFieldValues('tag').ui}
-                                onCheckedChange={handleCheckboxChange('tag', 'ui')}
-                            />
-                            <Field.Label className="checkbox-label">UI</Field.Label>
+                            <Field.HLabel>
+                                <Checkbox.Root
+                                    id="filter-ui"
+                                    checked={getFieldValues('tag').ui}
+                                    onCheckedChange={handleCheckboxChange('tag', 'ui')}
+                                />
+                                UI
+                            </Field.HLabel>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-open-source"
-                                checked={getFieldValues('tag')['open-source']}
-                                onCheckedChange={handleCheckboxChange('tag', 'open-source')}
-                            />
-                            <Field.Label className="checkbox-label">Open Source</Field.Label>
+                        <Field.Root>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-open-source"
+                                    checked={getFieldValues('tag')['open-source']}
+                                    onCheckedChange={handleCheckboxChange('tag', 'open-source')}
+                                />
+                                Open Source
+                            </Field.HLabel>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Checkbox.Root
-                                id="filter-performance"
-                                checked={getFieldValues('tag').performance}
-                                onCheckedChange={handleCheckboxChange('tag', 'performance')}
-                            />
-                            <Field.Label className="checkbox-label">Performance</Field.Label>
+                        <Field.Root>
+                            <Field.HLabel className="checkbox-label">
+                                <Checkbox.Root
+                                    id="filter-performance"
+                                    checked={getFieldValues('tag').performance}
+                                    onCheckedChange={handleCheckboxChange('tag', 'performance')}
+                                />
+                                Performance
+                            </Field.HLabel>
                         </Field.Root>
                     </Collapsible.Panel>
                 </Collapsible.Root>
