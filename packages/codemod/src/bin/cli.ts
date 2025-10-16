@@ -21,8 +21,8 @@ function checkGitStatus(force: boolean) {
     try {
         clean = isGitClean.sync();
         errorMessage = 'Git directory is not clean';
-    } catch (err: any) {
-        if (err && err.stderr && err.stderr.indexOf('Not a git repository') >= 0) {
+    } catch (err: unknown) {
+        if (err && typeof err === 'object' && 'stderr' in err && typeof err.stderr === 'string' && err.stderr.indexOf('Not a git repository') >= 0) {
             clean = true;
         }
     }
@@ -55,7 +55,7 @@ function runTransform({
     transformer,
 }: {
     files: string[];
-    flags: any;
+    flags: { dry?: boolean; jscodeshift?: string };
     parser: string;
     transformer: string;
 }) {

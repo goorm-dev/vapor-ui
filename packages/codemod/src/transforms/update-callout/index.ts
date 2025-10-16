@@ -1,4 +1,4 @@
-import { type API, FileInfo, Transform } from 'jscodeshift';
+import type { API, FileInfo, Transform } from 'jscodeshift';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
@@ -92,8 +92,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 // Normal Alert case - transform children structure
                 const children = element.children;
                 if (children && children.length > 0) {
-                    const newChildren = [];
-                    let textContent: any[] = [];
+                    const newChildren: (typeof children)[number][] = [];
+                    const textContent: (typeof children)[number][] = [];
 
                     // Separate icon and text content
                     children.forEach((child) => {
