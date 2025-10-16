@@ -22,7 +22,13 @@ function checkGitStatus(force: boolean) {
         clean = isGitClean.sync();
         errorMessage = 'Git directory is not clean';
     } catch (err: unknown) {
-        if (err && typeof err === 'object' && 'stderr' in err && typeof err.stderr === 'string' && err.stderr.indexOf('Not a git repository') >= 0) {
+        if (
+            err &&
+            typeof err === 'object' &&
+            'stderr' in err &&
+            typeof err.stderr === 'string' &&
+            err.stderr.indexOf('Not a git repository') >= 0
+        ) {
             clean = true;
         }
     }
