@@ -5,14 +5,16 @@ Automated code migration tools for Vapor UI using jscodeshift. This package help
 ## Usage
 
 ```bash
-npx @vapor-ui/codemod <transform-name> <path> <...options>
+npx @vapor-ui/codemod <transform-name> <path> [...options]
 ```
 
 ### Options
 
--   `--dry` - Dry run (no changes, print only)
--   `--parser <parser>` - Parser to use (default: tsx)
--   `--extensions <ext>` - File extensions to transform (default: js,jsx,ts,tsx)
+-   `--force` Bypass Git safety checks and forcibly run codemods
+-   `--parser` Specify the parser to be used. One of: tsx, babel
+-   `--dry` (Advanced) Dry run. Changes are not written to files.
+-   `--jscodeshift` (Advanced) Pass options directly to jscodeshift.
+    [See more options](https://jscodeshift.com/run/cli)
 
 ### Examples
 
@@ -25,13 +27,18 @@ npx @vapor-ui/codemod update-callout src/ --dry
 
 # Transform specific file types
 npx @vapor-ui/codemod update-callout src/ --extensions tsx,ts
+
+# Pass options directly to jscodeshift (e.g., for verbose output)
+npx @vapor-ui/codemod update-callout src/ --jscodeshift="--verbose=2"
 ```
 
 ## Available Transforms
 
+| You can run the command without specifying a transform to be prompted with an interactive list. This allows you to see all available options and choose the one you need.
+
 ### update-callout
 
-Migrates `Alert` component to `Callout` component.
+Converts `Alert` component to `Callout` component.
 
 ```bash
 npx @vapor-ui/codemod update-callout path
