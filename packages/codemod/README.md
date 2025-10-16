@@ -36,14 +36,6 @@ npx @vapor-ui/codemod update-callout src/ --jscodeshift="--verbose=2"
 
 | You can run the command without specifying a transform to be prompted with an interactive list. This allows you to see all available options and choose the one you need.
 
-### update-callout
-
-Converts `Alert` component to `Callout` component.
-
-```bash
-npx @vapor-ui/codemod update-callout path
-```
-
 ### For internal
 
 Converts `@goorm-dev/vapor-icons` to `@vapor-ui/icons` component.
