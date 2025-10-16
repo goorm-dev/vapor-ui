@@ -105,6 +105,10 @@ const TRANSFORMER_INQUIRER_CHOICES = [
         name: 'update-callout: Update Callout component usage to new API',
         value: 'update-callout',
     },
+    {
+        name: 'internal/icons: Migrate @goorm-dev/vapor-icons to @vapor-ui/icons',
+        value: 'internal/icons/migrate-icons-import',
+    },
 ];
 const run = async () => {
     const cli = meow(
