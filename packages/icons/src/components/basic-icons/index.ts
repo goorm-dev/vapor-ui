@@ -194,7 +194,7 @@ export { default as SchoolIcon } from './SchoolIcon';
 export { default as ParentsIcon } from './ParentsIcon';
 export { default as AiSmartieIcon } from './AiSmartieIcon';
 export { default as DashboardIcon } from './DashboardIcon';
-export { default as SideNavIcon } from './SidenNavIcon';
+export { default as SideNavIcon } from './SideNavIcon';
 export { default as SlotIcon } from './SlotIcon';
 export { default as EraserIcon } from './EraserIcon';
 export { default as CakeIcon } from './CakeIcon';
