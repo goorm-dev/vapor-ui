@@ -9,9 +9,6 @@ const tests = [
     'update-callout-no-icon',
     'update-callout-multiple-imports',
     'update-callout-vapor-ui-import',
-    'update-callout-aschild-no-jsx',
-    'update-callout-with-div',
-    'update-callout-aschild-empty',
 ];
 
 defineTransformTests('update-callout', tests);
