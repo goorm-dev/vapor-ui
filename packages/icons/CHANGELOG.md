@@ -1,5 +1,9 @@
 # @vapor-ui/icons
 
+## 1.0.0-beta.2
+
+- Update missing icons
+
 ## 1.0.0-beta.1
 
 ### Minor Changes
