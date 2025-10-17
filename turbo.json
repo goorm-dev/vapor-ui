@@ -12,7 +12,7 @@
         },
         "test": {
             "outputs": [],
-            "dependsOn": ["^build"]
+            "dependsOn": ["@vapor-ui/icons#build", "@vapor-ui/color-generator#build"]
         },
         "format": {
             "outputs": [],
