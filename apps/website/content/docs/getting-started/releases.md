@@ -3,6 +3,31 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 0.7.0
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+- 6c02d6f: unreflected content revisions
+- b581b9f: add `Form` component
+- 7928a67: add subcomponent props to `Content`
+
+#### Patch Changes
+
+- 3819233: Fix checkbox borderRadius sync error
+- 707f705: feat: update color tokens
+- f0f643b: feat: Remove Font Loading from CSS Build
+- 43cfefb: feat: add font banner
+- d68304a: fix(text-input): add component layer
+- Updated dependencies [8217749]
+- Updated dependencies [402284e]
+- Updated dependencies [fd4acaa]
+    - @vapor-ui/icons@0.5.0
+
+---
+
 ## 0.6.0
 
 ### @vapor-ui/core
@@ -68,6 +93,31 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - Updated dependencies [c4d0e8e]
 - Updated dependencies [a156f82]
     - @vapor-ui/icons@0.3.0
+
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- 8217749: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- 402284e: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `DocktoBottomOutlineIcon`, `SideNavOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- fd4acaa: Add new icons from Figma
+
+    **New Basic Icons:** `SideNavIcon`, `DocktoBottomIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
 
 ---
 
@@ -198,6 +248,16 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ## 0.1.0
 
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
+
+#### Patch Changes
+
+- 707f705: feat: update color tokens
+
 ### @vapor-ui/core
 
 #### Minor Changes
@@ -209,6 +269,19 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - Updated dependencies [68b001c]
     - @vapor-ui/hooks@0.1.0
     - @vapor-ui/icons@0.1.0
+
+### @vapor-ui/css-generator
+
+#### Minor Changes
+
+- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
+
+#### Patch Changes
+
+- 707f705: feat: update color tokens
+- Updated dependencies [caf13a1]
+- Updated dependencies [707f705]
+    - @vapor-ui/color-generator@0.1.0
 
 ### @vapor-ui/hooks
 
