@@ -1,7 +1,5 @@
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 
-import type { RadiusKey } from '../generators/radius';
-
 export type ColorThemeConfig = SemanticMappingConfig;
 
 export interface CompleteCSSConfig {
@@ -10,15 +8,11 @@ export interface CompleteCSSConfig {
     radius: RadiusKey;
 }
 
-export interface ThemeClassNames {
-    light: string;
-    dark: string;
-}
-
 export interface CSSGeneratorOptions {
-    classNames?: ThemeClassNames;
     prefix?: string;
     format?: 'compact' | 'readable';
 }
+
+export type RadiusKey = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 export type ThemeVariant = 'light' | 'dark';

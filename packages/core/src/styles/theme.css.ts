@@ -18,8 +18,6 @@ import {
 } from './tokens';
 import { vars } from './vars.css';
 
-export const DARK_CLASS_NAME = 'vapor-dark-theme';
-
 const THEME_TOKENS = {
     color: {
         ...LIGHT_BASIC_COLORS,
@@ -45,9 +43,12 @@ const DARK_THEME_TOKENS = {
     ...DARK_SEMANTIC_COLORS,
 };
 
-createGlobalTheme(':root', vars, { '@layer': layers.theme, ...THEME_TOKENS });
+createGlobalTheme(`:root, [data-vapor-theme='light']`, vars, {
+    '@layer': layers.theme,
+    ...THEME_TOKENS,
+});
 
-createGlobalTheme(`:root.${DARK_CLASS_NAME}`, vars.color, {
+createGlobalTheme(`[data-vapor-theme='dark']`, vars.color, {
     '@layer': layers.theme,
     ...DARK_THEME_TOKENS,
 });

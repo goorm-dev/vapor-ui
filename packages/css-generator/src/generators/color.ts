@@ -9,11 +9,6 @@ import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 type BrandColorPalette = ReturnType<typeof generateBrandColorPalette>;
 type SemanticTokens = ReturnType<typeof getSemanticDependentTokens>;
 
-const DEFAULT_CLASS_NAMES = {
-    light: 'vapor-light-theme',
-    dark: 'vapor-dark-theme',
-} as const;
-
 interface ColorCSSGeneratorContext {
     brandPalette: BrandColorPalette;
     semanticTokens: SemanticTokens;
@@ -62,7 +57,8 @@ const generateRootThemeCSS = (
         ...generateSemanticVariables(componentData, prefix),
     ];
 
-    const selector = variant === 'light' ? ':root' : `:root.${options.classNames[variant]}`;
+    const selector =
+        variant === 'light' ? ':root, [data-vapor-theme=light]' : '[data-vapor-theme=dark]';
 
     return {
         selector,
@@ -75,7 +71,6 @@ export const generateColorCSS = (
     options: CSSGeneratorOptions = {},
 ): string => {
     const resolvedOptions: Required<CSSGeneratorOptions> = {
-        classNames: DEFAULT_CLASS_NAMES,
         prefix: DEFAULT_PREFIX,
         format: 'readable',
         ...options,

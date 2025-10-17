@@ -8,10 +8,6 @@ interface CompleteCSSOptions extends CSSGeneratorOptions {
 }
 
 const DEFAULT_OPTIONS: Required<CompleteCSSOptions> = {
-    classNames: {
-        light: 'vapor-light-theme',
-        dark: 'vapor-dark-theme',
-    },
     prefix: 'vapor',
     format: 'readable',
     includeColorComments: false,
@@ -51,7 +47,6 @@ export const generateCompleteCSS = (
 
     // Generate individual CSS sections
     const colorCSS = generateColorCSS(config.colors, {
-        classNames: resolvedOptions.classNames,
         prefix: resolvedOptions.prefix,
         format: resolvedOptions.format,
     });
@@ -107,11 +102,11 @@ const mergeRootVariables = (
 
     if (format === 'compact') {
         const props = allProperties.join(';');
-        return `:root{${props}}`;
+        return `:root,[data-vapor-theme=light]{${props}}`;
     }
 
     const indentedProperties = allProperties.map((prop) => `    ${prop};`).join('\n');
-    return `:root {\n${indentedProperties}\n}`;
+    return `:root, [data-vapor-theme=light] {\n${indentedProperties}\n}`;
 };
 
 const extractCSSProperties = (css: string): string[] => {
@@ -135,12 +130,12 @@ const extractThemeCSS = (fullCSS: string): { lightTheme: string; darkTheme?: str
     let lightTheme = '';
     let darkTheme = '';
 
-    const rootMatch = trimmedCSS.match(/:root\s*\{[^}]*\}/);
+    const rootMatch = trimmedCSS.match(/:root,\s*\[data-vapor-theme=light\]\s*\{[^}]*\}/);
     if (rootMatch) {
         lightTheme = rootMatch[0];
     }
 
-    const darkThemeMatch = trimmedCSS.match(/:root\.[^{]*dark[^{]*\{[^}]*\}/);
+    const darkThemeMatch = trimmedCSS.match(/\[data-vapor-theme=dark\]\s*\{[^}]*\}/);
     if (darkThemeMatch) {
         darkTheme = darkThemeMatch[0];
     }

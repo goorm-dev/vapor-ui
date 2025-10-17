@@ -1,0 +1,186 @@
+---
+title: Theming
+description: Vapor UI의 테마 시스템을 설정하고 커스터마이징하는 방법을 알아보세요.
+---
+
+# Theming
+
+Vapor UI는 라이트 모드, 다크 모드, 그리고 시스템 설정에 동기화되는 테마를 손쉽게 지원합니다. 이 가이드를 통해 `ThemeProvider`를 설정하고 `useTheme` 훅을 사용하여 테마를 관리하는 방법을 알아보세요.
+
+## 시작하기
+
+### 1. 패키지 설치
+
+먼저, Vapor UI 핵심 패키지를 설치해야 합니다.
+
+```package-install
+npm install @vapor-ui/core@latest
+```
+
+### 2. `ThemeProvider` 설정
+
+애플리케이션의 최상위(`root`)를 `ThemeProvider`로 감싸고, 필요한 스타일을 import 합니다.
+
+```tsx title="app/layout.tsx"
+import { ThemeProvider } from '@vapor-ui/core';
+
+import '@vapor-ui/core/dist/styles.css';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="ko" suppressHydrationWarning>
+            <body>
+                <ThemeProvider
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
+                </ThemeProvider>
+            </body>
+        </html>
+    );
+}
+```
+
+Next.js와 같은 서버 사이드 렌더링(SSR) 환경에서는 `suppressHydrationWarning`을 `<html>` 태그에 추가하는 것을 권장합니다. 이는 서버에서 렌더링한 테마와 클라이언트의 테마가 달라 발생할 수 있는 하이드레이션 경고를 방지해 줍니다.
+
+## 사용법
+
+`useTheme` 훅을 사용하여 현재 테마를 확인하고 변경할 수 있습니다.
+
+```tsx title="components/theme-toggle.tsx"
+'use client';
+
+import { Button } from '@vapor-ui/components/ui/button';
+import { useTheme } from '@vapor-ui/core';
+
+export function ThemeToggle() {
+    const { theme, setTheme, mounted } = useTheme();
+
+    // SSR 환경에서 hydration 완료 전까지 로딩 상태 표시
+    if (!mounted) {
+        return <Button variant="ghost" disabled>Loading...</Button>;
+    }
+
+    return (
+        <Button 
+            variant="ghost" 
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+        >
+            {theme === 'light' ? 'Dark' : 'Light'}
+        </Button>
+    );
+}
+```
+
+## `useTheme` Hook
+
+`useTheme` 훅은 다음과 같은 유용한 값들을 반환합니다.
+
+| Key             | Type                      | Description                                                                                            |
+| :-------------- | :------------------------ | :----------------------------------------------------------------------------------------------------- |
+| `theme`         | `string`                  | 현재 설정된 테마 (`'light'`, `'dark'`, 또는 `'system'`). SSR 환경에서 `mounted`가 `false`일 때는 `undefined`. |
+| `setTheme`      | `(theme: string) => void` | 테마를 변경하는 함수.                                                                                  |
+| `themes`        | `string[]`                | 사용 가능한 테마 목록.                                                                                 |
+| `resolvedTheme` | `string`                  | 실제로 적용된 테마 (`'light'` 또는 `'dark'`). `theme`이 `'system'`일 때 현재 시스템 테마를 반영합니다. |
+| `systemTheme`   | `'light' \| 'dark'`       | 현재 사용자의 시스템 테마.                                                                             |
+| `resetTheme`    | `() => void`              | 테마 설정을 기본값으로 초기화하고 `localStorage`에서 저장된 값을 제거합니다.                           |
+| `mounted`       | `boolean`                 | ThemeProvider가 클라이언트에서 마운트되었는지 여부. SSR 환경에서 hydration 이슈 방지를 위해 사용.     |
+
+## `ThemeProvider` Props
+
+`ThemeProvider`에 전달할 수 있는 props는 다음과 같습니다.
+
+| Prop                        | Type                           | Default            | Description                                                                                              |
+| :-------------------------- | :----------------------------- | :----------------- | :------------------------------------------------------------------------------------------------------- |
+| `defaultTheme`              | `'light' \| 'dark' \| 'system'` | `'system'`         | 사용자가 테마를 직접 설정하기 전에 적용될 기본 테마.                                                     |
+| `storageKey`                | `string`                       | `'vapor-ui-theme'` | `localStorage`에 테마를 저장할 때 사용될 키.                                                             |
+| `enableSystem`              | `boolean`                      | `true`             | `true`일 경우, 시스템 테마 변경을 감지하고 동적으로 테마를 전환합니다.                                   |
+| `forcedTheme`               | `string`                       | `undefined`        | 특정 테마를 강제로 적용합니다. 이 값이 설정되면 다른 모든 테마 관련 설정을 무시합니다.                   |
+| `disableTransitionOnChange` | `boolean`                      | `false`            | `true`일 경우, 테마 변경 시 발생하는 CSS 트랜지션을 비활성화합니다.                                      |
+| `enableColorScheme`         | `boolean`                      | `true`             | `true`일 경우, `color-scheme` CSS 속성을 자동으로 설정하여 브라우저 UI(스크롤바 등)의 테마를 조정합니다. |
+| `nonce`                     | `string`                       | `undefined`        | CSP(Content Security Policy) nonce 값. 보안 정책이 적용된 환경에서 사용.                               |
+
+## 로컬 테마 스코프 (ThemeScope)
+
+`ThemeScope` 컴포넌트를 사용하여 특정 영역에만 다른 테마를 적용할 수 있습니다.
+
+```tsx title="components/theme-scope-example.tsx"
+import { ThemeScope } from '@vapor-ui/core';
+import { Card } from '@vapor-ui/components/ui/card';
+
+export function ThemeScopeExample() {
+    return (
+        <div>
+            <Card>전역 테마가 적용된 카드</Card>
+            
+            <ThemeScope forcedTheme="dark">
+                <Card>다크 테마가 강제 적용된 카드</Card>
+            </ThemeScope>
+            
+            <ThemeScope forcedTheme="light">
+                <Card>라이트 테마가 강제 적용된 카드</Card>
+            </ThemeScope>
+        </div>
+    );
+}
+```
+
+### `ThemeScope` Props
+
+| Prop          | Type                | Description                                    |
+| :------------ | :------------------ | :--------------------------------------------- |
+| `forcedTheme` | `'light' \| 'dark'` | 해당 영역에 강제로 적용할 테마.                |
+| `children`    | `React.ReactNode`   | 테마가 적용될 자식 컴포넌트들.                 |
+| `style`       | `CSSProperties`     | 추가 스타일. `colorScheme`는 자동으로 설정됨.  |
+
+
+## 고급 사용법
+
+### SSR 및 Hydration 처리
+
+서버 사이드 렌더링(SSR) 환경에서는 서버와 클라이언트 간 테마 정보 차이로 인한 hydration 오류가 발생할 수 있습니다. Vapor UI는 이를 자동으로 처리합니다:
+
+1. **`mounted` 상태**: 클라이언트 마운트 완료 여부를 추적
+2. **조건부 렌더링**: `mounted`가 `false`일 때는 안전한 기본값 사용
+3. **자동 동기화**: 마운트 완료 후 실제 테마 값으로 업데이트
+
+### 시스템 테마 자동 감지
+
+`defaultTheme="system"`으로 설정하면 사용자의 운영체제 테마 설정을 자동으로 감지합니다:
+
+- **macOS**: 시스템 환경설정 > 일반 > 외관 모드
+- **Windows**: 설정 > 개인 설정 > 색
+- **Linux**: 데스크톱 환경의 테마 설정
+
+내부적으로 `prefers-color-scheme` CSS 미디어 쿼리를 사용하여 실시간으로 변경사항을 감지하고 자동으로 테마를 전환합니다.
+
+### 테마 적용 우선순위
+
+테마는 다음 순서대로 적용됩니다. 우선순위가 높은 설정이 다른 설정을 덮어씁니다.
+
+1.  **`forcedTheme`**: `ThemeProvider`에 설정된 강제 테마 (가장 높은 우선순위)
+2.  **`localStorage`**: `setTheme` 함수를 통해 사용자가 직접 설정한 테마
+3.  **`defaultTheme`**: `ThemeProvider`에 설정된 기본 테마
+4.  **시스템 테마**: `defaultTheme`이 `'system'`으로 설정되었을 때의 시스템 환경 설정
+
+### 다중 탭 동기화
+
+Vapor UI는 여러 브라우저 탭 간 테마 설정을 자동으로 동기화합니다. 한 탭에서 테마를 변경하면 같은 도메인의 다른 탭들도 자동으로 업데이트됩니다.
+
+### TypeScript 지원
+
+```tsx
+import type { ThemeConfig, UseThemeReturn, ThemeScopeProps } from '@vapor-ui/core';
+
+const config: ThemeConfig = {
+    defaultTheme: 'system',
+    enableSystem: true,
+};
+
+const MyComponent = () => {
+    const themeData: UseThemeReturn = useTheme();
+    // ...
+};
+```

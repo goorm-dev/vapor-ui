@@ -40,10 +40,6 @@ describe('CSS Generator Snapshots', () => {
         const result = generateColorCSS(MOCK_COLOR_CONFIG, {
             prefix: 'custom',
             format: 'compact',
-            classNames: {
-                light: 'light-mode',
-                dark: 'dark-mode',
-            },
         });
         expect(result).toMatchSnapshot();
     });
