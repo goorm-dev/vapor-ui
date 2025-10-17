@@ -45,18 +45,12 @@ jobs:
 
             - name: Install Playwright Browsers
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
-            #   uses: ./.github/composite/browser-install
-            #   with:
-            #       working-directory: packages/core
 
             - name: Build Icons
               run: pnpm build --filter=@vapor-ui/icons
 
-            - name: Build Storybook
-              run: pnpm build-storybook
-
             - name: Run Playwright tests
-              run: pnpm core exec playwright test --project="${{ matrix.shard.name }}"
+              run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
@@ -65,12 +59,6 @@ jobs:
                   name: blob-report-${{ matrix.shard.project }}
                   path: packages/core/blob-report
                   retention-days: 1
-
-            # - uses: actions/upload-artifact@v4
-            #   if: "${{ !cancelled() }}"
-            #   with:
-            #       name: test-results
-            #       path: ./packages/core/__tests__/report/
 
     merge-reports:
         if: ${{ !cancelled() }}
@@ -92,23 +80,6 @@ jobs:
             - name: Merge into HTML Report
               run: pnpm core exec playwright merge-reports -c ./playwright.merge.ts ../../all-blob-reports
 
-            - name: Upload HTML report
-              uses: actions/upload-artifact@v4
-              with:
-                  name: html-report--attempt-${{ github.run_attempt }}
-                  path: ./packages/core/__tests__/report/
-                  retention-days: 14
-
-    deploy-report:
-        needs: [regressions, merge-reports]
-        if: always()
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/download-artifact@v4
-              with:
-                  name: html-report--attempt-${{ github.run_attempt }}
-                  path: ./report/
-
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
@@ -124,13 +95,13 @@ jobs:
             - name: Upload Report to S3
               run: |
                   aws s3 rm s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
-                  aws s3 cp './report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
+                  aws s3 cp './packages/core/__tests__/report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
 
             - name: Post Test Result
               id: playwright-summary
               uses: daun/playwright-report-summary@v3
               with:
-                  report-file: ./report/index.json
+                  report-file: ./packages/core/__tests__/report/index.json
                   report-url: http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html
                   create-comment: false
 

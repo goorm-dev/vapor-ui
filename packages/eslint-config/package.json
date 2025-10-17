@@ -17,7 +17,7 @@
         "eslint-plugin-jsx-a11y": "^6.10.2",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^5.2.0",
-        "eslint-plugin-storybook": "^0.11.3",
+        "eslint-plugin-storybook": "^9.1.9",
         "globals": "^16.3.0",
         "typescript-eslint": "^8.35.1"
     },
@@ -31,6 +31,7 @@
         "./react-package": "./react-package.js",
         "./vanilla-extract": "./vanilla-extract.js",
         "./typescript": "./typescript.js",
-        "./turbo": "./turbo.js"
+        "./turbo": "./turbo.js",
+        "./storybook": "./storybook.js"
     }
 }
