@@ -20,7 +20,7 @@ export default function FieldRequired() {
             </Field.Root>
 
             {/* Optional Field */}
-            <Field.Root name="optional-field" className="v-space-y-2">
+            <Field.Root name="optional-field">
                 <Field.VLabel>
                     <span>
                         선택 입력 필드{' '}

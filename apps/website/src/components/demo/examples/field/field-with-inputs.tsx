@@ -32,12 +32,14 @@ export default function FieldWithInputs() {
             </Field.Root>
 
             {/* Select with Field */}
-            <Field.Root name="country" className="v-space-y-2">
+            <Field.Root name="country">
                 <Select.Root placeholder="국가를 선택하세요">
-                    <Field.HLabel>
+                    <Field.VLabel htmlFor="country-select">
                         국가
-                        <Select.Trigger />
-                    </Field.HLabel>
+                        <Select.Trigger id="country-select">
+                            <Select.Value />
+                        </Select.Trigger>
+                    </Field.VLabel>
                     <Select.Portal>
                         <Select.Positioner>
                             <Select.Content>
