@@ -86,7 +86,6 @@ export const TestBed: Story = {
                             멘토님 강연 능력
                         </Field.HLabel>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>
                             <CheckCircleIcon /> 강의 평가가 완료되었습니다
                         </Field.Success>
@@ -102,7 +101,6 @@ export const TestBed: Story = {
                             멘토님 강연 능력
                         </Field.HLabel>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 강의 평가가 완료되었습니다</Field.Success>
                     </Field.Root>
                     {/* Switch Component Example */}
@@ -115,7 +113,6 @@ export const TestBed: Story = {
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
                         </Field.Description>
                         <Field.Error match>개인 정보 수신 동의가 필요합니다</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="notifications2" validationMode="onChange" {...fieldArgs}>
@@ -127,7 +124,6 @@ export const TestBed: Story = {
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
                         </Field.Description>
                         <Field.Error match>개인 정보 수신 동의가 필요합니다</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
                     </Field.Root>
 
@@ -151,7 +147,6 @@ export const TestBed: Story = {
                             기타
                         </Field.HLabel>
                         <Field.Error match>성별을 반드시 선택해주세요.</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 성별이 선택되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
@@ -163,7 +158,6 @@ export const TestBed: Story = {
                             계정 생성을 위해 유효한 이름을 입력해주세요
                         </Field.Description>
                         <Field.Error match="valueMissing">이 필드는 필수입니다.</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 올바른 이름 형식입니다</Field.Success>
                     </Field.Root>
 

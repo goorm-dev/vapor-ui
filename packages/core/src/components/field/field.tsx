@@ -101,18 +101,22 @@ Error.displayName = 'Field.Error';
  * -----------------------------------------------------------------------------------------------*/
 
 type PrimitiveSuccessProps = Omit<VComponentProps<typeof BaseField.Error>, 'match'>;
-interface FieldSuccessProps extends PrimitiveSuccessProps {}
+interface FieldSuccessProps extends PrimitiveSuccessProps {
+    match?: boolean | 'valid';
+}
 
-const Success = forwardRef<HTMLDivElement, FieldSuccessProps>(({ className, ...props }, ref) => {
-    return (
-        <BaseField.Error
-            ref={ref}
-            className={clsx(styles.success, className)}
-            {...props}
-            match="valid"
-        />
-    );
-});
+const Success = forwardRef<HTMLDivElement, FieldSuccessProps>(
+    ({ match, className, ...props }, ref) => {
+        return (
+            <BaseField.Error
+                ref={ref}
+                className={clsx(styles.success, className)}
+                {...props}
+                match={match}
+            />
+        );
+    },
+);
 Success.displayName = 'Field.Success';
 
 /* -----------------------------------------------------------------------------------------------*/
