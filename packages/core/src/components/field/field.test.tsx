@@ -3,11 +3,9 @@ import { useState } from 'react';
 import type { RenderResult } from '@testing-library/react';
 import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 import { axe } from 'vitest-axe';
 
 import { Checkbox } from '~/components/checkbox';
-import { Flex } from '~/components/flex';
 import { Radio } from '~/components/radio';
 import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
@@ -22,7 +20,8 @@ describe('Field', () => {
         it('should have no a11y violations', async () => {
             const rendered = render(
                 <Field.Root name="test-field">
-                    <Field.Label>Test Label</Field.Label>
+                    <Field.HLabel htmlFor="input">Test Label</Field.HLabel>
+                    <TextInput id="input" />
                     <Field.Description>Test Description</Field.Description>
                 </Field.Root>,
             );
@@ -34,7 +33,8 @@ describe('Field', () => {
         it('should render with proper field structure', () => {
             render(
                 <Field.Root name="test-field">
-                    <Field.Label>Test Label</Field.Label>
+                    <Field.HLabel htmlFor="input">Test Label</Field.HLabel>
+                    <TextInput id="input" />
                     <Field.Description>Test Description</Field.Description>
                 </Field.Root>,
             );
@@ -58,11 +58,22 @@ describe('Field', () => {
             expect(result).toHaveNoViolations();
         });
 
-        it('should associate field label with checkbox', async () => {
-            const label = rendered.getByText('I agree to the terms');
+        it('should render checkbox within field label', () => {
+            const rendered = render(
+                <Field.Root name="test-field">
+                    <Checkbox.Root id="checkbox" data-testid="checkbox" />
+                    <Field.HLabel htmlFor="checkbox">Test Label</Field.HLabel>
 
-            await userEvent.click(label);
-            expect(checkbox).toHaveFocus();
+                    <Field.Description>Test Description</Field.Description>
+                </Field.Root>,
+            );
+
+            const checkbox = rendered.getByTestId('checkbox');
+            const labelText = rendered.getByText('Test Label');
+
+            expect(checkbox).toBeInTheDocument();
+            expect(labelText).toBeInTheDocument();
+            expect(checkbox).not.toBeChecked();
         });
 
         it('should show success message when checkbox is checked', async () => {
@@ -74,7 +85,7 @@ describe('Field', () => {
         });
 
         it('should toggle checkbox state via field label click', async () => {
-            const label = rendered.getByText('I agree to the terms');
+            const label = rendered.getByText('agree to the terms');
 
             expect(checkbox).not.toBeChecked();
             await userEvent.click(label);
@@ -400,14 +411,13 @@ const FieldWithCheckboxTest = ({
     return (
         <form onSubmit={(e) => e.preventDefault()}>
             <Field.Root name="agreement" validationMode={validationMode} disabled={disabled}>
-                <Flex gap="$100">
-                    <Checkbox.Root required checked={isChecked} onCheckedChange={setIsChecked}>
-                        <Checkbox.Indicator>
-                            <ConfirmOutlineIcon />
-                        </Checkbox.Indicator>
-                    </Checkbox.Root>
-                    <Field.Label>I agree to the terms</Field.Label>
-                </Flex>
+                <Checkbox.Root
+                    id="checkbox"
+                    required
+                    checked={isChecked}
+                    onCheckedChange={setIsChecked}
+                />
+                <Field.HLabel htmlFor="checkbox">agree to the terms</Field.HLabel>
                 <Field.Description>
                     You must agree to the terms and conditions to continue
                 </Field.Description>
@@ -430,10 +440,8 @@ const FieldWithSwitchTest = ({
 
     return (
         <Field.Root name="notifications" validationMode={validationMode} disabled={disabled}>
-            <Flex alignItems="center" gap="$150">
-                <Switch.Root required checked={isEnabled} onCheckedChange={setIsEnabled} />
-                <Field.Label>Enable notifications</Field.Label>
-            </Flex>
+            <Switch.Root id="switch" required checked={isEnabled} onCheckedChange={setIsEnabled} />
+            <Field.HLabel htmlFor="switch">Enable notifications</Field.HLabel>
             <Field.Description>
                 Get notified about important updates and security alerts
             </Field.Description>
@@ -452,21 +460,18 @@ const FieldWithRadioGroupTest = ({
 }) => {
     return (
         <Field.Root name="gender" validationMode={validationMode} disabled={disabled}>
-            <Field.Label render={<legend />}>Select your gender</Field.Label>
+            <legend>Select your gender</legend>
             <RadioGroup.Root required>
                 <Field.Description>Please select your gender for registration</Field.Description>
-                <Flex alignItems="center" gap="$150">
-                    <Radio.Root value="male" id="male" />
-                    <Field.Label htmlFor="male">Male</Field.Label>
-                </Flex>
-                <Flex alignItems="center" gap="$150">
-                    <Radio.Root value="female" id="female" />
-                    <Field.Label htmlFor="female">Female</Field.Label>
-                </Flex>
-                <Flex alignItems="center" gap="$150">
-                    <Radio.Root value="other" id="other" />
-                    <Field.Label htmlFor="other">Other</Field.Label>
-                </Flex>
+                <Radio.Root value="male" id="male" />
+                <Field.HLabel htmlFor="male">Male</Field.HLabel>
+
+                <Radio.Root value="female" id="female" />
+                <Field.HLabel htmlFor="female">Female</Field.HLabel>
+
+                <Radio.Root value="other" id="other" />
+                <Field.HLabel htmlFor="other">Other</Field.HLabel>
+
                 <Field.Error>Please select your gender</Field.Error>
                 <Field.Success>✓ Gender selected</Field.Success>
             </RadioGroup.Root>
@@ -483,8 +488,11 @@ const FieldWithTextInputTest = ({
 }) => {
     return (
         <Field.Root name="email" validationMode={validationMode} disabled={disabled}>
-            <Field.Label>Email Address</Field.Label>
-            <TextInput type="email" placeholder="your.email@example.com" required />
+            <Field.VLabel>
+                Email Address
+                <TextInput type="email" placeholder="your.email@example.com" required />
+            </Field.VLabel>
+
             <Field.Description>
                 Please enter a valid email address for your account
             </Field.Description>

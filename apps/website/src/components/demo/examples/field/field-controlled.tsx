@@ -2,60 +2,74 @@
 
 import { useState } from 'react';
 
-import { Field, TextInput } from '@vapor-ui/core';
+import { Button, Field, Form, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldControlled() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
 
-    const isEmailValid = email.includes('@') && email.includes('.');
-    const showEmailError = email.length > 0 && !isEmailValid;
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        alert(`[제출된 값]\n- 이름: ${firstName}\n- 성: ${lastName}\n- 이메일: ${email}`);
+    };
 
     return (
-        <div className="v-space-y-6">
-            <Field.Root name="firstName" className="v-space-y-2">
-                <Field.Label>이름</Field.Label>
-                <TextInput
-                    placeholder="이름을 입력하세요"
-                    className="v-w-full"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                />
-                <Field.Description>현재 값: {firstName || '(비어있음)'}</Field.Description>
-            </Field.Root>
+        <Form onSubmit={handleSubmit}>
+            <VStack gap="$200" width="300px">
+                <Field.Root name="firstName">
+                    <Field.VLabel>
+                        이름
+                        <TextInput
+                            value={firstName}
+                            onValueChange={(value) => setFirstName(value)}
+                            placeholder="이름을 입력하세요"
+                        />
+                    </Field.VLabel>
 
-            <Field.Root name="lastName" className="v-space-y-2">
-                <Field.Label>성</Field.Label>
-                <TextInput
-                    placeholder="성을 입력하세요"
-                    className="v-w-full"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                />
-                <Field.Description>현재 값: {lastName || '(비어있음)'}</Field.Description>
-            </Field.Root>
+                    <Text typography="body3" foreground="hint-200">
+                        현재 값: {firstName || '(비어있음)'}
+                    </Text>
+                </Field.Root>
 
-            <Field.Root name="email" className="v-space-y-2">
-                <Field.Label>이메일</Field.Label>
-                <TextInput
-                    type="email"
-                    placeholder="이메일을 입력하세요"
-                    className="v-w-full"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <Field.Description>현재 값: {email || '(비어있음)'}</Field.Description>
-                <Field.Error match={showEmailError}>올바른 이메일 형식이 아닙니다.</Field.Error>
-                {isEmailValid && <Field.Success>유효한 이메일 형식입니다.</Field.Success>}
-            </Field.Root>
+                <Field.Root name="lastName">
+                    <Field.VLabel>
+                        성
+                        <TextInput
+                            value={lastName}
+                            onValueChange={(value) => setLastName(value)}
+                            placeholder="성을 입력하세요"
+                        />
+                    </Field.VLabel>
 
-            <div className="v-p-4 v-bg-gray-100 v-rounded-md">
-                <h3 className="v-text-sm v-font-medium v-mb-2">현재 폼 상태</h3>
-                <pre className="v-text-xs">
-                    {JSON.stringify({ firstName, lastName, email }, null, 2)}
-                </pre>
-            </div>
-        </div>
+                    <Text typography="body3" foreground="hint-200">
+                        현재 값: {lastName || '(비어있음)'}
+                    </Text>
+                </Field.Root>
+
+                <Field.Root name="email" validationMode="onChange">
+                    <Field.VLabel>
+                        이메일
+                        <TextInput
+                            type="email"
+                            required
+                            value={email}
+                            onValueChange={(value) => setEmail(value)}
+                            placeholder="이메일을 입력하세요"
+                        />
+                    </Field.VLabel>
+
+                    <Text typography="body3" foreground="hint-200">
+                        현재 값: {email || '(비어있음)'}
+                    </Text>
+
+                    <Field.Error match="typeMismatch">올바른 이메일 형식이 아닙니다.</Field.Error>
+                    <Field.Error match="valueMissing">이메일을 입력해주세요.</Field.Error>
+                    <Field.Success>유효한 이메일 형식입니다.</Field.Success>
+                </Field.Root>
+
+                <Button>제출</Button>
+            </VStack>
+        </Form>
     );
 }
