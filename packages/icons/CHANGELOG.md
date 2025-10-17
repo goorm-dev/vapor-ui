@@ -1,5 +1,30 @@
 # @vapor-ui/icons
 
+## 1.0.0-beta.1
+
+### Minor Changes
+
+- 8217749: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- 402284e: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `DocktoBottomOutlineIcon`, `SideNavOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- fd4acaa: Add new icons from Figma
+
+    **New Basic Icons:** `SideNavIcon`, `DocktoBottomIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
 ## 1.0.0-beta.0
 
 ### Major Changes
