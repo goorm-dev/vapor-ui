@@ -38,6 +38,7 @@ const config: StorybookConfig = {
                     ...config.resolve?.alias,
                     // ...convertTsConfigPathsToWebpackAliases(),
                     '~': path.resolve(__dirname, '../../../packages/core/src'),
+                    '@vapor-ui/core': path.resolve(__dirname, '../../../packages/core/src'),
                 },
             },
 

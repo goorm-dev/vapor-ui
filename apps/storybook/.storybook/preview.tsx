@@ -1,9 +1,9 @@
 import type { Preview } from '@storybook/react-vite';
 
-import '../../../packages/core/src/styles';
-import '../../../packages/core/src/styles/global-var.css';
-import '../../../packages/core/src/styles/global.css';
-import '../../../packages/core/src/styles/theme.css';
+import '@vapor-ui/core/styles';
+import '@vapor-ui/core/styles/global-var.css';
+import '@vapor-ui/core/styles/global.css';
+import '@vapor-ui/core/styles/theme.css';
 
 const preview: Preview = {
     tags: ['autodocs'],
