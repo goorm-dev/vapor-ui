@@ -1,45 +1,45 @@
 'use client';
 
-import { Checkbox, Field, Select, Switch, TextInput, VStack } from '@vapor-ui/core';
+import { Box, Checkbox, Field, Select, Switch, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldWithInputs() {
     return (
         <VStack gap="$200" width="300px">
             <Field.Root name="email">
-                <Field.VLabel>
+                <Box render={<Field.Label />} flexDirection="column">
                     이메일
                     <TextInput type="email" placeholder="example@domain.com" />
-                </Field.VLabel>
+                </Box>
                 <Field.Description>알림을 받을 이메일 주소를 입력하세요.</Field.Description>
             </Field.Root>
 
             {/* Checkbox with Field */}
             <Field.Root name="newsletter">
-                <Field.HLabel>
+                <Box render={<Field.Label />} alignItems="center">
                     <Checkbox.Root />
                     뉴스레터 구독
-                </Field.HLabel>
+                </Box>
                 <Field.Description>최신 소식과 업데이트를 이메일로 받아보세요.</Field.Description>
             </Field.Root>
 
             {/* Switch with Field */}
             <Field.Root name="notifications">
-                <Field.HLabel>
+                <Box render={<Field.Label />} alignItems="center">
                     <Switch.Root />
                     푸시 알림
-                </Field.HLabel>
+                </Box>
                 <Field.Description>중요한 알림을 즉시 받아보세요.</Field.Description>
             </Field.Root>
 
             {/* Select with Field */}
             <Field.Root name="country">
                 <Select.Root placeholder="국가를 선택하세요">
-                    <Field.VLabel htmlFor="country-select">
+                    <Box render={<Field.Label htmlFor="country-select" />} flexDirection="column">
                         국가
                         <Select.Trigger id="country-select">
                             <Select.Value />
                         </Select.Trigger>
-                    </Field.VLabel>
+                    </Box>
                     <Select.Portal>
                         <Select.Positioner>
                             <Select.Content>

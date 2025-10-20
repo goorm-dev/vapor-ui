@@ -1,6 +1,6 @@
 'use client';
 
-import { Field, TextInput, VStack } from '@vapor-ui/core';
+import { Box, Field, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldValidationMode() {
     const validateEmail = (value: unknown) => {
@@ -15,20 +15,20 @@ export default function FieldValidationMode() {
     return (
         <VStack gap="$200">
             <Field.Root name="name" validationMode="onChange">
-                <Field.VLabel>
+                <Box render={<Field.Label />} flexDirection="column">
                     이름 (onChange 검증)
                     <TextInput required placeholder="이름을 입력하세요" />
-                </Field.VLabel>
+                </Box>
 
                 <Field.Description>입력할 때마다 실시간으로 검증됩니다.</Field.Description>
                 <Field.Error />
             </Field.Root>
 
             <Field.Root name="email" validationMode="onBlur" validate={validateEmail}>
-                <Field.VLabel>
+                <Box render={<Field.Label />} flexDirection="column">
                     이메일 (onBlur 검증)
                     <TextInput type="email" placeholder="이메일을 입력하세요" />
-                </Field.VLabel>
+                </Box>
 
                 <Field.Description>입력 필드를 벗어날 때 검증됩니다.</Field.Description>
                 <Field.Error />

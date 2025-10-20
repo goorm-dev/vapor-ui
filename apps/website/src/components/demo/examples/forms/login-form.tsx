@@ -1,6 +1,6 @@
 import './login-form.css';
 
-import { Button, Checkbox, Field, Form, HStack, TextInput, VStack } from '@vapor-ui/core';
+import { Box, Button, Checkbox, Field, Form, HStack, TextInput, VStack } from '@vapor-ui/core';
 
 export default function LoginForm() {
     return (
@@ -15,16 +15,16 @@ export default function LoginForm() {
         >
             <VStack gap="$200">
                 <Field.Root render={<VStack gap="$100" />}>
-                    <Field.VLabel className="input-label">
+                    <Box render={<Field.Label />} flexDirection="column" className="input-label">
                         이메일
                         <TextInput id="login-email" size="lg" required type="email" />
-                    </Field.VLabel>
+                    </Box>
                     <Field.Error match="valueMissing">이메일을 입력해주세요.</Field.Error>
                     <Field.Error match="typeMismatch">유효한 이메일 형식이 아닙니다.</Field.Error>
                 </Field.Root>
 
                 <Field.Root render={<VStack gap="$100" />}>
-                    <Field.VLabel className="input-label">
+                    <Box render={<Field.Label />} flexDirection="column" className="input-label">
                         비밀번호
                         <TextInput
                             id="login-password"
@@ -33,7 +33,7 @@ export default function LoginForm() {
                             required
                             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,16}"
                         />
-                    </Field.VLabel>
+                    </Box>
                     <Field.Description>8~16자, 대소문자 영문, 특수문자 포함</Field.Description>
                     <Field.Error match="valueMissing">비밀번호를 입력해주세요.</Field.Error>
                     <Field.Error match="patternMismatch">
@@ -44,10 +44,14 @@ export default function LoginForm() {
             <VStack gap="$100">
                 <HStack justifyContent="space-between">
                     <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                        <Field.HLabel className="checkbox-label">
+                        <Box
+                            render={<Field.Label />}
+                            alignItems="center"
+                            className="checkbox-label"
+                        >
                             <Checkbox.Root id="login-auto-login" />
                             자동 로그인
-                        </Field.HLabel>
+                        </Box>
                     </Field.Root>
 
                     <Button type="button" variant="ghost" color="secondary">

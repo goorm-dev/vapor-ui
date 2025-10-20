@@ -2,7 +2,7 @@ import { Children, cloneElement, isValidElement, useState } from 'react';
 
 import './authentication-form.css';
 
-import { Button, Field, Form, Select, TextInput, VStack } from '@vapor-ui/core';
+import { Box, Button, Field, Form, Select, TextInput, VStack } from '@vapor-ui/core';
 
 const codes = {
     '+82': '🇰🇷 +82',
@@ -35,7 +35,11 @@ export default function AuthenticationForm() {
         >
             <VStack gap="$200">
                 <Field.Root render={<VStack gap="$100" />}>
-                    <Field.VLabel className="input-label" htmlFor="auth-phone">
+                    <Box
+                        render={<Field.Label htmlFor="auth-phone" />}
+                        flexDirection="column"
+                        className="input-label"
+                    >
                         핸드폰 번호
                         <Select.Root defaultValue={codes['+82']} size="lg">
                             <Group attached>
@@ -69,7 +73,7 @@ export default function AuthenticationForm() {
                                 </Button>
                             </Group>
                         </Select.Root>
-                    </Field.VLabel>
+                    </Box>
 
                     <Field.Error match="valueMissing">핸드폰 번호를 입력해주세요.</Field.Error>
                     <Field.Error match="patternMismatch">
@@ -78,10 +82,10 @@ export default function AuthenticationForm() {
                 </Field.Root>
 
                 <Field.Root render={<VStack gap="$100" />}>
-                    <Field.VLabel className="input-label">
+                    <Box render={<Field.Label />} flexDirection="column" className="input-label">
                         인증번호
                         <TextInput id="auth-verification-code" size="lg" required />
-                    </Field.VLabel>
+                    </Box>
                     <Field.Error match="valueMissing">인증번호를 입력해주세요.</Field.Error>
                 </Field.Root>
             </VStack>

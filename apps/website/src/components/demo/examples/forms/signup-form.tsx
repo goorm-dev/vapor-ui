@@ -3,6 +3,7 @@ import './signup-form.css';
 import { useState } from 'react';
 
 import {
+    Box,
     Button,
     Checkbox,
     Field,
@@ -40,10 +41,14 @@ export default function SignupForm() {
             <VStack gap="$400">
                 <VStack gap="$200">
                     <Field.Root render={<VStack gap="$100" />}>
-                        <Field.VLabel className="input-label">
+                        <Box
+                            render={<Field.Label />}
+                            flexDirection="column"
+                            className="input-label"
+                        >
                             이메일
                             <TextInput id="signup-email" size="lg" required type="email" />
-                        </Field.VLabel>
+                        </Box>
                         <Field.Error match="valueMissing">이메일을 입력해주세요.</Field.Error>
                         <Field.Error match="typeMismatch">
                             유효한 이메일 형식이 아닙니다.
@@ -51,7 +56,11 @@ export default function SignupForm() {
                     </Field.Root>
 
                     <Field.Root render={<VStack gap="$100" />}>
-                        <Field.VLabel className="input-label">
+                        <Box
+                            render={<Field.Label />}
+                            flexDirection="column"
+                            className="input-label"
+                        >
                             비밀번호
                             <TextInput
                                 id="signup-password"
@@ -63,7 +72,7 @@ export default function SignupForm() {
                                 required
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,16}"
                             />
-                        </Field.VLabel>
+                        </Box>
                         <Field.Description>
                             8~16자, 대소문자 영문, 숫자, 특수문자 포함
                         </Field.Description>
@@ -74,7 +83,11 @@ export default function SignupForm() {
                     </Field.Root>
 
                     <Field.Root render={<VStack gap="$100" />}>
-                        <Field.VLabel className="input-label">
+                        <Box
+                            render={<Field.Label />}
+                            flexDirection="column"
+                            className="input-label"
+                        >
                             비밀번호 확인
                             <TextInput
                                 id="signup-password-check"
@@ -83,7 +96,7 @@ export default function SignupForm() {
                                 required
                                 pattern={passwordCheck}
                             />
-                        </Field.VLabel>
+                        </Box>
                         <Field.Description>8~16자, 대소문자 영문, 특수문자 포함</Field.Description>
                         <Field.Error match="valueMissing">비밀번호를 입력해주세요.</Field.Error>
                         <Field.Error match="patternMismatch">
@@ -92,22 +105,30 @@ export default function SignupForm() {
                     </Field.Root>
 
                     <Field.Root render={<VStack gap="$100" />}>
-                        <Field.VLabel className="input-label">
+                        <Box
+                            render={<Field.Label />}
+                            flexDirection="column"
+                            className="input-label"
+                        >
                             이름
                             <TextInput id="signup-name" size="lg" required />
-                        </Field.VLabel>
+                        </Box>
                         <Field.Error match="valueMissing">이름을 입력해주세요.</Field.Error>
                     </Field.Root>
 
                     <Field.Root render={<VStack gap="$100" />}>
                         <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
-                            <Field.VLabel className="input-label" htmlFor="signup-jobs">
+                            <Box
+                                render={<Field.Label htmlFor="signup-jobs" />}
+                                flexDirection="column"
+                                className="input-label"
+                            >
                                 직업
                                 <Select.Trigger id="signup-jobs">
                                     <Select.Value />
                                     <Select.TriggerIcon />
                                 </Select.Trigger>
-                            </Field.VLabel>
+                            </Box>
 
                             <Select.Content>
                                 {jobs.map((job) => (
@@ -124,17 +145,25 @@ export default function SignupForm() {
                 <VStack gap="$300">
                     <VStack justifyContent="space-between" gap="$050">
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Field.HLabel className="checkbox-label">
+                            <Box
+                                render={<Field.Label />}
+                                alignItems="center"
+                                className="checkbox-label"
+                            >
                                 <Checkbox.Root id="signup-agree-all" />
                                 필수 약관에 모두 동의
-                            </Field.HLabel>
+                            </Box>
                         </Field.Root>
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
                             <HStack width="100%" justifyContent="space-between" alignItems="center">
-                                <Field.HLabel className="checkbox-label">
+                                <Box
+                                    render={<Field.Label />}
+                                    alignItems="center"
+                                    className="checkbox-label"
+                                >
                                     <Checkbox.Root id="signup-terms-of-service" />
                                     이용 약관 동의
-                                </Field.HLabel>
+                                </Box>
                                 <IconButton
                                     type="button"
                                     size="sm"
@@ -148,10 +177,14 @@ export default function SignupForm() {
                         </Field.Root>
                         <Field.Root render={<HStack alignItems="center" gap="$100" />}>
                             <HStack width="100%" justifyContent="space-between" alignItems="center">
-                                <Field.HLabel className="checkbox-label">
+                                <Box
+                                    render={<Field.Label />}
+                                    alignItems="center"
+                                    className="checkbox-label"
+                                >
                                     <Checkbox.Root id="signup-personal-info-collection" />
                                     개인 정보 수집 이용 동의
-                                </Field.HLabel>
+                                </Box>
                                 <IconButton
                                     type="button"
                                     size="sm"
