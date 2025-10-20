@@ -32,24 +32,28 @@ export function migrateImportSpecifier(
             } else {
                 importDeclaration.specifiers = otherSpecifiers;
 
-                const existingVaporImport = root
-                    .find(j.ImportDeclaration, {
-                        source: { value: targetPackage },
-                    })
-                    .at(0);
+                const allTargetImports = root.find(j.ImportDeclaration, {
+                    source: { value: targetPackage },
+                });
 
-                if (existingVaporImport.length > 0) {
-                    const existingImport = existingVaporImport.get().value;
-                    const hasComponentImport = existingImport.specifiers?.some(
+                if (allTargetImports.length > 0) {
+                    const firstImport = allTargetImports.at(0).get().value;
+                    const hasComponentImport = firstImport.specifiers?.some(
                         (spec: ImportSpecifier) =>
                             spec.type === 'ImportSpecifier' && spec.imported.name === componentName
                     );
 
                     if (!hasComponentImport) {
-                        existingImport.specifiers?.push(
+                        firstImport.specifiers?.push(
                             j.importSpecifier(j.identifier(componentName))
                         );
                     }
+
+                    allTargetImports.forEach((p, idx) => {
+                        if (idx > 0) {
+                            j(p).remove();
+                        }
+                    });
                 } else {
                     const componentImport = j.importDeclaration(
                         [j.importSpecifier(j.identifier(componentName))],
