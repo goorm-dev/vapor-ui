@@ -7,7 +7,6 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-
 const borderWidth = createVar('border-width');
 
 export const root = recipe({
@@ -46,8 +45,8 @@ export const root = recipe({
         {
             vars: {
                 [borderWidth]: '0.0625rem',
-            }
-        }
+            },
+        },
     ],
 
     defaultVariants: {
