@@ -15,7 +15,7 @@ async function build() {
             bundle: true,
             outfile: join(__dirname, 'dist/code.js'),
             platform: 'browser',
-            target: 'es2020',
+            target: 'es2017',
             format: 'iife',
             minify: isProduction,
             sourcemap: !isProduction,
@@ -24,22 +24,19 @@ async function build() {
             },
             logLevel: 'info',
         });
-
-        console.log('✅ Build completed successfully');
     } catch (error) {
-        console.error('❌ Build failed:', error);
+        console.error(error);
         process.exit(1);
     }
 }
 
-// Watch mode for development
 if (process.argv.includes('--watch')) {
     const ctx = await esbuild.context({
         entryPoints: [join(__dirname, 'src/code.ts')],
         bundle: true,
         outfile: join(__dirname, 'dist/code.js'),
         platform: 'browser',
-        target: 'es2020',
+        target: 'es2017',
         format: 'iife',
         minify: false,
         sourcemap: true,
