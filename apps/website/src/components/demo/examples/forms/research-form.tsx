@@ -46,9 +46,11 @@ export default function ResearchForm() {
             <VStack gap="$200">
                 <Text typography="heading5">기본 정보를 입력해주세요.</Text>
 
-                <Field.Root render={<VStack gap="$100" />}>
+                <Field.Root>
                     <Box render={<Field.Label />} flexDirection="column">
-                        이름
+                        <Text typography="subtitle2" foreground="normal-200">
+                            이름
+                        </Text>
                         <TextInput id="research-name" required size="lg" />
                     </Box>
                     <Field.Error match="valueMissing">이름을 입력해주세요.</Field.Error>
@@ -56,7 +58,9 @@ export default function ResearchForm() {
 
                 <Field.Root>
                     <Box render={<Field.Label htmlFor="research-jobs" />} flexDirection="column">
-                        직업
+                        <Text typography="subtitle2" foreground="normal-200">
+                            직업
+                        </Text>
                         <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
                             <Select.Trigger id="research-jobs">
                                 <Select.Value />
@@ -76,7 +80,9 @@ export default function ResearchForm() {
 
                 <Field.Root>
                     <Box render={<Field.Label htmlFor="research-stack" />} flexDirection="column">
-                        스택
+                        <Text typography="subtitle2" foreground="normal-200">
+                            스택
+                        </Text>
                         <MultiSelect.Root
                             items={stacks}
                             placeholder="자주 사용하는 스택을 선택해주세요."

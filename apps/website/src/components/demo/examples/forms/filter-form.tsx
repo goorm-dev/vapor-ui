@@ -97,11 +97,7 @@ export default function FilterForm() {
     };
 
     return (
-        <VStack
-            width="17.625rem"
-            className="filter"
-            render={<Form ref={formRef} onReset={handleReset} />}
-        >
+        <VStack width="17.625rem" render={<Form ref={formRef} onReset={handleReset} />}>
             <HStack justifyContent="space-between">
                 <Text typography="heading5">Filter</Text>
                 <Button type="reset" size="sm" variant="ghost" color="secondary">
@@ -135,19 +131,11 @@ export default function FilterForm() {
                                     handleRadioChange('view', value as string)
                                 }
                             >
-                                <Box
-                                    render={<Field.Label />}
-                                    alignItems="center"
-                                    className="radio-label"
-                                >
+                                <Box render={<Field.Label />} alignItems="center">
                                     <Radio.Root id="filter-recent" value="recent" />
                                     Recent
                                 </Box>
-                                <Box
-                                    render={<Field.Label />}
-                                    alignItems="center"
-                                    className="radio-label"
-                                >
+                                <Box render={<Field.Label />} alignItems="center">
                                     <Radio.Root id="filter-popular" value="popular" />
                                     Most Popular
                                 </Box>
@@ -165,14 +153,8 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root
-                            render={<HStack alignItems="center" gap="$100" marginTop="$150" />}
-                        >
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root render={<Box marginTop="$150" />}>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-feedback"
                                     checked={getFieldValues('sort').feedback}
@@ -181,12 +163,8 @@ export default function FilterForm() {
                                 Feedback
                             </Box>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-buttons"
                                     checked={getFieldValues('sort').buttons}
@@ -196,12 +174,8 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
 
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-data-display"
                                     checked={getFieldValues('sort')['data-display']}
@@ -211,12 +185,8 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
 
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-overlay"
                                     checked={getFieldValues('sort').overlay}
@@ -226,12 +196,8 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
 
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-inputs"
                                     checked={getFieldValues('sort').inputs}
@@ -241,12 +207,8 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
 
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-navigation"
                                     checked={getFieldValues('sort').navigation}
@@ -256,12 +218,8 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
 
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-utils"
                                     checked={getFieldValues('sort').utils}
@@ -280,12 +238,8 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<HStack marginTop="$150" />}>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root render={<Box marginTop="$150" />}>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-goorm-dev/vapor-core"
                                     checked={getFieldValues('packs')['goorm-dev/vapor-core']}
@@ -298,11 +252,7 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
                         <Field.Root>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-goorm-dev/vapor-component"
                                     checked={getFieldValues('packs')['goorm-dev/vapor-component']}
@@ -315,11 +265,7 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
                         <Field.Root>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-vapor-ui/core"
                                     checked={getFieldValues('packs')['vapor-ui/core']}
@@ -338,12 +284,8 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root render={<HStack marginTop="$150" />}>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                        <Field.Root render={<Box marginTop="$150" />}>
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-active"
                                     checked={getFieldValues('status').active}
@@ -353,11 +295,7 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
                         <Field.Root>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-inactive"
                                     checked={getFieldValues('status').inactive}
@@ -367,11 +305,7 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
                         <Field.Root>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-draft"
                                     checked={getFieldValues('status').draft}
@@ -390,9 +324,7 @@ export default function FilterForm() {
                     </Collapsible.Trigger>
 
                     <Collapsible.Panel>
-                        <Field.Root
-                            render={<HStack alignItems="center" gap="$100" marginTop="$150" />}
-                        >
+                        <Field.Root render={<Box marginTop="$150" />}>
                             <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-ui"
@@ -403,11 +335,7 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
                         <Field.Root>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-open-source"
                                     checked={getFieldValues('tag')['open-source']}
@@ -417,11 +345,7 @@ export default function FilterForm() {
                             </Box>
                         </Field.Root>
                         <Field.Root>
-                            <Box
-                                render={<Field.Label />}
-                                alignItems="center"
-                                className="checkbox-label"
-                            >
+                            <Box render={<Field.Label />} alignItems="center">
                                 <Checkbox.Root
                                     id="filter-performance"
                                     checked={getFieldValues('tag').performance}

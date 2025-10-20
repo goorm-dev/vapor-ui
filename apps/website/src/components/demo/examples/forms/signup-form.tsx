@@ -40,7 +40,7 @@ export default function SignupForm() {
         >
             <VStack gap="$400">
                 <VStack gap="$200">
-                    <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Root>
                         <Box
                             render={<Field.Label />}
                             flexDirection="column"
@@ -55,7 +55,7 @@ export default function SignupForm() {
                         </Field.Error>
                     </Field.Root>
 
-                    <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Root>
                         <Box
                             render={<Field.Label />}
                             flexDirection="column"
@@ -66,9 +66,7 @@ export default function SignupForm() {
                                 id="signup-password"
                                 size="lg"
                                 type="password"
-                                onValueChange={(value) => {
-                                    setPasswordCheck(value);
-                                }}
+                                onValueChange={(value) => setPasswordCheck(value)}
                                 required
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,16}"
                             />
@@ -82,7 +80,7 @@ export default function SignupForm() {
                         </Field.Error>
                     </Field.Root>
 
-                    <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Root>
                         <Box
                             render={<Field.Label />}
                             flexDirection="column"
@@ -104,7 +102,7 @@ export default function SignupForm() {
                         </Field.Error>
                     </Field.Root>
 
-                    <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Root>
                         <Box
                             render={<Field.Label />}
                             flexDirection="column"
@@ -116,7 +114,7 @@ export default function SignupForm() {
                         <Field.Error match="valueMissing">이름을 입력해주세요.</Field.Error>
                     </Field.Root>
 
-                    <Field.Root render={<VStack gap="$100" />}>
+                    <Field.Root>
                         <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
                             <Box
                                 render={<Field.Label htmlFor="signup-jobs" />}
@@ -144,7 +142,7 @@ export default function SignupForm() {
 
                 <VStack gap="$300">
                     <VStack justifyContent="space-between" gap="$050">
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
+                        <Field.Root>
                             <Box
                                 render={<Field.Label />}
                                 alignItems="center"
@@ -154,7 +152,7 @@ export default function SignupForm() {
                                 필수 약관에 모두 동의
                             </Box>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
+                        <Field.Root>
                             <HStack width="100%" justifyContent="space-between" alignItems="center">
                                 <Box
                                     render={<Field.Label />}
@@ -175,7 +173,7 @@ export default function SignupForm() {
                                 </IconButton>
                             </HStack>
                         </Field.Root>
-                        <Field.Root render={<HStack alignItems="center" gap="$100" />}>
+                        <Field.Root>
                             <HStack width="100%" justifyContent="space-between" alignItems="center">
                                 <Box
                                     render={<Field.Label />}

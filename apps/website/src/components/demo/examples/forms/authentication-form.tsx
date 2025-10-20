@@ -2,7 +2,7 @@ import { Children, cloneElement, isValidElement, useState } from 'react';
 
 import './authentication-form.css';
 
-import { Box, Button, Field, Form, Select, TextInput, VStack } from '@vapor-ui/core';
+import { Box, Button, Field, Form, Select, Text, TextInput, VStack } from '@vapor-ui/core';
 
 const codes = {
     '+82': '🇰🇷 +82',
@@ -34,13 +34,11 @@ export default function AuthenticationForm() {
             render={<Form onSubmit={(e) => e.preventDefault()} />}
         >
             <VStack gap="$200">
-                <Field.Root render={<VStack gap="$100" />}>
-                    <Box
-                        render={<Field.Label htmlFor="auth-phone" />}
-                        flexDirection="column"
-                        className="input-label"
-                    >
-                        핸드폰 번호
+                <Field.Root>
+                    <Box render={<Field.Label htmlFor="auth-phone" />} flexDirection="column">
+                        <Text typography="subtitle2" foreground="normal-200">
+                            핸드폰 번호
+                        </Text>
                         <Select.Root defaultValue={codes['+82']} size="lg">
                             <Group attached>
                                 <Select.Trigger>
@@ -81,9 +79,11 @@ export default function AuthenticationForm() {
                     </Field.Error>
                 </Field.Root>
 
-                <Field.Root render={<VStack gap="$100" />}>
-                    <Box render={<Field.Label />} flexDirection="column" className="input-label">
-                        인증번호
+                <Field.Root>
+                    <Box render={<Field.Label />} flexDirection="column">
+                        <Text typography="subtitle2" foreground="normal-200">
+                            인증번호
+                        </Text>
                         <TextInput id="auth-verification-code" size="lg" required />
                     </Box>
                     <Field.Error match="valueMissing">인증번호를 입력해주세요.</Field.Error>

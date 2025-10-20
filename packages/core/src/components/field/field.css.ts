@@ -54,7 +54,7 @@ export const success = style([
 
 export const label = [
     typography({ style: 'body2' }),
-    foregrounds({ color: 'normal-200' }),
+    foregrounds({ color: 'normal-100' }),
 
     layerStyle('components', {
         display: 'flex',

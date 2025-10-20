@@ -113,11 +113,7 @@ export default function SheetForm() {
                                         <VStack gap="$100">
                                             {/* Sort */}
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-feedback"
                                                         size="lg"
@@ -132,11 +128,7 @@ export default function SheetForm() {
                                             </Field.Root>
 
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-buttons"
                                                         size="lg"
@@ -151,11 +143,7 @@ export default function SheetForm() {
                                             </Field.Root>
 
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-data-display"
                                                         size="lg"
@@ -171,11 +159,7 @@ export default function SheetForm() {
                                                 </Box>
                                             </Field.Root>
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-overlay"
                                                         size="lg"
@@ -189,11 +173,7 @@ export default function SheetForm() {
                                                 </Box>
                                             </Field.Root>
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-inputs"
                                                         size="lg"
@@ -207,11 +187,7 @@ export default function SheetForm() {
                                                 </Box>
                                             </Field.Root>
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-navigation"
                                                         size="lg"
@@ -225,11 +201,7 @@ export default function SheetForm() {
                                                 </Box>
                                             </Field.Root>
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-utils"
                                                         size="lg"
@@ -248,11 +220,7 @@ export default function SheetForm() {
                                     <Tabs.Panel value="package" className={'tabs-panel'}>
                                         <VStack gap="$100">
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-goorm-dev/vapor-core"
                                                         size="lg"
@@ -270,11 +238,7 @@ export default function SheetForm() {
                                                 </Box>
                                             </Field.Root>
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-goorm-dev/vapor-component"
                                                         size="lg"
@@ -292,11 +256,7 @@ export default function SheetForm() {
                                                 </Box>
                                             </Field.Root>
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-vapor-ui/core"
                                                         size="lg"
@@ -317,11 +277,7 @@ export default function SheetForm() {
                                     <Tabs.Panel value="status" className={'tabs-panel'}>
                                         <VStack gap="$100">
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className={'checkbox-label'}
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-active"
                                                         size="lg"
@@ -335,11 +291,7 @@ export default function SheetForm() {
                                                 </Box>
                                             </Field.Root>
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className={'checkbox-label'}
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-inactive"
                                                         size="lg"
@@ -353,11 +305,7 @@ export default function SheetForm() {
                                                 </Box>
                                             </Field.Root>
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-draft"
                                                         size="lg"
@@ -376,11 +324,7 @@ export default function SheetForm() {
                                     <Tabs.Panel value="tag" className={'tabs-panel'}>
                                         <VStack gap="$100">
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-ui"
                                                         size="lg"
@@ -395,11 +339,7 @@ export default function SheetForm() {
                                             </Field.Root>
 
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-open-source"
                                                         size="lg"
@@ -416,11 +356,7 @@ export default function SheetForm() {
                                             </Field.Root>
 
                                             <Field.Root>
-                                                <Box
-                                                    render={<Field.Label />}
-                                                    alignItems="center"
-                                                    className="checkbox-label"
-                                                >
+                                                <Box render={<Field.Label />} alignItems="center">
                                                     <Checkbox.Root
                                                         id="sheet-performance"
                                                         size="lg"
