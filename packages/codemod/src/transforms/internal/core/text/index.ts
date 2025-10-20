@@ -1,6 +1,23 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 import { migrateImportSpecifier } from '~/utils/import-migration';
 
+const colorMapping: Record<string, string> = {
+    'text-primary': 'primary-100',
+    'text-primary-alternative': 'primary-200',
+    'text-secondary': 'secondary-100',
+    'text-secondary-alternative': 'secondary-200',
+    'text-success': 'success-100',
+    'text-success-alternative': 'success-200',
+    'text-warning': 'warning-100',
+    'text-warning-alternative': 'warning-200',
+    'text-danger': 'danger-100',
+    'text-danger-alternative': 'danger-200',
+    'text-hint': 'hint-100',
+    'text-hint-alternative': 'hint-200',
+    'text-contrast': 'contrast-100',
+    'text-contrast-alternative': 'contrast-200',
+};
+
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
@@ -25,25 +42,29 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         attributesToRemove.push(index);
                     } else if (attr.name.name === 'color') {
                         attr.name.name = 'foreground';
+                        const colorValue = attr.value;
+                        if (colorValue && colorValue.type === 'StringLiteral') {
+                            const oldColor = colorValue.value;
+                            if (oldColor && colorMapping[oldColor]) {
+                                colorValue.value = colorMapping[oldColor];
+                            }
+                        }
                     } else if (attr.name.name === 'asChild') {
                         hasAsChild = true;
                         attributesToRemove.push(index);
                     } else if (attr.name.name === 'as') {
+                        attr.name.name = 'render';
                         const asValue = attr.value;
                         if (
                             asValue &&
                             asValue.type === 'StringLiteral' &&
                             typeof asValue.value === 'string'
                         ) {
-                            const renderAttr = j.jsxAttribute(
-                                j.jsxIdentifier('render'),
-                                j.jsxExpressionContainer(
-                                    j.jsxElement(
-                                        j.jsxOpeningElement(j.jsxIdentifier(asValue.value), [], true)
-                                    )
+                            attr.value = j.jsxExpressionContainer(
+                                j.jsxElement(
+                                    j.jsxOpeningElement(j.jsxIdentifier(asValue.value), [], true)
                                 )
                             );
-                            element.openingElement.attributes![index] = renderAttr;
                         }
                     }
                 }
