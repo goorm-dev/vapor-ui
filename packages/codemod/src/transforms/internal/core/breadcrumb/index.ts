@@ -1,4 +1,14 @@
-import type { API, FileInfo, Transform, JSXElement, JSXAttribute, ImportSpecifier, ASTPath, ImportDeclaration } from 'jscodeshift';
+import type {
+    API,
+    FileInfo,
+    Transform,
+    JSXElement,
+    JSXAttribute,
+    ImportSpecifier,
+    ASTPath,
+    ImportDeclaration,
+    StringLiteral,
+} from 'jscodeshift';
 import { migrateImportSpecifier } from '~/utils/import-migration';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
@@ -6,7 +16,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     root.find(j.ImportDeclaration).forEach((path) => {
-        migrateImportSpecifier(root, j, path, 'Breadcrumb', '@goorm-dev/vapor-core', '@vapor-ui/core');
+        migrateImportSpecifier(
+            root,
+            j,
+            path,
+            'Breadcrumb',
+            '@goorm-dev/vapor-core',
+            '@vapor-ui/core'
+        );
     });
 
     const vaporImports = root.find(j.ImportDeclaration, {
@@ -92,7 +109,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 item.openingElement.attributes?.forEach((attr) => {
                     if (attr.type === 'JSXAttribute') {
                         if (attr.name.name === 'href') {
-                            href = attr.value?.value || attr.value;
+                            href = (attr.value as StringLiteral).value;
                         } else if (attr.name.name === 'active') {
                             active = true;
                         } else {
@@ -108,7 +125,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             j.jsxIdentifier('Link')
                         ),
                         [
-                            ...(href ? [j.jsxAttribute(j.jsxIdentifier('href'), typeof href === 'string' ? j.stringLiteral(href) : href)] : []),
+                            ...(href
+                                ? [
+                                      j.jsxAttribute(
+                                          j.jsxIdentifier('href'),
+                                          typeof href === 'string' ? j.stringLiteral(href) : href
+                                      ),
+                                  ]
+                                : []),
                             ...(active ? [j.jsxAttribute(j.jsxIdentifier('current'))] : []),
                         ]
                     ),
@@ -161,17 +185,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
             const listElement = j.jsxElement(
                 j.jsxOpeningElement(
-                    j.jsxMemberExpression(
-                        j.jsxIdentifier('Breadcrumb'),
-                        j.jsxIdentifier('List')
-                    ),
+                    j.jsxMemberExpression(j.jsxIdentifier('Breadcrumb'), j.jsxIdentifier('List')),
                     []
                 ),
                 j.jsxClosingElement(
-                    j.jsxMemberExpression(
-                        j.jsxIdentifier('Breadcrumb'),
-                        j.jsxIdentifier('List')
-                    )
+                    j.jsxMemberExpression(j.jsxIdentifier('Breadcrumb'), j.jsxIdentifier('List'))
                 ),
                 newChildren
             );
