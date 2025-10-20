@@ -71,8 +71,8 @@ export const indicator = layerStyle('components', {
     border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.white,
-    width: '50%',
-    height: '50%',
+    width: 'calc(50% - 0.0625rem)', // '50%' with border
+    height: 'calc(50% - 0.0625rem)', // '50%' with border
     selectors: {
         '&[data-readonly]': {
             backgroundColor: vars.color.foreground.hint[100],
