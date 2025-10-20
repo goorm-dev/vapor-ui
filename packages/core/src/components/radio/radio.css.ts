@@ -1,9 +1,14 @@
+import { createVar } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
+
+
+const borderWidth = createVar('border-width');
 
 export const root = recipe({
     base: [
@@ -38,6 +43,11 @@ export const root = recipe({
                 '&[data-readonly]:active::before': { opacity: 0.08 },
             },
         }),
+        {
+            vars: {
+                [borderWidth]: '0.0625rem',
+            }
+        }
     ],
 
     defaultVariants: {
@@ -71,8 +81,8 @@ export const indicator = layerStyle('components', {
     border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.white,
-    width: 'calc(50% - 0.0625rem)', // '50%' with border
-    height: 'calc(50% - 0.0625rem)', // '50%' with border
+    width: calc.subtract('50%', borderWidth),
+    height: calc.subtract('50%', borderWidth),
     selectors: {
         '&[data-readonly]': {
             backgroundColor: vars.color.foreground.hint[100],
