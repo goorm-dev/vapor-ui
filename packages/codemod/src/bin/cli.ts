@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { input, select } from '@inquirer/prompts';
-import chalk from 'chalk';
 import { execSync } from 'child_process';
 import { globbySync } from 'globby';
 import isGitClean from 'is-git-clean';
@@ -8,6 +7,7 @@ import meow from 'meow';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'path';
+import picocolors from 'picocolors';
 
 const fileName = fileURLToPath(import.meta.url);
 const dirName = path.dirname(fileName);
@@ -39,7 +39,7 @@ function checkGitStatus(force: boolean) {
         } else {
             console.log('Thank you for using vapor-ui!');
             console.log(
-                chalk.yellow(
+                picocolors.yellow(
                     '\nERROR: For safety, codemods can only be run on a clean git directory.'
                 )
             );
@@ -182,7 +182,7 @@ const run = async () => {
     const files = globbySync(cli.input[1] || answers.files);
 
     if (!files.length) {
-        console.log(chalk.red(`No files found matching ${files.join(' ')}`));
+        console.log(picocolors.red(`No files found matching ${files.join(' ')}`));
         return null;
     }
 
