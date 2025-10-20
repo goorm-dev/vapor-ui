@@ -113,6 +113,10 @@ const TRANSFORMER_INQUIRER_CHOICES = [
         name: 'internal/core/badge: Migrate Badge component to @vapor-ui/core',
         value: 'internal/core/badge',
     },
+    {
+        name: 'internal/core/collapsible: Migrate Collapsible component to @vapor-ui/core',
+        value: 'internal/core/collapsible',
+    },
 ];
 const run = async () => {
     const cli = meow(
