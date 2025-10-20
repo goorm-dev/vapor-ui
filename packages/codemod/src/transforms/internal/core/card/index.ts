@@ -1,11 +1,19 @@
-import type {
-    API,
-    ASTPath,
-    FileInfo,
-    ImportDeclaration,
-    ImportSpecifier,
-    Transform,
-} from 'jscodeshift';
+import type { API, FileInfo, Transform } from 'jscodeshift';
+
+import {
+    getFinalImportName,
+    mergeImports,
+    migrateImportSpecifier,
+} from '~/utils/import-migration';
+import {
+    transformAsChildToRender,
+    transformToMemberExpression,
+    updateMemberExpressionObject,
+} from '~/utils/jsx-transform';
+
+const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
+const TARGET_PACKAGE = '@vapor-ui/core';
+const COMPONENT_NAME = 'Card';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
@@ -16,110 +24,25 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
     // 1. Import migration: Card -> Card
     root.find(j.ImportDeclaration).forEach((path) => {
-        const importDeclaration = path.value;
+        const componentInfo = migrateImportSpecifier(
+            root,
+            j,
+            path,
+            COMPONENT_NAME,
+            SOURCE_PACKAGE,
+            TARGET_PACKAGE
+        );
 
-        if (
-            importDeclaration.source.value &&
-            typeof importDeclaration.source.value === 'string' &&
-            importDeclaration.source.value === '@goorm-dev/vapor-core'
-        ) {
-            let hasCard = false;
-            const otherSpecifiers: typeof importDeclaration.specifiers = [];
-
-            importDeclaration.specifiers?.forEach((specifier) => {
-                if (specifier.type === 'ImportSpecifier' && specifier.imported.name === 'Card') {
-                    hasCard = true;
-                    // Track the local name (could be aliased)
-                    oldCardLocalName = (specifier.local?.name as string) || 'Card';
-                } else {
-                    otherSpecifiers.push(specifier);
-                }
-            });
-
-            if (hasCard) {
-                // If Card is the only import from @goorm-dev/vapor-core
-                if (otherSpecifiers.length === 0) {
-                    // Change the entire import to @vapor-ui/core with Card
-                    importDeclaration.source.value = '@vapor-ui/core';
-                    importDeclaration.specifiers = [j.importSpecifier(j.identifier('Card'))];
-                } else {
-                    // Remove Card and keep other imports
-                    importDeclaration.specifiers = otherSpecifiers;
-
-                    // Add or merge Card into existing @vapor-ui/core imports
-                    const vaporImports = root.find(j.ImportDeclaration, {
-                        source: { value: '@vapor-ui/core' },
-                    });
-
-                    if (vaporImports.length > 0) {
-                        // Add Card to existing @vapor-ui/core import
-                        const firstImport = vaporImports.at(0).get().value;
-                        const hasCard = firstImport.specifiers?.some(
-                            (spec: ImportSpecifier) =>
-                                spec.type === 'ImportSpecifier' && spec.imported.name === 'Card'
-                        );
-
-                        if (!hasCard) {
-                            firstImport.specifiers?.push(j.importSpecifier(j.identifier('Card')));
-                        }
-                    } else {
-                        // Create new @vapor-ui/core import with Card
-                        const cardImport = j.importDeclaration(
-                            [j.importSpecifier(j.identifier('Card'))],
-                            j.literal('@vapor-ui/core')
-                        );
-                        path.insertAfter(cardImport);
-                    }
-                }
-            }
+        if (componentInfo) {
+            oldCardLocalName = componentInfo.localName;
         }
     });
 
     // Merge multiple @vapor-ui/core imports
-    const vaporImports = root.find(j.ImportDeclaration, {
-        source: { value: '@vapor-ui/core' },
-    });
+    mergeImports(root, j, TARGET_PACKAGE);
 
-    if (vaporImports.length > 1) {
-        const allSpecifiers: ImportSpecifier[] = [];
-        vaporImports.forEach((path: ASTPath<ImportDeclaration>) => {
-            path.value.specifiers?.forEach((spec) => {
-                if (spec.type === 'ImportSpecifier') {
-                    const exists = allSpecifiers.some(
-                        (s) => s.imported.name === spec.imported.name
-                    );
-                    if (!exists) {
-                        allSpecifiers.push(spec);
-                    }
-                }
-            });
-        });
-
-        const firstImport = vaporImports.at(0).get();
-        firstImport.value.specifiers = allSpecifiers;
-
-        vaporImports.forEach((path, idx) => {
-            if (idx > 0) {
-                j(path).remove();
-            }
-        });
-    }
-
-    // Detect Card import name (including alias)
-    let cardImportName: string = 'Card';
-    const finalVaporImports = root.find(j.ImportDeclaration, {
-        source: { value: '@vapor-ui/core' },
-    });
-
-    if (finalVaporImports.length > 0) {
-        const vaporImport = finalVaporImports.at(0).get().value;
-        vaporImport.specifiers?.forEach((spec: ImportSpecifier) => {
-            if (spec.imported.name === 'Card') {
-                // Use the local name (alias) if it exists, otherwise use 'Card'
-                cardImportName = (spec.local?.name as string) || 'Card';
-            }
-        });
-    }
+    // Get the final import name (considering aliases)
+    const cardImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
 
     // 2. Transform Card JSX elements to Card.Root (or alias.Root)
     root.find(j.JSXElement).forEach((path) => {
@@ -133,76 +56,10 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 (oldCardLocalName && element.openingElement.name.name === oldCardLocalName))
         ) {
             // Change to cardImportName.Root
-            element.openingElement.name = j.jsxMemberExpression(
-                j.jsxIdentifier(cardImportName),
-                j.jsxIdentifier('Root')
-            );
-
-            // Update closing tag if it exists
-            if (element.closingElement) {
-                element.closingElement.name = j.jsxMemberExpression(
-                    j.jsxIdentifier(cardImportName),
-                    j.jsxIdentifier('Root')
-                );
-            }
+            transformToMemberExpression(j, element, cardImportName, 'Root');
 
             // Transform asChild prop to render prop
-            const attributes = element.openingElement.attributes || [];
-            let hasAsChild = false;
-            const newAttributes = attributes.filter((attr) => {
-                if (attr.type === 'JSXAttribute' && attr.name.name === 'asChild') {
-                    hasAsChild = true;
-                    return false; // Remove asChild prop
-                }
-                return true;
-            });
-
-            element.openingElement.attributes = newAttributes;
-
-            // If asChild was present, add render prop with first child element
-            if (hasAsChild && element.children && element.children.length > 0) {
-                // Find the first JSXElement child
-                let firstElement = null;
-                let firstElementIndex = -1;
-
-                for (let i = 0; i < element.children.length; i++) {
-                    const child = element.children[i];
-                    if (child.type === 'JSXElement') {
-                        firstElement = child;
-                        firstElementIndex = i;
-                        break;
-                    }
-                }
-
-                if (firstElement) {
-                    // Create render prop with the first element (self-closing version)
-                    const renderProp = j.jsxAttribute(
-                        j.jsxIdentifier('render'),
-                        j.jsxExpressionContainer(
-                            j.jsxElement(
-                                j.jsxOpeningElement(
-                                    firstElement.openingElement.name,
-                                    firstElement.openingElement.attributes || [],
-                                    true // self-closing
-                                ),
-                                null,
-                                []
-                            )
-                        )
-                    );
-
-                    element.openingElement.attributes = [
-                        renderProp,
-                        ...element.openingElement.attributes,
-                    ];
-
-                    // Extract children from the wrapper element and replace the wrapper with its children
-                    const wrapperChildren = firstElement.children || [];
-                    const beforeWrapper = element.children.slice(0, firstElementIndex);
-                    const afterWrapper = element.children.slice(firstElementIndex + 1);
-                    element.children = [...beforeWrapper, ...wrapperChildren, ...afterWrapper];
-                }
-            }
+            transformAsChildToRender(j, element);
         }
     });
 
@@ -219,16 +76,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 (oldCardLocalName && element.openingElement.name.object.name === oldCardLocalName))
         ) {
             // Replace with the new import name (cardImportName)
-            element.openingElement.name.object.name = cardImportName;
-
-            // Update closing tag if it exists
-            if (
-                element.closingElement &&
-                element.closingElement.name.type === 'JSXMemberExpression' &&
-                element.closingElement.name.object.type === 'JSXIdentifier'
-            ) {
-                element.closingElement.name.object.name = cardImportName;
-            }
+            updateMemberExpressionObject(element, cardImportName);
         }
     });
 

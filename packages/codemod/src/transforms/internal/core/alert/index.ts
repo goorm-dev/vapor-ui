@@ -1,106 +1,46 @@
-import type {
-    API,
-    FileInfo,
-    Transform,
-    ImportSpecifier,
-    ASTPath,
-    ImportDeclaration,
-} from 'jscodeshift';
+import type { API, FileInfo, Transform } from 'jscodeshift';
+
+import {
+    getFinalImportName,
+    mergeImports,
+    migrateAndRenameImport,
+} from '~/utils/import-migration';
+import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
+
+const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
+const TARGET_PACKAGE = '@vapor-ui/core';
+const OLD_COMPONENT_NAME = 'Alert';
+const NEW_COMPONENT_NAME = 'Callout';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
+    // Track the old Alert local name from @goorm-dev/vapor-core
+    let oldAlertLocalName: string | null = null;
+
     // 1. Import migration: Alert -> Callout
     root.find(j.ImportDeclaration).forEach((path) => {
-        const importDeclaration = path.value;
+        const componentInfo = migrateAndRenameImport(
+            root,
+            j,
+            path,
+            OLD_COMPONENT_NAME,
+            NEW_COMPONENT_NAME,
+            SOURCE_PACKAGE,
+            TARGET_PACKAGE
+        );
 
-        if (
-            importDeclaration.source.value &&
-            typeof importDeclaration.source.value === 'string' &&
-            importDeclaration.source.value === '@goorm-dev/vapor-core'
-        ) {
-            let hasAlert = false;
-            const otherSpecifiers: typeof importDeclaration.specifiers = [];
-
-            importDeclaration.specifiers?.forEach((specifier) => {
-                if (specifier.type === 'ImportSpecifier' && specifier.imported.name === 'Alert') {
-                    hasAlert = true;
-                } else {
-                    otherSpecifiers.push(specifier);
-                }
-            });
-
-            if (hasAlert) {
-                // If Alert is the only import from @goorm-dev/vapor-core
-                if (otherSpecifiers.length === 0) {
-                    // Change the entire import to @vapor-ui/core with Callout
-                    importDeclaration.source.value = '@vapor-ui/core';
-                    importDeclaration.specifiers = [j.importSpecifier(j.identifier('Callout'))];
-                } else {
-                    // Remove Alert and keep other imports
-                    importDeclaration.specifiers = otherSpecifiers;
-
-                    // Add or merge Callout into existing @vapor-ui/core imports
-                    const vaporImports = root.find(j.ImportDeclaration, {
-                        source: { value: '@vapor-ui/core' },
-                    });
-
-                    if (vaporImports.length > 0) {
-                        // Add Callout to existing @vapor-ui/core import
-                        const firstImport = vaporImports.at(0).get().value;
-                        const hasCallout = firstImport.specifiers?.some(
-                            (spec: ImportSpecifier) =>
-                                spec.type === 'ImportSpecifier' && spec.imported.name === 'Callout'
-                        );
-
-                        if (!hasCallout) {
-                            firstImport.specifiers?.push(
-                                j.importSpecifier(j.identifier('Callout'))
-                            );
-                        }
-                    } else {
-                        // Create new @vapor-ui/core import with Callout
-                        const calloutImport = j.importDeclaration(
-                            [j.importSpecifier(j.identifier('Callout'))],
-                            j.literal('@vapor-ui/core')
-                        );
-                        path.insertAfter(calloutImport);
-                    }
-                }
-            }
+        if (componentInfo) {
+            oldAlertLocalName = componentInfo.localName;
         }
     });
 
     // Merge multiple @vapor-ui/core imports
-    const vaporImports = root.find(j.ImportDeclaration, {
-        source: { value: '@vapor-ui/core' },
-    });
+    mergeImports(root, j, TARGET_PACKAGE);
 
-    if (vaporImports.length > 1) {
-        const allSpecifiers: ImportSpecifier[] = [];
-        vaporImports.forEach((path: ASTPath<ImportDeclaration>) => {
-            path.value.specifiers?.forEach((spec) => {
-                if (spec.type === 'ImportSpecifier') {
-                    const exists = allSpecifiers.some(
-                        (s) => s.imported.name === spec.imported.name
-                    );
-                    if (!exists) {
-                        allSpecifiers.push(spec);
-                    }
-                }
-            });
-        });
-
-        const firstImport = vaporImports.at(0).get();
-        firstImport.value.specifiers = allSpecifiers;
-
-        vaporImports.forEach((path, idx) => {
-            if (idx > 0) {
-                j(path).remove();
-            }
-        });
-    }
+    // Get the final import name for Callout
+    const calloutImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
 
     // 2. Transform Alert JSX elements to Callout.Root
     root.find(j.JSXElement).forEach((path) => {
@@ -109,79 +49,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Alert> to <Callout.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'Alert'
+            (element.openingElement.name.name === 'Alert' ||
+                (oldAlertLocalName && element.openingElement.name.name === oldAlertLocalName))
         ) {
-            // Change Alert to Callout.Root
-            element.openingElement.name = j.jsxMemberExpression(
-                j.jsxIdentifier('Callout'),
-                j.jsxIdentifier('Root')
-            );
-
-            // Update closing tag if it exists
-            if (element.closingElement) {
-                element.closingElement.name = j.jsxMemberExpression(
-                    j.jsxIdentifier('Callout'),
-                    j.jsxIdentifier('Root')
-                );
-            }
+            // Change to Callout.Root
+            transformToMemberExpression(j, element, calloutImportName, 'Root');
 
             // Transform asChild prop to render prop
-            const attributes = element.openingElement.attributes || [];
-            let hasAsChild = false;
-            const newAttributes = attributes.filter((attr) => {
-                if (attr.type === 'JSXAttribute' && attr.name.name === 'asChild') {
-                    hasAsChild = true;
-                    return false; // Remove asChild prop
-                }
-                return true;
-            });
-
-            element.openingElement.attributes = newAttributes;
-
-            // If asChild was present, add render prop with first child element
-            if (hasAsChild && element.children && element.children.length > 0) {
-                // Find the first JSXElement child
-                let firstElement = null;
-                let firstElementIndex = -1;
-
-                for (let i = 0; i < element.children.length; i++) {
-                    const child = element.children[i];
-                    if (child.type === 'JSXElement') {
-                        firstElement = child;
-                        firstElementIndex = i;
-                        break;
-                    }
-                }
-
-                if (firstElement) {
-                    // Create render prop with the first element (self-closing version)
-                    const renderProp = j.jsxAttribute(
-                        j.jsxIdentifier('render'),
-                        j.jsxExpressionContainer(
-                            j.jsxElement(
-                                j.jsxOpeningElement(
-                                    firstElement.openingElement.name,
-                                    firstElement.openingElement.attributes || [],
-                                    true // self-closing
-                                ),
-                                null,
-                                []
-                            )
-                        )
-                    );
-
-                    element.openingElement.attributes = [
-                        renderProp,
-                        ...element.openingElement.attributes,
-                    ];
-
-                    // Extract children from the wrapper element and replace the wrapper with its children
-                    const wrapperChildren = firstElement.children || [];
-                    const beforeWrapper = element.children.slice(0, firstElementIndex);
-                    const afterWrapper = element.children.slice(firstElementIndex + 1);
-                    element.children = [...beforeWrapper, ...wrapperChildren, ...afterWrapper];
-                }
-            }
+            transformAsChildToRender(j, element);
 
             // Check if first JSX element child is an icon and wrap it with Callout.Icon
             if (element.children && element.children.length > 0) {
@@ -209,14 +84,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     const iconWrapper = j.jsxElement(
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
-                                j.jsxIdentifier('Callout'),
+                                j.jsxIdentifier(calloutImportName),
                                 j.jsxIdentifier('Icon')
                             ),
                             []
                         ),
                         j.jsxClosingElement(
                             j.jsxMemberExpression(
-                                j.jsxIdentifier('Callout'),
+                                j.jsxIdentifier(calloutImportName),
                                 j.jsxIdentifier('Icon')
                             )
                         ),

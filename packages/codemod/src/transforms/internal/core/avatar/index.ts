@@ -3,51 +3,43 @@ import type {
     FileInfo,
     Transform,
     JSXAttribute,
-    ImportSpecifier,
-    ASTPath,
-    ImportDeclaration,
     JSXSpreadAttribute,
 } from 'jscodeshift';
-import { migrateImportSpecifier } from '~/utils/import-migration';
+import { getFinalImportName, mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
+import { transformToMemberExpression } from '~/utils/jsx-transform';
+
+const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
+const TARGET_PACKAGE = '@vapor-ui/core';
+const COMPONENT_NAME = 'Avatar';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
+    // Track the old Avatar local name
+    let oldAvatarLocalName: string | null = null;
+
     // 1. Import migration
     root.find(j.ImportDeclaration).forEach((path) => {
-        migrateImportSpecifier(root, j, path, 'Avatar', '@goorm-dev/vapor-core', '@vapor-ui/core');
+        const componentInfo = migrateImportSpecifier(
+            root,
+            j,
+            path,
+            COMPONENT_NAME,
+            SOURCE_PACKAGE,
+            TARGET_PACKAGE
+        );
+
+        if (componentInfo) {
+            oldAvatarLocalName = componentInfo.localName;
+        }
     });
 
     // Merge multiple @vapor-ui/core imports
-    const vaporImports = root.find(j.ImportDeclaration, {
-        source: { value: '@vapor-ui/core' },
-    });
+    mergeImports(root, j, TARGET_PACKAGE);
 
-    if (vaporImports.length > 1) {
-        const allSpecifiers: ImportSpecifier[] = [];
-        vaporImports.forEach((path: ASTPath<ImportDeclaration>) => {
-            path.value.specifiers?.forEach((spec) => {
-                if (spec.type === 'ImportSpecifier') {
-                    const exists = allSpecifiers.some(
-                        (s) => s.imported.name === spec.imported.name
-                    );
-                    if (!exists) {
-                        allSpecifiers.push(spec);
-                    }
-                }
-            });
-        });
-
-        const firstImport = vaporImports.at(0).get();
-        firstImport.value.specifiers = allSpecifiers;
-
-        vaporImports.forEach((path, idx) => {
-            if (idx > 0) {
-                j(path).remove();
-            }
-        });
-    }
+    // Get the final import name
+    const avatarImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
 
     // 2. Transform Avatar JSX elements
     root.find(j.JSXElement).forEach((path) => {
@@ -56,20 +48,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Avatar> to <Avatar.Simple>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'Avatar'
+            (element.openingElement.name.name === 'Avatar' ||
+                (oldAvatarLocalName && element.openingElement.name.name === oldAvatarLocalName))
         ) {
             // Change Avatar to Avatar.Simple
-            element.openingElement.name = j.jsxMemberExpression(
-                j.jsxIdentifier('Avatar'),
-                j.jsxIdentifier('Simple')
-            );
-
-            if (element.closingElement) {
-                element.closingElement.name = j.jsxMemberExpression(
-                    j.jsxIdentifier('Avatar'),
-                    j.jsxIdentifier('Simple')
-                );
-            }
+            transformToMemberExpression(j, element, avatarImportName, 'Simple');
 
             const attributes = element.openingElement.attributes || [];
             let hasSquareProp = false;
