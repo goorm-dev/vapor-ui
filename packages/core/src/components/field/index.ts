@@ -1,16 +1,7 @@
-export {
-    Field,
-    FieldRoot,
-    FieldHLabel,
-    FieldVLabel,
-    FieldDescription,
-    FieldError,
-    FieldSuccess,
-} from './field';
+export { Field, FieldRoot, FieldLabel, FieldDescription, FieldError, FieldSuccess } from './field';
 export type {
     FieldRootProps,
-    FieldHLabelProps,
-    FieldVLabelProps,
+    FieldLabelProps,
     FieldDescriptionProps,
     FieldErrorProps,
     FieldSuccessProps,

@@ -12,7 +12,9 @@ import { Radio } from '~/components/radio';
 import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
 
+import { Box } from '../box';
 import { Button } from '../button';
+import { Text } from '../text';
 import { TextInput } from '../text-input';
 
 type FieldStoryArgs = React.ComponentProps<typeof Field.Root> & {
@@ -81,10 +83,10 @@ export const TestBed: Story = {
                         {...fieldArgs}
                     >
                         <Field.Description>non-required checkbox</Field.Description>
-                        <Field.HLabel>
+                        <Box render={<Field.Label />} alignItems="center">
                             <Checkbox.Root />
                             멘토님 강연 능력
-                        </Field.HLabel>
+                        </Box>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
                         <Field.Success match>
                             <CheckCircleIcon /> 강의 평가가 완료되었습니다
@@ -96,19 +98,20 @@ export const TestBed: Story = {
                         {...fieldArgs}
                     >
                         <Field.Description>required checkbox</Field.Description>
-                        <Field.HLabel>
+
+                        <Box render={<Field.Label />} alignItems="center">
                             <Checkbox.Root required />
                             멘토님 강연 능력
-                        </Field.HLabel>
+                        </Box>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
                         <Field.Success match>✓ 강의 평가가 완료되었습니다</Field.Success>
                     </Field.Root>
                     {/* Switch Component Example */}
                     <Field.Root name="notifications" validationMode="onChange" {...fieldArgs}>
-                        <Field.HLabel>
+                        <Box render={<Field.Label />} alignItems="center">
                             서비스 메일 수신 동의 - required
                             <Switch.Root required />
-                        </Field.HLabel>
+                        </Box>
                         <Field.Description>
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
                         </Field.Description>
@@ -116,10 +119,10 @@ export const TestBed: Story = {
                         <Field.Success match>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="notifications2" validationMode="onChange" {...fieldArgs}>
-                        <Field.HLabel>
+                        <Box render={<Field.Label />} alignItems="center">
                             이벤트성 광고 수신 동의 - non required
                             <Switch.Root />
-                        </Field.HLabel>
+                        </Box>
                         <Field.Description>
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
                         </Field.Description>
@@ -132,28 +135,30 @@ export const TestBed: Story = {
                         render={<RadioGroup.Root required />}
                         {...fieldArgs}
                     >
-                        <Field.HLabel>
+                        <Box render={<Field.Label />} alignItems="center">
                             <Radio.Root value="male" />
                             남성
-                        </Field.HLabel>
+                        </Box>
 
-                        <Field.HLabel>
+                        <Box render={<Field.Label />} alignItems="center">
                             <Radio.Root value="female" />
                             여성
-                        </Field.HLabel>
+                        </Box>
 
-                        <Field.HLabel>
+                        <Box render={<Field.Label />} alignItems="center">
                             <Radio.Root value="other" />
                             기타
-                        </Field.HLabel>
+                        </Box>
                         <Field.Error match>성별을 반드시 선택해주세요.</Field.Error>
                         <Field.Success match>✓ 성별이 선택되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
-                        <Field.VLabel>
-                            이름
+                        <Box render={<Field.Label />} flexDirection="column">
+                            <Text typography="subtitle2" foreground="normal-200">
+                                이름
+                            </Text>
                             <TextInput required />
-                        </Field.VLabel>
+                        </Box>
                         <Field.Description>
                             계정 생성을 위해 유효한 이름을 입력해주세요
                         </Field.Description>
