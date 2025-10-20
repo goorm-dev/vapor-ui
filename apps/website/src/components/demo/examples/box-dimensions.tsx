@@ -13,7 +13,7 @@ export default function BoxDimensions() {
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
-                        color="$contrast-100"
+                        textColor="$contrast-100"
                     >
                         800x800
                     </Box>
