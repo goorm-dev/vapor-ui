@@ -90,7 +90,7 @@ interface FieldSuccessProps extends PrimitiveSuccessProps {
 }
 
 const Success = forwardRef<HTMLDivElement, FieldSuccessProps>(
-    ({ match, className, ...props }, ref) => {
+    ({ match = 'valid', className, ...props }, ref) => {
         return (
             <BaseField.Error
                 ref={ref}
