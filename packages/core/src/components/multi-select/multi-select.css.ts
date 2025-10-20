@@ -146,7 +146,11 @@ export const triggerIcon = recipe({
     },
 });
 
-export const itemIndicator = style([foregrounds({ color: 'normal-200' }), icon]);
+export const itemIndicator = style([
+    foregrounds({ color: 'normal-200' }),
+    icon,
+    { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
+]);
 
 export const positioner = layerStyle('components', {
     position: 'relative',

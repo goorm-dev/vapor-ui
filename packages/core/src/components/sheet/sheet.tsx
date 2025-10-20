@@ -15,6 +15,7 @@ import { createContext } from '~/libs/create-context';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Dialog } from '../dialog';
@@ -132,8 +133,12 @@ const [SheetPositionerProvider, useSheetPositionerContext] = createContext<Posit
 
 interface SheetPositionerProps extends VComponentProps<'div'>, PositionerType {}
 
-const Positioner = forwardRef<HTMLDivElement, SheetPositionerProps>(({ render, ...props }, ref) => {
-    const [positionerProps, otherProps] = createSplitProps<PositionerType>()(props, ['side']);
+const Positioner = forwardRef<HTMLDivElement, SheetPositionerProps>((props, ref) => {
+    const { render, ...componentProps } = resolveStyles(props);
+
+    const [positionerProps, otherProps] = createSplitProps<PositionerType>()(componentProps, [
+        'side',
+    ]);
     const { side = 'right' } = positionerProps;
 
     const { open: contextOpen = false, mounted } = useSheetRootContext();
@@ -164,7 +169,9 @@ const Positioner = forwardRef<HTMLDivElement, SheetPositionerProps>(({ render, .
 
 interface SheetPopupProps extends VComponentProps<typeof BaseDialog.Popup> {}
 
-const Popup = forwardRef<HTMLDivElement, SheetPopupProps>(({ className, ...props }, ref) => {
+const Popup = forwardRef<HTMLDivElement, SheetPopupProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
     const { popupRef } = useSheetRootContext();
     const { side = 'right' } = useSheetPositionerContext();
 
@@ -177,7 +184,7 @@ const Popup = forwardRef<HTMLDivElement, SheetPopupProps>(({ className, ...props
             ref={composedRef}
             className={clsx(styles.popup, className)}
             {...dataAttr}
-            {...props}
+            {...componentProps}
         />
     );
 });
@@ -187,14 +194,14 @@ Popup.displayName = 'Sheet.Popup';
  * Sheet.Content
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetContentProps extends VComponentProps<typeof BaseDialog.Popup> {
+interface SheetContentProps extends VComponentProps<typeof Popup> {
     portalProps?: SheetPortalProps;
     overlayProps?: SheetOverlayProps;
     positionerProps?: SheetPositionerProps;
 }
 
 const Content = forwardRef<HTMLDivElement, SheetContentProps>(
-    ({ portalProps, overlayProps, positionerProps, className, ...props }, ref) => {
+    ({ portalProps, overlayProps, positionerProps, ...props }, ref) => {
         return (
             <Portal {...portalProps}>
                 <Overlay {...overlayProps} />
@@ -213,8 +220,12 @@ Content.displayName = 'Sheet.Content';
 
 interface SheetHeaderProps extends VComponentProps<typeof Dialog.Header> {}
 
-const Header = forwardRef<HTMLDivElement, SheetHeaderProps>(({ className, ...props }, ref) => {
-    return <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...props} />;
+const Header = forwardRef<HTMLDivElement, SheetHeaderProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...componentProps} />
+    );
 });
 Header.displayName = 'Sheet.Header';
 
@@ -224,8 +235,10 @@ Header.displayName = 'Sheet.Header';
 
 interface SheetBodyProps extends VComponentProps<typeof Dialog.Body> {}
 
-const Body = forwardRef<HTMLDivElement, SheetBodyProps>(({ className, ...props }, ref) => {
-    return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...props} />;
+const Body = forwardRef<HTMLDivElement, SheetBodyProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...componentProps} />;
 });
 Body.displayName = 'Sheet.Body';
 
@@ -235,8 +248,12 @@ Body.displayName = 'Sheet.Body';
 
 interface SheetFooterProps extends VComponentProps<typeof Dialog.Footer> {}
 
-const Footer = forwardRef<HTMLDivElement, SheetFooterProps>(({ className, ...props }, ref) => {
-    return <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...props} />;
+const Footer = forwardRef<HTMLDivElement, SheetFooterProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...componentProps} />
+    );
 });
 Footer.displayName = 'Sheet.Footer';
 

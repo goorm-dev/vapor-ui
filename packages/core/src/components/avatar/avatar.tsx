@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/vars.css';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { FallbackVariants, RootVariants } from './avatar.css';
@@ -28,8 +29,9 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 type AvatarRootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
 interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
 
-const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
-    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
+const Root = forwardRef<HTMLSpanElement, AvatarRootProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(componentProps, [
         'src',
         'alt',
         'size',
@@ -58,7 +60,8 @@ Root.displayName = 'Avatar.Root';
 type AvatarImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
 interface AvatarImageProps extends Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps> {}
 
-const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...props }, ref) => {
+const Image = forwardRef<HTMLImageElement, AvatarImageProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
     const { src, alt } = useAvatarContext();
 
     return (
@@ -67,7 +70,7 @@ const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...pr
             src={src}
             alt={alt}
             className={clsx(styles.image, className)}
-            {...props}
+            {...componentProps}
         />
     );
 });
@@ -80,27 +83,28 @@ Image.displayName = 'Avatar.Image';
 type AvatarFallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
 interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
 
-const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
-    ({ className, style, children, ...props }, ref) => {
-        const { size, alt, delay } = useAvatarContext();
-        const background = getRandomColor(alt);
+const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>((props, ref) => {
+    const { className, style, children, ...componentProps } = resolveStyles(props);
+    const { size, alt, delay } = useAvatarContext();
+    const background = getRandomColor(alt);
 
-        return (
-            <BaseAvatar.Fallback
-                ref={ref}
-                delay={delay}
-                style={{
-                    ...assignInlineVars({ [styles.fallbackBgVar]: background }),
-                    ...style,
-                }}
-                className={clsx(styles.fallback({ size }), className)}
-                {...props}
-            >
-                {children ?? getAvatarInitials(alt)}
-            </BaseAvatar.Fallback>
-        );
-    },
-);
+    const mergedStyle = {
+        ...assignInlineVars({ [styles.fallbackBgVar]: background }),
+        ...style,
+    };
+
+    return (
+        <BaseAvatar.Fallback
+            ref={ref}
+            delay={delay}
+            style={mergedStyle}
+            className={clsx(styles.fallback({ size }), className)}
+            {...componentProps}
+        >
+            {children ?? getAvatarInitials(alt)}
+        </BaseAvatar.Fallback>
+    );
+});
 Fallback.displayName = 'Avatar.Fallback';
 
 /* -------------------------------------------------------------------------------------------------

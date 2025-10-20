@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
@@ -22,33 +23,32 @@ type RadioVariants = RootVariants;
 type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
 interface RadioRootProps extends RootPrimitiveProps, RadioVariants {}
 
-const Root = forwardRef<HTMLButtonElement, RadioRootProps>(
-    ({ className, children, ...props }, ref) => {
-        const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
+const Root = forwardRef<HTMLButtonElement, RadioRootProps>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
+    const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
-        const [variantProps, otherProps] = createSplitProps<RadioVariants>()(props, [
-            'invalid',
-            'size',
-        ]);
-        const { size: sizeProp, invalid: invalidProp } = variantProps;
+    const [variantProps, otherProps] = createSplitProps<RadioVariants>()(componentProps, [
+        'invalid',
+        'size',
+    ]);
+    const { size: sizeProp, invalid: invalidProp } = variantProps;
 
-        const size = sizeProp || contextSize;
-        const invalid = invalidProp || contextInvalid;
+    const size = sizeProp || contextSize;
+    const invalid = invalidProp || contextInvalid;
 
-        const IndicatorElement = createSlot(children || <Indicator />);
+    const IndicatorElement = createSlot(children || <Indicator />);
 
-        return (
-            <BaseRadio.Root
-                ref={ref}
-                aria-invalid={invalid}
-                className={clsx(styles.root({ size, invalid }), className)}
-                {...otherProps}
-            >
-                <IndicatorElement />
-            </BaseRadio.Root>
-        );
-    },
-);
+    return (
+        <BaseRadio.Root
+            ref={ref}
+            aria-invalid={invalid}
+            className={clsx(styles.root({ size, invalid }), className)}
+            {...otherProps}
+        >
+            <IndicatorElement />
+        </BaseRadio.Root>
+    );
+});
 Root.displayName = 'RadioGroup.Root';
 
 /* -------------------------------------------------------------------------------------------------
@@ -58,17 +58,17 @@ Root.displayName = 'RadioGroup.Root';
 type IndicatorPrimitiveProps = VComponentProps<typeof BaseRadio.Indicator>;
 interface RadioIndicatorProps extends IndicatorPrimitiveProps {}
 
-const Indicator = forwardRef<HTMLDivElement, RadioIndicatorProps>(
-    ({ className, ...props }, ref) => {
-        return (
-            <BaseRadio.Indicator
-                ref={ref}
-                className={clsx(styles.indicator, className)}
-                {...props}
-            />
-        );
-    },
-);
+const Indicator = forwardRef<HTMLDivElement, RadioIndicatorProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseRadio.Indicator
+            ref={ref}
+            className={clsx(styles.indicator, className)}
+            {...componentProps}
+        />
+    );
+});
 Indicator.displayName = 'Radio.Indicator';
 
 /* -----------------------------------------------------------------------------------------------*/

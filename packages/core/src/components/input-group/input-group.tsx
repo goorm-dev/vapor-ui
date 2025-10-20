@@ -7,6 +7,7 @@ import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './input-group.css';
@@ -71,33 +72,33 @@ export function useInputGroup({ value, maxLength }: UseInputGroupSyncOptions) {
 
 interface InputGroupRootProps extends VComponentProps<'div'> {}
 
-const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
-    ({ className, render, ...props }, ref) => {
-        const [value, setValue] = useState<FieldValue>('');
-        const [maxLength, setMaxLength] = useState<FieldMaxLength | undefined>();
+const Root = forwardRef<HTMLDivElement, InputGroupRootProps>((props, ref) => {
+    const { className, render, ...componentProps } = resolveStyles(props);
 
-        const contextValue: InputGroupSharedProps = useMemo(
-            () => ({
-                value,
-                maxLength,
-                setValue,
-                setMaxLength,
-            }),
-            [value, maxLength],
-        );
+    const [value, setValue] = useState<FieldValue>('');
+    const [maxLength, setMaxLength] = useState<FieldMaxLength | undefined>();
 
-        const element = useRender({
-            ref,
-            render: render || <div />,
-            props: {
-                className: clsx(styles.root, className),
-                ...props,
-            },
-        });
+    const contextValue: InputGroupSharedProps = useMemo(
+        () => ({
+            value,
+            maxLength,
+            setValue,
+            setMaxLength,
+        }),
+        [value, maxLength],
+    );
 
-        return <InputGroupProvider value={contextValue}>{element}</InputGroupProvider>;
-    },
-);
+    const element = useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.root, className),
+            ...componentProps,
+        },
+    });
+
+    return <InputGroupProvider value={contextValue}>{element}</InputGroupProvider>;
+});
 
 Root.displayName = 'InputGroup.Root';
 
@@ -129,23 +130,22 @@ const generateCounterContent = (
     return maxLength !== undefined ? `${count}/${maxLength}` : `${count}`;
 };
 
-const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>(
-    ({ className, children, render, ...props }, ref) => {
-        const { value, maxLength } = useInputGroupContext();
-        const currentLength = value.length;
-        const content = generateCounterContent(children, currentLength, maxLength, value);
+const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>((props, ref) => {
+    const { className, children: childrenProp, render, ...componentProps } = resolveStyles(props);
+    const { value, maxLength } = useInputGroupContext();
+    const currentLength = value.length;
+    const children = generateCounterContent(childrenProp, currentLength, maxLength, value);
 
-        return useRender({
-            ref,
-            render: render || <span />,
-            props: {
-                className: clsx(styles.counter, className),
-                children: content,
-                ...props,
-            },
-        });
-    },
-);
+    return useRender({
+        ref,
+        render: render || <span />,
+        props: {
+            className: clsx(styles.counter, className),
+            children,
+            ...componentProps,
+        },
+    });
+});
 
 Counter.displayName = 'InputGroup.Counter';
 

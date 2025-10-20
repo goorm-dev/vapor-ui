@@ -9,6 +9,7 @@ import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './radio-group.css';
@@ -36,10 +37,12 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
 type RootPrimitiveProps = VComponentProps<typeof BaseRadioGroup>;
 interface RadioGroupRootProps extends RootPrimitiveProps, RadioGroupSharedProps {}
 
-const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...props }, ref) => {
+const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
     const [labelElementId, setLabelElementId] = useState<string | undefined>(undefined);
 
-    const [variantProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(props, [
+    const [variantProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(componentProps, [
         'size',
         'invalid',
         'orientation',
@@ -69,24 +72,24 @@ Root.displayName = 'RadioGroup.Root';
 type LabelPrimitiveProps = VComponentProps<'span'>;
 interface RadioGroupLabelProps extends LabelPrimitiveProps {}
 
-const Label = forwardRef<HTMLSpanElement, RadioGroupLabelProps>(
-    ({ render, className, ...props }, ref) => {
-        const { setLabelElementId } = useRadioGroupContext();
+const Label = forwardRef<HTMLSpanElement, RadioGroupLabelProps>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
 
-        const id = useVaporId();
+    const { setLabelElementId } = useRadioGroupContext();
 
-        useIsoLayoutEffect(() => {
-            setLabelElementId?.(id);
-            return () => setLabelElementId?.(undefined);
-        }, [id, setLabelElementId]);
+    const id = useVaporId();
 
-        return useRender({
-            ref,
-            render: render || <span />,
-            props: { id, className: clsx(styles.label, className), ...props },
-        });
-    },
-);
+    useIsoLayoutEffect(() => {
+        setLabelElementId?.(id);
+        return () => setLabelElementId?.(undefined);
+    }, [id, setLabelElementId]);
+
+    return useRender({
+        ref,
+        render: render || <span />,
+        props: { id, className: clsx(styles.label, className), ...componentProps },
+    });
+});
 Label.displayName = 'RadioGroup.Label';
 
 /* -----------------------------------------------------------------------------------------------*/

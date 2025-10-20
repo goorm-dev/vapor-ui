@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { useInputGroup } from '~/components/input-group/input-group';
 import { useAutoResize } from '~/hooks/use-auto-resize';
 import { composeRefs } from '~/utils/compose-refs';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
@@ -29,83 +30,80 @@ interface TextareaProps extends Assign<Omit<TextareaPrimitiveProps, 'size'>, Bas
     defaultValue?: string;
 }
 
-const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-    (
-        {
-            onValueChange,
-            value: valueProp,
-            defaultValue,
-            className,
-            invalid,
-            size,
-            autoResize,
-            maxLength,
-            render,
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => {
+    const {
+        onValueChange,
+        value: valueProp,
+        defaultValue,
+        className,
+        invalid,
+        size,
+        autoResize,
+        maxLength,
+        render,
+        disabled,
+        readOnly,
+        required,
+        ...componentProps
+    } = resolveStyles(props);
+
+    const isControlled = valueProp !== undefined;
+
+    // Use useControlled for unified value state management
+    const [value, setValue] = useControlled({
+        controlled: valueProp,
+        default: defaultValue,
+        name: 'TextArea',
+        state: 'value',
+    });
+
+    // Handle InputGroup synchronization via custom hook
+    useInputGroup({
+        value,
+        maxLength,
+    });
+
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+    // Auto resize functionality
+    const adjustHeight = useAutoResize(textareaRef);
+
+    // Trigger auto resize when value changes
+    useEffect(() => {
+        if (autoResize) {
+            adjustHeight();
+        }
+    }, [value, autoResize, adjustHeight]);
+
+    const handleRef = composeRefs(textareaRef, ref);
+
+    const handleValueChange = (newValue: string, event: Event) => {
+        onValueChange?.(newValue, event);
+        setValue(newValue);
+    };
+
+    const finalValue = value ?? '';
+    return useRender({
+        ref: handleRef,
+        render: render || <BaseField.Control render={<textarea />} />,
+        props: {
+            onValueChange(newValue: string, event: Event) {
+                if (disabled || readOnly) return;
+
+                handleValueChange(newValue, event);
+            },
+            ...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' }),
             disabled,
             readOnly,
             required,
-            ...props
-        },
-        ref,
-    ) => {
-        const isControlled = valueProp !== undefined;
-
-        // Use useControlled for unified value state management
-        const [value, setValue] = useControlled({
-            controlled: valueProp,
-            default: defaultValue,
-            name: 'TextArea',
-            state: 'value',
-        });
-
-        // Handle InputGroup synchronization via custom hook
-        useInputGroup({
-            value,
             maxLength,
-        });
-
-        const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-        // Auto resize functionality
-        const adjustHeight = useAutoResize(textareaRef);
-
-        // Trigger auto resize when value changes
-        useEffect(() => {
-            if (autoResize) {
-                adjustHeight();
-            }
-        }, [value, autoResize, adjustHeight]);
-
-        const handleRef = composeRefs(textareaRef, ref);
-
-        const handleValueChange = (newValue: string, event: Event) => {
-            onValueChange?.(newValue, event);
-            setValue(newValue);
-        };
-
-        const finalValue = value ?? '';
-        return useRender({
-            ref: handleRef,
-            render: render || <BaseField.Control render={<textarea />} />,
-            props: {
-                onValueChange(newValue: string, event: Event) {
-                    if (disabled || readOnly) return;
-
-                    handleValueChange(newValue, event);
-                },
-                ...(isControlled ? { value: finalValue } : { defaultValue: defaultValue ?? '' }),
-                disabled,
-                readOnly,
-                required,
-                maxLength,
-                'aria-invalid': invalid || undefined,
-                'aria-required': required || undefined,
-                className: clsx(styles.textarea({ invalid, size, autoResize }), className),
-                ...props,
-            },
-        });
-    },
-);
+            'aria-invalid': invalid || undefined,
+            'aria-required': required || undefined,
+            className: clsx(styles.textarea({ invalid, size, autoResize }), className),
+            ...componentProps,
+        },
+    });
+});
 Textarea.displayName = 'Textarea';
 
 export { Textarea };

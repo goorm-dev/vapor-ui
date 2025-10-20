@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { ControlVariants } from './switch.css';
@@ -29,28 +30,29 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
 type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
 interface SwitchRootProps extends RootPrimitiveProps, SwitchSharedProps {}
 
-const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
-    ({ className, children: childrenProp, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, ['size']);
+const Root = forwardRef<HTMLButtonElement, SwitchRootProps>((props, ref) => {
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
+        'size',
+    ]);
 
-        const { size } = variantProps;
+    const { size } = variantProps;
 
-        const ThumbElement = useMemo(() => createSlot(<Thumb />), []);
-        const children = childrenProp || <ThumbElement />;
+    const ThumbElement = useMemo(() => createSlot(<Thumb />), []);
+    const children = childrenProp || <ThumbElement />;
 
-        return (
-            <SwitchProvider value={variantProps}>
-                <BaseSwitch.Root
-                    ref={ref}
-                    className={clsx(styles.control({ size }), className)}
-                    {...otherProps}
-                >
-                    {children}
-                </BaseSwitch.Root>
-            </SwitchProvider>
-        );
-    },
-);
+    return (
+        <SwitchProvider value={variantProps}>
+            <BaseSwitch.Root
+                ref={ref}
+                className={clsx(styles.control({ size }), className)}
+                {...otherProps}
+            >
+                {children}
+            </BaseSwitch.Root>
+        </SwitchProvider>
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Switch.Thumb
@@ -59,10 +61,13 @@ const Root = forwardRef<HTMLButtonElement, SwitchRootProps>(
 type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
 interface SwitchThumbProps extends ThumbPrimitiveProps {}
 
-const Thumb = forwardRef<HTMLDivElement, SwitchThumbProps>(({ className, ...props }, ref) => {
+const Thumb = forwardRef<HTMLDivElement, SwitchThumbProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
     const { size } = useSwitchContext();
 
-    return <BaseSwitch.Thumb ref={ref} className={styles.indicator({ size })} {...props} />;
+    return (
+        <BaseSwitch.Thumb ref={ref} className={styles.indicator({ size })} {...componentProps} />
+    );
 });
 Thumb.displayName = 'Switch.Thumb';
 

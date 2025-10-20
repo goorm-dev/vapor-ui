@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 
 import * as styles from './tabs.css';
 import type { ListVariants, TriggerVariants } from './tabs.css';
@@ -28,8 +29,9 @@ const [TabsProvider, useTabsContext] = createContext<TabsContext>({
 type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Root>;
 interface TabsRootProps extends RootPrimitiveProps, TabsSharedProps {}
 
-const Root = forwardRef<HTMLDivElement, TabsRootProps>(({ className, ...props }, ref) => {
-    const [sharedProps, otherProps] = createSplitProps<TabsSharedProps>()(props, [
+const Root = forwardRef<HTMLDivElement, TabsRootProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+    const [sharedProps, otherProps] = createSplitProps<TabsSharedProps>()(componentProps, [
         'activateOnFocus',
         'loop',
         'variant',
@@ -60,16 +62,17 @@ Root.displayName = 'Tabs.Root';
 type ListPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.List>;
 interface TabsListProps extends Omit<ListPrimitiveProps, keyof TabsSharedProps> {}
 
-const List = forwardRef<HTMLDivElement, TabsListProps>(({ className, ...props }, ref) => {
+const List = forwardRef<HTMLDivElement, TabsListProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
     const { activateOnFocus, loop, variant, orientation } = useTabsContext();
 
     return (
         <BaseTabs.List
             ref={ref}
-            activateOnFocus={activateOnFocus}
             loop={loop}
+            activateOnFocus={activateOnFocus}
             className={clsx(styles.list({ variant, orientation }), className)}
-            {...props}
+            {...componentProps}
         />
     );
 });
@@ -82,22 +85,21 @@ List.displayName = 'Tabs.List';
 type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Tab>;
 interface TabsTriggerProps extends TriggerPrimitiveProps {}
 
-const Trigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
-    ({ disabled: disabledProp, className, ...props }, ref) => {
-        const { disabled: rootDisabled, size, orientation } = useTabsContext();
+const Trigger = forwardRef<HTMLButtonElement, TabsTriggerProps>((props, ref) => {
+    const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
+    const { disabled: rootDisabled, size, orientation } = useTabsContext();
 
-        const disabled = disabledProp || rootDisabled;
+    const disabled = disabledProp || rootDisabled;
 
-        return (
-            <BaseTabs.Tab
-                ref={ref}
-                disabled={disabled}
-                className={clsx(styles.trigger({ size, disabled, orientation }), className)}
-                {...props}
-            />
-        );
-    },
-);
+    return (
+        <BaseTabs.Tab
+            ref={ref}
+            disabled={disabled}
+            className={clsx(styles.trigger({ size, disabled, orientation }), className)}
+            {...componentProps}
+        />
+    );
+});
 Trigger.displayName = 'Tabs.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
@@ -107,14 +109,15 @@ Trigger.displayName = 'Tabs.Trigger';
 type IndicatorPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Indicator>;
 interface TabsIndicatorProps extends IndicatorPrimitiveProps {}
 
-const Indicator = forwardRef<HTMLDivElement, TabsIndicatorProps>(({ className, ...props }, ref) => {
+const Indicator = forwardRef<HTMLDivElement, TabsIndicatorProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
     const { orientation } = useTabsContext();
 
     return (
         <BaseTabs.Indicator
             ref={ref}
             className={clsx(styles.indicator({ orientation }), className)}
-            {...props}
+            {...componentProps}
         />
     );
 });
@@ -128,7 +131,9 @@ type PanelPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Panel>;
 interface TabsPanelProps extends PanelPrimitiveProps {}
 
 const Panel = forwardRef<HTMLDivElement, TabsPanelProps>((props, ref) => {
-    return <BaseTabs.Panel ref={ref} {...props} />;
+    const componentProps = resolveStyles(props);
+
+    return <BaseTabs.Panel ref={ref} {...componentProps} />;
 });
 Panel.displayName = 'Tabs.Panel';
 

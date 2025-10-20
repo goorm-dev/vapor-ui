@@ -1,28 +1,21 @@
 import { forwardRef } from 'react';
 
 import { useRender } from '@base-ui-components/react/use-render';
-import clsx from 'clsx';
 
-import { type Sprinkles, sprinkles } from '~/styles/sprinkles.css';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
-interface BoxProps extends VComponentProps<'div'>, Sprinkles {}
+interface BoxProps extends VComponentProps<'div'> {}
 
-const Box = forwardRef<HTMLDivElement, BoxProps>(
-    ({ render, color, className, style, ...props }, ref) => {
-        const layout = sprinkles({ color, ...props });
+const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
+    const { render, ...componentProps } = resolveStyles(props);
 
-        return useRender({
-            ref,
-            render: render || <div />,
-            props: {
-                className: clsx(layout.className, className),
-                style: { ...layout.style, ...style },
-                ...layout.otherProps,
-            },
-        });
-    },
-);
+    return useRender({
+        ref,
+        render: render || <div />,
+        props: componentProps,
+    });
+});
 Box.displayName = 'Box';
 
 export { Box };

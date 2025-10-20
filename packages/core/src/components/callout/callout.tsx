@@ -4,6 +4,7 @@ import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { CalloutVariants } from './callout.css';
@@ -16,20 +17,21 @@ import * as styles from './callout.css';
 type CalloutRootPrimitiveProps = VComponentProps<'div'>;
 interface CalloutRootProps extends CalloutRootPrimitiveProps, CalloutVariants {}
 
-const CalloutRoot = forwardRef<HTMLDivElement, CalloutRootProps>(
-    ({ render, className, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(props, ['color']);
+const CalloutRoot = forwardRef<HTMLDivElement, CalloutRootProps>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+    const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(componentProps, [
+        'color',
+    ]);
 
-        return useRender({
-            ref,
-            render: render || <div />,
-            props: {
-                className: clsx(styles.root(variantProps), className),
-                ...otherProps,
-            },
-        });
-    },
-);
+    return useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.root(variantProps), className),
+            ...otherProps,
+        },
+    });
+});
 CalloutRoot.displayName = 'CalloutRoot';
 
 /* -------------------------------------------------------------------------------------------------
@@ -39,18 +41,18 @@ CalloutRoot.displayName = 'CalloutRoot';
 type CalloutIconPrimitiveProps = VComponentProps<'div'>;
 interface CalloutIconProps extends CalloutIconPrimitiveProps {}
 
-const CalloutIcon = forwardRef<HTMLDivElement, CalloutIconProps>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <div />,
-            props: {
-                className: clsx(styles.icon, className),
-                ...props,
-            },
-        });
-    },
-);
+const CalloutIcon = forwardRef<HTMLDivElement, CalloutIconProps>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.icon, className),
+            ...componentProps,
+        },
+    });
+});
 CalloutIcon.displayName = 'CalloutIcon';
 
 /* -------------------------------------------------------------------------------------------------

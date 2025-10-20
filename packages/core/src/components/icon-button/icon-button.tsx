@@ -15,25 +15,24 @@ interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {
     'aria-label': string;
 }
 
-const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ 'aria-label': ariaLabel, className, children, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, ['shape']);
+const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
+    const { 'aria-label': ariaLabel, className, children, ...componentProps } = props;
+    const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, ['shape']);
 
-        const IconSlot = createSlot(children);
+    const IconElement = createSlot(children);
 
-        return (
-            <Button
-                ref={ref}
-                aria-label={ariaLabel}
-                className={clsx(styles.root(variantProps), className)}
-                {...otherProps}
-                stretch={false}
-            >
-                <IconSlot aria-hidden className={styles.icon({ size: otherProps.size })} />
-            </Button>
-        );
-    },
-);
+    return (
+        <Button
+            ref={ref}
+            aria-label={ariaLabel}
+            className={clsx(styles.root(variantProps), className)}
+            {...componentProps}
+            stretch={false}
+        >
+            <IconElement aria-hidden className={styles.icon({ size: otherProps.size })} />
+        </Button>
+    );
+});
 IconButton.displayName = 'IconButton';
 
 export { IconButton };

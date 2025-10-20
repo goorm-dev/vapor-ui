@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './select.css';
@@ -56,22 +57,27 @@ const Root = ({ items, ...props }: SelectRootProps) => {
 type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
 interface SelectTriggerProps extends TriggerPrimitiveProps {}
 
-const Trigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
-    ({ render = <button />, nativeButton = true, className, ...props }, ref) => {
-        const { size, invalid } = useSelectContext();
+const Trigger = forwardRef<HTMLButtonElement, SelectTriggerProps>((props, ref) => {
+    const {
+        render = <button />,
+        nativeButton = true,
+        className,
+        ...componentProps
+    } = resolveStyles(props);
 
-        return (
-            <BaseSelect.Trigger
-                ref={ref}
-                render={render}
-                nativeButton={nativeButton}
-                aria-invalid={invalid || undefined}
-                className={clsx(styles.trigger({ size, invalid }), className)}
-                {...props}
-            />
-        );
-    },
-);
+    const { size, invalid } = useSelectContext();
+
+    return (
+        <BaseSelect.Trigger
+            ref={ref}
+            render={render}
+            nativeButton={nativeButton}
+            aria-invalid={invalid || undefined}
+            className={clsx(styles.trigger({ size, invalid }), className)}
+            {...componentProps}
+        />
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Value
@@ -80,33 +86,32 @@ const Trigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
 type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
 interface SelectValueProps extends ValuePrimitiveProps {}
 
-const Value = forwardRef<HTMLSpanElement, SelectValueProps>(
-    ({ className, children: childrenProp, ...props }, ref) => {
-        const { items, size, placeholder } = useSelectContext();
+const Value = forwardRef<HTMLSpanElement, SelectValueProps>((props, ref) => {
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const { items, size, placeholder } = useSelectContext();
 
-        const renderValue = (value: string) => {
-            if (!items) return value;
+    const renderValue = (value: string) => {
+        if (!items) return value;
 
-            if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
-            return items[value];
-        };
+        if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
+        return items[value];
+    };
 
-        const children = (value: string) =>
-            typeof childrenProp === 'function'
-                ? childrenProp(value)
-                : (childrenProp ?? renderValue(value) ?? <Placeholder>{placeholder}</Placeholder>);
+    const children = (value: string) =>
+        typeof childrenProp === 'function'
+            ? childrenProp(value)
+            : (childrenProp ?? renderValue(value) ?? <Placeholder>{placeholder}</Placeholder>);
 
-        return (
-            <BaseSelect.Value
-                ref={ref}
-                className={clsx(styles.value({ size }), className)}
-                {...props}
-            >
-                {children}
-            </BaseSelect.Value>
-        );
-    },
-);
+    return (
+        <BaseSelect.Value
+            ref={ref}
+            className={clsx(styles.value({ size }), className)}
+            {...componentProps}
+        >
+            {children}
+        </BaseSelect.Value>
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Placeholder
@@ -115,17 +120,17 @@ const Value = forwardRef<HTMLSpanElement, SelectValueProps>(
 type PlaceholderPrimitiveProps = VComponentProps<'span'>;
 interface SelectPlaceholderProps extends PlaceholderPrimitiveProps {}
 
-const Placeholder = forwardRef<HTMLSpanElement, SelectPlaceholderProps>(
-    ({ render, className, ...props }, ref) => {
-        return (
-            <BaseSelect.Value
-                ref={ref}
-                className={clsx(styles.placeholder, className)}
-                {...props}
-            />
-        );
-    },
-);
+const Placeholder = forwardRef<HTMLSpanElement, SelectPlaceholderProps>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseSelect.Value
+            ref={ref}
+            className={clsx(styles.placeholder, className)}
+            {...componentProps}
+        />
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Select.TriggerIcon
@@ -134,23 +139,23 @@ const Placeholder = forwardRef<HTMLSpanElement, SelectPlaceholderProps>(
 type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
 interface SelectTriggerIconProps extends TriggerIconPrimitiveProps {}
 
-const TriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIconProps>(
-    ({ className, children, ...props }, ref) => {
-        const { size } = useSelectContext();
+const TriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIconProps>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
 
-        const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
+    const { size } = useSelectContext();
 
-        return (
-            <BaseSelect.Icon
-                ref={ref}
-                className={clsx(styles.triggerIcon({ size }), className)}
-                {...props}
-            >
-                <IconElement />
-            </BaseSelect.Icon>
-        );
-    },
-);
+    const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
+
+    return (
+        <BaseSelect.Icon
+            ref={ref}
+            className={clsx(styles.triggerIcon({ size }), className)}
+            {...componentProps}
+        >
+            <IconElement />
+        </BaseSelect.Icon>
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Portal
@@ -178,7 +183,7 @@ const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref
         alignItemWithTrigger = false,
         className,
         ...componentProps
-    } = props;
+    } = resolveStyles(props);
 
     return (
         <BaseSelect.Positioner
@@ -200,8 +205,12 @@ const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref
 type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
 interface SelectPopupProps extends PopupPrimitiveProps {}
 
-const Popup = forwardRef<HTMLDivElement, SelectPopupProps>(({ className, ...props }, ref) => {
-    return <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...props} />;
+const Popup = forwardRef<HTMLDivElement, SelectPopupProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
+    );
 });
 
 /* -------------------------------------------------------------------------------------------------
@@ -233,8 +242,12 @@ const Content = forwardRef<HTMLDivElement, SelectContentProps>(
 type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
 interface SelectItemProps extends ItemPrimitiveProps {}
 
-const Item = forwardRef<HTMLDivElement, SelectItemProps>(({ className, ...props }, ref) => {
-    return <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...props} />;
+const Item = forwardRef<HTMLDivElement, SelectItemProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...componentProps} />
+    );
 });
 
 /* -------------------------------------------------------------------------------------------------
@@ -244,21 +257,20 @@ const Item = forwardRef<HTMLDivElement, SelectItemProps>(({ className, ...props 
 type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
 interface SelectItemIndicatorProps extends ItemIndicatorPrimitiveProps {}
 
-const ItemIndicator = forwardRef<HTMLSpanElement, SelectItemIndicatorProps>(
-    ({ className, children, ...props }, ref) => {
-        const IconElement = createSlot(children || <ConfirmOutlineIcon />);
+const ItemIndicator = forwardRef<HTMLSpanElement, SelectItemIndicatorProps>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
+    const IconElement = createSlot(children || <ConfirmOutlineIcon />);
 
-        return (
-            <BaseSelect.ItemIndicator
-                ref={ref}
-                className={clsx(styles.itemIndicator, className)}
-                {...props}
-            >
-                <IconElement />
-            </BaseSelect.ItemIndicator>
-        );
-    },
-);
+    return (
+        <BaseSelect.ItemIndicator
+            ref={ref}
+            className={clsx(styles.itemIndicator, className)}
+            {...componentProps}
+        >
+            <IconElement />
+        </BaseSelect.ItemIndicator>
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Group
@@ -268,7 +280,9 @@ type GroupPrimitiveProps = VComponentProps<typeof BaseSelect.Group>;
 interface SelectGroupProps extends GroupPrimitiveProps {}
 
 const Group = forwardRef<HTMLDivElement, SelectGroupProps>((props, ref) => {
-    return <BaseSelect.Group ref={ref} {...props} />;
+    const componentProps = resolveStyles(props);
+
+    return <BaseSelect.Group ref={ref} {...componentProps} />;
 });
 
 /* -------------------------------------------------------------------------------------------------
@@ -278,17 +292,17 @@ const Group = forwardRef<HTMLDivElement, SelectGroupProps>((props, ref) => {
 type GroupLabelPrimitiveProps = VComponentProps<typeof BaseSelect.GroupLabel>;
 interface SelectGroupLabelProps extends GroupLabelPrimitiveProps {}
 
-const GroupLabel = forwardRef<HTMLDivElement, SelectGroupLabelProps>(
-    ({ className, ...props }, ref) => {
-        return (
-            <BaseSelect.GroupLabel
-                ref={ref}
-                className={clsx(styles.groupLabel, className)}
-                {...props}
-            />
-        );
-    },
-);
+const GroupLabel = forwardRef<HTMLDivElement, SelectGroupLabelProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseSelect.GroupLabel
+            ref={ref}
+            className={clsx(styles.groupLabel, className)}
+            {...componentProps}
+        />
+    );
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Separator
@@ -297,17 +311,17 @@ const GroupLabel = forwardRef<HTMLDivElement, SelectGroupLabelProps>(
 type SeparatorPrimitiveProps = VComponentProps<typeof BaseSelect.Separator>;
 interface SelectSeparatorProps extends SeparatorPrimitiveProps {}
 
-const Separator = forwardRef<HTMLDivElement, SelectSeparatorProps>(
-    ({ className, ...props }, ref) => {
-        return (
-            <BaseSelect.Separator
-                ref={ref}
-                className={clsx(styles.separator, className)}
-                {...props}
-            />
-        );
-    },
-);
+const Separator = forwardRef<HTMLDivElement, SelectSeparatorProps>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseSelect.Separator
+            ref={ref}
+            className={clsx(styles.separator, className)}
+            {...componentProps}
+        />
+    );
+});
 
 /* -----------------------------------------------------------------------------------------------*/
 

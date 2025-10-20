@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './breadcrumb.css';
@@ -29,22 +30,23 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
 type BreadcrumbPrimitiveProps = VComponentProps<'nav'>;
 interface BreadcrumbRootProps extends BreadcrumbPrimitiveProps, BreadcrumbVariants {}
 
-const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
-    ({ render, className, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(props, ['size']);
+const Root = forwardRef<HTMLElement, BreadcrumbRootProps>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+    const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(componentProps, [
+        'size',
+    ]);
 
-        const element = useRender({
-            ref,
-            render: render || <nav />,
-            props: {
-                'aria-label': 'Breadcrumb',
-                ...otherProps,
-            },
-        });
+    const element = useRender({
+        ref,
+        render: render || <nav />,
+        props: {
+            'aria-label': 'Breadcrumb',
+            ...otherProps,
+        },
+    });
 
-        return <BreadcrumbProvider value={variantProps}>{element}</BreadcrumbProvider>;
-    },
-);
+    return <BreadcrumbProvider value={variantProps}>{element}</BreadcrumbProvider>;
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.List
@@ -53,18 +55,18 @@ const Root = forwardRef<HTMLElement, BreadcrumbRootProps>(
 type BreadcrumbListPrimitiveProps = VComponentProps<'ol'>;
 interface BreadcrumbListProps extends BreadcrumbListPrimitiveProps {}
 
-const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <ol />,
-            props: {
-                className: clsx(styles.list, className),
-                ...props,
-            },
-        });
-    },
-);
+const List = forwardRef<HTMLOListElement, BreadcrumbListProps>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <ol />,
+        props: {
+            className: clsx(styles.list, className),
+            ...componentProps,
+        },
+    });
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Item
@@ -72,18 +74,18 @@ const List = forwardRef<HTMLOListElement, BreadcrumbListProps>(
 
 interface BreadcrumbItemProps extends VComponentProps<'li'> {}
 
-const Item = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <li />,
-            props: {
-                className: clsx(styles.item, className),
-                ...props,
-            },
-        });
-    },
-);
+const Item = forwardRef<HTMLLIElement, BreadcrumbItemProps>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <li />,
+        props: {
+            className: clsx(styles.item, className),
+            ...componentProps,
+        },
+    });
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Link
@@ -94,25 +96,24 @@ interface BreadcrumbLinkProps extends BreadcrumbLinkPrimitiveProps {
     current?: boolean;
 }
 
-const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
-    ({ render, current, className, ...props }, ref) => {
-        const Component = current ? 'span' : 'a';
+const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>((props, ref) => {
+    const { render, current, className, ...componentProps } = resolveStyles(props);
+    const Component = current ? 'span' : 'a';
 
-        const { size } = useBreadcrumbContext();
+    const { size } = useBreadcrumbContext();
 
-        return useRender({
-            ref,
-            render: render || <Component />,
-            props: {
-                role: current ? 'link' : undefined,
-                'aria-disabled': current ? 'true' : undefined,
-                'aria-current': current ? 'page' : undefined,
-                className: clsx(styles.link({ size, current }), className),
-                ...props,
-            },
-        });
-    },
-);
+    return useRender({
+        ref,
+        render: render || <Component />,
+        props: {
+            role: current ? 'link' : undefined,
+            'aria-disabled': current ? 'true' : undefined,
+            'aria-current': current ? 'page' : undefined,
+            className: clsx(styles.link({ size, current }), className),
+            ...componentProps,
+        },
+    });
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Separator
@@ -120,24 +121,24 @@ const Link = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
 
 interface BreadcrumbSeparatorProps extends VComponentProps<'li'> {}
 
-const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
-    ({ render, className, children, ...props }, ref) => {
-        const { size } = useBreadcrumbContext();
-        const Icon = createSlot(children || <SlashOutlineIcon size="100%" />);
+const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>((props, ref) => {
+    const { render, className, children, ...componentProps } = resolveStyles(props);
 
-        return useRender({
-            ref,
-            render: render || <li />,
-            props: {
-                role: 'presentation',
-                'aria-hidden': 'true',
-                className: clsx(styles.icon({ size }), className),
-                children: <Icon />,
-                ...props,
-            },
-        });
-    },
-);
+    const { size } = useBreadcrumbContext();
+    const IconElement = createSlot(children || <SlashOutlineIcon size="100%" />);
+
+    return useRender({
+        ref,
+        render: render || <li />,
+        props: {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            className: clsx(styles.icon({ size }), className),
+            children: <IconElement />,
+            ...componentProps,
+        },
+    });
+});
 
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Ellipsis
@@ -146,24 +147,24 @@ const Separator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
 type BreadcrumbEllipsisPrimitiveProps = VComponentProps<'span'>;
 interface BreadcrumbEllipsisProps extends BreadcrumbEllipsisPrimitiveProps {}
 
-const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
-    ({ render, className, children, ...props }, ref) => {
-        const { size } = useBreadcrumbContext();
-        const Icon = createSlot(children || <MoreCommonOutlineIcon size="100%" />);
+const Ellipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>((props, ref) => {
+    const { render, className, children, ...componentProps } = resolveStyles(props);
 
-        return useRender({
-            ref,
-            render: render || <span />,
-            props: {
-                role: 'presentation',
-                'aria-hidden': 'true',
-                className: clsx(styles.icon({ size }), className),
-                children: <Icon />,
-                ...props,
-            },
-        });
-    },
-);
+    const { size } = useBreadcrumbContext();
+    const IconElement = createSlot(children || <MoreCommonOutlineIcon size="100%" />);
+
+    return useRender({
+        ref,
+        render: render || <span />,
+        props: {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            className: clsx(styles.icon({ size }), className),
+            children: <IconElement />,
+            ...componentProps,
+        },
+    });
+});
 
 /* -----------------------------------------------------------------------------------------------*/
 
