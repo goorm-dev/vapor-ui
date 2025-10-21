@@ -41,12 +41,10 @@ export const root = recipe({
 
                 '&[data-readonly]:active::before': { opacity: 0.08 },
             },
-        }),
-        {
             vars: {
                 [borderWidth]: '0.0625rem',
             },
-        },
+        }),
     ],
 
     defaultVariants: {
