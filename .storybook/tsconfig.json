@@ -1,5 +1,0 @@
-{
-    "extends": "../packages/typescript-config/react-library.json",
-    // 적용될 범위를 현재 폴더(.storybook)로 한정합니다.
-    "include": ["./**/*"]
-}

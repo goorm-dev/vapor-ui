@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 
 import { HStack } from '../h-stack';
 import { Radio } from '../radio/radio';
