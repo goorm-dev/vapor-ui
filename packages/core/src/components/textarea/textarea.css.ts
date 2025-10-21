@@ -4,8 +4,8 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { typography } from '~/styles/mixins/typography.css';
+import { vars } from '~/styles/themes.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
 
 export const textareaMinHeightVar = createGlobalVar('vapor-textarea-min-height');
 export const textareaMaxHeightVar = createGlobalVar('vapor-textarea-max-height');

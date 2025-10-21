@@ -1,6 +1,6 @@
 import { calc } from '@vanilla-extract/css-utils';
 
-import { scaleFactorVar } from '~/styles/global-var.css';
+import { scaleFactorVar } from '~/styles/variable.css';
 
 export const LINE_HEIGHT = {
     '025': calc.multiply(scaleFactorVar, '14px'),

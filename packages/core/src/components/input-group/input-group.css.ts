@@ -1,5 +1,5 @@
+import { vars } from '~/styles/themes.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
 
 export const root = layerStyle('components', {
     position: 'relative',

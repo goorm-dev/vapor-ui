@@ -2,8 +2,8 @@ import { style } from '@vanilla-extract/css';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { typography } from '~/styles/mixins/typography.css';
+import { vars } from '~/styles/themes.css';
 import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
 
 export const root = layerStyle('components', {
     display: 'flex',

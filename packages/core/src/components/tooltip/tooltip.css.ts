@@ -1,6 +1,6 @@
 import { typography } from '~/styles/mixins/typography.css';
+import { vars } from '~/styles/themes.css';
 import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
 
 export const popup = [
     typography({ style: 'body3' }),

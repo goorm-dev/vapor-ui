@@ -1,6 +1,6 @@
 import { calc } from '@vanilla-extract/css-utils';
 
-import { scaleFactorVar } from '~/styles/global-var.css';
+import { scaleFactorVar } from '~/styles/variable.css';
 
 export const FONT_SIZE = {
     '025': calc.multiply(scaleFactorVar, '10px'),

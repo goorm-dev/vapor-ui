@@ -2,8 +2,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { typography } from '~/styles/mixins/typography.css';
+import { vars } from '~/styles/themes.css';
 import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
 
 export const list = layerStyle('components', {
     display: 'inline-flex',

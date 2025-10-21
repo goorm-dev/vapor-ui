@@ -1,7 +1,7 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 import { layerStyle } from '../utils/layer-style.css';
 
