@@ -117,6 +117,10 @@ const TRANSFORMER_INQUIRER_CHOICES = [
         name: 'internal/core/collapsible: Migrate Collapsible component to @vapor-ui/core',
         value: 'internal/core/collapsible',
     },
+    {
+        name: 'internal/core/dialog: Migrate Dialog component to @vapor-ui/core',
+        value: 'internal/core/dialog',
+    },
 ];
 const run = async () => {
     const cli = meow(

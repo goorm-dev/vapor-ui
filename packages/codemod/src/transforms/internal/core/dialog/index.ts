@@ -37,8 +37,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             path,
             COMPONENT_NAME,
             SOURCE_PACKAGE,
-            TARGET_PACKAGE,
-            { handleDefaultImport: true }
+            TARGET_PACKAGE
         );
 
         if (componentInfo) {
