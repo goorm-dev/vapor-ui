@@ -15,10 +15,10 @@ import { parseJsonConfigFileContent, readConfigFile, sys } from 'typescript';
  * @param {string} tsconfig - tsconfig 파일 경로
  * @returns {object} TypeScript 컴파일러 옵션
  */
-function loadCompilerOptions(tsconfig) {
-    if (!tsconfig) return {};
+function loadCompilerOptions(tsConfigPath) {
+    if (!tsConfigPath) return {};
 
-    const configFile = readConfigFile(tsconfig, sys.readFile);
+    const configFile = readConfigFile(tsConfigPath, sys.readFile);
     const { options } = parseJsonConfigFileContent(configFile.config, sys, './');
 
     return options;
@@ -154,10 +154,9 @@ function getAliasPlugin() {
     });
 }
 
-const commonPlugins = [
-    getAliasPlugin(),
-    vanillaExtractPlugin(),
-    depsExternal(),
+const commonPlugins = [getAliasPlugin(), vanillaExtractPlugin(), depsExternal()];
+const buildPlugins = [
+    ...commonPlugins,
     esbuild({ target: 'esnext' }),
     json(),
     preserveDirectives({ include: ['**/*.ts', '**/*.tsx'] }),
@@ -165,13 +164,13 @@ const commonPlugins = [
 
 const esmBuild = {
     input: componentEntries,
-    plugins: [...commonPlugins, bundleCssEmits()],
+    plugins: [...buildPlugins, bundleCssEmits()],
     output: [createOutput('dist/', 'esm', 'js')],
 };
 
 const cjsBuild = {
     input: componentEntries,
-    plugins: [...commonPlugins],
+    plugins: [...buildPlugins],
     output: [createOutput('dist/', 'cjs', 'cjs')],
 };
 
@@ -184,13 +183,13 @@ const getDtsPlugins = (compilerOptions) => {
         noEmit: false,
         emitDeclarationOnly: true,
         noEmitOnError: true,
-        target: 'ESNext',
+        target: compilerOptions.target || 'ESNext',
     });
 };
 
 const dtsBuild = {
     input: componentEntries,
-    plugins: [...commonPlugins.slice(0, 3), getDtsPlugins(compilerOptions)],
+    plugins: [...commonPlugins, getDtsPlugins(compilerOptions)],
     output: [
         createOutput('dist/', 'esm', 'd.ts', {
             preserveModulesRoot: 'src',
