@@ -3,7 +3,7 @@ import { calc } from '@vanilla-extract/css-utils';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../themes.css';
-import { layerStyle } from '../utils/layer-style.css';
+import { layerStyle } from './layer-style.css';
 
 const ratio = createVar('opacity-ratio');
 

@@ -3,7 +3,7 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '~/styles/themes.css';
 
-import { layerStyle } from '../utils/layer-style.css';
+import { layerStyle } from './layer-style.css';
 
 export const typography = recipe({
     defaultVariants: { style: 'body1' },
