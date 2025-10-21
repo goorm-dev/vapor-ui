@@ -1,38 +1,33 @@
 import reactDocgenTypescript from '@joshwooding/vite-plugin-react-docgen-typescript';
 import type { StorybookConfig } from '@storybook/react-vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
-import path from 'node:path';
+import { createRequire } from 'node:module';
+import path, { dirname, join } from 'node:path';
 import { mergeConfig } from 'vite';
 
-const config: StorybookConfig = {
-    stories: ['../packages/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+const require = createRequire(import.meta.url);
 
-    addons: [
-        '@storybook/addon-essentials',
-        '@storybook/addon-controls',
-        '@storybook/addon-interactions',
-    ],
+const config: StorybookConfig = {
+    stories: ['../../../packages/**/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    addons: [getAbsolutePath('@storybook/addon-docs')],
 
     core: {
-        builder: '@storybook/builder-vite',
+        builder: getAbsolutePath('@storybook/builder-vite'),
     },
 
     framework: {
-        name: '@storybook/react-vite',
+        name: getAbsolutePath('@storybook/react-vite'),
         options: {
             builder: {},
         },
     },
+
     typescript: {
         reactDocgen: 'react-docgen-typescript',
         reactDocgenTypescriptOptions: {
-            tsconfigPath: path.resolve(__dirname, '../packages/core/tsconfig.json'),
+            tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
         },
     },
-
-    previewHead: (head) => `
-    ${head}
-    ${'<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />'}`,
 
     viteFinal: async (config) => {
         const mergedConfig = mergeConfig(config, {
@@ -42,7 +37,8 @@ const config: StorybookConfig = {
                 alias: {
                     ...config.resolve?.alias,
                     // ...convertTsConfigPathsToWebpackAliases(),
-                    '~': path.resolve(__dirname, '../packages/core/src'),
+                    '~': path.resolve(__dirname, '../../../packages/core/src'),
+                    '@vapor-ui/core': path.resolve(__dirname, '../../../packages/core/src'),
                 },
             },
 
@@ -64,3 +60,7 @@ const config: StorybookConfig = {
 };
 
 export default config;
+
+function getAbsolutePath(value: string) {
+    return dirname(require.resolve(join(value, 'package.json')));
+}

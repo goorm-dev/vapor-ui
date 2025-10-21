@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/react-vite';
 
 const preview: Preview = {
     tags: ['autodocs'],
@@ -13,7 +13,7 @@ const preview: Preview = {
     },
 
     decorators: [
-        (Story, context) => {
+        (Story) => {
             return <Story />;
         },
     ],
