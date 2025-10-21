@@ -1,12 +1,9 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import {
-    getFinalImportName,
-    mergeImports,
-    migrateImportSpecifier,
-} from '~/utils/import-migration';
+import { getFinalImportName, mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
 import {
     transformAsChildToRender,
+    transformForceMountToKeepMounted,
     transformToMemberExpression,
     updateMemberExpressionObject,
 } from '~/utils/jsx-transform';
@@ -42,12 +39,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     mergeImports(root, j, TARGET_PACKAGE);
 
     // Get the final import name (considering aliases)
-    const collapsibleImportName = getFinalImportName(
-        root,
-        j,
-        COMPONENT_NAME,
-        TARGET_PACKAGE
-    );
+    const collapsibleImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
 
     // 2. Transform Collapsible JSX elements to Collapsible.Root
     root.find(j.JSXElement).forEach((path) => {
@@ -93,9 +85,17 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             // Transform Content to Panel
             if (propertyName === 'Content') {
                 element.openingElement.name.property = j.jsxIdentifier('Panel');
-                if (element.closingElement) {
+                if (
+                    element.closingElement &&
+                    element.closingElement.name.type === 'JSXMemberExpression'
+                ) {
                     element.closingElement.name.property = j.jsxIdentifier('Panel');
                 }
+            }
+
+            // Transform forceMount prop to keepMounted for Panel
+            if (propertyName === 'Content' || propertyName === 'Panel') {
+                transformForceMountToKeepMounted(j, element);
             }
 
             // Transform asChild prop to render prop for all sub-components

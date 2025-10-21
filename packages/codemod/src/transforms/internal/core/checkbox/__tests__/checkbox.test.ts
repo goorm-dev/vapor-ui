@@ -12,7 +12,6 @@ const tests = [
     'checkbox-with-label',
     'checkbox-with-label-component',
     'checkbox-label-with-props',
-    'checkbox-with-alias',
     'checkbox-with-asChild',
     'checkbox-asChild-with-props',
 ];

@@ -1,10 +1,6 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import {
-    getFinalImportName,
-    mergeImports,
-    migrateAndRenameImport,
-} from '~/utils/import-migration';
+import { getFinalImportName, mergeImports, migrateAndRenameImport } from '~/utils/import-migration';
 import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';

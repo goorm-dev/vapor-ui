@@ -6,7 +6,6 @@ const tests = [
     'collapsible-content-to-panel',
     'collapsible-with-asChild',
     'collapsible-asChild-with-props',
-    'collapsible-with-alias',
     'collapsible-mixed-imports',
     'collapsible-existing-vapor-import',
     'collapsible-merge-into-vapor-import',

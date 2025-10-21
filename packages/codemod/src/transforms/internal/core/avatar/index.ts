@@ -1,10 +1,4 @@
-import type {
-    API,
-    FileInfo,
-    Transform,
-    JSXAttribute,
-    JSXSpreadAttribute,
-} from 'jscodeshift';
+import type { API, FileInfo, Transform, JSXAttribute, JSXSpreadAttribute } from 'jscodeshift';
 import { getFinalImportName, mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
 import { transformToMemberExpression } from '~/utils/jsx-transform';
 

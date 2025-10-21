@@ -1,10 +1,6 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import {
-    getFinalImportName,
-    mergeImports,
-    migrateImportSpecifier,
-} from '~/utils/import-migration';
+import { getFinalImportName, mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
 import {
     transformAsChildToRender,
     transformToMemberExpression,

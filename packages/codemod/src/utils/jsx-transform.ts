@@ -23,41 +23,28 @@ export function transformAsChildToRender(j: API['jscodeshift'], element: JSXElem
     if (hasAsChild && element.children && element.children.length > 0) {
         // Find the first JSXElement child
         let firstElement = null;
-        let firstElementIndex = -1;
 
         for (let i = 0; i < element.children.length; i++) {
             const child = element.children[i];
             if (child.type === 'JSXElement') {
                 firstElement = child;
-                firstElementIndex = i;
                 break;
             }
         }
 
         if (firstElement) {
-            // Create render prop with the first element (self-closing version)
+            // Create render prop with the first element including its children
             const renderProp = j.jsxAttribute(
                 j.jsxIdentifier('render'),
-                j.jsxExpressionContainer(
-                    j.jsxElement(
-                        j.jsxOpeningElement(
-                            firstElement.openingElement.name,
-                            firstElement.openingElement.attributes || [],
-                            true // self-closing
-                        ),
-                        null,
-                        []
-                    )
-                )
+                j.jsxExpressionContainer(firstElement)
             );
 
             element.openingElement.attributes = [renderProp, ...element.openingElement.attributes];
 
-            // Extract children from the wrapper element and replace the wrapper with its children
-            const wrapperChildren = firstElement.children || [];
-            const beforeWrapper = element.children.slice(0, firstElementIndex);
-            const afterWrapper = element.children.slice(firstElementIndex + 1);
-            element.children = [...beforeWrapper, ...wrapperChildren, ...afterWrapper];
+            // Make the parent element self-closing
+            element.openingElement.selfClosing = true;
+            element.closingElement = null;
+            element.children = [];
 
             return true;
         }
@@ -112,4 +99,28 @@ export function updateMemberExpressionObject(element: JSXElement, newObjectName:
             element.closingElement.name.object.name = newObjectName;
         }
     }
+}
+
+/**
+ * Transform forceMount prop to keepMounted prop
+ * @param j - jscodeshift API
+ * @param element - JSX element to transform
+ * @returns true if transformation was applied
+ */
+export function transformForceMountToKeepMounted(
+    j: API['jscodeshift'],
+    element: JSXElement
+): boolean {
+    const attributes = element.openingElement.attributes || [];
+    let transformed = false;
+
+    element.openingElement.attributes = attributes.map((attr) => {
+        if (attr.type === 'JSXAttribute' && attr.name.name === 'forceMount') {
+            transformed = true;
+            return j.jsxAttribute(j.jsxIdentifier('keepMounted'), attr.value);
+        }
+        return attr;
+    });
+
+    return transformed;
 }

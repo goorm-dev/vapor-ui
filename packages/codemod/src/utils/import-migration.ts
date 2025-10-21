@@ -11,6 +11,7 @@ export interface ComponentImportInfo {
 
 /**
  * Migrate a component import from source package to target package
+ * Supports both default imports and named imports
  * Returns information about the component's local name (for alias support)
  */
 export function migrateImportSpecifier(
@@ -47,8 +48,11 @@ export function migrateImportSpecifier(
 
         if (componentInfo) {
             if (otherSpecifiers.length === 0) {
+                // Replace the entire import
                 importDeclaration.source.value = targetPackage;
+                importDeclaration.specifiers = [j.importSpecifier(j.identifier(componentName))];
             } else {
+                // Keep other specifiers, add new component import
                 importDeclaration.specifiers = otherSpecifiers;
 
                 const allTargetImports = root.find(j.ImportDeclaration, {
@@ -169,7 +173,8 @@ export function migrateAndRenameImport(
                     const firstImport = allTargetImports.at(0).get().value;
                     const hasComponentImport = firstImport.specifiers?.some(
                         (spec: ImportSpecifier) =>
-                            spec.type === 'ImportSpecifier' && spec.imported.name === newComponentName
+                            spec.type === 'ImportSpecifier' &&
+                            spec.imported.name === newComponentName
                     );
 
                     if (!hasComponentImport) {
