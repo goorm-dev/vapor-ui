@@ -203,6 +203,7 @@ const ArrowIcon = (props: VComponentProps<'svg'>) => {
 
 export namespace TooltipRoot {
     export interface Props extends VComponentProps<typeof BaseTooltip.Root> {}
+    export type OpenChangeEvent = BaseTooltip.Root.ChangeEventDetails;
 }
 
 export namespace TooltipTrigger {

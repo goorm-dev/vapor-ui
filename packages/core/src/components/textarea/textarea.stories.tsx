@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -11,7 +11,7 @@ const meta: Meta<Textarea.Props> = {
     tags: ['autodocs'],
     argTypes: {
         size: {
-            control: { type: 'select' },
+            control: { type: 'inline-radio' },
             options: ['sm', 'md', 'lg', 'xl'],
         },
         disabled: {
@@ -37,11 +37,27 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-    render: (args) => (
-        <div style={{ width: '100%', padding: '50px' }}>
-            <Textarea placeholder="Enter your text here..." {...args} />
-        </div>
-    ),
+    render: (args) => {
+        const [value, setValue] = useState('');
+        const ref = useRef<HTMLTextAreaElement | null>(null);
+
+        useEffect(() => {
+            console.log(ref.current?.clientHeight);
+        }, [ref, value]);
+
+        return (
+            <div style={{ width: '100%', padding: '50px' }}>
+                <Textarea
+                    ref={ref}
+                    cols={5}
+                    value={value}
+                    onValueChange={setValue}
+                    placeholder="Enter your text here..."
+                    {...args}
+                />
+            </div>
+        );
+    },
 };
 
 export const TestBed: Story = {

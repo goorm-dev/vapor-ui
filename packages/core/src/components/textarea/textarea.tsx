@@ -52,7 +52,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>(
 
         const composedRef = composeRefs(textareaRef, ref);
 
-        const handleValueChange = (newValue: string, event: Event) => {
+        const handleValueChange = (newValue: string, event: Textarea.ValueChangeEvent) => {
             if (disabled || readOnly) return;
 
             onValueChange?.(newValue, event);
@@ -61,7 +61,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>(
 
         return useRender({
             ref: composedRef,
-            render: render || <BaseField.Control render={<textarea />} />,
+            defaultTagName: 'textarea',
+            render: <BaseField.Control render={render || <textarea />} />,
+            state: { invalid },
             props: {
                 ...(isControlled ? { value } : { defaultValue }),
                 'aria-invalid': invalid,
@@ -80,6 +82,8 @@ export namespace Textarea {
     export interface Props extends Assign<TextareaPrimitiveProps, TextareaVariants> {
         value?: string;
         defaultValue?: string;
-        onValueChange?: (value: string, event: Event) => void;
+        onValueChange?: (value: string, event: Textarea.ValueChangeEvent) => void;
     }
+
+    export type ValueChangeEvent = BaseField.Control.ChangeEventDetails;
 }

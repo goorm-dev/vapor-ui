@@ -19,11 +19,10 @@ export const textarea = recipe({
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.canvas,
             color: vars.color.foreground.normal[200],
-            width: '100%',
             minHeight: textareaMinHeightVar,
 
             selectors: {
-                '&:read-only': { backgroundColor: vars.color.gray['050'] },
+                '&[readOnly]': { backgroundColor: vars.color.gray['050'] },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
             },
         }),
