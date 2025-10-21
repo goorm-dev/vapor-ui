@@ -4,9 +4,9 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
-import { layerStyle } from '~/styles/utils';
 
 export const root = recipe({
     base: layerStyle('components', { display: 'flex' }),

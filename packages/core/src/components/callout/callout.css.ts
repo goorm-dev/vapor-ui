@@ -1,9 +1,9 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
 
 export const root = recipe({
     base: [

@@ -1,5 +1,5 @@
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
 
 export const root = layerStyle('components', {
     position: 'relative',
