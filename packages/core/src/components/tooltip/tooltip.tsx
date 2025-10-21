@@ -19,10 +19,7 @@ import * as styles from './tooltip.css';
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = VComponentProps<typeof BaseTooltip.Root>;
-interface TooltipRootProps extends RootPrimitiveProps {}
-
-const Root = (props: TooltipRootProps) => {
+export const TooltipRoot = (props: TooltipRoot.Props) => {
     return <BaseTooltip.Root {...props} />;
 };
 
@@ -30,10 +27,7 @@ const Root = (props: TooltipRootProps) => {
  * Tooltip.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerPrimitiveProps = VComponentProps<typeof BaseTooltip.Trigger>;
-interface TooltipTriggerProps extends TriggerPrimitiveProps {}
-
-const Trigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>((props, ref) => {
+export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props>((props, ref) => {
     return <BaseTooltip.Trigger ref={ref} {...props} />;
 });
 
@@ -41,10 +35,7 @@ const Trigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>((props, ref) 
  * Tooltip.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-type PortalPrimitiveProps = VComponentProps<typeof BaseTooltip.Portal>;
-interface TooltipPortalProps extends PortalPrimitiveProps {}
-
-const Portal = (props: TooltipPortalProps) => {
+export const TooltipPortal = (props: TooltipPortal.Props) => {
     return <BaseTooltip.Portal {...props} />;
 };
 
@@ -52,10 +43,7 @@ const Portal = (props: TooltipPortalProps) => {
  * Tooltip.Positioner
  * -----------------------------------------------------------------------------------------------*/
 
-type PositionerPrimitiveProps = VComponentProps<typeof BaseTooltip.Positioner>;
-interface TooltipPositionerProps extends PositionerPrimitiveProps {}
-
-const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(
+export const TooltipPositioner = forwardRef<HTMLDivElement, TooltipPositioner.Props>(
     ({ side = 'top', align = 'center', sideOffset = 8, collisionAvoidance, ...props }, ref) => {
         return (
             <BaseTooltip.Positioner
@@ -77,13 +65,12 @@ const Positioner = forwardRef<HTMLDivElement, TooltipPositionerProps>(
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-type PopupPrimitiveProps = VComponentProps<typeof BaseTooltip.Popup>;
-interface TooltipPopupProps extends PopupPrimitiveProps {}
-
-const Popup = forwardRef<HTMLDivElement, TooltipPopupProps>(
+export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ className, children, ...props }, ref) => {
-        const [side, setSide] = useState<PositionerPrimitiveProps['side']>('bottom');
-        const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('center');
+        const [side, setSide] =
+            useState<VComponentProps<typeof BaseTooltip.Positioner>['side']>('bottom');
+        const [align, setAlign] =
+            useState<VComponentProps<typeof BaseTooltip.Positioner>['align']>('center');
 
         const position = useMemo(
             () =>
@@ -140,8 +127,8 @@ const Popup = forwardRef<HTMLDivElement, TooltipPopupProps>(
 );
 
 const extractPositions = (dataset: DOMStringMap) => {
-    const currentSide = dataset.side as PositionerPrimitiveProps['side'];
-    const currentAlign = dataset.align as PositionerPrimitiveProps['align'];
+    const currentSide = dataset.side as VComponentProps<typeof BaseTooltip.Positioner>['side'];
+    const currentAlign = dataset.align as VComponentProps<typeof BaseTooltip.Positioner>['align'];
     return { side: currentSide, align: currentAlign };
 };
 
@@ -149,26 +136,23 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Tooltip.Content
  * -----------------------------------------------------------------------------------------------*/
 
-interface TooltipContentProps extends VComponentProps<typeof Popup> {
-    portalProps?: TooltipPortalProps;
-    positionerProps?: TooltipPositionerProps;
-}
-
-const Content = forwardRef<HTMLDivElement, TooltipContentProps>(
+export const TooltipContent = forwardRef<HTMLDivElement, TooltipContent.Props>(
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
-            <Portal {...portalProps}>
-                <Positioner {...positionerProps}>
-                    <Popup ref={ref} {...props} />
-                </Positioner>
-            </Portal>
+            <TooltipPortal {...portalProps}>
+                <TooltipPositioner {...positionerProps}>
+                    <TooltipPopup ref={ref} {...props} />
+                </TooltipPositioner>
+            </TooltipPortal>
         );
     },
 );
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type ArrowPositionProps = Pick<PositionerPrimitiveProps, 'side' | 'align'> & { offset?: number };
+type ArrowPositionProps = Pick<VComponentProps<typeof BaseTooltip.Positioner>, 'side' | 'align'> & {
+    offset?: number;
+};
 
 const getArrowPosition = ({
     side = 'top',
@@ -217,29 +201,29 @@ const ArrowIcon = (props: VComponentProps<'svg'>) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as TooltipRoot,
-    Trigger as TooltipTrigger,
-    Portal as TooltipPortal,
-    Positioner as TooltipPositioner,
-    Popup as TooltipPopup,
-    Content as TooltipContent,
-};
+export namespace TooltipRoot {
+    export interface Props extends VComponentProps<typeof BaseTooltip.Root> {}
+}
 
-export type {
-    TooltipRootProps,
-    TooltipTriggerProps,
-    TooltipPortalProps,
-    TooltipPositionerProps,
-    TooltipPopupProps,
-    TooltipContentProps,
-};
+export namespace TooltipTrigger {
+    export interface Props extends VComponentProps<typeof BaseTooltip.Trigger> {}
+}
 
-export const Tooltip = {
-    Root,
-    Trigger,
-    Portal,
-    Positioner,
-    Popup,
-    Content,
-};
+export namespace TooltipPortal {
+    export interface Props extends VComponentProps<typeof BaseTooltip.Portal> {}
+}
+
+export namespace TooltipPositioner {
+    export interface Props extends VComponentProps<typeof BaseTooltip.Positioner> {}
+}
+
+export namespace TooltipPopup {
+    export interface Props extends VComponentProps<typeof BaseTooltip.Popup> {}
+}
+
+export namespace TooltipContent {
+    export interface Props extends VComponentProps<typeof TooltipPopup> {
+        portalProps?: VComponentProps<typeof BaseTooltip.Portal>;
+        positionerProps?: VComponentProps<typeof BaseTooltip.Positioner>;
+    }
+}
