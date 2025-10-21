@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
 
-import type { StoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 
 import { HStack } from '../h-stack';
 import { VStack } from '../v-stack';
