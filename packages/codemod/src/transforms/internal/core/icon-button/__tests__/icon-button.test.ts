@@ -12,6 +12,8 @@ const tests = [
     'icon-button-deprecated-props',
     'icon-button-hint-color',
     'icon-button-spread-props',
+    'icon-button-with-asChild',
+    'icon-button-asChild-with-props',
 ];
 
 defineTransformTests('internal/core/icon-button', tests);

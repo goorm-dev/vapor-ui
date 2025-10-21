@@ -1,5 +1,6 @@
 import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
 import { mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
+import { transformAsChildToRender } from '~/utils/jsx-transform';
 
 const TARGET_PACKAGE = '@vapor-ui/core';
 
@@ -125,6 +126,9 @@ function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
     }
 
     element.openingElement.attributes = newAttributes;
+
+    // Transform asChild prop to render prop
+    transformAsChildToRender(j, element);
 }
 
 function createShapeAttributeFromRounded(
