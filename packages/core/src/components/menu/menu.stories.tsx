@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react-vite';
 
-import { Menu } from './';
+import { Menu } from '.';
 
 export default {
     title: 'Menu',

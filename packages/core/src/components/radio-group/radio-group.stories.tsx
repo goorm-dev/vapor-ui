@@ -1,7 +1,7 @@
 import type { StoryObj } from '@storybook/react-vite';
 
 import { RadioGroup } from '.';
-import { Radio } from '../radio/radio';
+import { Radio } from '../radio';
 
 export default {
     title: 'RadioGroup',

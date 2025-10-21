@@ -5,12 +5,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Grid } from '../grid';
 import { Textarea } from './textarea';
 
-const meta: Meta<typeof Textarea> = {
+const meta: Meta<Textarea.Props> = {
     title: 'Textarea',
     component: Textarea,
-    parameters: {
-        layout: 'fullscreen',
-    },
     tags: ['autodocs'],
     argTypes: {
         size: {
@@ -34,7 +31,7 @@ const meta: Meta<typeof Textarea> = {
             control: { type: 'number' },
         },
     },
-} satisfies Meta<typeof Textarea>;
+} satisfies Meta<Textarea.Props>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

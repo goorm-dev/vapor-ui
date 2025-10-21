@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { HeartIcon } from '@vapor-ui/icons';
 
-import { IconButton, type IconButtonProps } from './icon-button';
+import { IconButton } from '.';
 
 export default {
     title: 'IconButton',
@@ -18,7 +18,7 @@ export default {
     },
 } satisfies Meta<typeof IconButton>;
 
-type Story = StoryObj<IconButtonProps>;
+type Story = StoryObj<IconButton.Props>;
 
 export const Default: Story = {
     render: (args) => (
@@ -66,7 +66,7 @@ export const TestBed: Story = {
         </div>
     ),
 };
-const IconButtons = ({ color, disabled }: Partial<IconButtonProps>) => {
+const IconButtons = ({ color, disabled }: Partial<IconButton.Props>) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="fill">

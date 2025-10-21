@@ -13,7 +13,7 @@ import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
 import { TextInput } from '~/components/text-input';
 
-import { Field } from './field';
+import { Field } from '.';
 
 describe('Field', () => {
     afterEach(cleanup);

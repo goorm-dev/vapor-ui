@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CheckboxIcon, CloseOutlineIcon } from '@vapor-ui/icons';
 
+import { Callout } from '.';
 import { Flex } from '../flex';
-import { Callout } from './callout';
 
 export default {
     title: 'Callout',

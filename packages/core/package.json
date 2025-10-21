@@ -87,6 +87,7 @@
         "@types/react": "^18.3.24",
         "@types/react-dom": "^18.3.7",
         "@vanilla-extract/rollup-plugin": "^1.4.1",
+        "@vanilla-extract/vite-plugin": "^5.1.1",
         "@vitest/browser": "^3.2.4",
         "@vitest/coverage-v8": "^3.2.4",
         "autoprefixer": "^10.4.21",

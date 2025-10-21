@@ -13,10 +13,7 @@ import * as styles from './callout.css';
  * CalloutRoot
  * -----------------------------------------------------------------------------------------------*/
 
-type CalloutRootPrimitiveProps = VComponentProps<'div'>;
-interface CalloutRootProps extends CalloutRootPrimitiveProps, CalloutVariants {}
-
-const CalloutRoot = forwardRef<HTMLDivElement, CalloutRootProps>(
+export const CalloutRoot = forwardRef<HTMLDivElement, CalloutRoot.Props>(
     ({ render, className, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(props, ['color']);
 
@@ -36,10 +33,7 @@ CalloutRoot.displayName = 'CalloutRoot';
  * CalloutIcon
  * -----------------------------------------------------------------------------------------------*/
 
-type CalloutIconPrimitiveProps = VComponentProps<'div'>;
-interface CalloutIconProps extends CalloutIconPrimitiveProps {}
-
-const CalloutIcon = forwardRef<HTMLDivElement, CalloutIconProps>(
+export const CalloutIcon = forwardRef<HTMLDivElement, CalloutIcon.Props>(
     ({ render, className, ...props }, ref) => {
         return useRender({
             ref,
@@ -57,10 +51,12 @@ CalloutIcon.displayName = 'CalloutIcon';
  * Callout Compound Component
  * -----------------------------------------------------------------------------------------------*/
 
-const Callout = {
-    Root: CalloutRoot,
-    Icon: CalloutIcon,
-};
+export namespace CalloutRoot {
+    type RootPrimitiveProps = VComponentProps<'div'>;
+    export interface Props extends RootPrimitiveProps, CalloutVariants {}
+}
 
-export { Callout, CalloutRoot, CalloutIcon };
-export type { CalloutRootProps, CalloutIconProps };
+export namespace CalloutIcon {
+    type IconPrimitiveProps = VComponentProps<'div'>;
+    export interface Props extends IconPrimitiveProps {}
+}
