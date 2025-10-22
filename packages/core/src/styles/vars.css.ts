@@ -30,17 +30,21 @@ const THEME_TOKENS = {
     },
 };
 
-export const vars = createGlobalThemeContract(THEME_TOKENS, (_, path) => `vapor-${path.join('-')}`);
-
-createGlobalTheme(':root', vars, { '@layer': layers.theme, ...THEME_TOKENS });
-
-const DARK_CLASS_NAME = 'vapor-dark-theme';
 const DARK_THEME_TOKENS = {
     ...DARK_BASIC_COLORS,
     ...DARK_SEMANTIC_COLORS,
 };
 
-createGlobalTheme(`:root.${DARK_CLASS_NAME}`, vars.color, {
+const vars = createGlobalThemeContract(THEME_TOKENS, (_, path) => `vapor-${path.join('-')}`);
+
+createGlobalTheme(`:root, [data-vapor-theme='light']`, vars, {
+    '@layer': layers.theme,
+    ...THEME_TOKENS,
+});
+
+createGlobalTheme(`[data-vapor-theme='dark']`, vars.color, {
     '@layer': layers.theme,
     ...DARK_THEME_TOKENS,
 });
+
+export { vars };
