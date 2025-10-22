@@ -18,8 +18,10 @@ type Theme = 'light' | 'dark' | 'system';
 type ResolvedTheme = 'light' | 'dark';
 interface ThemeConfig {
     /**
-     * Theme to display on initial load (Priority: 3rd)
-     * Only used when no theme is saved in localStorage
+     * Theme behavior:
+     * - 'light': Always use light theme (ignores system changes)
+     * - 'dark': Always use dark theme (ignores system changes)
+     * - 'system': Automatically sync with user's system theme changes
      * @default 'system'
      */
     defaultTheme?: Theme;
@@ -30,13 +32,6 @@ interface ThemeConfig {
      * @default 'vapor-ui-theme'
      */
     storageKey?: string;
-
-    /**
-     * Whether to automatically sync with user's system theme changes
-     * When false, system theme is only referenced on initial load, then operates independently
-     * @default true
-     */
-    enableSystem?: boolean;
 
     /**
      * Force a specific theme (Priority: 1st - highest)
@@ -81,7 +76,7 @@ interface UseThemeProps {
     /** List of available themes */
     themes: Theme[];
 
-    /** Current system theme (only provided when enableSystem=true) */
+    /** Current system theme (only provided when theme is 'system') */
     systemTheme?: ResolvedTheme;
 
     /** Whether the ThemeProvider has mounted */
@@ -162,7 +157,6 @@ const Theme = ({
     children,
     defaultTheme = 'system',
     storageKey = 'vapor-ui-theme',
-    enableSystem = true,
     forcedTheme,
     disableTransitionOnChange = false,
     enableColorScheme = true,
@@ -184,7 +178,7 @@ const Theme = ({
     const applyTheme = useCallback(
         (newTheme: Theme) => {
             let resolved = newTheme;
-            if (newTheme === 'system' && enableSystem) {
+            if (newTheme === 'system') {
                 resolved = getSystemTheme();
             }
 
@@ -205,7 +199,7 @@ const Theme = ({
 
             enableTransition?.();
         },
-        [enableSystem, enableColorScheme, defaultTheme, disableTransitionOnChange, nonce],
+        [enableColorScheme, defaultTheme, disableTransitionOnChange, nonce],
     );
 
     const setTheme = useCallback(
@@ -228,19 +222,21 @@ const Theme = ({
         (e: MediaQueryListEvent | MediaQueryList) => {
             const systemTheme = getSystemTheme(e);
             setResolvedTheme(systemTheme);
-            if (enableSystem && !forcedTheme) {
+            if (theme === 'system' && !forcedTheme) {
                 applyTheme(systemTheme);
             }
         },
-        [enableSystem, forcedTheme, applyTheme],
+        [theme, forcedTheme, applyTheme],
     );
 
     useEffect(() => {
-        const media = window.matchMedia(MEDIA_QUERY);
-        media.addEventListener('change', handleMediaQuery);
-        handleMediaQuery(media);
-        return () => media.removeEventListener('change', handleMediaQuery);
-    }, [handleMediaQuery]);
+        if (theme === 'system') {
+            const media = window.matchMedia(MEDIA_QUERY);
+            media.addEventListener('change', handleMediaQuery);
+            handleMediaQuery(media);
+            return () => media.removeEventListener('change', handleMediaQuery);
+        }
+    }, [theme, handleMediaQuery]);
 
     useEffect(() => {
         const handleStorage = (e: StorageEvent) => {
@@ -264,11 +260,11 @@ const Theme = ({
             resetTheme,
             forcedTheme,
             resolvedTheme: mounted ? (theme === 'system' ? resolvedTheme : (theme as ResolvedTheme)) : undefined,
-            themes: enableSystem ? THEME_LIST : RESOLVED_THEMES,
-            systemTheme: mounted && enableSystem ? resolvedTheme : undefined,
+            themes: THEME_LIST,
+            systemTheme: mounted && theme === 'system' ? resolvedTheme : undefined,
             mounted,
         }),
-        [theme, setTheme, resetTheme, forcedTheme, resolvedTheme, enableSystem, mounted],
+        [theme, setTheme, resetTheme, forcedTheme, resolvedTheme, mounted],
     );
 
     return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
