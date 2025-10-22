@@ -1,9 +1,4 @@
-import type { Preview } from '@storybook/react';
-
-import '../packages/core/src/styles';
-import '../packages/core/src/styles/global-var.css';
-import '../packages/core/src/styles/global.css';
-import '../packages/core/src/styles/theme.css';
+import type { Preview } from '@storybook/react-vite';
 
 import { ThemeProvider } from '../packages/core/src/components/theme-provider';
 

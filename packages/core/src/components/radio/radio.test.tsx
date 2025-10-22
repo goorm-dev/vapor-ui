@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { Radio } from '.';
 import { RadioGroup } from '../radio-group';
-import { Radio } from './radio';
 
 describe('<Radio.Root />', () => {
     it('does not forward `value` prop', async () => {

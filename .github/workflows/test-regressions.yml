@@ -1,6 +1,6 @@
-name: 'Run Visual Regression Tests'
+name: "Tests"
 
-'on':
+"on":
     workflow_dispatch:
     pull_request:
         types:
@@ -18,11 +18,22 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ''
+    REPORT_PATH: ""
 
 jobs:
-    visual-regression:
+    regressions:
         runs-on: macos-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                shard:
+                    [
+                        { name: firefox, project: firefox },
+                        { name: webkit, project: webkit },
+                        { name: chromium, project: chromium },
+                        { name: "Microsoft Edge", project: msedge },
+                    ]
+
         steps:
             - name: Git clone the repository
               uses: actions/checkout@v4
@@ -33,34 +44,41 @@ jobs:
               uses: ./.github/composite/install
 
             - name: Install Playwright Browsers
-              uses: ./.github/composite/browser-install
-              with:
-                  working-directory: packages/core
+              run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
             - name: Build Icons
-              run: pnpm icons build
+              run: pnpm build --filter=@vapor-ui/icons
 
-            - name: Build Storybook
-              run: pnpm build-storybook
+            - name: Run Playwright tests
+              run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
 
-            - name: Run Snapshot Tests
-              run: pnpm core test:visual
-
-            - uses: actions/upload-artifact@v4
-              if: '${{ !cancelled() }}'
+            - name: Upload blob report to GitHub Actions Artifacts
+              if: ${{ !cancelled() }}
+              uses: actions/upload-artifact@v4
               with:
-                  name: test-results
-                  path: ./packages/core/__tests__/report/
+                  name: blob-report-${{ matrix.shard.project }}
+                  path: packages/core/blob-report
+                  retention-days: 1
 
-    deploy-report:
-        needs: visual-regression
-        if: always()
+    merge-reports:
+        if: ${{ !cancelled() }}
+        needs: [regressions]
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/download-artifact@v4
+            - uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              uses: ./.github/composite/install
+
+            - name: Download blob reports from GitHub Actions Artifacts
+              uses: actions/download-artifact@v4
               with:
-                  name: test-results
-                  path: ./report/
+                  path: all-blob-reports
+                  pattern: blob-report-*
+                  merge-multiple: true
+
+            - name: Merge into HTML Report
+              run: pnpm core exec playwright merge-reports -c ./playwright.merge.ts ../../all-blob-reports
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4
@@ -77,13 +95,13 @@ jobs:
             - name: Upload Report to S3
               run: |
                   aws s3 rm s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
-                  aws s3 cp './report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
+                  aws s3 cp './packages/core/__tests__/report/' s3://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }} --recursive
 
             - name: Post Test Result
               id: playwright-summary
               uses: daun/playwright-report-summary@v3
               with:
-                  report-file: ./report/index.json
+                  report-file: ./packages/core/__tests__/report/index.json
                   report-url: http://${{ env.BUCKET_NAME }}/${{ env.REPORT_PATH }}/index.html
                   create-comment: false
 
@@ -122,7 +140,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ needs.visual-regression.result == 'failure' && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ contains(needs.regressions.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |

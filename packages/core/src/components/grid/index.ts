@@ -1,1 +1,1 @@
-export * from './grid';
+export * as Grid from './index.parts';

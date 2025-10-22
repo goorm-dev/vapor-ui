@@ -15,7 +15,6 @@ export const textarea = recipe({
         interaction({ type: 'form' }),
 
         layerStyle('components', {
-            outline: 0,
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.canvas,
@@ -24,13 +23,8 @@ export const textarea = recipe({
             minHeight: textareaMinHeightVar,
 
             selectors: {
-                '&:read-only': {
-                    backgroundColor: vars.color.gray['050'],
-                    resize: 'none',
-                },
-                '&::placeholder': {
-                    color: vars.color.foreground.hint[100],
-                },
+                '&:read-only': { backgroundColor: vars.color.gray['050'] },
+                '&::placeholder': { color: vars.color.foreground.hint[100] },
             },
         }),
     ],
@@ -39,28 +33,14 @@ export const textarea = recipe({
 
     variants: {
         invalid: {
-            true: {
-                borderColor: vars.color.border.danger,
-            },
+            true: { borderColor: vars.color.border.danger },
         },
         autoResize: {
             true: {
-                boxSizing: 'border-box',
-                minHeight: textareaMinHeightVar,
-                maxHeight: textareaMaxHeightVar,
-                overflowX: 'hidden',
-                overflowY: 'auto',
                 resize: 'none',
+                scrollbarWidth: 'auto',
                 scrollbarGutter: 'stable',
-                verticalAlign: 'top',
-
-                selectors: {
-                    '&': {
-                        scrollbarWidth: 'auto',
-                    },
-                },
             },
-            false: {},
         },
 
         size: {

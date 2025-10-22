@@ -1,8 +1,7 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type { NavigationMenuLinkProps, NavigationMenuRootProps } from './navigation-menu';
-import { NavigationMenu } from './navigation-menu';
+import { NavigationMenu } from '.';
 
 const TRIGGER_1 = 'trigger-1';
 const TRIGGER_2 = 'trigger-2';
@@ -11,7 +10,7 @@ const PANEL_LINK_2 = 'Link 2';
 const PANEL_LINK_3 = 'Link 3';
 const PANEL_LINK_4 = 'Link 4';
 
-const NavigationMenuTest = (props: NavigationMenuRootProps) => {
+const NavigationMenuTest = (props: NavigationMenu.Root.Props) => {
     return (
         <NavigationMenu.Root {...props}>
             <NavigationMenu.List>
@@ -254,7 +253,7 @@ describe('<NavigationMenu.Link />', () => {
     afterEach(cleanup);
 
     const NAV_LINK = 'nav-link';
-    const NavLinkTest = (linkProps: NavigationMenuLinkProps) => (
+    const NavLinkTest = (linkProps: NavigationMenu.Link.Props) => (
         <NavigationMenu.Root aria-label="Main">
             <NavigationMenu.List>
                 <NavigationMenu.Item>
