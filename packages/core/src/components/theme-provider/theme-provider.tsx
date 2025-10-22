@@ -192,8 +192,12 @@ const Theme = ({
             }
 
             if (enableColorScheme) {
-                const fallback = RESOLVED_THEMES.includes(defaultTheme as ResolvedTheme) ? defaultTheme : null;
-                const colorScheme = RESOLVED_THEMES.includes(resolved as ResolvedTheme) ? resolved : fallback;
+                const fallback = RESOLVED_THEMES.includes(defaultTheme as ResolvedTheme)
+                    ? defaultTheme
+                    : null;
+                const colorScheme = RESOLVED_THEMES.includes(resolved as ResolvedTheme)
+                    ? resolved
+                    : fallback;
                 d.style.colorScheme = colorScheme || '';
             }
 
@@ -259,7 +263,11 @@ const Theme = ({
             setTheme,
             resetTheme,
             forcedTheme,
-            resolvedTheme: mounted ? (theme === 'system' ? resolvedTheme : (theme as ResolvedTheme)) : undefined,
+            resolvedTheme: mounted
+                ? theme === 'system'
+                    ? resolvedTheme
+                    : (theme as ResolvedTheme)
+                : undefined,
             themes: THEME_LIST,
             systemTheme: mounted && theme === 'system' ? resolvedTheme : undefined,
             mounted,
