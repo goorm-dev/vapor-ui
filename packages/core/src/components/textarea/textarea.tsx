@@ -10,6 +10,7 @@ import { useInputGroup } from '~/components/input-group/input-group';
 import { useAutoResize } from '~/hooks/use-auto-resize';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttribute } from '~/utils/data-attributes';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
@@ -59,16 +60,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>(
             setValue(newValue);
         };
 
+        const dataAttrs = createDataAttribute('invalid', invalid);
+
         return useRender({
             ref: composedRef,
-            defaultTagName: 'textarea',
             render: <BaseField.Control render={render || <textarea />} />,
-            state: { invalid },
             props: {
                 ...(isControlled ? { value } : { defaultValue }),
-                'aria-invalid': invalid,
                 onValueChange: handleValueChange,
                 className: clsx(styles.textarea(variantProps), className),
+                ...dataAttrs,
                 ...otherProps,
             },
         });
