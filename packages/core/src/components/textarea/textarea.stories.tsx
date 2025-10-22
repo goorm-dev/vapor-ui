@@ -2,10 +2,10 @@ import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Textarea } from '.';
 import { Grid } from '../grid';
-import { Textarea } from './textarea';
 
-const meta: Meta<Textarea.Props> = {
+const meta: Meta<typeof Textarea> = {
     title: 'Textarea',
     component: Textarea,
     tags: ['autodocs'],
@@ -31,7 +31,7 @@ const meta: Meta<Textarea.Props> = {
             control: { type: 'number' },
         },
     },
-} satisfies Meta<Textarea.Props>;
+} satisfies Meta<typeof Textarea>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
