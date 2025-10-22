@@ -3,9 +3,9 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const textareaMinHeightVar = createGlobalVar('vapor-textarea-min-height');
 export const textareaMaxHeightVar = createGlobalVar('vapor-textarea-max-height');
@@ -15,7 +15,6 @@ export const textarea = recipe({
         interaction({ type: 'form' }),
 
         layerStyle('components', {
-            outline: 0,
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.canvas,
@@ -35,28 +34,14 @@ export const textarea = recipe({
 
     variants: {
         invalid: {
-            true: {
-                borderColor: vars.color.border.danger,
-            },
+            true: { borderColor: vars.color.border.danger },
         },
         autoResize: {
             true: {
-                boxSizing: 'border-box',
-                minHeight: textareaMinHeightVar,
-                maxHeight: textareaMaxHeightVar,
-                overflowX: 'hidden',
-                overflowY: 'auto',
                 resize: 'none',
+                scrollbarWidth: 'auto',
                 scrollbarGutter: 'stable',
-                verticalAlign: 'top',
-
-                selectors: {
-                    '&': {
-                        scrollbarWidth: 'auto',
-                    },
-                },
             },
-            false: {},
         },
 
         size: {

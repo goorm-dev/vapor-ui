@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'react';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 import { Grid } from '.';
 

@@ -2,7 +2,7 @@ import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 
 export const gridTemplateRows = createVar({ inherits: false, syntax: '*' }, 'template-rows');
 export const gridTemplateColumns = createVar({ inherits: false, syntax: '*' }, 'template-columns');
