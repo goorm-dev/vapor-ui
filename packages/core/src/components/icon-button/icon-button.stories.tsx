@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { HeartIcon } from '@vapor-ui/icons';
 
 import { IconButton } from '.';
@@ -16,7 +16,7 @@ export default {
         shape: { control: 'inline-radio', options: ['square', 'circle'] },
         disabled: { control: 'boolean' },
     },
-} satisfies Meta<IconButton.Props>;
+} satisfies Meta<typeof IconButton>;
 
 type Story = StoryObj<IconButton.Props>;
 

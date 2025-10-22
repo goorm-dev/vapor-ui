@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CheckboxIcon, CloseOutlineIcon } from '@vapor-ui/icons';
 
 import { Callout } from '.';
@@ -13,9 +13,9 @@ export default {
             options: ['primary', 'success', 'warning', 'danger', 'hint', 'contrast'],
         },
     },
-} satisfies Meta<Callout.Root.Props>;
+} satisfies Meta<typeof Callout.Root>;
 
-type Story = StoryObj<Callout.Root.Props>;
+type Story = StoryObj<typeof Callout.Root>;
 
 export const Default: Story = {
     render: (args) => <Callout.Root {...args}>Anyone can develop</Callout.Root>,
