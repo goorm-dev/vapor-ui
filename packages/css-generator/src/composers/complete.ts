@@ -102,11 +102,11 @@ const mergeRootVariables = (
 
     if (format === 'compact') {
         const props = allProperties.join(';');
-        return `:root,[data-vapor-theme=light]{${props}}`;
+        return `:root,[data-vapor-theme="light"]{${props}}`;
     }
 
     const indentedProperties = allProperties.map((prop) => `    ${prop};`).join('\n');
-    return `:root, [data-vapor-theme=light] {\n${indentedProperties}\n}`;
+    return `:root, [data-vapor-theme="light"] {\n${indentedProperties}\n}`;
 };
 
 const extractCSSProperties = (css: string): string[] => {
@@ -130,12 +130,12 @@ const extractThemeCSS = (fullCSS: string): { lightTheme: string; darkTheme?: str
     let lightTheme = '';
     let darkTheme = '';
 
-    const rootMatch = trimmedCSS.match(/:root,\s*\[data-vapor-theme=light\]\s*\{[^}]*\}/);
+    const rootMatch = trimmedCSS.match(/:root,\s*\[data-vapor-theme="light"\]\s*\{[^}]*\}/);
     if (rootMatch) {
         lightTheme = rootMatch[0];
     }
 
-    const darkThemeMatch = trimmedCSS.match(/\[data-vapor-theme=dark\]\s*\{[^}]*\}/);
+    const darkThemeMatch = trimmedCSS.match(/\[data-vapor-theme="dark"\]\s*\{[^}]*\}/);
     if (darkThemeMatch) {
         darkTheme = darkThemeMatch[0];
     }
