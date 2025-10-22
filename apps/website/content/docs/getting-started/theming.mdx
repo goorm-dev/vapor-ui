@@ -68,7 +68,7 @@ export function ThemeToggle() {
             variant="ghost" 
             onClick={() => setTheme(resolvedTheme === 'light' ? 'dark' : 'light')}
         >
-            {theme === 'light' ? 'Dark' : 'Light'}
+            {resolvedTheme === 'light' ? 'Dark' : 'Light'}
         </Button>
     );
 }
@@ -78,29 +78,30 @@ export function ThemeToggle() {
 
 `useTheme` 훅은 다음과 같은 유용한 값들을 반환합니다.
 
-| Key             | Type                      | Description                                                                                            |
-| :-------------- | :------------------------ | :----------------------------------------------------------------------------------------------------- |
-| `theme`         | `string`                  | 현재 설정된 테마 (`'light'`, `'dark'`, 또는 `'system'`). SSR 환경에서 `mounted`가 `false`일 때는 `undefined`. |
-| `setTheme`      | `(theme: string) => void` | 테마를 변경하는 함수.                                                                                  |
-| `themes`        | `string[]`                | 사용 가능한 테마 목록.                                                                                 |
-| `resolvedTheme` | `string`                  | 실제로 적용된 테마 (`'light'` 또는 `'dark'`). `theme`이 `'system'`일 때 현재 시스템 테마를 반영합니다. |
-| `systemTheme`   | `'light' \| 'dark'`       | 현재 사용자의 시스템 테마.                                                                             |
-| `resetTheme`    | `() => void`              | 테마 설정을 기본값으로 초기화하고 `localStorage`에서 저장된 값을 제거합니다.                           |
-| `mounted`       | `boolean`                 | ThemeProvider가 클라이언트에서 마운트되었는지 여부. SSR 환경에서 hydration 이슈 방지를 위해 사용.     |
+| Key             | Type                                                                             | Description                                                                                            |
+| :-------------- | :------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| `theme`         | `'light' \| 'dark' \| 'system' \| undefined`                                    | 현재 설정된 테마. SSR 환경에서 `mounted`가 `false`일 때는 `undefined`.                               |
+| `setTheme`      | `(theme: 'light' \| 'dark' \| 'system' \| ((prev: Theme) => Theme)) => void` | 테마를 변경하는 함수. 함수형 업데이트도 지원하며 `localStorage`에 자동 저장됩니다.                           |
+| `themes`        | `('light' \| 'dark' \| 'system')[]`                                            | 사용 가능한 테마 목록. `enableSystem`이 `true`일 때 `['light', 'dark', 'system']`, `false`일 때 `['light', 'dark']`.  |
+| `resolvedTheme` | `'light' \| 'dark' \| undefined`                                               | 실제로 적용된 테마. `theme`이 `'system'`일 때 현재 시스템 테마를 반영합니다.                        |
+| `systemTheme`   | `'light' \| 'dark' \| undefined`                                               | 현재 사용자의 시스템 테마. `enableSystem`이 `false`일 때는 `undefined`.                             |
+| `forcedTheme`   | `'light' \| 'dark' \| 'system' \| undefined`                                  | 강제로 적용된 테마. 설정되지 않았을 때는 `undefined`.                                                |
+| `resetTheme`    | `() => void`                                                                     | 테마 설정을 기본값으로 초기화하고 `localStorage`에서 저장된 값을 제거합니다.                           |
+| `mounted`       | `boolean`                                                                        | ThemeProvider가 클라이언트에서 마운트되었는지 여부. SSR 환경에서 hydration 이슈 방지를 위해 사용.     |
 
 ## `ThemeProvider` Props
 
 `ThemeProvider`에 전달할 수 있는 props는 다음과 같습니다.
 
-| Prop                        | Type                           | Default            | Description                                                                                              |
-| :-------------------------- | :----------------------------- | :----------------- | :------------------------------------------------------------------------------------------------------- |
-| `defaultTheme`              | `'light' \| 'dark' \| 'system'` | `'system'`         | 사용자가 테마를 직접 설정하기 전에 적용될 기본 테마.                                                     |
-| `storageKey`                | `string`                       | `'vapor-ui-theme'` | `localStorage`에 테마를 저장할 때 사용될 키.                                                             |
-| `enableSystem`              | `boolean`                      | `true`             | `true`일 경우, 시스템 테마 변경을 감지하고 동적으로 테마를 전환합니다.                                   |
-| `forcedTheme`               | `string`                       | `undefined`        | 특정 테마를 강제로 적용합니다. 이 값이 설정되면 다른 모든 테마 관련 설정을 무시합니다.                   |
-| `disableTransitionOnChange` | `boolean`                      | `false`            | `true`일 경우, 테마 변경 시 발생하는 CSS 트랜지션을 비활성화합니다.                                      |
-| `enableColorScheme`         | `boolean`                      | `true`             | `true`일 경우, `color-scheme` CSS 속성을 자동으로 설정하여 브라우저 UI(스크롤바 등)의 테마를 조정합니다. |
-| `nonce`                     | `string`                       | `undefined`        | CSP(Content Security Policy) nonce 값. 보안 정책이 적용된 환경에서 사용.                               |
+| Prop                        | Type                                    | Default            | Description                                                                                              |
+| :-------------------------- | :-------------------------------------- | :----------------- | :------------------------------------------------------------------------------------------------------- |
+| `defaultTheme`              | `'light' \| 'dark' \| 'system'`          | `'system'`         | 사용자가 테마를 직접 설정하기 전에 적용될 기본 테마.                                                     |
+| `storageKey`                | `string`                                | `'vapor-ui-theme'` | `localStorage`에 테마를 저장할 때 사용될 키.                                                             |
+| `enableSystem`              | `boolean`                               | `true`             | `true`일 경우, 시스템 테마 변경을 감지하고 동적으로 테마를 전환합니다.                                   |
+| `forcedTheme`               | `'light' \| 'dark' \| 'system'`          | `undefined`        | 특정 테마를 강제로 적용합니다. 이 값이 설정되면 다른 모든 테마 관련 설정을 무시합니다.                   |
+| `disableTransitionOnChange` | `boolean`                               | `false`            | `true`일 경우, 테마 변경 시 발생하는 CSS 트랜지션을 비활성화합니다.                                      |
+| `enableColorScheme`         | `boolean`                               | `true`             | `true`일 경우, `color-scheme` CSS 속성을 자동으로 설정하여 브라우저 UI(스크롤바 등)의 테마를 조정합니다. |
+| `nonce`                     | `string \| undefined`                  | `undefined`        | CSP(Content Security Policy) nonce 값. 보안 정책이 적용된 환경에서 사용.                               |
 
 ## 로컬 테마 스코프 (ThemeScope)
 
@@ -129,11 +130,11 @@ export function ThemeScopeExample() {
 
 ### `ThemeScope` Props
 
-| Prop          | Type                | Description                                    |
-| :------------ | :------------------ | :--------------------------------------------- |
-| `forcedTheme` | `'light' \| 'dark'` | 해당 영역에 강제로 적용할 테마.                |
-| `children`    | `React.ReactNode`   | 테마가 적용될 자식 컴포넌트들.                 |
-| `style`       | `CSSProperties`     | 추가 스타일. `colorScheme`는 자동으로 설정됨.  |
+| Prop          | Type                          | Description                                    |
+| :------------ | :---------------------------- | :--------------------------------------------- |
+| `forcedTheme` | `'light' \| 'dark'`           | 해당 영역에 강제로 적용할 테마.                |
+| `children`    | `React.ReactNode`             | 테마가 적용될 자식 컴포넌트들.                 |
+| `style`       | `CSSProperties \| undefined`  | 추가 스타일. `colorScheme`는 자동으로 설정됨.  |
 
 
 ## 고급 사용법
@@ -148,22 +149,22 @@ export function ThemeScopeExample() {
 
 ### 시스템 테마 자동 감지
 
-`defaultTheme="system"`으로 설정하면 사용자의 운영체제 테마 설정을 자동으로 감지합니다:
+`defaultTheme="system"`으로 설정하거나 사용자가 `setTheme('system')`을 호출하면 운영체제 테마 설정을 자동으로 감지합니다:
 
 - **macOS**: 시스템 환경설정 > 일반 > 외관 모드
 - **Windows**: 설정 > 개인 설정 > 색
 - **Linux**: 데스크톱 환경의 테마 설정
 
-내부적으로 `prefers-color-scheme` CSS 미디어 쿼리를 사용하여 실시간으로 변경사항을 감지하고 자동으로 테마를 전환합니다.
+내부적으로 `prefers-color-scheme` CSS 미디어 쿼리를 사용하여 실시간으로 변경사항을 감지하고 자동으로 테마를 전환합니다. 단, `enableSystem={false}`로 설정하면 초기 로드 시에만 참조하고 이후에는 동기화되지 않습니다.
 
 ### 테마 적용 우선순위
 
 테마는 다음 순서대로 적용됩니다. 우선순위가 높은 설정이 다른 설정을 덮어씁니다.
 
 1.  **`forcedTheme`**: `ThemeProvider`에 설정된 강제 테마 (가장 높은 우선순위)
-2.  **`localStorage`**: `setTheme` 함수를 통해 사용자가 직접 설정한 테마
-3.  **`defaultTheme`**: `ThemeProvider`에 설정된 기본 테마
-4.  **시스템 테마**: `defaultTheme`이 `'system'`으로 설정되었을 때의 시스템 환경 설정
+2.  **`localStorage`**: `setTheme()` 호출로 사용자가 저장한 테마 (사용자 선택 존중)
+3.  **`defaultTheme`**: 초기 로드용 기본 테마 (`localStorage`에 저장된 값이 없을 때만 사용)
+4.  **시스템 테마**: `defaultTheme`이 `'system'`일 때만 참조되는 시스템 환경 설정
 
 ### 다중 탭 동기화
 
@@ -172,7 +173,7 @@ Vapor UI는 여러 브라우저 탭 간 테마 설정을 자동으로 동기화�
 ### TypeScript 지원
 
 ```tsx
-import type { ThemeConfig, UseThemeReturn, ThemeScopeProps } from '@vapor-ui/core';
+import type { ThemeConfig, UseThemeProps, ThemeScopeProps } from '@vapor-ui/core';
 
 const config: ThemeConfig = {
     defaultTheme: 'system',
@@ -180,7 +181,7 @@ const config: ThemeConfig = {
 };
 
 const MyComponent = () => {
-    const themeData: UseThemeReturn = useTheme();
+    const themeData: UseThemeProps = useTheme();
     // ...
 };
 ```
