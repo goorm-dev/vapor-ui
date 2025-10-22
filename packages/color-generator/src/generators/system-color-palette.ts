@@ -41,7 +41,7 @@ const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
  * //   dark: { tokens: { ... }, metadata: {...} }
  * // }
  */
-function generateSystemColorPalette(config: ColorGeneratorConfig = {}): ColorPaletteResult {
+const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPaletteResult => {
     const colors = config.colors || DEFAULT_PRIMITIVE_COLORS;
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
     const background = config.background || {

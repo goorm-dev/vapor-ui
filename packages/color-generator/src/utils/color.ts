@@ -116,9 +116,9 @@ const getContrastingForegroundColor = (
  * getSortedScales({ '100': {...}, '050': {...}, '200': {...} })
  * // returns: ['050', '100', '200']
  */
-function getSortedScales(palette: Record<string, unknown>): string[] {
+const getSortedScales = (palette: Record<string, unknown>): string[] => {
     return Object.keys(palette).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-}
+};
 
 /**
  * deltaE 값이 가장 낮은(원본 색상과 가장 유사한) 스케일을 찾습니다.
@@ -130,7 +130,7 @@ function getSortedScales(palette: Record<string, unknown>): string[] {
  * findClosestScale({ '100': { deltaE: 5.2 }, '200': { deltaE: 1.1 }, '300': { deltaE: 8.7 } })
  * // returns: '200'
  */
-function findClosestScale(palette: Record<string, { deltaE?: number }>): string | null {
+const findClosestScale = (palette: Record<string, { deltaE?: number }>): string | null => {
     const scaleKeys = Object.keys(palette);
     if (scaleKeys.length === 0) return null;
 
@@ -139,7 +139,7 @@ function findClosestScale(palette: Record<string, { deltaE?: number }>): string 
         const currentDeltaE = palette[currentKey]?.deltaE ?? Infinity;
         return currentDeltaE < closestDeltaE ? currentKey : closestKey;
     });
-}
+};
 
 /* -----------------------------------------------------------------------------------------------*/
 

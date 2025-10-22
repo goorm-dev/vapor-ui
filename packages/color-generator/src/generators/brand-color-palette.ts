@@ -28,7 +28,7 @@ import {
  * // 'primary'와 가장 가까운 'color-primary-500'의 hex값이 '#0808dbff'으로 변경됨
  * const newTokens = overrideCustomColors(tokens, custom);
  */
-function overrideCustomColors(tokens: Tokens, customColors: Record<string, string>): Tokens {
+const overrideCustomColors = (tokens: Tokens, customColors: Record<string, string>): Tokens => {
     const newTokens = { ...tokens };
 
     for (const [colorName, hexValue] of Object.entries(customColors)) {
@@ -95,7 +95,7 @@ function overrideCustomColors(tokens: Tokens, customColors: Record<string, strin
  */
 type BrandColorPalette = Omit<ColorPaletteResult, 'base'>;
 
-function generateBrandColorPalette(config: BrandColorGeneratorConfig): BrandColorPalette {
+const generateBrandColorPalette = (config: BrandColorGeneratorConfig): BrandColorPalette => {
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
     const background = config.background || {
         color: '#FFFFFF',

@@ -30,10 +30,10 @@ interface SemanticTokenMapping {
 /**
  * 전체 토큰 맵에서 특정 색상에 해당하는 팔레트만 추출하여 재구성합니다.
  */
-function reconstructPalette(
+const reconstructPalette = (
     sourceTokens: Record<string, ColorToken | string>,
     colorName: string,
-): Record<string, ColorToken> {
+): Record<string, ColorToken> => {
     const palette: Record<string, ColorToken> = {};
     Object.entries(sourceTokens).forEach(([tokenName, token]) => {
         const isRelatedToken = typeof token === 'object' && tokenName.includes(`-${colorName}-`);
@@ -51,14 +51,14 @@ function reconstructPalette(
 /**
  * 배경 토큰의 oklch 값을 기반으로 대비가 높은 버튼 전경색을 결정합니다.
  */
-function determineButtonForegroundColor(backgroundToken: ColorToken | undefined): ColorToken {
+const determineButtonForegroundColor = (backgroundToken: ColorToken | undefined): ColorToken => {
     if (backgroundToken?.oklch) {
         return getContrastingForegroundColor(backgroundToken.oklch);
     }
     return { ...BASE_COLORS.white };
 }
 
-function createSemanticTokenMapping({
+const createSemanticTokenMapping = ({
     themeName,
     semanticRole,
     brandColorName,
@@ -67,7 +67,7 @@ function createSemanticTokenMapping({
 }: SemanticTokenMapping): {
     semantic: Record<string, string>;
     componentSpecific: Record<string, string>;
-} {
+} => {
     const background100Scale = themeName === 'dark' ? 800 : 100;
 
     return {
@@ -105,10 +105,10 @@ function createSemanticTokenMapping({
  * findLightThemeScales(palette, scales)
  * // returns: { backgroundScale: '400', foregroundScale: '500', alternativeScale: '600' }
  */
-function findLightThemeScales(
+const findLightThemeScales = (
     palette: Record<string, { deltaE?: number }>,
     scales: string[],
-): ScaleInfo {
+): ScaleInfo => {
     const deltaEZeroScale = scales.find((scale) => palette[scale]?.deltaE === 0);
     if (!deltaEZeroScale) {
         throw new Error('No scale with deltaE 0 found for light theme');
@@ -143,10 +143,10 @@ function findLightThemeScales(
  * findDarkThemeScales(palette, scales)
  * // returns: { backgroundScale: '800', foregroundScale: '900', alternativeScale: '900' } // '900'이 마지막 스케일이므로 foreground와 alternative가 동일
  */
-function findDarkThemeScales(
+const findDarkThemeScales = (
     palette: Record<string, { deltaE?: number }>,
     scales: string[],
-): ScaleInfo {
+): ScaleInfo => {
     const backgroundScale = findClosestScale(palette);
 
     if (!backgroundScale) {
@@ -175,7 +175,7 @@ function findDarkThemeScales(
  * @param mappingConfig - 시맨틱 역할과 브랜드 컬러 매핑 설정
  * @returns semantic과 componentSpecific으로 분리된 토큰 컨테이너
  */
-function getSemanticDependentTokens(mappingConfig: SemanticMappingConfig): SemanticTokensResult {
+const getSemanticDependentTokens = (mappingConfig: SemanticMappingConfig): SemanticTokensResult => {
     const lightSemanticMapping: Record<string, string> = {};
     const lightComponentMapping: Record<string, string> = {};
     const darkSemanticMapping: Record<string, string> = {};
