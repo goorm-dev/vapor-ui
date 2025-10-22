@@ -54,11 +54,7 @@ export function ThemeToggle() {
 
     // SSR 환경에서 hydration 완료 전까지 로딩 상태 표시
     if (!mounted) {
-        return (
-            <Button variant="ghost" disabled>
-                Loading...
-            </Button>
-        );
+        return null;
     }
 
     return (
