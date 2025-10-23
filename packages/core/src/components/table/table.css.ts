@@ -1,7 +1,7 @@
 import { foregrounds } from '~/styles/mixins/foreground.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const table = layerStyle('components', {
     borderCollapse: 'collapse',
