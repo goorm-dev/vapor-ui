@@ -19,7 +19,7 @@ const SectionMode = () => {
 
     return (
         <PanelSectionWrapper.Root>
-            <PanelSectionWrapper.Title>Color</PanelSectionWrapper.Title>
+            <PanelSectionWrapper.Title>Mode</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
                 <RadioCardGroup.Root
                     key={resolvedTheme}
