@@ -22,7 +22,7 @@ export const textarea = recipe({
             minHeight: textareaMinHeightVar,
 
             selectors: {
-                '&[readOnly]': { backgroundColor: vars.color.gray['050'] },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['050'] },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
             },
         }),

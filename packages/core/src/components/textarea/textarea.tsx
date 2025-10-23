@@ -65,6 +65,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>(
         return useRender({
             ref: composedRef,
             render: <BaseField.Control render={render || <textarea />} />,
+            state: { disabled, readOnly },
             props: {
                 ...(isControlled ? { value } : { defaultValue }),
                 onValueChange: handleValueChange,
