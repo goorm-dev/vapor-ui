@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'vitest-axe';
 
 import { Table } from '.';
 
@@ -29,7 +30,8 @@ describe('<Table.Root />', () => {
             </Table.Root>,
         );
 
-        const table = rendered.getByRole('table');
-        expect(table).toBeInTheDocument();
+        const result = await axe(rendered.container);
+
+        expect(result).toHaveNoViolations();
     });
 });
