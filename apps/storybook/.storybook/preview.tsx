@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react-vite';
 
-import { ThemeProvider } from '../packages/core/src/components/theme-provider';
+import { ThemeProvider } from '../../../packages/core/src/components/theme-provider';
 
 const preview: Preview = {
     tags: ['autodocs'],
