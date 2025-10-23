@@ -2,7 +2,7 @@ import './global.css';
 
 import type { ReactNode } from 'react';
 
-import { ThemeProvider } from '@vapor-ui/core';
+import { ThemeProvider } from '@vapor-ui/core/theme-provider';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
@@ -38,7 +38,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                     }}
                     theme={{ enabled: false }}
                 >
-                    <ThemeProvider defaultTheme="system">{children}</ThemeProvider>
+                    <ThemeProvider defaultTheme="system" storageKey="vapor-ui-docs">
+                        {children}
+                    </ThemeProvider>
                 </RootProvider>
             </body>
         </html>
