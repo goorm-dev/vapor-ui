@@ -154,21 +154,6 @@ export const TableColumn = forwardRef<HTMLTableColElement, TableColumn.Props>(
 );
 TableColumn.displayName = 'TableColumn';
 
-/* -------------------------------------------------------------------------------------------------
- * Table.Caption
- * -----------------------------------------------------------------------------------------------*/
-
-export const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaption.Props>(
-    ({ render, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <caption />,
-            props,
-        });
-    },
-);
-TableCaption.displayName = 'TableCaption';
-
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TableRoot {
@@ -205,8 +190,4 @@ export namespace TableColumnGroup {
 
 export namespace TableColumn {
     export interface Props extends VComponentProps<'col'> {}
-}
-
-export namespace TableCaption {
-    export interface Props extends VComponentProps<'caption'> {}
 }

@@ -15,7 +15,7 @@ export const Default: StoryObj<typeof Table.Root> = {
                 <Table.Column />
                 <Table.Column />
             </Table.ColumnGroup>
-            <Table.Caption>Sample Table</Table.Caption>
+
             <Table.Header>
                 <Table.Row>
                     <Table.Heading>Header 1</Table.Heading>

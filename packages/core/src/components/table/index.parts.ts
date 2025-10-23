@@ -8,5 +8,4 @@ export {
     TableCell as Cell,
     TableColumnGroup as ColumnGroup,
     TableColumn as Column,
-    TableCaption as Caption,
 } from './table';

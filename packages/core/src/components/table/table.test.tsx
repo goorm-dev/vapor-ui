@@ -7,7 +7,6 @@ describe('<Table.Root />', () => {
     it('should have no accessibility violations', async () => {
         const rendered = render(
             <Table.Root>
-                <Table.Caption>Accessible Table</Table.Caption>
                 <Table.ColumnGroup>
                     <Table.Column width="50%" />
                     <Table.Column width="30%" />
