@@ -1,19 +1,18 @@
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CheckCircleIcon } from '@vapor-ui/icons';
 
-import { Checkbox } from '~/components/checkbox';
-import { Field } from '~/components/field';
-import { Flex } from '~/components/flex';
-import { Form } from '~/components/form';
-import { Radio } from '~/components/radio';
-import { RadioGroup } from '~/components/radio-group';
-import { Switch } from '~/components/switch';
-
+import { Field } from '.';
 import { Button } from '../button';
+import { Checkbox } from '../checkbox';
+import { Flex } from '../flex';
+import { Form } from '../form';
 import { HStack } from '../h-stack';
+import { Radio } from '../radio';
+import { RadioGroup } from '../radio-group';
+import { Switch } from '../switch';
 import { TextInput } from '../text-input';
 
 type FieldStoryArgs = React.ComponentProps<typeof Field.Root> & {

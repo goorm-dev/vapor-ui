@@ -1,8 +1,11 @@
-import { Form } from '@base-ui-components/react';
+import { Form as BaseForm } from '@base-ui-components/react';
 
 import type { VComponentProps } from '~/utils/types';
 
-type FormProps = VComponentProps<typeof Form>;
+export const Form = BaseForm;
 
-export { Form };
-export type { FormProps };
+export namespace Form {
+    type FormPrimitiveProps = VComponentProps<typeof BaseForm>;
+
+    export interface Props extends FormPrimitiveProps {}
+}
