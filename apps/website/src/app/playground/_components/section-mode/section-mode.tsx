@@ -1,4 +1,5 @@
-import { RadioCard, RadioCardGroup, useTheme } from '@vapor-ui/core';
+import { useTheme } from '@vapor-ui/core';
+import { RadioCard, RadioCardGroup } from '@vapor-ui/radio-card';
 
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 

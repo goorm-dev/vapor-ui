@@ -166,7 +166,7 @@ const ThemePanel = () => {
                         positionMethod="fixed"
                     >
                         <Popover.Popup
-                            className={`shadow-[0px_4px_16px_0px_rgba(0,0,0,0.2)] outline-none bg-transparent
+                            className={`shadow-[0px_4px_16px_0px_rgba(0,0,0,0.2)] outline-none bg-transparent rounded-v-300 
                                 transition-transform duration-300 ease-in-out 
                                 data-[starting-style]:translate-x-full 
                                 data-[ending-style]:translate-x-full`}

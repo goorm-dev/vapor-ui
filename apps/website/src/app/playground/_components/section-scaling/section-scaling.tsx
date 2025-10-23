@@ -1,4 +1,4 @@
-import { RadioCard, RadioCardGroup } from '@vapor-ui/core';
+import { RadioCard, RadioCardGroup } from '@vapor-ui/radio-card';;
 
 import { SCALE_VALUES, useCustomTheme } from '~/providers/theme';
 

@@ -190,14 +190,17 @@ importers:
         specifier: workspace:*
         version: link:../../packages/color-generator
       '@vapor-ui/core':
-        specifier: file:./vapor-ui-core-0.6.0.tgz
-        version: file:apps/website/vapor-ui-core-0.6.0.tgz(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../packages/core
       '@vapor-ui/css-generator':
         specifier: workspace:*
         version: link:../../packages/css-generator
       '@vapor-ui/icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@vapor-ui/radio-card':
+        specifier: file:./vapor-ui-core-radio-card.tgz
+        version: '@vapor-ui/core@file:apps/website/vapor-ui-core-radio-card.tgz(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)'
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -3288,8 +3291,8 @@ packages:
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0
 
-  '@vapor-ui/core@file:apps/website/vapor-ui-core-0.6.0.tgz':
-    resolution: {integrity: sha512-a6MaUYx35IqtbbrSj+ghj9mRrhSez13JYU/5AVjlWm8yEd+h9VvjDohYyBf8PcX1mLFNxmj5jYlJxK7+OUT8oQ==, tarball: file:apps/website/vapor-ui-core-0.6.0.tgz}
+  '@vapor-ui/core@file:apps/website/vapor-ui-core-radio-card.tgz':
+    resolution: {integrity: sha512-a6MaUYx35IqtbbrSj+ghj9mRrhSez13JYU/5AVjlWm8yEd+h9VvjDohYyBf8PcX1mLFNxmj5jYlJxK7+OUT8oQ==, tarball: file:apps/website/vapor-ui-core-radio-card.tgz}
     version: 0.6.0
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -9591,7 +9594,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@vapor-ui/core@file:apps/website/vapor-ui-core-0.6.0.tgz(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@vapor-ui/core@file:apps/website/vapor-ui-core-radio-card.tgz(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@base-ui-components/react': 1.0.0-beta.2(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@base-ui-components/utils': 0.1.1(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

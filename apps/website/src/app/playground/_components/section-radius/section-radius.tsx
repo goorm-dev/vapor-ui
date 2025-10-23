@@ -1,4 +1,4 @@
-import { RadioCard, RadioCardGroup } from '@vapor-ui/core';
+import { RadioCard, RadioCardGroup } from '@vapor-ui/radio-card';;
 import type { RadiusKey } from '@vapor-ui/css-generator';
 
 import { useCustomTheme } from '~/providers/theme';
