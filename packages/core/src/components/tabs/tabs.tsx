@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign } from '~/utils/types';
 
 import * as styles from './tabs.css';
@@ -26,93 +27,89 @@ const [TabsProvider, useTabsContext] = createContext<TabsContext>({
  * Tabs.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>(
-    ({ className, ...props }, ref) => {
-        const [sharedProps, otherProps] = createSplitProps<TabsSharedProps>()(props, [
-            'activateOnFocus',
-            'loop',
-            'variant',
-            'size',
-            'disabled',
-            'orientation',
-        ]);
+export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+    const [sharedProps, otherProps] = createSplitProps<TabsSharedProps>()(componentProps, [
+        'activateOnFocus',
+        'loop',
+        'variant',
+        'size',
+        'disabled',
+        'orientation',
+    ]);
 
-        const { orientation } = sharedProps;
+    const { orientation } = sharedProps;
 
-        return (
-            <TabsProvider value={sharedProps}>
-                <BaseTabs.Root
-                    ref={ref}
-                    orientation={orientation}
-                    className={clsx(styles.root({ orientation }), className)}
-                    {...otherProps}
-                />
-            </TabsProvider>
-        );
-    },
-);
+    return (
+        <TabsProvider value={sharedProps}>
+            <BaseTabs.Root
+                ref={ref}
+                orientation={orientation}
+                className={clsx(styles.root({ orientation }), className)}
+                {...otherProps}
+            />
+        </TabsProvider>
+    );
+});
 TabsRoot.displayName = 'Tabs.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Tabs.List
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>(
-    ({ className, ...props }, ref) => {
-        const { activateOnFocus, loop, variant, orientation } = useTabsContext();
+export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+    const { activateOnFocus, loop, variant, orientation } = useTabsContext();
 
-        return (
-            <BaseTabs.List
-                ref={ref}
-                activateOnFocus={activateOnFocus}
-                loop={loop}
-                className={clsx(styles.list({ variant, orientation }), className)}
-                {...props}
-            />
-        );
-    },
-);
+    return (
+        <BaseTabs.List
+            ref={ref}
+            loop={loop}
+            activateOnFocus={activateOnFocus}
+            className={clsx(styles.list({ variant, orientation }), className)}
+            {...componentProps}
+        />
+    );
+});
 TabsList.displayName = 'Tabs.List';
 
 /* -------------------------------------------------------------------------------------------------
  * Tabs.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>(
-    ({ disabled: disabledProp, className, ...props }, ref) => {
-        const { disabled: rootDisabled, size, orientation } = useTabsContext();
+export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>((props, ref) => {
+    const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
+    const { disabled: rootDisabled, size, orientation } = useTabsContext();
 
-        const disabled = disabledProp || rootDisabled;
+    const disabled = disabledProp || rootDisabled;
 
-        return (
-            <BaseTabs.Tab
-                ref={ref}
-                disabled={disabled}
-                className={clsx(styles.trigger({ size, disabled, orientation }), className)}
-                {...props}
-            />
-        );
-    },
-);
+    return (
+        <BaseTabs.Tab
+            ref={ref}
+            disabled={disabled}
+            className={clsx(styles.trigger({ size, disabled, orientation }), className)}
+            {...componentProps}
+        />
+    );
+});
 TabsTrigger.displayName = 'Tabs.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Tabs.Indicator
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsIndicator = forwardRef<HTMLDivElement, TabsIndicator.Props>(
-    ({ className, ...props }, ref) => {
-        const { orientation } = useTabsContext();
+export const TabsIndicator = forwardRef<HTMLDivElement, TabsIndicator.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+    const { orientation } = useTabsContext();
 
-        return (
-            <BaseTabs.Indicator
-                ref={ref}
-                className={clsx(styles.indicator({ orientation }), className)}
-                {...props}
-            />
-        );
-    },
-);
+    return (
+        <BaseTabs.Indicator
+            ref={ref}
+            className={clsx(styles.indicator({ orientation }), className)}
+            {...componentProps}
+        />
+    );
+});
 TabsIndicator.displayName = 'Tabs.Indicator';
 
 /* -------------------------------------------------------------------------------------------------
@@ -120,7 +117,9 @@ TabsIndicator.displayName = 'Tabs.Indicator';
  * -----------------------------------------------------------------------------------------------*/
 
 export const TabsPanel = forwardRef<HTMLDivElement, TabsPanel.Props>((props, ref) => {
-    return <BaseTabs.Panel ref={ref} {...props} />;
+    const componentProps = resolveStyles(props);
+
+    return <BaseTabs.Panel ref={ref} {...componentProps} />;
 });
 TabsPanel.displayName = 'Tabs.Panel';
 

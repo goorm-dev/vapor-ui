@@ -184,7 +184,7 @@ const colorTokens = {
     white,
 };
 
-const foregroundColorTokens = {
+const textColorTokens = {
     'primary-100': foreground.primary[100],
     'primary-200': foreground.primary[200],
     'secondary-100': foreground.secondary[100],
@@ -270,7 +270,7 @@ const sprinkleProperties = defineProperties({
         borderColor: borderColorTokens,
         borderRadius: radiusTokens,
         backgroundColor: colorTokens,
-        color: foregroundColorTokens,
+        color: textColorTokens,
         opacity: true,
 
         // Behavior
@@ -288,4 +288,6 @@ const sprinkleProperties = defineProperties({
 });
 
 export const sprinkles = createRainbowSprinkles(sprinkleProperties);
-export type Sprinkles = Parameters<typeof sprinkles>[0];
+export type Sprinkles = Omit<Parameters<typeof sprinkles>[0], 'color'> & {
+    textColor?: `$${keyof typeof textColorTokens}`;
+};

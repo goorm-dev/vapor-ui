@@ -14,6 +14,7 @@ import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { ItemVariants, LinkVariants, ListVariants } from './navigation-menu.css';
@@ -36,13 +37,12 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Props>(
-    ({ 'aria-label': ariaLabel, className, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(props, [
-            'direction',
-            'size',
-            'stretch',
-            'disabled',
-        ]);
+    (props, ref) => {
+        const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
+        const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(
+            componentProps,
+            ['direction', 'size', 'stretch', 'disabled'],
+        );
 
         const { direction } = variantProps;
 
@@ -66,7 +66,8 @@ NavigationMenuRoot.displayName = 'NavigationMenu.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuList = forwardRef<HTMLDivElement, NavigationMenuList.Props>(
-    ({ className, ...props }, ref) => {
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
         const { direction } = useNavigationMenuContext();
 
         return (
@@ -74,7 +75,7 @@ export const NavigationMenuList = forwardRef<HTMLDivElement, NavigationMenuList.
                 ref={ref}
                 aria-orientation={undefined}
                 className={clsx(styles.list({ direction }), className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -86,14 +87,15 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
-    ({ className, ...props }, ref) => {
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
         const { stretch } = useNavigationMenuContext();
 
         return (
             <BaseNavigationMenu.Item
                 ref={ref}
                 className={clsx(styles.item({ stretch }), className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -105,7 +107,14 @@ NavigationMenuItem.displayName = 'NavigationMenu.Item';
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLink.Props>(
-    ({ selected, href, disabled: disabledProp, className, ...props }, ref) => {
+    (props, ref) => {
+        const {
+            selected,
+            href,
+            disabled: disabledProp,
+            className,
+            ...componentProps
+        } = resolveStyles(props);
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
 
         const disabled = disabledProp ?? contextDisabled;
@@ -122,7 +131,7 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
                 aria-disabled={disabled ? 'true' : undefined}
                 className={clsx(styles.link({ size }), className)}
                 {...dataAttrs}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -149,7 +158,8 @@ NavigationMenuLinkItem.displayName = 'NavigationMenu.LinkItem';
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuTrigger = forwardRef<HTMLButtonElement, NavigationMenuTrigger.Props>(
-    ({ disabled: disabledProp, className, ...props }, ref) => {
+    (props, ref) => {
+        const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
 
         const disabled = disabledProp ?? contextDisabled;
@@ -161,7 +171,7 @@ export const NavigationMenuTrigger = forwardRef<HTMLButtonElement, NavigationMen
                 disabled={disabled}
                 className={clsx(styles.link({ size }), styles.trigger, className)}
                 {...dataAttrs}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -175,11 +185,17 @@ NavigationMenuTrigger.displayName = 'NavigationMenu.Trigger';
 export const NavigationMenuTriggerIndicator = forwardRef<
     HTMLDivElement,
     NavigationMenuTriggerIndicator.Props
->(({ className, children, ...props }, ref) => {
+>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
+
     const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
 
     return (
-        <BaseNavigationMenu.Icon ref={ref} className={clsx(styles.icon, className)} {...props}>
+        <BaseNavigationMenu.Icon
+            ref={ref}
+            className={clsx(styles.icon, className)}
+            {...componentProps}
+        >
             <IconElement />
         </BaseNavigationMenu.Icon>
     );
@@ -191,12 +207,14 @@ NavigationMenuTriggerIndicator.displayName = 'NavigationMenu.TriggerIndicator';
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuPanel = forwardRef<HTMLDivElement, NavigationMenuPanel.Props>(
-    ({ className, ...props }, ref) => {
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+
         return (
             <BaseNavigationMenu.Content
                 ref={ref}
                 className={clsx(styles.panel, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -217,17 +235,16 @@ NavigationMenuPortal.displayName = 'NavigationMenu.Portal';
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuPositioner = forwardRef<HTMLDivElement, NavigationMenuPositioner.Props>(
-    (
-        {
+    (props, ref) => {
+        const {
             side = 'bottom',
             align = 'center',
             sideOffset = 8,
             collisionAvoidance,
             className,
-            ...props
-        },
-        ref,
-    ) => {
+            ...componentProps
+        } = resolveStyles(props);
+
         return (
             <BaseNavigationMenu.Positioner
                 ref={ref}
@@ -236,7 +253,7 @@ export const NavigationMenuPositioner = forwardRef<HTMLDivElement, NavigationMen
                 sideOffset={sideOffset}
                 collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
                 className={clsx(styles.positioner, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -251,7 +268,8 @@ const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
 export const NavigationMenuPopup = forwardRef<HTMLElement, NavigationMenuPopup.Props>(
-    ({ className, children, ...props }, ref) => {
+    (props, ref) => {
+        const { className, children, ...componentProps } = resolveStyles(props);
         const [side, setSide] = useState<NavigationMenuPositioner.Props['side']>();
         const [align, setAlign] = useState<NavigationMenuPositioner.Props['align']>();
 
@@ -289,7 +307,7 @@ export const NavigationMenuPopup = forwardRef<HTMLElement, NavigationMenuPopup.P
             <BaseNavigationMenu.Popup
                 ref={composedRef}
                 className={clsx(styles.popup, className)}
-                {...props}
+                {...componentProps}
             >
                 <BaseNavigationMenu.Arrow ref={arrowRef} style={position} className={styles.arrow}>
                     <ArrowIcon />
@@ -364,12 +382,14 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
-    ({ className, ...props }, ref) => {
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+
         return (
             <BaseNavigationMenu.Viewport
                 ref={ref}
                 className={clsx(styles.viewport, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },

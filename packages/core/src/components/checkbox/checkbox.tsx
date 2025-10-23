@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './checkbox.css';
@@ -26,33 +27,32 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>(
-    ({ render, className, children, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(props, [
-            'size',
-            'invalid',
-            'indeterminate',
-        ]);
+export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((props, ref) => {
+    const { render, className, children, ...componentProps } = resolveStyles(props);
+    const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
+        'size',
+        'invalid',
+        'indeterminate',
+    ]);
 
-        const { size, invalid, indeterminate } = variantProps;
+    const { size, invalid, indeterminate } = variantProps;
 
-        const IndicatorElement = createSlot(children || <CheckboxIndicator />);
+    const IndicatorElement = createSlot(children || <CheckboxIndicator />);
 
-        return (
-            <CheckboxProvider value={{ size, indeterminate }}>
-                <BaseCheckbox.Root
-                    ref={ref}
-                    aria-invalid={invalid}
-                    indeterminate={indeterminate}
-                    className={clsx(styles.root({ invalid, size }), className)}
-                    {...otherProps}
-                >
-                    <IndicatorElement />
-                </BaseCheckbox.Root>
-            </CheckboxProvider>
-        );
-    },
-);
+    return (
+        <CheckboxProvider value={{ size, indeterminate }}>
+            <BaseCheckbox.Root
+                ref={ref}
+                aria-invalid={invalid}
+                indeterminate={indeterminate}
+                className={clsx(styles.root({ invalid, size }), className)}
+                {...otherProps}
+            >
+                <IndicatorElement />
+            </BaseCheckbox.Root>
+        </CheckboxProvider>
+    );
+});
 CheckboxRoot.displayName = 'Checkbox.Root';
 
 /* -------------------------------------------------------------------------------------------------
@@ -60,14 +60,15 @@ CheckboxRoot.displayName = 'Checkbox.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const CheckboxIndicator = forwardRef<HTMLDivElement, CheckboxIndicator.Props>(
-    ({ className, ...props }, ref) => {
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
         const { size, indeterminate } = useCheckboxContext();
 
         return (
             <BaseCheckbox.Indicator
                 ref={ref}
                 className={clsx(styles.indicator({ size }), className)}
-                {...props}
+                {...componentProps}
             >
                 {indeterminate ? <DashIcon /> : <CheckIcon />}
             </BaseCheckbox.Indicator>
