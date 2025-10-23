@@ -7,7 +7,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { VComponentProps } from '~/utils/types';
 

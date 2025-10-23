@@ -8,6 +8,7 @@ export const scaleFactorVar = createGlobalVar(SCALE_FACTOR_VAR_NAME, {
     inherits: true,
     initialValue: '1',
 });
+
 export const radiusFactorVar = createGlobalVar(RADIUS_FACTOR_VAR_NAME, {
     syntax: '<number>',
     inherits: true,
