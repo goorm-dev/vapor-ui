@@ -257,7 +257,7 @@ export const MenuSubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContent.
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
             <MenuPortal {...portalProps}>
-                <MenuPositioner {...positionerProps}>
+                <MenuPositioner side="right" sideOffset={0} {...positionerProps}>
                     <MenuSubmenuPopup ref={ref} {...props} />
                 </MenuPositioner>
             </MenuPortal>
