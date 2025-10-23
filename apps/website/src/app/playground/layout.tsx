@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
-            <ThemeProvider defaultTheme="system" enableSystem storageKey="vapor-docs-theme">
+            <ThemeProvider defaultTheme="system" storageKey="vapor-docs-theme">
                 <SiteNavBar />
                 {children}
             </ThemeProvider>

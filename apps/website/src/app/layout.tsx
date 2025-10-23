@@ -38,9 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     }}
                     theme={{ enabled: false }}
                 >
-                    <ThemeProvider defaultTheme="system" enableSystem>
-                        {children}
-                    </ThemeProvider>
+                    <ThemeProvider defaultTheme="system">{children}</ThemeProvider>
                 </RootProvider>
             </body>
         </html>
