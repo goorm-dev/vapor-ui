@@ -7,7 +7,7 @@ import { Popover as BasePopover } from '@base-ui-components/react/popover';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -18,77 +18,69 @@ import * as styles from './popover.css';
  * Popover.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = VComponentProps<typeof BasePopover.Root>;
-interface PopoverRootProps extends RootPrimitiveProps {}
-
-const Root = (props: PopoverRootProps) => {
+export const PopoverRoot = (props: PopoverRoot.Props) => {
     return <BasePopover.Root {...props} />;
 };
+PopoverRoot.displayName = 'Popover.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerPrimitiveProps = VComponentProps<typeof BasePopover.Trigger>;
-interface PopoverTriggerProps extends TriggerPrimitiveProps {}
-
-const Trigger = forwardRef<HTMLButtonElement, PopoverTriggerProps>((props, ref) => {
+export const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
     return <BasePopover.Trigger ref={ref} {...componentProps} />;
 });
+PopoverTrigger.displayName = 'Popover.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Close
  * -----------------------------------------------------------------------------------------------*/
 
-interface PopoverCloseProps extends VComponentProps<typeof BasePopover.Close> {}
-
-const Close = forwardRef<HTMLButtonElement, PopoverCloseProps>((props, ref) => {
+export const PopoverClose = forwardRef<HTMLButtonElement, PopoverClose.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
     return <BasePopover.Close ref={ref} {...componentProps} />;
 });
-Close.displayName = 'Popover.Close';
+PopoverClose.displayName = 'Popover.Close';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-type PortalPrimitiveProps = VComponentProps<typeof BasePopover.Portal>;
-interface PopoverPortalProps extends PortalPrimitiveProps {}
-
-const Portal = (props: PopoverPortalProps) => {
+export const PopoverPortal = (props: PopoverPortal.Props) => {
     return <BasePopover.Portal {...props} />;
 };
+PopoverPortal.displayName = 'Popover.Portal';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Positioner
  * -----------------------------------------------------------------------------------------------*/
 
-type PositionerPrimitiveProps = VComponentProps<typeof BasePopover.Positioner>;
-interface PopoverPositionerProps extends PositionerPrimitiveProps {}
+export const PopoverPositioner = forwardRef<HTMLDivElement, PopoverPositioner.Props>(
+    (props, ref) => {
+        const {
+            side = 'bottom',
+            align = 'center',
+            sideOffset = 8,
+            collisionAvoidance,
+            ...componentProps
+        } = resolveStyles(props);
 
-const Positioner = forwardRef<HTMLDivElement, PopoverPositionerProps>((props, ref) => {
-    const {
-        side = 'bottom',
-        align = 'center',
-        sideOffset = 8,
-        collisionAvoidance,
-        ...componentProps
-    } = resolveStyles(props);
-
-    return (
-        <BasePopover.Positioner
-            ref={ref}
-            side={side}
-            align={align}
-            sideOffset={sideOffset}
-            collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
-            {...componentProps}
-        />
-    );
-});
+        return (
+            <BasePopover.Positioner
+                ref={ref}
+                side={side}
+                align={align}
+                sideOffset={sideOffset}
+                collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
+                {...componentProps}
+            />
+        );
+    },
+);
+PopoverPositioner.displayName = 'Popover.Positioner';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Popup
@@ -97,14 +89,11 @@ const Positioner = forwardRef<HTMLDivElement, PopoverPositionerProps>((props, re
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-type PopupPrimitiveProps = VComponentProps<typeof BasePopover.Popup>;
-interface PopoverPopupProps extends PopupPrimitiveProps {}
-
-const Popup = forwardRef<HTMLDivElement, PopoverPopupProps>((props, ref) => {
+export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
 
-    const [side, setSide] = useState<PositionerPrimitiveProps['side']>('bottom');
-    const [align, setAlign] = useState<PositionerPrimitiveProps['align']>('start');
+    const [side, setSide] = useState<PopoverPositioner.Props['side']>('bottom');
+    const [align, setAlign] = useState<PopoverPositioner.Props['align']>('start');
 
     const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
 
@@ -150,10 +139,11 @@ const Popup = forwardRef<HTMLDivElement, PopoverPopupProps>((props, ref) => {
         </BasePopover.Popup>
     );
 });
+PopoverPopup.displayName = 'Popover.Popup';
 
 const extractPositions = (dataset: DOMStringMap) => {
-    const currentSide = dataset.side as PositionerPrimitiveProps['side'];
-    const currentAlign = dataset.align as PositionerPrimitiveProps['align'];
+    const currentSide = dataset.side as PopoverPositioner.Props['side'];
+    const currentAlign = dataset.align as PopoverPositioner.Props['align'];
     return { side: currentSide, align: currentAlign };
 };
 
@@ -161,53 +151,48 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Popover.Content
  * -----------------------------------------------------------------------------------------------*/
 
-interface PopoverContentProps extends VComponentProps<typeof Popup> {
-    portalProps?: PopoverPortalProps;
-    positionerProps?: PopoverPositionerProps;
-}
-
-const Content = forwardRef<HTMLDivElement, PopoverContentProps>(
+export const PopoverContent = forwardRef<HTMLDivElement, PopoverContent.Props>(
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
-            <Portal {...portalProps}>
-                <Positioner {...positionerProps}>
-                    <Popup ref={ref} {...props} />
-                </Positioner>
-            </Portal>
+            <PopoverPortal {...portalProps}>
+                <PopoverPositioner {...positionerProps}>
+                    <PopoverPopup ref={ref} {...props} />
+                </PopoverPositioner>
+            </PopoverPortal>
         );
     },
 );
-Content.displayName = 'Popover.Content';
+PopoverContent.displayName = 'Popover.Content';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Title
  * -----------------------------------------------------------------------------------------------*/
 
-type TitlePrimitiveProps = VComponentProps<typeof BasePopover.Title>;
-interface PopoverTitleProps extends TitlePrimitiveProps {}
-
-const Title = forwardRef<HTMLHeadingElement, PopoverTitleProps>((props, ref) => {
+export const PopoverTitle = forwardRef<HTMLHeadingElement, PopoverTitle.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
     // NOTE: Consider whether to add styles for the Title component
     return <BasePopover.Title ref={ref} {...componentProps} />;
 });
+PopoverTitle.displayName = 'Popover.Title';
 
 /* -------------------------------------------------------------------------------------------------
  * Popover.Description
  * -----------------------------------------------------------------------------------------------*/
 
-type DescriptionPrimitiveProps = VComponentProps<typeof BasePopover.Description>;
-interface PopoverDescriptionProps extends DescriptionPrimitiveProps {}
+export const PopoverDescription = forwardRef<HTMLParagraphElement, PopoverDescription.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
 
-const Description = forwardRef<HTMLParagraphElement, PopoverDescriptionProps>((props, ref) => {
-    // NOTE: Consider whether to add styles for the Description component
-    return <BasePopover.Description ref={ref} {...props} />;
-});
+        // NOTE: Consider whether to add styles for the Description component
+        return <BasePopover.Description ref={ref} {...componentProps} />;
+    },
+);
+PopoverDescription.displayName = 'Popover.Description';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type ArrowPositionProps = Pick<PositionerPrimitiveProps, 'side' | 'align'> & { offset?: number };
+type ArrowPositionProps = Pick<PopoverPositioner.Props, 'side' | 'align'> & { offset?: number };
 
 const getArrowPosition = ({
     side = 'top',
@@ -249,38 +234,50 @@ const ArrowIcon = (props: VComponentProps<'svg'>) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as PopoverRoot,
-    Trigger as PopoverTrigger,
-    Close as PopoverClose,
-    Portal as PopoverPortal,
-    Positioner as PopoverPositioner,
-    Popup as PopoverPopup,
-    Content as PopoverContent,
-    Title as PopoverTitle,
-    Description as PopoverDescription,
-};
+export namespace PopoverRoot {
+    type RootPrimitiveProps = VComponentProps<typeof BasePopover.Root>;
+    export interface Props extends RootPrimitiveProps {}
+}
 
-export type {
-    PopoverRootProps,
-    PopoverTriggerProps,
-    PopoverCloseProps,
-    PopoverPortalProps,
-    PopoverPositionerProps,
-    PopoverPopupProps,
-    PopoverContentProps,
-    PopoverTitleProps,
-    PopoverDescriptionProps,
-};
+export namespace PopoverTrigger {
+    export type TriggerPrimitiveProps = VComponentProps<typeof BasePopover.Trigger>;
+    export interface Props extends TriggerPrimitiveProps {}
+}
 
-export const Popover = {
-    Root,
-    Trigger,
-    Close,
-    Portal,
-    Positioner,
-    Popup,
-    Content,
-    Title,
-    Description,
-};
+export namespace PopoverClose {
+    type ClosePrimitiveProps = VComponentProps<typeof BasePopover.Close>;
+    export type Props = ClosePrimitiveProps;
+}
+
+export namespace PopoverPortal {
+    export type PrimitivePortalProps = VComponentProps<typeof BasePopover.Portal>;
+    export interface Props extends PrimitivePortalProps {}
+}
+
+export namespace PopoverPositioner {
+    export type PrimitivePositionerProps = VComponentProps<typeof BasePopover.Positioner>;
+    export interface Props extends PrimitivePositionerProps {}
+}
+
+export namespace PopoverPopup {
+    export type PrimitivePopupProps = VComponentProps<typeof BasePopover.Popup>;
+    export interface Props extends PrimitivePopupProps {}
+}
+
+export namespace PopoverContent {
+    export type PrimitivePopupProps = VComponentProps<typeof PopoverPopup>;
+    export interface Props extends PrimitivePopupProps {
+        portalProps?: PopoverPortal.Props;
+        positionerProps?: PopoverPositioner.Props;
+    }
+}
+
+export namespace PopoverTitle {
+    export type PrimitiveTitleProps = VComponentProps<typeof BasePopover.Title>;
+    export interface Props extends PrimitiveTitleProps {}
+}
+
+export namespace PopoverDescription {
+    export type PrimitiveDescriptionProps = VComponentProps<typeof BasePopover.Description>;
+    export interface Props extends PrimitiveDescriptionProps {}
+}

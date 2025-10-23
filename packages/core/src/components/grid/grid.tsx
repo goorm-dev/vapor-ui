@@ -18,7 +18,6 @@ import * as styles from './grid.css';
  * Grid
  * -----------------------------------------------------------------------------------------------*/
 
-type GridPrimitiveProps = VComponentProps<typeof Box>;
 type GridVariants = RootVariants & {
     inline?: boolean;
     templateRows?: string;
@@ -26,10 +25,8 @@ type GridVariants = RootVariants & {
     flow?: CSSProperties['gridAutoFlow'];
 };
 
-interface GridRootProps extends GridPrimitiveProps, GridVariants {}
-
-const Root = forwardRef<HTMLDivElement, GridRootProps>((props, ref) => {
-    const { className, style, children, ...componentProps } = resolveStyles(props);
+export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>((props, ref) => {
+    const { className, style, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<GridVariants>()(componentProps, [
         'inline',
         'templateRows',
@@ -51,46 +48,45 @@ const Root = forwardRef<HTMLDivElement, GridRootProps>((props, ref) => {
             style={{ ...cssVariables, ...style }}
             className={clsx(styles.root(variants), className)}
             {...otherProps}
-        >
-            {children}
-        </Box>
+        />
     );
 });
-Root.displayName = 'Grid';
+GridRoot.displayName = 'Grid';
 
 /* -------------------------------------------------------------------------------------------------
  * Grid.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type GridItemPrimitiveProps = VComponentProps<typeof Box>;
-type GridItemVariants = { rowSpan?: string; colSpan?: string };
+export const GridItem = forwardRef<HTMLDivElement, GridItem.Props>((props, ref) => {
+    const { rowSpan, colSpan, className, style, ...componentProps } = resolveStyles(props);
 
-interface GridItemProps extends GridItemPrimitiveProps, GridItemVariants {}
+    const cssVariables = assignInlineVars({
+        [styles.gridItemRowSpan]: rowSpan,
+        [styles.gridItemColSpan]: colSpan,
+    });
 
-const Item = forwardRef<HTMLDivElement, GridItemProps>(
-    ({ rowSpan, colSpan, className, style, children, ...props }, ref) => {
-        const cssVariables = assignInlineVars({
-            [styles.gridItemRowSpan]: rowSpan,
-            [styles.gridItemColSpan]: colSpan,
-        });
-
-        return (
-            <Box
-                ref={ref}
-                style={{ ...cssVariables, ...style }}
-                className={clsx(styles.item, className)}
-                {...props}
-            >
-                {children}
-            </Box>
-        );
-    },
-);
-Item.displayName = 'Grid.Item';
+    return (
+        <Box
+            ref={ref}
+            style={{ ...cssVariables, ...style }}
+            className={clsx(styles.item, className)}
+            {...componentProps}
+        />
+    );
+});
+GridItem.displayName = 'Grid.Item';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as GridRoot, Item as GridItem };
-export type { GridRootProps, GridItemProps };
+export namespace GridRoot {
+    type GridPrimitiveProps = VComponentProps<typeof Box>;
 
-export const Grid = { Root, Item };
+    export interface Props extends GridPrimitiveProps, GridVariants {}
+}
+
+export namespace GridItem {
+    type GridItemPrimitiveProps = VComponentProps<typeof Box>;
+    type GridItemVariants = { rowSpan?: string; colSpan?: string };
+
+    export interface Props extends GridItemPrimitiveProps, GridItemVariants {}
+}

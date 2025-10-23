@@ -14,10 +14,7 @@ import * as styles from './field.css';
  * Field
  * -----------------------------------------------------------------------------------------------*/
 
-type FieldPrimitiveProps = VComponentProps<typeof BaseField.Root>;
-interface FieldRootProps extends FieldPrimitiveProps {}
-
-const Root = forwardRef<HTMLDivElement, FieldRootProps>((props, ref) => {
+export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
@@ -25,58 +22,45 @@ const Root = forwardRef<HTMLDivElement, FieldRootProps>((props, ref) => {
     );
 });
 
-Root.displayName = 'Field.Root';
+FieldRoot.displayName = 'Field.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = VComponentProps<typeof BaseField.Label>;
-interface FieldLabelProps extends PrimitiveLabelProps {}
-
-const Label = forwardRef<HTMLLabelElement, FieldLabelProps>((props, ref) => {
+export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
         <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...componentProps} />
     );
 });
-Label.displayName = 'Field.Label';
+FieldLabel.displayName = 'Field.Label';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Description
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveDescriptionProps = VComponentProps<typeof BaseField.Description>;
-interface FieldDescriptionProps extends PrimitiveDescriptionProps {}
+export const FieldDescription = forwardRef<HTMLParagraphElement, FieldDescription.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
 
-const Description = forwardRef<HTMLParagraphElement, FieldDescriptionProps>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseField.Description
-            ref={ref}
-            className={clsx(styles.description, className)}
-            {...componentProps}
-        />
-    );
-});
-Description.displayName = 'Field.Description';
+        return (
+            <BaseField.Description
+                ref={ref}
+                className={clsx(styles.description, className)}
+                {...componentProps}
+            />
+        );
+    },
+);
+FieldDescription.displayName = 'Field.Description';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Error
  * -----------------------------------------------------------------------------------------------*/
 
-type ErrorValidityState = Omit<
-    Parameters<BaseField.Validity.Props['children']>[0]['validity'],
-    'valid'
->;
-type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
-
-type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
-interface FieldErrorProps extends Assign<BaseFieldErrorProps, ErrorMatchProps> {}
-
-const Error = forwardRef<HTMLDivElement, FieldErrorProps>((props, ref) => {
+export const FieldError = forwardRef<HTMLDivElement, FieldError.Props>((props, ref) => {
     const { match, className, ...componentProps } = resolveStyles(props);
 
     return (
@@ -88,17 +72,15 @@ const Error = forwardRef<HTMLDivElement, FieldErrorProps>((props, ref) => {
         />
     );
 });
-Error.displayName = 'Field.Error';
+FieldError.displayName = 'Field.Error';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Success
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveSuccessProps = Omit<VComponentProps<typeof BaseField.Error>, 'match'>;
-interface FieldSuccessProps extends PrimitiveSuccessProps {}
-
-const Success = forwardRef<HTMLDivElement, FieldSuccessProps>((props, ref) => {
+export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
+
     return (
         <BaseField.Error
             ref={ref}
@@ -108,23 +90,34 @@ const Success = forwardRef<HTMLDivElement, FieldSuccessProps>((props, ref) => {
         />
     );
 });
-Success.displayName = 'Field.Success';
+FieldSuccess.displayName = 'Field.Success';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as FieldRoot,
-    Label as FieldLabel,
-    Description as FieldDescription,
-    Error as FieldError,
-    Success as FieldSuccess,
-};
-export type {
-    FieldRootProps,
-    FieldLabelProps,
-    FieldDescriptionProps,
-    FieldErrorProps,
-    FieldSuccessProps,
-};
+export namespace FieldRoot {
+    export interface Props extends VComponentProps<typeof BaseField.Root> {}
+}
 
-export const Field = { Root, Label, Description, Error, Success };
+export namespace FieldLabel {
+    export interface Props extends VComponentProps<typeof BaseField.Label> {}
+}
+
+export namespace FieldDescription {
+    export interface Props extends VComponentProps<typeof BaseField.Description> {}
+}
+
+export namespace FieldError {
+    type ErrorValidityState = Omit<BaseField.ValidityData['state'], 'valid'>;
+    type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
+    type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
+
+    export interface Props extends Assign<BaseFieldErrorProps, ErrorMatchProps> {}
+}
+
+export namespace FieldSuccess {
+    type SuccessValidityState = Pick<BaseField.ValidityData['state'], 'valid'>;
+    type SuccessMatchProps = { match?: boolean | keyof SuccessValidityState };
+    type PrimitiveSuccessProps = VComponentProps<typeof BaseField.Error>;
+
+    export interface Props extends Assign<PrimitiveSuccessProps, SuccessMatchProps> {}
+}

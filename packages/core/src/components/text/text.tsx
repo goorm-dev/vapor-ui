@@ -9,13 +9,7 @@ import { type Typography, typography } from '~/styles/mixins/typography.css';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
-type TextPrimitiveProps = VComponentProps<'span'>;
-interface TextProps extends TextPrimitiveProps {
-    foreground?: Foregrounds['color'];
-    typography?: Typography['style'];
-}
-
-const Text = forwardRef<HTMLSpanElement, TextProps>((props, ref) => {
+export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
     const {
         render,
         typography: typographyStyle,
@@ -39,5 +33,11 @@ const Text = forwardRef<HTMLSpanElement, TextProps>((props, ref) => {
 });
 Text.displayName = 'Text';
 
-export { Text };
-export type { TextProps };
+export namespace Text {
+    type TextPrimitiveProps = VComponentProps<'span'>;
+
+    export interface Props extends TextPrimitiveProps {
+        foreground?: Foregrounds['color'];
+        typography?: Typography['style'];
+    }
+}

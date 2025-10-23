@@ -4,10 +4,9 @@ import userEvent from '@testing-library/user-event';
 
 // import { axe } from 'vitest-axe';
 
-import type { MenuRootProps } from './menu';
-import { Menu } from './menu';
+import { Menu } from '.';
 
-const MenuTest = (props: Omit<MenuRootProps, 'children'>) => {
+const MenuTest = (props: Omit<Menu.Root.Props, 'children'>) => {
     return (
         <Menu.Root {...props} modal={false}>
             <Menu.Trigger>Open Menu</Menu.Trigger>

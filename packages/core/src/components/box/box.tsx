@@ -5,9 +5,7 @@ import { useRender } from '@base-ui-components/react/use-render';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
-interface BoxProps extends VComponentProps<'div'> {}
-
-const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
+export const Box = forwardRef<HTMLDivElement, Box.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
     return useRender({
@@ -18,5 +16,6 @@ const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
 });
 Box.displayName = 'Box';
 
-export { Box };
-export type { BoxProps };
+export namespace Box {
+    export interface Props extends VComponentProps<'div'> {}
+}

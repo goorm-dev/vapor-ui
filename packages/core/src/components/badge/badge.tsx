@@ -10,10 +10,7 @@ import type { VComponentProps } from '~/utils/types';
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
-type BadgePrimitiveProps = VComponentProps<'span'>;
-interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
-
-const Badge = forwardRef<HTMLSpanElement, BadgeProps>((props, ref) => {
+export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(componentProps, [
         'color',
@@ -32,5 +29,8 @@ const Badge = forwardRef<HTMLSpanElement, BadgeProps>((props, ref) => {
 });
 Badge.displayName = 'Badge';
 
-export { Badge };
-export type { BadgeProps };
+export namespace Badge {
+    type BadgePrimitiveProps = VComponentProps<'span'>;
+
+    export interface Props extends BadgePrimitiveProps, BadgeVariants {}
+}

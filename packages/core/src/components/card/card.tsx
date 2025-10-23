@@ -14,9 +14,7 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardRootProps extends VComponentProps<'div'> {}
-
-const Root = forwardRef<HTMLDivElement, CardRootProps>((props, ref) => {
+export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
     return useRender({
@@ -28,15 +26,13 @@ const Root = forwardRef<HTMLDivElement, CardRootProps>((props, ref) => {
         },
     });
 });
-Root.displayName = 'Card';
+CardRoot.displayName = 'Card.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardHeaderProps extends VComponentProps<'div'> {}
-
-const Header = forwardRef<HTMLDivElement, CardHeaderProps>((props, ref) => {
+export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
     return useRender({
@@ -48,15 +44,13 @@ const Header = forwardRef<HTMLDivElement, CardHeaderProps>((props, ref) => {
         },
     });
 });
-Header.displayName = 'Card.Header';
+CardHeader.displayName = 'Card.Header';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardBodyProps extends VComponentProps<'div'> {}
-
-const Body = forwardRef<HTMLDivElement, CardBodyProps>((props, ref) => {
+export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
     return useRender({
@@ -68,15 +62,13 @@ const Body = forwardRef<HTMLDivElement, CardBodyProps>((props, ref) => {
         },
     });
 });
-Body.displayName = 'Card.Body';
+CardBody.displayName = 'Card.Body';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardFooterProps extends VComponentProps<'div'> {}
-
-const Footer = forwardRef<HTMLDivElement, CardFooterProps>((props, ref) => {
+export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
     return useRender({
@@ -88,11 +80,30 @@ const Footer = forwardRef<HTMLDivElement, CardFooterProps>((props, ref) => {
         },
     });
 });
-Footer.displayName = 'Card.Footer';
+CardFooter.displayName = 'Card.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as CardRoot, Header as CardHeader, Body as CardBody, Footer as CardFooter };
-export type { CardRootProps, CardHeaderProps, CardBodyProps, CardFooterProps };
+export namespace CardRoot {
+    type RootPrimitiveProps = VComponentProps<'div'>;
 
-export const Card = { Root, Header, Body, Footer };
+    export interface Props extends RootPrimitiveProps {}
+}
+
+export namespace CardHeader {
+    type HeaderPrimitiveProps = VComponentProps<'div'>;
+
+    export interface Props extends HeaderPrimitiveProps {}
+}
+
+export namespace CardBody {
+    type BodyPrimitiveProps = VComponentProps<'div'>;
+
+    export interface Props extends BodyPrimitiveProps {}
+}
+
+export namespace CardFooter {
+    type FooterPrimitiveProps = VComponentProps<'div'>;
+
+    export interface Props extends FooterPrimitiveProps {}
+}

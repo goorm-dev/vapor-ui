@@ -34,10 +34,7 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
  * RadioGroup.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = VComponentProps<typeof BaseRadioGroup>;
-interface RadioGroupRootProps extends RootPrimitiveProps, RadioGroupSharedProps {}
-
-const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>((props, ref) => {
+export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
     const [labelElementId, setLabelElementId] = useState<string | undefined>(undefined);
@@ -63,16 +60,13 @@ const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>((props, ref) => {
         </RadioGroupProvider>
     );
 });
-Root.displayName = 'RadioGroup.Root';
+RadioGroupRoot.displayName = 'RadioGroup.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type LabelPrimitiveProps = VComponentProps<'span'>;
-interface RadioGroupLabelProps extends LabelPrimitiveProps {}
-
-const Label = forwardRef<HTMLSpanElement, RadioGroupLabelProps>((props, ref) => {
+export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
     const { setLabelElementId } = useRadioGroupContext();
@@ -90,11 +84,14 @@ const Label = forwardRef<HTMLSpanElement, RadioGroupLabelProps>((props, ref) => 
         props: { id, className: clsx(styles.label, className), ...componentProps },
     });
 });
-Label.displayName = 'RadioGroup.Label';
+RadioGroupLabel.displayName = 'RadioGroup.Label';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as RadioGroupRoot, Label as RadioGroupLabel };
-export type { RadioGroupRootProps, RadioGroupLabelProps };
+export namespace RadioGroupRoot {
+    export interface Props extends VComponentProps<typeof BaseRadioGroup>, RadioGroupSharedProps {}
+}
 
-export const RadioGroup = { Root, Label };
+export namespace RadioGroupLabel {
+    export interface Props extends VComponentProps<'span'> {}
+}

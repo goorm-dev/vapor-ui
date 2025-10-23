@@ -1,1 +1,1 @@
-export * from './multi-select';
+export * as MultiSelect from './index.parts';

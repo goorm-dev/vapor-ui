@@ -7,17 +7,17 @@ import type { VComponentProps } from '~/utils/types';
 import { Box } from '../box';
 
 type FlexVariants = { inline?: boolean };
-type FlexPrimitiveProps = VComponentProps<typeof Box>;
 
-interface FlexProps extends FlexPrimitiveProps, FlexVariants {}
-
-const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {
-    const componentProps = resolveStyles<FlexProps>(props);
+export const Flex = forwardRef<HTMLDivElement, Flex.Props>((props, ref) => {
+    const componentProps = resolveStyles(props);
     const [{ inline }, otherProps] = createSplitProps<FlexVariants>()(componentProps, ['inline']);
 
     return <Box ref={ref} display={inline ? 'inline-flex' : 'flex'} {...otherProps} />;
 });
 Flex.displayName = 'Flex';
 
-export { Flex };
-export type { FlexProps };
+export namespace Flex {
+    type FlexPrimitiveProps = VComponentProps<typeof Box>;
+
+    export interface Props extends FlexPrimitiveProps, FlexVariants {}
+}

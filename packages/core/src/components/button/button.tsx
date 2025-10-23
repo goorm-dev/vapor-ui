@@ -11,10 +11,7 @@ import type { VComponentProps } from '~/utils/types';
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
-type ButtonPrimitiveProps = VComponentProps<'button'>;
-interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {}
-
-const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [
         'color',
@@ -38,5 +35,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
 });
 Button.displayName = 'Button';
 
-export { Button };
-export type { ButtonProps };
+export namespace Button {
+    type ButtonPrimitiveProps = VComponentProps<'button'>;
+
+    export interface Props extends ButtonPrimitiveProps, ButtonVariants {}
+}

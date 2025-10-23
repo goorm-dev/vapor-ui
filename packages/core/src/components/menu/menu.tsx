@@ -14,7 +14,7 @@ import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './menu.css';
 
-type MenuContext = Pick<MenuRootProps, 'disabled'>;
+type MenuContext = Pick<MenuRoot.Props, 'disabled'>;
 
 const [MenuProvider, useMenuContext] = createContext<MenuContext>({
     name: 'Menu',
@@ -26,10 +26,7 @@ const [MenuProvider, useMenuContext] = createContext<MenuContext>({
  * Menu.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = VComponentProps<typeof BaseMenu.Root>;
-interface MenuRootProps extends RootPrimitiveProps {}
-
-const Root = (props: MenuRootProps) => {
+export const MenuRoot = (props: MenuRoot.Props) => {
     const { disabled } = props;
 
     return (
@@ -38,42 +35,33 @@ const Root = (props: MenuRootProps) => {
         </MenuProvider>
     );
 };
-Root.displayName = 'Menu.Root';
+MenuRoot.displayName = 'Menu.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerPrimitiveProps = VComponentProps<typeof BaseMenu.Trigger>;
-interface MenuTriggerProps extends TriggerPrimitiveProps {}
-
-const Trigger = forwardRef<HTMLButtonElement, MenuTriggerProps>((props, ref) => {
-    const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
+export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTrigger.Props>((props, ref) => {
+    const { disabled: disabledProp, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
 
     const disabled = disabledProp || contextDisabled;
 
     return <BaseMenu.Trigger ref={ref} disabled={disabled} {...componentProps} />;
 });
-Trigger.displayName = 'Menu.Trigger';
+MenuTrigger.displayName = 'Menu.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-type PortalPrimitiveProps = VComponentProps<typeof BaseMenu.Portal>;
-interface MenuPortalProps extends PortalPrimitiveProps {}
-
-const Portal = BaseMenu.Portal;
+export const MenuPortal = BaseMenu.Portal;
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Positioner
  * -----------------------------------------------------------------------------------------------*/
 
-type PositionerPrimitiveProps = VComponentProps<typeof BaseMenu.Positioner>;
-interface MenuPositionerProps extends PositionerPrimitiveProps {}
-
-const Positioner = forwardRef<HTMLDivElement, MenuPositionerProps>((props, ref) => {
+export const MenuPositioner = forwardRef<HTMLDivElement, MenuPositioner.Props>((props, ref) => {
     // FIXME: Using resolveStyles causes all positioning-related style properties to reset, so it's temporarily disabled.
     const { side = 'bottom', align = 'start', sideOffset = 8, ...componentProps } = props;
 
@@ -87,55 +75,42 @@ const Positioner = forwardRef<HTMLDivElement, MenuPositionerProps>((props, ref) 
         />
     );
 });
-Positioner.displayName = 'Menu.Positioner';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-type PopupPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
-interface MenuPopupProps extends PopupPrimitiveProps {}
-
-const Popup = forwardRef<HTMLDivElement, MenuPopupProps>((props, ref) => {
+export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
         <BaseMenu.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
     );
 });
-Popup.displayName = 'Menu.Popup';
+MenuPopup.displayName = 'Menu.Popup';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Content
  * -----------------------------------------------------------------------------------------------*/
 
-type ContentPrimitiveProps = VComponentProps<typeof Popup>;
-interface MenuContentProps extends ContentPrimitiveProps {
-    portalProps?: MenuPortalProps;
-    positionerProps?: MenuPositionerProps;
-}
-
-const Content = forwardRef<HTMLDivElement, MenuContentProps>(
+export const MenuContent = forwardRef<HTMLDivElement, MenuContent.Props>(
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
-            <Portal {...portalProps}>
-                <Positioner {...positionerProps}>
-                    <Popup ref={ref} {...props} />
-                </Positioner>
-            </Portal>
+            <MenuPortal {...portalProps}>
+                <MenuPositioner {...positionerProps}>
+                    <MenuPopup ref={ref} {...props} />
+                </MenuPositioner>
+            </MenuPortal>
         );
     },
 );
-Content.displayName = 'Menu.Content';
+MenuContent.displayName = 'Menu.Content';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemPrimitiveProps = VComponentProps<typeof BaseMenu.Item>;
-interface MenuItemProps extends ItemPrimitiveProps {}
-
-const Item = forwardRef<HTMLDivElement, MenuItemProps>((props, ref) => {
+export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
 
@@ -150,16 +125,13 @@ const Item = forwardRef<HTMLDivElement, MenuItemProps>((props, ref) => {
         />
     );
 });
-Item.displayName = 'Menu.Item';
+MenuItem.displayName = 'Menu.Item';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-type SeparatorPrimitiveProps = VComponentProps<typeof BaseMenu.Separator>;
-interface MenuSeparatorProps extends SeparatorPrimitiveProps {}
-
-const Separator = forwardRef<HTMLDivElement, MenuSeparatorProps>((props, ref) => {
+export const MenuSeparator = forwardRef<HTMLDivElement, MenuSeparator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
@@ -170,30 +142,24 @@ const Separator = forwardRef<HTMLDivElement, MenuSeparatorProps>((props, ref) =>
         />
     );
 });
-Separator.displayName = 'Menu.Separator';
+MenuSeparator.displayName = 'Menu.Separator';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Group
  * -----------------------------------------------------------------------------------------------*/
 
-type GroupPrimitiveProps = VComponentProps<typeof BaseMenu.Group>;
-interface MenuGroupProps extends GroupPrimitiveProps {}
-
-const Group = forwardRef<HTMLDivElement, MenuGroupProps>((props, ref) => {
+export const MenuGroup = forwardRef<HTMLDivElement, MenuGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
     return <BaseMenu.Group ref={ref} {...componentProps} />;
 });
-Group.displayName = 'Menu.Group';
+MenuGroup.displayName = 'Menu.Group';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
-type GroupLabelPrimitiveProps = VComponentProps<typeof BaseMenu.GroupLabel>;
-interface MenuGroupLabelProps extends GroupLabelPrimitiveProps {}
-
-const GroupLabel = forwardRef<HTMLDivElement, MenuGroupLabelProps>((props, ref) => {
+export const MenuGroupLabel = forwardRef<HTMLDivElement, MenuGroupLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
@@ -204,6 +170,7 @@ const GroupLabel = forwardRef<HTMLDivElement, MenuGroupLabelProps>((props, ref) 
         />
     );
 });
+MenuGroupLabel.displayName = 'Menu.GroupLabel';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.SubmenuRoot
@@ -216,11 +183,11 @@ type SubmenuContext = {
 
 const [SubmenuProvider, useSubmenuContext] = createContext<SubmenuContext>();
 
-type SubmenuRootPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuRoot>;
-interface MenuSubmenuRootProps extends SubmenuRootPrimitiveProps {}
-
-const SubmenuRoot = (props: MenuSubmenuRootProps) => {
-    const { closeParentOnEsc = false, disabled: disabledProp, ...componentProps } = props;
+export const MenuSubmenuRoot = ({
+    closeParentOnEsc = false,
+    disabled: disabledProp,
+    ...props
+}: MenuSubmenuRoot.Props) => {
     const { disabled: disabledRoot } = useMenuContext();
     const disabled = disabledProp || disabledRoot;
 
@@ -231,47 +198,43 @@ const SubmenuRoot = (props: MenuSubmenuRootProps) => {
             <BaseMenu.SubmenuRoot
                 disabled={disabled}
                 closeParentOnEsc={closeParentOnEsc}
-                {...componentProps}
+                {...props}
             />
         </SubmenuProvider>
     );
 };
-SubmenuRoot.displayName = 'Menu.SubmenuRoot';
+MenuSubmenuRoot.displayName = 'Menu.SubmenuRoot';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.SubmenuTriggerItem
  * -----------------------------------------------------------------------------------------------*/
 
-type SubmenuTriggerItemPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuTrigger>;
-interface MenuSubmenuTriggerItemProps extends SubmenuTriggerItemPrimitiveProps {}
+export const MenuSubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItem.Props>(
+    (props, ref) => {
+        const { className, children, ...componentProps } = resolveStyles(props);
+        const { triggerRef } = useSubmenuContext();
+        const composedRef = composeRefs(triggerRef, ref);
 
-const SubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItemProps>((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
-    const { triggerRef } = useSubmenuContext();
-    const composedRef = composeRefs(triggerRef, ref);
+        return (
+            <BaseMenu.SubmenuTrigger
+                ref={composedRef}
+                className={clsx(styles.subTrigger, className)}
+                {...componentProps}
+            >
+                {children}
 
-    return (
-        <BaseMenu.SubmenuTrigger
-            ref={composedRef}
-            className={clsx(styles.subTrigger, className)}
-            {...componentProps}
-        >
-            {children}
-
-            <ChevronRightOutlineIcon />
-        </BaseMenu.SubmenuTrigger>
-    );
-});
-SubmenuTriggerItem.displayName = 'Menu.SubmenuTriggerItem';
+                <ChevronRightOutlineIcon />
+            </BaseMenu.SubmenuTrigger>
+        );
+    },
+);
+MenuSubmenuTriggerItem.displayName = 'Menu.SubmenuTriggerItem';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.SubmenuContent
  * -----------------------------------------------------------------------------------------------*/
 
-type SubmenuPopupPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
-interface MenuSubmenuPopupProps extends SubmenuPopupPrimitiveProps {}
-
-const SubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopupProps>((props, ref) => {
+export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const { triggerRef } = useSubmenuContext();
 
@@ -284,45 +247,30 @@ const SubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopupProps>((props, r
         />
     );
 });
-SubmenuPopup.displayName = 'Menu.SubmenuPopup';
+MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.SubmenuContent
  * -----------------------------------------------------------------------------------------------*/
 
-type SubmenuContentPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
-interface MenuSubmenuContentProps extends SubmenuContentPrimitiveProps {
-    portalProps?: MenuPortalProps;
-    positionerProps?: MenuPositionerProps;
-}
-
-const SubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContentProps>((props, ref) => {
-    const { portalProps, positionerProps, className, ...componentProps } = resolveStyles(props);
-    const { triggerRef } = useSubmenuContext();
-
-    return (
-        <Portal {...portalProps}>
-            <Positioner side="right" align="start" sideOffset={0} {...positionerProps}>
-                <SubmenuPopup
-                    ref={ref}
-                    finalFocus={triggerRef}
-                    className={clsx(styles.subPopup, className)}
-                    {...componentProps}
-                />
-            </Positioner>
-        </Portal>
-    );
-});
-SubmenuContent.displayName = 'Menu.SubmenuContent';
+export const MenuSubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContent.Props>(
+    ({ portalProps, positionerProps, ...props }, ref) => {
+        return (
+            <MenuPortal {...portalProps}>
+                <MenuPositioner {...positionerProps}>
+                    <MenuSubmenuPopup ref={ref} {...props} />
+                </MenuPositioner>
+            </MenuPortal>
+        );
+    },
+);
+MenuSubmenuContent.displayName = 'Menu.SubmenuContent';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Checkbox
  * -----------------------------------------------------------------------------------------------*/
 
-type CheckboxPrimitiveProps = VComponentProps<typeof BaseMenu.CheckboxItem>;
-interface MenuCheckboxItemProps extends CheckboxPrimitiveProps {}
-
-const CheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>((props, ref) => {
+export const MenuCheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>((props, ref) => {
     const { disabled: disabledProp, className, children, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
     const disabled = disabledProp || contextDisabled;
@@ -342,32 +290,24 @@ const CheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>((props, r
         </BaseMenu.CheckboxItem>
     );
 });
-CheckboxItem.displayName = 'Menu.CheckboxItem';
+MenuCheckboxItem.displayName = 'Menu.CheckboxItem';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.RadioGroup
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioGroupPrimitiveProps = VComponentProps<typeof BaseMenu.RadioGroup>;
-interface MenuRadioGroupProps extends RadioGroupPrimitiveProps {}
-
-const RadioGroup = forwardRef<HTMLDivElement, MenuRadioGroupProps>((props, ref) => {
+export const MenuRadioGroup = forwardRef<HTMLDivElement, MenuRadioGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
     return <BaseMenu.RadioGroup ref={ref} {...componentProps} />;
 });
-RadioGroup.displayName = 'Menu.RadioGroup';
+MenuRadioGroup.displayName = 'Menu.RadioGroup';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.RadioItem
  * -----------------------------------------------------------------------------------------------*/
 
-type RadioItemPrimitiveProps = VComponentProps<typeof BaseMenu.RadioItem>;
-interface MenuRadioItemProps extends RadioItemPrimitiveProps {
-    closeOnClick?: boolean;
-}
-
-const RadioItem = forwardRef<HTMLDivElement, MenuRadioItemProps>((props, ref) => {
+export const MenuRadioItem = forwardRef<HTMLDivElement, MenuRadioItem.Props>((props, ref) => {
     const { disabled: disabledProp, className, children, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
     const disabled = disabledProp || contextDisabled;
@@ -387,63 +327,101 @@ const RadioItem = forwardRef<HTMLDivElement, MenuRadioItemProps>((props, ref) =>
         </BaseMenu.RadioItem>
     );
 });
-RadioItem.displayName = 'Menu.RadioItem';
+MenuRadioItem.displayName = 'Menu.RadioItem';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as MenuRoot,
-    Trigger as MenuTrigger,
-    Portal as MenuPortal,
-    Positioner as MenuPositioner,
-    Popup as MenuPopup,
-    Content as MenuContent,
-    Item as MenuItem,
-    Separator as MenuSeparator,
-    Group as MenuGroup,
-    GroupLabel as MenuGroupLabel,
-    SubmenuRoot as MenuSubmenuRoot,
-    SubmenuContent as MenuSubmenuContent,
-    SubmenuTriggerItem as MenuSubmenuTriggerItem,
-    CheckboxItem as MenuCheckboxItem,
-    RadioGroup as MenuRadioGroup,
-    RadioItem as MenuRadioItem,
-};
+export namespace MenuRoot {
+    type RootPrimitiveProps = VComponentProps<typeof BaseMenu.Root>;
+    export interface Props extends RootPrimitiveProps {}
+}
 
-export type {
-    MenuRootProps,
-    MenuTriggerProps,
-    MenuPortalProps,
-    MenuPositionerProps,
-    MenuPopupProps,
-    MenuContentProps,
-    MenuItemProps,
-    MenuSeparatorProps,
-    MenuGroupProps,
-    MenuGroupLabelProps,
-    MenuSubmenuRootProps,
-    MenuSubmenuContentProps,
-    MenuSubmenuTriggerItemProps,
-    MenuCheckboxItemProps,
-    MenuRadioGroupProps,
-    MenuRadioItemProps,
-};
+export namespace MenuTrigger {
+    type TriggerPrimitiveProps = VComponentProps<typeof BaseMenu.Trigger>;
+    export interface Props extends TriggerPrimitiveProps {}
+}
 
-export const Menu = {
-    Root,
-    Trigger,
-    Portal,
-    Positioner,
-    Popup,
-    Content,
-    Item,
-    Separator,
-    Group,
-    GroupLabel,
-    SubmenuRoot,
-    SubmenuContent,
-    SubmenuTriggerItem,
-    CheckboxItem,
-    RadioGroup,
-    RadioItem,
-};
+export namespace MenuPortal {
+    type PortalPrimitiveProps = VComponentProps<typeof BaseMenu.Portal>;
+    export interface Props extends PortalPrimitiveProps {}
+}
+
+export namespace MenuPositioner {
+    type PositionerPrimitiveProps = VComponentProps<typeof BaseMenu.Positioner>;
+    export interface Props extends PositionerPrimitiveProps {}
+}
+
+export namespace MenuPopup {
+    type PopupPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
+    export interface Props extends PopupPrimitiveProps {}
+}
+
+export namespace MenuContent {
+    type ContentPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
+    export interface Props extends ContentPrimitiveProps {
+        portalProps?: MenuPortal.Props;
+        positionerProps?: MenuPositioner.Props;
+    }
+}
+
+export namespace MenuItem {
+    type ItemPrimitiveProps = VComponentProps<typeof BaseMenu.Item>;
+    export interface Props extends ItemPrimitiveProps {}
+}
+
+export namespace MenuSeparator {
+    type SeparatorPrimitiveProps = VComponentProps<typeof BaseMenu.Separator>;
+    export interface Props extends SeparatorPrimitiveProps {}
+}
+
+export namespace MenuGroup {
+    type GroupPrimitiveProps = VComponentProps<typeof BaseMenu.Group>;
+    export interface Props extends GroupPrimitiveProps {}
+}
+
+export namespace MenuGroupLabel {
+    type GroupLabelPrimitiveProps = VComponentProps<typeof BaseMenu.GroupLabel>;
+    export interface Props extends GroupLabelPrimitiveProps {}
+}
+
+export namespace MenuSubmenuRoot {
+    type SubmenuRootPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuRoot>;
+    export interface Props extends SubmenuRootPrimitiveProps {
+        closeParentOnEsc?: boolean;
+    }
+}
+
+export namespace MenuSubmenuTriggerItem {
+    type SubmenuTriggerItemPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuTrigger>;
+    export interface Props extends SubmenuTriggerItemPrimitiveProps {}
+}
+
+export namespace MenuSubmenuPopup {
+    type SubmenuPopupPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
+    export interface Props extends SubmenuPopupPrimitiveProps {}
+}
+
+export namespace MenuSubmenuContent {
+    type SubmenuContentPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
+    export interface Props extends SubmenuContentPrimitiveProps {
+        portalProps?: MenuPortal.Props;
+        positionerProps?: MenuPositioner.Props;
+    }
+}
+
+export namespace MenuCheckboxItem {
+    type CheckboxPrimitiveProps = VComponentProps<typeof BaseMenu.CheckboxItem>;
+    export interface Props extends CheckboxPrimitiveProps {}
+}
+
+export namespace MenuRadioGroup {
+    type RadioGroupPrimitiveProps = VComponentProps<typeof BaseMenu.RadioGroup>;
+    export interface Props extends RadioGroupPrimitiveProps {}
+}
+
+export namespace MenuRadioItem {
+    type RadioItemPrimitiveProps = VComponentProps<typeof BaseMenu.RadioItem>;
+    export interface Props extends RadioItemPrimitiveProps {
+        closeOnClick?: boolean;
+    }
+}

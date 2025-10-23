@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'react';
 
-import type { StoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 import { HStack } from '.';
 import { Box } from '../box';

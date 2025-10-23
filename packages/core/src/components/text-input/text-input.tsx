@@ -26,10 +26,7 @@ type BaseProps = TextInputVariants & {
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
-interface TextInputProps extends Assign<TextInputPrimitiveProps, BaseProps> {}
-
-const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, ref) => {
+export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, ref) => {
     const {
         value: valueProp,
         onValueChange,
@@ -78,5 +75,8 @@ TextInput.displayName = 'TextInput';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { TextInput };
-export type { TextInputProps };
+export namespace TextInput {
+    type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
+
+    export interface Props extends Assign<TextInputPrimitiveProps, BaseProps> {}
+}

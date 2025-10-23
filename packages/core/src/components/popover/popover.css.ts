@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const popup = style({
     outline: 'none',
