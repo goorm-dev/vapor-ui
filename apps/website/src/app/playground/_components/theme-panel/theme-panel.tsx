@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import { Popover } from '@base-ui-components/react';
 import { Badge, Button, Card, Text } from '@vapor-ui/core';
 import {
     generateColorCSS,
@@ -20,7 +21,6 @@ import { SectionRadius } from '../section-radius';
 import { SectionScaling } from '../section-scaling';
 
 const ThemePanelContent = () => {
-    const [open, setOpen] = useState(true);
     const { currentConfig } = useCustomTheme();
     const { copyToClipboard, copied, reset } = useClipboard({
         onSuccess: () => {
@@ -37,16 +37,6 @@ const ThemePanelContent = () => {
         Boolean(currentConfig.colors) ||
         Boolean(currentConfig.scaling) ||
         Boolean(currentConfig.radius);
-
-    useEffect(() => {
-        const clickV = (e: KeyboardEvent) => {
-            if (e.metaKey || e.ctrlKey) return;
-            if (e.key === 'v' || e.key === 'ㅍ') setOpen((prev) => !prev);
-        };
-
-        document.addEventListener('keydown', clickV);
-        return () => document.removeEventListener('keydown', clickV);
-    }, []);
 
     const handleCopyTheme = async () => {
         const { colors, scaling, radius } = currentConfig;
@@ -81,18 +71,9 @@ const ThemePanelContent = () => {
     };
 
     return (
-        <Card.Root
-            className={`
-                fixed right-4 top-8 
-                flex flex-col
-                shadow-[0px_4px_16px_0px_rgba(0,0,0,0.2)]
-                z-[9999] overflow-hidden
-                transform transition-transform duration-200 ease-in
-                ${open ? 'translate-x-0' : 'translate-x-[105%]'}
-            `}
-        >
+        <Card.Root>
             <Card.Header className="flex justify-between items-center border-b-0 flex-shrink-0">
-                <Text typography="heading5">Theme Setting</Text>
+                <Popover.Title render={<Text typography="heading5">Theme Setting</Text>} />
 
                 <div className="flex items-center gap-[var(--vapor-size-space-050)]">
                     <Badge color="hint">V</Badge>
@@ -102,18 +83,12 @@ const ThemePanelContent = () => {
                 </div>
             </Card.Header>
 
-            <Card.Body>
-                <div
-                    className="pt-0 pb-6 max-h-[60vh] overflow-y-auto
-                    [--scroll-shadow-size:20px]
-                    [mask-image:linear-gradient(180deg,#000_calc(100%_-_var(--scroll-shadow-size)),transparent)]"
-                >
-                    <div className="flex flex-col gap-[var(--vapor-size-space-250)]">
-                        <SectionMode />
-                        <SectionColor />
-                        <SectionRadius />
-                        <SectionScaling />
-                    </div>
+            <Card.Body className="max-h-[60vh] overflow-y-auto [--scroll-shadow-size:20px] [mask-image:linear-gradient(180deg,#000_calc(100%_-_var(--scroll-shadow-size)),transparent)]">
+                <div className="flex flex-col gap-[var(--vapor-size-space-250)]">
+                    <SectionMode />
+                    <SectionColor />
+                    <SectionRadius />
+                    <SectionScaling />
                 </div>
             </Card.Body>
             <Card.Footer className="flex-shrink-0">
@@ -126,10 +101,84 @@ const ThemePanelContent = () => {
 };
 
 const ThemePanel = () => {
+    const [isOpen, setIsOpen] = useState(true);
+    const [liveMessage, setLiveMessage] = useState('');
+
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const clickV = (e: KeyboardEvent) => {
+            if (e.metaKey || e.ctrlKey) return;
+            if (e.key === 'v' || e.key === 'ㅍ')
+                setIsOpen((prevOpen) => {
+                    setLiveMessage(
+                        prevOpen
+                            ? '테마 설정 패널이 숨겨졌습니다.'
+                            : '테마 설정 패널이 나타났습니다.',
+                    );
+                    return !prevOpen;
+                });
+        };
+
+        document.addEventListener('keydown', clickV);
+        return () => document.removeEventListener('keydown', clickV);
+    }, []);
+
     return (
-        <CustomThemeProvider>
-            <ThemePanelContent />
-        </CustomThemeProvider>
+        <>
+            <div
+                id="theme-panel-anchor"
+                ref={anchorRef}
+                style={{
+                    position: 'fixed',
+                    top: '0',
+                    right: '0',
+                    width: '1rem',
+                    height: '4rem',
+                    background: 'transparent',
+                }}
+            />
+
+            <div
+                role="status"
+                aria-live="polite"
+                style={{
+                    position: 'absolute',
+                    width: '1px',
+                    height: '1px',
+                    margin: '-1px',
+                    padding: '0',
+                    overflow: 'hidden',
+                    clip: 'rect(0, 0, 0, 0)',
+                    border: '0',
+                }}
+            >
+                {liveMessage}
+            </div>
+            <Popover.Root open={isOpen} modal="trap-focus" closeDelay={3000}>
+                <Popover.Portal>
+                    <Popover.Positioner
+                        anchor={anchorRef}
+                        side="bottom"
+                        align="end"
+                        alignOffset={16}
+                        sideOffset={16}
+                        positionMethod="fixed"
+                    >
+                        <Popover.Popup
+                            className={`shadow-[0px_4px_16px_0px_rgba(0,0,0,0.2)] outline-none bg-transparent
+                                transition-transform duration-300 ease-in-out 
+                                data-[starting-style]:translate-x-full 
+                                data-[ending-style]:translate-x-full`}
+                        >
+                            <CustomThemeProvider>
+                                <ThemePanelContent />
+                            </CustomThemeProvider>
+                        </Popover.Popup>
+                    </Popover.Positioner>
+                </Popover.Portal>
+            </Popover.Root>
+        </>
     );
 };
 
