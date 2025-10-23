@@ -7,7 +7,7 @@ import { Popover as BasePopover } from '@base-ui-components/react/popover';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import type { VComponentProps } from '~/utils/types';
 

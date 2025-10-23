@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
