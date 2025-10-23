@@ -1,4 +1,5 @@
-import { RadioCard, RadioCardGroup, useTheme } from '@vapor-ui/core';
+import { useTheme } from '@vapor-ui/core';
+import { RadioCard, RadioCardGroup } from '@vapor-ui/radio-card';
 
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
@@ -19,7 +20,7 @@ const SectionMode = () => {
 
     return (
         <PanelSectionWrapper.Root>
-            <PanelSectionWrapper.Title>Color</PanelSectionWrapper.Title>
+            <PanelSectionWrapper.Title>Mode</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
                 <RadioCardGroup.Root
                     key={resolvedTheme}

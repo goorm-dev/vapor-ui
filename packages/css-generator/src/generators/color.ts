@@ -58,7 +58,7 @@ const generateRootThemeCSS = (
     ];
 
     const selector =
-        variant === 'light' ? ':root, [data-vapor-theme=light]' : '[data-vapor-theme=dark]';
+        variant === 'light' ? ':root, [data-vapor-theme="light"]' : '[data-vapor-theme="dark"]';
 
     return {
         selector,

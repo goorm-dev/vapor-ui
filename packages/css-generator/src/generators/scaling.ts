@@ -17,7 +17,7 @@ export const generateScalingCSS = (scaling: number, options: ScalingCSSOptions =
     const scalingVariable = createCSSVariable(`${prefix}-scale-factor`, scaling.toString());
 
     const rule: CSSRule = {
-        selector: ':root, [data-vapor-theme=light]',
+        selector: ':root, [data-vapor-theme="light"]',
         properties: [scalingVariable],
     };
 

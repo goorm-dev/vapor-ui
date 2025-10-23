@@ -14,13 +14,17 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 /* -------------------------------------------------------------------------------------------------
  * Types
  * -----------------------------------------------------------------------------------------------*/
+type Theme = 'light' | 'dark' | 'system';
+type ResolvedTheme = 'light' | 'dark';
 interface ThemeConfig {
     /**
-     * Theme to display on initial load (Priority: 3rd)
-     * Only used when no theme is saved in localStorage
+     * Theme behavior:
+     * - 'light': Always use light theme (ignores system changes)
+     * - 'dark': Always use dark theme (ignores system changes)
+     * - 'system': Automatically sync with user's system theme changes
      * @default 'system'
      */
-    defaultTheme?: 'light' | 'dark' | 'system';
+    defaultTheme?: Theme;
 
     /**
      * Key used to store theme in localStorage
@@ -30,17 +34,10 @@ interface ThemeConfig {
     storageKey?: string;
 
     /**
-     * Whether to automatically sync with user's system theme changes
-     * When false, system theme is only referenced on initial load, then operates independently
-     * @default true
-     */
-    enableSystem?: boolean;
-
-    /**
      * Force a specific theme (Priority: 1st - highest)
      * When set, ignores all other theme settings and always applies this value
      */
-    forcedTheme?: string;
+    forcedTheme?: Theme;
 
     /**
      * Whether to disable CSS transitions during theme changes
@@ -62,25 +59,25 @@ interface ThemeConfig {
 
 interface UseThemeProps {
     /** Current active theme ('light' | 'dark' | 'system') */
-    theme?: string;
+    theme?: Theme;
 
     /** Function to change theme (automatically saves to localStorage) */
-    setTheme: (theme: string | ((prev: string) => string)) => void;
+    setTheme: (theme: Theme | ((prev: Theme) => Theme)) => void;
 
     /** Resets theme to default and clears localStorage */
     resetTheme: () => void;
 
     /** Forced theme if set (highest priority) */
-    forcedTheme?: string;
+    forcedTheme?: Theme;
 
     /** Actually applied theme ('light' | 'dark') */
-    resolvedTheme?: string;
+    resolvedTheme?: ResolvedTheme;
 
     /** List of available themes */
-    themes: string[];
+    themes: Theme[];
 
-    /** Current system theme (only provided when enableSystem=true) */
-    systemTheme?: 'light' | 'dark';
+    /** Current system theme (only provided when theme is 'system') */
+    systemTheme?: ResolvedTheme;
 
     /** Whether the ThemeProvider has mounted */
     mounted?: boolean;
@@ -94,21 +91,22 @@ interface ThemeProviderProps extends ThemeConfig {
  * Constants
  * -----------------------------------------------------------------------------------------------*/
 const MEDIA_QUERY = '(prefers-color-scheme: dark)';
-const COLOR_SCHEMES = ['light', 'dark'];
-const THEME_LIST = ['light', 'dark'];
+const RESOLVED_THEMES: ResolvedTheme[] = ['light', 'dark'];
+const THEME_LIST: Theme[] = ['light', 'dark', 'system'];
 
 /* -------------------------------------------------------------------------------------------------
  * Utilities
  * -----------------------------------------------------------------------------------------------*/
-const getTheme = (storageKey: string, defaultTheme?: string): string | undefined => {
+const getTheme = (storageKey: string, defaultTheme?: Theme): Theme | undefined => {
     try {
-        return localStorage.getItem(storageKey) || defaultTheme;
+        const stored = localStorage.getItem(storageKey);
+        return (stored as Theme) || defaultTheme;
     } catch {
         return defaultTheme;
     }
 };
 
-const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent): 'light' | 'dark' => {
+const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent): ResolvedTheme => {
     if (!e) {
         if (typeof window === 'undefined') return 'light';
         e = window.matchMedia(MEDIA_QUERY);
@@ -116,7 +114,7 @@ const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent): 'light' | 'da
     return e.matches ? 'dark' : 'light';
 };
 
-const saveToStorage = (storageKey: string, value: string): void => {
+const saveToStorage = (storageKey: string, value: Theme): void => {
     try {
         localStorage.setItem(storageKey, value);
     } catch {
@@ -159,19 +157,18 @@ const Theme = ({
     children,
     defaultTheme = 'system',
     storageKey = 'vapor-ui-theme',
-    enableSystem = true,
     forcedTheme,
     disableTransitionOnChange = false,
     enableColorScheme = true,
     nonce,
 }: ThemeProviderProps) => {
     const [mounted, setMounted] = useState(false);
-    const [theme, setThemeState] = useState(
+    const [theme, setThemeState] = useState<Theme>(
         () => getTheme(storageKey, defaultTheme) || defaultTheme,
     );
-    const [resolvedTheme, setResolvedTheme] = useState(() => {
+    const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => {
         const initialTheme = getTheme(storageKey, defaultTheme) || defaultTheme;
-        return initialTheme === 'system' ? getSystemTheme() : initialTheme;
+        return initialTheme === 'system' ? getSystemTheme() : (initialTheme as ResolvedTheme);
     });
 
     useEffect(() => {
@@ -179,9 +176,9 @@ const Theme = ({
     }, []);
 
     const applyTheme = useCallback(
-        (newTheme: string) => {
+        (newTheme: Theme) => {
             let resolved = newTheme;
-            if (newTheme === 'system' && enableSystem) {
+            if (newTheme === 'system') {
                 resolved = getSystemTheme();
             }
 
@@ -195,18 +192,22 @@ const Theme = ({
             }
 
             if (enableColorScheme) {
-                const fallback = COLOR_SCHEMES.includes(defaultTheme) ? defaultTheme : null;
-                const colorScheme = COLOR_SCHEMES.includes(resolved) ? resolved : fallback;
+                const fallback = RESOLVED_THEMES.includes(defaultTheme as ResolvedTheme)
+                    ? defaultTheme
+                    : null;
+                const colorScheme = RESOLVED_THEMES.includes(resolved as ResolvedTheme)
+                    ? resolved
+                    : fallback;
                 d.style.colorScheme = colorScheme || '';
             }
 
             enableTransition?.();
         },
-        [enableSystem, enableColorScheme, defaultTheme, disableTransitionOnChange, nonce],
+        [enableColorScheme, defaultTheme, disableTransitionOnChange, nonce],
     );
 
     const setTheme = useCallback(
-        (newTheme: string | ((prev: string) => string)) => {
+        (newTheme: Theme | ((prev: Theme) => Theme)) => {
             const resolvedTheme = typeof newTheme === 'function' ? newTheme(theme) : newTheme;
             setThemeState(resolvedTheme);
             saveToStorage(storageKey, resolvedTheme);
@@ -225,24 +226,26 @@ const Theme = ({
         (e: MediaQueryListEvent | MediaQueryList) => {
             const systemTheme = getSystemTheme(e);
             setResolvedTheme(systemTheme);
-            if (enableSystem && !forcedTheme) {
+            if (theme === 'system' && !forcedTheme) {
                 applyTheme(systemTheme);
             }
         },
-        [enableSystem, forcedTheme, applyTheme],
+        [theme, forcedTheme, applyTheme],
     );
 
     useEffect(() => {
-        const media = window.matchMedia(MEDIA_QUERY);
-        media.addEventListener('change', handleMediaQuery);
-        handleMediaQuery(media);
-        return () => media.removeEventListener('change', handleMediaQuery);
-    }, [handleMediaQuery]);
+        if (theme === 'system') {
+            const media = window.matchMedia(MEDIA_QUERY);
+            media.addEventListener('change', handleMediaQuery);
+            handleMediaQuery(media);
+            return () => media.removeEventListener('change', handleMediaQuery);
+        }
+    }, [theme, handleMediaQuery]);
 
     useEffect(() => {
         const handleStorage = (e: StorageEvent) => {
             if (e.key === storageKey) {
-                const newTheme = e.newValue || defaultTheme;
+                const newTheme = (e.newValue as Theme) || defaultTheme;
                 setThemeState(newTheme);
             }
         };
@@ -260,12 +263,16 @@ const Theme = ({
             setTheme,
             resetTheme,
             forcedTheme,
-            resolvedTheme: mounted ? (theme === 'system' ? resolvedTheme : theme) : undefined,
-            themes: enableSystem ? [...THEME_LIST, 'system'] : THEME_LIST,
-            systemTheme: mounted && enableSystem ? (resolvedTheme as 'light' | 'dark') : undefined,
+            resolvedTheme: mounted
+                ? theme === 'system'
+                    ? resolvedTheme
+                    : (theme as ResolvedTheme)
+                : undefined,
+            themes: THEME_LIST,
+            systemTheme: mounted && theme === 'system' ? resolvedTheme : undefined,
             mounted,
         }),
-        [theme, setTheme, resetTheme, forcedTheme, resolvedTheme, enableSystem, mounted],
+        [theme, setTheme, resetTheme, forcedTheme, resolvedTheme, mounted],
     );
 
     return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
@@ -292,7 +299,7 @@ interface ThemeScopeProps extends React.HTMLAttributes<HTMLDivElement> {
     /**
      * The theme to force upon this scope, ignoring the global theme.
      */
-    forcedTheme: 'light' | 'dark';
+    forcedTheme: ResolvedTheme;
 }
 
 const ThemeScope = ({ children, forcedTheme, style, ...rest }: ThemeScopeProps) => {

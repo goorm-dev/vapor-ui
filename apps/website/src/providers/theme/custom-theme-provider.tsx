@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { generateColorCSS, generateRadiusCSS, generateScalingCSS } from '@vapor-ui/css-generator';
@@ -117,29 +117,27 @@ interface CustomThemeProviderProps {
 
 const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     const [currentConfig, setCurrentConfig] = useState<Partial<CompleteCSSConfig>>({});
-    const [_generatedCSS, setGeneratedCSS] = useState<GeneratedCSSStore>({});
+    const generatedCSSRef = useRef<GeneratedCSSStore>({});
 
     const applyTheme = useCallback((partialConfig: CustomThemeConfig) => {
         setCurrentConfig((prev) => ({ ...prev, ...partialConfig }));
 
-        setGeneratedCSS((prev) => {
-            const updated: GeneratedCSSStore = { ...prev };
+        const updated: GeneratedCSSStore = { ...generatedCSSRef.current };
 
-            if (partialConfig.colors) {
-                updated.colors = generateColorCSS(partialConfig.colors);
-            }
+        if (partialConfig.colors) {
+            updated.colors = generateColorCSS(partialConfig.colors);
+        }
 
-            if (partialConfig.scaling !== undefined) {
-                updated.scaling = generateScalingCSS(partialConfig.scaling);
-            }
+        if (partialConfig.scaling !== undefined) {
+            updated.scaling = generateScalingCSS(partialConfig.scaling);
+        }
 
-            if (partialConfig.radius !== undefined) {
-                updated.radius = generateRadiusCSS(partialConfig.radius);
-            }
+        if (partialConfig.radius !== undefined) {
+            updated.radius = generateRadiusCSS(partialConfig.radius);
+        }
 
-            injectDynamicStyle(updated);
-            return updated;
-        });
+        generatedCSSRef.current = updated;
+        injectDynamicStyle(updated);
     }, []);
 
     const applyColors = useCallback(
@@ -154,7 +152,7 @@ const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     const removeTheme = useCallback(() => {
         removeDynamicStyle();
         setCurrentConfig({});
-        setGeneratedCSS({});
+        generatedCSSRef.current = {};
     }, []);
 
     useEffect(() => {
