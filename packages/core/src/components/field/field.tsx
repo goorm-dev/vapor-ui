@@ -73,7 +73,7 @@ FieldError.displayName = 'Field.Error';
  * -----------------------------------------------------------------------------------------------*/
 
 export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>(
-    ({ match, className, ...props }, ref) => {
+    ({ match = 'valid', className, ...props }, ref) => {
         return (
             <BaseField.Error
                 ref={ref}

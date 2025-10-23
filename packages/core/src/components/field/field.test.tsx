@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import type { RenderResult } from '@testing-library/react';
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
@@ -32,7 +32,7 @@ describe('Field', () => {
         });
 
         it('should render with proper field structure', () => {
-            render(
+            const rendered = render(
                 <Field.Root name="test-field">
                     <Field.Label htmlFor="input">Test Label</Field.Label>
                     <TextInput id="input" />
@@ -40,52 +40,33 @@ describe('Field', () => {
                 </Field.Root>,
             );
 
-            expect(screen.getByText('Test Label')).toBeInTheDocument();
-            expect(screen.getByText('Test Description')).toBeInTheDocument();
+            expect(rendered.getByText('Test Label')).toBeInTheDocument();
+            expect(rendered.getByText('Test Description')).toBeInTheDocument();
         });
     });
 
     describe('Field with Checkbox integration', () => {
-        let rendered: RenderResult;
-        let checkbox: HTMLElement;
-
-        beforeEach(() => {
-            rendered = render(<FieldWithCheckboxTest />);
-            checkbox = rendered.getByRole('checkbox');
-        });
-
         it('should have no a11y violations', async () => {
+            const rendered = render(<FieldWithCheckboxTest />);
             const result = await axe(rendered.container);
+
             expect(result).toHaveNoViolations();
         });
 
-        it('should render checkbox within field label', () => {
-            const rendered = render(
-                <Field.Root name="test-field">
-                    <Checkbox.Root id="checkbox" data-testid="checkbox" />
-                    <Field.Label htmlFor="checkbox">Test Label</Field.Label>
-
-                    <Field.Description>Test Description</Field.Description>
-                </Field.Root>,
-            );
-
-            const checkbox = rendered.getByTestId('checkbox');
-            const labelText = rendered.getByText('Test Label');
-
-            expect(checkbox).toBeInTheDocument();
-            expect(labelText).toBeInTheDocument();
-            expect(checkbox).not.toBeChecked();
-        });
-
         it('should show success message when checkbox is checked', async () => {
-            expect(screen.queryByText('✓ Thank you for accepting')).not.toBeInTheDocument();
+            const rendered = render(<FieldWithCheckboxTest />);
+            const checkbox = rendered.getByRole('checkbox');
+
+            expect(rendered.queryByText('✓ Thank you for accepting')).not.toBeInTheDocument();
 
             await userEvent.click(checkbox);
             expect(checkbox).toBeChecked();
-            expect(screen.queryByText('✓ Thank you for accepting')).toBeInTheDocument();
+            expect(rendered.queryByText('✓ Thank you for accepting')).toBeInTheDocument();
         });
 
         it('should toggle checkbox state via field label click', async () => {
+            const rendered = render(<FieldWithCheckboxTest />);
+            const checkbox = rendered.getByRole('checkbox');
             const label = rendered.getByText('agree to the terms');
 
             expect(checkbox).not.toBeChecked();
@@ -98,20 +79,16 @@ describe('Field', () => {
     });
 
     describe('Field with Switch integration', () => {
-        let rendered: RenderResult;
-        let switchElement: HTMLElement;
-
-        beforeEach(() => {
-            rendered = render(<FieldWithSwitchTest />);
-            switchElement = rendered.getByRole('switch');
-        });
-
         it('should have no a11y violations', async () => {
+            const rendered = render(<FieldWithSwitchTest />);
             const result = await axe(rendered.container);
+
             expect(result).toHaveNoViolations();
         });
 
         it('should associate field label with switch', async () => {
+            const rendered = render(<FieldWithSwitchTest />);
+            const switchElement = rendered.getByRole('switch');
             const label = rendered.getByText('Enable notifications');
 
             await userEvent.click(label);
@@ -119,6 +96,9 @@ describe('Field', () => {
         });
 
         it('should toggle switch state', async () => {
+            const rendered = render(<FieldWithSwitchTest />);
+            const switchElement = rendered.getByRole('switch');
+
             expect(switchElement).not.toBeChecked();
 
             await userEvent.click(switchElement);
@@ -129,35 +109,22 @@ describe('Field', () => {
         });
 
         it('should show field success when switch is enabled', async () => {
-            expect(screen.queryByText('✓ Notifications enabled')).not.toBeInTheDocument();
+            const rendered = render(<FieldWithSwitchTest />);
+            const switchElement = rendered.getByRole('switch');
+            let successText = rendered.queryByText('✓ Notifications enabled');
+
+            expect(successText).not.toBeInTheDocument();
 
             await userEvent.click(switchElement);
-            expect(screen.queryByText('✓ Notifications enabled')).toBeInTheDocument();
+
+            successText = rendered.queryByText('✓ Notifications enabled');
+            expect(successText).toBeInTheDocument();
         });
     });
 
     describe('Field with RadioGroup integration', () => {
-        let rendered: RenderResult;
-        let radioGroup: HTMLElement;
-
-        beforeEach(() => {
-            rendered = render(<FieldWithRadioGroupTest />);
-            radioGroup = rendered.getByRole('radiogroup');
-        });
-
-        it('should have proper radiogroup structure', () => {
-            expect(radioGroup).toHaveAttribute('role', 'radiogroup');
-        });
-
-        it('should render radio group with field structure', () => {
-            expect(screen.getByText('Select your gender')).toBeInTheDocument();
-            expect(
-                screen.getByText('Please select your gender for registration'),
-            ).toBeInTheDocument();
-            expect(radioGroup).toBeInTheDocument();
-        });
-
         it('should select radio options', async () => {
+            const rendered = render(<FieldWithRadioGroupTest />);
             const maleRadio = rendered.getByRole('radio', { name: 'Male' });
             const femaleRadio = rendered.getByRole('radio', { name: 'Female' });
 
@@ -171,52 +138,78 @@ describe('Field', () => {
         });
 
         it('should show field success when option is selected', async () => {
+            const rendered = render(<FieldWithRadioGroupTest />);
             const maleRadio = rendered.getByRole('radio', { name: 'Male' });
+            let successText = rendered.queryByText('✓ Gender selected');
 
-            expect(screen.queryByText('✓ Gender selected')).not.toBeInTheDocument();
+            expect(successText).not.toBeInTheDocument();
 
             await userEvent.click(maleRadio);
-            expect(screen.queryByText('✓ Gender selected')).toBeInTheDocument();
+
+            successText = rendered.queryByText('✓ Gender selected');
+            expect(successText).toBeInTheDocument();
         });
 
         it('should associate radio labels with inputs', async () => {
+            const rendered = render(<FieldWithRadioGroupTest />);
+            const radioGroupInput = rendered.container.querySelector(
+                'input[name="gender"]',
+            ) as HTMLInputElement;
+
             const maleLabel = rendered.getByText('Male');
             const maleRadio = rendered.getByRole('radio', { name: 'Male' });
 
             await userEvent.click(maleLabel);
             expect(maleRadio).toBeChecked();
+            expect(radioGroupInput).toHaveValue('male');
         });
     });
 
     describe('Field with disabled state', () => {
-        it('should disable all form controls when field is disabled', () => {
+        it('should disable all form controls when field is disabled', async () => {
             const rendered = render(<FieldWithCheckboxTest disabled />);
             const checkbox = rendered.getByRole('checkbox');
 
             expect(checkbox).toBeDisabled();
+
+            await userEvent.click(checkbox);
+
+            expect(checkbox).not.toBeChecked();
         });
 
-        it('should disable radio group when field is disabled', () => {
+        it('should disable radio group when field is disabled', async () => {
             const rendered = render(<FieldWithRadioGroupTest disabled />);
             const radios = rendered.getAllByRole('radio');
 
             radios.forEach((radio) => {
                 expect(radio).toBeDisabled();
             });
+
+            await userEvent.click(radios[0]);
+
+            expect(radios[0]).not.toBeChecked();
         });
 
-        it('should disable switch when field is disabled', () => {
+        it('should disable switch when field is disabled', async () => {
             const rendered = render(<FieldWithSwitchTest disabled />);
             const switchElement = rendered.getByRole('switch');
 
             expect(switchElement).toBeDisabled();
+
+            await userEvent.click(switchElement);
+
+            expect(switchElement).not.toBeChecked();
         });
 
-        it('should disable text input when field is disabled', () => {
+        it('should disable text input when field is disabled', async () => {
             const rendered = render(<FieldWithTextInputTest disabled />);
             const textInput = rendered.getByRole('textbox');
 
             expect(textInput).toBeDisabled();
+
+            await userEvent.type(textInput, 'Hello');
+
+            expect(textInput).not.toHaveValue('Hello');
         });
     });
 
@@ -225,12 +218,12 @@ describe('Field', () => {
             const rendered = render(<FieldWithCheckboxTest validationMode="onChange" />);
             const checkbox = rendered.getByRole('checkbox');
 
-            expect(screen.queryByText('You must agree to continue')).not.toBeInTheDocument();
+            expect(rendered.queryByText('You must agree to continue')).not.toBeInTheDocument();
 
             await userEvent.click(checkbox);
             await userEvent.click(checkbox);
 
-            expect(screen.queryByText('You must agree to continue')).toBeInTheDocument();
+            expect(rendered.queryByText('You must agree to continue')).toBeInTheDocument();
         });
 
         it('should validate onBlur for switch field', async () => {
@@ -242,7 +235,7 @@ describe('Field', () => {
                 switchElement.blur();
             });
 
-            expect(screen.queryByText('Please enable notifications')).not.toBeInTheDocument();
+            expect(rendered.queryByText('Please enable notifications')).not.toBeInTheDocument();
         });
     });
 
@@ -252,7 +245,7 @@ describe('Field', () => {
             const checkbox = rendered.getByRole('checkbox');
 
             // Initially no error
-            expect(screen.queryByText('You must agree to continue')).not.toBeInTheDocument();
+            expect(rendered.queryByText('You must agree to continue')).not.toBeInTheDocument();
 
             // Check the checkbox (should show success)
             await userEvent.click(checkbox);
@@ -264,8 +257,8 @@ describe('Field', () => {
             // Uncheck the checkbox (should show error since it's required)
             await userEvent.click(checkbox);
             expect(checkbox).not.toBeChecked();
-            expect(screen.getByText('You must agree to continue')).toBeInTheDocument();
-            expect(screen.queryByText('✓ Thank you for accepting')).not.toBeInTheDocument();
+            expect(rendered.getByText('You must agree to continue')).toBeInTheDocument();
+            expect(rendered.queryByText('✓ Thank you for accepting')).not.toBeInTheDocument();
         });
 
         it('should show error when required switch is enabled then disabled', async () => {
@@ -273,18 +266,18 @@ describe('Field', () => {
             const switchElement = rendered.getByRole('switch');
 
             // Initially no error
-            expect(screen.queryByText('Please enable notifications')).not.toBeInTheDocument();
+            expect(rendered.queryByText('Please enable notifications')).not.toBeInTheDocument();
 
             // Enable the switch (should show success)
             await userEvent.click(switchElement);
             expect(switchElement).toBeChecked();
-            expect(screen.queryByText('✓ Notifications enabled')).toBeInTheDocument();
+            expect(rendered.queryByText('✓ Notifications enabled')).toBeInTheDocument();
 
             // Disable the switch (should show error since it's required)
             await userEvent.click(switchElement);
             expect(switchElement).not.toBeChecked();
-            expect(screen.getByText('Please enable notifications')).toBeInTheDocument();
-            expect(screen.queryByText('✓ Notifications enabled')).not.toBeInTheDocument();
+            expect(rendered.getByText('Please enable notifications')).toBeInTheDocument();
+            expect(rendered.queryByText('✓ Notifications enabled')).not.toBeInTheDocument();
         });
 
         it('should show error when required radio is selected then deselected', async () => {
@@ -292,16 +285,16 @@ describe('Field', () => {
             const maleRadio = rendered.getByRole('radio', { name: 'Male' });
 
             // Initially no error
-            expect(screen.queryByText('Please select your gender')).not.toBeInTheDocument();
+            expect(rendered.queryByText('Please select your gender')).not.toBeInTheDocument();
 
             // Select a radio option (should show success)
             await userEvent.click(maleRadio);
             expect(maleRadio).toBeChecked();
-            expect(screen.queryByText('✓ Gender selected')).toBeInTheDocument();
+            expect(rendered.queryByText('✓ Gender selected')).toBeInTheDocument();
 
             // Note: Radio buttons typically can't be unchecked once selected
             // This is expected behavior for radio groups
-            expect(screen.queryByText('Please select your gender')).not.toBeInTheDocument();
+            expect(rendered.queryByText('Please select your gender')).not.toBeInTheDocument();
         });
     });
 
@@ -475,7 +468,7 @@ const FieldWithRadioGroupTest = ({
                 <Radio.Root value="other" id="other" />
                 <Field.Label htmlFor="other">Other</Field.Label>
 
-                <Field.Error>Please select your gender</Field.Error>
+                <Field.Error match="valueMissing">Please select your gender</Field.Error>
                 <Field.Success>✓ Gender selected</Field.Success>
             </RadioGroup.Root>
         </Field.Root>
