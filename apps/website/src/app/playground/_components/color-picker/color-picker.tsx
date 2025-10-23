@@ -126,26 +126,23 @@ const ColorPickerRoot = ({
     const saturationRef = useRef<HTMLDivElement>(null);
     const hueRef = useRef<HTMLDivElement>(null);
 
-    const updateSaturationValue = useCallback(
-        (e: React.MouseEvent | MouseEvent) => {
-            if (!saturationRef.current) return;
+    const updateSaturationValue = useCallback((e: React.MouseEvent | MouseEvent) => {
+        if (!saturationRef.current) return;
 
-            const rect = saturationRef.current.getBoundingClientRect();
-            const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
-            const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+        const rect = saturationRef.current.getBoundingClientRect();
+        const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+        const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
 
-            const s = x / rect.width;
-            const v = 1 - y / rect.height;
+        const s = x / rect.width;
+        const v = 1 - y / rect.height;
 
-            setHsv(prevHsv => {
-                const newHsv = { ...prevHsv, s, v };
-                const newColor = hsvToHex(newHsv.h, newHsv.s, newHsv.v);
-                setColor(newColor);
-                return newHsv;
-            });
-        },
-        [],
-    );
+        setHsv((prevHsv) => {
+            const newHsv = { ...prevHsv, s, v };
+            const newColor = hsvToHex(newHsv.h, newHsv.s, newHsv.v);
+            setColor(newColor);
+            return newHsv;
+        });
+    }, []);
 
     const updateHueValue = useCallback(
         (e: React.MouseEvent | MouseEvent) => {
