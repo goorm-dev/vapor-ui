@@ -137,13 +137,14 @@ const ColorPickerRoot = ({
             const s = x / rect.width;
             const v = 1 - y / rect.height;
 
-            const newHsv = { ...hsv, s, v };
-            setHsv(newHsv);
-
-            const newColor = hsvToHex(newHsv.h, newHsv.s, newHsv.v);
-            setColor(newColor);
+            setHsv(prevHsv => {
+                const newHsv = { ...prevHsv, s, v };
+                const newColor = hsvToHex(newHsv.h, newHsv.s, newHsv.v);
+                setColor(newColor);
+                return newHsv;
+            });
         },
-        [hsv],
+        [],
     );
 
     const updateHueValue = useCallback(
