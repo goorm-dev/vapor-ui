@@ -1,5 +1,13 @@
 # @vapor-ui/icons
 
+## 1.0.0-beta.3
+
+### Patch Changes
+
+- f2950ee: Update icons from Figma
+
+    **Updated Basic Icons:** `TreeCollapseIcon`
+
 ## 1.0.0-beta.2
 
 - Update missing icons

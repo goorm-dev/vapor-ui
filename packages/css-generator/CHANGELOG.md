@@ -1,5 +1,11 @@
 # @vapor-ui/css-generator
 
+## 1.0.0-beta.2
+
+### Minor Changes
+
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+
 ## 1.0.0-beta.1
 
 ### Patch Changes

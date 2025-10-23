@@ -1,5 +1,20 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.3
+
+### Minor Changes
+
+- 27c0ba9: export component with namespace
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+
+### Patch Changes
+
+- 3819233: Fix checkbox borderRadius sync error
+- f0f643b: feat: Remove Font Loading from CSS Build
+- 716c1d6: restore reset css
+- Updated dependencies [f2950ee]
+    - @vapor-ui/icons@1.0.0-beta.3
+
 ## 1.0.0-beta.2
 
 ### Patch Changes
