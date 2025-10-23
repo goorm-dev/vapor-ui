@@ -1,8 +1,55 @@
-import { globalStyle } from '@vanilla-extract/css';
+import { createGlobalTheme, createGlobalThemeContract, globalStyle } from '@vanilla-extract/css';
 
 import { layers } from './layers.css';
-import { vars } from './vars.css';
+import {
+    BORDER_RADIUS,
+    BOX_SHADOW,
+    DARK_BASIC_COLORS,
+    DARK_SEMANTIC_COLORS,
+    DIMENSION,
+    FONT_FAMILY,
+    FONT_SIZE,
+    FONT_WEIGHT,
+    LETTER_SPACING,
+    LIGHT_BASIC_COLORS,
+    LIGHT_SEMANTIC_COLORS,
+    LINE_HEIGHT,
+    SPACE,
+} from './tokens';
 
+// default themes
+const THEME_TOKENS = {
+    color: { ...LIGHT_BASIC_COLORS, ...LIGHT_SEMANTIC_COLORS },
+    shadow: BOX_SHADOW,
+    size: { borderRadius: BORDER_RADIUS, dimension: DIMENSION, space: SPACE },
+    typography: {
+        fontSize: FONT_SIZE,
+        lineHeight: LINE_HEIGHT,
+        letterSpacing: LETTER_SPACING,
+        fontFamily: FONT_FAMILY,
+        fontWeight: FONT_WEIGHT,
+    },
+};
+
+export const vars = createGlobalThemeContract(THEME_TOKENS, (_, path) => `vapor-${path.join('-')}`);
+createGlobalTheme(':root', vars, {
+    '@layer': layers.theme,
+    ...THEME_TOKENS,
+});
+
+// dark themes
+const DARK_CLASS_NAME = 'vapor-dark-theme';
+const DARK_THEME_TOKENS = {
+    ...DARK_BASIC_COLORS,
+    ...DARK_SEMANTIC_COLORS,
+};
+
+createGlobalTheme(`:root.${DARK_CLASS_NAME}`, vars.color, {
+    '@layer': layers.theme,
+    ...DARK_THEME_TOKENS,
+});
+
+// reset styles
 globalStyle('*', {
     '@layer': {
         [layers.reset]: {

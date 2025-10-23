@@ -11,8 +11,8 @@ import { RadioGroup } from '~/components/radio-group';
 import { Switch } from '~/components/switch';
 import { TextInput } from '~/components/text-input';
 
+import { Field } from '.';
 import { Box } from '../box';
-import { Field } from './field';
 
 describe('Field', () => {
     afterEach(cleanup);

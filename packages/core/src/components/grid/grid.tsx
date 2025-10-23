@@ -17,7 +17,6 @@ import * as styles from './grid.css';
  * Grid
  * -----------------------------------------------------------------------------------------------*/
 
-type GridPrimitiveProps = VComponentProps<typeof Box>;
 type GridVariants = RootVariants & {
     inline?: boolean;
     templateRows?: string;
@@ -25,9 +24,7 @@ type GridVariants = RootVariants & {
     flow?: CSSProperties['gridAutoFlow'];
 };
 
-interface GridRootProps extends GridPrimitiveProps, GridVariants {}
-
-const Root = forwardRef<HTMLDivElement, GridRootProps>(
+export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>(
     ({ className, style, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<GridVariants>()(props, [
             'inline',
@@ -56,18 +53,13 @@ const Root = forwardRef<HTMLDivElement, GridRootProps>(
         );
     },
 );
-Root.displayName = 'Grid';
+GridRoot.displayName = 'Grid';
 
 /* -------------------------------------------------------------------------------------------------
  * Grid.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type GridItemPrimitiveProps = VComponentProps<typeof Box>;
-type GridItemVariants = { rowSpan?: string; colSpan?: string };
-
-interface GridItemProps extends GridItemPrimitiveProps, GridItemVariants {}
-
-const Item = forwardRef<HTMLDivElement, GridItemProps>(
+export const GridItem = forwardRef<HTMLDivElement, GridItem.Props>(
     ({ rowSpan, colSpan, className, style, children, ...props }, ref) => {
         const cssVariables = assignInlineVars({
             [styles.gridItemRowSpan]: rowSpan,
@@ -86,11 +78,19 @@ const Item = forwardRef<HTMLDivElement, GridItemProps>(
         );
     },
 );
-Item.displayName = 'Grid.Item';
+GridItem.displayName = 'Grid.Item';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as GridRoot, Item as GridItem };
-export type { GridRootProps, GridItemProps };
+export namespace GridRoot {
+    type GridPrimitiveProps = VComponentProps<typeof Box>;
 
-export const Grid = { Root, Item };
+    export interface Props extends GridPrimitiveProps, GridVariants {}
+}
+
+export namespace GridItem {
+    type GridItemPrimitiveProps = VComponentProps<typeof Box>;
+    type GridItemVariants = { rowSpan?: string; colSpan?: string };
+
+    export interface Props extends GridItemPrimitiveProps, GridItemVariants {}
+}

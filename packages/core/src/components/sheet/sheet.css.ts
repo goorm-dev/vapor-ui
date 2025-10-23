@@ -1,8 +1,8 @@
 import type { CSSProperties } from '@vanilla-extract/css';
 import { createGlobalVar } from '@vanilla-extract/css';
 
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const overlay = layerStyle('components', {
     position: 'fixed',
