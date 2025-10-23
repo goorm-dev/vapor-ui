@@ -29,7 +29,9 @@ export const Default: StoryObj<typeof Table.Root> = {
                         <Table.Heading>{item.name}</Table.Heading>
                         <Table.Cell>{item.type}</Table.Cell>
                         <Table.Cell>
-                            <time dateTime={item.updatedAt.toString()}>{item.updatedAt}</time>
+                            <time dateTime={new Date(item.updatedAt).toISOString()}>
+                                {new Date(item.updatedAt).toLocaleDateString()}
+                            </time>
                         </Table.Cell>
                     </Table.Row>
                 ))}
