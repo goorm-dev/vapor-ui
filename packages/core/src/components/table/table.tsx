@@ -163,7 +163,7 @@ export const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaption.Pro
         return useRender({
             ref,
             render: render || <caption />,
-            props: { ...props },
+            props,
         });
     },
 );
