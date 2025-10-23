@@ -4,8 +4,7 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { SwitchRootProps } from './switch';
-import { Switch } from './switch';
+import { Switch } from '.';
 
 describe('Switch', () => {
     afterEach(cleanup);
@@ -209,14 +208,14 @@ describe('Switch', () => {
 
 const LABEL_TEXT = 'Test Switch';
 
-const SwitchTest = (props: SwitchRootProps) => (
+const SwitchTest = (props: Switch.Root.Props) => (
     <>
         <Switch.Root id="switch-test" {...props} />
         <label htmlFor="switch-test">{LABEL_TEXT}</label>
     </>
 );
 
-const ControlledSwitchTest = ({ onCheckedChange, ...props }: SwitchRootProps) => {
+const ControlledSwitchTest = ({ onCheckedChange, ...props }: Switch.Root.Props) => {
     const [checked, setChecked] = useState<boolean>(false);
     const [blocker, setBlocker] = useState<boolean>(false);
 

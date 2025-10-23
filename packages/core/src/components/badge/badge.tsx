@@ -9,26 +9,28 @@ import type { VComponentProps } from '~/utils/types';
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
-type BadgePrimitiveProps = VComponentProps<'span'>;
-interface BadgeProps extends BadgePrimitiveProps, BadgeVariants {}
+export const Badge = forwardRef<HTMLSpanElement, Badge.Props>(
+    ({ render, className, ...props }, ref) => {
+        const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(props, [
+            'color',
+            'size',
+            'shape',
+        ]);
 
-const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ render, className, ...props }, ref) => {
-    const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(props, [
-        'color',
-        'size',
-        'shape',
-    ]);
-
-    return useRender({
-        ref,
-        render: render || <span />,
-        props: {
-            className: clsx(styles.root(variantsProps), className),
-            ...otherProps,
-        },
-    });
-});
+        return useRender({
+            ref,
+            render: render || <span />,
+            props: {
+                className: clsx(styles.root(variantsProps), className),
+                ...otherProps,
+            },
+        });
+    },
+);
 Badge.displayName = 'Badge';
 
-export { Badge };
-export type { BadgeProps };
+export namespace Badge {
+    type BadgePrimitiveProps = VComponentProps<'span'>;
+
+    export interface Props extends BadgePrimitiveProps, BadgeVariants {}
+}
