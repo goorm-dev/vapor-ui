@@ -142,24 +142,24 @@ import { Popover } from '@vapor-ui/core';
 
 ### Popover.Root Props (formerly Popover)
 
-| **Prop**       | **Before**                               | **After**             | **Change Type** | **Migration Method / Notes**                                       |
-| -------------- | ---------------------------------------- | --------------------- | --------------- | ------------------------------------------------------------------ |
-| `side`         | `'top' \| 'bottom' \| 'left' \| 'right'` | (Moved)               | **Moved**       | Now passed to `Content` via `positionerProps={{ side: "bottom" }}` |
-| `align`        | `'start' \| 'center' \| 'end'`           | (Moved)               | **Moved**       | Now passed to `Content` via `positionerProps={{ align: "start" }}` |
-| `disabled`     | `boolean`                                | `boolean`             | **No Change**   | Controls whether the Popover can be opened                         |
-| `open`         | `boolean`                                | `boolean`             | **No Change**   | Controls whether the Popover is open or closed                     |
+| **Prop**       | **Before**                               | **After**                 | **Change Type** | **Migration Method / Notes**                                       |
+| -------------- | ---------------------------------------- | ------------------------- | --------------- | ------------------------------------------------------------------ |
+| `side`         | `'top' \| 'bottom' \| 'left' \| 'right'` | (Moved)                   | **Moved**       | Now passed to `Content` via `positionerProps={{ side: "bottom" }}` |
+| `align`        | `'start' \| 'center' \| 'end'`           | (Moved)                   | **Moved**       | Now passed to `Content` via `positionerProps={{ align: "start" }}` |
+| `disabled`     | `boolean`                                | `boolean`                 | **No Change**   | Controls whether the Popover can be opened                         |
+| `open`         | `boolean`                                | `boolean`                 | **No Change**   | Controls whether the Popover is open or closed                     |
 | `onOpenChange` | `(open: boolean) => void`                | `(open: boolean) => void` | **No change**   | Callback invoked when Popover state changes                        |
-| `defaultOpen`  | `boolean`                                | `boolean`             | **No change**   | Initial open state in uncontrolled mode                            |
+| `defaultOpen`  | `boolean`                                | `boolean`                 | **No change**   | Initial open state in uncontrolled mode                            |
 
 ### Popover.Content Props (formerly Popover.Content / Popover.CombinedContent)
 
-| **Prop**          | **Before**              | **After**                 | **Change Type** | **Migration Method / Notes**                                             |
-| ----------------- | ----------------------- | ------------------------- | --------------- | ------------------------------------------------------------------------ |
-| `isArrowVisible`  | `boolean` (default: `true`) | (Removed)                 | **Removed**     | Arrow is now automatically included and always visible                   |
-| `sideOffset`      | `string` (e.g., `'space-150'`) | (Moved)                   | **Moved**       | Moved to `positionerProps={{ sideOffset: 'space-150' }}`                |
-| `alignOffset`     | `string` (e.g., `'space-000'`) | (Moved)                   | **Moved**       | Moved to `positionerProps={{ alignOffset: 'space-000' }}`               |
-| `portalProps`     | (None)                  | `PopoverPortalProps`      | **New Prop**    | Props to pass to the Portal                                              |
-| `positionerProps` | (None)                  | `PopoverPositionerProps`  | **New Prop**    | Props to pass to the Positioner (includes `side`, `align`, `sideOffset`) |
+| **Prop**          | **Before**                     | **After**                | **Change Type** | **Migration Method / Notes**                                             |
+| ----------------- | ------------------------------ | ------------------------ | --------------- | ------------------------------------------------------------------------ |
+| `isArrowVisible`  | `boolean` (default: `true`)    | (Removed)                | **Removed**     | Arrow is now automatically included and always visible                   |
+| `sideOffset`      | `string` (e.g., `'space-150'`) | (Moved)                  | **Moved**       | Moved to `positionerProps={{ sideOffset: 'space-150' }}`                 |
+| `alignOffset`     | `string` (e.g., `'space-000'`) | (Moved)                  | **Moved**       | Moved to `positionerProps={{ alignOffset: 'space-000' }}`                |
+| `portalProps`     | (None)                         | `PopoverPortalProps`     | **New Prop**    | Props to pass to the Portal                                              |
+| `positionerProps` | (None)                         | `PopoverPositionerProps` | **New Prop**    | Props to pass to the Positioner (includes `side`, `align`, `sideOffset`) |
 
 ### Common Props for Subcomponents
 
