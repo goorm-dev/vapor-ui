@@ -1,20 +1,17 @@
-type DataAttr = Record<string, string>;
+type DataAttr = { [key: string]: string };
 
 type SingleDataAttrValue = string | number | boolean | null | undefined;
-type SingleDataAttrReturn = DataAttr | Record<string, never>;
 
-export function createDataAttribute(key: string, value: SingleDataAttrValue): SingleDataAttrReturn {
-    if (value === null || value === undefined) {
-        return {};
+type ReturnByValue<T> = T extends null | undefined ? {} : DataAttr;
+
+export function createDataAttribute<T extends SingleDataAttrValue>(
+    key: string,
+    value: T,
+): ReturnByValue<T> {
+    if (value == null) {
+        return {} as ReturnByValue<T>;
     }
-
-    const dataKey = `data-${key}`;
-
-    if (typeof value === 'boolean') {
-        return value ? { [dataKey]: '' } : {};
-    }
-
-    return { [dataKey]: String(value) };
+    return { [`data-${key}`]: String(value) } as ReturnByValue<T>;
 }
 
 type MultiDataAttrValue = Record<string, SingleDataAttrValue>;
