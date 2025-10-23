@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -40,10 +40,6 @@ export const Default: Story = {
     render: (args) => {
         const [value, setValue] = useState('');
         const ref = useRef<HTMLTextAreaElement | null>(null);
-
-        useEffect(() => {
-            console.log(ref.current?.clientHeight);
-        }, [ref, value]);
 
         return (
             <div style={{ width: '100%', padding: '50px' }}>
