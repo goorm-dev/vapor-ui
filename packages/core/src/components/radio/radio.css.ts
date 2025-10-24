@@ -7,7 +7,7 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-const borderWidth = createVar('border-width');
+const BORDER_WIDTH = createVar('border-width');
 
 export const root = recipe({
     base: [
@@ -42,7 +42,7 @@ export const root = recipe({
                 '&[data-readonly]:active::before': { opacity: 0.08 },
             },
             vars: {
-                [borderWidth]: '0.0625rem',
+                [BORDER_WIDTH]: '0.0625rem',
             },
         }),
     ],
@@ -78,8 +78,8 @@ export const indicator = layerStyle('components', {
     border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.white,
-    width: calc.subtract('50%', borderWidth),
-    height: calc.subtract('50%', borderWidth),
+    width: calc.subtract('50%', BORDER_WIDTH),
+    height: calc.subtract('50%', BORDER_WIDTH),
     selectors: {
         '&[data-readonly]': {
             backgroundColor: vars.color.foreground.hint[100],
