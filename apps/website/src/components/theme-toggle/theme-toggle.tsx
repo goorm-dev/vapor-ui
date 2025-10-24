@@ -15,14 +15,25 @@ export const ThemeToggle = ({
     variant = 'ghost',
 }: ThemeToggleProps) => {
     const { resolvedTheme, setTheme, mounted } = useTheme();
+    if (!mounted)
+        return (
+            <IconButton
+                size={size}
+                color={color}
+                variant="ghost"
+                aria-label="light mode"
+                className="p-0"
+            >
+                <DarkIcon />
+            </IconButton>
+        );
 
     const toggleTheme = () => {
         setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
     };
 
     const getThemeIcon = () => {
-        if (!mounted || !resolvedTheme) return '';
-        return resolvedTheme === 'dark' ? <LightIcon /> : <DarkIcon />;
+        return resolvedTheme === 'dark' ? <LightIcon size={20} /> : <DarkIcon size={20} />;
     };
 
     const getAriaLabel = () => {
@@ -37,6 +48,7 @@ export const ThemeToggle = ({
             variant={mounted ? variant : 'fill'}
             aria-label={getAriaLabel()}
             onClick={toggleTheme}
+            className="p-0"
         >
             {getThemeIcon()}
         </IconButton>
