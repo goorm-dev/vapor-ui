@@ -28,6 +28,7 @@
         "sb": "pnpm --filter storybook",
         "website": "pnpm --filter website",
         "figma-plugin": "pnpm --filter figma-plugin",
+        "codemod": "pnpm --filter @vapor-ui/codemod",
         "dev": "turbo dev",
         "prepare": "husky",
         "typecheck": "turbo typecheck",
