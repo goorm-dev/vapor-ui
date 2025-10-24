@@ -2,7 +2,6 @@
 
 import { forwardRef, useEffect, useMemo, useState } from 'react';
 
-import type { Field } from '@base-ui-components/react';
 import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
@@ -12,24 +11,20 @@ import type { VComponentProps } from '~/utils/types';
 import * as styles from './input-group.css';
 
 /* -------------------------------------------------------------------------------------------------
- * Type Aliases
- * -----------------------------------------------------------------------------------------------*/
-
-type FieldValue = string;
-type FieldMaxLength = Field.Control.Props['maxLength'];
-
-/* -------------------------------------------------------------------------------------------------
  * InputGroup Context
  * -----------------------------------------------------------------------------------------------*/
 
-interface InputGroupSharedProps {
+type FieldValue = string;
+type FieldMaxLength = number;
+
+type InputGroupSharedProps = {
     value: FieldValue;
     maxLength?: FieldMaxLength;
     setValue: (value: FieldValue) => void;
     setMaxLength: (maxLength: FieldMaxLength) => void;
-}
+};
 
-const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupSharedProps>({
+export const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupSharedProps>({
     name: 'InputGroup',
     hookName: 'useInputGroup',
     providerName: 'InputGroupProvider',
@@ -37,52 +32,16 @@ const [InputGroupProvider, useInputGroupContext] = createContext<InputGroupShare
 });
 
 /* -------------------------------------------------------------------------------------------------
- * useInputGroup Hook
- * -----------------------------------------------------------------------------------------------*/
-
-interface UseInputGroupSyncOptions {
-    value?: string;
-    maxLength?: Field.Control.Props['maxLength'];
-}
-
-/**
- * Custom hook to handle InputGroup context synchronization
- * Separates InputGroup-related logic from Input component
- */
-export function useInputGroup({ value, maxLength }: UseInputGroupSyncOptions) {
-    const { setValue, setMaxLength } = useInputGroupContext() ?? {};
-
-    useEffect(() => {
-        if (setMaxLength && maxLength !== undefined) {
-            setMaxLength(maxLength);
-        }
-    }, [setMaxLength, maxLength]);
-
-    useEffect(() => {
-        if (setValue && value !== undefined) {
-            setValue(String(value));
-        }
-    }, [setValue, value]);
-}
-
-/* -------------------------------------------------------------------------------------------------
  * InputGroup Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface InputGroupRootProps extends VComponentProps<'div'> {}
-
-const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
-    ({ className, render, ...props }, ref) => {
+export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>(
+    ({ render, className, ...props }, ref) => {
         const [value, setValue] = useState<FieldValue>('');
-        const [maxLength, setMaxLength] = useState<FieldMaxLength | undefined>();
+        const [maxLength, setMaxLength] = useState<FieldMaxLength>();
 
         const contextValue: InputGroupSharedProps = useMemo(
-            () => ({
-                value,
-                maxLength,
-                setValue,
-                setMaxLength,
-            }),
+            () => ({ value, maxLength, setValue, setMaxLength }),
             [value, maxLength],
         );
 
@@ -98,63 +57,83 @@ const Root = forwardRef<HTMLDivElement, InputGroupRootProps>(
         return <InputGroupProvider value={contextValue}>{element}</InputGroupProvider>;
     },
 );
-
-Root.displayName = 'InputGroup.Root';
+InputGroupRoot.displayName = 'InputGroup.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * InputGroup Count
  * -----------------------------------------------------------------------------------------------*/
 
-type CounterRenderProps = { count: number; maxLength?: number; value: string };
-
-interface InputGroupCounterProps extends Omit<VComponentProps<'span'>, 'children'> {
-    children?: React.ReactNode | ((props: CounterRenderProps) => React.ReactNode);
-}
-
-/**
- * Generates counter content based on children prop or default format
- */
-const generateCounterContent = (
-    children: InputGroupCounterProps['children'],
-    count: number,
-    maxLength?: number,
-    value?: string,
-): React.ReactNode => {
-    if (children) {
-        return typeof children === 'function'
-            ? children({ count, maxLength, value: value ?? '' })
-            : children;
-    }
-
-    return maxLength !== undefined ? `${count}/${maxLength}` : `${count}`;
-};
-
-const Counter = forwardRef<HTMLSpanElement, InputGroupCounterProps>(
-    ({ className, children, render, ...props }, ref) => {
+export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.Props>(
+    ({ render, className, children: childrenProp, ...props }, ref) => {
         const { value, maxLength } = useInputGroupContext();
-        const currentLength = value.length;
-        const content = generateCounterContent(children, currentLength, maxLength, value);
+        const content = generateCounterContent({
+            maxLength,
+            count: value.length,
+        });
+
+        const children =
+            typeof childrenProp === 'function'
+                ? childrenProp({ count: value.length, maxLength, value })
+                : childrenProp || content;
 
         return useRender({
             ref,
             render: render || <span />,
             props: {
                 className: clsx(styles.counter, className),
-                children: content,
+                children,
                 ...props,
             },
         });
     },
 );
-
-Counter.displayName = 'InputGroup.Counter';
+InputGroupCounter.displayName = 'InputGroup.Counter';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const InputGroup = {
-    Root,
-    Counter,
+type CounterContentOptions = {
+    count: number;
+    maxLength?: number;
 };
 
-export { Counter as InputGroupCounter, Root as InputGroupRoot, useInputGroupContext };
-export type { InputGroupCounterProps, InputGroupRootProps };
+const generateCounterContent = ({ count, maxLength }: CounterContentOptions) => {
+    return maxLength ? `${count}/${maxLength}` : `${count}`;
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
+type UseInputGroupOptions = {
+    value?: FieldValue;
+    maxLength?: FieldMaxLength;
+};
+
+export function useInputGroup({ value, maxLength }: UseInputGroupOptions) {
+    const { setValue, setMaxLength } = useInputGroupContext() ?? {};
+
+    useEffect(() => {
+        if (setMaxLength && maxLength !== undefined) {
+            setMaxLength(maxLength);
+        }
+    }, [setMaxLength, maxLength]);
+
+    useEffect(() => {
+        if (setValue && value !== undefined) {
+            setValue(String(value));
+        }
+    }, [setValue, value]);
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export namespace InputGroupRoot {
+    export interface Props extends VComponentProps<'div'> {}
+}
+
+export namespace InputGroupCounter {
+    type PrimitiveCounterProps = Omit<VComponentProps<'span'>, 'children'>;
+    type CounterRenderProps = { count: number; maxLength?: number; value: string };
+
+    export interface Props extends PrimitiveCounterProps {
+        children?: React.ReactNode | ((props: CounterRenderProps) => React.ReactNode);
+    }
+}

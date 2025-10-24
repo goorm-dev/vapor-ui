@@ -1,16 +1,13 @@
 import { useState } from 'react';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Textarea } from '.';
 import { Grid } from '../grid';
-import { Textarea } from './textarea';
 
 const meta: Meta<typeof Textarea> = {
     title: 'Textarea',
     component: Textarea,
-    parameters: {
-        layout: 'fullscreen',
-    },
     tags: ['autodocs'],
     argTypes: {
         size: {
