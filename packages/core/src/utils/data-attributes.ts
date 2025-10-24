@@ -8,10 +8,10 @@ export function createDataAttribute<T extends SingleDataAttrValue>(
     key: string,
     value: T,
 ): ReturnByValue<T> {
-    if (value == null) {
+    if (value == null || value === false) {
         return {} as ReturnByValue<T>;
     }
-    return { [`data-${key}`]: String(value) } as ReturnByValue<T>;
+    return { [`data-${key}`]: value === true ? '' : String(value) } as ReturnByValue<T>;
 }
 
 type MultiDataAttrValue = Record<string, SingleDataAttrValue>;
