@@ -33,12 +33,19 @@ export const control = recipe({
                     outlineOffset: '-0.0625rem',
                 },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
+
+                '&[data-invalid]': {
+                    outline: '0.0625rem solid',
+                    outlineColor: vars.color.border.danger,
+                    outlineOffset: '-0.0625rem',
+                },
             },
         }),
     ],
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 'md', invalid: false },
     variants: {
+        invalid: { true: {}, false: {} },
         size: {
             sm: layerStyle('components', {
                 padding: vars.size.space['025'],
