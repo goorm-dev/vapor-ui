@@ -1,4 +1,4 @@
-import { Callout, Badge } from '@vapor-ui/core';
+import { Badge, Callout } from '@vapor-ui/core';
 
 export const Component = () => (
     <Callout.Root color="primary">

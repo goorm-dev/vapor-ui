@@ -8,7 +8,7 @@ import type {
     Transform,
 } from 'jscodeshift';
 
-import { mergeImports, migrateImportDeclaration } from '~/utils/import-migration';
+import { mergeImports, transformImportDeclaration } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -20,24 +20,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     let needsFieldImport = false;
-    const oldSwitchLocalName: string | null = null;
-
-    // 1. Import migration: Switch (default) -> { Switch } (named)
-    root.find(j.ImportDeclaration).forEach((path) => {
-        migrateImportDeclaration({
-            root,
-            j,
-            path,
-            sourcePackage: SOURCE_PACKAGE,
-            targetPackage: TARGET_PACKAGE,
-            oldComponentName: OLD_COMPONENT_NAME,
-            newComponentName: NEW_COMPONENT_NAME,
-        });
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
-
-    // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
-
     // 2. Transform Switch JSX elements (Compound pattern -> Switch.Root + Field wrapped)
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
@@ -45,8 +35,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Check if this is the Switch root element
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            (element.openingElement.name.name === OLD_COMPONENT_NAME ||
-                (oldSwitchLocalName && element.openingElement.name.name === oldSwitchLocalName))
+            element.openingElement.name.name === OLD_COMPONENT_NAME
         ) {
             // Find Switch.Label and Switch.Indicator children
             let labelElement: JSXElement | null = null;
@@ -59,8 +48,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     if (
                         child.openingElement.name.type === 'JSXMemberExpression' &&
                         child.openingElement.name.object.type === 'JSXIdentifier' &&
-                        child.openingElement.name.object.name ===
-                            (oldSwitchLocalName || OLD_COMPONENT_NAME) &&
                         child.openingElement.name.property.type === 'JSXIdentifier'
                     ) {
                         const propertyName = child.openingElement.name.property.name;

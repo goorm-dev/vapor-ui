@@ -1,12 +1,22 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
-import { migrateImportSpecifier } from '~/utils/import-migration';
+import { transformImportDeclaration } from '~/utils/import-transform';
+
+const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
+const TARGET_PACKAGE = '@vapor-ui/core';
+const OLD_COMPONENT_NAME = 'Badge';
+const NEW_COMPONENT_NAME = 'Badge';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    root.find(j.ImportDeclaration).forEach((path) => {
-        migrateImportSpecifier(root, j, path, 'Badge', '@goorm-dev/vapor-core', '@vapor-ui/core');
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
 
     root.find(j.JSXElement).forEach((path) => {

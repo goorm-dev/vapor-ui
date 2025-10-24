@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { Text } from '@vapor-ui/core';
 
 export const Component = () => (
@@ -18,5 +16,7 @@ export const Component = () => (
         <Text foreground="hint-200">Hint Alternative</Text>
         <Text foreground="contrast-100">Contrast Text</Text>
         <Text foreground="contrast-200">Contrast Alternative</Text>
+        <Text foreground="normal-100">Alternative Text</Text>
+        <Text foreground="normal-200">Normal Text</Text>
     </>
 );

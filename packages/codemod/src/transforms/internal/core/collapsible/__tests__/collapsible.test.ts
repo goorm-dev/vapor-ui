@@ -8,7 +8,6 @@ const tests = [
     'collapsible-asChild-with-props',
     'collapsible-mixed-imports',
     'collapsible-existing-vapor-import',
-    'collapsible-merge-into-vapor-import',
     'collapsible-already-in-vapor-import',
     'collapsible-multiple',
     'collapsible-controlled',

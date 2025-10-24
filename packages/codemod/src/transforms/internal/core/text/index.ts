@@ -1,5 +1,5 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
-import { migrateImportSpecifier } from '~/utils/import-migration';
+import { migrateImportSpecifier } from '~/utils/import-transform';
 
 const colorMapping: Record<string, string> = {
     'text-primary': 'primary-100',
@@ -16,6 +16,8 @@ const colorMapping: Record<string, string> = {
     'text-hint-alternative': 'hint-200',
     'text-contrast': 'contrast-100',
     'text-contrast-alternative': 'contrast-200',
+    'text-alternative': 'normal-100',
+    'text-normal': 'normal-200',
 };
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {

@@ -1,22 +1,23 @@
 import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
-import { mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
+import { mergeImports, transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender } from '~/utils/jsx-transform';
 
 const TARGET_PACKAGE = '@vapor-ui/core';
+const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
+const OLD_COMPONENT_NAME = 'IconButton';
+const NEW_COMPONENT_NAME = 'IconButton';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    root.find(j.ImportDeclaration).forEach((path) => {
-        migrateImportSpecifier(
-            root,
-            j,
-            path,
-            'IconButton',
-            '@goorm-dev/vapor-core',
-            '@vapor-ui/core'
-        );
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
 
     root.find(j.JSXElement).forEach((path) => {

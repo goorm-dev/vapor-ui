@@ -1,4 +1,4 @@
-import { Popover, Button } from '@vapor-ui/core';
+import { Button, Popover } from '@vapor-ui/core';
 
 export default function App() {
     return (

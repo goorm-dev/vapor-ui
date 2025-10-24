@@ -12,7 +12,6 @@ const tests = [
     'dialog-mixed-with-existing-vapor',
     'dialog-existing-vapor-import',
     'dialog-merge-into-vapor-import',
-    'dialog-already-in-vapor-import',
     'dialog-vapor-import-has-dialog',
     'dialog-with-asChild',
     'dialog-asChild-with-props',

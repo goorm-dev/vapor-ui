@@ -1,9 +1,11 @@
-import type { API, FileInfo, Transform, JSXAttribute, JSXSpreadAttribute } from 'jscodeshift';
-import { getFinalImportName, mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
+import type { API, FileInfo, JSXAttribute, JSXSpreadAttribute, Transform } from 'jscodeshift';
+import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 import { transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
+const OLD_COMPONENT_NAME = 'Avatar';
+const NEW_COMPONENT_NAME = 'Avatar';
 const COMPONENT_NAME = 'Avatar';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
@@ -11,27 +13,15 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     // Track the old Avatar local name
-    let oldAvatarLocalName: string | null = null;
 
-    // 1. Import migration
-    root.find(j.ImportDeclaration).forEach((path) => {
-        const componentInfo = migrateImportSpecifier(
-            root,
-            j,
-            path,
-            COMPONENT_NAME,
-            SOURCE_PACKAGE,
-            TARGET_PACKAGE
-        );
-
-        if (componentInfo) {
-            oldAvatarLocalName = componentInfo.localName;
-        }
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
-
-    // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
-
     // Get the final import name
     const avatarImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
 
@@ -42,8 +32,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Avatar> to <Avatar.Simple>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            (element.openingElement.name.name === 'Avatar' ||
-                (oldAvatarLocalName && element.openingElement.name.name === oldAvatarLocalName))
+            element.openingElement.name.name === 'Avatar'
         ) {
             // Change Avatar to Avatar.Simple
             transformToMemberExpression(j, element, avatarImportName, 'Simple');

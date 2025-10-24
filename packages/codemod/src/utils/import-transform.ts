@@ -233,18 +233,76 @@ export function mergeImports(root: Collection, j: API['jscodeshift'], packageNam
  * Example: import { Button } from 'A' -> import { Button } from 'B'
  */
 function handleSimplePackageMigration(
+    j: API['jscodeshift'],
     path: ASTPath<ImportDeclaration>,
     sourcePackage: string,
-    targetPackage: string
+    targetPackage: string,
+    oldComponentName: string,
+    newComponentName: string
 ): boolean {
     const importDeclaration = path.value;
     if (importDeclaration.source.value === sourcePackage) {
         importDeclaration.source.value = targetPackage;
+
+        if (oldComponentName !== newComponentName && importDeclaration.specifiers) {
+            importDeclaration.specifiers = importDeclaration.specifiers.map((spec) => {
+                if (spec.type === 'ImportSpecifier' && spec.imported.name === oldComponentName) {
+                    return j.importSpecifier(j.identifier(newComponentName));
+                }
+                return spec;
+            });
+        }
+
         return true;
     }
     return false;
 }
 
+const handleSplitComponentImports = ({
+    j,
+    importDeclarationFromSourcePackage,
+    targetPackage,
+    oldComponentName,
+    newComponentName,
+}: {
+    j: API['jscodeshift'];
+    importDeclarationFromSourcePackage: ASTPath<ImportDeclaration>;
+    targetPackage: string;
+    oldComponentName: string;
+    newComponentName: string;
+}) => {
+    const importDeclaration = importDeclarationFromSourcePackage.value;
+    let targetSpecifier: ImportSpecifier | null = null;
+    const otherSpecifiers: typeof importDeclaration.specifiers = [];
+    for (const specifier of importDeclaration.specifiers || []) {
+        if (specifier.type === 'ImportSpecifier' && specifier.imported.name === oldComponentName) {
+            targetSpecifier = specifier;
+        } else {
+            otherSpecifiers.push(specifier);
+        }
+    }
+
+    if (targetSpecifier) {
+        importDeclaration.specifiers = otherSpecifiers;
+
+        const localName = targetSpecifier.local?.name;
+        const hasAlias = localName && localName !== oldComponentName;
+
+        let newImportSpecifier: ImportSpecifier;
+        if (hasAlias) {
+            newImportSpecifier = j.importSpecifier(
+                j.identifier(newComponentName),
+                j.identifier(localName as string)
+            );
+        } else {
+            newImportSpecifier = j.importSpecifier(j.identifier(newComponentName));
+        }
+
+        const newImport = j.importDeclaration([newImportSpecifier], j.literal(targetPackage));
+
+        importDeclarationFromSourcePackage.insertAfter(newImport);
+    }
+};
 /**
  * Case 2: Progressive/individual component migration
  * Migrates only the target component from source package, keeping others
@@ -451,7 +509,14 @@ export function migrateImportDeclaration({
 
         if (remainingSpecifiers === 0 || importDeclaration.source.value === targetPackage) {
             // Case 1: Simple migration (entire import was changed)
-            handleSimplePackageMigration(path, sourcePackage, targetPackage);
+            handleSimplePackageMigration(
+                j,
+                path,
+                sourcePackage,
+                targetPackage,
+                oldComponentName,
+                newComponentName
+            );
             return componentInfo;
         } else {
             // Case 3: Merge with existing target package import
@@ -462,3 +527,154 @@ export function migrateImportDeclaration({
 
     return null;
 }
+
+/**
+ * Find existing import declaration for a given package
+ * Returns the ASTPath of the import declaration or null if not found
+ * @param {import('jscodeshift').Collection} root
+ * jscodeshift Collection representing the AST root
+ * @param {import('jscodeshift').API['jscodeshift']
+ * j} j
+ * jscodeshift API
+ * @param {string} packageName
+ * The package name to search for
+ * @returns {import('jscodeshift').ASTPath<import('jscodeshift').ImportDeclaration> | null}
+ * The ASTPath of the found import declaration or null
+ */
+function findExistingPackageImport(
+    root: Collection,
+    j: API['jscodeshift'],
+    packageName: string
+): ASTPath<ImportDeclaration> | null {
+    const imports = root.find(j.ImportDeclaration, {
+        source: { type: 'StringLiteral', value: packageName },
+    });
+    if (imports.length > 0) {
+        return imports.at(0).get();
+    }
+    return null;
+}
+
+/**
+ * Get the count of import specifiers in an import declaration
+ * returns the total number of imported items
+ *
+ * E.g.: import React, { useState, useEffect } from 'react';
+ * -> [ImportDefaultSpecifier, ImportSpecifier, ImportSpecifier]
+ * -> Count: 3
+ *
+ * @param {import('jscodeshift').ASTPath<import('jscodeshift').ImportDeclaration>} importDeclaration
+ * jscodeshift ASTPath representing the import declaration
+ * @returns {number} the total number of imported items in the line
+ */
+function getImportSpecifierCount(importDeclaration: ASTPath<ImportDeclaration>): number {
+    return importDeclaration.value.specifiers ? importDeclaration.value.specifiers.length : 0;
+}
+
+const handleMergeComponentImports = ({
+    j,
+    importDeclarationFromSourcePackage,
+    importDeclarationFromTargetPackage,
+    oldComponentName,
+    newComponentName,
+}: {
+    j: API['jscodeshift'];
+    importDeclarationFromSourcePackage: ASTPath<ImportDeclaration>;
+    importDeclarationFromTargetPackage: ASTPath<ImportDeclaration>;
+    oldComponentName: string;
+    newComponentName: string;
+}) => {
+    const sourceImport = importDeclarationFromSourcePackage.value;
+    const targetImport = importDeclarationFromTargetPackage.value;
+    let targetSpecifier: ImportSpecifier | null = null;
+    const otherSpecifiers: typeof sourceImport.specifiers = [];
+    for (const specifier of sourceImport.specifiers || []) {
+        if (specifier.type === 'ImportSpecifier' && specifier.imported.name === oldComponentName) {
+            targetSpecifier = specifier;
+        } else {
+            otherSpecifiers.push(specifier);
+        }
+    }
+
+    if (otherSpecifiers.length === 0) {
+        j(importDeclarationFromSourcePackage).remove();
+    } else {
+        sourceImport.specifiers = otherSpecifiers;
+    }
+
+    if (targetSpecifier) {
+        const hasComponentImport = targetImport.specifiers?.some(
+            (spec) => spec.type === 'ImportSpecifier' && spec.imported.name === newComponentName
+        );
+
+        if (!hasComponentImport) {
+            const localName = targetSpecifier.local?.name;
+            const hasAlias = localName && localName !== oldComponentName;
+
+            let newImportSpecifier: ImportSpecifier;
+            if (hasAlias) {
+                newImportSpecifier = j.importSpecifier(
+                    j.identifier(newComponentName),
+                    j.identifier(localName as string)
+                );
+            } else {
+                newImportSpecifier = j.importSpecifier(j.identifier(newComponentName));
+            }
+            targetImport.specifiers?.push(newImportSpecifier);
+        }
+    }
+};
+
+export const transformImportDeclaration = ({
+    root,
+    j,
+    oldComponentName,
+    newComponentName,
+    sourcePackage,
+    targetPackage,
+}: {
+    root: Collection;
+    j: API['jscodeshift'];
+    oldComponentName: string;
+    newComponentName: string;
+    sourcePackage: string;
+    targetPackage: string;
+}) => {
+    const importDeclarationFromSourcePackage = findExistingPackageImport(root, j, sourcePackage);
+    const importDeclarationFromTargetPackage = findExistingPackageImport(root, j, targetPackage);
+
+    if (!importDeclarationFromSourcePackage) {
+        return;
+    }
+
+    const sourceImportCount = getImportSpecifierCount(importDeclarationFromSourcePackage);
+
+    if (importDeclarationFromTargetPackage === null) {
+        if (sourceImportCount === 1) {
+            handleSimplePackageMigration(
+                j,
+                importDeclarationFromSourcePackage,
+                sourcePackage,
+                targetPackage,
+                oldComponentName,
+                newComponentName
+            );
+        } else {
+            handleSplitComponentImports({
+                j,
+                importDeclarationFromSourcePackage,
+                targetPackage,
+                oldComponentName,
+                newComponentName,
+            });
+        }
+    } else {
+        handleMergeComponentImports({
+            j,
+            importDeclarationFromSourcePackage,
+            importDeclarationFromTargetPackage,
+            oldComponentName,
+            newComponentName,
+        });
+    }
+};

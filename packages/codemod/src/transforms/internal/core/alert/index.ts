@@ -1,6 +1,6 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import { getFinalImportName, mergeImports, migrateAndRenameImport } from '~/utils/import-migration';
+import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
@@ -13,27 +13,16 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     // Track the old Alert local name from @goorm-dev/vapor-core
-    let oldAlertLocalName: string | null = null;
 
     // 1. Import migration: Alert -> Callout
-    root.find(j.ImportDeclaration).forEach((path) => {
-        const componentInfo = migrateAndRenameImport(
-            root,
-            j,
-            path,
-            OLD_COMPONENT_NAME,
-            NEW_COMPONENT_NAME,
-            SOURCE_PACKAGE,
-            TARGET_PACKAGE
-        );
-
-        if (componentInfo) {
-            oldAlertLocalName = componentInfo.localName;
-        }
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
-
-    // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
 
     // Get the final import name for Callout
     const calloutImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
@@ -45,8 +34,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Alert> to <Callout.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            (element.openingElement.name.name === 'Alert' ||
-                (oldAlertLocalName && element.openingElement.name.name === oldAlertLocalName))
+            element.openingElement.name.name === 'Alert'
         ) {
             // Change to Callout.Root
             transformToMemberExpression(j, element, calloutImportName, 'Root');

@@ -1,6 +1,6 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import { getFinalImportName, mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
+import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 import {
     transformAsChildToRender,
     transformForceMountToKeepMounted,
@@ -10,36 +10,25 @@ import {
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const COMPONENT_NAME = 'Collapsible';
+const OLD_COMPONENT_NAME = 'Collapsible';
+const NEW_COMPONENT_NAME = 'Collapsible';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
     // Track the old Collapsible local name from @goorm-dev/vapor-core
-    let oldCollapsibleLocalName: string | null = null;
-
-    // 1. Import migration: Collapsible -> Collapsible
-    root.find(j.ImportDeclaration).forEach((path) => {
-        const componentInfo = migrateImportSpecifier(
-            root,
-            j,
-            path,
-            COMPONENT_NAME,
-            SOURCE_PACKAGE,
-            TARGET_PACKAGE
-        );
-
-        if (componentInfo) {
-            oldCollapsibleLocalName = componentInfo.localName;
-        }
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
 
-    // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
-
     // Get the final import name (considering aliases)
-    const collapsibleImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
+    const collapsibleImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
 
     // 2. Transform Collapsible JSX elements to Collapsible.Root
     root.find(j.JSXElement).forEach((path) => {
@@ -48,9 +37,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Collapsible> to <Collapsible.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            (element.openingElement.name.name === 'Collapsible' ||
-                (oldCollapsibleLocalName &&
-                    element.openingElement.name.name === oldCollapsibleLocalName))
+            element.openingElement.name.name === 'Collapsible'
         ) {
             // Change to Collapsible.Root
             transformToMemberExpression(j, element, collapsibleImportName, 'Root');
@@ -69,9 +56,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            (element.openingElement.name.object.name === 'Collapsible' ||
-                (oldCollapsibleLocalName &&
-                    element.openingElement.name.object.name === oldCollapsibleLocalName))
+            element.openingElement.name.object.name === 'Collapsible'
         ) {
             // Get the property name (Trigger, Content, etc.)
             const propertyName =

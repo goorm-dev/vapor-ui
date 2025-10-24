@@ -1,40 +1,29 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import { getFinalImportName, mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
+import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const COMPONENT_NAME = 'Checkbox';
+const OLD_COMPONENT_NAME = 'Checkbox';
+const NEW_COMPONENT_NAME = 'Checkbox';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
     // Track the old Checkbox local name from @goorm-dev/vapor-core (e.g., 'Checkbox' or 'CoreCheckbox' if aliased)
-    let oldCheckboxLocalName: string | null = null;
-
-    // 1. Import migration: Checkbox -> Checkbox
-    root.find(j.ImportDeclaration).forEach((path) => {
-        const componentInfo = migrateImportSpecifier(
-            root,
-            j,
-            path,
-            COMPONENT_NAME,
-            SOURCE_PACKAGE,
-            TARGET_PACKAGE
-        );
-
-        if (componentInfo) {
-            oldCheckboxLocalName = componentInfo.localName;
-        }
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
 
-    // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
-
     // Get the final import name (considering aliases)
-    const checkboxImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
+    const checkboxImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
 
     // 2. Transform Checkbox JSX elements to Checkbox.Root (or alias.Root)
     root.find(j.JSXElement).forEach((path) => {
@@ -44,8 +33,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Check if this is the old Checkbox (either 'Checkbox' or its alias from vapor-core)
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            (element.openingElement.name.name === 'Checkbox' ||
-                (oldCheckboxLocalName && element.openingElement.name.name === oldCheckboxLocalName))
+            element.openingElement.name.name === 'Checkbox'
         ) {
             // Change to checkboxImportName.Root
             transformToMemberExpression(j, element, checkboxImportName, 'Root');
@@ -63,9 +51,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            (element.openingElement.name.object.name === 'Checkbox' ||
-                (oldCheckboxLocalName &&
-                    element.openingElement.name.object.name === oldCheckboxLocalName)) &&
+            element.openingElement.name.object.name === 'Checkbox' &&
             element.openingElement.name.property.type === 'JSXIdentifier' &&
             element.openingElement.name.property.name === 'Label'
         ) {
@@ -113,9 +99,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            (element.openingElement.name.object.name === 'Checkbox' ||
-                (oldCheckboxLocalName &&
-                    element.openingElement.name.object.name === oldCheckboxLocalName))
+            element.openingElement.name.object.name === 'Checkbox'
         ) {
             // Replace with the new import name (checkboxImportName)
             element.openingElement.name.object.name = checkboxImportName;

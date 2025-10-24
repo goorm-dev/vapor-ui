@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { Button } from '@vapor-ui/core';
+import { Button, Badge } from '@vapor-ui/core';
+
 import { Avatar } from '@goorm-dev/vapor-core';
-import { Badge } from '@vapor-ui/core';
 
 function Component() {
     return (

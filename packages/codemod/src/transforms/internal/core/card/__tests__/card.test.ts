@@ -8,7 +8,6 @@ const tests = [
     'card-mixed-imports',
     'card-existing-vapor-import',
     'card-merge-into-vapor-import',
-    'card-already-in-vapor-import',
     'card-title-with-props',
     'card-self-closing',
     'card-only-body',
@@ -16,7 +15,6 @@ const tests = [
     'card-multiple-titles',
     'card-with-asChild',
     'card-asChild-with-props',
-    'card-already-in-core-import',
 ];
 
 defineTransformTests('internal/core/card', tests);

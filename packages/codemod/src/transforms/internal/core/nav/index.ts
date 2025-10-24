@@ -1,10 +1,6 @@
 import type { API, FileInfo, JSXElement, Transform } from 'jscodeshift';
 
-import {
-    getFinalImportName,
-    mergeImports,
-    migrateImportDeclaration,
-} from '~/utils/import-migration';
+import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 import {
     transformAsChildToRender,
     transformToMemberExpression,
@@ -21,24 +17,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     // Track the old Nav local name from @goorm-dev/vapor-core
-    const oldNavLocalName: string | null = null;
-
-    // 1. Import migration: Nav (default) -> { NavigationMenu } (named)
-    root.find(j.ImportDeclaration).forEach((path) => {
-        migrateImportDeclaration({
-            root,
-            j,
-            path,
-            oldComponentName: OLD_COMPONENT_NAME,
-            newComponentName: NEW_COMPONENT_NAME,
-            sourcePackage: SOURCE_PACKAGE,
-            targetPackage: TARGET_PACKAGE,
-        });
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
-
-    // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
-
     // Get the final import name (considering aliases)
     const navigationMenuImportName = getFinalImportName(
         root,
@@ -54,8 +40,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Nav> or <OldNavAlias> to <NavigationMenu.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            (element.openingElement.name.name === OLD_COMPONENT_NAME ||
-                (oldNavLocalName && element.openingElement.name.name === oldNavLocalName))
+            element.openingElement.name.name === OLD_COMPONENT_NAME
         ) {
             const attributes = element.openingElement.attributes || [];
 
@@ -127,8 +112,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            (element.openingElement.name.object.name === OLD_COMPONENT_NAME ||
-                (oldNavLocalName && element.openingElement.name.object.name === oldNavLocalName))
+            element.openingElement.name.object.name === OLD_COMPONENT_NAME
         ) {
             // Get the property name
             const propertyName =

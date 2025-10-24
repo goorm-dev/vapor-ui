@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Dialog, Button } from '@vapor-ui/core';
+import { Button, Dialog } from '@vapor-ui/core';
 
 export const Component = () => (
     <Dialog.Root>

@@ -1,4 +1,4 @@
-import { Menu, Button } from '@vapor-ui/core';
+import { Button, Menu } from '@vapor-ui/core';
 
 export default function App() {
     return (

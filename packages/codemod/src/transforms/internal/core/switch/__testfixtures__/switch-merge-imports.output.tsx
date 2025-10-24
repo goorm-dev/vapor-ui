@@ -1,4 +1,4 @@
-import { Switch, Button } from '@vapor-ui/core';
+import { Button, Switch } from '@vapor-ui/core';
 
 export function MergeImportsExample() {
     return (

@@ -10,7 +10,7 @@ import type {
     Transform,
 } from 'jscodeshift';
 
-import { mergeImports, migrateImportDeclaration } from '~/utils/import-migration';
+import { mergeImports, transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
@@ -39,22 +39,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             hasLabels = true;
         }
     });
-
-    // 1. Import migration: RadioGroup (named/default) → { RadioGroup } (named)
-    root.find(j.ImportDeclaration).forEach((path) => {
-        migrateImportDeclaration({
-            root,
-            j,
-            path,
-            sourcePackage: SOURCE_PACKAGE,
-            targetPackage: TARGET_PACKAGE,
-            oldComponentName: OLD_COMPONENT_NAME,
-            newComponentName: NEW_COMPONENT_NAME,
-        });
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
-
-    // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
 
     // 2. Add Radio and Field imports
     const targetImports = root.find(j.ImportDeclaration, { source: { value: TARGET_PACKAGE } });

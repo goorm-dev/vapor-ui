@@ -1,4 +1,4 @@
-import { Card, Text } from '@vapor-ui/core';
+import { Text, Card } from '@vapor-ui/core';
 
 export const Component = () => (
     <Card.Root>

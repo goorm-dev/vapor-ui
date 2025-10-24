@@ -1,4 +1,4 @@
-import { Collapsible, Button } from '@vapor-ui/core';
+import { Button, Collapsible } from '@vapor-ui/core';
 
 export const Component = () => (
     <Collapsible.Root>

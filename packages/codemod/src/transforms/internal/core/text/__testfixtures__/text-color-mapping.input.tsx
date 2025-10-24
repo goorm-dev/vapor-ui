@@ -17,5 +17,7 @@ export const Component = () => (
         <Text color="text-hint-alternative">Hint Alternative</Text>
         <Text color="text-contrast">Contrast Text</Text>
         <Text color="text-contrast-alternative">Contrast Alternative</Text>
+        <Text color="text-alternative">Alternative Text</Text>
+        <Text color="text-normal">Normal Text</Text>
     </>
 );

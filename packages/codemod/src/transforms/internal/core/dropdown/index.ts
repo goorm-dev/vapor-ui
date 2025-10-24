@@ -1,6 +1,10 @@
 import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
 
-import { getFinalImportName, mergeImports, migrateAndRenameImport } from '~/utils/import-migration';
+import {
+    getFinalImportName,
+    mergeImports,
+    transformImportDeclaration,
+} from '~/utils/import-transform';
 import {
     transformAsChildToRender,
     transformForceMountToKeepMounted,
@@ -18,23 +22,15 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     // Track the old Dropdown local name from @goorm-dev/vapor-core
-    let oldDropdownLocalName: string | null = null;
 
     // 1. Import migration: Dropdown (named) -> { Menu } (named with rename)
-    root.find(j.ImportDeclaration).forEach((path) => {
-        const componentInfo = migrateAndRenameImport(
-            root,
-            j,
-            path,
-            OLD_COMPONENT_NAME, // 'Dropdown'
-            NEW_COMPONENT_NAME, // 'Menu'
-            SOURCE_PACKAGE,
-            TARGET_PACKAGE
-        );
-
-        if (componentInfo) {
-            oldDropdownLocalName = componentInfo.localName;
-        }
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
 
     // Merge multiple @vapor-ui/core imports
@@ -61,8 +57,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Dropdown> or <OldDropdownAlias> to <Menu.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            (element.openingElement.name.name === OLD_COMPONENT_NAME ||
-                (oldDropdownLocalName && element.openingElement.name.name === oldDropdownLocalName))
+            element.openingElement.name.name === OLD_COMPONENT_NAME
         ) {
             // Store side and align props to move to Content later
             const attributes = element.openingElement.attributes || [];
@@ -116,9 +111,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            (element.openingElement.name.object.name === OLD_COMPONENT_NAME ||
-                (oldDropdownLocalName &&
-                    element.openingElement.name.object.name === oldDropdownLocalName))
+            element.openingElement.name.object.name === OLD_COMPONENT_NAME
         ) {
             // Get the property name
             const propertyName =

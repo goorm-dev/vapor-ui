@@ -1,6 +1,6 @@
 import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
 
-import { getFinalImportName, mergeImports, migrateImportSpecifier } from '~/utils/import-migration';
+import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 import {
     transformAsChildToRender,
     transformForceMountToKeepMounted,
@@ -11,6 +11,8 @@ import {
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
 const COMPONENT_NAME = 'Popover';
+const NEW_COMPONENT_NAME = 'Popover';
+const OLD_COMPONENT_NAME = 'Popover';
 
 const spacePaddingMap: Record<string, number> = {
     'space-000': 0,
@@ -36,26 +38,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     // Track the old Popover local name from @goorm-dev/vapor-core
-    let oldPopoverLocalName: string | null = null;
-
-    // 1. Import migration: Popover (named) -> { Popover } (named)
-    root.find(j.ImportDeclaration).forEach((path) => {
-        const componentInfo = migrateImportSpecifier(
-            root,
-            j,
-            path,
-            COMPONENT_NAME,
-            SOURCE_PACKAGE,
-            TARGET_PACKAGE
-        );
-
-        if (componentInfo) {
-            oldPopoverLocalName = componentInfo.localName;
-        }
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: OLD_COMPONENT_NAME,
+        newComponentName: NEW_COMPONENT_NAME,
+        sourcePackage: SOURCE_PACKAGE,
+        targetPackage: TARGET_PACKAGE,
     });
-
-    // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
 
     // Get the final import name (considering aliases)
     const popoverImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
@@ -79,8 +69,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Popover> or <OldPopoverAlias> to <Popover.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            (element.openingElement.name.name === COMPONENT_NAME ||
-                (oldPopoverLocalName && element.openingElement.name.name === oldPopoverLocalName))
+            element.openingElement.name.name === COMPONENT_NAME
         ) {
             // Store side, align, and disabled props to move later
             const attributes = element.openingElement.attributes || [];
@@ -152,9 +141,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            (element.openingElement.name.object.name === COMPONENT_NAME ||
-                (oldPopoverLocalName &&
-                    element.openingElement.name.object.name === oldPopoverLocalName))
+            element.openingElement.name.object.name === COMPONENT_NAME
         ) {
             // Get the property name
             const propertyName =

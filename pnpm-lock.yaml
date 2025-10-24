@@ -373,11 +373,11 @@ importers:
         specifier: ^20.0.0
         version: 20.19.17
       '@vapor-ui/core':
-        specifier: 1.0.0-beta.0
-        version: 1.0.0-beta.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        specifier: workspace:*
+        version: link:../core
       '@vapor-ui/icons':
-        specifier: 1.0.0-beta.0
-        version: 1.0.0-beta.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        specifier: workspace:*
+        version: link:../icons
       eslint:
         specifier: ^9.37.0
         version: 9.37.0(jiti@2.6.0)
@@ -3871,12 +3871,6 @@ packages:
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0
 
-  '@vapor-ui/core@1.0.0-beta.0':
-    resolution: {integrity: sha512-/ZQBaVKM2xxn8ye0Is192x/9yliu2TYELTtTc1yA03DnBGpOar99th0Rxb16ha+LrLc4OWT41sQznuLlmgxFww==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@vapor-ui/core@file:apps/website/vapor-ui-core-radio-card.tgz':
     resolution: {integrity: sha512-a6MaUYx35IqtbbrSj+ghj9mRrhSez13JYU/5AVjlWm8yEd+h9VvjDohYyBf8PcX1mLFNxmj5jYlJxK7+OUT8oQ==, tarball: file:apps/website/vapor-ui-core-radio-card.tgz}
     version: 0.6.0
@@ -3889,19 +3883,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@vapor-ui/hooks@1.0.0-beta.0':
-    resolution: {integrity: sha512-Uga4+O5eJyFUt5B876lC1X/kn8FtRKmDA5Pb+w2qOfBa3JYusdtPTdHnbeEntq8qYBqee0EKoUmKOfe7JgFcEQ==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@vapor-ui/icons@0.4.0':
     resolution: {integrity: sha512-10qWMkEoAXKYeaV5CpyzVOdADTyb4nLn0k8XZQjC6d+jUM2efh/72sIREPejvfeZu8mUZSWRIMLM40q2vaqXiQ==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@vapor-ui/icons@1.0.0-beta.0':
-    resolution: {integrity: sha512-Kn01Ak7TB3L7ib4Ef179qZu6qyWPGLi+8Iq3ggpfFxJQcLSO1HEINB4Bqi2nGeM3udFa/tVIldZ9ehTMr3zCPg==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -8784,20 +8767,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.24
 
-  '@base-ui-components/react@1.0.0-beta.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      '@babel/runtime': 7.28.4
-      '@base-ui-components/utils': 0.1.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@floating-ui/react-dom': 2.1.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@floating-ui/utils': 0.2.10
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
-      reselect: 5.1.1
-      tabbable: 6.2.0
-      use-sync-external-store: 1.5.0(react@19.2.0)
-    optionalDependencies:
-      '@types/react': 19.2.2
-
   '@base-ui-components/utils@0.1.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.28.4
@@ -8809,17 +8778,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.24
 
-  '@base-ui-components/utils@0.1.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      '@babel/runtime': 7.28.4
-      '@floating-ui/utils': 0.2.10
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
-      reselect: 5.1.1
-      use-sync-external-store: 1.5.0(react@19.2.0)
-    optionalDependencies:
-      '@types/react': 19.2.2
-
   '@base-ui-components/utils@0.1.1(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.28.4
@@ -8830,17 +8788,6 @@ snapshots:
       use-sync-external-store: 1.5.0(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.24
-
-  '@base-ui-components/utils@0.1.1(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      '@babel/runtime': 7.28.4
-      '@floating-ui/utils': 0.2.10
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
-      reselect: 5.1.1
-      use-sync-external-store: 1.5.0(react@19.2.0)
-    optionalDependencies:
-      '@types/react': 19.2.2
 
   '@bcoe/v8-coverage@0.2.3': {}
 
@@ -9172,12 +9119,6 @@ snapshots:
       '@floating-ui/dom': 1.7.4
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-
-  '@floating-ui/react-dom@2.1.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      '@floating-ui/dom': 1.7.4
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
 
   '@floating-ui/utils@0.2.10': {}
 
@@ -11513,25 +11454,6 @@ snapshots:
       - tsx
       - yaml
 
-  '@vapor-ui/core@1.0.0-beta.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      '@base-ui-components/react': 1.0.0-beta.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@base-ui-components/utils': 0.1.1(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@vanilla-extract/css': 1.17.4
-      '@vanilla-extract/css-utils': 0.1.6
-      '@vanilla-extract/dynamic': 2.1.5
-      '@vanilla-extract/recipes': 0.5.7(@vanilla-extract/css@1.17.4)
-      '@vanilla-extract/sprinkles': 1.6.5(@vanilla-extract/css@1.17.4)
-      '@vapor-ui/hooks': 1.0.0-beta.0(react@19.2.0)
-      '@vapor-ui/icons': 1.0.0-beta.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      clsx: 2.1.1
-      rainbow-sprinkles: 1.0.0(@vanilla-extract/css@1.17.4)(@vanilla-extract/dynamic@2.1.5)
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
-    transitivePeerDependencies:
-      - '@types/react'
-      - babel-plugin-macros
-
   '@vapor-ui/core@file:apps/website/vapor-ui-core-radio-card.tgz(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@base-ui-components/react': 1.0.0-beta.2(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -11555,21 +11477,11 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  '@vapor-ui/hooks@1.0.0-beta.0(react@19.2.0)':
-    dependencies:
-      react: 19.2.0
-
   '@vapor-ui/icons@0.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       clsx: 2.1.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-
-  '@vapor-ui/icons@1.0.0-beta.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      clsx: 2.1.1
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
 
   '@vitejs/plugin-react@5.0.3(vite@6.3.6(@types/node@22.18.6)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))':
     dependencies:
@@ -16411,10 +16323,6 @@ snapshots:
   use-sync-external-store@1.5.0(react@18.3.1):
     dependencies:
       react: 18.3.1
-
-  use-sync-external-store@1.5.0(react@19.2.0):
-    dependencies:
-      react: 19.2.0
 
   util-deprecate@1.0.2: {}
 
