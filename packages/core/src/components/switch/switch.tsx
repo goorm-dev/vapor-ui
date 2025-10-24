@@ -31,6 +31,7 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>(
         const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, ['size']);
 
         const { size } = variantProps;
+        const { required } = otherProps;
 
         const ThumbElement = useMemo(() => createSlot(<SwitchThumb />), []);
         const children = childrenProp || <ThumbElement />;
@@ -39,6 +40,7 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>(
             <SwitchProvider value={variantProps}>
                 <BaseSwitch.Root
                     ref={ref}
+                    aria-required={required || undefined}
                     className={clsx(styles.control({ size }), className)}
                     {...otherProps}
                 >

@@ -18,6 +18,7 @@ export default {
         invalid: { control: 'boolean' },
         disabled: { control: 'boolean' },
         readOnly: { control: 'boolean' },
+        required: { control: 'boolean' },
         side: {
             control: { type: 'inline-radio' },
             options: ['top', 'right', 'bottom', 'left'],
