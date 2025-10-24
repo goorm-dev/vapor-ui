@@ -1,8 +1,7 @@
 import { DEFAULT_PREFIX } from '~/constants';
+import type { RadiusKey } from '~/types';
 
 import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
-
-export type RadiusKey = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 const RADIUS_MAP: Record<RadiusKey, number> = {
     none: 0,
@@ -32,7 +31,7 @@ export const generateRadiusCSS = (radius: RadiusKey, options: RadiusCSSOptions =
     const radiusVariable = createCSSVariable(`${prefix}-radius-factor`, String(radiusValue));
 
     const rule: CSSRule = {
-        selector: ':root',
+        selector: ':root, [data-vapor-theme="light"]',
         properties: [radiusVariable],
     };
 
