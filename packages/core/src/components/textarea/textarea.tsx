@@ -30,7 +30,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>(
         ]);
 
         const { invalid, autoResize } = variantProps;
-        const { disabled, readOnly, maxLength } = otherProps;
+        const { disabled, readOnly, required, maxLength } = otherProps;
 
         const [value, setValue] = useControlled({
             controlled: valueProp,
@@ -62,6 +62,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>(
         return useRender({
             ref: composedRef,
             render: render || <BaseField.Control render={<textarea />} />,
+            state: { disabled, readOnly, required, invalid },
             props: {
                 ...(isControlled ? { value } : { defaultValue }),
                 'aria-invalid': invalid,

@@ -27,10 +27,7 @@ export const root = recipe({
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             selectors: {
-                '&:is(:disabled, [data-disabled="true"])': {
-                    opacity: 0.32,
-                    pointerEvents: 'none',
-                },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
             },
         }),
     ],
