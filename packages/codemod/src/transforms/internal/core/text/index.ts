@@ -1,5 +1,5 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
-import { migrateImportSpecifier } from '~/utils/import-transform';
+import { transformImportDeclaration } from '~/utils/import-transform';
 
 const colorMapping: Record<string, string> = {
     'text-primary': 'primary-100',
@@ -24,8 +24,13 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    root.find(j.ImportDeclaration).forEach((path) => {
-        migrateImportSpecifier(root, j, path, 'Text', '@goorm-dev/vapor-core', '@vapor-ui/core');
+    transformImportDeclaration({
+        root,
+        j,
+        oldComponentName: 'Text',
+        newComponentName: 'Text',
+        sourcePackage: '@goorm-dev/vapor-core',
+        targetPackage: '@vapor-ui/core',
     });
 
     root.find(j.JSXElement).forEach((path) => {

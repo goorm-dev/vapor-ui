@@ -342,7 +342,6 @@ Codemod automatically handles the following changes:
     - Changes the `Dropdown` default import to a named import: `{ Menu }`
     - Automatically merges with existing `@vapor-ui/core` imports if present
     - Removes duplicate imports
-    - Uses the `migrateAndRenameImport` utility for safe import transformation
 2. **Component Name**: `Dropdown` → `Menu.Root`
     - Automatically changes both opening and closing tags
     - Self-closing tags also handled automatically

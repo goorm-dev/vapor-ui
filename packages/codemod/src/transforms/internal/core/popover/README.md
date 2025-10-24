@@ -275,7 +275,7 @@ Codemod automatically handles the following changes:
     - Migrates the `Popover` named import
     - Automatically merges with existing `@vapor-ui/core` imports if present
     - Removes duplicate imports
-    - Uses the `migrateImportSpecifier` utility for safe import transformation
+    - Uses the `transformImportDeclaration` utility for safe import transformation
 2. **Component Name**: `Popover` → `Popover.Root`
     - Automatically changes both opening and closing tags
     - Self-closing tags also handled automatically

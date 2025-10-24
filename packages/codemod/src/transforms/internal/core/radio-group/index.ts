@@ -10,7 +10,7 @@ import type {
     Transform,
 } from 'jscodeshift';
 
-import { mergeImports, transformImportDeclaration } from '~/utils/import-transform';
+import { transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
@@ -78,7 +78,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     }
 
     // Merge imports again after adding Radio and Field
-    mergeImports(root, j, TARGET_PACKAGE);
 
     // Use component names directly
     const radioGroupImportName = NEW_COMPONENT_NAME;

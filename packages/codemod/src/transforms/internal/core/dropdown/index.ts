@@ -1,10 +1,6 @@
 import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
 
-import {
-    getFinalImportName,
-    mergeImports,
-    transformImportDeclaration,
-} from '~/utils/import-transform';
+import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 import {
     transformAsChildToRender,
     transformForceMountToKeepMounted,
@@ -34,7 +30,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     });
 
     // Merge multiple @vapor-ui/core imports
-    mergeImports(root, j, TARGET_PACKAGE);
 
     // Get the final import name (considering aliases)
     const menuImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);

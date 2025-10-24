@@ -1,5 +1,5 @@
 import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
-import { mergeImports, transformImportDeclaration } from '~/utils/import-transform';
+import { transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender } from '~/utils/jsx-transform';
 
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -30,8 +30,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             transformIconButton(j, element);
         }
     });
-
-    mergeImports(root, j, TARGET_PACKAGE);
 
     return root.toSource({});
 };
