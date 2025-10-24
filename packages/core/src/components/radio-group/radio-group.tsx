@@ -66,10 +66,10 @@ RadioGroupRoot.displayName = 'RadioGroup.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>(
-    ({ render, className, ...props }, ref) => {
+    ({ render, id: idProp, className, ...props }, ref) => {
         const { setLabelElementId } = useRadioGroupContext();
 
-        const id = useVaporId();
+        const id = useVaporId(idProp);
 
         useIsoLayoutEffect(() => {
             setLabelElementId?.(id);

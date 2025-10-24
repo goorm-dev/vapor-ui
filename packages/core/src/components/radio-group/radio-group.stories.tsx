@@ -26,8 +26,8 @@ type Story = StoryObj<typeof RadioGroup>;
 
 export const Default: Story = {
     render: (args) => (
-        <RadioGroup.Root {...args} name="asedf" defaultValue={'3'}>
-            <RadioGroup.Label>Options</RadioGroup.Label>
+        <RadioGroup.Root {...args} name="radio-group" defaultValue={'3'}>
+            <RadioGroup.Label id="radio-group-label">Options</RadioGroup.Label>
             <Radio.Root value="1" />
             <Radio.Root value="2" />
             <Radio.Root value="3" />
