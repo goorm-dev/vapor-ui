@@ -1,0 +1,24 @@
+{
+    "name": "figma-codegen-plugin",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "node build.mjs --watch",
+        "build": "rimraf dist && mkdir -p dist && node build.mjs && cp manifest.json dist/",
+        "lint": "eslint ./src",
+        "format": "prettier --write \"./**/*.{ts,md}\"",
+        "format:check": "prettier --check \"./**/*.{ts,md}\"",
+        "clean": "rimraf dist node_modules .turbo",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@figma/plugin-typings": "^1.117.0",
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "esbuild": "^0.25.11",
+        "eslint": "^9.33.0",
+        "typescript": "^5.9.2"
+    }
+}

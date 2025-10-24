@@ -1,0 +1,15 @@
+{
+    "name": "Vapor UI Codegen Plugin",
+    "id": "1542812611331843954",
+    "api": "1.0.0",
+    "main": "code.js",
+    "editorType": ["dev"],
+    "capabilities": ["codegen"],
+    "codegenLanguages": [
+        {"label": "React", "value": "react"}
+    ],
+    "documentAccess": "dynamic-page",
+    "networkAccess": {
+        "allowedDomains": ["none"]
+    }
+}
