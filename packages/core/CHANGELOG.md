@@ -1,5 +1,31 @@
 # @vapor-ui/core
 
+## 0.7.0
+
+### Minor Changes
+
+- 27c0ba9: export component with namespace
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+- 6c02d6f: unreflected content revisions
+- b581b9f: add `Form` component
+- 7928a67: add subcomponent props to `Content`
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+
+### Patch Changes
+
+- 3819233: Fix checkbox borderRadius sync error
+- 707f705: feat: update color tokens
+- f0f643b: feat: Remove Font Loading from CSS Build
+- 43cfefb: feat: add font banner
+- 25c235e: adjust indicator size to account for border
+- 716c1d6: restore reset css
+- d68304a: fix(text-input): add component layer
+- Updated dependencies [8217749]
+- Updated dependencies [402284e]
+- Updated dependencies [fd4acaa]
+- Updated dependencies [f2950ee]
+    - @vapor-ui/icons@0.5.0
+
 ## 0.6.0
 
 ### Minor Changes
