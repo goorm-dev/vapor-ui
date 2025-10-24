@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -38,19 +38,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
     render: (args) => {
-        const [value, setValue] = useState('');
-        const ref = useRef<HTMLTextAreaElement | null>(null);
-
         return (
             <div style={{ width: '100%', padding: '50px' }}>
-                <Textarea
-                    ref={ref}
-                    cols={5}
-                    value={value}
-                    onValueChange={setValue}
-                    placeholder="Enter your text here..."
-                    {...args}
-                />
+                <Textarea placeholder="Enter your text here..." {...args} />
             </div>
         );
     },
