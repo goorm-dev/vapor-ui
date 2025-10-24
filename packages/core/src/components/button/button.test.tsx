@@ -3,12 +3,11 @@ import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 import { axe } from 'vitest-axe';
 
-import type { ButtonProps } from './button';
 import { Button } from './button';
 
 const BUTTON_LABEL = 'Click Me';
 
-const ButtonTest = (props: ButtonProps) => {
+const ButtonTest = (props: Button.Props) => {
     return <Button {...props}>{BUTTON_LABEL}</Button>;
 };
 

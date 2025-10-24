@@ -14,7 +14,7 @@ import type { RootVariants } from './checkbox.css';
 import * as styles from './checkbox.css';
 
 type CheckboxVariants = RootVariants;
-type CheckboxSharedProps = CheckboxVariants & Pick<RootPrimitiveProps, 'indeterminate'>;
+type CheckboxSharedProps = CheckboxVariants & Pick<BaseCheckbox.Root.Props, 'indeterminate'>;
 
 const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps>({
     name: 'Checkbox',
@@ -26,10 +26,7 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
-interface CheckboxRootProps extends RootPrimitiveProps, CheckboxSharedProps {}
-
-const Root = forwardRef<HTMLButtonElement, CheckboxRootProps>(
+export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>(
     ({ render, className, children, ...props }, ref) => {
         const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(props, [
             'size',
@@ -39,7 +36,7 @@ const Root = forwardRef<HTMLButtonElement, CheckboxRootProps>(
 
         const { size, invalid, indeterminate } = variantProps;
 
-        const IndicatorElement = createSlot(children || <Indicator />);
+        const IndicatorElement = createSlot(children || <CheckboxIndicator />);
 
         return (
             <CheckboxProvider value={{ size, indeterminate }}>
@@ -56,16 +53,13 @@ const Root = forwardRef<HTMLButtonElement, CheckboxRootProps>(
         );
     },
 );
-Root.displayName = 'Checkbox.Root';
+CheckboxRoot.displayName = 'Checkbox.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Checkbox.Indicator
  * -----------------------------------------------------------------------------------------------*/
 
-type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
-interface CheckboxIndicatorProps extends IndicatorPrimitiveProps {}
-
-const Indicator = forwardRef<HTMLDivElement, CheckboxIndicatorProps>(
+export const CheckboxIndicator = forwardRef<HTMLDivElement, CheckboxIndicator.Props>(
     ({ className, ...props }, ref) => {
         const { size, indeterminate } = useCheckboxContext();
 
@@ -80,7 +74,7 @@ const Indicator = forwardRef<HTMLDivElement, CheckboxIndicatorProps>(
         );
     },
 );
-Indicator.displayName = 'Checkbox.Indicator';
+CheckboxIndicator.displayName = 'Checkbox.Indicator';
 
 /* -------------------------------------------------------------------------------------------------
  * Icons
@@ -111,7 +105,14 @@ const DashIcon = (props: IconProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as CheckboxRoot, Indicator as CheckboxIndicator };
-export type { CheckboxRootProps, CheckboxIndicatorProps };
+export namespace CheckboxRoot {
+    type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
 
-export const Checkbox = { Root, Indicator };
+    export interface Props extends RootPrimitiveProps, CheckboxSharedProps {}
+}
+
+export namespace CheckboxIndicator {
+    type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
+
+    export interface Props extends IndicatorPrimitiveProps {}
+}

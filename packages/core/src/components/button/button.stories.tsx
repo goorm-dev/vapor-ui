@@ -1,9 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { upperFirst } from '~/utils/string';
 
 import { HStack } from '../h-stack';
-import type { ButtonProps } from './button';
 import { Button } from './button';
 
 export default {
@@ -62,7 +61,7 @@ export const TestBed: Story = {
     ),
 };
 
-const Buttons = ({ color, disabled }: ButtonProps) => {
+const Buttons = ({ color, disabled }: Button.Props) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Button color={color} disabled={disabled} variant="fill">
