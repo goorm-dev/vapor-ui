@@ -18,11 +18,13 @@ export const Button = forwardRef<HTMLButtonElement, Button.Props>(
             'stretch',
         ]);
 
+        const { disabled } = otherProps;
+
         return useRender({
             ref,
+            state: { disabled },
             render: render || <button />,
             props: {
-                'data-disabled': otherProps.disabled,
                 className: clsx(styles.root(variantsProps), className),
                 ...otherProps,
             },

@@ -81,27 +81,42 @@ const languages = {
 };
 
 export const ObjectItems: StoryObj<typeof Select.Root> = {
-    render: (args) => (
-        <Select.Root placeholder="Select Font" items={languages} {...args}>
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
+    render: (args) => {
+        return (
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
 
-            <Select.Content>
-                <Select.Group>
-                    <Select.GroupLabel>Font</Select.GroupLabel>
-                    {Object.entries(languages).map(([value, label]) => (
-                        <Select.Item key={value} value={value}>
-                            {label}
+                    const formData = new FormData(e.currentTarget);
+                    const stringifiedFormData = new URLSearchParams(formData as never).toString();
 
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                    ))}
-                </Select.Group>
-            </Select.Content>
-        </Select.Root>
-    ),
+                    console.log(stringifiedFormData);
+                }}
+            >
+                <Select.Root placeholder="Select Font" items={languages} {...args}>
+                    <Select.Trigger>
+                        <Select.Value />
+                        <Select.TriggerIcon />
+                    </Select.Trigger>
+
+                    <Select.Content>
+                        <Select.Group>
+                            <Select.GroupLabel>Font</Select.GroupLabel>
+                            {Object.entries(languages).map(([value, label]) => (
+                                <Select.Item key={value} value={value}>
+                                    {label}
+
+                                    <Select.ItemIndicator />
+                                </Select.Item>
+                            ))}
+                        </Select.Group>
+                    </Select.Content>
+                </Select.Root>
+
+                <button>submit</button>
+            </form>
+        );
+    },
 };
 
 const fonts = [
