@@ -8,11 +8,7 @@ import type {
     Transform,
 } from 'jscodeshift';
 
-import {
-    getFinalImportName,
-    mergeImports,
-    transformImportDeclaration,
-} from '~/utils/import-transform';
+import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -180,9 +176,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 firstImport.specifiers?.push(j.importSpecifier(j.identifier('Field')));
             }
         }
-
-        // Merge imports again after adding Field
-        mergeImports(root, j, TARGET_PACKAGE);
     }
 
     return root.toSource();
