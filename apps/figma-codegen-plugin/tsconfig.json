@@ -6,12 +6,8 @@
         "module": "CommonJS",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "strict": true,
         "noEmit": true,
         "resolveJsonModule": true,
-        "isolatedModules": true,
         "typeRoots": ["./node_modules/@types", "./node_modules/@figma"]
     },
     "include": ["src/**/*"],

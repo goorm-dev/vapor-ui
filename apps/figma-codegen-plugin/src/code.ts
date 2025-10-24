@@ -20,7 +20,7 @@ if (figma.editorType === 'dev' && figma.mode === 'codegen') {
     });
 }
 
-function generateCodeForNode(node: SceneNode, language?: string): CodegenResult[] {
+function generateCodeForNode(node: SceneNode, _language?: string): CodegenResult[] {
     const results: CodegenResult[] = [];
 
     results.push({
