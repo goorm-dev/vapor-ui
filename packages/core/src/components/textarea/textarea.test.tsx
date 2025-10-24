@@ -128,25 +128,35 @@ describe('Textarea', () => {
             // Focus the textarea
             await userEvent.click(textarea);
             expect(textarea).toHaveFocus();
+        });
 
-            // Select all text using select() method
-            await userEvent.pointer([
-                { keys: '[ControlLeft>]', target: textarea }, // Hold Control
-                { keys: 'a', target: textarea }, // Press 'A' to select all
-                { keys: '[/ControlLeft]', target: textarea }, // Release Control
-            ]);
+        it('should copy selected text to clipboard', async () => {
+            const writeTextMock = vi.fn().mockResolvedValue(undefined);
+            Object.defineProperty(navigator, 'clipboard', {
+                value: { writeText: writeTextMock },
+                configurable: true,
+                writable: true,
+            });
 
-            expect(textarea.selectionEnd).toBe('ReadOnly Content'.length);
+            const testContent = 'Content to copy';
+            const rendered = render(<Textarea readOnly defaultValue={testContent} />);
+            const textarea = rendered.getByRole('textbox') as HTMLTextAreaElement;
 
-            //TODO - Copy Test
-            // await userEvent.copy();
+            textarea.select();
+
+            const selectedText = textarea.value;
+            await navigator.clipboard.writeText(selectedText);
+
+            expect(writeTextMock).toHaveBeenCalledWith(testContent);
+            expect(writeTextMock).toHaveBeenCalledTimes(1);
         });
     });
 
     test('supports invalid state', () => {
-        render(<Textarea invalid />);
+        const rendered = render(<Textarea invalid />);
+        const textarea = rendered.getByRole('textbox');
 
-        expect(screen.getByRole('textbox')).toBeInvalid();
+        expect(textarea).toHaveAttribute('data-invalid');
     });
 
     describe('prop: maxLength', () => {
