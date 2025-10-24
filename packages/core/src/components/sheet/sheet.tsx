@@ -135,19 +135,13 @@ export const SheetPositioner = forwardRef<HTMLDivElement, SheetPositioner.Props>
 
         const { open: contextOpen = false, mounted } = useSheetRootContext();
 
-        const dataAttr = createDataAttributes({
-            open: contextOpen,
-            closed: !contextOpen,
-            side: side,
-        });
-
         const element = useRender({
             ref,
             render: render || <div />,
+            state: { open: contextOpen, closed: !contextOpen, side },
             props: {
                 role: 'presentation',
                 hidden: !mounted,
-                ...dataAttr,
                 ...otherProps,
             },
         });
