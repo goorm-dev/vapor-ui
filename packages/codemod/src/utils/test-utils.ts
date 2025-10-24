@@ -18,12 +18,16 @@ function testTransform(transformName: string, testCaseName: string) {
     const outputPath = path.join(transformDir, '__testfixtures__', `${testCaseName}.output.tsx`);
 
     const fixture = fs.readFileSync(inputPath, 'utf8');
-    const expected = fs.readFileSync(outputPath, 'utf8');
 
     const result = applyTransform(transform, {}, { source: fixture }, { parser: 'tsx' });
     const formattedResult = prettier.format(result, prettierOptions);
+    const expected = fs.readFileSync(outputPath, 'utf8');
 
-    expect(formattedResult).toEqual(expected);
+    const cleanRegex = /\/\/\s*@ts-nocheck\s*\r?\n?/;
+    const cleanResult = formattedResult.replace(cleanRegex, '');
+    const cleanExpected = expected.replace(cleanRegex, '');
+
+    expect(cleanResult).toEqual(cleanExpected);
 }
 
 function defineTransformTests(transformName: string, testCases: string[]) {

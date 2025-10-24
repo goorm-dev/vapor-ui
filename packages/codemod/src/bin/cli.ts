@@ -105,6 +105,22 @@ const TRANSFORMER_INQUIRER_CHOICES = [
         name: 'internal/icons: Migrate @goorm-dev/vapor-icons to @vapor-ui/icons',
         value: 'internal/icons/migrate-icons-import',
     },
+    {
+        name: 'internal/core/button: Migrate Button component to @vapor-ui/core',
+        value: 'internal/core/button',
+    },
+    {
+        name: 'internal/core/badge: Migrate Badge component to @vapor-ui/core',
+        value: 'internal/core/badge',
+    },
+    {
+        name: 'internal/core/collapsible: Migrate Collapsible component to @vapor-ui/core',
+        value: 'internal/core/collapsible',
+    },
+    {
+        name: 'internal/core/dialog: Migrate Dialog component to @vapor-ui/core',
+        value: 'internal/core/dialog',
+    },
 ];
 const run = async () => {
     const cli = meow(
