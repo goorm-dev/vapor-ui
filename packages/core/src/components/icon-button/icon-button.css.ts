@@ -4,13 +4,17 @@ import { recipe } from '@vanilla-extract/recipes';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = recipe({
-    base: layerStyle('components', {
-        aspectRatio: '1 / 1',
-        padding: 0,
-        verticalAlign: 'top',
-    }),
+import { root as buttonRecipe } from '../button/button.css';
 
+export const root = recipe({
+    base: [
+        buttonRecipe.classNames.base,
+        layerStyle('components', {
+            aspectRatio: '1 / 1',
+            padding: 0,
+            verticalAlign: 'top',
+        }),
+    ],
     defaultVariants: { shape: 'square' },
     variants: {
         shape: {
