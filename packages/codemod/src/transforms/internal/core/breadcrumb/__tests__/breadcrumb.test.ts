@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 
-import { runTestTransform } from '~/utils/test-utils';
+import { runTestTransform } from '~/utils/test';
 
 import transform from '../index';
 
