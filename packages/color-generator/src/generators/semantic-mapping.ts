@@ -82,6 +82,24 @@ const determineButtonForegroundColor = (backgroundToken: ColorToken | undefined)
     return { ...BASE_COLORS.white };
 };
 
+/**
+ * 시맨틱 토큰 매핑 객체를 생성합니다.
+ *
+ * @param params - 시맨틱 토큰 매핑 정보
+ * @param params.semanticRole - 시맨틱 역할 (예: 'primary')
+ * @param params.brandColorName - 브랜드 컬러 이름
+ * @param params.scaleInfo - 각 테마에서 사용할 스케일 정보
+ * @param params.buttonForegroundColor - 버튼 전경색 토큰
+ * @returns semantic과 componentSpecific 토큰 매핑 객체
+ *
+ * @example
+ * createSemanticTokenMapping({
+ *   semanticRole: 'primary',
+ *   brandColorName: 'blue',
+ *   scaleInfo: { background100Scale: '100', background200Scale: '200', borderScale: '300', foreground100Scale: '400', foreground200Scale: '500' },
+ *   buttonForegroundColor: { name: 'color-white', hex: '#ffffff', oklch: 'oklch(1 0 0)' }
+ * })
+ */
 const createSemanticTokenMapping = ({
     semanticRole,
     brandColorName,
@@ -111,20 +129,20 @@ const createSemanticTokenMapping = ({
  *
  * @param palette - 색상 팔레트
  * @param scales - 명도순으로 정렬된 스케일 배열
- * @returns 배경, 전경, 대체 스케일 정보
+ * @returns ScaleInfo 타입의 스케일 정보 객체
  *
  * @example
  * // palette에서 '400' 스케일의 deltaE가 0이라고 가정
  * const palette = {
  * '300': { deltaE: 15 },
- * '400': { deltaE: 0 },   // 이 스케일이 background
- * '500': { deltaE: 12 },  // 그 다음 스케일이 foreground
- * '600': { deltaE: 25 },  // 다다음 스케일이 alternative
+ * '400': { deltaE: 0 },   // 이 스케일이 background200Scale
+ * '500': { deltaE: 12 },  // 그 다음 스케일이 foreground100Scale
+ * '600': { deltaE: 25 },  // 다다음 스케일이 foreground200Scale
  * };
  * const scales = ['300', '400', '500', '600'];
  *
  * findLightThemeScales(palette, scales)
- * // returns: { backgroundScale: '400', foregroundScale: '500', alternativeScale: '600' }
+ * // returns: { background100Scale: '100', background200Scale: '400', borderScale: '400', foreground100Scale: '500', foreground200Scale: '600' }
  */
 const findLightThemeScales = (
     palette: Record<string, { deltaE?: number }>,
@@ -158,14 +176,16 @@ const findLightThemeScales = (
  *
  * @param palette - 색상 팔레트
  * @param scales - 명도순으로 정렬된 스케일 배열
- * @returns 배경, 전경, 대체 스케일 정보
+ * @returns ScaleInfo 타입의 스케일 정보 객체
  *
  * @example findDarkThemeScales(palette, ['600', '700', '800', '900'])
  *
  * returns: {
- *   backgroundScale: '800',
- *   foregroundScale: '900',
- *   alternativeScale: '900'
+ *   background100Scale: '050',
+ *   background200Scale: '800',
+ *   borderScale: '800',
+ *   foreground100Scale: '900',
+ *   foreground200Scale: '900'
  * }
  */
 const findDarkThemeScales = (
