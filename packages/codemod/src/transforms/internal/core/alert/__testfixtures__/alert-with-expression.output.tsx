@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Callout } from '@vapor-ui/core';
 
 const color = 'success';

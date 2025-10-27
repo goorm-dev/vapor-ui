@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import { RadioGroup, Radio } from '@vapor-ui/core';
+
+import { Radio, RadioGroup } from '@vapor-ui/core';
 
 export function Example() {
     return (

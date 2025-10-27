@@ -1,25 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'alert-basic',
-    'alert-self-closing',
-    'alert-with-props',
-    'alert-all-colors',
-    'alert-mixed-imports',
-    'alert-existing-vapor-import',
-    'alert-no-color',
-    'alert-with-expression',
-    'alert-duplicate-callout',
-    'alert-mixed-with-existing-callout',
-    'alert-mixed-with-existing-vapor',
-    'alert-with-icon',
-    'alert-with-svg',
-    'alert-icon-only-text',
-    'alert-with-custom-icon',
-    'alert-with-non-icon-component',
-    'alert-with-asChild',
-    'alert-asChild-with-props',
-    'alert-asChild-with-icon',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/alert', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

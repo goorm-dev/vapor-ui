@@ -1,4 +1,4 @@
-import { Dialog, Badge, Button } from '@goorm-dev/vapor-core';
+import { Badge, Button, Dialog } from '@goorm-dev/vapor-core';
 
 export const Component = () => (
     <div>

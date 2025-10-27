@@ -1,5 +1,4 @@
 import { Badge, Button } from '@goorm-dev/vapor-core';
-
 import { NavigationMenu } from '@vapor-ui/core';
 
 export default function App() {

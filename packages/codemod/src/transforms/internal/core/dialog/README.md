@@ -1,7 +1,7 @@
 # **Component:** `Dialog` ➡️ `Dialog.Root`
 
--   **Overview:** Modifies the Dialog component for migration to vapor-ui.
-    It transitions from a Radix UI-based structure to a Base UI-based structure, with changes to the root component name, certain props, and the subcomponent structure.
+- **Overview:** Modifies the Dialog component for migration to vapor-ui.
+  It transitions from a Radix UI-based structure to a Base UI-based structure, with changes to the root component name, certain props, and the subcomponent structure.
 
 ---
 
@@ -9,11 +9,11 @@
 
 The composition structure remains unchanged, but the root component name and some subcomponents have been modified.
 
--   **Before:** `<Dialog>` (Radix UI-based)
--   **After:** `<Dialog.Root>` (Base UI-based)
--   ⚠️**Caution:** `Dialog.Contents` / `Dialog.CombinedContent` → Changed to `Dialog.Content`
--   ⚠️**Caution:** `Dialog.Content` (Used standalone without Portal or Overlay) → Changed to `Dialog.Popup` (Beware of confusion with the new component's Dialog.Content)
--   The remaining subcomponents (`Trigger`, `Portal`, `Overlay`, `Header`, `Body`, `Footer`, `Title`, `Description`, `Close`) retain their original names.
+- **Before:** `<Dialog>` (Radix UI-based)
+- **After:** `<Dialog.Root>` (Base UI-based)
+- ⚠️**Caution:** `Dialog.Contents` / `Dialog.CombinedContent` → Changed to `Dialog.Content`
+- ⚠️**Caution:** `Dialog.Content` (Used standalone without Portal or Overlay) → Changed to `Dialog.Popup` (Beware of confusion with the new component's Dialog.Content)
+- The remaining subcomponents (`Trigger`, `Portal`, `Overlay`, `Header`, `Body`, `Footer`, `Title`, `Description`, `Close`) retain their original names.
 
 ---
 
@@ -131,10 +131,10 @@ The root container for the Dialog. It provides state management and Context.
 
 **Props:**
 
--   `size`: Dialog size (`‘md’` | `‘lg’` | `‘xl’`)
--   `closeOnClickOverlay`: Close Dialog on overlay click (boolean)
--   `open`, `onOpenChange`, `defaultOpen`: State control props
--   `children`: Dialog content
+- `size`: Dialog size (`‘md’` | `‘lg’` | `‘xl’`)
+- `closeOnClickOverlay`: Close Dialog on overlay click (boolean)
+- `open`, `onOpenChange`, `defaultOpen`: State control props
+- `children`: Dialog content
 
 ### Dialog.Trigger
 
@@ -173,9 +173,9 @@ The background overlay behind the Dialog. (Renamed from Base-ui Dialog.Backdrop)
 
 **Props:**
 
--   `portalProps`: Props to pass to the Portal
--   `overlayProps`: Props to pass to the Overlay
--   Other Popup props (like className)
+- `portalProps`: Props to pass to the Portal
+- `overlayProps`: Props to pass to the Overlay
+- Other Popup props (like className)
 
 ### Dialog.Popup
 
@@ -206,9 +206,9 @@ Each section of the Dialog.
 
 **Props:**
 
--   `className`: Custom style class
--   `render`: Custom rendering (default: `<div />`)
--   `children`: Content
+- `className`: Custom style class
+- `render`: Custom rendering (default: `<div />`)
+- `children`: Content
 
 ### Dialog.Title
 
@@ -250,7 +250,6 @@ Codemode automatically handles the following changes:
     - `scrimClickable` → `closeOnClickOverlay`
     - Prop values remain unchanged (true → true, false → false)
 4. **Subcomponent Conversion**:
-
     - `Dialog.Contents` → `Dialog.Content`
     - `Dialog.CombinedContent` → `Dialog.Content`
     - When explicitly using `Dialog.Portal` and `Dialog.Overlay` while also using `Dialog.Content` → Convert to `Dialog.Popup`
@@ -286,7 +285,6 @@ Codemode automatically handles the following changes:
     ```
 
 5. **asChild → automatic render prop conversion** :
-
     - Automatically converts the `asChild` prop to a `render` prop
     - Extracts the first child JSX element as a render prop (self-closing form)
     - Preserves the child element's props in the render prop
@@ -331,7 +329,6 @@ New Dialog components have transitioned from **Radix UI** to **Base UI**.
     - Previous: `@radix-ui/react-dialog`
     - New: `@base-ui-components/react/dialog`
 2. **Focus Management Approach**:
-
     - **Radix UI**: Uses `onOpenAutoFocus`, `onCloseAutoFocus`
 
     ```jsx
@@ -355,7 +352,6 @@ New Dialog components have transitioned from **Radix UI** to **Base UI**.
     ```
 
 3. **Overlay Click Behavior**:
-
     - **Radix UI**: Closes by default on overlay click (uncontrollable)
     - **Base UI**: Controlled via `dismissible` property (we wrap it with `closeOnClickOverlay`)
 
@@ -373,31 +369,31 @@ New Dialog components have transitioned from **Radix UI** to **Base UI**.
 
 ### Dialog.Contents vs Dialog.Content
 
--   **Previous version (`@goorm-dev/vapor-core`)**:
-    -   `Dialog.Contents` (or `Dialog.CombinedContent`) is a composite component containing `Portal + Overlay + Content`
-    -   Renders all elements at once for convenience
--   **New Version (`@vapor-ui/core`)**:
-    -   Renamed to `Dialog.Content`, same role (includes `Portal + Overlay + Popup`)
-    -   `Dialog.Popup` is the primary element usable on its own
-    -   Portal, Overlay, and Popup can be explicitly configured when finer control is needed
+- **Previous version (`@goorm-dev/vapor-core`)**:
+    - `Dialog.Contents` (or `Dialog.CombinedContent`) is a composite component containing `Portal + Overlay + Content`
+    - Renders all elements at once for convenience
+- **New Version (`@vapor-ui/core`)**:
+    - Renamed to `Dialog.Content`, same role (includes `Portal + Overlay + Popup`)
+    - `Dialog.Popup` is the primary element usable on its own
+    - Portal, Overlay, and Popup can be explicitly configured when finer control is needed
 
 ### Size Variants
 
 The Dialog's size property remains unchanged:
 
--   `md`: Medium size (default)
--   `lg`: Large size
--   `xl`: Extra large size
+- `md`: Medium size (default)
+- `lg`: Large size
+- `xl`: Extra large size
 
 ### Accessibility
 
 Both libraries provide excellent accessibility:
 
--   `Dialog.Title` is automatically linked to `aria-labelledby`
--   `Dialog.Description` is automatically linked to `aria-describedby`
--   `role=“dialog”` is automatically set
--   `aria-modal=“true”` is automatically set
--   Focus trap is built-in (controllable via the `trap` prop in Base UI)
+- `Dialog.Title` is automatically linked to `aria-labelledby`
+- `Dialog.Description` is automatically linked to `aria-describedby`
+- `role=“dialog”` is automatically set
+- `aria-modal=“true”` is automatically set
+- Focus trap is built-in (controllable via the `trap` prop in Base UI)
 
 ---
 

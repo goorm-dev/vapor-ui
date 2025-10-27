@@ -1,5 +1,5 @@
+// @ts-nocheck
 import { Badge, Button } from '@goorm-dev/vapor-core';
-
 import { Callout } from '@vapor-ui/core';
 
 export const Component = () => (

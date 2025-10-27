@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import { Button } from '@goorm-dev/vapor-core';
 import { Badge, Text } from '@vapor-ui/core';
 

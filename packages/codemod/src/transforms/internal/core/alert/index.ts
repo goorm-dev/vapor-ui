@@ -69,17 +69,17 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier(calloutImportName),
-                                j.jsxIdentifier('Icon')
+                                j.jsxIdentifier('Icon'),
                             ),
-                            []
+                            [],
                         ),
                         j.jsxClosingElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier(calloutImportName),
-                                j.jsxIdentifier('Icon')
-                            )
+                                j.jsxIdentifier('Icon'),
+                            ),
                         ),
-                        [firstElement]
+                        [firstElement],
                     );
 
                     // Replace first element with wrapped icon
@@ -92,7 +92,15 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'single' as const,
+        objectCurlySpacing: true,
+        reuseWhitespace: true,
+        lineTerminator: '\n',
+        tabwidth: 4,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

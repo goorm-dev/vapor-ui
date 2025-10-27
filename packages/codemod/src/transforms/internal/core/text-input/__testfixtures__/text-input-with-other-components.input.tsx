@@ -1,4 +1,4 @@
-import { TextInput, Button } from '@goorm-dev/vapor-core';
+import { Button, TextInput } from '@goorm-dev/vapor-core';
 
 export function WithOtherComponentsExample() {
     return (

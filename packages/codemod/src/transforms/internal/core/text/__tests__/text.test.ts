@@ -1,13 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'text-import-only',
-    'text-mixed-imports',
-    'text-existing-vapor-import',
-    'text-props-migration',
-    'text-aschild-migration',
-    'text-color-mapping',
-    'text-edge-cases',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/text', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

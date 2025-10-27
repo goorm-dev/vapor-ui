@@ -36,7 +36,7 @@ export function transformAsChildToRender(j: API['jscodeshift'], element: JSXElem
             // Create render prop with the first element including its children
             const renderProp = j.jsxAttribute(
                 j.jsxIdentifier('render'),
-                j.jsxExpressionContainer(firstElement)
+                j.jsxExpressionContainer(firstElement),
             );
 
             element.openingElement.attributes = [renderProp, ...element.openingElement.attributes];
@@ -64,17 +64,17 @@ export function transformToMemberExpression(
     j: API['jscodeshift'],
     element: JSXElement,
     objectName: string,
-    propertyName: string
+    propertyName: string,
 ): void {
     element.openingElement.name = j.jsxMemberExpression(
         j.jsxIdentifier(objectName),
-        j.jsxIdentifier(propertyName)
+        j.jsxIdentifier(propertyName),
     );
 
     if (element.closingElement) {
         element.closingElement.name = j.jsxMemberExpression(
             j.jsxIdentifier(objectName),
-            j.jsxIdentifier(propertyName)
+            j.jsxIdentifier(propertyName),
         );
     }
 }
@@ -109,7 +109,7 @@ export function updateMemberExpressionObject(element: JSXElement, newObjectName:
  */
 export function transformForceMountToKeepMounted(
     j: API['jscodeshift'],
-    element: JSXElement
+    element: JSXElement,
 ): boolean {
     const attributes = element.openingElement.attributes || [];
     let transformed = false;

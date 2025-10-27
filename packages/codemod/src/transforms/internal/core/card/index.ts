@@ -84,10 +84,10 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             j.commentLine(
                                 ' TODO: Card.Title removed - consider using Text component or custom heading',
                                 true,
-                                false
+                                false,
                             ),
                         ],
-                    })
+                    }),
                 );
 
                 // Get children of Card.Title
@@ -108,7 +108,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

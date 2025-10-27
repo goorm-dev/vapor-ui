@@ -1,6 +1,6 @@
 // @ts-nocheck
+import { Button, Dialog } from '@goorm-dev/vapor-core';
 import { Badge } from '@vapor-ui/core';
-import { Dialog, Button } from '@goorm-dev/vapor-core';
 
 export const Component = () => (
     <div>

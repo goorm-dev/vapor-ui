@@ -1,16 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'collapsible-basic',
-    'collapsible-with-props',
-    'collapsible-content-to-panel',
-    'collapsible-with-asChild',
-    'collapsible-asChild-with-props',
-    'collapsible-mixed-imports',
-    'collapsible-existing-vapor-import',
-    'collapsible-already-in-vapor-import',
-    'collapsible-multiple',
-    'collapsible-controlled',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/collapsible', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

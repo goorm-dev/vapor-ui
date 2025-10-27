@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Collapsible } from '@vapor-ui/core';
 
 export const Component = () => {

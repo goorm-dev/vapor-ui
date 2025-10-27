@@ -1,17 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'text-input-basic',
-    'text-input-with-label',
-    'text-input-visually-hidden-label',
-    'text-input-controlled',
-    'text-input-props',
-    'text-input-ref',
-    'text-input-multiple',
-    'text-input-merge-imports',
-    'text-input-with-spread',
-    'text-input-named-import',
-    'text-input-with-other-components',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/text-input', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

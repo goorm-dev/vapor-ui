@@ -1,4 +1,4 @@
-import { Checkbox, Button, Badge } from '@goorm-dev/vapor-core';
+import { Badge, Button, Checkbox } from '@goorm-dev/vapor-core';
 
 export const Component = () => (
     <div>

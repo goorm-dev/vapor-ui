@@ -23,7 +23,7 @@ export function getFinalImportName(
     root: Collection,
     j: API['jscodeshift'],
     componentName: string,
-    targetPackage: string
+    targetPackage: string,
 ): string {
     const targetImports = root.find(j.ImportDeclaration, {
         source: { value: targetPackage },
@@ -33,7 +33,7 @@ export function getFinalImportName(
         const vaporImport = targetImports.at(0).get().value;
         const specifier = vaporImport.specifiers?.find(
             (spec: ImportSpecifier) =>
-                spec.type === 'ImportSpecifier' && spec.imported.name === componentName
+                spec.type === 'ImportSpecifier' && spec.imported.name === componentName,
         ) as ImportSpecifier | undefined;
 
         if (specifier) {
@@ -55,7 +55,7 @@ function handleSimplePackageMigration(
     sourcePackage: string,
     targetPackage: string,
     oldComponentName: string,
-    newComponentName: string
+    newComponentName: string,
 ): boolean {
     const importDeclaration = path.value;
     if (importDeclaration.source.value === sourcePackage) {
@@ -109,7 +109,7 @@ const handleSplitComponentImports = ({
         if (hasAlias) {
             newImportSpecifier = j.importSpecifier(
                 j.identifier(newComponentName),
-                j.identifier(localName)
+                j.identifier(localName),
             );
         } else {
             newImportSpecifier = j.importSpecifier(j.identifier(newComponentName));
@@ -137,7 +137,7 @@ const handleSplitComponentImports = ({
 function findExistingPackageImport(
     root: Collection,
     j: API['jscodeshift'],
-    packageName: string
+    packageName: string,
 ): ASTPath<ImportDeclaration> | null {
     const imports = root.find(j.ImportDeclaration, {
         source: { type: 'StringLiteral', value: packageName },
@@ -197,7 +197,7 @@ const handleMergeComponentImports = ({
 
     if (targetSpecifier) {
         const hasComponentImport = targetImport.specifiers?.some(
-            (spec) => spec.type === 'ImportSpecifier' && spec.imported.name === newComponentName
+            (spec) => spec.type === 'ImportSpecifier' && spec.imported.name === newComponentName,
         );
 
         if (!hasComponentImport) {
@@ -208,7 +208,7 @@ const handleMergeComponentImports = ({
             if (hasAlias) {
                 newImportSpecifier = j.importSpecifier(
                     j.identifier(newComponentName),
-                    j.identifier(localName)
+                    j.identifier(localName),
                 );
             } else {
                 newImportSpecifier = j.importSpecifier(j.identifier(newComponentName));
@@ -250,7 +250,7 @@ export const transformImportDeclaration = ({
                 sourcePackage,
                 targetPackage,
                 oldComponentName,
-                newComponentName
+                newComponentName,
             );
         } else {
             handleSplitComponentImports({

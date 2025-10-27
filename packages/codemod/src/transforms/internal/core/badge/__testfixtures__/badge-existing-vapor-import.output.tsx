@@ -1,5 +1,5 @@
 import { Text } from '@goorm-dev/vapor-core';
-import { Card, Badge } from '@vapor-ui/core';
+import { Badge, Card } from '@vapor-ui/core';
 
 export const Component = () => (
     <Card.Root>

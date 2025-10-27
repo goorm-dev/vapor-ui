@@ -1,4 +1,5 @@
 import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
+
 import { transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender } from '~/utils/jsx-transform';
 
@@ -31,7 +32,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource({});
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
@@ -89,7 +97,7 @@ function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
             // Warn about deprecated icon prop
             if (attrName === 'icon') {
                 console.warn(
-                    `[IconButton] 'icon' prop is deprecated. Use children instead. Found in ${element.loc?.start.line}`
+                    `[IconButton] 'icon' prop is deprecated. Use children instead. Found in ${element.loc?.start.line}`,
                 );
                 return null;
             }
@@ -97,7 +105,7 @@ function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
             // Warn about deprecated iconClassName prop
             if (attrName === 'iconClassName') {
                 console.warn(
-                    `[IconButton] 'iconClassName' prop is deprecated and will be removed. Found in ${element.loc?.start.line}`
+                    `[IconButton] 'iconClassName' prop is deprecated and will be removed. Found in ${element.loc?.start.line}`,
                 );
                 return null;
             }
@@ -110,7 +118,7 @@ function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
                 attr.value.value === 'hint'
             ) {
                 console.warn(
-                    `[IconButton] 'hint' color is not supported in new version. Consider using 'secondary' instead. Found in ${element.loc?.start.line}`
+                    `[IconButton] 'hint' color is not supported in new version. Consider using 'secondary' instead. Found in ${element.loc?.start.line}`,
                 );
             }
 
@@ -132,7 +140,7 @@ function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
 
 function createShapeAttributeFromRounded(
     j: API['jscodeshift'],
-    roundedValue: JSXAttribute['value']
+    roundedValue: JSXAttribute['value'],
 ) {
     // If rounded is explicitly true or no value (means true)
     if (
@@ -161,7 +169,7 @@ function createShapeAttributeFromRounded(
         const ternary = j.conditionalExpression(
             roundedValue.expression,
             j.stringLiteral('circle'),
-            j.stringLiteral('square')
+            j.stringLiteral('square'),
         );
         return j.jsxAttribute(j.jsxIdentifier('shape'), j.jsxExpressionContainer(ternary));
     }

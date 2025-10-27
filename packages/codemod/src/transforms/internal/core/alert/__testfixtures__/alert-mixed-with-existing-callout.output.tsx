@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Badge } from '@goorm-dev/vapor-core';
 import { Callout, Text } from '@vapor-ui/core';
 

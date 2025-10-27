@@ -1,10 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'button-variants-change',
-    'button-import-only',
-    'button-mixed-imports',
-    'button-existing-vapor-import',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/button', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

@@ -83,11 +83,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier(NEW_COMPONENT_NAME),
-                            j.jsxIdentifier('Thumb')
+                            j.jsxIdentifier('Thumb'),
                         ),
                         indicatorProps,
-                        true
-                    )
+                        true,
+                    ),
                 );
 
                 // Create new Switch.Root element with merged props
@@ -95,17 +95,17 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier(NEW_COMPONENT_NAME),
-                            j.jsxIdentifier('Root')
+                            j.jsxIdentifier('Root'),
                         ),
-                        rootProps
+                        rootProps,
                     ),
                     j.jsxClosingElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier(NEW_COMPONENT_NAME),
-                            j.jsxIdentifier('Root')
-                        )
+                            j.jsxIdentifier('Root'),
+                        ),
                     ),
-                    [j.jsxText('\n      '), thumbElement, j.jsxText('\n    ')]
+                    [j.jsxText('\n      '), thumbElement, j.jsxText('\n    ')],
                 );
 
                 // Handle label cases
@@ -118,21 +118,21 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier('Field'),
-                                j.jsxIdentifier('Label')
+                                j.jsxIdentifier('Label'),
                             ),
-                            []
+                            [],
                         ),
                         j.jsxClosingElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier('Field'),
-                                j.jsxIdentifier('Label')
-                            )
+                                j.jsxIdentifier('Label'),
+                            ),
                         ),
                         [
                             j.jsxText('\n      ' + labelText + '\n      '),
                             newSwitchRootElement,
                             j.jsxText('\n    '),
-                        ]
+                        ],
                     );
 
                     // Create Field.Root wrapper
@@ -140,14 +140,17 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier('Field'),
-                                j.jsxIdentifier('Root')
+                                j.jsxIdentifier('Root'),
                             ),
-                            []
+                            [],
                         ),
                         j.jsxClosingElement(
-                            j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Root'))
+                            j.jsxMemberExpression(
+                                j.jsxIdentifier('Field'),
+                                j.jsxIdentifier('Root'),
+                            ),
                         ),
-                        [j.jsxText('\n    '), fieldLabel, j.jsxText('\n  ')]
+                        [j.jsxText('\n    '), fieldLabel, j.jsxText('\n  ')],
                     );
 
                     // Replace the entire Switch with Field.Root
@@ -170,7 +173,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             const firstImport = targetImports.at(0).get().value;
             const hasFieldImport = firstImport.specifiers?.some(
                 (spec: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) =>
-                    spec.type === 'ImportSpecifier' && spec.imported.name === 'Field'
+                    spec.type === 'ImportSpecifier' && spec.imported.name === 'Field',
             );
 
             if (!hasFieldImport) {
@@ -181,7 +184,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Merge imports again after adding Field
     }
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

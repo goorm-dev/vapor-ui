@@ -1,4 +1,4 @@
-import { Text, Breadcrumb } from '@vapor-ui/core';
+import { Breadcrumb, Text } from '@vapor-ui/core';
 
 export default function App() {
     return (

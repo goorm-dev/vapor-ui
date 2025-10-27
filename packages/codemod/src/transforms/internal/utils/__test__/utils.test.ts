@@ -1,10 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'only-one-component-import-from-package',
-    'two-component-import-from-package',
-    'merge-with-existing-target-import',
-    'alias-import',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/utils', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

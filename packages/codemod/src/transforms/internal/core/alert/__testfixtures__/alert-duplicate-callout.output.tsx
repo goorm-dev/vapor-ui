@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Callout, Text } from '@vapor-ui/core';
 
 export const Component = () => (

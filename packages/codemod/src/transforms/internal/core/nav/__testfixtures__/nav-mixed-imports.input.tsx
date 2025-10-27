@@ -1,4 +1,4 @@
-import { Nav, Badge, Button } from '@goorm-dev/vapor-core';
+import { Badge, Button, Nav } from '@goorm-dev/vapor-core';
 
 export default function App() {
     return (

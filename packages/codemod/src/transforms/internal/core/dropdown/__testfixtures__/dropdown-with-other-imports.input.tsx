@@ -1,4 +1,4 @@
-import { Dropdown, Button } from '@goorm-dev/vapor-core';
+import { Button, Dropdown } from '@goorm-dev/vapor-core';
 
 export default function App() {
     return (

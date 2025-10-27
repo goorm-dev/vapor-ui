@@ -1,12 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'breadcrumb-basic',
-    'breadcrumb-size-change',
-    'breadcrumb-mixed-imports',
-    'breadcrumb-existing-vapor-import',
-    'breadcrumb-with-expression',
-    'breadcrumb-with-classname',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/breadcrumb', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

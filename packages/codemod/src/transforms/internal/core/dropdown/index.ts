@@ -189,8 +189,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             positionerPropsObj.properties.push(
                                 j.objectProperty(
                                     j.identifier('side'),
-                                    rootProps.sideAttr.value || j.stringLiteral('bottom')
-                                )
+                                    rootProps.sideAttr.value || j.stringLiteral('bottom'),
+                                ),
                             );
                         }
 
@@ -198,8 +198,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             positionerPropsObj.properties.push(
                                 j.objectProperty(
                                     j.identifier('align'),
-                                    rootProps.alignAttr.value || j.stringLiteral('start')
-                                )
+                                    rootProps.alignAttr.value || j.stringLiteral('start'),
+                                ),
                             );
                         }
 
@@ -208,8 +208,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             element.openingElement.attributes?.push(
                                 j.jsxAttribute(
                                     j.jsxIdentifier('positionerProps'),
-                                    j.jsxExpressionContainer(positionerPropsObj)
-                                )
+                                    j.jsxExpressionContainer(positionerPropsObj),
+                                ),
                             );
                         }
                     }
@@ -232,7 +232,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 // Add style prop with maxHeight if it was present
                 if (maxHeightValue) {
                     const existingStyleAttr = element.openingElement.attributes?.find(
-                        (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'style'
+                        (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'style',
                     );
 
                     if (existingStyleAttr && existingStyleAttr.type === 'JSXAttribute') {
@@ -245,8 +245,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             existingStyleAttr.value.expression.properties.push(
                                 j.objectProperty(
                                     j.identifier('maxHeight'),
-                                    j.stringLiteral(maxHeightValue)
-                                )
+                                    j.stringLiteral(maxHeightValue),
+                                ),
                             );
                         }
                     } else {
@@ -258,11 +258,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                     j.objectExpression([
                                         j.objectProperty(
                                             j.identifier('maxHeight'),
-                                            j.stringLiteral(maxHeightValue)
+                                            j.stringLiteral(maxHeightValue),
                                         ),
-                                    ])
-                                )
-                            )
+                                    ]),
+                                ),
+                            ),
                         );
                     }
                 }
@@ -272,8 +272,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             transformAsChildToRender(j, element);
         }
     });
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
 
-    return root.toSource();
+    return root.toSource(printOptions);
 };
 
 export default transform;

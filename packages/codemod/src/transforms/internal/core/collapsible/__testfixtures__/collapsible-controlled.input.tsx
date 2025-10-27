@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Collapsible } from '@goorm-dev/vapor-core';
 
 export const Component = () => {

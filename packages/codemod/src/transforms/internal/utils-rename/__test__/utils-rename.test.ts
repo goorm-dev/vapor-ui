@@ -1,9 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'rename-component-with-split',
-    'rename-component-with-merge',
-    'rename-component-with-alias',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/utils-rename', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

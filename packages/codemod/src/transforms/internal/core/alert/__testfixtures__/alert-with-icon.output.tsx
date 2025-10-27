@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Callout } from '@vapor-ui/core';
 import { CheckIcon } from '@vapor-ui/icons';
 

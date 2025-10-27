@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+
 import { TextInput } from '@goorm-dev/vapor-core';
 
 export function ControlledExample() {

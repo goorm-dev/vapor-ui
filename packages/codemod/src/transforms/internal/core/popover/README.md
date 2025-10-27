@@ -23,16 +23,16 @@ This transformer automates the migration of the Popover component from `@goorm-d
 
 This transformer automatically handles:
 
--   ✅ Import statement migration with smart merging
--   ✅ Component renaming (`Popover` → `Popover.Root`)
--   ✅ `CombinedContent` → `Content` conversion
--   ✅ Props repositioning (`side`, `align` → `positionerProps`)
--   ✅ Offset props migration (`sideOffset`, `alignOffset` → `positionerProps`)
--   ✅ Arrow component removal (auto-included in new Popup)
--   ✅ Anchor component removal (children moved to parent Root)
--   ✅ Portal prop renaming (`forceMount` → `keepMounted`)
--   ✅ `asChild` to `render` prop conversion
--   ✅ `isArrowVisible` prop removal
+- ✅ Import statement migration with smart merging
+- ✅ Component renaming (`Popover` → `Popover.Root`)
+- ✅ `CombinedContent` → `Content` conversion
+- ✅ Props repositioning (`side`, `align` → `positionerProps`)
+- ✅ Offset props migration (`sideOffset`, `alignOffset` → `positionerProps`)
+- ✅ Arrow component removal (auto-included in new Popup)
+- ✅ Anchor component removal (children moved to parent Root)
+- ✅ Portal prop renaming (`forceMount` → `keepMounted`)
+- ✅ `asChild` to `render` prop conversion
+- ✅ `isArrowVisible` prop removal
 
 ### Coverage
 
@@ -45,12 +45,12 @@ This transformer automatically handles:
 
 The root component has been renamed from Popover to Popover.Root.
 
--   **Before:** `<Popover>` (Radix UI-based)
--   **After:** `<Popover.Root>` (Base UI-based)
--   ⚠️**Caution:** `Popover.CombinedContent` → Changed to `Popover.Content`
--   ⚠️**Caution:** `Popover.Arrow` → Removed (automatically included in Popup)
--   ⚠️**Caution:** `Popover.Anchor` → Removed (children moved to parent Root)
--   Other components (`Trigger`, `Portal`, `Content`, `Close`) stay the same
+- **Before:** `<Popover>` (Radix UI-based)
+- **After:** `<Popover.Root>` (Base UI-based)
+- ⚠️**Caution:** `Popover.CombinedContent` → Changed to `Popover.Content`
+- ⚠️**Caution:** `Popover.Arrow` → Removed (automatically included in Popup)
+- ⚠️**Caution:** `Popover.Anchor` → Removed (children moved to parent Root)
+- Other components (`Trigger`, `Portal`, `Content`, `Close`) stay the same
 
 ---
 
@@ -185,9 +185,9 @@ The root container for the Popover. It provides state management and Context.
 
 **Props:**
 
--   `open`, `onOpenChange`, `defaultOpen`: State control props
--   `disabled`: Disables the popover
--   `children`: Popover content
+- `open`, `onOpenChange`, `defaultOpen`: State control props
+- `disabled`: Disables the popover
+- `children`: Popover content
 
 ### Popover.Trigger
 
@@ -207,7 +207,7 @@ Renders the Popover at a different location in the DOM (typically at the end of 
 
 **Props:**
 
--   `keepMounted`: Keep the portal mounted even when closed (formerly `forceMount`)
+- `keepMounted`: Keep the portal mounted even when closed (formerly `forceMount`)
 
 ### Popover.Content
 
@@ -221,9 +221,9 @@ Renders the Popover at a different location in the DOM (typically at the end of 
 
 **Props:**
 
--   `portalProps`: Props to pass to the Portal
--   `positionerProps`: Props to pass to the Positioner (includes `side`, `align`, `sideOffset`, `alignOffset`)
--   Other Popup props (like className, style)
+- `portalProps`: Props to pass to the Portal
+- `positionerProps`: Props to pass to the Positioner (includes `side`, `align`, `sideOffset`, `alignOffset`)
+- Other Popup props (like className, style)
 
 ### Popover.Close
 
@@ -286,7 +286,6 @@ Codemod automatically handles the following changes:
     - `disabled` prop remains on Root
     - **Portal's `forceMount` prop is automatically converted to `keepMounted`**
 4. **Subcomponent Conversion**:
-
     - `Popover.Trigger` → `Popover.Trigger`
     - `Popover.Portal` → `Popover.Portal`
         - Portal's `forceMount` → `keepMounted`
@@ -310,7 +309,6 @@ Codemod automatically handles the following changes:
     ```
 
 5. **asChild → automatic render prop conversion**:
-
     - Automatically converts the `asChild` prop to a `render` prop
     - Extracts the first child JSX element as a render prop (self-closing form)
     - Preserves the child element's props in the render prop
@@ -339,32 +337,32 @@ The transformer performs the following transformations automatically:
 
 ### 6.1. Import Transformation
 
--   Locates all imports from `@goorm-dev/vapor-core` containing `Popover`
--   Migrates named imports from `@goorm-dev/vapor-core` to `@vapor-ui/core`
--   Merges with existing `@vapor-ui/core` imports to avoid duplicate import statements
--   Preserves all other imports from the same source
+- Locates all imports from `@goorm-dev/vapor-core` containing `Popover`
+- Migrates named imports from `@goorm-dev/vapor-core` to `@vapor-ui/core`
+- Merges with existing `@vapor-ui/core` imports to avoid duplicate import statements
+- Preserves all other imports from the same source
 
 ### 6.2. Component Structure Transformation
 
--   Renames the root component: `<Popover>` → `<Popover.Root>`
--   Transforms `Popover.CombinedContent` → `Popover.Content`
--   Removes `Popover.Arrow` components (automatically included in new Popup)
--   Updates both opening and closing tags, as well as self-closing tags
+- Renames the root component: `<Popover>` → `<Popover.Root>`
+- Transforms `Popover.CombinedContent` → `Popover.Content`
+- Removes `Popover.Arrow` components (automatically included in new Popup)
+- Updates both opening and closing tags, as well as self-closing tags
 
 ### 6.3. Props Transformation
 
--   **Repositions positioning props**: Extracts `side` and `align` from `Popover.Root` and wraps them in `positionerProps={{ side, align }}` on `Popover.Content`
--   **Moves offset props**: Extracts `sideOffset` and `alignOffset` from `Content` and wraps them in `positionerProps`
--   **Removes isArrowVisible**: Removes the `isArrowVisible` prop (arrow is now always visible and included automatically)
--   **Renames Portal props**: Converts `forceMount` to `keepMounted` on `Popover.Portal`
+- **Repositions positioning props**: Extracts `side` and `align` from `Popover.Root` and wraps them in `positionerProps={{ side, align }}` on `Popover.Content`
+- **Moves offset props**: Extracts `sideOffset` and `alignOffset` from `Content` and wraps them in `positionerProps`
+- **Removes isArrowVisible**: Removes the `isArrowVisible` prop (arrow is now always visible and included automatically)
+- **Renames Portal props**: Converts `forceMount` to `keepMounted` on `Popover.Portal`
 
 ### 6.4. asChild to render Prop Conversion
 
--   Detects `asChild` prop usage on any Popover subcomponent
--   Extracts the first child JSX element
--   Converts it to a self-closing `render` prop: `render={<element />}`
--   Moves the child's internal content to the component's children
--   Preserves all props from the original child element
+- Detects `asChild` prop usage on any Popover subcomponent
+- Extracts the first child JSX element
+- Converts it to a self-closing `render` prop: `render={<element />}`
+- Moves the child's internal content to the component's children
+- Preserves all props from the original child element
 
 ---
 
@@ -408,12 +406,10 @@ New Popover components have transitioned from **Radix UI Popover** to **Base UI 
     - Previous: `@radix-ui/react-popover`
     - New: `@base-ui-components/react/popover`
 2. **Component Structure**:
-
     - **Radix UI**: Flat structure with `Popover.Root`, `Popover.Content`
     - **Base UI**: Hierarchical structure with `Popover.Root`, `Popover.Portal`, `Popover.Positioner`, `Popover.Popup`
 
 3. **Arrow Handling**:
-
     - **Radix UI**: Separate `Popover.Arrow` component
     - **Base UI**: Arrow is automatically included in `Popup` component
 
@@ -426,23 +422,23 @@ New Popover components have transitioned from **Radix UI Popover** to **Base UI 
 
 ### CombinedContent vs Content
 
--   **Previous version (`@goorm-dev/vapor-core`)**:
-    -   `Popover.CombinedContent` is a composite component containing `Portal + Content`
-    -   Renders all elements at once for convenience
-    -   `Popover.Content` is just the content without Portal
--   **New Version (`@vapor-ui/core`)**:
-    -   `Popover.Content` is now the composite component (includes `Portal + Positioner + Popup`)
-    -   `Popover.Popup` is the primary element usable on its own
-    -   Portal, Positioner, and Popup can be explicitly configured when finer control is needed
+- **Previous version (`@goorm-dev/vapor-core`)**:
+    - `Popover.CombinedContent` is a composite component containing `Portal + Content`
+    - Renders all elements at once for convenience
+    - `Popover.Content` is just the content without Portal
+- **New Version (`@vapor-ui/core`)**:
+    - `Popover.Content` is now the composite component (includes `Portal + Positioner + Popup`)
+    - `Popover.Popup` is the primary element usable on its own
+    - Portal, Positioner, and Popup can be explicitly configured when finer control is needed
 
 ### Accessibility
 
 Both libraries provide excellent accessibility:
 
--   Proper focus management
--   Escape key closes the popover
--   Arrow key navigation (when applicable)
--   ARIA attributes are automatically applied
+- Proper focus management
+- Escape key closes the popover
+- Arrow key navigation (when applicable)
+- ARIA attributes are automatically applied
 
 ---
 

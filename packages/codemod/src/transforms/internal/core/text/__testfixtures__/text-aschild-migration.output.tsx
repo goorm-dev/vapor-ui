@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import { Text } from '@vapor-ui/core';
 
 export const Component = () => (

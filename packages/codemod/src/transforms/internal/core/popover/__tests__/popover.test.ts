@@ -1,19 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'popover-basic',
-    'popover-props-side-align',
-    'popover-combined-content',
-    'popover-with-arrow',
-    'popover-with-asChild',
-    'popover-portal-forceMount',
-    'popover-isArrowVisible',
-    'popover-with-anchor',
-    'popover-multiple',
-    'popover-merge-into-existing',
-    'popover-close-asChild',
-    'popover-with-spread',
-    'popover-disabled-to-trigger',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/popover', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

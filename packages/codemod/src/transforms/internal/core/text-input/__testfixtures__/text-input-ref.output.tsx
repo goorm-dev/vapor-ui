@@ -1,5 +1,6 @@
 import React from 'react';
-import { TextInput, Field } from '@vapor-ui/core';
+
+import { Field, TextInput } from '@vapor-ui/core';
 
 export function RefExample() {
     const inputRef = React.useRef<HTMLInputElement>(null);

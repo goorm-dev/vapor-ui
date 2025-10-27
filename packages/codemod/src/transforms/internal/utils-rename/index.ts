@@ -1,4 +1,5 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
+
 import { transformImportDeclaration } from '~/utils/import-transform';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
@@ -18,7 +19,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         j(path).replaceWith(j.jsxIdentifier('NewButton'));
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 export default transform;
 export const parser = 'tsx';

@@ -1,5 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = ['migrate-icons-basic'];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/icons/migrate-icons-import', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

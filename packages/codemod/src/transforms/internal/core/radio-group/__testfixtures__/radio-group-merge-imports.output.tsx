@@ -1,4 +1,4 @@
-import { Button, RadioGroup, Radio } from '@vapor-ui/core';
+import { Button, Radio, RadioGroup } from '@vapor-ui/core';
 
 export function Example() {
     return (

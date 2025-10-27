@@ -1,4 +1,5 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
+
 import { transformImportDeclaration } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
@@ -39,7 +40,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
                         const shapeAttr = j.jsxAttribute(
                             j.jsxIdentifier('shape'),
-                            j.stringLiteral(newShapeValue)
+                            j.stringLiteral(newShapeValue),
                         );
 
                         element.openingElement.attributes![index] = shapeAttr;
@@ -49,7 +50,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     ) {
                         const shapeAttr = j.jsxAttribute(
                             j.jsxIdentifier('shape'),
-                            j.stringLiteral('pill')
+                            j.stringLiteral('pill'),
                         );
 
                         element.openingElement.attributes![index] = shapeAttr;
@@ -59,7 +60,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource({});
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

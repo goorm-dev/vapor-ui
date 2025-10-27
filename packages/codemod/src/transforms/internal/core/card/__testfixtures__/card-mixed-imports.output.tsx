@@ -1,5 +1,4 @@
 import { Badge, Button } from '@goorm-dev/vapor-core';
-
 import { Card } from '@vapor-ui/core';
 
 export const Component = () => (

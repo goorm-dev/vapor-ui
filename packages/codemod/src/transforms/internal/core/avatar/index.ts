@@ -1,4 +1,5 @@
 import type { API, FileInfo, JSXAttribute, JSXSpreadAttribute, Transform } from 'jscodeshift';
+
 import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
 import { transformToMemberExpression } from '~/utils/jsx-transform';
 
@@ -82,14 +83,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             // square (no value, means true)
                             shapeAttr = j.jsxAttribute(
                                 j.jsxIdentifier('shape'),
-                                j.stringLiteral('square')
+                                j.stringLiteral('square'),
                             );
                         } else if (attr.value.type === 'StringLiteral') {
                             // square="true" or square="false"
                             const boolValue = attr.value.value === 'true';
                             shapeAttr = j.jsxAttribute(
                                 j.jsxIdentifier('shape'),
-                                j.stringLiteral(boolValue ? 'square' : 'circle')
+                                j.stringLiteral(boolValue ? 'square' : 'circle'),
                             );
                         } else if (attr.value.type === 'JSXExpressionContainer') {
                             const expr = attr.value.expression;
@@ -98,7 +99,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             if (expr.type === 'BooleanLiteral') {
                                 shapeAttr = j.jsxAttribute(
                                     j.jsxIdentifier('shape'),
-                                    j.stringLiteral(expr.value ? 'square' : 'circle')
+                                    j.stringLiteral(expr.value ? 'square' : 'circle'),
                                 );
                             }
                             // square={expression} - convert to ternary (but not JSXEmptyExpression)
@@ -109,9 +110,9 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                         j.conditionalExpression(
                                             expr,
                                             j.stringLiteral('square'),
-                                            j.stringLiteral('circle')
-                                        )
-                                    )
+                                            j.stringLiteral('circle'),
+                                        ),
+                                    ),
                                 );
                             }
                             // square={} - treat as false (default to circle)
@@ -122,7 +123,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                 /* istanbul ignore next */
                                 shapeAttr = j.jsxAttribute(
                                     j.jsxIdentifier('shape'),
-                                    j.stringLiteral('circle')
+                                    j.stringLiteral('circle'),
                                 );
                             }
                         }
@@ -196,7 +197,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

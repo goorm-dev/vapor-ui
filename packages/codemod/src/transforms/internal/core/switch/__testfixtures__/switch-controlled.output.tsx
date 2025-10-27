@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch, Field } from '@vapor-ui/core';
+
+import { Field, Switch } from '@vapor-ui/core';
 
 export function ControlledExample() {
     const [enabled, setEnabled] = React.useState(false);

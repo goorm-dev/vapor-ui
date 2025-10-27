@@ -1,4 +1,4 @@
-import { Switch, Field } from '@vapor-ui/core';
+import { Field, Switch } from '@vapor-ui/core';
 
 export function MultipleExample() {
     return (

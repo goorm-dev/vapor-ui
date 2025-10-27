@@ -1,5 +1,4 @@
 import { Button } from '@goorm-dev/vapor-core';
-
 import { TextInput } from '@vapor-ui/core';
 
 export function WithOtherComponentsExample() {

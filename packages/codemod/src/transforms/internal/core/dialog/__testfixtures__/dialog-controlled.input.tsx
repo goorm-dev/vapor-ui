@@ -1,5 +1,6 @@
-import { Dialog } from '@goorm-dev/vapor-core';
 import { useState } from 'react';
+
+import { Dialog } from '@goorm-dev/vapor-core';
 
 export const Component = () => {
     const [open, setOpen] = useState(false);

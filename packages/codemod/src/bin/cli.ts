@@ -40,11 +40,11 @@ function checkGitStatus(force: boolean) {
             console.log('Thank you for using vapor-ui!');
             console.log(
                 picocolors.yellow(
-                    '\nERROR: For safety, codemods can only be run on a clean git directory.'
-                )
+                    '\nERROR: For safety, codemods can only be run on a clean git directory.',
+                ),
             );
             console.log(
-                '\nIf you understand the risks, you may use the --force flag to override this safety check.'
+                '\nIf you understand the risks, you may use the --force flag to override this safety check.',
             );
             process.exit(1);
         }
@@ -161,7 +161,7 @@ const run = async () => {
                     aliases: ['j'],
                 },
             },
-        }
+        },
     );
 
     if (!cli.flags.dry) {

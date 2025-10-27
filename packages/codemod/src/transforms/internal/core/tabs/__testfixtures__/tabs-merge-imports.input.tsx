@@ -1,5 +1,5 @@
-import { Button } from '@vapor-ui/core';
 import { Tabs } from '@goorm-dev/vapor-core';
+import { Button } from '@vapor-ui/core';
 
 export default function Example() {
     return (

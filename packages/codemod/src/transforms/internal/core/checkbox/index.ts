@@ -66,10 +66,10 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             j.commentLine(
                                 ' TODO: Checkbox.Label removed - use standard HTML label element with htmlFor attribute',
                                 true,
-                                false
+                                false,
                             ),
                         ],
-                    })
+                    }),
                 );
 
                 // Get children of Checkbox.Label
@@ -115,7 +115,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

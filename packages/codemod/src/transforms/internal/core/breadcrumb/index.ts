@@ -6,6 +6,7 @@ import type {
     StringLiteral,
     Transform,
 } from 'jscodeshift';
+
 import { transformImportDeclaration } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
@@ -34,13 +35,13 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         ) {
             element.openingElement.name = j.jsxMemberExpression(
                 j.jsxIdentifier('Breadcrumb'),
-                j.jsxIdentifier('Root')
+                j.jsxIdentifier('Root'),
             );
 
             if (element.closingElement) {
                 element.closingElement.name = j.jsxMemberExpression(
                     j.jsxIdentifier('Breadcrumb'),
-                    j.jsxIdentifier('Root')
+                    j.jsxIdentifier('Root'),
                 );
             }
 
@@ -92,44 +93,44 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier('Breadcrumb'),
-                            j.jsxIdentifier('Link')
+                            j.jsxIdentifier('Link'),
                         ),
                         [
                             ...(href
                                 ? [
                                       j.jsxAttribute(
                                           j.jsxIdentifier('href'),
-                                          typeof href === 'string' ? j.stringLiteral(href) : href
+                                          typeof href === 'string' ? j.stringLiteral(href) : href,
                                       ),
                                   ]
                                 : []),
                             ...(active ? [j.jsxAttribute(j.jsxIdentifier('current'))] : []),
-                        ]
+                        ],
                     ),
                     j.jsxClosingElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier('Breadcrumb'),
-                            j.jsxIdentifier('Link')
-                        )
+                            j.jsxIdentifier('Link'),
+                        ),
                     ),
-                    item.children
+                    item.children,
                 );
 
                 const wrappedItem = j.jsxElement(
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier('Breadcrumb'),
-                            j.jsxIdentifier('Item')
+                            j.jsxIdentifier('Item'),
                         ),
-                        otherAttrs
+                        otherAttrs,
                     ),
                     j.jsxClosingElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier('Breadcrumb'),
-                            j.jsxIdentifier('Item')
-                        )
+                            j.jsxIdentifier('Item'),
+                        ),
                     ),
-                    [j.jsxText('\n      '), linkElement, j.jsxText('\n    ')]
+                    [j.jsxText('\n      '), linkElement, j.jsxText('\n    ')],
                 );
 
                 newChildren.push(wrappedItem);
@@ -141,12 +142,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             j.jsxOpeningElement(
                                 j.jsxMemberExpression(
                                     j.jsxIdentifier('Breadcrumb'),
-                                    j.jsxIdentifier('Separator')
+                                    j.jsxIdentifier('Separator'),
                                 ),
                                 [],
-                                true
-                            )
-                        )
+                                true,
+                            ),
+                        ),
                     );
                 }
             });
@@ -156,12 +157,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             const listElement = j.jsxElement(
                 j.jsxOpeningElement(
                     j.jsxMemberExpression(j.jsxIdentifier('Breadcrumb'), j.jsxIdentifier('List')),
-                    []
+                    [],
                 ),
                 j.jsxClosingElement(
-                    j.jsxMemberExpression(j.jsxIdentifier('Breadcrumb'), j.jsxIdentifier('List'))
+                    j.jsxMemberExpression(j.jsxIdentifier('Breadcrumb'), j.jsxIdentifier('List')),
                 ),
-                newChildren
+                newChildren,
             );
 
             element.children = [j.jsxText('\n  '), listElement, j.jsxText('\n')];
@@ -184,7 +185,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource({});
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

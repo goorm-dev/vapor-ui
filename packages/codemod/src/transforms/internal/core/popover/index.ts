@@ -191,7 +191,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         const parentElement = path.parent.value as JSXElement;
                         if (parentElement.children) {
                             parentElement.children = parentElement.children.filter(
-                                (child) => child !== element
+                                (child) => child !== element,
                             );
                         }
                     }
@@ -321,8 +321,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             positionerPropsObj.properties.push(
                                 j.objectProperty(
                                     j.identifier('side'),
-                                    rootProps.sideAttr.value || j.stringLiteral('bottom')
-                                )
+                                    rootProps.sideAttr.value || j.stringLiteral('bottom'),
+                                ),
                             );
                         }
 
@@ -330,8 +330,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             positionerPropsObj.properties.push(
                                 j.objectProperty(
                                     j.identifier('align'),
-                                    rootProps.alignAttr.value || j.stringLiteral('center')
-                                )
+                                    rootProps.alignAttr.value || j.stringLiteral('center'),
+                                ),
                             );
                         }
                     }
@@ -340,13 +340,16 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 // Add sideOffset and alignOffset to positionerProps
                 if (sideOffset !== null) {
                     positionerPropsObj.properties.push(
-                        j.objectProperty(j.identifier('sideOffset'), j.numericLiteral(sideOffset))
+                        j.objectProperty(j.identifier('sideOffset'), j.numericLiteral(sideOffset)),
                     );
                 }
 
                 if (alignOffset !== null) {
                     positionerPropsObj.properties.push(
-                        j.objectProperty(j.identifier('alignOffset'), j.numericLiteral(alignOffset))
+                        j.objectProperty(
+                            j.identifier('alignOffset'),
+                            j.numericLiteral(alignOffset),
+                        ),
                     );
                 }
 
@@ -367,8 +370,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     element.openingElement.attributes?.push(
                         j.jsxAttribute(
                             j.jsxIdentifier('positionerProps'),
-                            j.jsxExpressionContainer(positionerPropsObj)
-                        )
+                            j.jsxExpressionContainer(positionerPropsObj),
+                        ),
                     );
                 }
             }
@@ -378,7 +381,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

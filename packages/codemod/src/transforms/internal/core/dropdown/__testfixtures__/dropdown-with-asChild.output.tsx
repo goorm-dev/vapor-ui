@@ -1,5 +1,5 @@
-import { Menu } from '@vapor-ui/core';
 import { Button } from '@goorm-dev/vapor-core';
+import { Menu } from '@vapor-ui/core';
 
 export default function App() {
     return (

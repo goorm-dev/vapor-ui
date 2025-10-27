@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { Tabs } from '@goorm-dev/vapor-core';
 
 export default function Example() {

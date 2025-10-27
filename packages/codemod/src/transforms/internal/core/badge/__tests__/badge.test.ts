@@ -1,10 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'badge-variants-change',
-    'badge-import-only',
-    'badge-mixed-imports',
-    'badge-existing-vapor-import',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/badge', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

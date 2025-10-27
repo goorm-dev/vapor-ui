@@ -1,4 +1,4 @@
-import { Checkbox, Button } from '@goorm-dev/vapor-core';
+import { Button, Checkbox } from '@goorm-dev/vapor-core';
 import { Text } from '@vapor-ui/core';
 
 export const Component = () => (

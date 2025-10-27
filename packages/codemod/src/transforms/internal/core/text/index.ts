@@ -1,4 +1,5 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
+
 import { transformImportDeclaration } from '~/utils/import-transform';
 
 const colorMapping: Record<string, string> = {
@@ -69,8 +70,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         ) {
                             attr.value = j.jsxExpressionContainer(
                                 j.jsxElement(
-                                    j.jsxOpeningElement(j.jsxIdentifier(asValue.value), [], true)
-                                )
+                                    j.jsxOpeningElement(j.jsxIdentifier(asValue.value), [], true),
+                                ),
                             );
                         }
                     }
@@ -79,7 +80,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
             if (hasAsChild && element.children && element.children.length > 0) {
                 const firstChild = element.children.find(
-                    (child) => child.type === 'JSXElement' || child.type === 'JSXFragment'
+                    (child) => child.type === 'JSXElement' || child.type === 'JSXFragment',
                 );
 
                 if (firstChild && firstChild.type === 'JSXElement') {
@@ -95,10 +96,10 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                     j.jsxOpeningElement(
                                         childElement.openingElement.name,
                                         childAttributes,
-                                        true
-                                    )
-                                )
-                            )
+                                        true,
+                                    ),
+                                ),
+                            ),
                         ),
                     ];
 
@@ -112,7 +113,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource({});
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

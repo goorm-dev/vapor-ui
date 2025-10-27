@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Alert } from '@goorm-dev/vapor-core';
 import { CheckIcon } from '@vapor-ui/icons';
 

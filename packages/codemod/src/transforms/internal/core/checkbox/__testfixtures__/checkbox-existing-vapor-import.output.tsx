@@ -1,4 +1,4 @@
-import { Text, Checkbox } from '@vapor-ui/core';
+import { Checkbox, Text } from '@vapor-ui/core';
 
 export const Component = () => (
     <div>

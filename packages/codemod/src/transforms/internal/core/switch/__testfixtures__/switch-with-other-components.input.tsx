@@ -1,4 +1,4 @@
-import { Switch, Button } from '@goorm-dev/vapor-core';
+import { Button, Switch } from '@goorm-dev/vapor-core';
 
 export function WithOtherComponentsExample() {
     return (

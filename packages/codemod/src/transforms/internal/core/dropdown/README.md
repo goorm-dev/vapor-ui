@@ -22,13 +22,13 @@ This transformer automates the migration of the Dropdown component from `@goorm-
 
 This transformer automatically handles:
 
--   ✅ Import statement migration with smart merging
--   ✅ Component and subcomponent renaming
--   ✅ Props repositioning and conversion
--   ✅ Portal prop renaming (`forceMount` → `keepMounted`)
--   ✅ `asChild` to `render` prop conversion
--   ✅ Style prop merging for `maxHeight`
--   ⚠️ Removes `closeOnClick` with warning (Base UI always closes on click)
+- ✅ Import statement migration with smart merging
+- ✅ Component and subcomponent renaming
+- ✅ Props repositioning and conversion
+- ✅ Portal prop renaming (`forceMount` → `keepMounted`)
+- ✅ `asChild` to `render` prop conversion
+- ✅ Style prop merging for `maxHeight`
+- ⚠️ Removes `closeOnClick` with warning (Base UI always closes on click)
 
 ### Coverage
 
@@ -41,14 +41,14 @@ This transformer automatically handles:
 
 The overall component has been renamed from Dropdown to Menu, and the composition structure has been modified.
 
--   **Before:** `<Dropdown>` (Radix UI-based)
--   **After:** `<Menu.Root>` (Base UI-based)
--   ⚠️**Caution:** `Dropdown.Contents` / `Dropdown.CombinedContent` → Changed to `Menu.Content`
--   ⚠️**Caution:** `Dropdown.Divider` → Changed to `Menu.Separator`
--   ⚠️**Caution:** `Dropdown.Sub` → Changed to `Menu.SubmenuRoot`
--   ⚠️**Caution:** `Dropdown.SubTrigger` → Changed to `Menu.SubmenuTriggerItem`
--   ⚠️**Caution:** `Dropdown.SubContent` → Changed to `Menu.Content` (within SubmenuRoot)
--   ⚠️**Caution:** `Dropdown.SubContents` / `Dropdown.SubCombinedContent` → Changed to `Menu.SubmenuContent`
+- **Before:** `<Dropdown>` (Radix UI-based)
+- **After:** `<Menu.Root>` (Base UI-based)
+- ⚠️**Caution:** `Dropdown.Contents` / `Dropdown.CombinedContent` → Changed to `Menu.Content`
+- ⚠️**Caution:** `Dropdown.Divider` → Changed to `Menu.Separator`
+- ⚠️**Caution:** `Dropdown.Sub` → Changed to `Menu.SubmenuRoot`
+- ⚠️**Caution:** `Dropdown.SubTrigger` → Changed to `Menu.SubmenuTriggerItem`
+- ⚠️**Caution:** `Dropdown.SubContent` → Changed to `Menu.Content` (within SubmenuRoot)
+- ⚠️**Caution:** `Dropdown.SubContents` / `Dropdown.SubCombinedContent` → Changed to `Menu.SubmenuContent`
 
 ---
 
@@ -59,6 +59,8 @@ The overall component has been renamed from Dropdown to Menu, and the compositio
 ```jsx
 // Before
 import { Dropdown } from '@goorm-dev/vapor-core';
+// After
+import { Menu } from '@vapor-ui/core';
 
 <Dropdown side="bottom" align="start" modal={true}>
     <Dropdown.Trigger>Open Menu</Dropdown.Trigger>
@@ -71,9 +73,6 @@ import { Dropdown } from '@goorm-dev/vapor-core';
         </Dropdown.Content>
     </Dropdown.Portal>
 </Dropdown>;
-
-// After
-import { Menu } from '@vapor-ui/core';
 
 <Menu.Root modal={true}>
     <Menu.Trigger>Open Menu</Menu.Trigger>
@@ -214,10 +213,10 @@ The root container for the Menu. It provides state management and Context.
 
 **Props:**
 
--   `modal`: Focus trap behavior (boolean)
--   `open`, `onOpenChange`, `defaultOpen`: State control props
--   `disabled`: Disables all menu items
--   `children`: Menu content
+- `modal`: Focus trap behavior (boolean)
+- `open`, `onOpenChange`, `defaultOpen`: State control props
+- `disabled`: Disables all menu items
+- `children`: Menu content
 
 ### Menu.Trigger
 
@@ -248,9 +247,9 @@ Renders the Menu at a different location in the DOM (typically at the end of the
 
 **Props:**
 
--   `portalProps`: Props to pass to the Portal
--   `positionerProps`: Props to pass to the Positioner (includes `side`, `align`, `sideOffset`)
--   Other Popup props (like className, style)
+- `portalProps`: Props to pass to the Portal
+- `positionerProps`: Props to pass to the Positioner (includes `side`, `align`, `sideOffset`)
+- Other Popup props (like className, style)
 
 ### Menu.Item
 
@@ -262,9 +261,9 @@ A menu item.
 
 **Props:**
 
--   `disabled`: Disables the item
--   `render`: Custom rendering
--   `className`: Custom style class
+- `disabled`: Disables the item
+- `render`: Custom rendering
+- `className`: Custom style class
 
 ### Menu.Separator
 
@@ -328,9 +327,9 @@ The content of a submenu (formerly `Dropdown.SubContent` / `Dropdown.SubCombined
 
 **Props:**
 
--   `portalProps`: Props to pass to the Portal
--   `positionerProps`: Props to pass to the Positioner
--   Other Popup props
+- `portalProps`: Props to pass to the Portal
+- `positionerProps`: Props to pass to the Positioner
+- Other Popup props
 
 ---
 
@@ -352,7 +351,6 @@ Codemod automatically handles the following changes:
     - `closeOnClick` prop is removed (with a comment warning)
     - **Portal's `forceMount` prop is automatically converted to `keepMounted`**
 4. **Subcomponent Conversion**:
-
     - `Dropdown.Trigger` → `Menu.Trigger`
     - `Dropdown.Portal` → `Menu.Portal`
         - Portal's `forceMount` → `keepMounted`
@@ -379,7 +377,6 @@ Codemod automatically handles the following changes:
     ```
 
 5. **asChild → automatic render prop conversion**:
-
     - Automatically converts the `asChild` prop to a `render` prop
     - Extracts the first child JSX element as a render prop (self-closing form)
     - Preserves the child element's props in the render prop
@@ -408,34 +405,34 @@ The transformer performs the following transformations automatically:
 
 ### 6.1. Import Transformation
 
--   Locates all imports from `@goorm-dev/vapor-core` containing `Dropdown`
--   Converts default imports to named imports: `import Dropdown` → `import { Menu }`
--   Changes the import source: `@goorm-dev/vapor-core` → `@vapor-ui/core`
--   Merges with existing `@vapor-ui/core` imports to avoid duplicate import statements
--   Preserves all other imports from the same source
+- Locates all imports from `@goorm-dev/vapor-core` containing `Dropdown`
+- Converts default imports to named imports: `import Dropdown` → `import { Menu }`
+- Changes the import source: `@goorm-dev/vapor-core` → `@vapor-ui/core`
+- Merges with existing `@vapor-ui/core` imports to avoid duplicate import statements
+- Preserves all other imports from the same source
 
 ### 6.2. Component Structure Transformation
 
--   Renames the root component: `<Dropdown>` → `<Menu.Root>`
--   Transforms all subcomponents with their new names (e.g., `Dropdown.Item` → `Menu.Item`)
--   Handles aliased subcomponents (e.g., `Dropdown.Contents`, `Dropdown.CombinedContent` → `Menu.Content`)
--   Updates both opening and closing tags, as well as self-closing tags
+- Renames the root component: `<Dropdown>` → `<Menu.Root>`
+- Transforms all subcomponents with their new names (e.g., `Dropdown.Item` → `Menu.Item`)
+- Handles aliased subcomponents (e.g., `Dropdown.Contents`, `Dropdown.CombinedContent` → `Menu.Content`)
+- Updates both opening and closing tags, as well as self-closing tags
 
 ### 6.3. Props Transformation
 
--   **Repositions positioning props**: Extracts `side` and `align` from `Menu.Root` and wraps them in `positionerProps={{ side, align }}` on `Menu.Content`
--   **Converts maxHeight**: Changes `maxHeight="40vh"` to `style={{ maxHeight: "40vh" }}` on `Menu.Content`
--   **Merges styles**: If both `maxHeight` and `style` exist, merges them into a single style object
--   **Renames Portal props**: Converts `forceMount` to `keepMounted` on `Menu.Portal`
--   **Removes deprecated props**: Removes `closeOnClick` and adds a warning comment
+- **Repositions positioning props**: Extracts `side` and `align` from `Menu.Root` and wraps them in `positionerProps={{ side, align }}` on `Menu.Content`
+- **Converts maxHeight**: Changes `maxHeight="40vh"` to `style={{ maxHeight: "40vh" }}` on `Menu.Content`
+- **Merges styles**: If both `maxHeight` and `style` exist, merges them into a single style object
+- **Renames Portal props**: Converts `forceMount` to `keepMounted` on `Menu.Portal`
+- **Removes deprecated props**: Removes `closeOnClick` and adds a warning comment
 
 ### 6.4. asChild to render Prop Conversion
 
--   Detects `asChild` prop usage on any Menu subcomponent
--   Extracts the first child JSX element
--   Converts it to a self-closing `render` prop: `render={<element />}`
--   Moves the child's internal content to the component's children
--   Preserves all props from the original child element
+- Detects `asChild` prop usage on any Menu subcomponent
+- Extracts the first child JSX element
+- Converts it to a self-closing `render` prop: `render={<element />}`
+- Moves the child's internal content to the component's children
+- Preserves all props from the original child element
 
 ---
 
@@ -447,8 +444,8 @@ Codemod handles most tasks automatically, but manual intervention may be necessa
 
 **⚠️ IMPORTANT**: Base UI Menu items **always close the menu when clicked**. This behavior is not customizable.
 
--   **Radix UI** (old): You could use `onSelect` with `event.preventDefault()` to prevent menu closing
--   **Base UI** (new): Menu always closes on item click (default `closeOnClick: true`)
+- **Radix UI** (old): You could use `onSelect` with `event.preventDefault()` to prevent menu closing
+- **Base UI** (new): Menu always closes on item click (default `closeOnClick: true`)
 
 **Action Required**: If your code relied on `closeOnClick={false}` to keep the menu open, you'll need to refactor your logic. The codemod adds a warning comment where this prop was used.
 
@@ -490,12 +487,10 @@ New Menu components have transitioned from **Radix UI Dropdown Menu** to **Base 
     - Previous: `@radix-ui/react-dropdown-menu`
     - New: `@base-ui-components/react/menu`
 2. **Component Structure**:
-
     - **Radix UI**: Flat structure with `DropdownMenu.Root`
     - **Base UI**: Hierarchical structure with `Menu.Root`, `Menu.Positioner`, `Menu.Popup`
 
 3. **closeOnClick behavior**:
-
     - **Radix UI**: Controllable via `onSelect` event with `event.preventDefault()`
     - **Base UI**: Items always close the menu on click (not customizable)
 
@@ -508,22 +503,22 @@ New Menu components have transitioned from **Radix UI Dropdown Menu** to **Base 
 
 ### Dropdown.Contents vs Menu.Content
 
--   **Previous version (`@goorm-dev/vapor-core`)**:
-    -   `Dropdown.Contents` (or `Dropdown.CombinedContent`) is a composite component containing `Portal + Content`
-    -   Renders all elements at once for convenience
--   **New Version (`@vapor-ui/core`)**:
-    -   Renamed to `Menu.Content`, same role (includes `Portal + Positioner + Popup`)
-    -   `Menu.Popup` is the primary element usable on its own
-    -   Portal, Positioner, and Popup can be explicitly configured when finer control is needed
+- **Previous version (`@goorm-dev/vapor-core`)**:
+    - `Dropdown.Contents` (or `Dropdown.CombinedContent`) is a composite component containing `Portal + Content`
+    - Renders all elements at once for convenience
+- **New Version (`@vapor-ui/core`)**:
+    - Renamed to `Menu.Content`, same role (includes `Portal + Positioner + Popup`)
+    - `Menu.Popup` is the primary element usable on its own
+    - Portal, Positioner, and Popup can be explicitly configured when finer control is needed
 
 ### Accessibility
 
 Both libraries provide excellent accessibility:
 
--   `role="menu"` is automatically set
--   Arrow key navigation is built-in
--   Escape key closes the menu
--   Focus management is handled automatically
+- `role="menu"` is automatically set
+- Arrow key navigation is built-in
+- Escape key closes the menu
+- Focus management is handled automatically
 
 ---
 

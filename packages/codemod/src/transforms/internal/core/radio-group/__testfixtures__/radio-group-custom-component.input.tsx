@@ -1,6 +1,8 @@
 // @ts-nocheck
 import React from 'react';
+
 import { RadioGroup } from '@goorm-dev/vapor-core';
+
 import { Custom } from './custom';
 
 export function Example() {

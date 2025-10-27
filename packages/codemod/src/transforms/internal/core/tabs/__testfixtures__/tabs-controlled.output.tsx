@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { Tabs } from '@vapor-ui/core';
 
 export default function Example() {

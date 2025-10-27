@@ -1,19 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'nav-basic',
-    'nav-link-active',
-    'nav-props-type',
-    'nav-link-align',
-    'nav-aria-label-exists',
-    'nav-with-asChild',
-    'nav-mixed-imports',
-    'nav-merge-into-existing',
-    'nav-multiple',
-    'nav-vertical',
-    'nav-disabled-link',
-    'nav-with-spread',
-    'nav-complex',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/nav', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

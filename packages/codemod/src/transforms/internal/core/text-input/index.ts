@@ -65,7 +65,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                 (attr) =>
                                     attr.type === 'JSXAttribute' &&
                                     attr.name.type === 'JSXIdentifier' &&
-                                    attr.name.name === 'visuallyHidden'
+                                    attr.name.name === 'visuallyHidden',
                             );
 
                             // Extract label text
@@ -92,8 +92,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     j.jsxOpeningElement(
                         j.jsxIdentifier(textInputImportName),
                         [...rootProps, ...fieldProps],
-                        true
-                    )
+                        true,
+                    ),
                 );
 
                 // Handle label cases
@@ -106,21 +106,21 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier('Field'),
-                                j.jsxIdentifier('Label')
+                                j.jsxIdentifier('Label'),
                             ),
-                            []
+                            [],
                         ),
                         j.jsxClosingElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier('Field'),
-                                j.jsxIdentifier('Label')
-                            )
+                                j.jsxIdentifier('Label'),
+                            ),
                         ),
                         [
                             j.jsxText('\n                ' + labelText + '\n                '),
                             newTextInputElement,
                             j.jsxText('\n            '),
-                        ]
+                        ],
                     );
 
                     // Create Field.Root wrapper
@@ -128,14 +128,17 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier('Field'),
-                                j.jsxIdentifier('Root')
+                                j.jsxIdentifier('Root'),
                             ),
-                            []
+                            [],
                         ),
                         j.jsxClosingElement(
-                            j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Root'))
+                            j.jsxMemberExpression(
+                                j.jsxIdentifier('Field'),
+                                j.jsxIdentifier('Root'),
+                            ),
                         ),
-                        [j.jsxText('\n            '), fieldLabel, j.jsxText('\n        ')]
+                        [j.jsxText('\n            '), fieldLabel, j.jsxText('\n        ')],
                     );
 
                     // Replace the entire TextInput with Field.Root
@@ -144,7 +147,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     // Add aria-label instead of using Field
                     const ariaLabelAttr = j.jsxAttribute(
                         j.jsxIdentifier('aria-label'),
-                        j.stringLiteral(labelText)
+                        j.stringLiteral(labelText),
                     );
 
                     newTextInputElement.openingElement.attributes?.unshift(ariaLabelAttr);
@@ -169,7 +172,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             const firstImport = targetImports.at(0).get().value;
             const hasFieldImport = firstImport.specifiers?.some(
                 (spec: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) =>
-                    spec.type === 'ImportSpecifier' && spec.imported.name === 'Field'
+                    spec.type === 'ImportSpecifier' && spec.imported.name === 'Field',
             );
 
             if (!hasFieldImport) {
@@ -178,7 +181,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     }
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

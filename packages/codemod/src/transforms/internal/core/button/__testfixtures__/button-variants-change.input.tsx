@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import { Button } from '@vapor-ui/core';
 
 export const Component = () => (

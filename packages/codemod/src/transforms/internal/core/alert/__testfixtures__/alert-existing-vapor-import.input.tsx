@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { Alert } from '@goorm-dev/vapor-core';
-
 import { Text } from '@vapor-ui/core';
 
 export const Component = () => (

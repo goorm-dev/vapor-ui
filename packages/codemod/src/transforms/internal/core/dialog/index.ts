@@ -136,7 +136,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                 | JSXExpressionContainer
                                 | JSXSpreadChild
                                 | JSXElement
-                                | JSXFragment
+                                | JSXFragment,
                         ) => {
                             return (
                                 sibling.type === 'JSXElement' &&
@@ -146,7 +146,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                 sibling.openingElement.name.property.type === 'JSXIdentifier' &&
                                 sibling.openingElement.name.property.name === 'Overlay'
                             );
-                        }
+                        },
                     );
 
                     // If inside Portal with Overlay sibling, transform to Popup
@@ -164,7 +164,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

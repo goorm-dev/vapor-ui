@@ -57,7 +57,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Add Radio import
         const hasRadio = firstImport.specifiers?.some(
             (spec: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) =>
-                spec.type === 'ImportSpecifier' && spec.imported.name === RADIO_COMPONENT_NAME
+                spec.type === 'ImportSpecifier' && spec.imported.name === RADIO_COMPONENT_NAME,
         );
 
         if (!hasRadio) {
@@ -68,7 +68,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (hasLabels) {
             const hasField = firstImport.specifiers?.some(
                 (spec: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) =>
-                    spec.type === 'ImportSpecifier' && spec.imported.name === FIELD_COMPONENT_NAME
+                    spec.type === 'ImportSpecifier' && spec.imported.name === FIELD_COMPONENT_NAME,
             );
 
             if (!hasField) {
@@ -136,7 +136,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         ) {
             // Extract disabled prop from Item
             const disabledAttr = element.openingElement.attributes?.find(
-                (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'disabled'
+                (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'disabled',
             );
 
             // Store Item's attributes for later (to preserve key, className, etc.)
@@ -163,7 +163,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         }
                         // Only add if not already present
                         const hasDisabled = child.openingElement.attributes.some(
-                            (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'disabled'
+                            (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'disabled',
                         );
                         if (!hasDisabled) {
                             child.openingElement.attributes.push(disabledAttr as JSXAttribute);
@@ -269,7 +269,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             // Filter out disabled attribute from Item (it's handled in Radio.Root)
             // but keep other attributes like key, className, etc.
             const itemAttrsToKeep = attributes?.filter(
-                (attr) => attr.type === 'JSXAttribute' && attr.name.name !== 'disabled'
+                (attr) => attr.type === 'JSXAttribute' && attr.name.name !== 'disabled',
             );
 
             // Merge Item's attributes with Label's attributes (Item attrs take precedence)
@@ -282,17 +282,17 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 j.jsxOpeningElement(
                     j.jsxMemberExpression(
                         j.jsxIdentifier(fieldImportName!),
-                        j.jsxIdentifier('Label')
+                        j.jsxIdentifier('Label'),
                     ),
-                    mergedAttributes
+                    mergedAttributes,
                 ),
                 j.jsxClosingElement(
                     j.jsxMemberExpression(
                         j.jsxIdentifier(fieldImportName!),
-                        j.jsxIdentifier('Label')
-                    )
+                        j.jsxIdentifier('Label'),
+                    ),
                 ),
-                newLabelChildren
+                newLabelChildren,
             );
 
             // Replace Item with the new structure
@@ -302,7 +302,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             // Transfer Item's attributes to Radio.Root (except disabled which is already handled)
             const itemAttrsToKeep =
                 attributes?.filter(
-                    (attr) => attr.type === 'JSXAttribute' && attr.name.name !== 'disabled'
+                    (attr) => attr.type === 'JSXAttribute' && attr.name.name !== 'disabled',
                 ) || [];
             if (itemAttrsToKeep.length > 0) {
                 indicator.openingElement.attributes = [
@@ -316,7 +316,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             // Transfer Item's attributes to Field.Label
             const itemAttrsToKeep =
                 attributes?.filter(
-                    (attr) => attr.type === 'JSXAttribute' && attr.name.name !== 'disabled'
+                    (attr) => attr.type === 'JSXAttribute' && attr.name.name !== 'disabled',
                 ) || [];
             if (itemAttrsToKeep.length > 0) {
                 label.openingElement.attributes = [
@@ -331,7 +331,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

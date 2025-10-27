@@ -30,7 +30,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         root,
         j,
         NEW_COMPONENT_NAME,
-        TARGET_PACKAGE
+        TARGET_PACKAGE,
     );
 
     // 2. Transform Nav JSX elements to NavigationMenu.Root
@@ -49,13 +49,13 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 (attr) =>
                     attr.type === 'JSXAttribute' &&
                     attr.name.type === 'JSXIdentifier' &&
-                    attr.name.name === 'aria-label'
+                    attr.name.name === 'aria-label',
             );
 
             // Add aria-label if it doesn't exist
             if (!hasAriaLabel) {
                 element.openingElement.attributes?.push(
-                    j.jsxAttribute(j.jsxIdentifier('aria-label'), j.stringLiteral('Navigation'))
+                    j.jsxAttribute(j.jsxIdentifier('aria-label'), j.stringLiteral('Navigation')),
                 );
             }
 
@@ -64,7 +64,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 (attr) =>
                     attr.type === 'JSXAttribute' &&
                     attr.name.type === 'JSXIdentifier' &&
-                    attr.name.name === 'type'
+                    attr.name.name === 'type',
             );
 
             element.openingElement.attributes = attributes.filter((attr) => {
@@ -88,7 +88,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     j.commentBlock(
                         ' TODO: The "type" prop has been removed. Please use CSS to customize the navigation style. ',
                         true,
-                        false
+                        false,
                     ),
                 ];
 
@@ -149,7 +149,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     (attr) =>
                         attr.type === 'JSXAttribute' &&
                         attr.name.type === 'JSXIdentifier' &&
-                        attr.name.name === 'align'
+                        attr.name.name === 'align',
                 );
 
                 element.openingElement.attributes = (
@@ -169,7 +169,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         j.commentBlock(
                             ' TODO: The "align" prop has been removed. Please use CSS (text-align or flexbox) to customize alignment. ',
                             true,
-                            false
+                            false,
                         ),
                     ];
 
@@ -182,7 +182,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                 index,
                                 0,
                                 jsxComment,
-                                j.jsxText('\n                    ')
+                                j.jsxText('\n                    '),
                             );
                         }
                     }
@@ -194,7 +194,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

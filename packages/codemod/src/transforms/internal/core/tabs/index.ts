@@ -50,7 +50,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
             // Extract hasBorder value from Tabs.List
             const hasBorderAttr = element.openingElement.attributes?.find(
-                (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'hasBorder'
+                (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'hasBorder',
             ) as JSXAttribute | undefined;
 
             let hasBorderValue: boolean | null = null;
@@ -123,8 +123,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 element.openingElement.attributes.push(
                     j.jsxAttribute(
                         j.jsxIdentifier('variant'),
-                        j.jsxExpressionContainer(j.stringLiteral(variantValue))
-                    )
+                        j.jsxExpressionContainer(j.stringLiteral(variantValue)),
+                    ),
                 );
             }
 
@@ -148,7 +148,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             // Remove align prop
             const attributes = element.openingElement.attributes || [];
             element.openingElement.attributes = attributes.filter(
-                (attr) => !(attr.type === 'JSXAttribute' && attr.name.name === 'align')
+                (attr) => !(attr.type === 'JSXAttribute' && attr.name.name === 'align'),
             );
 
             // Transform Button → Trigger
@@ -182,7 +182,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     !(
                         attr.type === 'JSXAttribute' &&
                         (attr.name.name === 'hasBorder' || attr.name.name === 'loop')
-                    )
+                    ),
             );
 
             // Add Tabs.Indicator as the last child if not already present
@@ -194,7 +194,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     child.openingElement.name.object.type === 'JSXIdentifier' &&
                     child.openingElement.name.object.name === tabsImportName &&
                     child.openingElement.name.property.type === 'JSXIdentifier' &&
-                    child.openingElement.name.property.name === 'Indicator'
+                    child.openingElement.name.property.name === 'Indicator',
             );
 
             if (!hasIndicator) {
@@ -203,11 +203,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier(tabsImportName),
-                            j.jsxIdentifier('Indicator')
+                            j.jsxIdentifier('Indicator'),
                         ),
                         [],
-                        true
-                    )
+                        true,
+                    ),
                 );
 
                 // Add indicator as last child
@@ -236,14 +236,21 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     !(
                         attr.type === 'JSXAttribute' &&
                         (attr.name.name === 'forceMount' || attr.name.name === 'hidden')
-                    )
+                    ),
             );
 
             transformAsChildToRender(j, element);
         }
     });
 
-    return root.toSource();
+    const printOptions = {
+        quote: 'auto' as const,
+        trailingComma: true,
+        tabWidth: 4,
+        reuseWhitespace: true,
+    };
+
+    return root.toSource(printOptions);
 };
 
 export default transform;

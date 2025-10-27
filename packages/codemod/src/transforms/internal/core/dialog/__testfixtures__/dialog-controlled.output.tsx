@@ -1,5 +1,6 @@
-import { Dialog } from '@vapor-ui/core';
 import { useState } from 'react';
+
+import { Dialog } from '@vapor-ui/core';
 
 export const Component = () => {
     const [open, setOpen] = useState(false);

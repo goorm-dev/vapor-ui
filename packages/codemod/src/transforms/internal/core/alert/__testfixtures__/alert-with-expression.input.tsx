@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Alert } from '@goorm-dev/vapor-core';
 
 const color = 'success';

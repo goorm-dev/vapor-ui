@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Button, Badge, Avatar } from '@vapor-ui/core';
+import { Avatar, Badge, Button } from '@vapor-ui/core';
 
 function Component() {
     return (

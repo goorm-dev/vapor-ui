@@ -1,5 +1,4 @@
 import { Collapsible } from '@goorm-dev/vapor-core';
-
 import { Button } from '@vapor-ui/core';
 
 export const Component = () => (

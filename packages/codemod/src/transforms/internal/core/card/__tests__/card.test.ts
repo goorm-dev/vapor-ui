@@ -1,20 +1,10 @@
-const { defineTransformTests } = require('~/utils/test-utils');
+import { join } from 'node:path';
 
-const tests = [
-    'card-basic',
-    'card-with-title',
-    'card-all-sections',
-    'card-with-props',
-    'card-mixed-imports',
-    'card-existing-vapor-import',
-    'card-merge-into-vapor-import',
-    'card-title-with-props',
-    'card-self-closing',
-    'card-only-body',
-    'card-nested-title',
-    'card-multiple-titles',
-    'card-with-asChild',
-    'card-asChild-with-props',
-];
+import { runTestTransform } from '~/utils/test-utils';
 
-defineTransformTests('internal/core/card', tests);
+import transform from '../index';
+
+runTestTransform({
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
+});

@@ -1,5 +1,5 @@
-import { Button } from '@vapor-ui/core';
 import { RadioGroup } from '@goorm-dev/vapor-core';
+import { Button } from '@vapor-ui/core';
 
 export function Example() {
     return (

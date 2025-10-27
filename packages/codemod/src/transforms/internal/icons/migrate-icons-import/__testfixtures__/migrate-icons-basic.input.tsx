@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import { HeartIcon, HomeIcon } from '@goorm-dev/vapor-icons';
 
 export function MyComponent() {

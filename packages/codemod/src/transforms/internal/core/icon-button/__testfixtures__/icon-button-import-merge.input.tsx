@@ -1,5 +1,5 @@
-import { Button } from '@vapor-ui/core';
 import { IconButton } from '@goorm-dev/vapor-core';
+import { Button } from '@vapor-ui/core';
 import { HeartIcon } from '@vapor-ui/icons';
 
 export default function App() {
