@@ -22,9 +22,11 @@ interface Tokens {
 }
 
 interface ScaleInfo {
-    backgroundScale: string;
-    foregroundScale: string;
-    alternativeScale: string;
+    background100Scale: string;
+    background200Scale: string;
+    borderScale: string;
+    foreground100Scale: string;
+    foreground200Scale: string;
 }
 
 interface TokenContainer {

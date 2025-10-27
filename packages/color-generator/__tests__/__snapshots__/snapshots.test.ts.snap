@@ -342,7 +342,7 @@ exports[`Color Generator Snapshots > should match semanticDependentTokens snapsh
         "type": "semantic",
       },
       "tokens": {
-        "color-background-primary-100": "color-mint-800",
+        "color-background-primary-100": "color-mint-050",
         "color-background-primary-200": "color-mint-800",
         "color-border-primary": "color-mint-800",
         "color-foreground-primary-100": "color-mint-900",

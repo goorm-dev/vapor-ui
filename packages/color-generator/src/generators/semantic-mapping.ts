@@ -1,5 +1,12 @@
 import { BASE_COLORS } from '../constants';
-import type { Background, ColorToken, ScaleInfo, SemanticTokensResult, ThemeType } from '../types';
+import type {
+    Background,
+    ColorToken,
+    ScaleInfo,
+    SemanticTokensResult,
+    ThemeType,
+    Tokens,
+} from '../types';
 import { findClosestScale, getContrastingForegroundColor, getSortedScales } from '../utils';
 import { generateBrandColorPalette } from './brand-color-palette';
 
@@ -8,15 +15,10 @@ import { generateBrandColorPalette } from './brand-color-palette';
  * -----------------------------------------------------------------------------------------------*/
 interface SemanticMappingConfig {
     primary: { name: string; color: string };
-    secondary?: { name: string; color: string };
-    success?: { name: string; color: string };
-    warning?: { name: string; color: string };
-    error?: { name: string; color: string };
     background: Background;
 }
 
 interface SemanticTokenMapping {
-    themeName: ThemeType;
     semanticRole: string;
     brandColorName: string;
     scaleInfo: ScaleInfo;
@@ -30,7 +32,7 @@ interface SemanticTokenMapping {
 /**
  * 전체 토큰 맵에서 특정 색상에 해당하는 팔레트만 추출하여 재구성합니다.
  *
- * @param sourceTokens - Record<string, ColorToken | string> 타입의 전체 토큰 맵
+ * @param sourceTokens - Tokens 타입의 전체 토큰 맵
  * @param colorName - 추출할 색상 이름 (ex: 'primary', 'blue')
  * @returns Record<string, ColorToken> 타입의 재구성된 색상 팔레트
  *
@@ -42,7 +44,7 @@ interface SemanticTokenMapping {
  * }
  */
 const reconstructPalette = (
-    sourceTokens: Record<string, ColorToken | string>,
+    sourceTokens: Tokens,
     colorName: string,
 ): Record<string, ColorToken> => {
     const palette: Record<string, ColorToken> = {};
@@ -81,7 +83,6 @@ const determineButtonForegroundColor = (backgroundToken: ColorToken | undefined)
 };
 
 const createSemanticTokenMapping = ({
-    themeName,
     semanticRole,
     brandColorName,
     scaleInfo,
@@ -90,15 +91,13 @@ const createSemanticTokenMapping = ({
     semantic: Record<string, string>;
     componentSpecific: Record<string, string>;
 } => {
-    const background100Scale = themeName === 'dark' ? 800 : 100;
-
     return {
         semantic: {
-            [`color-background-${semanticRole}-100`]: `color-${brandColorName}-${background100Scale}`,
-            [`color-background-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
-            [`color-foreground-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.foregroundScale}`,
-            [`color-foreground-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.alternativeScale}`,
-            [`color-border-${semanticRole}`]: `color-${brandColorName}-${scaleInfo.backgroundScale}`,
+            [`color-background-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.background100Scale}`,
+            [`color-background-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.background200Scale}`,
+            [`color-foreground-${semanticRole}-100`]: `color-${brandColorName}-${scaleInfo.foreground100Scale}`,
+            [`color-foreground-${semanticRole}-200`]: `color-${brandColorName}-${scaleInfo.foreground200Scale}`,
+            [`color-border-${semanticRole}`]: `color-${brandColorName}-${scaleInfo.borderScale}`,
         },
         componentSpecific: {
             [`color-button-foreground-${semanticRole}`]: buttonForegroundColor.name!,
@@ -136,12 +135,21 @@ const findLightThemeScales = (
         throw new Error('No scale with deltaE 0 found for light theme');
     }
 
-    const backgroundScale = deltaEZeroScale;
-    const backgroundIndex = scales.indexOf(backgroundScale);
-    const foregroundScale = scales[backgroundIndex + 1] ?? backgroundScale;
-    const alternativeScale = scales[backgroundIndex + 2] ?? foregroundScale;
+    const background200Scale = deltaEZeroScale;
+    const backgroundIndex = scales.indexOf(background200Scale);
 
-    return { backgroundScale, foregroundScale, alternativeScale };
+    const background100Scale = deltaEZeroScale === '050' ? '050' : '100'; // 라이트 테마에서는 항상 050 또는 100으로 사용
+    const borderScale = deltaEZeroScale;
+    const foreground100Scale = scales[backgroundIndex + 1] ?? background200Scale;
+    const foreground200Scale = scales[backgroundIndex + 2] ?? foreground100Scale;
+
+    return {
+        background100Scale,
+        background200Scale,
+        borderScale,
+        foreground100Scale,
+        foreground200Scale,
+    };
 };
 
 /**
@@ -164,21 +172,83 @@ const findDarkThemeScales = (
     palette: Record<string, { deltaE?: number }>,
     scales: string[],
 ): ScaleInfo => {
-    const backgroundScale = findClosestScale(palette);
+    const deltaELowestScale = findClosestScale(palette);
 
-    if (!backgroundScale) {
+    if (!deltaELowestScale) {
         throw new Error('Could not find a valid background scale in the palette for dark theme.');
     }
 
-    const backgroundIndex = scales.indexOf(backgroundScale);
-    const foregroundScale = scales[backgroundIndex + 1] ?? backgroundScale;
-    const alternativeScale = scales[backgroundIndex + 2] ?? foregroundScale;
+    const background200Scale = deltaELowestScale;
+    const backgroundIndex = scales.indexOf(deltaELowestScale);
+
+    const background100Scale = '050'; // 다크 테마에서는 항상 050으로 사용
+    const borderScale = deltaELowestScale;
+    const foreground100Scale = scales[backgroundIndex + 1] ?? background200Scale;
+    const foreground200Scale = scales[backgroundIndex + 2] ?? foreground100Scale;
 
     return {
-        backgroundScale,
-        foregroundScale,
-        alternativeScale,
+        background100Scale,
+        background200Scale,
+        borderScale,
+        foreground100Scale,
+        foreground200Scale,
     };
+};
+
+/**
+ * 특정 테마에 대한 시맨틱 토큰 매핑을 생성합니다.
+ *
+ * @param config - 테마 토큰 생성 설정
+ * @param config.tokens - 브랜드 팔레트 토큰들
+ * @param config.themeName - 테마 이름
+ * @param config.brandColorName - 브랜드 컬러 이름
+ * @returns semantic과 componentSpecific 토큰 매핑
+ *
+ * @example createThemeTokens({ tokens, themeName: 'light', brandColorName: 'blue' })
+ *
+ * returns: {
+ *   semantic: { 'color-background-primary-100': 'color-blue-100' },
+ *   componentSpecific: { 'color-button-foreground-primary': 'color-white' }
+ * }
+ */
+const createThemeTokens = ({
+    tokens,
+    themeName,
+    brandColorName,
+}: {
+    tokens: Tokens;
+    themeName: ThemeType;
+    brandColorName: string;
+}): {
+    semantic: Record<string, string>;
+    componentSpecific: Record<string, string>;
+} => {
+    // background는 제거 후, primary 색상 팔레트만 재구성
+    const palette = reconstructPalette(tokens, brandColorName);
+
+    console.log('-------------palette--------------');
+    console.log(palette);
+    console.log('---------------------------------');
+
+    const scales = getSortedScales(palette);
+    const scaleInfo =
+        themeName === 'light'
+            ? findLightThemeScales(palette, scales)
+            : findDarkThemeScales(palette, scales);
+
+    console.log('-------------scaleInfo--------------');
+    console.log(scaleInfo);
+    console.log('---------------------------------');
+
+    const backgroundToken = palette[scaleInfo.background200Scale];
+    const buttonForegroundColor = determineButtonForegroundColor(backgroundToken);
+
+    return createSemanticTokenMapping({
+        semanticRole: 'primary',
+        brandColorName,
+        scaleInfo,
+        buttonForegroundColor,
+    });
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -206,74 +276,37 @@ const findDarkThemeScales = (
  * }
  */
 const getSemanticDependentTokens = (mappingConfig: SemanticMappingConfig): SemanticTokensResult => {
-    const lightSemanticMapping: Record<string, string> = {};
-    const lightComponentMapping: Record<string, string> = {};
-    const darkSemanticMapping: Record<string, string> = {};
-    const darkComponentMapping: Record<string, string> = {};
-
-    const brandColors: Record<string, string> = {};
-    Object.entries(mappingConfig).forEach(([semanticRole, config]) => {
-        if (semanticRole !== 'background') {
-            brandColors[config.name] = config.color;
-        }
-    });
-
     const brandPalette = generateBrandColorPalette({
-        colors: brandColors,
+        colors: { [mappingConfig.primary.name]: mappingConfig.primary.color },
         background: mappingConfig.background,
     });
 
-    Object.entries(mappingConfig).forEach(([semanticRole, config]) => {
-        if (semanticRole === 'background') return;
+    console.log('------------brandPalette---------------');
+    console.log(brandPalette);
+    console.log('---------------------------------');
 
-        const themes = [
-            {
-                name: 'light' as ThemeType,
-                tokens: brandPalette.light.tokens,
-                findScales: findLightThemeScales,
-                semanticMappingTarget: lightSemanticMapping,
-                componentMappingTarget: lightComponentMapping,
-            },
-            {
-                name: 'dark' as ThemeType,
-                tokens: brandPalette.dark.tokens,
-                findScales: findDarkThemeScales,
-                semanticMappingTarget: darkSemanticMapping,
-                componentMappingTarget: darkComponentMapping,
-            },
-        ];
-
-        for (const theme of themes) {
-            const palette = reconstructPalette(theme.tokens, config.name);
-            const scales = getSortedScales(palette);
-            const scaleInfo = theme.findScales(palette, scales);
-            const backgroundToken = palette[scaleInfo.backgroundScale];
-            const buttonForegroundColor = determineButtonForegroundColor(backgroundToken);
-
-            const tokenMappings = createSemanticTokenMapping({
-                themeName: theme.name,
-                semanticRole,
-                brandColorName: config.name,
-                scaleInfo,
-                buttonForegroundColor,
-            });
-
-            Object.assign(theme.semanticMappingTarget, tokenMappings.semantic);
-            Object.assign(theme.componentMappingTarget, tokenMappings.componentSpecific);
-        }
+    const lightTokens = createThemeTokens({
+        tokens: brandPalette.light.tokens,
+        themeName: 'light',
+        brandColorName: mappingConfig.primary.name,
+    });
+    const darkTokens = createThemeTokens({
+        tokens: brandPalette.dark.tokens,
+        themeName: 'dark',
+        brandColorName: mappingConfig.primary.name,
     });
 
     return {
         semantic: {
             light: {
-                tokens: lightSemanticMapping,
+                tokens: lightTokens.semantic,
                 metadata: {
                     type: 'semantic',
                     theme: 'light',
                 },
             },
             dark: {
-                tokens: darkSemanticMapping,
+                tokens: darkTokens.semantic,
                 metadata: {
                     type: 'semantic',
                     theme: 'dark',
@@ -282,14 +315,14 @@ const getSemanticDependentTokens = (mappingConfig: SemanticMappingConfig): Seman
         },
         componentSpecific: {
             light: {
-                tokens: lightComponentMapping,
+                tokens: lightTokens.componentSpecific,
                 metadata: {
                     type: 'component-specific',
                     theme: 'light',
                 },
             },
             dark: {
-                tokens: darkComponentMapping,
+                tokens: darkTokens.componentSpecific,
                 metadata: {
                     type: 'component-specific',
                     theme: 'dark',
