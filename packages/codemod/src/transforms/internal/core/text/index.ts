@@ -1,6 +1,6 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import { transformImportDeclaration } from '~/utils/import-transform';
+import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
 
 const colorMapping: Record<string, string> = {
     'text-primary': 'primary-100',
@@ -25,6 +25,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
+    if (!hasComponentInPackage(root, j, 'Text', 'Text')) {
+        return fileInfo.source;
+    }
+
+    // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
         j,

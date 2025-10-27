@@ -1,6 +1,6 @@
 import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
 
-import { transformImportDeclaration } from '~/utils/import-transform';
+import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
@@ -78,6 +78,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
     // 1. Import migration: Tabs (default) → { Tabs } (named)
     // Custom logic to handle default import → named import conversion
+
+    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
+        return fileInfo.source;
+    }
+
+    // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
         j,

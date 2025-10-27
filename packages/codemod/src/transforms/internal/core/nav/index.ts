@@ -1,6 +1,10 @@
 import type { API, FileInfo, JSXElement, Transform } from 'jscodeshift';
 
-import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
+import {
+    getFinalImportName,
+    hasComponentInPackage,
+    transformImportDeclaration,
+} from '~/utils/import-transform';
 import {
     transformAsChildToRender,
     transformToMemberExpression,
@@ -17,6 +21,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     // Track the old Nav local name from @goorm-dev/vapor-core
+
+    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
+        return fileInfo.source;
+    }
+
+    // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
         j,

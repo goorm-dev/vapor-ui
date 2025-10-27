@@ -8,7 +8,7 @@ import type {
     Transform,
 } from 'jscodeshift';
 
-import { transformImportDeclaration } from '~/utils/import-transform';
+import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -20,6 +20,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const root = j(fileInfo.source);
 
     let needsFieldImport = false;
+
+    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
+        return fileInfo.source;
+    }
+
+    // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
         j,

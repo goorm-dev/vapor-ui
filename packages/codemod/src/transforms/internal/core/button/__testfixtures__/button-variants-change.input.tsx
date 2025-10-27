@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Button } from '@vapor-ui/core';
+import { Button } from '@goorm-dev/vapor-core';
 
 export const Component = () => (
     <>

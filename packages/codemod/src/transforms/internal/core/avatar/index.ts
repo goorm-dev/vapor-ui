@@ -1,6 +1,10 @@
 import type { API, FileInfo, JSXAttribute, JSXSpreadAttribute, Transform } from 'jscodeshift';
 
-import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
+import {
+    getFinalImportName,
+    hasComponentInPackage,
+    transformImportDeclaration,
+} from '~/utils/import-transform';
 import { transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
@@ -15,6 +19,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
     // Track the old Avatar local name
 
+    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
+        return fileInfo.source;
+    }
+
+    // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
         j,

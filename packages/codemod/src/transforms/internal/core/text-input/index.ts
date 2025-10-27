@@ -8,7 +8,11 @@ import type {
     Transform,
 } from 'jscodeshift';
 
-import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
+import {
+    getFinalImportName,
+    hasComponentInPackage,
+    transformImportDeclaration,
+} from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -22,6 +26,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     let needsFieldImport = false;
 
     // 1. Import migration: TextInput (default) -> { TextInput } (named)
+
+    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
+        return fileInfo.source;
+    }
+
+    // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
         j,

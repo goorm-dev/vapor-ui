@@ -1,6 +1,10 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import { getFinalImportName, transformImportDeclaration } from '~/utils/import-transform';
+import {
+    getFinalImportName,
+    hasComponentInPackage,
+    transformImportDeclaration,
+} from '~/utils/import-transform';
 import {
     transformAsChildToRender,
     transformToMemberExpression,
@@ -16,6 +20,12 @@ const NEW_COMPONENT_NAME = 'Card';
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
+
+    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
+        return fileInfo.source;
+    }
+
+    // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
         j,

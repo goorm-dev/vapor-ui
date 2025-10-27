@@ -7,7 +7,7 @@ import type {
     Transform,
 } from 'jscodeshift';
 
-import { transformImportDeclaration } from '~/utils/import-transform';
+import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -17,6 +17,12 @@ const NEW_COMPONENT_NAME = 'Breadcrumb';
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
+
+    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
+        return fileInfo.source;
+    }
+
+    // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
         j,

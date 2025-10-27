@@ -16,6 +16,61 @@ function getLocalName(specifier: ImportSpecifier, importedName: string): string 
 }
 
 /**
+ * Check if a component exists in the source package import
+ */
+export function hasComponentInPackage(
+    root: Collection,
+    j: API['jscodeshift'],
+    componentName: string,
+    packageName: string,
+): boolean {
+    const packageImport = root.find(j.ImportDeclaration, {
+        source: { value: packageName },
+    });
+
+    return (
+        packageImport.length > 0 &&
+        (packageImport
+            .at(0)
+            .get()
+            .value.specifiers?.some(
+                (spec: ImportSpecifier) =>
+                    spec.type === 'ImportSpecifier' && spec.imported.name === componentName,
+            ) ??
+            false)
+    );
+}
+
+/**
+ * Get the local import name of a component (considering aliases)
+ * Returns the local name if found, undefined otherwise
+ */
+export function getLocalImportName(
+    root: Collection,
+    j: API['jscodeshift'],
+    componentName: string,
+    packageName: string,
+): string | undefined {
+    const packageImport = root.find(j.ImportDeclaration, {
+        source: { value: packageName },
+    });
+
+    if (packageImport.length === 0) {
+        return undefined;
+    }
+
+    const specifier = packageImport
+        .at(0)
+        .get()
+        .value.specifiers?.find(
+            (spec: ImportSpecifier) =>
+                spec.type === 'ImportSpecifier' && spec.imported.name === componentName,
+        );
+
+    return specifier ? getLocalName(specifier, componentName) : undefined;
+}
+
+/**
  * Get the final import name for a component after migration
  * Useful for getting the actual name used in JSX (considering aliases)
  */
@@ -237,6 +292,14 @@ export const transformImportDeclaration = ({
     const importDeclarationFromTargetPackage = findExistingPackageImport(root, j, targetPackage);
 
     if (!importDeclarationFromSourcePackage) {
+        return;
+    }
+
+    const hasTargetComponent = importDeclarationFromSourcePackage.value.specifiers?.some(
+        (spec) => spec.type === 'ImportSpecifier' && spec.imported.name === oldComponentName,
+    );
+
+    if (!hasTargetComponent) {
         return;
     }
 

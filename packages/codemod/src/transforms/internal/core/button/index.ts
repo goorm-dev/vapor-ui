@@ -1,6 +1,10 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import { transformImportDeclaration } from '~/utils/import-transform';
+import {
+    getLocalImportName,
+    hasComponentInPackage,
+    transformImportDeclaration,
+} from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -10,6 +14,13 @@ const NEW_COMPONENT_NAME = 'Button';
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
+
+    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
+        return fileInfo.source;
+    }
+
+    const localButtonName = getLocalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE);
+
     transformImportDeclaration({
         root,
         j,
@@ -24,7 +35,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'Button'
+            element.openingElement.name.name === localButtonName
         ) {
             element.openingElement.attributes?.forEach((attr) => {
                 if (attr.type === 'JSXAttribute' && attr.name.name === 'shape') {
