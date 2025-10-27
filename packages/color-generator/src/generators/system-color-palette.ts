@@ -84,7 +84,6 @@ const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPal
 
     const baseTokens = createBaseColorTokens(formatOklchForWeb);
 
-    // Create base token container
     const baseContainer = {
         tokens: Object.entries(baseTokens).reduce(
             (acc, [, token]) => {

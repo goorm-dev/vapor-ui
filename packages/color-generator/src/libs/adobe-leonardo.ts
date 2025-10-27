@@ -63,10 +63,9 @@ const createAdaptiveColorKeys = (
  * Adobe Leonardo Color 정의 객체를 생성합니다.
  * 브랜드 컬러를 기반으로 adaptive light/dark key pair를 생성하여 Leonardo Color 객체를 만듭니다.
  *
- * @param config - 색상 정의 설정 객체
- * @param config.name - 색상 이름
- * @param config.colorHex - HEX 색상 값
- * @param config.contrastRatios - 대비 비율 설정
+ * @param name - 색상 이름
+ * @param colorHex - HEX 색상 값
+ * @param contrastRatios - 대비 비율 설정
  * @returns Adobe Leonardo Color 객체 또는 null (유효하지 않은 색상인 경우)
  *
  * @example createColorDefinition({ name: 'blue', colorHex: '#448EFE', contrastRatios: { '050': 1.15, '100': 1.3 } })
@@ -106,12 +105,11 @@ const createColorDefinition = ({
 /**
  * Adobe Leonardo Theme 객체를 생성합니다.
  *
- * @param config - 테마 생성 설정 객체
- * @param config.colorDefinitions - Leonardo 색상 정의 배열
- * @param config.backgroundColor - 배경색
- * @param config.backgroundName - 배경색 이름
- * @param config.lightness - 테마의 명도 값
- * @param config.contrastRatios - 대비 비율
+ * @param colorDefinitions - Leonardo 색상 정의 배열
+ * @param backgroundColor - 배경색
+ * @param backgroundName - 배경색 이름
+ * @param lightness - 테마의 명도 값
+ * @param contrastRatios - 대비 비율
  * @returns Adobe Leonardo Theme 객체
  *
  * @example createLeonardoTheme({ colorDefinitions: [colorObj], backgroundColor: '#ffffff', backgroundName: 'canvas', lightness: 90, contrastRatios: { '050': 1.15 } })
