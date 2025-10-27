@@ -1,5 +1,217 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Color Generator Snapshots > getSemanticDependentTokens > should match snapshot for primary (L:050 / D:900) 1`] = `
+{
+  "componentSpecific": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-black",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-black",
+      },
+    },
+  },
+  "semantic": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-lightGreen-050",
+        "color-background-primary-200": "color-lightGreen-900",
+        "color-border-primary": "color-lightGreen-900",
+        "color-foreground-primary-100": "color-lightGreen-900",
+        "color-foreground-primary-200": "color-lightGreen-900",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-lightGreen-050",
+        "color-background-primary-200": "color-lightGreen-050",
+        "color-border-primary": "color-lightGreen-050",
+        "color-foreground-primary-100": "color-lightGreen-100",
+        "color-foreground-primary-200": "color-lightGreen-200",
+      },
+    },
+  },
+}
+`;
+
+exports[`Color Generator Snapshots > getSemanticDependentTokens > should match snapshot for primary (L:100 / D:800) 1`] = `
+{
+  "componentSpecific": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-black",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-black",
+      },
+    },
+  },
+  "semantic": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-mint-050",
+        "color-background-primary-200": "color-mint-800",
+        "color-border-primary": "color-mint-800",
+        "color-foreground-primary-100": "color-mint-900",
+        "color-foreground-primary-200": "color-mint-900",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-mint-100",
+        "color-background-primary-200": "color-mint-100",
+        "color-border-primary": "color-mint-100",
+        "color-foreground-primary-100": "color-mint-200",
+        "color-foreground-primary-200": "color-mint-300",
+      },
+    },
+  },
+}
+`;
+
+exports[`Color Generator Snapshots > getSemanticDependentTokens > should match snapshot for primary (L:800 / D:100) 1`] = `
+{
+  "componentSpecific": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-white",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-white",
+      },
+    },
+  },
+  "semantic": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-darkGreen-050",
+        "color-background-primary-200": "color-darkGreen-100",
+        "color-border-primary": "color-darkGreen-100",
+        "color-foreground-primary-100": "color-darkGreen-200",
+        "color-foreground-primary-200": "color-darkGreen-300",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-darkGreen-100",
+        "color-background-primary-200": "color-darkGreen-800",
+        "color-border-primary": "color-darkGreen-800",
+        "color-foreground-primary-100": "color-darkGreen-900",
+        "color-foreground-primary-200": "color-darkGreen-900",
+      },
+    },
+  },
+}
+`;
+
+exports[`Color Generator Snapshots > getSemanticDependentTokens > should match snapshot for primary (L:900 / D:050) 1`] = `
+{
+  "componentSpecific": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-white",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-white",
+      },
+    },
+  },
+  "semantic": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-darkestGreen-050",
+        "color-background-primary-200": "color-darkestGreen-050",
+        "color-border-primary": "color-darkestGreen-050",
+        "color-foreground-primary-100": "color-darkestGreen-100",
+        "color-foreground-primary-200": "color-darkestGreen-200",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-darkestGreen-100",
+        "color-background-primary-200": "color-darkestGreen-900",
+        "color-border-primary": "color-darkestGreen-900",
+        "color-foreground-primary-100": "color-darkestGreen-900",
+        "color-foreground-primary-200": "color-darkestGreen-900",
+      },
+    },
+  },
+}
+`;
+
 exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`] = `
 {
   "dark": {
@@ -307,59 +519,6 @@ exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`]
         "hex": "#171717",
         "name": "color-myGray-900",
         "oklch": "oklch(0.205 0.000 0.0)",
-      },
-    },
-  },
-}
-`;
-
-exports[`Color Generator Snapshots > should match semanticDependentTokens snapshot 1`] = `
-{
-  "componentSpecific": {
-    "dark": {
-      "metadata": {
-        "theme": "dark",
-        "type": "component-specific",
-      },
-      "tokens": {
-        "color-button-foreground-primary": "color-black",
-      },
-    },
-    "light": {
-      "metadata": {
-        "theme": "light",
-        "type": "component-specific",
-      },
-      "tokens": {
-        "color-button-foreground-primary": "color-black",
-      },
-    },
-  },
-  "semantic": {
-    "dark": {
-      "metadata": {
-        "theme": "dark",
-        "type": "semantic",
-      },
-      "tokens": {
-        "color-background-primary-100": "color-mint-050",
-        "color-background-primary-200": "color-mint-800",
-        "color-border-primary": "color-mint-800",
-        "color-foreground-primary-100": "color-mint-900",
-        "color-foreground-primary-200": "color-mint-900",
-      },
-    },
-    "light": {
-      "metadata": {
-        "theme": "light",
-        "type": "semantic",
-      },
-      "tokens": {
-        "color-background-primary-100": "color-mint-100",
-        "color-background-primary-200": "color-mint-100",
-        "color-border-primary": "color-mint-100",
-        "color-foreground-primary-100": "color-mint-200",
-        "color-foreground-primary-200": "color-mint-300",
       },
     },
   },
