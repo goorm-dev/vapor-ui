@@ -2,7 +2,7 @@ import { Tabs } from '@vapor-ui/core';
 
 export default function Example() {
     return (
-        <Tabs.Root variant={'line'}>
+        <Tabs.Root variant="line">
             <Tabs.List>
                 <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
                 <Tabs.Trigger value="tab2" disabled>

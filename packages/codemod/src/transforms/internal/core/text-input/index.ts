@@ -25,13 +25,23 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
     let needsFieldImport = false;
 
-    // 1. Import migration: TextInput (default) -> { TextInput } (named)
-
+    // 1. Check if TextInput exists in source package
     if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
         return fileInfo.source;
     }
 
-    // 1. Import migration: Alert -> Callout
+    // Get the local import name from source package (before transformation)
+    const sourceTextInputName = root
+        .find(j.ImportDeclaration, { source: { value: SOURCE_PACKAGE } })
+        .find(j.ImportSpecifier, { imported: { name: OLD_COMPONENT_NAME } })
+        .at(0);
+
+    const localTextInputName =
+        sourceTextInputName.length > 0
+            ? sourceTextInputName.get().value.local?.name || OLD_COMPONENT_NAME
+            : OLD_COMPONENT_NAME;
+
+    // 2. Import migration: TextInput -> TextInput
     transformImportDeclaration({
         root,
         j,
@@ -40,28 +50,60 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         sourcePackage: SOURCE_PACKAGE,
         targetPackage: TARGET_PACKAGE,
     });
+
     // Get the final import name (considering aliases)
     const textInputImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
 
-    // 2. Transform TextInput JSX elements (Compound pattern -> Single component or Field wrapped)
+    // 3. Transform TextInput JSX elements (Compound pattern -> Single component or Field wrapped)
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
         // Check if this is the TextInput root element
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === OLD_COMPONENT_NAME
+            element.openingElement.name.name === localTextInputName
         ) {
-            // Find TextInput.Label and TextInput.Field children
+            // Find TextInput.Label and TextInput.Field children (recursively)
             let labelElement: JSXElement | null = null;
             let fieldElement: JSXElement | null = null;
+            let fieldParentElement: JSXElement | null = null;
             let hasVisuallyHiddenLabel = false;
             let labelText: string | null = null;
+
+            type ChildNode = JSXElement['children'][number];
+            
+            const findFieldRecursively = (
+                children: ChildNode[],
+            ): { field: JSXElement | null; parent: JSXElement | null } => {
+                for (const child of children) {
+                    if (child.type === 'JSXElement') {
+                        if (
+                            child.openingElement.name.type === 'JSXMemberExpression' &&
+                            child.openingElement.name.object.type === 'JSXIdentifier' &&
+                            child.openingElement.name.object.name === localTextInputName &&
+                            child.openingElement.name.property.type === 'JSXIdentifier' &&
+                            child.openingElement.name.property.name === 'Field'
+                        ) {
+                            return { field: child, parent: null };
+                        }
+                        // Recurse into children
+                        if (child.children) {
+                            const result = findFieldRecursively(child.children);
+                            if (result.field) {
+                                return { field: result.field, parent: result.parent || child };
+                            }
+                        }
+                    }
+                }
+                return { field: null, parent: null };
+            };
+
             for (const child of element?.children || []) {
                 if (child.type === 'JSXElement') {
                     if (
                         child.openingElement.name.type === 'JSXMemberExpression' &&
                         child.openingElement.name.object.type === 'JSXIdentifier' &&
+                        child.openingElement.name.object.name === localTextInputName &&
                         child.openingElement.name.property.type === 'JSXIdentifier'
                     ) {
                         const propertyName = child.openingElement.name.property.name;
@@ -92,6 +134,13 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 }
             }
 
+            // If Field not found as direct child, search recursively
+            if (!fieldElement) {
+                const result = findFieldRecursively(element.children || []);
+                fieldElement = result.field;
+                fieldParentElement = result.parent;
+            }
+
             if (fieldElement) {
                 // Get props from root and field
                 const rootProps = element.openingElement.attributes || [];
@@ -107,18 +156,25 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 );
 
                 // Handle label cases
-                if (labelElement && !hasVisuallyHiddenLabel && labelText) {
+                if (labelElement && !hasVisuallyHiddenLabel) {
                     // Use Field.Root to wrap
                     needsFieldImport = true;
 
-                    // Create Field.Label with TextInput inside
+                    // Preserve Label's attributes (className, etc.)
+                    const labelAttributes = labelElement.openingElement.attributes || [];
+
+                    // Get Label's children and add TextInput
+                    const labelChildren = [...(labelElement.children || [])];
+                    labelChildren.push(newTextInputElement);
+
+                    // Create Field.Label with preserved children and TextInput
                     const fieldLabel = j.jsxElement(
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
                                 j.jsxIdentifier('Field'),
                                 j.jsxIdentifier('Label'),
                             ),
-                            [],
+                            labelAttributes,
                         ),
                         j.jsxClosingElement(
                             j.jsxMemberExpression(
@@ -126,14 +182,32 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                 j.jsxIdentifier('Label'),
                             ),
                         ),
-                        [
-                            j.jsxText('\n                ' + labelText + '\n                '),
-                            newTextInputElement,
-                            j.jsxText('\n            '),
-                        ],
+                        labelChildren,
                     );
 
-                    // Create Field.Root wrapper
+                    // Collect other children from Field's parent or TextInput root
+                    let otherChildren = [];
+                    if (fieldParentElement && fieldParentElement.children) {
+                        // Extract children from Field's parent container (excluding the Field itself)
+                        otherChildren = fieldParentElement.children.filter(
+                            (child) =>
+                                child !== fieldElement &&
+                                (child.type !== 'JSXText' || child.value.trim() !== ''),
+                        );
+                    } else {
+                        // Field was a direct child, collect other direct children
+                        otherChildren =
+                            element.children?.filter(
+                                (child) =>
+                                    child !== labelElement &&
+                                    child !== fieldElement &&
+                                    (child.type !== 'JSXText' || child.value.trim() !== ''),
+                            ) || [];
+                    }
+
+                    // Create Field.Root wrapper with Label and other children
+                    const fieldRootChildren = [fieldLabel, ...otherChildren];
+
                     const fieldRoot = j.jsxElement(
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
@@ -148,7 +222,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                 j.jsxIdentifier('Root'),
                             ),
                         ),
-                        [j.jsxText('\n            '), fieldLabel, j.jsxText('\n        ')],
+                        fieldRootChildren,
                     );
 
                     // Replace the entire TextInput with Field.Root

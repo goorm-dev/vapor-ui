@@ -4,7 +4,7 @@ export default function Example() {
     const tabs = ['tab1', 'tab2', 'tab3'];
 
     return (
-        <Tabs.Root variant={'line'}>
+        <Tabs.Root variant="line">
             <Tabs.List>
                 {tabs.map((tab) => (
                     <Tabs.Trigger key={tab} value={tab}>

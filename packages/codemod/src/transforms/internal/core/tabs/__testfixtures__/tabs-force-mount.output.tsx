@@ -6,7 +6,7 @@ export default function Example() {
     const [activeTab, setActiveTab] = useState('tab1');
 
     return (
-        <Tabs.Root value={activeTab} onValueChange={setActiveTab} variant={'line'}>
+        <Tabs.Root value={activeTab} onValueChange={setActiveTab} variant="line">
             <Tabs.List>
                 <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
                 <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>

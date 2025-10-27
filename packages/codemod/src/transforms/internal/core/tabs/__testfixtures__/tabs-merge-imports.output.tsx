@@ -4,7 +4,7 @@ export default function Example() {
     return (
         <>
             <Button>Click</Button>
-            <Tabs.Root variant={'line'}>
+            <Tabs.Root variant="line">
                 <Tabs.List>
                     <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
                     <Tabs.Indicator />

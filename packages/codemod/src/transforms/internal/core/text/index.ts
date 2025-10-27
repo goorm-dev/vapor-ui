@@ -19,6 +19,8 @@ const colorMapping: Record<string, string> = {
     'text-contrast-alternative': 'contrast-200',
     'text-alternative': 'normal-100',
     'text-normal': 'normal-200',
+    'text-light': 'white',
+    'text-exception': 'white',
 };
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {

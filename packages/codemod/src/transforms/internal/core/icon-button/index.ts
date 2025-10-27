@@ -1,4 +1,11 @@
-import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
+import type {
+    API,
+    FileInfo,
+    JSXAttribute,
+    JSXElement,
+    JSXSpreadAttribute,
+    Transform,
+} from 'jscodeshift';
 
 import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
 import { transformAsChildToRender } from '~/utils/jsx-transform';
@@ -48,23 +55,26 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 };
 
 function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
-    const attributes = element.openingElement.attributes || [];
+    const attributes: (JSXAttribute | JSXSpreadAttribute)[] =
+        element.openingElement.attributes || [];
     let hasRounded = false;
     let roundedValue: JSXAttribute['value'] = null;
     let hasShape = false;
+    let iconPropValue: JSXAttribute['value'] | null = null;
 
-    // First pass: collect information about rounded and shape props
-    attributes.forEach((attr) => {
-        if (attr.type === 'JSXAttribute' && attr.name.type === 'JSXIdentifier') {
-            if (attr.name.name === 'rounded') {
+    // First pass: collect information about rounded, shape, and icon props
+    for (const attribute of attributes) {
+        if (attribute.type === 'JSXAttribute' && attribute.name.type === 'JSXIdentifier') {
+            if (attribute.name.name === 'rounded') {
                 hasRounded = true;
-                roundedValue = attr.value;
-            } else if (attr.name.name === 'shape') {
+                roundedValue = attribute.value;
+            } else if (attribute.name.name === 'shape') {
                 hasShape = true;
+            } else if (attribute.name.name === 'icon') {
+                iconPropValue = attribute.value;
             }
         }
-    });
-
+    }
     // Second pass: transform props
     const newAttributes = attributes
         .map((attr) => {
@@ -99,11 +109,8 @@ function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
                 return newAttr;
             }
 
-            // Warn about deprecated icon prop
+            // Remove icon prop (will be converted to children)
             if (attrName === 'icon') {
-                console.warn(
-                    `[IconButton] 'icon' prop is deprecated. Use children instead. Found in ${element.loc?.start.line}`,
-                );
                 return null;
             }
 
@@ -138,6 +145,28 @@ function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
     }
 
     element.openingElement.attributes = newAttributes;
+
+    // Convert icon prop to children if present
+    if (iconPropValue && element.openingElement.selfClosing) {
+        element.openingElement.selfClosing = false;
+
+        let iconChild;
+        if (
+            iconPropValue.type === 'JSXExpressionContainer' &&
+            iconPropValue.expression.type === 'Identifier'
+        ) {
+            // icon={HeartIcon} -> <HeartIcon />
+            iconChild = j.jsxElement(
+                j.jsxOpeningElement(j.jsxIdentifier(iconPropValue.expression.name), [], true),
+            );
+        } else {
+            // Fallback: just use the expression as-is
+            iconChild = j.jsxExpressionContainer(iconPropValue);
+        }
+
+        element.children = [iconChild];
+        element.closingElement = j.jsxClosingElement(j.jsxIdentifier('IconButton'));
+    }
 
     // Transform asChild prop to render prop
     transformAsChildToRender(j, element);

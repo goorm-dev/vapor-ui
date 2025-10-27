@@ -127,10 +127,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             if (hasBorder !== null) {
                 const variantValue = hasBorder ? 'line' : 'plain';
                 element.openingElement.attributes.push(
-                    j.jsxAttribute(
-                        j.jsxIdentifier('variant'),
-                        j.jsxExpressionContainer(j.stringLiteral(variantValue)),
-                    ),
+                    j.jsxAttribute(j.jsxIdentifier('variant'), j.stringLiteral(variantValue)),
                 );
             }
 

@@ -6,7 +6,7 @@ export default function Example() {
     const [value, setValue] = useState('tab1');
 
     return (
-        <Tabs.Root value={value} onValueChange={setValue} variant={'line'}>
+        <Tabs.Root value={value} onValueChange={setValue} variant="line">
             <Tabs.List>
                 <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
                 <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>

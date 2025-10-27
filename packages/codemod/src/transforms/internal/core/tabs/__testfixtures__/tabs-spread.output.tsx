@@ -7,7 +7,7 @@ export default function Example() {
     };
 
     return (
-        <Tabs.Root {...tabsProps} variant={'line'}>
+        <Tabs.Root {...tabsProps} variant="line">
             <Tabs.List>
                 <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
                 <Tabs.Indicator />
