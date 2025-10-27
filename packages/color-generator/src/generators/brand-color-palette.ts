@@ -73,7 +73,7 @@ const overrideCustomColors = (tokens: Tokens, customColors: Record<string, strin
     }
 
     return newTokens;
-}
+};
 
 /**
  * 브랜드 컬러 팔레트를 생성합니다.
@@ -134,7 +134,7 @@ const generateBrandColorPalette = (config: BrandColorGeneratorConfig): BrandColo
             },
         },
     };
-}
+};
 
 /* -----------------------------------------------------------------------------------------------*/
 

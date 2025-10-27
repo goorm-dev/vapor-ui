@@ -104,7 +104,7 @@ const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPal
         light: lightContainer,
         dark: darkContainer,
     };
-}
+};
 
 /* -----------------------------------------------------------------------------------------------*/
 
