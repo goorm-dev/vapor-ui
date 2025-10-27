@@ -14,12 +14,12 @@ import { formatOklchForWeb, generateCodeSyntax, generateTokenName } from '../uti
  * @param originalHex - 원본 HEX 색상 문자열
  * @returns Light/Dark 테마용 색상 키 쌍
  *
- * @example
- * createAdaptiveColorKeys({ mode: 'oklch', l: 0.8, c: 0.15, h: 180 }, '#87CEEB')
- * // returns: {
- * //   lightKey: '#87CEEB',
- * //   darkKey: '#4A90A4'
- * // }
+ * @example createAdaptiveColorKeys({ mode: 'oklch', l: 0.8, c: 0.15, h: 180 }, '#87CEEB')
+ *
+ * returns: {
+ *   lightKey: '#87CEEB',
+ *   darkKey: '#4A90A4'
+ * }
  */
 const createAdaptiveColorKeys = (
     brandColorOklch: OklchColor,
@@ -69,18 +69,14 @@ const createAdaptiveColorKeys = (
  * @param config.contrastRatios - 대비 비율 설정
  * @returns Adobe Leonardo Color 객체 또는 null (유효하지 않은 색상인 경우)
  *
- * @example
- * createColorDefinition({
+ * @example createColorDefinition({ name: 'blue', colorHex: '#448EFE', contrastRatios: { '050': 1.15, '100': 1.3 } })
+ *
+ * returns: Color {
  *   name: 'blue',
- *   colorHex: '#448EFE',
- *   contrastRatios: { '050': 1.15, '100': 1.3, '200': 1.7 }
- * })
- * // returns: Color {
- * //   name: 'blue',
- * //   colorKeys: ['#448EFE', '#2563EB'],
- * //   colorspace: 'OKLCH',
- * //   ratios: { '050': 1.15, '100': 1.3, '200': 1.7 }
- * // }
+ *   colorKeys: ['#448EFE', '#2563EB'],
+ *   colorspace: 'OKLCH',
+ *   ratios: { '050': 1.15, '100': 1.3 }
+ * }
  */
 const createColorDefinition = ({
     name,
@@ -110,12 +106,22 @@ const createColorDefinition = ({
 /**
  * Adobe Leonardo Theme 객체를 생성합니다.
  *
- * @param colorDefinitions - Leonardo 색상 정의 배열
- * @param backgroundColor - 배경색
- * @param backgroundName - 배경색 이름
- * @param lightness - 테마의 명도 값
- * @param contrastRatios - 대비 비율
+ * @param config - 테마 생성 설정 객체
+ * @param config.colorDefinitions - Leonardo 색상 정의 배열
+ * @param config.backgroundColor - 배경색
+ * @param config.backgroundName - 배경색 이름
+ * @param config.lightness - 테마의 명도 값
+ * @param config.contrastRatios - 대비 비율
  * @returns Adobe Leonardo Theme 객체
+ *
+ * @example createLeonardoTheme({ colorDefinitions: [colorObj], backgroundColor: '#ffffff', backgroundName: 'canvas', lightness: 90, contrastRatios: { '050': 1.15 } })
+ *
+ * returns: Theme {
+ *   colors: [...],
+ *   backgroundColor: BackgroundColor,
+ *   lightness: 90,
+ *   output: 'HEX'
+ * }
  */
 const createLeonardoTheme = ({
     colorDefinitions,
@@ -148,17 +154,20 @@ const createLeonardoTheme = ({
  * Adobe Leonardo를 사용하여 테마별 컬러 토큰을 생성합니다.
  * 직접 TokenContainer 형태로 반환하여 변환 과정 없이 일관된 구조를 제공합니다.
  *
- * @param colors - 색상 이름과 HEX 값의 매핑
- * @param contrast - 대비 비율 설정
- * @param themeType - 테마 타입 ('light' | 'dark')
- * @returns 생성된 토큰들이 포함된 TokenContainer
+ * @param config - 토큰 생성 설정 객체
+ * @param config.colors - 색상 이름과 HEX 값의 매핑
+ * @param config.contrastRatios - 대비 비율 설정
+ * @param config.backgroundColor - 배경색
+ * @param config.backgroundName - 배경색 이름
+ * @param config.lightness - 테마의 명도 값
+ * @returns 생성된 컬러 토큰 객체
  *
- * @example
- * generateThemeTokens({ blue: '#448EFE' }, { '050': 1.15, '100': 1.3 }, 'light')
- * // returns: {
- * //   tokens: { "vapor-color-blue-050": {...}, "vapor-color-background-canvas": {...} },
- * //   metadata: { type: 'primitive', theme: 'light', generated: '...' }
- * // }
+ * @example generateThemeTokens({ colors: { blue: '#448EFE' }, contrastRatios: { '050': 1.15, '100': 1.3 }, backgroundColor: '#ffffff', backgroundName: 'canvas', lightness: 90 })
+ *
+ * returns: {
+ *   'vapor-color-blue-050': { name: '...', hex: '...', oklch: '...', deltaE: 0, codeSyntax: '...' },
+ *   'vapor-color-background-canvas': { name: '...', hex: '#ffffff', oklch: '...', codeSyntax: '...' }
+ * }
  */
 export const generateThemeTokens = ({
     colors,
