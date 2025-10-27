@@ -37,10 +37,15 @@ interface TokenContainer {
     };
 }
 
+interface PrimitiveSemanticContainer {
+    primitive: TokenContainer;
+    semantic: TokenContainer;
+}
+
 interface ColorPaletteResult {
     base?: TokenContainer;
-    light: TokenContainer;
-    dark: TokenContainer;
+    light: PrimitiveSemanticContainer;
+    dark: PrimitiveSemanticContainer;
 }
 
 interface SemanticTokensResult {
@@ -64,6 +69,7 @@ export type {
     Tokens,
     ScaleInfo,
     TokenContainer,
+    PrimitiveSemanticContainer,
     ColorPaletteResult,
     SemanticTokensResult,
 };

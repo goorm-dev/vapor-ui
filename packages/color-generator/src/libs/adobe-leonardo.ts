@@ -150,21 +150,20 @@ const createLeonardoTheme = ({
 
 /**
  * Adobe Leonardo를 사용하여 테마별 컬러 토큰을 생성합니다.
- * 직접 TokenContainer 형태로 반환하여 변환 과정 없이 일관된 구조를 제공합니다.
+ * Primitive 컬러 토큰만 생성하며, semantic 토큰은 별도 처리됩니다.
  *
- * @param config - 토큰 생성 설정 객체
- * @param config.colors - 색상 이름과 HEX 값의 매핑
- * @param config.contrastRatios - 대비 비율 설정
- * @param config.backgroundColor - 배경색
- * @param config.backgroundName - 배경색 이름
- * @param config.lightness - 테마의 명도 값
- * @returns 생성된 컬러 토큰 객체
+ * @param colors - 색상 이름과 HEX 값의 매핑
+ * @param contrastRatios - 대비 비율 설정
+ * @param backgroundColor - 배경색 (Leonardo 내부 계산용)
+ * @param backgroundName - 배경색 이름 (Leonardo 내부 계산용)
+ * @param lightness - 테마의 명도 값
+ * @returns 생성된 primitive 컬러 토큰 객체
  *
  * @example generateThemeTokens({ colors: { blue: '#448EFE' }, contrastRatios: { '050': 1.15, '100': 1.3 }, backgroundColor: '#ffffff', backgroundName: 'canvas', lightness: 90 })
  *
  * returns: {
- *   'vapor-color-blue-050': { name: '...', hex: '...', oklch: '...', deltaE: 0, codeSyntax: '...' },
- *   'vapor-color-background-canvas': { name: '...', hex: '#ffffff', oklch: '...', codeSyntax: '...' }
+ *   'color-blue-050': { name: 'color-blue-050', hex: '...', oklch: '...', deltaE: 0, codeSyntax: 'vapor-color-blue-050' },
+ *   'color-blue-100': { name: 'color-blue-100', hex: '...', oklch: '...', deltaE: 0, codeSyntax: 'vapor-color-blue-100' }
  * }
  */
 const generateThemeTokens = ({
@@ -191,28 +190,12 @@ const generateThemeTokens = ({
         lightness,
         contrastRatios,
     });
-    const [backgroundObj, ...themeColors] = theme.contrastColors;
+    const [, ...themeColors] = theme.contrastColors;
 
     const calculateDeltaE = differenceCiede2000();
     const tokens: Record<string, ColorToken> = {};
 
-    // Background canvas token 처리
-    if ('background' in backgroundObj) {
-        const oklchColor = oklch(backgroundObj.background);
-        const oklchValue = formatCss(oklchColor);
-
-        if (oklchValue) {
-            const canvasToken: ColorToken = {
-                name: generateTokenName(['background', 'canvas']),
-                hex: backgroundObj.background,
-                oklch: formatOklchForWeb(oklchValue),
-                codeSyntax: generateCodeSyntax(['background', 'canvas']),
-            };
-            tokens[canvasToken.name!] = canvasToken;
-        }
-    }
-
-    // 색상 팔레트 토큰들 처리
+    // 색상 팔레트 토큰들 처리 (background canvas 토큰 제외)
     themeColors.forEach((color) => {
         if ('name' in color && 'values' in color && color.values.length > 0) {
             const colorName = color.name;

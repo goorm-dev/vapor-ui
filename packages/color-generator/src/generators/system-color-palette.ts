@@ -7,7 +7,7 @@ import {
     DEFAULT_PRIMITIVE_COLORS,
 } from '../constants';
 import { generateThemeTokens } from '../libs';
-import type { ColorGeneratorConfig, ColorPaletteResult, ColorToken } from '../types';
+import type { ColorGeneratorConfig, ColorPaletteResult, ColorToken, TokenContainer, Tokens } from '../types';
 import { formatOklchForWeb } from '../utils';
 
 const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
@@ -28,7 +28,7 @@ const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
 
 /**
  * 시스템 컬러 팔레트를 생성합니다.
- * Primitive 토큰들을 포함한 일관된 토큰 컨테이너 형태로 반환합니다.
+ * Primitive와 Semantic 토큰들을 포함한 새로운 구조로 반환합니다.
  *
  * @param [config={}] - 색상 생성기 설정 (선택적)
  * @returns ColorPaletteResult 타입의 base, light, dark 테마 토큰 컨테이너
@@ -37,10 +37,38 @@ const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
  *
  * returns: {
  *   base: { tokens: { 'color-white': {...}, 'color-black': {...} }, metadata: { type: 'primitive', theme: 'base' } },
- *   light: { tokens: { 'color-blue-050': {...}, 'color-background-canvas': {...} }, metadata: { type: 'primitive', theme: 'light' } },
- *   dark: { tokens: { 'color-blue-050': {...}, 'color-background-canvas': {...} }, metadata: { type: 'primitive', theme: 'dark' } }
+ *   light: {
+ *     primitive: { tokens: { 'color-blue-050': {...} }, metadata: { type: 'primitive', theme: 'light' } },
+ *     semantic: { tokens: { 'color-background-canvas-100': 'color-white' }, metadata: { type: 'semantic', theme: 'light' } }
+ *   },
+ *   dark: {
+ *     primitive: { tokens: { 'color-blue-050': {...} }, metadata: { type: 'primitive', theme: 'dark' } },
+ *     semantic: { tokens: { 'color-background-canvas-100': 'color-gray-050' }, metadata: { type: 'semantic', theme: 'dark' } }
+ *   }
  * }
  */
+const createSemanticTokens = (theme: 'light' | 'dark'): TokenContainer => {
+    const baseSemanticTokens: Tokens = theme === 'light' 
+        ? {
+            'color-background-canvas-100': 'color-white',
+            'color-background-canvas-200': 'color-gray-050',
+            'color-background-overlay-100': 'color-white'
+        }
+        : {
+            'color-background-canvas-100': 'color-gray-050',
+            'color-background-canvas-200': 'color-gray-100',
+            'color-background-overlay-100': 'color-gray-200'
+        };
+
+    return {
+        tokens: baseSemanticTokens,
+        metadata: {
+            type: 'semantic',
+            theme,
+        },
+    };
+};
+
 const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPaletteResult => {
     const colors = config.colors || DEFAULT_PRIMITIVE_COLORS;
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
@@ -50,7 +78,7 @@ const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPal
         name: 'gray',
     };
 
-    const lightTokens = generateThemeTokens({
+    const lightPrimitiveTokens = generateThemeTokens({
         colors,
         contrastRatios,
         backgroundColor: background.color,
@@ -58,7 +86,7 @@ const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPal
         lightness: background.lightness.light,
     });
 
-    const darkTokens = generateThemeTokens({
+    const darkPrimitiveTokens = generateThemeTokens({
         colors,
         contrastRatios,
         backgroundColor: background.color,
@@ -66,21 +94,25 @@ const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPal
         lightness: background.lightness.dark,
     });
 
-    const lightContainer: ColorPaletteResult['light'] = {
-        tokens: lightTokens,
+    const lightPrimitiveContainer: TokenContainer = {
+        tokens: lightPrimitiveTokens,
         metadata: {
             type: 'primitive',
             theme: 'light',
         },
     };
 
-    const darkContainer: ColorPaletteResult['dark'] = {
-        tokens: darkTokens,
+    const darkPrimitiveContainer: TokenContainer = {
+        tokens: darkPrimitiveTokens,
         metadata: {
             type: 'primitive',
             theme: 'dark',
         },
     };
+
+    // semantic 토큰 생성
+    const lightSemanticContainer = createSemanticTokens('light');
+    const darkSemanticContainer = createSemanticTokens('dark');
 
     const baseTokens = createBaseColorTokens(formatOklchForWeb);
 
@@ -100,11 +132,17 @@ const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPal
 
     return {
         base: baseContainer,
-        light: lightContainer,
-        dark: darkContainer,
+        light: {
+            primitive: lightPrimitiveContainer,
+            semantic: lightSemanticContainer,
+        },
+        dark: {
+            primitive: darkPrimitiveContainer,
+            semantic: darkSemanticContainer,
+        },
     };
 };
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { generateSystemColorPalette };
+export { generateSystemColorPalette, createSemanticTokens };

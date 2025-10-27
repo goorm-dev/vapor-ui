@@ -306,12 +306,12 @@ const getSemanticDependentTokens = (mappingConfig: SemanticMappingConfig): Seman
     console.log('---------------------------------');
 
     const lightTokens = createThemeTokens({
-        tokens: brandPalette.light.tokens,
+        tokens: brandPalette.light.primitive.tokens,
         themeName: 'light',
         brandColorName: mappingConfig.primary.name,
     });
     const darkTokens = createThemeTokens({
-        tokens: brandPalette.dark.tokens,
+        tokens: brandPalette.dark.primitive.tokens,
         themeName: 'dark',
         brandColorName: mappingConfig.primary.name,
     });

@@ -85,8 +85,14 @@ const overrideCustomColors = (tokens: Tokens, customColors: Record<string, strin
  * @example generateBrandColorPalette({ colors: { myBlue: '#448EFE' } })
  *
  * returns: {
- *   light: { tokens: { 'color-myBlue-050': {...}, 'color-myBlue-100': {...} }, metadata: { type: 'primitive', theme: 'light' } },
- *   dark: { tokens: { 'color-myBlue-050': {...}, 'color-myBlue-100': {...} }, metadata: { type: 'primitive', theme: 'dark' } }
+ *   light: { 
+ *     primitive: { tokens: { 'color-myBlue-050': {...} }, metadata: { type: 'primitive', theme: 'light' } },
+ *     semantic: { tokens: {}, metadata: { type: 'semantic', theme: 'light' } }
+ *   },
+ *   dark: { 
+ *     primitive: { tokens: { 'color-myBlue-050': {...} }, metadata: { type: 'primitive', theme: 'dark' } },
+ *     semantic: { tokens: {}, metadata: { type: 'semantic', theme: 'dark' } }
+ *   }
  * }
  */
 type BrandColorPalette = Omit<ColorPaletteResult, 'base'>;
@@ -120,17 +126,35 @@ const generateBrandColorPalette = (config: BrandColorGeneratorConfig): BrandColo
 
     return {
         light: {
-            tokens: adjustedLightTokens,
-            metadata: {
-                type: 'primitive',
-                theme: 'light',
+            primitive: {
+                tokens: adjustedLightTokens,
+                metadata: {
+                    type: 'primitive',
+                    theme: 'light',
+                },
+            },
+            semantic: {
+                tokens: {},
+                metadata: {
+                    type: 'semantic',
+                    theme: 'light',
+                },
             },
         },
         dark: {
-            tokens: darkTokens,
-            metadata: {
-                type: 'primitive',
-                theme: 'dark',
+            primitive: {
+                tokens: darkTokens,
+                metadata: {
+                    type: 'primitive',
+                    theme: 'dark',
+                },
+            },
+            semantic: {
+                tokens: {},
+                metadata: {
+                    type: 'semantic',
+                    theme: 'dark',
+                },
             },
         },
     };
