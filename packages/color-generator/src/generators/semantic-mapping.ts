@@ -29,6 +29,17 @@ interface SemanticTokenMapping {
 
 /**
  * 전체 토큰 맵에서 특정 색상에 해당하는 팔레트만 추출하여 재구성합니다.
+ *
+ * @param sourceTokens - Record<string, ColorToken | string> 타입의 전체 토큰 맵
+ * @param colorName - 추출할 색상 이름 (ex: 'primary', 'blue')
+ * @returns Record<string, ColorToken> 타입의 재구성된 색상 팔레트
+ *
+ * @example reconstructPalette(tokens, 'primary')
+ *
+ * returns: {
+ *   '050': { name: 'color-primary-050', hex: '#f0f0ff', oklch: '...' },
+ *   '100': { name: 'color-primary-100', hex: '#e0e0ff', oklch: '...' }
+ * }
  */
 const reconstructPalette = (
     sourceTokens: Record<string, ColorToken | string>,
@@ -46,17 +57,28 @@ const reconstructPalette = (
         }
     });
     return palette;
-}
+};
 
 /**
  * 배경 토큰의 oklch 값을 기반으로 대비가 높은 버튼 전경색을 결정합니다.
+ *
+ * @param backgroundToken - 배경 컬러 토큰
+ * @returns 대비가 높은 전경색 토큰
+ *
+ * @example determineButtonForegroundColor(backgroundToken)
+ *
+ * returns: {
+ *   name: 'color-white',
+ *   hex: '#ffffff',
+ *   oklch: 'oklch(1 0 0)'
+ * }
  */
 const determineButtonForegroundColor = (backgroundToken: ColorToken | undefined): ColorToken => {
     if (backgroundToken?.oklch) {
         return getContrastingForegroundColor(backgroundToken.oklch);
     }
     return { ...BASE_COLORS.white };
-}
+};
 
 const createSemanticTokenMapping = ({
     themeName,
@@ -82,7 +104,7 @@ const createSemanticTokenMapping = ({
             [`color-button-foreground-${semanticRole}`]: buttonForegroundColor.name!,
         },
     };
-}
+};
 
 /**
  * 라이트 테마용 스케일 정보를 찾습니다.
@@ -120,7 +142,7 @@ const findLightThemeScales = (
     const alternativeScale = scales[backgroundIndex + 2] ?? foregroundScale;
 
     return { backgroundScale, foregroundScale, alternativeScale };
-}
+};
 
 /**
  * 다크 테마용 스케일 정보를 찾습니다.
@@ -130,18 +152,13 @@ const findLightThemeScales = (
  * @param scales - 명도순으로 정렬된 스케일 배열
  * @returns 배경, 전경, 대체 스케일 정보
  *
- * @example
- * // palette에서 '800' 스케일의 deltaE가 가장 낮다고 가정
- * const palette = {
- * '600': { deltaE: 14.44 },
- * '700': { deltaE: 7.53 },
- * '800': { deltaE: 0.35 },  // deltaE가 가장 낮으므로 이 스케일이 background
- * '900': { deltaE: 13.97 }, // 그 다음 스케일이 foreground
- * };
- * const scales = ['600', '700', '800', '900'];
+ * @example findDarkThemeScales(palette, ['600', '700', '800', '900'])
  *
- * findDarkThemeScales(palette, scales)
- * // returns: { backgroundScale: '800', foregroundScale: '900', alternativeScale: '900' } // '900'이 마지막 스케일이므로 foreground와 alternative가 동일
+ * returns: {
+ *   backgroundScale: '800',
+ *   foregroundScale: '900',
+ *   alternativeScale: '900'
+ * }
  */
 const findDarkThemeScales = (
     palette: Record<string, { deltaE?: number }>,
@@ -162,7 +179,7 @@ const findDarkThemeScales = (
         foregroundScale,
         alternativeScale,
     };
-}
+};
 
 /* -------------------------------------------------------------------------------------------------
  * Main Function
@@ -172,8 +189,21 @@ const findDarkThemeScales = (
  * 시맨틱 토큰을 생성합니다.
  * 브랜드 컬러를 기반으로 semantic과 component-specific 토큰을 분리하여 생성합니다.
  *
- * @param mappingConfig - 시맨틱 역할과 브랜드 컬러 매핑 설정
- * @returns semantic과 componentSpecific으로 분리된 토큰 컨테이너
+ * @param mappingConfig - SemanticMappingConfig 타입의 시맨틱 역할과 브랜드 컬러 매핑 설정
+ * @returns SemanticTokensResult 타입의 semantic과 componentSpecific 토큰 컨테이너
+ *
+ * @example getSemanticDependentTokens({ primary: { name: 'blue', color: '#448EFE' }, background: { color: '#ffffff', name: 'gray', lightness: { light: 90, dark: 10 } } })
+ *
+ * returns: {
+ *   semantic: {
+ *     light: { tokens: { 'color-background-primary-100': 'color-blue-100' }, metadata: { type: 'semantic', theme: 'light' } },
+ *     dark: { tokens: { 'color-background-primary-100': 'color-blue-800' }, metadata: { type: 'semantic', theme: 'dark' } }
+ *   },
+ *   componentSpecific: {
+ *     light: { tokens: { 'color-button-foreground-primary': 'color-white' }, metadata: { type: 'component-specific', theme: 'light' } },
+ *     dark: { tokens: { 'color-button-foreground-primary': 'color-white' }, metadata: { type: 'component-specific', theme: 'dark' } }
+ *   }
+ * }
  */
 const getSemanticDependentTokens = (mappingConfig: SemanticMappingConfig): SemanticTokensResult => {
     const lightSemanticMapping: Record<string, string> = {};
@@ -267,7 +297,7 @@ const getSemanticDependentTokens = (mappingConfig: SemanticMappingConfig): Seman
             },
         },
     };
-}
+};
 
 export type { SemanticMappingConfig };
 export { getSemanticDependentTokens };

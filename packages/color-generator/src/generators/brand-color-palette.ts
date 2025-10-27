@@ -13,20 +13,16 @@ import {
 /**
  * 사용자 지정 색상(customColors)을 기반으로 기존 토큰(tokens) 객체의 색상 값을 덮어씁니다.
  *
- * @param {Tokens} tokens - 덮어쓰기의 대상이 될 원본 토큰 객체.
- * @param {Record<string, string>} customColors - 적용할 색상. { '색상이름': '새로운 hex값' } 형태.
- * @returns {Tokens} 사용자 지정 색상이 적용된 새로운 토큰 객체.
+ * @param tokens - 덮어쓰기의 대상이 될 원본 토큰 객체
+ * @param customColors - 적용할 색상. { '색상이름': '새로운 hex값' } 형태
+ * @returns 사용자 지정 색상이 적용된 새로운 토큰 객체
  *
- * @example
- * const tokens = {
- * 'color-primary-500': { name: '...', hex: '#7878f8ff' },
- * 'color-primary-600': { name: '...', hex: '#0000DD' },
- * };
+ * @example overrideCustomColors(tokens, { primary: '#0808dbff' })
  *
- * const custom = { 'primary': '#0808dbff' };
- *
- * // 'primary'와 가장 가까운 'color-primary-500'의 hex값이 '#0808dbff'으로 변경됨
- * const newTokens = overrideCustomColors(tokens, custom);
+ * returns: {
+ *   'color-primary-500': { name: '...', hex: '#0808dbff', oklch: '...', deltaE: 0 },
+ *   'color-primary-600': { name: '...', hex: '#0000DD', oklch: '...', deltaE: 25 }
+ * }
  */
 const overrideCustomColors = (tokens: Tokens, customColors: Record<string, string>): Tokens => {
     const newTokens = { ...tokens };
@@ -83,15 +79,15 @@ const overrideCustomColors = (tokens: Tokens, customColors: Record<string, strin
  * 브랜드 컬러 팔레트를 생성합니다.
  * 사용자 정의 브랜드 컬러를 기반으로 Primitive 토큰들을 생성합니다.
  *
- * @param config - 브랜드 컬러 설정
- * @returns 라이트, 다크 테마의 토큰 컨테이너 (base 제외)
+ * @param config - BrandColorGeneratorConfig 타입의 브랜드 컬러 설정 (필수)
+ * @returns BrandColorPalette 타입의 light, dark 테마 컨테이너 (base 제외)
  *
- * @example
- * generateBrandColorPalette({ colors: { myBlue: '#448EFE' } })
- * // returns: {
- * //   light: { tokens: { "color-myBlue-050": {...}, "color-myBlue-100": {...} }, metadata: {...} },
- * //   dark: { tokens: { ... }, metadata: {...} }
- * // }
+ * @example generateBrandColorPalette({ colors: { myBlue: '#448EFE' } })
+ *
+ * returns: {
+ *   light: { tokens: { 'color-myBlue-050': {...}, 'color-myBlue-100': {...} }, metadata: { type: 'primitive', theme: 'light' } },
+ *   dark: { tokens: { 'color-myBlue-050': {...}, 'color-myBlue-100': {...} }, metadata: { type: 'primitive', theme: 'dark' } }
+ * }
  */
 type BrandColorPalette = Omit<ColorPaletteResult, 'base'>;
 

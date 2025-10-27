@@ -30,16 +30,16 @@ const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
  * 시스템 컬러 팔레트를 생성합니다.
  * Primitive 토큰들을 포함한 일관된 토큰 컨테이너 형태로 반환합니다.
  *
- * @param config - 색상 생성기 설정
- * @returns 기본, 라이트, 다크 테마의 토큰 컨테이너
+ * @param [config={}] - 색상 생성기 설정 (선택적)
+ * @returns ColorPaletteResult 타입의 base, light, dark 테마 토큰 컨테이너
  *
- * @example
- * generateSystemColorPalette()
- * // returns: {
- * //   base: { tokens: { "color-white": {...}, "color-black": {...} }, metadata: {...} },
- * //   light: { tokens: { "color-blue-050": {...}, "color-background-canvas": {...} }, metadata: {...} },
- * //   dark: { tokens: { ... }, metadata: {...} }
- * // }
+ * @example generateSystemColorPalette({ colors: { blue: '#448EFE' } })
+ *
+ * returns: {
+ *   base: { tokens: { 'color-white': {...}, 'color-black': {...} }, metadata: { type: 'primitive', theme: 'base' } },
+ *   light: { tokens: { 'color-blue-050': {...}, 'color-background-canvas': {...} }, metadata: { type: 'primitive', theme: 'light' } },
+ *   dark: { tokens: { 'color-blue-050': {...}, 'color-background-canvas': {...} }, metadata: { type: 'primitive', theme: 'dark' } }
+ * }
  */
 const generateSystemColorPalette = (config: ColorGeneratorConfig = {}): ColorPaletteResult => {
     const colors = config.colors || DEFAULT_PRIMITIVE_COLORS;

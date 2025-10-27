@@ -169,7 +169,7 @@ const createLeonardoTheme = ({
  *   'vapor-color-background-canvas': { name: '...', hex: '#ffffff', oklch: '...', codeSyntax: '...' }
  * }
  */
-export const generateThemeTokens = ({
+const generateThemeTokens = ({
     colors,
     contrastRatios,
     backgroundColor,
@@ -275,3 +275,5 @@ export const generateThemeTokens = ({
 
     return tokens;
 };
+
+export { generateThemeTokens };
