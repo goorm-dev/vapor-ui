@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Breadcrumb } from '@goorm-dev/vapor-core';
 
 export default function App() {

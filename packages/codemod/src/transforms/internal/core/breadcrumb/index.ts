@@ -64,8 +64,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             });
 
             const itemElements: JSXElement[] = [];
+            let hasMapExpression = false;
+
             element.children?.forEach((child) => {
-                if (
+                if (child.type === 'JSXExpressionContainer' && child.expression.type === 'CallExpression') {
+                    hasMapExpression = true;
+                } else if (
                     child.type === 'JSXElement' &&
                     child.openingElement.name.type === 'JSXMemberExpression' &&
                     child.openingElement.name.object.type === 'JSXIdentifier' &&
@@ -75,6 +79,21 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     itemElements.push(child);
                 }
             });
+
+            if (hasMapExpression) {
+                const listElement = j.jsxElement(
+                    j.jsxOpeningElement(
+                        j.jsxMemberExpression(j.jsxIdentifier('Breadcrumb'), j.jsxIdentifier('List')),
+                        [],
+                    ),
+                    j.jsxClosingElement(
+                        j.jsxMemberExpression(j.jsxIdentifier('Breadcrumb'), j.jsxIdentifier('List')),
+                    ),
+                    [j.jsxText('\n            '), ...(element.children || []), j.jsxText('\n        ')],
+                );
+                element.children = [j.jsxText('\n        '), listElement, j.jsxText('\n    ')];
+                return;
+            }
 
             const newChildren: (JSXElement | ReturnType<typeof j.jsxText>)[] = [];
             itemElements.forEach((item, index) => {

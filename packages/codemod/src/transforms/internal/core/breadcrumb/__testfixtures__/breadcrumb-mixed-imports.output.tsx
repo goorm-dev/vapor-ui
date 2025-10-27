@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Button } from '@goorm-dev/vapor-core';
 import { Breadcrumb } from '@vapor-ui/core';
 

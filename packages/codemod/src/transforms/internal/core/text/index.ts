@@ -25,7 +25,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    if (!hasComponentInPackage(root, j, 'Text', 'Text')) {
+    if (!hasComponentInPackage(root, j, 'Text', '@goorm-dev/vapor-core')) {
         return fileInfo.source;
     }
 

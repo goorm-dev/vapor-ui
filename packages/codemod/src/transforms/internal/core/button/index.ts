@@ -37,19 +37,34 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             element.openingElement.name.type === 'JSXIdentifier' &&
             element.openingElement.name.name === localButtonName
         ) {
-            element.openingElement.attributes?.forEach((attr) => {
-                if (attr.type === 'JSXAttribute' && attr.name.name === 'shape') {
-                    attr.name.name = 'variant';
+            let hasOutlineProp = false;
+            let outlineAttrIndex = -1;
 
-                    if (
-                        attr.value &&
-                        attr.value.type === 'StringLiteral' &&
-                        attr.value.value === 'invisible'
-                    ) {
-                        attr.value.value = 'ghost';
+            element.openingElement.attributes?.forEach((attr, index) => {
+                if (attr.type === 'JSXAttribute') {
+                    if (attr.name.name === 'shape') {
+                        attr.name.name = 'variant';
+
+                        if (
+                            attr.value &&
+                            attr.value.type === 'StringLiteral' &&
+                            attr.value.value === 'invisible'
+                        ) {
+                            attr.value.value = 'ghost';
+                        }
+                    } else if (attr.name.name === 'outline') {
+                        hasOutlineProp = true;
+                        outlineAttrIndex = index;
                     }
                 }
             });
+
+            if (hasOutlineProp && element.openingElement.attributes) {
+                element.openingElement.attributes.splice(outlineAttrIndex, 1);
+                element.openingElement.attributes.push(
+                    j.jsxAttribute(j.jsxIdentifier('variant'), j.stringLiteral('outline')),
+                );
+            }
         }
     });
 

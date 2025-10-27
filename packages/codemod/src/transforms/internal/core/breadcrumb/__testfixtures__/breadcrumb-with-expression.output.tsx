@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Breadcrumb } from '@vapor-ui/core';
 
 export default function App() {
