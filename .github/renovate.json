@@ -2,13 +2,10 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:base", "config:recommended", "group:monorepos", ":dependencyDashboard"],
     "baseBranchPatterns": ["main"],
-    "rebaseWhen": "conflicted",
+    "rebaseWhen": "auto",
     "labels": ["type: dependencies"],
     "automergeStrategy": "squash",
-    "autodiscover": true,
-    "autodiscoverFilter": ["goorm-dev/vapor-ui"],
     "prHourlyLimit": 10,
-    "prNotPendingHours": 48,
     "rangeStrategy": "bump",
     "vulnerabilityAlerts": {
         "enabled": true,
@@ -18,11 +15,11 @@
     },
     "packageRules": [
         {
-            "description": "patch make auto PR , auto merge",
+            "description": "patch make auto PR, auto merge",
             "matchUpdateTypes": ["patch"],
             "automerge": true,
             "dependencyDashboardApproval": false,
-            "labels": ["type: dependencies", "auto-merge"]
+            "labels": ["type: dependencies"]
         },
         {
             "description": "minor make auto PR, no auto merge",
@@ -72,21 +69,6 @@
                 "!/@vanilla-extract/*/",
                 "!/@base-ui-components/*/"
             ]
-        },
-        {
-            "description": "Security updates require manual review with alerts",
-            "isVulnerabilityAlert": true,
-            "automerge": false,
-            "dependencyDashboardApproval": true,
-            "labels": ["type: security"],
-            "matchPackageNames": ["*"]
-        },
-        {
-            "description": "Lockfile maintenance requires manual review",
-            "matchUpdateTypes": ["lockFileMaintenance"],
-            "automerge": false,
-            "dependencyDashboardApproval": true,
-            "labels": ["type: maintenance"]
         }
     ]
 }
