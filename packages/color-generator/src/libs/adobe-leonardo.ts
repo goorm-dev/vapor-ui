@@ -190,7 +190,7 @@ const generateThemeTokens = ({
         lightness,
         contrastRatios,
     });
-    const [, ...themeColors] = theme.contrastColors;
+    const [themeBackgroundColor, ...themeColors] = theme.contrastColors;
 
     const calculateDeltaE = differenceCiede2000();
     const tokens: Record<string, ColorToken> = {};
@@ -220,6 +220,13 @@ const generateThemeTokens = ({
                         deltaE =
                             Math.round(calculateDeltaE(originalColorHex, instance.value) * 100) /
                             100;
+                    } else if (colorName === backgroundName) {
+                        // Background color (예: gray)의 경우 backgroundColor와의 deltaE 계산
+                        deltaE =
+                            Math.round(
+                                calculateDeltaE(themeBackgroundColor.background, instance.value) *
+                                    100,
+                            ) / 100;
                     }
 
                     shadeData.push({
