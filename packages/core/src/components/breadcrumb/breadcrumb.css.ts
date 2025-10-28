@@ -1,9 +1,9 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const list = layerStyle('components', {
     display: 'inline-flex',
@@ -28,7 +28,7 @@ export const link = recipe({
         current: {
             false: [
                 layerStyle('components', {
-                    color: vars.color.foreground.hint,
+                    color: vars.color.foreground.hint[100],
 
                     // NOTE: When the link interaction style is declared multiple times, consider separating it.
                     ':hover': {
@@ -36,17 +36,16 @@ export const link = recipe({
                     },
                     ':focus-visible': {
                         outline: 'none',
-                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal}`,
+                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal[200]}`,
                     },
                     ':active': {
                         textDecoration: 'underline',
-
-                        textDecorationColor: vars.color.foreground.primary,
+                        textDecorationColor: vars.color.foreground.primary[100],
                     },
                 }),
             ],
             true: layerStyle('components', {
-                color: vars.color.foreground.primary,
+                color: vars.color.foreground.primary[100],
             }),
         },
     },
@@ -54,7 +53,7 @@ export const link = recipe({
 
 export const icon = recipe({
     base: layerStyle('components', {
-        color: vars.color.foreground.hint,
+        color: vars.color.foreground.hint[100],
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

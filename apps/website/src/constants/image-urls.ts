@@ -5,6 +5,7 @@ export const GOORM_FAVICON_URL = `${STATICS_DOMAIN}/gds/resources/brand-images/l
 export const VAPOR_BANNER_URL = `${STATICS_DOMAIN}/gds/docs/main/vapor-index-banner.png`;
 export const NAVBAR_BLOCK_URL = `${STATICS_DOMAIN}/gds/docs/blocks/nav-bar.svg`;
 export const SIDEBAR_BLOCK_URL = `${STATICS_DOMAIN}/gds/docs/blocks/side-bar.svg`;
+export const FORM_BLOCK_URL = `/images/form-card.svg`;
 
 export const getComponentOgImageUrl = (componentName: string) =>
     `${STATICS_DOMAIN}/gds/docs/og-image/components/core/${componentName}.png`;

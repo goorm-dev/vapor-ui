@@ -1,0 +1,13 @@
+{
+    "extends": "@repo/typescript-config/base",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["./src/*"]
+        },
+        "lib": ["es2017", "dom"]
+    },
+    "include": ["src"],
+    "exclude": ["dist", "build", "node_modules"]
+}

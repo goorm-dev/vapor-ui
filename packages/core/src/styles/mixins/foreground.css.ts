@@ -1,64 +1,61 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
-import { layerStyle } from '../utils/layer-style.css';
+import { layerStyle } from './layer-style.css';
 
 export const foregrounds = recipe({
-    defaultVariants: { color: 'normal' },
+    defaultVariants: { color: 'normal-200' },
     variants: {
         color: {
-            primary: layerStyle('components', {
-                color: vars.color.foreground.primary,
+            'primary-100': layerStyle('components', {
+                color: vars.color.foreground.primary[100],
             }),
-            'primary-darker': layerStyle('components', {
-                color: vars.color.foreground['primary-darker'],
+            'primary-200': layerStyle('components', {
+                color: vars.color.foreground.primary[200],
             }),
-            secondary: layerStyle('components', {
-                color: vars.color.foreground.secondary,
+            'secondary-100': layerStyle('components', {
+                color: vars.color.foreground.secondary[100],
             }),
-            'secondary-darker': layerStyle('components', {
-                color: vars.color.foreground['secondary-darker'],
+            'secondary-200': layerStyle('components', {
+                color: vars.color.foreground.secondary[200],
             }),
-            success: layerStyle('components', {
-                color: vars.color.foreground.success,
+            'success-100': layerStyle('components', {
+                color: vars.color.foreground.success[100],
             }),
-            'success-darker': layerStyle('components', {
-                color: vars.color.foreground['success-darker'],
+            'success-200': layerStyle('components', {
+                color: vars.color.foreground.success[200],
             }),
-            warning: layerStyle('components', {
-                color: vars.color.foreground.warning,
+            'warning-100': layerStyle('components', {
+                color: vars.color.foreground.warning[100],
             }),
-            'warning-darker': layerStyle('components', {
-                color: vars.color.foreground['warning-darker'],
+            'warning-200': layerStyle('components', {
+                color: vars.color.foreground.warning[200],
             }),
-            danger: layerStyle('components', {
-                color: vars.color.foreground.danger,
+            'danger-100': layerStyle('components', {
+                color: vars.color.foreground.danger[100],
             }),
-            'danger-darker': layerStyle('components', {
-                color: vars.color.foreground['danger-darker'],
+            'danger-200': layerStyle('components', {
+                color: vars.color.foreground.danger[200],
             }),
-            hint: layerStyle('components', {
-                color: vars.color.foreground.hint,
+            'hint-100': layerStyle('components', {
+                color: vars.color.foreground.hint[100],
             }),
-            'hint-darker': layerStyle('components', {
-                color: vars.color.foreground['hint-darker'],
+            'hint-200': layerStyle('components', {
+                color: vars.color.foreground.hint[200],
             }),
-            contrast: layerStyle('components', {
-                color: vars.color.foreground.contrast,
+            'contrast-100': layerStyle('components', {
+                color: vars.color.foreground.contrast[100],
             }),
-            'contrast-darker': layerStyle('components', {
-                color: vars.color.foreground['contrast-darker'],
+            'contrast-200': layerStyle('components', {
+                color: vars.color.foreground.contrast[200],
             }),
-            normal: layerStyle('components', {
-                color: vars.color.foreground.normal,
+            'normal-100': layerStyle('components', {
+                color: vars.color.foreground.normal[100],
             }),
-            'normal-lighter': layerStyle('components', {
-                color: vars.color.foreground['normal-lighter'],
-            }),
-            accent: layerStyle('components', {
-                color: vars.color.foreground.accent,
+            'normal-200': layerStyle('components', {
+                color: vars.color.foreground.normal[200],
             }),
         },
     },

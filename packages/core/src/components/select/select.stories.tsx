@@ -1,12 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Select } from '.';
 import { Box } from '../box';
 import { Grid } from '../grid';
-import type { SelectPositionerProps, SelectRootProps } from './select';
-import { Select } from './select';
 
-type SelectProps = SelectRootProps &
-    Pick<SelectPositionerProps, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
+type SelectProps = Select.Root.Props &
+    Pick<Select.Positioner.Props, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
 
 export default {
     title: 'Select',
@@ -41,37 +40,28 @@ export const Default: StoryObj<SelectProps> = {
                     <Select.TriggerIcon />
                 </Select.Trigger>
 
-                <Select.Portal>
-                    <Select.Positioner
-                        side={side}
-                        align={align}
-                        sideOffset={sideOffset}
-                        alignOffset={alignOffset}
-                    >
-                        <Select.Popup>
-                            <Select.Group>
-                                <Select.GroupLabel>Font</Select.GroupLabel>
-                                <Select.Item value="sans">
-                                    Sans-serif
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="serif">
-                                    Serif
-                                    <Select.ItemIndicator />
-                                </Select.Item>
+                <Select.Content positionerProps={{ side, align, sideOffset, alignOffset }}>
+                    <Select.Group>
+                        <Select.GroupLabel>Font</Select.GroupLabel>
+                        <Select.Item value="sans">
+                            Sans-serif
+                            <Select.ItemIndicator />
+                        </Select.Item>
+                        <Select.Item value="serif">
+                            Serif
+                            <Select.ItemIndicator />
+                        </Select.Item>
 
-                                <Select.Item value="mono">
-                                    Monospace
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                                <Select.Item value="cursive">
-                                    Cursive
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                            </Select.Group>
-                        </Select.Popup>
-                    </Select.Positioner>
-                </Select.Portal>
+                        <Select.Item value="mono">
+                            Monospace
+                            <Select.ItemIndicator />
+                        </Select.Item>
+                        <Select.Item value="cursive">
+                            Cursive
+                            <Select.ItemIndicator />
+                        </Select.Item>
+                    </Select.Group>
+                </Select.Content>
             </Select.Root>
         </Box>
     ),

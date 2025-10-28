@@ -1,4 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { HeartIcon } from '@vapor-ui/icons';
 
 import { Switch } from '.';
 import { HStack } from '../h-stack';
@@ -19,7 +22,18 @@ type Story = StoryObj<typeof Switch.Root>;
 
 export const Default: Story = {
     render: (args) => {
-        return <Switch.Root {...args} />;
+        const [checked, setChecked] = useState(false);
+        return (
+            <>
+                <Switch.Root checked={checked} onCheckedChange={setChecked} {...args} />
+                <Switch.Root checked={checked} onCheckedChange={setChecked} {...args}>
+                    <Switch.Thumb>
+                        <HeartIcon />
+                    </Switch.Thumb>
+                </Switch.Root>
+                <Switch.Root {...args} />
+            </>
+        );
     },
 };
 

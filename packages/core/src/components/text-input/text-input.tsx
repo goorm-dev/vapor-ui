@@ -1,10 +1,12 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 
 import { Input as BaseInput } from '@base-ui-components/react';
+import { useControlled } from '@base-ui-components/utils/useControlled';
 import clsx from 'clsx';
 
+import { useInputGroup } from '~/components/input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { Assign, VComponentProps } from '~/utils/types';
 
@@ -16,30 +18,46 @@ type BaseProps = TextInputVariants & {
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     value?: string;
     defaultValue?: string;
-    onValueChange?: (value: string) => void;
+    onValueChange?: (value: string, event: Event) => void;
 };
 
 /* -------------------------------------------------------------------------------------------------
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
-interface TextInputProps extends Assign<TextInputPrimitiveProps, BaseProps> {}
-
-const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-    ({ onValueChange, className, ...props }, ref) => {
+export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>(
+    ({ onValueChange, value: valueProp, defaultValue = '', className, ...props }, ref) => {
         const [textInputRootProps, otherProps] = createSplitProps<TextInputVariants>()(props, [
             'size',
             'invalid',
         ]);
 
         const { invalid, size } = textInputRootProps;
+        const { current: isControlled } = useRef(valueProp !== undefined);
+
+        const [value, setValue] = useControlled({
+            controlled: valueProp,
+            default: defaultValue,
+            name: 'TextInput',
+            state: 'value',
+        });
+
+        const handleChange = (value: string, event: Event) => {
+            setValue(value);
+            onValueChange?.(value, event);
+        };
+
+        useInputGroup({
+            value,
+            maxLength: otherProps.maxLength,
+        });
 
         return (
             <BaseInput
                 ref={ref}
+                {...(isControlled ? { value } : { defaultValue })}
                 aria-invalid={invalid}
-                onChange={(event) => onValueChange?.(event.target.value)}
+                onValueChange={handleChange}
                 className={clsx(styles.root({ invalid, size }), className)}
                 {...otherProps}
             />
@@ -50,5 +68,8 @@ TextInput.displayName = 'TextInput';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { TextInput };
-export type { TextInputProps };
+export namespace TextInput {
+    type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
+
+    export interface Props extends Assign<TextInputPrimitiveProps, BaseProps> {}
+}

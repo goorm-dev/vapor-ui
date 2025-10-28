@@ -1,6 +1,12 @@
 {
     "props": [
         {
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "button",
+            "description": "버튼을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
             "prop": "color",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "default": "primary",
@@ -29,6 +35,30 @@
             "type": ["boolean"],
             "default": false,
             "description": "버튼을 비활성화 상태로 만듭니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "추가적인 CSS 클래스를 적용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "undefined",
+            "description": "버튼의 내용을 포함합니다."
+        },
+        {
+            "prop": "type",
+            "type": ["button", "submit", "reset"],
+            "default": "button",
+            "description": "버튼의 타입을 설정합니다."
+        },
+        {
+            "prop": "onClick",
+            "type": ["function"],
+            "default": "undefined",
+            "description": "버튼 클릭 시 호출되는 이벤트 핸들러입니다."
         }
     ]
 }

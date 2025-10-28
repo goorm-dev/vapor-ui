@@ -1,10 +1,10 @@
 import type { ComponentProps } from 'react';
 
-import type { StoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 
+import { NavigationMenu } from '.';
 import { HStack } from '../h-stack';
 import { VStack } from '../v-stack';
-import { NavigationMenu } from './navigation-menu';
 
 type RootProps = ComponentProps<typeof NavigationMenu.Root>;
 type PositionerProps = ComponentProps<typeof NavigationMenu.Positioner>;
@@ -122,13 +122,7 @@ export const Default: StoryObj<StoryProps> = {
                         </NavigationMenu.Item>
                     </NavigationMenu.List>
 
-                    <NavigationMenu.Portal keepMounted>
-                        <NavigationMenu.Positioner side={side} align={align}>
-                            <NavigationMenu.Popup>
-                                <NavigationMenu.Viewport />
-                            </NavigationMenu.Popup>
-                        </NavigationMenu.Positioner>
-                    </NavigationMenu.Portal>
+                    <NavigationMenu.Content positionerProps={{ side, align }} />
                 </NavigationMenu.Root>
             </HStack>
         );
@@ -190,13 +184,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
-                        <NavigationMenu.Portal>
-                            <NavigationMenu.Positioner side="left">
-                                <NavigationMenu.Popup>
-                                    <NavigationMenu.Viewport />
-                                </NavigationMenu.Popup>
-                            </NavigationMenu.Positioner>
-                        </NavigationMenu.Portal>
+                        <NavigationMenu.Content positionerProps={{ side: 'left' }} />
                     </NavigationMenu.Root>
 
                     {/* Top Navigation Menu */}
@@ -227,13 +215,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
-                        <NavigationMenu.Portal>
-                            <NavigationMenu.Positioner side="top">
-                                <NavigationMenu.Popup>
-                                    <NavigationMenu.Viewport />
-                                </NavigationMenu.Popup>
-                            </NavigationMenu.Positioner>
-                        </NavigationMenu.Portal>
+                        <NavigationMenu.Content positionerProps={{ side: 'top' }} />
                     </NavigationMenu.Root>
 
                     {/* Bottom Navigation Menu */}
@@ -264,9 +246,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
-                        <NavigationMenu.Content>
-                            <NavigationMenu.Viewport />
-                        </NavigationMenu.Content>
+                        <NavigationMenu.Content />
                     </NavigationMenu.Root>
 
                     {/* Right Navigation Menu */}
@@ -297,13 +277,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
-                        <NavigationMenu.Portal>
-                            <NavigationMenu.Positioner side="right">
-                                <NavigationMenu.Popup>
-                                    <NavigationMenu.Viewport />
-                                </NavigationMenu.Popup>
-                            </NavigationMenu.Positioner>
-                        </NavigationMenu.Portal>
+                        <NavigationMenu.Content positionerProps={{ side: 'right' }} />
                     </NavigationMenu.Root>
                 </HStack>
 
@@ -336,13 +310,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
-                        <NavigationMenu.Portal>
-                            <NavigationMenu.Positioner align="start">
-                                <NavigationMenu.Popup>
-                                    <NavigationMenu.Viewport />
-                                </NavigationMenu.Popup>
-                            </NavigationMenu.Positioner>
-                        </NavigationMenu.Portal>
+                        <NavigationMenu.Content positionerProps={{ align: 'start' }} />
                     </NavigationMenu.Root>
 
                     {/* Center Navigation Menu */}
@@ -373,13 +341,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
-                        <NavigationMenu.Portal>
-                            <NavigationMenu.Positioner align="center">
-                                <NavigationMenu.Popup>
-                                    <NavigationMenu.Viewport />
-                                </NavigationMenu.Popup>
-                            </NavigationMenu.Positioner>
-                        </NavigationMenu.Portal>
+                        <NavigationMenu.Content positionerProps={{ align: 'center' }} />
                     </NavigationMenu.Root>
 
                     {/* End Navigation Menu */}
@@ -410,13 +372,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
 
-                        <NavigationMenu.Portal>
-                            <NavigationMenu.Positioner align="end">
-                                <NavigationMenu.Popup>
-                                    <NavigationMenu.Viewport />
-                                </NavigationMenu.Popup>
-                            </NavigationMenu.Positioner>
-                        </NavigationMenu.Portal>
+                        <NavigationMenu.Content positionerProps={{ align: 'end' }} />
                     </NavigationMenu.Root>
                 </HStack>
             </VStack>

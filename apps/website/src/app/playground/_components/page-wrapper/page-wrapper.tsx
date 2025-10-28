@@ -1,22 +1,23 @@
 'use client';
 
-import ThemePanel from '../theme-panel/theme-panel';
-import styles from './page-wrapper.module.scss';
+import type { ReactNode } from 'react';
 
-type PageWrapperProps = {
-    children: React.ReactNode;
-};
+import SiteNavBar from '~/components/site-nav-bar/site-nav-bar';
 
+import { ThemePanel } from '../theme-panel';
+
+interface PageWrapperProps {
+    children: ReactNode;
+}
 const PageWrapper = ({ children }: PageWrapperProps) => {
     return (
         <>
+            <SiteNavBar />
             <ThemePanel />
 
-            <div className={styles.container}>
-                <div className={styles.wrapper}>{children}</div>
-            </div>
+            {children}
         </>
     );
 };
 
-export default PageWrapper;
+export { PageWrapper };

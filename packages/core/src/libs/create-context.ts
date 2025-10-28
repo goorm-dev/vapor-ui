@@ -13,6 +13,15 @@ export type CreateContextOptions<T> = {
 
 export type CreateContextReturn<T> = [React.Provider<T>, () => T, React.Context<T>];
 
+// Global registry to ensure context instances are reused across different bundles
+// This prevents context sharing issues when splitting: false in tsup config
+const globalContextRegistry = globalThis as typeof globalThis & {
+    __vaporContextRegistry?: Map<string, React.Context<unknown>>;
+};
+if (!globalContextRegistry.__vaporContextRegistry) {
+    globalContextRegistry.__vaporContextRegistry = new Map();
+}
+
 const getErrorMessage = (hook: string, provider: string) => {
     return `${hook} returned \`undefined\`. Seems you forgot to wrap component within ${provider}`;
 };
@@ -25,9 +34,25 @@ export const createContext = <T>({
     errorMessage,
     defaultValue,
 }: CreateContextOptions<T> = {}) => {
-    const Context = createReactContext<T | undefined>(defaultValue);
+    let Context: React.Context<T | undefined>;
 
-    Context.displayName = name;
+    // Reuse existing context if name is provided and already exists in global registry
+    if (name && globalContextRegistry.__vaporContextRegistry?.has(name)) {
+        Context = globalContextRegistry.__vaporContextRegistry.get(name) as React.Context<
+            T | undefined
+        >;
+    } else {
+        Context = createReactContext<T | undefined>(defaultValue);
+        Context.displayName = name;
+
+        // Store in global registry if name is provided
+        if (name && globalContextRegistry.__vaporContextRegistry) {
+            globalContextRegistry.__vaporContextRegistry.set(
+                name,
+                Context as React.Context<unknown>,
+            );
+        }
+    }
 
     function useContext() {
         const context = useReactContext(Context);

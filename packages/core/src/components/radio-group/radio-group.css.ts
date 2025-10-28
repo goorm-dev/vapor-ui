@@ -2,9 +2,9 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: layerStyle('components', {
@@ -24,6 +24,6 @@ export const root = recipe({
     },
 });
 
-export const label = [foregrounds({ color: 'normal-lighter' }), typography({ style: 'subtitle2' })];
+export const label = [foregrounds({ color: 'normal-100' }), typography({ style: 'subtitle2' })];
 
 export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

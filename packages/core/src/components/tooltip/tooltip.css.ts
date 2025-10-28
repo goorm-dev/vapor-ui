@@ -1,6 +1,6 @@
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const popup = [
     typography({ style: 'body3' }),
@@ -8,7 +8,7 @@ export const popup = [
         paddingBlock: vars.size.space['075'],
         paddingInline: vars.size.space['100'],
         borderRadius: vars.size.borderRadius['300'],
-        backgroundColor: vars.color.background.contrast,
+        backgroundColor: vars.color.background.contrast[200],
         border: `0.0625rem solid ${vars.color.border.normal}`,
         color: vars.color.white,
         boxShadow: vars.shadow.md,
@@ -17,7 +17,7 @@ export const popup = [
 
 export const arrow = layerStyle('components', {
     display: 'flex',
-    color: vars.color.background.contrast,
+    color: vars.color.background.contrast[200],
 
     selectors: {
         '&[data-side="top"]': {

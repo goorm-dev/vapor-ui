@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import { Dialog, type DialogRootProps } from './dialog';
+import { Dialog } from '.';
 
 describe('Dialog', () => {
     const consoleWarnMockFunction = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -95,15 +95,26 @@ describe('Dialog', () => {
     });
 
     it('should close the content when the overlay is clicked', async () => {
-        const rendered = render(<DialogTest />);
+        const rendered = render(
+            <Dialog.Root>
+                <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
+                <Dialog.Portal>
+                    <Dialog.Overlay data-testid={OVERLAY_TEXT} />
+                    <Dialog.Popup>
+                        <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
+                    </Dialog.Popup>
+                </Dialog.Portal>
+            </Dialog.Root>,
+        );
         const trigger = rendered.getByText(TRIGGER_TEXT);
 
         await userEvent.click(trigger);
         const overlay = rendered.getByTestId(OVERLAY_TEXT);
+        const closeButton = rendered.getByText(CLOSE_TEXT);
 
         await userEvent.click(overlay);
 
-        expect(rendered.queryByText(CLOSE_TEXT)).not.toBeInTheDocument();
+        expect(closeButton).not.toBeInTheDocument();
     });
 
     it('should not close the content when the overlay is clicked if closeOnClickOverlay is false', async () => {
@@ -125,7 +136,7 @@ const TITLE_TEXT = 'Dialog Title';
 const DESCRIPTION_TEXT = 'This is a description of the dialog.';
 const OVERLAY_TEXT = 'Overlay';
 
-const DialogTest = (props: DialogRootProps) => {
+const DialogTest = (props: Dialog.Root.Props) => {
     return (
         <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
@@ -185,13 +196,13 @@ const DialogTest = (props: DialogRootProps) => {
 //     );
 // };
 
-const UndefinedDescriptionDialogTest = (props: DialogRootProps) => {
+const UndefinedDescriptionDialogTest = (props: Dialog.Root.Props) => {
     return (
         <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
             <Dialog.Portal>
-                <Dialog.Overlay />
-                <Dialog.Content aria-describedby={undefined}>
+                <Dialog.Overlay data-testid={OVERLAY_TEXT} />
+                <Dialog.Popup aria-describedby={undefined}>
                     <Dialog.Header>
                         <Dialog.Title>{TITLE_TEXT}</Dialog.Title>
                     </Dialog.Header>
@@ -199,7 +210,7 @@ const UndefinedDescriptionDialogTest = (props: DialogRootProps) => {
                     <Dialog.Footer>
                         <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                     </Dialog.Footer>
-                </Dialog.Content>
+                </Dialog.Popup>
             </Dialog.Portal>
         </Dialog.Root>
     );

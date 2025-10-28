@@ -33,43 +33,39 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
  * RadioGroup.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = VComponentProps<typeof BaseRadioGroup>;
-interface RadioGroupRootProps extends RootPrimitiveProps, RadioGroupSharedProps {}
+export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>(
+    ({ className, ...props }, ref) => {
+        const [labelElementId, setLabelElementId] = useState<string | undefined>(undefined);
 
-const Root = forwardRef<HTMLDivElement, RadioGroupRootProps>(({ className, ...props }, ref) => {
-    const [labelElementId, setLabelElementId] = useState<string | undefined>(undefined);
+        const [variantProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(props, [
+            'size',
+            'invalid',
+            'orientation',
+        ]);
 
-    const [variantProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(props, [
-        'size',
-        'invalid',
-        'orientation',
-    ]);
+        const { size, orientation, invalid } = variantProps;
 
-    const { size, orientation, invalid } = variantProps;
-
-    return (
-        <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
-            <BaseRadioGroup
-                ref={ref}
-                aria-invalid={invalid}
-                aria-orientation={orientation}
-                aria-describedby={labelElementId}
-                className={clsx(styles.root({ size, orientation }), className)}
-                {...otherProps}
-            />
-        </RadioGroupProvider>
-    );
-});
-Root.displayName = 'RadioGroup.Root';
+        return (
+            <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
+                <BaseRadioGroup
+                    ref={ref}
+                    aria-invalid={invalid}
+                    aria-orientation={orientation}
+                    aria-describedby={labelElementId}
+                    className={clsx(styles.root({ size, orientation }), className)}
+                    {...otherProps}
+                />
+            </RadioGroupProvider>
+        );
+    },
+);
+RadioGroupRoot.displayName = 'RadioGroup.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type LabelPrimitiveProps = VComponentProps<'span'>;
-interface RadioGroupLabelProps extends LabelPrimitiveProps {}
-
-const Label = forwardRef<HTMLSpanElement, RadioGroupLabelProps>(
+export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>(
     ({ render, className, ...props }, ref) => {
         const { setLabelElementId } = useRadioGroupContext();
 
@@ -87,11 +83,14 @@ const Label = forwardRef<HTMLSpanElement, RadioGroupLabelProps>(
         });
     },
 );
-Label.displayName = 'RadioGroup.Label';
+RadioGroupLabel.displayName = 'RadioGroup.Label';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as RadioGroupRoot, Label as RadioGroupLabel };
-export type { RadioGroupRootProps, RadioGroupLabelProps };
+export namespace RadioGroupRoot {
+    export interface Props extends VComponentProps<typeof BaseRadioGroup>, RadioGroupSharedProps {}
+}
 
-export const RadioGroup = { Root, Label };
+export namespace RadioGroupLabel {
+    export interface Props extends VComponentProps<'span'> {}
+}

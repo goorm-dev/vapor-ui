@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
-import type { SheetPositionerProps, SheetRootProps } from '.';
 import { Sheet } from '.';
 import { Box } from '../box';
 import { Button } from '../button';
@@ -10,9 +9,9 @@ import { VStack } from '../v-stack';
 export default {
     title: 'Sheet',
     component: Sheet.Root,
-} satisfies Meta<SheetRootProps>;
+} satisfies Meta<Sheet.Root.Props>;
 
-type SheetStory = StoryObj<SheetRootProps & Pick<SheetPositionerProps, 'side'>>;
+type SheetStory = StoryObj<Sheet.Root.Props & Pick<Sheet.Positioner.Props, 'side'>>;
 
 export const Default: SheetStory = {
     argTypes: {
@@ -26,31 +25,26 @@ export const Default: SheetStory = {
             <VStack height="1000vh">
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
-                    <Sheet.Portal keepMounted>
-                        <Sheet.Overlay />
-                        <Sheet.Positioner side={side}>
-                            <Sheet.Popup>
-                                <Box
-                                    aria-label="Close sheet"
-                                    position="absolute"
-                                    display="flex"
-                                    style={{ top: '1rem', right: '1rem' }}
-                                    render={<Sheet.Close />}
-                                >
-                                    <CloseOutlineIcon />
-                                </Box>
-                                <Sheet.Header>
-                                    <Sheet.Title>Sheet Title</Sheet.Title>
-                                </Sheet.Header>
-                                <Sheet.Body>
-                                    <Sheet.Description>Sheet content goes here.</Sheet.Description>
-                                </Sheet.Body>
-                                <Sheet.Footer>
-                                    <Sheet.Close>Close</Sheet.Close>
-                                </Sheet.Footer>
-                            </Sheet.Popup>
-                        </Sheet.Positioner>
-                    </Sheet.Portal>
+                    <Sheet.Content portalProps={{ keepMounted: true }} positionerProps={{ side }}>
+                        <Box
+                            aria-label="Close sheet"
+                            position="absolute"
+                            display="flex"
+                            style={{ top: '1rem', right: '1rem' }}
+                            render={<Sheet.Close />}
+                        >
+                            <CloseOutlineIcon />
+                        </Box>
+                        <Sheet.Header>
+                            <Sheet.Title>Sheet Title</Sheet.Title>
+                        </Sheet.Header>
+                        <Sheet.Body>
+                            <Sheet.Description>Sheet content goes here.</Sheet.Description>
+                        </Sheet.Body>
+                        <Sheet.Footer>
+                            <Sheet.Close>Close</Sheet.Close>
+                        </Sheet.Footer>
+                    </Sheet.Content>
                 </Sheet.Root>
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
@@ -80,7 +74,7 @@ export const Default: SheetStory = {
     },
 };
 
-export const TestBed: StoryObj<SheetRootProps> = {
+export const TestBed: StoryObj<Sheet.Root.Props> = {
     render: ({ ...args }) => {
         return (
             <VStack>
