@@ -153,7 +153,7 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
 
                     <Tabs.Root
                         orientation="vertical"
-                        variant="plain"
+                        variant="line"
                         defaultValue={'tab2'}
                         activateOnFocus={false}
                         {...args}
