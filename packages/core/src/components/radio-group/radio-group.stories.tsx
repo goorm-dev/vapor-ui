@@ -43,10 +43,10 @@ export const WithRadioCard: Story = {
         <RadioGroup.Root {...args} name="radio-group" defaultValue="3">
             <RadioGroup.Label>Options</RadioGroup.Label>
             <RadioCard value="1">value 1</RadioCard>
-            <RadioCard value="2">value 1</RadioCard>
-            <RadioCard value="3">value 1</RadioCard>
-            <RadioCard value="4">value 1</RadioCard>
-            <RadioCard value="5">value 1</RadioCard>
+            <RadioCard value="2">value 2</RadioCard>
+            <RadioCard value="3">value 3</RadioCard>
+            <RadioCard value="4">value 4</RadioCard>
+            <RadioCard value="5">value 5</RadioCard>
         </RadioGroup.Root>
     ),
 };
