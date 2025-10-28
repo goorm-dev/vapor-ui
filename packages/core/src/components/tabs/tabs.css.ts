@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -7,6 +7,12 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
+
+const listBorderBottom = createVar();
+const listBorderRight = createVar();
+const triggerSelectedBg = createVar();
+const triggerSelectedBorderRadius = createVar();
+const indicatorDisplay = createVar();
 
 export const root = recipe({
     base: layerStyle('components', { display: 'flex' }),
@@ -28,35 +34,48 @@ export const list = recipe({
     base: layerStyle('components', {
         position: 'relative',
         gap: vars.size.space[100],
+        borderBottom: listBorderBottom,
+        borderRight: listBorderRight,
     }),
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
     variants: {
-        variant: { line: {}, plain: {} },
         orientation: {
             horizontal: layerStyle('components', {
                 display: 'flex',
+                vars: {
+                    [listBorderBottom]: `1px solid ${vars.color.border.normal}`,
+                    [listBorderRight]: 'none',
+                },
             }),
             vertical: layerStyle('components', {
                 display: 'inline-flex',
                 flexDirection: 'column',
+                vars: {
+                    [listBorderBottom]: 'none',
+                    [listBorderRight]: `1px solid ${vars.color.border.normal}`,
+                },
+            }),
+        },
+        variant: {
+            line: layerStyle('components', {
+                vars: {
+                    [triggerSelectedBg]: 'transparent',
+                    [triggerSelectedBorderRadius]: '0',
+                    [indicatorDisplay]: 'block',
+                },
+            }),
+            fill: layerStyle('components', {
+                vars: {
+                    [listBorderBottom]: 'none',
+                    [listBorderRight]: 'none',
+                    [triggerSelectedBg]: vars.color.background.primary[100],
+                    [triggerSelectedBorderRadius]: vars.size.borderRadius[300],
+                    [indicatorDisplay]: 'none',
+                },
             }),
         },
     },
-    compoundVariants: [
-        {
-            variants: { variant: 'line', orientation: 'horizontal' },
-            style: layerStyle('components', {
-                borderBottom: `1px solid ${vars.color.border.normal}`,
-            }),
-        },
-        {
-            variants: { variant: 'line', orientation: 'vertical' },
-            style: layerStyle('components', {
-                borderRight: `1px solid ${vars.color.border.normal}`,
-            }),
-        },
-    ],
 });
 
 const triggerBase = style([
@@ -71,7 +90,11 @@ const triggerBase = style([
         borderRadius: vars.size.borderRadius['300'],
 
         selectors: {
-            '&[data-selected]': { color: vars.color.foreground.primary[100] },
+            '&[data-selected]': {
+                color: vars.color.foreground.primary[100],
+                backgroundColor: triggerSelectedBg,
+                borderRadius: triggerSelectedBorderRadius,
+            },
         },
     }),
 ]);
@@ -118,6 +141,7 @@ export const trigger = recipe({
 export const indicator = recipe({
     base: layerStyle('components', {
         position: 'absolute',
+        display: indicatorDisplay,
 
         transitionDuration: '200ms',
         transitionProperty: `translate, width`,
