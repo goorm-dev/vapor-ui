@@ -1,6 +1,22 @@
-import { lch, oklch } from 'culori';
+import { differenceCiede2000, lch, oklch } from 'culori';
 
 import { BASE_COLORS, BUTTON_FOREGROUND_LIGHTNESS_THRESHOLD } from '../constants';
+
+/* -------------------------------------------------------------------------------------------------
+ * Color Calculation Utilities
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * 두 색상 간의 deltaE 값을 계산합니다.
+ *
+ * @param sourceColor - 기준 색상 (HEX)
+ * @param targetColor - 비교 색상 (HEX)
+ * @returns 소수점 둘째자리까지 반올림된 deltaE 값
+ */
+const computeDeltaEValue = (sourceColor: string, targetColor: string): number => {
+    const calculateDeltaE = differenceCiede2000();
+    return Math.round(calculateDeltaE(sourceColor, targetColor) * 100) / 100;
+};
 
 /* -------------------------------------------------------------------------------------------------
  * Color Formatting Utilities
@@ -158,6 +174,7 @@ const getColorLightness = (colorHex: string): number | null => {
 };
 
 export {
+    computeDeltaEValue,
     formatOklchForWeb,
     generateCodeSyntax,
     generateTokenName,

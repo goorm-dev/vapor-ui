@@ -1,10 +1,14 @@
 import type { CssColor } from '@adobe/leonardo-contrast-colors';
 import { BackgroundColor, Color, Theme } from '@adobe/leonardo-contrast-colors';
-import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
+import { formatCss, formatHex, oklch } from 'culori';
 
 import { ADAPTIVE_COLOR_GENERATION } from '../constants';
 import type { Background, ColorToken, Colors, ContrastRatios, OklchColor, Tokens } from '../types';
-import { formatOklchForWeb, generateCodeSyntax, generateTokenName } from '../utils';
+import { computeDeltaEValue, formatOklchForWeb, generateCodeSyntax, generateTokenName } from '../utils';
+
+interface ShadeData extends ColorToken {
+    instanceName: string;
+}
 
 /**
  * 입력 색상의 명도를 분석하여 최적의 Light/Dark Key 쌍을 생성합니다.
@@ -148,6 +152,37 @@ const createLeonardoTheme = ({
     });
 };
 
+
+/**
+ * 컬러 토큰의 deltaE 값을 계산합니다.
+ *
+ * @param params - deltaE 계산을 위한 매개변수 객체
+ * @returns deltaE 값 (0 이상의 숫자)
+ */
+const calculateColorDeltaE = ({
+    colorName,
+    originalColorHex,
+    backgroundName,
+    themeBackgroundColor,
+    instanceValue,
+}: {
+    colorName: string;
+    originalColorHex?: string;
+    backgroundName: string;
+    themeBackgroundColor: { background: string };
+    instanceValue: string;
+}): number => {
+    if (originalColorHex) {
+        return computeDeltaEValue(originalColorHex, instanceValue);
+    }
+
+    if (colorName === backgroundName) {
+        return computeDeltaEValue(themeBackgroundColor.background, instanceValue);
+    }
+
+    return 0;
+};
+
 /**
  * Adobe Leonardo를 사용하여 테마별 컬러 토큰을 생성합니다.
  * Primitive 컬러 토큰만 생성하며, semantic 토큰은 별도 처리됩니다.
@@ -191,8 +226,6 @@ const generateThemeTokens = ({
         contrastRatios,
     });
     const [themeBackgroundColor, ...themeColors] = theme.contrastColors;
-
-    const calculateDeltaE = differenceCiede2000();
     const tokens: Record<string, ColorToken> = {};
 
     // 색상 팔레트 토큰들 처리 (background canvas 토큰 제외)
@@ -201,62 +234,47 @@ const generateThemeTokens = ({
             const colorName = color.name;
             const originalColorHex = colors[colorName];
 
-            const shadeData: Array<{
-                name: string;
-                hex: string;
-                oklch: string;
-                deltaE: number;
-                tokenName: string;
-                codeSyntax: string;
-            }> = [];
+            const shadeData: ShadeData[] = [];
 
             color.values.forEach((instance) => {
                 const oklchColor = oklch(instance.value);
                 const oklchValue = formatCss(oklchColor);
 
-                if (oklchValue) {
-                    let deltaE: number | undefined = undefined;
-                    if (originalColorHex) {
-                        deltaE =
-                            Math.round(calculateDeltaE(originalColorHex, instance.value) * 100) /
-                            100;
-                    } else if (colorName === backgroundName) {
-                        // Background color (예: gray)의 경우 backgroundColor와의 deltaE 계산
-                        deltaE =
-                            Math.round(
-                                calculateDeltaE(themeBackgroundColor.background, instance.value) *
-                                    100,
-                            ) / 100;
-                    }
+                if (!oklchValue) return;
 
-                    shadeData.push({
-                        name: instance.name,
-                        hex: instance.value,
-                        oklch: formatOklchForWeb(oklchValue),
-                        deltaE: deltaE || 0,
-                        tokenName: generateTokenName([colorName, instance.name]),
-                        codeSyntax: generateCodeSyntax([colorName, instance.name]),
-                    });
-                }
+                const deltaE = calculateColorDeltaE({
+                    colorName,
+                    originalColorHex,
+                    backgroundName,
+                    themeBackgroundColor,
+                    instanceValue: instance.value,
+                });
+
+                shadeData.push({
+                    name: generateTokenName([colorName, instance.name]),
+                    hex: instance.value,
+                    oklch: formatOklchForWeb(oklchValue),
+                    deltaE,
+                    instanceName: instance.name,
+                    codeSyntax: generateCodeSyntax([colorName, instance.name]),
+                });
             });
 
-            // 숫자 순으로 정렬
             shadeData.sort((a, b) => {
-                const numA = parseInt(a.name, 10);
-                const numB = parseInt(b.name, 10);
+                const numA = parseInt(a.instanceName, 10);
+                const numB = parseInt(b.instanceName, 10);
                 return numA - numB;
             });
 
-            // 토큰 객체에 추가
             shadeData.forEach((shade) => {
                 const token: ColorToken = {
-                    name: shade.tokenName,
+                    name: shade.name,
                     hex: shade.hex,
                     oklch: shade.oklch,
                     deltaE: shade.deltaE,
                     codeSyntax: shade.codeSyntax,
                 };
-                tokens[shade.tokenName] = token;
+                tokens[shade.name] = token;
             });
         }
     });
