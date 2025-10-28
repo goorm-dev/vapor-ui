@@ -1,6 +1,6 @@
-name: "Tests"
+name: 'Tests'
 
-"on":
+on:
     workflow_dispatch:
     pull_request:
         types:
@@ -18,7 +18,11 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ""
+    REPORT_PATH: ''
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+    cancel-in-progress: true
 
 jobs:
     regressions:
@@ -31,7 +35,7 @@ jobs:
                         { name: firefox, project: firefox },
                         { name: webkit, project: webkit },
                         { name: chromium, project: chromium },
-                        { name: "Microsoft Edge", project: msedge },
+                        { name: 'Microsoft Edge', project: msedge },
                     ]
 
         steps:
