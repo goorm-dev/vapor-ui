@@ -318,6 +318,7 @@ export namespace MultiSelectRoot {
     export interface Props<Value>
         extends Omit<RootPrimitiveProps<Value>, 'multiple'>,
             MultiSelectSharedProps {}
+    export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 
 export namespace MultiSelectTrigger {

@@ -73,13 +73,9 @@ export const SheetRoot = ({
 
     useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
 
-    const handleOpenChange = (
-        ...params: Parameters<NonNullable<SheetRoot.Props['onOpenChange']>>
-    ) => {
-        const [nextOpen] = params;
-
-        setOpen(nextOpen);
-        onOpenChange?.(...params);
+    const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
+        setOpen(open);
+        onOpenChange?.(open, eventDetails);
     };
 
     return (
@@ -139,19 +135,13 @@ export const SheetPositioner = forwardRef<HTMLDivElement, SheetPositioner.Props>
 
         const { open: contextOpen = false, mounted } = useSheetRootContext();
 
-        const dataAttr = createDataAttributes({
-            open: contextOpen,
-            closed: !contextOpen,
-            side: side,
-        });
-
         const element = useRender({
             ref,
             render: render || <div />,
+            state: { open: contextOpen, closed: !contextOpen, side },
             props: {
                 role: 'presentation',
                 hidden: !mounted,
-                ...dataAttr,
                 ...otherProps,
             },
         });
@@ -256,6 +246,7 @@ SheetDescription.displayName = 'Sheet.Description';
 export namespace SheetRoot {
     type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
     export interface Props extends RootPrimitiveProps {}
+    export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
 }
 
 export namespace SheetTrigger {

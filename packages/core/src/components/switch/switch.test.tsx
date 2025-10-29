@@ -137,11 +137,11 @@ describe('Switch', () => {
 
             await userEvent.click(control);
             expect(onCheckedChange).toHaveBeenCalledTimes(1);
-            expect(onCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
+            expect(onCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
 
             await userEvent.click(control);
             expect(onCheckedChange).toHaveBeenCalledTimes(2);
-            expect(onCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
+            expect(onCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
         });
 
         it('should not toggle checked state when blocker is active', async () => {
@@ -219,7 +219,7 @@ const ControlledSwitchTest = ({ onCheckedChange, ...props }: Switch.Root.Props) 
     const [checked, setChecked] = useState<boolean>(false);
     const [blocker, setBlocker] = useState<boolean>(false);
 
-    const handleCheckedChange = (checked: boolean, event: Event) => {
+    const handleCheckedChange = (checked: boolean, event: Switch.Root.ChangeEventDetails) => {
         onCheckedChange?.(checked, event);
 
         if (blocker) return;
