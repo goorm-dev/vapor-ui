@@ -1,9 +1,9 @@
 // @ts-nocheck
 import { Nav } from '@goorm-dev/vapor-core';
 
-export default function App() {
+function App() {
     return (
-        <Nav size="md" type="pill" stretch={false} direction="horizontal">
+        <Nav type="pill">
             <Nav.List>
                 <Nav.Item>
                     <Nav.Link href="/">Home</Nav.Link>

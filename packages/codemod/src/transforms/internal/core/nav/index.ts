@@ -26,6 +26,38 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         return fileInfo.source;
     }
 
+    // Check if any Nav has type="pill" - skip transformation if found
+    let hasPillNav = false;
+    root.find(j.JSXElement).forEach((path) => {
+        const element: JSXElement = path.value;
+        if (
+            element.openingElement.name.type === 'JSXIdentifier' &&
+            element.openingElement.name.name === OLD_COMPONENT_NAME
+        ) {
+            const attributes = element.openingElement.attributes || [];
+            const typeProp = attributes.find(
+                (attr) =>
+                    attr.type === 'JSXAttribute' &&
+                    attr.name.type === 'JSXIdentifier' &&
+                    attr.name.name === 'type',
+            );
+
+            if (
+                typeProp &&
+                typeProp.type === 'JSXAttribute' &&
+                typeProp.value?.type === 'StringLiteral' &&
+                typeProp.value.value === 'pill'
+            ) {
+                hasPillNav = true;
+            }
+        }
+    });
+
+    // Skip transformation if any Nav has type="pill" (use nav-to-tabs transform instead)
+    if (hasPillNav) {
+        return fileInfo.source;
+    }
+
     // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,

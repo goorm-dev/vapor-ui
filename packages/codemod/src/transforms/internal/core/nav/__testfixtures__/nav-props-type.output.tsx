@@ -1,18 +1,14 @@
-import { NavigationMenu } from '@vapor-ui/core';
+// @ts-nocheck
+import { Nav } from '@goorm-dev/vapor-core';
 
 export default function App() {
     return (
-        <NavigationMenu.Root
-            size="md"
-            stretch={false}
-            direction="horizontal"
-            aria-label="Navigation"
-        >
-            <NavigationMenu.List>
-                <NavigationMenu.Item>
-                    <NavigationMenu.Link href="/">Home</NavigationMenu.Link>
-                </NavigationMenu.Item>
-            </NavigationMenu.List>
-        </NavigationMenu.Root>
+        <Nav size="md" type="pill" stretch={false} direction="horizontal">
+            <Nav.List>
+                <Nav.Item>
+                    <Nav.Link href="/">Home</Nav.Link>
+                </Nav.Item>
+            </Nav.List>
+        </Nav>
     );
 }

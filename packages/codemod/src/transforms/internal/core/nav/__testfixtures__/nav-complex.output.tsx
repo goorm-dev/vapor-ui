@@ -1,31 +1,25 @@
-// @ts-nocheck
-import { NavigationMenu } from '@vapor-ui/core';
+import { Nav } from '@goorm-dev/vapor-core';
 
 export default function App() {
     return (
-        <NavigationMenu.Root
-            size="md"
-            direction="horizontal"
-            className="custom-nav"
-            aria-label="Navigation"
-        >
-            <NavigationMenu.List>
-                <NavigationMenu.Item>
-                    {/* TODO: The "align" prop has been removed. Please use CSS (text-align or flexbox) to customize alignment. */}
-                    <NavigationMenu.Link href="/" selected>
+        <Nav size="md" type="pill" direction="horizontal" className="custom-nav">
+            <Nav.List>
+                <Nav.Item>
+                    <Nav.Link href="/" active align="center">
                         Home
-                    </NavigationMenu.Link>
-                </NavigationMenu.Item>
-                <NavigationMenu.Item>
-                    <NavigationMenu.Link href="/products" disabled>
+                    </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link href="/products" disabled>
                         Products
-                    </NavigationMenu.Link>
-                </NavigationMenu.Item>
-                <NavigationMenu.Item>
-                    {/* TODO: The "align" prop has been removed. Please use CSS (text-align or flexbox) to customize alignment. */}
-                    <NavigationMenu.Link href="/about">About</NavigationMenu.Link>
-                </NavigationMenu.Item>
-            </NavigationMenu.List>
-        </NavigationMenu.Root>
+                    </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link href="/about" align="left">
+                        About
+                    </Nav.Link>
+                </Nav.Item>
+            </Nav.List>
+        </Nav>
     );
 }
