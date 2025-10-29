@@ -2,7 +2,7 @@
 import { input, select } from '@inquirer/prompts';
 import { execSync } from 'child_process';
 import { globbySync } from 'globby';
-import isGitClean from 'is-git-isClean';
+import isGitClean from 'is-git-clean';
 import meow from 'meow';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
