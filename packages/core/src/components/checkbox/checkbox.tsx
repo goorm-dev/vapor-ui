@@ -109,7 +109,7 @@ export namespace CheckboxRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseCheckbox.Root>;
 
     export interface Props extends RootPrimitiveProps, CheckboxSharedProps {}
-    export type CheckedChangeEvent = BaseCheckbox.Root.ChangeEventDetails;
+    export type ChangeEventDetails = BaseCheckbox.Root.ChangeEventDetails;
 }
 
 export namespace CheckboxIndicator {

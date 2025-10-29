@@ -45,7 +45,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>(
 
         const composedRef = composeRefs(textareaRef, ref);
 
-        const handleValueChange = (newValue: string, event: Textarea.ValueChangeEvent) => {
+        const handleValueChange = (newValue: string, event: Textarea.ChangeEventDetails) => {
             if (disabled || readOnly) return;
 
             onValueChange?.(newValue, event);
@@ -104,8 +104,8 @@ export namespace Textarea {
     export interface Props extends Assign<TextareaPrimitiveProps, TextareaVariants> {
         value?: string;
         defaultValue?: string;
-        onValueChange?: (value: string, event: Textarea.ValueChangeEvent) => void;
+        onValueChange?: (value: string, event: Textarea.ChangeEventDetails) => void;
     }
 
-    export type ValueChangeEvent = BaseField.Control.ChangeEventDetails;
+    export type ChangeEventDetails = BaseField.Control.ChangeEventDetails;
 }

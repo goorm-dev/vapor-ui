@@ -367,7 +367,7 @@ export namespace DialogRoot {
     export interface Props extends DialogPrimitiveProps, DialogSharedProps {
         closeOnClickOverlay?: boolean;
     }
-    export type OpenChangeEvent = BaseDialog.Root.ChangeEventDetails;
+    export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
 }
 
 export namespace DialogPortal {

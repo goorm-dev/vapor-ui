@@ -18,7 +18,7 @@ type BaseProps = TextInputVariants & {
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     value?: string;
     defaultValue?: string;
-    onValueChange?: (value: string, event: TextInput.ValueChangeEvent) => void;
+    onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>(
             state: 'value',
         });
 
-        const handleChange = (value: string, event: TextInput.ValueChangeEvent) => {
+        const handleChange = (value: string, event: TextInput.ChangeEventDetails) => {
             setValue(value);
             onValueChange?.(value, event);
         };
@@ -72,5 +72,5 @@ export namespace TextInput {
     type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
 
     export interface Props extends Assign<TextInputPrimitiveProps, BaseProps> {}
-    export type ValueChangeEvent = BaseInput.ChangeEventDetails;
+    export type ChangeEventDetails = BaseInput.ChangeEventDetails;
 }

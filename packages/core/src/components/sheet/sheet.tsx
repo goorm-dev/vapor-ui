@@ -73,7 +73,7 @@ export const SheetRoot = ({
 
     useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
 
-    const handleOpenChange = (open: boolean, eventDetails: SheetRoot.OpenChangeEvent) => {
+    const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
         setOpen(open);
         onOpenChange?.(open, eventDetails);
     };
@@ -246,7 +246,7 @@ SheetDescription.displayName = 'Sheet.Description';
 export namespace SheetRoot {
     type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
     export interface Props extends RootPrimitiveProps {}
-    export type OpenChangeEvent = BaseDialog.Root.ChangeEventDetails;
+    export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
 }
 
 export namespace SheetTrigger {

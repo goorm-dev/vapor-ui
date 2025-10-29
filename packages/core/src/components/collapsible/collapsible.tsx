@@ -48,7 +48,7 @@ export namespace CollapsibleRoot {
     type PrimitiveRootProps = VComponentProps<typeof BaseCollapsible.Root>;
 
     export interface Props extends PrimitiveRootProps {}
-    export type OpenChangeEvent = BaseCollapsible.Root.ChangeEventDetails;
+    export type ChangeEventDetails = BaseCollapsible.Root.ChangeEventDetails;
 }
 
 export namespace CollapsibleTrigger {

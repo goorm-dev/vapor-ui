@@ -219,7 +219,7 @@ const ControlledSwitchTest = ({ onCheckedChange, ...props }: Switch.Root.Props) 
     const [checked, setChecked] = useState<boolean>(false);
     const [blocker, setBlocker] = useState<boolean>(false);
 
-    const handleCheckedChange = (checked: boolean, event: Switch.Root.CheckedChangeEvent) => {
+    const handleCheckedChange = (checked: boolean, event: Switch.Root.ChangeEventDetails) => {
         onCheckedChange?.(checked, event);
 
         if (blocker) return;

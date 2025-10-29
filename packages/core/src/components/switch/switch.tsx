@@ -68,7 +68,7 @@ SwitchThumb.displayName = 'Switch.Thumb';
 export namespace SwitchRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
     export interface Props extends RootPrimitiveProps, SwitchSharedProps {}
-    export type CheckedChangeEvent = BaseSwitch.Root.ChangeEventDetails;
+    export type ChangeEventDetails = BaseSwitch.Root.ChangeEventDetails;
 }
 
 export namespace SwitchThumb {

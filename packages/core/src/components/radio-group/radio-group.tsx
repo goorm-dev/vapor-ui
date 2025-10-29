@@ -89,7 +89,7 @@ RadioGroupLabel.displayName = 'RadioGroup.Label';
 
 export namespace RadioGroupRoot {
     export interface Props extends VComponentProps<typeof BaseRadioGroup>, RadioGroupSharedProps {}
-    export type ValueChangeEvent = BaseRadioGroup.ChangeEventDetails;
+    export type ChangeEventDetails = BaseRadioGroup.ChangeEventDetails;
 }
 
 export namespace RadioGroupLabel {

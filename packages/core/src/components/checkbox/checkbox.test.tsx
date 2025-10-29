@@ -264,7 +264,7 @@ const ControlledCheckboxTest = (props: Checkbox.Root.Props) => {
     const [checkbox, setCheckbox] = useState<boolean>(false);
     const [blocker, setBlocker] = useState<boolean>(false);
 
-    const handleCheckedChange = (checked: boolean, event: Checkbox.Root.CheckedChangeEvent) => {
+    const handleCheckedChange = (checked: boolean, event: Checkbox.Root.ChangeEventDetails) => {
         props.onCheckedChange?.(checked, event);
 
         if (blocker) return;

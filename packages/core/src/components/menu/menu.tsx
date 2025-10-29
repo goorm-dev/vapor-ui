@@ -347,7 +347,7 @@ export namespace MenuRoot {
     type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Root>;
 
     export interface Props extends RootPrimitiveProps, MenuSharedProps {}
-    export type OpenEventDetails = BaseMenu.Root.ChangeEventDetails;
+    export type ChangeEventDetails = BaseMenu.Root.ChangeEventDetails;
 }
 
 export namespace MenuTrigger {
@@ -431,14 +431,14 @@ export namespace MenuCheckboxItem {
     type CheckboxPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.CheckboxItem>;
 
     export interface Props extends CheckboxPrimitiveProps {}
-    export type CheckedChangeEvent = BaseMenu.CheckboxItem.ChangeEventDetails;
+    export type ChangeEventDetails = BaseMenu.CheckboxItem.ChangeEventDetails;
 }
 
 export namespace MenuRadioGroup {
     type RadioGroupPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.RadioGroup>;
 
     export interface Props extends RadioGroupPrimitiveProps {}
-    export type ValueChangeEvent = BaseMenu.RadioGroup.ChangeEventDetails;
+    export type ChangeEventDetails = BaseMenu.RadioGroup.ChangeEventDetails;
 }
 
 export namespace MenuRadioItem {
