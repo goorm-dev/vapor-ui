@@ -2,7 +2,7 @@
 import { input, select } from '@inquirer/prompts';
 import { execSync } from 'child_process';
 import { globbySync } from 'globby';
-import isGitClean from 'is-git-clean';
+import isGitClean from 'is-git-isClean';
 import meow from 'meow';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -15,11 +15,11 @@ const require = createRequire(import.meta.url);
 const transformerDirectory = path.join(dirName, '../src', 'transforms');
 
 function checkGitStatus(force: boolean) {
-    let clean = false;
+    let isClean = false;
     let errorMessage = 'Unable to determine if git directory is clean';
 
     try {
-        clean = isGitClean.sync();
+        isClean = isGitClean.sync();
         errorMessage = 'Git directory is not clean';
     } catch (err: unknown) {
         if (
@@ -29,18 +29,18 @@ function checkGitStatus(force: boolean) {
             typeof err.stderr === 'string' &&
             err.stderr.indexOf('Not a git repository') >= 0
         ) {
-            clean = true;
+            isClean = true;
         }
     }
 
-    if (!clean) {
+    if (!isClean) {
         if (force) {
             console.log(`WARNING: ${errorMessage}. Forcibly continuing.`);
         } else {
             console.log('Thank you for using vapor-ui!');
             console.log(
                 picocolors.yellow(
-                    '\nERROR: For safety, codemods can only be run on a clean git directory.'
+                    '\nERROR: For safety, codemods can only be run on a isClean git directory.'
                 )
             );
             console.log(
