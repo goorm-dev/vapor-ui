@@ -110,7 +110,114 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         return false;
     }
 
-    // 2. Transform Nav to Tabs.Root (only transformable Navs)
+    // 2. Transform Nav.Link to Tabs.Trigger FIRST (before Nav is renamed)
+    root.find(j.JSXElement).forEach((path) => {
+        const element = path.value;
+
+        if (
+            element.openingElement.name.type === 'JSXMemberExpression' &&
+            element.openingElement.name.object.type === 'JSXIdentifier' &&
+            element.openingElement.name.object.name === OLD_COMPONENT_NAME &&
+            element.openingElement.name.property.type === 'JSXIdentifier' &&
+            element.openingElement.name.property.name === 'Link' &&
+            isChildOfTransformableNav(element, path)
+        ) {
+            const attributes = element.openingElement.attributes || [];
+
+            // Transform active → selected, align → remove
+            element.openingElement.attributes = attributes
+                .map((attr) => {
+                    if (attr.type === 'JSXAttribute') {
+                        if (attr.name.name === 'active') {
+                            return j.jsxAttribute(j.jsxIdentifier('selected'), attr.value);
+                        }
+                        // Remove align, href (Tabs use value not href)
+                        if (attr.name.name === 'align' || attr.name.name === 'href') {
+                            return null;
+                        }
+                    }
+                    return attr;
+                })
+                .filter((attr): attr is JSXAttribute => attr !== null);
+
+            // Update to Tabs.Trigger
+            element.openingElement.name.object.name = tabsImportName;
+            element.openingElement.name.property = j.jsxIdentifier('Trigger');
+            if (element.closingElement?.name.type === 'JSXMemberExpression') {
+                const closingName = element.closingElement.name as JSXMemberExpression;
+                (closingName.object as JSXIdentifier).name = tabsImportName;
+                closingName.property = j.jsxIdentifier('Trigger');
+            }
+
+            transformAsChildToRender(j, element);
+        }
+    });
+
+    // 3. Remove Nav.Item wrapper and transfer props to child (before Nav is renamed)
+    root.find(j.JSXElement).forEach((path) => {
+        const element = path.value;
+
+        if (
+            element.openingElement.name.type === 'JSXMemberExpression' &&
+            element.openingElement.name.object.type === 'JSXIdentifier' &&
+            element.openingElement.name.object.name === OLD_COMPONENT_NAME &&
+            element.openingElement.name.property.type === 'JSXIdentifier' &&
+            element.openingElement.name.property.name === 'Item' &&
+            isChildOfTransformableNav(element, path)
+        ) {
+            // Remove Nav.Item by replacing it with its first child
+            const firstChild = element.children?.find((child) => child.type === 'JSXElement');
+            if (firstChild && firstChild.type === 'JSXElement') {
+                // Transfer key and other props from Nav.Item to the child
+                const itemProps = element.openingElement.attributes || [];
+                const childProps = firstChild.openingElement.attributes || [];
+                
+                // Merge props: Nav.Item props go first, then child props
+                firstChild.openingElement.attributes = [...itemProps, ...childProps];
+
+                // Check if parent is ArrowFunctionExpression
+                const parent = path.parent;
+                if (parent && parent.value) {
+                    if (parent.value.type === 'ArrowFunctionExpression') {
+                        // Replace arrow function body with first child
+                        parent.value.body = firstChild;
+                    } else if (Array.isArray(parent.value.children)) {
+                        // Replace Nav.Item with its children in parent's children array
+                        const index = parent.value.children.indexOf(element);
+                        if (index !== -1) {
+                            parent.value.children.splice(index, 1, ...(element.children || []));
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // 4. Transform Nav.List to Tabs.List (before Nav is renamed)
+    // Note: pill form doesn't need Tabs.Indicator
+    root.find(j.JSXElement).forEach((path) => {
+        const element = path.value;
+
+        if (
+            element.openingElement.name.type === 'JSXMemberExpression' &&
+            element.openingElement.name.object.type === 'JSXIdentifier' &&
+            element.openingElement.name.object.name === OLD_COMPONENT_NAME &&
+            element.openingElement.name.property.type === 'JSXIdentifier' &&
+            element.openingElement.name.property.name === 'List' &&
+            isChildOfTransformableNav(element, path)
+        ) {
+            // Update to Tabs.List
+            element.openingElement.name.object.name = tabsImportName;
+            if (element.closingElement?.name.type === 'JSXMemberExpression') {
+                const closingName = element.closingElement.name as JSXMemberExpression;
+                (closingName.object as JSXIdentifier).name = tabsImportName;
+            }
+
+            transformAsChildToRender(j, element);
+        }
+    });
+
+    // 5. Transform Nav to Tabs.Root LAST (after all children are transformed)
     root.find(j.JSXElement).forEach((path) => {
         const element: JSXElement = path.value;
 
@@ -168,145 +275,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 const index = parent.children.indexOf(element);
                 if (index !== -1) {
                     parent.children.splice(index, 0, jsxComment, j.jsxText('\n            '));
-                }
-            }
-        }
-    });
-
-    // 3. Transform Nav.List to Tabs.List and add Tabs.Indicator (only if child of transformable Nav)
-    root.find(j.JSXElement).forEach((path) => {
-        const element = path.value;
-
-        if (
-            element.openingElement.name.type === 'JSXMemberExpression' &&
-            element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === OLD_COMPONENT_NAME &&
-            element.openingElement.name.property.type === 'JSXIdentifier' &&
-            element.openingElement.name.property.name === 'List' &&
-            isChildOfTransformableNav(element, path)
-        ) {
-            // Update to Tabs.List
-            element.openingElement.name.object.name = tabsImportName;
-            if (element.closingElement?.name.type === 'JSXMemberExpression') {
-                const closingName = element.closingElement.name as JSXMemberExpression;
-                (closingName.object as JSXIdentifier).name = tabsImportName;
-            }
-
-            // Add Tabs.Indicator as last child
-            const children = element.children || [];
-            const hasIndicator = children.some(
-                (child) =>
-                    child.type === 'JSXElement' &&
-                    child.openingElement.name.type === 'JSXMemberExpression' &&
-                    child.openingElement.name.object.type === 'JSXIdentifier' &&
-                    child.openingElement.name.object.name === tabsImportName &&
-                    child.openingElement.name.property.type === 'JSXIdentifier' &&
-                    child.openingElement.name.property.name === 'Indicator',
-            );
-
-            if (!hasIndicator) {
-                const indicator = j.jsxElement(
-                    j.jsxOpeningElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier(tabsImportName),
-                            j.jsxIdentifier('Indicator'),
-                        ),
-                        [],
-                        true,
-                    ),
-                );
-                element.children = [...children, indicator];
-            }
-
-            transformAsChildToRender(j, element);
-        }
-    });
-
-    // 4. Remove Nav.Item wrapper (not needed in Tabs, only if child of transformable Nav)
-    root.find(j.JSXElement).forEach((path) => {
-        const element = path.value;
-
-        if (
-            element.openingElement.name.type === 'JSXMemberExpression' &&
-            element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === OLD_COMPONENT_NAME &&
-            element.openingElement.name.property.type === 'JSXIdentifier' &&
-            element.openingElement.name.property.name === 'Item' &&
-            isChildOfTransformableNav(element, path)
-        ) {
-            // Remove Nav.Item by replacing it with its children
-            const parent = path.parent;
-            if (parent && parent.value && Array.isArray(parent.value.children)) {
-                const index = parent.value.children.indexOf(element);
-                if (index !== -1) {
-                    // Replace Nav.Item with its children
-                    parent.value.children.splice(index, 1, ...(element.children || []));
-                }
-            }
-        }
-    });
-
-    // 5. Transform Nav.Link to Tabs.Trigger (only if child of transformable Nav)
-    root.find(j.JSXElement).forEach((path) => {
-        const element = path.value;
-
-        if (
-            element.openingElement.name.type === 'JSXMemberExpression' &&
-            element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === OLD_COMPONENT_NAME &&
-            element.openingElement.name.property.type === 'JSXIdentifier' &&
-            element.openingElement.name.property.name === 'Link' &&
-            isChildOfTransformableNav(element, path)
-        ) {
-            const attributes = element.openingElement.attributes || [];
-
-            // Transform active → selected, align → remove
-            element.openingElement.attributes = attributes
-                .map((attr) => {
-                    if (attr.type === 'JSXAttribute') {
-                        if (attr.name.name === 'active') {
-                            return j.jsxAttribute(j.jsxIdentifier('selected'), attr.value);
-                        }
-                        // Remove align, href (Tabs use value not href)
-                        if (attr.name.name === 'align' || attr.name.name === 'href') {
-                            return null;
-                        }
-                    }
-                    return attr;
-                })
-                .filter((attr): attr is JSXAttribute => attr !== null);
-
-            // Update to Tabs.Trigger
-            element.openingElement.name.object.name = tabsImportName;
-            element.openingElement.name.property = j.jsxIdentifier('Trigger');
-            if (element.closingElement?.name.type === 'JSXMemberExpression') {
-                const closingName = element.closingElement.name as JSXMemberExpression;
-                (closingName.object as JSXIdentifier).name = tabsImportName;
-                closingName.property = j.jsxIdentifier('Trigger');
-            }
-
-            transformAsChildToRender(j, element);
-
-            // Add comment about removed href
-            const jsxComment = j.jsxExpressionContainer(j.jsxEmptyExpression());
-            jsxComment.expression.comments = [
-                j.commentBlock(
-                    ' TODO: href prop removed. Use value prop for tabs. Add Tabs.Panel for content. ',
-                    true,
-                    false,
-                ),
-            ];
-
-            const parent = path.parent.value;
-            if (parent && Array.isArray(parent.children)) {
-                const index = parent.children.indexOf(element);
-                if (index !== -1) {
-                    parent.children.splice(
-                        index,
-                        0,
-                        jsxComment,
-                        j.jsxText('\n                    '),
-                    );
                 }
             }
         }
