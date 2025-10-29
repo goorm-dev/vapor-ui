@@ -57,30 +57,28 @@ function resolveTransformer(transformerDirectory: string, transformer: string) {
 function runTransform({
     files,
     flags,
-    parser,
     transformer,
 }: {
     files: string[];
-    flags: { dry?: boolean; jscodeshift?: string };
-    parser: string;
+    flags: {
+        dry?: boolean;
+        jscodeshift?: string;
+        parser: string;
+        force: boolean;
+        extensions: string;
+    };
     transformer: string;
 }) {
     const transformerPath = resolveTransformer(transformerDirectory, transformer);
 
     let args: string[] = [];
 
-    const { dry, jscodeshift } = flags;
+    const { force, dry, parser, extensions, jscodeshift } = flags;
 
     args.push(`--parser=${parser}`);
-    if (dry) {
-        args.push(`--dry`);
-    }
-
-    if (parser === 'tsx') {
-        args.push(`--extensions=tsx,ts,jsx,js`);
-    } else {
-        args.push(`--extensions=jsx,js`);
-    }
+    args.push(`--extensions=${extensions}`);
+    args.push(dry ? '--dry' : '--no-dry');
+    args.push(force ? '--force' : '--no-force');
 
     args = args.concat([`--transform=${transformerPath || ''}`]);
 
@@ -111,14 +109,17 @@ const run = async () => {
         `Usage
       $ npx @vapor-ui/migrate <transform> <files> [...options]
     
-        transform    One of the choices from https://github.com/goorm-dev/vapor-ui/tree/main/packages/codemod
+        transform   One of the choices from https://github.com/goorm-dev/vapor-ui/tree/main/packages/codemod
         files       Files or directory to transform. Can be a glob like src/**.test.js
 
     Options
-      --force            Bypass Git safety checks and forcibly run codemods
-      --parser           Specify the parser to be used. One of: tsx, babel
-      --dry              (Advanced) Dry run. Changes are not written to files.
-      --jscodeshift      (Advanced) Pass options directly to jscodeshift.
+        --force             Bypass Git safety checks and forcibly run codemods
+        --parser            Specify the parser to be used. One of: babel | babylon | flow | ts | tsx.
+                            Default is tsx.
+        --extensions        Comma-separated list of file extensions to transform.
+                            Default is tsx,ts,jsx,js
+        --dry               (Advanced) Dry run. Changes are not written to files.
+        --jscodeshift       (Advanced) Pass options directly to jscodeshift.
                         See more options: https://jscodeshift.com/run/cli
     `,
         {
@@ -136,8 +137,13 @@ const run = async () => {
                 },
                 parser: {
                     type: 'string',
-                    default: '',
+                    default: 'tsx',
                     aliases: ['p'],
+                },
+                extensions: {
+                    type: 'string',
+                    default: 'tsx,ts,jsx,js',
+                    aliases: ['e'],
                 },
                 jscodeshift: {
                     type: 'string',
@@ -168,17 +174,6 @@ const run = async () => {
             choices: TRANSFORMER_INQUIRER_CHOICES,
         });
     }
-    if (!cli.flags.parser) {
-        answers.parser = await select({
-            message: 'Which parser should be used?',
-            choices: [
-                { name: 'tsx (for .tsx, .ts, .jsx, .js files)', value: 'tsx' },
-                { name: 'babel (for .jsx, .js files)', value: 'babel' },
-            ],
-            default: 'tsx',
-        });
-    }
-
     const files = globbySync(cli.input[1] || answers.files);
 
     if (!files.length) {
@@ -189,7 +184,6 @@ const run = async () => {
     return runTransform({
         files: globbySync(cli.input[1] || answers.files),
         flags: cli.flags,
-        parser: (cli.flags.parser as string) || answers.parser,
         transformer: cli.input[0] || answers.transformer,
     });
 };
