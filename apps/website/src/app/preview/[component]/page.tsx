@@ -71,8 +71,7 @@ function useDynamicComponent(componentPath?: string) {
                     setError(`Component "${componentPath}" does not have a default export`);
                 }
             } catch (err) {
-                console.error('Error loading component:', err);
-                setError(`Could not load component: ${componentPath}`);
+                setError(`Could not load component: ${componentPath}. ${(err as Error).message}`);
             } finally {
                 setIsLoading(false);
             }
@@ -99,10 +98,10 @@ function DynamicComponent({ componentPath }: { componentPath?: string }) {
 }
 function isValidComponentPath(path?: string): boolean {
     if (!path) return false;
-    
+
     const pathTraversalPattern = /\.\./;
     if (pathTraversalPattern.test(path)) return false;
-    
+
     const validPathPattern = /^[a-zA-Z0-9/_-]+$/;
     return validPathPattern.test(path);
 }
