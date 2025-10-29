@@ -147,7 +147,6 @@ const run = async () => {
                 },
                 jscodeshift: {
                     type: 'string',
-                    default: '',
                     aliases: ['j'],
                 },
             },
