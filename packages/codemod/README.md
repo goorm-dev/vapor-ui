@@ -10,11 +10,11 @@ npx @vapor-ui/codemod <transform-name> <path> [...options]
 
 ### Options
 
--   `--force` Bypass Git safety checks and forcibly run codemods
--   `--parser` Specify the parser to be used. One of: tsx, babel
--   `--dry` (Advanced) Dry run. Changes are not written to files.
--   `--jscodeshift` (Advanced) Pass options directly to jscodeshift.
-    [See more options](https://jscodeshift.com/run/cli)
+- `--force` Bypass Git safety checks and forcibly run codemods
+- `--parser` Specify the parser to be used. One of: tsx, babel
+- `--dry` (Advanced) Dry run. Changes are not written to files.
+- `--jscodeshift` (Advanced) Pass options directly to jscodeshift.
+  [See more options](https://jscodeshift.com/run/cli)
 
 ### Examples
 

@@ -26,6 +26,7 @@
         "prettier": "2"
     },
     "devDependencies": {
+        "@prettier/sync": "^0.6.1",
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/is-git-clean": "^1.1.2",

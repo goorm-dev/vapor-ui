@@ -1,112 +1,117 @@
 #!/usr/bin/env node
-import { input, select } from '@inquirer/prompts';
-import { execSync } from 'child_process';
-import { globbySync } from 'globby';
-import isGitClean from 'is-git-clean';
-import meow from 'meow';
-import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
-import path from 'path';
-import picocolors from 'picocolors';
+import { input, select } from "@inquirer/prompts";
+import { execSync } from "child_process";
+import { globbySync } from "globby";
+import isGitClean from "is-git-clean";
+import meow from "meow";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
+import path from "path";
+import picocolors from "picocolors";
 
 const fileName = fileURLToPath(import.meta.url);
 const dirName = path.dirname(fileName);
 const require = createRequire(import.meta.url);
-const transformerDirectory = path.join(dirName, '../src', 'transforms');
+const transformerDirectory = path.join(dirName, "../src", "transforms");
 
 function checkGitStatus(force: boolean) {
-    let isClean = false;
-    let errorMessage = 'Unable to determine if git directory is clean';
+  let isClean = false;
+  let errorMessage = "Unable to determine if git directory is clean";
 
-    try {
-        isClean = isGitClean.sync();
-        errorMessage = 'Git directory is not clean';
-    } catch (err: unknown) {
-        if (
-            err &&
-            typeof err === 'object' &&
-            'stderr' in err &&
-            typeof err.stderr === 'string' &&
-            err.stderr.indexOf('Not a git repository') >= 0
-        ) {
-            isClean = true;
-        }
+  try {
+    isClean = isGitClean.sync();
+    errorMessage = "Git directory is not clean";
+  } catch (err: unknown) {
+    if (
+      err &&
+      typeof err === "object" &&
+      "stderr" in err &&
+      typeof err.stderr === "string" &&
+      err.stderr.indexOf("Not a git repository") >= 0
+    ) {
+      isClean = true;
     }
+  }
 
-    if (!isClean) {
-        if (force) {
-            console.log(`WARNING: ${errorMessage}. Forcibly continuing.`);
-        } else {
-            console.log('Thank you for using vapor-ui!');
-            console.log(
-                picocolors.yellow(
-                    '\nERROR: For safety, codemods can only be run on a isClean git directory.'
-                )
-            );
-            console.log(
-                '\nIf you understand the risks, you may use the --force flag to override this safety check.'
-            );
-            process.exit(1);
-        }
+  if (!isClean) {
+    if (force) {
+      console.log(`WARNING: ${errorMessage}. Forcibly continuing.`);
+    } else {
+      console.log("Thank you for using vapor-ui!");
+      console.log(
+        picocolors.yellow(
+          "\nERROR: For safety, codemods can only be run on a isClean git directory."
+        )
+      );
+      console.log(
+        "\nIf you understand the risks, you may use the --force flag to override this safety check."
+      );
+      process.exit(1);
     }
+  }
 }
 
 function resolveTransformer(transformerDirectory: string, transformer: string) {
-    return globbySync(`${transformerDirectory}/${transformer}/index.{mjs,js}`)[0] || null;
+  return (
+    globbySync(`${transformerDirectory}/${transformer}/index.{mjs,js}`)[0] ||
+    null
+  );
 }
 function runTransform({
-    files,
-    flags,
-    transformer,
+  files,
+  flags,
+  transformer,
 }: {
-    files: string[];
-    flags: {
-        dry?: boolean;
-        jscodeshift?: string;
-        parser: string;
-        force: boolean;
-        extensions: string;
-    };
-    transformer: string;
+  files: string[];
+  flags: {
+    dry?: boolean;
+    jscodeshift?: string;
+    parser: string;
+    force: boolean;
+    extensions: string;
+  };
+  transformer: string;
 }) {
-    const transformerPath = resolveTransformer(transformerDirectory, transformer);
+  const transformerPath = resolveTransformer(transformerDirectory, transformer);
 
-    let args: string[] = [];
+  let args: string[] = [];
 
-    const { force, dry, parser, extensions, jscodeshift } = flags;
+  const { force, dry, parser, extensions, jscodeshift } = flags;
 
-    args.push(`--parser=${parser}`);
-    args.push(`--extensions=${extensions}`);
-    args.push(dry ? '--dry' : '--no-dry');
-    args.push(force ? '--force' : '--no-force');
+  args.push(`--parser=${parser}`);
+  args.push(`--extensions=${extensions}`);
+  args.push(dry ? "--dry" : "--no-dry");
+  args.push(force ? "--force" : "--no-force");
 
-    args = args.concat([`--transform=${transformerPath || ''}`]);
+  args = args.concat([`--transform=${transformerPath || ""}`]);
 
-    if (jscodeshift) {
-        args = args.concat(jscodeshift);
-    }
+  if (jscodeshift) {
+    args = args.concat(jscodeshift);
+  }
 
-    args = args.concat(files);
+  args = args.concat(files);
 
-    const jscodeshiftExecutable = require.resolve('jscodeshift/bin/jscodeshift.js');
-    const command = `node ${jscodeshiftExecutable} ${args.join(' ')}`;
+  const jscodeshiftExecutable = require.resolve(
+    "jscodeshift/bin/jscodeshift.js"
+  );
+  const command = `node ${jscodeshiftExecutable} ${args.join(" ")}`;
 
-    try {
-        execSync(command, { stdio: 'inherit' });
-    } catch (error) {
-        throw error;
-    }
+  try {
+    execSync(command, { stdio: "inherit" });
+  } catch (error) {
+    throw error;
+  }
 }
 
 const TRANSFORMER_INQUIRER_CHOICES = [
-    {
-        name: 'internal/icons: Migrate @goorm-dev/vapor-icons to @vapor-ui/icons',
-        value: 'internal/icons/migrate-icons-import',
-    },
+  {
+    name: "internal/icons: Migrate @goorm-dev/vapor-icons to @vapor-ui/icons",
+    value: "internal/icons/migrate-icons-import",
+  },
 ];
 const run = async () => {
-    const cli = meow(
-        `Usage
+  const cli = meow(
+    `Usage
       $ npx @vapor-ui/migrate <transform> <files> [...options]
     
         transform   One of the choices from https://github.com/goorm-dev/vapor-ui/tree/main/packages/codemod
@@ -122,69 +127,69 @@ const run = async () => {
         --jscodeshift       (Advanced) Pass options directly to jscodeshift.
                         See more options: https://jscodeshift.com/run/cli
     `,
-        {
-            importMeta: import.meta,
-            flags: {
-                force: {
-                    type: 'boolean',
-                    default: false,
-                    aliases: ['f'],
-                },
-                dry: {
-                    type: 'boolean',
-                    default: false,
-                    aliases: ['d'],
-                },
-                parser: {
-                    type: 'string',
-                    default: 'tsx',
-                    aliases: ['p'],
-                },
-                extensions: {
-                    type: 'string',
-                    default: 'tsx,ts,jsx,js',
-                    aliases: ['e'],
-                },
-                jscodeshift: {
-                    type: 'string',
-                    aliases: ['j'],
-                },
-            },
-        }
-    );
-
-    if (!cli.flags.dry) {
-        checkGitStatus(cli.flags.force);
+    {
+      importMeta: import.meta,
+      flags: {
+        force: {
+          type: "boolean",
+          default: false,
+          aliases: ["f"],
+        },
+        dry: {
+          type: "boolean",
+          default: false,
+          aliases: ["d"],
+        },
+        parser: {
+          type: "string",
+          default: "tsx",
+          aliases: ["p"],
+        },
+        extensions: {
+          type: "string",
+          default: "tsx,ts,jsx,js",
+          aliases: ["e"],
+        },
+        jscodeshift: {
+          type: "string",
+          aliases: ["j"],
+        },
+      },
     }
+  );
 
-    const answers: { [key: string]: string } = {};
+  if (!cli.flags.dry) {
+    checkGitStatus(cli.flags.force);
+  }
 
-    if (!cli.input[1]) {
-        answers.files = await input({
-            message: 'On which files or directory should the codemods be applied?',
-            default: '.',
-            transformer: (value) => value.trim(),
-        });
-    }
+  const answers: { [key: string]: string } = {};
 
-    if (!cli.input[0]) {
-        answers.transformer = await select({
-            message: 'Which transform would you like to apply?',
-            choices: TRANSFORMER_INQUIRER_CHOICES,
-        });
-    }
-    const files = globbySync(cli.input[1] || answers.files);
-
-    if (!files.length) {
-        console.log(picocolors.red(`No files found matching ${files.join(' ')}`));
-        return null;
-    }
-
-    return runTransform({
-        files: globbySync(cli.input[1] || answers.files),
-        flags: cli.flags,
-        transformer: cli.input[0] || answers.transformer,
+  if (!cli.input[1]) {
+    answers.files = await input({
+      message: "On which files or directory should the codemods be applied?",
+      default: ".",
+      transformer: (value) => value.trim(),
     });
+  }
+
+  if (!cli.input[0]) {
+    answers.transformer = await select({
+      message: "Which transform would you like to apply?",
+      choices: TRANSFORMER_INQUIRER_CHOICES,
+    });
+  }
+  const files = globbySync(cli.input[1] || answers.files);
+
+  if (!files.length) {
+    console.log(picocolors.red(`No files found matching ${files.join(" ")}`));
+    return null;
+  }
+
+  return runTransform({
+    files: globbySync(cli.input[1] || answers.files),
+    flags: cli.flags,
+    transformer: cli.input[0] || answers.transformer,
+  });
 };
 
 run();
