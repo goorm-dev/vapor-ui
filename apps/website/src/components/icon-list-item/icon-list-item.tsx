@@ -66,7 +66,7 @@ const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
             <span className={styles.iconContainer}>
                 <Icon size="40" color="var(--vapor-color-foreground-secondary-darker)" />
             </span>
-            <Text typography="body3" foreground="normal" className={styles.text}>
+            <Text typography="body3" foreground="normal-200" className={styles.text}>
                 {iconName}
             </Text>
             {isHovered && <div className={styles.dim}></div>}
@@ -83,7 +83,10 @@ const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
                     ) : (
                         <CopyIcon size="16" color="var(--vapor-color-foreground-contrast)" />
                     )}
-                    <Text foreground={isCopied ? 'success' : 'contrast'} typography="subtitle1">
+                    <Text
+                        foreground={isCopied ? 'success-100' : 'contrast-100'}
+                        typography="subtitle1"
+                    >
                         {isCopied ? '코드 복사됨' : '코드 복사'}
                     </Text>
                 </Badge>

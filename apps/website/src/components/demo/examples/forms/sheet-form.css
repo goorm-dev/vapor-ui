@@ -1,5 +1,5 @@
 .checkbox-label {
-    color: var(--vapor-color-foreground-normal, #2b2d36);
+    color: var(--vapor-color-foreground-normal-100, #2b2d36);
 
     font-size: var(--vapor-typography-fontSize-075, 0.875rem);
     font-weight: var(--vapor-typography-fontWeight-400);

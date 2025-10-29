@@ -1,8 +1,8 @@
-import { Select } from '@vapor-ui/core';
+import { HStack, Select } from '@vapor-ui/core';
 
 export default function SelectPositioning() {
     return (
-        <div className="grid grid-cols-2 gap-4 p-8">
+        <HStack maxWidth="800px" width="100%" gap="$250">
             <Select.Root placeholder="Top">
                 <Select.Trigger>
                     <Select.Value />
@@ -70,6 +70,6 @@ export default function SelectPositioning() {
                     </Select.Item>
                 </Select.Content>
             </Select.Root>
-        </div>
+        </HStack>
     );
 }

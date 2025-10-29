@@ -30,6 +30,16 @@ export default defineConfig({
                 id: 'package-manager',
             },
         },
-        remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({ relative: true })] }]],
+        remarkPlugins: [[remarkDocGen, { generators: [fileGenerator({})] }]],
+        rehypeCodeOptions: {
+            lazy: true,
+            experimentalJSEngine: true,
+            langs: ['ts', 'js', 'html', 'tsx', 'mdx'],
+            inline: 'tailing-curly-colon',
+            themes: {
+                light: 'github-light',
+                dark: 'slack-dark',
+            },
+        },
     },
 });

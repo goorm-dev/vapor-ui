@@ -161,7 +161,7 @@ export default function FilterForm() {
                 <Collapsible.Root>
                     <Collapsible.Trigger className="collapsible-trigger">
                         <Text typography="heading6">
-                            Sort <Text foreground="primary">{selectedSortCount}</Text>
+                            Sort <Text foreground="primary-100">{selectedSortCount}</Text>
                         </Text>
                         <ChevronDownOutlineIcon className="trigger-icon" />
                     </Collapsible.Trigger>

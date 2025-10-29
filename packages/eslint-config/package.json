@@ -6,24 +6,24 @@
     "main": "./index.js",
     "devDependencies": {
         "@antebudimir/eslint-plugin-vanilla-extract": "^1.11.0",
-        "@eslint/compat": "^1.3.1",
-        "@eslint/js": "^9.30.0",
-        "@next/eslint-plugin-next": "^15.3.4",
+        "@eslint/compat": "^1.3.2",
+        "@eslint/js": "^9.30.1",
+        "@next/eslint-plugin-next": "^15.3.5",
         "@types/eslint-plugin-jsx-a11y": "^6.10.0",
-        "eslint": "^9.30.0",
-        "eslint-config-next": "^15.3.4",
-        "eslint-config-turbo": "^2.5.4",
+        "eslint": "^9.30.1",
+        "eslint-config-next": "^15.3.5",
+        "eslint-config-turbo": "^2.5.5",
         "eslint-plugin-import-x": "^4.16.1",
         "eslint-plugin-jsx-a11y": "^6.10.2",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^5.2.0",
-        "eslint-plugin-storybook": "^0.11.2",
-        "globals": "^16.2.0",
-        "typescript-eslint": "^8.35.0"
+        "eslint-plugin-storybook": "^9.1.9",
+        "globals": "^16.3.0",
+        "typescript-eslint": "^8.35.1"
     },
     "peerDependencies": {
         "eslint": ">=9.18",
-        "typescript": ">=5"
+        "typescript": ">=5.0.3"
     },
     "exports": {
         "./base": "./index.js",
@@ -31,6 +31,7 @@
         "./react-package": "./react-package.js",
         "./vanilla-extract": "./vanilla-extract.js",
         "./typescript": "./typescript.js",
-        "./turbo": "./turbo.js"
+        "./turbo": "./turbo.js",
+        "./storybook": "./storybook.js"
     }
 }

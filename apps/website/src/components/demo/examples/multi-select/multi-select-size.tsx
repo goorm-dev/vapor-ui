@@ -1,4 +1,4 @@
-import { MultiSelect } from '@vapor-ui/core';
+import { Flex, MultiSelect } from '@vapor-ui/core';
 
 const options = [
     { label: '옵션 1', value: 'option1' },
@@ -8,7 +8,7 @@ const options = [
 
 export default function MultiSelectSize() {
     return (
-        <div className="flex flex-wrap gap-4">
+        <Flex gap="$200" className="flex-wrap" width="400px">
             <MultiSelect.Root placeholder="Small" size="sm" items={options}>
                 <MultiSelect.Trigger>
                     <MultiSelect.Value />
@@ -68,6 +68,6 @@ export default function MultiSelectSize() {
                     ))}
                 </MultiSelect.Content>
             </MultiSelect.Root>
-        </div>
+        </Flex>
     );
 }

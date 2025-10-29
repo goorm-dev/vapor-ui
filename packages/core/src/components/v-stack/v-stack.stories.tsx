@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'react';
 
-import type { StoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 import { VStack } from '.';
 import { Box } from '../box';
@@ -61,7 +61,7 @@ const CustomBox = ({ size = 50, ...props }: ComponentProps<typeof Box> & { size?
             border="1px solid white"
             textAlign="center"
             alignContent="center"
-            foregroundColor="$accent"
+            color="$normal-200"
             {...props}
         />
     );

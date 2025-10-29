@@ -7,7 +7,7 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 import { createSplitProps } from '~/utils/create-split-props';
 import type { VComponentProps } from '~/utils/types';
 
@@ -25,62 +25,57 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type AvatarRootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
-interface AvatarRootProps extends AvatarRootPrimitiveProps, AvatarSharedProps {}
+export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>(
+    ({ className, ...props }, ref) => {
+        const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
+            'src',
+            'alt',
+            'size',
+            'shape',
+            'delay',
+        ]);
 
-const Root = forwardRef<HTMLSpanElement, AvatarRootProps>(({ className, ...props }, ref) => {
-    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
-        'src',
-        'alt',
-        'size',
-        'shape',
-        'delay',
-    ]);
+        const { shape, size } = variantProps;
 
-    const { shape, size } = variantProps;
-
-    return (
-        <AvatarProvider value={variantProps}>
-            <BaseAvatar.Root
-                ref={ref}
-                className={clsx(styles.root({ shape, size }), className)}
-                {...otherProps}
-            />
-        </AvatarProvider>
-    );
-});
-Root.displayName = 'Avatar.Root';
+        return (
+            <AvatarProvider value={variantProps}>
+                <BaseAvatar.Root
+                    ref={ref}
+                    className={clsx(styles.root({ shape, size }), className)}
+                    {...otherProps}
+                />
+            </AvatarProvider>
+        );
+    },
+);
+AvatarRoot.displayName = 'Avatar.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Image
  * -----------------------------------------------------------------------------------------------*/
 
-type AvatarImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
-interface AvatarImageProps extends Omit<AvatarImagePrimitiveProps, keyof AvatarSharedProps> {}
+export const AvatarImage = forwardRef<HTMLImageElement, AvatarImage.Props>(
+    ({ className, ...props }, ref) => {
+        const { src, alt } = useAvatarContext();
 
-const Image = forwardRef<HTMLImageElement, AvatarImageProps>(({ className, ...props }, ref) => {
-    const { src, alt } = useAvatarContext();
-
-    return (
-        <BaseAvatar.Image
-            ref={ref}
-            src={src}
-            alt={alt}
-            className={clsx(styles.image, className)}
-            {...props}
-        />
-    );
-});
-Image.displayName = 'Avatar.Image';
+        return (
+            <BaseAvatar.Image
+                ref={ref}
+                src={src}
+                alt={alt}
+                className={clsx(styles.image, className)}
+                {...props}
+            />
+        );
+    },
+);
+AvatarImage.displayName = 'Avatar.Image';
 
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Fallback
  * -----------------------------------------------------------------------------------------------*/
 
-type AvatarFallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
-interface AvatarFallbackProps extends Omit<AvatarFallbackPrimitiveProps, keyof AvatarSharedProps> {}
-
-const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
+export const AvatarFallback = forwardRef<HTMLSpanElement, AvatarFallback.Props>(
     ({ className, style, children, ...props }, ref) => {
         const { size, alt, delay } = useAvatarContext();
         const background = getRandomColor(alt);
@@ -101,23 +96,21 @@ const Fallback = forwardRef<HTMLSpanElement, AvatarFallbackProps>(
         );
     },
 );
-Fallback.displayName = 'Avatar.Fallback';
+AvatarFallback.displayName = 'Avatar.Fallback';
 
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Simple
  * -----------------------------------------------------------------------------------------------*/
 
-interface AvatarSimpleProps extends AvatarRootProps {}
-
-const Simple = forwardRef<HTMLSpanElement, AvatarSimpleProps>((props, ref) => {
+export const AvatarSimple = forwardRef<HTMLSpanElement, AvatarSimple.Props>((props, ref) => {
     return (
-        <Root ref={ref} {...props}>
-            <Fallback />
-            <Image />
-        </Root>
+        <AvatarRoot ref={ref} {...props}>
+            <AvatarFallback />
+            <AvatarImage />
+        </AvatarRoot>
     );
 });
-Simple.displayName = 'Avatar.Simple';
+AvatarSimple.displayName = 'Avatar.Simple';
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -178,12 +171,21 @@ const getRandomColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as AvatarRoot,
-    Image as AvatarImage,
-    Fallback as AvatarFallback,
-    Simple as AvatarSimple,
-};
-export type { AvatarRootProps, AvatarImageProps, AvatarFallbackProps, AvatarSimpleProps };
+export namespace AvatarRoot {
+    type RootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
+    export interface Props extends RootPrimitiveProps, AvatarSharedProps {}
+}
 
-export const Avatar = { Root, Image, Fallback, Simple };
+export namespace AvatarImage {
+    type ImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
+    export interface Props extends Omit<ImagePrimitiveProps, keyof AvatarSharedProps> {}
+}
+
+export namespace AvatarFallback {
+    type FallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
+    export interface Props extends Omit<FallbackPrimitiveProps, keyof AvatarSharedProps> {}
+}
+
+export namespace AvatarSimple {
+    export interface Props extends AvatarRoot.Props {}
+}

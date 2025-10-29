@@ -1,8 +1,8 @@
 import type { CSSProperties } from '@vanilla-extract/css';
 import { createGlobalVar } from '@vanilla-extract/css';
 
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const overlay = layerStyle('components', {
     position: 'fixed',
@@ -80,7 +80,7 @@ export const popup = layerStyle('components', {
 
     borderRadius: 0,
     boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-    backgroundColor: vars.color.background['normal-lighter'],
+    backgroundColor: vars.color.background.surface[100],
 
     selectors: {
         ...sideSelectors,

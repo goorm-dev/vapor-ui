@@ -10,9 +10,10 @@ import styles from './foundation-color-boxes.module.scss';
 type ColorBoxProps = {
     color: string;
     value: string;
+    basicToken?: string;
 };
 
-function ColorBox({ color, value }: ColorBoxProps) {
+function ColorBox({ color, value, basicToken }: ColorBoxProps) {
     return (
         <div className={styles.box}>
             <div
@@ -22,16 +23,21 @@ function ColorBox({ color, value }: ColorBoxProps) {
                 }}
             />
             <div className={styles.descriptions}>
-                <Text typography="subtitle1" foreground="hint">
-                    {value.toUpperCase()}
+                <Text typography="subtitle1" foreground="hint-100">
+                    {String(value).toUpperCase()}
                 </Text>
-                <Text
-                    typography="subtitle1"
-                    foreground="hint-darker"
-                    className={styles.description}
-                >
+                <Text typography="subtitle1" foreground="hint-200" className={styles.description}>
                     {color}
                 </Text>
+                {basicToken && (
+                    <Text
+                        typography="subtitle2"
+                        foreground="hint-100"
+                        className={styles.basicToken}
+                    >
+                        {basicToken}
+                    </Text>
+                )}
             </div>
         </div>
     );
@@ -43,6 +49,7 @@ type ColorBoxesProps = {
         colorShade: {
             name: string;
             value: string;
+            basicToken?: string;
         }[];
     }[];
 };
@@ -54,8 +61,13 @@ const ColorBoxes = ({ tokens }: ColorBoxesProps) => {
                     <Text typography="heading5">{title}</Text>
 
                     <div className={styles.boxes}>
-                        {colorShade.map(({ name, value }) => (
-                            <ColorBox key={name} color={name} value={value} />
+                        {colorShade.map(({ name, value, basicToken }) => (
+                            <ColorBox
+                                key={name}
+                                color={name}
+                                value={value}
+                                basicToken={basicToken}
+                            />
                         ))}
                     </div>
                 </section>

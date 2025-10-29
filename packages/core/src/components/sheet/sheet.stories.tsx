@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
-import type { SheetPositionerProps, SheetRootProps } from '.';
 import { Sheet } from '.';
 import { Box } from '../box';
 import { Button } from '../button';
@@ -10,9 +9,9 @@ import { VStack } from '../v-stack';
 export default {
     title: 'Sheet',
     component: Sheet.Root,
-} satisfies Meta<SheetRootProps>;
+} satisfies Meta<Sheet.Root.Props>;
 
-type SheetStory = StoryObj<SheetRootProps & Pick<SheetPositionerProps, 'side'>>;
+type SheetStory = StoryObj<Sheet.Root.Props & Pick<Sheet.Positioner.Props, 'side'>>;
 
 export const Default: SheetStory = {
     argTypes: {
@@ -75,7 +74,7 @@ export const Default: SheetStory = {
     },
 };
 
-export const TestBed: StoryObj<SheetRootProps> = {
+export const TestBed: StoryObj<Sheet.Root.Props> = {
     render: ({ ...args }) => {
         return (
             <VStack>

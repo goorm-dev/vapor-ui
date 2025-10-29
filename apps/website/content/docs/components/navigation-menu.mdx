@@ -5,29 +5,10 @@ description: '여러 콘텐츠 섹션 간에 전환할 수 있도록 돕는 요�
 ---
 
 <Demo name="default-navigation-menu">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-
-export default function DefaultNavigationMenu() {
-    return (
-        <NavigationMenu.Root size="md" aria-label="Navigation menu">
-            <NavigationMenu.List>
-                <NavigationMenu.Item>
-                    <NavigationMenu.Link href="#">Default Link</NavigationMenu.Link>
-                </NavigationMenu.Item>
-                <NavigationMenu.Item>
-                    <NavigationMenu.Link href="#" selected>
-                        Selected Link
-                    </NavigationMenu.Link>
-                </NavigationMenu.Item>
-                <NavigationMenu.Item>
-                    <NavigationMenu.Link href="#" disabled>
-                        Disabled Link
-                    </NavigationMenu.Link>
-                </NavigationMenu.Item>
-            </NavigationMenu.List>
-        </NavigationMenu.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/default-navigation-menu.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -41,41 +22,10 @@ export default function DefaultNavigationMenu() {
 NavigationMenu 사이즈는 sm, md, lg, xl로 제공합니다.
 
 <Demo name="navigation-menu-size">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-
-export default function NavSize() {
-    return (
-        <div className="space-y-4">
-            <NavigationMenu.Root size="sm" aria-label="Small navigation">
-                <NavigationMenu.List>
-                    <NavigationMenu.Item><NavigationMenu.Link href="#">Small</NavigationMenu.Link></NavigationMenu.Item>
-                    <NavigationMenu.Item><NavigationMenu.Link href="#" selected>Small Selected</NavigationMenu.Link></NavigationMenu.Item>
-                </NavigationMenu.List>
-            </NavigationMenu.Root>
-            
-            <NavigationMenu.Root size="md" aria-label="Medium navigation">
-                <NavigationMenu.List>
-                    <NavigationMenu.Item><NavigationMenu.Link href="#">Medium</NavigationMenu.Link></NavigationMenu.Item>
-                    <NavigationMenu.Item><NavigationMenu.Link href="#" selected>Medium Selected</NavigationMenu.Link></NavigationMenu.Item>
-                </NavigationMenu.List>
-            </NavigationMenu.Root>
-            
-            <NavigationMenu.Root size="lg" aria-label="Large navigation">
-                <NavigationMenu.List>
-                    <NavigationMenu.Item><NavigationMenu.Link href="#">Large</NavigationMenu.Link></NavigationMenu.Item>
-                    <NavigationMenu.Item><NavigationMenu.Link href="#" selected>Large Selected</NavigationMenu.Link></NavigationMenu.Item>
-                </NavigationMenu.List>
-            </NavigationMenu.Root>
-            
-            <NavigationMenu.Root size="xl" aria-label="Extra large navigation">
-                <NavigationMenu.List>
-                    <NavigationMenu.Item><NavigationMenu.Link href="#">Extra Large</NavigationMenu.Link></NavigationMenu.Item>
-                    <NavigationMenu.Item><NavigationMenu.Link href="#" selected>Extra Large Selected</NavigationMenu.Link></NavigationMenu.Item>
-                </NavigationMenu.List>
-            </NavigationMenu.Root>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -85,35 +35,10 @@ export default function NavSize() {
 NavigationMenu 방향은 horizontal, vertical로 제공합니다.
 
 <Demo name="navigation-menu-direction">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-
-export default function NavDirection() {
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Horizontal</h4>
-                <NavigationMenu.Root direction="horizontal" aria-label="Horizontal navigation">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">Home</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#" selected>About</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">Contact</NavigationMenu.Link></NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Vertical</h4>
-                <NavigationMenu.Root direction="vertical" aria-label="Vertical navigation">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">Home</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#" selected>About</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">Contact</NavigationMenu.Link></NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-direction.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -123,35 +48,10 @@ export default function NavDirection() {
 NavigationMenu 항목의 너비를 컨텐츠 너비에 맞춰 늘릴지 여부를 결정하는 속성입니다.
 
 <Demo name="navigation-menu-stretch">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-
-export default function NavStretch() {
-    return (
-        <div className="space-y-4 w-full">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Default (stretch=false)</h4>
-                <NavigationMenu.Root aria-label="Default navigation">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">홈</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#" selected>제품</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">서비스</NavigationMenu.Link></NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Stretch (stretch=true)</h4>
-                <NavigationMenu.Root stretch aria-label="Stretched navigation">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">홈</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#" selected>제품</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">서비스</NavigationMenu.Link></NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-stretch.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -161,36 +61,10 @@ export default function NavStretch() {
 NavigationMenu.Link의 비활성화 상태를 보여주는 예시입니다.
 
 <Demo name="navigation-menu-disabled">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-
-export default function NavDisabled() {
-    return (
-        <div className="space-y-4">
-            <div>
-                <h4 className="text-sm font-medium mb-2">기본 상태와 비활성화 상태</h4>
-                <NavigationMenu.Root aria-label="Navigation with disabled links">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">활성 링크</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#" disabled>비활성화 링크</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">다른 활성 링크</NavigationMenu.Link></NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">선택된 상태와 비활성화 상태</h4>
-                <NavigationMenu.Root aria-label="Navigation with selected and disabled">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">홈</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#" selected>선택된 링크</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#" disabled>비활성화 링크</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">연락처</NavigationMenu.Link></NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-disabled.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -200,46 +74,10 @@ export default function NavDisabled() {
 NavigationMenu.Link의 선택된 상태를 보여주는 예시입니다.
 
 <Demo name="navigation-menu-selected">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-
-export default function NavSelected() {
-    return (
-        <div className="space-y-4">
-            <div>
-                <h4 className="text-sm font-medium mb-2">선택된 상태 표시</h4>
-                <NavigationMenu.Root aria-label="Navigation with selected link">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">홈</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#" selected>제품 (선택됨)</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">서비스</NavigationMenu.Link></NavigationMenu.Item>
-                        <NavigationMenu.Item><NavigationMenu.Link href="#">회사소개</NavigationMenu.Link></NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">다양한 모양에서의 선택 상태</h4>
-                <div className="space-y-3">
-                    <NavigationMenu.Root aria-label="Fill navigation with selection">
-                        <NavigationMenu.List>
-                            <NavigationMenu.Item><NavigationMenu.Link href="#">일반</NavigationMenu.Link></NavigationMenu.Item>
-                            <NavigationMenu.Item><NavigationMenu.Link href="#" selected>선택됨 (Fill)</NavigationMenu.Link></NavigationMenu.Item>
-                            <NavigationMenu.Item><NavigationMenu.Link href="#">일반</NavigationMenu.Link></NavigationMenu.Item>
-                        </NavigationMenu.List>
-                    </NavigationMenu.Root>
-                    
-                    <NavigationMenu.Root aria-label="Ghost navigation with selection">
-                        <NavigationMenu.List>
-                            <NavigationMenu.Item><NavigationMenu.Link href="#">일반</NavigationMenu.Link></NavigationMenu.Item>
-                            <NavigationMenu.Item><NavigationMenu.Link href="#" selected>선택됨 (Ghost)</NavigationMenu.Link></NavigationMenu.Item>
-                            <NavigationMenu.Item><NavigationMenu.Link href="#">일반</NavigationMenu.Link></NavigationMenu.Item>
-                        </NavigationMenu.List>
-                    </NavigationMenu.Root>
-                </div>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-selected.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -253,27 +91,12 @@ export default function NavSelected() {
 NavigationMenu.LinkItem을 사용한 가장 간단한 형태입니다.
 
 <Demo name="navigation-menu-simple">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-
-export default function NavSimple() {
-    return (
-        <NavigationMenu.Root size="md" aria-label="Simple navigation">
-            <NavigationMenu.List>
-                <NavigationMenu.LinkItem href="/">홈</NavigationMenu.LinkItem>
-                <NavigationMenu.LinkItem href="/products" selected>
-                    제품
-                </NavigationMenu.LinkItem>
-                <NavigationMenu.LinkItem href="/about">회사소개</NavigationMenu.LinkItem>
-                <NavigationMenu.LinkItem href="/contact" disabled>
-                    연락처
-                </NavigationMenu.LinkItem>
-            </NavigationMenu.List>
-        </NavigationMenu.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-simple.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### With Icons
@@ -281,123 +104,12 @@ export default function NavSimple() {
 Nav에 아이콘을 추가한 예시입니다.
 
 <Demo name="navigation-menu-with-icon">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-import { HomeIcon, SettingIcon, StarIcon, UserIcon } from '@vapor-ui/icons';
-
-export default function NavWithIcon() {
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">아이콘과 텍스트 조합</h4>
-                <NavigationMenu.Root aria-label="Navigation with icons and text">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" className="flex items-center gap-2">
-                                <HomeIcon size={16} />홈
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected className="flex items-center gap-2">
-                                <StarIcon size={16} />
-                                즐겨찾기
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" className="flex items-center gap-2">
-                                <UserIcon size={16} />
-                                프로필
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" className="flex items-center gap-2">
-                                <SettingIcon size={16} />
-                                설정
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-            <div>
-                <h4 className="text-sm font-medium mb-2">아이콘만 사용</h4>
-                <NavigationMenu.Root aria-label="Navigation with icons only">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link
-                                href="#"
-                                className="flex items-center justify-center"
-                                aria-label="홈"
-                            >
-                                <HomeIcon size={20} />
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link
-                                href="#"
-                                selected
-                                className="flex items-center justify-center"
-                                aria-label="즐겨찾기"
-                            >
-                                <StarIcon size={20} />
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link
-                                href="#"
-                                className="flex items-center justify-center"
-                                aria-label="프로필"
-                            >
-                                <UserIcon size={20} />
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link
-                                href="#"
-                                className="flex items-center justify-center"
-                                aria-label="설정"
-                            >
-                                <SettingIcon size={20} />
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-            <div>
-                <h4 className="text-sm font-medium mb-2">세로 방향에서의 아이콘</h4>
-                <NavigationMenu.Root direction="vertical" aria-label="Vertical navigation with icons">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" className="flex items-center gap-3">
-                                <HomeIcon size={16} />
-                                대시보드
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected className="flex items-center gap-3">
-                                <StarIcon size={16} />
-                                즐겨찾기
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" className="flex items-center gap-3">
-                                <UserIcon size={16} />
-                                사용자 관리
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" disabled className="flex items-center gap-3">
-                                <SettingIcon size={16} />
-                                시스템 설정
-                            </NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-with-icon.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### Composition Pattern
@@ -405,47 +117,12 @@ export default function NavWithIcon() {
 NavigationMenu.Root, NavigationMenu.List, NavigationMenu.Item, NavigationMenu.Link를 조합한 패턴입니다.
 
 <Demo name="navigation-menu-composition">
-```tsx
-import { NavigationMenu } from '@vapor-ui/core';
-
-export default function NavComposition() {
-    return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">기본 컴포지션 패턴</h4>
-                <NavigationMenu.Root aria-label="Basic composition navigation">
-                    <NavigationMenu.List>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/">홈</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/products" selected>제품</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/about">회사소개</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                        <NavigationMenu.Item>
-                            <NavigationMenu.Link href="/contact">연락처</NavigationMenu.Link>
-                        </NavigationMenu.Item>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-            <div>
-                <h4 className="text-sm font-medium mb-2">LinkItem 패턴 (편의 컴포넌트)</h4>
-                <NavigationMenu.Root aria-label="LinkItem pattern navigation">
-                    <NavigationMenu.List>
-                        <NavigationMenu.LinkItem href="/">홈</NavigationMenu.LinkItem>
-                        <NavigationMenu.LinkItem href="/products">제품</NavigationMenu.LinkItem>
-                        <NavigationMenu.LinkItem href="/about">회사소개</NavigationMenu.LinkItem>
-                        <NavigationMenu.LinkItem href="/contact">연락처</NavigationMenu.LinkItem>
-                    </NavigationMenu.List>
-                </NavigationMenu.Root>
-            </div>
-        </div>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/navigation-menu-composition.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ## Props Table

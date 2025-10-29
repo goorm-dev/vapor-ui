@@ -1,9 +1,13 @@
+import { createVar } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
+
+const BORDER_WIDTH = createVar('border-width');
 
 export const root = recipe({
     base: [
@@ -20,14 +24,14 @@ export const root = recipe({
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: 9999,
 
-            backgroundColor: vars.color.background.normal,
+            backgroundColor: vars.color.background.canvas,
             cursor: 'pointer',
 
             padding: vars.size.space['000'],
 
             selectors: {
                 '&[data-checked]': {
-                    backgroundColor: vars.color.background.primary,
+                    backgroundColor: vars.color.background.primary[200],
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
@@ -36,6 +40,9 @@ export const root = recipe({
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
 
                 '&[data-readonly]:active::before': { opacity: 0.08 },
+            },
+            vars: {
+                [BORDER_WIDTH]: '0.0625rem',
             },
         }),
     ],
@@ -47,7 +54,7 @@ export const root = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('components', { borderColor: vars.color.background['danger'] }),
+            true: layerStyle('components', { borderColor: vars.color.border.danger }),
         },
 
         size: {
@@ -71,11 +78,11 @@ export const indicator = layerStyle('components', {
     border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.white,
-    width: '50%',
-    height: '50%',
+    width: calc.subtract('50%', BORDER_WIDTH),
+    height: calc.subtract('50%', BORDER_WIDTH),
     selectors: {
         '&[data-readonly]': {
-            backgroundColor: vars.color.foreground.hint,
+            backgroundColor: vars.color.foreground.hint[100],
         },
     },
 });

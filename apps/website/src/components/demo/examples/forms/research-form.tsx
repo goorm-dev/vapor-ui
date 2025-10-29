@@ -134,7 +134,7 @@ export default function ResearchForm() {
             <VStack gap="$100">
                 <VStack marginBottom="$050">
                     <Text typography="heading5">좋았던 강의는 무엇인가요?</Text>
-                    <Text typography="body2" foreground="normal-lighter">
+                    <Text typography="body2" foreground="normal-100">
                         중복 선택 가능
                     </Text>
                 </VStack>

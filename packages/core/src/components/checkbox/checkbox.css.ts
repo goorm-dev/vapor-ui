@@ -2,8 +2,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: [
@@ -20,15 +20,19 @@ export const root = recipe({
             border: '0.0625rem solid',
             borderColor: vars.color.border.normal,
 
-            backgroundColor: vars.color.background['normal-darker'],
+            backgroundColor: vars.color.background.canvas,
             padding: vars.size.space['000'],
+            overflow: 'hidden',
 
             selectors: {
                 '&[data-checked], &[data-indeterminate]': {
-                    backgroundColor: vars.color.background.primary,
+                    backgroundColor: vars.color.background.primary[200],
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
+                '&::before': {
+                    borderRadius: '0',
+                },
                 '&:disabled::before': { opacity: 0 },
                 '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
                 '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
@@ -71,7 +75,7 @@ export const indicator = recipe({
         color: vars.color.white,
         selectors: {
             '&[data-readonly]': {
-                color: vars.color.foreground.hint,
+                color: vars.color.foreground.hint['100'],
             },
         },
     }),

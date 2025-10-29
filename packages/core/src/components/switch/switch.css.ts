@@ -2,8 +2,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const control = recipe({
     base: [
@@ -21,7 +21,7 @@ export const control = recipe({
 
             selectors: {
                 '&[data-checked]': {
-                    backgroundColor: vars.color.background.primary,
+                    backgroundColor: vars.color.background.primary[200],
                 },
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray[200],
@@ -80,7 +80,7 @@ export const indicator = recipe({
                 boxShadow: 'none',
             },
             '&[data-readonly][data-checked]': {
-                backgroundColor: vars.color.foreground.hint,
+                backgroundColor: vars.color.foreground.hint[100],
                 boxShadow: 'none',
             },
         },

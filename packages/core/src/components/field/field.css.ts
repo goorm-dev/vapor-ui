@@ -1,9 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = layerStyle('components', {
     display: 'flex',
@@ -13,7 +13,7 @@ export const root = layerStyle('components', {
 
 export const description = style([
     typography({ style: 'body2' }),
-    foregrounds({ color: 'hint' }),
+    foregrounds({ color: 'hint-100' }),
     layerStyle('components', {
         display: 'flex',
         alignItems: 'center',
@@ -30,7 +30,7 @@ export const description = style([
 
 export const error = style([
     typography({ style: 'body2' }),
-    foregrounds({ color: 'danger' }),
+    foregrounds({ color: 'danger-100' }),
     layerStyle('components', {
         display: 'flex',
         alignItems: 'center',
@@ -47,7 +47,7 @@ export const error = style([
 
 export const success = style([
     typography({ style: 'body2' }),
-    foregrounds({ color: 'success' }),
+    foregrounds({ color: 'success-100' }),
     layerStyle('components', {
         display: 'flex',
         alignItems: 'center',
@@ -64,7 +64,7 @@ export const success = style([
 
 export const label = style([
     typography({ style: 'subtitle2' }),
-    foregrounds({ color: 'normal-lighter' }),
+    foregrounds({ color: 'normal-100' }),
     layerStyle('components', {
         selectors: {
             '&:is(:disabled, [data-disabled])': {

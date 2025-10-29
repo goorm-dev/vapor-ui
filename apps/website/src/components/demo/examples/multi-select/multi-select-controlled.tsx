@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { MultiSelect } from '@vapor-ui/core';
+import { Button, HStack, MultiSelect, Text, VStack } from '@vapor-ui/core';
 
 const fonts = [
     { label: 'Sans-serif', value: 'sans' },
@@ -19,12 +19,12 @@ export default function MultiSelectControlled() {
     };
 
     return (
-        <div className="space-y-4">
+        <VStack gap="$200" width="400px">
             <MultiSelect.Root
-                placeholder="폰트 선택"
+                items={fonts}
                 value={value}
                 onValueChange={handleValueChange}
-                items={fonts}
+                placeholder="폰트 선택"
             >
                 <MultiSelect.Trigger>
                     <MultiSelect.Value />
@@ -41,27 +41,21 @@ export default function MultiSelectControlled() {
                 </MultiSelect.Content>
             </MultiSelect.Root>
 
-            <p className="text-sm text-gray-600">
+            <Text typography="body2" foreground="secondary-200">
                 선택된 값:{' '}
                 <code className="bg-gray-100 px-1 rounded">
                     {value.length > 0 ? value.join(', ') : '없음'}
                 </code>
-            </p>
+            </Text>
 
-            <div className="flex gap-2">
-                <button
-                    onClick={() => setValue(['serif', 'mono'])}
-                    className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
+            <HStack gap="$100">
+                <Button color="primary" onClick={() => setValue(['serif', 'mono'])}>
                     Serif, Mono 선택
-                </button>
-                <button
-                    onClick={() => setValue([])}
-                    className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
-                >
+                </Button>
+                <Button color="secondary" onClick={() => setValue([])}>
                     모두 해제
-                </button>
-            </div>
-        </div>
+                </Button>
+            </HStack>
+        </VStack>
     );
 }

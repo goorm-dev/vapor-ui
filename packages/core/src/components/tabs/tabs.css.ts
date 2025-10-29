@@ -4,9 +4,9 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: layerStyle('components', { display: 'flex' }),
@@ -60,7 +60,7 @@ export const list = recipe({
 });
 
 const triggerBase = style([
-    foregrounds({ color: 'normal' }),
+    foregrounds({ color: 'normal-100' }),
     interaction({ scale: 'light' }),
     layerStyle('components', {
         position: 'relative',
@@ -71,7 +71,7 @@ const triggerBase = style([
         borderRadius: vars.size.borderRadius['300'],
 
         selectors: {
-            '&[data-selected]': { color: vars.color.foreground.primary },
+            '&[data-selected]': { color: vars.color.foreground.primary[100] },
         },
     }),
 ]);
