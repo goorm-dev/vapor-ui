@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "description": "Code migration tools using jscodeshift",
     "main": "dist/src/index.mjs",
-    "bin": "./dist/bin/cli.mjs",
+    "bin": {
+        "vapor-codemod": "./dist/bin/cli.mjs"
+    },
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
