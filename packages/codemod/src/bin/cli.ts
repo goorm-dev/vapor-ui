@@ -61,7 +61,7 @@ function runTransform({
     transformer,
 }: {
     files: string[];
-    flags: { dry?: boolean; jscodeshift?: string };
+    flags: { dry?: boolean; jscodeshift?: string; extensions?: string };
     parser: string;
     transformer: string;
 }) {
@@ -69,23 +69,21 @@ function runTransform({
 
     let args: string[] = [];
 
-    const { dry, jscodeshift } = flags;
+    const { dry, jscodeshift, extensions } = flags;
 
     args.push(`--parser=${parser}`);
     if (dry) {
         args.push(`--dry`);
     }
 
-    if (parser === 'tsx') {
-        args.push(`--extensions=tsx,ts,jsx,js`);
-    } else {
-        args.push(`--extensions=jsx,js`);
-    }
-
     args = args.concat([`--transform=${transformerPath || ''}`]);
 
     if (jscodeshift) {
         args = args.concat(jscodeshift);
+    }
+
+    if (extensions) {
+        args = args.concat([`--extensions=${extensions}`]);
     }
 
     args = args.concat(files);
@@ -190,9 +188,10 @@ const run = async () => {
     Options
       --force            Bypass Git safety checks and forcibly run codemods
       --parser           Specify the parser to be used. One of: tsx, babel
-      --dry              (Advanced) Dry run. Changes are not written to files.
-      --jscodeshift      (Advanced) Pass options directly to jscodeshift.
+      --dry              Dry run. Changes are not written to files.
+      --jscodeshift      Pass options directly to jscodeshift.
                         See more options: https://jscodeshift.com/run/cli
+      --extensions        Specify additional file extensions to be transformed.
     `,
         {
             importMeta: import.meta,
@@ -209,13 +208,18 @@ const run = async () => {
                 },
                 parser: {
                     type: 'string',
-                    default: '',
+                    default: 'tsx',
                     aliases: ['p'],
                 },
                 jscodeshift: {
                     type: 'string',
                     default: '',
                     aliases: ['j'],
+                },
+                extensions: {
+                    type: 'string',
+                    default: 'tsx, ts, jsx, js',
+                    aliases: ['e'],
                 },
             },
         },
@@ -239,16 +243,6 @@ const run = async () => {
         answers.transformer = await select({
             message: 'Which transform would you like to apply?',
             choices: TRANSFORMER_INQUIRER_CHOICES,
-        });
-    }
-    if (!cli.flags.parser) {
-        answers.parser = await select({
-            message: 'Which parser should be used?',
-            choices: [
-                { name: 'tsx (for .tsx, .ts, .jsx, .js files)', value: 'tsx' },
-                { name: 'babel (for .jsx, .js files)', value: 'babel' },
-            ],
-            default: 'tsx',
         });
     }
 
