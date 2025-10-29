@@ -24,6 +24,12 @@ export const BLOCKS: Block[] = [
         href: '/blocks/form',
         imageUrl: FORM_BLOCK_URL,
     },
+    {
+        id: 'table',
+        name: 'Table',
+        description: '데이터를 행과 열 단위로 정리해 비교/분석할 수 있는 컴포넌트입니다.',
+        href: '/blocks/table',
+    },
 ];
 
 export const COMING_SOON_BLOCKS: Block[] = [
@@ -33,12 +39,7 @@ export const COMING_SOON_BLOCKS: Block[] = [
         description: '사용자의 주요 데이터와 상태를 한눈에 볼 수 있도록 구성된 화면입니다.',
         isComingSoon: true,
     },
-    {
-        id: 'table',
-        name: 'Table',
-        description: '데이터를 행과 열 단위로 정리해 비교/분석할 수 있는 컴포넌트입니다.',
-        isComingSoon: true,
-    },
+
     {
         id: 'list',
         name: 'List',
