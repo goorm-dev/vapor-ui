@@ -1,6 +1,7 @@
 import './research-form.css';
 
 import {
+    Box,
     Button,
     Checkbox,
     Field,
@@ -45,89 +46,86 @@ export default function ResearchForm() {
             <VStack gap="$200">
                 <Text typography="heading5">기본 정보를 입력해주세요.</Text>
 
-                <Field.Root render={<VStack gap="$100" />}>
-                    <Field.Label className="input-label">이름 </Field.Label>
-                    <TextInput id="research-name" required size="lg" />
+                <Field.Root>
+                    <Box render={<Field.Label />} flexDirection="column">
+                        <Text typography="subtitle2" foreground="normal-200">
+                            이름
+                        </Text>
+                        <TextInput id="research-name" required size="lg" />
+                    </Box>
                     <Field.Error match="valueMissing">이름을 입력해주세요.</Field.Error>
                 </Field.Root>
 
-                <Field.Root render={<VStack gap="$100" />}>
-                    <Field.Label className="input-label">직업</Field.Label>
-                    <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
-                        <Select.Trigger id="research-jobs">
-                            <Select.Value />
-                            <Select.TriggerIcon />
-                        </Select.Trigger>
-                        <Select.Content>
-                            {jobs.map((job) => (
-                                <Select.Item key={job.value} value={job.value}>
-                                    {job.label}
-                                    <Select.ItemIndicator />
-                                </Select.Item>
-                            ))}
-                        </Select.Content>
-                    </Select.Root>
+                <Field.Root>
+                    <Box render={<Field.Label htmlFor="research-jobs" />} flexDirection="column">
+                        <Text typography="subtitle2" foreground="normal-200">
+                            직업
+                        </Text>
+                        <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
+                            <Select.Trigger id="research-jobs">
+                                <Select.Value />
+                                <Select.TriggerIcon />
+                            </Select.Trigger>
+                            <Select.Content>
+                                {jobs.map((job) => (
+                                    <Select.Item key={job.value} value={job.value}>
+                                        {job.label}
+                                        <Select.ItemIndicator />
+                                    </Select.Item>
+                                ))}
+                            </Select.Content>
+                        </Select.Root>
+                    </Box>
                 </Field.Root>
 
-                <Field.Root render={<VStack gap="$100" />}>
-                    <Field.Label className="input-label">스택</Field.Label>
-                    <MultiSelect.Root
-                        items={stacks}
-                        placeholder="자주 사용하는 스택을 선택해주세요."
-                        size="lg"
-                    >
-                        <MultiSelect.Trigger id="research-stack">
-                            <MultiSelect.Value />
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
-                        <MultiSelect.Content>
-                            {stacks.map((stack) => (
-                                <MultiSelect.Item key={stack.value} value={stack.value}>
-                                    {stack.label}
-                                    <MultiSelect.ItemIndicator />
-                                </MultiSelect.Item>
-                            ))}
-                        </MultiSelect.Content>
-                    </MultiSelect.Root>
+                <Field.Root>
+                    <Box render={<Field.Label htmlFor="research-stack" />} flexDirection="column">
+                        <Text typography="subtitle2" foreground="normal-200">
+                            스택
+                        </Text>
+                        <MultiSelect.Root
+                            items={stacks}
+                            placeholder="자주 사용하는 스택을 선택해주세요."
+                            size="lg"
+                        >
+                            <MultiSelect.Trigger id="research-stack">
+                                <MultiSelect.Value />
+                                <MultiSelect.TriggerIcon />
+                            </MultiSelect.Trigger>
+                            <MultiSelect.Content>
+                                {stacks.map((stack) => (
+                                    <MultiSelect.Item key={stack.value} value={stack.value}>
+                                        {stack.label}
+                                        <MultiSelect.ItemIndicator />
+                                    </MultiSelect.Item>
+                                ))}
+                            </MultiSelect.Content>
+                        </MultiSelect.Root>
+                    </Box>
                 </Field.Root>
             </VStack>
 
-            <Field.Root render={<VStack gap="$150" />}>
+            <Field.Root>
                 <RadioGroup.Root>
                     <RadioGroup.Label>만족도를 선택해주세요.</RadioGroup.Label>
-                    <HStack
-                        render={<Field.Label />}
-                        alignItems="center"
-                        gap="$100"
-                        className="radio-label"
-                    >
+                    <Box render={<Field.Label />} alignItems="center">
                         <Radio.Root
                             id="research-fully-satisfied"
                             value="fully-satisfied"
                             size="lg"
                         />
                         매우 만족
-                    </HStack>
+                    </Box>
 
-                    <HStack
-                        render={<Field.Label />}
-                        alignItems="center"
-                        gap="$100"
-                        className="radio-label"
-                    >
+                    <Box render={<Field.Label />} alignItems="center">
                         <Radio.Root id="research-neutral" value="neutral" size="lg" />
-                        매우 만족
-                    </HStack>
+                        보통
+                    </Box>
 
-                    <HStack
-                        render={<Field.Label />}
-                        alignItems="center"
-                        gap="$100"
-                        className="radio-label"
-                    >
+                    <Box render={<Field.Label />} alignItems="center">
                         <Radio.Root id="research-not-satisfied" value="not-satisfied" size="lg" />
                         불만족
-                    </HStack>
+                    </Box>
                 </RadioGroup.Root>
             </Field.Root>
 
@@ -139,46 +137,56 @@ export default function ResearchForm() {
                     </Text>
                 </VStack>
 
-                <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                    <Checkbox.Root id="research-mentoring" size="lg" />
-                    <Field.Label className="checkbox-label">멘토님 강연 능력</Field.Label>
+                <Field.Root>
+                    <Box render={<Field.Label />} alignItems="center">
+                        <Checkbox.Root id="research-mentoring" size="lg" />
+                        멘토님 강연 능력
+                    </Box>
                 </Field.Root>
 
-                <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                    <Checkbox.Root id="research-topic" size="lg" />
-                    <Field.Label className="checkbox-label">
+                <Field.Root>
+                    <Box render={<Field.Label />} alignItems="center">
+                        <Checkbox.Root id="research-topic" size="lg" />
                         주제(협업 및 커뮤니케이션 스킬)
-                    </Field.Label>
+                    </Box>
                 </Field.Root>
 
-                <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                    <Checkbox.Root id="research-content" size="lg" />
-                    <Field.Label className="checkbox-label">전반적인 강의 내용</Field.Label>
+                <Field.Root>
+                    <Box render={<Field.Label />} alignItems="center">
+                        <Checkbox.Root id="research-content" size="lg" />
+                        전반적인 강의 내용
+                    </Box>
                 </Field.Root>
 
-                <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                    <Checkbox.Root id="research-seminar" size="lg" />
-                    <Field.Label className="checkbox-label">세미나 자료</Field.Label>
+                <Field.Root>
+                    <Box render={<Field.Label />} alignItems="center">
+                        <Checkbox.Root id="research-seminar" size="lg" />
+                        세미나 자료
+                    </Box>
                 </Field.Root>
 
-                <Field.Root render={<HStack alignItems="center" gap="$100" />}>
-                    <Checkbox.Root id="research-etc" size="lg" />
-                    <Field.Label className="checkbox-label">기타</Field.Label>
+                <Field.Root>
+                    <Box render={<Field.Label />} alignItems="center">
+                        <Checkbox.Root id="research-etc" size="lg" />
+                        기타
+                    </Box>
                 </Field.Root>
             </VStack>
 
             <VStack gap="$100">
                 <Text typography="heading5">개인 정보 수신 동의</Text>
 
-                <Field.Root render={<HStack justifyContent="space-between" alignItems="center" />}>
-                    <Field.Label className="checkbox-label">서비스 메일 수신 동의</Field.Label>
-                    <Switch.Root defaultChecked id="research-service" />
+                <Field.Root>
+                    <HStack width="100%" justifyContent="space-between" render={<Field.Label />}>
+                        서비스 메일 수신 동의
+                        <Switch.Root defaultChecked id="research-service" />
+                    </HStack>
                 </Field.Root>
-                <Field.Root render={<HStack justifyContent="space-between" alignItems="center" />}>
-                    <Field.Label htmlFor="research-advertising" className="checkbox-label">
+                <Field.Root>
+                    <HStack width="100%" justifyContent="space-between" render={<Field.Label />}>
                         이벤트성 광고 수신 동의
-                    </Field.Label>
-                    <Switch.Root defaultChecked id="research-advertising" />
+                        <Switch.Root defaultChecked id="research-advertising" />
+                    </HStack>
                 </Field.Root>
             </VStack>
 
