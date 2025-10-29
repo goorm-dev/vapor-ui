@@ -61,7 +61,7 @@ interface ToggleMaskProps {
 const ToggleMask = ({ style }: ToggleMaskProps) => {
     return (
         <div
-            className="absolute z-0 flex justify-center items-center bg-v-white border border-v-normal rounded-v-300 shadow-sm transition-all duration-200 ease-out"
+            className="absolute z-0 flex justify-center items-center bg-v-canvas border border-v-normal rounded-v-300 shadow-sm transition-all duration-200 ease-out"
             style={style}
             aria-hidden="true"
         />
@@ -94,7 +94,7 @@ const ToggleItem = ({ item, isSelected, onClick, ref }: ToggleItemProps) => {
             onClick={onClick}
             className={clsx(
                 'relative z-10 flex items-center justify-center w-v-300 h-v-300 gap-v-050 border-none bg-transparent cursor-pointer font-medium transition-colors duration-150 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-v-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-                isSelected ? 'text-v-normal' : 'text-v-gray-500 hover:text-v-normal',
+                isSelected ? 'text-v-normal-200 ' : 'text-v-gray-500 hover:text-v-normal',
             )}
         >
             {item.icon && <span className="flex items-center">{item.icon}</span>}

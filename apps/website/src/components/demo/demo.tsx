@@ -12,7 +12,6 @@ import ErrorBoundary from './error-boundary';
 import { IframePreview } from './iframe-preview';
 import { Preview } from './preview';
 
-// 타입 가드 함수들
 const isValidTabType = (value: string): value is TabType => {
     return Object.values(TAB_TYPES).includes(value as TabType);
 };
@@ -21,7 +20,6 @@ const isValidDeviceType = (value: string): value is DeviceType => {
     return Object.values(DEVICE_TYPES).includes(value as DeviceType);
 };
 
-// 커스텀 훅: 상태 관리 로직 분리
 const useDemoState = () => {
     const [selectedDevice, setSelectedDevice] = React.useState<DeviceType>(DEVICE_TYPES.DESKTOP);
     const [selectedTab, setSelectedTab] = React.useState<TabType>(TAB_TYPES.PREVIEW);
@@ -44,7 +42,6 @@ const useDemoState = () => {
     };
 };
 
-// DemoHeader 컴포넌트 분리
 interface DemoHeaderProps {
     selectedTab: TabType;
     showResponsiveToggle: boolean;
@@ -70,7 +67,7 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
     const shouldShowDeviceToggle = selectedTab === TAB_TYPES['PREVIEW'] && showResponsiveToggle;
 
     return (
-        <Card.Header className="p-0 border-b-0 pt-v-050)]">
+        <Card.Header className="p-0 border-b-0 pt-v-50">
             <Box
                 paddingY="$000"
                 paddingX="$300"
@@ -104,7 +101,6 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
     );
 };
 
-// DemoPreviewPanel 컴포넌트 분리
 interface DemoPreviewPanelProps {
     name: string;
     showResponsiveToggle: boolean;
@@ -123,7 +119,6 @@ const DemoPreviewPanel = ({
     return <Preview name={name} />;
 };
 
-// DemoContent 컴포넌트 분리
 interface DemoContentProps {
     name: string;
     children: React.ReactNode;
