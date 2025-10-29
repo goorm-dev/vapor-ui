@@ -1,10 +1,10 @@
-import { join } from "node:path";
+import { join } from 'node:path';
 
-import { runTestTransform } from "~/utils/test";
+import { runTestTransform } from '~/utils/test';
 
-import transform from "../index";
+import transform from '../index';
 
 runTestTransform({
-  transform,
-  fixturesDir: join(__dirname, "..", "__testfixtures__"),
+    transform,
+    fixturesDir: join(__dirname, '..', '__testfixtures__'),
 });

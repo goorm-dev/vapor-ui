@@ -12,7 +12,7 @@ import picocolors from 'picocolors';
 const fileName = fileURLToPath(import.meta.url);
 const dirName = path.dirname(fileName);
 const require = createRequire(import.meta.url);
-const transformerDirectory = path.join(dirName, '../src', 'transforms');
+const transformerDirectory = path.join(dirName, '..', 'transforms');
 
 function checkGitStatus(force: boolean) {
     let isClean = false;
