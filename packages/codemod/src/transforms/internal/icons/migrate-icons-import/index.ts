@@ -1,23 +1,23 @@
-import type { API, FileInfo, Transform } from "jscodeshift";
+import type { API, FileInfo, Transform } from 'jscodeshift';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
-  const j = api.jscodeshift;
-  const root = j(fileInfo.source);
+    const j = api.jscodeshift;
+    const root = j(fileInfo.source);
 
-  root.find(j.ImportDeclaration).forEach((path) => {
-    const importDeclaration = path.value;
+    root.find(j.ImportDeclaration).forEach((path) => {
+        const importDeclaration = path.value;
 
-    if (
-      importDeclaration.source.value &&
-      typeof importDeclaration.source.value === "string" &&
-      importDeclaration.source.value === "@goorm-dev/vapor-icons"
-    ) {
-      importDeclaration.source.value = "@vapor-ui/icons";
-    }
-  });
+        if (
+            importDeclaration.source.value &&
+            typeof importDeclaration.source.value === 'string' &&
+            importDeclaration.source.value === '@goorm-dev/vapor-icons'
+        ) {
+            importDeclaration.source.value = '@vapor-ui/icons';
+        }
+    });
 
-  return root.toSource({});
+    return root.toSource({});
 };
 
 export default transform;
-export const parser = "tsx";
+export const parser = 'tsx';
