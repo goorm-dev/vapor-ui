@@ -83,7 +83,7 @@ function runTransform({
     }
 
     if (extensions) {
-        args = args.concat([`--extensions=${extensions}`]);
+        args = args.concat([`--extensions=${extensions.replace(/\s+/g, '')}`]);
     }
 
     args = args.concat(files);
@@ -218,7 +218,7 @@ const run = async () => {
                 },
                 extensions: {
                     type: 'string',
-                    default: 'tsx, ts, jsx, js',
+                    default: 'tsx,ts,jsx,js',
                     aliases: ['e'],
                 },
             },
