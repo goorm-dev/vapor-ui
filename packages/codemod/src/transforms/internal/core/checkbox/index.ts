@@ -208,19 +208,19 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 // Create Field.Label wrapping Checkbox.Root and label text
                 const fieldLabel = j.jsxElement(
                     j.jsxOpeningElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier('Field'),
-                            j.jsxIdentifier('Label'),
-                        ),
+                        j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Label')),
                         [],
                     ),
                     j.jsxClosingElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier('Field'),
-                            j.jsxIdentifier('Label'),
-                        ),
+                        j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Label')),
                     ),
-                    [j.jsxText('\n  '), element, j.jsxText('\n  '), ...labelChildren, j.jsxText('\n')],
+                    [
+                        j.jsxText('\n  '),
+                        element,
+                        j.jsxText('\n  '),
+                        ...labelChildren,
+                        j.jsxText('\n'),
+                    ],
                 );
 
                 // Replace Checkbox.Root with Field.Label in parent
