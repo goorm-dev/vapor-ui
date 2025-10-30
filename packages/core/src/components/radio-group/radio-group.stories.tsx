@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import type { StoryObj } from '@storybook/react-vite';
 
 import { RadioGroup } from '.';
@@ -11,10 +12,6 @@ export default {
         invalid: { control: 'boolean' },
         readOnly: { control: 'boolean' },
         required: { control: 'boolean' },
-        orientation: {
-            control: 'inline-radio',
-            options: ['vertical', 'horizontal'],
-        },
         size: {
             control: 'inline-radio',
             options: ['md', 'lg'],
@@ -26,8 +23,9 @@ type Story = StoryObj<typeof RadioGroup>;
 
 export const Default: Story = {
     render: (args) => (
-        <RadioGroup.Root {...args} name="asedf" defaultValue={'3'}>
+        <RadioGroup.Root {...args} name="radio-group" defaultValue={'3'}>
             <RadioGroup.Label>Options</RadioGroup.Label>
+
             <label
                 style={{
                     display: 'flex',

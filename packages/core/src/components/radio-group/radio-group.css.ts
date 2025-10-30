@@ -12,7 +12,7 @@ export const root = recipe({
         flexWrap: 'wrap',
     }),
 
-    defaultVariants: { size: 'md', orientation: 'vertical' },
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
             md: layerStyle('components', {
@@ -22,16 +22,6 @@ export const root = recipe({
             lg: layerStyle('components', {
                 rowGap: vars.size.space['100'],
                 columnGap: vars.size.space['100'],
-            }),
-        },
-        orientation: {
-            horizontal: layerStyle('components', {
-                flexDirection: 'row',
-                alignContent: 'flex-start',
-                columnGap: vars.size.space['200'],
-            }),
-            vertical: layerStyle('components', {
-                flexDirection: 'column',
             }),
         },
     },
