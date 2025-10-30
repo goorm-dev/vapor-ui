@@ -8,7 +8,7 @@ export const Component = () => (
         <Badge>Badge</Badge>
         <Dialog>
             <Dialog.Trigger>Old Dialog</Dialog.Trigger>
-            <Dialog.Contents>Old Content</Dialog.Contents>
+            <Dialog.Content>Old Content</Dialog.Content>
         </Dialog>
         <VaporDialog.Root>
             <VaporDialog.Trigger>New Dialog</VaporDialog.Trigger>

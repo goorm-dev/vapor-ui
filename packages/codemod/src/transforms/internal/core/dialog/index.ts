@@ -11,6 +11,7 @@ import type {
 
 import {
     getFinalImportName,
+    getLocalImportName,
     hasComponentInPackage,
     transformImportDeclaration,
 } from '~/utils/import-transform';
@@ -34,6 +35,10 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         return fileInfo.source;
     }
 
+    // Get the local name from source package before transformation
+    const oldDialogLocalName =
+        getLocalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE) || OLD_COMPONENT_NAME;
+
     // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
         root,
@@ -45,7 +50,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     });
     // Get the final import name (considering aliases)
     const dialogImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
-
     // 2. Transform Dialog JSX elements to Dialog.Root
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
@@ -53,7 +57,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Dialog> or <OldDialogAlias> to <dialogImportName.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'Dialog'
+            element.openingElement.name.name === oldDialogLocalName
         ) {
             // Change to dialogImportName.Root
             transformToMemberExpression(j, element, dialogImportName, 'Root');
@@ -80,7 +84,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === 'Dialog'
+            element.openingElement.name.object.name === oldDialogLocalName
         ) {
             // Get the property name (Contents, CombinedContent, Content, etc.)
             const propertyName =
