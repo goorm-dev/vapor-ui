@@ -1,10 +1,12 @@
-import { Checkbox } from '@vapor-ui/core';
+import { Checkbox, Field } from '@vapor-ui/core';
 
 export const Component = () => (
-    <div className="flex items-center gap-2">
-        <Checkbox.Root id="newsletter" defaultChecked>
-            <Checkbox.Indicator />
-        </Checkbox.Root>
-        <label htmlFor="newsletter">Subscribe to newsletter</label>
+    <div>
+        <Field.Label>
+            <Checkbox.Root id="terms" size="md" invalid={false}>
+                <Checkbox.Indicator />
+            </Checkbox.Root>
+            약관에 동의합니다
+        </Field.Label>
     </div>
 );

@@ -19,7 +19,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
         return fileInfo.source;
     }
-    // 1. Import migration: Alert -> Callout
+    // 1. Import migration
     transformImportDeclaration({
         root,
         j,
