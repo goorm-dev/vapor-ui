@@ -37,10 +37,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             element.openingElement.name.type === 'JSXIdentifier' &&
             element.openingElement.name.name === buttonImportName
         ) {
-            let hasOutlineProp = false;
-            let outlineAttrIndex = -1;
-
-            element.openingElement.attributes?.forEach((attr, index) => {
+            element.openingElement.attributes?.forEach((attr) => {
                 if (attr.type === 'JSXAttribute') {
                     if (attr.name.name === 'shape') {
                         attr.name.name = 'variant';
@@ -52,30 +49,13 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                         ) {
                             attr.value.value = 'ghost';
                         }
-                    } else if (attr.name.name === 'outline') {
-                        hasOutlineProp = true;
-                        outlineAttrIndex = index;
                     }
                 }
             });
-
-            if (hasOutlineProp && element.openingElement.attributes) {
-                element.openingElement.attributes.splice(outlineAttrIndex, 1);
-                element.openingElement.attributes.push(
-                    j.jsxAttribute(j.jsxIdentifier('variant'), j.stringLiteral('outline')),
-                );
-            }
         }
     });
 
-    const printOptions = {
-        quote: 'auto' as const,
-        trailingComma: true,
-        tabWidth: 4,
-        reuseWhitespace: true,
-    };
-
-    return root.toSource(printOptions);
+    return root.toSource();
 };
 
 export default transform;

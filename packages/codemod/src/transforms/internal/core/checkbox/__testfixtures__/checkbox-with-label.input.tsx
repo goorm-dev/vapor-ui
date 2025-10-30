@@ -1,10 +1,11 @@
+// @ts-nocheck
 import { Checkbox } from '@goorm-dev/vapor-core';
 
 export const Component = () => (
-    <div className="flex items-center gap-2">
-        <Checkbox id="newsletter" defaultChecked>
+    <div>
+        <Checkbox id="terms" size="md" invalid={false}>
             <Checkbox.Indicator />
+            <Checkbox.Label>약관에 동의합니다</Checkbox.Label>
         </Checkbox>
-        <label htmlFor="newsletter">Subscribe to newsletter</label>
     </div>
 );

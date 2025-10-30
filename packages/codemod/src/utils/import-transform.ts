@@ -251,11 +251,11 @@ const handleMergeComponentImports = ({
     }
 
     if (targetSpecifier) {
-        const hasComponentImport = targetImport.specifiers?.some(
+        const existingComponentSpec = targetImport.specifiers?.find(
             (spec) => spec.type === 'ImportSpecifier' && spec.imported.name === newComponentName,
-        );
+        ) as ImportSpecifier | undefined;
 
-        if (!hasComponentImport) {
+        if (!existingComponentSpec) {
             const localName = getLocalName(targetSpecifier, oldComponentName);
             const hasAlias = localName !== oldComponentName;
 

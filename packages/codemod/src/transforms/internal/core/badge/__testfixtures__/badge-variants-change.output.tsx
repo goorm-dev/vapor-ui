@@ -6,6 +6,5 @@ export const Component = () => (
         <Badge>Default</Badge>
         <Badge shape="pill">Pill</Badge>
         <Badge shape="pill">Pill</Badge>
-        <Badge shape="pill">Implicit True</Badge>
     </>
 );
