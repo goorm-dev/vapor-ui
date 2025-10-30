@@ -15,11 +15,11 @@ const require = createRequire(import.meta.url);
 const transformerDirectory = path.join(dirName, '..', 'transforms');
 
 function checkGitStatus(force: boolean) {
-    let clean = false;
+    let isClean = false;
     let errorMessage = 'Unable to determine if git directory is clean';
 
     try {
-        clean = isGitClean.sync();
+        isClean = isGitClean.sync();
         errorMessage = 'Git directory is not clean';
     } catch (err: unknown) {
         if (
@@ -29,18 +29,18 @@ function checkGitStatus(force: boolean) {
             typeof err.stderr === 'string' &&
             err.stderr.indexOf('Not a git repository') >= 0
         ) {
-            clean = true;
+            isClean = true;
         }
     }
 
-    if (!clean) {
+    if (!isClean) {
         if (force) {
             console.log(`WARNING: ${errorMessage}. Forcibly continuing.`);
         } else {
             console.log('Thank you for using vapor-ui!');
             console.log(
                 picocolors.yellow(
-                    '\nERROR: For safety, codemods can only be run on a clean git directory.',
+                    '\nERROR: For safety, codemods can only be run on a isClean git directory.',
                 ),
             );
             console.log(
@@ -57,24 +57,28 @@ function resolveTransformer(transformerDirectory: string, transformer: string) {
 function runTransform({
     files,
     flags,
-    parser,
     transformer,
 }: {
     files: string[];
-    flags: { dry?: boolean; jscodeshift?: string; extensions?: string };
-    parser: string;
+    flags: {
+        dry?: boolean;
+        jscodeshift?: string;
+        parser: string;
+        force: boolean;
+        extensions: string;
+    };
     transformer: string;
 }) {
     const transformerPath = resolveTransformer(transformerDirectory, transformer);
 
     let args: string[] = [];
 
-    const { dry, jscodeshift, extensions } = flags;
+    const { force, dry, parser, extensions, jscodeshift } = flags;
 
     args.push(`--parser=${parser}`);
-    if (dry) {
-        args.push(`--dry`);
-    }
+    args.push(`--extensions=${extensions}`);
+    args.push(dry ? '--dry' : '--no-dry');
+    args.push(force ? '--force' : '--no-force');
 
     args = args.concat([`--transform=${transformerPath || ''}`]);
 
@@ -182,14 +186,17 @@ const run = async () => {
         `Usage
       $ npx @vapor-ui/migrate <transform> <files> [...options]
     
-        transform    One of the choices from https://github.com/goorm-dev/vapor-ui/tree/main/packages/codemod
+        transform   One of the choices from https://github.com/goorm-dev/vapor-ui/tree/main/packages/codemod
         files       Files or directory to transform. Can be a glob like src/**.test.js
 
     Options
-      --force            Bypass Git safety checks and forcibly run codemods
-      --parser           Specify the parser to be used. One of: tsx, babel
-      --dry              Dry run. Changes are not written to files.
-      --jscodeshift      Pass options directly to jscodeshift.
+        --force             Bypass Git safety checks and forcibly run codemods
+        --parser            Specify the parser to be used. One of: babel | babylon | flow | ts | tsx.
+                            Default is tsx.
+        --extensions        Comma-separated list of file extensions to transform.
+                            Default is tsx,ts,jsx,js
+        --dry               (Advanced) Dry run. Changes are not written to files.
+        --jscodeshift       (Advanced) Pass options directly to jscodeshift.
                         See more options: https://jscodeshift.com/run/cli
       --extensions        Specify additional file extensions to be transformed.
     `,
@@ -211,15 +218,14 @@ const run = async () => {
                     default: 'tsx',
                     aliases: ['p'],
                 },
-                jscodeshift: {
-                    type: 'string',
-                    default: '',
-                    aliases: ['j'],
-                },
                 extensions: {
                     type: 'string',
                     default: 'tsx,ts,jsx,js',
                     aliases: ['e'],
+                },
+                jscodeshift: {
+                    type: 'string',
+                    aliases: ['j'],
                 },
             },
         },
@@ -245,7 +251,6 @@ const run = async () => {
             choices: TRANSFORMER_INQUIRER_CHOICES,
         });
     }
-
     const files = globbySync(cli.input[1] || answers.files);
 
     if (!files.length) {
@@ -256,7 +261,6 @@ const run = async () => {
     return runTransform({
         files: globbySync(cli.input[1] || answers.files),
         flags: cli.flags,
-        parser: (cli.flags.parser as string) || answers.parser,
         transformer: cli.input[0] || answers.transformer,
     });
 };

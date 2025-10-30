@@ -9,16 +9,28 @@ interface RunFixtureTestsOptions {
     fixturesDir: string;
     extensions?: string[];
     transformOptions?: Record<string, unknown>;
-    name?: string;
 }
+
+const getParserByExtension = (ext: string) => {
+    switch (ext) {
+        case 'ts':
+        case 'tsx':
+            return 'typescript';
+        case 'js':
+        case 'jsx':
+            return 'babel';
+        default:
+            return 'babel';
+    }
+};
+
 export const runTestTransform = ({
     transform,
     fixturesDir,
     extensions = ['tsx'],
     transformOptions = {},
-    name,
 }: RunFixtureTestsOptions): void => {
-    const transformName = name || basename(dirname(fixturesDir));
+    const transformName = basename(dirname(fixturesDir));
 
     const inputFiles = extensions.flatMap((extension) => {
         return readdirSync(fixturesDir)
@@ -36,32 +48,20 @@ export const runTestTransform = ({
                 const outputFilePath = join(fixturesDir, `${testCase}.output.${extension}`);
 
                 const input = readFileSync(inputFilePath, 'utf-8');
-                const output = readFileSync(outputFilePath, 'utf8').trim();
+                const output = readFileSync(outputFilePath, 'utf8');
                 const cleanRegex = /\/\/\s*@ts-nocheck\s*\r?\n?/;
 
-                const result = applyTransform(
-                    transform,
-                    transformOptions,
-                    { source: input },
-                    { parser: 'tsx' },
-                );
-                const config = prettier.resolveConfig(path.join(process.cwd(), '.prettierrc'));
-
-                expect(
-                    prettier
-                        .format(result, {
-                            parser: 'typescript',
-                            ...config,
-                        })
-                        .replace(cleanRegex, ''),
-                ).toEqual(
-                    prettier
-                        .format(output, {
-                            parser: 'typescript',
-                            ...config,
-                        })
-                        .replace(cleanRegex, ''),
-                );
+                const result = applyTransform(transform, transformOptions, {
+                    source: input,
+                });
+                const config = {
+                    parser: getParserByExtension(extension),
+                    ...prettier.resolveConfig(path.join(process.cwd())),
+                };
+                const formatAndClean = (code: string) => {
+                    return prettier.format(code, config).replace(cleanRegex, '');
+                };
+                expect(formatAndClean(result)).toBe(formatAndClean(output));
             });
         });
     });
