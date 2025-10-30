@@ -38,13 +38,13 @@ The basic usage is the same, but the `pill` boolean prop has been changed to the
 
 ## 3. Props Changes
 
-| **Prop** | **Before** | **After** | **Change Type** | **Migration Method / Notes** |
-|----------|------------|-----------|-----------------|------------------------------|
-| `pill` | `boolean` | (removed) | **Removed** | The `pill` prop has been removed and unified into the `shape` prop. Change `pill={true}` → `shape="pill"`, `pill={false}` → `shape="square"`. |
-| `shape` | (none) | `'square' \| 'pill'` | **New Prop** | Replaces the existing `pill` boolean prop. Default value is `'square'`. |
-| `size` | `'sm' \| 'md' \| 'lg'` | (no change) | **No Change** | |
-| `color` | `'primary' \| 'success' \| 'warning' \| 'danger' \| 'contrast' \| 'hint'` | (no change) | **No Change** | |
-| `render` | (none) | `ReactElement` | **New Prop** | Same functionality as Radix UI's `asChild`. Replace HTML element with another tag or compose with other components. Only the usage differs. |
+| **Prop** | **Before**                                                                | **After**            | **Change Type** | **Migration Method / Notes**                                                                                                                  |
+| -------- | ------------------------------------------------------------------------- | -------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pill`   | `boolean`                                                                 | (removed)            | **Removed**     | The `pill` prop has been removed and unified into the `shape` prop. Change `pill={true}` → `shape="pill"`, `pill={false}` → `shape="square"`. |
+| `shape`  | (none)                                                                    | `'square' \| 'pill'` | **New Prop**    | Replaces the existing `pill` boolean prop. Default value is `'square'`.                                                                       |
+| `size`   | `'sm' \| 'md' \| 'lg'`                                                    | (no change)          | **No Change**   |                                                                                                                                               |
+| `color`  | `'primary' \| 'success' \| 'warning' \| 'danger' \| 'contrast' \| 'hint'` | (no change)          | **No Change**   |                                                                                                                                               |
+| `render` | (none)                                                                    | `ReactElement`       | **New Prop**    | Same functionality as Radix UI's `asChild`. Replace HTML element with another tag or compose with other components. Only the usage differs.   |
 
 ---
 
@@ -53,21 +53,21 @@ The basic usage is the same, but the `pill` boolean prop has been changed to the
 The codemod automatically handles the following changes:
 
 1. **Import Change**: `@goorm-dev/vapor-core` → `@vapor-ui/core`
-   - Changes Badge import to Badge
-   - Automatically merges with existing `@vapor-ui/core` imports
+    - Changes Badge import to Badge
+    - Automatically merges with existing `@vapor-ui/core` imports
 
 2. **Component Name**: Badge remains as Badge (no change)
 
 3. **Prop Changes**:
-   - `pill={true}` → `shape="pill"` (boolean to string)
-   - `pill={false}` → `shape="square"` (boolean to string)
-   - When `pill` prop is not specified, no shape prop is added (default `'square'` is implicit)
-   - Automatically converts `asChild` prop to `render` prop
-   - All other props (color, size, className, etc.) are preserved
+    - `pill={true}` → `shape="pill"` (boolean to string)
+    - `pill={false}` → `shape="square"` (boolean to string)
+    - When `pill` prop is not specified, no shape prop is added (default `'square'` is implicit)
+    - Automatically converts `asChild` prop to `render` prop
+    - All other props (color, size, className, etc.) are preserved
 
 4. **Prop Preservation**:
-   - All other props are preserved as-is
-   - Expression props are automatically handled
+    - All other props are preserved as-is
+    - Expression props are automatically handled
 
 ---
 
@@ -85,7 +85,7 @@ The codemod automatically handles:
 Manual review may only be needed for:
 
 1. **Dynamic pill prop**: When the `pill` prop is an expression or variable
-   - The codemod converts expressions, but verify the logic is correct
+    - The codemod converts expressions, but verify the logic is correct
 2. **Custom children**: When complex custom content exists inside Badge
 
 ---

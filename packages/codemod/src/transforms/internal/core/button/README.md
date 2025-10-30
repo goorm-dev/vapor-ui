@@ -45,12 +45,12 @@ The basic usage is the same, but the custom element rendering capability through
 
 ## 3. Props Changes
 
-| **Prop** | **Before** | **After** | **Change Type** | **Migration Method / Notes** |
-|----------|------------|-----------|-----------------|------------------------------|
-| `shape` | `'fill' \| 'outline' \| 'invisible'` | Changed to `variant` | **Name Change** | Prop name changed from `shape` to `variant`. |
-| `shape` value: `invisible` | `'invisible'` | `'ghost'` | **Type/Value Change** | `'invisible'` has been changed to `'ghost'`. `'fill'` and `'outline'` remain the same. |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` | (no change) | **No Change** | |
-| `render` | (none) | `ReactElement` | **New Prop** | Same functionality as Radix UI's `asChild`. Replace HTML element with another tag or compose with other components. Only the usage differs. |
+| **Prop**                   | **Before**                           | **After**            | **Change Type**       | **Migration Method / Notes**                                                                                                                |
+| -------------------------- | ------------------------------------ | -------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shape`                    | `'fill' \| 'outline' \| 'invisible'` | Changed to `variant` | **Name Change**       | Prop name changed from `shape` to `variant`.                                                                                                |
+| `shape` value: `invisible` | `'invisible'`                        | `'ghost'`            | **Type/Value Change** | `'invisible'` has been changed to `'ghost'`. `'fill'` and `'outline'` remain the same.                                                      |
+| `size`                     | `'sm' \| 'md' \| 'lg' \| 'xl'`       | (no change)          | **No Change**         |                                                                                                                                             |
+| `render`                   | (none)                               | `ReactElement`       | **New Prop**          | Same functionality as Radix UI's `asChild`. Replace HTML element with another tag or compose with other components. Only the usage differs. |
 
 ---
 
@@ -59,27 +59,27 @@ The basic usage is the same, but the custom element rendering capability through
 The codemod automatically handles the following changes:
 
 1. **Import Change**: `@goorm-dev/vapor-core` → `@vapor-ui/core`
-   - Changes Button import to Button
-   - Automatically merges with existing `@vapor-ui/core` imports
+    - Changes Button import to Button
+    - Automatically merges with existing `@vapor-ui/core` imports
 
 2. **Component Name**: Button remains as Button (no change)
 
 3. **Prop Changes**:
-   - `shape` → `variant` (prop name change)
-   - `shape="invisible"` → `variant="ghost"` (value mapping)
-   - `shape="fill"` → `variant="fill"` (preserved)
-   - `shape="outline"` → `variant="outline"` (preserved)
-   - Automatically converts `asChild` prop to `render` prop
+    - `shape` → `variant` (prop name change)
+    - `shape="invisible"` → `variant="ghost"` (value mapping)
+    - `shape="fill"` → `variant="fill"` (preserved)
+    - `shape="outline"` → `variant="outline"` (preserved)
+    - Automatically converts `asChild` prop to `render` prop
 
 4. **asChild → render prop automatic conversion** ✨
-   - Automatically converts `asChild` prop to `render` prop
-   - Extracts the first child element as render prop
-   - Preserves child element props in render prop
-   - Moves child element's inner content to Button's children
+    - Automatically converts `asChild` prop to `render` prop
+    - Extracts the first child element as render prop
+    - Preserves child element props in render prop
+    - Moves child element's inner content to Button's children
 
 5. **Prop Preservation**:
-   - All other props (color, size, className, etc.) are preserved
-   - Expression props are automatically handled
+    - All other props (color, size, className, etc.) are preserved
+    - Expression props are automatically handled
 
 ---
 
@@ -99,7 +99,7 @@ The codemod automatically handles:
 Manual review may only be needed for:
 
 1. **Dynamic shape prop**: When the `shape` prop is an expression or variable
-   - The codemod converts expressions, but verify the logic is correct
+    - The codemod converts expressions, but verify the logic is correct
 2. **Complex asChild patterns**: When asChild contains complex nested structures
 
 ---
