@@ -13,7 +13,6 @@ export const root = recipe({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '100%',
             textAlign: 'center',
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius[300],
