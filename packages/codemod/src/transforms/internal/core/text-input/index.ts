@@ -70,7 +70,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             let hasVisuallyHiddenLabel = false;
             let labelText: string | null = null;
 
-            type ChildNode = JSXElement['children'][number];
+            type ChildNode = NonNullable<JSXElement['children']>[number];
 
             const findFieldRecursively = (
                 children: ChildNode[],
