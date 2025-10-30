@@ -56,7 +56,7 @@ export const link = recipe({
             color: vars.color.foreground.normal[100],
 
             selectors: {
-                '&[aria-current="page"]': {
+                '&[data-selected]': {
                     color: vars.color.foreground.primary[200],
                 },
 
