@@ -49,9 +49,9 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>(
             <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
                 <BaseRadioGroup
                     ref={ref}
+                    aria-labelledby={labelElementId}
                     aria-invalid={invalid}
                     aria-orientation={orientation}
-                    aria-describedby={labelElementId}
                     className={clsx(styles.root({ size, orientation }), className)}
                     {...otherProps}
                 />
