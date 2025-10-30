@@ -97,15 +97,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    const printOptions = {
-        quote: 'single' as const,
-        objectCurlySpacing: true,
-        reuseWhitespace: true,
-        lineTerminator: '\n',
-        tabwidth: 4,
-    };
-
-    return root.toSource(printOptions);
+    return root.toSource();
 };
 
 export default transform;

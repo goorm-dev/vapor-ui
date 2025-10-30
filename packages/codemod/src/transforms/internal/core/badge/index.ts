@@ -1,6 +1,10 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
-import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
+import {
+    getFinalImportName,
+    hasComponentInPackage,
+    transformImportDeclaration,
+} from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -25,12 +29,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         targetPackage: TARGET_PACKAGE,
     });
 
+    const badgeImportName = getFinalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE);
+
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'Badge'
+            element.openingElement.name.name === badgeImportName
         ) {
             element.openingElement.attributes?.forEach((attr, index) => {
                 if (attr.type === 'JSXAttribute' && attr.name.name === 'pill') {
@@ -65,14 +71,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    const printOptions = {
-        quote: 'auto' as const,
-        trailingComma: true,
-        tabWidth: 4,
-        reuseWhitespace: true,
-    };
-
-    return root.toSource(printOptions);
+    return root.toSource();
 };
 
 export default transform;

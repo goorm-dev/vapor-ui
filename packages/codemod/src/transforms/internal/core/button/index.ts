@@ -1,7 +1,7 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
 import {
-    getLocalImportName,
+    getFinalImportName,
     hasComponentInPackage,
     transformImportDeclaration,
 } from '~/utils/import-transform';
@@ -19,7 +19,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         return fileInfo.source;
     }
 
-    const localButtonName = getLocalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE);
+    const buttonImportName = getFinalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE);
 
     transformImportDeclaration({
         root,
@@ -35,7 +35,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === localButtonName
+            element.openingElement.name.name === buttonImportName
         ) {
             let hasOutlineProp = false;
             let outlineAttrIndex = -1;
