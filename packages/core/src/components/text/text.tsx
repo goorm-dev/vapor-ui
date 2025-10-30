@@ -8,13 +8,7 @@ import { foregrounds } from '~/styles/mixins/foreground.css';
 import { type Typography, typography } from '~/styles/mixins/typography.css';
 import type { VComponentProps } from '~/utils/types';
 
-type TextPrimitiveProps = VComponentProps<'span'>;
-interface TextProps extends TextPrimitiveProps {
-    foreground?: Foregrounds['color'];
-    typography?: Typography['style'];
-}
-
-const Text = forwardRef<HTMLSpanElement, TextProps>(
+export const Text = forwardRef<HTMLSpanElement, Text.Props>(
     ({ render, typography: typographyStyle, foreground, className, ...props }, ref) => {
         return useRender({
             ref,
@@ -32,5 +26,11 @@ const Text = forwardRef<HTMLSpanElement, TextProps>(
 );
 Text.displayName = 'Text';
 
-export { Text };
-export type { TextProps };
+export namespace Text {
+    type TextPrimitiveProps = VComponentProps<'span'>;
+
+    export interface Props extends TextPrimitiveProps {
+        foreground?: Foregrounds['color'];
+        typography?: Typography['style'];
+    }
+}

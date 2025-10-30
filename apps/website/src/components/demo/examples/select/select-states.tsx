@@ -1,4 +1,3 @@
-import type { SelectRootProps } from '@vapor-ui/core';
 import { Select, VStack } from '@vapor-ui/core';
 
 export default function SelectStates() {
@@ -12,7 +11,7 @@ export default function SelectStates() {
     );
 }
 
-const SelectTemplate = (props: SelectRootProps) => {
+const SelectTemplate = (props: Select.Root.Props) => {
     return (
         <Select.Root {...props}>
             <Select.Trigger>

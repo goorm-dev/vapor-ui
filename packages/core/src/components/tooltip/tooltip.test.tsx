@@ -4,13 +4,12 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { TooltipRootProps } from './tooltip';
-import { Tooltip } from './tooltip';
+import { Tooltip } from '.';
 
 const OPEN_DELAY = 1000;
 const CLOSE_DELAY = 100;
 
-const TooltipTest = (props: TooltipRootProps) => {
+const TooltipTest = (props: Tooltip.Root.Props) => {
     return (
         <Tooltip.Root {...props}>
             <Tooltip.Trigger>Hover me</Tooltip.Trigger>

@@ -2,7 +2,7 @@ import { calc } from '@vanilla-extract/css-utils';
 import { createRainbowSprinkles, defineProperties } from 'rainbow-sprinkles';
 
 import { layers } from './layers.css';
-import { vars } from './vars.css';
+import { vars } from './themes.css';
 
 const spaceTokens = vars.size.space;
 type SpaceKey = keyof typeof spaceTokens;

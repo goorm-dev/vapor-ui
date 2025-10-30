@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import type { StoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 
 import { RadioGroup } from '.';
-import { Radio } from '../radio/radio';
+import { Radio } from '../radio';
 
 export default {
     title: 'RadioGroup',
