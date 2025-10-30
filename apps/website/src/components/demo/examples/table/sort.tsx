@@ -72,12 +72,9 @@ export default function Sort() {
                 <Table.Root style={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="5%" />
-                        <Table.Column width="17.5%" />
-                        <Table.Column width="17.5%" />
-                        <Table.Column width="30%" />
-                        <Table.Column width="30%" />
+                        <Table.Column width="15%" />
+                        <Table.Column width="45%" />
                     </Table.ColumnGroup>
-
                     <Table.Header style={{ borderRadius: 'inherit' }}>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row

@@ -13,15 +13,13 @@ export default function Basic() {
             {
                 header: 'ID',
                 accessorKey: 'id',
-                size: 0, // prevent cumulative layout shift
-                cell: ({ row }) => <div style={{ textAlign: 'center' }}>{row.index + 1}</div>,
+                cell: ({ row }) => <Box textAlign="center">{row.index + 1}</Box>,
             },
 
             {
                 header: 'Name',
                 accessorKey: 'name',
-                size: 0, // prevent cumulative layout shift
-                cell: ({ row }) => <div style={{ textWrap: 'nowrap' }}>{row.getValue('name')}</div>,
+                cell: ({ row }) => <Box style={{ textWrap: 'nowrap' }}>{row.getValue('name')}</Box>,
             },
 
             {
@@ -39,12 +37,12 @@ export default function Basic() {
             },
 
             {
-                header: () => <Box width="400px">Role</Box>,
+                header: 'Role',
                 accessorKey: 'role',
             },
 
             {
-                header: () => <Box width="400px">Last Active</Box>,
+                header: 'Last Active',
                 accessorKey: 'last-active',
             },
         ],
@@ -63,7 +61,12 @@ export default function Basic() {
     return (
         <Card.Root style={{ width: '100%' }}>
             <Card.Body style={{ overflow: 'auto', padding: 0 }}>
-                <Table.Root>
+                <Table.Root style={{ width: '150%' }}>
+                    <Table.ColumnGroup>
+                        <Table.Column width="64px" />
+                        <Table.Column width="128px" />
+                        <Table.Column width="256px" />
+                    </Table.ColumnGroup>
                     <Table.Header>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>

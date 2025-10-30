@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { Badge, Card, Table } from '@vapor-ui/core';
+import { Badge, Box, Card, Table } from '@vapor-ui/core';
 
 export default function Ordering() {
     const [rowSelection, setRowSelection] = useState({});
@@ -10,8 +10,9 @@ export default function Ordering() {
         () => [
             {
                 id: 'select',
-                header: 'ID',
-                cell: ({ row }) => <div style={{ textAlign: 'center' }}>{row.index + 1}</div>,
+
+                header: () => <Box textAlign="center">ID</Box>,
+                cell: ({ row }) => <Box textAlign="center">{row.index + 1}</Box>,
             },
 
             {
@@ -24,6 +25,7 @@ export default function Ordering() {
                 accessorKey: 'status',
                 cell: ({ getValue }) => {
                     const status = getValue<string>();
+
                     return (
                         <Badge color={activeness[status]} shape="pill">
                             {status.toUpperCase()}
@@ -57,7 +59,7 @@ export default function Ordering() {
     return (
         <Card.Root style={{ width: '100%' }}>
             <Card.Body style={{ padding: 0 }}>
-                <Table.Root>
+                <Table.Root style={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="5%" />
                         <Table.Column width="17.5%" />

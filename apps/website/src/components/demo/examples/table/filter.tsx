@@ -184,7 +184,7 @@ export default function Scroll() {
                 </HStack>
             </Card.Header>
             <Card.Body style={{ overflow: 'auto', padding: 0 }}>
-                <Table.Root>
+                <Table.Root style={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="5%" />
                         <Table.Column width="15%" />

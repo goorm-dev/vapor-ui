@@ -72,11 +72,11 @@ export default function Basic() {
     return (
         <Card.Root style={{ width: '100%' }}>
             <Card.Body style={{ padding: 0 }}>
-                <Table.Root>
+                <Table.Root style={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="5%" />
-                        <Table.Column width="17.5%" />
-                        <Table.Column width="17.5%" />
+                        <Table.Column width="20%" />
+                        <Table.Column width="15%" />
                         <Table.Column width="30%" />
                         <Table.Column width="30%" />
                     </Table.ColumnGroup>
