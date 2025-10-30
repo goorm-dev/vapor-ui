@@ -86,6 +86,10 @@ function runTransform({
         args = args.concat(jscodeshift);
     }
 
+    if (extensions) {
+        args = args.concat([`--extensions=${extensions.replace(/\s+/g, '')}`]);
+    }
+
     args = args.concat(files);
 
     const jscodeshiftExecutable = require.resolve('jscodeshift/bin/jscodeshift.js');
@@ -102,6 +106,79 @@ const TRANSFORMER_INQUIRER_CHOICES = [
     {
         name: 'internal/icons: Migrate @goorm-dev/vapor-icons to @vapor-ui/icons',
         value: 'internal/icons/migrate-icons-import',
+    },
+    {
+        name: 'internal/core/alert: Migrate Alert component to @vapor-ui/core Callout',
+        value: 'internal/core/alert',
+    },
+    {
+        name: 'internal/core/avatar: Migrate Avatar component to @vapor-ui/core',
+        value: 'internal/core/avatar',
+    },
+    {
+        name: 'internal/core/badge: Migrate Badge component to @vapor-ui/core',
+        value: 'internal/core/badge',
+    },
+    {
+        name: 'internal/core/breadcrumb: Migrate Breadcrumb component to @vapor-ui/core',
+        value: 'internal/core/breadcrumb',
+    },
+    {
+        name: 'internal/core/button: Migrate Button component to @vapor-ui/core',
+        value: 'internal/core/button',
+    },
+    {
+        name: 'internal/core/card: Migrate Card component to @vapor-ui/core',
+        value: 'internal/core/card',
+    },
+    {
+        name: 'internal/core/checkbox: Migrate Checkbox component to @vapor-ui/core',
+        value: 'internal/core/checkbox',
+    },
+
+    {
+        name: 'internal/core/collapsible: Migrate Collapsible component to @vapor-ui/core',
+        value: 'internal/core/collapsible',
+    },
+    {
+        name: 'internal/core/dialog: Migrate Dialog component to @vapor-ui/core',
+        value: 'internal/core/dialog',
+    },
+    {
+        name: 'internal/core/dropdown: Migrate Dropdown component to @vapor-ui/core',
+        value: 'internal/core/dropdown',
+    },
+    {
+        name: 'internal/core/icon-button: Migrate IconButton component to @vapor-ui/core',
+        value: 'internal/core/icon-button',
+    },
+    {
+        name: 'internal/core/nav: Migrate Nav component to @vapor-ui/core',
+        value: 'internal/core/nav',
+    },
+    {
+        name: 'internal/core/popover: Migrate Popover component to @vapor-ui/core',
+        value: 'internal/core/popover',
+    },
+    {
+        name: 'internal/core/radio-group: Migrate RadioGroup component to @vapor-ui/core',
+        value: 'internal/core/radio-group',
+    },
+    {
+        name: 'internal/core/switch: Migrate Switch component to @vapor-ui/core',
+        value: 'internal/core/switch',
+    },
+    {
+        name: 'internal/core/tabs: Migrate Tabs component to @vapor-ui/core',
+        value: 'internal/core/tabs',
+    },
+    {
+        name: 'internal/core/text: Migrate Text component to @vapor-ui/core',
+        value: 'internal/core/text',
+    },
+    {
+        name: 'internal/core/text-input: Migrate TextInput component to @vapor-ui/core',
+        value: 'internal/core/text-input',
     },
 ];
 const run = async () => {
@@ -121,6 +198,7 @@ const run = async () => {
         --dry               (Advanced) Dry run. Changes are not written to files.
         --jscodeshift       (Advanced) Pass options directly to jscodeshift.
                         See more options: https://jscodeshift.com/run/cli
+      --extensions        Specify additional file extensions to be transformed.
     `,
         {
             importMeta: import.meta,

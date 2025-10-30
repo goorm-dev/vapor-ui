@@ -39,3 +39,33 @@ Converts `@goorm-dev/vapor-icons` import to `@vapor-ui/icons` import.
 ```sh
 npx @vapor-ui/codemod internal/icons/migrate-icons-import src
 ```
+
+#### `internal/core/alert`
+
+Migrates Alert component from `@goorm-dev/vapor-core` to Callout component in `@vapor-ui/core`.
+
+```sh
+npx @vapor-ui/codemod internal/core/alert src
+```
+
+[📖 Detailed migration guide](src/transforms/internal/core/alert/README.md)
+
+#### `internal/core/badge`
+
+Migrates Badge component from `@goorm-dev/vapor-core` to `@vapor-ui/core`.
+
+```sh
+npx @vapor-ui/codemod internal/core/badge src
+```
+
+[📖 Detailed migration guide](src/transforms/internal/core/badge/README.md)
+
+#### `internal/core/button`
+
+Migrates Button component from `@goorm-dev/vapor-core` to `@vapor-ui/core`.
+
+```sh
+npx @vapor-ui/codemod internal/core/button src
+```
+
+[📖 Detailed migration guide](src/transforms/internal/core/button/README.md)
