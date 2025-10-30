@@ -1,10 +1,4 @@
-import type {
-    API,
-    FileInfo,
-    JSXAttribute,
-    JSXElement,
-    Transform,
-} from 'jscodeshift';
+import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
 
 import {
     getFinalImportName,
@@ -67,20 +61,10 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
         const linkAttrs: JSXAttribute[] = [];
         if (hrefAttr) {
-            linkAttrs.push(
-                j.jsxAttribute(
-                    j.jsxIdentifier('href'),
-                    hrefAttr.value,
-                ),
-            );
+            linkAttrs.push(j.jsxAttribute(j.jsxIdentifier('href'), hrefAttr.value));
         }
         if (activeAttr) {
-            linkAttrs.push(
-                j.jsxAttribute(
-                    j.jsxIdentifier('current'),
-                    activeAttr.value,
-                ),
-            );
+            linkAttrs.push(j.jsxAttribute(j.jsxIdentifier('current'), activeAttr.value));
         }
 
         const linkElement = j.jsxElement(
@@ -187,12 +171,15 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             const callbackBody = mapCallback.body;
                             const callbackParams = mapCallback.params;
                             const indexParam = callbackParams[1];
-                            
+
                             if (callbackBody.type === 'JSXElement') {
                                 if (
-                                    callbackBody.openingElement.name.type === 'JSXMemberExpression' &&
-                                    callbackBody.openingElement.name.object.type === 'JSXIdentifier' &&
-                                    callbackBody.openingElement.name.object.name === breadcrumbImportName &&
+                                    callbackBody.openingElement.name.type ===
+                                        'JSXMemberExpression' &&
+                                    callbackBody.openingElement.name.object.type ===
+                                        'JSXIdentifier' &&
+                                    callbackBody.openingElement.name.object.name ===
+                                        breadcrumbImportName &&
                                     callbackBody.openingElement.name.property.name === 'Item'
                                 ) {
                                     const itemCopy = j.jsxElement(
@@ -201,7 +188,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                         callbackBody.children,
                                     );
                                     const transformedItem = transformBreadcrumbItem(itemCopy);
-                                    
+
                                     const separatorElement = j.jsxElement(
                                         j.jsxOpeningElement(
                                             j.jsxMemberExpression(
@@ -212,11 +199,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                             true,
                                         ),
                                     );
-                                    
-                                    const indexIdentifier = indexParam && indexParam.type === 'Identifier' 
-                                        ? j.identifier(indexParam.name) 
-                                        : j.identifier('index');
-                                    
+
+                                    const indexIdentifier =
+                                        indexParam && indexParam.type === 'Identifier'
+                                            ? j.identifier(indexParam.name)
+                                            : j.identifier('index');
+
                                     const fragment = j.jsxFragment(
                                         j.jsxOpeningFragment(),
                                         j.jsxClosingFragment(),
@@ -245,26 +233,32 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                                             j.jsxText('\n            '),
                                         ],
                                     );
-                                    
+
                                     if (!indexParam) {
                                         callbackParams.push(j.identifier('index'));
                                     }
-                                    
+
                                     mapCallback.body = fragment;
                                 }
                             } else if (callbackBody.type === 'BlockStatement') {
-                                j(callbackBody).find(j.JSXElement).forEach((jsxPath) => {
-                                    const jsxElement = jsxPath.value;
-                                    if (
-                                        jsxElement.openingElement.name.type === 'JSXMemberExpression' &&
-                                        jsxElement.openingElement.name.object.type === 'JSXIdentifier' &&
-                                        jsxElement.openingElement.name.object.name === breadcrumbImportName &&
-                                        jsxElement.openingElement.name.property.name === 'Item'
-                                    ) {
-                                        const transformedItem = transformBreadcrumbItem(jsxElement);
-                                        jsxPath.replace(transformedItem);
-                                    }
-                                });
+                                j(callbackBody)
+                                    .find(j.JSXElement)
+                                    .forEach((jsxPath) => {
+                                        const jsxElement = jsxPath.value;
+                                        if (
+                                            jsxElement.openingElement.name.type ===
+                                                'JSXMemberExpression' &&
+                                            jsxElement.openingElement.name.object.type ===
+                                                'JSXIdentifier' &&
+                                            jsxElement.openingElement.name.object.name ===
+                                                breadcrumbImportName &&
+                                            jsxElement.openingElement.name.property.name === 'Item'
+                                        ) {
+                                            const transformedItem =
+                                                transformBreadcrumbItem(jsxElement);
+                                            jsxPath.replace(transformedItem);
+                                        }
+                                    });
                             }
                         }
                     }
@@ -285,11 +279,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             j.jsxIdentifier('List'),
                         ),
                     ),
-                    [
-                        j.jsxText('\n            '),
-                        ...transformedChildren,
-                        j.jsxText('\n        '),
-                    ],
+                    [j.jsxText('\n            '), ...transformedChildren, j.jsxText('\n        ')],
                 );
                 element.children = [j.jsxText('\n        '), listElement, j.jsxText('\n    ')];
                 return;
