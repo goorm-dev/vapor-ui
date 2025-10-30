@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Text } from '@goorm-dev/vapor-core';
 import { Button as CoreButton } from '@vapor-ui/core';
 

@@ -1,7 +1,16 @@
-import type { API, FileInfo, Transform } from 'jscodeshift';
+import type {
+    API,
+    ASTNode,
+    FileInfo,
+    ImportSpecifier,
+    JSXAttribute,
+    JSXSpreadAttribute,
+    Transform,
+} from 'jscodeshift';
 
 import {
     getFinalImportName,
+    getLocalImportName,
     hasComponentInPackage,
     transformImportDeclaration,
 } from '~/utils/import-transform';
@@ -16,13 +25,15 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    // Track the old Checkbox local name from @goorm-dev/vapor-core (e.g., 'Checkbox' or 'CoreCheckbox' if aliased)
-
     if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
         return fileInfo.source;
     }
 
-    // 1. Import migration: Alert -> Callout
+    // Get the local import name from the old package (considering aliases like "Checkbox as VaporCheckbox")
+    const oldCheckboxImportName =
+        getLocalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE) || OLD_COMPONENT_NAME;
+
+    // 1. Import migration: Checkbox -> Checkbox
     transformImportDeclaration({
         root,
         j,
@@ -35,90 +46,206 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     // Get the final import name (considering aliases)
     const checkboxImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
 
-    // 2. Transform Checkbox JSX elements to Checkbox.Root (or alias.Root)
+    // Track if Field import is needed
+    let needsFieldImport = false;
+
+    // 2. First pass: Check if we need to add Field import (if Checkbox.Label exists)
+    root.find(j.JSXElement).forEach((path) => {
+        const element = path.value;
+        if (
+            element.openingElement.name.type === 'JSXMemberExpression' &&
+            element.openingElement.name.object.type === 'JSXIdentifier' &&
+            element.openingElement.name.object.name === oldCheckboxImportName &&
+            element.openingElement.name.property.type === 'JSXIdentifier' &&
+            element.openingElement.name.property.name === 'Label'
+        ) {
+            needsFieldImport = true;
+        }
+    });
+
+    // Add Field import if needed
+    if (needsFieldImport) {
+        const existingFieldImport = root.find(j.ImportDeclaration, {
+            source: { value: TARGET_PACKAGE },
+        });
+
+        if (existingFieldImport.length > 0) {
+            const importDecl = existingFieldImport.at(0).get().value;
+            const hasField = importDecl.specifiers?.some(
+                (spec: ImportSpecifier) =>
+                    spec.type === 'ImportSpecifier' && spec.imported.name === 'Field',
+            );
+
+            if (!hasField) {
+                importDecl.specifiers?.push(j.importSpecifier(j.identifier('Field')));
+            }
+        }
+    }
+
+    // 3. Transform Checkbox JSX elements to Checkbox.Root
+    // AND handle Checkbox.Label transformation
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
-        // Transform <Checkbox> or <OldCheckboxAlias> to <checkboxImportName.Root>
-        // Check if this is the old Checkbox (either 'Checkbox' or its alias from vapor-core)
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'Checkbox'
+            element.openingElement.name.name === oldCheckboxImportName
         ) {
+            // Check if this Checkbox has Checkbox.Label as a child BEFORE transforming
+            const children = element.children || [];
+            let labelElement: ASTNode | null = null;
+            let labelIndex = -1;
+
+            children.forEach((child: ASTNode, index: number) => {
+                if (
+                    child.type === 'JSXElement' &&
+                    child.openingElement.name.type === 'JSXMemberExpression' &&
+                    child.openingElement.name.object.type === 'JSXIdentifier' &&
+                    child.openingElement.name.object.name === oldCheckboxImportName &&
+                    child.openingElement.name.property.type === 'JSXIdentifier' &&
+                    child.openingElement.name.property.name === 'Label'
+                ) {
+                    labelElement = child;
+                    labelIndex = index;
+                }
+            });
+
+            // Store parent info before transformation
+            const parentPath = path.parent;
+            let shouldWrapWithFieldLabel = false;
+            let labelChildren: ASTNode[] = [];
+
+            if (labelElement && labelIndex !== -1) {
+                shouldWrapWithFieldLabel = true;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                labelChildren = (labelElement as any).children || [];
+                // Remove Checkbox.Label from Checkbox.Root children
+                children.splice(labelIndex, 1);
+            }
+
             // Change to checkboxImportName.Root
             transformToMemberExpression(j, element, checkboxImportName, 'Root');
 
             // Transform asChild prop to render prop
             transformAsChildToRender(j, element);
-        }
-    });
 
-    // 3. Remove Checkbox.Label and replace with TODO comment
-    root.find(j.JSXElement).forEach((path) => {
-        const element = path.value;
+            // Handle props transformation
+            const attributes = element.openingElement.attributes || [];
+            const newAttributes: (JSXAttribute | JSXSpreadAttribute)[] = [];
+            let hasOnCheckedChange = false;
+            let hasCheckedExpression = false;
 
-        // Check if this is Checkbox.Label (or alias.Label)
-        if (
-            element.openingElement.name.type === 'JSXMemberExpression' &&
-            element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === 'Checkbox' &&
-            element.openingElement.name.property.type === 'JSXIdentifier' &&
-            element.openingElement.name.property.name === 'Label'
-        ) {
-            // Find parent element to replace Checkbox.Label
-            const parentPath = path.parent;
+            attributes.forEach((attr) => {
+                if (attr.type === 'JSXAttribute') {
+                    // Track onCheckedChange for TODO comment
+                    if (attr.name.name === 'onCheckedChange') {
+                        hasOnCheckedChange = true;
+                        newAttributes.push(attr);
+                    }
+                    // Transform checked='indeterminate' to indeterminate={true}
+                    else if (attr.name.name === 'checked') {
+                        if (
+                            attr.value &&
+                            attr.value.type === 'StringLiteral' &&
+                            attr.value.value === 'indeterminate'
+                        ) {
+                            // Add indeterminate prop instead
+                            newAttributes.push(
+                                j.jsxAttribute(
+                                    j.jsxIdentifier('indeterminate'),
+                                    j.jsxExpressionContainer(j.booleanLiteral(true)),
+                                ),
+                            );
+                        } else {
+                            // Track if checked is an expression (could be 'indeterminate')
+                            if (
+                                attr.value &&
+                                attr.value.type === 'JSXExpressionContainer' &&
+                                attr.value.expression.type !== 'JSXEmptyExpression'
+                            ) {
+                                hasCheckedExpression = true;
+                            }
+                            newAttributes.push(attr);
+                        }
+                    } else {
+                        newAttributes.push(attr);
+                    }
+                } else {
+                    newAttributes.push(attr);
+                }
+            });
 
-            if (parentPath && parentPath.value) {
-                // Create TODO comment
-                const todoComment = j.jsxExpressionContainer(
-                    j.jsxEmptyExpression.from({
-                        comments: [
-                            j.commentLine(
-                                ' TODO: Checkbox.Label removed - use standard HTML label element with htmlFor attribute',
-                                true,
-                                false,
-                            ),
-                        ],
-                    }),
+            element.openingElement.attributes = newAttributes;
+
+            // Add TODO comment if onCheckedChange exists or checked is an expression
+            const comments: Array<ReturnType<typeof j.commentLine>> = [];
+            if (hasOnCheckedChange) {
+                comments.push(
+                    j.commentLine(
+                        ' TODO: onCheckedChange 시그니처가 변경되었습니다 - 이제 (checked: CheckedState) 대신 (checked: boolean, event: Event)를 받습니다',
+                        true,
+                        false,
+                    ),
+                );
+            }
+            if (hasCheckedExpression) {
+                comments.push(
+                    j.commentLine(
+                        " TODO: checked가 'indeterminate'일 수 있다면 로직을 분리하세요: indeterminate 상태에는 indeterminate prop을, boolean에는 checked prop을 사용하세요",
+                        true,
+                        false,
+                    ),
+                );
+            }
+            if (comments.length > 0) {
+                element.comments = [...(element.comments || []), ...comments];
+            }
+
+            // Handle Checkbox.Label wrapping if exists
+            if (shouldWrapWithFieldLabel && parentPath && parentPath.value) {
+                // Create Field.Label wrapping Checkbox.Root and label text
+                const fieldLabel = j.jsxElement(
+                    j.jsxOpeningElement(
+                        j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Label')),
+                        [],
+                    ),
+                    j.jsxClosingElement(
+                        j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Label')),
+                    ),
+
+                    [
+                        j.jsxText('\n  '),
+                        element,
+                        j.jsxText('\n  '),
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        ...(labelChildren as any),
+                        j.jsxText('\n'),
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ] as any,
                 );
 
-                // Get children of Checkbox.Label
-                const labelChildren = element.children || [];
-
-                // Replace Checkbox.Label element with TODO comment + children
-                if (parentPath.value.type === 'JSXElement') {
-                    const parentChildren = parentPath.value.children;
-                    if (parentChildren) {
-                        const labelIndex = parentChildren.indexOf(element);
-                        if (labelIndex !== -1) {
-                            // Replace Checkbox.Label with TODO comment and its children
-                            parentChildren.splice(labelIndex, 1, todoComment, ...labelChildren);
-                        }
-                    }
-                }
+                // Replace current path with Field.Label
+                j(path).replaceWith(fieldLabel);
             }
         }
     });
 
-    // 4. Transform Checkbox.* elements to use the alias (e.g., Checkbox.Indicator -> checkboxImportName.Indicator)
-    // Also handles old aliases (e.g., CoreCheckbox.Indicator -> checkboxImportName.Indicator)
+    // 4. Transform Checkbox.* elements to use the alias (if any)
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
-        // Check if this is Checkbox.* or OldCheckboxAlias.* (e.g., Checkbox.Indicator, CoreCheckbox.Indicator, etc.)
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === 'Checkbox'
+            element.openingElement.name.object.name === checkboxImportName
         ) {
-            // Replace with the new import name (checkboxImportName)
-            element.openingElement.name.object.name = checkboxImportName;
-
-            // Update closing tag if it exists
+            // Already using the correct import name, no change needed
+            // This pass ensures closing elements are also updated
             if (
                 element.closingElement &&
                 element.closingElement.name.type === 'JSXMemberExpression' &&
-                element.closingElement.name.object.type === 'JSXIdentifier'
+                element.closingElement.name.object.type === 'JSXIdentifier' &&
+                element.closingElement.name.object.name !== checkboxImportName
             ) {
                 element.closingElement.name.object.name = checkboxImportName;
             }

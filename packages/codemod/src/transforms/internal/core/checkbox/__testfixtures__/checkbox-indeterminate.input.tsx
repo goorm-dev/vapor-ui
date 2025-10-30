@@ -2,7 +2,7 @@
 import { Checkbox } from '@goorm-dev/vapor-core';
 
 export const Component = () => (
-    <Checkbox>
+    <Checkbox checked="indeterminate">
         <Checkbox.Indicator />
     </Checkbox>
 );
