@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Badge } from '@goorm-dev/vapor-core';
 
 export const Component = () => (
@@ -6,6 +7,5 @@ export const Component = () => (
         <Badge>Default</Badge>
         <Badge pill={true}>Pill</Badge>
         <Badge pill>Pill</Badge>
-        <Badge pill>Implicit True</Badge>
     </>
 );
