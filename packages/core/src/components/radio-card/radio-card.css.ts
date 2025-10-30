@@ -27,7 +27,10 @@ export const root = recipe({
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray['200'],
                 },
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none', cursor: 'not-allowed' },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none', cursor: 'not-allowed' },
+                '&[data-invalid]': {
+                    borderColor: vars.color.border.danger,
+                },
             },
         }),
     ],
@@ -39,11 +42,8 @@ export const root = recipe({
 
     variants: {
         invalid: {
-            true: layerStyle('components', {
-                borderColor: vars.color.border.danger,
-            }),
+            true: {},
         },
-
         size: {
             md: layerStyle('components', {
                 height: vars.size.dimension['400'],
