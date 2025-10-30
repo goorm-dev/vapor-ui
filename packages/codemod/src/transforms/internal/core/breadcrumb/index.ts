@@ -3,7 +3,6 @@ import type {
     FileInfo,
     JSXAttribute,
     JSXElement,
-    StringLiteral,
     Transform,
 } from 'jscodeshift';
 
@@ -37,6 +36,87 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     });
 
     const breadcrumbImportName = getFinalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE);
+
+    const transformBreadcrumbItem = (item: JSXElement): JSXElement => {
+        let hrefAttr: JSXAttribute | undefined;
+        let activeAttr: JSXAttribute | undefined;
+        const otherAttrs: JSXAttribute[] = [];
+
+        item.openingElement.attributes?.forEach((attr) => {
+            if (attr.type === 'JSXAttribute') {
+                if (attr.name.name === 'href') {
+                    hrefAttr = attr;
+                } else if (attr.name.name === 'active') {
+                    if (
+                        attr.value?.type === 'JSXExpressionContainer' &&
+                        attr.value.expression.type === 'BooleanLiteral' &&
+                        attr.value.expression.value === false
+                    ) {
+                        return;
+                    }
+                    activeAttr = attr;
+                } else {
+                    otherAttrs.push(attr);
+                }
+            }
+        });
+
+        if (!hrefAttr && !activeAttr) {
+            return item;
+        }
+
+        const linkAttrs: JSXAttribute[] = [];
+        if (hrefAttr) {
+            linkAttrs.push(
+                j.jsxAttribute(
+                    j.jsxIdentifier('href'),
+                    hrefAttr.value,
+                ),
+            );
+        }
+        if (activeAttr) {
+            linkAttrs.push(
+                j.jsxAttribute(
+                    j.jsxIdentifier('current'),
+                    activeAttr.value,
+                ),
+            );
+        }
+
+        const linkElement = j.jsxElement(
+            j.jsxOpeningElement(
+                j.jsxMemberExpression(
+                    j.jsxIdentifier(breadcrumbImportName),
+                    j.jsxIdentifier('Link'),
+                ),
+                linkAttrs,
+            ),
+            j.jsxClosingElement(
+                j.jsxMemberExpression(
+                    j.jsxIdentifier(breadcrumbImportName),
+                    j.jsxIdentifier('Link'),
+                ),
+            ),
+            item.children,
+        );
+
+        return j.jsxElement(
+            j.jsxOpeningElement(
+                j.jsxMemberExpression(
+                    j.jsxIdentifier(breadcrumbImportName),
+                    j.jsxIdentifier('Item'),
+                ),
+                otherAttrs,
+            ),
+            j.jsxClosingElement(
+                j.jsxMemberExpression(
+                    j.jsxIdentifier(breadcrumbImportName),
+                    j.jsxIdentifier('Item'),
+                ),
+            ),
+            [j.jsxText('\n      '), linkElement, j.jsxText('\n    ')],
+        );
+    };
 
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
@@ -90,6 +170,107 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             });
 
             if (hasMapExpression) {
+                const transformedChildren = (element.children || []).map((child) => {
+                    if (
+                        child.type === 'JSXExpressionContainer' &&
+                        child.expression.type === 'CallExpression' &&
+                        child.expression.callee.type === 'MemberExpression' &&
+                        child.expression.callee.property.type === 'Identifier' &&
+                        child.expression.callee.property.name === 'map'
+                    ) {
+                        const mapCallback = child.expression.arguments[0];
+                        if (
+                            mapCallback &&
+                            (mapCallback.type === 'ArrowFunctionExpression' ||
+                                mapCallback.type === 'FunctionExpression')
+                        ) {
+                            const callbackBody = mapCallback.body;
+                            const callbackParams = mapCallback.params;
+                            const indexParam = callbackParams[1];
+                            
+                            if (callbackBody.type === 'JSXElement') {
+                                if (
+                                    callbackBody.openingElement.name.type === 'JSXMemberExpression' &&
+                                    callbackBody.openingElement.name.object.type === 'JSXIdentifier' &&
+                                    callbackBody.openingElement.name.object.name === breadcrumbImportName &&
+                                    callbackBody.openingElement.name.property.name === 'Item'
+                                ) {
+                                    const itemCopy = j.jsxElement(
+                                        callbackBody.openingElement,
+                                        callbackBody.closingElement,
+                                        callbackBody.children,
+                                    );
+                                    const transformedItem = transformBreadcrumbItem(itemCopy);
+                                    
+                                    const separatorElement = j.jsxElement(
+                                        j.jsxOpeningElement(
+                                            j.jsxMemberExpression(
+                                                j.jsxIdentifier(breadcrumbImportName),
+                                                j.jsxIdentifier('Separator'),
+                                            ),
+                                            [],
+                                            true,
+                                        ),
+                                    );
+                                    
+                                    const indexIdentifier = indexParam && indexParam.type === 'Identifier' 
+                                        ? j.identifier(indexParam.name) 
+                                        : j.identifier('index');
+                                    
+                                    const fragment = j.jsxFragment(
+                                        j.jsxOpeningFragment(),
+                                        j.jsxClosingFragment(),
+                                        [
+                                            j.jsxText('\n                '),
+                                            transformedItem,
+                                            j.jsxText('\n                '),
+                                            j.jsxExpressionContainer(
+                                                j.logicalExpression(
+                                                    '&&',
+                                                    j.binaryExpression(
+                                                        '<',
+                                                        indexIdentifier,
+                                                        j.binaryExpression(
+                                                            '-',
+                                                            j.memberExpression(
+                                                                child.expression.callee.object,
+                                                                j.identifier('length'),
+                                                            ),
+                                                            j.numericLiteral(1),
+                                                        ),
+                                                    ),
+                                                    separatorElement,
+                                                ),
+                                            ),
+                                            j.jsxText('\n            '),
+                                        ],
+                                    );
+                                    
+                                    if (!indexParam) {
+                                        callbackParams.push(j.identifier('index'));
+                                    }
+                                    
+                                    mapCallback.body = fragment;
+                                }
+                            } else if (callbackBody.type === 'BlockStatement') {
+                                j(callbackBody).find(j.JSXElement).forEach((jsxPath) => {
+                                    const jsxElement = jsxPath.value;
+                                    if (
+                                        jsxElement.openingElement.name.type === 'JSXMemberExpression' &&
+                                        jsxElement.openingElement.name.object.type === 'JSXIdentifier' &&
+                                        jsxElement.openingElement.name.object.name === breadcrumbImportName &&
+                                        jsxElement.openingElement.name.property.name === 'Item'
+                                    ) {
+                                        const transformedItem = transformBreadcrumbItem(jsxElement);
+                                        jsxPath.replace(transformedItem);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    return child;
+                });
+
                 const listElement = j.jsxElement(
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(
@@ -100,13 +281,13 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     ),
                     j.jsxClosingElement(
                         j.jsxMemberExpression(
-                            j.jsxIdentifier('Breadcrumb'),
+                            j.jsxIdentifier(breadcrumbImportName),
                             j.jsxIdentifier('List'),
                         ),
                     ),
                     [
                         j.jsxText('\n            '),
-                        ...(element.children || []),
+                        ...transformedChildren,
                         j.jsxText('\n        '),
                     ],
                 );
@@ -117,66 +298,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             const newChildren: (JSXElement | ReturnType<typeof j.jsxText>)[] = [];
             itemElements.forEach((item, index) => {
                 newChildren.push(j.jsxText('\n    '));
-                let href: string | undefined;
-                let active = false;
-                const otherAttrs: JSXAttribute[] = [];
-
-                item.openingElement.attributes?.forEach((attr) => {
-                    if (attr.type === 'JSXAttribute') {
-                        if (attr.name.name === 'href') {
-                            href = (attr.value as StringLiteral).value;
-                        } else if (attr.name.name === 'active') {
-                            active = true;
-                        } else {
-                            otherAttrs.push(attr);
-                        }
-                    }
-                });
-
-                const linkElement = j.jsxElement(
-                    j.jsxOpeningElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier(breadcrumbImportName),
-                            j.jsxIdentifier('Link'),
-                        ),
-                        [
-                            ...(href
-                                ? [
-                                      j.jsxAttribute(
-                                          j.jsxIdentifier('href'),
-                                          typeof href === 'string' ? j.stringLiteral(href) : href,
-                                      ),
-                                  ]
-                                : []),
-                            ...(active ? [j.jsxAttribute(j.jsxIdentifier('current'))] : []),
-                        ],
-                    ),
-                    j.jsxClosingElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier(breadcrumbImportName),
-                            j.jsxIdentifier('Link'),
-                        ),
-                    ),
-                    item.children,
-                );
-
-                const wrappedItem = j.jsxElement(
-                    j.jsxOpeningElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier(breadcrumbImportName),
-                            j.jsxIdentifier('Item'),
-                        ),
-                        otherAttrs,
-                    ),
-                    j.jsxClosingElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier(breadcrumbImportName),
-                            j.jsxIdentifier('Item'),
-                        ),
-                    ),
-                    [j.jsxText('\n      '), linkElement, j.jsxText('\n    ')],
-                );
-
+                const wrappedItem = transformBreadcrumbItem(item);
                 newChildren.push(wrappedItem);
 
                 if (index < itemElements.length - 1) {
