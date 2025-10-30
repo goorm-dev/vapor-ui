@@ -44,7 +44,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         return fileInfo.source;
     }
 
-    // 1. Import migration: Alert -> Callout
+    // 1. Import migration
     transformImportDeclaration({
         root,
         j,

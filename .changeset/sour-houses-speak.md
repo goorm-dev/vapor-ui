@@ -2,4 +2,4 @@
 '@vapor-ui/codemod': major
 ---
 
-Add Popover, RadioGroup, Switch Transfrom
+Add Popover, RadioGroup, Switch Transform
