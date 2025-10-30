@@ -115,7 +115,7 @@ The codemod automatically handles the following changes:
     - Automatically converts `asChild` prop to `render` prop
     - Extracts the first child element as render prop
     - Preserves child element props in render prop
-    - Moves child element's inner content to Callout.Root's children
+    - Extracts the first child element and moves it to the `render` prop
 
 4. **Automatic Icon Detection and Wrapping** ✨
     - Automatically detects if the first child JSX element is an icon

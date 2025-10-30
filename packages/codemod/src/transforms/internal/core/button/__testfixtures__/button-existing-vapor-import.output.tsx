@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Badge } from '@goorm-dev/vapor-core';
 import { Button, Card } from '@vapor-ui/core';
 
