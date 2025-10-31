@@ -153,10 +153,6 @@ const TRANSFORMER_INQUIRER_CHOICES = [
         value: 'internal/core/icon-button',
     },
     {
-        name: 'internal/core/nav: Migrate Nav component to @vapor-ui/core',
-        value: 'internal/core/nav',
-    },
-    {
         name: 'internal/core/popover: Migrate Popover component to @vapor-ui/core',
         value: 'internal/core/popover',
     },

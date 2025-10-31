@@ -121,7 +121,7 @@ function handleSimplePackageMigration(
                 if (spec.type === 'ImportSpecifier' && spec.imported.name === oldComponentName) {
                     const localName = getLocalName(spec, oldComponentName);
                     const hasAlias = localName !== oldComponentName;
-                    
+
                     if (hasAlias) {
                         return j.importSpecifier(
                             j.identifier(newComponentName),
