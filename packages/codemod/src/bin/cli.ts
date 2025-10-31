@@ -173,7 +173,9 @@ const run = async () => {
             choices: TRANSFORMER_INQUIRER_CHOICES,
         });
     }
-    const files = globbySync(cli.input[1] || answers.files);
+    const files = globbySync(cli.input[1] || answers.files, {
+        ignore: ['**/node_modules/**', '**/*.d.ts'],
+    });
 
     if (!files.length) {
         console.log(picocolors.red(`No files found matching ${files.join(' ')}`));
@@ -181,7 +183,7 @@ const run = async () => {
     }
 
     return runTransform({
-        files: globbySync(cli.input[1] || answers.files),
+        files,
         flags: cli.flags,
         transformer: cli.input[0] || answers.transformer,
     });
