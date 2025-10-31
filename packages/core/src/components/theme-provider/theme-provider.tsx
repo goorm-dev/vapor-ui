@@ -187,9 +187,7 @@ const Theme = ({
 
             if (resolved === 'dark') {
                 d.setAttribute('data-vapor-theme', 'dark');
-                d.classList.add('dark');
             } else {
-                d.classList.remove('dark');
                 d.setAttribute('data-vapor-theme', 'light');
             }
 
