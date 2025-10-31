@@ -145,6 +145,7 @@ const DemoContent = ({
                 onValueChange={onTabChange}
                 className="w-full rounded-v-300"
                 variant="plain"
+                size="lg"
             >
                 <DemoHeader
                     selectedTab={selectedTab}
@@ -152,7 +153,7 @@ const DemoContent = ({
                     onDeviceChange={onDeviceChange}
                 />
 
-                <Card.Body className="p-0">
+                <Card.Body className="p-0 bg-v-canvas rounded-b-v-300">
                     <Tabs.Panel value={TAB_TYPES['PREVIEW']} className="rounded-t-none" keepMounted>
                         <DemoPreviewPanel
                             name={name}
