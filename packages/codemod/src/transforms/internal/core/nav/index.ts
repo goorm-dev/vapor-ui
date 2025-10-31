@@ -2,6 +2,7 @@ import type { API, FileInfo, JSXElement, Transform } from 'jscodeshift';
 
 import {
     getFinalImportName,
+    getLocalImportName,
     hasComponentInPackage,
     transformImportDeclaration,
 } from '~/utils/import-transform';
@@ -20,11 +21,12 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    // Track the old Nav local name from @goorm-dev/vapor-core
-
     if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
         return fileInfo.source;
     }
+
+    const oldNavLocalName =
+        getLocalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE) || OLD_COMPONENT_NAME;
 
     // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
@@ -50,7 +52,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Nav> or <OldNavAlias> to <NavigationMenu.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === OLD_COMPONENT_NAME
+            element.openingElement.name.name === oldNavLocalName
         ) {
             const attributes = element.openingElement.attributes || [];
 
@@ -122,7 +124,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === OLD_COMPONENT_NAME
+            element.openingElement.name.object.name === oldNavLocalName
         ) {
             // Get the property name
             const propertyName =

@@ -7,7 +7,11 @@ import type {
     Transform,
 } from 'jscodeshift';
 
-import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
+import {
+    getLocalImportName,
+    hasComponentInPackage,
+    transformImportDeclaration,
+} from '~/utils/import-transform';
 import { transformAsChildToRender } from '~/utils/jsx-transform';
 
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -22,6 +26,9 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
         return fileInfo.source;
     }
+
+    const oldIconButtonLocalName =
+        getLocalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE) || OLD_COMPONENT_NAME;
 
     // 1. Import migration: Alert -> Callout
     transformImportDeclaration({
@@ -38,7 +45,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'IconButton'
+            element.openingElement.name.name === oldIconButtonLocalName
         ) {
             transformIconButton(j, element);
         }
