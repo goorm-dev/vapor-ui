@@ -15,6 +15,7 @@ export default {
         disabled: { control: 'boolean' },
         readOnly: { control: 'boolean' },
         required: { control: 'boolean' },
+        invalid: { control: 'boolean' },
     },
 } as Meta<typeof Switch.Root>;
 
@@ -26,11 +27,17 @@ export const Default: Story = {
         return (
             <>
                 <Switch.Root checked={checked} onCheckedChange={setChecked} {...args} />
+                <br />
+                <br />
+                <br />
                 <Switch.Root checked={checked} onCheckedChange={setChecked} {...args}>
                     <Switch.Thumb>
                         <HeartIcon />
                     </Switch.Thumb>
                 </Switch.Root>
+                <br />
+                <br />
+                <br />
                 <Switch.Root {...args} />
             </>
         );

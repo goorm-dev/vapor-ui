@@ -15,15 +15,8 @@ export const description = style([
     typography({ style: 'body2' }),
     foregrounds({ color: 'hint-100' }),
     layerStyle('components', {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        gap: vars.size.space['050'],
         selectors: {
-            '&:is(:disabled, [data-disabled])': {
-                opacity: 0.32,
-                pointerEvents: 'none',
-            },
+            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
     }),
 ]);
@@ -32,15 +25,8 @@ export const error = style([
     typography({ style: 'body2' }),
     foregrounds({ color: 'danger-100' }),
     layerStyle('components', {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        gap: vars.size.space['050'],
         selectors: {
-            '&:is(:disabled, [data-disabled])': {
-                opacity: 0.32,
-                pointerEvents: 'none',
-            },
+            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
     }),
 ]);
@@ -49,15 +35,8 @@ export const success = style([
     typography({ style: 'body2' }),
     foregrounds({ color: 'success-100' }),
     layerStyle('components', {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        gap: vars.size.space['050'],
         selectors: {
-            '&:is(:disabled, [data-disabled])': {
-                opacity: 0.32,
-                pointerEvents: 'none',
-            },
+            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
     }),
 ]);
@@ -67,10 +46,7 @@ export const label = style([
     foregrounds({ color: 'normal-100' }),
     layerStyle('components', {
         selectors: {
-            '&:is(:disabled, [data-disabled])': {
-                opacity: 0.32,
-                pointerEvents: 'none',
-            },
+            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
     }),
 ]);

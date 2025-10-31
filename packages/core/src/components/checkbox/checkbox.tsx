@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import type { VComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './checkbox.css';
@@ -35,6 +36,7 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>(
         ]);
 
         const { size, invalid, indeterminate } = variantProps;
+        const dataAttrs = createDataAttributes({ invalid });
 
         const IndicatorElement = createSlot(children || <CheckboxIndicator />);
 
@@ -45,6 +47,7 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>(
                     aria-invalid={invalid}
                     indeterminate={indeterminate}
                     className={clsx(styles.root({ invalid, size }), className)}
+                    {...dataAttrs}
                     {...otherProps}
                 >
                     <IndicatorElement />
@@ -61,12 +64,14 @@ CheckboxRoot.displayName = 'Checkbox.Root';
 
 export const CheckboxIndicator = forwardRef<HTMLDivElement, CheckboxIndicator.Props>(
     ({ className, ...props }, ref) => {
-        const { size, indeterminate } = useCheckboxContext();
+        const { size, invalid, indeterminate } = useCheckboxContext();
+        const dataAttrs = createDataAttributes({ invalid });
 
         return (
             <BaseCheckbox.Indicator
                 ref={ref}
                 className={clsx(styles.indicator({ size }), className)}
+                {...dataAttrs}
                 {...props}
             >
                 {indeterminate ? <DashIcon /> : <CheckIcon />}

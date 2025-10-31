@@ -24,10 +24,12 @@ export const trigger = recipe({
             backgroundColor: vars.color.background.surface[100],
 
             selectors: {
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
 
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
+
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
             },
         }),
     ],
@@ -52,9 +54,8 @@ export const trigger = recipe({
                 paddingInline: vars.size.space['300'],
             }),
         },
-        invalid: {
-            true: layerStyle('components', { borderColor: vars.color.border.danger }),
-        },
+
+        invalid: { true: {}, false: {} },
     },
 });
 
