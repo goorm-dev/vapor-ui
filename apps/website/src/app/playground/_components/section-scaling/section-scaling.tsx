@@ -1,4 +1,4 @@
-import { RadioCard, RadioCardGroup } from '@vapor-ui/radio-card';
+import { HStack, RadioCard, RadioGroup } from '@vapor-ui/core';
 
 import { SCALE_VALUES, useCustomTheme } from '~/providers/theme';
 
@@ -24,18 +24,15 @@ const SectionScaling = () => {
         <PanelSectionWrapper.Root>
             <PanelSectionWrapper.Title>Scaling</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
-                <RadioCardGroup.Root
-                    defaultValue="1"
-                    orientation="horizontal"
-                    size="md"
-                    onValueChange={handleValueChange}
-                >
-                    {SCALE_OPTIONS.map(({ value, label }) => (
-                        <RadioCard.Root key={value} value={String(value)}>
-                            {label}
-                        </RadioCard.Root>
-                    ))}
-                </RadioCardGroup.Root>
+                <RadioGroup.Root defaultValue="1" size="md" onValueChange={handleValueChange}>
+                    <HStack gap="$100">
+                        {SCALE_OPTIONS.map(({ value, label }) => (
+                            <RadioCard key={value} value={String(value)}>
+                                {label}
+                            </RadioCard>
+                        ))}
+                    </HStack>
+                </RadioGroup.Root>
             </PanelSectionWrapper.Contents>
         </PanelSectionWrapper.Root>
     );

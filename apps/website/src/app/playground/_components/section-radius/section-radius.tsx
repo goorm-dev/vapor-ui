@@ -1,5 +1,5 @@
+import { HStack, RadioCard, RadioGroup } from '@vapor-ui/core';
 import type { RadiusKey } from '@vapor-ui/css-generator';
-import { RadioCard, RadioCardGroup } from '@vapor-ui/radio-card';
 
 import { useCustomTheme } from '~/providers/theme';
 
@@ -26,18 +26,15 @@ const SectionRadius = () => {
         <PanelSectionWrapper.Root>
             <PanelSectionWrapper.Title>Border Radius</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
-                <RadioCardGroup.Root
-                    defaultValue="md"
-                    orientation="horizontal"
-                    size="md"
-                    onValueChange={handleValueChange}
-                >
-                    {RADIUS_OPTIONS.map(({ value, label }) => (
-                        <RadioCard.Root key={value} value={value}>
-                            {label}
-                        </RadioCard.Root>
-                    ))}
-                </RadioCardGroup.Root>
+                <RadioGroup.Root defaultValue="md" size="md" onValueChange={handleValueChange}>
+                    <HStack gap="$100">
+                        {RADIUS_OPTIONS.map(({ value, label }) => (
+                            <RadioCard key={value} value={value}>
+                                {label}
+                            </RadioCard>
+                        ))}
+                    </HStack>
+                </RadioGroup.Root>
             </PanelSectionWrapper.Contents>
         </PanelSectionWrapper.Root>
     );

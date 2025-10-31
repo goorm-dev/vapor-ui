@@ -2,6 +2,7 @@ import type { StoryObj } from '@storybook/react-vite';
 
 import { RadioGroup } from '.';
 import { Radio } from '../radio';
+import { RadioCard } from '../radio-card';
 
 export default {
     title: 'RadioGroup',
@@ -26,13 +27,26 @@ type Story = StoryObj<typeof RadioGroup>;
 
 export const Default: Story = {
     render: (args) => (
-        <RadioGroup.Root {...args} name="asedf" defaultValue={'3'}>
+        <RadioGroup.Root {...args} name="radio-group" defaultValue="3">
             <RadioGroup.Label>Options</RadioGroup.Label>
             <Radio.Root value="1" />
             <Radio.Root value="2" />
             <Radio.Root value="3" />
             <Radio.Root value="4" />
             <Radio.Root value="5" />
+        </RadioGroup.Root>
+    ),
+};
+
+export const WithRadioCard: Story = {
+    render: (args) => (
+        <RadioGroup.Root {...args} name="radio-group" defaultValue="3">
+            <RadioGroup.Label>Options</RadioGroup.Label>
+            <RadioCard value="1">value 1</RadioCard>
+            <RadioCard value="2">value 2</RadioCard>
+            <RadioCard value="3">value 3</RadioCard>
+            <RadioCard value="4">value 4</RadioCard>
+            <RadioCard value="5">value 5</RadioCard>
         </RadioGroup.Root>
     ),
 };
