@@ -62,7 +62,8 @@ function processAssetFileName(assetInfo) {
 
 /**
  * CSS 번들링을 위한 플러그인
- * CSS import를 처리하고 최종 CSS 파일을 생성합니다.
+ * - foundation(styles/...) CSS는 styles.css로 번들링합니다.
+ * - 컴포넌트(components/...) CSS는 JS 파일에 import를 남겨둡니다 (트리 쉐이킹).
  * @return {import('rollup').Plugin}
  */
 const bundleCssEmits = () => ({
@@ -71,7 +72,7 @@ const bundleCssEmits = () => ({
         emittedCSSFiles.clear();
     },
     /**
-     * 청크를 렌더링할 때 CSS import를 제거합니다.
+     * 청크를 렌더링할 때 'foundation' CSS import만 제거합니다.
      * @param {string} code
      * @param {import('rollup').RenderedChunk} chunkInfo
      */
@@ -79,9 +80,17 @@ const bundleCssEmits = () => ({
         /** @type Array<[string, string]> */
         const allImports = [...code.matchAll(/import (?:.* from )?['"]([^;'"]*)['"];?/g)];
         const dirname = path.dirname(chunkInfo.fileName);
+
         const output = allImports.reduce((resultingCode, [importLine, moduleId]) => {
-            if (emittedCSSFiles.has(path.posix.join(dirname, moduleId))) {
-                return resultingCode.replace(importLine, '');
+            const resolvedModulePath = path.posix.join(dirname, moduleId);
+
+            if (emittedCSSFiles.has(resolvedModulePath)) {
+                // 'components/'로 시작하지 않는 CSS import만 제거합니다.
+                if (!resolvedModulePath.startsWith('components/')) {
+                    // foundation 스타일(styles/...)이면 JS에서 import를 제거합니다.
+                    return resultingCode.replace(importLine, '');
+                }
+                // 컴포넌트 스타일(components/...)이면 import를 그대로 둡니다.
             }
             return resultingCode;
         }, code);
@@ -92,29 +101,52 @@ const bundleCssEmits = () => ({
         };
     },
 
+    /**
+     * 'foundation' CSS 파일만 styles.css로 번들링합니다.
+     */
     generateBundle() {
-        const cssFiles = Array.from(emittedCSSFiles);
+        const allCssFiles = Array.from(emittedCSSFiles);
 
+        // 1. foundation 파일만 필터링합니다 (컴포넌트 CSS 제외)
+        const foundationalFiles = allCssFiles.filter((file) => !file.startsWith('components/'));
+
+        // 2. foundation 파일에서 tailwind-preset 분리
         const defaultFiles = { tailwindFile: null, filteredFiles: [] };
-        const { tailwindFile, filteredFiles } = cssFiles.reduce((acc, file) => {
+        const { tailwindFile, filteredFiles } = foundationalFiles.reduce((acc, file) => {
             if (file.includes('tailwind-preset')) acc.tailwindFile = file;
             else acc.filteredFiles.push(file);
 
             return acc;
         }, defaultFiles);
 
-        const sortedFiles = filteredFiles.sort((a) => (a.match(/styles\/layers/) ? -1 : 1));
+        // 3. foundation 파일의 @import 순서를 명시적으로 정렬합니다.
+        const FOUNDATIONAL_ORDER = [
+            'styles/layers', ///// 1 - @layer 우선순위 선언 (필수 최상단)
+            'styles/variables', // 2 - @property 등록 (값이 할당/사용되기 전에 선행되어야 함)
+            'styles/themes', ///// 3 - CSS 변수 값 할당 (:root, [data-theme] 등, 가독성 상 상단에 위치)
+            'styles/mixins', ///// 이외는 @layer로 우선순위가 제어되므로, 순서 무관
+            'styles/sprinkles',
+        ];
 
+        const getOrderIndex = (file) => {
+            const index = FOUNDATIONAL_ORDER.findIndex((prefix) => file.includes(prefix));
+            return index === -1 ? FOUNDATIONAL_ORDER.length : index;
+        };
+
+        const sortedFiles = filteredFiles.sort((a, b) => getOrderIndex(a) - getOrderIndex(b));
+
+        // 4. styles.css 생성 (foundation 파일만 포함)
         this.emitFile({
             type: 'asset',
-            name: 'src/styles.css',
+            name: 'src/styles.css', // 빌드 후 'dist/styles.css'가 됩니다.
             source: sortedFiles.map((name) => `@import "./${name}";`).join('\n') + '\n',
         });
 
+        // 5. tailwind.css 생성
         if (tailwindFile) {
             this.emitFile({
                 type: 'asset',
-                name: 'src/tailwind.css',
+                name: 'src/tailwind.css', // 빌드 후 'dist/tailwind.css'가 됩니다.
                 source: `@import "./${tailwindFile}";\n`,
             });
         }
@@ -131,6 +163,7 @@ function createOutput(dir, format, extension, options = {}) {
         preserveModules: true,
         strict: false,
         entryFileNames({ name }) {
+            // 'styles/tailwind-preset.css' -> 'styles/tailwind-preset.css.vanilla.js'
             return `${name.replace(/\.css$/, '.css.vanilla')}.${extension}`;
         },
         assetFileNames: processAssetFileName,
