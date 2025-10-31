@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
@@ -19,50 +20,49 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
-export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>(
-    ({ className, children, ...props }, ref) => {
-        const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
+export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
+    const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
-        const [variantProps, otherProps] = createSplitProps<RadioVariants>()(props, [
-            'invalid',
-            'size',
-        ]);
-        const { size: sizeProp, invalid: invalidProp } = variantProps;
+    const [variantProps, otherProps] = createSplitProps<RadioVariants>()(componentProps, [
+        'invalid',
+        'size',
+    ]);
+    const { size: sizeProp, invalid: invalidProp } = variantProps;
 
-        const size = sizeProp || contextSize;
-        const invalid = invalidProp || contextInvalid;
+    const size = sizeProp || contextSize;
+    const invalid = invalidProp || contextInvalid;
 
-        const IndicatorElement = createSlot(children || <RadioIndicator />);
+    const IndicatorElement = createSlot(children || <RadioIndicator />);
 
-        return (
-            <BaseRadio.Root
-                ref={ref}
-                aria-invalid={invalid}
-                className={clsx(styles.root({ size, invalid }), className)}
-                {...otherProps}
-            >
-                <IndicatorElement />
-            </BaseRadio.Root>
-        );
-    },
-);
+    return (
+        <BaseRadio.Root
+            ref={ref}
+            aria-invalid={invalid}
+            className={clsx(styles.root({ size, invalid }), className)}
+            {...otherProps}
+        >
+            <IndicatorElement />
+        </BaseRadio.Root>
+    );
+});
 RadioRoot.displayName = 'Radio.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Radio.Indicator
  * -----------------------------------------------------------------------------------------------*/
 
-export const RadioIndicator = forwardRef<HTMLDivElement, RadioIndicator.Props>(
-    ({ className, ...props }, ref) => {
-        return (
-            <BaseRadio.Indicator
-                ref={ref}
-                className={clsx(styles.indicator, className)}
-                {...props}
-            />
-        );
-    },
-);
+export const RadioIndicator = forwardRef<HTMLDivElement, RadioIndicator.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseRadio.Indicator
+            ref={ref}
+            className={clsx(styles.indicator, className)}
+            {...componentProps}
+        />
+    );
+});
 RadioIndicator.displayName = 'Radio.Indicator';
 
 /* -----------------------------------------------------------------------------------------------*/
