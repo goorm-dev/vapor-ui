@@ -34,7 +34,7 @@ export const root = recipe({
         }),
     ],
 
-    defaultVariants: { color: 'primary', size: 'md', variant: 'fill', stretch: false },
+    defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill', stretch: false },
     variants: {
         size: {
             sm: [
@@ -71,7 +71,7 @@ export const root = recipe({
             ],
         },
 
-        color: {
+        colorPalette: {
             primary: layerStyle('components', {
                 vars: {
                     [fg]: vars.color.button.foreground.primary,

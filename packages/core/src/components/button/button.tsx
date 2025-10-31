@@ -14,7 +14,7 @@ import * as styles from './button.css';
 export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [
-        'color',
+        'colorPalette',
         'size',
         'variant',
         'stretch',

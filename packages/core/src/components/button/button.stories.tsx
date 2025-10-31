@@ -36,18 +36,18 @@ export const TestBed: Story = {
     render: () => (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div style={{ display: 'flex' }}>
-                <Buttons color="primary" />
-                <Buttons color="primary" disabled />
-                <Buttons color="secondary" />
-                <Buttons color="secondary" disabled />
-                <Buttons color="success" />
-                <Buttons color="success" disabled />
-                <Buttons color="warning" />
-                <Buttons color="warning" disabled />
-                <Buttons color="danger" />
-                <Buttons color="danger" disabled />
-                <Buttons color="contrast" />
-                <Buttons color="contrast" disabled />
+                <Buttons colorPalette="primary" />
+                <Buttons colorPalette="primary" disabled />
+                <Buttons colorPalette="secondary" />
+                <Buttons colorPalette="secondary" disabled />
+                <Buttons colorPalette="success" />
+                <Buttons colorPalette="success" disabled />
+                <Buttons colorPalette="warning" />
+                <Buttons colorPalette="warning" disabled />
+                <Buttons colorPalette="danger" />
+                <Buttons colorPalette="danger" disabled />
+                <Buttons colorPalette="contrast" />
+                <Buttons colorPalette="contrast" disabled />
             </div>
 
             <div>
@@ -61,17 +61,17 @@ export const TestBed: Story = {
     ),
 };
 
-const Buttons = ({ color, disabled }: Button.Props) => {
+const Buttons = ({ colorPalette, disabled }: Button.Props) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Button color={color} disabled={disabled} variant="fill">
-                {upperFirst(`${color}`)}
+            <Button colorPalette={colorPalette} disabled={disabled} variant="fill">
+                {upperFirst(`${colorPalette}`)}
             </Button>
-            <Button color={color} disabled={disabled} variant="ghost">
-                {upperFirst(`${color}`)}
+            <Button colorPalette={colorPalette} disabled={disabled} variant="ghost">
+                {upperFirst(`${colorPalette}`)}
             </Button>
-            <Button color={color} disabled={disabled} variant="outline">
-                {upperFirst(`${color}`)}
+            <Button colorPalette={colorPalette} disabled={disabled} variant="outline">
+                {upperFirst(`${colorPalette}`)}
             </Button>
         </div>
     );

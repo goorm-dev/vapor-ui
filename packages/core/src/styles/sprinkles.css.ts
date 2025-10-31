@@ -26,7 +26,7 @@ const radiusTokens = vars.size.borderRadius;
 
 const { foreground, button, border, black, white, logo, ...colors } = vars.color;
 
-const colorTokens = {
+const bgColorTokens = {
     // Background colors
     'primary-100': colors.background.primary[100],
     'primary-200': colors.background.primary[200],
@@ -184,7 +184,7 @@ const colorTokens = {
     white,
 };
 
-const textColorTokens = {
+const colorTokens = {
     'primary-100': foreground.primary[100],
     'primary-200': foreground.primary[200],
     'secondary-100': foreground.secondary[100],
@@ -269,8 +269,8 @@ const sprinkleProperties = defineProperties({
         border: true,
         borderColor: borderColorTokens,
         borderRadius: radiusTokens,
-        backgroundColor: colorTokens,
-        color: textColorTokens,
+        backgroundColor: bgColorTokens,
+        color: colorTokens,
         opacity: true,
 
         // Behavior
@@ -288,6 +288,4 @@ const sprinkleProperties = defineProperties({
 });
 
 export const sprinkles = createRainbowSprinkles(sprinkleProperties);
-export type Sprinkles = Omit<Parameters<typeof sprinkles>[0], 'color'> & {
-    textColor?: `$${keyof typeof textColorTokens}`;
-};
+export type Sprinkles = Parameters<typeof sprinkles>[0];

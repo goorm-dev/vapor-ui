@@ -43,7 +43,7 @@ export const resolveStyles = <T extends object>(props: T) => {
         'borderColor',
         'borderRadius',
         'backgroundColor',
-        'textColor',
+        'color',
         'opacity',
 
         // Behavior
@@ -58,8 +58,7 @@ export const resolveStyles = <T extends object>(props: T) => {
         'marginY',
     ]);
 
-    const { textColor } = layoutProps;
-    const { className, style } = sprinkles({ color: textColor, ...layoutProps });
+    const { className, style } = sprinkles(layoutProps);
 
     return mergeProps({ className, style } as T, otherProps);
 };

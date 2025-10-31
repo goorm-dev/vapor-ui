@@ -32,18 +32,18 @@ export const TestBed: Story = {
     render: () => (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div style={{ display: 'flex' }}>
-                <IconButtons color="primary" />
-                <IconButtons color="primary" disabled />
-                <IconButtons color="secondary" />
-                <IconButtons color="secondary" disabled />
-                <IconButtons color="success" />
-                <IconButtons color="success" disabled />
-                <IconButtons color="warning" />
-                <IconButtons color="warning" disabled />
-                <IconButtons color="danger" />
-                <IconButtons color="danger" disabled />
-                <IconButtons color="contrast" />
-                <IconButtons color="contrast" disabled />
+                <IconButtons colorPalette="primary" />
+                <IconButtons colorPalette="primary" disabled />
+                <IconButtons colorPalette="secondary" />
+                <IconButtons colorPalette="secondary" disabled />
+                <IconButtons colorPalette="success" />
+                <IconButtons colorPalette="success" disabled />
+                <IconButtons colorPalette="warning" />
+                <IconButtons colorPalette="warning" disabled />
+                <IconButtons colorPalette="danger" />
+                <IconButtons colorPalette="danger" disabled />
+                <IconButtons colorPalette="contrast" />
+                <IconButtons colorPalette="contrast" disabled />
             </div>
 
             <div>

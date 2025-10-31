@@ -20,7 +20,7 @@ export const root = recipe({
 
     defaultVariants: { color: 'primary' },
     variants: {
-        color: {
+        colorPalette: {
             primary: layerStyle('components', {
                 border: `.0625rem solid ${vars.color.border.primary}`,
                 backgroundColor: vars.color.background.primary[100],
