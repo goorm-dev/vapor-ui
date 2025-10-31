@@ -57,6 +57,9 @@ export const foregrounds = recipe({
             'normal-200': layerStyle('components', {
                 color: vars.color.foreground.normal[200],
             }),
+            white: layerStyle('components', {
+                color: vars.color.white,
+            }),
         },
     },
 });
