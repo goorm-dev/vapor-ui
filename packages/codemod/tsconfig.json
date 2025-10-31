@@ -1,0 +1,22 @@
+{
+    "extends": "@repo/typescript-config/base",
+    "compilerOptions": {
+        "moduleDetection": "force",
+        "target": "esnext",
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "jsx": "react-jsx",
+        "paths": {
+            "~/*": ["./src/*"]
+        }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist", "**/__testfixtures__/**"]
+}
