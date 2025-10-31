@@ -190,14 +190,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Merge imports again after adding Field
     }
 
-    const printOptions = {
-        quote: 'auto' as const,
-        trailingComma: true,
-        tabWidth: 4,
-        reuseWhitespace: true,
-    };
-
-    return root.toSource(printOptions);
+    return root.toSource();
 };
 
 export default transform;

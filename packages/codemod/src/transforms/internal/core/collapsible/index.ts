@@ -98,14 +98,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    const printOptions = {
-        quote: 'auto' as const,
-        trailingComma: true,
-        tabWidth: 4,
-        reuseWhitespace: true,
-    };
-
-    return root.toSource(printOptions);
+    return root.toSource();
 };
 
 export default transform;
