@@ -15,7 +15,7 @@ const BASE_COLORS = {
     },
 } as const satisfies Record<'white' | 'black', ColorToken>;
 
-const DEFAULT_PRIMITIVE_COLORS = {
+const DEFAULT_KEY_COLORS = {
     red: '#F5535E',
     pink: '#F26394',
     grape: '#CC5DE8',
@@ -30,4 +30,4 @@ const DEFAULT_PRIMITIVE_COLORS = {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { BASE_COLORS, DEFAULT_PRIMITIVE_COLORS };
+export { BASE_COLORS, DEFAULT_KEY_COLORS };

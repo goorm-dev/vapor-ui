@@ -4,7 +4,7 @@ import {
     BASE_COLORS,
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
-    DEFAULT_PRIMITIVE_COLORS,
+    DEFAULT_KEY_COLORS,
 } from '../constants';
 import { generateThemeTokens } from '../libs';
 import type { ColorGeneratorConfig, ColorPaletteResult, ColorToken } from '../types';
@@ -42,7 +42,7 @@ const createBaseColorTokens = (formatter: (oklchString: string) => string) => {
  * // }
  */
 function generateSystemColorPalette(config: ColorGeneratorConfig = {}): ColorPaletteResult {
-    const colors = config.colors || DEFAULT_PRIMITIVE_COLORS;
+    const colors = config.colors || DEFAULT_KEY_COLORS;
     const contrastRatios = config.contrastRatios || DEFAULT_CONTRAST_RATIOS;
     const background = config.background || {
         color: '#FFFFFF',
