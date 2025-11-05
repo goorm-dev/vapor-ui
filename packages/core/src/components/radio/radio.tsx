@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import type { VComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
@@ -32,6 +33,8 @@ export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>(
         const size = sizeProp || contextSize;
         const invalid = invalidProp || contextInvalid;
 
+        const dataAttrs = createDataAttributes({ invalid });
+
         const IndicatorElement = createSlot(children || <RadioIndicator />);
 
         return (
@@ -39,6 +42,7 @@ export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>(
                 ref={ref}
                 aria-invalid={invalid}
                 className={clsx(styles.root({ size, invalid }), className)}
+                {...dataAttrs}
                 {...otherProps}
             >
                 <IndicatorElement />
@@ -54,10 +58,14 @@ RadioRoot.displayName = 'Radio.Root';
 
 export const RadioIndicator = forwardRef<HTMLDivElement, RadioIndicator.Props>(
     ({ className, ...props }, ref) => {
+        const { invalid } = useRadioGroupContext();
+        const dataAttrs = createDataAttributes({ invalid });
+
         return (
             <BaseRadio.Indicator
                 ref={ref}
                 className={clsx(styles.indicator, className)}
+                {...dataAttrs}
                 {...props}
             />
         );

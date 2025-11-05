@@ -8,7 +8,8 @@ export function createDataAttribute(key: string, value: SingleDataAttrValue): Si
         return {};
     }
 
-    const dataKey = `data-${key}`;
+    const lowerCaseKey = key.toLowerCase();
+    const dataKey = `data-${lowerCaseKey}`;
 
     if (typeof value === 'boolean') {
         return value ? { [dataKey]: '' } : {};

@@ -17,6 +17,7 @@ export default {
         invalid: { control: 'boolean' },
         disabled: { control: 'boolean' },
         readOnly: { control: 'boolean' },
+        required: { control: 'boolean' },
     },
 } satisfies Meta;
 

@@ -8,6 +8,7 @@ import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './text-input.css';
@@ -33,6 +34,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>(
         ]);
 
         const { invalid, size } = textInputRootProps;
+        const { disabled, readOnly, required } = otherProps;
+
         const { current: isControlled } = useRef(valueProp !== undefined);
 
         const [value, setValue] = useControlled({
@@ -52,6 +55,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>(
             maxLength: otherProps.maxLength,
         });
 
+        const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
+
         return (
             <BaseInput
                 ref={ref}
@@ -59,6 +64,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>(
                 aria-invalid={invalid}
                 onValueChange={handleChange}
                 className={clsx(styles.root({ invalid, size }), className)}
+                {...dataAttrs}
                 {...otherProps}
             />
         );
