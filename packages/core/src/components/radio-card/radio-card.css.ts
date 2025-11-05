@@ -3,13 +3,16 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: [
         interaction(),
+        typography({
+            style: 'subtitle1',
+        }),
         layerStyle('components', {
-            position: 'relative',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -26,7 +29,7 @@ export const root = recipe({
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray['200'],
                 },
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none', cursor: 'not-allowed' },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
                 '&[data-invalid]': {
                     borderColor: vars.color.border.danger,
                 },
@@ -47,18 +50,10 @@ export const root = recipe({
             md: layerStyle('components', {
                 height: vars.size.dimension['400'],
                 paddingInline: vars.size.space['150'],
-                fontSize: vars.typography.fontSize['075'],
-                fontWeight: vars.typography.fontWeight['500'],
-                lineHeight: vars.typography.lineHeight['075'],
-                letterSpacing: vars.typography.letterSpacing['100'],
             }),
             lg: layerStyle('components', {
                 height: vars.size.dimension['500'],
                 paddingInline: vars.size.space['200'],
-                fontSize: vars.typography.fontSize['075'],
-                fontWeight: vars.typography.fontWeight['500'],
-                lineHeight: vars.typography.lineHeight['075'],
-                letterSpacing: vars.typography.letterSpacing['100'],
             }),
         },
     },
