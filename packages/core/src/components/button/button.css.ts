@@ -46,7 +46,7 @@ export const root = recipe({
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['050'],
-                paddingInline: vars.size.space['050'],
+                paddingInline: vars.size.space['100'],
                 height: vars.size.dimension['300'],
 
                 lineHeight: vars.typography.lineHeight['075'],
