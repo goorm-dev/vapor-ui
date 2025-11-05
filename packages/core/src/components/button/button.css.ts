@@ -25,9 +25,8 @@ export const root = recipe({
 
             border: 'none',
             borderRadius: vars.size.borderRadius['300'],
-
-            whiteSpace: 'nowrap',
-
+            flexWrap: 'nowrap',
+            textWrap: 'nowrap',
             selectors: {
                 '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
             },

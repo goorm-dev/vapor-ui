@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -31,9 +32,13 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
         'size',
+        'invalid',
     ]);
 
-    const { size } = variantProps;
+    const { size, invalid } = variantProps;
+    const { required } = otherProps;
+
+    const dataAttrs = createDataAttributes({ invalid });
 
     const ThumbElement = useMemo(() => createSlot(<SwitchThumb />), []);
     const children = childrenProp || <ThumbElement />;
@@ -42,7 +47,10 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
         <SwitchProvider value={variantProps}>
             <BaseSwitch.Root
                 ref={ref}
+                aria-required={required || undefined}
+                aria-invalid={invalid || undefined}
                 className={clsx(styles.control({ size }), className)}
+                {...dataAttrs}
                 {...otherProps}
             >
                 {children}

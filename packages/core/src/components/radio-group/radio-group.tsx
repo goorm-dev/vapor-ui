@@ -9,6 +9,7 @@ import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -46,6 +47,7 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
     ]);
 
     const { size, orientation, invalid } = variantProps;
+    const dataAttrs = createDataAttributes({ invalid });
 
     return (
         <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
@@ -55,6 +57,7 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
                 aria-orientation={orientation}
                 aria-describedby={labelElementId}
                 className={clsx(styles.root({ size, orientation }), className)}
+                {...dataAttrs}
                 {...otherProps}
             />
         </RadioGroupProvider>
@@ -68,8 +71,7 @@ RadioGroupRoot.displayName = 'RadioGroup.Root';
 
 export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
-
-    const { setLabelElementId } = useRadioGroupContext();
+    const { setLabelElementId, invalid } = useRadioGroupContext();
 
     const id = useVaporId();
 
@@ -81,6 +83,7 @@ export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props
     return useRender({
         ref,
         render: render || <span />,
+        state: { invalid },
         props: { id, className: clsx(styles.label, className), ...componentProps },
     });
 });

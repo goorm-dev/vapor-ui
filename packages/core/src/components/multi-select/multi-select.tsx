@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -21,7 +22,8 @@ type MultiSelectSharedProps = MultiSelectVariants & {
     placeholder?: React.ReactNode;
 };
 
-type MultiSelectContext = MultiSelectSharedProps & Pick<BaseSelect.Root.Props<unknown>, 'items'>;
+type MultiSelectContext = MultiSelectSharedProps &
+    Pick<BaseSelect.Root.Props<unknown>, 'items' | 'required'>;
 
 const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectContext>({
     name: 'MultiSelectContext',
@@ -33,15 +35,17 @@ const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectCo
  * MultiSelect.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectRoot = <Value,>({ items, ...props }: MultiSelectRoot.Props<Value>) => {
+export const MultiSelectRoot = <Value,>(props: MultiSelectRoot.Props<Value>) => {
     const [sharedProps, otherProps] = createSplitProps<MultiSelectSharedProps>()(props, [
         'placeholder',
         'size',
         'invalid',
     ]);
 
+    const { items, required } = otherProps;
+
     return (
-        <MultiSelectProvider value={{ items, ...sharedProps }}>
+        <MultiSelectProvider value={{ items, required, ...sharedProps }}>
             <BaseSelect.Root {...otherProps} multiple />
         </MultiSelectProvider>
     );
@@ -61,14 +65,18 @@ export const MultiSelectTrigger = forwardRef<HTMLButtonElement, MultiSelectTrigg
             ...componentProps
         } = resolveStyles(props);
 
-        const { size, invalid } = useMultiSelectContext();
+        const { size, required, invalid } = useMultiSelectContext();
+        const dataAttrs = createDataAttributes({ required, invalid });
 
         return (
             <BaseSelect.Trigger
                 ref={ref}
                 render={render}
                 nativeButton={nativeButton}
+                aria-invalid={invalid || undefined}
+                aria-required={required || undefined}
                 className={clsx(styles.trigger({ size, invalid }), className)}
+                {...dataAttrs}
                 {...componentProps}
             />
         );

@@ -20,14 +20,14 @@ export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) =
         'stretch',
     ]);
 
-    const dataAttrs = createDataAttributes({ disabled: otherProps.disabled });
+    const { disabled } = otherProps;
+    const dataAttrs = createDataAttributes({ disabled });
 
     return useRender({
         ref,
         render: render || <button />,
         props: {
             className: clsx(styles.root(variantsProps), className),
-
             ...dataAttrs,
             ...otherProps,
         },

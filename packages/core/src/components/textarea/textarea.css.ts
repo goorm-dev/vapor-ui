@@ -23,7 +23,9 @@ export const textarea = recipe({
             minHeight: textareaMinHeightVar,
 
             selectors: {
-                '&:read-only': { backgroundColor: vars.color.gray['050'] },
+                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
             },
         }),
@@ -32,9 +34,7 @@ export const textarea = recipe({
     defaultVariants: { invalid: false, size: 'md', autoResize: false },
 
     variants: {
-        invalid: {
-            true: { borderColor: vars.color.border.danger },
-        },
+        invalid: { true: {}, false: {} },
         autoResize: {
             true: {
                 resize: 'none',
