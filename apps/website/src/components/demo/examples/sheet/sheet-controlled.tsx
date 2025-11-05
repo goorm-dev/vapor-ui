@@ -11,10 +11,10 @@ export default function SheetControlled() {
     return (
         <div className="space-y-4">
             <div className="flex gap-2">
-                <Button onClick={() => setIsOpen(true)} colorPalette="primary">
+                <Button onClick={() => setIsOpen(true)} color="primary">
                     Sheet 열기
                 </Button>
-                <Button onClick={() => setIsOpen(false)} colorPalette="danger" variant="outline">
+                <Button onClick={() => setIsOpen(false)} color="danger" variant="outline">
                     Sheet 닫기
                 </Button>
             </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import type { RefObject } from 'react';
+import type { ComponentPropsWithoutRef, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
 import { Menu as BaseMenu } from '@base-ui-components/react';
@@ -9,12 +9,15 @@ import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { composeRefs } from '~/utils/compose-refs';
-import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import { createSplitProps } from '~/utils/create-split-props';
 
 import * as styles from './menu.css';
+import type { MenuItemVariants } from './menu.css';
 
-type MenuContext = Pick<MenuRoot.Props, 'disabled'>;
+type MenuVariants = MenuItemVariants;
+type MenuSharedProps = MenuVariants;
+
+type MenuContext = MenuSharedProps;
 
 const [MenuProvider, useMenuContext] = createContext<MenuContext>({
     name: 'Menu',
@@ -27,11 +30,13 @@ const [MenuProvider, useMenuContext] = createContext<MenuContext>({
  * -----------------------------------------------------------------------------------------------*/
 
 export const MenuRoot = (props: MenuRoot.Props) => {
-    const { disabled } = props;
+    const [sharedProps, otherProps] = createSplitProps<MenuSharedProps>()(props, ['disabled']);
+
+    const { disabled } = sharedProps;
 
     return (
-        <MenuProvider value={{ disabled }}>
-            <BaseMenu.Root {...props} />
+        <MenuProvider value={sharedProps}>
+            <BaseMenu.Root disabled={disabled} {...otherProps} />
         </MenuProvider>
     );
 };
@@ -41,14 +46,19 @@ MenuRoot.displayName = 'Menu.Root';
  * Menu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTrigger.Props>((props, ref) => {
-    const { disabled: disabledProp, ...componentProps } = resolveStyles(props);
-    const { disabled: contextDisabled } = useMenuContext();
+export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTrigger.Props>(
+    ({ disabled: disabledProp, className, children, ...props }, ref) => {
+        const { disabled: contextDisabled } = useMenuContext();
 
-    const disabled = disabledProp || contextDisabled;
+        const disabled = disabledProp || contextDisabled;
 
-    return <BaseMenu.Trigger ref={ref} disabled={disabled} {...componentProps} />;
-});
+        return (
+            <BaseMenu.Trigger ref={ref} disabled={disabled} {...props}>
+                {children}
+            </BaseMenu.Trigger>
+        );
+    },
+);
 MenuTrigger.displayName = 'Menu.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
@@ -61,32 +71,29 @@ export const MenuPortal = BaseMenu.Portal;
  * Menu.Positioner
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuPositioner = forwardRef<HTMLDivElement, MenuPositioner.Props>((props, ref) => {
-    // FIXME: Using resolveStyles causes all positioning-related style properties to reset, so it's temporarily disabled.
-    const { side = 'bottom', align = 'start', sideOffset = 8, ...componentProps } = props;
-
-    return (
-        <BaseMenu.Positioner
-            ref={ref}
-            side={side}
-            align={align}
-            sideOffset={sideOffset}
-            {...componentProps}
-        />
-    );
-});
+export const MenuPositioner = forwardRef<HTMLDivElement, MenuPositioner.Props>(
+    ({ side = 'bottom', align = 'start', sideOffset = 8, ...props }, ref) => {
+        return (
+            <BaseMenu.Positioner
+                side={side}
+                align={align}
+                sideOffset={sideOffset}
+                ref={ref}
+                {...props}
+            />
+        );
+    },
+);
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseMenu.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
-    );
-});
+export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
+    ({ className, ...props }: MenuPopup.Props, ref) => {
+        return <BaseMenu.Popup ref={ref} className={clsx(styles.popup, className)} {...props} />;
+    },
+);
 MenuPopup.displayName = 'Menu.Popup';
 
 /* -------------------------------------------------------------------------------------------------
@@ -94,11 +101,11 @@ MenuPopup.displayName = 'Menu.Popup';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MenuContent = forwardRef<HTMLDivElement, MenuContent.Props>(
-    ({ portalProps, positionerProps, ...props }, ref) => {
+    ({ portalProps, positionerProps, className, ...props }: MenuContent.Props, ref) => {
         return (
             <MenuPortal {...portalProps}>
                 <MenuPositioner {...positionerProps}>
-                    <MenuPopup ref={ref} {...props} />
+                    <MenuPopup ref={ref} className={clsx(styles.popup, className)} {...props} />
                 </MenuPositioner>
             </MenuPortal>
         );
@@ -110,38 +117,38 @@ MenuContent.displayName = 'Menu.Content';
  * Menu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
-    const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
-    const { disabled: contextDisabled } = useMenuContext();
+export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>(
+    ({ disabled: disabledProp, className, ...props }, ref) => {
+        const { disabled: contextDisabled } = useMenuContext();
+        const disabled = disabledProp || contextDisabled;
 
-    const disabled = disabledProp || contextDisabled;
-
-    return (
-        <BaseMenu.Item
-            ref={ref}
-            disabled={disabled}
-            className={clsx(styles.item, className)}
-            {...componentProps}
-        />
-    );
-});
+        return (
+            <BaseMenu.Item
+                ref={ref}
+                disabled={disabled}
+                className={clsx(styles.item({ disabled }), className)}
+                {...props}
+            />
+        );
+    },
+);
 MenuItem.displayName = 'Menu.Item';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuSeparator = forwardRef<HTMLDivElement, MenuSeparator.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseMenu.Separator
-            ref={ref}
-            className={clsx(styles.separator, className)}
-            {...componentProps}
-        />
-    );
-});
+export const MenuSeparator = forwardRef<HTMLDivElement, MenuSeparator.Props>(
+    ({ className, ...props }, ref) => {
+        return (
+            <BaseMenu.Separator
+                ref={ref}
+                className={clsx(styles.separator, className)}
+                {...props}
+            />
+        );
+    },
+);
 MenuSeparator.displayName = 'Menu.Separator';
 
 /* -------------------------------------------------------------------------------------------------
@@ -149,9 +156,7 @@ MenuSeparator.displayName = 'Menu.Separator';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MenuGroup = forwardRef<HTMLDivElement, MenuGroup.Props>((props, ref) => {
-    const componentProps = resolveStyles(props);
-
-    return <BaseMenu.Group ref={ref} {...componentProps} />;
+    return <BaseMenu.Group ref={ref} {...props} />;
 });
 MenuGroup.displayName = 'Menu.Group';
 
@@ -159,17 +164,17 @@ MenuGroup.displayName = 'Menu.Group';
  * Menu.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuGroupLabel = forwardRef<HTMLDivElement, MenuGroupLabel.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseMenu.GroupLabel
-            ref={ref}
-            className={clsx(styles.groupLabel, className)}
-            {...componentProps}
-        />
-    );
-});
+export const MenuGroupLabel = forwardRef<HTMLDivElement, MenuGroupLabel.Props>(
+    ({ className, ...props }, ref) => {
+        return (
+            <BaseMenu.GroupLabel
+                ref={ref}
+                className={clsx(styles.groupLabel, className)}
+                {...props}
+            />
+        );
+    },
+);
 MenuGroupLabel.displayName = 'Menu.GroupLabel';
 
 /* -------------------------------------------------------------------------------------------------
@@ -188,10 +193,10 @@ export const MenuSubmenuRoot = ({
     disabled: disabledProp,
     ...props
 }: MenuSubmenuRoot.Props) => {
+    const triggerRef = useRef<HTMLElement>(null);
+
     const { disabled: disabledRoot } = useMenuContext();
     const disabled = disabledProp || disabledRoot;
-
-    const triggerRef = useRef<HTMLElement>(null);
 
     return (
         <SubmenuProvider value={{ triggerRef, disabled }}>
@@ -210,16 +215,15 @@ MenuSubmenuRoot.displayName = 'Menu.SubmenuRoot';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MenuSubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItem.Props>(
-    (props, ref) => {
-        const { className, children, ...componentProps } = resolveStyles(props);
-        const { triggerRef } = useSubmenuContext();
+    ({ className, children, ...props }, ref) => {
+        const { triggerRef, disabled } = useSubmenuContext();
         const composedRef = composeRefs(triggerRef, ref);
 
         return (
             <BaseMenu.SubmenuTrigger
                 ref={composedRef}
-                className={clsx(styles.subTrigger, className)}
-                {...componentProps}
+                className={clsx(styles.subTrigger({ disabled }), className)}
+                {...props}
             >
                 {children}
 
@@ -234,19 +238,20 @@ MenuSubmenuTriggerItem.displayName = 'Menu.SubmenuTriggerItem';
  * Menu.SubmenuContent
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-    const { triggerRef } = useSubmenuContext();
+export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
+    ({ className, ...props }, ref) => {
+        const { triggerRef } = useSubmenuContext();
 
-    return (
-        <BaseMenu.Popup
-            ref={ref}
-            finalFocus={triggerRef}
-            className={clsx(styles.subPopup, className)}
-            {...componentProps}
-        />
-    );
-});
+        return (
+            <BaseMenu.Popup
+                ref={ref}
+                finalFocus={triggerRef}
+                className={clsx(styles.subPopup, className)}
+                {...props}
+            />
+        );
+    },
+);
 MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
 
 /* -------------------------------------------------------------------------------------------------
@@ -254,11 +259,18 @@ MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MenuSubmenuContent = forwardRef<HTMLDivElement, MenuSubmenuContent.Props>(
-    ({ portalProps, positionerProps, ...props }, ref) => {
+    ({ portalProps, positionerProps, className, ...props }, ref) => {
+        const { triggerRef } = useSubmenuContext();
+
         return (
             <MenuPortal {...portalProps}>
-                <MenuPositioner side="right" sideOffset={0} {...positionerProps}>
-                    <MenuSubmenuPopup ref={ref} {...props} />
+                <MenuPositioner side="right" align="start" sideOffset={0} {...positionerProps}>
+                    <MenuSubmenuPopup
+                        ref={ref}
+                        finalFocus={triggerRef}
+                        className={clsx(styles.subPopup, className)}
+                        {...props}
+                    />
                 </MenuPositioner>
             </MenuPortal>
         );
@@ -270,26 +282,27 @@ MenuSubmenuContent.displayName = 'Menu.SubmenuContent';
  * Menu.Checkbox
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuCheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>((props, ref) => {
-    const { disabled: disabledProp, className, children, ...componentProps } = resolveStyles(props);
-    const { disabled: contextDisabled } = useMenuContext();
-    const disabled = disabledProp || contextDisabled;
+export const MenuCheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>(
+    ({ disabled: disabledProp, className, children, ...props }, ref) => {
+        const { disabled: contextDisabled } = useMenuContext();
+        const disabled = disabledProp || contextDisabled;
 
-    return (
-        <BaseMenu.CheckboxItem
-            ref={ref}
-            disabled={disabled}
-            className={clsx(styles.item, className)}
-            {...componentProps}
-        >
-            {children}
+        return (
+            <BaseMenu.CheckboxItem
+                ref={ref}
+                disabled={disabled}
+                className={clsx(styles.item({ disabled }), className)}
+                {...props}
+            >
+                {children}
 
-            <BaseMenu.CheckboxItemIndicator className={styles.indicator}>
-                <ConfirmOutlineIcon size="100%" />
-            </BaseMenu.CheckboxItemIndicator>
-        </BaseMenu.CheckboxItem>
-    );
-});
+                <BaseMenu.CheckboxItemIndicator className={styles.indicator}>
+                    <ConfirmOutlineIcon size="100%" />
+                </BaseMenu.CheckboxItemIndicator>
+            </BaseMenu.CheckboxItem>
+        );
+    },
+);
 MenuCheckboxItem.displayName = 'Menu.CheckboxItem';
 
 /* -------------------------------------------------------------------------------------------------
@@ -297,9 +310,7 @@ MenuCheckboxItem.displayName = 'Menu.CheckboxItem';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MenuRadioGroup = forwardRef<HTMLDivElement, MenuRadioGroup.Props>((props, ref) => {
-    const componentProps = resolveStyles(props);
-
-    return <BaseMenu.RadioGroup ref={ref} {...componentProps} />;
+    return <BaseMenu.RadioGroup ref={ref} {...props} />;
 });
 MenuRadioGroup.displayName = 'Menu.RadioGroup';
 
@@ -307,57 +318,58 @@ MenuRadioGroup.displayName = 'Menu.RadioGroup';
  * Menu.RadioItem
  * -----------------------------------------------------------------------------------------------*/
 
-export const MenuRadioItem = forwardRef<HTMLDivElement, MenuRadioItem.Props>((props, ref) => {
-    const { disabled: disabledProp, className, children, ...componentProps } = resolveStyles(props);
-    const { disabled: contextDisabled } = useMenuContext();
-    const disabled = disabledProp || contextDisabled;
+export const MenuRadioItem = forwardRef<HTMLDivElement, MenuRadioItem.Props>(
+    ({ disabled: disabledProp, className, children, ...props }, ref) => {
+        const { disabled: contextDisabled } = useMenuContext();
+        const disabled = disabledProp || contextDisabled;
 
-    return (
-        <BaseMenu.RadioItem
-            ref={ref}
-            disabled={disabled}
-            className={clsx(styles.item, className)}
-            {...componentProps}
-        >
-            {children}
+        return (
+            <BaseMenu.RadioItem
+                ref={ref}
+                disabled={disabled}
+                className={clsx(styles.item({ disabled }), className)}
+                {...props}
+            >
+                {children}
 
-            <BaseMenu.RadioItemIndicator className={styles.indicator}>
-                <ConfirmOutlineIcon size="100%" />
-            </BaseMenu.RadioItemIndicator>
-        </BaseMenu.RadioItem>
-    );
-});
+                <BaseMenu.RadioItemIndicator className={styles.indicator}>
+                    <ConfirmOutlineIcon size="100%" />
+                </BaseMenu.RadioItemIndicator>
+            </BaseMenu.RadioItem>
+        );
+    },
+);
 MenuRadioItem.displayName = 'Menu.RadioItem';
 
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace MenuRoot {
-    type RootPrimitiveProps = VComponentProps<typeof BaseMenu.Root>;
-    export interface Props extends RootPrimitiveProps {}
+    type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Root>;
+    export interface Props extends RootPrimitiveProps, MenuSharedProps {}
 }
 
 export namespace MenuTrigger {
-    type TriggerPrimitiveProps = VComponentProps<typeof BaseMenu.Trigger>;
+    type TriggerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Trigger>;
     export interface Props extends TriggerPrimitiveProps {}
 }
 
 export namespace MenuPortal {
-    type PortalPrimitiveProps = VComponentProps<typeof BaseMenu.Portal>;
+    type PortalPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Portal>;
     export interface Props extends PortalPrimitiveProps {}
 }
 
 export namespace MenuPositioner {
-    type PositionerPrimitiveProps = VComponentProps<typeof BaseMenu.Positioner>;
+    type PositionerPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Positioner>;
     export interface Props extends PositionerPrimitiveProps {}
 }
 
 export namespace MenuPopup {
-    type PopupPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
+    type PopupPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
     export interface Props extends PopupPrimitiveProps {}
 }
 
 export namespace MenuContent {
-    type ContentPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
+    type ContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
     export interface Props extends ContentPrimitiveProps {
         portalProps?: MenuPortal.Props;
         positionerProps?: MenuPositioner.Props;
@@ -365,44 +377,46 @@ export namespace MenuContent {
 }
 
 export namespace MenuItem {
-    type ItemPrimitiveProps = VComponentProps<typeof BaseMenu.Item>;
+    type ItemPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Item>;
     export interface Props extends ItemPrimitiveProps {}
 }
 
 export namespace MenuSeparator {
-    type SeparatorPrimitiveProps = VComponentProps<typeof BaseMenu.Separator>;
+    type SeparatorPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Separator>;
     export interface Props extends SeparatorPrimitiveProps {}
 }
 
 export namespace MenuGroup {
-    type GroupPrimitiveProps = VComponentProps<typeof BaseMenu.Group>;
+    type GroupPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Group>;
     export interface Props extends GroupPrimitiveProps {}
 }
 
 export namespace MenuGroupLabel {
-    type GroupLabelPrimitiveProps = VComponentProps<typeof BaseMenu.GroupLabel>;
+    type GroupLabelPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.GroupLabel>;
     export interface Props extends GroupLabelPrimitiveProps {}
 }
 
 export namespace MenuSubmenuRoot {
-    type SubmenuRootPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuRoot>;
+    type SubmenuRootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.SubmenuRoot>;
     export interface Props extends SubmenuRootPrimitiveProps {
         closeParentOnEsc?: boolean;
     }
 }
 
 export namespace MenuSubmenuTriggerItem {
-    type SubmenuTriggerItemPrimitiveProps = VComponentProps<typeof BaseMenu.SubmenuTrigger>;
+    type SubmenuTriggerItemPrimitiveProps = ComponentPropsWithoutRef<
+        typeof BaseMenu.SubmenuTrigger
+    >;
     export interface Props extends SubmenuTriggerItemPrimitiveProps {}
 }
 
 export namespace MenuSubmenuPopup {
-    type SubmenuPopupPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
+    type SubmenuPopupPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
     export interface Props extends SubmenuPopupPrimitiveProps {}
 }
 
 export namespace MenuSubmenuContent {
-    type SubmenuContentPrimitiveProps = VComponentProps<typeof BaseMenu.Popup>;
+    type SubmenuContentPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.Popup>;
     export interface Props extends SubmenuContentPrimitiveProps {
         portalProps?: MenuPortal.Props;
         positionerProps?: MenuPositioner.Props;
@@ -410,17 +424,17 @@ export namespace MenuSubmenuContent {
 }
 
 export namespace MenuCheckboxItem {
-    type CheckboxPrimitiveProps = VComponentProps<typeof BaseMenu.CheckboxItem>;
+    type CheckboxPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.CheckboxItem>;
     export interface Props extends CheckboxPrimitiveProps {}
 }
 
 export namespace MenuRadioGroup {
-    type RadioGroupPrimitiveProps = VComponentProps<typeof BaseMenu.RadioGroup>;
+    type RadioGroupPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.RadioGroup>;
     export interface Props extends RadioGroupPrimitiveProps {}
 }
 
 export namespace MenuRadioItem {
-    type RadioItemPrimitiveProps = VComponentProps<typeof BaseMenu.RadioItem>;
+    type RadioItemPrimitiveProps = ComponentPropsWithoutRef<typeof BaseMenu.RadioItem>;
     export interface Props extends RadioItemPrimitiveProps {
         closeOnClick?: boolean;
     }

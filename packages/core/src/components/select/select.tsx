@@ -11,7 +11,6 @@ import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
-import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './select.css';
@@ -55,64 +54,59 @@ SelectRoot.displayName = 'Select.Root';
  * Select.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTrigger.Props>((props, ref) => {
-    const {
-        render = <button />,
-        nativeButton = true,
-        className,
-        ...componentProps
-    } = resolveStyles(props);
+export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTrigger.Props>(
+    ({ render = <button />, nativeButton = true, className, ...props }, ref) => {
+        const { size, required, invalid } = useSelectContext();
+        const dataAttrs = createDataAttributes({ required, invalid });
 
-    // TODO required 확인
-    const { size, invalid, required } = useSelectContext();
-    const dataAttrs = createDataAttributes({ required, invalid });
-
-    return (
-        <BaseSelect.Trigger
-            ref={ref}
-            render={render}
-            nativeButton={nativeButton}
-            aria-required={required || undefined}
-            aria-invalid={invalid || undefined}
-            className={clsx(styles.trigger({ size, invalid }), className)}
-            {...dataAttrs}
-            {...componentProps}
-        />
-    );
-});
+        return (
+            <BaseSelect.Trigger
+                ref={ref}
+                render={render}
+                nativeButton={nativeButton}
+                aria-required={required || undefined}
+                aria-invalid={invalid || undefined}
+                className={clsx(styles.trigger({ size, invalid }), className)}
+                {...dataAttrs}
+                {...props}
+            />
+        );
+    },
+);
 SelectTrigger.displayName = 'Select.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Value
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectValue = forwardRef<HTMLSpanElement, SelectValue.Props>((props, ref) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
-    const { items, size, placeholder } = useSelectContext();
+export const SelectValue = forwardRef<HTMLSpanElement, SelectValue.Props>(
+    ({ className, children: childrenProp, ...props }, ref) => {
+        const { items, size, placeholder } = useSelectContext();
 
-    const renderValue = (value: string) => {
-        if (!items) return value;
+        const renderValue = (value: string) => {
+            if (!items) return value;
 
-        if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
-        return items[value];
-    };
+            if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
+            return items[value];
+        };
 
-    const children = (value: string) =>
-        typeof childrenProp === 'function'
-            ? childrenProp(value)
-            : (childrenProp ??
-              renderValue(value) ?? <SelectPlaceholder>{placeholder}</SelectPlaceholder>);
+        const children = (value: string) =>
+            typeof childrenProp === 'function'
+                ? childrenProp(value)
+                : (childrenProp ??
+                  renderValue(value) ?? <SelectPlaceholder>{placeholder}</SelectPlaceholder>);
 
-    return (
-        <BaseSelect.Value
-            ref={ref}
-            className={clsx(styles.value({ size }), className)}
-            {...componentProps}
-        >
-            {children}
-        </BaseSelect.Value>
-    );
-});
+        return (
+            <BaseSelect.Value
+                ref={ref}
+                className={clsx(styles.value({ size }), className)}
+                {...props}
+            >
+                {children}
+            </BaseSelect.Value>
+        );
+    },
+);
 SelectValue.displayName = 'Select.Value';
 
 /* -------------------------------------------------------------------------------------------------
@@ -120,14 +114,12 @@ SelectValue.displayName = 'Select.Value';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SelectPlaceholder = forwardRef<HTMLSpanElement, SelectPlaceholder.Props>(
-    (props, ref) => {
-        const { render, className, ...componentProps } = resolveStyles(props);
-
+    ({ render, className, ...props }, ref) => {
         return (
             <BaseSelect.Value
                 ref={ref}
                 className={clsx(styles.placeholder, className)}
-                {...componentProps}
+                {...props}
             />
         );
     },
@@ -139,9 +131,7 @@ SelectPlaceholder.displayName = 'Select.Placeholder';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SelectTriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIcon.Props>(
-    (props, ref) => {
-        const { className, children, ...componentProps } = resolveStyles(props);
-
+    ({ className, children, ...props }, ref) => {
         const { size } = useSelectContext();
 
         const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
@@ -150,7 +140,7 @@ export const SelectTriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIcon.Pr
             <BaseSelect.Icon
                 ref={ref}
                 className={clsx(styles.triggerIcon({ size }), className)}
-                {...componentProps}
+                {...props}
             >
                 <IconElement />
             </BaseSelect.Icon>
@@ -179,7 +169,7 @@ export const SelectPositioner = forwardRef<HTMLDivElement, SelectPositioner.Prop
         alignItemWithTrigger = false,
         className,
         ...componentProps
-    } = resolveStyles(props);
+    } = props;
 
     return (
         <BaseSelect.Positioner
@@ -199,13 +189,11 @@ SelectPositioner.displayName = 'Select.Positioner';
  * Select.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
-    );
-});
+export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
+    ({ className, ...props }, ref) => {
+        return <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...props} />;
+    },
+);
 SelectPopup.displayName = 'Select.Popup';
 
 /* -------------------------------------------------------------------------------------------------
@@ -229,13 +217,11 @@ SelectContent.displayName = 'Select.Content';
  * Select.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectItem = forwardRef<HTMLDivElement, SelectItem.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...componentProps} />
-    );
-});
+export const SelectItem = forwardRef<HTMLDivElement, SelectItem.Props>(
+    ({ className, ...props }, ref) => {
+        return <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...props} />;
+    },
+);
 SelectItem.displayName = 'Select.Item';
 
 /* -------------------------------------------------------------------------------------------------
@@ -243,15 +229,14 @@ SelectItem.displayName = 'Select.Item';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SelectItemIndicator = forwardRef<HTMLSpanElement, SelectItemIndicator.Props>(
-    (props, ref) => {
-        const { className, children, ...componentProps } = resolveStyles(props);
+    ({ className, children, ...props }, ref) => {
         const IconElement = createSlot(children || <ConfirmOutlineIcon />);
 
         return (
             <BaseSelect.ItemIndicator
                 ref={ref}
                 className={clsx(styles.itemIndicator, className)}
-                {...componentProps}
+                {...props}
             >
                 <IconElement />
             </BaseSelect.ItemIndicator>
@@ -265,9 +250,7 @@ SelectItemIndicator.displayName = 'Select.ItemIndicator';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SelectGroup = forwardRef<HTMLDivElement, SelectGroup.Props>((props, ref) => {
-    const componentProps = resolveStyles(props);
-
-    return <BaseSelect.Group ref={ref} {...componentProps} />;
+    return <BaseSelect.Group ref={ref} {...props} />;
 });
 SelectGroup.displayName = 'Select.Group';
 
@@ -275,34 +258,34 @@ SelectGroup.displayName = 'Select.Group';
  * Select.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectGroupLabel = forwardRef<HTMLDivElement, SelectGroupLabel.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseSelect.GroupLabel
-            ref={ref}
-            className={clsx(styles.groupLabel, className)}
-            {...componentProps}
-        />
-    );
-});
+export const SelectGroupLabel = forwardRef<HTMLDivElement, SelectGroupLabel.Props>(
+    ({ className, ...props }, ref) => {
+        return (
+            <BaseSelect.GroupLabel
+                ref={ref}
+                className={clsx(styles.groupLabel, className)}
+                {...props}
+            />
+        );
+    },
+);
 SelectGroupLabel.displayName = 'Select.GroupLabel';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparator.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseSelect.Separator
-            ref={ref}
-            className={clsx(styles.separator, className)}
-            {...componentProps}
-        />
-    );
-});
+export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparator.Props>(
+    ({ className, ...props }, ref) => {
+        return (
+            <BaseSelect.Separator
+                ref={ref}
+                className={clsx(styles.separator, className)}
+                {...props}
+            />
+        );
+    },
+);
 SelectSeparator.displayName = 'Select.Separator';
 
 /* -----------------------------------------------------------------------------------------------*/

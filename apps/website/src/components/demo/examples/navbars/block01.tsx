@@ -48,7 +48,7 @@ export default function Block1() {
                             <IconButton
                                 aria-label="Open Menu"
                                 variant="ghost"
-                                colorPalette="secondary"
+                                color="secondary"
                                 className="navbar-mobile"
                             />
                         }
@@ -77,7 +77,7 @@ export default function Block1() {
                                                     <IconButton
                                                         aria-label="Close Sheet"
                                                         variant="ghost"
-                                                        colorPalette="secondary"
+                                                        color="secondary"
                                                     />
                                                 }
                                             >

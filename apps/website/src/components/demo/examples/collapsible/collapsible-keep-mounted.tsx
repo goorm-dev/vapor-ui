@@ -5,7 +5,7 @@ export default function CollapsibleKeepMounted() {
         <HStack gap="$500">
             <Collapsible.Root className="w-72 h-36">
                 <h4 className="text-lg font-medium mb-3">기본 (DOM에서 제거됨)</h4>
-                <Collapsible.Trigger render={<Button colorPalette="secondary" />}>
+                <Collapsible.Trigger render={<Button color="secondary" />}>
                     기본 동작
                 </Collapsible.Trigger>
                 <Collapsible.Panel>
@@ -17,7 +17,7 @@ export default function CollapsibleKeepMounted() {
 
             <Collapsible.Root className="w-72 h-36">
                 <h4 className="text-lg font-medium mb-3">keepMounted (DOM에 유지됨)</h4>
-                <Collapsible.Trigger render={<Button colorPalette="warning" variant="outline" />}>
+                <Collapsible.Trigger render={<Button color="warning" variant="outline" />}>
                     keepMounted 사용
                 </Collapsible.Trigger>
                 <Collapsible.Panel keepMounted>

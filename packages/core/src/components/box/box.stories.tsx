@@ -79,7 +79,7 @@ export const TestBed = {
                 padding="$500"
                 backgroundColor="$gray-500"
             >
-                <Box backgroundColor="$red-500" render={<Button>I'm Button</Button>} />
+                <Box style={{ backgroundColor: 'red' }} render={<Button>I'm Button</Button>} />
                 <Box
                     display="flex"
                     justifyContent="center"

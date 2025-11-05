@@ -27,11 +27,7 @@ export default function TabsControlled() {
                 <Button onClick={() => setActiveTab('account')} className="">
                     계정 탭으로 이동
                 </Button>
-                <Button
-                    colorPalette="success"
-                    onClick={() => setActiveTab('security')}
-                    className=""
-                >
+                <Button color="success" onClick={() => setActiveTab('security')} className="">
                     보안 탭으로 이동
                 </Button>
             </div>
