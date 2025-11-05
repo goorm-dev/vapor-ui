@@ -72,13 +72,13 @@ export default function LoginForm() {
                         </Box>
                     </Field.Root>
 
-                    <Button type="button" variant="ghost" color="secondary">
+                    <Button type="button" variant="ghost" colorPalette="secondary">
                         ID/비밀번호 찾기
                     </Button>
                 </HStack>
 
                 <Button size="lg">로그인</Button>
-                <Button size="lg" color="secondary" variant="outline">
+                <Button size="lg" colorPalette="secondary" variant="outline">
                     회원가입
                 </Button>
             </VStack>

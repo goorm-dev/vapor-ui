@@ -1,5 +1,6 @@
 'use client';
 
+import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 
 import { Checkbox as BaseCheckbox } from '@base-ui-components/react/checkbox';
@@ -9,6 +10,7 @@ import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './checkbox.css';
@@ -27,35 +29,34 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>(
-    ({ render, className, children, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(props, [
-            'size',
-            'invalid',
-            'indeterminate',
-        ]);
+export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((props, ref) => {
+    const { render, className, children, ...componentProps } = resolveStyles(props);
+    const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
+        'size',
+        'invalid',
+        'indeterminate',
+    ]);
 
-        const { size, invalid, indeterminate } = variantProps;
-        const dataAttrs = createDataAttributes({ invalid });
+    const { size, invalid, indeterminate } = variantProps;
+    const dataAttrs = createDataAttributes({ invalid });
 
-        const IndicatorElement = createSlot(children || <CheckboxIndicator />);
+    const IndicatorElement = createSlot(children || <CheckboxIndicator />);
 
-        return (
-            <CheckboxProvider value={{ size, indeterminate }}>
-                <BaseCheckbox.Root
-                    ref={ref}
-                    aria-invalid={invalid}
-                    indeterminate={indeterminate}
-                    className={clsx(styles.root({ invalid, size }), className)}
-                    {...dataAttrs}
-                    {...otherProps}
-                >
-                    <IndicatorElement />
-                </BaseCheckbox.Root>
-            </CheckboxProvider>
-        );
-    },
-);
+    return (
+        <CheckboxProvider value={{ size, indeterminate }}>
+            <BaseCheckbox.Root
+                ref={ref}
+                aria-invalid={invalid}
+                indeterminate={indeterminate}
+                className={clsx(styles.root({ invalid, size }), className)}
+                {...dataAttrs}
+                {...otherProps}
+            >
+                <IndicatorElement />
+            </BaseCheckbox.Root>
+        </CheckboxProvider>
+    );
+});
 CheckboxRoot.displayName = 'Checkbox.Root';
 
 /* -------------------------------------------------------------------------------------------------
@@ -63,7 +64,9 @@ CheckboxRoot.displayName = 'Checkbox.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const CheckboxIndicator = forwardRef<HTMLDivElement, CheckboxIndicator.Props>(
-    ({ className, ...props }, ref) => {
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+
         const { size, invalid, indeterminate } = useCheckboxContext();
         const dataAttrs = createDataAttributes({ invalid });
 
@@ -72,7 +75,7 @@ export const CheckboxIndicator = forwardRef<HTMLDivElement, CheckboxIndicator.Pr
                 ref={ref}
                 className={clsx(styles.indicator({ size }), className)}
                 {...dataAttrs}
-                {...props}
+                {...componentProps}
             >
                 {indeterminate ? <DashIcon /> : <CheckIcon />}
             </BaseCheckbox.Indicator>
@@ -85,7 +88,7 @@ CheckboxIndicator.displayName = 'Checkbox.Indicator';
  * Icons
  * -----------------------------------------------------------------------------------------------*/
 
-interface IconProps extends VComponentProps<'svg'> {}
+interface IconProps extends ComponentProps<'svg'> {}
 
 const CheckIcon = (props: IconProps) => {
     return (
