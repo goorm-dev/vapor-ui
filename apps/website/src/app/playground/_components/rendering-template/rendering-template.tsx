@@ -1,8 +1,6 @@
 import { Text } from '@vapor-ui/core';
 import cx from 'clsx';
 
-import styles from './rendering-template.module.scss';
-
 type CustomCSSProperties = React.CSSProperties & {
     '--cols'?: number;
     '--rows'?: number;
@@ -31,13 +29,19 @@ const RenderingTemplateComponent = ({
     };
 
     return (
-        <div className={cx((cols || rows) && styles.grid)} style={customStyle}>
+        <div
+            className={cx(
+                (cols || rows) &&
+                    'grid w-fit [grid-template-columns:repeat(var(--cols,1),1fr)] [grid-template-rows:repeat(var(--rows,1),auto)] [gap:var(--gap,0.5rem)]',
+            )}
+            style={customStyle}
+        >
             {children}
         </div>
     );
 };
 const RenderingTemplate = ({ children }: { children: React.ReactNode }) => {
-    return <div className={styles.container}>{children}</div>;
+    return <div className="flex flex-col gap-6">{children}</div>;
 };
 
 RenderingTemplate.Title = RenderingTemplateTitle;

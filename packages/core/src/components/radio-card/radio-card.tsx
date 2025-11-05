@@ -29,16 +29,14 @@ const RadioCard = forwardRef<HTMLButtonElement, RadioCardProps>(
         const size = sizeProp || contextSize;
 
         return (
-            <label>
-                <BaseRadio.Root
-                    ref={ref}
-                    aria-invalid={invalid}
-                    className={clsx(styles.root({ size, invalid }), className)}
-                    {...otherProps}
-                >
-                    {children}
-                </BaseRadio.Root>
-            </label>
+            <BaseRadio.Root
+                ref={ref}
+                aria-invalid={invalid}
+                className={clsx(styles.root({ size, invalid }), className)}
+                {...otherProps}
+            >
+                {children}
+            </BaseRadio.Root>
         );
     },
 );
