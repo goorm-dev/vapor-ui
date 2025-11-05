@@ -6,6 +6,7 @@ import { Radio as BaseRadio } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
 import type { VComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
@@ -23,16 +24,19 @@ const RadioCard = forwardRef<HTMLButtonElement, RadioCardProps>(
             'invalid',
             'size',
         ]);
+
         const { size: sizeProp, invalid: invalidProp } = variantProps;
 
         const invalid = invalidProp || contextInvalid;
         const size = sizeProp || contextSize;
+        const dataAttrs = createDataAttributes({ invalid });
 
         return (
             <BaseRadio.Root
                 ref={ref}
                 aria-invalid={invalid}
                 className={clsx(styles.root({ size, invalid }), className)}
+                {...dataAttrs}
                 {...otherProps}
             >
                 {children}
