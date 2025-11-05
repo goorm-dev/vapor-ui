@@ -42,7 +42,7 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>(
             'invalid',
         ]);
 
-        const { size, invalid } = variantProps;
+        const { invalid } = variantProps;
 
         return (
             <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
@@ -50,7 +50,7 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>(
                     ref={ref}
                     aria-invalid={invalid}
                     aria-describedby={labelElementId}
-                    className={clsx(styles.root({ size }), className)}
+                    className={clsx(styles.root(), className)}
                     {...otherProps}
                 />
             </RadioGroupProvider>
