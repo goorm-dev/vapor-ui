@@ -14,22 +14,12 @@ const meta: Meta<typeof Textarea> = {
             control: { type: 'inline-radio' },
             options: ['sm', 'md', 'lg', 'xl'],
         },
-        disabled: {
-            control: { type: 'boolean' },
-        },
-        invalid: {
-            control: { type: 'boolean' },
-        },
-        readOnly: {
-            control: { type: 'boolean' },
-        },
-
-        autoResize: {
-            control: { type: 'boolean' },
-        },
-        maxLength: {
-            control: { type: 'number' },
-        },
+        disabled: { control: { type: 'boolean' } },
+        invalid: { control: { type: 'boolean' } },
+        readOnly: { control: { type: 'boolean' } },
+        required: { control: { type: 'boolean' } },
+        autoResize: { control: { type: 'boolean' } },
+        maxLength: { control: { type: 'number' } },
     },
 } satisfies Meta<typeof Textarea>;
 
