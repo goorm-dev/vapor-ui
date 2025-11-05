@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ComponentProps } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
@@ -185,7 +185,7 @@ const getArrowPosition = ({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const ArrowIcon = (props: VComponentProps<'svg'>) => {
+const ArrowIcon = (props: ComponentProps<'svg'>) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
