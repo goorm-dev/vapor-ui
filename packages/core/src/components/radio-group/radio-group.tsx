@@ -26,7 +26,7 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
     name: 'RadioGroup',
     hookName: 'useRadioGroupContext',
     providerName: 'RadioGroupProvider',
-    defaultValue: { size: 'md', orientation: 'vertical', invalid: false },
+    defaultValue: { size: 'md', invalid: false },
     strict: false,
 });
 
@@ -41,10 +41,9 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>(
         const [variantProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(props, [
             'size',
             'invalid',
-            'orientation',
         ]);
 
-        const { size, orientation, invalid } = variantProps;
+        const { invalid } = variantProps;
 
         const dataAttrs = createDataAttributes({ invalid });
 
@@ -53,9 +52,8 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>(
                 <BaseRadioGroup
                     ref={ref}
                     aria-invalid={invalid}
-                    aria-orientation={orientation}
                     aria-describedby={labelElementId}
-                    className={clsx(styles.root({ size, orientation }), className)}
+                    className={clsx(styles.root(), className)}
                     {...dataAttrs}
                     {...otherProps}
                 />
