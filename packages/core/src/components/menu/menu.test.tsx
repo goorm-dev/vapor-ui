@@ -264,7 +264,9 @@ describe('<Menu.Root />', () => {
 
             const items = rendered.getAllByRole('menuitem');
             const lastItem = items[items.length - 1];
-            expect(lastItem).toHaveFocus();
+            await waitFor(() => {
+                expect(lastItem).toHaveFocus();
+            });
             expect(lastItem).toHaveAttribute('data-highlighted');
         });
 
