@@ -2,6 +2,7 @@
 import type { StoryObj } from '@storybook/react-vite';
 
 import { RadioGroup } from '.';
+import { HStack } from '../h-stack';
 import { Radio } from '../radio';
 import { RadioCard } from '../radio-card';
 
@@ -73,7 +74,7 @@ export const Default: Story = {
 
 export const WithRadioCard: Story = {
     render: (args) => (
-        <RadioGroup.Root {...args} name="radio-group" defaultValue="3">
+        <RadioGroup.Root {...args} name="radio-card-group" defaultValue="3">
             <RadioGroup.Label>Options</RadioGroup.Label>
             <RadioCard value="1">value 1</RadioCard>
             <RadioCard value="2">value 2</RadioCard>
@@ -86,12 +87,34 @@ export const WithRadioCard: Story = {
 
 export const TestBed: Story = {
     render: (args) => (
-        <RadioGroup.Root {...args} defaultValue="3">
-            <Radio.Root id="radio-1" value="1" />
-            <Radio.Root id="radio-2" value="2" />
-            <Radio.Root id="radio-3" value="3" />
-            <Radio.Root id="radio-4" value="4" invalid />
-            <Radio.Root id="radio-5" value="5" disabled />
-        </RadioGroup.Root>
+        <HStack gap="$400">
+            <RadioGroup.Root {...args} defaultValue="3">
+                <RadioGroup.Label>Options</RadioGroup.Label>
+                <Radio.Root id="radio-1" value="1" />
+                <Radio.Root id="radio-2" value="2" />
+                <Radio.Root id="radio-3" value="3" />
+                <Radio.Root id="radio-4" value="4" />
+                <Radio.Root id="radio-5" value="5" />
+            </RadioGroup.Root>
+
+            <RadioGroup.Root {...args} defaultValue="3">
+                <RadioGroup.Label>Options</RadioGroup.Label>
+                <RadioCard id="radio-1" value="1">
+                    Option 1
+                </RadioCard>
+                <RadioCard id="radio-2" value="2">
+                    Option 2
+                </RadioCard>
+                <RadioCard id="radio-3" value="3">
+                    Option 3
+                </RadioCard>
+                <RadioCard id="radio-4" value="4">
+                    Option 4
+                </RadioCard>
+                <RadioCard id="radio-5" value="5">
+                    Option 5
+                </RadioCard>
+            </RadioGroup.Root>
+        </HStack>
     ),
 };
