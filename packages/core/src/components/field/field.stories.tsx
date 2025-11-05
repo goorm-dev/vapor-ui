@@ -87,9 +87,14 @@ export const TestBed: Story = {
                             멘토님 강연 능력
                         </Box>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
-                        <Field.Success match>
+                        <Box
+                            render={<Field.Success match />}
+                            display="flex"
+                            alignItems="center"
+                            gap="$050"
+                        >
                             <CheckCircleIcon /> 강의 평가가 완료되었습니다
-                        </Field.Success>
+                        </Box>
                     </Field.Root>
                     <Field.Root
                         name="vapor-policy-agreement2"
