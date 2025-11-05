@@ -73,13 +73,13 @@ FieldError.displayName = 'Field.Error';
  * -----------------------------------------------------------------------------------------------*/
 
 export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>(
-    ({ className, ...props }, ref) => {
+    ({ match = 'valid', className, ...props }, ref) => {
         return (
             <BaseField.Error
                 ref={ref}
                 className={clsx(styles.success, className)}
                 {...props}
-                match="valid"
+                match={match}
             />
         );
     },
@@ -113,5 +113,7 @@ export namespace FieldError {
 
 export namespace FieldSuccess {
     type PrimitiveSuccessProps = Omit<VComponentProps<typeof BaseField.Error>, 'match'>;
-    export interface Props extends PrimitiveSuccessProps {}
+    export interface Props extends PrimitiveSuccessProps {
+        match?: boolean | 'valid';
+    }
 }
