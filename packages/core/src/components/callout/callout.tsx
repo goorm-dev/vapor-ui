@@ -17,7 +17,7 @@ import * as styles from './callout.css';
 export const CalloutRoot = forwardRef<HTMLDivElement, CalloutRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(componentProps, [
-        'color',
+        'colorPalette',
     ]);
 
     return useRender({

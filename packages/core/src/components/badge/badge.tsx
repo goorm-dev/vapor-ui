@@ -13,7 +13,7 @@ import * as styles from './badge.css';
 export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(componentProps, [
-        'color',
+        'colorPalette',
         'size',
         'shape',
     ]);

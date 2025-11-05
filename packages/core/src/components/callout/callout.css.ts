@@ -18,7 +18,7 @@ export const root = recipe({
         }),
     ],
 
-    defaultVariants: { color: 'primary' },
+    defaultVariants: { colorPalette: 'primary' },
     variants: {
         colorPalette: {
             primary: layerStyle('components', {

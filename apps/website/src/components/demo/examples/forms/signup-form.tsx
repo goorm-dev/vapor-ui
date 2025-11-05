@@ -124,7 +124,7 @@ export default function SignupForm() {
                                 <Field.Label className="checkbox-label">이용 약관 동의</Field.Label>
                                 <IconButton
                                     size="sm"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     variant="ghost"
                                     aria-label="약관 보기"
                                 >
@@ -140,7 +140,7 @@ export default function SignupForm() {
                                 </Field.Label>
                                 <IconButton
                                     size="sm"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     variant="ghost"
                                     aria-label="개인 정보 수집 이용 보기"
                                 >

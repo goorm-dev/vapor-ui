@@ -104,7 +104,7 @@ export default function FilterForm() {
         >
             <HStack justifyContent="space-between">
                 <Text typography="heading5">Filter</Text>
-                <Button type="reset" size="sm" variant="ghost" color="secondary">
+                <Button type="reset" size="sm" variant="ghost" colorPalette="secondary">
                     <RefreshOutlineIcon />
                     Refresh
                 </Button>

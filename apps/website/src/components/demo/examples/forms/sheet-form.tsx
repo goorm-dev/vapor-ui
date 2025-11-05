@@ -405,7 +405,7 @@ export default function SheetForm() {
                                 <Button
                                     type="reset"
                                     size="lg"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     className="refresh-button"
                                     form="sheet-form"
                                 >
