@@ -8,7 +8,7 @@ export default {
     component: IconButton,
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
-        color: {
+        colorPalette: {
             control: 'inline-radio',
             options: ['primary', 'secondary', 'success', 'warning', 'danger', 'contrast'],
         },
@@ -66,18 +66,29 @@ export const TestBed: Story = {
         </div>
     ),
 };
-const IconButtons = ({ color, disabled }: Partial<IconButton.Props>) => {
+
+const IconButtons = ({ colorPalette, disabled }: Partial<IconButton.Props>) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="fill">
-                <HeartIcon />
-            </IconButton>
-            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="ghost">
+            <IconButton
+                aria-label="Button Label"
+                colorPalette={colorPalette}
+                disabled={disabled}
+                variant="fill"
+            >
                 <HeartIcon />
             </IconButton>
             <IconButton
                 aria-label="Button Label"
-                color={color}
+                colorPalette={colorPalette}
+                disabled={disabled}
+                variant="ghost"
+            >
+                <HeartIcon />
+            </IconButton>
+            <IconButton
+                aria-label="Button Label"
+                colorPalette={colorPalette}
                 disabled={disabled}
                 variant="outline"
             >

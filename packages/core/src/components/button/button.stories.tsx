@@ -8,7 +8,7 @@ import { Button } from './button';
 export default {
     title: 'Button',
     argTypes: {
-        color: {
+        colorPalette: {
             control: 'inline-radio',
             options: ['primary', 'secondary', 'success', 'warning', 'danger', 'contrast'],
         },

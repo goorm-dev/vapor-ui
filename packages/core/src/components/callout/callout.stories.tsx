@@ -8,7 +8,7 @@ export default {
     title: 'Callout',
     component: Callout.Root,
     argTypes: {
-        color: {
+        colorPalette: {
             control: 'inline-radio',
             options: ['primary', 'success', 'warning', 'danger', 'hint', 'contrast'],
         },
