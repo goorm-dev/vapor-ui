@@ -17,21 +17,21 @@ export const root = recipe({
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
-            border: `0.0625rem solid ${vars.color.border.normal}`,
+            boxShadow: `inset 0 0 0 1px ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius[300],
             color: vars.color.foreground.normal[200],
             cursor: 'pointer',
 
             selectors: {
                 '&[data-checked]': {
-                    borderColor: vars.color.border.primary,
+                    boxShadow: `inset 0 0 0 1px ${vars.color.border.primary}`,
                 },
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray['200'],
                 },
                 '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
                 '&[data-invalid]': {
-                    borderColor: vars.color.border.danger,
+                    boxShadow: `inset 0 0 0 1px ${vars.color.border.danger}`,
                 },
             },
         }),
