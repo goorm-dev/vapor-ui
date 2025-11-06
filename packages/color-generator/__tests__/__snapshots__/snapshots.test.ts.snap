@@ -316,7 +316,7 @@ exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`]
 exports[`Color Generator Snapshots > should match semanticDependentTokens snapshot 1`] = `
 {
   "darkModeTokens": {
-    "color-background-canvas-100": "#232323",
+    "color-background-canvas-100": "color-background-canvas",
     "color-background-canvas-200": "color-gray-050",
     "color-background-overlay-100": "color-gray-100",
     "color-background-primary-100": "color-mint-050",
@@ -326,9 +326,9 @@ exports[`Color Generator Snapshots > should match semanticDependentTokens snapsh
     "color-foreground-200": "color-mint-900",
   },
   "lightModeTokens": {
-    "color-background-canvas-100": "#ffffff",
+    "color-background-canvas-100": "color-background-canvas",
     "color-background-canvas-200": "color-gray-050",
-    "color-background-overlay-100": "#ffffff",
+    "color-background-overlay-100": "color-background-canvas",
     "color-background-primary-100": "color-mint-100",
     "color-background-primary-200": "color-mint-200",
     "color-border-primary": "color-mint-200",
