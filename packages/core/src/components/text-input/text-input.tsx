@@ -42,7 +42,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, r
     ]);
 
     const { invalid, size } = variantProps;
-    const { disabled, readOnly, required } = otherProps;
+    const { disabled, readOnly, maxLength, required } = otherProps;
 
     const handleChange = (value: string, event: TextInput.ChangeEventDetails) => {
         setValue(value);
@@ -58,10 +58,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, r
         state: 'value',
     });
 
-    useInputGroup({
-        value,
-        maxLength: otherProps.maxLength,
-    });
+    useInputGroup({ value, maxLength });
 
     const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
 

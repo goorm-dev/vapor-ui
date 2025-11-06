@@ -150,23 +150,6 @@ export const SheetPositioner = forwardRef<HTMLDivElement, SheetPositioner.Props>
         },
     });
 
-    // const dataAttr = createDataAttributes({
-    //     open: contextOpen,
-    //     closed: !contextOpen,
-    //     side: side,
-    // });
-
-    // const element = useRender({
-    //     ref,
-    //     render: render || <div />,
-    //     props: {
-    //         role: 'presentation',
-    //         hidden: !mounted,
-    //         ...dataAttr,
-    //         ...otherProps,
-    //     },
-    // });
-
     return <SheetPositionerProvider value={positionerProps}>{element}</SheetPositionerProvider>;
 });
 SheetPositioner.displayName = 'Sheet.Positioner';
