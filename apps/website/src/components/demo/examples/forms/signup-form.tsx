@@ -165,7 +165,7 @@ export default function SignupForm() {
                                 <IconButton
                                     type="button"
                                     size="sm"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     variant="ghost"
                                     aria-label="약관 보기"
                                 >
@@ -186,7 +186,7 @@ export default function SignupForm() {
                                 <IconButton
                                     type="button"
                                     size="sm"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     variant="ghost"
                                     aria-label="개인 정보 수집 이용 보기"
                                 >
