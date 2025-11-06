@@ -168,6 +168,7 @@ export const TestBed: StoryObj<typeof Pagination.Root> = {
                         </Pagination.Item>
                     </Pagination.List>
                 </Pagination.Root>
+
                 <Pagination.Root {...args}>
                     <Pagination.List>
                         <Pagination.Item>
@@ -203,6 +204,18 @@ export const TestBed: StoryObj<typeof Pagination.Root> = {
                     <Pagination.List>
                         <Pagination.Item>
                             <Pagination.Previous />
+                        </Pagination.Item>
+                        <Pagination.Items />
+                        <Pagination.Item>
+                            <Pagination.Next />
+                        </Pagination.Item>
+                    </Pagination.List>
+                </Pagination.Root>
+
+                <Pagination.Root {...args} size="lg">
+                    <Pagination.List>
+                        <Pagination.Item>
+                            <Pagination.Previous disabled />
                         </Pagination.Item>
                         <Pagination.Items />
                         <Pagination.Item>

@@ -157,24 +157,19 @@ export const PaginationButton = forwardRef<HTMLButtonElement, PaginationButton.P
             setPage(page, details);
         });
 
-        const disabled = disabledProp ?? contextDisabled;
+        const disabled = disabledProp || contextDisabled;
         const current = page === contextPage;
-        const Component = current ? 'span' : 'button';
-
-        const recipes = current ? styles.currentPage : styles.button;
 
         return useRender({
             ref,
-            render: render || <Component />,
+            render: render || <button />,
+            state: { current, disabled },
             props: {
                 'aria-label': `Page ${page}`,
-                'data-current': current ? '' : undefined,
-                'data-disabled': disabled ? '' : undefined,
                 'aria-current': current ? 'page' : undefined,
-                'aria-disabled': (disabled ?? current) ? 'true' : undefined,
                 disabled,
                 onClick: handleClick,
-                className: clsx(recipes({ size }), className),
+                className: clsx(styles.button({ size }), className),
                 ...props,
             },
         });
@@ -190,7 +185,7 @@ export const PaginationPrevious = forwardRef<HTMLButtonElement, PaginationPrevio
     ({ render, disabled: disabledProp, className, children: childrenProp, ...props }, ref) => {
         const { page, setPage, size, disabled: contextDisabled } = usePaginationContext();
 
-        const disabled = disabledProp ?? contextDisabled ?? page <= 1;
+        const disabled = disabledProp || contextDisabled || page <= 1;
 
         const onClick = useEventCallback((event: MouseEvent) => {
             if (disabled) return;
@@ -231,7 +226,7 @@ export const PaginationNext = forwardRef<HTMLButtonElement, PaginationNext.Props
             disabled: contextDisabled,
         } = usePaginationContext();
 
-        const disabled = disabledProp ?? contextDisabled ?? page >= totalPages;
+        const disabled = disabledProp || contextDisabled || page >= totalPages;
 
         const onClick = useEventCallback((event: MouseEvent) => {
             if (disabled) return;
