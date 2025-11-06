@@ -27,8 +27,12 @@ const SectionMode = () => {
                     onValueChange={handleModeChange}
                 >
                     <HStack gap="$100">
-                        <RadioCard value="light">Light</RadioCard>
-                        <RadioCard value="dark">Dark</RadioCard>
+                        <RadioCard className="flex-1" value="light">
+                            Light
+                        </RadioCard>
+                        <RadioCard className="flex-1" value="dark">
+                            Dark
+                        </RadioCard>
                     </HStack>
                 </RadioGroup.Root>
             </PanelSectionWrapper.Contents>
