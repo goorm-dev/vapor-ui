@@ -254,7 +254,7 @@ const cjsBuild = {
     input: componentEntries,
     plugins: [
         ...buildPlugins,
-        // cleanCssLayerDeclarations(), // <-- 수정: (cjs) CSS 생성 -> 정리
+        cleanCssLayerDeclarations(), // <-- 수정: (cjs) CSS 생성 -> 정리
     ],
     output: [createOutput('dist/', 'cjs', 'cjs')],
 };
@@ -277,7 +277,7 @@ const dtsBuild = {
     plugins: [
         ...commonPlugins,
         getDtsPlugins(compilerOptions),
-        cleanCssLayerDeclarations(), // <-- 수정: (dts) CSS 생성 -> 정리
+        // cleanCssLayerDeclarations(), // <-- 수정: (dts) CSS 생성 -> 정리
     ],
     output: [
         createOutput('dist/', 'esm', 'd.ts', {
