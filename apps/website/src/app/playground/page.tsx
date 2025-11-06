@@ -166,7 +166,7 @@ const Page = () => {
                 <header>
                     <Text typography="heading1">Theme Playground</Text>
                     <Link href="/docs/getting-started/theming">
-                        <Button variant="outline" color="secondary">
+                        <Button variant="outline" colorPalette="secondary">
                             <OpenInNewOutlineIcon />
                             Theme Provider Usage 보러가기
                         </Button>

@@ -28,7 +28,7 @@ export const Default: Story = {
                     <Dialog.Description>기본 형태의 다이얼로그입니다.</Dialog.Description>
                 </Dialog.Body>
                 <Dialog.Footer>
-                    <Dialog.Close render={<Button color="contrast">닫기</Button>} />
+                    <Dialog.Close render={<Button colorPalette="contrast">닫기</Button>} />
                 </Dialog.Footer>
             </Dialog.Content>
         </Dialog.Root>

@@ -29,7 +29,7 @@ export function UserListItem({
                         {name || '이름 없음'}
                     </Text>
                     {badge && (
-                        <Badge color="primary" shape="pill">
+                        <Badge colorPalette="primary" shape="pill">
                             {badge}
                         </Badge>
                     )}
