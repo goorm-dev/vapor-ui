@@ -37,7 +37,8 @@
     "type": "module",
     "scripts": {
         "build": "rimraf dist && tsup",
-        "test": "vitest",
+        "test": "vitest --run",
+        "test:watch": "vitest",
         "lint": "eslint ./src",
         "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
