@@ -9,17 +9,15 @@ import { vars } from '~/styles/themes.css';
 export const root = recipe({
     base: layerStyle('components', {
         display: 'flex',
+        flexDirection: 'column',
+        gap: vars.size.space[100],
     }),
 
-    defaultVariants: { size: 'md', orientation: 'vertical' },
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('components', { gap: vars.size.space['050'] }),
-            lg: layerStyle('components', { gap: vars.size.space['100'] }),
-        },
-        orientation: {
-            horizontal: layerStyle('components', { flexDirection: 'row' }),
-            vertical: layerStyle('components', { flexDirection: 'column' }),
+            md: {},
+            lg: {},
         },
     },
 });

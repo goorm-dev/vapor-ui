@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import type { StoryObj } from '@storybook/react-vite';
 
 import { RadioGroup } from '.';
@@ -11,10 +12,6 @@ export default {
         invalid: { control: 'boolean' },
         readOnly: { control: 'boolean' },
         required: { control: 'boolean' },
-        orientation: {
-            control: 'inline-radio',
-            options: ['vertical', 'horizontal'],
-        },
         size: {
             control: 'inline-radio',
             options: ['md', 'lg'],
@@ -28,11 +25,47 @@ export const Default: Story = {
     render: (args) => (
         <RadioGroup.Root {...args} name="radio-group" defaultValue={'3'}>
             <RadioGroup.Label id="radio-group-label">Options</RadioGroup.Label>
-            <Radio.Root value="1" />
-            <Radio.Root value="2" />
-            <Radio.Root value="3" />
-            <Radio.Root value="4" />
-            <Radio.Root value="5" />
+
+            <label
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--vapor-size-space-050)',
+                }}
+            >
+                <Radio.Root value="1" />
+                Option 1
+            </label>
+            <label
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--vapor-size-space-050)',
+                }}
+            >
+                <Radio.Root value="2" />
+                Option 2
+            </label>
+            <label
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--vapor-size-space-050)',
+                }}
+            >
+                <Radio.Root value="3" />
+                Option 3
+            </label>
+            <label
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--vapor-size-space-050)',
+                }}
+            >
+                <Radio.Root value="4" />
+                Option 4
+            </label>
         </RadioGroup.Root>
     ),
 };
