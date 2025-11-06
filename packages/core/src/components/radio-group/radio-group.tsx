@@ -53,9 +53,9 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
         <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
             <BaseRadioGroup
                 ref={ref}
+                aria-labelledby={labelElementId}
                 aria-invalid={invalid}
                 aria-orientation={orientation}
-                aria-describedby={labelElementId}
                 className={clsx(styles.root({ size, orientation }), className)}
                 {...dataAttrs}
                 {...otherProps}
@@ -70,10 +70,10 @@ RadioGroupRoot.displayName = 'RadioGroup.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
+    const { render, id: idProp, className, ...componentProps } = resolveStyles(props);
     const { setLabelElementId, invalid } = useRadioGroupContext();
 
-    const id = useVaporId();
+    const id = useVaporId(idProp);
 
     useIsoLayoutEffect(() => {
         setLabelElementId?.(id);
