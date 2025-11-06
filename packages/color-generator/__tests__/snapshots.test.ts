@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-    generateBrandColorPalette,
-    generateSystemColorPalette,
-    getSemanticDependentTokens,
-} from '../src/index';
+import { generateBrandColorPalette, generateSystemColorPalette } from '../src/generators';
+import { generatePrimitiveColorPalette, getSemanticDependentTokens } from '../src/infrastructure';
 
 describe('Color Generator Snapshots', () => {
     it('should match systemColorPalette snapshot', () => {
@@ -30,17 +27,13 @@ describe('Color Generator Snapshots', () => {
     });
 
     it('should match semanticDependentTokens snapshot', () => {
-        const semanticDependentTokens = getSemanticDependentTokens({
-            primary: { name: 'mint', color: '#44ebd3' },
-            background: {
-                name: 'myGray',
-                color: '#EFEAE6',
-                lightness: {
-                    light: 93,
-                    dark: 10,
-                },
-            },
+        // First generate primitive palettes
+        const primitiveResult = generatePrimitiveColorPalette({
+            brandColor: { name: 'mint', hexcode: '#44ebd3' },
         });
+
+        // Then generate semantic tokens from primitives
+        const semanticDependentTokens = getSemanticDependentTokens(primitiveResult, 'mint');
         expect(semanticDependentTokens).toMatchSnapshot();
     });
 });

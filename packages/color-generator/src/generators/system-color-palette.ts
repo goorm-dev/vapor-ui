@@ -3,8 +3,8 @@ import { formatCss, oklch } from 'culori';
 import {
     BASE_COLORS,
     DEFAULT_CONTRAST_RATIOS,
-    DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
     DEFAULT_KEY_COLORS,
+    DEFAULT_MAIN_BACKGROUND_LIGHTNESS,
 } from '../constants';
 import { generateThemeTokens } from '../libs';
 import type { ColorGeneratorConfig, ColorPaletteResult, ColorToken } from '../types';
