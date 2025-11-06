@@ -1,5 +1,28 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.4
+
+### Minor Changes
+
+- c9e4b68: migrate to base-ui beta v4
+- 216866e: feat: add new component `RadioCard`
+- f17650a: add uilitiy props
+- e12f4c4: split label into vertical/horizontal
+- 98170c1: Add white foreground variant to foreground recipe
+
+### Patch Changes
+
+- ee61a32: Synchronize the aria-labelledby with the recieved id prop
+- df5cb78: separate `readonly` from `disabled`
+- 74dc538: ### Features
+    - **Enabled CSS Tree-shaking:** Component CSS is now imported by its corresponding JS file instead of being in the global `styles.css`. This significantly reduces your production bundle size by only including the CSS for components you actually use.
+
+    ### Bug Fixes
+    - Fixed a CSS dependency order issue where `IconButton` styles loaded before `Button` styles, causing incorrect style inheritance.
+
+- 25c235e: adjust indicator size to account for border
+- 9a3c4f6: fix(RadioGroup): Resolving orientation style errors
+
 ## 1.0.0-beta.3
 
 ### Minor Changes

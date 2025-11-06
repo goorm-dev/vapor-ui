@@ -1,6 +1,6 @@
 {
   "name": "@vapor-ui/codemod",
-  "version": "1.0.0",
+  "version": "1.1.0-beta.0",
   "description": "Code migration tools using jscodeshift",
   "main": "dist/src/index.mjs",
   "bin": {
@@ -32,7 +32,7 @@
     "@types/jest": "^29.5.0",
     "@types/jscodeshift": "^17.3.0",
     "@types/node": "^20.0.0",
-    "@vapor-ui/core": "1.0.0-beta.0",
+    "@vapor-ui/core": "1.0.0-beta.4",
     "@vapor-ui/icons": "1.0.0-beta.0",
     "prettier": "^3.2.5",
     "eslint": "^9.37.0",

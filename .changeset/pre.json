@@ -11,18 +11,27 @@
     "@vapor-ui/hooks": "0.1.0",
     "@vapor-ui/icons": "0.4.0",
     "@repo/typescript-config": "0.0.0",
-    "storybook": "0.0.0"
+    "storybook": "0.0.0",
+    "@vapor-ui/codemod": "1.0.0"
   },
   "changesets": [
     "bright-doors-thank",
     "chatty-keys-bathe",
+    "clean-glasses-slide",
     "fluffy-sites-slide",
     "green-candies-drive",
+    "itchy-lions-enter",
+    "lemon-parrots-reply",
+    "major-dragons-dream",
     "moody-needles-press",
     "new-games-mix",
     "orange-icons-grin",
+    "public-ducks-yawn",
+    "ripe-swans-serve",
+    "seven-nights-post",
     "shaky-colts-brake",
     "six-rats-reply",
+    "small-places-tie",
     "sync-icons-20250926010901",
     "sync-icons-20251002070348",
     "sync-icons-20251009070343",
@@ -30,7 +39,10 @@
     "tender-baboons-cut",
     "thick-states-kick",
     "thin-pens-sell",
+    "tough-mirrors-hide",
     "twenty-cars-invent",
+    "twenty-snakes-end",
+    "white-foreground-variant",
     "young-boats-add"
   ]
 }
