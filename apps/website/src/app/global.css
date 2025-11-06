@@ -1,6 +1,5 @@
-@layer tw-theme, theme, reset, tw-base, components, utilities, tw-utilities;
+@layer tw-theme, theme, tw-base, reset, base, components, utilities, tw-utilities;
 
-@import '@vapor-ui/core/styles.css';
 @import '@vapor-ui/core/tailwind.css';
 
 @import 'tailwindcss/preflight' layer(tw-base);
