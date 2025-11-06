@@ -1,4 +1,3 @@
-import { createGlobalVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -6,9 +5,6 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
-
-export const textareaMinHeightVar = createGlobalVar('vapor-textarea-min-height');
-export const textareaMaxHeightVar = createGlobalVar('vapor-textarea-max-height');
 
 export const textarea = recipe({
     base: [
@@ -20,7 +16,6 @@ export const textarea = recipe({
             backgroundColor: vars.color.background.canvas,
             color: vars.color.foreground.normal[200],
             width: '100%',
-            minHeight: textareaMinHeightVar,
 
             selectors: {
                 '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },

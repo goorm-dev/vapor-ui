@@ -334,6 +334,7 @@ MenuRadioItem.displayName = 'Menu.RadioItem';
 export namespace MenuRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseMenu.Root>;
     export interface Props extends RootPrimitiveProps {}
+    export type ChangeEventDetails = BaseMenu.Root.ChangeEventDetails;
 }
 
 export namespace MenuTrigger {
@@ -389,6 +390,7 @@ export namespace MenuSubmenuRoot {
     export interface Props extends SubmenuRootPrimitiveProps {
         closeParentOnEsc?: boolean;
     }
+    export type OpenEventDetails = BaseMenu.SubmenuRoot.ChangeEventDetails;
 }
 
 export namespace MenuSubmenuTriggerItem {
@@ -412,11 +414,13 @@ export namespace MenuSubmenuContent {
 export namespace MenuCheckboxItem {
     type CheckboxPrimitiveProps = VComponentProps<typeof BaseMenu.CheckboxItem>;
     export interface Props extends CheckboxPrimitiveProps {}
+    export type ChangeEventDetails = BaseMenu.CheckboxItem.ChangeEventDetails;
 }
 
 export namespace MenuRadioGroup {
     type RadioGroupPrimitiveProps = VComponentProps<typeof BaseMenu.RadioGroup>;
     export interface Props extends RadioGroupPrimitiveProps {}
+    export type ChangeEventDetails = BaseMenu.RadioGroup.ChangeEventDetails;
 }
 
 export namespace MenuRadioItem {

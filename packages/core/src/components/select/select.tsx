@@ -63,7 +63,6 @@ export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTrigger.Props>(
         ...componentProps
     } = resolveStyles(props);
 
-    // TODO required 확인
     const { size, invalid, required } = useSelectContext();
     const dataAttrs = createDataAttributes({ required, invalid });
 
@@ -94,7 +93,8 @@ export const SelectValue = forwardRef<HTMLSpanElement, SelectValue.Props>((props
         if (!items) return value;
 
         if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
-        return items[value];
+
+        return (items as Record<string, ReactNode>)[value];
     };
 
     const children = (value: string) =>
@@ -310,6 +310,7 @@ SelectSeparator.displayName = 'Select.Separator';
 export namespace SelectRoot {
     type RootPrimitiveProps = Omit<VComponentProps<typeof BaseSelect.Root>, 'multiple'>;
     export interface Props extends RootPrimitiveProps, SelectSharedProps {}
+    export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 
 export namespace SelectTrigger {

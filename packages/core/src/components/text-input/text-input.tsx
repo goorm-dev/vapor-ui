@@ -20,7 +20,7 @@ type BaseProps = TextInputVariants & {
     type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
     value?: string;
     defaultValue?: string;
-    onValueChange?: (value: string, event: Event) => void;
+    onValueChange?: (value: string, event: TextInput.ChangeEventDetails) => void;
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -42,7 +42,12 @@ export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, r
     ]);
 
     const { invalid, size } = variantProps;
-    const { disabled, readOnly, required } = otherProps;
+    const { disabled, readOnly, maxLength, required } = otherProps;
+
+    const handleChange = (value: string, event: TextInput.ChangeEventDetails) => {
+        setValue(value);
+        onValueChange?.(value, event);
+    };
 
     const { current: isControlled } = useRef(valueProp !== undefined);
 
@@ -53,15 +58,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, r
         state: 'value',
     });
 
-    const handleChange = (value: string, event: Event) => {
-        setValue(value);
-        onValueChange?.(value, event);
-    };
-
-    useInputGroup({
-        value,
-        maxLength: otherProps.maxLength,
-    });
+    useInputGroup({ value, maxLength });
 
     const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
 
@@ -85,4 +82,5 @@ export namespace TextInput {
     type TextInputPrimitiveProps = VComponentProps<typeof BaseInput>;
 
     export interface Props extends Assign<TextInputPrimitiveProps, BaseProps> {}
+    export type ChangeEventDetails = BaseInput.ChangeEventDetails;
 }
