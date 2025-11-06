@@ -3,10 +3,7 @@ import {
     getSemanticDependentTokens as getSemanticDependentTokensUseCase,
 } from '../../application';
 import type { SemanticResult, ThemeOptions, ThemeResult } from '../../domain';
-import { LeonardoAdapter } from '../adapters';
-
-// Infrastructure 계층에서 의존성 주입
-const leonardoAdapter = new LeonardoAdapter();
+import { leonardoAdapter } from '../adapters';
 
 /**
  * 시스템의 모든 Primitive Color Token을 생성합니다.
