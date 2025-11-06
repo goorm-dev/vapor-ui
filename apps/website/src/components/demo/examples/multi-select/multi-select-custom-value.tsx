@@ -25,7 +25,7 @@ const renderRestValue = (value: string[]) => {
                 </Badge>
             ))}
             {remainingCount > 0 && (
-                <Badge size="sm" colorPalette="hint">
+                <Badge size="sm" color="hint">
                     +{remainingCount} more
                 </Badge>
             )}

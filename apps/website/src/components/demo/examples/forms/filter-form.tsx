@@ -100,7 +100,7 @@ export default function FilterForm() {
         <VStack width="17.625rem" render={<Form ref={formRef} onReset={handleReset} />}>
             <HStack justifyContent="space-between">
                 <Text typography="heading5">Filter</Text>
-                <Button type="reset" size="sm" variant="ghost" colorPalette="secondary">
+                <Button type="reset" size="sm" variant="ghost" color="secondary">
                     <RefreshOutlineIcon />
                     Refresh
                 </Button>

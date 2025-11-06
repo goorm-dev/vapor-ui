@@ -10,7 +10,6 @@ import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
-import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Badge } from '../badge';
@@ -57,14 +56,7 @@ MultiSelectRoot.displayName = 'MultiSelect.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectTrigger = forwardRef<HTMLButtonElement, MultiSelectTrigger.Props>(
-    (props, ref) => {
-        const {
-            render = <button />,
-            nativeButton = true,
-            className,
-            ...componentProps
-        } = resolveStyles(props);
-
+    ({ render = <button />, nativeButton = true, className, ...props }, ref) => {
         const { size, required, invalid } = useMultiSelectContext();
         const dataAttrs = createDataAttributes({ required, invalid });
 
@@ -77,7 +69,7 @@ export const MultiSelectTrigger = forwardRef<HTMLButtonElement, MultiSelectTrigg
                 aria-required={required || undefined}
                 className={clsx(styles.trigger({ size, invalid }), className)}
                 {...dataAttrs}
-                {...componentProps}
+                {...props}
             />
         );
     },
@@ -89,8 +81,7 @@ MultiSelectTrigger.displayName = 'MultiSelect.Trigger';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectValue = forwardRef<HTMLSpanElement, MultiSelectValue.Props>(
-    (props, ref) => {
-        const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    ({ className, children: childrenProp, ...props }, ref) => {
         const { size = 'md', items, placeholder } = useMultiSelectContext();
 
         const itemMap = useMemo(() => {
@@ -127,7 +118,7 @@ export const MultiSelectValue = forwardRef<HTMLSpanElement, MultiSelectValue.Pro
             <BaseSelect.Value
                 ref={ref}
                 className={clsx(styles.value({ size }), className)}
-                {...componentProps}
+                {...props}
             >
                 {children}
             </BaseSelect.Value>
@@ -151,15 +142,14 @@ const badgeSizeMap: Record<
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectPlaceholder = forwardRef<HTMLSpanElement, MultiSelectPlaceholder.Props>(
-    (props, ref) => {
-        const { render, className, ...componentProps } = resolveStyles(props);
+    ({ render, className, ...props }, ref) => {
         const { size } = useMultiSelectContext();
 
         return (
             <BaseSelect.Value
                 ref={ref}
                 className={clsx(styles.placeholder({ size }), className)}
-                {...componentProps}
+                {...props}
             />
         );
     },
@@ -170,9 +160,7 @@ export const MultiSelectPlaceholder = forwardRef<HTMLSpanElement, MultiSelectPla
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectTriggerIcon = forwardRef<HTMLDivElement, MultiSelectTriggerIcon.Props>(
-    (props, ref) => {
-        const { className, children, ...componentProps } = resolveStyles(props);
-
+    ({ className, children, ...props }, ref) => {
         const { size } = useMultiSelectContext();
         const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
 
@@ -180,7 +168,7 @@ export const MultiSelectTriggerIcon = forwardRef<HTMLDivElement, MultiSelectTrig
             <BaseSelect.Icon
                 ref={ref}
                 className={clsx(styles.triggerIcon({ size }), className)}
-                {...componentProps}
+                {...props}
             >
                 <IconElement />
             </BaseSelect.Icon>
@@ -211,7 +199,7 @@ export const MultiSelectPositioner = forwardRef<HTMLDivElement, MultiSelectPosit
             alignItemWithTrigger = false,
             className,
             ...componentProps
-        } = resolveStyles(props);
+        } = props;
 
         return (
             <BaseSelect.Positioner
@@ -232,13 +220,11 @@ MultiSelectPositioner.displayName = 'MultiSelect.Positioner';
  * MultiSelect.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
-    );
-});
+export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>(
+    ({ className, ...props }, ref) => {
+        return <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...props} />;
+    },
+);
 MultiSelectPopup.displayName = 'MultiSelect.Popup';
 
 /* -------------------------------------------------------------------------------------------------
@@ -262,13 +248,11 @@ MultiSelectContent.displayName = 'MultiSelect.Content';
  * MultiSelect.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItem.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...componentProps} />
-    );
-});
+export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItem.Props>(
+    ({ className, ...props }, ref) => {
+        return <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...props} />;
+    },
+);
 MultiSelectItem.displayName = 'MultiSelect.Item';
 
 /* -------------------------------------------------------------------------------------------------
@@ -276,16 +260,14 @@ MultiSelectItem.displayName = 'MultiSelect.Item';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectItemIndicator = forwardRef<HTMLSpanElement, MultiSelectItemIndicator.Props>(
-    (props, ref) => {
-        const { className, children, ...componentProps } = resolveStyles(props);
-
-        const IconElement = createSlot(children || <ConfirmOutlineIcon size="100%" />);
+    ({ className, children, ...props }, ref) => {
+        const IconElement = createSlot(children || <ConfirmOutlineIcon />);
 
         return (
             <BaseSelect.ItemIndicator
                 ref={ref}
                 className={clsx(styles.itemIndicator, className)}
-                {...componentProps}
+                {...props}
             >
                 <IconElement />
             </BaseSelect.ItemIndicator>
@@ -299,9 +281,7 @@ MultiSelectItemIndicator.displayName = 'MultiSelect.ItemIndicator';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectGroup = forwardRef<HTMLDivElement, MultiSelectGroup.Props>((props, ref) => {
-    const componentProps = resolveStyles(props);
-
-    return <BaseSelect.Group ref={ref} {...componentProps} />;
+    return <BaseSelect.Group ref={ref} {...props} />;
 });
 MultiSelectGroup.displayName = 'MultiSelect.Group';
 
@@ -310,14 +290,12 @@ MultiSelectGroup.displayName = 'MultiSelect.Group';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectGroupLabel = forwardRef<HTMLDivElement, MultiSelectGroupLabel.Props>(
-    (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
-
+    ({ className, ...props }, ref) => {
         return (
             <BaseSelect.GroupLabel
                 ref={ref}
                 className={clsx(styles.groupLabel, className)}
-                {...componentProps}
+                {...props}
             />
         );
     },
@@ -329,14 +307,12 @@ MultiSelectGroupLabel.displayName = 'MultiSelect.GroupLabel';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectSeparator = forwardRef<HTMLDivElement, MultiSelectSeparator.Props>(
-    (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
-
+    ({ className, ...props }, ref) => {
         return (
             <BaseSelect.Separator
                 ref={ref}
                 className={clsx(styles.separator, className)}
-                {...componentProps}
+                {...props}
             />
         );
     },

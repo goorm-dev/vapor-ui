@@ -5,7 +5,6 @@ import { forwardRef } from 'react';
 import { Field as BaseField } from '@base-ui-components/react/field';
 import clsx from 'clsx';
 
-import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import * as styles from './field.css';
@@ -14,13 +13,11 @@ import * as styles from './field.css';
  * Field
  * -----------------------------------------------------------------------------------------------*/
 
-export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseField.Root ref={ref} className={clsx(styles.root, className)} {...componentProps} />
-    );
-});
+export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>(
+    ({ className, ...props }, ref) => {
+        return <BaseField.Root ref={ref} className={clsx(styles.root, className)} {...props} />;
+    },
+);
 
 FieldRoot.displayName = 'Field.Root';
 
@@ -28,13 +25,11 @@ FieldRoot.displayName = 'Field.Root';
  * Field.Label
  * -----------------------------------------------------------------------------------------------*/
 
-export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...componentProps} />
-    );
-});
+export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>(
+    ({ className, ...props }, ref) => {
+        return <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...props} />;
+    },
+);
 FieldLabel.displayName = 'Field.Label';
 
 /* -------------------------------------------------------------------------------------------------
@@ -42,14 +37,12 @@ FieldLabel.displayName = 'Field.Label';
  * -----------------------------------------------------------------------------------------------*/
 
 export const FieldDescription = forwardRef<HTMLParagraphElement, FieldDescription.Props>(
-    (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
-
+    ({ className, ...props }, ref) => {
         return (
             <BaseField.Description
-                ref={ref}
                 className={clsx(styles.description, className)}
-                {...componentProps}
+                {...props}
+                ref={ref}
             />
         );
     },
@@ -60,36 +53,37 @@ FieldDescription.displayName = 'Field.Description';
  * Field.Error
  * -----------------------------------------------------------------------------------------------*/
 
-export const FieldError = forwardRef<HTMLDivElement, FieldError.Props>((props, ref) => {
-    const { match, className, ...componentProps } = resolveStyles(props);
+export const FieldError = forwardRef<HTMLDivElement, FieldError.Props>(
+    ({ match, className, ...props }, ref) => {
+        return (
+            <BaseField.Error
+                ref={ref}
+                className={clsx(styles.error, className)}
+                {...props}
+                match={match}
+            />
+        );
+    },
+);
 
-    return (
-        <BaseField.Error
-            ref={ref}
-            className={clsx(styles.error, className)}
-            {...componentProps}
-            match={match}
-        />
-    );
-});
 FieldError.displayName = 'Field.Error';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Success
  * -----------------------------------------------------------------------------------------------*/
 
-export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>((props, ref) => {
-    const { match = 'valid', className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseField.Error
-            ref={ref}
-            className={clsx(styles.success, className)}
-            {...componentProps}
-            match={match}
-        />
-    );
-});
+export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>(
+    ({ match = 'valid', className, ...props }, ref) => {
+        return (
+            <BaseField.Error
+                ref={ref}
+                className={clsx(styles.success, className)}
+                {...props}
+                match={match}
+            />
+        );
+    },
+);
 FieldSuccess.displayName = 'Field.Success';
 
 /* -----------------------------------------------------------------------------------------------*/
@@ -107,10 +101,13 @@ export namespace FieldDescription {
 }
 
 export namespace FieldError {
-    type ErrorValidityState = Omit<BaseField.ValidityData['state'], 'valid'>;
+    type ErrorValidityState = Omit<
+        Parameters<BaseField.Validity.Props['children']>[0]['validity'],
+        'valid'
+    >;
     type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
-    type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
 
+    type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
     export interface Props extends Assign<BaseFieldErrorProps, ErrorMatchProps> {}
 }
 

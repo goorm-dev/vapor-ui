@@ -47,10 +47,10 @@ export default function SelectControlled() {
             </Text>
 
             <HStack gap="$100">
-                <Button colorPalette="primary" onClick={() => setValue('serif')}>
+                <Button color="primary" onClick={() => setValue('serif')}>
                     Serif 선택
                 </Button>
-                <Button onClick={() => setValue('')} colorPalette="secondary">
+                <Button onClick={() => setValue('')} color="secondary">
                     선택 해제
                 </Button>
             </HStack>

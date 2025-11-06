@@ -7,10 +7,14 @@ import { Flex } from '../flex';
 
 type HStackVariants = { reverse?: boolean };
 
-export const HStack = forwardRef<HTMLDivElement, HStack.Props>((props, ref) => {
-    const [{ reverse }, otherProps] = createSplitProps<HStackVariants>()(props, ['reverse']);
+export const HStack = forwardRef<HTMLDivElement, HStack.Props>(({ children, ...props }, ref) => {
+    const [hStackProps, otherProps] = createSplitProps<HStackVariants>()(props, ['reverse']);
 
-    return <Flex ref={ref} flexDirection={reverse ? 'row-reverse' : 'row'} {...otherProps} />;
+    return (
+        <Flex flexDirection={hStackProps.reverse ? 'row-reverse' : 'row'} ref={ref} {...otherProps}>
+            {children}
+        </Flex>
+    );
 });
 HStack.displayName = 'HStack';
 

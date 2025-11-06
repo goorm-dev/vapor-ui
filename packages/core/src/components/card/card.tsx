@@ -5,7 +5,6 @@ import { forwardRef } from 'react';
 import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
-import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './card.css';
@@ -14,72 +13,72 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
-
-    return useRender({
-        ref,
-        render: render || <div />,
-        props: {
-            className: clsx(styles.root, className),
-            ...componentProps,
-        },
-    });
-});
+export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>(
+    ({ render, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(styles.root, className),
+                ...props,
+            },
+        });
+    },
+);
 CardRoot.displayName = 'Card.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
-export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
-
-    return useRender({
-        ref,
-        render: render || <div />,
-        props: {
-            className: clsx(styles.header, className),
-            ...componentProps,
-        },
-    });
-});
+export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>(
+    ({ render, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(styles.header, className),
+                ...props,
+            },
+        });
+    },
+);
 CardHeader.displayName = 'Card.Header';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
-export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
-
-    return useRender({
-        ref,
-        render: render || <div />,
-        props: {
-            className: clsx(styles.body, className),
-            ...componentProps,
-        },
-    });
-});
+export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>(
+    ({ render, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(styles.body, className),
+                ...props,
+            },
+        });
+    },
+);
 CardBody.displayName = 'Card.Body';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, ref) => {
-    const { render, className, ...componentProps } = resolveStyles(props);
-
-    return useRender({
-        ref,
-        render: render || <div />,
-        props: {
-            className: clsx(styles.footer, className),
-            ...componentProps,
-        },
-    });
-});
+export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>(
+    ({ render, className, ...props }, ref) => {
+        return useRender({
+            ref,
+            render: render || <div />,
+            props: {
+                className: clsx(styles.footer, className),
+                ...props,
+            },
+        });
+    },
+);
 CardFooter.displayName = 'Card.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/

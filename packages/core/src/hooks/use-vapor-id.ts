@@ -1,8 +1,9 @@
 import * as React from 'react';
 
-import type { AnyProp } from '~/utils/types';
-
 import { useIsoLayoutEffect } from './use-iso-layout-effect';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyProp = any;
 
 const useReactId = (React as AnyProp)[' useId '.trim().toString()] || (() => undefined);
 let globalId = 0;

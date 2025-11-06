@@ -8,7 +8,7 @@ export default {
     component: IconButton,
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
-        colorPalette: {
+        color: {
             control: 'inline-radio',
             options: ['primary', 'secondary', 'success', 'warning', 'danger', 'contrast'],
         },
@@ -32,18 +32,18 @@ export const TestBed: Story = {
     render: () => (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div style={{ display: 'flex' }}>
-                <IconButtons colorPalette="primary" />
-                <IconButtons colorPalette="primary" disabled />
-                <IconButtons colorPalette="secondary" />
-                <IconButtons colorPalette="secondary" disabled />
-                <IconButtons colorPalette="success" />
-                <IconButtons colorPalette="success" disabled />
-                <IconButtons colorPalette="warning" />
-                <IconButtons colorPalette="warning" disabled />
-                <IconButtons colorPalette="danger" />
-                <IconButtons colorPalette="danger" disabled />
-                <IconButtons colorPalette="contrast" />
-                <IconButtons colorPalette="contrast" disabled />
+                <IconButtons color="primary" />
+                <IconButtons color="primary" disabled />
+                <IconButtons color="secondary" />
+                <IconButtons color="secondary" disabled />
+                <IconButtons color="success" />
+                <IconButtons color="success" disabled />
+                <IconButtons color="warning" />
+                <IconButtons color="warning" disabled />
+                <IconButtons color="danger" />
+                <IconButtons color="danger" disabled />
+                <IconButtons color="contrast" />
+                <IconButtons color="contrast" disabled />
             </div>
 
             <div>
@@ -66,29 +66,18 @@ export const TestBed: Story = {
         </div>
     ),
 };
-
-const IconButtons = ({ colorPalette, disabled }: Partial<IconButton.Props>) => {
+const IconButtons = ({ color, disabled }: Partial<IconButton.Props>) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <IconButton
-                aria-label="Button Label"
-                colorPalette={colorPalette}
-                disabled={disabled}
-                variant="fill"
-            >
+            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="fill">
+                <HeartIcon />
+            </IconButton>
+            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="ghost">
                 <HeartIcon />
             </IconButton>
             <IconButton
                 aria-label="Button Label"
-                colorPalette={colorPalette}
-                disabled={disabled}
-                variant="ghost"
-            >
-                <HeartIcon />
-            </IconButton>
-            <IconButton
-                aria-label="Button Label"
-                colorPalette={colorPalette}
+                color={color}
                 disabled={disabled}
                 variant="outline"
             >

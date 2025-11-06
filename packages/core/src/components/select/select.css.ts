@@ -62,7 +62,7 @@ export const trigger = recipe({
 });
 
 export const value = recipe({
-    base: [foregrounds({ color: 'normal-200' }), { whiteSpace: 'nowrap' }],
+    base: foregrounds({ color: 'normal-200' }),
 
     defaultVariants: { size: 'md' },
     variants: {

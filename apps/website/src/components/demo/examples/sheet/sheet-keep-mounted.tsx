@@ -32,7 +32,7 @@ export default function SheetKeepMounted() {
 
             {/* Keep Mounted Sheet */}
             <Sheet.Root>
-                <Sheet.Trigger render={<Button variant="outline" colorPalette="success" />}>
+                <Sheet.Trigger render={<Button variant="outline" color="success" />}>
                     유지 Sheet
                 </Sheet.Trigger>
                 <Sheet.Content portalProps={{ keepMounted: true }}>

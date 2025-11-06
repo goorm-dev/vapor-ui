@@ -9,7 +9,6 @@ import clsx from 'clsx';
 import { useInputGroup } from '~/components/input-group';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
-import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { RootVariants } from './text-input.css';
@@ -27,56 +26,50 @@ type BaseProps = TextInputVariants & {
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, ref) => {
-    const {
-        value: valueProp,
-        onValueChange,
-        defaultValue = '',
-        className,
-        ...componentProps
-    } = resolveStyles(props);
+export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>(
+    ({ onValueChange, value: valueProp, defaultValue = '', className, ...props }, ref) => {
+        const [textInputRootProps, otherProps] = createSplitProps<TextInputVariants>()(props, [
+            'size',
+            'invalid',
+        ]);
 
-    const [variantProps, otherProps] = createSplitProps<TextInputVariants>()(componentProps, [
-        'size',
-        'invalid',
-    ]);
+        const { invalid, size } = textInputRootProps;
+        const { disabled, readOnly, required } = otherProps;
 
-    const { invalid, size } = variantProps;
-    const { disabled, readOnly, required } = otherProps;
+        const { current: isControlled } = useRef(valueProp !== undefined);
 
-    const { current: isControlled } = useRef(valueProp !== undefined);
+        const [value, setValue] = useControlled({
+            controlled: valueProp,
+            default: defaultValue,
+            name: 'TextInput',
+            state: 'value',
+        });
 
-    const [value, setValue] = useControlled({
-        controlled: valueProp,
-        default: defaultValue,
-        name: 'TextInput',
-        state: 'value',
-    });
+        const handleChange = (value: string, event: Event) => {
+            setValue(value);
+            onValueChange?.(value, event);
+        };
 
-    const handleChange = (value: string, event: Event) => {
-        setValue(value);
-        onValueChange?.(value, event);
-    };
+        useInputGroup({
+            value,
+            maxLength: otherProps.maxLength,
+        });
 
-    useInputGroup({
-        value,
-        maxLength: otherProps.maxLength,
-    });
+        const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
 
-    const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
-
-    return (
-        <BaseInput
-            ref={ref}
-            {...(isControlled ? { value } : { defaultValue })}
-            aria-invalid={invalid}
-            onValueChange={handleChange}
-            className={clsx(styles.root({ invalid, size }), className)}
-            {...dataAttrs}
-            {...otherProps}
-        />
-    );
-});
+        return (
+            <BaseInput
+                ref={ref}
+                {...(isControlled ? { value } : { defaultValue })}
+                aria-invalid={invalid}
+                onValueChange={handleChange}
+                className={clsx(styles.root({ invalid, size }), className)}
+                {...dataAttrs}
+                {...otherProps}
+            />
+        );
+    },
+);
 TextInput.displayName = 'TextInput';
 
 /* -----------------------------------------------------------------------------------------------*/

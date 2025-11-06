@@ -87,7 +87,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                             render={
                                 <Button
                                     variant="fill"
-                                    colorPalette="secondary"
+                                    color="secondary"
                                     style={{ textAlign: 'start' }}
                                 >
                                     Toggle
@@ -139,7 +139,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                                     <IconButton
                                         aria-label="toggle collapsible"
                                         variant="outline"
-                                        colorPalette="secondary"
+                                        color="secondary"
                                     >
                                         <ChevronDownOutlineIcon />
                                     </IconButton>

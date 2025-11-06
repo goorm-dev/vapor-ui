@@ -9,7 +9,6 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { createSplitProps } from '~/utils/create-split-props';
-import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { FallbackVariants, RootVariants } from './avatar.css';
@@ -26,75 +25,77 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(componentProps, [
-        'src',
-        'alt',
-        'size',
-        'shape',
-        'delay',
-    ]);
-    const { shape, size } = variantProps;
+export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>(
+    ({ className, ...props }, ref) => {
+        const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(props, [
+            'src',
+            'alt',
+            'size',
+            'shape',
+            'delay',
+        ]);
 
-    return (
-        <AvatarProvider value={variantProps}>
-            <BaseAvatar.Root
-                ref={ref}
-                className={clsx(styles.root({ shape, size }), className)}
-                {...otherProps}
-            />
-        </AvatarProvider>
-    );
-});
+        const { shape, size } = variantProps;
+
+        return (
+            <AvatarProvider value={variantProps}>
+                <BaseAvatar.Root
+                    ref={ref}
+                    className={clsx(styles.root({ shape, size }), className)}
+                    {...otherProps}
+                />
+            </AvatarProvider>
+        );
+    },
+);
 AvatarRoot.displayName = 'Avatar.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Image
  * -----------------------------------------------------------------------------------------------*/
 
-export const AvatarImage = forwardRef<HTMLImageElement, AvatarImage.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-    const { src, alt } = useAvatarContext();
+export const AvatarImage = forwardRef<HTMLImageElement, AvatarImage.Props>(
+    ({ className, ...props }, ref) => {
+        const { src, alt } = useAvatarContext();
 
-    return (
-        <BaseAvatar.Image
-            ref={ref}
-            src={src}
-            alt={alt}
-            className={clsx(styles.image, className)}
-            {...componentProps}
-        />
-    );
-});
+        return (
+            <BaseAvatar.Image
+                ref={ref}
+                src={src}
+                alt={alt}
+                className={clsx(styles.image, className)}
+                {...props}
+            />
+        );
+    },
+);
 AvatarImage.displayName = 'Avatar.Image';
 
 /* -------------------------------------------------------------------------------------------------
  * Avatar.Fallback
  * -----------------------------------------------------------------------------------------------*/
 
-export const AvatarFallback = forwardRef<HTMLSpanElement, AvatarFallback.Props>((props, ref) => {
-    const { className, style, children, ...componentProps } = resolveStyles(props);
-    const { size, alt, delay } = useAvatarContext();
-    const background = getRandomColor(alt);
+export const AvatarFallback = forwardRef<HTMLSpanElement, AvatarFallback.Props>(
+    ({ className, style, children, ...props }, ref) => {
+        const { size, alt, delay } = useAvatarContext();
+        const background = getRandomColor(alt);
 
-    const mergedStyle = {
-        ...assignInlineVars({ [styles.fallbackBgVar]: background }),
-        ...style,
-    };
-
-    return (
-        <BaseAvatar.Fallback
-            ref={ref}
-            delay={delay}
-            style={mergedStyle}
-            className={clsx(styles.fallback({ size }), className)}
-            {...componentProps}
-        >
-            {children ?? getAvatarInitials(alt)}
-        </BaseAvatar.Fallback>
-    );
-});
+        return (
+            <BaseAvatar.Fallback
+                ref={ref}
+                delay={delay}
+                style={{
+                    ...assignInlineVars({ [styles.fallbackBgVar]: background }),
+                    ...style,
+                }}
+                className={clsx(styles.fallback({ size }), className)}
+                {...props}
+            >
+                {children ?? getAvatarInitials(alt)}
+            </BaseAvatar.Fallback>
+        );
+    },
+);
 AvatarFallback.displayName = 'Avatar.Fallback';
 
 /* -------------------------------------------------------------------------------------------------

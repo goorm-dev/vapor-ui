@@ -8,7 +8,7 @@ export default {
     title: 'Callout',
     component: Callout.Root,
     argTypes: {
-        colorPalette: {
+        color: {
             control: 'inline-radio',
             options: ['primary', 'success', 'warning', 'danger', 'hint', 'contrast'],
         },
@@ -24,20 +24,20 @@ export const Default: Story = {
 export const TestBed: Story = {
     render: () => (
         <Flex style={{ flexDirection: 'column', gap: 'var(--vapor-size-dimension-150)' }}>
-            <Callout.Root colorPalette="primary">Anyone can develop</Callout.Root>
-            <Callout.Root colorPalette="success">Anyone can develop</Callout.Root>
-            <Callout.Root colorPalette="warning">Anyone can develop</Callout.Root>
-            <Callout.Root colorPalette="danger">Anyone can develop</Callout.Root>
-            <Callout.Root colorPalette="hint">Anyone can develop</Callout.Root>
-            <Callout.Root colorPalette="contrast">Anyone can develop</Callout.Root>
+            <Callout.Root color="primary">Anyone can develop</Callout.Root>
+            <Callout.Root color="success">Anyone can develop</Callout.Root>
+            <Callout.Root color="warning">Anyone can develop</Callout.Root>
+            <Callout.Root color="danger">Anyone can develop</Callout.Root>
+            <Callout.Root color="hint">Anyone can develop</Callout.Root>
+            <Callout.Root color="contrast">Anyone can develop</Callout.Root>
 
-            <Callout.Root colorPalette="success">
+            <Callout.Root color="success">
                 <Callout.Icon>
                     <CheckboxIcon />
                 </Callout.Icon>
                 Success operation completed
             </Callout.Root>
-            <Callout.Root colorPalette="danger">
+            <Callout.Root color="danger">
                 <Callout.Icon>
                     <CloseOutlineIcon />
                 </Callout.Icon>
