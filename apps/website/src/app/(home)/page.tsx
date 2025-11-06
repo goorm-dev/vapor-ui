@@ -123,9 +123,9 @@ const ThemeSection = () => {
                         Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌 디자인을 제공합니다
                     </Text>
                     <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
-                        <Badge color="hint">Primary: #3174dc</Badge>
-                        <Badge color="hint">Border-radius: md</Badge>
-                        <Badge color="hint">Scaling: 100%</Badge>
+                        <Badge colorPalette="hint">Primary: #3174dc</Badge>
+                        <Badge colorPalette="hint">Border-radius: md</Badge>
+                        <Badge colorPalette="hint">Scaling: 100%</Badge>
                     </div>
                 </div>
             </LocalTabsContent>
@@ -136,9 +136,9 @@ const ThemeSection = () => {
                         적합합니다
                     </Text>
                     <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
-                        <Badge color="hint">Primary: #8b5cf6</Badge>
-                        <Badge color="hint">Border-radius: xl</Badge>
-                        <Badge color="hint">Scaling: 100%</Badge>
+                        <Badge colorPalette="hint">Primary: #8b5cf6</Badge>
+                        <Badge colorPalette="hint">Border-radius: xl</Badge>
+                        <Badge colorPalette="hint">Scaling: 100%</Badge>
                     </div>
                 </div>
             </LocalTabsContent>
@@ -149,9 +149,9 @@ const ThemeSection = () => {
                         적합합니다
                     </Text>
                     <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
-                        <Badge color="hint">Primary: #ec4899</Badge>
-                        <Badge color="hint">Border-radius: full</Badge>
-                        <Badge color="hint">Scaling: 120%</Badge>
+                        <Badge colorPalette="hint">Primary: #ec4899</Badge>
+                        <Badge colorPalette="hint">Border-radius: full</Badge>
+                        <Badge colorPalette="hint">Scaling: 120%</Badge>
                     </div>
                 </div>
             </LocalTabsContent>
@@ -189,7 +189,7 @@ export default function HomePage() {
                         <div className="flex flex-col items-center gap-10 self-stretch">
                             <div className="flex flex-col items-center gap-4 self-stretch">
                                 <div className="flex flex-col items-center gap-[var(--vapor-size-space-050)] self-stretch">
-                                    <Badge size="lg" color="hint" shape="pill">
+                                    <Badge size="lg" colorPalette="hint" shape="pill">
                                         구름 디자인 시스템 3.0
                                     </Badge>
 
@@ -263,7 +263,7 @@ export default function HomePage() {
                                     <div className="flex items-center gap-[var(--vapor-size-space-100)]">
                                         <Badge
                                             render={<kbd />}
-                                            color="hint"
+                                            colorPalette="hint"
                                             size="md"
                                             shape="square"
                                             className="text-lg"
@@ -272,7 +272,7 @@ export default function HomePage() {
                                         </Badge>
                                         <Badge
                                             render={<kbd />}
-                                            color="hint"
+                                            colorPalette="hint"
                                             size="md"
                                             shape="square"
                                             className="h-[24px] w-[24px]"
@@ -286,7 +286,7 @@ export default function HomePage() {
 
                         <Button
                             size="lg"
-                            color="secondary"
+                            colorPalette="secondary"
                             className={'w-full md:w-auto'}
                             render={
                                 <Link href="/docs">

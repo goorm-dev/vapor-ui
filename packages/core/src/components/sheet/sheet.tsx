@@ -15,6 +15,7 @@ import { createContext } from '~/libs/create-context';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Dialog } from '../dialog';
@@ -73,13 +74,9 @@ export const SheetRoot = ({
 
     useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
 
-    const handleOpenChange = (
-        ...params: Parameters<NonNullable<SheetRoot.Props['onOpenChange']>>
-    ) => {
-        const [nextOpen] = params;
-
-        setOpen(nextOpen);
-        onOpenChange?.(...params);
+    const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
+        setOpen(open);
+        onOpenChange?.(open, eventDetails);
     };
 
     return (
@@ -132,58 +129,54 @@ const [SheetPositionerProvider, useSheetPositionerContext] = createContext<Posit
     hookName: 'useSheetPositionerContext',
 });
 
-export const SheetPositioner = forwardRef<HTMLDivElement, SheetPositioner.Props>(
-    ({ render, ...props }, ref) => {
-        const [positionerProps, otherProps] = createSplitProps<PositionerType>()(props, ['side']);
-        const { side = 'right' } = positionerProps;
+export const SheetPositioner = forwardRef<HTMLDivElement, SheetPositioner.Props>((props, ref) => {
+    const { render, ...componentProps } = resolveStyles(props);
 
-        const { open: contextOpen = false, mounted } = useSheetRootContext();
+    const [positionerProps, otherProps] = createSplitProps<PositionerType>()(componentProps, [
+        'side',
+    ]);
+    const { side = 'right' } = positionerProps;
 
-        const dataAttr = createDataAttributes({
-            open: contextOpen,
-            closed: !contextOpen,
-            side: side,
-        });
+    const { open: contextOpen = false, mounted } = useSheetRootContext();
 
-        const element = useRender({
-            ref,
-            render: render || <div />,
-            props: {
-                role: 'presentation',
-                hidden: !mounted,
-                ...dataAttr,
-                ...otherProps,
-            },
-        });
+    const element = useRender({
+        ref,
+        render: render || <div />,
+        state: { open: contextOpen, closed: !contextOpen, side },
+        props: {
+            role: 'presentation',
+            hidden: !mounted,
+            ...otherProps,
+        },
+    });
 
-        return <SheetPositionerProvider value={positionerProps}>{element}</SheetPositionerProvider>;
-    },
-);
+    return <SheetPositionerProvider value={positionerProps}>{element}</SheetPositionerProvider>;
+});
 SheetPositioner.displayName = 'Sheet.Positioner';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
-    ({ className, ...props }, ref) => {
-        const { popupRef } = useSheetRootContext();
-        const { side = 'right' } = useSheetPositionerContext();
+export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-        const composedRef = composeRefs(popupRef, ref);
+    const { popupRef } = useSheetRootContext();
+    const { side = 'right' } = useSheetPositionerContext();
 
-        const dataAttr = createDataAttributes({ side: side });
+    const composedRef = composeRefs(popupRef, ref);
 
-        return (
-            <BaseDialog.Popup
-                ref={composedRef}
-                className={clsx(styles.popup, className)}
-                {...dataAttr}
-                {...props}
-            />
-        );
-    },
-);
+    const dataAttr = createDataAttributes({ side });
+
+    return (
+        <BaseDialog.Popup
+            ref={composedRef}
+            className={clsx(styles.popup, className)}
+            {...dataAttr}
+            {...componentProps}
+        />
+    );
+});
 SheetPopup.displayName = 'Sheet.Popup';
 
 /* -------------------------------------------------------------------------------------------------
@@ -191,7 +184,7 @@ SheetPopup.displayName = 'Sheet.Popup';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SheetContent = forwardRef<HTMLDivElement, SheetContent.Props>(
-    ({ portalProps, overlayProps, positionerProps, className, ...props }, ref) => {
+    ({ portalProps, overlayProps, positionerProps, ...props }, ref) => {
         return (
             <SheetPortal {...portalProps}>
                 <SheetOverlay {...overlayProps} />
@@ -208,33 +201,37 @@ SheetContent.displayName = 'Sheet.Content';
  * Sheet.Header
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetHeader = forwardRef<HTMLDivElement, SheetHeader.Props>(
-    ({ className, ...props }, ref) => {
-        return <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...props} />;
-    },
-);
+export const SheetHeader = forwardRef<HTMLDivElement, SheetHeader.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...componentProps} />
+    );
+});
 SheetHeader.displayName = 'Sheet.Header';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Body
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetBody = forwardRef<HTMLDivElement, SheetBody.Props>(
-    ({ className, ...props }, ref) => {
-        return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...props} />;
-    },
-);
+export const SheetBody = forwardRef<HTMLDivElement, SheetBody.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...componentProps} />;
+});
 SheetBody.displayName = 'Sheet.Body';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetFooter = forwardRef<HTMLDivElement, SheetFooter.Props>(
-    ({ className, ...props }, ref) => {
-        return <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...props} />;
-    },
-);
+export const SheetFooter = forwardRef<HTMLDivElement, SheetFooter.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...componentProps} />
+    );
+});
 SheetFooter.displayName = 'Sheet.Footer';
 
 /* -------------------------------------------------------------------------------------------------
@@ -256,6 +253,7 @@ SheetDescription.displayName = 'Sheet.Description';
 export namespace SheetRoot {
     type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
     export interface Props extends RootPrimitiveProps {}
+    export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
 }
 
 export namespace SheetTrigger {

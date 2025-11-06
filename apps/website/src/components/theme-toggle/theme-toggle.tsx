@@ -33,7 +33,7 @@ export const ThemeToggle = ({
     return (
         <IconButton
             size={size}
-            color={color}
+            colorPalette={color}
             variant={mounted ? variant : 'fill'}
             aria-label={getAriaLabel()}
             onClick={toggleTheme}
