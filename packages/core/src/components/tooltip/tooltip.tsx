@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ComponentProps } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './tooltip.css';
@@ -28,7 +29,9 @@ export const TooltipRoot = (props: TooltipRoot.Props) => {
  * -----------------------------------------------------------------------------------------------*/
 
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props>((props, ref) => {
-    return <BaseTooltip.Trigger ref={ref} {...props} />;
+    const componentProps = resolveStyles(props);
+
+    return <BaseTooltip.Trigger ref={ref} {...componentProps} />;
 });
 
 /* -------------------------------------------------------------------------------------------------
@@ -44,7 +47,15 @@ export const TooltipPortal = (props: TooltipPortal.Props) => {
  * -----------------------------------------------------------------------------------------------*/
 
 export const TooltipPositioner = forwardRef<HTMLDivElement, TooltipPositioner.Props>(
-    ({ side = 'top', align = 'center', sideOffset = 8, collisionAvoidance, ...props }, ref) => {
+    (props, ref) => {
+        const {
+            side = 'top',
+            align = 'center',
+            sideOffset = 8,
+            collisionAvoidance,
+            ...componentProps
+        } = resolveStyles(props);
+
         return (
             <BaseTooltip.Positioner
                 ref={ref}
@@ -52,7 +63,7 @@ export const TooltipPositioner = forwardRef<HTMLDivElement, TooltipPositioner.Pr
                 align={align}
                 sideOffset={sideOffset}
                 collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -65,66 +76,64 @@ export const TooltipPositioner = forwardRef<HTMLDivElement, TooltipPositioner.Pr
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
-    ({ className, children, ...props }, ref) => {
-        const [side, setSide] =
-            useState<VComponentProps<typeof BaseTooltip.Positioner>['side']>('bottom');
-        const [align, setAlign] =
-            useState<VComponentProps<typeof BaseTooltip.Positioner>['align']>('center');
+export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
 
-        const position = useMemo(
-            () =>
-                getArrowPosition({
-                    side,
-                    align,
-                    offset: side === 'top' || side === 'bottom' ? 12 : 6,
-                }),
-            [side, align],
-        );
+    const [side, setSide] = useState<TooltipPositioner.Props['side']>('bottom');
+    const [align, setAlign] = useState<TooltipPositioner.Props['align']>('center');
 
-        const popupRef = useRef<HTMLDivElement>(null);
-        const composedRef = composeRefs(popupRef, ref);
+    const position = useMemo(
+        () =>
+            getArrowPosition({
+                side,
+                align,
+                offset: side === 'top' || side === 'bottom' ? 12 : 6,
+            }),
+        [side, align],
+    );
 
-        useEffect(() => {
-            if (!popupRef.current) return;
+    const popupRef = useRef<HTMLDivElement>(null);
+    const composedRef = composeRefs(popupRef, ref);
 
-            const dataset = popupRef.current.dataset;
-            const { side: initialSide, align: initialAlign } = extractPositions(dataset);
+    useEffect(() => {
+        if (!popupRef.current) return;
 
-            if (initialSide) setSide(initialSide);
-            if (initialAlign) setAlign(initialAlign);
-        }, []);
+        const dataset = popupRef.current.dataset;
+        const { side: initialSide, align: initialAlign } = extractPositions(dataset);
 
-        const arrowRef = useMutationObserver<HTMLDivElement>({
-            callback: (mutations) => {
-                mutations.forEach((mutation) => {
-                    const { attributeName, target: mutationTarget } = mutation;
+        if (initialSide) setSide(initialSide);
+        if (initialAlign) setAlign(initialAlign);
+    }, []);
 
-                    const dataset = (mutationTarget as HTMLElement).dataset;
-                    const { side: nextSide, align: nextAlign } = extractPositions(dataset);
+    const arrowRef = useMutationObserver<HTMLDivElement>({
+        callback: (mutations) => {
+            mutations.forEach((mutation) => {
+                const { attributeName, target: mutationTarget } = mutation;
 
-                    if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
-                    if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
-                });
-            },
-            options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
-        });
+                const dataset = (mutationTarget as HTMLElement).dataset;
+                const { side: nextSide, align: nextAlign } = extractPositions(dataset);
 
-        return (
-            <BaseTooltip.Popup
-                ref={composedRef}
-                className={clsx(styles.popup, className)}
-                {...props}
-            >
-                <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
-                    <ArrowIcon />
-                </BaseTooltip.Arrow>
+                if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
+                if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
+            });
+        },
+        options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
+    });
 
-                {children}
-            </BaseTooltip.Popup>
-        );
-    },
-);
+    return (
+        <BaseTooltip.Popup
+            ref={composedRef}
+            className={clsx(styles.popup, className)}
+            {...componentProps}
+        >
+            <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                <ArrowIcon />
+            </BaseTooltip.Arrow>
+
+            {children}
+        </BaseTooltip.Popup>
+    );
+});
 
 const extractPositions = (dataset: DOMStringMap) => {
     const currentSide = dataset.side as VComponentProps<typeof BaseTooltip.Positioner>['side'];
@@ -176,7 +185,7 @@ const getArrowPosition = ({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const ArrowIcon = (props: VComponentProps<'svg'>) => {
+const ArrowIcon = (props: ComponentProps<'svg'>) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

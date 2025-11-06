@@ -5,7 +5,7 @@ import { Badge } from '.';
 export default {
     title: 'Badge',
     argTypes: {
-        color: {
+        colorPalette: {
             control: 'inline-radio',
             options: ['primary', 'success', 'warning', 'danger', 'contrast', 'hint'],
         },
