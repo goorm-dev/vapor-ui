@@ -47,6 +47,7 @@ export default {
                 'hint-200',
                 'normal-100',
                 'normal-200',
+                'white',
             ],
         },
     },

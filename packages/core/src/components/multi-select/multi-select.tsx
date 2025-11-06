@@ -9,6 +9,8 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Badge } from '../badge';
@@ -20,7 +22,8 @@ type MultiSelectSharedProps = MultiSelectVariants & {
     placeholder?: React.ReactNode;
 };
 
-type MultiSelectContext = MultiSelectSharedProps & Pick<BaseSelect.Root.Props<unknown>, 'items'>;
+type MultiSelectContext = MultiSelectSharedProps &
+    Pick<BaseSelect.Root.Props<unknown>, 'items' | 'required'>;
 
 const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectContext>({
     name: 'MultiSelectContext',
@@ -32,15 +35,17 @@ const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectCo
  * MultiSelect.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectRoot = <Value,>({ items, ...props }: MultiSelectRoot.Props<Value>) => {
+export const MultiSelectRoot = <Value,>(props: MultiSelectRoot.Props<Value>) => {
     const [sharedProps, otherProps] = createSplitProps<MultiSelectSharedProps>()(props, [
         'placeholder',
         'size',
         'invalid',
     ]);
 
+    const { items, required } = otherProps;
+
     return (
-        <MultiSelectProvider value={{ items, ...sharedProps }}>
+        <MultiSelectProvider value={{ items, required, ...sharedProps }}>
             <BaseSelect.Root {...otherProps} multiple />
         </MultiSelectProvider>
     );
@@ -52,16 +57,27 @@ MultiSelectRoot.displayName = 'MultiSelect.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectTrigger = forwardRef<HTMLButtonElement, MultiSelectTrigger.Props>(
-    ({ render = <button />, nativeButton = true, className, ...props }, ref) => {
-        const { size, invalid } = useMultiSelectContext();
+    (props, ref) => {
+        const {
+            render = <button />,
+            nativeButton = true,
+            className,
+            ...componentProps
+        } = resolveStyles(props);
+
+        const { size, required, invalid } = useMultiSelectContext();
+        const dataAttrs = createDataAttributes({ required, invalid });
 
         return (
             <BaseSelect.Trigger
                 ref={ref}
                 render={render}
                 nativeButton={nativeButton}
+                aria-invalid={invalid || undefined}
+                aria-required={required || undefined}
                 className={clsx(styles.trigger({ size, invalid }), className)}
-                {...props}
+                {...dataAttrs}
+                {...componentProps}
             />
         );
     },
@@ -73,7 +89,8 @@ MultiSelectTrigger.displayName = 'MultiSelect.Trigger';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectValue = forwardRef<HTMLSpanElement, MultiSelectValue.Props>(
-    ({ className, children: childrenProp, ...props }, ref) => {
+    (props, ref) => {
+        const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
         const { size = 'md', items, placeholder } = useMultiSelectContext();
 
         const itemMap = useMemo(() => {
@@ -110,7 +127,7 @@ export const MultiSelectValue = forwardRef<HTMLSpanElement, MultiSelectValue.Pro
             <BaseSelect.Value
                 ref={ref}
                 className={clsx(styles.value({ size }), className)}
-                {...props}
+                {...componentProps}
             >
                 {children}
             </BaseSelect.Value>
@@ -134,14 +151,15 @@ const badgeSizeMap: Record<
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectPlaceholder = forwardRef<HTMLSpanElement, MultiSelectPlaceholder.Props>(
-    ({ render, className, ...props }, ref) => {
+    (props, ref) => {
+        const { render, className, ...componentProps } = resolveStyles(props);
         const { size } = useMultiSelectContext();
 
         return (
             <BaseSelect.Value
                 ref={ref}
                 className={clsx(styles.placeholder({ size }), className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -152,7 +170,9 @@ export const MultiSelectPlaceholder = forwardRef<HTMLSpanElement, MultiSelectPla
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectTriggerIcon = forwardRef<HTMLDivElement, MultiSelectTriggerIcon.Props>(
-    ({ className, children, ...props }, ref) => {
+    (props, ref) => {
+        const { className, children, ...componentProps } = resolveStyles(props);
+
         const { size } = useMultiSelectContext();
         const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
 
@@ -160,7 +180,7 @@ export const MultiSelectTriggerIcon = forwardRef<HTMLDivElement, MultiSelectTrig
             <BaseSelect.Icon
                 ref={ref}
                 className={clsx(styles.triggerIcon({ size }), className)}
-                {...props}
+                {...componentProps}
             >
                 <IconElement />
             </BaseSelect.Icon>
@@ -191,7 +211,7 @@ export const MultiSelectPositioner = forwardRef<HTMLDivElement, MultiSelectPosit
             alignItemWithTrigger = false,
             className,
             ...componentProps
-        } = props;
+        } = resolveStyles(props);
 
         return (
             <BaseSelect.Positioner
@@ -212,11 +232,13 @@ MultiSelectPositioner.displayName = 'MultiSelect.Positioner';
  * MultiSelect.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>(
-    ({ className, ...props }, ref) => {
-        return <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...props} />;
-    },
-);
+export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
+    );
+});
 MultiSelectPopup.displayName = 'MultiSelect.Popup';
 
 /* -------------------------------------------------------------------------------------------------
@@ -240,11 +262,13 @@ MultiSelectContent.displayName = 'MultiSelect.Content';
  * MultiSelect.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItem.Props>(
-    ({ className, ...props }, ref) => {
-        return <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...props} />;
-    },
-);
+export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItem.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...componentProps} />
+    );
+});
 MultiSelectItem.displayName = 'MultiSelect.Item';
 
 /* -------------------------------------------------------------------------------------------------
@@ -252,14 +276,16 @@ MultiSelectItem.displayName = 'MultiSelect.Item';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectItemIndicator = forwardRef<HTMLSpanElement, MultiSelectItemIndicator.Props>(
-    ({ className, children, ...props }, ref) => {
-        const IconElement = createSlot(children || <ConfirmOutlineIcon />);
+    (props, ref) => {
+        const { className, children, ...componentProps } = resolveStyles(props);
+
+        const IconElement = createSlot(children || <ConfirmOutlineIcon size="100%" />);
 
         return (
             <BaseSelect.ItemIndicator
                 ref={ref}
                 className={clsx(styles.itemIndicator, className)}
-                {...props}
+                {...componentProps}
             >
                 <IconElement />
             </BaseSelect.ItemIndicator>
@@ -273,7 +299,9 @@ MultiSelectItemIndicator.displayName = 'MultiSelect.ItemIndicator';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectGroup = forwardRef<HTMLDivElement, MultiSelectGroup.Props>((props, ref) => {
-    return <BaseSelect.Group ref={ref} {...props} />;
+    const componentProps = resolveStyles(props);
+
+    return <BaseSelect.Group ref={ref} {...componentProps} />;
 });
 MultiSelectGroup.displayName = 'MultiSelect.Group';
 
@@ -282,12 +310,14 @@ MultiSelectGroup.displayName = 'MultiSelect.Group';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectGroupLabel = forwardRef<HTMLDivElement, MultiSelectGroupLabel.Props>(
-    ({ className, ...props }, ref) => {
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+
         return (
             <BaseSelect.GroupLabel
                 ref={ref}
                 className={clsx(styles.groupLabel, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
@@ -299,12 +329,14 @@ MultiSelectGroupLabel.displayName = 'MultiSelect.GroupLabel';
  * -----------------------------------------------------------------------------------------------*/
 
 export const MultiSelectSeparator = forwardRef<HTMLDivElement, MultiSelectSeparator.Props>(
-    ({ className, ...props }, ref) => {
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+
         return (
             <BaseSelect.Separator
                 ref={ref}
                 className={clsx(styles.separator, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },

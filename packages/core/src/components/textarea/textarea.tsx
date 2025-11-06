@@ -10,6 +10,8 @@ import { useInputGroup } from '~/components/input-group/input-group';
 import { useAutoResize } from '~/hooks/use-auto-resize';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { TextareaVariants } from './textarea.css';
@@ -19,59 +21,68 @@ import * as styles from './textarea.css';
  * Textarea
  * -----------------------------------------------------------------------------------------------*/
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>(
-    ({ render, value: valueProp, defaultValue = '', onValueChange, className, ...props }, ref) => {
-        const isControlled = valueProp !== undefined;
+export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>((props, ref) => {
+    const {
+        render,
+        value: valueProp,
+        defaultValue = '',
+        onValueChange,
+        className,
+        ...componentProps
+    } = resolveStyles(props);
+    const isControlled = valueProp !== undefined;
 
-        const [variantProps, otherProps] = createSplitProps<TextareaVariants>()(props, [
-            'invalid',
-            'size',
-            'autoResize',
-        ]);
+    const [variantProps, otherProps] = createSplitProps<TextareaVariants>()(componentProps, [
+        'invalid',
+        'size',
+        'autoResize',
+    ]);
 
-        const { invalid, autoResize } = variantProps;
-        const { disabled, readOnly, maxLength } = otherProps;
+    const { invalid, autoResize } = variantProps;
+    const { disabled, readOnly, required, maxLength } = otherProps;
 
-        const [value, setValue] = useControlled({
-            controlled: valueProp,
-            default: defaultValue,
-            name: 'TextArea',
-            state: 'value',
-        });
+    const [value, setValue] = useControlled({
+        controlled: valueProp,
+        default: defaultValue,
+        name: 'TextArea',
+        state: 'value',
+    });
 
-        useInputGroup({ value, maxLength });
+    useInputGroup({ value, maxLength });
 
-        const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-        const adjustHeight = useAutoResize(textareaRef);
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    const adjustHeight = useAutoResize(textareaRef);
 
-        useEffect(() => {
-            if (autoResize) {
-                adjustHeight();
-            }
-        }, [value, autoResize, adjustHeight]);
+    useEffect(() => {
+        if (autoResize) {
+            adjustHeight();
+        }
+    }, [value, autoResize, adjustHeight]);
 
-        const composedRef = composeRefs(textareaRef, ref);
+    const composedRef = composeRefs(textareaRef, ref);
 
-        const handleValueChange = (newValue: string, event: Event) => {
-            if (disabled || readOnly) return;
+    const handleValueChange = (newValue: string, event: Event) => {
+        if (disabled || readOnly) return;
 
-            onValueChange?.(newValue, event);
-            setValue(newValue);
-        };
+        onValueChange?.(newValue, event);
+        setValue(newValue);
+    };
 
-        return useRender({
-            ref: composedRef,
-            render: render || <BaseField.Control render={<textarea />} />,
-            props: {
-                ...(isControlled ? { value } : { defaultValue }),
-                'aria-invalid': invalid,
-                onValueChange: handleValueChange,
-                className: clsx(styles.textarea(variantProps), className),
-                ...otherProps,
-            },
-        });
-    },
-);
+    const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
+
+    return useRender({
+        ref: composedRef,
+        render: render || <BaseField.Control render={<textarea />} />,
+        props: {
+            ...(isControlled ? { value } : { defaultValue }),
+            'aria-invalid': invalid,
+            onValueChange: handleValueChange,
+            className: clsx(styles.textarea(variantProps), className),
+            ...dataAttrs,
+            ...otherProps,
+        },
+    });
+});
 Textarea.displayName = 'Textarea';
 
 export namespace Textarea {
