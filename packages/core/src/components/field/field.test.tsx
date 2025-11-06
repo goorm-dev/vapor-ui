@@ -157,7 +157,7 @@ describe('Field', () => {
             ) as HTMLInputElement;
 
             const maleLabel = rendered.getByText('Male');
-            const maleRadio = rendered.getByRole('radio', { name: 'Male' });
+            const maleRadio = rendered.getByTestId('male');
 
             await userEvent.click(maleLabel);
             expect(maleRadio).toBeChecked();
@@ -455,11 +455,11 @@ const FieldWithRadioGroupTest = ({
     validationMode?: 'onChange' | 'onBlur';
 }) => {
     return (
-        <Field.Root name="gender" validationMode={validationMode} disabled={disabled}>
+        <Field.Root validationMode={validationMode} disabled={disabled}>
             <legend>Select your gender</legend>
-            <RadioGroup.Root required>
+            <RadioGroup.Root required name="gender" defaultValue="other">
                 <Field.Description>Please select your gender for registration</Field.Description>
-                <Radio.Root value="male" id="male" />
+                <Radio.Root value="male" id="male" data-testid="male" />
                 <Field.Label htmlFor="male">Male</Field.Label>
 
                 <Radio.Root value="female" id="female" />
