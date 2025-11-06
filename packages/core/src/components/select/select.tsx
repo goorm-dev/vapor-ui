@@ -63,7 +63,6 @@ export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTrigger.Props>(
         ...componentProps
     } = resolveStyles(props);
 
-    // TODO required 확인
     const { size, invalid, required } = useSelectContext();
     const dataAttrs = createDataAttributes({ required, invalid });
 

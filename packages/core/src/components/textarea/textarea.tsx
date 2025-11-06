@@ -62,30 +62,17 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>((props, 
 
     return useRender({
         ref: composedRef,
-        render: <BaseField.Control render={render || <textarea />} />,
         state: { disabled, readOnly, required, invalid },
+        render: render || <BaseField.Control render={<textarea />} />,
         props: {
             ...(isControlled ? { value } : { defaultValue }),
+            'aria-invalid': invalid,
             onValueChange: handleValueChange,
             className: clsx(styles.textarea(variantProps), className),
             ...otherProps,
         },
     });
 });
-// const dataAttrs = createDataAttributes({ disabled, readOnly, required, invalid });
-
-// return useRender({
-//     ref: composedRef,
-//     render: render || <BaseField.Control render={<textarea />} />,
-//     props: {
-//         ...(isControlled ? { value } : { defaultValue }),
-//         'aria-invalid': invalid,
-//         onValueChange: handleValueChange,
-//         className: clsx(styles.textarea(variantProps), className),
-//         ...dataAttrs,
-//         ...otherProps,
-//     },
-// });
 Textarea.displayName = 'Textarea';
 
 /* -----------------------------------------------------------------------------------------------*/
