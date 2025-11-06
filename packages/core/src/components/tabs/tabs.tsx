@@ -129,6 +129,7 @@ export namespace TabsRoot {
     type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Root>;
 
     export interface Props extends RootPrimitiveProps, TabsSharedProps {}
+    export type ChangeEventDetails = BaseTabs.Root.ChangeEventDetails;
 }
 
 export namespace TabsList {

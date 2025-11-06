@@ -11,7 +11,7 @@ const meta: Meta<typeof Textarea> = {
     tags: ['autodocs'],
     argTypes: {
         size: {
-            control: { type: 'select' },
+            control: { type: 'inline-radio' },
             options: ['sm', 'md', 'lg', 'xl'],
         },
         disabled: { control: { type: 'boolean' } },
@@ -27,11 +27,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-    render: (args) => (
-        <div style={{ width: '100%', padding: '50px' }}>
-            <Textarea placeholder="Enter your text here..." {...args} />
-        </div>
-    ),
+    render: (args) => {
+        return (
+            <div style={{ width: '100%', padding: '50px' }}>
+                <Textarea placeholder="Enter your text here..." {...args} />
+            </div>
+        );
+    },
 };
 
 export const TestBed: Story = {

@@ -423,6 +423,7 @@ export namespace NavigationMenuRoot {
     export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {
         'aria-label': string;
     }
+    export type ChangeEventDetails = BaseNavigationMenu.Root.ChangeEventDetails;
 }
 
 export namespace NavigationMenuList {

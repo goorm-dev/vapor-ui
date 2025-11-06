@@ -4,7 +4,6 @@ import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
-import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -21,14 +20,13 @@ export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) =
     ]);
 
     const { disabled } = otherProps;
-    const dataAttrs = createDataAttributes({ disabled });
 
     return useRender({
         ref,
+        state: { disabled },
         render: render || <button />,
         props: {
             className: clsx(styles.root(variantsProps), className),
-            ...dataAttrs,
             ...otherProps,
         },
     });
