@@ -103,7 +103,7 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                                 className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[100px] w-px ${index === tableProps.length - 1 ? 'border-b-0' : ''}`}
                             >
                                 {prop.defaultValue ? (
-                                    <Badge color="hint" size="md">
+                                    <Badge colorPalette="hint" size="md">
                                         {prop.defaultValue}
                                     </Badge>
                                 ) : prop.isOptional ? (
@@ -117,7 +117,7 @@ const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({
                             >
                                 <div className="flex flex-wrap gap-[var(--vapor-size-space-100)]">
                                     {prop.type.map((typeValue) => (
-                                        <Badge key={typeValue} color="hint" size="md">
+                                        <Badge key={typeValue} colorPalette="hint" size="md">
                                             {typeValue}
                                         </Badge>
                                     ))}
