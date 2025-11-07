@@ -26,8 +26,8 @@
             "import": "./dist/components/*/index.js",
             "require": "./dist/components/*/index.cjs"
         },
-        "./styles.css": "./dist/styles.css",
-        "./tailwind.css": "./dist/tailwind.css"
+        "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
+        "./styles.css": "./dist/styles/themes.css.ts.vanilla.css"
     },
     "files": [
         "dist"

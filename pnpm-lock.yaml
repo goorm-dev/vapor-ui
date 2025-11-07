@@ -223,9 +223,6 @@ importers:
       '@vapor-ui/icons':
         specifier: workspace:*
         version: link:../../packages/icons
-      '@vapor-ui/radio-card':
-        specifier: file:./vapor-ui-core-radio-card.tgz
-        version: '@vapor-ui/core@file:apps/website/vapor-ui-core-radio-card.tgz(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)'
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -384,6 +381,9 @@ importers:
       jest:
         specifier: ^30.2.0
         version: 30.2.0(@types/node@20.19.17)(esbuild-register@3.6.0(esbuild@0.25.10))
+      prettier:
+        specifier: ^3.2.5
+        version: 3.6.2
       ts-jest:
         specifier: ^29.1.0
         version: 29.4.5(@babel/core@7.28.4)(@jest/transform@30.2.0)(@jest/types@30.2.0)(babel-jest@30.2.0(@babel/core@7.28.4))(esbuild@0.25.10)(jest-util@30.2.0)(jest@30.2.0(@types/node@20.19.17)(esbuild-register@3.6.0(esbuild@0.25.10)))(typescript@5.9.2)
@@ -3946,13 +3946,6 @@ packages:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@vapor-ui/core@file:apps/website/vapor-ui-core-radio-card.tgz':
-    resolution: {integrity: sha512-a6MaUYx35IqtbbrSj+ghj9mRrhSez13JYU/5AVjlWm8yEd+h9VvjDohYyBf8PcX1mLFNxmj5jYlJxK7+OUT8oQ==, tarball: file:apps/website/vapor-ui-core-radio-card.tgz}
-    version: 0.6.0
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@vapor-ui/hooks@0.1.0':
     resolution: {integrity: sha512-YbfPS3BVwA5Mwa9HYnSLGCaikBgVINtc6SKwcSpxPFgLoMYuFp9eqXBH+1Nq5xFW6WGpLWHKDzGfU0AI5ICJAQ==}
     peerDependencies:
@@ -3962,12 +3955,6 @@ packages:
     resolution: {integrity: sha512-Uga4+O5eJyFUt5B876lC1X/kn8FtRKmDA5Pb+w2qOfBa3JYusdtPTdHnbeEntq8qYBqee0EKoUmKOfe7JgFcEQ==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@vapor-ui/icons@0.4.0':
-    resolution: {integrity: sha512-10qWMkEoAXKYeaV5CpyzVOdADTyb4nLn0k8XZQjC6d+jUM2efh/72sIREPejvfeZu8mUZSWRIMLM40q2vaqXiQ==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@vapor-ui/icons@1.0.0-beta.0':
     resolution: {integrity: sha512-Kn01Ak7TB3L7ib4Ef179qZu6qyWPGLi+8Iq3ggpfFxJQcLSO1HEINB4Bqi2nGeM3udFa/tVIldZ9ehTMr3zCPg==}
@@ -11805,25 +11792,6 @@ snapshots:
       - '@types/react'
       - babel-plugin-macros
 
-  '@vapor-ui/core@file:apps/website/vapor-ui-core-radio-card.tgz(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@base-ui-components/react': 1.0.0-beta.2(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@base-ui-components/utils': 0.1.1(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@vanilla-extract/css': 1.17.4
-      '@vanilla-extract/css-utils': 0.1.6
-      '@vanilla-extract/dynamic': 2.1.5
-      '@vanilla-extract/recipes': 0.5.7(@vanilla-extract/css@1.17.4)
-      '@vanilla-extract/sprinkles': 1.6.5(@vanilla-extract/css@1.17.4)
-      '@vapor-ui/hooks': 0.1.0(react@18.3.1)
-      '@vapor-ui/icons': 0.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      clsx: 2.1.1
-      rainbow-sprinkles: 1.0.0(@vanilla-extract/css@1.17.4)(@vanilla-extract/dynamic@2.1.5)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-    transitivePeerDependencies:
-      - '@types/react'
-      - babel-plugin-macros
-
   '@vapor-ui/hooks@0.1.0(react@18.3.1)':
     dependencies:
       react: 18.3.1
@@ -11831,12 +11799,6 @@ snapshots:
   '@vapor-ui/hooks@1.0.0-beta.0(react@19.2.0)':
     dependencies:
       react: 19.2.0
-
-  '@vapor-ui/icons@0.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      clsx: 2.1.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@vapor-ui/icons@1.0.0-beta.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
