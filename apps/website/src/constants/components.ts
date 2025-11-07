@@ -17,6 +17,7 @@ import inputGroupData from '../../public/components/input-group.json';
 import menuData from '../../public/components/menu.json';
 import multiSelectData from '../../public/components/multi-select.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
+import paginationData from '../../public/components/pagination.json';
 import popoverData from '../../public/components/popover.json';
 import radioGroupData from '../../public/components/radio-group.json';
 import radioData from '../../public/components/radio.json';
@@ -64,4 +65,5 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     tooltip: tooltipData,
     'input-group': inputGroupData,
     textarea: textareaData,
+    paginationData,
 };

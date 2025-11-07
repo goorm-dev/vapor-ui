@@ -39,11 +39,11 @@ const [PaginationProvider, usePaginationContext] = createContext<PaginationConte
 export const PaginationRoot = forwardRef<HTMLElement, PaginationRoot.Props>((props, ref) => {
     const {
         render,
-        totalPages,
         page: pageProp,
         defaultPage = 1,
         onPageChange: onPageChangeProp,
 
+        totalPages,
         siblingCount = 1,
         boundaryCount = 1,
         disabled = false,
