@@ -315,25 +315,53 @@ exports[`Color Generator Snapshots > should match brandColorPalette snapshot 1`]
 
 exports[`Color Generator Snapshots > should match semanticDependentTokens snapshot 1`] = `
 {
-  "darkModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
-    "color-background-canvas-200": "color-gray-050",
-    "color-background-overlay-100": "color-gray-100",
-    "color-background-primary-100": "color-mint-050",
-    "color-background-primary-200": "color-mint-800",
-    "color-border-primary": "color-mint-800",
-    "color-foreground-100": "color-mint-900",
-    "color-foreground-200": "color-mint-900",
+  "componentSpecific": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-black",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "component-specific",
+      },
+      "tokens": {
+        "color-button-foreground-primary": "color-black",
+      },
+    },
   },
-  "lightModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
-    "color-background-canvas-200": "color-gray-050",
-    "color-background-overlay-100": "color-background-canvas",
-    "color-background-primary-100": "color-mint-100",
-    "color-background-primary-200": "color-mint-200",
-    "color-border-primary": "color-mint-200",
-    "color-foreground-100": "color-mint-300",
-    "color-foreground-200": "color-mint-400",
+  "semantic": {
+    "dark": {
+      "metadata": {
+        "theme": "dark",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-mint-800",
+        "color-background-primary-200": "color-mint-800",
+        "color-border-primary": "color-mint-800",
+        "color-foreground-primary-100": "color-mint-900",
+        "color-foreground-primary-200": "color-mint-900",
+      },
+    },
+    "light": {
+      "metadata": {
+        "theme": "light",
+        "type": "semantic",
+      },
+      "tokens": {
+        "color-background-primary-100": "color-mint-100",
+        "color-background-primary-200": "color-mint-100",
+        "color-border-primary": "color-mint-100",
+        "color-foreground-primary-100": "color-mint-200",
+        "color-foreground-primary-200": "color-mint-300",
+      },
+    },
   },
 }
 `;
