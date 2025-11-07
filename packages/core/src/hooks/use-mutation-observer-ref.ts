@@ -59,7 +59,9 @@ export const useMutationObserverRef = <T extends HTMLElement>({
             // For React 17-18, this return value is ignored
             return () => {
                 observer.disconnect();
-                observerRef.current = null;
+                if (observerRef.current === observer) {
+                    observerRef.current = null;
+                }
             };
         }
     }, []); // Empty dependency array - stable across all renders
