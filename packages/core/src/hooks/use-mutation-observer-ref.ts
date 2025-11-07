@@ -17,7 +17,6 @@ interface Params {
  * For React 19+, the callback ref returns a cleanup function that will
  * automatically disconnect the observer when the ref changes or unmounts.
  *
- * @see https://tkdodo.eu/blog/avoiding-use-effect-with-callback-refs
  * @see https://tkdodo.eu/blog/ref-callbacks-react-19-and-the-compiler
  *
  * @example
