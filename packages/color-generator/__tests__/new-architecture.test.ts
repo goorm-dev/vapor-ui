@@ -58,7 +58,7 @@ describe('New Architecture Snapshot Tests', () => {
     });
 
     describe('getSemanticDependentTokens', () => {
-        it('should generate semantic tokens from primitive palette', () => {
+        it('should generate semantic tokens with standard brand color mapping', () => {
             const primitiveResult = generatePrimitiveColorPalette({
                 brandColor: {
                     name: 'mint',
@@ -70,7 +70,7 @@ describe('New Architecture Snapshot Tests', () => {
             expect(semanticResult).toMatchSnapshot();
         });
 
-        it('should generate semantic tokens with different brand color', () => {
+        it('should apply semantic order inversion prevention for very light brand colors', () => {
             const primitiveResult = generatePrimitiveColorPalette({
                 brandColor: {
                     name: 'lightRed',
@@ -82,7 +82,7 @@ describe('New Architecture Snapshot Tests', () => {
             expect(semanticResult).toMatchSnapshot();
         });
 
-        it('should generate semantic tokens with different brand color', () => {
+        it('should handle semantic token mapping for very dark brand colors', () => {
             const primitiveResult = generatePrimitiveColorPalette({
                 brandColor: {
                     name: 'darkRed',
