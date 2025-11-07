@@ -27,10 +27,7 @@ interface Params {
  *
  * return <div ref={ref}>Content</div>;
  */
-export const useMutationObserverRef = <T extends HTMLElement>({
-    callback,
-    options,
-}: Params) => {
+export const useMutationObserverRef = <T extends HTMLElement>({ callback, options }: Params) => {
     const observerRef = useRef<MutationObserver | null>(null);
     const callbackRef = useRef(callback);
     const optionsRef = useRef(options);
