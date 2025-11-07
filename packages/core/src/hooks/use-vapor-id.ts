@@ -51,7 +51,7 @@ function useCounter(isDisabled = false) {
     return ref.current;
 }
 
-const useReactId = ((isDisabled: boolean) => useCounter(isDisabled));
+const useReactId = (React as AnyProp)[' useId '.trim().toString()] || ((isDisabled: boolean) => useCounter(isDisabled));
 
 function useVaporId(deterministicId?: string): string {
     const id = useReactId(!!deterministicId);
