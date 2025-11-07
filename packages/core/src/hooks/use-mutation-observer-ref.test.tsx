@@ -6,7 +6,7 @@ import { useMutationObserverRef } from './use-mutation-observer-ref';
 describe('useMutationObserverRef', () => {
     it('should observe mutations on the attached element', async () => {
         const callback = vi.fn();
-        let testRef: HTMLDivElement | null = null;
+        let testRef = null as HTMLDivElement | null;
 
         function TestComponent() {
             const ref = useMutationObserverRef<HTMLDivElement>({
@@ -77,7 +77,7 @@ describe('useMutationObserverRef', () => {
     it('should update to the latest callback on each render', async () => {
         const firstCallback = vi.fn();
         const secondCallback = vi.fn();
-        let testRef: HTMLDivElement | null = null;
+        let testRef = null as HTMLDivElement | null;
 
         function TestComponent({ callback }: { callback: (mutations: MutationRecord[]) => void }) {
             const ref = useMutationObserverRef<HTMLDivElement>({
@@ -126,7 +126,7 @@ describe('useMutationObserverRef', () => {
 
     it('should observe child list mutations when configured', async () => {
         const callback = vi.fn();
-        let testRef: HTMLDivElement | null = null;
+        let testRef = null as HTMLDivElement | null;
 
         function TestComponent() {
             const ref = useMutationObserverRef<HTMLDivElement>({
