@@ -1,5 +1,5 @@
 /**
- * 디자인 시스템의 기본 10개 키 컬러 (기존 호환성 유지)
+ * 디자인 시스템의 기본 11개 키 컬러 (gray 포함)
  */
 export const DEFAULT_KEY_COLORS = {
     red: '#F5535E',
@@ -12,4 +12,5 @@ export const DEFAULT_KEY_COLORS = {
     lime: '#8FD327',
     yellow: '#FFC107',
     orange: '#ED670C',
+    gray: '#ffffff',
 } as const;

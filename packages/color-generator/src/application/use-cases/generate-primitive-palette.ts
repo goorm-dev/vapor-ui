@@ -39,11 +39,9 @@ export function generatePrimitiveColorPalette(
     // 3. colors 배열 동적 구성
     const colors: KeyColor[] = [];
 
-    // 필수 팔레트: DEFAULT_KEY_COLORS에서 refBg.name과 일치하는 색상 제외
+    // 기본 팔레트: DEFAULT_KEY_COLORS 11개 (gray 포함) 모두 포함
     Object.entries(mergedOptions.keyColors).forEach(([name, hexcode]) => {
-        if (name !== refBg.name) {
-            colors.push({ name, hexcode });
-        }
+        colors.push({ name, hexcode });
     });
 
     // brandColor가 제공되면 추가
@@ -51,8 +49,12 @@ export function generatePrimitiveColorPalette(
         colors.push(options.brandColor);
     }
 
-    // PRD 요구사항: colors 배열은 '기준 배경색'을 포함하지 않아야 합니다.
-    // backgroundColor는 Leonardo Adapter에서 별도의 BackgroundColor로 처리됩니다.
+    // backgroundColor는 Leonardo Adapter에서 자동으로 별도 팔레트로 생성되므로
+    // colors 배열에 수동으로 추가할 필요가 없습니다.
+    // Leonardo는 input.colors + input.backgroundColor로 모든 팔레트를 생성합니다.
+
+    // PRD 요구사항: colors 배열은 모든 색상 팔레트를 포함합니다.
+    // backgroundColor는 여전히 Leonardo Adapter에서 별도의 BackgroundColor로 처리되어 기준점 역할을 합니다.
 
     // 4. Lightness 값 클리핑
     const lightLightness = clampLightness(mergedOptions.lightness.light, 'light');

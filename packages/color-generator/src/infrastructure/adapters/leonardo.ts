@@ -108,8 +108,13 @@ const createLeonardoTheme = ({
         ratios: contrastRatios,
     });
 
+    // backgroundColorObj와 같은 이름의 colorDefinition이 있는지 확인하여 중복 제거
+    const filteredColorDefinitions = colorDefinitions.filter(
+        colorDef => colorDef.name !== backgroundName
+    );
+
     return new Theme({
-        colors: [...colorDefinitions, backgroundColorObj],
+        colors: [...filteredColorDefinitions, backgroundColorObj],
         backgroundColor: backgroundColorObj,
         lightness,
         output: 'HEX',
