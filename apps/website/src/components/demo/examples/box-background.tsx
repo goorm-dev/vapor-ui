@@ -18,13 +18,13 @@ export default function BoxBackground() {
             <Box padding="$400" backgroundColor="$danger-200" color="$contrast-100">
                 Danger
             </Box>
-            <Box padding="$400" backgroundColor="$gray-200" color="$primary">
+            <Box padding="$400" backgroundColor="$gray-200" color="$primary-100">
                 Gray 200
             </Box>
-            <Box padding="$400" backgroundColor="$blue-500" color="$contrast">
+            <Box padding="$400" backgroundColor="$blue-500" color="$contrast-100">
                 Blue 500
             </Box>
-            <Box padding="$400" backgroundColor="$green-300" color="$primary">
+            <Box padding="$400" backgroundColor="$green-300" color="$primary-100">
                 Green 300
             </Box>
         </div>

@@ -8,7 +8,7 @@ Vapor UI core components library.
 
 ```bash
 # With npm
-npm install @vapor-ui/core@latest @vapor-ui/hooks@latest @vapor-ui/icons@latest
+npm install @vapor-ui/core@beta @vapor-ui/hooks@beta @vapor-ui/icons@beta
 ```
 
 ## License

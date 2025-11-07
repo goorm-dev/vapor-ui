@@ -5,7 +5,7 @@ description: Vapor UI 설치를 위한 가이드.
 
 <b style={{ marginBottom: 0 }}>요구사항:</b>
 <ul style={{ marginTop: 0 }}>
-    <li>React 18 or later</li>
+    <li>React 17 or later</li>
     <li>Node.js 16 or later</li>
 </ul>
 
@@ -16,84 +16,7 @@ description: Vapor UI 설치를 위한 가이드.
 다음 중 하나의 패키지 매니저를 사용하여 Vapor UI를 설치하세요:
 
 ```package-install
-npm install @vapor-ui/core@latest @vapor-ui/icons@latest
-```
-
----
-
-## 프레임워크별 설정
-
-### Next.js
-
-Next.js 프로젝트에서 Vapor UI를 설정하는 방법:
-
-#### 1. App Router (권장)
-
-`app/layout.tsx`에 스타일을 추가하세요:
-
-```tsx
-import '@vapor-ui/core/styles.css';
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <html lang="ko">
-            <body>{children}</body>
-        </html>
-    );
-}
-```
-
-#### 2. Pages Router
-
-`pages/_app.tsx`에 스타일을 추가하세요:
-
-```tsx
-import '@vapor-ui/core/styles.css';
-
-import type { AppProps } from 'next/app';
-
-export default function App({ Component, pageProps }: AppProps) {
-    return <Component {...pageProps} />;
-}
-```
-
-### Vite
-
-Vite 프로젝트에서 `src/main.tsx` 또는 `src/main.js`에 스타일을 추가하세요:
-
-```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-
-import '@vapor-ui/core/styles.css';
-
-import App from './App.tsx';
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
-);
-```
-
-### Create React App
-
-`src/index.js` 또는 `src/index.tsx`에 스타일을 추가하세요:
-
-```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-
-import '@vapor-ui/core/styles.css';
-
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
-);
+npm install @vapor-ui/core@beta @vapor-ui/icons@beta
 ```
 
 ---

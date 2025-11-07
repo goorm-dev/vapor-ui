@@ -17,6 +17,7 @@ export default {
         disabled: { control: 'boolean' },
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
         readOnly: { control: 'boolean' },
+        required: { control: 'boolean' },
     },
 } as Meta<typeof TextInput>;
 

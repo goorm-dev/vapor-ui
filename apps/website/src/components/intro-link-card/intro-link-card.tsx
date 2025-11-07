@@ -35,7 +35,7 @@ const IntroLinkCard = ({
                     </div>
                     <Button
                         size="lg"
-                        color="secondary"
+                        colorPalette="secondary"
                         render={
                             <Link href={link}>
                                 Learn more <ForwardPageOutlineIcon size={20} />

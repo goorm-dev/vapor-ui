@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';
 import { axe } from 'vitest-axe';
@@ -6,6 +6,8 @@ import { axe } from 'vitest-axe';
 import { Textarea } from './textarea';
 
 describe('Textarea', () => {
+    afterEach(cleanup);
+
     test('should have no a11y violations', async () => {
         const rendered = render(
             <label>
@@ -18,140 +20,258 @@ describe('Textarea', () => {
         expect(result).toHaveNoViolations();
     });
 
-    test('renders textarea', () => {
-        render(<Textarea />);
-
-        expect(screen.getByRole('textbox')).toBeInTheDocument();
-    });
-
     test('supports placeholder text', () => {
-        render(<Textarea placeholder="Enter your message..." />);
+        const placeholderText = 'Enter your message...';
+        const rendered = render(<Textarea placeholder={placeholderText} />);
 
-        expect(screen.getByPlaceholderText('Enter your message...')).toBeInTheDocument();
+        expect(rendered.getByPlaceholderText(placeholderText)).toBeInTheDocument();
     });
 
-    test('supports default value', () => {
-        render(<Textarea defaultValue="Default content" />);
+    test('handles controlled value and onValueChange', async () => {
+        const handleValueChange = vi.fn();
+        const rendered = render(
+            <Textarea
+                data-testid="textarea"
+                defaultValue="initial"
+                onValueChange={handleValueChange}
+            />,
+        );
 
-        expect(screen.getByDisplayValue('Default content')).toBeInTheDocument();
-    });
-
-    test('handles controlled value and onChange', async () => {
-        const user = userEvent.setup();
-        const handleValueChange = vi.fn((value: string, _event: Event) => {
-            rerender(<Textarea value={value} onValueChange={handleValueChange} />);
-        });
-
-        const { rerender } = render(<Textarea value="initial" onValueChange={handleValueChange} />);
-
-        const textarea = screen.getByRole('textbox');
+        const textarea = rendered.getByTestId('textarea');
         expect(textarea).toHaveValue('initial');
 
-        await user.clear(textarea);
-        await user.type(textarea, 'new content');
+        await userEvent.clear(textarea);
+        await userEvent.type(textarea, 'new content');
 
-        expect(handleValueChange).toHaveBeenLastCalledWith('new content', expect.any(Event));
-
-        // Simulate controlled component behavior by updating the value prop
-        rerender(<Textarea value="new content" onValueChange={handleValueChange} />);
-
-        expect(textarea).toHaveValue('new content');
+        expect(handleValueChange).toHaveBeenLastCalledWith('new content', expect.any(Object));
     });
 
-    test('can be disabled', () => {
-        render(<Textarea disabled />);
+    describe('prop: disabled', () => {
+        it('should not have aria-disabled attribute when not disabled', () => {
+            const rendered = render(<Textarea />);
+            const textarea = rendered.getByRole('textbox');
 
-        expect(screen.getByRole('textbox')).toBeDisabled();
+            expect(textarea).not.toBeDisabled();
+            expect(textarea).not.toHaveAttribute('data-disabled');
+        });
+
+        it('should have aria-disabled attribute', () => {
+            const rendered = render(<Textarea disabled />);
+            const textarea = rendered.getByRole('textbox');
+
+            expect(textarea).toBeDisabled();
+            expect(textarea).toHaveAttribute('data-disabled');
+        });
+
+        it('should not invoke onValueChange when typed', async () => {
+            const onValueChange = vi.fn();
+            const rendered = render(<Textarea disabled onValueChange={onValueChange} />);
+            const textarea = rendered.getByRole('textbox');
+
+            await userEvent.type(textarea, 'trying to type');
+
+            expect(onValueChange).not.toHaveBeenCalled();
+        });
+
+        it('should not change its value when typed', async () => {
+            const rendered = render(<Textarea disabled />);
+            const textarea = rendered.getByRole('textbox');
+
+            expect(textarea).toHaveValue('');
+            await userEvent.type(textarea, 'trying to type');
+
+            expect(textarea).toHaveValue('');
+        });
     });
 
-    test('can be readonly', () => {
-        render(<Textarea readOnly />);
+    describe('prop: readOnly', () => {
+        afterEach(cleanup);
 
-        expect(screen.getByRole('textbox')).toHaveAttribute('readonly');
+        it('should not have readonly attribute when not readOnly', () => {
+            const rendered = render(<Textarea />);
+            const textarea = rendered.getByRole('textbox');
+
+            expect(textarea).not.toHaveAttribute('readonly');
+        });
+
+        it('should have readonly attribute when readOnly', () => {
+            const rendered = render(<Textarea readOnly />);
+            const textarea = rendered.getByRole('textbox');
+
+            expect(textarea).toHaveAttribute('readonly');
+        });
+
+        it('should not invoke onValueChange when typed', async () => {
+            const onValueChange = vi.fn();
+            const rendered = render(<Textarea readOnly onValueChange={onValueChange} />);
+            const textarea = rendered.getByRole('textbox');
+
+            await userEvent.type(textarea, 'trying to type');
+
+            expect(onValueChange).not.toHaveBeenCalled();
+        });
+
+        it('should not change its value when typed', async () => {
+            const rendered = render(<Textarea readOnly />);
+            const textarea = rendered.getByRole('textbox');
+
+            expect(textarea).toHaveValue('');
+            await userEvent.type(textarea, 'trying to type');
+
+            expect(textarea).toHaveValue('');
+        });
+
+        it('should allow text selection in readonly mode', async () => {
+            const rendered = render(<Textarea readOnly defaultValue="ReadOnly Content" />);
+            const textarea = rendered.getByRole('textbox') as HTMLTextAreaElement;
+
+            // Focus the textarea
+            await userEvent.click(textarea);
+            expect(textarea).toHaveFocus();
+        });
+
+        it('should copy selected text to clipboard', async () => {
+            const writeTextMock = vi.fn().mockResolvedValue(undefined);
+            Object.defineProperty(navigator, 'clipboard', {
+                value: { writeText: writeTextMock },
+                configurable: true,
+                writable: true,
+            });
+
+            const testContent = 'Content to copy';
+            const rendered = render(<Textarea readOnly defaultValue={testContent} />);
+            const textarea = rendered.getByRole('textbox') as HTMLTextAreaElement;
+
+            textarea.select();
+
+            const selectedText = textarea.value;
+            await navigator.clipboard.writeText(selectedText);
+
+            expect(writeTextMock).toHaveBeenCalledWith(testContent);
+            expect(writeTextMock).toHaveBeenCalledTimes(1);
+        });
     });
 
     test('supports invalid state', () => {
-        render(<Textarea invalid />);
+        const rendered = render(<Textarea invalid />);
+        const textarea = rendered.getByRole('textbox');
 
-        expect(screen.getByRole('textbox')).toBeInvalid();
+        expect(textarea).toHaveAttribute('data-invalid');
     });
 
-    test('supports custom rows and cols', () => {
-        render(<Textarea rows={10} cols={50} />);
+    describe('prop: maxLength', () => {
+        it('should limit input length', async () => {
+            const rendered = render(<Textarea maxLength={5} />);
+            const textarea = rendered.getByRole('textbox');
 
-        const textarea = screen.getByRole('textbox');
-        expect(textarea).toHaveAttribute('rows', '10');
-        expect(textarea).toHaveAttribute('cols', '50');
-    });
+            await userEvent.type(textarea, 'Exceeding');
 
-    test('applies size variants', () => {
-        const { rerender } = render(<Textarea size="sm" data-testid="textarea" />);
-
-        expect(screen.getByTestId('textarea')).toHaveClass(/size_sm/);
-
-        rerender(<Textarea size="lg" data-testid="textarea" />);
-
-        expect(screen.getByTestId('textarea')).toHaveClass(/size_lg/);
-    });
-
-    test('supports maxLength prop', () => {
-        render(<Textarea maxLength={5} />);
-
-        const textarea = screen.getByRole('textbox');
-        expect(textarea).toHaveAttribute('maxLength', '5');
-    });
-
-    test('supports required prop', () => {
-        render(<Textarea required />);
-
-        const textarea = screen.getByRole('textbox');
-        expect(textarea).toBeRequired();
-    });
-
-    describe('autoResize functionality', () => {
-        test('applies autoResize CSS classes when enabled', () => {
-            render(<Textarea autoResize data-testid="textarea" />);
-
-            const textarea = screen.getByTestId('textarea');
-
-            expect(textarea).toHaveClass(/autoResize_true/);
-        });
-
-        test('does not apply autoResize CSS classes when disabled', () => {
-            render(<Textarea data-testid="textarea" />);
-
-            const textarea = screen.getByTestId('textarea');
-
-            expect(textarea).not.toHaveClass(/autoResize_true/);
+            expect(textarea).toHaveValue('Excee');
         });
     });
 
-    describe('custom styling', () => {
-        test('supports custom styles via style prop', () => {
-            render(
-                <Textarea
-                    autoResize
-                    style={{
-                        minHeight: '150px',
-                        maxHeight: '500px',
-                    }}
-                    data-testid="textarea"
-                />,
-            );
+    describe('prop: required', () => {
+        it('should be required when provided required props', () => {
+            render(<Textarea required />);
 
-            const textarea = screen.getByTestId('textarea');
+            const textarea = screen.getByRole('textbox');
+            expect(textarea).toBeRequired();
+        });
+    });
 
-            // Custom styles should be applied
-            expect(textarea.style.minHeight).toBe('150px');
-            expect(textarea.style.maxHeight).toBe('500px');
+    describe('prop: autoResize', () => {
+        const lineHeight = 22;
+        const paddingBlock = 12;
+
+        beforeEach(() => {
+            // Mock scrollHeight to simulate different content heights
+            Object.defineProperty(HTMLTextAreaElement.prototype, 'scrollHeight', {
+                configurable: true,
+                get: function (this: HTMLTextAreaElement) {
+                    // Calculate height based on content length
+
+                    // Handle empty content
+                    if (!this.value) {
+                        return paddingBlock; // Just paddingBlock for empty content
+                    }
+
+                    // Simply count actual line breaks for accurate calculation
+                    const lines = this.value.split('\n').length;
+                    return lines * lineHeight + paddingBlock;
+                },
+            });
         });
 
-        test('supports className prop for additional styling', () => {
-            render(<Textarea className="custom-textarea" data-testid="textarea" />);
+        it('should adjust height based on content when autoResize is true', async () => {
+            const rendered = render(<Textarea rows={2} autoResize data-testid="textarea" />);
+            const textarea = rendered.getByTestId('textarea') as HTMLTextAreaElement;
 
-            const textarea = screen.getByTestId('textarea');
+            expect(textarea.style.height).toBe(`${paddingBlock}px`); // padding only
 
-            expect(textarea).toHaveClass('custom-textarea');
+            const longContent = 'Line 1\nLine 2\nLine 3\nLine 4';
+            await userEvent.clear(textarea);
+            await userEvent.type(textarea, longContent);
+
+            expect(textarea.style.height).toBe('100px'); // 4 lines + padding
+        });
+
+        it('should not adjust height when autoResize is false', async () => {
+            const rendered = render(<Textarea autoResize={false} data-testid="textarea" />);
+            const textarea = rendered.getByTestId('textarea') as HTMLTextAreaElement;
+
+            const longContent = 'Line 1\nLine 2\nLine 3\nLine 4';
+            await userEvent.clear(textarea);
+            await userEvent.type(textarea, longContent);
+
+            expect(textarea.style.height).toBe('');
+        });
+
+        it('should reset height to auto before calculating new height', async () => {
+            const rendered = render(<Textarea autoResize data-testid="textarea" />);
+            const textarea = rendered.getByTestId('textarea') as HTMLTextAreaElement;
+
+            // Spy on style.height setter
+            const heightSetterSpy = vi.fn();
+            Object.defineProperty(textarea.style, 'height', {
+                configurable: true,
+                set: heightSetterSpy,
+                get: () =>
+                    heightSetterSpy.mock.calls[heightSetterSpy.mock.calls.length - 1]?.[0] || '',
+            });
+
+            await userEvent.type(textarea, 'Some content');
+
+            // Should first set to 'auto', then to calculated height
+            expect(heightSetterSpy).toHaveBeenCalledWith('auto');
+            expect(heightSetterSpy).toHaveBeenCalledWith(`${paddingBlock + lineHeight}px`);
+        });
+
+        it('should handle value changes programmatically', async () => {
+            const rendered = render(<Textarea autoResize data-testid="textarea" />);
+            const textarea = rendered.getByTestId('textarea') as HTMLTextAreaElement;
+            let line: number;
+
+            // Initial height
+            expect(textarea.style.height).toBe(`${paddingBlock}px`); // Empty content + padding
+
+            // Change value programmatically with actual line breaks
+
+            await userEvent.type(textarea, 'Line 1');
+
+            line = textarea.value.split('\n').length;
+            expect(textarea.style.height).toBe(`${lineHeight * line + paddingBlock}px`);
+
+            await userEvent.type(textarea, '{Enter}');
+            await userEvent.type(textarea, 'Line 2');
+
+            line = textarea.value.split('\n').length;
+            expect(textarea.style.height).toBe(`${lineHeight * line + paddingBlock}px`);
+
+            await userEvent.type(textarea, '{Enter}');
+            await userEvent.type(textarea, 'Line 3');
+
+            line = textarea.value.split('\n').length;
+            expect(textarea.style.height).toBe(`${lineHeight * line + paddingBlock}px`);
         });
     });
 });

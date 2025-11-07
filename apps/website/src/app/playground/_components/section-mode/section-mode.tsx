@@ -1,5 +1,4 @@
-import { useTheme } from '@vapor-ui/core';
-import { RadioCard, RadioCardGroup } from '@vapor-ui/radio-card';
+import { HStack, RadioCard, RadioGroup, useTheme } from '@vapor-ui/core';
 
 import { PanelSectionWrapper } from '../panel-section-wrapper';
 
@@ -22,16 +21,20 @@ const SectionMode = () => {
         <PanelSectionWrapper.Root>
             <PanelSectionWrapper.Title>Mode</PanelSectionWrapper.Title>
             <PanelSectionWrapper.Contents>
-                <RadioCardGroup.Root
-                    key={resolvedTheme}
-                    defaultValue={resolvedTheme ?? 'light'}
-                    orientation="horizontal"
+                <RadioGroup.Root
+                    value={resolvedTheme ?? 'light'}
                     size="md"
                     onValueChange={handleModeChange}
                 >
-                    <RadioCard.Root value="light">Light</RadioCard.Root>
-                    <RadioCard.Root value="dark">Dark</RadioCard.Root>
-                </RadioCardGroup.Root>
+                    <HStack gap="$100">
+                        <RadioCard className="flex-1" value="light">
+                            Light
+                        </RadioCard>
+                        <RadioCard className="flex-1" value="dark">
+                            Dark
+                        </RadioCard>
+                    </HStack>
+                </RadioGroup.Root>
             </PanelSectionWrapper.Contents>
         </PanelSectionWrapper.Root>
     );

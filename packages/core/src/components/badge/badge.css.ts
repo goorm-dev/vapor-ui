@@ -11,9 +11,9 @@ export const root = recipe({
         justifyContent: 'center',
     }),
 
-    defaultVariants: { color: 'primary', size: 'md', shape: 'square' },
+    defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
-        color: {
+        colorPalette: {
             primary: layerStyle('components', {
                 color: vars.color.foreground.primary[200],
                 backgroundColor: vars.color.background.primary[100],

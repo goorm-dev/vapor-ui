@@ -164,7 +164,7 @@ const CreditPurchaseCard = () => {
 
                         <Button
                             size="lg"
-                            color="secondary"
+                            colorPalette="secondary"
                             stretch
                             variant="outline"
                             className="mt-2"
@@ -261,7 +261,7 @@ const TemplateListCard = () => (
                             Template {index + 1}
                         </Text>
                         {index === 0 && (
-                            <Badge color="primary" size="sm">
+                            <Badge colorPalette="primary" size="sm">
                                 <Text typography="subtitle2">기본</Text>
                             </Badge>
                         )}
@@ -510,10 +510,10 @@ const PublicDialogCard = () => (
         {/* Footer */}
         <div className="flex px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] justify-end items-center gap-[var(--vapor-size-space-100)] self-stretch">
             <div className="flex h-[40px] p-0 justify-end items-start gap-[var(--vapor-size-space-100)] flex-1">
-                <Button size="lg" color="secondary">
+                <Button size="lg" colorPalette="secondary">
                     취소
                 </Button>
-                <Button size="lg" color="primary" className="text-white">
+                <Button size="lg" colorPalette="primary" className="text-white">
                     <SwitchIcon />
                     Public으로 변경
                 </Button>

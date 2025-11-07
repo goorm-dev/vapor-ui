@@ -15,7 +15,7 @@ export default function DefaultDialog() {
                     </Dialog.Description>
                 </Dialog.Body>
                 <Dialog.Footer style={{ marginLeft: 'auto' }}>
-                    <Button color="primary">확인</Button>
+                    <Button colorPalette="primary">확인</Button>
                 </Dialog.Footer>
             </Dialog.Content>
         </Dialog.Root>

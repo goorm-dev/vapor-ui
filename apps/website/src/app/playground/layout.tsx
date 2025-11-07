@@ -4,8 +4,6 @@ import type { Metadata } from 'next';
 
 import { PageWrapper } from './_components/page-wrapper';
 
-import './style.css';
-
 export const metadata: Metadata = {
     title: 'Playground - Vapor UI',
 };

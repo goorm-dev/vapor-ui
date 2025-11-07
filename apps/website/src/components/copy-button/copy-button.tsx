@@ -30,7 +30,7 @@ export const CopyButton = ({ markdownUrl, ...props }: CopyButtonProps) => {
     const [checked, onClick] = useCopyButton(() => handleCopyContent(markdownUrl));
 
     return (
-        <Button color="secondary" variant="outline" onClick={onClick} {...props}>
+        <Button colorPalette="secondary" variant="outline" onClick={onClick} {...props}>
             {checked ? <CopyAsMarkdownOutlineIcon /> : <CopyIcon />}
             Copy as Markdown
         </Button>

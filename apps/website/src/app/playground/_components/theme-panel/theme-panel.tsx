@@ -76,7 +76,7 @@ const ThemePanelContent = () => {
                 <Popover.Title render={<Text typography="heading5">Theme Setting</Text>} />
 
                 <div className="flex items-center gap-[var(--vapor-size-space-050)]">
-                    <Badge color="hint">V</Badge>
+                    <Badge colorPalette="hint">V</Badge>
                     <Text typography="subtitle2" foreground="hint-100">
                         로 열기/닫기
                     </Text>

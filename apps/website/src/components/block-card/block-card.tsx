@@ -17,7 +17,7 @@ export type BlockCardProps = {
 const ComingSoonContent = ({ name, description }: { name: string; description: string }) => (
     <>
         <Card.Header className="p-0 overflow-hidden relative flex items-center justify-center aspect-[5/3] bg-v-normal-darker backdrop-blur-lg">
-            <Badge color="contrast" size="lg" shape="pill">
+            <Badge colorPalette="contrast" size="lg" shape="pill">
                 Coming Soon
             </Badge>
         </Card.Header>

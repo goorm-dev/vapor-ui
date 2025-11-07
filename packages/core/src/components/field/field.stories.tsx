@@ -5,14 +5,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CheckCircleIcon } from '@vapor-ui/icons';
 
 import { Field } from '.';
+import { Box } from '../box';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Flex } from '../flex';
 import { Form } from '../form';
-import { HStack } from '../h-stack';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio-group';
 import { Switch } from '../switch';
+import { Text } from '../text';
 import { TextInput } from '../text-input';
 
 type FieldStoryArgs = React.ComponentProps<typeof Field.Root> & {
@@ -81,15 +82,19 @@ export const TestBed: Story = {
                         {...fieldArgs}
                     >
                         <Field.Description>non-required checkbox</Field.Description>
-                        <HStack gap="$100" alignItems="center">
+                        <Box render={<Field.Label />} alignItems="center">
                             <Checkbox.Root />
-                            <Field.Label>멘토님 강연 능력</Field.Label>
-                        </HStack>
+                            멘토님 강연 능력
+                        </Box>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
-                        {/* @ts-ignore */}
-                        <Field.Success match>
+                        <Box
+                            render={<Field.Success match />}
+                            display="flex"
+                            alignItems="center"
+                            gap="$050"
+                        >
                             <CheckCircleIcon /> 강의 평가가 완료되었습니다
-                        </Field.Success>
+                        </Box>
                     </Field.Root>
                     <Field.Root
                         name="vapor-policy-agreement2"
@@ -97,37 +102,35 @@ export const TestBed: Story = {
                         {...fieldArgs}
                     >
                         <Field.Description>required checkbox</Field.Description>
-                        <HStack gap="$100" alignItems="center">
+
+                        <Box render={<Field.Label />} alignItems="center">
                             <Checkbox.Root required />
-                            <Field.Label>멘토님 강연 능력</Field.Label>
-                        </HStack>
+                            멘토님 강연 능력
+                        </Box>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 강의 평가가 완료되었습니다</Field.Success>
                     </Field.Root>
                     {/* Switch Component Example */}
                     <Field.Root name="notifications" validationMode="onChange" {...fieldArgs}>
-                        <HStack gap="$100" alignItems="center" justifyContent="space-between">
-                            <Field.Label>서비스 메일 수신 동의 - required</Field.Label>
+                        <Box render={<Field.Label />} alignItems="center">
+                            서비스 메일 수신 동의 - required
                             <Switch.Root required />
-                        </HStack>
+                        </Box>
                         <Field.Description>
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
                         </Field.Description>
                         <Field.Error match>개인 정보 수신 동의가 필요합니다</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="notifications2" validationMode="onChange" {...fieldArgs}>
-                        <HStack alignItems="center" gap="$100" justifyContent="space-between">
-                            <Field.Label>이벤트성 광고 수신 동의 - non required</Field.Label>
+                        <Box render={<Field.Label />} alignItems="center">
+                            이벤트성 광고 수신 동의 - non required
                             <Switch.Root />
-                        </HStack>
+                        </Box>
                         <Field.Description>
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
                         </Field.Description>
                         <Field.Error match>개인 정보 수신 동의가 필요합니다</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
                     </Field.Root>
 
@@ -136,32 +139,34 @@ export const TestBed: Story = {
                         render={<RadioGroup.Root required />}
                         {...fieldArgs}
                     >
-                        <HStack alignItems="center" gap="$100" render={<Field.Label />}>
+                        <Box render={<Field.Label />} alignItems="center">
                             <Radio.Root value="male" />
                             남성
-                        </HStack>
+                        </Box>
 
-                        <HStack alignItems="center" gap="$100" render={<Field.Label />}>
+                        <Box render={<Field.Label />} alignItems="center">
                             <Radio.Root value="female" />
                             여성
-                        </HStack>
+                        </Box>
 
-                        <HStack alignItems="center" gap="$100" render={<Field.Label />}>
+                        <Box render={<Field.Label />} alignItems="center">
                             <Radio.Root value="other" />
                             기타
-                        </HStack>
+                        </Box>
                         <Field.Error match>성별을 반드시 선택해주세요.</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 성별이 선택되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
-                        <Field.Label>이름</Field.Label>
-                        <TextInput required />
+                        <Box render={<Field.Label />} flexDirection="column">
+                            <Text typography="subtitle2" foreground="normal-200">
+                                이름
+                            </Text>
+                            <TextInput required />
+                        </Box>
                         <Field.Description>
                             계정 생성을 위해 유효한 이름을 입력해주세요
                         </Field.Description>
                         <Field.Error match="valueMissing">이 필드는 필수입니다.</Field.Error>
-                        {/* @ts-ignore */}
                         <Field.Success match>✓ 올바른 이름 형식입니다</Field.Success>
                     </Field.Root>
 

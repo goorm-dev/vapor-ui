@@ -26,7 +26,7 @@ const radiusTokens = vars.size.borderRadius;
 
 const { foreground, button, border, black, white, logo, ...colors } = vars.color;
 
-const colorTokens = {
+const bgColorTokens = {
     // Background colors
     'primary-100': colors.background.primary[100],
     'primary-200': colors.background.primary[200],
@@ -184,7 +184,7 @@ const colorTokens = {
     white,
 };
 
-const foregroundColorTokens = {
+const colorTokens = {
     'primary-100': foreground.primary[100],
     'primary-200': foreground.primary[200],
     'secondary-100': foreground.secondary[100],
@@ -269,8 +269,8 @@ const sprinkleProperties = defineProperties({
         border: true,
         borderColor: borderColorTokens,
         borderRadius: radiusTokens,
-        backgroundColor: colorTokens,
-        color: foregroundColorTokens,
+        backgroundColor: bgColorTokens,
+        color: colorTokens,
         opacity: true,
 
         // Behavior

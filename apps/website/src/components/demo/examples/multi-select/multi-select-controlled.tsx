@@ -49,10 +49,10 @@ export default function MultiSelectControlled() {
             </Text>
 
             <HStack gap="$100">
-                <Button color="primary" onClick={() => setValue(['serif', 'mono'])}>
+                <Button colorPalette="primary" onClick={() => setValue(['serif', 'mono'])}>
                     Serif, Mono 선택
                 </Button>
-                <Button color="secondary" onClick={() => setValue([])}>
+                <Button colorPalette="secondary" onClick={() => setValue([])}>
                     모두 해제
                 </Button>
             </HStack>

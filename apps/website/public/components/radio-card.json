@@ -1,0 +1,58 @@
+{
+    "props": [
+        {
+            "prop": "value",
+            "type": ["string", "number", "null"],
+            "default": "null",
+            "description": "RadioCard의 값입니다. RadioGroup 내에서 선택된 값을 식별하는 데 사용됩니다."
+        },
+        {
+            "prop": "size",
+            "type": ["\"md\"", "\"lg\""],
+            "default": "\"md\"",
+            "description": "RadioCard의 크기를 설정합니다. RadioGroup 컨텍스트에서 상속받거나 개별적으로 설정할 수 있습니다."
+        },
+        {
+            "prop": "invalid",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "RadioCard가 유효하지 않은 상태인지 여부를 설정합니다. RadioGroup의 invalid 속성에 의해 상속될 수 있습니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "RadioCard를 비활성화할지 여부를 설정합니다. 비활성화된 카드는 선택할 수 없습니다."
+        },
+        {
+            "prop": "readOnly",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "RadioCard를 읽기 전용으로 설정할지 여부를 결정합니다. 읽기 전용 상태에서는 값을 변경할 수 없습니다."
+        },
+        {
+            "prop": "required",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "RadioCard가 필수 선택 항목인지 여부를 설정합니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "null",
+            "description": "RadioCard 요소에 적용할 CSS 클래스명입니다."
+        },
+        {
+            "prop": "render",
+            "type": ["ReactElement"],
+            "default": "button",
+            "description": "RadioCard 요소를 렌더링할 때 사용할 커스텀 렌더링 prop입니다."
+        },
+        {
+            "prop": "children",
+            "type": ["React.ReactNode"],
+            "default": "null",
+            "description": "RadioCard 내부에 렌더링할 자식 요소입니다. 일반적으로 카드에 표시될 텍스트나 콘텐츠를 포함합니다."
+        }
+    ]
+}

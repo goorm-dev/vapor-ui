@@ -3,7 +3,7 @@ import './sheet-form.css';
 import type { FormEvent } from 'react';
 import { useCallback, useState } from 'react';
 
-import { Button, Checkbox, Field, Form, HStack, Sheet, Tabs, VStack } from '@vapor-ui/core';
+import { Box, Button, Checkbox, Field, Form, Sheet, Tabs, VStack } from '@vapor-ui/core';
 import { RefreshOutlineIcon } from '@vapor-ui/icons';
 
 type FormData = typeof FORM_SCHEME;
@@ -112,290 +112,262 @@ export default function SheetForm() {
                                     <Tabs.Panel value="sort" className={'tabs-panel'}>
                                         <VStack gap="$100">
                                             {/* Sort */}
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-feedback"
-                                                    size="lg"
-                                                    checked={getFieldValues('sort').feedback}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'sort',
-                                                        'feedback',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-feedback"
+                                                        size="lg"
+                                                        checked={getFieldValues('sort').feedback}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'sort',
+                                                            'feedback',
+                                                        )}
+                                                    />
                                                     Feedback
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
 
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-buttons"
-                                                    size="lg"
-                                                    checked={getFieldValues('sort').buttons}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'sort',
-                                                        'buttons',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-buttons"
+                                                        size="lg"
+                                                        checked={getFieldValues('sort').buttons}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'sort',
+                                                            'buttons',
+                                                        )}
+                                                    />
                                                     Buttons
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
 
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-data-display"
-                                                    size="lg"
-                                                    checked={getFieldValues('sort')['data-display']}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'sort',
-                                                        'data-display',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-data-display"
+                                                        size="lg"
+                                                        checked={
+                                                            getFieldValues('sort')['data-display']
+                                                        }
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'sort',
+                                                            'data-display',
+                                                        )}
+                                                    />
                                                     Data Display
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-overlay"
-                                                    size="lg"
-                                                    checked={getFieldValues('sort').overlay}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'sort',
-                                                        'overlay',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-overlay"
+                                                        size="lg"
+                                                        checked={getFieldValues('sort').overlay}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'sort',
+                                                            'overlay',
+                                                        )}
+                                                    />
                                                     Overlay
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-inputs"
-                                                    size="lg"
-                                                    checked={getFieldValues('sort').inputs}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'sort',
-                                                        'inputs',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-inputs"
+                                                        size="lg"
+                                                        checked={getFieldValues('sort').inputs}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'sort',
+                                                            'inputs',
+                                                        )}
+                                                    />
                                                     Inputs
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-navigation"
-                                                    size="lg"
-                                                    checked={getFieldValues('sort').navigation}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'sort',
-                                                        'navigation',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-navigation"
+                                                        size="lg"
+                                                        checked={getFieldValues('sort').navigation}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'sort',
+                                                            'navigation',
+                                                        )}
+                                                    />
                                                     Navigation
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-utils"
-                                                    size="lg"
-                                                    checked={getFieldValues('sort').utils}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'sort',
-                                                        'utils',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-utils"
+                                                        size="lg"
+                                                        checked={getFieldValues('sort').utils}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'sort',
+                                                            'utils',
+                                                        )}
+                                                    />
                                                     Utils
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
                                         </VStack>
                                     </Tabs.Panel>
                                     {/* Package */}
                                     <Tabs.Panel value="package" className={'tabs-panel'}>
                                         <VStack gap="$100">
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-goorm-dev/vapor-core"
-                                                    size="lg"
-                                                    checked={
-                                                        getFieldValues('packs')[
-                                                            'goorm-dev/vapor-core'
-                                                        ]
-                                                    }
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'packs',
-                                                        'goorm-dev/vapor-core',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-goorm-dev/vapor-core"
+                                                        size="lg"
+                                                        checked={
+                                                            getFieldValues('packs')[
+                                                                'goorm-dev/vapor-core'
+                                                            ]
+                                                        }
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'packs',
+                                                            'goorm-dev/vapor-core',
+                                                        )}
+                                                    />
                                                     goorm-dev/vapor-core
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-goorm-dev/vapor-component"
-                                                    size="lg"
-                                                    checked={
-                                                        getFieldValues('packs')[
-                                                            'goorm-dev/vapor-component'
-                                                        ]
-                                                    }
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'packs',
-                                                        'goorm-dev/vapor-component',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-goorm-dev/vapor-component"
+                                                        size="lg"
+                                                        checked={
+                                                            getFieldValues('packs')[
+                                                                'goorm-dev/vapor-component'
+                                                            ]
+                                                        }
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'packs',
+                                                            'goorm-dev/vapor-component',
+                                                        )}
+                                                    />
                                                     goorm-dev/vapor-component
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-vapor-ui/core"
-                                                    size="lg"
-                                                    checked={
-                                                        getFieldValues('packs')['vapor-ui/core']
-                                                    }
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'packs',
-                                                        'vapor-ui/core',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-vapor-ui/core"
+                                                        size="lg"
+                                                        checked={
+                                                            getFieldValues('packs')['vapor-ui/core']
+                                                        }
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'packs',
+                                                            'vapor-ui/core',
+                                                        )}
+                                                    />
                                                     vapor-ui/core
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
                                         </VStack>
                                     </Tabs.Panel>
                                     {/* Status */}
                                     <Tabs.Panel value="status" className={'tabs-panel'}>
                                         <VStack gap="$100">
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-active"
-                                                    size="lg"
-                                                    checked={getFieldValues('status').active}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'status',
-                                                        'active',
-                                                    )}
-                                                />
-                                                <Field.Label className={'checkbox-label'}>
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-active"
+                                                        size="lg"
+                                                        checked={getFieldValues('status').active}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'status',
+                                                            'active',
+                                                        )}
+                                                    />
                                                     Active
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-inactive"
-                                                    size="lg"
-                                                    checked={getFieldValues('status').inactive}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'status',
-                                                        'inactive',
-                                                    )}
-                                                />
-                                                <Field.Label className={'checkbox-label'}>
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-inactive"
+                                                        size="lg"
+                                                        checked={getFieldValues('status').inactive}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'status',
+                                                            'inactive',
+                                                        )}
+                                                    />
                                                     Inactive
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-draft"
-                                                    size="lg"
-                                                    checked={getFieldValues('status').draft}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'status',
-                                                        'draft',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-draft"
+                                                        size="lg"
+                                                        checked={getFieldValues('status').draft}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'status',
+                                                            'draft',
+                                                        )}
+                                                    />
                                                     Draft
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
                                         </VStack>
                                     </Tabs.Panel>
                                     {/* Tag */}
                                     <Tabs.Panel value="tag" className={'tabs-panel'}>
                                         <VStack gap="$100">
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-ui"
-                                                    size="lg"
-                                                    checked={getFieldValues('tag').ui}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'tag',
-                                                        'ui',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-ui"
+                                                        size="lg"
+                                                        checked={getFieldValues('tag').ui}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'tag',
+                                                            'ui',
+                                                        )}
+                                                    />
                                                     UI
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
 
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-open-source"
-                                                    size="lg"
-                                                    checked={getFieldValues('tag')['open-source']}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'tag',
-                                                        'open-source',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-open-source"
+                                                        size="lg"
+                                                        checked={
+                                                            getFieldValues('tag')['open-source']
+                                                        }
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'tag',
+                                                            'open-source',
+                                                        )}
+                                                    />
                                                     Open Source
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
 
-                                            <Field.Root
-                                                render={<HStack alignItems="center" gap="$100" />}
-                                            >
-                                                <Checkbox.Root
-                                                    id="sheet-performance"
-                                                    size="lg"
-                                                    checked={getFieldValues('tag').performance}
-                                                    onCheckedChange={handleCheckboxChange(
-                                                        'tag',
-                                                        'performance',
-                                                    )}
-                                                />
-                                                <Field.Label className="checkbox-label">
+                                            <Field.Root>
+                                                <Box render={<Field.Label />} alignItems="center">
+                                                    <Checkbox.Root
+                                                        id="sheet-performance"
+                                                        size="lg"
+                                                        checked={getFieldValues('tag').performance}
+                                                        onCheckedChange={handleCheckboxChange(
+                                                            'tag',
+                                                            'performance',
+                                                        )}
+                                                    />
                                                     Performance
-                                                </Field.Label>
+                                                </Box>
                                             </Field.Root>
                                         </VStack>
                                     </Tabs.Panel>
@@ -405,7 +377,7 @@ export default function SheetForm() {
                                 <Button
                                     type="reset"
                                     size="lg"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     className="refresh-button"
                                     form="sheet-form"
                                 >

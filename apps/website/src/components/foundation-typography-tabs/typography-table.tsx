@@ -40,7 +40,7 @@ const TypographyTable = ({ tokens }: TypographyTableProps) => {
                     {tokens.map((token) => (
                         <tr key={token.name} className="border-b border-gray-100">
                             <td className="py-3 px-4">
-                                <Badge size="sm" color="hint">
+                                <Badge size="sm" colorPalette="hint">
                                     {token.cssVariable}
                                 </Badge>
                             </td>

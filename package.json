@@ -20,6 +20,7 @@
         "format:check": "turbo run format:check",
         "build:storybook": "turbo run build:storybook",
         "test:regressions": "turbo run test:regressions",
+        "test:update-snapshots": "turbo run test:regressions -- --update-snapshots",
         "core": "pnpm --filter @vapor-ui/core",
         "hooks": "pnpm --filter @vapor-ui/hooks",
         "icons": "pnpm --filter @vapor-ui/icons",

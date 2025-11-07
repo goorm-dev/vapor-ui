@@ -15,7 +15,7 @@ export default function DialogComposition() {
                 </Dialog.Body>
                 <Dialog.Footer>
                     <Dialog.Close render={<Button variant="ghost">취소</Button>} />
-                    <Dialog.Close render={<Button color="danger">삭제</Button>} />
+                    <Dialog.Close render={<Button colorPalette="danger">삭제</Button>} />
                 </Dialog.Footer>
             </Dialog.Content>
         </Dialog.Root>

@@ -13,11 +13,11 @@ export default function Block6() {
             paddingX={{ desktop: '$400', mobile: '$200' }}
             paddingY={{ desktop: '$100', mobile: '$050' }}
         >
-            <IconButton aria-label="back" variant="outline" color="secondary">
+            <IconButton aria-label="back" variant="outline" colorPalette="secondary">
                 <BackPageOutlineIcon />
             </IconButton>
             <LogoSvg className="logo" />
-            <IconButton aria-label="next" variant="outline" color="secondary">
+            <IconButton aria-label="next" variant="outline" colorPalette="secondary">
                 <ForwardPageOutlineIcon />
             </IconButton>
         </HStack>
