@@ -6,7 +6,7 @@ import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { Popover as BasePopover } from '@base-ui-components/react/popover';
 import clsx from 'clsx';
 
-import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -110,7 +110,7 @@ export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>((prop
         if (initialAlign) setAlign(initialAlign);
     }, []);
 
-    const arrowRef = useMutationObserver<HTMLDivElement>({
+    const arrowRef = useMutationObserverRef<HTMLDivElement>({
         callback: (mutations) => {
             mutations.forEach((mutation) => {
                 const { attributeName, target: mutationTarget } = mutation;

@@ -7,7 +7,7 @@ import { NavigationMenu as BaseNavigationMenu } from '@base-ui-components/react'
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
-import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
@@ -288,7 +288,7 @@ export const NavigationMenuPopup = forwardRef<HTMLElement, NavigationMenuPopup.P
             if (initialAlign) setAlign(initialAlign);
         }, []);
 
-        const arrowRef = useMutationObserver<HTMLDivElement>({
+        const arrowRef = useMutationObserverRef<HTMLDivElement>({
             callback: (mutations) => {
                 mutations.forEach((mutation) => {
                     const { attributeName, target: mutationTarget } = mutation;
