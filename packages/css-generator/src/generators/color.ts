@@ -1,60 +1,65 @@
-import { generateBrandColorPalette, getSemanticDependentTokens } from '@vapor-ui/color-generator';
-import type { ColorToken, Tokens } from '@vapor-ui/color-generator';
+import {
+    generatePrimitiveColorPalette,
+    getSemanticDependentTokens,
+} from '@vapor-ui/color-generator';
+import type { SemanticResult, ThemeResult } from '@vapor-ui/color-generator';
 
 import { DEFAULT_PREFIX } from '~/constants';
 
 import type { CSSGeneratorOptions, ColorThemeConfig, ThemeVariant } from '../types';
 import { type CSSRule, createCSSVariable, formatCSS } from '../utils';
 
-type BrandColorPalette = ReturnType<typeof generateBrandColorPalette>;
-type SemanticTokens = ReturnType<typeof getSemanticDependentTokens>;
-
 interface ColorCSSGeneratorContext {
-    brandPalette: BrandColorPalette;
-    semanticTokens: SemanticTokens;
+    themeResult: ThemeResult;
+    semanticTokens: SemanticResult;
     options: Required<CSSGeneratorOptions>;
 }
 
-const isColorToken = (value: string | ColorToken): value is ColorToken => {
-    return typeof value === 'object' && 'hex' in value && 'codeSyntax' in value;
+const generatePaletteVariables = (
+    palettes: ThemeResult['lightModeTokens']['palettes'],
+    prefix: string,
+) => {
+    const variables: ReturnType<typeof createCSSVariable>[] = [];
+
+    palettes.forEach((palette) => {
+        Object.values(palette.chips).forEach((chip) => {
+            const variableName = chip.codeSyntax.replace('vapor-', `${prefix}-`);
+            variables.push(createCSSVariable(variableName, chip.hex));
+        });
+    });
+
+    return variables;
 };
 
-const generatePaletteVariables = (tokens: Tokens, prefix: string) => {
-    return Object.entries(tokens)
-        .filter(([, tokenData]) => isColorToken(tokenData))
-        .map(([, tokenData]) => {
-            const token = tokenData as ColorToken;
-            const variableName = token.codeSyntax.replace('vapor-', `${prefix}-`);
-            return createCSSVariable(variableName, token.hex);
-        });
-};
-
-const generateSemanticVariables = (tokens: Tokens, prefix: string) => {
-    return Object.entries(tokens)
-        .filter(([, tokenValue]) => typeof tokenValue === 'string')
-        .map(([tokenName, tokenValue]) => {
-            const value = tokenValue as string;
-            const variableName = `${prefix}-${tokenName}`;
-            const valueReference = value.startsWith('color-') ? `var(--${prefix}-${value})` : value;
-            return createCSSVariable(variableName, valueReference);
-        });
+const generateSemanticVariables = (
+    semanticTokens: SemanticResult['lightModeTokens'],
+    prefix: string,
+) => {
+    return Object.entries(semanticTokens).map(([tokenName, tokenValue]) => {
+        const variableName = `${prefix}-${tokenName}`;
+        const valueReference = tokenValue.startsWith('color-')
+            ? `var(--${prefix}-${tokenValue})`
+            : tokenValue;
+        return createCSSVariable(variableName, valueReference);
+    });
 };
 
 const generateRootThemeCSS = (
     context: ColorCSSGeneratorContext,
     variant: ThemeVariant,
 ): CSSRule => {
-    const { brandPalette, semanticTokens, options } = context;
+    const { themeResult, semanticTokens, options } = context;
     const { prefix } = options;
 
-    const paletteTokens = brandPalette[variant]?.tokens || {};
-    const semanticData = semanticTokens.semantic[variant]?.tokens || {};
-    const componentData = semanticTokens.componentSpecific[variant]?.tokens || {};
+    const modeTokens =
+        variant === 'light' ? themeResult.lightModeTokens : themeResult.darkModeTokens;
+
+    const semanticModeTokens =
+        variant === 'light' ? semanticTokens.lightModeTokens : semanticTokens.darkModeTokens;
 
     const properties = [
-        ...generatePaletteVariables(paletteTokens, prefix),
-        ...generateSemanticVariables(semanticData, prefix),
-        ...generateSemanticVariables(componentData, prefix),
+        ...generatePaletteVariables(modeTokens.palettes, prefix),
+        ...generateSemanticVariables(semanticModeTokens, prefix),
     ];
 
     const selector =
@@ -76,17 +81,26 @@ export const generateColorCSS = (
         ...options,
     };
 
-    const brandPalette = generateBrandColorPalette({
-        colors: {
-            [colorConfig.primary.name]: colorConfig.primary.color,
+    const themeResult = generatePrimitiveColorPalette({
+        brandColor: {
+            name: colorConfig.primary.name,
+            hexcode: colorConfig.primary.color.replace(/ff$/, ''), // Remove alpha channel if present
         },
-        background: colorConfig.background,
+        backgroundColor: {
+            name: colorConfig.background.name,
+            hexcode: colorConfig.background.color.replace(/ff$/, ''), // Remove alpha channel if present
+        },
+        lightness: colorConfig.background.lightness,
     });
 
-    const semanticTokens = getSemanticDependentTokens(colorConfig);
+    const semanticTokens = getSemanticDependentTokens(
+        themeResult,
+        colorConfig.primary.name,
+        colorConfig.background.name,
+    );
 
     const context: ColorCSSGeneratorContext = {
-        brandPalette,
+        themeResult,
         semanticTokens,
         options: resolvedOptions,
     };
