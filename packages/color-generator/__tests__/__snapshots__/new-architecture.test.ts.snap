@@ -5402,23 +5402,48 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should g
 {
   "darkModeTokens": {
     "color-background-canvas-100": "color-background-canvas",
-    "color-background-canvas-200": "color-gray-050",
-    "color-background-overlay-100": "color-gray-100",
+    "color-background-canvas-200": "color-neutral-050",
+    "color-background-overlay-100": "color-neutral-100",
     "color-background-primary-100": "color-mint-050",
-    "color-background-primary-200": "color-mint-600",
-    "color-border-primary": "color-mint-600",
-    "color-foreground-100": "color-mint-700",
-    "color-foreground-200": "color-mint-800",
+    "color-background-primary-200": "color-mint-700",
+    "color-border-primary": "color-mint-700",
+    "color-foreground-100": "color-mint-800",
+    "color-foreground-200": "color-mint-900",
   },
   "lightModeTokens": {
     "color-background-canvas-100": "color-background-canvas",
-    "color-background-canvas-200": "color-gray-050",
+    "color-background-canvas-200": "color-neutral-050",
     "color-background-overlay-100": "color-background-canvas",
     "color-background-primary-100": "color-mint-100",
-    "color-background-primary-200": "color-mint-300",
-    "color-border-primary": "color-mint-300",
-    "color-foreground-100": "color-mint-400",
-    "color-foreground-200": "color-mint-500",
+    "color-background-primary-200": "color-mint-200",
+    "color-border-primary": "color-mint-200",
+    "color-foreground-100": "color-mint-300",
+    "color-foreground-200": "color-mint-400",
+  },
+}
+`;
+
+exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should handle custom background colors correctly 1`] = `
+{
+  "darkModeTokens": {
+    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-200": "color-cream-050",
+    "color-background-overlay-100": "color-cream-100",
+    "color-background-primary-100": "color-teal-050",
+    "color-background-primary-200": "color-teal-400",
+    "color-border-primary": "color-teal-400",
+    "color-foreground-100": "color-teal-500",
+    "color-foreground-200": "color-teal-600",
+  },
+  "lightModeTokens": {
+    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-200": "color-cream-050",
+    "color-background-overlay-100": "color-background-canvas",
+    "color-background-primary-100": "color-teal-100",
+    "color-background-primary-200": "color-teal-500",
+    "color-border-primary": "color-teal-500",
+    "color-foreground-100": "color-teal-600",
+    "color-foreground-200": "color-teal-700",
   },
 }
 `;

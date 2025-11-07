@@ -44,6 +44,7 @@ export function generatePrimitiveColorPalette(options?: Partial<ThemeOptions>): 
  *
  * @param themeResult - generatePrimitiveColorPalette의 결과
  * @param primaryColorName - Primary로 사용할 색상 이름 (기본: 'blue')
+ * @param canvasColorName - Canvas로 사용할 색상 이름 (기본: 'gray')
  * @returns Light/Dark 모드별 시맨틱 토큰
  *
  * @example
@@ -53,11 +54,18 @@ export function generatePrimitiveColorPalette(options?: Partial<ThemeOptions>): 
  * });
  *
  * const semanticResult = getSemanticDependentTokens(primitiveResult, 'mint');
+ *
+ * // 커스텀 배경색을 사용한 경우
+ * const customResult = generatePrimitiveColorPalette({
+ *   backgroundColor: { name: 'beige', hexcode: '#fcf6df' }
+ * });
+ * const semanticResult2 = getSemanticDependentTokens(customResult, 'blue', 'beige');
  * ```
  */
 export function getSemanticDependentTokens(
     themeResult: ThemeResult,
     primaryColorName = 'blue',
+    canvasColorName = 'gray',
 ): SemanticResult {
     // Primary 팔레트 찾기
     const lightPrimaryPalette = themeResult.lightModeTokens.palettes.find(
@@ -72,11 +80,15 @@ export function getSemanticDependentTokens(
     }
 
     // Canvas 팔레트 찾기 (배경색 기준)
-    const lightCanvasPalette = themeResult.lightModeTokens.palettes.find((p) => p.name === 'gray');
-    const darkCanvasPalette = themeResult.darkModeTokens.palettes.find((p) => p.name === 'gray');
+    const lightCanvasPalette = themeResult.lightModeTokens.palettes.find(
+        (p) => p.name === canvasColorName,
+    );
+    const darkCanvasPalette = themeResult.darkModeTokens.palettes.find(
+        (p) => p.name === canvasColorName,
+    );
 
     if (!lightCanvasPalette || !darkCanvasPalette) {
-        throw new Error('Canvas color palette not found in theme result');
+        throw new Error(`Canvas color palette '${canvasColorName}' not found in theme result`);
     }
 
     // Light Mode 시맨틱 토큰 생성

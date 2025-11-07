@@ -64,9 +64,17 @@ describe('New Architecture Snapshot Tests', () => {
                     name: 'mint',
                     hexcode: '#00BEEF',
                 },
+                backgroundColor: {
+                    name: 'neutral',
+                    hexcode: '#efeae6',
+                },
+                lightness: {
+                    light: 93,
+                    dark: 10,
+                },
             });
 
-            const semanticResult = getSemanticDependentTokens(primitiveResult, 'mint');
+            const semanticResult = getSemanticDependentTokens(primitiveResult, 'mint', 'neutral');
             expect(semanticResult).toMatchSnapshot();
         });
 
@@ -92,6 +100,45 @@ describe('New Architecture Snapshot Tests', () => {
 
             const semanticResult = getSemanticDependentTokens(primitiveResult, 'darkRed');
             expect(semanticResult).toMatchSnapshot();
+        });
+
+        it('should handle custom background colors correctly', () => {
+            const primitiveResult = generatePrimitiveColorPalette({
+                backgroundColor: {
+                    name: 'cream',
+                    hexcode: '#faf8f3',
+                },
+                brandColor: {
+                    name: 'teal',
+                    hexcode: '#008080',
+                },
+            });
+
+            // Canvas color name should match the backgroundColor.name
+            const semanticResult = getSemanticDependentTokens(primitiveResult, 'teal', 'cream');
+            expect(semanticResult).toMatchSnapshot();
+
+            // Verify that the semantic tokens use the correct canvas color palette
+            expect(semanticResult.lightModeTokens['color-background-canvas-200']).toContain(
+                'cream',
+            );
+            expect(semanticResult.darkModeTokens['color-background-overlay-100']).toContain(
+                'cream',
+            );
+        });
+
+        it('should throw error when canvas color palette is not found', () => {
+            const primitiveResult = generatePrimitiveColorPalette({
+                brandColor: {
+                    name: 'purple',
+                    hexcode: '#800080',
+                },
+            });
+
+            // Try to use non-existent canvas color
+            expect(() => {
+                getSemanticDependentTokens(primitiveResult, 'purple', 'nonexistent');
+            }).toThrow("Canvas color palette 'nonexistent' not found in theme result");
         });
     });
 });
