@@ -53,7 +53,7 @@ const renderBadges = () => {
     const combinations = getCartesianProduct(BADGE_SHAPES, badgeSizes, BADGE_COLORS);
 
     return combinations.map(([shape, size, color]) => (
-        <Badge key={`${shape}-${size}-${color}`} shape={shape} size={size} color={color}>
+        <Badge key={`${shape}-${size}-${color}`} shape={shape} size={size} colorPalette={color}>
             Badge
         </Badge>
     ));
@@ -67,7 +67,7 @@ const renderButtons = () => {
             key={`${variant}-${size}-${color}`}
             variant={variant === 'solid' ? undefined : variant}
             size={size}
-            color={color}
+            colorPalette={color}
         >
             Button
         </Button>
@@ -83,7 +83,7 @@ const renderIconButtons = () => {
             aria-label="icon-button"
             variant={variant === 'solid' ? undefined : variant}
             size={size}
-            color={color}
+            colorPalette={color}
         >
             <HeartIcon />
         </IconButton>
@@ -166,7 +166,7 @@ const Page = () => {
                 <header>
                     <Text typography="heading1">Theme Playground</Text>
                     <Link href="/docs/getting-started/theming">
-                        <Button variant="outline" color="secondary">
+                        <Button variant="outline" colorPalette="secondary">
                             <OpenInNewOutlineIcon />
                             Theme Provider Usage 보러가기
                         </Button>

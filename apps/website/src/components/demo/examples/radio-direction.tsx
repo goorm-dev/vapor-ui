@@ -1,11 +1,11 @@
-import { Radio, RadioGroup } from '@vapor-ui/core';
+import { HStack, Radio, RadioGroup, VStack } from '@vapor-ui/core';
 
-export default function RadioGroupDirection() {
+export default function RadioDirection() {
     return (
         <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Vertical (기본값)</h4>
-                <RadioGroup.Root name="orientation-vertical" orientation="vertical">
+            <RadioGroup.Root name="direction-vertical" defaultValue="v1">
+                <RadioGroup.Label>Vertical (기본값)</RadioGroup.Label>
+                <VStack gap="$100">
                     <label className="flex items-center gap-2">
                         <Radio.Root value="v1" />
                         Option 1
@@ -18,12 +18,12 @@ export default function RadioGroupDirection() {
                         <Radio.Root value="v3" />
                         Option 3
                     </label>
-                </RadioGroup.Root>
-            </div>
+                </VStack>
+            </RadioGroup.Root>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Horizontal</h4>
-                <RadioGroup.Root name="orientation-horizontal" orientation="horizontal">
+            <RadioGroup.Root name="direction-horizontal" defaultValue="h1">
+                <RadioGroup.Label>Horizontal</RadioGroup.Label>
+                <HStack gap="$200">
                     <label className="flex items-center gap-2">
                         <Radio.Root value="h1" />
                         Option 1
@@ -36,8 +36,8 @@ export default function RadioGroupDirection() {
                         <Radio.Root value="h3" />
                         Option 3
                     </label>
-                </RadioGroup.Root>
-            </div>
+                </HStack>
+            </RadioGroup.Root>
         </div>
     );
 }
