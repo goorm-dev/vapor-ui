@@ -61,10 +61,7 @@ export function generatePrimitiveColorPalette(
     // 5. Light Mode 팔레트 생성
     const lightModeTokens = colorGeneratorPort.generatePalette({
         colors,
-        backgroundColor: {
-            ...refBg,
-            lightness: lightLightness,
-        },
+        backgroundColor: refBg,
         contrastRatios: mergedOptions.contrastRatios,
         lightness: lightLightness,
     });
@@ -72,10 +69,7 @@ export function generatePrimitiveColorPalette(
     // 6. Dark Mode 팔레트 생성
     const darkModeTokens = colorGeneratorPort.generatePalette({
         colors,
-        backgroundColor: {
-            ...refBg,
-            lightness: darkLightness,
-        },
+        backgroundColor: refBg,
         contrastRatios: mergedOptions.contrastRatios,
         lightness: darkLightness,
     });
