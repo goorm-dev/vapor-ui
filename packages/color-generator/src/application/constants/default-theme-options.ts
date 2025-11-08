@@ -13,10 +13,10 @@ export const DEFAULT_THEME_OPTIONS: Required<Omit<ThemeOptions, 'brandColor'>> &
     backgroundColor: {
         name: 'gray',
         hexcode: '#FFFFFF',
-    },
-    lightness: {
-        light: 100,
-        dark: 14,
+        lightness: {
+            light: 100,
+            dark: 14,
+        },
     },
     contrastRatios: DEFAULT_CONTRAST_RATIOS,
 } as const;

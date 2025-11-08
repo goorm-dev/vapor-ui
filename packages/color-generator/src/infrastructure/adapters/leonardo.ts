@@ -238,7 +238,7 @@ const convertToPrimitivePalette = (
  * 디자인 시스템의 데이터 구조에 맞게 변환하는 Adapter입니다.
  */
 const generatePalette = (input: LeonardoAdapterInput): PrimitiveColorTokens => {
-    // 1. Leonardo Color 정의들 생성
+    // Leonardo Color 정의들 생성
     const colorDefinitions = input.colors
         .map((keyColor) =>
             createColorDefinition({
@@ -249,7 +249,7 @@ const generatePalette = (input: LeonardoAdapterInput): PrimitiveColorTokens => {
         )
         .filter((def): def is Color => def !== null);
 
-    // 2. Leonardo Theme 생성
+    // Leonardo Theme 생성
     const theme = createLeonardoTheme({
         colorDefinitions,
         backgroundColor: input.backgroundColor.hexcode,
@@ -258,13 +258,12 @@ const generatePalette = (input: LeonardoAdapterInput): PrimitiveColorTokens => {
         contrastRatios: input.contrastRatios,
     });
 
-    // 3. 결과 파싱 및 변환
     const [backgroundObj, ...themeColors] = theme.contrastColors;
 
-    // 4. Background Canvas 추출
+    // Background Canvas 추출
     const backgroundCanvas = extractBackgroundCanvas(backgroundObj);
 
-    // 5. 팔레트들 변환 (N개의 colors + 1개의 backgroundColor 팔레트)
+    // 팔레트들 변환 (N개의 colors + 1개의 backgroundColor 팔레트)
     const allColors = [...input.colors, input.backgroundColor];
     const palettes = themeColors.map((color) => convertToPrimitivePalette(color, allColors));
 

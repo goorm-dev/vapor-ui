@@ -11,7 +11,7 @@ import {
     getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
 import { Box, Button, HStack, VStack } from '@vapor-ui/core';
-import { generateCompleteCSS } from '@vapor-ui/css-generator';
+import { generateColorCSS } from '@vapor-ui/css-generator';
 import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { Logger } from '~/common/logger';
@@ -76,7 +76,6 @@ export const ColorSystemTab = () => {
             const options: Partial<ThemeOptions> = {
                 keyColors,
                 contrastRatios,
-                lightness,
             };
 
             if (isBrandColorEnabled) {
@@ -94,11 +93,13 @@ export const ColorSystemTab = () => {
                 options.backgroundColor = {
                     name: backgroundName,
                     hexcode: backgroundHex,
+                    lightness,
                 };
             } else {
                 options.backgroundColor = {
                     name: 'gray',
                     hexcode: gray,
+                    lightness,
                 };
             }
 
@@ -164,19 +165,15 @@ export const ColorSystemTab = () => {
         setIsCopying(true);
 
         try {
-            const css = generateCompleteCSS({
-                colors: {
-                    primary: isBrandColorEnabled
-                        ? { name: brandColorName, color: brandColorHex }
-                        : { name: 'blue', color: keyColors.blue },
-                    background: {
-                        name: isCustomBackgroundEnabled ? backgroundName : 'gray',
-                        color: isCustomBackgroundEnabled ? backgroundHex : gray,
-                        lightness,
-                    },
+            const css = generateColorCSS({
+                primary: isBrandColorEnabled
+                    ? { name: brandColorName, hexcode: brandColorHex }
+                    : { name: 'blue', hexcode: keyColors.blue },
+                background: {
+                    name: isCustomBackgroundEnabled ? backgroundName : 'gray',
+                    hexcode: isCustomBackgroundEnabled ? backgroundHex : gray,
+                    lightness,
                 },
-                scaling: 1,
-                radius: 'md',
             });
 
             if (navigator.clipboard && navigator.clipboard.writeText) {

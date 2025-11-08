@@ -8,13 +8,8 @@ export interface ThemeOptions {
     keyColors?: Record<string, string>;
     /** 추가 브랜드 컬러 */
     brandColor?: KeyColor;
-    /** 기준 배경색 */
+    /** 기준 배경색 (Light/Dark 모드별 lightness 값 포함) */
     backgroundColor?: BackgroundColor;
-    /** Light/Dark 모드별 lightness 값 */
-    lightness?: {
-        light: number;
-        dark: number;
-    };
     /** 명암비 설정 */
     contrastRatios?: ContrastRatios;
 }

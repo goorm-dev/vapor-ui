@@ -14,7 +14,13 @@ export interface KeyColor {
 /**
  * 배경색 정보
  */
-export interface BackgroundColor extends KeyColor {}
+export interface BackgroundLightness {
+    light: number;
+    dark: number;
+}
+export interface BackgroundColor extends KeyColor {
+    lightness?: BackgroundLightness;
+}
 
 /**
  * 명암비 설정 객체 타입

@@ -52,13 +52,18 @@ export function generatePrimitiveColorPalette(
     // backgroundColor는 Leonardo Adapter에서 자동으로 별도 팔레트로 생성되므로
     // colors 배열에 수동으로 추가할 필요가 없습니다.
     // Leonardo는 input.colors + input.backgroundColor로 모든 팔레트를 생성합니다.
-
-    // PRD 요구사항: colors 배열은 모든 색상 팔레트를 포함합니다.
     // backgroundColor는 여전히 Leonardo Adapter에서 별도의 BackgroundColor로 처리되어 기준점 역할을 합니다.
 
-    // 4. Lightness 값 클리핑
-    const lightLightness = clampLightness(mergedOptions.lightness.light, 'light');
-    const darkLightness = clampLightness(mergedOptions.lightness.dark, 'dark');
+    // 4. Lightness 값 처리 및 클리핑
+    // backgroundColor에 lightness가 없으면 기본값 사용
+    const backgroundLightness =
+        mergedOptions.backgroundColor.lightness ??
+        DEFAULT_THEME_OPTIONS.backgroundColor.lightness;
+
+    // TypeScript에게 backgroundLightness가 항상 정의됨을 보장
+    // DEFAULT_THEME_OPTIONS.backgroundColor.lightness는 항상 정의되어 있음
+    const lightLightness = clampLightness(backgroundLightness!.light, 'light');
+    const darkLightness = clampLightness(backgroundLightness!.dark, 'dark');
 
     // 5. Light Mode 팔레트 생성
     const lightModeTokens = colorGeneratorPort.generatePalette({

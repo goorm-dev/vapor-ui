@@ -1,4 +1,4 @@
-import type { ThemeResult, SemanticResult } from '@vapor-ui/color-generator';
+import type { SemanticResult, ThemeResult } from '@vapor-ui/color-generator';
 
 /* -------------------------------------------------------------------------------------------------
  * Message Types

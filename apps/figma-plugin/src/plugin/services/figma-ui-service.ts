@@ -142,7 +142,6 @@ export const figmaUIService = {
         try {
             Logger.info(`Starting palette generation for: ${sectionTitle}`);
 
-            // 필요한 모든 폰트 스타일 로드
             await loadRequiredFonts();
 
             // 색상 패밀리별로 그룹화
@@ -237,7 +236,6 @@ export const figmaUIService = {
         try {
             Logger.info(`Starting dependent tokens list generation for: ${sectionTitle}`);
 
-            // 필요한 모든 폰트 스타일 로드
             await loadRequiredFonts();
 
             const sections: SectionNode[] = [];

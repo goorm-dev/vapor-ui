@@ -34,10 +34,10 @@ describe('New Architecture Snapshot Tests', () => {
                 backgroundColor: {
                     name: 'beige',
                     hexcode: '#fcf6df',
-                },
-                lightness: {
-                    light: 97,
-                    dark: 0,
+                    lightness: {
+                        light: 97,
+                        dark: 0,
+                    },
                 },
             };
 
@@ -67,10 +67,10 @@ describe('New Architecture Snapshot Tests', () => {
                 backgroundColor: {
                     name: 'neutral',
                     hexcode: '#efeae6',
-                },
-                lightness: {
-                    light: 93,
-                    dark: 10,
+                    lightness: {
+                        light: 93,
+                        dark: 10,
+                    },
                 },
             });
 

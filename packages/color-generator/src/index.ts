@@ -13,6 +13,7 @@ export type {
     SemanticTokens,
     KeyColor,
     BackgroundColor,
+    BackgroundLightness,
     ContrastRatios,
     OklchColor,
 } from './domain';

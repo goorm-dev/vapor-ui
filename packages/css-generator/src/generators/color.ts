@@ -84,13 +84,13 @@ export const generateColorCSS = (
     const themeResult = generatePrimitiveColorPalette({
         brandColor: {
             name: colorConfig.primary.name,
-            hexcode: colorConfig.primary.color.replace(/ff$/, ''), // Remove alpha channel if present
+            hexcode: colorConfig.primary.hexcode.replace(/ff$/, ''), // Remove alpha channel if present
         },
         backgroundColor: {
             name: colorConfig.background.name,
-            hexcode: colorConfig.background.color.replace(/ff$/, ''), // Remove alpha channel if present
+            hexcode: colorConfig.background.hexcode.replace(/ff$/, ''), // Remove alpha channel if present
+            lightness: colorConfig.background.lightness,
         },
-        lightness: colorConfig.background.lightness,
     });
 
     const semanticTokens = getSemanticDependentTokens(

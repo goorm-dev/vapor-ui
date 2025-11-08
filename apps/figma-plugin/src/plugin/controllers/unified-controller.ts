@@ -89,13 +89,14 @@ export const unifiedController = {
                 if (themeData && themeData.palettes) {
                     const convertedThemeData = convertThemeResultToThemeData(generatedTheme, theme);
                     const themeName = theme === 'lightModeTokens' ? 'light' : 'dark';
-                    console.log('convertedThemeData', convertedThemeData);
 
                     await figmaUIService.generatePalette(convertedThemeData, themeName);
                 }
             }
 
             // 3. Create semantic tokens sections
+            // Semantic tokens are string references (e.g., "color-blue-500"), not PaletteChips
+            // Use generateDependentTokensListOnly which handles string tokens correctly
             if (semanticTokens) {
                 const semanticLightData = convertSemanticResultToThemeData(
                     semanticTokens.lightModeTokens,
@@ -104,10 +105,20 @@ export const unifiedController = {
                     semanticTokens.darkModeTokens,
                 );
 
-                console.log('semanticLightData', semanticLightData);
+                // Prepare primitive palettes as brand palette for hex resolution
+                const brandPalette = {
+                    light: convertThemeResultToThemeData(generatedTheme, 'lightModeTokens'),
+                    dark: convertThemeResultToThemeData(generatedTheme, 'darkModeTokens'),
+                };
 
-                await figmaUIService.generatePalette(semanticLightData, 'semantic-light');
-                await figmaUIService.generatePalette(semanticDarkData, 'semantic-dark');
+                await figmaUIService.generateDependentTokensListOnly(
+                    {
+                        light: semanticLightData,
+                        dark: semanticDarkData,
+                    },
+                    'semantic',
+                    brandPalette,
+                );
             }
 
             figmaNoticeService.paletteCreated();
