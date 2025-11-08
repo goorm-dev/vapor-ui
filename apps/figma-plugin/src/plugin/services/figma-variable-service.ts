@@ -58,10 +58,7 @@ export const figmaVariableService = {
      * Creates Figma variables from unified theme result (new architecture)
      * Handles the new ThemeResult structure with palettes array format
      */
-    async createUnifiedVariables(
-        themeResult: ThemeResult,
-        collectionName: string,
-    ): Promise<void> {
+    async createUnifiedVariables(themeResult: ThemeResult, collectionName: string): Promise<void> {
         try {
             Logger.variables.creating(collectionName);
 
@@ -265,12 +262,7 @@ async function createVariablesFromTokens(
                 : formatTokenName(tokenName);
 
             variablePromises.push(
-                createVariable(
-                    collection,
-                    variableName,
-                    paletteChip.hex,
-                    paletteChip.codeSyntax,
-                ),
+                createVariable(collection, variableName, paletteChip.hex, paletteChip.codeSyntax),
             );
         }
     });

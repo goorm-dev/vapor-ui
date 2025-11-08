@@ -57,8 +57,7 @@ export function generatePrimitiveColorPalette(
     // 4. Lightness 값 처리 및 클리핑
     // backgroundColor에 lightness가 없으면 기본값 사용
     const backgroundLightness =
-        mergedOptions.backgroundColor.lightness ??
-        DEFAULT_THEME_OPTIONS.backgroundColor.lightness;
+        mergedOptions.backgroundColor.lightness ?? DEFAULT_THEME_OPTIONS.backgroundColor.lightness;
 
     // TypeScript에게 backgroundLightness가 항상 정의됨을 보장
     // DEFAULT_THEME_OPTIONS.backgroundColor.lightness는 항상 정의되어 있음
