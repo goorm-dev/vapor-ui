@@ -6,7 +6,7 @@ export const DEFAULT_KEY_COLORS = {
     pink: '#F26394',
     grape: '#CC5DE8',
     violet: '#8662F3',
-    blue: '#448EFE',
+    blue: '#2A72E5',
     cyan: '#1EBAD2',
     green: '#04A37E',
     lime: '#8FD327',

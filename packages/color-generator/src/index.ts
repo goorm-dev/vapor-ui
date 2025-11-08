@@ -1,4 +1,3 @@
-// ===== NEW ARCHITECTURE API =====
 // Primary API exports from the new 3-layer architecture
 export { generatePrimitiveColorPalette, getSemanticDependentTokens } from './infrastructure';
 
@@ -14,12 +13,13 @@ export type {
     SemanticTokens,
     KeyColor,
     BackgroundColor,
-    ContrastRatios as NewContrastRatios,
-    OklchColor as NewOklchColor,
+    ContrastRatios,
+    OklchColor,
 } from './domain';
 
-// ===== LEGACY API (for backward compatibility) =====
-export * from './generators';
-export * from './constants';
-export type * from './types';
-export { getColorLightness } from './utils';
+// Constants for external use
+export {
+    DEFAULT_CONTRAST_RATIOS,
+    DEFAULT_KEY_COLORS,
+    DEFAULT_THEME_OPTIONS,
+} from './application/constants';

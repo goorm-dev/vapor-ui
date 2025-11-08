@@ -8,7 +8,6 @@ import { leonardoAdapter } from '../adapters';
 /**
  * 시스템의 모든 Primitive Color Token을 생성합니다.
  *
- * PRD 요구사항 2번에 해당하는 핵심 함수입니다.
  * Leonardo Adapter를 사용하여 단일 기준 배경색을 기반으로
  * 모든 필수 팔레트(시스템 기본, 브랜드 커스텀)를 일관되게 생성합니다.
  *
@@ -38,7 +37,6 @@ export function generatePrimitiveColorPalette(options?: Partial<ThemeOptions>): 
 /**
  * Primitive Palette를 시맨틱 토큰으로 매핑합니다.
  *
- * PRD 요구사항 3번에 해당하는 함수입니다.
  * generatePrimitiveColorPalette에서 생성된 Primitive Palette를 입력받아
  * 실제 애플리케이션에서 사용될 시맨틱 토큰으로 매핑합니다.
  *
@@ -112,6 +110,3 @@ export function getSemanticDependentTokens(
         darkModeTokens: darkSemanticTokens,
     };
 }
-
-// Re-export domain types for external use
-export type * from '../../domain';

@@ -1,4 +1,8 @@
-import type { CssColor, ContrastColor, ContrastColorBackground } from '@adobe/leonardo-contrast-colors';
+import type {
+    ContrastColor,
+    ContrastColorBackground,
+    CssColor,
+} from '@adobe/leonardo-contrast-colors';
 import { BackgroundColor, Color, Theme } from '@adobe/leonardo-contrast-colors';
 import { differenceCiede2000, formatCss, formatHex, oklch } from 'culori';
 
@@ -110,7 +114,7 @@ const createLeonardoTheme = ({
 
     // backgroundColorObj와 같은 이름의 colorDefinition이 있는지 확인하여 중복 제거
     const filteredColorDefinitions = colorDefinitions.filter(
-        colorDef => colorDef.name !== backgroundName
+        (colorDef) => colorDef.name !== backgroundName,
     );
 
     return new Theme({
@@ -207,8 +211,7 @@ const convertToPrimitivePalette = (
         if (oklchValue) {
             let deltaE = 0;
             if (originalColorHex) {
-                deltaE =
-                    Math.round(calculateDeltaE(originalColorHex, instance.value) * 100) / 100;
+                deltaE = Math.round(calculateDeltaE(originalColorHex, instance.value) * 100) / 100;
             }
 
             const chipName = generateTokenName([colorName, instance.name]);
@@ -263,9 +266,7 @@ const generatePalette = (input: LeonardoAdapterInput): PrimitiveColorTokens => {
 
     // 5. 팔레트들 변환 (N개의 colors + 1개의 backgroundColor 팔레트)
     const allColors = [...input.colors, input.backgroundColor];
-    const palettes = themeColors.map((color) =>
-        convertToPrimitivePalette(color, allColors),
-    );
+    const palettes = themeColors.map((color) => convertToPrimitivePalette(color, allColors));
 
     return {
         palettes,
