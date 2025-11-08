@@ -33,7 +33,7 @@ describe('useMutationObserverRef', () => {
         await waitFor(() => expect(testRef).not.toBeNull());
 
         // Trigger a mutation
-        testRef?.setAttribute('data-test', 'changed');
+        testRef!.setAttribute('data-test', 'changed');
 
         // Wait for the callback to be called
         await waitFor(() => {
@@ -103,7 +103,7 @@ describe('useMutationObserverRef', () => {
         await waitFor(() => expect(testRef).not.toBeNull());
 
         // Trigger first mutation
-        testRef?.setAttribute('data-test', 'changed1');
+        testRef!.setAttribute('data-test', 'changed1');
 
         await waitFor(() => {
             expect(firstCallback).toHaveBeenCalled();
@@ -114,7 +114,7 @@ describe('useMutationObserverRef', () => {
         rerender(<TestComponent callback={secondCallback} />);
 
         // Trigger second mutation
-        testRef?.setAttribute('data-test', 'changed2');
+        testRef!.setAttribute('data-test', 'changed2');
 
         await waitFor(() => {
             expect(secondCallback).toHaveBeenCalled();
@@ -153,7 +153,7 @@ describe('useMutationObserverRef', () => {
         // Add a new child
         const newChild = document.createElement('span');
         newChild.textContent = 'New Child';
-        testRef?.appendChild(newChild);
+        testRef!.appendChild(newChild);
 
         await waitFor(() => {
             expect(callback).toHaveBeenCalled();
