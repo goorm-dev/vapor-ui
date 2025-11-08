@@ -1,3 +1,5 @@
+import { lch } from 'culori';
+
 export interface PerceptualUniformityMetrics {
     uniformity: string;
     lightnessRange: {
@@ -103,4 +105,18 @@ export const extractColorsFromPalette = (
     });
 
     return colors;
+};
+
+/**
+ * 색상의 LCH Lightness 값을 반환합니다.
+ *
+ * @param colorHex - HEX 색상 값
+ * @returns 0-100 범위의 정수 lightness 값 또는 null
+ */
+export const getColorLightness = (colorHex: string): number | null => {
+    const lchColor = lch(colorHex);
+    if (lchColor && typeof lchColor.l === 'number') {
+        return Math.round(lchColor.l);
+    }
+    return null;
 };

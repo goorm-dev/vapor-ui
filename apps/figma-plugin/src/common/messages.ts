@@ -1,36 +1,55 @@
-import type { ColorPaletteResult, SemanticTokensResult } from '@vapor-ui/color-generator';
+import type { ThemeResult, SemanticResult } from '@vapor-ui/color-generator';
 
 /* -------------------------------------------------------------------------------------------------
  * Message Types
  * -----------------------------------------------------------------------------------------------*/
 
+type CreateUnifiedPaletteSectionsMessage = {
+    type: 'create-unified-palette-sections';
+    data: {
+        generatedTheme: ThemeResult;
+        semanticTokens: SemanticResult;
+    };
+};
+
+type CreateUnifiedFigmaVariablesMessage = {
+    type: 'create-unified-figma-variables';
+    data: {
+        generatedTheme: ThemeResult;
+        collectionName: string;
+    };
+};
+
+// Keep legacy message types for backward compatibility during transition
 type CreatePaletteSectionsMessage = {
     type: 'create-palette-sections';
-    data: { generatedPalette: Pick<ColorPaletteResult, 'light' | 'dark'> };
+    data: { generatedPalette: any };
 };
 
 type CreateFigmaVariablesMessage = {
     type: 'create-figma-variables';
-    data: { generatedPalette: ColorPaletteResult; collectionName: string };
+    data: { generatedPalette: any; collectionName: string };
 };
 
 type CreateBrandPaletteSectionsMessage = {
     type: 'create-brand-palette-sections';
     data: {
-        generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
-        dependentTokens: SemanticTokensResult;
+        generatedBrandPalette: any;
+        dependentTokens: any;
     };
 };
 
 type CreateBrandFigmaVariablesMessage = {
     type: 'create-brand-figma-variables';
     data: {
-        generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
+        generatedBrandPalette: any;
         collectionName: string;
     };
 };
 
 export type UIMessage =
+    | CreateUnifiedPaletteSectionsMessage
+    | CreateUnifiedFigmaVariablesMessage
     | CreatePaletteSectionsMessage
     | CreateFigmaVariablesMessage
     | CreateBrandPaletteSectionsMessage

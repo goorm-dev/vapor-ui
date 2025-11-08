@@ -1,4 +1,4 @@
-import type { ColorPaletteResult, ColorToken, TokenContainer } from '@vapor-ui/color-generator';
+import type { PaletteChip } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
 import { formatFamilyTitle } from '~/plugin/utils/color';
@@ -45,7 +45,7 @@ interface DependentTokenData {
 }
 
 interface ThemeTokens {
-    [tokenName: string]: ColorToken | string;
+    [tokenName: string]: PaletteChip | string;
 }
 
 interface ThemeData {
@@ -225,11 +225,14 @@ export const figmaUIService = {
      */
     async generateDependentTokensListOnly(
         dependentTokensByTheme: {
-            light: TokenContainer;
-            dark: TokenContainer;
+            light: ThemeData;
+            dark: ThemeData;
         },
         sectionTitle: string,
-        brandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>,
+        brandPalette: {
+            light: ThemeData;
+            dark: ThemeData;
+        },
     ): Promise<SectionNode[]> {
         try {
             Logger.info(`Starting dependent tokens list generation for: ${sectionTitle}`);
@@ -343,9 +346,9 @@ function extractColorFamilies(tokens: ThemeTokens): Record<string, ColorData[]> 
     const colorFamilies: Record<string, ColorData[]> = {};
 
     Object.entries(tokens).forEach(([tokenName, tokenData]) => {
-        // primitive token만 처리 (ColorToken 타입)
+        // primitive token만 처리 (PaletteChip 타입)
         if (tokenData && typeof tokenData === 'object' && 'hex' in tokenData) {
-            const colorToken = tokenData as ColorToken;
+            const colorToken = tokenData as PaletteChip;
             const familyName = extractColorFamily(tokenName);
 
             if (!colorFamilies[familyName]) {
@@ -366,8 +369,8 @@ function extractColorFamilies(tokens: ThemeTokens): Record<string, ColorData[]> 
 }
 
 function createDependentTokenList(
-    tokens: Record<string, string | ColorToken>,
-    brandPaletteTheme?: { tokens: Record<string, ColorToken | string> },
+    tokens: Record<string, string | PaletteChip>,
+    brandPaletteTheme?: { tokens: Record<string, PaletteChip | string> },
 ): DependentTokenData[] {
     return Object.entries(tokens).map(([tokenName, dependentValue]) => {
         // dependentValue가 string인지 ColorToken인지 확인
