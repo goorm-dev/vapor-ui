@@ -1,4 +1,3 @@
-import type { SelectRootProps } from '@vapor-ui/core';
 import { Flex, Select } from '@vapor-ui/core';
 
 export default function SelectSize() {
@@ -12,7 +11,7 @@ export default function SelectSize() {
     );
 }
 
-const SelectTemplate = (props: SelectRootProps) => {
+const SelectTemplate = (props: Select.Root.Props) => {
     return (
         <Select.Root {...props}>
             <Select.Trigger>

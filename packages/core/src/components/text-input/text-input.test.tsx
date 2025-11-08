@@ -3,10 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
-import { TextInput, type TextInputProps } from './text-input';
+import { TextInput } from './text-input';
 
 const LABEL_TEXT = 'Label';
-const TextInputTest = (props: TextInputProps) => {
+const TextInputTest = (props: TextInput.Props) => {
     return (
         <label>
             {LABEL_TEXT}
@@ -39,7 +39,7 @@ describe('TextInput', () => {
         const input = rendered.getByRole('textbox');
 
         await userEvent.type(input, 'Testing');
-        expect(handleValueChange).toHaveBeenLastCalledWith('Testing', expect.any(Event));
+        expect(handleValueChange).toHaveBeenLastCalledWith('Testing', expect.any(Object));
     });
 
     it('should be disabled and prevent input', async () => {

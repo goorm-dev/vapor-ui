@@ -2,24 +2,22 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: layerStyle('components', {
         display: 'flex',
+        flexDirection: 'column',
+        gap: vars.size.space[100],
     }),
 
-    defaultVariants: { size: 'md', orientation: 'vertical' },
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('components', { gap: vars.size.space['050'] }),
-            lg: layerStyle('components', { gap: vars.size.space['100'] }),
-        },
-        orientation: {
-            horizontal: layerStyle('components', { flexDirection: 'row' }),
-            vertical: layerStyle('components', { flexDirection: 'column' }),
+            md: {},
+            lg: {},
         },
     },
 });

@@ -1,12 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Select } from '.';
 import { Box } from '../box';
 import { Grid } from '../grid';
-import type { SelectPositionerProps, SelectRootProps } from './select';
-import { Select } from './select';
 
-type SelectProps = SelectRootProps &
-    Pick<SelectPositionerProps, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
+type SelectProps = Select.Root.Props &
+    Pick<Select.Positioner.Props, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
 
 export default {
     title: 'Select',
@@ -19,6 +18,7 @@ export default {
         invalid: { control: 'boolean' },
         disabled: { control: 'boolean' },
         readOnly: { control: 'boolean' },
+        required: { control: 'boolean' },
         side: {
             control: { type: 'inline-radio' },
             options: ['top', 'right', 'bottom', 'left'],
@@ -82,27 +82,42 @@ const languages = {
 };
 
 export const ObjectItems: StoryObj<typeof Select.Root> = {
-    render: (args) => (
-        <Select.Root placeholder="Select Font" items={languages} {...args}>
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
+    render: (args) => {
+        return (
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
 
-            <Select.Content>
-                <Select.Group>
-                    <Select.GroupLabel>Font</Select.GroupLabel>
-                    {Object.entries(languages).map(([value, label]) => (
-                        <Select.Item key={value} value={value}>
-                            {label}
+                    const formData = new FormData(e.currentTarget);
+                    const stringifiedFormData = new URLSearchParams(formData as never).toString();
 
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                    ))}
-                </Select.Group>
-            </Select.Content>
-        </Select.Root>
-    ),
+                    console.log(stringifiedFormData);
+                }}
+            >
+                <Select.Root placeholder="Select Font" items={languages} {...args}>
+                    <Select.Trigger>
+                        <Select.Value />
+                        <Select.TriggerIcon />
+                    </Select.Trigger>
+
+                    <Select.Content>
+                        <Select.Group>
+                            <Select.GroupLabel>Font</Select.GroupLabel>
+                            {Object.entries(languages).map(([value, label]) => (
+                                <Select.Item key={value} value={value}>
+                                    {label}
+
+                                    <Select.ItemIndicator />
+                                </Select.Item>
+                            ))}
+                        </Select.Group>
+                    </Select.Content>
+                </Select.Root>
+
+                <button>submit</button>
+            </form>
+        );
+    },
 };
 
 const fonts = [

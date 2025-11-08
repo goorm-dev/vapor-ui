@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { HeartIcon } from '@vapor-ui/icons';
 
-import { IconButton, type IconButtonProps } from './icon-button';
+import { IconButton } from '.';
 
 export default {
     title: 'IconButton',
     component: IconButton,
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
-        color: {
+        colorPalette: {
             control: 'inline-radio',
             options: ['primary', 'secondary', 'success', 'warning', 'danger', 'contrast'],
         },
@@ -16,9 +16,9 @@ export default {
         shape: { control: 'inline-radio', options: ['square', 'circle'] },
         disabled: { control: 'boolean' },
     },
-} satisfies Meta<IconButtonProps>;
+} satisfies Meta<typeof IconButton>;
 
-type Story = StoryObj<IconButtonProps>;
+type Story = StoryObj<IconButton.Props>;
 
 export const Default: Story = {
     render: (args) => (
@@ -32,18 +32,18 @@ export const TestBed: Story = {
     render: () => (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div style={{ display: 'flex' }}>
-                <IconButtons color="primary" />
-                <IconButtons color="primary" disabled />
-                <IconButtons color="secondary" />
-                <IconButtons color="secondary" disabled />
-                <IconButtons color="success" />
-                <IconButtons color="success" disabled />
-                <IconButtons color="warning" />
-                <IconButtons color="warning" disabled />
-                <IconButtons color="danger" />
-                <IconButtons color="danger" disabled />
-                <IconButtons color="contrast" />
-                <IconButtons color="contrast" disabled />
+                <IconButtons colorPalette="primary" />
+                <IconButtons colorPalette="primary" disabled />
+                <IconButtons colorPalette="secondary" />
+                <IconButtons colorPalette="secondary" disabled />
+                <IconButtons colorPalette="success" />
+                <IconButtons colorPalette="success" disabled />
+                <IconButtons colorPalette="warning" />
+                <IconButtons colorPalette="warning" disabled />
+                <IconButtons colorPalette="danger" />
+                <IconButtons colorPalette="danger" disabled />
+                <IconButtons colorPalette="contrast" />
+                <IconButtons colorPalette="contrast" disabled />
             </div>
 
             <div>
@@ -66,18 +66,29 @@ export const TestBed: Story = {
         </div>
     ),
 };
-const IconButtons = ({ color, disabled }: Partial<IconButtonProps>) => {
+
+const IconButtons = ({ colorPalette, disabled }: Partial<IconButton.Props>) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="fill">
-                <HeartIcon />
-            </IconButton>
-            <IconButton aria-label="Button Label" color={color} disabled={disabled} variant="ghost">
+            <IconButton
+                aria-label="Button Label"
+                colorPalette={colorPalette}
+                disabled={disabled}
+                variant="fill"
+            >
                 <HeartIcon />
             </IconButton>
             <IconButton
                 aria-label="Button Label"
-                color={color}
+                colorPalette={colorPalette}
+                disabled={disabled}
+                variant="ghost"
+            >
+                <HeartIcon />
+            </IconButton>
+            <IconButton
+                aria-label="Button Label"
+                colorPalette={colorPalette}
                 disabled={disabled}
                 variant="outline"
             >

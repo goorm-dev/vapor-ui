@@ -5,8 +5,7 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { CheckboxRootProps } from './checkbox';
-import { Checkbox } from './checkbox';
+import { Checkbox } from '.';
 
 describe('Checkbox', () => {
     afterEach(cleanup);
@@ -254,18 +253,18 @@ describe('Checkbox', () => {
 
 const LABEL_TEXT = 'Checkbox Label';
 
-const CheckboxTest = (props: CheckboxRootProps) => (
+const CheckboxTest = (props: Checkbox.Root.Props) => (
     <>
         <Checkbox.Root id="checkbox" {...props} />
         <label htmlFor="checkbox">{LABEL_TEXT}</label>
     </>
 );
 
-const ControlledCheckboxTest = (props: CheckboxRootProps) => {
+const ControlledCheckboxTest = (props: Checkbox.Root.Props) => {
     const [checkbox, setCheckbox] = useState<boolean>(false);
     const [blocker, setBlocker] = useState<boolean>(false);
 
-    const handleCheckedChange = (checked: boolean, event: Event) => {
+    const handleCheckedChange = (checked: boolean, event: Checkbox.Root.ChangeEventDetails) => {
         props.onCheckedChange?.(checked, event);
 
         if (blocker) return;

@@ -1,5 +1,6 @@
 import { globalStyle } from '@vanilla-extract/css';
 
+import { vars } from './themes.css';
 import {
     BORDER_RADIUS,
     FONT_FAMILY,
@@ -11,7 +12,6 @@ import {
     LINE_HEIGHT,
     SPACE,
 } from './tokens';
-import { vars } from './vars.css';
 
 /**
  * Define the theme variable namespace supported by Tailwind CSS as a type.

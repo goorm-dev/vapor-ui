@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { TextInput } from '.';
 import { Grid } from '../grid';
@@ -17,6 +17,7 @@ export default {
         disabled: { control: 'boolean' },
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
         readOnly: { control: 'boolean' },
+        required: { control: 'boolean' },
     },
 } as Meta<typeof TextInput>;
 

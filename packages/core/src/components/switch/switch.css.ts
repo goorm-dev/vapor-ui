@@ -2,8 +2,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const control = recipe({
     base: [
@@ -23,23 +23,29 @@ export const control = recipe({
                 '&[data-checked]': {
                     backgroundColor: vars.color.background.primary[200],
                 },
+
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+
                 '&[data-readonly]': {
                     backgroundColor: vars.color.gray[200],
                     outline: '0.0625rem solid',
                     outlineColor: vars.color.border.normal,
                     outlineOffset: '-0.0625rem',
                 },
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
+                '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-readonly]:active::before': {
-                    opacity: 0.08,
+                '&[data-invalid]': {
+                    outline: '0.0625rem solid',
+                    outlineColor: vars.color.border.danger,
+                    outlineOffset: '-0.0625rem',
                 },
             },
         }),
     ],
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 'md', invalid: false },
     variants: {
+        invalid: { true: {}, false: {} },
         size: {
             sm: layerStyle('components', {
                 padding: vars.size.space['025'],

@@ -3,8 +3,9 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { typography } from '~/styles/mixins/typography.css';
+import { vars } from '~/styles/themes.css';
 
 const fg = createVar();
 const outlineFg = createVar();
@@ -21,72 +22,55 @@ export const root = recipe({
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
+
             border: 'none',
             borderRadius: vars.size.borderRadius['300'],
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
+            flexWrap: 'nowrap',
+            textWrap: 'nowrap',
             selectors: {
-                '&:is(:disabled, [data-disabled="true"])': {
-                    opacity: 0.32,
-                    pointerEvents: 'none',
-                },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
             },
         }),
     ],
 
-    defaultVariants: {
-        color: 'primary',
-        size: 'md',
-        variant: 'fill',
-        stretch: false,
-    },
-
+    defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill', stretch: false },
     variants: {
         size: {
-            sm: layerStyle('components', {
-                gap: vars.size.space['050'],
-                paddingInline: vars.size.space['050'],
-                height: vars.size.dimension['300'],
-
-                lineHeight: vars.typography.lineHeight['075'],
-                letterSpacing: vars.typography.letterSpacing['100'],
-                fontSize: vars.typography.fontSize['075'],
-                fontWeight: vars.typography.fontWeight['500'],
-            }),
-            md: layerStyle('components', {
-                gap: vars.size.space['075'],
-                paddingInline: vars.size.space['150'],
-                height: vars.size.dimension['400'],
-
-                lineHeight: vars.typography.lineHeight['075'],
-                letterSpacing: vars.typography.letterSpacing['100'],
-                fontSize: vars.typography.fontSize['075'],
-                fontWeight: vars.typography.fontWeight[500],
-            }),
-            lg: layerStyle('components', {
-                gap: vars.size.space['100'],
-                paddingInline: vars.size.space['200'],
-                height: vars.size.dimension['500'],
-
-                lineHeight: vars.typography.lineHeight['075'],
-                letterSpacing: vars.typography.letterSpacing['100'],
-                fontSize: vars.typography.fontSize['075'],
-                fontWeight: vars.typography.fontWeight[500],
-            }),
-            xl: layerStyle('components', {
-                gap: vars.size.space['100'],
-                paddingInline: vars.size.space['300'],
-                height: vars.size.dimension['600'],
-
-                lineHeight: vars.typography.lineHeight[100],
-                letterSpacing: vars.typography.letterSpacing['100'],
-                fontSize: vars.typography.fontSize[100],
-                fontWeight: vars.typography.fontWeight[500],
-            }),
+            sm: [
+                typography({ style: 'subtitle1' }),
+                layerStyle('components', {
+                    gap: vars.size.space['050'],
+                    paddingInline: vars.size.space['100'],
+                    height: vars.size.dimension['300'],
+                }),
+            ],
+            md: [
+                typography({ style: 'subtitle1' }),
+                layerStyle('components', {
+                    gap: vars.size.space['075'],
+                    paddingInline: vars.size.space['150'],
+                    height: vars.size.dimension['400'],
+                }),
+            ],
+            lg: [
+                typography({ style: 'subtitle1' }),
+                layerStyle('components', {
+                    gap: vars.size.space['100'],
+                    paddingInline: vars.size.space['200'],
+                    height: vars.size.dimension['500'],
+                }),
+            ],
+            xl: [
+                typography({ style: 'heading6' }),
+                layerStyle('components', {
+                    gap: vars.size.space['100'],
+                    paddingInline: vars.size.space['300'],
+                    height: vars.size.dimension['600'],
+                }),
+            ],
         },
 
-        color: {
+        colorPalette: {
             primary: layerStyle('components', {
                 vars: {
                     [fg]: vars.color.button.foreground.primary,
@@ -159,12 +143,10 @@ export const root = recipe({
                 backgroundColor: outlineBg,
                 color: outlineFg,
             }),
-            ghost: [
-                layerStyle('components', {
-                    backgroundColor: 'transparent',
-                    color: ghostFg,
-                }),
-            ],
+            ghost: layerStyle('components', {
+                backgroundColor: 'transparent',
+                color: ghostFg,
+            }),
         },
 
         stretch: { true: layerStyle('components', { width: '100%' }) },
