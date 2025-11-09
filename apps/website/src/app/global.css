@@ -1,4 +1,5 @@
-@layer tw-theme, theme, tw-base, reset, base, components, utilities, tw-utilities;
+/* @layer tw-theme, tw-base, base, vapor, tw-utilities; */
+@layer tw-theme, tw-base, vapor, tw-utilities, base;
 
 @import '@vapor-ui/core/tailwind.css';
 
@@ -9,8 +10,7 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
-@theme {
-    /* Custom Breakpoints */
+:root {
     --breakpoint-sm: 768px;
     --breakpoint-md: 992px;
     --breakpoint-lg: 1200px;
@@ -21,8 +21,8 @@
     --color-fd-background: var(--vapor-color-background-canvas);
     --color-fd-primary: var(--vapor-color-foreground-primary-100);
     --color-fd-border: var(--vapor-color-border-normal);
-    --color-fd-accent: var(--vapor-color-background-secondary-100);
-    --color-fd-accent-foreground: var(--vapor-color-foreground-secondary-100);
+    /* --color-fd-accent: var(--vapor-color-background-secondary-100); */
+    /* --color-fd-accent-foreground: var(--vapor-color-foreground-secondary-100); */
     --color-fd-muted: var(--vapor-color-background-secondary-200);
     --color-fd-muted-foreground: var(--vapor-color-foreground-secondary-100);
     --color-fd-foreground: var(--vapor-color-foreground-secondary-100);
