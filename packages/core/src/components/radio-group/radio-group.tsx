@@ -70,35 +70,33 @@ RadioGroupRoot.displayName = 'RadioGroup.Root';
  * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
-export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>(
-    (props, ref) => {
-        const { render, className, id: idProp, ...componentProps } = resolveStyles(props);
-        const { invalid, setLabelElementId } = useRadioGroupContext();
+export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>((props, ref) => {
+    const { render, className, id: idProp, ...componentProps } = resolveStyles(props);
+    const { invalid, setLabelElementId } = useRadioGroupContext();
 
-        const id = useVaporId(idProp);
+    const id = useVaporId(idProp);
 
     useLayoutEffect(() => {
         setLabelElementId?.(id);
         return () => setLabelElementId?.(undefined);
     }, [id, setLabelElementId]);
 
-        return useRender({
-            ref,
-            render: render || <span />,
-            state: { invalid },
-            props: { id, className: clsx(styles.label, className), ...componentProps },
-        });
-    },
-);
+    return useRender({
+        ref,
+        render: render || <span />,
+        state: { invalid },
+        props: { id, className: clsx(styles.label, className), ...componentProps },
+    });
+});
 RadioGroupLabel.displayName = 'RadioGroup.Label';
 
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace RadioGroupRoot {
-    export interface Props extends VComponentProps<typeof BaseRadioGroup>, RadioGroupSharedProps { }
+    export interface Props extends VComponentProps<typeof BaseRadioGroup>, RadioGroupSharedProps {}
     export type ChangeEventDetails = BaseRadioGroup.ChangeEventDetails;
 }
 
 export namespace RadioGroupLabel {
-    export interface Props extends VComponentProps<'span'> { }
+    export interface Props extends VComponentProps<'span'> {}
 }
