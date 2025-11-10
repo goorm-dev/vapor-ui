@@ -1,5 +1,5 @@
 /**
- * Figma Codegen Plugin 실행 확인을 위한 코드입니다.
+ * Figma Codegen Plugin 임시 실행 확인을 위한 코드입니다.
  * 이 파일은 실제 코드 생성 로직 작업시에 제거될 예정입니다.
  */
 
