@@ -257,6 +257,61 @@ describe('RadioGroup', () => {
         expect(radioA).toHaveAttribute('tabindex', '-1');
         expect(radioB).toHaveAttribute('tabindex', '0');
     });
+
+    describe('RadioGroup.Label', () => {
+        it('should connect Label to Root via aria-labelledby', () => {
+            const rendered = render(
+                <RadioGroup.Root>
+                    <RadioGroup.Label>Choose an option</RadioGroup.Label>
+                    <Radio.Root id="option1" value="option1" />
+                    <label htmlFor="option1">Option 1</label>
+                    <Radio.Root id="option2" value="option2" />
+                    <label htmlFor="option2">Option 2</label>
+                </RadioGroup.Root>,
+            );
+
+            const radioGroup = rendered.getByRole('radiogroup');
+            const label = rendered.getByText('Choose an option');
+
+            expect(label).toHaveAttribute('id');
+            const labelId = label.getAttribute('id');
+            expect(labelId).toBeTruthy();
+            expect(radioGroup).toHaveAttribute('aria-labelledby', labelId);
+        });
+
+        it('should use custom id prop when provided', () => {
+            const customId = 'custom-label-id';
+            const rendered = render(
+                <RadioGroup.Root>
+                    <RadioGroup.Label id={customId}>Choose an option</RadioGroup.Label>
+                    <Radio.Root id="option1" value="option1" />
+                    <label htmlFor="option1">Option 1</label>
+                </RadioGroup.Root>,
+            );
+
+            const radioGroup = rendered.getByRole('radiogroup');
+            const label = rendered.getByText('Choose an option');
+
+            expect(label).toHaveAttribute('id', customId);
+            expect(radioGroup).toHaveAttribute('aria-labelledby', customId);
+        });
+
+        it('should work correctly with SSR (synchronous rendering)', () => {
+            const rendered = render(
+                <RadioGroup.Root>
+                    <RadioGroup.Label>Choose an option</RadioGroup.Label>
+                    <Radio.Root id="option1" value="option1" />
+                </RadioGroup.Root>,
+            );
+
+            const radioGroup = rendered.getByRole('radiogroup');
+            const label = rendered.getByText('Choose an option');
+            const labelId = label.getAttribute('id');
+
+            // In SSR, aria-labelledby should be set immediately, not after useEffect
+            expect(radioGroup).toHaveAttribute('aria-labelledby', labelId);
+        });
+    });
 });
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
