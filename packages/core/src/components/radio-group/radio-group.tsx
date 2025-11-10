@@ -75,7 +75,7 @@ export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props
         const { render, className, id: idProp, ...componentProps } = resolveStyles(props);
         const { invalid, setLabelElementId } = useRadioGroupContext();
 
-        const id = idProp ?? useVaporId();
+        const id = useVaporId(idProp);
 
     useLayoutEffect(() => {
         setLabelElementId?.(id);
