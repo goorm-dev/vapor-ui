@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'react';
 
-import type { StoryObj } from '@storybook/react';
+import type { StoryObj } from '@storybook/react-vite';
 
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 import { VStack } from '.';
 import { Box } from '../box';
@@ -55,13 +55,13 @@ export const TestBed: StoryObj<typeof VStack> = {
 const CustomBox = ({ size = 50, ...props }: ComponentProps<typeof Box> & { size?: number }) => {
     return (
         <Box
-            backgroundColor="$primary"
+            backgroundColor="$primary-200"
             width={`${size}px`}
             height={`${size}px`}
             border="1px solid white"
             textAlign="center"
             alignContent="center"
-            color="$normal-200"
+            color="white"
             {...props}
         />
     );

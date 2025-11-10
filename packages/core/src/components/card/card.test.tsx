@@ -1,10 +1,9 @@
 import { cleanup, render } from '@testing-library/react';
 import { axe } from 'vitest-axe';
 
-import type { CardRootProps } from './card';
-import { Card } from './card';
+import { Card } from '.';
 
-const CardTest = (props: CardRootProps) => {
+const CardTest = (props: Card.Root.Props) => {
     return (
         <Card.Root {...props}>
             <Card.Header>Card Header</Card.Header>

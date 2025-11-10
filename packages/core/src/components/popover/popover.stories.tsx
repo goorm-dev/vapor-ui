@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import type { PopoverPositionerProps, PopoverRootProps } from '.';
 import { Popover } from '.';
 import { Button } from '../button';
 import { Flex } from '../flex';
@@ -12,7 +11,7 @@ export default {
     argTypes: {},
 } satisfies Meta;
 
-export const Default: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
+export const Default: StoryObj<Popover.Root.Props & Popover.Positioner.Props> = {
     render: (args) => (
         <Flex gap="$400" marginTop="200px" justifyContent="center" alignItems="center">
             <Popover.Root {...args}>
@@ -29,7 +28,7 @@ export const Default: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
     ),
 };
 
-export const Customable: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
+export const Customable: StoryObj<Popover.Root.Props & Popover.Positioner.Props> = {
     argTypes: {
         side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
         sideOffset: { control: 'number' },
@@ -52,7 +51,7 @@ export const Customable: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
     ),
 };
 
-export const TestBed: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
+export const TestBed: StoryObj<Popover.Root.Props & Popover.Positioner.Props> = {
     render: (args) => (
         <>
             <HStack

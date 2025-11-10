@@ -3,8 +3,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     defaultVariants: { stretch: false },
@@ -56,7 +56,7 @@ export const link = recipe({
             color: vars.color.foreground.normal[100],
 
             selectors: {
-                '&[aria-current="page"]': {
+                '&[data-selected]': {
                     color: vars.color.foreground.primary[200],
                 },
 

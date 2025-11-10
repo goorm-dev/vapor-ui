@@ -1,9 +1,9 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
-import { layerStyle } from '../utils/layer-style.css';
+import { layerStyle } from './layer-style.css';
 
 export const foregrounds = recipe({
     defaultVariants: { color: 'normal-200' },
@@ -56,6 +56,9 @@ export const foregrounds = recipe({
             }),
             'normal-200': layerStyle('components', {
                 color: vars.color.foreground.normal[200],
+            }),
+            white: layerStyle('components', {
+                color: vars.color.white,
             }),
         },
     },

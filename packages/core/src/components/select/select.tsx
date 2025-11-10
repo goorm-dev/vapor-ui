@@ -10,6 +10,8 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './select.css';
@@ -20,7 +22,7 @@ type SelectSharedProps = SelectVariants & {
     placeholder?: ReactNode;
 };
 
-type SelectContext = SelectSharedProps & Pick<RootPrimitiveProps, 'items'>;
+type SelectContext = SelectSharedProps & Pick<SelectRoot.Props, 'items' | 'required'>;
 
 const [SelectProvider, useSelectContext] = createContext<SelectContext>({
     name: 'SelectContext',
@@ -32,110 +34,114 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
  * Select.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = Omit<VComponentProps<typeof BaseSelect.Root>, 'multiple'>;
-interface SelectRootProps extends RootPrimitiveProps, SelectSharedProps {}
-
-const Root = ({ items, ...props }: SelectRootProps) => {
+export const SelectRoot = (props: SelectRoot.Props) => {
     const [sharedProps, otherProps] = createSplitProps<SelectSharedProps>()(props, [
         'placeholder',
         'size',
         'invalid',
     ]);
 
+    const { items, required } = otherProps;
+
     return (
-        <SelectProvider value={{ items, ...sharedProps }}>
-            <BaseSelect.Root items={items} {...otherProps} multiple={false} />
+        <SelectProvider value={{ items, required, ...sharedProps }}>
+            <BaseSelect.Root {...otherProps} multiple={false} />
         </SelectProvider>
     );
 };
+SelectRoot.displayName = 'Select.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
-interface SelectTriggerProps extends TriggerPrimitiveProps {}
+export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTrigger.Props>((props, ref) => {
+    const {
+        render = <button />,
+        nativeButton = true,
+        className,
+        ...componentProps
+    } = resolveStyles(props);
 
-const Trigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
-    ({ render = <button />, nativeButton = true, className, ...props }, ref) => {
-        const { size, invalid } = useSelectContext();
+    const { size, invalid, required } = useSelectContext();
+    const dataAttrs = createDataAttributes({ required, invalid });
 
-        return (
-            <BaseSelect.Trigger
-                ref={ref}
-                render={render}
-                nativeButton={nativeButton}
-                aria-invalid={invalid || undefined}
-                className={clsx(styles.trigger({ size, invalid }), className)}
-                {...props}
-            />
-        );
-    },
-);
+    return (
+        <BaseSelect.Trigger
+            ref={ref}
+            render={render}
+            nativeButton={nativeButton}
+            aria-required={required || undefined}
+            aria-invalid={invalid || undefined}
+            className={clsx(styles.trigger({ size, invalid }), className)}
+            {...dataAttrs}
+            {...componentProps}
+        />
+    );
+});
+SelectTrigger.displayName = 'Select.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Value
  * -----------------------------------------------------------------------------------------------*/
 
-type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
-interface SelectValueProps extends ValuePrimitiveProps {}
+export const SelectValue = forwardRef<HTMLSpanElement, SelectValue.Props>((props, ref) => {
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const { items, size, placeholder } = useSelectContext();
 
-const Value = forwardRef<HTMLSpanElement, SelectValueProps>(
-    ({ className, children: childrenProp, ...props }, ref) => {
-        const { items, size, placeholder } = useSelectContext();
+    const renderValue = (value: string) => {
+        if (!items) return value;
 
-        const renderValue = (value: string) => {
-            if (!items) return value;
+        if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
 
-            if (Array.isArray(items)) return items.find((item) => item.value === value)?.label;
-            return items[value];
-        };
+        return (items as Record<string, ReactNode>)[value];
+    };
 
-        const children = (value: string) =>
-            typeof childrenProp === 'function'
-                ? childrenProp(value)
-                : (childrenProp ?? renderValue(value) ?? <Placeholder>{placeholder}</Placeholder>);
+    const children = (value: string) =>
+        typeof childrenProp === 'function'
+            ? childrenProp(value)
+            : (childrenProp ??
+              renderValue(value) ?? <SelectPlaceholder>{placeholder}</SelectPlaceholder>);
 
-        return (
-            <BaseSelect.Value
-                ref={ref}
-                className={clsx(styles.value({ size }), className)}
-                {...props}
-            >
-                {children}
-            </BaseSelect.Value>
-        );
-    },
-);
+    return (
+        <BaseSelect.Value
+            ref={ref}
+            className={clsx(styles.value({ size }), className)}
+            {...componentProps}
+        >
+            {children}
+        </BaseSelect.Value>
+    );
+});
+SelectValue.displayName = 'Select.Value';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Placeholder
  * -----------------------------------------------------------------------------------------------*/
 
-type PlaceholderPrimitiveProps = VComponentProps<'span'>;
-interface SelectPlaceholderProps extends PlaceholderPrimitiveProps {}
+export const SelectPlaceholder = forwardRef<HTMLSpanElement, SelectPlaceholder.Props>(
+    (props, ref) => {
+        const { render, className, ...componentProps } = resolveStyles(props);
 
-const Placeholder = forwardRef<HTMLSpanElement, SelectPlaceholderProps>(
-    ({ render, className, ...props }, ref) => {
         return (
             <BaseSelect.Value
                 ref={ref}
                 className={clsx(styles.placeholder, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
 );
+SelectPlaceholder.displayName = 'Select.Placeholder';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.TriggerIcon
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
-interface SelectTriggerIconProps extends TriggerIconPrimitiveProps {}
+export const SelectTriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIcon.Props>(
+    (props, ref) => {
+        const { className, children, ...componentProps } = resolveStyles(props);
 
-const TriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIconProps>(
-    ({ className, children, ...props }, ref) => {
         const { size } = useSelectContext();
 
         const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
@@ -144,22 +150,20 @@ const TriggerIcon = forwardRef<HTMLDivElement, SelectTriggerIconProps>(
             <BaseSelect.Icon
                 ref={ref}
                 className={clsx(styles.triggerIcon({ size }), className)}
-                {...props}
+                {...componentProps}
             >
                 <IconElement />
             </BaseSelect.Icon>
         );
     },
 );
+SelectTriggerIcon.displayName = 'Select.TriggerIcon';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-type PortalPrimitiveProps = VComponentProps<typeof BaseSelect.Portal>;
-interface SelectPortalProps extends PortalPrimitiveProps {}
-
-const Portal = (props: SelectPortalProps) => {
+export const SelectPortal = (props: SelectPortal.Props) => {
     return <BaseSelect.Portal {...props} />;
 };
 
@@ -167,10 +171,7 @@ const Portal = (props: SelectPortalProps) => {
  * Select.Positioner
  * -----------------------------------------------------------------------------------------------*/
 
-type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
-interface SelectPositionerProps extends PositionerPrimitiveProps {}
-
-const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref) => {
+export const SelectPositioner = forwardRef<HTMLDivElement, SelectPositioner.Props>((props, ref) => {
     const {
         side = 'bottom',
         align = 'start',
@@ -178,7 +179,7 @@ const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref
         alignItemWithTrigger = false,
         className,
         ...componentProps
-    } = props;
+    } = resolveStyles(props);
 
     return (
         <BaseSelect.Positioner
@@ -192,171 +193,190 @@ const Positioner = forwardRef<HTMLDivElement, SelectPositionerProps>((props, ref
         />
     );
 });
+SelectPositioner.displayName = 'Select.Positioner';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
-interface SelectPopupProps extends PopupPrimitiveProps {}
+export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-const Popup = forwardRef<HTMLDivElement, SelectPopupProps>(({ className, ...props }, ref) => {
-    return <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...props} />;
+    return (
+        <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
+    );
 });
+SelectPopup.displayName = 'Select.Popup';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Content
  * -----------------------------------------------------------------------------------------------*/
 
-type ContentPrimitiveProps = VComponentProps<typeof Popup>;
-interface SelectContentProps extends ContentPrimitiveProps {
-    portalProps?: SelectPortalProps;
-    positionerProps?: SelectPositionerProps;
-}
-
-const Content = forwardRef<HTMLDivElement, SelectContentProps>(
+export const SelectContent = forwardRef<HTMLDivElement, SelectContent.Props>(
     ({ portalProps, positionerProps, ...props }, ref) => {
         return (
-            <Portal {...portalProps}>
-                <Positioner {...positionerProps}>
-                    <Popup ref={ref} {...props} />
-                </Positioner>
-            </Portal>
+            <SelectPortal {...portalProps}>
+                <SelectPositioner {...positionerProps}>
+                    <SelectPopup ref={ref} {...props} />
+                </SelectPositioner>
+            </SelectPortal>
         );
     },
 );
+SelectContent.displayName = 'Select.Content';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
-interface SelectItemProps extends ItemPrimitiveProps {}
+export const SelectItem = forwardRef<HTMLDivElement, SelectItem.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-const Item = forwardRef<HTMLDivElement, SelectItemProps>(({ className, ...props }, ref) => {
-    return <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...props} />;
+    return (
+        <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...componentProps} />
+    );
 });
+SelectItem.displayName = 'Select.Item';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.ItemIndicator
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
-interface SelectItemIndicatorProps extends ItemIndicatorPrimitiveProps {}
-
-const ItemIndicator = forwardRef<HTMLSpanElement, SelectItemIndicatorProps>(
-    ({ className, children, ...props }, ref) => {
+export const SelectItemIndicator = forwardRef<HTMLSpanElement, SelectItemIndicator.Props>(
+    (props, ref) => {
+        const { className, children, ...componentProps } = resolveStyles(props);
         const IconElement = createSlot(children || <ConfirmOutlineIcon />);
 
         return (
             <BaseSelect.ItemIndicator
                 ref={ref}
                 className={clsx(styles.itemIndicator, className)}
-                {...props}
+                {...componentProps}
             >
                 <IconElement />
             </BaseSelect.ItemIndicator>
         );
     },
 );
+SelectItemIndicator.displayName = 'Select.ItemIndicator';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Group
  * -----------------------------------------------------------------------------------------------*/
 
-type GroupPrimitiveProps = VComponentProps<typeof BaseSelect.Group>;
-interface SelectGroupProps extends GroupPrimitiveProps {}
+export const SelectGroup = forwardRef<HTMLDivElement, SelectGroup.Props>((props, ref) => {
+    const componentProps = resolveStyles(props);
 
-const Group = forwardRef<HTMLDivElement, SelectGroupProps>((props, ref) => {
-    return <BaseSelect.Group ref={ref} {...props} />;
+    return <BaseSelect.Group ref={ref} {...componentProps} />;
 });
+SelectGroup.displayName = 'Select.Group';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
-type GroupLabelPrimitiveProps = VComponentProps<typeof BaseSelect.GroupLabel>;
-interface SelectGroupLabelProps extends GroupLabelPrimitiveProps {}
+export const SelectGroupLabel = forwardRef<HTMLDivElement, SelectGroupLabel.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-const GroupLabel = forwardRef<HTMLDivElement, SelectGroupLabelProps>(
-    ({ className, ...props }, ref) => {
-        return (
-            <BaseSelect.GroupLabel
-                ref={ref}
-                className={clsx(styles.groupLabel, className)}
-                {...props}
-            />
-        );
-    },
-);
+    return (
+        <BaseSelect.GroupLabel
+            ref={ref}
+            className={clsx(styles.groupLabel, className)}
+            {...componentProps}
+        />
+    );
+});
+SelectGroupLabel.displayName = 'Select.GroupLabel';
 
 /* -------------------------------------------------------------------------------------------------
  * Select.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-type SeparatorPrimitiveProps = VComponentProps<typeof BaseSelect.Separator>;
-interface SelectSeparatorProps extends SeparatorPrimitiveProps {}
+export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparator.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-const Separator = forwardRef<HTMLDivElement, SelectSeparatorProps>(
-    ({ className, ...props }, ref) => {
-        return (
-            <BaseSelect.Separator
-                ref={ref}
-                className={clsx(styles.separator, className)}
-                {...props}
-            />
-        );
-    },
-);
+    return (
+        <BaseSelect.Separator
+            ref={ref}
+            className={clsx(styles.separator, className)}
+            {...componentProps}
+        />
+    );
+});
+SelectSeparator.displayName = 'Select.Separator';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as SelectRoot,
-    Trigger as SelectTrigger,
-    Value as SelectValue,
-    Placeholder as SelectPlaceholder,
-    TriggerIcon as SelectTriggerIcon,
-    Portal as SelectPortal,
-    Positioner as SelectPositioner,
-    Popup as SelectPopup,
-    Content as SelectContent,
-    Item as SelectItem,
-    ItemIndicator as SelectItemIndicator,
-    Group as SelectGroup,
-    GroupLabel as SelectGroupLabel,
-    Separator as SelectSeparator,
-};
-export type {
-    SelectRootProps,
-    SelectTriggerProps,
-    SelectValueProps,
-    SelectPlaceholderProps,
-    SelectTriggerIconProps,
-    SelectPortalProps,
-    SelectPositionerProps,
-    SelectPopupProps,
-    SelectContentProps,
-    SelectItemProps,
-    SelectItemIndicatorProps,
-    SelectGroupProps,
-    SelectGroupLabelProps,
-    SelectSeparatorProps,
-};
+export namespace SelectRoot {
+    type RootPrimitiveProps = Omit<VComponentProps<typeof BaseSelect.Root>, 'multiple'>;
+    export interface Props extends RootPrimitiveProps, SelectSharedProps {}
+    export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
+}
 
-export const Select = {
-    Root,
-    Trigger,
-    Value,
-    Placeholder,
-    TriggerIcon,
-    Content,
-    Portal,
-    Positioner,
-    Popup,
-    Item,
-    ItemIndicator,
-    Group,
-    GroupLabel,
-    Separator,
-};
+export namespace SelectTrigger {
+    type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
+    export interface Props extends TriggerPrimitiveProps {}
+}
+
+export namespace SelectValue {
+    type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
+    export interface Props extends ValuePrimitiveProps {}
+}
+
+export namespace SelectPlaceholder {
+    type PlaceholderPrimitiveProps = VComponentProps<'span'>;
+    export interface Props extends PlaceholderPrimitiveProps {}
+}
+
+export namespace SelectTriggerIcon {
+    type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
+    export interface Props extends TriggerIconPrimitiveProps {}
+}
+
+export namespace SelectPortal {
+    type PortalPrimitiveProps = VComponentProps<typeof BaseSelect.Portal>;
+    export interface Props extends PortalPrimitiveProps {}
+}
+
+export namespace SelectPositioner {
+    type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
+    export interface Props extends PositionerPrimitiveProps {}
+}
+
+export namespace SelectPopup {
+    type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
+    export interface Props extends PopupPrimitiveProps {}
+}
+
+export namespace SelectContent {
+    type ContentPrimitiveProps = VComponentProps<typeof SelectPopup>;
+    export interface Props extends ContentPrimitiveProps {
+        portalProps?: SelectPortal.Props;
+        positionerProps?: SelectPositioner.Props;
+    }
+}
+
+export namespace SelectItem {
+    type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
+    export interface Props extends ItemPrimitiveProps {}
+}
+
+export namespace SelectItemIndicator {
+    type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
+    export interface Props extends ItemIndicatorPrimitiveProps {}
+}
+
+export namespace SelectGroup {
+    type GroupPrimitiveProps = VComponentProps<typeof BaseSelect.Group>;
+    export interface Props extends GroupPrimitiveProps {}
+}
+
+export namespace SelectGroupLabel {
+    type GroupLabelPrimitiveProps = VComponentProps<typeof BaseSelect.GroupLabel>;
+    export interface Props extends GroupLabelPrimitiveProps {}
+}
+
+export namespace SelectSeparator {
+    type SeparatorPrimitiveProps = VComponentProps<typeof BaseSelect.Separator>;
+    export interface Props extends SeparatorPrimitiveProps {}
+}

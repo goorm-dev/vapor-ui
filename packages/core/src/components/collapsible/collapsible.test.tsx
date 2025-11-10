@@ -2,10 +2,9 @@ import { act, cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { CollapsibleRootProps } from './collapsible';
-import { Collapsible } from './collapsible';
+import { Collapsible } from '.';
 
-const CollapsibleTest = (props: CollapsibleRootProps) => {
+const CollapsibleTest = (props: Collapsible.Root.Props) => {
     return (
         <Collapsible.Root {...props}>
             <Collapsible.Trigger>Toggle</Collapsible.Trigger>
@@ -32,7 +31,7 @@ describe('<Collapsible />', () => {
         await userEvent.click(trigger);
 
         expect(onOpenChange).toHaveBeenCalled();
-        expect(onOpenChange).toHaveBeenCalledWith(true);
+        expect(onOpenChange).toHaveBeenCalledWith(true, expect.any(Object));
     });
 
     describe('keyboard navigation', () => {

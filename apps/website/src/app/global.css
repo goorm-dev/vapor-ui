@@ -1,6 +1,5 @@
-@layer reset, tw-base, base, tw-theme, theme, components, utilities, tw-utilities;
+@layer tw-theme, theme, tw-base, reset, base, components, utilities, tw-utilities;
 
-@import '@vapor-ui/core/styles.css';
 @import '@vapor-ui/core/tailwind.css';
 
 @import 'tailwindcss/preflight' layer(tw-base);
@@ -40,4 +39,16 @@
 
 a[data-active='true'] {
     color: var(--vapor-color-foreground-primary-100);
+}
+
+/* Prevent layout shift from scrollbar appearance */
+html {
+    scrollbar-gutter: stable; /* Modern browsers - reserves space for scrollbar */
+}
+
+/* Fallback for older browsers */
+@supports not (scrollbar-gutter: stable) {
+    html {
+        overflow-y: scroll; /* Always show scrollbar space */
+    }
 }

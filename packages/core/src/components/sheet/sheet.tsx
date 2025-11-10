@@ -15,6 +15,7 @@ import { createContext } from '~/libs/create-context';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Dialog } from '../dialog';
@@ -40,10 +41,12 @@ const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
-interface SheetRootProps extends RootPrimitiveProps {}
-
-const Root = ({ open: openProp, defaultOpen, onOpenChange, ...props }: SheetRootProps) => {
+export const SheetRoot = ({
+    open: openProp,
+    defaultOpen,
+    onOpenChange,
+    ...props
+}: SheetRoot.Props) => {
     const [open, setOpen] = useControlled({
         controlled: openProp,
         default: defaultOpen || false,
@@ -71,13 +74,9 @@ const Root = ({ open: openProp, defaultOpen, onOpenChange, ...props }: SheetRoot
 
     useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
 
-    const handleOpenChange = (
-        ...params: Parameters<NonNullable<RootPrimitiveProps['onOpenChange']>>
-    ) => {
-        const [nextOpen] = params;
-
-        setOpen(nextOpen);
-        onOpenChange?.(...params);
+    const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
+        setOpen(open);
+        onOpenChange?.(open, eventDetails);
     };
 
     return (
@@ -86,37 +85,37 @@ const Root = ({ open: openProp, defaultOpen, onOpenChange, ...props }: SheetRoot
         </SheetRootProvider>
     );
 };
+SheetRoot.displayName = 'Sheet.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetTriggerProps extends VComponentProps<typeof Dialog.Trigger> {}
-const Trigger = Dialog.Trigger;
+export const SheetTrigger = Dialog.Trigger;
+SheetTrigger.displayName = 'Sheet.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Close
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetCloseProps extends VComponentProps<typeof Dialog.Close> {}
-const Close = Dialog.Close;
+export const SheetClose = Dialog.Close;
+SheetClose.displayName = 'Sheet.Close';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Overlay
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetOverlayProps extends VComponentProps<typeof Dialog.Overlay> {}
-const Overlay = Dialog.Overlay;
+export const SheetOverlay = Dialog.Overlay;
+SheetOverlay.displayName = 'Sheet.Overlay';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetPortalProps extends VComponentProps<typeof Dialog.Portal> {}
-
-const Portal = (props: SheetPortalProps) => {
+export const SheetPortal = (props: SheetPortal.Props) => {
     return <Dialog.Portal {...props} />;
 };
+SheetPortal.displayName = 'Sheet.Portal';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Positioner
@@ -130,176 +129,193 @@ const [SheetPositionerProvider, useSheetPositionerContext] = createContext<Posit
     hookName: 'useSheetPositionerContext',
 });
 
-interface SheetPositionerProps extends VComponentProps<'div'>, PositionerType {}
+export const SheetPositioner = forwardRef<HTMLDivElement, SheetPositioner.Props>((props, ref) => {
+    const { render, ...componentProps } = resolveStyles(props);
 
-const Positioner = forwardRef<HTMLDivElement, SheetPositionerProps>(({ render, ...props }, ref) => {
-    const [positionerProps, otherProps] = createSplitProps<PositionerType>()(props, ['side']);
+    const [positionerProps, otherProps] = createSplitProps<PositionerType>()(componentProps, [
+        'side',
+    ]);
     const { side = 'right' } = positionerProps;
 
     const { open: contextOpen = false, mounted } = useSheetRootContext();
 
-    const dataAttr = createDataAttributes({
-        open: contextOpen,
-        closed: !contextOpen,
-        side: side,
-    });
-
     const element = useRender({
         ref,
         render: render || <div />,
+        state: { open: contextOpen, closed: !contextOpen, side },
         props: {
             role: 'presentation',
             hidden: !mounted,
-            ...dataAttr,
             ...otherProps,
         },
     });
 
     return <SheetPositionerProvider value={positionerProps}>{element}</SheetPositionerProvider>;
 });
+SheetPositioner.displayName = 'Sheet.Positioner';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetPopupProps extends VComponentProps<typeof BaseDialog.Popup> {}
+export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-const Popup = forwardRef<HTMLDivElement, SheetPopupProps>(({ className, ...props }, ref) => {
     const { popupRef } = useSheetRootContext();
     const { side = 'right' } = useSheetPositionerContext();
 
     const composedRef = composeRefs(popupRef, ref);
 
-    const dataAttr = createDataAttributes({ side: side });
+    const dataAttr = createDataAttributes({ side });
 
     return (
         <BaseDialog.Popup
             ref={composedRef}
             className={clsx(styles.popup, className)}
             {...dataAttr}
-            {...props}
+            {...componentProps}
         />
     );
 });
-Popup.displayName = 'Sheet.Popup';
+SheetPopup.displayName = 'Sheet.Popup';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Content
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetContentProps extends VComponentProps<typeof BaseDialog.Popup> {
-    portalProps?: SheetPortalProps;
-    overlayProps?: SheetOverlayProps;
-    positionerProps?: SheetPositionerProps;
-}
-
-const Content = forwardRef<HTMLDivElement, SheetContentProps>(
-    ({ portalProps, overlayProps, positionerProps, className, ...props }, ref) => {
+export const SheetContent = forwardRef<HTMLDivElement, SheetContent.Props>(
+    ({ portalProps, overlayProps, positionerProps, ...props }, ref) => {
         return (
-            <Portal {...portalProps}>
-                <Overlay {...overlayProps} />
-                <Positioner {...positionerProps}>
-                    <Popup ref={ref} {...props} />
-                </Positioner>
-            </Portal>
+            <SheetPortal {...portalProps}>
+                <SheetOverlay {...overlayProps} />
+                <SheetPositioner {...positionerProps}>
+                    <SheetPopup ref={ref} {...props} />
+                </SheetPositioner>
+            </SheetPortal>
         );
     },
 );
-Content.displayName = 'Sheet.Content';
+SheetContent.displayName = 'Sheet.Content';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Header
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetHeaderProps extends VComponentProps<typeof Dialog.Header> {}
+export const SheetHeader = forwardRef<HTMLDivElement, SheetHeader.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-const Header = forwardRef<HTMLDivElement, SheetHeaderProps>(({ className, ...props }, ref) => {
-    return <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...props} />;
+    return (
+        <Dialog.Header ref={ref} className={clsx(styles.header, className)} {...componentProps} />
+    );
 });
-Header.displayName = 'Sheet.Header';
+SheetHeader.displayName = 'Sheet.Header';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Body
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetBodyProps extends VComponentProps<typeof Dialog.Body> {}
+export const SheetBody = forwardRef<HTMLDivElement, SheetBody.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-const Body = forwardRef<HTMLDivElement, SheetBodyProps>(({ className, ...props }, ref) => {
-    return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...props} />;
+    return <Dialog.Body ref={ref} className={clsx(styles.body, className)} {...componentProps} />;
 });
-Body.displayName = 'Sheet.Body';
+SheetBody.displayName = 'Sheet.Body';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetFooterProps extends VComponentProps<typeof Dialog.Footer> {}
+export const SheetFooter = forwardRef<HTMLDivElement, SheetFooter.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-const Footer = forwardRef<HTMLDivElement, SheetFooterProps>(({ className, ...props }, ref) => {
-    return <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...props} />;
+    return (
+        <Dialog.Footer ref={ref} className={clsx(styles.footer, className)} {...componentProps} />
+    );
 });
-Footer.displayName = 'Sheet.Footer';
+SheetFooter.displayName = 'Sheet.Footer';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Title
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetTitleProps extends VComponentProps<typeof Dialog.Title> {}
-const Title = Dialog.Title;
+export const SheetTitle = Dialog.Title;
+SheetTitle.displayName = 'Sheet.Title';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Description
  * -----------------------------------------------------------------------------------------------*/
 
-interface SheetDescriptionProps extends VComponentProps<typeof Dialog.Description> {}
-const Description = Dialog.Description;
+export const SheetDescription = Dialog.Description;
+SheetDescription.displayName = 'Sheet.Description';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as SheetRoot,
-    Trigger as SheetTrigger,
-    Close as SheetClose,
-    Overlay as SheetOverlay,
-    Portal as SheetPortal,
-    Positioner as SheetPositioner,
-    Popup as SheetPopup,
-    Content as SheetContent,
-    Header as SheetHeader,
-    Body as SheetBody,
-    Footer as SheetFooter,
-    Title as SheetTitle,
-    Description as SheetDescription,
-};
+export namespace SheetRoot {
+    type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
+    export interface Props extends RootPrimitiveProps {}
+    export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
+}
 
-export type {
-    SheetRootProps,
-    SheetTriggerProps,
-    SheetCloseProps,
-    SheetOverlayProps,
-    SheetPortalProps,
-    SheetPositionerProps,
-    SheetPopupProps,
-    SheetContentProps,
-    SheetHeaderProps,
-    SheetBodyProps,
-    SheetFooterProps,
-    SheetTitleProps,
-    SheetDescriptionProps,
-};
+export namespace SheetTrigger {
+    type TriggerPrimitiveProps = VComponentProps<typeof Dialog.Trigger>;
+    export interface Props extends TriggerPrimitiveProps {}
+}
 
-export const Sheet = {
-    Root,
-    Trigger,
-    Close,
-    Overlay,
-    Portal,
-    Popup,
-    Positioner,
-    Content,
-    Header,
-    Body,
-    Footer,
-    Title,
-    Description,
-};
+export namespace SheetClose {
+    type ClosePrimitiveProps = VComponentProps<typeof Dialog.Close>;
+    export interface Props extends ClosePrimitiveProps {}
+}
+
+export namespace SheetOverlay {
+    type OverlayPrimitiveProps = VComponentProps<typeof Dialog.Overlay>;
+    export interface Props extends OverlayPrimitiveProps {}
+}
+
+export namespace SheetPortal {
+    type PortalPrimitiveProps = VComponentProps<typeof Dialog.Portal>;
+    export interface Props extends PortalPrimitiveProps {}
+}
+
+export namespace SheetPositioner {
+    type PositionerPrimitiveProps = VComponentProps<'div'>;
+    export interface Props extends PositionerPrimitiveProps, PositionerType {}
+}
+
+export namespace SheetPopup {
+    type PopupPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
+    export interface Props extends PopupPrimitiveProps {}
+}
+
+export namespace SheetContent {
+    type ContentPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
+    export interface Props extends ContentPrimitiveProps {
+        portalProps?: SheetPortal.Props;
+        overlayProps?: SheetOverlay.Props;
+        positionerProps?: SheetPositioner.Props;
+    }
+}
+
+export namespace SheetHeader {
+    type HeaderPrimitiveProps = VComponentProps<typeof Dialog.Header>;
+    export interface Props extends HeaderPrimitiveProps {}
+}
+
+export namespace SheetBody {
+    type BodyPrimitiveProps = VComponentProps<typeof Dialog.Body>;
+    export interface Props extends BodyPrimitiveProps {}
+}
+
+export namespace SheetFooter {
+    type FooterPrimitiveProps = VComponentProps<typeof Dialog.Footer>;
+    export interface Props extends FooterPrimitiveProps {}
+}
+
+export namespace SheetTitle {
+    type TitlePrimitiveProps = VComponentProps<typeof Dialog.Title>;
+    export interface Props extends TitlePrimitiveProps {}
+}
+
+export namespace SheetDescription {
+    type DescriptionPrimitiveProps = VComponentProps<typeof Dialog.Description>;
+    export interface Props extends DescriptionPrimitiveProps {}
+}

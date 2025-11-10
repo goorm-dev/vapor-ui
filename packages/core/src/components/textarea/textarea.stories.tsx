@@ -1,38 +1,25 @@
 import { useState } from 'react';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Textarea } from '.';
 import { Grid } from '../grid';
-import { Textarea } from './textarea';
 
 const meta: Meta<typeof Textarea> = {
     title: 'Textarea',
     component: Textarea,
-    parameters: {
-        layout: 'fullscreen',
-    },
     tags: ['autodocs'],
     argTypes: {
         size: {
-            control: { type: 'select' },
+            control: { type: 'inline-radio' },
             options: ['sm', 'md', 'lg', 'xl'],
         },
-        disabled: {
-            control: { type: 'boolean' },
-        },
-        invalid: {
-            control: { type: 'boolean' },
-        },
-        readOnly: {
-            control: { type: 'boolean' },
-        },
-
-        autoResize: {
-            control: { type: 'boolean' },
-        },
-        maxLength: {
-            control: { type: 'number' },
-        },
+        disabled: { control: { type: 'boolean' } },
+        invalid: { control: { type: 'boolean' } },
+        readOnly: { control: { type: 'boolean' } },
+        required: { control: { type: 'boolean' } },
+        autoResize: { control: { type: 'boolean' } },
+        maxLength: { control: { type: 'number' } },
     },
 } satisfies Meta<typeof Textarea>;
 
@@ -40,11 +27,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-    render: (args) => (
-        <div style={{ width: '100%', padding: '50px' }}>
-            <Textarea placeholder="Enter your text here..." {...args} />
-        </div>
-    ),
+    render: (args) => {
+        return (
+            <div style={{ width: '100%', padding: '50px' }}>
+                <Textarea placeholder="Enter your text here..." {...args} />
+            </div>
+        );
+    },
 };
 
 export const TestBed: Story = {

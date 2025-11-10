@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { Radio } from '.';
 import { RadioGroup } from '../radio-group';
-import { Radio } from './radio';
 
 describe('<Radio.Root />', () => {
     it('does not forward `value` prop', async () => {
@@ -26,18 +26,19 @@ describe('<Radio.Root />', () => {
             </RadioGroup.Root>,
         );
 
-        const input = rendered.container.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+        const input =
+            rendered.container.querySelector<HTMLInputElement>(`input:not([type="radio"])`);
         expect(input).toBeInTheDocument();
 
         const radioNull = rendered.getByTestId('radio-null');
         const radioA = rendered.getByTestId('radio-a');
 
         await userEvent.click(radioNull);
-        expect(radioNull).toHaveAttribute('aria-checked', 'true');
+        expect(radioNull).toBeChecked();
         expect(input).toHaveValue('');
 
         await userEvent.click(radioA);
-        expect(radioNull).toHaveAttribute('aria-checked', 'false');
+        expect(radioNull).not.toBeChecked();
         expect(input).toHaveValue('a');
     });
 });

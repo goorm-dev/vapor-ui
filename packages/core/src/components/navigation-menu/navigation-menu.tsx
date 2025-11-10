@@ -10,10 +10,11 @@ import clsx from 'clsx';
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { ItemVariants, LinkVariants, ListVariants } from './navigation-menu.css';
@@ -35,20 +36,13 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
  * NavigationMenu.Root
  * -----------------------------------------------------------------------------------------------*/
 
-type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
-
-interface NavigationMenuRootProps extends RootPrimitiveProps, NavigationMenuSharedProps {
-    'aria-label': string;
-}
-
-const Root = forwardRef<HTMLElement, NavigationMenuRootProps>(
-    ({ 'aria-label': ariaLabel, className, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(props, [
-            'direction',
-            'size',
-            'stretch',
-            'disabled',
-        ]);
+export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Props>(
+    (props, ref) => {
+        const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
+        const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(
+            componentProps,
+            ['direction', 'size', 'stretch', 'disabled'],
+        );
 
         const { direction } = variantProps;
 
@@ -65,61 +59,62 @@ const Root = forwardRef<HTMLElement, NavigationMenuRootProps>(
         );
     },
 );
-Root.displayName = 'NavigationMenu.Root';
+NavigationMenuRoot.displayName = 'NavigationMenu.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.List
  * -----------------------------------------------------------------------------------------------*/
 
-type ListPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.List>;
-interface NavigationMenuListProps extends ListPrimitiveProps {}
+export const NavigationMenuList = forwardRef<HTMLDivElement, NavigationMenuList.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+        const { direction } = useNavigationMenuContext();
 
-const List = forwardRef<HTMLDivElement, NavigationMenuListProps>(({ className, ...props }, ref) => {
-    const { direction } = useNavigationMenuContext();
-
-    return (
-        <BaseNavigationMenu.List
-            ref={ref}
-            aria-orientation={undefined}
-            className={clsx(styles.list({ direction }), className)}
-            {...props}
-        />
-    );
-});
-List.displayName = 'NavigationMenu.List';
+        return (
+            <BaseNavigationMenu.List
+                ref={ref}
+                aria-orientation={undefined}
+                className={clsx(styles.list({ direction }), className)}
+                {...componentProps}
+            />
+        );
+    },
+);
+NavigationMenuList.displayName = 'NavigationMenu.List';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Item>;
-interface NavigationMenuItemProps extends ItemPrimitiveProps {}
+export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+        const { stretch } = useNavigationMenuContext();
 
-const Item = forwardRef<HTMLDivElement, NavigationMenuItemProps>(({ className, ...props }, ref) => {
-    const { stretch } = useNavigationMenuContext();
-
-    return (
-        <BaseNavigationMenu.Item
-            ref={ref}
-            className={clsx(styles.item({ stretch }), className)}
-            {...props}
-        />
-    );
-});
-Item.displayName = 'NavigationMenu.Item';
+        return (
+            <BaseNavigationMenu.Item
+                ref={ref}
+                className={clsx(styles.item({ stretch }), className)}
+                {...componentProps}
+            />
+        );
+    },
+);
+NavigationMenuItem.displayName = 'NavigationMenu.Item';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.Link
  * -----------------------------------------------------------------------------------------------*/
 
-type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNavigationMenu.Link>, 'active'>;
-interface NavigationMenuLinkProps extends LinkPrimitiveProps {
-    selected?: boolean;
-    disabled?: boolean;
-}
-
-const Link = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
-    ({ selected, href, disabled: disabledProp, className, ...props }, ref) => {
+export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLink.Props>(
+    (props, ref) => {
+        const {
+            selected,
+            href,
+            disabled: disabledProp,
+            className,
+            ...componentProps
+        } = resolveStyles(props);
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
 
         const disabled = disabledProp ?? contextDisabled;
@@ -136,37 +131,35 @@ const Link = forwardRef<HTMLAnchorElement, NavigationMenuLinkProps>(
                 aria-disabled={disabled ? 'true' : undefined}
                 className={clsx(styles.link({ size }), className)}
                 {...dataAttrs}
-                {...props}
+                {...componentProps}
             />
         );
     },
 );
-Link.displayName = 'NavigationMenu.Link';
+NavigationMenuLink.displayName = 'NavigationMenu.Link';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.LinkItem
  * -----------------------------------------------------------------------------------------------*/
 
-interface NavigationMenuLinkItemProps extends VComponentProps<typeof Link> {}
-
-const LinkItem = forwardRef<HTMLAnchorElement, NavigationMenuLinkItemProps>((props, ref) => {
-    return (
-        <NavigationMenu.Item>
-            <NavigationMenu.Link ref={ref} {...props} />
-        </NavigationMenu.Item>
-    );
-});
-LinkItem.displayName = 'NavigationMenu.LinkItem';
+export const NavigationMenuLinkItem = forwardRef<HTMLAnchorElement, NavigationMenuLinkItem.Props>(
+    (props, ref) => {
+        return (
+            <NavigationMenuItem>
+                <NavigationMenuLink ref={ref} {...props} />
+            </NavigationMenuItem>
+        );
+    },
+);
+NavigationMenuLinkItem.displayName = 'NavigationMenu.LinkItem';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Trigger>;
-interface NavigationMenuTriggerProps extends TriggerPrimitiveProps {}
-
-const Trigger = forwardRef<HTMLButtonElement, NavigationMenuTriggerProps>(
-    ({ disabled: disabledProp, className, ...props }, ref) => {
+export const NavigationMenuTrigger = forwardRef<HTMLButtonElement, NavigationMenuTrigger.Props>(
+    (props, ref) => {
+        const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
         const { size, disabled: contextDisabled } = useNavigationMenuContext();
 
         const disabled = disabledProp ?? contextDisabled;
@@ -178,84 +171,80 @@ const Trigger = forwardRef<HTMLButtonElement, NavigationMenuTriggerProps>(
                 disabled={disabled}
                 className={clsx(styles.link({ size }), styles.trigger, className)}
                 {...dataAttrs}
-                {...props}
+                {...componentProps}
             />
         );
     },
 );
-Trigger.displayName = 'NavigationMenu.Trigger';
+NavigationMenuTrigger.displayName = 'NavigationMenu.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.TriggerIndicator
  * -----------------------------------------------------------------------------------------------*/
 
-type TriggerIndicatorPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Icon>;
-interface NavigationMenuTriggerIndicatorProps extends TriggerIndicatorPrimitiveProps {}
+export const NavigationMenuTriggerIndicator = forwardRef<
+    HTMLDivElement,
+    NavigationMenuTriggerIndicator.Props
+>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
 
-const TriggerIndicator = forwardRef<HTMLDivElement, NavigationMenuTriggerIndicatorProps>(
-    ({ className, children, ...props }, ref) => {
-        const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
+    const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
 
-        return (
-            <BaseNavigationMenu.Icon ref={ref} className={clsx(styles.icon, className)} {...props}>
-                <IconElement />
-            </BaseNavigationMenu.Icon>
-        );
-    },
-);
-TriggerIndicator.displayName = 'NavigationMenu.TriggerIndicator';
+    return (
+        <BaseNavigationMenu.Icon
+            ref={ref}
+            className={clsx(styles.icon, className)}
+            {...componentProps}
+        >
+            <IconElement />
+        </BaseNavigationMenu.Icon>
+    );
+});
+NavigationMenuTriggerIndicator.displayName = 'NavigationMenu.TriggerIndicator';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.Panel
  * -----------------------------------------------------------------------------------------------*/
 
-type PanelPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Content>;
-interface NavigationMenuPanelProps extends PanelPrimitiveProps {}
+export const NavigationMenuPanel = forwardRef<HTMLDivElement, NavigationMenuPanel.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
 
-const Panel = forwardRef<HTMLDivElement, NavigationMenuPanelProps>(
-    ({ className, ...props }, ref) => {
         return (
             <BaseNavigationMenu.Content
                 ref={ref}
                 className={clsx(styles.panel, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
 );
-Panel.displayName = 'NavigationMenu.Panel';
+NavigationMenuPanel.displayName = 'NavigationMenu.Panel';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.Portal
  * -----------------------------------------------------------------------------------------------*/
 
-type PortalPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Portal>;
-interface NavigationMenuPortalProps extends PortalPrimitiveProps {}
-
-const Portal = (props: NavigationMenuPortalProps) => {
+export const NavigationMenuPortal = (props: NavigationMenuPortal.Props) => {
     return <BaseNavigationMenu.Portal {...props} />;
 };
-Portal.displayName = 'NavigationMenu.Portal';
+NavigationMenuPortal.displayName = 'NavigationMenu.Portal';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.Positioner
  * -----------------------------------------------------------------------------------------------*/
 
-type PositionerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Positioner>;
-interface NavigationMenuPositionerProps extends PositionerPrimitiveProps {}
-
-const Positioner = forwardRef<HTMLDivElement, NavigationMenuPositionerProps>(
-    (
-        {
+export const NavigationMenuPositioner = forwardRef<HTMLDivElement, NavigationMenuPositioner.Props>(
+    (props, ref) => {
+        const {
             side = 'bottom',
             align = 'center',
             sideOffset = 8,
             collisionAvoidance,
             className,
-            ...props
-        },
-        ref,
-    ) => {
+            ...componentProps
+        } = resolveStyles(props);
+
         return (
             <BaseNavigationMenu.Positioner
                 ref={ref}
@@ -264,12 +253,12 @@ const Positioner = forwardRef<HTMLDivElement, NavigationMenuPositionerProps>(
                 sideOffset={sideOffset}
                 collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
                 className={clsx(styles.positioner, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
 );
-Positioner.displayName = 'NavigationMenu.Positioner';
+NavigationMenuPositioner.displayName = 'NavigationMenu.Positioner';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.Popup
@@ -278,13 +267,11 @@ Positioner.displayName = 'NavigationMenu.Positioner';
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-type PopupPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Popup>;
-interface NavigationMenuPopupProps extends PopupPrimitiveProps {}
-
-const Popup = forwardRef<HTMLElement, NavigationMenuPopupProps>(
-    ({ className, children, ...props }, ref) => {
-        const [side, setSide] = useState<PositionerPrimitiveProps['side']>();
-        const [align, setAlign] = useState<PositionerPrimitiveProps['align']>();
+export const NavigationMenuPopup = forwardRef<HTMLElement, NavigationMenuPopup.Props>(
+    (props, ref) => {
+        const { className, children, ...componentProps } = resolveStyles(props);
+        const [side, setSide] = useState<NavigationMenuPositioner.Props['side']>();
+        const [align, setAlign] = useState<NavigationMenuPositioner.Props['align']>();
 
         const position = useMemo(() => getArrowPosition({ side, align }), [side, align]);
 
@@ -320,7 +307,7 @@ const Popup = forwardRef<HTMLElement, NavigationMenuPopupProps>(
             <BaseNavigationMenu.Popup
                 ref={composedRef}
                 className={clsx(styles.popup, className)}
-                {...props}
+                {...componentProps}
             >
                 <BaseNavigationMenu.Arrow ref={arrowRef} style={position} className={styles.arrow}>
                     <ArrowIcon />
@@ -331,16 +318,19 @@ const Popup = forwardRef<HTMLElement, NavigationMenuPopupProps>(
         );
     },
 );
+NavigationMenuPopup.displayName = 'NavigationMenu.Popup';
 
 const extractPositions = (dataset: DOMStringMap) => {
-    const currentSide = dataset.side as PositionerPrimitiveProps['side'];
-    const currentAlign = dataset.align as PositionerPrimitiveProps['align'];
+    const currentSide = dataset.side as NavigationMenuPositioner.Props['side'];
+    const currentAlign = dataset.align as NavigationMenuPositioner.Props['align'];
     return { side: currentSide, align: currentAlign };
 };
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type ArrowPositionProps = Pick<PositionerPrimitiveProps, 'side' | 'align'> & { offset?: number };
+type ArrowPositionProps = Pick<NavigationMenuPositioner.Props, 'side' | 'align'> & {
+    offset?: number;
+};
 
 const getArrowPosition = ({
     side = 'top',
@@ -391,94 +381,113 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
  * NavigationMenu.Viewport
  * -----------------------------------------------------------------------------------------------*/
 
-type ViewportPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Viewport>;
-interface NavigationMenuViewportProps extends ViewportPrimitiveProps {}
+export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
 
-const Viewport = forwardRef<HTMLDivElement, NavigationMenuViewportProps>(
-    ({ className, ...props }, ref) => {
         return (
             <BaseNavigationMenu.Viewport
                 ref={ref}
                 className={clsx(styles.viewport, className)}
-                {...props}
+                {...componentProps}
             />
         );
     },
 );
-Viewport.displayName = 'NavigationMenu.Viewport';
+NavigationMenuViewport.displayName = 'NavigationMenu.Viewport';
 
 /* -------------------------------------------------------------------------------------------------
  * NavigationMenu.Content
  * -----------------------------------------------------------------------------------------------*/
 
-type ContentPrimitiveProps = VComponentProps<typeof Viewport>;
-interface NavigationMenuContentProps extends ContentPrimitiveProps {
-    portalProps?: NavigationMenuPortalProps;
-    positionerProps?: NavigationMenuPositionerProps;
-    popupProps?: NavigationMenuPopupProps;
-}
-
-const Content = forwardRef<HTMLDivElement, NavigationMenuContentProps>(
+export const NavigationMenuContent = forwardRef<HTMLDivElement, NavigationMenuContent.Props>(
     ({ portalProps, positionerProps, popupProps, className, ...props }, ref) => {
         return (
-            <Portal {...portalProps}>
-                <Positioner {...positionerProps}>
-                    <Popup {...popupProps}>
-                        <Viewport ref={ref} {...props} />
-                    </Popup>
-                </Positioner>
-            </Portal>
+            <NavigationMenuPortal {...portalProps}>
+                <NavigationMenuPositioner {...positionerProps}>
+                    <NavigationMenuPopup {...popupProps}>
+                        <NavigationMenuViewport ref={ref} {...props} />
+                    </NavigationMenuPopup>
+                </NavigationMenuPositioner>
+            </NavigationMenuPortal>
         );
     },
 );
-Content.displayName = 'NavigationMenu.Content';
+NavigationMenuContent.displayName = 'NavigationMenu.Content';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as NavigationMenuRoot,
-    List as NavigationMenuList,
-    Item as NavigationMenuItem,
-    Link as NavigationMenuLink,
-    Trigger as NavigationMenuTrigger,
-    TriggerIndicator as NavigationMenuTriggerIndicator,
-    Panel as NavigationMenuPanel,
-    Portal as NavigationMenuPortal,
-    Positioner as NavigationMenuPositioner,
-    Popup as NavigationMenuPopup,
-    Content as NavigationMenuContent,
-    Viewport as NavigationMenuViewport,
-    LinkItem as NavigationMenuLinkItem,
-};
+export namespace NavigationMenuRoot {
+    type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
 
-export type {
-    NavigationMenuRootProps,
-    NavigationMenuListProps,
-    NavigationMenuItemProps,
-    NavigationMenuLinkProps,
-    NavigationMenuTriggerProps,
-    NavigationMenuTriggerIndicatorProps,
-    NavigationMenuPanelProps,
-    NavigationMenuPortalProps,
-    NavigationMenuPositionerProps,
-    NavigationMenuPopupProps,
-    NavigationMenuContentProps,
-    NavigationMenuViewportProps,
-    NavigationMenuLinkItemProps,
-};
+    export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {
+        'aria-label': string;
+    }
+    export type ChangeEventDetails = BaseNavigationMenu.Root.ChangeEventDetails;
+}
 
-export const NavigationMenu = {
-    Root,
-    List,
-    Item,
-    Link,
-    Trigger,
-    TriggerIndicator,
-    Panel,
-    Portal,
-    Positioner,
-    Popup,
-    Content,
-    Viewport,
-    LinkItem,
-};
+export namespace NavigationMenuList {
+    type ListPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.List>;
+    export interface Props extends ListPrimitiveProps {}
+}
+
+export namespace NavigationMenuItem {
+    type ItemPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Item>;
+    export interface Props extends ItemPrimitiveProps {}
+}
+
+export namespace NavigationMenuLink {
+    type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNavigationMenu.Link>, 'active'>;
+    export interface Props extends LinkPrimitiveProps {
+        selected?: boolean;
+        disabled?: boolean;
+    }
+}
+
+export namespace NavigationMenuLinkItem {
+    export interface Props extends VComponentProps<typeof NavigationMenuLink> {}
+}
+
+export namespace NavigationMenuTrigger {
+    type TriggerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Trigger>;
+    export interface Props extends TriggerPrimitiveProps {}
+}
+
+export namespace NavigationMenuTriggerIndicator {
+    type TriggerIndicatorPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Icon>;
+    export interface Props extends TriggerIndicatorPrimitiveProps {}
+}
+
+export namespace NavigationMenuPanel {
+    type PanelPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Content>;
+    export interface Props extends PanelPrimitiveProps {}
+}
+
+export namespace NavigationMenuPortal {
+    type PortalPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Portal>;
+    export interface Props extends PortalPrimitiveProps {}
+}
+
+export namespace NavigationMenuPositioner {
+    type PositionerPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Positioner>;
+    export interface Props extends PositionerPrimitiveProps {}
+}
+
+export namespace NavigationMenuPopup {
+    type PopupPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Popup>;
+    export interface Props extends PopupPrimitiveProps {}
+}
+
+export namespace NavigationMenuViewport {
+    type ViewportPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Viewport>;
+    export interface Props extends ViewportPrimitiveProps {}
+}
+
+export namespace NavigationMenuContent {
+    type ContentPrimitiveProps = VComponentProps<typeof NavigationMenuViewport>;
+    export interface Props extends ContentPrimitiveProps {
+        portalProps?: NavigationMenuPortal.Props;
+        positionerProps?: NavigationMenuPositioner.Props;
+        popupProps?: NavigationMenuPopup.Props;
+    }
+}

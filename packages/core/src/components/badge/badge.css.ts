@@ -1,8 +1,8 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: layerStyle('components', {
@@ -11,9 +11,9 @@ export const root = recipe({
         justifyContent: 'center',
     }),
 
-    defaultVariants: { color: 'primary', size: 'md', shape: 'square' },
+    defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
-        color: {
+        colorPalette: {
             primary: layerStyle('components', {
                 color: vars.color.foreground.primary[200],
                 backgroundColor: vars.color.background.primary[100],
