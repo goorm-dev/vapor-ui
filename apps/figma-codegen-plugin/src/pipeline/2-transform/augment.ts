@@ -2,24 +2,66 @@
  * IR Augmenter
  *
  * PRD 7.1: Raw IR을 Semantic IR로 보강
- * Phase 1: Pass-through (메타데이터 기반 보강은 Phase 2에서 구현)
+ * Phase 2: 메타데이터 기반 보강 완료
  */
 
 import type { RawIR, SemanticIR } from '../../domain/types';
+import type { ComponentMetadata } from '../../infrastructure/metadata';
+import {
+    applyComponentNameMapping,
+    injectFunctionalComponents,
+    optimizeNesting,
+} from './transformers';
+
+/**
+ * Augmenter Options
+ */
+export interface AugmenterOptions {
+    /**
+     * 컴포넌트 메타데이터
+     */
+    metadata?: ComponentMetadata;
+
+    /**
+     * Nesting 최적화 활성화 여부
+     */
+    optimizeNesting?: boolean;
+}
 
 /**
  * IR 보강 함수 생성
  *
- * Phase 1: 단순히 Raw IR을 Semantic IR로 변환 (imports 추가)
- * Phase 2에서 메타데이터 기반 보강 로직 추가 예정
+ * Phase 2: 메타데이터 기반 IR 보강 파이프라인
+ *
+ * @param options - Augmenter 옵션
+ * @returns Augment 함수
  */
-export function createAugmenter() {
+export function createAugmenter(options: AugmenterOptions = {}) {
+    const { metadata, optimizeNesting: shouldOptimize = true } = options;
+
     const augment = (rawIR: RawIR): SemanticIR => {
-        // Phase 1: 기본 imports 수집만 수행
-        const imports = collectImports(rawIR);
+        let transformedIR = rawIR;
+
+        // [1] Functional Component 주입 (Figma 이름 기준, 메타데이터가 있을 경우)
+        if (metadata) {
+            transformedIR = injectFunctionalComponents(transformedIR, metadata);
+        }
+
+        // [2] Component Name Mapping (Figma 이름 → Vapor-UI 이름)
+        if (metadata) {
+            transformedIR = applyComponentNameMapping(transformedIR, metadata);
+        }
+
+        // [3] Nesting 최적화
+        if (shouldOptimize) {
+            transformedIR = optimizeNesting(transformedIR);
+        }
+
+        // [4] Imports 수집
+        const imports = collectImports(transformedIR);
 
         return {
-            ...rawIR,
+            ...transformedIR,
             imports,
         };
     };

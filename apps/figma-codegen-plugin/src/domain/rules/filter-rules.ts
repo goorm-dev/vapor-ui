@@ -51,13 +51,22 @@ export function applyFilters(node: FigmaNode): FilterResult {
     }
 
     // [4] 벡터 노드 제외 (아이콘 제외)
-    // 아이콘(❤️)은 통과, 나머지 벡터는 제외
+    // Phase 2: 아이콘 감지 개선 - ❤️ prefix 또는 icon 키워드 확인
     const vectorTypes: FigmaNode['type'][] = ['VECTOR', 'LINE', 'STAR', 'ELLIPSE'];
-    if (vectorTypes.includes(node.type) && !node.name.includes(FIGMA_LAYER_PREFIX.ICON)) {
-        return {
-            action: 'skip',
-            reason: '아이콘이 아닌 벡터 노드는 제외',
-        };
+    if (vectorTypes.includes(node.type)) {
+        // 아이콘으로 인식할 조건
+        const isIcon =
+            node.name.includes(FIGMA_LAYER_PREFIX.ICON) ||
+            node.name.toLowerCase().includes('icon') ||
+            // ❤️ 같은 이모지 prefix 감지 (유니코드 이모지 범위)
+            /^[\u{1F300}-\u{1F9FF}]/u.test(node.name);
+
+        if (!isIcon) {
+            return {
+                action: 'skip',
+                reason: '아이콘이 아닌 벡터 노드는 제외',
+            };
+        }
     }
 
     // [5] AutoLayout 없는 FRAME/GROUP → 투명 컨테이너

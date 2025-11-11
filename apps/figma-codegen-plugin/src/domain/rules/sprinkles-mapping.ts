@@ -5,7 +5,16 @@
  */
 
 import type { FigmaNode } from '../types';
-import { findClosestDimensionToken, findClosestRadiusToken, findClosestSpaceToken } from '../constants';
+import {
+    findClosestDimensionToken,
+    findClosestRadiusToken,
+    findClosestSpaceToken,
+    mapFontSizeToToken,
+    mapFontWeightToToken,
+    mapLineHeightToToken,
+    mapRgbToColorToken,
+    mapShadowToToken,
+} from '../constants';
 
 /**
  * Sprinkles Props 추출
@@ -76,14 +85,97 @@ export function extractSprinkleProps(node: FigmaNode): Record<string, unknown> {
         props.opacity = node.opacity;
     }
 
-    // Background Color (단순 버전 - Variable binding은 Phase 2에서)
-    // 현재는 solid fill만 처리
+    // Background Color - Phase 2: Color Token 매핑 추가
     if (node.fills && node.fills.length > 0) {
         const fill = node.fills[0];
         if (fill.visible && fill.type === 'SOLID' && fill.color) {
-            // TODO: Variable binding 처리 추가 필요 (Phase 2)
-            // 현재는 간단한 RGB 처리만
-            // props.backgroundColor = mapColorToToken(fill.color);
+            const { r, g, b } = fill.color;
+            const colorToken = mapRgbToColorToken(r, g, b);
+            if (colorToken) {
+                props.backgroundColor = colorToken;
+            }
+        }
+    }
+
+    // Text Color - Phase 2 추가
+    // TextNode의 경우 fills가 텍스트 색상을 나타냄
+    if (node.type === 'TEXT' && node.fills && node.fills.length > 0) {
+        const fill = node.fills[0];
+        if (fill.visible && fill.type === 'SOLID' && fill.color) {
+            const { r, g, b } = fill.color;
+            const colorToken = mapRgbToColorToken(r, g, b);
+            if (colorToken) {
+                props.color = colorToken;
+            }
+        }
+    }
+
+    // Border Color - Phase 2 추가
+    if (node.strokes && node.strokes.length > 0) {
+        const stroke = node.strokes[0];
+        if (stroke.visible && stroke.type === 'SOLID' && stroke.color) {
+            const { r, g, b } = stroke.color;
+            const colorToken = mapRgbToColorToken(r, g, b);
+            if (colorToken) {
+                props.borderColor = colorToken;
+            }
+        }
+    }
+
+    // Typography - Phase 2 추가
+    if (node.type === 'TEXT') {
+        // Font Size
+        if (node.fontSize !== undefined && typeof node.fontSize === 'number') {
+            const fontSizeToken = mapFontSizeToToken(node.fontSize);
+            if (fontSizeToken) {
+                props.fontSize = fontSizeToken;
+            }
+        }
+
+        // Font Weight
+        if (node.fontWeight !== undefined && typeof node.fontWeight === 'number') {
+            const fontWeightToken = mapFontWeightToToken(node.fontWeight);
+            if (fontWeightToken) {
+                props.fontWeight = fontWeightToken;
+            }
+        }
+
+        // Line Height
+        if (node.lineHeight !== undefined && typeof node.lineHeight === 'object') {
+            const lineHeightValue = (node.lineHeight as { value?: number }).value;
+            if (lineHeightValue !== undefined) {
+                const lineHeightToken = mapLineHeightToToken(lineHeightValue);
+                if (lineHeightToken) {
+                    props.lineHeight = lineHeightToken;
+                }
+            }
+        }
+
+        // Letter Spacing
+        if (node.letterSpacing !== undefined && typeof node.letterSpacing === 'object') {
+            const letterSpacingValue = (node.letterSpacing as { value?: number }).value;
+            if (letterSpacingValue !== undefined && letterSpacingValue !== 0) {
+                props.letterSpacing = `${letterSpacingValue}px`;
+            }
+        }
+    }
+
+    // Shadow (Box Shadow) - Phase 2 추가
+    if (node.effects && node.effects.length > 0) {
+        const dropShadow = node.effects.find((effect) => effect.type === 'DROP_SHADOW');
+        if (dropShadow && dropShadow.visible) {
+            const { offset, radius, spread } = dropShadow;
+            if (offset && radius !== undefined) {
+                const shadowToken = mapShadowToToken(
+                    offset.x ?? 0,
+                    offset.y ?? 0,
+                    radius,
+                    spread ?? 0,
+                );
+                if (shadowToken) {
+                    props.boxShadow = shadowToken;
+                }
+            }
         }
     }
 

@@ -50,6 +50,7 @@ export interface Effect {
     radius?: number;
     color?: RGBA;
     offset?: { x: number; y: number };
+    spread?: number;
 }
 
 export interface RGBA extends RGB {

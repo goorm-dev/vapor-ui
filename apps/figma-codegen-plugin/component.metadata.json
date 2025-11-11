@@ -1,0 +1,186 @@
+{
+    "version": "1.0.0",
+    "components": {
+        "Button": {
+            "name": "Button",
+            "vaporComponentName": "Button",
+            "variants": [
+                {
+                    "figmaProperty": "size",
+                    "propName": "size"
+                },
+                {
+                    "figmaProperty": "variant",
+                    "propName": "variant"
+                },
+                {
+                    "figmaProperty": "colorPalette",
+                    "propName": "colorPalette"
+                },
+                {
+                    "figmaProperty": "disabled",
+                    "propName": "disabled"
+                }
+            ]
+        },
+        "Dialog": {
+            "name": "Dialog",
+            "vaporComponentName": "Dialog.Root",
+            "augmentations": [
+                {
+                    "name": "inject-trigger",
+                    "type": "functional-component",
+                    "target": "Dialog",
+                    "functionalComponent": {
+                        "type": "Trigger",
+                        "position": "first-child",
+                        "componentName": "Dialog.Trigger"
+                    }
+                }
+            ],
+            "subComponents": {
+                "Content": {
+                    "name": "Content",
+                    "vaporComponentName": "Dialog.Popup"
+                },
+                "Header": {
+                    "name": "Header",
+                    "vaporComponentName": "Dialog.Header",
+                    "augmentations": [
+                        {
+                            "name": "inject-close",
+                            "type": "functional-component",
+                            "target": "Dialog.Header",
+                            "functionalComponent": {
+                                "type": "Trigger",
+                                "position": "last-child",
+                                "componentName": "Dialog.Close"
+                            }
+                        }
+                    ]
+                },
+                "Body": {
+                    "name": "Body",
+                    "vaporComponentName": "Dialog.Body"
+                },
+                "Footer": {
+                    "name": "Footer",
+                    "vaporComponentName": "Dialog.Footer"
+                },
+                "Overlay": {
+                    "name": "Overlay",
+                    "vaporComponentName": "Dialog.Overlay"
+                },
+                "Title": {
+                    "name": "Title",
+                    "vaporComponentName": "Dialog.Title"
+                },
+                "Description": {
+                    "name": "Description",
+                    "vaporComponentName": "Dialog.Description"
+                }
+            }
+        },
+        "Tabs": {
+            "name": "Tabs",
+            "vaporComponentName": "Tabs",
+            "augmentations": [
+                {
+                    "name": "inject-panel-value",
+                    "type": "functional-component",
+                    "target": "Tabs.Panel",
+                    "functionalComponent": {
+                        "type": "Panel",
+                        "position": "wrap",
+                        "componentName": "Tabs.Panel",
+                        "props": {
+                            "value": "${index}"
+                        }
+                    }
+                }
+            ],
+            "subComponents": {
+                "Root": {
+                    "name": "Root",
+                    "vaporComponentName": "Tabs.Root"
+                },
+                "List": {
+                    "name": "List",
+                    "vaporComponentName": "Tabs.List"
+                },
+                "Trigger": {
+                    "name": "Trigger",
+                    "vaporComponentName": "Tabs.Trigger"
+                },
+                "Panel": {
+                    "name": "Panel",
+                    "vaporComponentName": "Tabs.Panel"
+                }
+            }
+        },
+        "Breadcrumb": {
+            "name": "Breadcrumb",
+            "vaporComponentName": "Breadcrumb",
+            "variants": [
+                {
+                    "figmaProperty": "size",
+                    "propName": "size"
+                }
+            ],
+            "subComponents": {
+                "Item": {
+                    "name": "Item",
+                    "vaporComponentName": "Breadcrumb.Item",
+                    "variants": [
+                        {
+                            "figmaProperty": "current",
+                            "propName": "current"
+                        }
+                    ]
+                }
+            }
+        },
+        "Alert": {
+            "name": "Alert",
+            "vaporComponentName": "Alert",
+            "variants": [
+                {
+                    "figmaProperty": "variant",
+                    "propName": "variant"
+                },
+                {
+                    "figmaProperty": "colorPalette",
+                    "propName": "colorPalette"
+                }
+            ],
+            "subComponents": {
+                "Title": {
+                    "name": "Title",
+                    "vaporComponentName": "Alert.Title"
+                },
+                "Description": {
+                    "name": "Description",
+                    "vaporComponentName": "Alert.Description"
+                }
+            }
+        },
+        "Card": {
+            "name": "Card",
+            "vaporComponentName": "Card",
+            "subComponents": {
+                "Header": {
+                    "name": "Header",
+                    "vaporComponentName": "Card.Header"
+                },
+                "Body": {
+                    "name": "Body",
+                    "vaporComponentName": "Card.Body"
+                },
+                "Footer": {
+                    "name": "Footer",
+                    "vaporComponentName": "Card.Footer"
+                }
+            }
+        }
+    }
+}
