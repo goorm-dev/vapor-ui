@@ -4,12 +4,7 @@ import { axe } from 'vitest-axe';
 import { Avatar } from '.';
 
 const AvatarTest = (props: Avatar.Root.Props) => {
-    return (
-        <Avatar.Root {...props}>
-            <Avatar.Image />
-            <Avatar.Fallback />
-        </Avatar.Root>
-    );
+    return <Avatar.Root {...props} />;
 };
 
 describe('Avatar', () => {
@@ -109,11 +104,7 @@ describe('Avatar', () => {
 });
 
 const AvatarFallbackTest = (props: Avatar.Root.Props) => {
-    return (
-        <Avatar.Root {...props}>
-            <Avatar.Fallback />
-        </Avatar.Root>
-    );
+    return <Avatar.Root {...props} />;
 };
 
 describe('Avatar.Fallback', () => {
