@@ -40,7 +40,7 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((p
     const { size, invalid, indeterminate } = variantProps;
     const dataAttrs = createDataAttributes({ invalid });
 
-    const IndicatorElement = createSlot(children || <CheckboxIndicator />);
+    const IndicatorElement = createSlot(children || <CheckboxIndicatorPrimitive />);
 
     return (
         <CheckboxProvider value={{ size, indeterminate }}>
@@ -60,29 +60,30 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((p
 CheckboxRoot.displayName = 'Checkbox.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Checkbox.Indicator
+ * Checkbox.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const CheckboxIndicator = forwardRef<HTMLDivElement, CheckboxIndicator.Props>(
-    (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
+export const CheckboxIndicatorPrimitive = forwardRef<
+    HTMLDivElement,
+    CheckboxIndicatorPrimitive.Props
+>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-        const { size, invalid, indeterminate } = useCheckboxContext();
-        const dataAttrs = createDataAttributes({ invalid });
+    const { size, invalid, indeterminate } = useCheckboxContext();
+    const dataAttrs = createDataAttributes({ invalid });
 
-        return (
-            <BaseCheckbox.Indicator
-                ref={ref}
-                className={clsx(styles.indicator({ size }), className)}
-                {...dataAttrs}
-                {...componentProps}
-            >
-                {indeterminate ? <DashIcon /> : <CheckIcon />}
-            </BaseCheckbox.Indicator>
-        );
-    },
-);
-CheckboxIndicator.displayName = 'Checkbox.Indicator';
+    return (
+        <BaseCheckbox.Indicator
+            ref={ref}
+            className={clsx(styles.indicator({ size }), className)}
+            {...dataAttrs}
+            {...componentProps}
+        >
+            {indeterminate ? <DashIcon /> : <CheckIcon />}
+        </BaseCheckbox.Indicator>
+    );
+});
+CheckboxIndicatorPrimitive.displayName = 'Checkbox.IndicatorPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Icons
@@ -120,7 +121,7 @@ export namespace CheckboxRoot {
     export type ChangeEventDetails = BaseCheckbox.Root.ChangeEventDetails;
 }
 
-export namespace CheckboxIndicator {
+export namespace CheckboxIndicatorPrimitive {
     type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
 
     export interface Props extends IndicatorPrimitiveProps {}
