@@ -8,7 +8,31 @@
 
 import type { RawIR } from '../../../domain/types';
 import type { ComponentMetadata } from '../../../infrastructure/metadata';
-import { getComponentRule } from '../../../infrastructure/metadata';
+
+/**
+ * 컴포넌트 규칙 조회 헬퍼
+ *
+ * @param metadata - 메타데이터
+ * @param componentName - 컴포넌트 이름
+ * @returns 컴포넌트 규칙
+ */
+function getComponentRule(metadata: ComponentMetadata, componentName: string) {
+    const parts = componentName.split('.');
+
+    if (parts.length === 1) {
+        return metadata.components[componentName];
+    }
+
+    const [parent, ...childParts] = parts;
+    const childName = childParts.join('.');
+    const parentRule = metadata.components[parent];
+
+    if (!parentRule) {
+        return undefined;
+    }
+
+    return parentRule.subComponents?.[childName];
+}
 
 /**
  * 컴포넌트 이름 매핑 적용
@@ -19,7 +43,14 @@ import { getComponentRule } from '../../../infrastructure/metadata';
  */
 export function applyComponentNameMapping(ir: RawIR, metadata: ComponentMetadata): RawIR {
     // 재귀적으로 IR 트리 순회
-    return mapComponentName(ir, metadata);
+    const result = mapComponentName(ir, metadata);
+
+    // Type guard: result가 string이면 오류 (이론적으로 발생하지 않아야 함)
+    if (typeof result === 'string') {
+        throw new Error('Unexpected string result in component name mapping');
+    }
+
+    return result;
 }
 
 /**

@@ -1,9 +1,69 @@
 /**
  * Component Metadata Types
  *
- * PRD 5.3 & 10: component.metadata.json 스키마 정의
+ * PRD 5.3 & 10: component.metadata.ts 스키마 정의
  * 메타데이터 기반 IR 보강을 위한 타입 정의
+ *
+ * ✅ TypeScript 지원: 함수형 변환 및 동적 로직 지원
  */
+
+import type { RawIR } from '../../domain/types';
+
+/**
+ * Value Transform Function
+ *
+ * PRD 5.3 & 6.5: 함수형 값 변환 지원
+ * Figma variant 값을 React prop 값으로 변환하는 함수
+ *
+ * @example
+ * // "In Progress" → "inProgress"
+ * (value) => value.split(' ').map((w, i) => i === 0 ? w.toLowerCase() : capitalize(w)).join('')
+ */
+export type ValueTransformFn = (value: string) => unknown;
+
+/**
+ * Value Transform Preset
+ *
+ * 자주 사용하는 변환 프리셋
+ */
+export type ValueTransformPreset = 'toLowerCase' | 'toUpperCase' | 'toBoolean' | 'toNumber';
+
+/**
+ * Target Matcher Function
+ *
+ * PRD 10.3: 함수형 타겟 매칭
+ * 복잡한 매칭 로직을 함수로 표현
+ *
+ * @example
+ * (node) => node.componentName === 'Tabs' && !['Tabs.Trigger', 'Tabs.List'].includes(node.name)
+ */
+export type TargetMatcherFn = (node: RawIR, context: AugmentContext) => boolean;
+
+/**
+ * Props Generator Function
+ *
+ * PRD 10.3: 동적 props 생성
+ * 런타임에 props를 계산하는 함수
+ *
+ * @example
+ * (child, index) => ({ value: `${index}` })
+ */
+export type PropGeneratorFn = (
+    child: RawIR,
+    index: number,
+    siblings: RawIR[],
+) => Record<string, unknown>;
+
+/**
+ * Augment Context
+ *
+ * Augmentation 실행 컨텍스트
+ */
+export interface AugmentContext {
+    depth: number;
+    parent?: RawIR;
+    siblings: RawIR[];
+}
 
 /**
  * Variant Rule - Variant Props 매핑 규칙
@@ -24,10 +84,12 @@ export interface VariantRule {
     propName: string;
 
     /**
-     * 값 변환 규칙 (optional)
-     * 예: { "fill": "solid", "outline": "outline" }
+     * ✅ 값 변환 규칙 (optional)
+     * - Record: 정적 매핑 (예: { "fill": "solid" })
+     * - ValueTransformFn: 동적 변환 함수
+     * - ValueTransformPreset: 프리셋 ('toLowerCase', 'toBoolean' 등)
      */
-    valueMapping?: Record<string, string>;
+    valueMapping?: Record<string, string> | ValueTransformFn | ValueTransformPreset;
 
     /**
      * 이 variant를 포함할지 여부를 결정하는 조건 (optional)
@@ -72,9 +134,11 @@ export interface FunctionalComponentRule {
     componentName: string;
 
     /**
-     * 추가 props (optional)
+     * ✅ 추가 props (optional)
+     * - 정적 props: Record<string, unknown>
+     * - 동적 props: PropGeneratorFn
      */
-    props?: Record<string, unknown>;
+    props?: Record<string, unknown> | PropGeneratorFn;
 }
 
 /**
@@ -113,10 +177,11 @@ export interface AugmentRule {
     type: 'functional-component' | 'nesting-optimization';
 
     /**
-     * 적용 대상 컴포넌트 (glob 패턴)
-     * 예: "Dialog.*", "Tabs.Panel"
+     * ✅ 적용 대상 컴포넌트
+     * - 문자열: glob 패턴 (예: "Dialog.*", "Tabs.Panel")
+     * - 함수: 복잡한 매칭 로직 (예: (node) => node.componentName === 'Tabs')
      */
-    target: string;
+    target: string | TargetMatcherFn;
 
     /**
      * 기능 컴포넌트 주입 규칙 (type이 'functional-component'일 때)
@@ -132,8 +197,10 @@ export interface AugmentRule {
 /**
  * Component Metadata
  *
- * PRD 10: component.metadata.json 스키마
+ * PRD 10: component.metadata.ts 스키마
  * 컴포넌트별 변환 규칙을 정의
+ *
+ * ✅ TypeScript로 작성하여 타입 안전성과 함수형 로직 지원
  */
 export interface ComponentMetadata {
     /**
@@ -182,16 +249,20 @@ export interface ComponentRule {
 }
 
 /**
- * Metadata 로더 옵션
+ * ⚠️ Deprecated: MetadataLoaderOptions
+ *
+ * PRD 9: 직접 import 방식으로 변경되어 더 이상 필요하지 않음
+ *
+ * @deprecated No longer needed with TypeScript metadata
  */
 export interface MetadataLoaderOptions {
     /**
-     * 메타데이터 파일 경로
+     * @deprecated
      */
     path?: string;
 
     /**
-     * 기본 메타데이터 (파일이 없을 경우)
+     * @deprecated
      */
     defaultMetadata?: ComponentMetadata;
 }

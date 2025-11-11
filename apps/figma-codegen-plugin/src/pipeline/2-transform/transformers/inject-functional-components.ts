@@ -7,7 +7,31 @@
 
 import type { RawIR } from '../../../domain/types';
 import type { ComponentMetadata, FunctionalComponentRule } from '../../../infrastructure/metadata';
-import { getComponentRule } from '../../../infrastructure/metadata';
+
+/**
+ * 컴포넌트 규칙 조회 헬퍼
+ *
+ * @param metadata - 메타데이터
+ * @param componentName - 컴포넌트 이름
+ * @returns 컴포넌트 규칙
+ */
+function getComponentRule(metadata: ComponentMetadata, componentName: string) {
+    const parts = componentName.split('.');
+
+    if (parts.length === 1) {
+        return metadata.components[componentName];
+    }
+
+    const [parent, ...childParts] = parts;
+    const childName = childParts.join('.');
+    const parentRule = metadata.components[parent];
+
+    if (!parentRule) {
+        return undefined;
+    }
+
+    return parentRule.subComponents?.[childName];
+}
 
 /**
  * 기능 컴포넌트 주입 변환기
