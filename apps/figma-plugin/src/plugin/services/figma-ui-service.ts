@@ -3,7 +3,6 @@ import type { PaletteChip } from '@vapor-ui/color-generator';
 import { Logger } from '~/common/logger';
 import { formatFamilyTitle } from '~/plugin/utils/color';
 import { hexToFigmaColor } from '~/plugin/utils/color';
-import { loadDefaultFont } from '~/plugin/utils/figma-font';
 
 // ============================================================================
 // Constants & Types
@@ -79,33 +78,8 @@ const UI_CONSTANTS: PaletteConfig = {
 } as const;
 
 // ============================================================================
-// Font Loading
+// Font Utilities
 // ============================================================================
-async function loadRequiredFonts(): Promise<void> {
-    const requiredFonts = [
-        { family: 'Inter', style: 'Bold' },
-        { family: 'Inter', style: 'Medium' },
-        { family: 'Inter', style: 'Regular' },
-    ];
-
-    // 기본 폰트 로드 시도 (Pretendard 또는 Inter Regular)
-    try {
-        await loadDefaultFont();
-    } catch (error) {
-        Logger.error('Default font loading failed, continuing with Inter', error);
-    }
-
-    // 필요한 Inter 폰트 스타일들 로드
-    for (const font of requiredFonts) {
-        try {
-            await figma.loadFontAsync(font);
-            Logger.info(`Font loaded: ${font.family} ${font.style}`);
-        } catch (error) {
-            Logger.error(`Failed to load font: ${font.family} ${font.style}`, error);
-        }
-    }
-}
-
 async function setTextSafely(
     textNode: TextNode,
     text: string,
@@ -141,8 +115,6 @@ export const figmaUIService = {
     async generatePalette(themeData: ThemeData, sectionTitle: string): Promise<SectionNode> {
         try {
             Logger.info(`Starting palette generation for: ${sectionTitle}`);
-
-            await loadRequiredFonts();
 
             // 색상 패밀리별로 그룹화
             const colorFamilies = extractColorFamilies(themeData.tokens);
@@ -235,8 +207,6 @@ export const figmaUIService = {
     ): Promise<SectionNode[]> {
         try {
             Logger.info(`Starting dependent tokens list generation for: ${sectionTitle}`);
-
-            await loadRequiredFonts();
 
             const sections: SectionNode[] = [];
             const themeOrder: ('light' | 'dark')[] = ['light', 'dark'];
