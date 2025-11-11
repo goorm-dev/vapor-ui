@@ -4,6 +4,16 @@ import type { SemanticResult, ThemeResult } from '@vapor-ui/color-generator';
  * Message Types
  * -----------------------------------------------------------------------------------------------*/
 
+type PaletteGenerationStartedEvent = {
+    type: 'palette-generation-started';
+    data: Record<string, never>;
+};
+
+type VariableGenerationStartedEvent = {
+    type: 'variable-generation-started';
+    data: Record<string, never>;
+};
+
 type CreateUnifiedPaletteSectionsMessage = {
     type: 'create-unified-palette-sections';
     data: {
@@ -20,7 +30,11 @@ type CreateUnifiedFigmaVariablesMessage = {
     };
 };
 
-export type UIMessage = CreateUnifiedPaletteSectionsMessage | CreateUnifiedFigmaVariablesMessage;
+export type UIMessage =
+    | PaletteGenerationStartedEvent
+    | VariableGenerationStartedEvent
+    | CreateUnifiedPaletteSectionsMessage
+    | CreateUnifiedFigmaVariablesMessage;
 
 /* -------------------------------------------------------------------------------------------------
  * Message Utilities

@@ -73,6 +73,11 @@ export const ColorSystemTab = () => {
 
     const handleGeneratePalette = () => {
         try {
+            postMessage({
+                type: 'palette-generation-started',
+                data: {},
+            });
+
             const options: Partial<ThemeOptions> = {
                 keyColors,
                 contrastRatios,
@@ -141,6 +146,11 @@ export const ColorSystemTab = () => {
             Logger.warn('팔레트가 생성되지 않았습니다');
             return;
         }
+
+        postMessage({
+            type: 'variable-generation-started',
+            data: {},
+        });
 
         try {
             Logger.variables.creating(collectionName);

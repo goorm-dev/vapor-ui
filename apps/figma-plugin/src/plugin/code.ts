@@ -3,6 +3,7 @@ import type { UIMessage } from '~/common/messages';
 import { loadDefaultFont } from '~/plugin/utils/figma-font';
 
 import { unifiedController } from './controllers';
+import { figmaNoticeService } from './services/figma-notification';
 
 /* -------------------------------------------------------------------------------------------------
  * Figma Plugin Setup
@@ -46,7 +47,7 @@ async function initializePlugin(): Promise<void> {
     } catch (error) {
         Logger.error('Plugin initialization failed', error);
 
-        // 에러가 발생해도 UI는 표시 (폴백 메커니즘 유지)
+        // 에러가 발생해도 UI는 표시
         figma.showUI(__html__);
         figma.ui.resize(400, 600);
 
@@ -66,7 +67,12 @@ initializePlugin();
 
 figma.ui.onmessage = async (msg: UIMessage) => {
     switch (msg.type) {
-        // Unified message handlers (new architecture)
+        case 'palette-generation-started':
+            figmaNoticeService.paletteCreating();
+            break;
+        case 'variable-generation-started':
+            figmaNoticeService.variableCreating();
+            break;
         case 'create-unified-palette-sections':
             await unifiedController.createUnifiedPaletteSections(msg.data);
             break;

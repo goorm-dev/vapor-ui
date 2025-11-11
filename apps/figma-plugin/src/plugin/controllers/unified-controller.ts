@@ -69,7 +69,6 @@ export const unifiedController = {
     }): Promise<void> {
         const { generatedTheme, semanticTokens } = data;
 
-        figmaNoticeService.paletteCreating();
         try {
             // 1. Create base tokens section
             if (generatedTheme.baseTokens) {
@@ -132,7 +131,6 @@ export const unifiedController = {
         generatedTheme: ThemeResult;
         collectionName: string;
     }): Promise<void> {
-        figmaNoticeService.variableCreating();
         try {
             await figmaVariableService.createUnifiedVariables(
                 data.generatedTheme,

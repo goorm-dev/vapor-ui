@@ -114,8 +114,6 @@ async function setTextSafely(
 export const figmaUIService = {
     async generatePalette(themeData: ThemeData, sectionTitle: string): Promise<SectionNode> {
         try {
-            Logger.info(`Starting palette generation for: ${sectionTitle}`);
-
             // 색상 패밀리별로 그룹화
             const colorFamilies = extractColorFamilies(themeData.tokens);
 
@@ -206,8 +204,6 @@ export const figmaUIService = {
         },
     ): Promise<SectionNode[]> {
         try {
-            Logger.info(`Starting dependent tokens list generation for: ${sectionTitle}`);
-
             const sections: SectionNode[] = [];
             const themeOrder: ('light' | 'dark')[] = ['light', 'dark'];
 
