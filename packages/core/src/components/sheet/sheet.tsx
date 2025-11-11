@@ -105,7 +105,7 @@ SheetClose.displayName = 'Sheet.Close';
  * Sheet.Overlay
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetOverlay = Dialog.Overlay;
+export const SheetOverlay = Dialog.OverlayPrimitive;
 SheetOverlay.displayName = 'Sheet.Overlay';
 
 /* -------------------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ SheetOverlay.displayName = 'Sheet.Overlay';
  * -----------------------------------------------------------------------------------------------*/
 
 export const SheetPortal = (props: SheetPortal.Props) => {
-    return <Dialog.Portal {...props} />;
+    return <Dialog.PortalPrimitive {...props} />;
 };
 SheetPortal.displayName = 'Sheet.Portal';
 
@@ -267,12 +267,12 @@ export namespace SheetClose {
 }
 
 export namespace SheetOverlay {
-    type OverlayPrimitiveProps = VComponentProps<typeof Dialog.Overlay>;
+    type OverlayPrimitiveProps = VComponentProps<typeof Dialog.OverlayPrimitive>;
     export interface Props extends OverlayPrimitiveProps {}
 }
 
 export namespace SheetPortal {
-    type PortalPrimitiveProps = VComponentProps<typeof Dialog.Portal>;
+    type PortalPrimitiveProps = VComponentProps<typeof Dialog.PortalPrimitive>;
     export interface Props extends PortalPrimitiveProps {}
 }
 

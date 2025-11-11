@@ -100,9 +100,9 @@ describe('Dialog', () => {
                 <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
                 <Dialog.PortalPrimitive>
                     <Dialog.OverlayPrimitive data-testid={OVERLAY_TEXT} />
-                    <Dialog.Popup>
+                    <Dialog.PopupPrimitive>
                         <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
-                    </Dialog.Popup>
+                    </Dialog.PopupPrimitive>
                 </Dialog.PortalPrimitive>
             </Dialog.Root>,
         );
