@@ -41,7 +41,7 @@ async function initializePlugin(): Promise<void> {
 
         // UI 표시
         figma.showUI(__html__);
-        figma.ui.resize(400, 600);
+        figma.ui.resize(450, 600);
 
         Logger.info('Plugin initialized successfully');
     } catch (error) {
@@ -49,7 +49,7 @@ async function initializePlugin(): Promise<void> {
 
         // 에러가 발생해도 UI는 표시
         figma.showUI(__html__);
-        figma.ui.resize(400, 600);
+        figma.ui.resize(450, 600);
 
         // UI에 에러 알림
         figma.ui.postMessage({

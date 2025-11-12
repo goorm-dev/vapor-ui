@@ -10,9 +10,9 @@ import {
     generatePrimitiveColorPalette,
     getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
-import { Box, Button, HStack, VStack } from '@vapor-ui/core';
+import { Box, Button, Collapsible, HStack, VStack } from '@vapor-ui/core';
 import { generateColorCSS } from '@vapor-ui/css-generator';
-import { ConfirmOutlineIcon } from '@vapor-ui/icons';
+import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { Logger } from '~/common/logger';
 import { postMessage } from '~/common/messages';
@@ -27,16 +27,16 @@ const { gray, ...DEFAULT_KEY_COLORS_EXCLUDING_GRAY } = DEFAULT_KEY_COLORS;
 export const ColorSystemTab = () => {
     // Key Colors (10 colors, excluding gray)
     const [keyColors, setKeyColors] = useState<Record<string, string>>({
-        ...DEFAULT_KEY_COLORS_EXCLUDING_GRAY,
+        ...DEFAULT_KEY_COLORS,
     });
 
-    // Brand Color (optional)
-    const [isBrandColorEnabled, setIsBrandColorEnabled] = useState<boolean>(false);
-    const [brandColorName, setBrandColorName] = useState<string>('mint');
-    const [brandColorHex, setBrandColorHex] = useState<string>('#70f0ae');
+    // Primary Color (Required - always enabled with default blue)
+    const [primaryColorName, setPrimaryColorName] = useState<string>('blue');
+    const [primaryColorHex, setPrimaryColorHex] = useState<string>(
+        DEFAULT_KEY_COLORS_EXCLUDING_GRAY.blue,
+    );
 
-    // Reference Background (required)
-    const [isCustomBackgroundEnabled, setIsCustomBackgroundEnabled] = useState<boolean>(false);
+    // Background Color (Required - always enabled with default gray/white)
     const [backgroundName, setBackgroundName] = useState<string>('gray');
     const [backgroundHex, setBackgroundHex] = useState<string>(gray);
     const [lightness, setLightness] = useState<{ light: number; dark: number }>({
@@ -44,7 +44,7 @@ export const ColorSystemTab = () => {
         dark: 14,
     });
 
-    // Contrast Ratios (required, 10 values)
+    // Contrast Ratios (optional, 10 values)
     const [contrastRatios, setContrastRatios] = useState<ContrastRatios>({
         ...DEFAULT_CONTRAST_RATIOS,
     });
@@ -57,19 +57,17 @@ export const ColorSystemTab = () => {
 
     // Dynamic lightness calculation when background color changes
     useEffect(() => {
-        if (isCustomBackgroundEnabled) {
-            const actualLightness = getColorLightness(backgroundHex);
+        const actualLightness = getColorLightness(backgroundHex);
 
-            if (actualLightness !== null) {
-                const constrainedLightness = Math.max(88, actualLightness);
+        if (actualLightness !== null) {
+            const constrainedLightness = Math.max(88, actualLightness);
 
-                setLightness((prev) => ({
-                    ...prev,
-                    light: constrainedLightness,
-                }));
-            }
+            setLightness((prev) => ({
+                ...prev,
+                light: constrainedLightness,
+            }));
         }
-    }, [backgroundHex, isCustomBackgroundEnabled]);
+    }, [backgroundHex]);
 
     const handleGeneratePalette = () => {
         try {
@@ -81,47 +79,28 @@ export const ColorSystemTab = () => {
             const options: Partial<ThemeOptions> = {
                 keyColors,
                 contrastRatios,
-            };
-
-            if (isBrandColorEnabled) {
-                options.brandColor = {
-                    name: brandColorName,
-                    hexcode: brandColorHex,
-                };
-            }
-
-            if (isCustomBackgroundEnabled) {
-                options.keyColors = {
-                    ...options.keyColors,
-                    gray: gray,
-                };
-                options.backgroundColor = {
+                brandColor: {
+                    name: primaryColorName,
+                    hexcode: primaryColorHex,
+                },
+                backgroundColor: {
                     name: backgroundName,
                     hexcode: backgroundHex,
                     lightness,
-                };
-            } else {
-                options.backgroundColor = {
-                    name: 'gray',
-                    hexcode: gray,
-                    lightness,
-                };
-            }
+                },
+            };
 
             Logger.palette.generating({ options });
 
             const themeResult = generatePrimitiveColorPalette(options);
             setGeneratedTheme(themeResult);
 
-            const primaryColorName = isBrandColorEnabled ? brandColorName : 'blue';
-            const canvasColorName = isCustomBackgroundEnabled ? backgroundName : 'gray';
-
-            Logger.semantic.generating({ primaryColorName, canvasColorName }, {});
+            Logger.semantic.generating({ primaryColorName, canvasColorName: backgroundName }, {});
 
             const semanticResult = getSemanticDependentTokens(
                 themeResult,
                 primaryColorName,
-                canvasColorName,
+                backgroundName,
             );
 
             Logger.semantic.generated(semanticResult);
@@ -176,12 +155,10 @@ export const ColorSystemTab = () => {
 
         try {
             const css = generateColorCSS({
-                primary: isBrandColorEnabled
-                    ? { name: brandColorName, hexcode: brandColorHex }
-                    : { name: 'blue', hexcode: keyColors.blue },
+                primary: { name: primaryColorName, hexcode: primaryColorHex },
                 background: {
-                    name: isCustomBackgroundEnabled ? backgroundName : 'gray',
-                    hexcode: isCustomBackgroundEnabled ? backgroundHex : gray,
+                    name: backgroundName,
+                    hexcode: backgroundHex,
                     lightness,
                 },
             });
@@ -209,157 +186,140 @@ export const ColorSystemTab = () => {
     return (
         <VStack gap="$300">
             <VStack gap="$200">
-                {/* A. Key Colors Input (Required, 10 colors) */}
-                <Section title="Key Colors">
-                    <div className="grid grid-cols-1 gap-v-100">
-                        {Object.entries(keyColors).map(([colorName, colorValue]) => (
-                            <ColorInput
-                                key={colorName}
-                                label={colorName}
-                                value={colorValue}
-                                onChange={(value) =>
-                                    setKeyColors((prev) => ({
-                                        ...prev,
-                                        [colorName]: value,
-                                    }))
-                                }
-                            />
-                        ))}
-                    </div>
+                <Section>
+                    <Section.Title title="Primary Color" />
+                    <Section.Description description="브랜드의 핵심 색상을 지정해요. 기본값은 Vapor의 파란색(blue)이에요." />
+                    <VStack gap="$100">
+                        <LabeledInput
+                            label="Color Name"
+                            value={primaryColorName}
+                            onChange={setPrimaryColorName}
+                            placeholder="blue"
+                        />
+                        <ColorInput
+                            label="Hex Code"
+                            value={primaryColorHex}
+                            onChange={setPrimaryColorHex}
+                            placeholder="#2a72e5"
+                        />
+                    </VStack>
                 </Section>
 
-                {/* B. Brand Color Input (Optional) */}
-                <Section title="Brand Color (Optional)">
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={isBrandColorEnabled}
-                                onChange={(e) => setIsBrandColorEnabled(e.target.checked)}
-                                className="rounded border-gray-300"
-                            />
-                            <span className="text-sm text-gray-700">Add Brand Color</span>
-                        </label>
-
-                        {isBrandColorEnabled && (
-                            <div className="space-y-2 pl-6">
-                                <LabeledInput
-                                    label="Color Name"
-                                    value={brandColorName}
-                                    onChange={setBrandColorName}
-                                    placeholder="brand"
-                                />
-                                <ColorInput
-                                    label="Hex Code"
-                                    value={brandColorHex}
-                                    onChange={setBrandColorHex}
-                                    placeholder="#70f0ae"
-                                />
-                            </div>
-                        )}
-                    </div>
+                <Section>
+                    <Section.Title title="Background Color" />
+                    <Section.Description description="모든 색상 팔레트의 기준이 되는 배경색을 지정해요. 기본값은 흰색(gray)이에요." />
+                    <VStack gap="$100">
+                        <LabeledInput
+                            label="Color Name"
+                            value={backgroundName}
+                            onChange={setBackgroundName}
+                            placeholder="gray"
+                        />
+                        <ColorInput
+                            label="Hex Code"
+                            value={backgroundHex}
+                            onChange={setBackgroundHex}
+                            placeholder="#FFFFFF"
+                        />
+                    </VStack>
                 </Section>
 
-                {/* C. Reference Background Input (Required) */}
-                <Section title="Reference Background">
-                    <div className="space-y-3">
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={isCustomBackgroundEnabled}
-                                onChange={(e) => setIsCustomBackgroundEnabled(e.target.checked)}
-                                className="rounded border-gray-300"
-                            />
-                            <span className="text-sm text-gray-700">Customize Background</span>
-                        </label>
+                <Section>
+                    <Section.Title title="Background Lightness" />
+                    <Section.Description description="Light/Dark 테마별 배경색의 밝기를 지정해요. 색역 클리핑 방지를 위해 Light는 88~100%, Dark는 0~15%로 제한돼요.\n범위를 벗어나면 가장 어두운(900) 색상이 순수한 검정/흰색으로 왜곡될 수 있어요." />
 
-                        {isCustomBackgroundEnabled && (
-                            <div className="space-y-2 pl-6">
-                                <LabeledInput
-                                    label="Background Name"
-                                    value={backgroundName}
-                                    onChange={setBackgroundName}
-                                    placeholder="bg"
-                                />
-                                <ColorInput
-                                    label="Background Hex"
-                                    value={backgroundHex}
-                                    onChange={setBackgroundHex}
-                                    placeholder="#FFFFFF"
-                                />
-                            </div>
-                        )}
-
-                        {/* Lightness Sliders */}
-                        <div className="space-y-2">
-                            {isCustomBackgroundEnabled && (
-                                <div className="mb-2 text-xs text-gray-600">
-                                    Base Color Lightness:{' '}
-                                    {(() => {
-                                        const currentLightness = getColorLightness(backgroundHex);
-                                        return currentLightness !== null
-                                            ? `${currentLightness}%`
-                                            : 'Invalid';
-                                    })()}
-                                </div>
-                            )}
-                            <RangeSlider
-                                label="Light Theme"
-                                value={lightness.light}
-                                onChange={(value) =>
-                                    setLightness((prev) => ({
-                                        ...prev,
-                                        light: value,
-                                    }))
-                                }
-                                min={88} // [Constraint]: gamut clipping prevention
-                                max={100}
-                            />
-                            <RangeSlider
-                                label="Dark Theme"
-                                value={lightness.dark}
-                                onChange={(value) =>
-                                    setLightness((prev) => ({
-                                        ...prev,
-                                        dark: value,
-                                    }))
-                                }
-                                min={0} // [Constraint]: gamut clipping prevention
-                                max={15}
-                            />
-                        </div>
-                    </div>
+                    <RangeSlider
+                        label="Light Theme"
+                        value={lightness.light}
+                        onChange={(value) =>
+                            setLightness((prev) => ({
+                                ...prev,
+                                light: value,
+                            }))
+                        }
+                        min={88} // [Constraint]: gamut clipping prevention
+                        max={100}
+                    />
+                    <RangeSlider
+                        label="Dark Theme"
+                        value={lightness.dark}
+                        onChange={(value) =>
+                            setLightness((prev) => ({
+                                ...prev,
+                                dark: value,
+                            }))
+                        }
+                        min={0} // [Constraint]: gamut clipping prevention
+                        max={15}
+                    />
                 </Section>
 
-                {/* D. Contrast Ratios Input (Required, 10 values) */}
-                <Section title="Contrast Ratios">
-                    <div className="grid grid-cols-2 gap-3">
-                        {Object.entries(contrastRatios)
-                            .sort(([a], [b]) => {
-                                const numA = parseInt(a, 10);
-                                const numB = parseInt(b, 10);
-                                return numA - numB;
-                            })
-                            .map(([shade, ratio]) => (
-                                <LabeledInput
-                                    key={shade}
-                                    label={shade}
-                                    value={ratio}
-                                    onChange={(value) =>
-                                        setContrastRatios((prev) => ({
-                                            ...prev,
-                                            [shade]: Number(value),
-                                        }))
-                                    }
-                                    labelWidth="min-w-[28px]"
-                                    type="number"
-                                    min="1"
-                                    max="21"
-                                    step="0.1"
-                                />
-                            ))}
-                    </div>
-                </Section>
+                <Collapsible.Root>
+                    <Section isTop>
+                        <Collapsible.Trigger className="group flex justify-between w-full items-center">
+                            <Section.Title title="Primitive Color" />
+                            <ChevronDownOutlineIcon className="transition-transform group-data-[panel-open]:rotate-180" />
+                        </Collapsible.Trigger>
+                        <Collapsible.Panel>
+                            <VStack gap="$100">
+                                <Section.Description description="디자인 시스템의 10가지 기본 색상 팔레트(red, blue, green 등)를 생성하는 키 컬러에요.\n각 색상은 Background Color 대비 명암비를 준수하며, 인지적으로 균일한 050~900 단계로 생성돼요." />
+
+                                {Object.entries(keyColors).map(([colorName, colorValue]) => (
+                                    <ColorInput
+                                        key={colorName}
+                                        label={colorName}
+                                        value={colorValue}
+                                        onChange={(value) =>
+                                            setKeyColors((prev) => ({
+                                                ...prev,
+                                                [colorName]: value,
+                                            }))
+                                        }
+                                        placeholder="Please enter a hex code"
+                                    />
+                                ))}
+                            </VStack>
+                        </Collapsible.Panel>
+                    </Section>
+                </Collapsible.Root>
+
+                <Collapsible.Root>
+                    <Section isTop>
+                        <Collapsible.Trigger className="group flex justify-between w-full items-center">
+                            <Section.Title title="Contrast Ratios" />
+                            <ChevronDownOutlineIcon className="transition-transform group-data-[panel-open]:rotate-180" />
+                        </Collapsible.Trigger>
+                        <Collapsible.Panel>
+                            <VStack gap="$100">
+                                <Section.Description description="각 색상 단계(050~900)가 배경색 대비 가져야 할 명암비 값이에요. 기본값은 WCAG 접근성 기준을 준수해요.\n500(4.5:1)은 WCAG AA, 700(8.5:1)은 WCAG AAA 기준을 충족하는 값이에요." />
+
+                                {Object.entries(contrastRatios)
+                                    .sort(([a], [b]) => {
+                                        const numA = parseInt(a, 10);
+                                        const numB = parseInt(b, 10);
+                                        return numA - numB;
+                                    })
+                                    .map(([shade, ratio]) => (
+                                        <LabeledInput
+                                            key={shade}
+                                            label={shade}
+                                            value={ratio}
+                                            onChange={(value) =>
+                                                setContrastRatios((prev) => ({
+                                                    ...prev,
+                                                    [shade]: Number(value),
+                                                }))
+                                            }
+                                            type="number"
+                                            min="1"
+                                            max="21"
+                                            step="0.1"
+                                        />
+                                    ))}
+                            </VStack>
+                        </Collapsible.Panel>
+                    </Section>
+                </Collapsible.Root>
 
                 <Button onClick={handleGeneratePalette}>Generate Palette</Button>
             </VStack>
@@ -381,12 +341,13 @@ export const ColorSystemTab = () => {
                                 Palette Generated
                             </div>
                             <div className="text-xs text-gray-600 mb-1">
-                                Key Colors: {Object.keys(keyColors).length}
-                                {isBrandColorEnabled && ` + Brand: ${brandColorName}`}
+                                Primary Color: {primaryColorName} ({primaryColorHex})
+                            </div>
+                            <div className="text-xs text-gray-600 mb-1">
+                                Background: {backgroundName} ({backgroundHex})
                             </div>
                             <div className="text-xs text-gray-600">
-                                Background: {isCustomBackgroundEnabled ? backgroundName : 'gray'}
-                                (Light: {lightness.light}% / Dark: {lightness.dark}%)
+                                Lightness - Light: {lightness.light}% / Dark: {lightness.dark}%
                             </div>
                         </Box>
 
