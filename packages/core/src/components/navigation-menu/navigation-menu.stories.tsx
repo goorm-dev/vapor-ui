@@ -58,26 +58,12 @@ export const Default: StoryObj<StoryProps> = {
                         <NavigationMenu.Item>
                             <NavigationMenu.Trigger>Trigger 2</NavigationMenu.Trigger>
                             <NavigationMenu.Content>
-                                <VStack gap="0">
-                                    <NavigationMenu.Link href="#">
-                                        TESTETSTSETSET 1
-                                    </NavigationMenu.Link>
-                                    <NavigationMenu.Link href="#">
-                                        TESTETSTSETSET 2
-                                    </NavigationMenu.Link>
-                                    <NavigationMenu.Link href="#">
-                                        TESTETSTSETSET 3
-                                    </NavigationMenu.Link>
-                                    <NavigationMenu.Link href="#">
-                                        TESTETSTSETSET 4
-                                    </NavigationMenu.Link>
-                                    <NavigationMenu.Link href="#">
-                                        TESTETSTSETSET 4
-                                    </NavigationMenu.Link>
-                                    <NavigationMenu.Link href="#">
-                                        TESTETSTSETSET 4
-                                    </NavigationMenu.Link>
-                                </VStack>
+                                <NavigationMenu.Link href="#">TESTETSTSETSET 1</NavigationMenu.Link>
+                                <NavigationMenu.Link href="#">TESTETSTSETSET 2</NavigationMenu.Link>
+                                <NavigationMenu.Link href="#">TESTETSTSETSET 3</NavigationMenu.Link>
+                                <NavigationMenu.Link href="#">TESTETSTSETSET 4</NavigationMenu.Link>
+                                <NavigationMenu.Link href="#">TESTETSTSETSET 4</NavigationMenu.Link>
+                                <NavigationMenu.Link href="#">TESTETSTSETSET 4</NavigationMenu.Link>
                             </NavigationMenu.Content>
                         </NavigationMenu.Item>
 
@@ -132,17 +118,8 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
                                 <NavigationMenu.Content>
-                                    <VStack
-                                        render={<ul style={{ listStyle: 'none' }} />}
-                                        gap="$000"
-                                    >
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 1
-                                        </NavigationMenu.Link>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 2
-                                        </NavigationMenu.Link>
-                                    </VStack>
+                                    <NavigationMenu.Link href="#">Sub Link 1</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 2</NavigationMenu.Link>
                                 </NavigationMenu.Content>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -158,17 +135,8 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
                                 <NavigationMenu.Content>
-                                    <VStack
-                                        render={<ul style={{ listStyle: 'none' }} />}
-                                        gap="$000"
-                                    >
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 1
-                                        </NavigationMenu.Link>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 2
-                                        </NavigationMenu.Link>
-                                    </VStack>
+                                    <NavigationMenu.Link href="#">Sub Link 1</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 2</NavigationMenu.Link>
                                 </NavigationMenu.Content>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -184,17 +152,8 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
                                 <NavigationMenu.Content>
-                                    <VStack
-                                        render={<ul style={{ listStyle: 'none' }} />}
-                                        gap="$000"
-                                    >
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 1
-                                        </NavigationMenu.Link>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 2
-                                        </NavigationMenu.Link>
-                                    </VStack>
+                                    <NavigationMenu.Link href="#">Sub Link 1</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 2</NavigationMenu.Link>
                                 </NavigationMenu.Content>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -208,17 +167,8 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
                                 <NavigationMenu.Content>
-                                    <VStack
-                                        render={<ul style={{ listStyle: 'none' }} />}
-                                        gap="$000"
-                                    >
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 1
-                                        </NavigationMenu.Link>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 2
-                                        </NavigationMenu.Link>
-                                    </VStack>
+                                    <NavigationMenu.Link href="#">Sub Link 1</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 2</NavigationMenu.Link>
                                 </NavigationMenu.Content>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -236,17 +186,8 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
                                 <NavigationMenu.Content>
-                                    <VStack
-                                        render={<ul style={{ listStyle: 'none' }} />}
-                                        gap="$000"
-                                    >
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 1
-                                        </NavigationMenu.Link>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 2
-                                        </NavigationMenu.Link>
-                                    </VStack>
+                                    <NavigationMenu.Link href="#">Sub Link 1</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 2</NavigationMenu.Link>
                                 </NavigationMenu.Content>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -262,17 +203,8 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
                                 <NavigationMenu.Content>
-                                    <VStack
-                                        render={<ul style={{ listStyle: 'none' }} />}
-                                        gap="$000"
-                                    >
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 1
-                                        </NavigationMenu.Link>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 2
-                                        </NavigationMenu.Link>
-                                    </VStack>
+                                    <NavigationMenu.Link href="#">Sub Link 1</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 2</NavigationMenu.Link>
                                 </NavigationMenu.Content>
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
@@ -290,21 +222,10 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                             <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
                                 <NavigationMenu.Content>
-                                    <VStack
-                                        render={<ul style={{ listStyle: 'none' }} />}
-                                        gap="$000"
-                                    >
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 1
-                                        </NavigationMenu.Link>
-                                        <NavigationMenu.Link href="#">
-                                            Sub Link 2
-                                        </NavigationMenu.Link>
-                                    </VStack>
+                                    <NavigationMenu.Link href="#">Sub Link 1</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 2</NavigationMenu.Link>
                                 </NavigationMenu.Content>
                             </NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" />
-                            Item = ItemPrimtitive + LinkPrimitive
                         </NavigationMenu.List>
 
                         <NavigationMenu.Viewport
