@@ -12,12 +12,6 @@ export const Logger = {
     error: (message: string, error?: unknown) => {
         console.error(`[ERROR] ${message}`, error ?? '');
     },
-    /**
-     * only use dev
-     */
-    debug: (message: string, data?: unknown) => {
-        console.debug(`[DEBUG] ${message}`, data ?? '');
-    },
 
     palette: {
         generating: (colorData: unknown) => {

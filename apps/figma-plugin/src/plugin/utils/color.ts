@@ -1,4 +1,4 @@
-import type { ColorToken } from '@vapor-ui/color-generator';
+import type { PaletteChip } from '@vapor-ui/color-generator';
 
 /* -------------------------------------------------------------------------------------------------
  * Color Conversion
@@ -74,16 +74,17 @@ export function sortColorShades(shades: Record<string, unknown>): Array<[string,
 
 /**
  * Filters and sorts valid color shades from color palette
- * @returns [['050', colorToken], ['100', colorToken]]
+ * @returns [['050', paletteChip], ['100', paletteChip]]
  */
-export function getValidColorShades(colorShades: unknown): [string, ColorToken][] {
+export function getValidColorShades(colorShades: unknown): [string, PaletteChip][] {
     if (typeof colorShades !== 'object' || !colorShades) {
         return [];
     }
 
     const entries = Object.entries(colorShades).filter(
-        ([_, colorToken]) => typeof colorToken === 'object' && colorToken && 'hex' in colorToken,
-    ) as [string, ColorToken][];
+        ([_, paletteChip]) =>
+            typeof paletteChip === 'object' && paletteChip && 'hex' in paletteChip,
+    ) as [string, PaletteChip][];
 
     return entries.sort(([a], [b]) => {
         const numA = parseInt(a, 10);

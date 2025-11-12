@@ -1,6 +1,9 @@
-import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
+import type { BackgroundColor, KeyColor } from '@vapor-ui/color-generator';
 
-export type ColorThemeConfig = SemanticMappingConfig;
+export interface ColorThemeConfig {
+    primary: KeyColor;
+    background: BackgroundColor;
+}
 
 export interface CompleteCSSConfig {
     colors: ColorThemeConfig;

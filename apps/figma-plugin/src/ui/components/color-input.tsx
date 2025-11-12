@@ -1,8 +1,10 @@
-interface ColorInputProps {
+import { useRef } from 'react';
+
+import { Box, Field, TextInput } from '@vapor-ui/core';
+
+interface ColorInputProps extends Omit<TextInput.Props, 'onChange'> {
     label: string;
-    value: string;
     onChange: (value: string) => void;
-    placeholder?: string;
 }
 
 export const ColorInput = ({
@@ -10,24 +12,36 @@ export const ColorInput = ({
     value,
     onChange,
     placeholder = '#000000',
+    ...props
 }: ColorInputProps) => {
+    const colorInputRef = useRef<HTMLInputElement>(null);
+
+    const handleTextInputClick = () => {
+        colorInputRef.current?.click();
+    };
+
     return (
-        <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-600 min-w-[102px] capitalize">{label}:</label>
-            <input
-                type="text"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder={placeholder}
-            />
-            <input
-                type="color"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                className="w-6 h-6 border border-gray-300 rounded cursor-pointer"
-                title={`Pick ${label} color`}
-            />
-        </div>
+        <Field.Root className="w-full">
+            <Field.Label className="flex justify-between items-center">
+                {label}
+                <Box className="relative">
+                    <TextInput
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        placeholder={placeholder}
+                        className="pl-10 w-[200px]"
+                        onClick={handleTextInputClick}
+                        {...props}
+                    />
+                    <input
+                        ref={colorInputRef}
+                        type="color"
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        className="absolute top-1/2 left-2 -translate-y-1/2 w-6 h-6 p-0 border-0 bg-transparent cursor-pointer"
+                    />
+                </Box>
+            </Field.Label>
+        </Field.Root>
     );
 };
