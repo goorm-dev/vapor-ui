@@ -8,29 +8,35 @@ export default function TooltipAlignment() {
                 <div className="flex gap-4">
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>시작</Button>} />
-                        <Tooltip.Portal>
-                            <Tooltip.Positioner side="bottom" align="start">
-                                <Tooltip.Popup>시작 위치에 정렬된 툴팁</Tooltip.Popup>
-                            </Tooltip.Positioner>
-                        </Tooltip.Portal>
+                        <Tooltip.Popup
+                            positionerElement={
+                                <Tooltip.PositionerPrimitive side="bottom" align="start" />
+                            }
+                        >
+                            시작 위치에 정렬된 툴팁
+                        </Tooltip.Popup>
                     </Tooltip.Root>
 
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
-                        <Tooltip.Portal>
-                            <Tooltip.Positioner side="bottom" align="center">
-                                <Tooltip.Popup>중앙에 정렬된 툴팁</Tooltip.Popup>
-                            </Tooltip.Positioner>
-                        </Tooltip.Portal>
+                        <Tooltip.Popup
+                            positionerElement={
+                                <Tooltip.PositionerPrimitive side="bottom" align="center" />
+                            }
+                        >
+                            중앙에 정렬된 툴팁
+                        </Tooltip.Popup>
                     </Tooltip.Root>
 
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>끝</Button>} />
-                        <Tooltip.Portal>
-                            <Tooltip.Positioner side="bottom" align="end">
-                                <Tooltip.Popup>끝 위치에 정렬된 툴팁</Tooltip.Popup>
-                            </Tooltip.Positioner>
-                        </Tooltip.Portal>
+                        <Tooltip.Popup
+                            positionerElement={
+                                <Tooltip.PositionerPrimitive side="bottom" align="end" />
+                            }
+                        >
+                            끝 위치에 정렬된 툴팁
+                        </Tooltip.Popup>
                     </Tooltip.Root>
                 </div>
             </div>
@@ -40,29 +46,35 @@ export default function TooltipAlignment() {
                 <div className="flex flex-col gap-4">
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>시작</Button>} />
-                        <Tooltip.Portal>
-                            <Tooltip.Positioner side="right" align="start">
-                                <Tooltip.Popup>상단 시작 위치</Tooltip.Popup>
-                            </Tooltip.Positioner>
-                        </Tooltip.Portal>
+                        <Tooltip.Popup
+                            positionerElement={
+                                <Tooltip.PositionerPrimitive side="right" align="start" />
+                            }
+                        >
+                            상단 시작 위치
+                        </Tooltip.Popup>
                     </Tooltip.Root>
 
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>중앙</Button>} />
-                        <Tooltip.Portal>
-                            <Tooltip.Positioner side="right" align="center">
-                                <Tooltip.Popup>중앙 위치</Tooltip.Popup>
-                            </Tooltip.Positioner>
-                        </Tooltip.Portal>
+                        <Tooltip.Popup
+                            positionerElement={
+                                <Tooltip.PositionerPrimitive side="right" align="center" />
+                            }
+                        >
+                            중앙 위치
+                        </Tooltip.Popup>
                     </Tooltip.Root>
 
                     <Tooltip.Root>
                         <Tooltip.Trigger render={<Button>끝</Button>} />
-                        <Tooltip.Portal>
-                            <Tooltip.Positioner side="right" align="end">
-                                <Tooltip.Popup>하단 끝 위치</Tooltip.Popup>
-                            </Tooltip.Positioner>
-                        </Tooltip.Portal>
+                        <Tooltip.Popup
+                            positionerElement={
+                                <Tooltip.PositionerPrimitive side="right" align="end" />
+                            }
+                        >
+                            하단 끝 위치
+                        </Tooltip.Popup>
                     </Tooltip.Root>
                 </div>
             </div>

@@ -4,10 +4,10 @@ export default function SwitchReadOnly() {
     return (
         <div className="space-y-3">
             <Switch.Root readOnly defaultChecked>
-                <Switch.Thumb />
+                <Switch.ThumbPrimitive />
             </Switch.Root>
             <Switch.Root readOnly>
-                <Switch.Thumb />
+                <Switch.ThumbPrimitive />
             </Switch.Root>
         </div>
     );
