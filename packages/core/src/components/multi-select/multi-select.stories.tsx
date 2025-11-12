@@ -85,10 +85,10 @@ export const ObjectItems: StoryObj = {
                 <VStack>
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={languages}>
-                        <MultiSelect.Trigger>
+                        <MultiSelect.TriggerPrimitive>
                             <MultiSelect.ValuePrimitive>{renderValue}</MultiSelect.ValuePrimitive>
                             <MultiSelect.TriggerIconPrimitive />
-                        </MultiSelect.Trigger>
+                        </MultiSelect.TriggerPrimitive>
                         <MultiSelect.Popup>
                             {Object.entries(languages).map(([value, label]) => (
                                 <MultiSelect.Item key={value} value={value}>
@@ -102,7 +102,7 @@ export const ObjectItems: StoryObj = {
                 <VStack>
                     <span>Custom Value</span>
                     <MultiSelect.Root {...args} items={languages}>
-                        <MultiSelect.Trigger>
+                        <MultiSelect.TriggerPrimitive>
                             <MultiSelect.ValuePrimitive>
                                 {(value) =>
                                     value.length ? (
@@ -115,7 +115,7 @@ export const ObjectItems: StoryObj = {
                                 }
                             </MultiSelect.ValuePrimitive>
                             <MultiSelect.TriggerIconPrimitive />
-                        </MultiSelect.Trigger>
+                        </MultiSelect.TriggerPrimitive>
                         <MultiSelect.Popup>
                             {Object.entries(languages).map(([value, label]) => (
                                 <MultiSelect.Item key={value} value={value}>
@@ -155,10 +155,10 @@ export const ArrayItmes: StoryObj = {
                 <VStack>
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={fonts} defaultValue={null}>
-                        <MultiSelect.Trigger>
+                        <MultiSelect.TriggerPrimitive>
                             <MultiSelect.ValuePrimitive>{renderValue}</MultiSelect.ValuePrimitive>
                             <MultiSelect.TriggerIconPrimitive />
-                        </MultiSelect.Trigger>
+                        </MultiSelect.TriggerPrimitive>
                         <MultiSelect.Popup>
                             {fonts.map(({ value, label }) => (
                                 <MultiSelect.Item key={value} value={value}>
@@ -172,7 +172,7 @@ export const ArrayItmes: StoryObj = {
                 <VStack>
                     <span>Custom Value</span>
                     <MultiSelect.Root {...args} items={fonts}>
-                        <MultiSelect.Trigger>
+                        <MultiSelect.TriggerPrimitive>
                             <MultiSelect.ValuePrimitive>
                                 {(value) =>
                                     value.length ? (
@@ -186,7 +186,7 @@ export const ArrayItmes: StoryObj = {
                             </MultiSelect.ValuePrimitive>
 
                             <MultiSelect.TriggerIconPrimitive />
-                        </MultiSelect.Trigger>
+                        </MultiSelect.TriggerPrimitive>
                         <MultiSelect.Popup>
                             {fonts.map(({ value, label }) => (
                                 <MultiSelect.Item key={value} value={value}>
@@ -319,10 +319,10 @@ export const TestBed = {
                         defaultValue={['javascript', 'python', 'go', 'rust']}
                         defaultOpen
                     >
-                        <MultiSelect.Trigger>
+                        <MultiSelect.TriggerPrimitive>
                             <MultiSelect.ValuePrimitive>{renderValue}</MultiSelect.ValuePrimitive>
                             <MultiSelect.TriggerIconPrimitive />
-                        </MultiSelect.Trigger>
+                        </MultiSelect.TriggerPrimitive>
                         <MultiSelect.Popup>
                             <MultiSelect.Group>
                                 <MultiSelect.GroupLabel>Truncated</MultiSelect.GroupLabel>

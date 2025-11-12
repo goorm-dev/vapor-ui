@@ -8,6 +8,7 @@ export {
     // primitives
     NavigationMenuRootPrimitive as RootPrimitive,
     NavigationMenuListPrimitive as ListPrimitive,
+    NavigationMenuTriggerPrimitive as TriggerPrimitive,
     NavigationMenuTriggerIndicatorPrimitive as TriggerIndicatorPrimitive,
     NavigationMenuPortalPrimitive as PortalPrimitive,
     NavigationMenuPositionerPrimitive as PositionerPrimitive,

@@ -10,6 +10,7 @@ export {
     // Primitives
     MultiSelectValuePrimitive as ValuePrimitive,
     MultiSelectPlaceholderPrimitive as PlaceholderPrimitive,
+    MultiSelectTriggerPrimitive as TriggerPrimitive,
     MultiSelectTriggerIconPrimitive as TriggerIconPrimitive,
     MultiSelectPopupPrimitive as PopupPrimitive,
     MultiSelectPortalPrimitive as PortalPrimitive,
