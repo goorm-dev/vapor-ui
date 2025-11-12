@@ -1,6 +1,6 @@
 'use client';
 
-import type { RefObject } from 'react';
+import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 import { Dialog as BaseDialog, useRender } from '@base-ui-components/react';
@@ -12,6 +12,7 @@ import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
 import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { createContext } from '~/libs/create-context';
+import { createSlot } from '~/libs/create-slot';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -102,23 +103,23 @@ export const SheetClose = Dialog.Close;
 SheetClose.displayName = 'Sheet.Close';
 
 /* -------------------------------------------------------------------------------------------------
- * Sheet.Overlay
+ * Sheet.OverlayPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetOverlay = Dialog.OverlayPrimitive;
-SheetOverlay.displayName = 'Sheet.Overlay';
+export const SheetOverlayPrimitive = Dialog.OverlayPrimitive;
+SheetOverlayPrimitive.displayName = 'Sheet.OverlayPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Sheet.Portal
+ * Sheet.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetPortal = (props: SheetPortal.Props) => {
+export const SheetPortalPrimitive = (props: SheetPortalPrimitive.Props) => {
     return <Dialog.PortalPrimitive {...props} />;
 };
-SheetPortal.displayName = 'Sheet.Portal';
+SheetPortalPrimitive.displayName = 'Sheet.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Sheet.Positioner
+ * Sheet.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
 type PositionerType = { side?: 'top' | 'right' | 'bottom' | 'left' };
@@ -129,73 +130,81 @@ const [SheetPositionerProvider, useSheetPositionerContext] = createContext<Posit
     hookName: 'useSheetPositionerContext',
 });
 
-export const SheetPositioner = forwardRef<HTMLDivElement, SheetPositioner.Props>((props, ref) => {
-    const { render, ...componentProps } = resolveStyles(props);
+export const SheetPositionerPrimitive = forwardRef<HTMLDivElement, SheetPositionerPrimitive.Props>(
+    (props, ref) => {
+        const { render, ...componentProps } = resolveStyles(props);
 
-    const [positionerProps, otherProps] = createSplitProps<PositionerType>()(componentProps, [
-        'side',
-    ]);
-    const { side = 'right' } = positionerProps;
+        const [positionerProps, otherProps] = createSplitProps<PositionerType>()(componentProps, [
+            'side',
+        ]);
+        const { side = 'right' } = positionerProps;
 
-    const { open: contextOpen = false, mounted } = useSheetRootContext();
+        const { open: contextOpen = false, mounted } = useSheetRootContext();
 
-    const element = useRender({
-        ref,
-        render: render || <div />,
-        state: { open: contextOpen, closed: !contextOpen, side },
-        props: {
-            role: 'presentation',
-            hidden: !mounted,
-            ...otherProps,
-        },
-    });
+        const element = useRender({
+            ref,
+            render: render || <div />,
+            state: { open: contextOpen, closed: !contextOpen, side },
+            props: {
+                role: 'presentation',
+                hidden: !mounted,
+                ...otherProps,
+            },
+        });
 
-    return <SheetPositionerProvider value={positionerProps}>{element}</SheetPositionerProvider>;
-});
-SheetPositioner.displayName = 'Sheet.Positioner';
+        return <SheetPositionerProvider value={positionerProps}>{element}</SheetPositionerProvider>;
+    },
+);
+SheetPositionerPrimitive.displayName = 'Sheet.PositionerPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * Sheet.PopupPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitive.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+
+        const { popupRef } = useSheetRootContext();
+        const { side = 'right' } = useSheetPositionerContext();
+
+        const composedRef = composeRefs(popupRef, ref);
+
+        const dataAttr = createDataAttributes({ side });
+
+        return (
+            <BaseDialog.Popup
+                ref={composedRef}
+                className={clsx(styles.popup, className)}
+                {...dataAttr}
+                {...componentProps}
+            />
+        );
+    },
+);
+SheetPopupPrimitive.displayName = 'Sheet.PopupPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
+    ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
+        const PortalElement = createSlot(portalElement || <SheetPortalPrimitive />);
+        const OverlayElement = createSlot(overlayElement || <SheetOverlayPrimitive />);
+        const PositionerElement = createSlot(positionerElement || <SheetPositionerPrimitive />);
 
-    const { popupRef } = useSheetRootContext();
-    const { side = 'right' } = useSheetPositionerContext();
-
-    const composedRef = composeRefs(popupRef, ref);
-
-    const dataAttr = createDataAttributes({ side });
-
-    return (
-        <BaseDialog.Popup
-            ref={composedRef}
-            className={clsx(styles.popup, className)}
-            {...dataAttr}
-            {...componentProps}
-        />
-    );
-});
-SheetPopup.displayName = 'Sheet.Popup';
-
-/* -------------------------------------------------------------------------------------------------
- * Sheet.Content
- * -----------------------------------------------------------------------------------------------*/
-
-export const SheetContent = forwardRef<HTMLDivElement, SheetContent.Props>(
-    ({ portalProps, overlayProps, positionerProps, ...props }, ref) => {
         return (
-            <SheetPortal {...portalProps}>
-                <SheetOverlay {...overlayProps} />
-                <SheetPositioner {...positionerProps}>
-                    <SheetPopup ref={ref} {...props} />
-                </SheetPositioner>
-            </SheetPortal>
+            <PortalElement>
+                <OverlayElement />
+                <PositionerElement>
+                    <SheetPopupPrimitive ref={ref} {...props} />
+                </PositionerElement>
+            </PortalElement>
         );
     },
 );
-SheetContent.displayName = 'Sheet.Content';
+SheetPopup.displayName = 'Sheet.Popup';
 
 /* -------------------------------------------------------------------------------------------------
  * Sheet.Header
@@ -266,32 +275,32 @@ export namespace SheetClose {
     export interface Props extends ClosePrimitiveProps {}
 }
 
-export namespace SheetOverlay {
+export namespace SheetOverlayPrimitive {
     type OverlayPrimitiveProps = VComponentProps<typeof Dialog.OverlayPrimitive>;
     export interface Props extends OverlayPrimitiveProps {}
 }
 
-export namespace SheetPortal {
+export namespace SheetPortalPrimitive {
     type PortalPrimitiveProps = VComponentProps<typeof Dialog.PortalPrimitive>;
     export interface Props extends PortalPrimitiveProps {}
 }
 
-export namespace SheetPositioner {
+export namespace SheetPositionerPrimitive {
     type PositionerPrimitiveProps = VComponentProps<'div'>;
     export interface Props extends PositionerPrimitiveProps, PositionerType {}
 }
 
-export namespace SheetPopup {
+export namespace SheetPopupPrimitive {
     type PopupPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
     export interface Props extends PopupPrimitiveProps {}
 }
 
-export namespace SheetContent {
-    type ContentPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
-    export interface Props extends ContentPrimitiveProps {
-        portalProps?: SheetPortal.Props;
-        overlayProps?: SheetOverlay.Props;
-        positionerProps?: SheetPositioner.Props;
+export namespace SheetPopup {
+    type PopupPrimitiveProps = VComponentProps<typeof BaseDialog.Popup>;
+    export interface Props extends PopupPrimitiveProps {
+        portalElement?: ReactElement<SheetPortalPrimitive.Props>;
+        overlayElement?: ReactElement<SheetOverlayPrimitive.Props>;
+        positionerElement?: ReactElement<SheetPositionerPrimitive.Props>;
     }
 }
 
