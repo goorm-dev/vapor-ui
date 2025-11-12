@@ -62,18 +62,14 @@ export default function ResearchForm() {
                             직업
                         </Text>
                         <Select.Root items={jobs} placeholder="직업을 선택해주세요." size="lg">
-                            <Select.Trigger id="research-jobs">
-                                <Select.Value />
-                                <Select.TriggerIcon />
-                            </Select.Trigger>
-                            <Select.Content>
+                            <Select.Trigger id="research-jobs" />
+                            <Select.Popup>
                                 {jobs.map((job) => (
                                     <Select.Item key={job.value} value={job.value}>
                                         {job.label}
-                                        <Select.ItemIndicator />
                                     </Select.Item>
                                 ))}
-                            </Select.Content>
+                            </Select.Popup>
                         </Select.Root>
                     </Box>
                 </Field.Root>
@@ -88,18 +84,14 @@ export default function ResearchForm() {
                             placeholder="자주 사용하는 스택을 선택해주세요."
                             size="lg"
                         >
-                            <MultiSelect.Trigger id="research-stack">
-                                <MultiSelect.Value />
-                                <MultiSelect.TriggerIcon />
-                            </MultiSelect.Trigger>
-                            <MultiSelect.Content>
+                            <MultiSelect.Trigger id="research-stack" />
+                            <MultiSelect.Popup>
                                 {stacks.map((stack) => (
                                     <MultiSelect.Item key={stack.value} value={stack.value}>
                                         {stack.label}
-                                        <MultiSelect.ItemIndicator />
                                     </MultiSelect.Item>
                                 ))}
-                            </MultiSelect.Content>
+                            </MultiSelect.Popup>
                         </MultiSelect.Root>
                     </Box>
                 </Field.Root>
