@@ -42,56 +42,58 @@ export const Default: StoryObj<StoryProps> = {
     render: ({ side, align, ...args }) => {
         return (
             <HStack justifyContent={'start'} margin="-$200">
-                <NavigationMenu.RootPrimitive {...args} defaultValue={'1'} aria-label="Main">
-                    <NavigationMenu.ListPrimitive>
-                        <NavigationMenu.ItemPrimitive value="1">
+                <NavigationMenu.Root {...args} defaultValue={'1'} aria-label="Main">
+                    <NavigationMenu.List>
+                        <NavigationMenu.Item value="1">
                             <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
-                            <NavigationMenu.Panel>
-                                <VStack render={<ul style={{ listStyle: 'none' }} />}>
-                                    <NavigationMenu.Item href="#">Sub Link 1</NavigationMenu.Item>
-                                    <NavigationMenu.Item href="#">Sub Link 2</NavigationMenu.Item>
-                                    <NavigationMenu.Item href="#">Sub Link 3</NavigationMenu.Item>
-                                    <NavigationMenu.Item href="#">Sub Link 4</NavigationMenu.Item>
+                            <NavigationMenu.Content>
+                                <VStack>
+                                    <NavigationMenu.Link href="#">Sub Link 1</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 2</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 3</NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">Sub Link 4</NavigationMenu.Link>
                                 </VStack>
-                            </NavigationMenu.Panel>
-                        </NavigationMenu.ItemPrimitive>
+                            </NavigationMenu.Content>
+                        </NavigationMenu.Item>
                         <NavigationMenu.Item>
                             <NavigationMenu.Trigger>Trigger 2</NavigationMenu.Trigger>
-                            <NavigationMenu.Panel>
-                                <VStack render={<ul style={{ listStyle: 'none' }} />} gap="0">
-                                    <NavigationMenu.Item href="#">
+                            <NavigationMenu.Content>
+                                <VStack gap="0">
+                                    <NavigationMenu.Link href="#">
                                         TESTETSTSETSET 1
-                                    </NavigationMenu.Item>
-                                    <NavigationMenu.Item href="#">
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">
                                         TESTETSTSETSET 2
-                                    </NavigationMenu.Item>
-                                    <NavigationMenu.Item href="#">
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">
                                         TESTETSTSETSET 3
-                                    </NavigationMenu.Item>
-                                    <NavigationMenu.Item href="#">
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">
                                         TESTETSTSETSET 4
-                                    </NavigationMenu.Item>
-                                    <NavigationMenu.Item href="#">
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">
                                         TESTETSTSETSET 4
-                                    </NavigationMenu.Item>
-                                    <NavigationMenu.Item href="#">
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link href="#">
                                         TESTETSTSETSET 4
-                                    </NavigationMenu.Item>
+                                    </NavigationMenu.Link>
                                 </VStack>
-                            </NavigationMenu.Panel>
+                            </NavigationMenu.Content>
                         </NavigationMenu.Item>
 
-                        <NavigationMenu.Item selected href="#">
-                            Link 1
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link selected href="#">
+                                Link 1
+                            </NavigationMenu.Link>
                         </NavigationMenu.Item>
-                    </NavigationMenu.ListPrimitive>
+                    </NavigationMenu.List>
 
                     <NavigationMenu.Viewport
                         positionerElement={
                             <NavigationMenu.PositionerPrimitive side={side} align={align} />
                         }
                     />
-                </NavigationMenu.RootPrimitive>
+                </NavigationMenu.Root>
             </HStack>
         );
     },
@@ -108,197 +110,207 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                 border="1px solid"
             >
                 <NavigationMenu.Root aria-label="Main">
-                    <NavigationMenu.Item href="#" selected>
-                        Link 1
-                    </NavigationMenu.Item>
-                    <NavigationMenu.Item href="#">Link 2</NavigationMenu.Item>
-                    <NavigationMenu.Item href="#">Link 3</NavigationMenu.Item>
+                    <NavigationMenu.List>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="#" selected>
+                                Link 1
+                            </NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="#">Link 2</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                        <NavigationMenu.Item>
+                            <NavigationMenu.Link href="#">Link 3</NavigationMenu.Link>
+                        </NavigationMenu.Item>
+                    </NavigationMenu.List>
                 </NavigationMenu.Root>
 
                 <HStack gap="$250">
                     {/* Left Navigation Menu */}
-                    <NavigationMenu.RootPrimitive aria-label="Main" value="1">
-                        <NavigationMenu.ListPrimitive>
-                            <NavigationMenu.ItemPrimitive value="1">
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
-                                <NavigationMenu.Panel>
+                                <NavigationMenu.Content>
                                     <VStack
                                         render={<ul style={{ listStyle: 'none' }} />}
                                         gap="$000"
                                     >
-                                        <NavigationMenu.Item href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 1
-                                        </NavigationMenu.Item>
-                                        <NavigationMenu.Item href="#">
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 2
-                                        </NavigationMenu.Item>
+                                        </NavigationMenu.Link>
                                     </VStack>
-                                </NavigationMenu.Panel>
-                            </NavigationMenu.ItemPrimitive>
-                        </NavigationMenu.ListPrimitive>
+                                </NavigationMenu.Content>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
 
                         <NavigationMenu.Viewport
                             positionerElement={<NavigationMenu.PositionerPrimitive side="left" />}
                         />
-                    </NavigationMenu.RootPrimitive>
+                    </NavigationMenu.Root>
 
                     {/* Top Navigation Menu */}
-                    <NavigationMenu.RootPrimitive aria-label="Main" value="1">
-                        <NavigationMenu.ListPrimitive>
-                            <NavigationMenu.ItemPrimitive value="1">
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
-                                <NavigationMenu.Panel>
+                                <NavigationMenu.Content>
                                     <VStack
                                         render={<ul style={{ listStyle: 'none' }} />}
                                         gap="$000"
                                     >
-                                        <NavigationMenu.Item href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 1
-                                        </NavigationMenu.Item>
-                                        <NavigationMenu.Item href="#">
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 2
-                                        </NavigationMenu.Item>
+                                        </NavigationMenu.Link>
                                     </VStack>
-                                </NavigationMenu.Panel>
-                            </NavigationMenu.ItemPrimitive>
-                        </NavigationMenu.ListPrimitive>
+                                </NavigationMenu.Content>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
 
                         <NavigationMenu.Viewport
                             positionerElement={<NavigationMenu.PositionerPrimitive side="top" />}
                         />
-                    </NavigationMenu.RootPrimitive>
+                    </NavigationMenu.Root>
 
                     {/* Bottom Navigation Menu */}
-                    <NavigationMenu.RootPrimitive aria-label="Main" value="1">
-                        <NavigationMenu.ListPrimitive>
-                            <NavigationMenu.ItemPrimitive value="1">
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
-                                <NavigationMenu.Panel>
+                                <NavigationMenu.Content>
                                     <VStack
                                         render={<ul style={{ listStyle: 'none' }} />}
                                         gap="$000"
                                     >
-                                        <NavigationMenu.Item href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 1
-                                        </NavigationMenu.Item>
-                                        <NavigationMenu.Item href="#">
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 2
-                                        </NavigationMenu.Item>
+                                        </NavigationMenu.Link>
                                     </VStack>
-                                </NavigationMenu.Panel>
-                            </NavigationMenu.ItemPrimitive>
-                        </NavigationMenu.ListPrimitive>
+                                </NavigationMenu.Content>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
 
                         <NavigationMenu.Viewport />
-                    </NavigationMenu.RootPrimitive>
+                    </NavigationMenu.Root>
 
                     {/* Right Navigation Menu */}
-                    <NavigationMenu.RootPrimitive aria-label="Main" value="1">
-                        <NavigationMenu.ListPrimitive>
-                            <NavigationMenu.ItemPrimitive value="1">
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
-                                <NavigationMenu.Panel>
+                                <NavigationMenu.Content>
                                     <VStack
                                         render={<ul style={{ listStyle: 'none' }} />}
                                         gap="$000"
                                     >
-                                        <NavigationMenu.Item href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 1
-                                        </NavigationMenu.Item>
-                                        <NavigationMenu.Item href="#">
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 2
-                                        </NavigationMenu.Item>
+                                        </NavigationMenu.Link>
                                     </VStack>
-                                </NavigationMenu.Panel>
-                            </NavigationMenu.ItemPrimitive>
-                        </NavigationMenu.ListPrimitive>
+                                </NavigationMenu.Content>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
 
                         <NavigationMenu.Viewport
                             positionerElement={<NavigationMenu.PositionerPrimitive side="right" />}
                         />
-                    </NavigationMenu.RootPrimitive>
+                    </NavigationMenu.Root>
                 </HStack>
 
                 <HStack gap="$250">
                     {/* Start Navigation Menu */}
-                    <NavigationMenu.RootPrimitive aria-label="Main" value="1">
-                        <NavigationMenu.ListPrimitive>
-                            <NavigationMenu.ItemPrimitive value="1">
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
-                                <NavigationMenu.Panel>
+                                <NavigationMenu.Content>
                                     <VStack
                                         render={<ul style={{ listStyle: 'none' }} />}
                                         gap="$000"
                                     >
-                                        <NavigationMenu.Item href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 1
-                                        </NavigationMenu.Item>
-                                        <NavigationMenu.Item href="#">
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 2
-                                        </NavigationMenu.Item>
+                                        </NavigationMenu.Link>
                                     </VStack>
-                                </NavigationMenu.Panel>
-                            </NavigationMenu.ItemPrimitive>
-                        </NavigationMenu.ListPrimitive>
+                                </NavigationMenu.Content>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
 
                         <NavigationMenu.Viewport
                             positionerElement={<NavigationMenu.PositionerPrimitive align="start" />}
                         />
-                    </NavigationMenu.RootPrimitive>
+                    </NavigationMenu.Root>
 
                     {/* Center Navigation Menu */}
-                    <NavigationMenu.RootPrimitive aria-label="Main" value="1">
-                        <NavigationMenu.ListPrimitive>
-                            <NavigationMenu.ItemPrimitive value="1">
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
-                                <NavigationMenu.Panel>
+                                <NavigationMenu.Content>
                                     <VStack
                                         render={<ul style={{ listStyle: 'none' }} />}
                                         gap="$000"
                                     >
-                                        <NavigationMenu.Item href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 1
-                                        </NavigationMenu.Item>
-                                        <NavigationMenu.Item href="#">
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 2
-                                        </NavigationMenu.Item>
+                                        </NavigationMenu.Link>
                                     </VStack>
-                                </NavigationMenu.Panel>
-                            </NavigationMenu.ItemPrimitive>
-                        </NavigationMenu.ListPrimitive>
+                                </NavigationMenu.Content>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
 
                         <NavigationMenu.Viewport
                             positionerElement={
                                 <NavigationMenu.PositionerPrimitive align="center" />
                             }
                         />
-                    </NavigationMenu.RootPrimitive>
+                    </NavigationMenu.Root>
 
                     {/* End Navigation Menu */}
-                    <NavigationMenu.RootPrimitive aria-label="Main" value="1">
-                        <NavigationMenu.ListPrimitive>
-                            <NavigationMenu.ItemPrimitive value="1">
+                    <NavigationMenu.Root aria-label="Main" value="1">
+                        <NavigationMenu.List>
+                            <NavigationMenu.Item value="1">
                                 <NavigationMenu.Trigger>Overview</NavigationMenu.Trigger>
-                                <NavigationMenu.Panel>
+                                <NavigationMenu.Content>
                                     <VStack
                                         render={<ul style={{ listStyle: 'none' }} />}
                                         gap="$000"
                                     >
-                                        <NavigationMenu.Item href="#">
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 1
-                                        </NavigationMenu.Item>
-                                        <NavigationMenu.Item href="#">
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link href="#">
                                             Sub Link 2
-                                        </NavigationMenu.Item>
+                                        </NavigationMenu.Link>
                                     </VStack>
-                                </NavigationMenu.Panel>
-                            </NavigationMenu.ItemPrimitive>
-                        </NavigationMenu.ListPrimitive>
+                                </NavigationMenu.Content>
+                            </NavigationMenu.Item>
+                            <NavigationMenu.Link href="#" />
+                            Item = ItemPrimtitive + LinkPrimitive
+                        </NavigationMenu.List>
 
                         <NavigationMenu.Viewport
                             positionerElement={<NavigationMenu.PositionerPrimitive align="end" />}
                         />
-                    </NavigationMenu.RootPrimitive>
+                    </NavigationMenu.Root>
                 </HStack>
             </VStack>
         );
