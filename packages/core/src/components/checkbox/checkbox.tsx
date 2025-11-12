@@ -95,10 +95,10 @@ const CheckIcon = (props: IconProps) => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" {...props}>
             <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M11.5374 1.93469C10.9206 1.3551 9.92198 1.3551 9.30673 1.93469L3.99987 6.92127L2.69208 5.6939C2.07684 5.1143 1.07825 5.1143 0.461432 5.6939C-0.153811 6.27201 -0.153811 7.21033 0.461432 7.78992L2.88454 10.0653C3.49979 10.6449 4.49837 10.6449 5.11519 10.0653L11.5374 4.03072C12.1542 3.45261 12.1542 2.51429 11.5374 1.93469"
-                fill="white"
+                fill="currentColor"
             />
         </svg>
     );
