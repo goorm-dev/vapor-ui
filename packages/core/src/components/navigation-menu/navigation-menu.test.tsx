@@ -12,28 +12,26 @@ const PANEL_LINK_4 = 'Link 4';
 
 const NavigationMenuTest = (props: NavigationMenu.Root.Props) => {
     return (
-        <NavigationMenu.RootPrimitive {...props}>
-            <NavigationMenu.ListPrimitive>
-                <NavigationMenu.Item href="#">Link</NavigationMenu.Item>
-                <NavigationMenu.ItemPrimitive value={TRIGGER_1}>
+        <NavigationMenu.Root {...props}>
+            <NavigationMenu.List>
+                <NavigationMenu.Item>
+                    <NavigationMenu.Link href="#">Link</NavigationMenu.Link>
+                </NavigationMenu.Item>
+                <NavigationMenu.Item value={TRIGGER_1}>
                     <NavigationMenu.Trigger>{TRIGGER_1}</NavigationMenu.Trigger>
-                    <NavigationMenu.Panel>
-                        <ul>
-                            <NavigationMenu.Item href="#">{PANEL_LINK_1}</NavigationMenu.Item>
-                            <NavigationMenu.Item href="#">{PANEL_LINK_2}</NavigationMenu.Item>
-                        </ul>
-                    </NavigationMenu.Panel>
-                </NavigationMenu.ItemPrimitive>
-                <NavigationMenu.ItemPrimitive value={TRIGGER_2}>
+                    <NavigationMenu.Content>
+                        <NavigationMenu.Link href="#">{PANEL_LINK_1}</NavigationMenu.Link>
+                        <NavigationMenu.Link href="#">{PANEL_LINK_2}</NavigationMenu.Link>
+                    </NavigationMenu.Content>
+                </NavigationMenu.Item>
+                <NavigationMenu.Item value={TRIGGER_2}>
                     <NavigationMenu.Trigger>{TRIGGER_2}</NavigationMenu.Trigger>
-                    <NavigationMenu.Panel>
-                        <ul>
-                            <NavigationMenu.Item href="#">{PANEL_LINK_3}</NavigationMenu.Item>
-                            <NavigationMenu.Item href="#">{PANEL_LINK_4}</NavigationMenu.Item>
-                        </ul>
-                    </NavigationMenu.Panel>
-                </NavigationMenu.ItemPrimitive>
-            </NavigationMenu.ListPrimitive>
+                    <NavigationMenu.Content>
+                        <NavigationMenu.Link href="#">{PANEL_LINK_3}</NavigationMenu.Link>
+                        <NavigationMenu.Link href="#">{PANEL_LINK_4}</NavigationMenu.Link>
+                    </NavigationMenu.Content>
+                </NavigationMenu.Item>
+            </NavigationMenu.List>
 
             <NavigationMenu.PortalPrimitive>
                 <NavigationMenu.PositionerPrimitive>
@@ -42,7 +40,7 @@ const NavigationMenuTest = (props: NavigationMenu.Root.Props) => {
                     </NavigationMenu.PopupPrimitive>
                 </NavigationMenu.PositionerPrimitive>
             </NavigationMenu.PortalPrimitive>
-        </NavigationMenu.RootPrimitive>
+        </NavigationMenu.Root>
     );
 };
 
@@ -243,11 +241,15 @@ describe('<NavigationMenu.Link />', () => {
     afterEach(cleanup);
 
     const NAV_LINK = 'nav-link';
-    const NavItemTest = (itemProps: NavigationMenu.Item.Props) => (
+    const NavItemTest = (itemProps: NavigationMenu.Link.Props) => (
         <NavigationMenu.Root aria-label="Main">
-            <NavigationMenu.Item data-testid={NAV_LINK} href="#" {...itemProps}>
-                Home
-            </NavigationMenu.Item>
+            <NavigationMenu.List>
+                <NavigationMenu.Item>
+                    <NavigationMenu.Link data-testid={NAV_LINK} href="#" {...itemProps}>
+                        Home
+                    </NavigationMenu.Link>
+                </NavigationMenu.Item>
+            </NavigationMenu.List>
         </NavigationMenu.Root>
     );
 
