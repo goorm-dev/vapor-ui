@@ -40,13 +40,29 @@ export function generatePrimitiveColorPalette(
     const colors: KeyColor[] = [];
 
     // 기본 팔레트: DEFAULT_KEY_COLORS 11개 (gray 포함) 모두 포함
+    // NOTE: brandColor 이름 충돌 방지 로직
+    // - brandColor.name이 keyColors에 존재하는 경우: keyColor를 brandColor로 대체 (중복 팔레트 방지)
+    // - 예: primaryColorName='blue'이고 brandColor.hexcode='#9c90f9'인 경우,
+    //   keyColors.blue 대신 brandColor를 사용하여 팔레트 생성
+    // - 이후 Brand Color Swap 로직이 적용되어 가장 가까운 칩을 사용자 hex로 교체
     Object.entries(mergedOptions.keyColors).forEach(([name, hexcode]) => {
-        colors.push({ name, hexcode });
+        if (options.brandColor && options.brandColor.name === name) {
+            // brandColor로 대체 (Leonardo는 brandColor.hexcode 기반으로 팔레트 생성)
+            colors.push(options.brandColor);
+        } else {
+            colors.push({ name, hexcode });
+        }
     });
 
-    // brandColor가 제공되면 추가
+    // brandColor가 제공되고, keyColors에 없는 새로운 이름인 경우 추가
+    // 예: primaryColorName='mint' (keyColors에 없는 커스텀 이름)
     if (options.brandColor) {
-        colors.push(options.brandColor);
+        const brandColorExistsInKeyColors = Object.keys(mergedOptions.keyColors).includes(
+            options.brandColor.name,
+        );
+        if (!brandColorExistsInKeyColors) {
+            colors.push(options.brandColor);
+        }
     }
 
     // backgroundColor는 Leonardo Adapter에서 자동으로 별도 팔레트로 생성되므로

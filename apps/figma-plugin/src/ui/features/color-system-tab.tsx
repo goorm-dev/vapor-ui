@@ -22,8 +22,6 @@ import { RangeSlider } from '~/ui/components/range-slider';
 import { Section } from '~/ui/components/section';
 import { getColorLightness } from '~/ui/utils/color-metrics';
 
-const { gray, ...DEFAULT_KEY_COLORS_EXCLUDING_GRAY } = DEFAULT_KEY_COLORS;
-
 export const ColorSystemTab = () => {
     // Key Colors (10 colors, excluding gray)
     const [keyColors, setKeyColors] = useState<Record<string, string>>({
@@ -32,13 +30,11 @@ export const ColorSystemTab = () => {
 
     // Primary Color (Required - always enabled with default blue)
     const [primaryColorName, setPrimaryColorName] = useState<string>('blue');
-    const [primaryColorHex, setPrimaryColorHex] = useState<string>(
-        DEFAULT_KEY_COLORS_EXCLUDING_GRAY.blue,
-    );
+    const [primaryColorHex, setPrimaryColorHex] = useState<string>(DEFAULT_KEY_COLORS.blue);
 
     // Background Color (Required - always enabled with default gray/white)
     const [backgroundName, setBackgroundName] = useState<string>('gray');
-    const [backgroundHex, setBackgroundHex] = useState<string>(gray);
+    const [backgroundHex, setBackgroundHex] = useState<string>(DEFAULT_KEY_COLORS.gray);
     const [lightness, setLightness] = useState<{ light: number; dark: number }>({
         light: 100,
         dark: 14,
