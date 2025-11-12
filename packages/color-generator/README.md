@@ -20,7 +20,10 @@ pnpm add @vapor-ui/color-generator
 ## Quick Start
 
 ```typescript
-import { generatePrimitiveColorPalette, getSemanticDependentTokens } from '@vapor-ui/color-generator';
+import {
+    generatePrimitiveColorPalette,
+    getSemanticDependentTokens,
+} from '@vapor-ui/color-generator';
 
 // Generate default palette (11 colors: red, blue, gray, etc.)
 const theme = generatePrimitiveColorPalette();
@@ -91,25 +94,30 @@ Generates all primitive color tokens for a design system.
 #### Parameters
 
 **`options.keyColors?: Record<string, string>`**
+
 - Override the 11 default system colors
 - Default: `DEFAULT_KEY_COLORS` (red, pink, grape, violet, blue, cyan, green, lime, yellow, orange, gray)
 
 **`options.brandColor?: { name: string, hexcode: string }`**
+
 - Add a custom brand palette (e.g., `{ name: 'mint', hexcode: '#00BEEF' }`)
 - Uses Brand Color Swap to preserve exact brand color at closest deltaE step
 
 **`options.backgroundColor?: { name: string, hexcode: string }`**
+
 - Customize the reference background color
 - Default: `{ name: 'gray', hexcode: '#FFFFFF' }`
 - Automatically generates an additional palette if name is not in default colors
 
 **`options.contrastRatios?: Record<string, number>`**
+
 - Override contrast ratio values for each step (050-900)
 - Default: `DEFAULT_CONTRAST_RATIOS`
 
 #### Returns
 
 `ThemeResult` containing:
+
 - `lightModeTokens`: Palettes for light mode (lightness: 100)
 - `darkModeTokens`: Palettes for dark mode (lightness: 14)
 - `baseTokens`: color-white and color-black
@@ -200,12 +208,14 @@ const Button = styled.button`
 The package follows a clean 3-layer architecture:
 
 ### Domain Layer (`src/domain/`)
+
 Pure TypeScript types and interfaces defining core business models and contracts. No external dependencies.
 
 - **Models**: `Color`, `Palette`, `Theme`, `PaletteChip` types
 - **Ports**: `ColorGeneratorPort` interface (contract between application and infrastructure)
 
 ### Application Layer (`src/application/`)
+
 Business logic and use cases. Depends only on domain layer. No external library imports (except culori for color space conversions).
 
 - **Use Cases**: `generatePrimitivePalette`, `getSemanticTokens`
@@ -213,12 +223,14 @@ Business logic and use cases. Depends only on domain layer. No external library 
 - **Utils**: Palette utilities, validation helpers
 
 ### Infrastructure Layer (`src/infrastructure/`)
+
 External integrations and technical implementations. Only layer that imports external libraries.
 
 - **Adapters**: Leonardo adapter implementing `ColorGeneratorPort`
 - **Entrypoints**: Public API and dependency injection
 
 ### Dependency Flow
+
 ```
 Infrastructure → Application → Domain
      ↑                            ↑
@@ -230,7 +242,7 @@ Infrastructure → Application → Domain
 ### Custom Contrast Ratios
 
 ```typescript
-import { generatePrimitiveColorPalette, DEFAULT_CONTRAST_RATIOS } from '@vapor-ui/color-generator';
+import { DEFAULT_CONTRAST_RATIOS, generatePrimitiveColorPalette } from '@vapor-ui/color-generator';
 
 const theme = generatePrimitiveColorPalette({
     contrastRatios: {
@@ -303,8 +315,8 @@ theme.lightModeTokens.palettes.forEach((palette) => {
 
 ```typescript
 import {
-    DEFAULT_KEY_COLORS,
     DEFAULT_CONTRAST_RATIOS,
+    DEFAULT_KEY_COLORS,
     DEFAULT_THEME_OPTIONS,
 } from '@vapor-ui/color-generator';
 
@@ -322,34 +334,38 @@ console.log(DEFAULT_THEME_OPTIONS.backgroundColor); // { name: 'gray', hexcode: 
 
 ```typescript
 import type {
-    ThemeOptions,
-    ThemeResult,
-    SemanticResult,
-    PrimitiveColorTokens,
-    PrimitivePalette,
-    PaletteChip,
     BackgroundCanvas,
-    SemanticTokens,
-    KeyColor,
     BackgroundColor,
     BackgroundLightness,
     ContrastRatios,
+    KeyColor,
     OklchColor,
+    PaletteChip,
+    PrimitiveColorTokens,
+    PrimitivePalette,
+    SemanticResult,
+    SemanticTokens,
+    ThemeOptions,
+    ThemeResult,
 } from '@vapor-ui/color-generator';
 ```
 
 ## Important Notes
 
 ### Accessibility First
+
 This generator prioritizes WCAG compliance over visual preferences. If a generated color doesn't match your expectation, it's likely because the contrast requirement takes precedence.
 
 ### Atomic Theme Enforcement
+
 The architecture prevents partial theme overrides by design. This is not a limitation but a feature that guarantees accessibility across your entire design system.
 
 ### Performance
+
 Color generation is computationally intensive. Generate palettes at build time rather than runtime for production applications.
 
 ### Color Space
+
 All calculations use OKLCH for perceptual uniformity. Output includes both hex (for web) and OKLCH (for advanced use cases).
 
 ## Related Resources
