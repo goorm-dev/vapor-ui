@@ -85,7 +85,7 @@
             "description": "체크박스의 내용을 포함합니다. 기본적으로 Checkbox.Indicator가 자동으로 포함됩니다."
         }
     ],
-    "indicatorProps": [
+    "indicatorPrimitiveProps": [
         {
             "prop": "render",
             "type": ["ReactElement", "function"],

@@ -24,7 +24,7 @@ export default function SheetControlled() {
             </p>
 
             <Sheet.Root open={isOpen} onOpenChange={setIsOpen}>
-                <Sheet.Content>
+                <Sheet.Popup>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
@@ -42,7 +42,7 @@ export default function SheetControlled() {
                     <Sheet.Footer>
                         <Sheet.Close render={<Button variant="ghost" />}>닫기</Sheet.Close>
                     </Sheet.Footer>
-                </Sheet.Content>
+                </Sheet.Popup>
             </Sheet.Root>
         </div>
     );
