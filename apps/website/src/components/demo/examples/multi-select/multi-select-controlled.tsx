@@ -26,19 +26,15 @@ export default function MultiSelectControlled() {
                 onValueChange={handleValueChange}
                 placeholder="폰트 선택"
             >
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
+                <MultiSelect.Trigger />
 
-                <MultiSelect.Content>
+                <MultiSelect.Popup>
                     {fonts.map((font) => (
                         <MultiSelect.Item key={font.value} value={font.value}>
                             {font.label}
-                            <MultiSelect.ItemIndicator />
                         </MultiSelect.Item>
                     ))}
-                </MultiSelect.Content>
+                </MultiSelect.Popup>
             </MultiSelect.Root>
 
             <Text typography="body2" foreground="secondary-200">

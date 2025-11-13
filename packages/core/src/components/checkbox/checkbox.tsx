@@ -40,7 +40,7 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((p
     const { size, invalid, indeterminate } = variantProps;
     const dataAttrs = createDataAttributes({ invalid });
 
-    const IndicatorElement = createSlot(children || <CheckboxIndicator />);
+    const IndicatorElement = createSlot(children || <CheckboxIndicatorPrimitive />);
 
     return (
         <CheckboxProvider value={{ size, indeterminate }}>
@@ -60,29 +60,30 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((p
 CheckboxRoot.displayName = 'Checkbox.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Checkbox.Indicator
+ * Checkbox.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const CheckboxIndicator = forwardRef<HTMLDivElement, CheckboxIndicator.Props>(
-    (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
+export const CheckboxIndicatorPrimitive = forwardRef<
+    HTMLDivElement,
+    CheckboxIndicatorPrimitive.Props
+>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-        const { size, invalid, indeterminate } = useCheckboxContext();
-        const dataAttrs = createDataAttributes({ invalid });
+    const { size, invalid, indeterminate } = useCheckboxContext();
+    const dataAttrs = createDataAttributes({ invalid });
 
-        return (
-            <BaseCheckbox.Indicator
-                ref={ref}
-                className={clsx(styles.indicator({ size }), className)}
-                {...dataAttrs}
-                {...componentProps}
-            >
-                {indeterminate ? <DashIcon /> : <CheckIcon />}
-            </BaseCheckbox.Indicator>
-        );
-    },
-);
-CheckboxIndicator.displayName = 'Checkbox.Indicator';
+    return (
+        <BaseCheckbox.Indicator
+            ref={ref}
+            className={clsx(styles.indicator({ size }), className)}
+            {...dataAttrs}
+            {...componentProps}
+        >
+            {indeterminate ? <DashIcon /> : <CheckIcon />}
+        </BaseCheckbox.Indicator>
+    );
+});
+CheckboxIndicatorPrimitive.displayName = 'Checkbox.IndicatorPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Icons
@@ -92,12 +93,12 @@ interface IconProps extends ComponentProps<'svg'> {}
 
 const CheckIcon = (props: IconProps) => {
     return (
-        <svg viewBox="0 0 8 7" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" {...props}>
             <path
-                d="M11.3135 5.29325c-.391-.391-1.024-.391-1.414 0l-3.364 3.364-.829-.828c-.39-.391-1.023-.391-1.414 0-.39.39-.39 1.023 0 1.414l1.536 1.535c.39.391 1.023.391 1.414 0l4.071-4.071c.391-.39.391-1.023 0-1.414"
-                fill="currentColor"
                 fillRule="evenodd"
-                transform="translate(-4 -5)"
+                clipRule="evenodd"
+                d="M11.5374 1.93469C10.9206 1.3551 9.92198 1.3551 9.30673 1.93469L3.99987 6.92127L2.69208 5.6939C2.07684 5.1143 1.07825 5.1143 0.461432 5.6939C-0.153811 6.27201 -0.153811 7.21033 0.461432 7.78992L2.88454 10.0653C3.49979 10.6449 4.49837 10.6449 5.11519 10.0653L11.5374 4.03072C12.1542 3.45261 12.1542 2.51429 11.5374 1.93469"
+                fill="currentColor"
             />
         </svg>
     );
@@ -120,7 +121,7 @@ export namespace CheckboxRoot {
     export type ChangeEventDetails = BaseCheckbox.Root.ChangeEventDetails;
 }
 
-export namespace CheckboxIndicator {
+export namespace CheckboxIndicatorPrimitive {
     type IndicatorPrimitiveProps = VComponentProps<typeof BaseCheckbox.Indicator>;
 
     export interface Props extends IndicatorPrimitiveProps {}

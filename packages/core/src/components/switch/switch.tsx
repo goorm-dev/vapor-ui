@@ -40,7 +40,7 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
 
     const dataAttrs = createDataAttributes({ invalid });
 
-    const ThumbElement = useMemo(() => createSlot(<SwitchThumb />), []);
+    const ThumbElement = useMemo(() => createSlot(<SwitchThumbPrimitive />), []);
     const children = childrenProp || <ThumbElement />;
 
     return (
@@ -61,18 +61,24 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
 SwitchRoot.displayName = 'Switch.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Switch.Thumb
+ * Switch.ThumbPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SwitchThumb = forwardRef<HTMLDivElement, SwitchThumb.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-    const { size } = useSwitchContext();
+export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimitive.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+        const { size } = useSwitchContext();
 
-    return (
-        <BaseSwitch.Thumb ref={ref} className={styles.indicator({ size })} {...componentProps} />
-    );
-});
-SwitchThumb.displayName = 'Switch.Thumb';
+        return (
+            <BaseSwitch.Thumb
+                ref={ref}
+                className={styles.indicator({ size })}
+                {...componentProps}
+            />
+        );
+    },
+);
+SwitchThumbPrimitive.displayName = 'Switch.ThumbPrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -82,7 +88,7 @@ export namespace SwitchRoot {
     export type ChangeEventDetails = BaseSwitch.Root.ChangeEventDetails;
 }
 
-export namespace SwitchThumb {
+export namespace SwitchThumbPrimitive {
     type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
     export interface Props extends ThumbPrimitiveProps {}
 }

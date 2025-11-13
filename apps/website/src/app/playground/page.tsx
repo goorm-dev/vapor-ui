@@ -44,7 +44,7 @@ const renderAvatars = () => {
     const combinations = getCartesianProduct(AVATAR_SHAPES, SIZES);
 
     return combinations.map(([shape, size]) => (
-        <Avatar.Simple key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
+        <Avatar.Root key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
     ));
 };
 
@@ -247,14 +247,11 @@ const Page = () => {
                             <Dialog.Root>
                                 <Dialog.Trigger render={<Button>트리거</Button>} />
 
-                                <Dialog.Portal>
-                                    <Dialog.Overlay />
-                                    <Dialog.Content>
-                                        <Dialog.Header>Header</Dialog.Header>
-                                        <Dialog.Body>Body</Dialog.Body>
-                                        <Dialog.Footer>Footer</Dialog.Footer>
-                                    </Dialog.Content>
-                                </Dialog.Portal>
+                                <Dialog.Popup>
+                                    <Dialog.Header>Header</Dialog.Header>
+                                    <Dialog.Body>Body</Dialog.Body>
+                                    <Dialog.Footer>Footer</Dialog.Footer>
+                                </Dialog.Popup>
                             </Dialog.Root>
                         </RenderingTemplate.Component>
                     </RenderingTemplate>
