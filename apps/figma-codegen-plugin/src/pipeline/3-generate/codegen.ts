@@ -3,7 +3,6 @@
  *
  * PRD 8.1: Semantic IR을 React 코드로 생성
  */
-
 import type { SemanticIR } from '../../domain/types';
 import { generateImports, generateJSX } from './builders';
 import { formatCode } from './formatter';
@@ -30,7 +29,7 @@ export async function generateReactCode(
     const { componentName = 'GeneratedComponent', format = true } = options;
 
     // 1. Import 문 생성
-    const imports = generateImports(ir.imports);
+    const imports = generateImports(ir.imports, ir.iconImports);
 
     // 2. JSX 생성 (재귀)
     const jsx = generateJSX(ir, 2); // depth 2로 시작 (return 문 내부)

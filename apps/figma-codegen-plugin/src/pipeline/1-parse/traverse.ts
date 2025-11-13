@@ -3,11 +3,10 @@
  *
  * PRD 6.1: Figma 노드 트리를 순회하여 Raw IR 생성
  */
-
-import type { FigmaNode, RawIR } from '../../domain/types';
+import { FIGMA_COMPONENT_PREFIX, FIGMA_LAYER_PREFIX } from '../../domain/constants';
 import { applyFilters } from '../../domain/rules';
-import { mapComponentNode, mapTextNode, mapLayoutNode } from './mappers';
-import { FIGMA_COMPONENT_PREFIX } from '../../domain/constants';
+import type { FigmaNode, RawIR } from '../../domain/types';
+import { mapComponentNode, mapIconNode, mapLayoutNode, mapTextNode } from './mappers';
 
 /**
  * Mapper 선택
@@ -15,26 +14,43 @@ import { FIGMA_COMPONENT_PREFIX } from '../../domain/constants';
  * 노드 타입과 이름을 기반으로 적절한 매퍼 선택
  */
 function selectMapper(node: FigmaNode): (node: FigmaNode) => RawIR {
-    // [1] Component/Instance → Component Mapper
-    if ((node.type === 'COMPONENT' || node.type === 'INSTANCE') && node.name.startsWith(FIGMA_COMPONENT_PREFIX)) {
+    // [1] Icon 체크 (모든 타입에서 우선 확인)
+    // ❤️ prefix가 있으면 무조건 아이콘
+    if (node.name.startsWith(FIGMA_LAYER_PREFIX.ICON)) {
+        return mapIconNode;
+    }
+
+    // [2] Component/Instance → Component Mapper (💙 prefix)
+    if (
+        (node.type === 'COMPONENT' || node.type === 'INSTANCE') &&
+        node.name.startsWith(FIGMA_COMPONENT_PREFIX)
+    ) {
         return mapComponentNode;
     }
 
-    // [2] Text → Text Mapper
+    // [3] Text → Text Mapper
     if (node.type === 'TEXT') {
         return mapTextNode;
     }
 
-    // [3] AutoLayout (Frame) → Layout Mapper
-    if (
-        node.type === 'FRAME' &&
-        node.layoutMode &&
-        node.layoutMode !== 'NONE'
-    ) {
+    // [4] Icon → Icon Mapper (VECTOR 타입의 아이콘)
+    const vectorTypes: FigmaNode['type'][] = ['VECTOR', 'LINE', 'STAR', 'ELLIPSE'];
+    if (vectorTypes.includes(node.type)) {
+        // "icon" 키워드나 이모지로 시작하는 경우
+        const isIcon =
+            node.name.toLowerCase().includes('icon') || /^[\u{1F300}-\u{1F9FF}]/u.test(node.name);
+
+        if (isIcon) {
+            return mapIconNode;
+        }
+    }
+
+    // [5] AutoLayout (Frame) → Layout Mapper
+    if (node.type === 'FRAME' && node.layoutMode && node.layoutMode !== 'NONE') {
         return mapLayoutNode;
     }
 
-    // [4] 기본: Layout Mapper (일반 컨테이너)
+    // [6] 기본: Layout Mapper (일반 컨테이너)
     return mapLayoutNode;
 }
 

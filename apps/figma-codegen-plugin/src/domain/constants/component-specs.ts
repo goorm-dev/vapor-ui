@@ -19,9 +19,10 @@ export const FIGMA_LAYER_PREFIX = {
 } as const;
 
 /**
- * Vapor-UI 컴포넌트 패키지
+ * Vapor-UI 패키지
  */
 export const VAPOR_UI_PACKAGE = '@vapor-ui/core';
+export const VAPOR_UI_ICONS_PACKAGE = '@vapor-ui/icons';
 
 /**
  * 알려진 Vapor-UI 컴포넌트 목록

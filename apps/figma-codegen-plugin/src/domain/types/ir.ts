@@ -17,6 +17,7 @@ export interface RawIR {
         figmaNodeId: string;
         figmaNodeName: string;
         figmaNodeType: string;
+        isIcon?: boolean; // 아이콘 여부
     };
 }
 
@@ -26,6 +27,7 @@ export interface RawIR {
  */
 export interface SemanticIR extends RawIR {
     imports: Set<string>;
+    iconImports: Set<string>; // 아이콘 imports (@vapor-ui/icons)
     semanticType?: SemanticType;
 }
 

@@ -57,11 +57,12 @@ export function createAugmenter(options: AugmenterOptions = {}) {
         }
 
         // [4] Imports 수집
-        const imports = collectImports(transformedIR);
+        const { imports, iconImports } = collectImports(transformedIR);
 
         return {
             ...transformedIR,
             imports,
+            iconImports,
         };
     };
 
@@ -72,18 +73,26 @@ export function createAugmenter(options: AugmenterOptions = {}) {
  * IR 트리에서 필요한 imports 수집
  *
  * @param ir - Raw IR
- * @returns Import 문자열 Set
+ * @returns { imports: 일반 컴포넌트, iconImports: 아이콘 컴포넌트 }
  */
-function collectImports(ir: RawIR): Set<string> {
+function collectImports(ir: RawIR): { imports: Set<string>; iconImports: Set<string> } {
     const imports = new Set<string>();
+    const iconImports = new Set<string>();
 
     // 재귀적으로 컴포넌트 이름 수집
     const collectComponentNames = (node: RawIR | string) => {
         if (typeof node === 'string') return;
 
+        // 아이콘 여부 확인
+        const isIcon = node.metadata?.isIcon === true;
+
         // 컴포넌트 타입이면 imports에 추가
         if (node.type === 'component') {
-            imports.add(node.componentName);
+            if (isIcon) {
+                iconImports.add(node.componentName);
+            } else {
+                imports.add(node.componentName);
+            }
         } else if (node.type === 'element') {
             // Flex, Box 등 레이아웃 컴포넌트
             imports.add(node.componentName);
@@ -98,5 +107,5 @@ function collectImports(ir: RawIR): Set<string> {
 
     collectComponentNames(ir);
 
-    return imports;
+    return { imports, iconImports };
 }
