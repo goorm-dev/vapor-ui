@@ -38,6 +38,7 @@ export const KNOWN_COMPONENTS = [
     'Card',
     'Badge',
     'Avatar',
+    'Text',
 ] as const;
 
 export type KnownComponent = (typeof KNOWN_COMPONENTS)[number];

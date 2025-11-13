@@ -66,41 +66,42 @@ function sortImports(code: string): string {
     return [...imports, '', ...rest].join('\n');
 }
 
-/**
- * 들여쓰기 정규화
- *
- * @param code - 코드
- * @returns 들여쓰기가 정규화된 코드
- */
-function normalizeIndentation(code: string): string {
-    const lines = code.split('\n');
-    let indentLevel = 0;
-    const INDENT = '    '; // 4칸 스페이스
+// FIXME: unused - 향후 필요 시 활성화
+// /**
+//  * 들여쓰기 정규화
+//  *
+//  * @param code - 코드
+//  * @returns 들여쓰기가 정규화된 코드
+//  */
+// function normalizeIndentation(code: string): string {
+//     const lines = code.split('\n');
+//     let indentLevel = 0;
+//     const INDENT = '    '; // 4칸 스페이스
 
-    return lines
-        .map((line) => {
-            const trimmed = line.trim();
+//     return lines
+//         .map((line) => {
+//             const trimmed = line.trim();
 
-            // 빈 줄은 그대로
-            if (trimmed === '') return '';
+//             // 빈 줄은 그대로
+//             if (trimmed === '') return '';
 
-            // 닫는 괄호/브래킷은 들여쓰기 감소
-            if (trimmed.startsWith('}') || trimmed.startsWith(']') || trimmed.startsWith(')')) {
-                indentLevel = Math.max(0, indentLevel - 1);
-            }
+//             // 닫는 괄호/브래킷은 들여쓰기 감소
+//             if (trimmed.startsWith('}') || trimmed.startsWith(']') || trimmed.startsWith(')')) {
+//                 indentLevel = Math.max(0, indentLevel - 1);
+//             }
 
-            const indented = INDENT.repeat(indentLevel) + trimmed;
+//             const indented = INDENT.repeat(indentLevel) + trimmed;
 
-            // 여는 괄호/브래킷은 들여쓰기 증가
-            if (
-                trimmed.endsWith('{') ||
-                trimmed.endsWith('[') ||
-                (trimmed.endsWith('(') && !trimmed.includes(')'))
-            ) {
-                indentLevel += 1;
-            }
+//             // 여는 괄호/브래킷은 들여쓰기 증가
+//             if (
+//                 trimmed.endsWith('{') ||
+//                 trimmed.endsWith('[') ||
+//                 (trimmed.endsWith('(') && !trimmed.includes(')'))
+//             ) {
+//                 indentLevel += 1;
+//             }
 
-            return indented;
-        })
-        .join('\n');
-}
+//             return indented;
+//         })
+//         .join('\n');
+// }

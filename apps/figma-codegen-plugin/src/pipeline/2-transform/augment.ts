@@ -4,7 +4,6 @@
  * PRD 7.1: Raw IR을 Semantic IR로 보강
  * Phase 2: 메타데이터 기반 보강 완료
  */
-
 import type { RawIR, SemanticIR } from '../../domain/types';
 import type { ComponentMetadata } from '../../infrastructure/metadata';
 import {
@@ -87,6 +86,9 @@ function collectImports(ir: RawIR): Set<string> {
             imports.add(node.componentName);
         } else if (node.type === 'element') {
             // Flex, Box 등 레이아웃 컴포넌트
+            imports.add(node.componentName);
+        } else if (node.type === 'text') {
+            // Text 컴포넌트
             imports.add(node.componentName);
         }
 

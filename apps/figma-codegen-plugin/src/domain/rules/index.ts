@@ -5,3 +5,4 @@
 export * from './filter-rules';
 export * from './variant-mapping';
 export * from './sprinkles-mapping';
+export * from './typography-mapping';

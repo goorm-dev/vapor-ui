@@ -3,9 +3,8 @@
  *
  * Figma Codegen Panel에서 실행되는 메인 코드
  */
-
-import { createTranspiler } from './transpiler';
 import type { FigmaNode } from './domain/types';
+import { createTranspiler } from './transpiler';
 
 // Figma Codegen Panel에서만 실행
 if (figma.editorType === 'dev' && figma.mode === 'codegen') {
@@ -105,7 +104,7 @@ async function convertToFigmaNode(node: SceneNode): Promise<FigmaNode> {
     // Instance 속성 (비동기 API 사용)
     if (node.type === 'INSTANCE') {
         const instanceNode = node as InstanceNode;
-        baseNode.componentProperties = instanceNode.componentProperties as any;
+        baseNode.componentProperties = instanceNode.componentProperties as never;
 
         // Codegen Panel에서는 getMainComponentAsync 사용 필수
         const mainComponent = await instanceNode.getMainComponentAsync();
@@ -139,15 +138,15 @@ async function convertToFigmaNode(node: SceneNode): Promise<FigmaNode> {
 
     // Style 속성
     if ('fills' in node) {
-        baseNode.fills = node.fills as any;
+        baseNode.fills = node.fills as never;
     }
 
     if ('strokes' in node) {
-        baseNode.strokes = node.strokes as any;
+        baseNode.strokes = node.strokes as never;
     }
 
     if ('effects' in node) {
-        baseNode.effects = node.effects as any;
+        baseNode.effects = node.effects as never;
     }
 
     if ('opacity' in node) {
@@ -164,7 +163,7 @@ async function convertToFigmaNode(node: SceneNode): Promise<FigmaNode> {
         baseNode.characters = textNode.characters;
         baseNode.fontSize = textNode.fontSize as number;
         baseNode.fontWeight = textNode.fontWeight as number;
-        baseNode.lineHeight = textNode.lineHeight as any;
+        baseNode.lineHeight = textNode.lineHeight as never;
         baseNode.textAlignHorizontal = textNode.textAlignHorizontal;
     }
 

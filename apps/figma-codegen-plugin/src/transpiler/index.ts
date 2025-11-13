@@ -6,13 +6,12 @@
  *
  * ✅ TypeScript 메타데이터: 직접 import 방식 사용
  */
-
 import type { FigmaNode, RawIR, SemanticIR } from '../domain/types';
 import type { ComponentMetadata } from '../infrastructure/metadata';
 import { metadata as defaultMetadata, validateMetadata } from '../infrastructure/metadata';
 import { createTraverser } from '../pipeline/1-parse/traverse';
 import { createAugmenter } from '../pipeline/2-transform/augment';
-import { generateReactCode, type CodegenOptions } from '../pipeline/3-generate/codegen';
+import { type CodegenOptions, generateReactCode } from '../pipeline/3-generate/codegen';
 
 /**
  * Transpiler Options
@@ -76,9 +75,7 @@ export interface Transpiler {
  * @param options - Transpiler 옵션
  * @returns Transpiler 인스턴스
  */
-export async function createTranspiler(
-    options: TranspilerOptions = {},
-): Promise<Transpiler> {
+export async function createTranspiler(options: TranspilerOptions = {}): Promise<Transpiler> {
     // 1. 메타데이터 준비 (직접 import 방식)
     const metadata: ComponentMetadata = options.metadata ?? defaultMetadata;
 
