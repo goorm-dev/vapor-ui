@@ -3,9 +3,9 @@
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
+import type { ThemeOptions } from '@vapor-ui/color-generator';
 import { generateColorCSS, generateRadiusCSS, generateScalingCSS } from '@vapor-ui/css-generator';
-import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
+import type { RadiusKey } from '@vapor-ui/css-generator';
 
 /* -------------------------------------------------------------------------------------------------
  * Constants
@@ -22,18 +22,24 @@ const SCALE_VALUES = [0.8, 0.9, 1, 1.1, 1.2] as const;
 type ScaleValue = (typeof SCALE_VALUES)[number];
 
 interface CustomThemeConfig {
-    colors?: SemanticMappingConfig;
+    colors?: ThemeOptions;
+    scaling?: number;
+    radius?: RadiusKey;
+}
+
+interface CustomThemeState {
+    colors?: ThemeOptions;
     scaling?: number;
     radius?: RadiusKey;
 }
 
 interface CustomThemeContextValue {
     applyTheme: (partialConfig: CustomThemeConfig) => void;
-    applyColors: (colors: SemanticMappingConfig) => void;
+    applyColors: (colors: ThemeOptions) => void;
     applyScaling: (scaling: number) => void;
     applyRadius: (radius: RadiusKey) => void;
     removeTheme: () => void;
-    currentConfig: Partial<CompleteCSSConfig>;
+    currentConfig: CustomThemeState;
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -116,7 +122,7 @@ interface CustomThemeProviderProps {
 }
 
 const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
-    const [currentConfig, setCurrentConfig] = useState<Partial<CompleteCSSConfig>>({});
+    const [currentConfig, setCurrentConfig] = useState<CustomThemeState>({});
     const generatedCSSRef = useRef<GeneratedCSSStore>({});
 
     const applyTheme = useCallback((partialConfig: CustomThemeConfig) => {
@@ -125,7 +131,19 @@ const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
         const updated: GeneratedCSSStore = { ...generatedCSSRef.current };
 
         if (partialConfig.colors) {
-            updated.colors = generateColorCSS(partialConfig.colors);
+            // ThemeOptions를 ColorThemeConfig로 변환
+            const colorConfig = {
+                brandColor: partialConfig.colors.brandColor || {
+                    name: 'brand',
+                    hexcode: '#000000',
+                },
+                backgroundColor: partialConfig.colors.backgroundColor || {
+                    name: 'background',
+                    hexcode: '#ffffff',
+                },
+            };
+            updated.colors = generateColorCSS(colorConfig);
+            console.log('Generated Color CSS:', updated.colors);
         }
 
         if (partialConfig.scaling !== undefined) {
@@ -140,10 +158,7 @@ const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
         injectDynamicStyle(updated);
     }, []);
 
-    const applyColors = useCallback(
-        (colors: SemanticMappingConfig) => applyTheme({ colors }),
-        [applyTheme],
-    );
+    const applyColors = useCallback((colors: ThemeOptions) => applyTheme({ colors }), [applyTheme]);
 
     const applyScaling = useCallback((scaling: number) => applyTheme({ scaling }), [applyTheme]);
 

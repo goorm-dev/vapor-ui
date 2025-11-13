@@ -1,8 +1,8 @@
 import type { BackgroundColor, KeyColor } from '@vapor-ui/color-generator';
 
 export interface ColorThemeConfig {
-    primary: KeyColor;
-    background: BackgroundColor;
+    brandColor: KeyColor;
+    backgroundColor: BackgroundColor;
 }
 
 export interface CompleteCSSConfig {

@@ -44,8 +44,19 @@ const ThemePanelContent = () => {
         let css = '';
 
         if (colors && scaling && radius) {
+            // ThemeOptions를 ColorThemeConfig로 변환
+            const colorConfig = {
+                brandColor: colors.brandColor || {
+                    name: 'brand',
+                    hexcode: '#000000',
+                },
+                backgroundColor: colors.backgroundColor || {
+                    name: 'background',
+                    hexcode: '#ffffff',
+                },
+            };
             css = generateCompleteCSS({
-                colors,
+                colors: colorConfig,
                 scaling,
                 radius,
             });
@@ -53,7 +64,18 @@ const ThemePanelContent = () => {
             const cssBlocks: string[] = [];
 
             if (colors) {
-                cssBlocks.push(generateColorCSS(colors));
+                // ThemeOptions를 ColorThemeConfig로 변환
+                const colorConfig = {
+                    brandColor: colors.brandColor || {
+                        name: 'brand',
+                        hexcode: '#000000',
+                    },
+                    backgroundColor: colors.backgroundColor || {
+                        name: 'background',
+                        hexcode: '#ffffff',
+                    },
+                };
+                cssBlocks.push(generateColorCSS(colorConfig));
             }
 
             if (scaling) {

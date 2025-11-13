@@ -9,8 +9,8 @@ import {
 import type { ColorThemeConfig, CompleteCSSConfig } from '../src/types';
 
 const MOCK_COLOR_CONFIG: ColorThemeConfig = {
-    primary: { name: 'mint', hexcode: '#71d378' },
-    background: {
+    brandColor: { name: 'mint', hexcode: '#71d378' },
+    backgroundColor: {
         name: 'neutral',
         hexcode: '#F8FAFC',
         lightness: {

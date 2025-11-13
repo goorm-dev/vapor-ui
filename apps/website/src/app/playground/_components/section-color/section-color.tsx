@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 import { Slider } from '@base-ui-components/react/slider';
-import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
-import { getColorLightness } from '@vapor-ui/color-generator';
+import type { ThemeOptions } from '@vapor-ui/color-generator';
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';
+import { lch } from 'culori';
 
 import { useCustomTheme } from '~/providers/theme';
 
@@ -101,14 +101,14 @@ const SectionColor = () => {
         selectedLightness?: number;
         selectedDarkLightness?: number;
     }) => {
-        const colorConfig: SemanticMappingConfig = {
-            primary: {
+        const colorConfig: ThemeOptions = {
+            brandColor: {
                 name: 'primary',
-                color: selectedPrimary,
+                hexcode: selectedPrimary,
             },
-            background: {
+            backgroundColor: {
                 name: 'neutral',
-                color: selectedBackground,
+                hexcode: selectedBackground,
                 lightness: {
                     light: selectedLightness,
                     dark: selectedDarkLightness,
@@ -197,3 +197,11 @@ const SectionColor = () => {
 };
 
 export { SectionColor };
+
+const getColorLightness = (colorHex: string): number | null => {
+    const lchColor = lch(colorHex);
+    if (lchColor && typeof lchColor.l === 'number') {
+        return Math.round(lchColor.l);
+    }
+    return null;
+};

@@ -235,6 +235,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      culori:
+        specifier: ^4.0.1
+        version: 4.0.2
       fumadocs-core:
         specifier: ^15.3.0
         version: 15.7.13(@oramacloud/client@2.1.4)(@types/react@18.3.24)(next@15.5.3(@babel/core@7.28.4)(@playwright/test@1.56.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.93.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -305,6 +308,9 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.1.6
         version: 4.1.13
+      '@types/culori':
+        specifier: ^4.0.0
+        version: 4.0.1
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12

@@ -30,13 +30,13 @@ const ThemeSection = () => {
         if (value === 'vapor') {
             applyTheme({
                 colors: {
-                    primary: {
+                    brandColor: {
                         name: 'my-blue',
-                        color: '#3174dc',
+                        hexcode: '#3174dc',
                     },
-                    background: {
+                    backgroundColor: {
                         name: 'my-bg',
-                        color: '#ffffff',
+                        hexcode: '#ffffff',
                         lightness: {
                             light: 100,
                             dark: 14,
@@ -50,13 +50,13 @@ const ThemeSection = () => {
         if (value === 'aurora') {
             applyTheme({
                 colors: {
-                    primary: {
+                    brandColor: {
                         name: 'my-violet',
-                        color: '#8b5cf6',
+                        hexcode: '#8b5cf6',
                     },
-                    background: {
+                    backgroundColor: {
                         name: 'my-bg',
-                        color: '#ffffff',
+                        hexcode: '#ffffff',
                         lightness: {
                             light: 100,
                             dark: 14,
@@ -70,13 +70,13 @@ const ThemeSection = () => {
         if (value === 'pop') {
             applyTheme({
                 colors: {
-                    primary: {
+                    brandColor: {
                         name: 'my-pink',
-                        color: '#ec4899',
+                        hexcode: '#ec4899',
                     },
-                    background: {
+                    backgroundColor: {
                         name: 'my-bg',
-                        color: '#ffffff',
+                        hexcode: '#ffffff',
                         lightness: {
                             light: 100,
                             dark: 14,

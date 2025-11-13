@@ -83,20 +83,20 @@ export const generateColorCSS = (
 
     const themeResult = generatePrimitiveColorPalette({
         brandColor: {
-            name: colorConfig.primary.name,
-            hexcode: colorConfig.primary.hexcode,
+            name: colorConfig.brandColor.name,
+            hexcode: colorConfig.brandColor.hexcode,
         },
         backgroundColor: {
-            name: colorConfig.background.name,
-            hexcode: colorConfig.background.hexcode,
-            lightness: colorConfig.background.lightness,
+            name: colorConfig.backgroundColor.name,
+            hexcode: colorConfig.backgroundColor.hexcode,
+            lightness: colorConfig.backgroundColor.lightness,
         },
     });
 
     const semanticTokens = getSemanticDependentTokens(
         themeResult,
-        colorConfig.primary.name,
-        colorConfig.background.name,
+        colorConfig.brandColor.name,
+        colorConfig.backgroundColor.name,
     );
 
     const context: ColorCSSGeneratorContext = {
