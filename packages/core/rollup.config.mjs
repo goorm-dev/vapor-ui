@@ -86,7 +86,7 @@ const cleanCssLayerDeclarations = () => {
          * @param {Record<string, import('rollup').OutputAsset | import('rollup').OutputChunk>} bundle
          */
         generateBundle(options, bundle) {
-            const layerDeclarationRegex = /^@layer [a-zA-Z0-9_-]+;\s*/gm;
+            const layerDeclarationRegex = /^@layer vapor.[a-zA-Z0-9_-]+;\s*/gm;
             const exceptionFile = 'styles/layers.css.ts.vanilla.css';
 
             for (const fileName in bundle) {
