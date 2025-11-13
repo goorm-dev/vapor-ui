@@ -7,7 +7,7 @@
             "description": "버튼을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
-            "prop": "color",
+            "prop": "colorPalette",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "default": "primary",
             "description": "버튼의 주 색상(의미)을 설정합니다."
