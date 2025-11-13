@@ -1,5 +1,6 @@
 import { globalStyle } from '@vanilla-extract/css';
 
+import { layers } from './layers.css';
 import { vars } from './themes.css';
 import {
     BORDER_RADIUS,
@@ -111,9 +112,14 @@ const otherThemeMaps = themeMappings.reduce<Record<string, string>>(
 );
 
 globalStyle('@theme', {
-    ...colorThemeMap,
-    ...otherThemeMaps,
+    '@layer': {
+        [layers.theme]: {
+            ...colorThemeMap,
+            ...otherThemeMaps,
+        },
+    },
 });
+
 /* -------------------------------------------------------------------------------------------------
  * @utility layer
  * -----------------------------------------------------------------------------------------------*/

@@ -34,7 +34,6 @@
     --color-fd-popover: var(--vapor-color-background-surface-100);
     --color-fd-primary-foreground: var(--vapor-color-foreground-primary-100);
     --color-fd-foreground: var(--vapor-color-foreground-normal-100);
-    --fd-nav-height: 64px;
 }
 
 a[data-active='true'] {
