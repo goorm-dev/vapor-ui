@@ -75,7 +75,7 @@ export const metadata: ComponentMetadata = {
                             type: 'functional-component',
                             target: 'Dialog.Header',
                             functionalComponent: {
-                                type: 'Trigger',
+                                type: 'Close',
                                 position: 'last-child',
                                 componentName: 'Dialog.Close',
                             },

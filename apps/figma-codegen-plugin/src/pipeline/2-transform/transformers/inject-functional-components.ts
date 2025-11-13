@@ -4,7 +4,6 @@
  * PRD 7.2 & 8.2.2: 기능적 컴포넌트 자동 주입
  * 예: Dialog.Portal, Tabs.Panel 자동 생성
  */
-
 import type { RawIR } from '../../../domain/types';
 import type { ComponentMetadata, FunctionalComponentRule } from '../../../infrastructure/metadata';
 
@@ -135,11 +134,20 @@ function applyFunctionalComponentRule(node: RawIR, rule: FunctionalComponentRule
 
         case 'first-child': {
             // 현재 노드의 첫 번째 자식으로 추가
+            // Trigger, Close 타입인 경우 기본 텍스트 추가
+            const isTrigger = rule.type === 'Trigger';
+            const isClose = rule.type === 'Close';
+            const children = isTrigger
+                ? ['Trigger(내용을 추가해주세요)']
+                : isClose
+                  ? ['Close(내용을 추가해주세요)']
+                  : [];
+
             const functionalComponent: RawIR = {
                 type: 'component',
                 componentName,
                 props: { ...props },
-                children: [],
+                children,
                 metadata: {
                     figmaNodeId: node.metadata.figmaNodeId + '-first-child',
                     figmaNodeName: `${componentName}(first-child)`,
@@ -155,11 +163,20 @@ function applyFunctionalComponentRule(node: RawIR, rule: FunctionalComponentRule
 
         case 'last-child': {
             // 현재 노드의 마지막 자식으로 추가
+            // Trigger, Close 타입인 경우 기본 텍스트 추가
+            const isTrigger = rule.type === 'Trigger';
+            const isClose = rule.type === 'Close';
+            const children = isTrigger
+                ? ['Trigger(내용을 추가해주세요)']
+                : isClose
+                  ? ['Close(내용을 추가해주세요)']
+                  : [];
+
             const functionalComponent: RawIR = {
                 type: 'component',
                 componentName,
                 props: { ...props },
-                children: [],
+                children,
                 metadata: {
                     figmaNodeId: node.metadata.figmaNodeId + '-last-child',
                     figmaNodeName: `${componentName}(last-child)`,

@@ -3,7 +3,6 @@
  *
  * PRD 8.2: JSX 코드 생성
  */
-
 import type { SemanticIR } from '../../../domain/types';
 
 /**
@@ -13,10 +12,7 @@ import type { SemanticIR } from '../../../domain/types';
  * @param depth - 들여쓰기 depth
  * @returns JSX 문자열
  */
-export function generateJSX(
-    node: SemanticIR | string,
-    depth = 0,
-): string {
+export function generateJSX(node: SemanticIR | string, depth = 0): string {
     // 텍스트 노드
     if (typeof node === 'string') {
         const indent = '  '.repeat(depth);
@@ -46,6 +42,7 @@ export function generateJSX(
                 const semanticChild: SemanticIR = {
                     ...child,
                     imports: new Set(),
+                    iconImports: new Set(),
                 };
                 return generateJSX(semanticChild, depth + 1);
             }
@@ -73,6 +70,13 @@ function formatProp(key: string, value: unknown): string {
 
     // String
     if (typeof value === 'string') {
+        // "true" 또는 "false" 문자열을 boolean으로 변환
+        if (value === 'true') {
+            return key;
+        }
+        if (value === 'false') {
+            return '';
+        }
         return `${key}="${value}"`;
     }
 

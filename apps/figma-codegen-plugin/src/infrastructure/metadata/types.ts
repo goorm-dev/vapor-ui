@@ -6,7 +6,6 @@
  *
  * ✅ TypeScript 지원: 함수형 변환 및 동적 로직 지원
  */
-
 import type { RawIR } from '../../domain/types';
 
 /**
@@ -109,7 +108,7 @@ export interface FunctionalComponentRule {
      * 주입할 컴포넌트 타입
      * 예: "Portal", "Panel", "Overlay"
      */
-    type: 'Portal' | 'Panel' | 'Overlay' | 'Trigger' | 'Content';
+    type: 'Portal' | 'Panel' | 'Overlay' | 'Trigger' | 'Content' | 'Close';
 
     /**
      * 주입할 위치
