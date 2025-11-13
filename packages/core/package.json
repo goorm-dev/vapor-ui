@@ -67,7 +67,7 @@
         "@vanilla-extract/dynamic": "^2.1.5",
         "@vanilla-extract/recipes": "^0.5.6",
         "@vanilla-extract/sprinkles": "^1.6.5",
-        "@vapor-ui/hooks": "0.1.0",
+        "@vapor-ui/hooks": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
         "clsx": "^2.1.1",
         "rainbow-sprinkles": "^1.0.0"
