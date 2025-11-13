@@ -8,6 +8,6 @@
  */
 
 export * from './types';
-export * from './loader'; // Deprecated, for backward compatibility
+// export * from './loader'; // Deprecated, for backward compatibility
 export * from './validator';
 export { metadata, getComponentRule } from './component.metadata';

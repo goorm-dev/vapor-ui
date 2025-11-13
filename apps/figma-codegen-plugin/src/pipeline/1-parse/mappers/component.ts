@@ -3,10 +3,8 @@
  *
  * PRD 6.2.2: Figma Component/Instance → Vapor-UI Component
  */
-
-import type { FigmaNode, RawIR } from '../../../domain/types';
 import { extractVariantProps } from '../../../domain/rules';
-import { extractSprinkleProps } from '../../../domain/rules';
+import type { FigmaNode, RawIR } from '../../../domain/types';
 import { extractComponentName } from '../../../utils';
 
 /**
@@ -23,12 +21,13 @@ export function mapComponentNode(node: FigmaNode): RawIR {
     const variantProps = extractVariantProps(node.componentProperties, componentName);
 
     // [2] Sprinkle Props (스타일 오버라이드)
-    const sprinkleProps = extractSprinkleProps(node);
+    // const sprinkleProps = extractSprinkleProps(node);
 
     return {
         type: 'component',
         componentName,
-        props: { ...variantProps, ...sprinkleProps },
+        props: { ...variantProps },
+        // props: { ...variantProps, ...sprinkleProps },
         children: [],
         metadata: {
             figmaNodeId: node.id,
