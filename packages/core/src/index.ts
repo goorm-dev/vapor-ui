@@ -18,6 +18,7 @@ export * from './components/input-group';
 export * from './components/menu';
 export * from './components/multi-select';
 export * from './components/navigation-menu';
+export * from './components/pagination';
 export * from './components/popover';
 export * from './components/radio';
 export * from './components/radio-group';
