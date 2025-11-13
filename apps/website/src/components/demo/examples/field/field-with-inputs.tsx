@@ -36,20 +36,14 @@ export default function FieldWithInputs() {
                 <Select.Root placeholder="국가를 선택하세요">
                     <Box render={<Field.Label htmlFor="country-select" />} flexDirection="column">
                         국가
-                        <Select.Trigger id="country-select">
-                            <Select.Value />
-                        </Select.Trigger>
+                        <Select.Trigger id="country-select" />
                     </Box>
-                    <Select.Portal>
-                        <Select.Positioner>
-                            <Select.Content>
-                                <Select.Item value="kr">대한민국</Select.Item>
-                                <Select.Item value="us">미국</Select.Item>
-                                <Select.Item value="jp">일본</Select.Item>
-                                <Select.Item value="cn">중국</Select.Item>
-                            </Select.Content>
-                        </Select.Positioner>
-                    </Select.Portal>
+                    <Select.Popup>
+                        <Select.Item value="kr">대한민국</Select.Item>
+                        <Select.Item value="us">미국</Select.Item>
+                        <Select.Item value="jp">일본</Select.Item>
+                        <Select.Item value="cn">중국</Select.Item>
+                    </Select.Popup>
                 </Select.Root>
                 <Field.Description>거주 중인 국가를 선택하세요.</Field.Description>
             </Field.Root>

@@ -98,12 +98,12 @@ describe('Dialog', () => {
         const rendered = render(
             <Dialog.Root>
                 <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
-                <Dialog.Portal>
-                    <Dialog.Overlay data-testid={OVERLAY_TEXT} />
-                    <Dialog.Popup>
+                <Dialog.PortalPrimitive>
+                    <Dialog.OverlayPrimitive data-testid={OVERLAY_TEXT} />
+                    <Dialog.PopupPrimitive>
                         <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
-                    </Dialog.Popup>
-                </Dialog.Portal>
+                    </Dialog.PopupPrimitive>
+                </Dialog.PortalPrimitive>
             </Dialog.Root>,
         );
         const trigger = rendered.getByText(TRIGGER_TEXT);
@@ -140,9 +140,9 @@ const DialogTest = (props: Dialog.Root.Props) => {
     return (
         <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
-            <Dialog.Portal>
-                <Dialog.Overlay data-testid={OVERLAY_TEXT} />
-                <Dialog.Content>
+            <Dialog.PortalPrimitive>
+                <Dialog.OverlayPrimitive data-testid={OVERLAY_TEXT} />
+                <Dialog.PopupPrimitive>
                     <Dialog.Header>
                         <Dialog.Title>{TITLE_TEXT}</Dialog.Title>
                     </Dialog.Header>
@@ -152,8 +152,8 @@ const DialogTest = (props: Dialog.Root.Props) => {
                     <Dialog.Footer>
                         <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                     </Dialog.Footer>
-                </Dialog.Content>
-            </Dialog.Portal>
+                </Dialog.PopupPrimitive>
+            </Dialog.PortalPrimitive>
         </Dialog.Root>
     );
 };
@@ -200,9 +200,9 @@ const UndefinedDescriptionDialogTest = (props: Dialog.Root.Props) => {
     return (
         <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
-            <Dialog.Portal>
-                <Dialog.Overlay data-testid={OVERLAY_TEXT} />
-                <Dialog.Popup aria-describedby={undefined}>
+            <Dialog.PortalPrimitive>
+                <Dialog.OverlayPrimitive data-testid={OVERLAY_TEXT} />
+                <Dialog.PopupPrimitive aria-describedby={undefined}>
                     <Dialog.Header>
                         <Dialog.Title>{TITLE_TEXT}</Dialog.Title>
                     </Dialog.Header>
@@ -210,8 +210,8 @@ const UndefinedDescriptionDialogTest = (props: Dialog.Root.Props) => {
                     <Dialog.Footer>
                         <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                     </Dialog.Footer>
-                </Dialog.Popup>
-            </Dialog.Portal>
+                </Dialog.PopupPrimitive>
+            </Dialog.PortalPrimitive>
         </Dialog.Root>
     );
 };

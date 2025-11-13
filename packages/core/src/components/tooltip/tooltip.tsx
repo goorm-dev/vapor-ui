@@ -1,12 +1,13 @@
 'use client';
 
-import type { CSSProperties, ComponentProps } from 'react';
+import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -33,107 +34,114 @@ export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props
 
     return <BaseTooltip.Trigger ref={ref} {...componentProps} />;
 });
+TooltipTrigger.displayName = 'Tooltip.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
- * Tooltip.Portal
+ * Tooltip.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const TooltipPortal = (props: TooltipPortal.Props) => {
+export const TooltipPortalPrimitive = (props: TooltipPortalPrimitive.Props) => {
     return <BaseTooltip.Portal {...props} />;
 };
+TooltipPortalPrimitive.displayName = 'Tooltip.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Tooltip.Positioner
+ * Tooltip.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const TooltipPositioner = forwardRef<HTMLDivElement, TooltipPositioner.Props>(
-    (props, ref) => {
-        const {
-            side = 'top',
-            align = 'center',
-            sideOffset = 8,
-            collisionAvoidance,
-            ...componentProps
-        } = resolveStyles(props);
+export const TooltipPositionerPrimitive = forwardRef<
+    HTMLDivElement,
+    TooltipPositionerPrimitive.Props
+>((props, ref) => {
+    const {
+        side = 'top',
+        align = 'center',
+        sideOffset = 8,
+        collisionAvoidance,
+        ...componentProps
+    } = resolveStyles(props);
 
-        return (
-            <BaseTooltip.Positioner
-                ref={ref}
-                side={side}
-                align={align}
-                sideOffset={sideOffset}
-                collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
-                {...componentProps}
-            />
-        );
-    },
-);
+    return (
+        <BaseTooltip.Positioner
+            ref={ref}
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
+            {...componentProps}
+        />
+    );
+});
+TooltipPositionerPrimitive.displayName = 'Tooltip.PositionerPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Tooltip.Popup
+ * Tooltip.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrimitive.Props>(
+    (props, ref) => {
+        const { className, children, ...componentProps } = resolveStyles(props);
 
-    const [side, setSide] = useState<TooltipPositioner.Props['side']>('bottom');
-    const [align, setAlign] = useState<TooltipPositioner.Props['align']>('center');
+        const [side, setSide] = useState<TooltipPositionerPrimitive.Props['side']>('bottom');
+        const [align, setAlign] = useState<TooltipPositionerPrimitive.Props['align']>('center');
 
-    const position = useMemo(
-        () =>
-            getArrowPosition({
-                side,
-                align,
-                offset: side === 'top' || side === 'bottom' ? 12 : 6,
-            }),
-        [side, align],
-    );
+        const position = useMemo(
+            () =>
+                getArrowPosition({
+                    side,
+                    align,
+                    offset: side === 'top' || side === 'bottom' ? 12 : 6,
+                }),
+            [side, align],
+        );
 
-    const popupRef = useRef<HTMLDivElement>(null);
-    const composedRef = composeRefs(popupRef, ref);
+        const popupRef = useRef<HTMLDivElement>(null);
+        const composedRef = composeRefs(popupRef, ref);
 
-    useEffect(() => {
-        if (!popupRef.current) return;
+        useEffect(() => {
+            if (!popupRef.current) return;
 
-        const dataset = popupRef.current.dataset;
-        const { side: initialSide, align: initialAlign } = extractPositions(dataset);
+            const dataset = popupRef.current.dataset;
+            const { side: initialSide, align: initialAlign } = extractPositions(dataset);
 
-        if (initialSide) setSide(initialSide);
-        if (initialAlign) setAlign(initialAlign);
-    }, []);
+            if (initialSide) setSide(initialSide);
+            if (initialAlign) setAlign(initialAlign);
+        }, []);
 
-    const arrowRef = useMutationObserver<HTMLDivElement>({
-        callback: (mutations) => {
-            mutations.forEach((mutation) => {
-                const { attributeName, target: mutationTarget } = mutation;
+        const arrowRef = useMutationObserver<HTMLDivElement>({
+            callback: (mutations) => {
+                mutations.forEach((mutation) => {
+                    const { attributeName, target: mutationTarget } = mutation;
 
-                const dataset = (mutationTarget as HTMLElement).dataset;
-                const { side: nextSide, align: nextAlign } = extractPositions(dataset);
+                    const dataset = (mutationTarget as HTMLElement).dataset;
+                    const { side: nextSide, align: nextAlign } = extractPositions(dataset);
 
-                if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
-                if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
-            });
-        },
-        options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
-    });
+                    if (attributeName === DATA_SIDE && nextSide) setSide(nextSide);
+                    if (attributeName === DATA_ALIGN && nextAlign) setAlign(nextAlign);
+                });
+            },
+            options: { attributes: true, attributeFilter: [DATA_SIDE, DATA_ALIGN] },
+        });
 
-    return (
-        <BaseTooltip.Popup
-            ref={composedRef}
-            className={clsx(styles.popup, className)}
-            {...componentProps}
-        >
-            <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
-                <ArrowIcon />
-            </BaseTooltip.Arrow>
+        return (
+            <BaseTooltip.Popup
+                ref={composedRef}
+                className={clsx(styles.popup, className)}
+                {...componentProps}
+            >
+                <BaseTooltip.Arrow ref={arrowRef} style={position} className={styles.arrow}>
+                    <ArrowIcon />
+                </BaseTooltip.Arrow>
 
-            {children}
-        </BaseTooltip.Popup>
-    );
-});
+                {children}
+            </BaseTooltip.Popup>
+        );
+    },
+);
+TooltipPopupPrimitive.displayName = 'Tooltip.PopupPrimitive';
 
 const extractPositions = (dataset: DOMStringMap) => {
     const currentSide = dataset.side as VComponentProps<typeof BaseTooltip.Positioner>['side'];
@@ -142,20 +150,26 @@ const extractPositions = (dataset: DOMStringMap) => {
 };
 
 /* -------------------------------------------------------------------------------------------------
- * Tooltip.Content
+ * Tooltip.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const TooltipContent = forwardRef<HTMLDivElement, TooltipContent.Props>(
-    ({ portalProps, positionerProps, ...props }, ref) => {
+export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
+    ({ portalElement, positionerElement, ...props }, ref) => {
+        const PortalElement = createSlot(portalElement || <TooltipPortalPrimitive />);
+        const PositionerElement = createSlot(
+            positionerElement || <TooltipPositionerPrimitive side="top" align="center" />,
+        );
+
         return (
-            <TooltipPortal {...portalProps}>
-                <TooltipPositioner {...positionerProps}>
-                    <TooltipPopup ref={ref} {...props} />
-                </TooltipPositioner>
-            </TooltipPortal>
+            <PortalElement>
+                <PositionerElement>
+                    <TooltipPopupPrimitive ref={ref} {...props} />
+                </PositionerElement>
+            </PortalElement>
         );
     },
 );
+TooltipPopup.displayName = 'Tooltip.Popup';
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -219,21 +233,21 @@ export namespace TooltipTrigger {
     export interface Props extends VComponentProps<typeof BaseTooltip.Trigger> {}
 }
 
-export namespace TooltipPortal {
+export namespace TooltipPortalPrimitive {
     export interface Props extends VComponentProps<typeof BaseTooltip.Portal> {}
 }
 
-export namespace TooltipPositioner {
+export namespace TooltipPositionerPrimitive {
     export interface Props extends VComponentProps<typeof BaseTooltip.Positioner> {}
 }
 
-export namespace TooltipPopup {
+export namespace TooltipPopupPrimitive {
     export interface Props extends VComponentProps<typeof BaseTooltip.Popup> {}
 }
 
-export namespace TooltipContent {
-    export interface Props extends VComponentProps<typeof TooltipPopup> {
-        portalProps?: VComponentProps<typeof BaseTooltip.Portal>;
-        positionerProps?: VComponentProps<typeof BaseTooltip.Positioner>;
+export namespace TooltipPopup {
+    export interface Props extends VComponentProps<typeof TooltipPopupPrimitive> {
+        portalElement?: ReactElement<TooltipPortalPrimitive.Props>;
+        positionerElement?: ReactElement<TooltipPositionerPrimitive.Props>;
     }
 }

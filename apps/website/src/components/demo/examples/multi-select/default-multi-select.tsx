@@ -10,19 +10,15 @@ const fonts = [
 export default function DefaultMultiSelect() {
     return (
         <MultiSelect.Root items={fonts} placeholder="폰트를 선택하세요">
-            <MultiSelect.Trigger>
-                <MultiSelect.Value />
-                <MultiSelect.TriggerIcon />
-            </MultiSelect.Trigger>
+            <MultiSelect.Trigger />
 
-            <MultiSelect.Content>
+            <MultiSelect.Popup>
                 {fonts.map((font) => (
                     <MultiSelect.Item key={font.value} value={font.value}>
                         {font.label}
-                        <MultiSelect.ItemIndicator />
                     </MultiSelect.Item>
                 ))}
-            </MultiSelect.Content>
+            </MultiSelect.Popup>
         </MultiSelect.Root>
     );
 }

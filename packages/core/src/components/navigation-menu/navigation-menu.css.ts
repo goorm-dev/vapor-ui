@@ -166,13 +166,14 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const panel = layerStyle('components', {
+export const content = layerStyle('components', {
     width: '100%',
     height: '100%',
 
     paddingBlock: vars.size.space[150],
     paddingInline: vars.size.space[200],
 
+    whiteSpace: 'nowrap',
     transition: `opacity calc(${durationVar} * 0.5) ease, transform ${durationVar} ${easingVar}`,
 
     selectors: {

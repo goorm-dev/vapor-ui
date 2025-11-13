@@ -1,16 +1,20 @@
 export {
     SelectRoot as Root,
     SelectTrigger as Trigger,
-    SelectValue as Value,
-    SelectPlaceholder as Placeholder,
-    SelectTriggerIcon as TriggerIcon,
-    SelectPortal as Portal,
-    SelectPositioner as Positioner,
     SelectPopup as Popup,
-    SelectContent as Content,
     SelectItem as Item,
-    SelectItemIndicator as ItemIndicator,
     SelectGroup as Group,
     SelectGroupLabel as GroupLabel,
     SelectSeparator as Separator,
+
+    // primitives
+    SelectValuePrimitive as ValuePrimitive,
+    SelectPlaceholderPrimitive as PlaceholderPrimitive,
+    SelectTriggerPrimitive as TriggerPrimitive,
+    SelectTriggerIconPrimitive as TriggerIconPrimitive,
+    SelectPortalPrimitive as PortalPrimitive,
+    SelectPositionerPrimitive as PositionerPrimitive,
+    SelectPopupPrimitive as PopupPrimitive,
+    SelectItemPrimitive as ItemPrimitive,
+    SelectItemIndicatorPrimitive as ItemIndicatorPrimitive,
 } from './select';

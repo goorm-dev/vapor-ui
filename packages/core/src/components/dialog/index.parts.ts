@@ -1,10 +1,10 @@
 export {
     DialogRoot as Root,
     DialogTrigger as Trigger,
-    DialogPortal as Portal,
-    DialogOverlay as Overlay,
+    DialogPortalPrimitive as PortalPrimitive,
+    DialogOverlayPrimitive as OverlayPrimitive,
+    DialogPopupPrimitive as PopupPrimitive,
     DialogPopup as Popup,
-    DialogContent as Content,
     DialogTitle as Title,
     DialogDescription as Description,
     DialogClose as Close,

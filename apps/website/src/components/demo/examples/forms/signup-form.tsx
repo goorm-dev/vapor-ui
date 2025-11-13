@@ -122,20 +122,16 @@ export default function SignupForm() {
                                 className="input-label"
                             >
                                 직업
-                                <Select.Trigger id="signup-jobs">
-                                    <Select.Value />
-                                    <Select.TriggerIcon />
-                                </Select.Trigger>
+                                <Select.Trigger id="signup-jobs" />
                             </Box>
 
-                            <Select.Content>
+                            <Select.Popup>
                                 {jobs.map((job) => (
                                     <Select.Item key={job.value} value={job.value}>
                                         {job.label}
-                                        <Select.ItemIndicator />
                                     </Select.Item>
                                 ))}
-                            </Select.Content>
+                            </Select.Popup>
                         </Select.Root>
                     </Field.Root>
                 </VStack>
