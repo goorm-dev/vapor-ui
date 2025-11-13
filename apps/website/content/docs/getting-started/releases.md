@@ -3,7 +3,7 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
-## 1.1.0
+## 1.0.0-beta.5
 
 ### @vapor-ui/codemod
 
@@ -11,9 +11,15 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 - a8de0b0: Add codemod for icon packages name import
 
----
+### @vapor-ui/color-generator
 
-## 0.7.0
+#### Minor Changes
+
+- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
+
+#### Patch Changes
+
+- 707f705: feat: update color tokens
 
 ### @vapor-ui/core
 
@@ -58,6 +64,57 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - Updated dependencies [fd4acaa]
 - Updated dependencies [f2950ee]
     - @vapor-ui/icons@0.5.0
+
+### @vapor-ui/css-generator
+
+#### Minor Changes
+
+- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+
+#### Patch Changes
+
+- 707f705: feat: update color tokens
+- Updated dependencies [caf13a1]
+- Updated dependencies [707f705]
+    - @vapor-ui/color-generator@0.1.0
+
+### @vapor-ui/hooks
+
+#### Minor Changes
+
+- 68b001c: create avatar , badge , box , button , card , dialog , flex , grid , h-stack , icon-button, nav , text-input , text , theme-provider , v-stack
+
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- 8217749: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- 402284e: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `DocktoBottomOutlineIcon`, `SideNavOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- fd4acaa: Add new icons from Figma
+
+    **New Basic Icons:** `SideNavIcon`, `DocktoBottomIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+#### Patch Changes
+
+- f2950ee: Update icons from Figma
+
+    **Updated Basic Icons:** `TreeCollapseIcon`
 
 ---
 
@@ -126,37 +183,6 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - Updated dependencies [c4d0e8e]
 - Updated dependencies [a156f82]
     - @vapor-ui/icons@0.3.0
-
-### @vapor-ui/icons
-
-#### Minor Changes
-
-- 8217749: Add new icons from Figma
-
-    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
-
-    **Also Updated:**
-    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
-
-- 402284e: Add new icons from Figma
-
-    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `DocktoBottomOutlineIcon`, `SideNavOutlineIcon`
-
-    **Also Updated:**
-    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
-
-- fd4acaa: Add new icons from Figma
-
-    **New Basic Icons:** `SideNavIcon`, `DocktoBottomIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
-
-    **Also Updated:**
-    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
-
-#### Patch Changes
-
-- f2950ee: Update icons from Figma
-
-    **Updated Basic Icons:** `TreeCollapseIcon`
 
 ---
 
@@ -287,16 +313,6 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ## 0.1.0
 
-### @vapor-ui/color-generator
-
-#### Minor Changes
-
-- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
-
-#### Patch Changes
-
-- 707f705: feat: update color tokens
-
 ### @vapor-ui/core
 
 #### Minor Changes
@@ -308,26 +324,6 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - Updated dependencies [68b001c]
     - @vapor-ui/hooks@0.1.0
     - @vapor-ui/icons@0.1.0
-
-### @vapor-ui/css-generator
-
-#### Minor Changes
-
-- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
-- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
-
-#### Patch Changes
-
-- 707f705: feat: update color tokens
-- Updated dependencies [caf13a1]
-- Updated dependencies [707f705]
-    - @vapor-ui/color-generator@0.1.0
-
-### @vapor-ui/hooks
-
-#### Minor Changes
-
-- 68b001c: create avatar , badge , box , button , card , dialog , flex , grid , h-stack , icon-button, nav , text-input , text , theme-provider , v-stack
 
 ### @vapor-ui/icons
 
