@@ -16,10 +16,27 @@ export function mapIconNode(node: FigmaNode): RawIR {
     // 아이콘 이름 추출
     const iconName = extractIconName(node.name);
 
+    // 아이콘 속성 추출
+    const iconProps: Record<string, unknown> = {};
+
+    // Width
+    if (node.width !== undefined) {
+        iconProps.width = `${Math.round(node.width)}px`;
+    }
+
+    // Height
+    if (node.height !== undefined) {
+        iconProps.height = `${Math.round(node.height)}px`;
+    }
+
+    // TODO: 안되어 있음
+    // Color 추출
+    // INSTANCE 타입의 경우 componentProperties나 strokes에서도 색상 확인 필요
+
     return {
         type: 'component',
         componentName: iconName,
-        props: {},
+        props: iconProps,
         children: [],
         metadata: {
             figmaNodeId: node.id,
