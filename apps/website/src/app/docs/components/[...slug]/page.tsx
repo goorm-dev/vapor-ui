@@ -24,9 +24,6 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
                 single: false,
             }}
             lastUpdate={lastModified}
-            footer={{
-                enabled: false,
-            }}
             article={{
                 className: 'gap-[var(--vapor-size-space-500)]',
             }}

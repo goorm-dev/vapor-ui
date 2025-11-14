@@ -11,7 +11,7 @@ type DocsPageHeaderProps = {
 
 export const DocsPageHeader = ({ title, description, markdownUrl }: DocsPageHeaderProps) => {
     return (
-        <div className="flex flex-col items-start gap-[var(--vapor-size-space-250)] self-stretch">
+        <header className="flex flex-col items-start gap-[var(--vapor-size-space-250)] self-stretch mb-8">
             <div className="flex flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch">
                 <DocsTitle>{title}</DocsTitle>
                 <DocsDescription>{description}</DocsDescription>
@@ -21,6 +21,6 @@ export const DocsPageHeader = ({ title, description, markdownUrl }: DocsPageHead
                     <CopyButton markdownUrl={markdownUrl} />
                 </div>
             )}
-        </div>
+        </header>
     );
 };
