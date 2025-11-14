@@ -35,6 +35,7 @@
     --color-fd-primary-foreground: var(--vapor-color-foreground-primary-100);
     --color-fd-foreground: var(--vapor-color-foreground-normal-100);
     --fd-nav-height: 64px;
+    --fd-tocnav-height: 64px;
 }
 
 a[data-active='true'] {
@@ -51,4 +52,24 @@ html {
     html {
         overflow-y: scroll; /* Always show scrollbar space */
     }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * FUMADOCS UI
+ * -----------------------------------------------------------------------------------------------*/
+
+#nd-page {
+    @media (min-width: 1280px) {
+        padding-top: 0;
+    }
+}
+
+/* ============================================================================
+   FUMADOCS UI - TABLE OF CONTENTS
+   ============================================================================ */
+
+#nd-toc {
+    padding-top: 24px;
+    right: 0;
+    --fd-toc-width: 220px;
 }

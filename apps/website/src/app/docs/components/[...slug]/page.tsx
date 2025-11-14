@@ -39,7 +39,7 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
                 description={page.data.description}
                 markdownUrl={`${page.url}.mdx`}
             />
-            <DocsBody className="px-0 flex flex-col pb-24">
+            <DocsBody className="px-0 flex flex-col">
                 <MDX components={getMDXComponents({})} />
             </DocsBody>
         </DocsPage>
