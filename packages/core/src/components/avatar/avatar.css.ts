@@ -62,7 +62,7 @@ export const fallback = recipe({
         height: '100%',
 
         backgroundColor: fallbackBgVar,
-        color: vars.color.button.foreground.primary,
+        color: vars.color.foreground.button.primary,
     }),
 
     defaultVariants: { size: 'md' },

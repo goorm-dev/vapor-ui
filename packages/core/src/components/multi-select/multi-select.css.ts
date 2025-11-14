@@ -21,7 +21,7 @@ export const trigger = recipe({
 
             width: '100%',
 
-            backgroundColor: vars.color.background.surface[100],
+            backgroundColor: vars.color.background.overlay[100],
 
             selectors: {
                 '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },

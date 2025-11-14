@@ -170,5 +170,5 @@ semanticMappings.forEach(({ prefix, property, contractGroup, tokenGroup }) => {
 });
 
 globalStyle('@utility text-v-logo', {
-    color: vars.color.logo.normal,
+    color: vars.color.foreground.secondary[200],
 });
