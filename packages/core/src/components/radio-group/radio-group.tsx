@@ -1,11 +1,10 @@
 'use client';
 
-import { forwardRef, useState } from 'react';
+import { forwardRef, useLayoutEffect, useState } from 'react';
 
 import { RadioGroup as BaseRadioGroup, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
 import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -38,7 +37,7 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
 export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
-    const [labelElementId, setLabelElementId] = useState<string | undefined>(undefined);
+    const [labelId, setLabelId] = useState<string | undefined>();
 
     const [variantProps, otherProps] = createSplitProps<RadioGroupSharedProps>()(componentProps, [
         'size',
@@ -48,11 +47,15 @@ export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((
     const { invalid } = variantProps;
     const dataAttrs = createDataAttributes({ invalid });
 
+    const setLabelElementId = (id?: string) => {
+        setLabelId(id);
+    };
+
     return (
         <RadioGroupProvider value={{ setLabelElementId, invalid, ...variantProps }}>
             <BaseRadioGroup
                 ref={ref}
-                aria-labelledby={labelElementId}
+                aria-labelledby={labelId}
                 aria-invalid={invalid}
                 className={clsx(styles.root(), className)}
                 {...dataAttrs}
@@ -68,12 +71,12 @@ RadioGroupRoot.displayName = 'RadioGroup.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>((props, ref) => {
-    const { render, id: idProp, className, ...componentProps } = resolveStyles(props);
-    const { setLabelElementId, invalid } = useRadioGroupContext();
+    const { render, className, id: idProp, ...componentProps } = resolveStyles(props);
+    const { invalid, setLabelElementId } = useRadioGroupContext();
 
     const id = useVaporId(idProp);
 
-    useIsoLayoutEffect(() => {
+    useLayoutEffect(() => {
         setLabelElementId?.(id);
         return () => setLabelElementId?.(undefined);
     }, [id, setLabelElementId]);
