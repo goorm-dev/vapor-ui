@@ -1,16 +1,20 @@
 export {
     MultiSelectRoot as Root,
     MultiSelectTrigger as Trigger,
-    MultiSelectValue as Value,
-    MultiSelectPlaceholder as Placeholder,
-    MultiSelectTriggerIcon as TriggerIcon,
-    MultiSelectContent as Content,
-    MultiSelectPortal as Portal,
-    MultiSelectPositioner as Positioner,
     MultiSelectPopup as Popup,
     MultiSelectGroup as Group,
     MultiSelectGroupLabel as GroupLabel,
     MultiSelectItem as Item,
-    MultiSelectItemIndicator as ItemIndicator,
     MultiSelectSeparator as Separator,
+
+    // Primitives
+    MultiSelectValuePrimitive as ValuePrimitive,
+    MultiSelectPlaceholderPrimitive as PlaceholderPrimitive,
+    MultiSelectTriggerPrimitive as TriggerPrimitive,
+    MultiSelectTriggerIconPrimitive as TriggerIconPrimitive,
+    MultiSelectPopupPrimitive as PopupPrimitive,
+    MultiSelectPortalPrimitive as PortalPrimitive,
+    MultiSelectPositionerPrimitive as PositionerPrimitive,
+    MultiSelectItemPrimitive as ItemPrimitive,
+    MultiSelectItemIndicatorPrimitive as ItemIndicatorPrimitive,
 } from './multi-select';

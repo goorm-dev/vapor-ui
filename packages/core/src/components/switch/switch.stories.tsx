@@ -31,9 +31,9 @@ export const Default: Story = {
                 <br />
                 <br />
                 <Switch.Root checked={checked} onCheckedChange={setChecked} {...args}>
-                    <Switch.Thumb>
+                    <Switch.ThumbPrimitive>
                         <HeartIcon />
-                    </Switch.Thumb>
+                    </Switch.ThumbPrimitive>
                 </Switch.Root>
                 <br />
                 <br />

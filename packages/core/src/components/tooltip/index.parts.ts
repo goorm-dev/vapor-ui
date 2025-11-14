@@ -1,8 +1,10 @@
 export {
     TooltipRoot as Root,
     TooltipTrigger as Trigger,
-    TooltipPortal as Portal,
-    TooltipPositioner as Positioner,
     TooltipPopup as Popup,
-    TooltipContent as Content,
+
+    // primitives
+    TooltipPortalPrimitive as PortalPrimitive,
+    TooltipPositionerPrimitive as PositionerPrimitive,
+    TooltipPopupPrimitive as PopupPrimitive,
 } from './tooltip';

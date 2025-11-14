@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { Select as BaseSelect } from '@base-ui-components/react';
@@ -53,88 +54,90 @@ export const MultiSelectRoot = <Value,>(props: MultiSelectRoot.Props<Value>) => 
 MultiSelectRoot.displayName = 'MultiSelect.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * MultiSelect.Trigger
+ * MultiSelect.TriggerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectTrigger = forwardRef<HTMLButtonElement, MultiSelectTrigger.Props>(
-    (props, ref) => {
-        const {
-            render = <button />,
-            nativeButton = true,
-            className,
-            ...componentProps
-        } = resolveStyles(props);
+export const MultiSelectTriggerPrimitive = forwardRef<
+    HTMLButtonElement,
+    MultiSelectTriggerPrimitive.Props
+>((props, ref) => {
+    const {
+        render = <button />,
+        nativeButton = true,
+        className,
+        ...componentProps
+    } = resolveStyles(props);
 
-        const { size, required, invalid } = useMultiSelectContext();
-        const dataAttrs = createDataAttributes({ required, invalid });
+    const { size, required, invalid } = useMultiSelectContext();
+    const dataAttrs = createDataAttributes({ required, invalid });
 
-        return (
-            <BaseSelect.Trigger
-                ref={ref}
-                render={render}
-                nativeButton={nativeButton}
-                aria-invalid={invalid || undefined}
-                aria-required={required || undefined}
-                className={clsx(styles.trigger({ size, invalid }), className)}
-                {...dataAttrs}
-                {...componentProps}
-            />
-        );
-    },
-);
-MultiSelectTrigger.displayName = 'MultiSelect.Trigger';
+    return (
+        <BaseSelect.Trigger
+            ref={ref}
+            render={render}
+            nativeButton={nativeButton}
+            aria-invalid={invalid || undefined}
+            aria-required={required || undefined}
+            className={clsx(styles.trigger({ size, invalid }), className)}
+            {...dataAttrs}
+            {...componentProps}
+        />
+    );
+});
+MultiSelectTriggerPrimitive.displayName = 'MultiSelect.TriggerPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Select.Value
+ * Select.ValuePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectValue = forwardRef<HTMLSpanElement, MultiSelectValue.Props>(
-    (props, ref) => {
-        const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
-        const { size = 'md', items, placeholder } = useMultiSelectContext();
+export const MultiSelectValuePrimitive = forwardRef<
+    HTMLSpanElement,
+    MultiSelectValuePrimitive.Props
+>((props, ref) => {
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const { size = 'md', items, placeholder } = useMultiSelectContext();
 
-        const itemMap = useMemo(() => {
-            if (Array.isArray(items)) return new Map(items.map((item) => [item.value, item.label]));
+    const itemMap = useMemo(() => {
+        if (Array.isArray(items)) return new Map(items.map((item) => [item.value, item.label]));
 
-            if (typeof items === 'object' && items !== null) return new Map(Object.entries(items));
+        if (typeof items === 'object' && items !== null) return new Map(Object.entries(items));
 
-            return new Map();
-        }, [items]);
+        return new Map();
+    }, [items]);
 
-        const getLabel = (val: string) => itemMap.get(val) ?? val;
+    const getLabel = (val: string) => itemMap.get(val) ?? val;
 
-        const renderValue = (value: Array<string>) => {
-            if (value.length === 0) {
-                return itemMap.get(null) ?? itemMap.get('null');
-            }
+    const renderValue = (value: Array<string>) => {
+        if (value.length === 0) {
+            return itemMap.get(null) ?? itemMap.get('null');
+        }
 
-            return value.map((val) => (
-                <Badge key={val} size={badgeSizeMap[size]}>
-                    {getLabel(val)}
-                </Badge>
-            ));
-        };
+        return value.map((val) => (
+            <Badge key={val} size={badgeSizeMap[size]}>
+                {getLabel(val)}
+            </Badge>
+        ));
+    };
 
-        const children = (value: Array<string>) => {
-            return typeof childrenProp === 'function'
-                ? childrenProp(value)
-                : (childrenProp ?? renderValue(value) ?? (
-                      <MultiSelectPlaceholder>{placeholder}</MultiSelectPlaceholder>
-                  ));
-        };
+    const children = (value: Array<string>) => {
+        return typeof childrenProp === 'function'
+            ? childrenProp(value)
+            : (childrenProp ?? renderValue(value) ?? (
+                  <MultiSelectPlaceholderPrimitive>{placeholder}</MultiSelectPlaceholderPrimitive>
+              ));
+    };
 
-        return (
-            <BaseSelect.Value
-                ref={ref}
-                className={clsx(styles.value({ size }), className)}
-                {...componentProps}
-            >
-                {children}
-            </BaseSelect.Value>
-        );
-    },
-);
-MultiSelectValue.displayName = 'MultiSelect.Value';
+    return (
+        <BaseSelect.Value
+            ref={ref}
+            className={clsx(styles.value({ size }), className)}
+            {...componentProps}
+        >
+            {children}
+        </BaseSelect.Value>
+    );
+});
+MultiSelectValuePrimitive.displayName = 'MultiSelect.ValuePrimitive';
 
 const badgeSizeMap: Record<
     NonNullable<MultiSelectVariants['size']>,
@@ -147,152 +150,206 @@ const badgeSizeMap: Record<
 };
 
 /* -------------------------------------------------------------------------------------------------
- * Select.Placeholder
+ * Select.PlaceholderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectPlaceholder = forwardRef<HTMLSpanElement, MultiSelectPlaceholder.Props>(
-    (props, ref) => {
-        const { render, className, ...componentProps } = resolveStyles(props);
-        const { size } = useMultiSelectContext();
+export const MultiSelectPlaceholderPrimitive = forwardRef<
+    HTMLSpanElement,
+    MultiSelectPlaceholderPrimitive.Props
+>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+    const { size } = useMultiSelectContext();
 
+    return (
+        <BaseSelect.Value
+            ref={ref}
+            className={clsx(styles.placeholder({ size }), className)}
+            {...componentProps}
+        />
+    );
+});
+MultiSelectPlaceholderPrimitive.displayName = 'MultiSelect.PlaceholderPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * MultiSelect.TriggerIconPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const MultiSelectTriggerIconPrimitive = forwardRef<
+    HTMLDivElement,
+    MultiSelectTriggerIconPrimitive.Props
+>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
+
+    const { size } = useMultiSelectContext();
+    const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
+
+    return (
+        <BaseSelect.Icon
+            ref={ref}
+            className={clsx(styles.triggerIcon({ size }), className)}
+            {...componentProps}
+        >
+            <IconElement />
+        </BaseSelect.Icon>
+    );
+});
+MultiSelectTriggerIconPrimitive.displayName = 'MultiSelect.TriggerIconPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * MultiSelect.Trigger
+ * -----------------------------------------------------------------------------------------------*/
+
+export const MultiSelectTrigger = forwardRef<HTMLButtonElement, MultiSelectTrigger.Props>(
+    (props, ref) => {
         return (
-            <BaseSelect.Value
-                ref={ref}
-                className={clsx(styles.placeholder({ size }), className)}
-                {...componentProps}
-            />
+            <MultiSelectTriggerPrimitive ref={ref} {...props}>
+                <MultiSelectValuePrimitive />
+                <MultiSelectTriggerIconPrimitive />
+            </MultiSelectTriggerPrimitive>
         );
     },
 );
+MultiSelectTrigger.displayName = 'MultiSelect.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
- * MultiSelect.TriggerIcon
+ * MultiSelect.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectTriggerIcon = forwardRef<HTMLDivElement, MultiSelectTriggerIcon.Props>(
-    (props, ref) => {
-        const { className, children, ...componentProps } = resolveStyles(props);
-
-        const { size } = useMultiSelectContext();
-        const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
-
-        return (
-            <BaseSelect.Icon
-                ref={ref}
-                className={clsx(styles.triggerIcon({ size }), className)}
-                {...componentProps}
-            >
-                <IconElement />
-            </BaseSelect.Icon>
-        );
-    },
-);
-MultiSelectTriggerIcon.displayName = 'MultiSelect.TriggerIcon';
-
-/* -------------------------------------------------------------------------------------------------
- * MultiSelect.Portal
- * -----------------------------------------------------------------------------------------------*/
-
-export const MultiSelectPortal = (props: MultiSelectPortal.Props) => {
+export const MultiSelectPortalPrimitive = (props: MultiSelectPortalPrimitive.Props) => {
     return <BaseSelect.Portal {...props} />;
 };
-MultiSelectPortal.displayName = 'MultiSelect.Portal';
+MultiSelectPortalPrimitive.displayName = 'MultiSelect.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * MultiSelect.Positioner
+ * MultiSelect.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectPositioner = forwardRef<HTMLDivElement, MultiSelectPositioner.Props>(
-    (props, ref) => {
-        const {
-            side = 'bottom',
-            align = 'start',
-            sideOffset = 4,
-            alignItemWithTrigger = false,
-            className,
-            ...componentProps
-        } = resolveStyles(props);
+export const MultiSelectPositionerPrimitive = forwardRef<
+    HTMLDivElement,
+    MultiSelectPositionerPrimitive.Props
+>((props, ref) => {
+    const {
+        side = 'bottom',
+        align = 'start',
+        sideOffset = 4,
+        alignItemWithTrigger = false,
+        className,
+        ...componentProps
+    } = resolveStyles(props);
 
-        return (
-            <BaseSelect.Positioner
-                ref={ref}
-                side={side}
-                align={align}
-                sideOffset={sideOffset}
-                alignItemWithTrigger={alignItemWithTrigger}
-                className={clsx(styles.positioner, className)}
-                {...componentProps}
-            />
-        );
-    },
-);
-MultiSelectPositioner.displayName = 'MultiSelect.Positioner';
+    return (
+        <BaseSelect.Positioner
+            ref={ref}
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            alignItemWithTrigger={alignItemWithTrigger}
+            className={clsx(styles.positioner, className)}
+            {...componentProps}
+        />
+    );
+});
+MultiSelectPositionerPrimitive.displayName = 'MultiSelect.PositionerPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * MultiSelect.Popup
+ * MultiSelect.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>((props, ref) => {
+export const MultiSelectPopupPrimitive = forwardRef<
+    HTMLDivElement,
+    MultiSelectPopupPrimitive.Props
+>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
     return (
         <BaseSelect.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
     );
 });
-MultiSelectPopup.displayName = 'MultiSelect.Popup';
+MultiSelectPopupPrimitive.displayName = 'MultiSelect.PopupPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Select.Content
+ * Select.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectContent = forwardRef<HTMLDivElement, MultiSelectContent.Props>(
-    ({ portalProps, positionerProps, ...props }, ref) => {
+export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>(
+    ({ portalElement, positionerElement, ...props }, ref) => {
+        const PortalElement = createSlot(portalElement || <MultiSelectPortalPrimitive />);
+        const PositionerElement = createSlot(
+            positionerElement || <MultiSelectPositionerPrimitive />,
+        );
+
         return (
-            <MultiSelectPortal {...portalProps}>
-                <MultiSelectPositioner {...positionerProps}>
-                    <MultiSelectPopup ref={ref} {...props} />
-                </MultiSelectPositioner>
-            </MultiSelectPortal>
+            <PortalElement>
+                <PositionerElement>
+                    <MultiSelectPopupPrimitive ref={ref} {...props} />
+                </PositionerElement>
+            </PortalElement>
         );
     },
 );
-MultiSelectContent.displayName = 'MultiSelect.Content';
+MultiSelectPopup.displayName = 'MultiSelect.Popup';
+
+/* -------------------------------------------------------------------------------------------------
+ * MultiSelect.ItemPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const MultiSelectItemPrimitive = forwardRef<HTMLDivElement, MultiSelectItemPrimitive.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+
+        return (
+            <BaseSelect.Item
+                ref={ref}
+                className={clsx(styles.item, className)}
+                {...componentProps}
+            />
+        );
+    },
+);
+MultiSelectItemPrimitive.displayName = 'MultiSelect.ItemPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * MultiSelect.ItemIndicatorPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const MultiSelectItemIndicatorPrimitive = forwardRef<
+    HTMLSpanElement,
+    MultiSelectItemIndicatorPrimitive.Props
+>((props, ref) => {
+    const { className, children, ...componentProps } = resolveStyles(props);
+
+    const IconElement = createSlot(children || <ConfirmOutlineIcon size="100%" />);
+
+    return (
+        <BaseSelect.ItemIndicator
+            ref={ref}
+            className={clsx(styles.itemIndicator, className)}
+            {...componentProps}
+        >
+            <IconElement />
+        </BaseSelect.ItemIndicator>
+    );
+});
+MultiSelectItemIndicatorPrimitive.displayName = 'MultiSelect.ItemIndicatorPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * MultiSelect.Item
  * -----------------------------------------------------------------------------------------------*/
 
-export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItem.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-
-    return (
-        <BaseSelect.Item ref={ref} className={clsx(styles.item, className)} {...componentProps} />
-    );
-});
-MultiSelectItem.displayName = 'MultiSelect.Item';
-
-/* -------------------------------------------------------------------------------------------------
- * Select.ItemIndicator
- * -----------------------------------------------------------------------------------------------*/
-
-export const MultiSelectItemIndicator = forwardRef<HTMLSpanElement, MultiSelectItemIndicator.Props>(
+export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItemPrimitive.Props>(
     (props, ref) => {
-        const { className, children, ...componentProps } = resolveStyles(props);
-
-        const IconElement = createSlot(children || <ConfirmOutlineIcon size="100%" />);
+        const { children, ...componentProps } = resolveStyles(props);
 
         return (
-            <BaseSelect.ItemIndicator
-                ref={ref}
-                className={clsx(styles.itemIndicator, className)}
-                {...componentProps}
-            >
-                <IconElement />
-            </BaseSelect.ItemIndicator>
+            <MultiSelectItemPrimitive ref={ref} {...componentProps}>
+                {children}
+
+                <MultiSelectItemIndicatorPrimitive />
+            </MultiSelectItemPrimitive>
         );
     },
 );
-MultiSelectItemIndicator.displayName = 'MultiSelect.ItemIndicator';
+MultiSelectItem.displayName = 'MultiSelect.Item';
 
 /* -------------------------------------------------------------------------------------------------
  * MultiSelect.Group
@@ -353,55 +410,63 @@ export namespace MultiSelectRoot {
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 
-export namespace MultiSelectTrigger {
+export namespace MultiSelectTriggerPrimitive {
     type TriggerPrimitiveProps = VComponentProps<typeof BaseSelect.Trigger>;
     export interface Props extends TriggerPrimitiveProps {}
 }
 
-export namespace MultiSelectValue {
+export namespace MultiSelectTrigger {
+    export interface Props extends MultiSelectTriggerPrimitive.Props {}
+}
+
+export namespace MultiSelectValuePrimitive {
     type ValuePrimitiveProps = VComponentProps<typeof BaseSelect.Value>;
     export interface Props extends ValuePrimitiveProps {}
 }
 
-export namespace MultiSelectPlaceholder {
+export namespace MultiSelectPlaceholderPrimitive {
     type PlaceholderPrimitiveProps = VComponentProps<'span'>;
     export interface Props extends PlaceholderPrimitiveProps {}
 }
 
-export namespace MultiSelectTriggerIcon {
+export namespace MultiSelectTriggerIconPrimitive {
     type TriggerIconPrimitiveProps = VComponentProps<typeof BaseSelect.Icon>;
     export interface Props extends TriggerIconPrimitiveProps {}
 }
 
-export namespace MultiSelectPortal {
+export namespace MultiSelectPortalPrimitive {
     type PortalPrimitiveProps = VComponentProps<typeof BaseSelect.Portal>;
     export interface Props extends PortalPrimitiveProps {}
 }
 
-export namespace MultiSelectPositioner {
+export namespace MultiSelectPositionerPrimitive {
     type PositionerPrimitiveProps = VComponentProps<typeof BaseSelect.Positioner>;
     export interface Props extends PositionerPrimitiveProps {}
 }
 
-export namespace MultiSelectPopup {
+export namespace MultiSelectPopupPrimitive {
     type PopupPrimitiveProps = VComponentProps<typeof BaseSelect.Popup>;
     export interface Props extends PopupPrimitiveProps {}
 }
 
-export namespace MultiSelectContent {
-    type ContentPrimitiveProps = VComponentProps<typeof MultiSelectPopup>;
-    export interface Props extends ContentPrimitiveProps {
-        portalProps?: MultiSelectPortal.Props;
-        positionerProps?: MultiSelectPositioner.Props;
+export namespace MultiSelectPopup {
+    type PopupPrimitiveProps = VComponentProps<typeof MultiSelectPopupPrimitive>;
+    export interface Props extends PopupPrimitiveProps {
+        portalElement?: ReactElement<MultiSelectPortalPrimitive.Props>;
+        positionerElement?: ReactElement<MultiSelectPositionerPrimitive.Props>;
     }
 }
 
-export namespace MultiSelectItem {
+export namespace MultiSelectItemPrimitive {
     type ItemPrimitiveProps = VComponentProps<typeof BaseSelect.Item>;
     export interface Props extends ItemPrimitiveProps {}
 }
 
-export namespace MultiSelectItemIndicator {
+export namespace MultiSelectItem {
+    export interface Props extends MultiSelectItemPrimitive.Props {}
+}
+
+export namespace MultiSelectItemIndicatorPrimitive {
     type ItemIndicatorPrimitiveProps = VComponentProps<typeof BaseSelect.ItemIndicator>;
     export interface Props extends ItemIndicatorPrimitiveProps {}
 }

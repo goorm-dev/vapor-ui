@@ -47,18 +47,14 @@ export const Default: StoryObj = {
     render: (args) => {
         return (
             <MultiSelect.Root placeholder="Select fonts" items={fonts} {...args}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
+                <MultiSelect.Trigger />
+                <MultiSelect.Popup>
                     {fonts.map((font) => (
                         <MultiSelect.Item key={font.value} value={font.value}>
                             {font.label}
-                            <MultiSelect.ItemIndicator />
                         </MultiSelect.Item>
                     ))}
-                </MultiSelect.Content>
+                </MultiSelect.Popup>
             </MultiSelect.Root>
         );
     },
@@ -68,7 +64,11 @@ export const ObjectItems: StoryObj = {
     render: (args) => {
         const renderValue = (value: Array<Language>) => {
             if (value.length === 0) {
-                return <MultiSelect.Placeholder>Select languages</MultiSelect.Placeholder>;
+                return (
+                    <MultiSelect.PlaceholderPrimitive>
+                        Select languages
+                    </MultiSelect.PlaceholderPrimitive>
+                );
             }
 
             const values = value.slice(0, 2);
@@ -85,46 +85,44 @@ export const ObjectItems: StoryObj = {
                 <VStack>
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={languages}>
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value>{renderValue}</MultiSelect.Value>
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
-                        <MultiSelect.Content>
+                        <MultiSelect.TriggerPrimitive>
+                            <MultiSelect.ValuePrimitive>{renderValue}</MultiSelect.ValuePrimitive>
+                            <MultiSelect.TriggerIconPrimitive />
+                        </MultiSelect.TriggerPrimitive>
+                        <MultiSelect.Popup>
                             {Object.entries(languages).map(([value, label]) => (
                                 <MultiSelect.Item key={value} value={value}>
                                     {label}
-                                    <MultiSelect.ItemIndicator />
                                 </MultiSelect.Item>
                             ))}
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </VStack>
 
                 <VStack>
                     <span>Custom Value</span>
                     <MultiSelect.Root {...args} items={languages}>
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value>
+                        <MultiSelect.TriggerPrimitive>
+                            <MultiSelect.ValuePrimitive>
                                 {(value) =>
                                     value.length ? (
                                         value.join(', ')
                                     ) : (
-                                        <MultiSelect.Placeholder>
+                                        <MultiSelect.PlaceholderPrimitive>
                                             Select languages
-                                        </MultiSelect.Placeholder>
+                                        </MultiSelect.PlaceholderPrimitive>
                                     )
                                 }
-                            </MultiSelect.Value>
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
-                        <MultiSelect.Content>
+                            </MultiSelect.ValuePrimitive>
+                            <MultiSelect.TriggerIconPrimitive />
+                        </MultiSelect.TriggerPrimitive>
+                        <MultiSelect.Popup>
                             {Object.entries(languages).map(([value, label]) => (
                                 <MultiSelect.Item key={value} value={value}>
                                     {label}
-                                    <MultiSelect.ItemIndicator />
                                 </MultiSelect.Item>
                             ))}
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </VStack>
             </HStack>
@@ -136,7 +134,11 @@ export const ArrayItmes: StoryObj = {
     render: (args) => {
         const renderValue = (value: Array<string>) => {
             if (value.length === 0) {
-                return <MultiSelect.Placeholder>Select fonts</MultiSelect.Placeholder>;
+                return (
+                    <MultiSelect.PlaceholderPrimitive>
+                        Select fonts
+                    </MultiSelect.PlaceholderPrimitive>
+                );
             }
 
             const values = value.slice(0, 2);
@@ -153,47 +155,45 @@ export const ArrayItmes: StoryObj = {
                 <VStack>
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={fonts} defaultValue={null}>
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value>{renderValue}</MultiSelect.Value>
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
-                        <MultiSelect.Content>
+                        <MultiSelect.TriggerPrimitive>
+                            <MultiSelect.ValuePrimitive>{renderValue}</MultiSelect.ValuePrimitive>
+                            <MultiSelect.TriggerIconPrimitive />
+                        </MultiSelect.TriggerPrimitive>
+                        <MultiSelect.Popup>
                             {fonts.map(({ value, label }) => (
                                 <MultiSelect.Item key={value} value={value}>
                                     {label}
-                                    <MultiSelect.ItemIndicator />
                                 </MultiSelect.Item>
                             ))}
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </VStack>
 
                 <VStack>
                     <span>Custom Value</span>
                     <MultiSelect.Root {...args} items={fonts}>
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value>
+                        <MultiSelect.TriggerPrimitive>
+                            <MultiSelect.ValuePrimitive>
                                 {(value) =>
                                     value.length ? (
                                         value.join(', ')
                                     ) : (
-                                        <MultiSelect.Placeholder>
+                                        <MultiSelect.PlaceholderPrimitive>
                                             Select fonts
-                                        </MultiSelect.Placeholder>
+                                        </MultiSelect.PlaceholderPrimitive>
                                     )
                                 }
-                            </MultiSelect.Value>
+                            </MultiSelect.ValuePrimitive>
 
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
-                        <MultiSelect.Content>
+                            <MultiSelect.TriggerIconPrimitive />
+                        </MultiSelect.TriggerPrimitive>
+                        <MultiSelect.Popup>
                             {fonts.map(({ value, label }) => (
                                 <MultiSelect.Item key={value} value={value}>
                                     {label}
-                                    <MultiSelect.ItemIndicator />
                                 </MultiSelect.Item>
                             ))}
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </VStack>
             </HStack>
@@ -224,27 +224,19 @@ export const TestBed = {
             >
                 <Grid.Item>
                     <MultiSelect.Root placeholder="Placeholder">
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value />
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
+                        <MultiSelect.Trigger />
                     </MultiSelect.Root>
                 </Grid.Item>
 
                 <Grid.Item>
                     <MultiSelect.Root placeholder="Grouped" defaultOpen>
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value />
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
-                        <MultiSelect.Content>
+                        <MultiSelect.Trigger />
+                        <MultiSelect.Popup>
                             <MultiSelect.Group>
                                 <MultiSelect.GroupLabel>Font Group</MultiSelect.GroupLabel>
                                 {fonts.map((font) => (
                                     <MultiSelect.Item key={font.value} value={font.value}>
                                         {font.label}
-
-                                        <MultiSelect.ItemIndicator />
                                     </MultiSelect.Item>
                                 ))}
                             </MultiSelect.Group>
@@ -254,33 +246,26 @@ export const TestBed = {
                                 {Object.entries(languages).map(([value, label]) => (
                                     <MultiSelect.Item key={value} value={value}>
                                         {label}
-
-                                        <MultiSelect.ItemIndicator />
                                     </MultiSelect.Item>
                                 ))}
                             </MultiSelect.Group>
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </Grid.Item>
 
                 <Grid.Item>
                     <MultiSelect.Root placeholder="Placeholder" defaultOpen defaultValue={['mono']}>
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value />
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
-                        <MultiSelect.Content>
+                        <MultiSelect.Trigger />
+                        <MultiSelect.Popup>
                             <MultiSelect.Group>
                                 <MultiSelect.GroupLabel>Font</MultiSelect.GroupLabel>
                                 {fonts.map((font) => (
                                     <MultiSelect.Item key={font.value} value={font.value}>
                                         {font.label}
-
-                                        <MultiSelect.ItemIndicator />
                                     </MultiSelect.Item>
                                 ))}
                             </MultiSelect.Group>
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </Grid.Item>
 
@@ -291,22 +276,18 @@ export const TestBed = {
                         items={languages}
                         defaultValue={['csharp']}
                     >
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value />
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
+                        <MultiSelect.Trigger />
 
-                        <MultiSelect.Content>
+                        <MultiSelect.Popup>
                             <MultiSelect.Group>
                                 <MultiSelect.GroupLabel>Auto Label: </MultiSelect.GroupLabel>
                                 {Object.entries(languages).map(([value, label]) => (
                                     <MultiSelect.Item key={value} value={value}>
                                         {value} → {label}
-                                        <MultiSelect.ItemIndicator />
                                     </MultiSelect.Item>
                                 ))}
                             </MultiSelect.Group>
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </Grid.Item>
 
@@ -317,22 +298,18 @@ export const TestBed = {
                         defaultValue={['mono']}
                         defaultOpen
                     >
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value />
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
+                        <MultiSelect.Trigger />
 
-                        <MultiSelect.Content>
+                        <MultiSelect.Popup>
                             <MultiSelect.Group>
                                 <MultiSelect.GroupLabel>Auto Label:</MultiSelect.GroupLabel>
                                 {fonts.map((font) => (
                                     <MultiSelect.Item key={font.value} value={font.value}>
                                         {font.value} → {font.label}
-                                        <MultiSelect.ItemIndicator />
                                     </MultiSelect.Item>
                                 ))}
                             </MultiSelect.Group>
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </Grid.Item>
 
@@ -342,21 +319,20 @@ export const TestBed = {
                         defaultValue={['javascript', 'python', 'go', 'rust']}
                         defaultOpen
                     >
-                        <MultiSelect.Trigger>
-                            <MultiSelect.Value>{renderValue}</MultiSelect.Value>
-                            <MultiSelect.TriggerIcon />
-                        </MultiSelect.Trigger>
-                        <MultiSelect.Content>
+                        <MultiSelect.TriggerPrimitive>
+                            <MultiSelect.ValuePrimitive>{renderValue}</MultiSelect.ValuePrimitive>
+                            <MultiSelect.TriggerIconPrimitive />
+                        </MultiSelect.TriggerPrimitive>
+                        <MultiSelect.Popup>
                             <MultiSelect.Group>
                                 <MultiSelect.GroupLabel>Truncated</MultiSelect.GroupLabel>
                                 {Object.entries(languages).map(([value, label]) => (
                                     <MultiSelect.Item key={value} value={value}>
                                         {label}
-                                        <MultiSelect.ItemIndicator />
                                     </MultiSelect.Item>
                                 ))}
                             </MultiSelect.Group>
-                        </MultiSelect.Content>
+                        </MultiSelect.Popup>
                     </MultiSelect.Root>
                 </Grid.Item>
             </Grid.Root>

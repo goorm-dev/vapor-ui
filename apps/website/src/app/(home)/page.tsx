@@ -179,8 +179,8 @@ export default function HomePage() {
                         style={{
                             background:
                                 resolvedTheme === 'light'
-                                    ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--color-background-normal, #FFF) 100%)'
-                                    : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--color-background-normal, #23272E) 100%)',
+                                    ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--vapor-color-background-canvas, #FFF) 100%)'
+                                    : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--vapor-color-background-canvas, #23272E) 100%)',
                         }}
                     />
                     <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />

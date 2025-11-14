@@ -41,19 +41,15 @@ export default function AuthenticationForm() {
                         </Text>
                         <Select.Root defaultValue={codes['+82']} size="lg">
                             <Group attached>
-                                <Select.Trigger>
-                                    <Select.Value />
-                                    <Select.TriggerIcon />
-                                </Select.Trigger>
+                                <Select.Trigger />
 
-                                <Select.Content>
+                                <Select.Popup>
                                     {Object.entries(codes).map(([value, label]) => (
                                         <Select.Item key={value} value={value}>
                                             {label}
-                                            <Select.ItemIndicator />
                                         </Select.Item>
                                     ))}
-                                </Select.Content>
+                                </Select.Popup>
 
                                 <TextInput
                                     style={{ flex: 1, width: '100%' }}

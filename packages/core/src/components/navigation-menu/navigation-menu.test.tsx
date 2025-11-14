@@ -19,31 +19,27 @@ const NavigationMenuTest = (props: NavigationMenu.Root.Props) => {
                 </NavigationMenu.Item>
                 <NavigationMenu.Item value={TRIGGER_1}>
                     <NavigationMenu.Trigger>{TRIGGER_1}</NavigationMenu.Trigger>
-                    <NavigationMenu.Panel>
-                        <ul>
-                            <NavigationMenu.Link href="#">{PANEL_LINK_1}</NavigationMenu.Link>
-                            <NavigationMenu.Link href="#">{PANEL_LINK_2}</NavigationMenu.Link>
-                        </ul>
-                    </NavigationMenu.Panel>
+                    <NavigationMenu.Content>
+                        <NavigationMenu.Link href="#">{PANEL_LINK_1}</NavigationMenu.Link>
+                        <NavigationMenu.Link href="#">{PANEL_LINK_2}</NavigationMenu.Link>
+                    </NavigationMenu.Content>
                 </NavigationMenu.Item>
                 <NavigationMenu.Item value={TRIGGER_2}>
                     <NavigationMenu.Trigger>{TRIGGER_2}</NavigationMenu.Trigger>
-                    <NavigationMenu.Panel>
-                        <ul>
-                            <NavigationMenu.Link href="#">{PANEL_LINK_3}</NavigationMenu.Link>
-                            <NavigationMenu.Link href="#">{PANEL_LINK_4}</NavigationMenu.Link>
-                        </ul>
-                    </NavigationMenu.Panel>
+                    <NavigationMenu.Content>
+                        <NavigationMenu.Link href="#">{PANEL_LINK_3}</NavigationMenu.Link>
+                        <NavigationMenu.Link href="#">{PANEL_LINK_4}</NavigationMenu.Link>
+                    </NavigationMenu.Content>
                 </NavigationMenu.Item>
             </NavigationMenu.List>
 
-            <NavigationMenu.Portal>
-                <NavigationMenu.Positioner>
-                    <NavigationMenu.Popup>
-                        <NavigationMenu.Viewport />
-                    </NavigationMenu.Popup>
-                </NavigationMenu.Positioner>
-            </NavigationMenu.Portal>
+            <NavigationMenu.PortalPrimitive>
+                <NavigationMenu.PositionerPrimitive>
+                    <NavigationMenu.PopupPrimitive>
+                        <NavigationMenu.ViewportPrimitive />
+                    </NavigationMenu.PopupPrimitive>
+                </NavigationMenu.PositionerPrimitive>
+            </NavigationMenu.PortalPrimitive>
         </NavigationMenu.Root>
     );
 };
@@ -245,11 +241,11 @@ describe('<NavigationMenu.Link />', () => {
     afterEach(cleanup);
 
     const NAV_LINK = 'nav-link';
-    const NavLinkTest = (linkProps: NavigationMenu.Link.Props) => (
+    const NavItemTest = (itemProps: NavigationMenu.Link.Props) => (
         <NavigationMenu.Root aria-label="Main">
             <NavigationMenu.List>
                 <NavigationMenu.Item>
-                    <NavigationMenu.Link data-testid={NAV_LINK} href="#" {...linkProps}>
+                    <NavigationMenu.Link data-testid={NAV_LINK} href="#" {...itemProps}>
                         Home
                     </NavigationMenu.Link>
                 </NavigationMenu.Item>
@@ -258,7 +254,7 @@ describe('<NavigationMenu.Link />', () => {
     );
 
     it('should render with aria-current="page" when given selected', () => {
-        const rendered = render(<NavLinkTest selected />);
+        const rendered = render(<NavItemTest selected />);
         const link = rendered.getByTestId(NAV_LINK);
 
         expect(link).toHaveAttribute('aria-current', 'page');
@@ -267,7 +263,7 @@ describe('<NavigationMenu.Link />', () => {
     it('should render with aria-current="page" when clicked', async () => {
         let link;
 
-        const rendered = render(<NavLinkTest selected />);
+        const rendered = render(<NavItemTest selected />);
         link = rendered.getByTestId(NAV_LINK);
 
         await userEvent.click(link);
@@ -277,7 +273,7 @@ describe('<NavigationMenu.Link />', () => {
     });
 
     it('should not clickable when disabled', async () => {
-        const rendered = render(<NavLinkTest disabled />);
+        const rendered = render(<NavItemTest disabled />);
         const link = rendered.getByTestId(NAV_LINK);
 
         expect(link).toHaveAttribute('aria-disabled', 'true');

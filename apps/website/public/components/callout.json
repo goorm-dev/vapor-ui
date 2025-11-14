@@ -7,7 +7,7 @@
             "description": "Callout을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
-            "prop": "color",
+            "prop": "colorPalette",
             "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
             "default": "primary",
             "description": "Callout의 색상을 설정합니다."

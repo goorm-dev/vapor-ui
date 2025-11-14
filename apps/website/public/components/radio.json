@@ -55,7 +55,7 @@
             "description": "라디오 버튼 내부에 렌더링할 자식 요소입니다. 기본적으로 Radio.Indicator가 렌더링됩니다."
         }
     ],
-    "radioIndicatorProps": [
+    "radioIndicatorPrimitiveProps": [
         {
             "prop": "className",
             "type": ["string"],
