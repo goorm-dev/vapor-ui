@@ -73,7 +73,7 @@ export const root = recipe({
         colorPalette: {
             primary: layerStyle('components', {
                 vars: {
-                    [fg]: vars.color.button.foreground.primary,
+                    [fg]: vars.color.foreground.button.primary,
                     [outlineFg]: vars.color.foreground.primary[200],
                     [ghostFg]: vars.color.foreground.primary[100],
                     [bg]: vars.color.background.primary[200],
