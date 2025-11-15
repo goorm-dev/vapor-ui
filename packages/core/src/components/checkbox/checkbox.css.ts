@@ -20,7 +20,7 @@ export const root = recipe({
             border: '0.0625rem solid',
             borderColor: vars.color.border.normal,
 
-            backgroundColor: vars.color.background.canvas,
+            backgroundColor: vars.color.background.canvas[100],
             padding: vars.size.space['000'],
             overflow: 'hidden',
 
