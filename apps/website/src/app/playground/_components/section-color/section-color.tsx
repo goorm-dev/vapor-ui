@@ -89,10 +89,10 @@ const ColorPickerSection = ({ defaultValue, onColorChange }: ColorPickerSectionP
 const SectionColor = () => {
     const { currentConfig, applyColors } = useCustomTheme();
     const [primaryColor, setPrimaryColor] = useState(
-        currentConfig.colors?.primary.color ?? '#3174dc',
+        currentConfig.colors?.primary.hexcode ?? '#2a72e5',
     );
     const [backgroundColor, setBackgroundColor] = useState(
-        currentConfig.colors?.background.color ?? '#ffffff',
+        currentConfig.colors?.background.hexcode ?? '#ffffff',
     );
     const [backgroundLightness, setBackgroundLightness] = useState(
         currentConfig.colors?.background.lightness?.light ?? 100,
