@@ -1,55 +1,65 @@
-import type { API, FileInfo, Transform } from 'jscodeshift';
+import type { API, FileInfo, ImportSpecifier, Transform } from 'jscodeshift';
 
+import type { ComponentRenameRule } from '~/utils/import-transform';
 import {
-    getFinalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+    transformSpecifier,
 } from '~/utils/import-transform';
 import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const OLD_COMPONENT_NAME = 'Alert';
-const NEW_COMPONENT_NAME = 'Callout';
+
+const COMPONENT_RENAME_MAP: {
+    [oldName: string]: ComponentRenameRule;
+} = {
+    Alert: {
+        newImport: 'Callout',
+        newJSX: 'Callout.Root',
+    },
+};
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
-    }
-    // 1. Import migration
-    transformImportDeclaration({
-        root,
+    const specifiersToMove: ImportSpecifier[] = collectImportSpecifiersToMove(
         j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+        root,
+        SOURCE_PACKAGE,
+    );
 
-    // Get the final import name for Callout
-    const calloutImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
+    }
 
-    // 2. Transform Alert JSX elements to Callout.Root
+    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, COMPONENT_RENAME_MAP);
+    const calloutLocalName =
+        transformedSpecifiers.find(
+            (spec) => spec.imported.name === COMPONENT_RENAME_MAP['Alert'].newImport,
+        )?.local?.name || COMPONENT_RENAME_MAP['Alert'].newImport;
+
+    // Get the Alert's local name before transformation
+    const alertLocalName =
+        specifiersToMove.find((spec) => spec.imported.name === 'Alert')?.local?.name || 'Alert';
+
+    // Transform Alert JSX elements BEFORE import changes
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
-        // Transform <Alert> to <Callout.Root>
+        // Find Alert elements (using original local name)
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'Alert'
+            element.openingElement.name.name === alertLocalName
         ) {
-            // Change to Callout.Root
-            transformToMemberExpression(j, element, calloutImportName, 'Root');
-
-            // Transform asChild prop to render prop
+            // Transform asChild prop to render prop FIRST
             transformAsChildToRender(j, element);
 
             // Check if first JSX element child is an icon and wrap it with Callout.Icon
             if (element.children && element.children.length > 0) {
-                // Find the first JSXElement child (skip whitespace/text)
                 let firstElementIndex = -1;
                 let firstElement = null;
 
@@ -73,14 +83,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     const iconWrapper = j.jsxElement(
                         j.jsxOpeningElement(
                             j.jsxMemberExpression(
-                                j.jsxIdentifier(calloutImportName),
+                                j.jsxIdentifier(calloutLocalName as string),
                                 j.jsxIdentifier('Icon'),
                             ),
                             [],
                         ),
                         j.jsxClosingElement(
                             j.jsxMemberExpression(
-                                j.jsxIdentifier(calloutImportName),
+                                j.jsxIdentifier(calloutLocalName as string),
                                 j.jsxIdentifier('Icon'),
                             ),
                         ),
@@ -92,10 +102,22 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 }
             }
 
-            // All props (color, className, etc.) remain unchanged
-            // No prop transformation needed
+            // Change Alert to Callout.Root
+            transformToMemberExpression(j, element, calloutLocalName as string, 'Root');
         }
     });
+
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
+
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
 
     return root.toSource();
 };
