@@ -486,8 +486,8 @@ export const transformSpecifier = (
 };
 
 export interface ComponentRenameRule {
-    newImport: string; // Target Import에 추가될 이름 (e.g., 'Callout')
-    newJSX: string; // JSX 태그가 변경될 이름 (e.g., 'Callout.Root')
+    newImport: string;
+    newJSX: string;
 }
 
 export const buildJsxTransformMap = (
@@ -512,32 +512,21 @@ export const buildJsxTransformMap = (
 export function transformJsxUsage(
     j: API['jscodeshift'],
     root: Collection<File>,
-    jsxMap: Map<string, string>, // e.g., Map { 'MyAlert' => 'Callout.Root' }
+    jsxMap: Map<string, string>,
 ) {
-    // jsxMap의 Key (e.g., 'MyAlert')와 일치하는 JSX 태그를 찾습니다.
     root.find(j.JSXIdentifier, (node) => jsxMap.has(node.name)).forEach((jsxIdentifierPath) => {
-        // e.g., node.name === 'MyAlert'
-
-        // 1. 변경할 새 이름(e.g., 'Callout.Root')을 맵에서 가져옵니다.
         const newJsxName = jsxMap.get(jsxIdentifierPath.node.name)!;
 
-        // 2. 새 이름으로 교체합니다.
-        // 2a. (단순 이름) e.g., 'NewComponent'
         if (!newJsxName.includes('.')) {
             jsxIdentifierPath.replace(j.jsxIdentifier(newJsxName));
-        }
-        // 2b. (복합 이름) e.g., 'Callout.Root'
-        else {
-            // j.jsxIdentifier('Callout.Root')는 유효하지 않습니다.
-            // AST에서 'Callout.Root'는 JSXMemberExpression입니다.
-            const parts = newJsxName.split('.'); // ['Callout', 'Root']
+        } else {
+            const parts = newJsxName.split('.');
             const [first, ...rest] = parts.map((part) => j.jsxIdentifier(part));
             const newAstNode = rest.reduce(
                 (obj, prop) => j.jsxMemberExpression(obj, prop),
                 first as JSXIdentifier | JSXMemberExpression,
             );
 
-            // <MyAlert> 노드를 <Callout.Root>로 교체
             jsxIdentifierPath.replace(newAstNode);
         }
     });

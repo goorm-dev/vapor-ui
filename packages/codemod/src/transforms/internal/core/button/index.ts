@@ -1,41 +1,43 @@
-import type { API, FileInfo, Transform } from 'jscodeshift';
+import type { API, FileInfo, ImportSpecifier, Transform } from 'jscodeshift';
 
 import {
-    getFinalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+    transformSpecifier,
 } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const OLD_COMPONENT_NAME = 'Button';
-const NEW_COMPONENT_NAME = 'Button';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(
+        j,
+        root,
+        SOURCE_PACKAGE,
+    );
+
+    const specifiersToMove = allSpecifiers.filter((spec) => spec.imported.name === 'Button');
+
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    const buttonImportName = getFinalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE);
+    const buttonLocalName =
+        specifiersToMove.find((spec) => spec.imported.name === 'Button')?.local?.name || 'Button';
 
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, {});
 
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === buttonImportName
+            element.openingElement.name.name === buttonLocalName
         ) {
             element.openingElement.attributes?.forEach((attr) => {
                 if (attr.type === 'JSXAttribute') {
@@ -54,6 +56,18 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             });
         }
     });
+
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
+
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
 
     return root.toSource();
 };
