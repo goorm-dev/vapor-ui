@@ -203,6 +203,36 @@ const Button = styled.button`
 `;
 ```
 
+### `getColorLightness(colorHex)`
+
+Helper utility to extract LCH lightness from a hex color. Useful when you want to preserve the exact background color by matching the lightness value.
+
+#### Parameters
+
+- **`colorHex`**: HEX color string (e.g., `'#dbe0ea'`)
+
+#### Returns
+
+Integer lightness value (0-100) or `null` if invalid
+
+#### Example
+
+```typescript
+import { getColorLightness, generatePrimitiveColorPalette } from '@vapor-ui/color-generator';
+
+const userBg = '#dbe0ea';
+const lightness = getColorLightness(userBg); // 89
+
+const theme = generatePrimitiveColorPalette({
+    backgroundColor: {
+        name: 'custom',
+        hexcode: userBg,
+        lightness: { light: lightness, dark: 14 },
+    },
+});
+// Result: #dbe0ea is used exactly as-is
+```
+
 ## Architecture Overview
 
 The package follows a clean 3-layer architecture:

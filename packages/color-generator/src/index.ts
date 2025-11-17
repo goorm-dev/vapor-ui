@@ -1,7 +1,9 @@
-// Primary API exports from the new 3-layer architecture
-export { generatePrimitiveColorPalette, getSemanticDependentTokens } from './infrastructure';
+export {
+    generatePrimitiveColorPalette,
+    getSemanticDependentTokens,
+    getColorLightness,
+} from './infrastructure';
 
-// Domain types for external use
 export type {
     ThemeOptions,
     ThemeResult,
@@ -18,7 +20,6 @@ export type {
     OklchColor,
 } from './domain';
 
-// Constants for external use
 export {
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_KEY_COLORS,
