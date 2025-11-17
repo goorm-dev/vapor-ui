@@ -10,6 +10,7 @@ import {
     generatePrimitiveColorPalette,
     getSemanticDependentTokens,
 } from '@vapor-ui/color-generator';
+import { getColorLightness } from '@vapor-ui/color-generator';
 import { Box, Button, Collapsible, HStack, VStack } from '@vapor-ui/core';
 import { generateColorCSS } from '@vapor-ui/css-generator';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
@@ -20,7 +21,6 @@ import { ColorInput } from '~/ui/components/color-input';
 import { LabeledInput } from '~/ui/components/labeled-input';
 import { RangeSlider } from '~/ui/components/range-slider';
 import { Section } from '~/ui/components/section';
-import { getColorLightness } from '~/ui/utils/color-metrics';
 
 export const ColorSystemTab = () => {
     // Key Colors (10 colors, excluding gray)
