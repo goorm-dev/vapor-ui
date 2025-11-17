@@ -82,6 +82,7 @@ describe('IconButton', () => {
 
         const icon2 = rendered.getByTestId('icon');
 
+        expect(handleClickMock).toHaveBeenCalledTimes(1);
         expect(icon).toBe(icon2);
     });
 });
