@@ -83,12 +83,19 @@ const ColorPickerSection = ({ defaultValue, onColorChange }: ColorPickerSectionP
  * SectionColor - Main Component
  * -----------------------------------------------------------------------------------------------*/
 const SectionColor = () => {
-    const [primaryColor, setPrimaryColor] = useState('#3174dc');
-    const [backgroundColor, setBackgroundColor] = useState('#ffffff');
-    const [backgroundLightness, setBackgroundLightness] = useState(100);
-    const [darkBackgroundLightness, setDarkBackgroundLightness] = useState(14);
-
-    const { applyColors } = useCustomTheme();
+    const { currentConfig, applyColors } = useCustomTheme();
+    const [primaryColor, setPrimaryColor] = useState(
+        currentConfig.colors?.primary.color ?? '#3174dc',
+    );
+    const [backgroundColor, setBackgroundColor] = useState(
+        currentConfig.colors?.background.color ?? '#ffffff',
+    );
+    const [backgroundLightness, setBackgroundLightness] = useState(
+        currentConfig.colors?.background.lightness?.light ?? 100,
+    );
+    const [darkBackgroundLightness, setDarkBackgroundLightness] = useState(
+        currentConfig.colors?.background.lightness?.dark ?? 14,
+    );
 
     const applyColorsToCSS = ({
         selectedPrimary = primaryColor,
