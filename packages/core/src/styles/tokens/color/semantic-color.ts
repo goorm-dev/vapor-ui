@@ -125,8 +125,8 @@ export const DARK_SEMANTIC_COLORS = {
     },
     foreground: {
         primary: {
-            '100': DARK_BASIC_COLORS.blue['500'],
-            '200': DARK_BASIC_COLORS.blue['600'],
+            '100': DARK_BASIC_COLORS.blue['600'],
+            '200': DARK_BASIC_COLORS.blue['700'],
         },
         secondary: {
             '100': DARK_BASIC_COLORS.gray['700'],
