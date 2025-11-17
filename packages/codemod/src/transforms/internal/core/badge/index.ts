@@ -1,42 +1,43 @@
-import type { API, FileInfo, Transform } from 'jscodeshift';
+import type { API, FileInfo, ImportSpecifier, Transform } from 'jscodeshift';
 
 import {
-    getFinalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+    transformSpecifier,
 } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const OLD_COMPONENT_NAME = 'Badge';
-const NEW_COMPONENT_NAME = 'Badge';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(
+        j,
+        root,
+        SOURCE_PACKAGE,
+    );
+
+    const specifiersToMove = allSpecifiers.filter((spec) => spec.imported.name === 'Badge');
+
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    // 1. Import migration
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+    const badgeLocalName =
+        specifiersToMove.find((spec) => spec.imported.name === 'Badge')?.local?.name || 'Badge';
 
-    const badgeImportName = getFinalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE);
+    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, {});
 
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === badgeImportName
+            element.openingElement.name.name === badgeLocalName
         ) {
             element.openingElement.attributes?.forEach((attr, index) => {
                 if (attr.type === 'JSXAttribute' && attr.name.name === 'pill') {
@@ -70,6 +71,18 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             });
         }
     });
+
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
+
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
 
     return root.toSource();
 };

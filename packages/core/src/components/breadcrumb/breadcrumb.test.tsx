@@ -7,25 +7,13 @@ import { Breadcrumb } from '.';
 const BreadcrumbTest = (props: Breadcrumb.Root.Props) => {
     return (
         <Breadcrumb.Root {...props}>
-            <Breadcrumb.List>
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="home">Home</Breadcrumb.Link>
-                </Breadcrumb.Item>
-
-                <Breadcrumb.Separator />
-
-                <Breadcrumb.Item>
-                    <Breadcrumb.Ellipsis />
-                </Breadcrumb.Item>
-
-                <Breadcrumb.Separator />
-
-                <Breadcrumb.Item>
-                    <Breadcrumb.Link href="products" current>
-                        Products
-                    </Breadcrumb.Link>
-                </Breadcrumb.Item>
-            </Breadcrumb.List>
+            <Breadcrumb.Item href="home">Home</Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Ellipsis />
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item href="products" current>
+                Products
+            </Breadcrumb.Item>
         </Breadcrumb.Root>
     );
 };
@@ -42,13 +30,9 @@ describe('Breadcrumb', () => {
         const onClick = vi.fn();
         const rendered = render(
             <Breadcrumb.Root>
-                <Breadcrumb.List>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.Link href="home" onClick={onClick}>
-                            Home
-                        </Breadcrumb.Link>
-                    </Breadcrumb.Item>
-                </Breadcrumb.List>
+                <Breadcrumb.Item href="home" onClick={onClick}>
+                    Home
+                </Breadcrumb.Item>
             </Breadcrumb.Root>,
         );
 
@@ -64,16 +48,10 @@ describe('Breadcrumb', () => {
         const onClick = vi.fn();
         render(
             <Breadcrumb.Root>
-                <Breadcrumb.List>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.Link href="home">Home</Breadcrumb.Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.Link href="away" onClick={onClick}>
-                            Away
-                        </Breadcrumb.Link>
-                    </Breadcrumb.Item>
-                </Breadcrumb.List>
+                <Breadcrumb.Item href="home">Home</Breadcrumb.Item>
+                <Breadcrumb.Item href="away" onClick={onClick}>
+                    Away
+                </Breadcrumb.Item>
             </Breadcrumb.Root>,
         );
 

@@ -4,31 +4,41 @@ import clsx from 'clsx';
 
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
-export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>(
-    ({ 'aria-label': ariaLabel, className, children, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, ['shape']);
+export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props, ref) => {
+    const {
+        'aria-label': ariaLabel,
+        className,
+        children,
+        ...componentProps
+    } = resolveStyles(props);
 
-        const IconSlot = createSlot(children);
+    const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(componentProps, [
+        'shape',
+    ]);
 
-        return (
-            <Button
-                ref={ref}
-                aria-label={ariaLabel}
-                className={clsx(styles.root(variantProps), className)}
-                {...otherProps}
-                stretch={false}
-            >
-                <IconSlot aria-hidden className={styles.icon({ size: otherProps.size })} />
-            </Button>
-        );
-    },
-);
+    const { size } = otherProps;
+
+    const IconElement = createSlot(children);
+
+    return (
+        <Button
+            ref={ref}
+            aria-label={ariaLabel}
+            className={clsx(styles.root(variantProps), className)}
+            {...otherProps}
+            stretch={false}
+        >
+            <IconElement aria-hidden className={styles.icon({ size })} />
+        </Button>
+    );
+});
 IconButton.displayName = 'IconButton';
 
 export namespace IconButton {
