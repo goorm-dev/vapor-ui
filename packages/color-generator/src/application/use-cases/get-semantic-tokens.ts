@@ -1,10 +1,27 @@
 import type {
     BackgroundCanvas,
+    PaletteChip,
     PrimitivePalette,
     SemanticResult,
     SemanticTokens,
 } from '../../domain';
-import { findLowestDeltaEChip, getNextNextStep, getNextStep } from '../utils';
+import {
+    extractOklchLightness,
+    findLowestDeltaEChip,
+    getNextNextStep,
+    getNextStep,
+} from '../utils';
+
+/**
+ * getSemanticDependentTokens 함수의 파라미터 인터페이스
+ */
+export interface GetSemanticDependentTokensParams {
+    primaryColorPalette: PrimitivePalette;
+    canvasColorPalette: PrimitivePalette;
+    lightModeCanvas: BackgroundCanvas;
+    darkModeCanvas: BackgroundCanvas;
+    baseTokens: Record<string, PaletteChip>;
+}
 
 /**
  * getSemanticDependentTokens Use Case
@@ -12,17 +29,19 @@ import { findLowestDeltaEChip, getNextNextStep, getNextStep } from '../utils';
  * generatePrimitiveColorPalette에서 생성된 Primitive Palette를 입력받아,
  * 실제 애플리케이션에서 사용될 시맨틱(Semantic) 토큰으로 매핑하는 규칙을 제공합니다.
  */
-export function getSemanticDependentTokens(
-    primaryColorPalette: PrimitivePalette,
-    canvasColorPalette: PrimitivePalette,
-    lightModeCanvas: BackgroundCanvas,
-    darkModeCanvas: BackgroundCanvas,
-): SemanticResult {
+export function getSemanticDependentTokens({
+    primaryColorPalette,
+    canvasColorPalette,
+    lightModeCanvas,
+    darkModeCanvas,
+    baseTokens,
+}: GetSemanticDependentTokensParams): SemanticResult {
     // Light Mode 시맨틱 토큰 생성
     const lightModeTokens = generateLightModeSemanticTokens(
         primaryColorPalette,
         canvasColorPalette,
         lightModeCanvas,
+        baseTokens,
     );
 
     // Dark Mode 시맨틱 토큰 생성
@@ -30,6 +49,7 @@ export function getSemanticDependentTokens(
         primaryColorPalette,
         canvasColorPalette,
         darkModeCanvas,
+        baseTokens,
     );
 
     return {
@@ -45,44 +65,38 @@ function generateLightModeSemanticTokens(
     primaryColorPalette: PrimitivePalette,
     canvasColorPalette: PrimitivePalette,
     backgroundCanvas: BackgroundCanvas,
+    baseTokens: Record<string, PaletteChip>,
 ): SemanticTokens {
-    // 1. color-background-primary-100: 기본은 100 단계, 예외 처리
-    let backgroundPrimary100: string;
     const lowestDeltaEChip = findLowestDeltaEChip(primaryColorPalette);
+    const lowestDeltaEStep = extractStepFromChipName(lowestDeltaEChip.name);
 
+    let backgroundPrimary100: string;
     if (lowestDeltaEChip.deltaE === 0 && lowestDeltaEChip.name.includes('050')) {
-        // Brand Color Swap이 적용되고 050 단계에 매핑된 경우
         backgroundPrimary100 = lowestDeltaEChip.name;
     } else {
-        // 기본: 100 단계 사용
         backgroundPrimary100 = primaryColorPalette.chips['100']?.name || lowestDeltaEChip.name;
     }
 
-    // 2. color-background-primary-200: deltaE가 가장 낮은 단계
     const backgroundPrimary200 = lowestDeltaEChip.name;
-
-    // 3. color-border-primary: color-background-primary-200와 동일
     const borderPrimary = backgroundPrimary200;
 
-    // 4. color-foreground-100: primary-200 단계의 다음 단계
-    const lowestDeltaEStep = extractStepFromChipName(lowestDeltaEChip.name);
     const foreground100Step = getNextStep(lowestDeltaEStep);
     const foreground100 =
         primaryColorPalette.chips[foreground100Step]?.name || primaryColorPalette.chips['900'].name;
 
-    // 5. color-foreground-200: primary-200 단계의 다다음 단계
     const foreground200Step = getNextNextStep(lowestDeltaEStep);
     const foreground200 =
         primaryColorPalette.chips[foreground200Step]?.name || primaryColorPalette.chips['900'].name;
 
-    // 6. color-background-canvas-100: backgroundCanvas name 사용
     const backgroundCanvas100 = backgroundCanvas.name;
-
-    // 7. color-background-canvas-200: canvasColorPalette의 050 단계
     const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || backgroundCanvas.name;
-
-    // 8. color-background-overlay-100: backgroundCanvas name 사용
     const backgroundOverlay100 = backgroundCanvas.name;
+
+    // Adaptive Contrast Rule: lightness >= 0.65이면 color-black, 아니면 color-white
+    const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
+    const lightness = extractOklchLightness(primary200Chip?.oklch || lowestDeltaEChip.oklch);
+    const buttonForegroundPrimary =
+        lightness >= 0.65 ? baseTokens['color-black'].name : baseTokens['color-white'].name;
 
     return {
         'color-background-primary-100': backgroundPrimary100,
@@ -93,6 +107,7 @@ function generateLightModeSemanticTokens(
         'color-background-canvas-100': backgroundCanvas100,
         'color-background-canvas-200': backgroundCanvas200,
         'color-background-overlay-100': backgroundOverlay100,
+        'color-button-foreground-primary': buttonForegroundPrimary,
     };
 }
 
@@ -103,37 +118,32 @@ function generateDarkModeSemanticTokens(
     primaryColorPalette: PrimitivePalette,
     canvasColorPalette: PrimitivePalette,
     backgroundCanvas: BackgroundCanvas,
+    baseTokens: Record<string, PaletteChip>,
 ): SemanticTokens {
-    // 1. color-background-primary-100: 050 단계 고정
+    const lowestDeltaEChip = findLowestDeltaEChip(primaryColorPalette);
+    const lowestDeltaEStep = extractStepFromChipName(lowestDeltaEChip.name);
+
     const backgroundPrimary100 =
         primaryColorPalette.chips['050']?.name || primaryColorPalette.chips['100'].name;
-
-    // 2. color-background-primary-200: deltaE가 가장 낮은 단계
-    const lowestDeltaEChip = findLowestDeltaEChip(primaryColorPalette);
     const backgroundPrimary200 = lowestDeltaEChip.name;
-
-    // 3. color-border-primary: color-background-primary-200와 동일
     const borderPrimary = backgroundPrimary200;
 
-    // 4. color-foreground-100: primary-200 단계의 다음 단계
-    const lowestDeltaEStep = extractStepFromChipName(lowestDeltaEChip.name);
     const foreground100Step = getNextStep(lowestDeltaEStep);
     const foreground100 =
         primaryColorPalette.chips[foreground100Step]?.name || primaryColorPalette.chips['900'].name;
 
-    // 5. color-foreground-200: primary-200 단계의 다다음 단계
     const foreground200Step = getNextNextStep(lowestDeltaEStep);
     const foreground200 =
         primaryColorPalette.chips[foreground200Step]?.name || primaryColorPalette.chips['900'].name;
 
-    // 6. color-background-canvas-100: backgroundCanvas name 사용
     const backgroundCanvas100 = backgroundCanvas.name;
-
-    // 7. color-background-canvas-200: canvasColorPalette의 050 단계
     const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || backgroundCanvas.name;
-
-    // 8. color-background-overlay-100: canvasColorPalette의 100 단계
     const backgroundOverlay100 = canvasColorPalette.chips['100']?.name || backgroundCanvas.name;
+
+    const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
+    const lightness = extractOklchLightness(primary200Chip?.oklch || lowestDeltaEChip.oklch);
+    const buttonForegroundPrimary =
+        lightness >= 0.65 ? baseTokens['color-black'].name : baseTokens['color-white'].name;
 
     return {
         'color-background-primary-100': backgroundPrimary100,
@@ -144,13 +154,11 @@ function generateDarkModeSemanticTokens(
         'color-background-canvas-100': backgroundCanvas100,
         'color-background-canvas-200': backgroundCanvas200,
         'color-background-overlay-100': backgroundOverlay100,
+        'color-button-foreground-primary': buttonForegroundPrimary,
     };
 }
 
-/**
- * 칩 이름에서 단계 추출 (예: "color-blue-500" -> "500")
- */
 function extractStepFromChipName(chipName: string): string {
     const match = chipName.match(/(\d{3})$/);
-    return match ? match[1] : '500'; // 기본값
+    return match ? match[1] : '500';
 }

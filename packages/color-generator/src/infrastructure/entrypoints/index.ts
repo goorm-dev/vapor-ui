@@ -90,20 +90,22 @@ export function getSemanticDependentTokens(
     }
 
     // Light Mode 시맨틱 토큰 생성
-    const lightSemanticTokens = getSemanticDependentTokensUseCase(
-        lightPrimaryPalette,
-        lightCanvasPalette,
-        themeResult.lightModeTokens.backgroundCanvas,
-        themeResult.darkModeTokens.backgroundCanvas,
-    ).lightModeTokens;
+    const lightSemanticTokens = getSemanticDependentTokensUseCase({
+        primaryColorPalette: lightPrimaryPalette,
+        canvasColorPalette: lightCanvasPalette,
+        lightModeCanvas: themeResult.lightModeTokens.backgroundCanvas,
+        darkModeCanvas: themeResult.darkModeTokens.backgroundCanvas,
+        baseTokens: themeResult.baseTokens,
+    }).lightModeTokens;
 
     // Dark Mode 시맨틱 토큰 생성
-    const darkSemanticTokens = getSemanticDependentTokensUseCase(
-        darkPrimaryPalette,
-        darkCanvasPalette,
-        themeResult.lightModeTokens.backgroundCanvas,
-        themeResult.darkModeTokens.backgroundCanvas,
-    ).darkModeTokens;
+    const darkSemanticTokens = getSemanticDependentTokensUseCase({
+        primaryColorPalette: darkPrimaryPalette,
+        canvasColorPalette: darkCanvasPalette,
+        lightModeCanvas: themeResult.lightModeTokens.backgroundCanvas,
+        darkModeCanvas: themeResult.darkModeTokens.backgroundCanvas,
+        baseTokens: themeResult.baseTokens,
+    }).darkModeTokens;
 
     return {
         lightModeTokens: lightSemanticTokens,

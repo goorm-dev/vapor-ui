@@ -20,8 +20,11 @@ export type {
     OklchColor,
 } from './domain';
 
+export type { GetSemanticDependentTokensParams } from './application';
+
 export {
     DEFAULT_CONTRAST_RATIOS,
     DEFAULT_KEY_COLORS,
     DEFAULT_THEME_OPTIONS,
+    BASE_TOKENS,
 } from './application/constants';

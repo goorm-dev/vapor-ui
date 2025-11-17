@@ -26,6 +26,7 @@ export interface SemanticTokens {
     'color-background-canvas-100': string;
     'color-background-canvas-200': string;
     'color-background-overlay-100': string;
+    'color-button-foreground-primary': string;
 }
 
 /**

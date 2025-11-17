@@ -68,3 +68,19 @@ export function getNextNextStep(currentStep: string): string {
 
     return steps[currentIndex + 2];
 }
+
+/**
+ * OKLCH 문자열에서 lightness 값을 추출합니다.
+ * @param oklchString - "oklch(L C H)" 형식의 문자열 (예: "oklch(0.65 0.128 231.79)")
+ * @returns 0~1 사이의 lightness 값, 파싱 실패 시 0.5 반환
+ */
+export function extractOklchLightness(oklchString: string): number {
+    // "oklch(0.65 0.128 231.79)" -> "0.65 0.128 231.79"
+    const match = oklchString.match(/oklch\(([\d.]+)/);
+    if (!match || !match[1]) {
+        return 0.5; // 기본값
+    }
+
+    const lightness = parseFloat(match[1]);
+    return isNaN(lightness) ? 0.5 : lightness;
+}

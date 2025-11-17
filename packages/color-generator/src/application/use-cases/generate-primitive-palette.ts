@@ -1,11 +1,5 @@
-import type {
-    ColorGeneratorPort,
-    KeyColor,
-    PaletteChip,
-    ThemeOptions,
-    ThemeResult,
-} from '../../domain';
-import { DEFAULT_THEME_OPTIONS } from '../constants';
+import type { ColorGeneratorPort, KeyColor, ThemeOptions, ThemeResult } from '../../domain';
+import { BASE_TOKENS, DEFAULT_THEME_OPTIONS } from '../constants';
 import { applyBrandColorSwap, isValidHexColor } from '../utils';
 
 /**
@@ -18,13 +12,11 @@ export function generatePrimitiveColorPalette(
     colorGeneratorPort: ColorGeneratorPort,
     options: Partial<ThemeOptions> = {},
 ): ThemeResult {
-    // 1. 옵션 병합 및 검증
     const mergedOptions = {
         ...DEFAULT_THEME_OPTIONS,
         ...options,
     };
 
-    // Validation
     if (mergedOptions.brandColor && !isValidHexColor(mergedOptions.brandColor.hexcode)) {
         throw new Error(`Invalid brand color hex: ${mergedOptions.brandColor.hexcode}`);
     }
@@ -33,29 +25,18 @@ export function generatePrimitiveColorPalette(
         throw new Error(`Invalid background color hex: ${mergedOptions.backgroundColor.hexcode}`);
     }
 
-    // 2. 통합된 기준점 설정 (Critical)
     const refBg = mergedOptions.backgroundColor;
-
-    // 3. colors 배열 동적 구성
     const colors: KeyColor[] = [];
 
-    // 기본 팔레트: DEFAULT_KEY_COLORS 11개 (gray 포함) 모두 포함
-    // NOTE: brandColor 이름 충돌 방지 로직
-    // - brandColor.name이 keyColors에 존재하는 경우: keyColor를 brandColor로 대체 (중복 팔레트 방지)
-    // - 예: primaryColorName='blue'이고 brandColor.hexcode='#9c90f9'인 경우,
-    //   keyColors.blue 대신 brandColor를 사용하여 팔레트 생성
-    // - 이후 Brand Color Swap 로직이 적용되어 가장 가까운 칩을 사용자 hex로 교체
+    // brandColor 이름이 keyColors에 존재하면 대체, 아니면 추가
     Object.entries(mergedOptions.keyColors).forEach(([name, hexcode]) => {
         if (options.brandColor && options.brandColor.name === name) {
-            // brandColor로 대체 (Leonardo는 brandColor.hexcode 기반으로 팔레트 생성)
             colors.push(options.brandColor);
         } else {
             colors.push({ name, hexcode });
         }
     });
 
-    // brandColor가 제공되고, keyColors에 없는 새로운 이름인 경우 추가
-    // 예: primaryColorName='mint' (keyColors에 없는 커스텀 이름)
     if (options.brandColor) {
         const brandColorExistsInKeyColors = Object.keys(mergedOptions.keyColors).includes(
             options.brandColor.name,
@@ -65,22 +46,12 @@ export function generatePrimitiveColorPalette(
         }
     }
 
-    // backgroundColor는 Leonardo Adapter에서 자동으로 별도 팔레트로 생성되므로
-    // colors 배열에 수동으로 추가할 필요가 없습니다.
-    // Leonardo는 input.colors + input.backgroundColor로 모든 팔레트를 생성합니다.
-    // backgroundColor는 여전히 Leonardo Adapter에서 별도의 BackgroundColor로 처리되어 기준점 역할을 합니다.
-
-    // 4. Lightness 값 처리
-    // backgroundColor에 lightness가 없으면 기본값 사용
     const backgroundLightness =
         mergedOptions.backgroundColor.lightness ?? DEFAULT_THEME_OPTIONS.backgroundColor.lightness;
 
-    // TypeScript에게 backgroundLightness가 항상 정의됨을 보장
-    // DEFAULT_THEME_OPTIONS.backgroundColor.lightness는 항상 정의되어 있음
     const lightLightness = backgroundLightness!.light;
     const darkLightness = backgroundLightness!.dark;
 
-    // 5. Light Mode 팔레트 생성
     const lightModeTokens = colorGeneratorPort.generatePalette({
         colors,
         backgroundColor: refBg,
@@ -88,7 +59,6 @@ export function generatePrimitiveColorPalette(
         lightness: lightLightness,
     });
 
-    // 6. Dark Mode 팔레트 생성
     const darkModeTokens = colorGeneratorPort.generatePalette({
         colors,
         backgroundColor: refBg,
@@ -96,11 +66,9 @@ export function generatePrimitiveColorPalette(
         lightness: darkLightness,
     });
 
-    // 7. Brand Color Swap 적용 (있는 경우)
     if (options.brandColor) {
         const brandColorName = options.brandColor.name;
 
-        // Light Mode에서 브랜드 색상 팔레트 찾아서 스왑
         const lightBrandPalette = lightModeTokens.palettes.find((p) => p.name === brandColorName);
         if (lightBrandPalette) {
             const swappedLightPalette = applyBrandColorSwap(
@@ -111,7 +79,6 @@ export function generatePrimitiveColorPalette(
             lightModeTokens.palettes[index] = swappedLightPalette;
         }
 
-        // Dark Mode에서도 동일하게 적용
         const darkBrandPalette = darkModeTokens.palettes.find((p) => p.name === brandColorName);
         if (darkBrandPalette) {
             const swappedDarkPalette = applyBrandColorSwap(
@@ -123,27 +90,9 @@ export function generatePrimitiveColorPalette(
         }
     }
 
-    // 8. Base Tokens 생성 (color-white, color-black)
-    const baseTokens: Record<string, PaletteChip> = {
-        'color-white': {
-            name: 'color-white',
-            hex: '#FFFFFF',
-            oklch: 'oklch(1 0 0)',
-            deltaE: 0,
-            codeSyntax: 'vapor-color-white',
-        },
-        'color-black': {
-            name: 'color-black',
-            hex: '#000000',
-            oklch: 'oklch(0 0 0)',
-            deltaE: 0,
-            codeSyntax: 'vapor-color-black',
-        },
-    };
-
     return {
         lightModeTokens,
         darkModeTokens,
-        baseTokens,
+        baseTokens: BASE_TOKENS,
     };
 }
