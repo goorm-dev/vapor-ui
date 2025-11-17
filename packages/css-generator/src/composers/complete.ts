@@ -17,8 +17,8 @@ const generateThemeComment = (config: CompleteCSSConfig): string => {
     return `/*
  * Vapor UI Theme
  * Generated with @vapor-ui/css-generator
- * 
- * Colors: ${config.colors.primary.name} (#${config.colors.primary.color.replace('#', '')})
+ *
+ * Colors: ${config.colors.primary.name} (#${config.colors.primary.hexcode.replace('#', '')})
  * Scaling: ${config.scaling}
  * Radius: ${config.radius}
  */
@@ -33,7 +33,7 @@ export const generateCompleteCSS = (
     const resolvedOptions = { ...DEFAULT_OPTIONS, ...options };
 
     // Validate configuration
-    if (!config.colors?.primary?.color || !config.colors?.background?.color) {
+    if (!config.colors?.primary?.hexcode || !config.colors?.background?.hexcode) {
         throw new Error('Invalid color configuration: primary and background colors are required');
     }
 
