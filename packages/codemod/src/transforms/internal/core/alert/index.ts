@@ -2,9 +2,11 @@ import type { API, FileInfo, ImportSpecifier, Transform } from 'jscodeshift';
 
 import type { ComponentRenameRule } from '~/utils/import-transform';
 import {
+    buildAliasMap,
     cleanUpSourcePackage,
     collectImportSpecifiersToMove,
     createNewImportDeclaration,
+    filterSpecifiersByMap,
     mergeIntoExistingImport,
     transformSpecifier,
 } from '~/utils/import-transform';
@@ -26,25 +28,21 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    const specifiersToMove: ImportSpecifier[] = collectImportSpecifiersToMove(
-        j,
-        root,
-        SOURCE_PACKAGE,
-    );
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
+
+    // Filter only Alert-related specifiers
+    const specifiersToMove = filterSpecifiersByMap(allSpecifiers, COMPONENT_RENAME_MAP);
 
     if (specifiersToMove.length === 0) {
         return root.toSource();
     }
 
-    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, COMPONENT_RENAME_MAP);
-    const calloutLocalName =
-        transformedSpecifiers.find(
-            (spec) => spec.imported.name === COMPONENT_RENAME_MAP['Alert'].newImport,
-        )?.local?.name || COMPONENT_RENAME_MAP['Alert'].newImport;
-
     // Get the Alert's local name before transformation
     const alertLocalName =
         specifiersToMove.find((spec) => spec.imported.name === 'Alert')?.local?.name || 'Alert';
+
+    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, COMPONENT_RENAME_MAP);
+    const calloutLocalName = buildAliasMap(transformedSpecifiers).get('Callout') || 'Callout';
 
     // Transform Alert JSX elements BEFORE import changes
     root.find(j.JSXElement).forEach((path) => {

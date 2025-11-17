@@ -7,6 +7,8 @@ import type {
     ImportDefaultSpecifier,
     ImportNamespaceSpecifier,
     ImportSpecifier,
+    JSXIdentifier,
+    JSXMemberExpression,
 } from 'jscodeshift';
 
 export interface ComponentImportInfo {
@@ -529,12 +531,31 @@ export function transformJsxUsage(
             // j.jsxIdentifier('Callout.Root')는 유효하지 않습니다.
             // AST에서 'Callout.Root'는 JSXMemberExpression입니다.
             const parts = newJsxName.split('.'); // ['Callout', 'Root']
-            const newAstNode = parts
-                .map((part) => j.jsxIdentifier(part))
-                .reduce((obj, prop) => j.jsxMemberExpression(obj, prop));
+            const [first, ...rest] = parts.map((part) => j.jsxIdentifier(part));
+            const newAstNode = rest.reduce(
+                (obj, prop) => j.jsxMemberExpression(obj, prop),
+                first as JSXIdentifier | JSXMemberExpression,
+            );
 
             // <MyAlert> 노드를 <Callout.Root>로 교체
             jsxIdentifierPath.replace(newAstNode);
         }
     });
 }
+
+export const filterSpecifiersByMap = (
+    allSpecifiers: ImportSpecifier[],
+    renameMap: { [oldName: string]: ComponentRenameRule },
+): ImportSpecifier[] => {
+    const mapKeys = Object.keys(renameMap);
+    return allSpecifiers.filter((spec) => mapKeys.includes(spec.imported.name as string));
+};
+
+export const buildAliasMap = (specifiersToMove: ImportSpecifier[]): Map<string, string> => {
+    const aliasMap = new Map<string, string>();
+
+    specifiersToMove.forEach((specifier) => {
+        aliasMap.set(specifier.imported.name as string, specifier.local?.name as string);
+    });
+    return aliasMap;
+};
