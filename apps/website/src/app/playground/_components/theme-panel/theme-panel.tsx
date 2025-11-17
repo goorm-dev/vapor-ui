@@ -125,7 +125,7 @@ const ThemePanel = () => {
     }, []);
 
     return (
-        <>
+        <CustomThemeProvider>
             <div
                 id="theme-panel-anchor"
                 ref={anchorRef}
@@ -171,14 +171,12 @@ const ThemePanel = () => {
                                 data-[starting-style]:translate-x-full 
                                 data-[ending-style]:translate-x-full`}
                         >
-                            <CustomThemeProvider>
-                                <ThemePanelContent />
-                            </CustomThemeProvider>
+                            <ThemePanelContent />
                         </Popover.Popup>
                     </Popover.Positioner>
                 </Popover.Portal>
             </Popover.Root>
-        </>
+        </CustomThemeProvider>
     );
 };
 
