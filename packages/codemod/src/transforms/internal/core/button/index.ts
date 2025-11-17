@@ -15,11 +15,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(
-        j,
-        root,
-        SOURCE_PACKAGE,
-    );
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
 
     const specifiersToMove = allSpecifiers.filter((spec) => spec.imported.name === 'Button');
 

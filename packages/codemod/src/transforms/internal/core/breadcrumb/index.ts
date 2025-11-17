@@ -1,35 +1,40 @@
-import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
+import type {
+    API,
+    FileInfo,
+    ImportSpecifier,
+    JSXAttribute,
+    JSXElement,
+    Transform,
+} from 'jscodeshift';
 
 import {
-    getFinalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+    transformSpecifier,
 } from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const OLD_COMPONENT_NAME = 'Breadcrumb';
-const NEW_COMPONENT_NAME = 'Breadcrumb';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
+
+    const specifiersToMove = allSpecifiers.filter((spec) => spec.imported.name === 'Breadcrumb');
+
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    //  1. Import migration:
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+    const breadcrumbImportName =
+        specifiersToMove.find((spec) => spec.imported.name === 'Breadcrumb')?.local?.name ||
+        'Breadcrumb';
 
-    const breadcrumbImportName = getFinalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE);
+    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, {});
 
     const transformBreadcrumbItem = (item: JSXElement): JSXElement => {
         let hrefAttr: JSXAttribute | undefined;
@@ -70,14 +75,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         const linkElement = j.jsxElement(
             j.jsxOpeningElement(
                 j.jsxMemberExpression(
-                    j.jsxIdentifier(breadcrumbImportName),
+                    j.jsxIdentifier(breadcrumbImportName as string),
                     j.jsxIdentifier('Link'),
                 ),
                 linkAttrs,
             ),
             j.jsxClosingElement(
                 j.jsxMemberExpression(
-                    j.jsxIdentifier(breadcrumbImportName),
+                    j.jsxIdentifier(breadcrumbImportName as string),
                     j.jsxIdentifier('Link'),
                 ),
             ),
@@ -87,14 +92,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         return j.jsxElement(
             j.jsxOpeningElement(
                 j.jsxMemberExpression(
-                    j.jsxIdentifier(breadcrumbImportName),
+                    j.jsxIdentifier(breadcrumbImportName as string),
                     j.jsxIdentifier('Item'),
                 ),
                 otherAttrs,
             ),
             j.jsxClosingElement(
                 j.jsxMemberExpression(
-                    j.jsxIdentifier(breadcrumbImportName),
+                    j.jsxIdentifier(breadcrumbImportName as string),
                     j.jsxIdentifier('Item'),
                 ),
             ),
@@ -346,6 +351,18 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             }
         }
     });
+
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
+
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
 
     const printOptions = {
         quote: 'auto' as const,
