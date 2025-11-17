@@ -18,17 +18,16 @@ export default function SelectCustomValue() {
             <Select.Root placeholder="폰트 선택" items={fonts}>
                 <h4 className="text-sm font-medium mb-2">커스텀 값 표시</h4>
                 <Select.Trigger>
-                    <Select.Value>{renderValue}</Select.Value>
-                    <Select.TriggerIcon />
+                    <Select.ValuePrimitive>{renderValue}</Select.ValuePrimitive>
+                    <Select.TriggerIconPrimitive />
                 </Select.Trigger>
-                <Select.Content>
+                <Select.Popup>
                     {Object.entries(fonts).map(([value, label]) => (
                         <Select.Item key={value} value={value}>
                             <span style={{ fontFamily: value }}>{label}</span>
-                            <Select.ItemIndicator />
                         </Select.Item>
                     ))}
-                </Select.Content>
+                </Select.Popup>
             </Select.Root>
         </Box>
     );

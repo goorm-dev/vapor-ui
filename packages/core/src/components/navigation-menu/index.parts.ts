@@ -2,14 +2,16 @@ export {
     NavigationMenuRoot as Root,
     NavigationMenuList as List,
     NavigationMenuItem as Item,
+    NavigationMenuLink as Link,
     NavigationMenuTrigger as Trigger,
-    NavigationMenuTriggerIndicator as TriggerIndicator,
-    NavigationMenuPortal as Portal,
-    NavigationMenuPositioner as Positioner,
-    NavigationMenuPopup as Popup,
     NavigationMenuViewport as Viewport,
     NavigationMenuContent as Content,
-    NavigationMenuPanel as Panel,
-    NavigationMenuLink as Link,
-    NavigationMenuLinkItem as LinkItem,
+
+    // primitives
+    NavigationMenuTriggerPrimitive as TriggerPrimitive,
+    NavigationMenuTriggerIndicatorPrimitive as TriggerIndicatorPrimitive,
+    NavigationMenuPortalPrimitive as PortalPrimitive,
+    NavigationMenuPositionerPrimitive as PositionerPrimitive,
+    NavigationMenuPopupPrimitive as PopupPrimitive,
+    NavigationMenuViewportPrimitive as ViewportPrimitive,
 } from './navigation-menu';

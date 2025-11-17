@@ -4,10 +4,10 @@ site_name: 'Dialog - Vapor Core'
 description: 'Dialog는 페이지 위에 모달 형태로 정보를 표시하거나 작업을 수행하도록 하는 컴포넌트입니다.'
 ---
 
-<Demo name="default-dialog">
+<Demo name="dialog/default-dialog">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/default-dialog.tsx",
+    "file": "./src/components/demo/examples/dialog/default-dialog.tsx",
     "codeblock": true
 }
 ```
@@ -21,10 +21,10 @@ description: 'Dialog는 페이지 위에 모달 형태로 정보를 표시하거
 
 Dialog 사이즈는 md, lg, xl로 제공합니다.
 
-<Demo name="dialog-size">
+<Demo name="dialog/dialog-size">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/dialog-size.tsx",
+    "file": "./src/components/demo/examples/dialog/dialog-size.tsx",
     "codeblock": true
 }
 ```
@@ -34,10 +34,10 @@ Dialog 사이즈는 md, lg, xl로 제공합니다.
 
 Dialog의 모달 동작을 제어할 수 있습니다.
 
-<Demo name="dialog-modal">
+<Demo name="dialog/dialog-modal">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/dialog-modal.tsx",
+    "file": "./src/components/demo/examples/dialog/dialog-modal.tsx",
     "codeblock": true
 }
 ```
@@ -47,40 +47,14 @@ Dialog의 모달 동작을 제어할 수 있습니다.
 
 ---
 
-### Simple Usage
-
-기본적인 Dialog 사용법입니다.
-
-<Demo name="dialog-simple">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/dialog-simple.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Composition Pattern
+### Custom Usage
 
 Dialog.Root, Dialog.Trigger, Dialog.CombinedContent, Dialog.Header, Dialog.Body, Dialog.Footer를 조합한 패턴입니다.
 
-<Demo name="dialog-composition">
+<Demo name="dialog/flexible">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/dialog-composition.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Size & Modal Variants
-
-다양한 크기와 모달 설정을 조합한 예시입니다.
-
-<Demo name="dialog-variants">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/dialog-variants.tsx",
+    "file": "./src/components/demo/examples/dialog/flexible.tsx",
     "codeblock": true
 }
 ```
@@ -96,29 +70,29 @@ Dialog의 루트 컨테이너로, 다이얼로그의 상태와 동작을 관리�
 
 <ComponentPropsTable file="dialog" section="props" />
 
-### Dialog.Portal
+### Dialog.PortalPrimitive
 
 Dialog 콘텐츠를 document.body 또는 지정된 컨테이너에 렌더링합니다. 다이얼로그가 다른 요소들 위에 표시되도록 보장합니다.
 
-<ComponentPropsTable file="dialog" section="portalProps" />
+<ComponentPropsTable file="dialog" section="portalPrimitiveProps" />
 
-### Dialog.Overlay
+### Dialog.OverlayPrimitive
 
 Dialog의 배경 오버레이입니다. 다이얼로그 외부 영역을 어둡게 하고 클릭 이벤트를 처리합니다.
 
-<ComponentPropsTable file="dialog" section="overlayProps" />
+<ComponentPropsTable file="dialog" section="overlayPrimitiveProps" />
 
-### Dialog.Content
+### Dialog.PopupPrimitive
 
 Dialog의 실제 콘텐츠 영역입니다. Portal과 Overlay를 별도로 구성해야 합니다. 세밀한 제어가 필요할 때 사용합니다.
 
-<ComponentPropsTable file="dialog" section="contentProps" />
+<ComponentPropsTable file="dialog" section="popupPrimitiveProps" />
 
-### Dialog.CombinedContent
+### Dialog.Popup
 
-Portal, Overlay, Content가 통합된 편의 컴포넌트입니다. 대부분의 경우 이 컴포넌트를 사용하는 것을 권장합니다.
+`PortalPrimitive`, `OverlayPrimitive`, `PopupPrimitive`가 통합된 편의 컴포넌트입니다. 대부분의 경우 이 컴포넌트를 사용하는 것을 권장합니다.
 
-<ComponentPropsTable file="dialog" section="combinedContentProps" />
+<ComponentPropsTable file="dialog" section="popupProps" />
 
 ### Dialog.Trigger
 

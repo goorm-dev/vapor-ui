@@ -1,4 +1,3 @@
-import { createGlobalVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -6,9 +5,6 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
-
-export const textareaMinHeightVar = createGlobalVar('vapor-textarea-min-height');
-export const textareaMaxHeightVar = createGlobalVar('vapor-textarea-max-height');
 
 export const textarea = recipe({
     base: [
@@ -20,10 +16,11 @@ export const textarea = recipe({
             backgroundColor: vars.color.background.canvas,
             color: vars.color.foreground.normal[200],
             width: '100%',
-            minHeight: textareaMinHeightVar,
 
             selectors: {
-                '&:read-only': { backgroundColor: vars.color.gray['050'] },
+                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
             },
         }),
@@ -32,9 +29,7 @@ export const textarea = recipe({
     defaultVariants: { invalid: false, size: 'md', autoResize: false },
 
     variants: {
-        invalid: {
-            true: { borderColor: vars.color.border.danger },
-        },
+        invalid: { true: {}, false: {} },
         autoResize: {
             true: {
                 resize: 'none',
