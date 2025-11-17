@@ -13,7 +13,7 @@ export const SemanticColor = () => {
                     {
                         name: 'Background Primary 200',
                         variable: 'background-primary-200',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     { name: 'Background Secondary 100', variable: 'background-secondary-100' },
                     {
@@ -25,21 +25,25 @@ export const SemanticColor = () => {
                     {
                         name: 'Background Success 200',
                         variable: 'background-success-200',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     { name: 'Background Warning 100', variable: 'background-warning-100' },
                     {
                         name: 'Background Warning 200',
                         variable: 'background-warning-200',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     { name: 'Background Danger 100', variable: 'background-danger-100' },
                     {
                         name: 'Background Danger 200',
                         variable: 'background-danger-200',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
-                    { name: 'Background Hint 100', variable: 'background-hint-100' },
+                    {
+                        name: 'Background Hint 100',
+                        variable: 'background-hint-100',
+                        foreground: 'white',
+                    },
                     {
                         name: 'Background Hint 200',
                         variable: 'background-hint-200',
@@ -49,7 +53,7 @@ export const SemanticColor = () => {
                     {
                         name: 'Background Contrast 200',
                         variable: 'background-contrast-200',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     {
                         name: 'Background Canvas 100',
@@ -76,7 +80,7 @@ export const SemanticColor = () => {
                     {
                         name: 'Foreground Primary 100',
                         variable: 'foreground-primary-100',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     {
                         name: 'Foreground Primary 200',
@@ -86,7 +90,7 @@ export const SemanticColor = () => {
                     {
                         name: 'Foreground Secondary 100',
                         variable: 'foreground-secondary-100',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     {
                         name: 'Foreground Secondary 200',
@@ -96,7 +100,7 @@ export const SemanticColor = () => {
                     {
                         name: 'Foreground Success 100',
                         variable: 'foreground-success-100',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     {
                         name: 'Foreground Success 200',
@@ -106,7 +110,7 @@ export const SemanticColor = () => {
                     {
                         name: 'Foreground Warning 100',
                         variable: 'foreground-warning-100',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     {
                         name: 'Foreground Warning 200',
@@ -116,7 +120,7 @@ export const SemanticColor = () => {
                     {
                         name: 'Foreground Danger 100',
                         variable: 'foreground-danger-100',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     {
                         name: 'Foreground Danger 200',
@@ -136,12 +140,12 @@ export const SemanticColor = () => {
                     {
                         name: 'Foreground Contrast 100',
                         variable: 'foreground-contrast-100',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     {
                         name: 'Foreground Contrast 200',
                         variable: 'foreground-contrast-200',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     {
                         name: 'Foreground Normal 100',
@@ -160,20 +164,20 @@ export const SemanticColor = () => {
 
             <ColorPalette
                 colors={[
-                    { name: 'Border Primary', variable: 'border-primary', foreground: 'gray-050' },
+                    { name: 'Border Primary', variable: 'border-primary', foreground: 'white' },
                     {
                         name: 'Border Secondary',
                         variable: 'border-secondary',
                         foreground: 'gray-900',
                     },
-                    { name: 'Border Success', variable: 'border-success', foreground: 'gray-050' },
-                    { name: 'Border Warning', variable: 'border-warning', foreground: 'gray-050' },
-                    { name: 'Border Danger', variable: 'border-danger', foreground: 'gray-050' },
-                    { name: 'Border Hint', variable: 'border-hint', foreground: 'gray-050' },
+                    { name: 'Border Success', variable: 'border-success', foreground: 'white' },
+                    { name: 'Border Warning', variable: 'border-warning', foreground: 'white' },
+                    { name: 'Border Danger', variable: 'border-danger', foreground: 'white' },
+                    { name: 'Border Hint', variable: 'border-hint', foreground: 'white' },
                     {
                         name: 'Border Contrast',
                         variable: 'border-contrast',
-                        foreground: 'gray-050',
+                        foreground: 'white',
                     },
                     { name: 'Border Normal', variable: 'border-normal', foreground: 'gray-900' },
                 ]}
