@@ -22,6 +22,7 @@ export const root = recipe({
 });
 
 export const icon = recipe({
+    base: layerStyle('components', { pointerEvents: 'none' }),
     variants: {
         size: {
             sm: layerStyle('components', {
