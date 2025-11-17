@@ -4,8 +4,8 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 import { Slider } from '@base-ui-components/react/slider';
-import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { getColorLightness } from '@vapor-ui/color-generator';
+import type { ColorThemeConfig } from '@vapor-ui/css-generator';
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';
 
 import { useCustomTheme } from '~/providers/theme';
@@ -22,6 +22,8 @@ interface LightnessSliderProps {
     onValueChange: (value: number) => void;
     onValueCommitted?: (value: number) => void;
     ariaLabel: string;
+    min?: number;
+    max?: number;
 }
 
 const LightnessSlider = ({
@@ -30,6 +32,8 @@ const LightnessSlider = ({
     onValueChange,
     onValueCommitted,
     ariaLabel,
+    min = 0,
+    max = 100,
 }: LightnessSliderProps) => {
     return (
         <div className="flex-1 space-y-3">
@@ -41,8 +45,8 @@ const LightnessSlider = ({
                 value={value}
                 onValueChange={onValueChange}
                 onValueCommitted={onValueCommitted}
-                min={0}
-                max={100}
+                min={min}
+                max={max}
                 aria-label={ariaLabel}
             >
                 <Slider.Control className="box-border flex items-center w-full py-3 touch-none select-none">
@@ -101,20 +105,21 @@ const SectionColor = () => {
         selectedLightness?: number;
         selectedDarkLightness?: number;
     }) => {
-        const colorConfig: SemanticMappingConfig = {
+        const colorConfig: ColorThemeConfig = {
             primary: {
                 name: 'primary',
-                color: selectedPrimary,
+                hexcode: selectedPrimary,
             },
             background: {
                 name: 'neutral',
-                color: selectedBackground,
+                hexcode: selectedBackground,
                 lightness: {
                     light: selectedLightness,
                     dark: selectedDarkLightness,
                 },
             },
         };
+
         applyColors(colorConfig);
     };
 
@@ -125,32 +130,28 @@ const SectionColor = () => {
 
     const handleBackgroundColorChange = (color: string) => {
         setBackgroundColor(color);
-        const lightness = getColorLightness(color);
-        if (lightness !== null) {
-            setBackgroundLightness(lightness);
-        }
 
-        applyColorsToCSS({ selectedBackground: color, selectedLightness: lightness ?? 100 });
+        const actualLightness = getColorLightness(color) ?? 100;
+        const constrainedLightness = Math.max(88, actualLightness);
+
+        setBackgroundLightness(constrainedLightness);
+        applyColorsToCSS({ selectedBackground: color, selectedLightness: constrainedLightness });
     };
 
     const handleLightLightnessChange = (value: number) => {
-        const lightness = Math.min(100, Math.max(0, value));
-        setBackgroundLightness(lightness);
+        setBackgroundLightness(value);
     };
 
     const handleLightLightnessCommit = (value: number) => {
-        const lightness = Math.min(100, Math.max(0, value));
-        applyColorsToCSS({ selectedLightness: lightness });
+        applyColorsToCSS({ selectedLightness: value });
     };
 
     const handleDarkLightnessChange = (value: number) => {
-        const lightness = Math.min(100, Math.max(0, value));
-        setDarkBackgroundLightness(lightness);
+        setDarkBackgroundLightness(value);
     };
 
     const handleDarkLightnessCommit = (value: number) => {
-        const lightness = Math.min(100, Math.max(0, value));
-        applyColorsToCSS({ selectedDarkLightness: lightness });
+        applyColorsToCSS({ selectedDarkLightness: value });
     };
 
     return (
@@ -182,6 +183,8 @@ const SectionColor = () => {
                         onValueChange={handleLightLightnessChange}
                         onValueCommitted={handleLightLightnessCommit}
                         ariaLabel="Light mode background lightness"
+                        min={88}
+                        max={100}
                     />
                     <LightnessSlider
                         icon={<DarkIcon />}
@@ -189,6 +192,8 @@ const SectionColor = () => {
                         onValueChange={handleDarkLightnessChange}
                         onValueCommitted={handleDarkLightnessCommit}
                         ariaLabel="Dark mode background lightness"
+                        min={0}
+                        max={15}
                     />
                 </div>
             </PanelSectionWrapper.Contents>

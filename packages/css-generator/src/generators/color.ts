@@ -16,12 +16,18 @@ interface ColorCSSGeneratorContext {
 }
 
 const generatePaletteVariables = (
-    palettes: ThemeResult['lightModeTokens']['palettes'],
+    modeTokens: ThemeResult['lightModeTokens'],
     prefix: string,
 ) => {
     const variables: ReturnType<typeof createCSSVariable>[] = [];
 
-    palettes.forEach((palette) => {
+    // Generate backgroundCanvas token first
+    const bgCanvas = modeTokens.backgroundCanvas;
+    const bgVariableName = bgCanvas.codeSyntax.replace('vapor-', `${prefix}-`);
+    variables.push(createCSSVariable(bgVariableName, bgCanvas.hex));
+
+    // Generate palette tokens
+    modeTokens.palettes.forEach((palette) => {
         Object.values(palette.chips).forEach((chip) => {
             const variableName = chip.codeSyntax.replace('vapor-', `${prefix}-`);
             variables.push(createCSSVariable(variableName, chip.hex));
@@ -58,7 +64,7 @@ const generateRootThemeCSS = (
         variant === 'light' ? semanticTokens.lightModeTokens : semanticTokens.darkModeTokens;
 
     const properties = [
-        ...generatePaletteVariables(modeTokens.palettes, prefix),
+        ...generatePaletteVariables(modeTokens, prefix),
         ...generateSemanticVariables(semanticModeTokens, prefix),
     ];
 

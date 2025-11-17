@@ -103,11 +103,16 @@ Generates all primitive color tokens for a design system.
 - Add a custom brand palette (e.g., `{ name: 'mint', hexcode: '#00BEEF' }`)
 - Uses Brand Color Swap to preserve exact brand color at closest deltaE step
 
-**`options.backgroundColor?: { name: string, hexcode: string }`**
+**`options.backgroundColor?: { name: string, hexcode: string, lightness?: { light: number, dark: number } }`**
 
 - Customize the reference background color
-- Default: `{ name: 'gray', hexcode: '#FFFFFF' }`
+- Default: `{ name: 'gray', hexcode: '#FFFFFF', lightness: { light: 100, dark: 14 } }`
 - Automatically generates an additional palette if name is not in default colors
+- **`lightness`**: Optional lightness values for light/dark modes
+  - **Recommended ranges to prevent gamut clipping:**
+    - **Light mode: 88-100** (values < 88 may cause the 900 step to clip to `#000000`)
+    - **Dark mode: 0-15** (values > 15 may cause the 900 step to clip to `#FFFFFF`)
+  - The library accepts any lightness value; UI implementations should limit input controls to these recommended ranges
 
 **`options.contrastRatios?: Record<string, number>`**
 
@@ -218,7 +223,7 @@ Integer lightness value (0-100) or `null` if invalid
 #### Example
 
 ```typescript
-import { getColorLightness, generatePrimitiveColorPalette } from '@vapor-ui/color-generator';
+import { generatePrimitiveColorPalette, getColorLightness } from '@vapor-ui/color-generator';
 
 const userBg = '#dbe0ea';
 const lightness = getColorLightness(userBg); // 89
@@ -298,10 +303,12 @@ const theme = generatePrimitiveColorPalette({
 
 ### Gamut Clipping Prevention
 
-The lightness values are constrained to prevent color clipping:
+The lightness values should be kept within recommended ranges to prevent color clipping:
 
-- **Light mode**: 88-100 (prevents 900 step from clipping to #000)
-- **Dark mode**: 0-15 (prevents 900 step from clipping to #FFF)
+- **Light mode**: 88-100 (recommended - values < 88 may cause the 900 step to clip to #000)
+- **Dark mode**: 0-15 (recommended - values > 15 may cause the 900 step to clip to #FFF)
+
+**Note**: The library accepts any lightness value without validation. It's the responsibility of UI implementations (e.g., Figma plugin, web interfaces) to limit user input to these recommended ranges using slider controls or validation.
 
 ```typescript
 const theme = generatePrimitiveColorPalette({
@@ -309,8 +316,8 @@ const theme = generatePrimitiveColorPalette({
         name: 'gray',
         hexcode: '#FFFFFF',
         lightness: {
-            light: 95, // Valid: 88-100
-            dark: 10, // Valid: 0-15
+            light: 95, // Recommended: 88-100
+            dark: 10, // Recommended: 0-15
         },
     },
 });

@@ -6,7 +6,7 @@ import type {
     ThemeResult,
 } from '../../domain';
 import { DEFAULT_THEME_OPTIONS } from '../constants';
-import { applyBrandColorSwap, clampLightness, isValidHexColor } from '../utils';
+import { applyBrandColorSwap, isValidHexColor } from '../utils';
 
 /**
  * generatePrimitiveColorPalette Use Case
@@ -70,15 +70,15 @@ export function generatePrimitiveColorPalette(
     // Leonardo는 input.colors + input.backgroundColor로 모든 팔레트를 생성합니다.
     // backgroundColor는 여전히 Leonardo Adapter에서 별도의 BackgroundColor로 처리되어 기준점 역할을 합니다.
 
-    // 4. Lightness 값 처리 및 클리핑
+    // 4. Lightness 값 처리
     // backgroundColor에 lightness가 없으면 기본값 사용
     const backgroundLightness =
         mergedOptions.backgroundColor.lightness ?? DEFAULT_THEME_OPTIONS.backgroundColor.lightness;
 
     // TypeScript에게 backgroundLightness가 항상 정의됨을 보장
     // DEFAULT_THEME_OPTIONS.backgroundColor.lightness는 항상 정의되어 있음
-    const lightLightness = clampLightness(backgroundLightness!.light, 'light');
-    const darkLightness = clampLightness(backgroundLightness!.dark, 'dark');
+    const lightLightness = backgroundLightness!.light;
+    const darkLightness = backgroundLightness!.dark;
 
     // 5. Light Mode 팔레트 생성
     const lightModeTokens = colorGeneratorPort.generatePalette({

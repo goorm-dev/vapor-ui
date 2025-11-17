@@ -1,4 +1,3 @@
-
 export interface PerceptualUniformityMetrics {
     uniformity: string;
     lightnessRange: {
