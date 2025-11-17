@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import { Dialog, type DialogRootProps } from './dialog';
+import { Dialog } from '.';
 
 describe('Dialog', () => {
     const consoleWarnMockFunction = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -98,12 +98,12 @@ describe('Dialog', () => {
         const rendered = render(
             <Dialog.Root>
                 <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
-                <Dialog.Portal>
-                    <Dialog.Overlay data-testid={OVERLAY_TEXT} />
-                    <Dialog.Popup>
+                <Dialog.PortalPrimitive>
+                    <Dialog.OverlayPrimitive data-testid={OVERLAY_TEXT} />
+                    <Dialog.PopupPrimitive>
                         <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
-                    </Dialog.Popup>
-                </Dialog.Portal>
+                    </Dialog.PopupPrimitive>
+                </Dialog.PortalPrimitive>
             </Dialog.Root>,
         );
         const trigger = rendered.getByText(TRIGGER_TEXT);
@@ -136,13 +136,13 @@ const TITLE_TEXT = 'Dialog Title';
 const DESCRIPTION_TEXT = 'This is a description of the dialog.';
 const OVERLAY_TEXT = 'Overlay';
 
-const DialogTest = (props: DialogRootProps) => {
+const DialogTest = (props: Dialog.Root.Props) => {
     return (
         <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
-            <Dialog.Portal>
-                <Dialog.Overlay data-testid={OVERLAY_TEXT} />
-                <Dialog.Content>
+            <Dialog.PortalPrimitive>
+                <Dialog.OverlayPrimitive data-testid={OVERLAY_TEXT} />
+                <Dialog.PopupPrimitive>
                     <Dialog.Header>
                         <Dialog.Title>{TITLE_TEXT}</Dialog.Title>
                     </Dialog.Header>
@@ -152,8 +152,8 @@ const DialogTest = (props: DialogRootProps) => {
                     <Dialog.Footer>
                         <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                     </Dialog.Footer>
-                </Dialog.Content>
-            </Dialog.Portal>
+                </Dialog.PopupPrimitive>
+            </Dialog.PortalPrimitive>
         </Dialog.Root>
     );
 };
@@ -196,13 +196,13 @@ const DialogTest = (props: DialogRootProps) => {
 //     );
 // };
 
-const UndefinedDescriptionDialogTest = (props: DialogRootProps) => {
+const UndefinedDescriptionDialogTest = (props: Dialog.Root.Props) => {
     return (
         <Dialog.Root {...props}>
             <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>
-            <Dialog.Portal>
-                <Dialog.Overlay data-testid={OVERLAY_TEXT} />
-                <Dialog.Popup aria-describedby={undefined}>
+            <Dialog.PortalPrimitive>
+                <Dialog.OverlayPrimitive data-testid={OVERLAY_TEXT} />
+                <Dialog.PopupPrimitive aria-describedby={undefined}>
                     <Dialog.Header>
                         <Dialog.Title>{TITLE_TEXT}</Dialog.Title>
                     </Dialog.Header>
@@ -210,8 +210,8 @@ const UndefinedDescriptionDialogTest = (props: DialogRootProps) => {
                     <Dialog.Footer>
                         <Dialog.Close>{CLOSE_TEXT}</Dialog.Close>
                     </Dialog.Footer>
-                </Dialog.Popup>
-            </Dialog.Portal>
+                </Dialog.PopupPrimitive>
+            </Dialog.PortalPrimitive>
         </Dialog.Root>
     );
 };

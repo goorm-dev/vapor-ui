@@ -2,7 +2,7 @@ import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 
 export const gridTemplateRows = createVar({ inherits: false, syntax: '*' }, 'template-rows');
 export const gridTemplateColumns = createVar({ inherits: false, syntax: '*' }, 'template-columns');
@@ -15,7 +15,6 @@ export const root = recipe({
 
     defaultVariants: { flow: 'row' },
     variants: {
-        /** Use the flow prop to control the auto-placement algorithm of grid items */
         flow: {
             row: layerStyle('components', { gridAutoFlow: 'row' }),
             column: layerStyle('components', { gridAutoFlow: 'column' }),

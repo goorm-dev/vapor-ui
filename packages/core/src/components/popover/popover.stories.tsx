@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import type { PopoverPositionerProps, PopoverRootProps } from '.';
 import { Popover } from '.';
 import { Button } from '../button';
 import { Flex } from '../flex';
@@ -12,24 +11,24 @@ export default {
     argTypes: {},
 } satisfies Meta;
 
-export const Default: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
+export const Default: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.Props> = {
     render: (args) => (
         <Flex gap="$400" marginTop="200px" justifyContent="center" alignItems="center">
             <Popover.Root {...args}>
                 <Popover.Trigger render={<Button>Open Popover</Button>} />
 
-                <Popover.Content>
+                <Popover.Popup>
                     <Popover.Title>Notifications</Popover.Title>
                     <Popover.Description>
                         You have 3 new messages and 1 new notification.
                     </Popover.Description>
-                </Popover.Content>
+                </Popover.Popup>
             </Popover.Root>
         </Flex>
     ),
 };
 
-export const Customable: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
+export const Customable: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.Props> = {
     argTypes: {
         side: { control: 'inline-radio', options: ['top', 'right', 'bottom', 'left'] },
         sideOffset: { control: 'number' },
@@ -41,18 +40,26 @@ export const Customable: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
             <Popover.Root {...args}>
                 <Popover.Trigger render={<Button>Open Popover</Button>} />
 
-                <Popover.Content positionerProps={{ side, align, sideOffset }}>
+                <Popover.Popup
+                    positionerElement={
+                        <Popover.PositionerPrimitive
+                            side={side}
+                            align={align}
+                            sideOffset={sideOffset}
+                        />
+                    }
+                >
                     <Popover.Title>Notifications</Popover.Title>
                     <Popover.Description>
                         You have 3 new messages and 1 new notification.
                     </Popover.Description>
-                </Popover.Content>
+                </Popover.Popup>
             </Popover.Root>
         </Flex>
     ),
 };
 
-export const TestBed: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
+export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.Props> = {
     render: (args) => (
         <>
             <HStack
@@ -65,34 +72,36 @@ export const TestBed: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Left Popover</Button>} />
 
-                    <Popover.Content positionerProps={{ side: 'left' }}>
+                    <Popover.Popup positionerElement={<Popover.PositionerPrimitive side="left" />}>
                         <Popover.Title>Left Popover</Popover.Title>
                         <Popover.Description>This is a left popover content.</Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Top Popover</Button>} />
 
-                    <Popover.Content positionerProps={{ side: 'top' }}>
+                    <Popover.Popup positionerElement={<Popover.PositionerPrimitive side="top" />}>
                         <Popover.Title>Top Popover</Popover.Title>
                         <Popover.Description>This is a top popover content.</Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Bottom Popover</Button>} />
 
-                    <Popover.Content positionerProps={{ side: 'bottom' }}>
+                    <Popover.Popup
+                        positionerElement={<Popover.PositionerPrimitive side="bottom" />}
+                    >
                         <Popover.Title>Bottom Popover</Popover.Title>
                         <Popover.Description>This is a bottom popover content.</Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Right Popover</Button>} />
 
-                    <Popover.Content positionerProps={{ side: 'right' }}>
+                    <Popover.Popup positionerElement={<Popover.PositionerPrimitive side="right" />}>
                         <Popover.Title>Right Popover</Popover.Title>
                         <Popover.Description>This is a right popover content.</Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
             </HStack>
 
@@ -106,26 +115,30 @@ export const TestBed: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>End Popover</Button>} />
 
-                    <Popover.Content positionerProps={{ align: 'end' }}>
+                    <Popover.Popup positionerElement={<Popover.PositionerPrimitive align="end" />}>
                         <Popover.Title>End Popover</Popover.Title>
                         <Popover.Description>This is a end popover content.</Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Center Popover</Button>} />
 
-                    <Popover.Content positionerProps={{ align: 'center' }}>
+                    <Popover.Popup
+                        positionerElement={<Popover.PositionerPrimitive align="center" />}
+                    >
                         <Popover.Title>Center Popover</Popover.Title>
                         <Popover.Description>This is a center popover content.</Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Start Popover</Button>} />
 
-                    <Popover.Content positionerProps={{ align: 'start' }}>
+                    <Popover.Popup
+                        positionerElement={<Popover.PositionerPrimitive align="start" />}
+                    >
                         <Popover.Title>Start Popover</Popover.Title>
                         <Popover.Description>This is a start popover content.</Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
             </HStack>
 
@@ -133,24 +146,29 @@ export const TestBed: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Fliped Popover</Button>} />
 
-                    <Popover.Content positionerProps={{ side: 'left' }}>
+                    <Popover.Popup positionerElement={<Popover.PositionerPrimitive side="left" />}>
                         <Popover.Title>Fliped Popover</Popover.Title>
                         <Popover.Description>
                             This is a left popover content. But it is flipped to the right side.
                         </Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Shift Popover</Button>} />
 
-                    <Popover.Content
-                        positionerProps={{ side: 'right', collisionAvoidance: { side: 'shift' } }}
+                    <Popover.Popup
+                        positionerElement={
+                            <Popover.PositionerPrimitive
+                                side="right"
+                                collisionAvoidance={{ side: 'shift' }}
+                            />
+                        }
                     >
                         <Popover.Title>Shift Popover</Popover.Title>
                         <Popover.Description>
                             This is a left popover content. it is shifted inside.
                         </Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
             </HStack>
 
@@ -158,35 +176,39 @@ export const TestBed: StoryObj<PopoverRootProps & PopoverPositionerProps> = {
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Fliped Popover</Button>} />
 
-                    <Popover.Content
-                        positionerProps={{
-                            side: 'bottom',
-                            align: 'end',
-                            alignOffset: 100,
-                            collisionAvoidance: { align: 'flip' },
-                        }}
+                    <Popover.Popup
+                        positionerElement={
+                            <Popover.PositionerPrimitive
+                                side="bottom"
+                                align="end"
+                                alignOffset={100}
+                                collisionAvoidance={{ align: 'flip' }}
+                            />
+                        }
                     >
                         <Popover.Title>Fliped Popover</Popover.Title>
                         <Popover.Description>
                             This is a end popover content. But it is flipped to the start alignment.
                         </Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
 
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Shift Popover</Button>} />
-                    <Popover.Content
-                        positionerProps={{
-                            side: 'bottom',
-                            align: 'start',
-                            collisionAvoidance: { align: 'shift' },
-                        }}
+                    <Popover.Popup
+                        positionerElement={
+                            <Popover.PositionerPrimitive
+                                side="bottom"
+                                align="start"
+                                collisionAvoidance={{ align: 'shift' }}
+                            />
+                        }
                     >
                         <Popover.Title>Shift Popover</Popover.Title>
                         <Popover.Description>
                             This is a start popover content. But it is shifted inside.
                         </Popover.Description>
-                    </Popover.Content>
+                    </Popover.Popup>
                 </Popover.Root>
             </HStack>
         </>

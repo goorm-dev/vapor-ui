@@ -2,8 +2,8 @@ import { createVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '../utils/layer-style.css';
-import { vars } from '../vars.css';
+import { vars } from '../themes.css';
+import { layerStyle } from './layer-style.css';
 
 const ratio = createVar('opacity-ratio');
 
@@ -23,7 +23,7 @@ export const interaction = recipe({
                 opacity: 0,
                 border: 'none',
                 borderRadius: 'inherit',
-                backgroundColor: vars.color['black'],
+                backgroundColor: vars.color.gray[900],
                 pointerEvents: 'none',
 
                 width: '100%',
@@ -52,7 +52,8 @@ export const interaction = recipe({
                 selectors: {
                     '&:active::before': { opacity: calc.multiply(ratio, 2) },
                     '&:focus-visible': {
-                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal[200]}`,
+                        outline: `2px solid ${vars.color.foreground.normal[200]}`,
+                        outlineOffset: '2px',
                     },
                 },
 

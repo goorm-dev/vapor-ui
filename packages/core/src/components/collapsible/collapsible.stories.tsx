@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronDownOutlineIcon, SourcecodeIcon } from '@vapor-ui/icons';
 
+import { Collapsible } from '.';
 import { Box } from '../box';
 import { Button } from '../button';
 import { Flex } from '../flex';
@@ -10,7 +11,6 @@ import { Grid } from '../grid';
 import { HStack } from '../h-stack';
 import { IconButton } from '../icon-button';
 import { VStack } from '../v-stack';
-import { Collapsible } from './collapsible';
 
 export default {
     title: 'Collapsible',
@@ -87,7 +87,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                             render={
                                 <Button
                                     variant="fill"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     style={{ textAlign: 'start' }}
                                 >
                                     Toggle
@@ -139,7 +139,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                                     <IconButton
                                         aria-label="toggle collapsible"
                                         variant="outline"
-                                        color="secondary"
+                                        colorPalette="secondary"
                                     >
                                         <ChevronDownOutlineIcon />
                                     </IconButton>

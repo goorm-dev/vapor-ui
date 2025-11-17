@@ -1,9 +1,9 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: [
@@ -18,10 +18,9 @@ export const root = recipe({
         }),
     ],
 
-    defaultVariants: { color: 'primary' },
+    defaultVariants: { colorPalette: 'primary' },
     variants: {
-        /** Use the color prop to change the color scheme of the callout */
-        color: {
+        colorPalette: {
             primary: layerStyle('components', {
                 border: `.0625rem solid ${vars.color.border.primary}`,
                 backgroundColor: vars.color.background.primary[100],

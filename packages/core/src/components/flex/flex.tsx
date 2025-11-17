@@ -1,24 +1,23 @@
 import { forwardRef } from 'react';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Box } from '../box';
 
 type FlexVariants = { inline?: boolean };
-type FlexPrimitiveProps = VComponentProps<typeof Box>;
 
-interface FlexProps extends FlexPrimitiveProps, FlexVariants {}
+export const Flex = forwardRef<HTMLDivElement, Flex.Props>((props, ref) => {
+    const componentProps = resolveStyles(props);
+    const [{ inline }, otherProps] = createSplitProps<FlexVariants>()(componentProps, ['inline']);
 
-/**
- * Renders a flexible container with flexbox layout. Renders a <div> element with display flex.
- */
-const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {
-    const [variantProps, otherProps] = createSplitProps<FlexVariants>()(props, ['inline']);
-
-    return <Box ref={ref} display={variantProps.inline ? 'inline-flex' : 'flex'} {...otherProps} />;
+    return <Box ref={ref} display={inline ? 'inline-flex' : 'flex'} {...otherProps} />;
 });
 Flex.displayName = 'Flex';
 
-export { Flex };
-export type { FlexProps };
+export namespace Flex {
+    type FlexPrimitiveProps = VComponentProps<typeof Box>;
+
+    export interface Props extends FlexPrimitiveProps, FlexVariants {}
+}

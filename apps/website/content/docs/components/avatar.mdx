@@ -4,10 +4,10 @@ site_name: 'Avatar - Vapor Core'
 description: 'Avatar는 사용자가 설정한 프로필 이미지 혹은 텍스트를 UI상에 나타냅니다.'
 ---
 
-<Demo name="default-avatar">
+<Demo name="avatar/default-avatar">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/default-avatar.tsx",
+    "file": "./src/components/demo/examples/avatar/default-avatar.tsx",
     "codeblock": true
 }
 ```
@@ -21,10 +21,10 @@ description: 'Avatar는 사용자가 설정한 프로필 이미지 혹은 텍스
 
 Avatar 사이즈는 sm, md, lg, xl 로 제공합니다.
 
-<Demo name="avatar-size">
+<Demo name="avatar/avatar-size">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/avatar-size.tsx",
+    "file": "./src/components/demo/examples/avatar/avatar-size.tsx",
     "codeblock": true
 }
 ```
@@ -34,10 +34,10 @@ Avatar 사이즈는 sm, md, lg, xl 로 제공합니다.
 
 Avatar 모양은 circle, square 로 제공합니다.
 
-<Demo name="avatar-shape">
+<Demo name="avatar/avatar-shape">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/avatar-shape.tsx",
+    "file": "./src/components/demo/examples/avatar/avatar-shape.tsx",
     "codeblock": true
 }
 ```
@@ -47,51 +47,27 @@ Avatar 모양은 circle, square 로 제공합니다.
 
 ---
 
-### Simple Usage
+### Custom Usage
 
-Avatar.Simple을 사용한 가장 간단한 형태입니다.
+Avatar의 유연한 사용 예시입니다.
 
-<Demo name="avatar-simple">
+<Demo name="avatar/flexible">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/avatar-simple.tsx",
+    "file": "./src/components/demo/examples/avatar/flexible.tsx",
     "codeblock": true
 }
 ```
 </Demo>
-### Composition Pattern
 
-Avatar.Root, Avatar.Image, Avatar.Fallback을 조합한 패턴입니다.
-
-<Demo name="avatar-composition">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/avatar-composition.tsx",
-    "codeblock": true
-}
-```
-</Demo>
 ### Fallback Only
 
 이미지 로드 실패 시 표시되는 Fallback 텍스트나 이니셜을 사용하는 패턴입니다.
 
-<Demo name="avatar-fallback-only">
+<Demo name="avatar/avatar-fallback-only">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/avatar-fallback-only.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Size & Shape Variants
-
-다양한 크기와 모양을 조합한 예시입니다.
-
-<Demo name="avatar-variants">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/avatar-variants.tsx",
+    "file": "./src/components/demo/examples/avatar/avatar-fallback-only.tsx",
     "codeblock": true
 }
 ```
@@ -105,14 +81,14 @@ Avatar.Root, Avatar.Image, Avatar.Fallback을 조합한 패턴입니다.
 
 <NewComponentPropsTable componentName="avatar-root" />
 
-### Avatar.Image
+### Avatar.ImagePrimitive
 
-<NewComponentPropsTable componentName="avatar-image" />
+Avatar 이미지를 표시하는 컴포넌트입니다. src가 로드되지 않거나 오류가 발생할 경우 자동으로 Fallback 컴포넌트가 표시됩니다.
 
-### Avatar.Fallback
+<ComponentPropsTable file="avatar" section="imagePrimitiveProps" />
 
-<NewComponentPropsTable componentName="avatar-fallback" />
+### Avatar.FallbackPrimitive
 
-### Avatar.Simple
+이미지가 로드되지 않을 때 표시되는 대체 컴포넌트입니다. alt 속성을 기반으로 자동으로 이니셜을 생성하고, Linear Congruential Generator 알고리즘을 사용해 일관된 배경 색상을 제공합니다.
 
-<NewComponentPropsTable componentName="avatar-simple" />
+<ComponentPropsTable file="avatar" section="fallbackPrimitiveProps" />

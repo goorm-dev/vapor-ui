@@ -1,9 +1,13 @@
+import { createVar } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
+
+const borderWidth = createVar('border-width');
 
 export const root = recipe({
     base: [
@@ -17,7 +21,7 @@ export const root = recipe({
             justifyContent: 'center',
             gap: vars.size.space[100],
 
-            border: `0.0625rem solid ${vars.color.border.normal}`,
+            border: `${borderWidth} solid ${vars.color.border.normal}`,
             borderRadius: 9999,
 
             backgroundColor: vars.color.background.canvas,
@@ -26,32 +30,29 @@ export const root = recipe({
             padding: vars.size.space['000'],
 
             selectors: {
-                '&[data-checked]': {
-                    backgroundColor: vars.color.background.primary[200],
-                },
+                '&[data-checked]': { backgroundColor: vars.color.background.primary[200] },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
-                '&:disabled::before': { opacity: 0 },
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-disabled]::before': { opacity: 0 },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
 
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
+
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
+            },
+
+            vars: {
+                [borderWidth]: '0.0625rem',
             },
         }),
     ],
 
-    defaultVariants: {
-        invalid: false,
-        size: 'md',
-    },
+    defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
-        /** Use the invalid prop to indicate validation errors */
-        invalid: {
-            true: layerStyle('components', { borderColor: vars.color.border.danger }),
-        },
+        invalid: { true: {}, false: {} },
 
-        /** Use the size prop to change the size of the radio button */
         size: {
             md: layerStyle('components', {
                 width: vars.size.dimension[200],
@@ -73,8 +74,8 @@ export const indicator = layerStyle('components', {
     border: 'none',
     borderRadius: '9999px',
     backgroundColor: vars.color.white,
-    width: '50%',
-    height: '50%',
+    width: calc.subtract('50%', borderWidth),
+    height: calc.subtract('50%', borderWidth),
     selectors: {
         '&[data-readonly]': {
             backgroundColor: vars.color.foreground.hint[100],

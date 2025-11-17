@@ -1,8 +1,8 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const overlay = layerStyle('components', {
     position: 'fixed',
@@ -21,7 +21,7 @@ export const overlay = layerStyle('components', {
     },
 });
 
-export const content = recipe({
+export const popup = recipe({
     base: layerStyle('components', {
         position: 'fixed',
         top: '50%',
@@ -49,7 +49,6 @@ export const content = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
-        /** Use the size prop to change the width of the dialog */
         size: {
             md: layerStyle('components', { width: '31.25rem' }),
             lg: layerStyle('components', { width: '50rem' }),
@@ -105,4 +104,4 @@ export const footer = layerStyle('components', {
     width: '100%',
 });
 
-export type DialogContentVariants = NonNullable<RecipeVariants<typeof content>>;
+export type DialogPopupVariants = NonNullable<RecipeVariants<typeof popup>>;

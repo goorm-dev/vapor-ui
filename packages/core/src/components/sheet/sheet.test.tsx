@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import { Sheet, type SheetRootProps } from './sheet';
+import { Sheet } from '.';
 
 describe('Sheet', () => {
     const consoleWarnMockFunction = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -138,15 +138,14 @@ describe('Sheet', () => {
         const rendered = render(
             <Sheet.Root>
                 <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
-                <Sheet.Portal keepMounted>
-                    <Sheet.Overlay />
-                    <Sheet.Positioner>
-                        <Sheet.Popup data-testid="sheet-popup">
-                            <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
-                            <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
-                        </Sheet.Popup>
-                    </Sheet.Positioner>
-                </Sheet.Portal>
+
+                <Sheet.Popup
+                    data-testid="sheet-popup"
+                    portalElement={<Sheet.PortalPrimitive keepMounted />}
+                >
+                    <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
+                    <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
+                </Sheet.Popup>
             </Sheet.Root>,
         );
 
@@ -163,86 +162,40 @@ const TITLE_TEXT = 'Sheet Title';
 const DESCRIPTION_TEXT = 'This is a description of the Sheet.';
 const OVERLAY_TEXT = 'Overlay';
 
-const SheetTest = (props: SheetRootProps) => {
+const SheetTest = (props: Sheet.Root.Props) => {
     return (
         <Sheet.Root {...props}>
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
-            <Sheet.Portal>
-                <Sheet.Overlay data-testid={OVERLAY_TEXT} />
-                <Sheet.Positioner>
-                    <Sheet.Popup>
-                        <Sheet.Header>
-                            <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
-                        </Sheet.Header>
-                        <Sheet.Body>
-                            <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
-                        </Sheet.Body>
-                        <Sheet.Footer>
-                            <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
-                        </Sheet.Footer>
-                    </Sheet.Popup>
-                </Sheet.Positioner>
-            </Sheet.Portal>
+
+            <Sheet.Popup overlayElement={<Sheet.OverlayPrimitive data-testid={OVERLAY_TEXT} />}>
+                <Sheet.Header>
+                    <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
+                </Sheet.Header>
+                <Sheet.Body>
+                    <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
+                </Sheet.Body>
+                <Sheet.Footer>
+                    <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
+                </Sheet.Footer>
+            </Sheet.Popup>
         </Sheet.Root>
     );
 };
 
-// const NoTitleSheetTest = (props: SheetRootProps) => {
-//     return (
-//         <Sheet.Root {...props}>
-//             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
-//             <Sheet.Portal>
-//                 <Sheet.Overlay />
-//                 <Sheet.Content>
-//                     <Sheet.Body>
-//                         <Sheet.Description>{DESCRIPTION_TEXT}</Sheet.Description>
-//                     </Sheet.Body>
-//                     <Sheet.Footer>
-//                         <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
-//                     </Sheet.Footer>
-//                 </Sheet.Content>
-//             </Sheet.Portal>
-//         </Sheet.Root>
-//     );
-// };
-
-// const NoDescriptionSheetTest = (props: SheetRootProps) => {
-//     return (
-//         <Sheet.Root {...props}>
-//             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
-//             <Sheet.Portal>
-//                 <Sheet.Overlay />
-//                 <Sheet.Content>
-//                     <Sheet.Header>
-//                         <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
-//                     </Sheet.Header>
-//                     <Sheet.Footer>
-//                         <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
-//                     </Sheet.Footer>
-//                 </Sheet.Content>
-//             </Sheet.Portal>
-//         </Sheet.Root>
-//     );
-// };
-
-const UndefinedDescriptionSheetTest = (props: SheetRootProps) => {
+const UndefinedDescriptionSheetTest = (props: Sheet.Root.Props) => {
     return (
         <Sheet.Root {...props}>
             <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
-            <Sheet.Portal>
-                <Sheet.Overlay />
-                <Sheet.Positioner>
-                    <Sheet.Popup aria-describedby={undefined}>
-                        <Sheet.Header>
-                            <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
-                        </Sheet.Header>
 
-                        <Sheet.Footer>
-                            <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
-                        </Sheet.Footer>
-                    </Sheet.Popup>
-                </Sheet.Positioner>
-            </Sheet.Portal>
+            <Sheet.Popup aria-describedby={undefined}>
+                <Sheet.Header>
+                    <Sheet.Title>{TITLE_TEXT}</Sheet.Title>
+                </Sheet.Header>
+
+                <Sheet.Footer>
+                    <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
+                </Sheet.Footer>
+            </Sheet.Popup>
         </Sheet.Root>
     );
 };

@@ -3,13 +3,12 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     defaultVariants: { stretch: false },
     variants: {
-        /** Use the stretch prop to make the navigation menu take full width */
         stretch: {
             true: layerStyle('components', { width: '100%' }),
             false: layerStyle('components', { width: 'fit-content' }),
@@ -27,7 +26,6 @@ export const list = recipe({
 
     defaultVariants: { direction: 'horizontal' },
     variants: {
-        /** Use the direction prop to change the orientation of navigation items */
         direction: {
             horizontal: layerStyle('components', { flexDirection: 'row' }),
             vertical: layerStyle('components', { flexDirection: 'column' }),
@@ -36,10 +34,7 @@ export const list = recipe({
 });
 
 export const item = recipe({
-    variants: {
-        /** Use the stretch prop to make navigation items take full width */
-        stretch: { true: layerStyle('components', { flex: 1 }) },
-    },
+    variants: { stretch: { true: layerStyle('components', { flex: 1 }) } },
 });
 
 export const link = recipe({
@@ -61,7 +56,7 @@ export const link = recipe({
             color: vars.color.foreground.normal[100],
 
             selectors: {
-                '&[aria-current="page"]': {
+                '&[data-selected]': {
                     color: vars.color.foreground.primary[200],
                 },
 
@@ -74,7 +69,6 @@ export const link = recipe({
         size: 'md',
     },
     variants: {
-        /** Use the size prop to change the size of navigation links */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['075'],
@@ -172,13 +166,14 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const panel = layerStyle('components', {
+export const content = layerStyle('components', {
     width: '100%',
     height: '100%',
 
     paddingBlock: vars.size.space[150],
     paddingInline: vars.size.space[200],
 
+    whiteSpace: 'nowrap',
     transition: `opacity calc(${durationVar} * 0.5) ease, transform ${durationVar} ${easingVar}`,
 
     selectors: {

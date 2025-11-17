@@ -5,6 +5,7 @@ import { forwardRef } from 'react';
 import { Field as BaseField } from '@base-ui-components/react/field';
 import clsx from 'clsx';
 
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
 
 import * as styles from './field.css';
@@ -13,130 +14,109 @@ import * as styles from './field.css';
  * Field
  * -----------------------------------------------------------------------------------------------*/
 
-type FieldPrimitiveProps = VComponentProps<typeof BaseField.Root>;
-interface FieldRootProps extends FieldPrimitiveProps {}
+export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-/**
- * Provides a container for form elements with label, description, and validation messages. Renders a <div> element.
- *
- * Documentation: [Field Documentation](https://vapor-ui.goorm.io/docs/components/field)
- */
-const Root = forwardRef<HTMLDivElement, FieldRootProps>(({ className, ...props }, ref) => {
-    return <BaseField.Root ref={ref} className={clsx(styles.root, className)} {...props} />;
+    return (
+        <BaseField.Root ref={ref} className={clsx(styles.root, className)} {...componentProps} />
+    );
 });
 
-Root.displayName = 'Field.Root';
+FieldRoot.displayName = 'Field.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Label
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveLabelProps = VComponentProps<typeof BaseField.Label>;
-interface FieldLabelProps extends PrimitiveLabelProps {}
+export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-/**
- * Displays a label for the form field with automatic association. Renders a <label> element.
- */
-const Label = forwardRef<HTMLLabelElement, FieldLabelProps>(({ className, ...props }, ref) => {
-    return <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...props} />;
+    return (
+        <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...componentProps} />
+    );
 });
-Label.displayName = 'Field.Label';
+FieldLabel.displayName = 'Field.Label';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Description
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveDescriptionProps = VComponentProps<typeof BaseField.Description>;
-interface FieldDescriptionProps extends PrimitiveDescriptionProps {}
+export const FieldDescription = forwardRef<HTMLParagraphElement, FieldDescription.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
 
-/**
- * Provides additional context and instructions for the form field. Renders a <p> element.
- */
-const Description = forwardRef<HTMLParagraphElement, FieldDescriptionProps>(
-    ({ className, ...props }, ref) => {
         return (
             <BaseField.Description
-                className={clsx(styles.description, className)}
-                {...props}
                 ref={ref}
+                className={clsx(styles.description, className)}
+                {...componentProps}
             />
         );
     },
 );
-Description.displayName = 'Field.Description';
+FieldDescription.displayName = 'Field.Description';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Error
  * -----------------------------------------------------------------------------------------------*/
 
-type ErrorValidityState = Omit<
-    Parameters<BaseField.Validity.Props['children']>[0]['validity'],
-    'valid'
->;
-type ErrorMatchProps = {
-    /**
-     * Determines whether to show the error message according to the field’s ValidityState. Specifying true will always show the error message, and lets external libraries control the visibility.
-     */
-    match?: boolean | keyof ErrorValidityState;
-};
+export const FieldError = forwardRef<HTMLDivElement, FieldError.Props>((props, ref) => {
+    const { match, className, ...componentProps } = resolveStyles(props);
 
-type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
-interface FieldErrorProps extends Assign<BaseFieldErrorProps, ErrorMatchProps> {}
-
-/**
- * Displays validation error messages when field validation fails. Renders a <div> element.
- */
-const Error = forwardRef<HTMLDivElement, FieldErrorProps>(({ match, className, ...props }, ref) => {
     return (
         <BaseField.Error
             ref={ref}
             className={clsx(styles.error, className)}
-            {...props}
+            {...componentProps}
             match={match}
         />
     );
 });
-
-Error.displayName = 'Field.Error';
+FieldError.displayName = 'Field.Error';
 
 /* -------------------------------------------------------------------------------------------------
  * Field.Success
  * -----------------------------------------------------------------------------------------------*/
 
-type PrimitiveSuccessProps = Omit<VComponentProps<typeof BaseField.Error>, 'match'>;
-interface FieldSuccessProps extends PrimitiveSuccessProps {}
+export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>((props, ref) => {
+    const { match = 'valid', className, ...componentProps } = resolveStyles(props);
 
-/**
- * Displays success messages when field validation passes. Renders a <div> element.
- */
-const Success = forwardRef<HTMLDivElement, FieldSuccessProps>(({ className, ...props }, ref) => {
     return (
         <BaseField.Error
             ref={ref}
             className={clsx(styles.success, className)}
-            {...props}
-            match="valid"
+            {...componentProps}
+            match={match}
         />
     );
 });
-
-Success.displayName = 'Field.Success';
+FieldSuccess.displayName = 'Field.Success';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export {
-    Root as FieldRoot,
-    Label as FieldLabel,
-    Description as FieldDescription,
-    Error as FieldError,
-    Success as FieldSuccess,
-};
-export type {
-    FieldRootProps,
-    FieldLabelProps,
-    FieldDescriptionProps,
-    FieldErrorProps,
-    FieldSuccessProps,
-};
+export namespace FieldRoot {
+    export interface Props extends VComponentProps<typeof BaseField.Root> {}
+}
 
-export const Field = { Root, Label, Description, Error, Success };
+export namespace FieldLabel {
+    export interface Props extends VComponentProps<typeof BaseField.Label> {}
+}
+
+export namespace FieldDescription {
+    export interface Props extends VComponentProps<typeof BaseField.Description> {}
+}
+
+export namespace FieldError {
+    type ErrorValidityState = Omit<BaseField.ValidityData['state'], 'valid'>;
+    type ErrorMatchProps = { match?: boolean | keyof ErrorValidityState };
+    type BaseFieldErrorProps = VComponentProps<typeof BaseField.Error>;
+
+    export interface Props extends Assign<BaseFieldErrorProps, ErrorMatchProps> {}
+}
+
+export namespace FieldSuccess {
+    type PrimitiveSuccessProps = Omit<VComponentProps<typeof BaseField.Error>, 'match'>;
+    export interface Props extends PrimitiveSuccessProps {
+        match?: boolean | 'valid';
+    }
+}

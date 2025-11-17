@@ -4,40 +4,37 @@ import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
-type ButtonPrimitiveProps = VComponentProps<'button'>;
-interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {}
+export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+    const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [
+        'colorPalette',
+        'size',
+        'variant',
+        'stretch',
+    ]);
 
-/**
- * Triggers actions and navigation in response to user interactions. Renders a <button> element.
- *
- * Documentation: [Button Documentation](https://vapor-ui.goorm.io/docs/components/button)
- */
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ render, className, ...props }, ref) => {
-        const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(props, [
-            'color',
-            'size',
-            'variant',
-            'stretch',
-        ]);
+    const { disabled } = otherProps;
 
-        return useRender({
-            ref,
-            render: render || <button />,
-            props: {
-                'data-disabled': otherProps.disabled,
-                className: clsx(styles.root(variantsProps), className),
-                ...otherProps,
-            },
-        });
-    },
-);
+    return useRender({
+        ref,
+        state: { disabled },
+        render: render || <button />,
+        props: {
+            className: clsx(styles.root(variantsProps), className),
+            ...otherProps,
+        },
+    });
+});
 Button.displayName = 'Button';
 
-export { Button };
-export type { ButtonProps };
+export namespace Button {
+    type ButtonPrimitiveProps = VComponentProps<'button'>;
+
+    export interface Props extends ButtonPrimitiveProps, ButtonVariants {}
+}

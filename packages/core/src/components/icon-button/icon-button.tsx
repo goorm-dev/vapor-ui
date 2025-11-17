@@ -4,42 +4,47 @@ import clsx from 'clsx';
 
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
-type IconButtonPrimitiveProps = Omit<VComponentProps<typeof Button>, 'stretch'>;
-interface IconButtonProps extends IconButtonVariants, IconButtonPrimitiveProps {
-    'aria-label': string;
-}
+export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props, ref) => {
+    const {
+        'aria-label': ariaLabel,
+        className,
+        children,
+        ...componentProps
+    } = resolveStyles(props);
 
-/**
- * Triggers actions using only an icon without text labels. Renders a <button> element.
- *
- * Documentation: [IconButton Documentation](https://vapor-ui.goorm.io/docs/components/icon-button)
- */
-const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ 'aria-label': ariaLabel, className, children, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, ['shape']);
+    const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(componentProps, [
+        'shape',
+    ]);
 
-        const IconSlot = createSlot(children);
+    const { size } = otherProps;
 
-        return (
-            <Button
-                ref={ref}
-                aria-label={ariaLabel}
-                className={clsx(styles.root(variantProps), className)}
-                {...otherProps}
-                stretch={false}
-            >
-                <IconSlot aria-hidden className={styles.icon({ size: otherProps.size })} />
-            </Button>
-        );
-    },
-);
+    const IconElement = createSlot(children);
+
+    return (
+        <Button
+            ref={ref}
+            aria-label={ariaLabel}
+            className={clsx(styles.root(variantProps), className)}
+            {...otherProps}
+            stretch={false}
+        >
+            <IconElement aria-hidden className={styles.icon({ size })} />
+        </Button>
+    );
+});
 IconButton.displayName = 'IconButton';
 
-export { IconButton };
-export type { IconButtonProps };
+export namespace IconButton {
+    type IconButtonPrimitiveProps = Omit<VComponentProps<typeof Button>, 'stretch'>;
+
+    export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {
+        'aria-label': string;
+    }
+}

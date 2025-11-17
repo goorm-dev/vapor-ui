@@ -4,9 +4,9 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const trigger = recipe({
     base: [
@@ -24,17 +24,18 @@ export const trigger = recipe({
             backgroundColor: vars.color.background.surface[100],
 
             selectors: {
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
 
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
+
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
             },
         }),
     ],
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
-        /** Use the size prop to change the size of the multi-select trigger */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['100'],
@@ -53,10 +54,8 @@ export const trigger = recipe({
                 paddingInline: vars.size.space['300'],
             }),
         },
-        /** Use the invalid prop to indicate validation errors */
-        invalid: {
-            true: layerStyle('components', { borderColor: vars.color.border.danger }),
-        },
+
+        invalid: { true: {}, false: {} },
     },
 });
 
@@ -148,7 +147,11 @@ export const triggerIcon = recipe({
     },
 });
 
-export const itemIndicator = style([foregrounds({ color: 'normal-200' }), icon]);
+export const itemIndicator = style([
+    foregrounds({ color: 'normal-200' }),
+    icon,
+    { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
+]);
 
 export const positioner = layerStyle('components', {
     position: 'relative',

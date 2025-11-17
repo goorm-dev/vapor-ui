@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Text } from '.';
 import { VStack } from '../v-stack';
-import { Text } from './text';
 
 export default {
     title: 'Text',
@@ -47,6 +47,7 @@ export default {
                 'hint-200',
                 'normal-100',
                 'normal-200',
+                'white',
             ],
         },
     },

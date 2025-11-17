@@ -1,6 +1,6 @@
 {
     "name": "website",
-    "version": "0.0.8",
+    "version": "1.0.0-beta.5",
     "private": true,
     "scripts": {
         "build": "next build",
@@ -25,6 +25,8 @@
         "@vapor-ui/core": "workspace:*",
         "@vapor-ui/docs-extractor": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
+        "@vapor-ui/css-generator": "workspace:*",
+        "@vapor-ui/color-generator": "workspace:*",
         "clsx": "^2.1.1",
         "fumadocs-core": "^15.3.0",
         "fumadocs-docgen": "^3.0.0",

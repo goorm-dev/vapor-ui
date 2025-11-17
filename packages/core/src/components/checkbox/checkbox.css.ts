@@ -2,8 +2,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: [
@@ -30,30 +30,24 @@ export const root = recipe({
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
-                '&::before': {
-                    borderRadius: '0',
-                },
-                '&:disabled::before': { opacity: 0 },
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&::before': { borderRadius: '0' },
 
+                '&[data-disabled]::before': { opacity: 0 },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
+
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
             },
         }),
     ],
 
-    defaultVariants: {
-        invalid: false,
-        size: 'md',
-    },
+    defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
-        /** Use the invalid prop to mark the checkbox as invalid */
-        invalid: {
-            true: layerStyle('components', { borderColor: vars.color.border.danger }),
-        },
+        invalid: { true: {}, false: {} },
 
-        /** Use the size prop to change the size of the checkbox */
         size: {
             md: layerStyle('components', {
                 borderRadius: vars.size.borderRadius[100],
@@ -84,7 +78,6 @@ export const indicator = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
-        /** Use the size prop to change the size of the indicator */
         size: {
             md: layerStyle('components', {
                 width: vars.size.dimension[100],

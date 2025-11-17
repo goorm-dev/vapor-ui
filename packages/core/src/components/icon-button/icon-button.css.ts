@@ -1,19 +1,19 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
-    base: layerStyle('components', {
-        aspectRatio: '1 / 1',
-        padding: 0,
-        verticalAlign: 'top',
-    }),
-
+    base: [
+        layerStyle('components', {
+            aspectRatio: '1 / 1',
+            padding: 0,
+            verticalAlign: 'top',
+        }),
+    ],
     defaultVariants: { shape: 'square' },
     variants: {
-        /** Use the shape prop to change the shape of the icon button */
         shape: {
             square: {},
             circle: layerStyle('components', { borderRadius: '9999px' }),
@@ -22,9 +22,7 @@ export const root = recipe({
 });
 
 export const icon = recipe({
-    defaultVariants: { size: 'md' },
     variants: {
-        /** Use the size prop to change the size of the icon */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension[200],

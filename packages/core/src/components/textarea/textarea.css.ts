@@ -1,36 +1,27 @@
-import { createGlobalVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
-
-export const textareaMinHeightVar = createGlobalVar('vapor-textarea-min-height');
-export const textareaMaxHeightVar = createGlobalVar('vapor-textarea-max-height');
+import { vars } from '~/styles/themes.css';
 
 export const textarea = recipe({
     base: [
         interaction({ type: 'form' }),
 
         layerStyle('components', {
-            outline: 0,
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
             backgroundColor: vars.color.background.canvas,
             color: vars.color.foreground.normal[200],
             width: '100%',
-            minHeight: textareaMinHeightVar,
 
             selectors: {
-                '&:read-only': {
-                    backgroundColor: vars.color.gray['050'],
-                    resize: 'none',
-                },
-                '&::placeholder': {
-                    color: vars.color.foreground.hint[100],
-                },
+                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
+                '&::placeholder': { color: vars.color.foreground.hint[100] },
             },
         }),
     ],
@@ -38,34 +29,15 @@ export const textarea = recipe({
     defaultVariants: { invalid: false, size: 'md', autoResize: false },
 
     variants: {
-        /** Use the invalid prop to indicate validation errors */
-        invalid: {
-            true: {
-                borderColor: vars.color.border.danger,
-            },
-        },
-        /** Use the autoResize prop to enable automatic height adjustment */
+        invalid: { true: {}, false: {} },
         autoResize: {
             true: {
-                boxSizing: 'border-box',
-                minHeight: textareaMinHeightVar,
-                maxHeight: textareaMaxHeightVar,
-                overflowX: 'hidden',
-                overflowY: 'auto',
                 resize: 'none',
+                scrollbarWidth: 'auto',
                 scrollbarGutter: 'stable',
-                verticalAlign: 'top',
-
-                selectors: {
-                    '&': {
-                        scrollbarWidth: 'auto',
-                    },
-                },
             },
-            false: {},
         },
 
-        /** Use the size prop to change the size of the textarea */
         size: {
             sm: [
                 typography({ style: 'body3' }),

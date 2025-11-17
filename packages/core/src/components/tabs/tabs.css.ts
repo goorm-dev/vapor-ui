@@ -4,16 +4,15 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: layerStyle('components', { display: 'flex' }),
 
     defaultVariants: { orientation: 'horizontal' },
     variants: {
-        /** Use the orientation prop to change the layout direction of tabs */
         orientation: {
             horizontal: layerStyle('components', {
                 flexDirection: 'column',
@@ -33,9 +32,7 @@ export const list = recipe({
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
     variants: {
-        /** Use the variant prop to change the visual style of the tab list */
         variant: { line: {}, plain: {} },
-        /** Use the orientation prop to change the layout direction */
         orientation: {
             horizontal: layerStyle('components', {
                 display: 'flex',
@@ -84,7 +81,6 @@ export const trigger = recipe({
 
     defaultVariants: { size: 'md', disabled: false, orientation: 'horizontal' },
     variants: {
-        /** Use the size prop to change the size of tab triggers */
         size: {
             sm: [
                 typography({ style: 'subtitle2' }),
@@ -104,12 +100,10 @@ export const trigger = recipe({
             ],
         },
 
-        /** Use the disabled prop to disable tab triggers */
         disabled: {
             true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
         },
 
-        /** Use the orientation prop to change the layout direction */
         orientation: {
             horizontal: layerStyle('components', {
                 paddingInline: vars.size.space['050'],

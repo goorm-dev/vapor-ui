@@ -5,6 +5,7 @@ import { forwardRef } from 'react';
 import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './card.css';
@@ -13,95 +14,96 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardRootProps extends VComponentProps<'div'> {}
+export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
 
-/**
- * Displays a card container with structured layout sections. Renders a <div> element.
- *
- * Documentation: [Card Documentation](https://vapor-ui.goorm.io/docs/components/card)
- */
-const Root = forwardRef<HTMLDivElement, CardRootProps>(({ render, className, ...props }, ref) => {
     return useRender({
         ref,
         render: render || <div />,
         props: {
             className: clsx(styles.root, className),
-            ...props,
+            ...componentProps,
         },
     });
 });
-Root.displayName = 'Card';
+CardRoot.displayName = 'Card.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardHeaderProps extends VComponentProps<'div'> {}
+export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
 
-/**
- * Displays the header section of a card with title or meta information. Renders a <div> element.
- */
-const Header = forwardRef<HTMLDivElement, CardHeaderProps>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <div />,
-            props: {
-                className: clsx(styles.header, className),
-                ...props,
-            },
-        });
-    },
-);
-Header.displayName = 'Card.Header';
+    return useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.header, className),
+            ...componentProps,
+        },
+    });
+});
+CardHeader.displayName = 'Card.Header';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardBodyProps extends VComponentProps<'div'> {}
+export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
 
-/**
- * Displays the main content area of a card. Renders a <div> element.
- */
-const Body = forwardRef<HTMLDivElement, CardBodyProps>(({ render, className, ...props }, ref) => {
     return useRender({
         ref,
         render: render || <div />,
         props: {
             className: clsx(styles.body, className),
-            ...props,
+            ...componentProps,
         },
     });
 });
-Body.displayName = 'Card.Body';
+CardBody.displayName = 'Card.Body';
 
 /* -------------------------------------------------------------------------------------------------
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-interface CardFooterProps extends VComponentProps<'div'> {}
+export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
 
-/**
- * Displays the footer section of a card with actions or additional information. Renders a <div> element.
- */
-const Footer = forwardRef<HTMLDivElement, CardFooterProps>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <div />,
-            props: {
-                className: clsx(styles.footer, className),
-                ...props,
-            },
-        });
-    },
-);
-Footer.displayName = 'Card.Footer';
+    return useRender({
+        ref,
+        render: render || <div />,
+        props: {
+            className: clsx(styles.footer, className),
+            ...componentProps,
+        },
+    });
+});
+CardFooter.displayName = 'Card.Footer';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as CardRoot, Header as CardHeader, Body as CardBody, Footer as CardFooter };
-export type { CardRootProps, CardHeaderProps, CardBodyProps, CardFooterProps };
+export namespace CardRoot {
+    type RootPrimitiveProps = VComponentProps<'div'>;
 
-export const Card = { Root, Header, Body, Footer };
+    export interface Props extends RootPrimitiveProps {}
+}
+
+export namespace CardHeader {
+    type HeaderPrimitiveProps = VComponentProps<'div'>;
+
+    export interface Props extends HeaderPrimitiveProps {}
+}
+
+export namespace CardBody {
+    type BodyPrimitiveProps = VComponentProps<'div'>;
+
+    export interface Props extends BodyPrimitiveProps {}
+}
+
+export namespace CardFooter {
+    type FooterPrimitiveProps = VComponentProps<'div'>;
+
+    export interface Props extends FooterPrimitiveProps {}
+}

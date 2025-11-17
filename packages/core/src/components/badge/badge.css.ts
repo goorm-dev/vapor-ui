@@ -1,8 +1,8 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: layerStyle('components', {
@@ -11,10 +11,9 @@ export const root = recipe({
         justifyContent: 'center',
     }),
 
-    defaultVariants: { color: 'primary', size: 'md', shape: 'square' },
+    defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
-        /** Use the color prop to change the color scheme of the badge */
-        color: {
+        colorPalette: {
             primary: layerStyle('components', {
                 color: vars.color.foreground.primary[200],
                 backgroundColor: vars.color.background.primary[100],
@@ -41,7 +40,6 @@ export const root = recipe({
             }),
         },
 
-        /** Use the shape prop to change the shape of the badge */
         shape: {
             square: layerStyle('components', {
                 borderRadius: vars.size.borderRadius['300'],
@@ -51,7 +49,6 @@ export const root = recipe({
             }),
         },
 
-        /** Use the size prop to change the size of the badge */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['025'],

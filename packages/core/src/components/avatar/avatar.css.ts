@@ -2,8 +2,8 @@ import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 const radii = createVar('border-radius');
 
@@ -22,9 +22,6 @@ export const root = recipe({
 
     defaultVariants: { size: 'md', shape: 'square' },
     variants: {
-        /**
-         * Use the size prop to change the size of the avatar
-         */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension[300],
@@ -47,10 +44,6 @@ export const root = recipe({
                 vars: { [radii]: vars.size.borderRadius[400] },
             }),
         },
-
-        /**
-         * Use the shape prop to change the shape of the avatar
-         */
         shape: {
             square: layerStyle('components', { borderRadius: radii }),
             circle: layerStyle('components', { borderRadius: '50%' }),
@@ -72,6 +65,7 @@ export const fallback = recipe({
         color: vars.color.button.foreground.primary,
     }),
 
+    defaultVariants: { size: 'md' },
     variants: {
         size: {
             sm: layerStyle('components', {

@@ -1,22 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CheckboxIcon, CloseOutlineIcon } from '@vapor-ui/icons';
 
+import { Callout } from '.';
 import { Flex } from '../flex';
-import type { CalloutRootProps } from './callout';
-import { Callout } from './callout';
 
 export default {
     title: 'Callout',
     component: Callout.Root,
     argTypes: {
-        color: {
+        colorPalette: {
             control: 'inline-radio',
             options: ['primary', 'success', 'warning', 'danger', 'hint', 'contrast'],
         },
     },
-} satisfies Meta<CalloutRootProps>;
+} satisfies Meta<typeof Callout.Root>;
 
-type Story = StoryObj<CalloutRootProps>;
+type Story = StoryObj<typeof Callout.Root>;
 
 export const Default: Story = {
     render: (args) => <Callout.Root {...args}>Anyone can develop</Callout.Root>,
@@ -25,20 +24,20 @@ export const Default: Story = {
 export const TestBed: Story = {
     render: () => (
         <Flex style={{ flexDirection: 'column', gap: 'var(--vapor-size-dimension-150)' }}>
-            <Callout.Root color="primary">Anyone can develop</Callout.Root>
-            <Callout.Root color="success">Anyone can develop</Callout.Root>
-            <Callout.Root color="warning">Anyone can develop</Callout.Root>
-            <Callout.Root color="danger">Anyone can develop</Callout.Root>
-            <Callout.Root color="hint">Anyone can develop</Callout.Root>
-            <Callout.Root color="contrast">Anyone can develop</Callout.Root>
+            <Callout.Root colorPalette="primary">Anyone can develop</Callout.Root>
+            <Callout.Root colorPalette="success">Anyone can develop</Callout.Root>
+            <Callout.Root colorPalette="warning">Anyone can develop</Callout.Root>
+            <Callout.Root colorPalette="danger">Anyone can develop</Callout.Root>
+            <Callout.Root colorPalette="hint">Anyone can develop</Callout.Root>
+            <Callout.Root colorPalette="contrast">Anyone can develop</Callout.Root>
 
-            <Callout.Root color="success">
+            <Callout.Root colorPalette="success">
                 <Callout.Icon>
                     <CheckboxIcon />
                 </Callout.Icon>
                 Success operation completed
             </Callout.Root>
-            <Callout.Root color="danger">
+            <Callout.Root colorPalette="danger">
                 <Callout.Icon>
                     <CloseOutlineIcon />
                 </Callout.Icon>

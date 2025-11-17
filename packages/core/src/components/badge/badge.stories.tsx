@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Badge } from './badge';
+import { Badge } from '.';
 
 export default {
     title: 'Badge',
     argTypes: {
-        color: {
+        colorPalette: {
             control: 'inline-radio',
             options: ['primary', 'success', 'warning', 'danger', 'contrast', 'hint'],
         },

@@ -5,6 +5,7 @@ import { forwardRef } from 'react';
 import { Collapsible as BaseCollapsible } from '@base-ui-components/react';
 import clsx from 'clsx';
 
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './collapsible.css';
@@ -13,54 +14,60 @@ import * as styles from './collapsible.css';
  * Collapsible.Root
  * -----------------------------------------------------------------------------------------------*/
 
-interface CollapsibleRootProps extends VComponentProps<typeof BaseCollapsible.Root> {}
+export const CollapsibleRoot = forwardRef<HTMLDivElement, CollapsibleRoot.Props>((props, ref) => {
+    const componentProps = resolveStyles(props);
 
-/**
- * Provides a collapsible container that can show or hide content. Renders a <div> element.
- *
- * Documentation: [Collapsible Documentation](https://vapor-ui.goorm.io/docs/components/collapsible)
- */
-const Root = forwardRef<HTMLDivElement, CollapsibleRootProps>((props, ref) => {
-    return <BaseCollapsible.Root ref={ref} {...props} />;
+    return <BaseCollapsible.Root ref={ref} {...componentProps} />;
 });
-Root.displayName = 'Collapsible.Root';
+CollapsibleRoot.displayName = 'Collapsible.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Collapsible.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-interface CollapsibleTriggerProps extends VComponentProps<typeof BaseCollapsible.Trigger> {}
+export const CollapsibleTrigger = forwardRef<HTMLButtonElement, CollapsibleTrigger.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
 
-/**
- * Toggles the collapsible panel's open/closed state when activated. Renders a <button> element.
- */
-const Trigger = forwardRef<HTMLButtonElement, CollapsibleTriggerProps>((props, ref) => {
-    return <BaseCollapsible.Trigger ref={ref} {...props} />;
-});
-Trigger.displayName = 'Collapsible.Trigger';
+        return <BaseCollapsible.Trigger ref={ref} {...componentProps} />;
+    },
+);
+CollapsibleTrigger.displayName = 'Collapsible.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * Collapsible.Panel
  * -----------------------------------------------------------------------------------------------*/
 
-interface CollapsiblePanelProps extends VComponentProps<typeof BaseCollapsible.Panel> {}
+export const CollapsiblePanel = forwardRef<HTMLDivElement, CollapsiblePanel.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-/**
- * Contains the collapsible content that can be shown or hidden. Renders a <div> element.
- */
-const Panel = forwardRef<HTMLDivElement, CollapsiblePanelProps>(({ className, ...props }, ref) => {
-    return <BaseCollapsible.Panel ref={ref} className={clsx(styles.panel, className)} {...props} />;
+    return (
+        <BaseCollapsible.Panel
+            ref={ref}
+            className={clsx(styles.panel, className)}
+            {...componentProps}
+        />
+    );
 });
-Panel.displayName = 'Collapsible.Panel';
+CollapsiblePanel.displayName = 'Collapsible.Panel';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Root as CollapsibleRoot, Trigger as CollapsibleTrigger, Panel as CollapsiblePanel };
+export namespace CollapsibleRoot {
+    type PrimitiveRootProps = VComponentProps<typeof BaseCollapsible.Root>;
 
-export type { CollapsibleRootProps, CollapsibleTriggerProps, CollapsiblePanelProps };
+    export interface Props extends PrimitiveRootProps {}
+    export type ChangeEventDetails = BaseCollapsible.Root.ChangeEventDetails;
+}
 
-export const Collapsible = {
-    Root,
-    Trigger,
-    Panel,
-};
+export namespace CollapsibleTrigger {
+    export type PrimitiveTriggerProps = VComponentProps<typeof BaseCollapsible.Trigger>;
+
+    export interface Props extends PrimitiveTriggerProps {}
+}
+
+export namespace CollapsiblePanel {
+    export type PrimitivePanelProps = VComponentProps<typeof BaseCollapsible.Panel>;
+
+    export interface Props extends PrimitivePanelProps {}
+}

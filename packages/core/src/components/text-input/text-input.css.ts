@@ -2,8 +2,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: [
@@ -19,8 +19,9 @@ export const root = recipe({
             color: vars.color.foreground.normal[200],
 
             selectors: {
-                '&:read-only': { backgroundColor: vars.color.gray['200'] },
-                '&:disabled': { pointerEvents: 'none', opacity: 0.32 },
+                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
@@ -30,14 +31,8 @@ export const root = recipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
-        /** Use the invalid prop to indicate validation errors */
-        invalid: {
-            true: layerStyle('components', {
-                borderColor: vars.color.border.danger,
-            }),
-        },
+        invalid: { true: {}, false: {} },
 
-        /** Use the size prop to change the size of the text input */
         size: {
             sm: layerStyle('components', {
                 paddingInline: vars.size.space[100],

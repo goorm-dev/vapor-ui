@@ -1,9 +1,9 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 export const list = layerStyle('components', {
     display: 'inline-flex',
@@ -18,7 +18,6 @@ export const item = layerStyle('components', {
 export const link = recipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
-        /** Use the size prop to change the size of the breadcrumb */
         size: {
             sm: typography({ style: 'body4' }),
             md: typography({ style: 'body3' }),
@@ -60,8 +59,8 @@ export const icon = recipe({
         justifyContent: 'center',
     }),
 
+    defaultVariants: { size: 'md' },
     variants: {
-        /** Use the size prop to change the size of icons */
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },
             md: { width: vars.size.dimension[200], height: vars.size.dimension[200] },
