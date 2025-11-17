@@ -20,6 +20,7 @@ export function createComponentInfo(
     symbol: ts.Symbol,
     type: ts.Type,
     sourceFile: ts.SourceFile,
+    excludeSprinkles?: boolean,
 ): ComponentTypeInfo[] | undefined {
     // Check if it's a React component
     if (!isReactReturnType(type, checker)) {
@@ -31,7 +32,9 @@ export function createComponentInfo(
 
     // Extract props
     const propsType = extractPropsType(checker, type);
-    const props = propsType ? extractProps(checker, program, propsType, sourceFile) : [];
+    const props = propsType
+        ? extractProps(checker, program, propsType, sourceFile, excludeSprinkles)
+        : [];
 
     // Extract display name and default element
     const displayName = extractDisplayName(symbol);

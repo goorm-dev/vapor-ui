@@ -22,11 +22,6 @@ export function processExportSpecifier(
     checker: ts.TypeChecker,
     exportDeclaration: ts.ExportSpecifier,
 ): { targetSymbol: ts.Symbol; type: ts.Type } | undefined {
-    // Skip re-exports e.g., export { Button } from './Button';
-    if (isReExport(exportDeclaration)) {
-        return;
-    }
-
     const targetSymbol = checker.getExportSpecifierLocalTargetSymbol(exportDeclaration);
 
     if (!targetSymbol) {

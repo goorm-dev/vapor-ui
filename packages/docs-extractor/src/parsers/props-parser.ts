@@ -51,6 +51,7 @@ export function extractProps(
     program: ts.Program,
     propsType: ts.Type,
     sourceFile: ts.SourceFile,
+    excludeSprinkles?: boolean,
 ): PropInfo[] {
     const props: PropInfo[] = [];
     const properties = propsType.getProperties();
@@ -59,7 +60,7 @@ export function extractProps(
         const propName = prop.getName();
 
         // Only include props from allowed sources (component files, Base UI, Vanilla Extract)
-        if (!shouldIncludeExternalProp(prop, checker, sourceFile)) {
+        if (!shouldIncludeExternalProp(prop, checker, sourceFile, excludeSprinkles)) {
             return;
         }
 

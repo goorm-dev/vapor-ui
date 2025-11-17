@@ -18,6 +18,7 @@ export function handleExportSpecifier(
     exportDeclaration: ts.ExportSpecifier,
     exportSymbol: ts.Symbol,
     sourceFile: ts.SourceFile,
+    excludeSprinkles?: boolean,
 ): ComponentTypeInfo[] | undefined {
     const result = processExportSpecifier(checker, exportDeclaration);
 
@@ -26,7 +27,15 @@ export function handleExportSpecifier(
     }
 
     const { targetSymbol, type } = result;
-    return createComponentInfo(program, checker, exportSymbol.name, targetSymbol, type, sourceFile);
+    return createComponentInfo(
+        program,
+        checker,
+        exportSymbol.name,
+        targetSymbol,
+        type,
+        sourceFile,
+        excludeSprinkles,
+    );
 }
 
 /**
@@ -36,10 +45,12 @@ export const processComponentExportedSymbols = ({
     program,
     checker,
     sourceFile,
+    excludeSprinkles,
 }: {
     program: ts.Program;
     checker: ts.TypeChecker;
     sourceFile: ts.SourceFile;
+    excludeSprinkles?: boolean;
 }) => {
     let components: ComponentTypeInfo[] = [];
     const errors: string[] = [];
@@ -68,6 +79,7 @@ export const processComponentExportedSymbols = ({
                         exportDeclaration,
                         symbol,
                         sourceFile,
+                        excludeSprinkles,
                     );
                     if (result) {
                         components = components.concat(result);

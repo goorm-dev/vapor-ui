@@ -21,12 +21,23 @@ export function isProjectTypeDeclaration(fileName: string): boolean {
 }
 
 /**
+ * Checks if a declaration comes from Sprinkles (rainbow-sprinkles or styles/sprinkles.css)
+ */
+export function isSprinklesDeclaration(fileName: string): boolean {
+    return (
+        fileName.includes('node_modules/rainbow-sprinkles') ||
+        fileName.includes('/styles/sprinkles.css')
+    );
+}
+
+/**
  * Handles external package prop filtering
  */
 export function shouldIncludeExternalProp(
     prop: ts.Symbol,
     checker: ts.TypeChecker,
     sourceFile: ts.SourceFile,
+    excludeSprinkles?: boolean,
 ): boolean {
     const symbol = prop.valueDeclaration
         ? checker.getSymbolAtLocation(prop.valueDeclaration)
@@ -38,6 +49,11 @@ export function shouldIncludeExternalProp(
 
     for (const declaration of symbol.declarations) {
         const { fileName: declarationFileName } = declaration.getSourceFile();
+
+        // Exclude Sprinkles props if option is enabled
+        if (excludeSprinkles && isSprinklesDeclaration(declarationFileName)) {
+            return false;
+        }
 
         // Component file itself (current source file)
         if (declarationFileName === sourceFile.fileName) {

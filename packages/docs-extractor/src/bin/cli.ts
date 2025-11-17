@@ -42,6 +42,11 @@ export function createCliCommand(runFunction: (options: RunOptions) => Promise<v
                         default: ['@base-ui-components/react:esm/index.d.ts'],
                         description:
                             'External type definition files to include (format: package:subpath)',
+                    })
+                    .option('excludeSprinkles', {
+                        type: 'boolean',
+                        default: false,
+                        description: 'Exclude Sprinkles (Vanilla Extract) props from extraction',
                     });
             },
             runFunction,
@@ -53,7 +58,7 @@ export function createCliCommand(runFunction: (options: RunOptions) => Promise<v
 
 export async function main(options: RunOptions) {
     try {
-        const { configPath, out: outputPath, files, externalTypePaths } = options;
+        const { configPath, out: outputPath, files, externalTypePaths, excludeSprinkles } = options;
 
         const configDir = path.dirname(configPath);
 
@@ -71,6 +76,7 @@ export async function main(options: RunOptions) {
             files: resolvedFiles,
             projectRoot: configDir,
             externalTypePaths,
+            excludeSprinkles,
         };
         const program = createTypeScriptProgram(extractorConfig);
         const checker = program.getTypeChecker();
@@ -88,9 +94,11 @@ export async function main(options: RunOptions) {
                     program,
                     checker,
                     sourceFile,
+                    excludeSprinkles,
                 });
 
                 for (const component of components) {
+                    console.log(component);
                     const componentData = createComponentData(component, fullPath);
                     if (componentData !== null) {
                         ensureOutputDirectory(outputPath);

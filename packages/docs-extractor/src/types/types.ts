@@ -9,6 +9,7 @@ export interface RunOptions {
     configPath: string;
     out: string;
     externalTypePaths?: string[];
+    excludeSprinkles?: boolean;
 }
 
 export interface TsConfig {
@@ -48,4 +49,5 @@ export interface TypeExtractorConfig {
     files?: string[];
     projectRoot?: string;
     externalTypePaths?: string[];
+    excludeSprinkles?: boolean;
 }
