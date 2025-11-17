@@ -8,7 +8,7 @@ import { mergeConfig } from 'vite';
 const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
-    stories: ['../../../packages/**/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    stories: ['../../../packages/**!(node_modules|dist)/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
     addons: [getAbsolutePath('@storybook/addon-docs')],
 
     core: {

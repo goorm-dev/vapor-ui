@@ -40,7 +40,7 @@ const CardWrapper = ({
                 <div className={styles.componentName}>
                     <Text typography="heading5">{name}</Text>
                     {componentType && (
-                        <Badge color="primary" size="md" shape="pill" className="gap-7">
+                        <Badge colorPalette="primary" size="md" shape="pill" className="gap-7">
                             {componentType}
                         </Badge>
                     )}

@@ -56,7 +56,7 @@ export const link = recipe({
             color: vars.color.foreground.normal[100],
 
             selectors: {
-                '&[aria-current="page"]': {
+                '&[data-selected]': {
                     color: vars.color.foreground.primary[200],
                 },
 
@@ -166,13 +166,14 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const panel = layerStyle('components', {
+export const content = layerStyle('components', {
     width: '100%',
     height: '100%',
 
     paddingBlock: vars.size.space[150],
     paddingInline: vars.size.space[200],
 
+    whiteSpace: 'nowrap',
     transition: `opacity calc(${durationVar} * 0.5) ease, transform ${durationVar} ${easingVar}`,
 
     selectors: {

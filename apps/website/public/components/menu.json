@@ -129,7 +129,7 @@
             "description": "커스텀 렌더링을 위한 요소나 함수를 설정합니다."
         }
     ],
-    "portalProps": [
+    "portalPrimitiveProps": [
         {
             "prop": "container",
             "type": ["Element", "function"],
@@ -143,7 +143,7 @@
             "description": "닫힌 상태에서도 DOM에 마운트된 상태를 유지할지 여부를 설정합니다."
         }
     ],
-    "contentProps": [
+    "popupProps": [
         {
             "prop": "className",
             "type": ["string"],
@@ -427,7 +427,7 @@
             "description": "서브메뉴 트리거 아이템의 콘텐츠입니다. ChevronRightOutlineIcon이 자동으로 추가됩니다."
         }
     ],
-    "submenuContentProps": [
+    "submenuPopupProps": [
         {
             "prop": "className",
             "type": ["string"],

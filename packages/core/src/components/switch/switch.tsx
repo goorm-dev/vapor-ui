@@ -8,6 +8,8 @@ import clsx from 'clsx';
 import { createContext } from '~/libs/create-context';
 import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import type { ControlVariants } from './switch.css';
@@ -26,51 +28,67 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>(
-    ({ className, children: childrenProp, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(props, ['size']);
+export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props, ref) => {
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
+        'size',
+        'invalid',
+    ]);
 
-        const { size } = variantProps;
+    const { size, invalid } = variantProps;
+    const { required } = otherProps;
 
-        const ThumbElement = useMemo(() => createSlot(<SwitchThumb />), []);
-        const children = childrenProp || <ThumbElement />;
+    const dataAttrs = createDataAttributes({ invalid });
 
-        return (
-            <SwitchProvider value={variantProps}>
-                <BaseSwitch.Root
-                    ref={ref}
-                    className={clsx(styles.control({ size }), className)}
-                    {...otherProps}
-                >
-                    {children}
-                </BaseSwitch.Root>
-            </SwitchProvider>
-        );
-    },
-);
+    const ThumbElement = useMemo(() => createSlot(<SwitchThumbPrimitive />), []);
+    const children = childrenProp || <ThumbElement />;
+
+    return (
+        <SwitchProvider value={variantProps}>
+            <BaseSwitch.Root
+                ref={ref}
+                aria-required={required || undefined}
+                aria-invalid={invalid || undefined}
+                className={clsx(styles.control({ size }), className)}
+                {...dataAttrs}
+                {...otherProps}
+            >
+                {children}
+            </BaseSwitch.Root>
+        </SwitchProvider>
+    );
+});
 SwitchRoot.displayName = 'Switch.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Switch.Thumb
+ * Switch.ThumbPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const SwitchThumb = forwardRef<HTMLDivElement, SwitchThumb.Props>(
-    ({ className, ...props }, ref) => {
+export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimitive.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
         const { size } = useSwitchContext();
 
-        return <BaseSwitch.Thumb ref={ref} className={styles.indicator({ size })} {...props} />;
+        return (
+            <BaseSwitch.Thumb
+                ref={ref}
+                className={styles.indicator({ size })}
+                {...componentProps}
+            />
+        );
     },
 );
-SwitchThumb.displayName = 'Switch.Thumb';
+SwitchThumbPrimitive.displayName = 'Switch.ThumbPrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace SwitchRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseSwitch.Root>;
     export interface Props extends RootPrimitiveProps, SwitchSharedProps {}
+    export type ChangeEventDetails = BaseSwitch.Root.ChangeEventDetails;
 }
 
-export namespace SwitchThumb {
+export namespace SwitchThumbPrimitive {
     type ThumbPrimitiveProps = VComponentProps<typeof BaseSwitch.Thumb>;
     export interface Props extends ThumbPrimitiveProps {}
 }

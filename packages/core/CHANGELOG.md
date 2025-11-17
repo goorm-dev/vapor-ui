@@ -1,5 +1,49 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.5
+
+### Minor Changes
+
+- 27c0ba9: export component with namespace
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+- c9e4b68: migrate to base-ui beta v4
+- 220cda2: change components interface
+- 216866e: feat: add new component `RadioCard`
+- 6c02d6f: unreflected content revisions
+- f17650a: add uilitiy props
+- b581b9f: add `Form` component
+- 7928a67: add subcomponent props to `Content`
+- e12f4c4: split label into vertical/horizontal
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+- 98170c1: Add white foreground variant to foreground recipe
+
+### Patch Changes
+
+- abeac6d: Unified the Cascade Layer into a single layer `vapor`
+- 3819233: Fix checkbox borderRadius sync error
+- ee61a32: Synchronize the aria-labelledby with the recieved id prop
+- df5cb78: separate `readonly` from `disabled`
+- 707f705: feat: update color tokens
+- f0f643b: feat: Remove Font Loading from CSS Build
+- 43cfefb: feat: add font banner
+- 74dc538: ### Features
+    - **Enabled CSS Tree-shaking:** Component CSS is now imported by its corresponding JS file instead of being in the global `styles.css`. This significantly reduces your production bundle size by only including the CSS for components you actually use.
+
+    ### Bug Fixes
+    - Fixed a CSS dependency order issue where `IconButton` styles loaded before `Button` styles, causing incorrect style inheritance.
+
+- 6f8de5b: correct padding-inline for sm size from 4px(050) to 8px(100)
+- 4df6bcf: resolved interactions layer's color in dark mode
+- 25c235e: adjust indicator size to account for border
+- 716c1d6: restore reset css
+- 9a3c4f6: fix(RadioGroup): Resolving orientation style errors
+- d68304a: fix(text-input): add component layer
+- Updated dependencies [8217749]
+- Updated dependencies [402284e]
+- Updated dependencies [fd4acaa]
+- Updated dependencies [f2950ee]
+    - @vapor-ui/icons@0.5.0
+
 ## 0.6.0
 
 ### Minor Changes
