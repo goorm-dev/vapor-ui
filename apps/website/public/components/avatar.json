@@ -49,7 +49,7 @@
             "description": "아바타의 최상위 요소에 적용할 CSS 클래스명입니다. 함수 형태로 전달하면 상태에 따른 동적 클래스 적용이 가능합니다."
         }
     ],
-    "imageProps": [
+    "imagePrimitiveProps": [
         {
             "prop": "render",
             "type": ["ReactElement", "function"],
@@ -81,7 +81,7 @@
             "description": "이미지에 적용할 CSS 클래스입니다. 함수 형태로 전달하면 상태에 따른 동적 클래스 적용이 가능합니다."
         }
     ],
-    "fallbackProps": [
+    "fallbackPrimitiveProps": [
         {
             "prop": "render",
             "type": ["ReactElement", "function"],
@@ -105,44 +105,6 @@
             "type": ["string", "function"],
             "default": "-",
             "description": "폴백에 적용할 CSS 클래스입니다. 함수 형태로 전달하면 상태에 따른 동적 클래스 적용이 가능합니다."
-        }
-    ],
-    "simpleProps": [
-        {
-            "prop": "size",
-            "type": ["sm", "md", "lg", "xl"],
-            "default": "md",
-            "description": "아바타 컴포넌트의 크기를 조절합니다."
-        },
-        {
-            "prop": "shape",
-            "type": ["circle", "square"],
-            "default": "square",
-            "description": "아바타 컴포넌트의 모양을 조절합니다."
-        },
-        {
-            "prop": "src",
-            "type": ["string"],
-            "default": "-",
-            "description": "아바타 이미지의 소스 URL입니다."
-        },
-        {
-            "prop": "alt",
-            "type": ["string"],
-            "default": "-",
-            "description": "아바타 이미지의 대체 텍스트입니다."
-        },
-        {
-            "prop": "delay",
-            "type": ["number"],
-            "default": "-",
-            "description": "폴백을 표시하기 전의 지연 시간(밀리초)입니다."
-        },
-        {
-            "prop": "className",
-            "type": ["string"],
-            "default": "-",
-            "description": "적용할 추가 CSS 클래스입니다."
         }
     ]
 }

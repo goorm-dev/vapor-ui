@@ -5,7 +5,7 @@ import { Box } from '../box';
 import { Grid } from '../grid';
 
 type SelectProps = Select.Root.Props &
-    Pick<Select.Positioner.Props, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
+    Pick<Select.PositionerPrimitive.Props, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
 
 export default {
     title: 'Select',
@@ -18,6 +18,7 @@ export default {
         invalid: { control: 'boolean' },
         disabled: { control: 'boolean' },
         readOnly: { control: 'boolean' },
+        required: { control: 'boolean' },
         side: {
             control: { type: 'inline-radio' },
             options: ['top', 'right', 'bottom', 'left'],
@@ -35,33 +36,26 @@ export const Default: StoryObj<SelectProps> = {
     render: ({ side, align, sideOffset, alignOffset, ...args }) => (
         <Box margin="200px">
             <Select.Root placeholder="Select Font" {...args}>
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
+                <Select.Trigger />
 
-                <Select.Content positionerProps={{ side, align, sideOffset, alignOffset }}>
+                <Select.Popup
+                    positionerElement={
+                        <Select.PositionerPrimitive
+                            side={side}
+                            align={align}
+                            sideOffset={sideOffset}
+                            alignOffset={alignOffset}
+                        />
+                    }
+                >
                     <Select.Group>
                         <Select.GroupLabel>Font</Select.GroupLabel>
-                        <Select.Item value="sans">
-                            Sans-serif
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        <Select.Item value="serif">
-                            Serif
-                            <Select.ItemIndicator />
-                        </Select.Item>
-
-                        <Select.Item value="mono">
-                            Monospace
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        <Select.Item value="cursive">
-                            Cursive
-                            <Select.ItemIndicator />
-                        </Select.Item>
+                        <Select.Item value="sans">Sans-serif</Select.Item>
+                        <Select.Item value="serif">Serif</Select.Item>
+                        <Select.Item value="mono">Monospace</Select.Item>
+                        <Select.Item value="cursive">Cursive</Select.Item>
                     </Select.Group>
-                </Select.Content>
+                </Select.Popup>
             </Select.Root>
         </Box>
     ),
@@ -81,27 +75,37 @@ const languages = {
 };
 
 export const ObjectItems: StoryObj<typeof Select.Root> = {
-    render: (args) => (
-        <Select.Root placeholder="Select Font" items={languages} {...args}>
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
+    render: (args) => {
+        return (
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
 
-            <Select.Content>
-                <Select.Group>
-                    <Select.GroupLabel>Font</Select.GroupLabel>
-                    {Object.entries(languages).map(([value, label]) => (
-                        <Select.Item key={value} value={value}>
-                            {label}
+                    const formData = new FormData(e.currentTarget);
+                    const stringifiedFormData = new URLSearchParams(formData as never).toString();
 
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                    ))}
-                </Select.Group>
-            </Select.Content>
-        </Select.Root>
-    ),
+                    console.log(stringifiedFormData);
+                }}
+            >
+                <Select.Root placeholder="Select Font" items={languages} {...args}>
+                    <Select.Trigger />
+
+                    <Select.Popup>
+                        <Select.Group>
+                            <Select.GroupLabel>Font</Select.GroupLabel>
+                            {Object.entries(languages).map(([value, label]) => (
+                                <Select.Item key={value} value={value}>
+                                    {label}
+                                </Select.Item>
+                            ))}
+                        </Select.Group>
+                    </Select.Popup>
+                </Select.Root>
+
+                <button>submit</button>
+            </form>
+        );
+    },
 };
 
 const fonts = [
@@ -114,23 +118,18 @@ const fonts = [
 export const ArrayItems: StoryObj<typeof Select.Root> = {
     render: (args) => (
         <Select.Root placeholder="Select Font" items={fonts} {...args}>
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
+            <Select.Trigger />
 
-            <Select.Content>
+            <Select.Popup>
                 <Select.Group>
                     <Select.GroupLabel>Font</Select.GroupLabel>
                     {fonts.map((font) => (
                         <Select.Item key={font.value} value={font.value}>
                             {font.label}
-
-                            <Select.ItemIndicator />
                         </Select.Item>
                     ))}
                 </Select.Group>
-            </Select.Content>
+            </Select.Popup>
         </Select.Root>
     ),
 };
@@ -145,27 +144,19 @@ export const TestBed = {
             >
                 <Grid.Item>
                     <Select.Root placeholder="Placeholder">
-                        <Select.Trigger>
-                            <Select.Value />
-                            <Select.TriggerIcon />
-                        </Select.Trigger>
+                        <Select.Trigger />
                     </Select.Root>
                 </Grid.Item>
 
                 <Grid.Item>
                     <Select.Root placeholder="Grouped" defaultOpen>
-                        <Select.Trigger>
-                            <Select.Value />
-                            <Select.TriggerIcon />
-                        </Select.Trigger>
-                        <Select.Content>
+                        <Select.Trigger />
+                        <Select.Popup>
                             <Select.Group>
                                 <Select.GroupLabel>Font Group</Select.GroupLabel>
                                 {fonts.map((font) => (
                                     <Select.Item key={font.value} value={font.value}>
                                         {font.label}
-
-                                        <Select.ItemIndicator />
                                     </Select.Item>
                                 ))}
                             </Select.Group>
@@ -175,33 +166,26 @@ export const TestBed = {
                                 {Object.entries(languages).map(([value, label]) => (
                                     <Select.Item key={value} value={value}>
                                         {label}
-
-                                        <Select.ItemIndicator />
                                     </Select.Item>
                                 ))}
                             </Select.Group>
-                        </Select.Content>
+                        </Select.Popup>
                     </Select.Root>
                 </Grid.Item>
 
                 <Grid.Item>
                     <Select.Root placeholder="Placeholder" defaultOpen defaultValue={'mono'}>
-                        <Select.Trigger>
-                            <Select.Value />
-                            <Select.TriggerIcon />
-                        </Select.Trigger>
-                        <Select.Content>
+                        <Select.Trigger />
+                        <Select.Popup>
                             <Select.Group>
                                 <Select.GroupLabel>Font</Select.GroupLabel>
                                 {fonts.map((font) => (
                                     <Select.Item key={font.value} value={font.value}>
                                         {font.label}
-
-                                        <Select.ItemIndicator />
                                     </Select.Item>
                                 ))}
                             </Select.Group>
-                        </Select.Content>
+                        </Select.Popup>
                     </Select.Root>
                 </Grid.Item>
 
@@ -212,22 +196,18 @@ export const TestBed = {
                         items={languages}
                         defaultValue={'csharp'}
                     >
-                        <Select.Trigger>
-                            <Select.Value />
-                            <Select.TriggerIcon />
-                        </Select.Trigger>
+                        <Select.Trigger />
 
-                        <Select.Content>
+                        <Select.Popup>
                             <Select.Group>
                                 <Select.GroupLabel>Auto Label: </Select.GroupLabel>
                                 {Object.entries(languages).map(([value, label]) => (
                                     <Select.Item key={value} value={value}>
                                         {value} → {label}
-                                        <Select.ItemIndicator />
                                     </Select.Item>
                                 ))}
                             </Select.Group>
-                        </Select.Content>
+                        </Select.Popup>
                     </Select.Root>
                 </Grid.Item>
 
@@ -238,22 +218,18 @@ export const TestBed = {
                         defaultValue={'mono'}
                         defaultOpen
                     >
-                        <Select.Trigger>
-                            <Select.Value />
-                            <Select.TriggerIcon />
-                        </Select.Trigger>
+                        <Select.Trigger />
 
-                        <Select.Content>
+                        <Select.Popup>
                             <Select.Group>
                                 <Select.GroupLabel>Auto Label:</Select.GroupLabel>
                                 {fonts.map((font) => (
                                     <Select.Item key={font.value} value={font.value}>
                                         {font.value} → {font.label}
-                                        <Select.ItemIndicator />
                                     </Select.Item>
                                 ))}
                             </Select.Group>
-                        </Select.Content>
+                        </Select.Popup>
                     </Select.Root>
                 </Grid.Item>
             </Grid.Root>

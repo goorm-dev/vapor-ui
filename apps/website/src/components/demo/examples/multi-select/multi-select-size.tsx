@@ -10,63 +10,47 @@ export default function MultiSelectSize() {
     return (
         <Flex gap="$200" className="flex-wrap" width="400px">
             <MultiSelect.Root placeholder="Small" size="sm" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
+                <MultiSelect.Trigger />
+                <MultiSelect.Popup>
                     {options.map((option) => (
                         <MultiSelect.Item key={option.value} value={option.value}>
                             {option.label}
-                            <MultiSelect.ItemIndicator />
                         </MultiSelect.Item>
                     ))}
-                </MultiSelect.Content>
+                </MultiSelect.Popup>
             </MultiSelect.Root>
 
             <MultiSelect.Root placeholder="Medium" size="md" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
+                <MultiSelect.Trigger />
+                <MultiSelect.Popup>
                     {options.map((option) => (
                         <MultiSelect.Item key={option.value} value={option.value}>
                             {option.label}
-                            <MultiSelect.ItemIndicator />
                         </MultiSelect.Item>
                     ))}
-                </MultiSelect.Content>
+                </MultiSelect.Popup>
             </MultiSelect.Root>
 
             <MultiSelect.Root placeholder="Large" size="lg" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
+                <MultiSelect.Trigger />
+                <MultiSelect.Popup>
                     {options.map((option) => (
                         <MultiSelect.Item key={option.value} value={option.value}>
                             {option.label}
-                            <MultiSelect.ItemIndicator />
                         </MultiSelect.Item>
                     ))}
-                </MultiSelect.Content>
+                </MultiSelect.Popup>
             </MultiSelect.Root>
 
             <MultiSelect.Root placeholder="Extra Large" size="xl" items={options}>
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
-                <MultiSelect.Content>
+                <MultiSelect.Trigger />
+                <MultiSelect.Popup>
                     {options.map((option) => (
                         <MultiSelect.Item key={option.value} value={option.value}>
                             {option.label}
-                            <MultiSelect.ItemIndicator />
                         </MultiSelect.Item>
                     ))}
-                </MultiSelect.Content>
+                </MultiSelect.Popup>
             </MultiSelect.Root>
         </Flex>
     );

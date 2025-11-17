@@ -1,7 +1,7 @@
 {
     "props": [
         {
-            "prop": "color",
+            "prop": "colorPalette",
             "type": ["primary", "hint", "danger", "success", "warning", "contrast"],
             "default": "primary",
             "description": "배지의 색상(의미)을 설정합니다. 예컨대 success는 성공 상태를, danger는 오류 상태를 나타냅니다."
