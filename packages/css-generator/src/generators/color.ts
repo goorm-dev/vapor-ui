@@ -15,10 +15,7 @@ interface ColorCSSGeneratorContext {
     options: Required<CSSGeneratorOptions>;
 }
 
-const generatePaletteVariables = (
-    modeTokens: ThemeResult['lightModeTokens'],
-    prefix: string,
-) => {
+const generatePaletteVariables = (modeTokens: ThemeResult['lightModeTokens'], prefix: string) => {
     const variables: ReturnType<typeof createCSSVariable>[] = [];
 
     // Generate backgroundCanvas token first

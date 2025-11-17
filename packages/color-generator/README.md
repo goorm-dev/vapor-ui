@@ -109,10 +109,10 @@ Generates all primitive color tokens for a design system.
 - Default: `{ name: 'gray', hexcode: '#FFFFFF', lightness: { light: 100, dark: 14 } }`
 - Automatically generates an additional palette if name is not in default colors
 - **`lightness`**: Optional lightness values for light/dark modes
-  - **Recommended ranges to prevent gamut clipping:**
-    - **Light mode: 88-100** (values < 88 may cause the 900 step to clip to `#000000`)
-    - **Dark mode: 0-15** (values > 15 may cause the 900 step to clip to `#FFFFFF`)
-  - The library accepts any lightness value; UI implementations should limit input controls to these recommended ranges
+    - **Recommended ranges to prevent gamut clipping:**
+        - **Light mode: 88-100** (values < 88 may cause the 900 step to clip to `#000000`)
+        - **Dark mode: 0-15** (values > 15 may cause the 900 step to clip to `#FFFFFF`)
+    - The library accepts any lightness value; UI implementations should limit input controls to these recommended ranges
 
 **`options.contrastRatios?: Record<string, number>`**
 
