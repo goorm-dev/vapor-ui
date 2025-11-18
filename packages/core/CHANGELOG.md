@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 1.0.0
+
+### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+
 ## 1.0.0-beta.5
 
 ### Minor Changes
