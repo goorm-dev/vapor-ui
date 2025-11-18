@@ -109,7 +109,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                             element.closingElement &&
                             element.closingElement.name.type === 'JSXMemberExpression'
                         ) {
-                            element.closingElement.name.property = j.jsxIdentifier('PopupPrimitive');
+                            element.closingElement.name.property =
+                                j.jsxIdentifier('PopupPrimitive');
                         }
                     }
                 }
@@ -124,7 +125,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             transformAsChildToRender(j, element);
         }
     });
-
 
     const targetImport = root.find(j.ImportDeclaration, {
         source: { value: TARGET_PACKAGE },
