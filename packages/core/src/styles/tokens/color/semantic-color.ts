@@ -35,7 +35,7 @@ export const LIGHT_SEMANTIC_COLORS = {
             '200': LIGHT_BASIC_COLORS.gray['050'],
         },
         overlay: {
-            '100': BASE_BASIC_COLORS.white,
+            '100': LIGHT_BASIC_COLORS.background.canvas,
         },
     },
     foreground: {
