@@ -151,6 +151,7 @@ export const ColorSystemTab = () => {
 
         try {
             const css = generateColorCSS({
+                keyColors,
                 primary: { name: primaryColorName, hexcode: primaryColorHex },
                 background: {
                     name: backgroundName,
