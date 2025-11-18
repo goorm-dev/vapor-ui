@@ -58,7 +58,7 @@ export const item = style([
 
         borderRadius: vars.size.borderRadius['300'],
         cursor: 'pointer',
-        paddingRight: vars.size.space['075'],
+        paddingRight: vars.size.space['150'],
         paddingLeft: vars.size.space['250'],
         paddingBlock: vars.size.space['050'],
 
