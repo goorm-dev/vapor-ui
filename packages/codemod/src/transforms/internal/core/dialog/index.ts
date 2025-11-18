@@ -1,19 +1,11 @@
-import type {
-    API,
-    FileInfo,
-    JSXElement,
-    JSXExpressionContainer,
-    JSXFragment,
-    JSXSpreadChild,
-    JSXText,
-    Transform,
-} from 'jscodeshift';
+import type { API, FileInfo, ImportSpecifier, Transform } from 'jscodeshift';
 
 import {
-    getFinalImportName,
-    getLocalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+    transformSpecifier,
 } from '~/utils/import-transform';
 import {
     transformAsChildToRender,
@@ -24,32 +16,25 @@ import {
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const OLD_COMPONENT_NAME = 'Dialog';
-const NEW_COMPONENT_NAME = 'Dialog';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
+
+    const specifiersToMove = allSpecifiers.filter((spec) => spec.imported.name === 'Dialog');
+
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    // Get the local name from source package before transformation
-    const oldDialogLocalName =
-        getLocalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE) || OLD_COMPONENT_NAME;
+    const oldDialogImportName =
+        specifiersToMove.find((spec) => spec.imported.name === 'Dialog')?.local?.name || 'Dialog';
 
-    // 1. Import migration: Alert -> Callout
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
-    // Get the final import name (considering aliases)
-    const dialogImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
+    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, {});
+
+    const dialogImportName = oldDialogImportName as string;
     // 2. Transform Dialog JSX elements to Dialog.Root
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
@@ -57,7 +42,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Dialog> or <OldDialogAlias> to <dialogImportName.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === oldDialogLocalName
+            element.openingElement.name.name === oldDialogImportName
         ) {
             // Change to dialogImportName.Root
             transformToMemberExpression(j, element, dialogImportName, 'Root');
@@ -84,7 +69,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === oldDialogLocalName
+            element.openingElement.name.object.name === oldDialogImportName
         ) {
             // Get the property name (Contents, CombinedContent, Content, etc.)
             const propertyName =
@@ -95,14 +80,38 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             // Replace with the new import name
             updateMemberExpressionObject(element, dialogImportName);
 
-            // Transform Contents and CombinedContent to Content
+            // Transform Contents and CombinedContent to Popup
             if (propertyName === 'Contents' || propertyName === 'CombinedContent') {
-                element.openingElement.name.property = j.jsxIdentifier('Content');
+                element.openingElement.name.property = j.jsxIdentifier('Popup');
                 if (
                     element.closingElement &&
                     element.closingElement.name.type === 'JSXMemberExpression'
                 ) {
-                    element.closingElement.name.property = j.jsxIdentifier('Content');
+                    element.closingElement.name.property = j.jsxIdentifier('Popup');
+                }
+            }
+
+            // Transform Content to PopupPrimitive when inside Portal
+            if (propertyName === 'Content') {
+                const parentPath = path.parent;
+                if (parentPath && parentPath.value && parentPath.value.type === 'JSXElement') {
+                    const parentElement = parentPath.value;
+                    const isInsidePortal =
+                        parentElement.openingElement.name.type === 'JSXMemberExpression' &&
+                        parentElement.openingElement.name.object.type === 'JSXIdentifier' &&
+                        parentElement.openingElement.name.object.name === dialogImportName &&
+                        parentElement.openingElement.name.property.type === 'JSXIdentifier' &&
+                        parentElement.openingElement.name.property.name === 'Portal';
+
+                    if (isInsidePortal) {
+                        element.openingElement.name.property = j.jsxIdentifier('PopupPrimitive');
+                        if (
+                            element.closingElement &&
+                            element.closingElement.name.type === 'JSXMemberExpression'
+                        ) {
+                            element.closingElement.name.property = j.jsxIdentifier('PopupPrimitive');
+                        }
+                    }
                 }
             }
 
@@ -116,76 +125,20 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    // 4. Transform Dialog.Content to Dialog.Popup when inside Dialog.Portal with explicit Overlay
-    // This needs to be done in a separate pass to check parent context
-    root.find(j.JSXElement).forEach((path) => {
-        const element = path.value;
 
-        // Check if this is Dialog.Content (after transformation)
-        if (
-            element.openingElement.name.type === 'JSXMemberExpression' &&
-            element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === dialogImportName &&
-            element.openingElement.name.property.type === 'JSXIdentifier' &&
-            element.openingElement.name.property.name === 'Content'
-        ) {
-            // Check if parent is Dialog.Portal
-            const parentPath = path.parent;
-            if (parentPath && parentPath.value && parentPath.value.type === 'JSXElement') {
-                const parentElement = parentPath.value;
-                const isInsidePortal =
-                    parentElement.openingElement.name.type === 'JSXMemberExpression' &&
-                    parentElement.openingElement.name.object.type === 'JSXIdentifier' &&
-                    parentElement.openingElement.name.object.name === dialogImportName &&
-                    parentElement.openingElement.name.property.type === 'JSXIdentifier' &&
-                    parentElement.openingElement.name.property.name === 'Portal';
-
-                if (isInsidePortal) {
-                    // Check if there's a sibling Dialog.Overlay
-                    const siblings = parentElement.children || [];
-                    const hasOverlay = siblings.some(
-                        (
-                            sibling:
-                                | JSXText
-                                | JSXExpressionContainer
-                                | JSXSpreadChild
-                                | JSXElement
-                                | JSXFragment,
-                        ) => {
-                            return (
-                                sibling.type === 'JSXElement' &&
-                                sibling.openingElement.name.type === 'JSXMemberExpression' &&
-                                sibling.openingElement.name.object.type === 'JSXIdentifier' &&
-                                sibling.openingElement.name.object.name === dialogImportName &&
-                                sibling.openingElement.name.property.type === 'JSXIdentifier' &&
-                                sibling.openingElement.name.property.name === 'Overlay'
-                            );
-                        },
-                    );
-
-                    // If inside Portal with Overlay sibling, transform to Popup
-                    if (hasOverlay) {
-                        element.openingElement.name.property = j.jsxIdentifier('Popup');
-                        if (
-                            element.closingElement &&
-                            element.closingElement.name.type === 'JSXMemberExpression'
-                        ) {
-                            element.closingElement.name.property = j.jsxIdentifier('Popup');
-                        }
-                    }
-                }
-            }
-        }
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
     });
 
-    const printOptions = {
-        quote: 'auto' as const,
-        trailingComma: true,
-        tabWidth: 4,
-        reuseWhitespace: true,
-    };
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
 
-    return root.toSource(printOptions);
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
+
+    return root.toSource();
 };
 
 export default transform;

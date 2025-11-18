@@ -7,12 +7,12 @@ export const Component = () => {
     return (
         <Dialog.Root size="lg" open={open} onOpenChange={setOpen} closeOnClickOverlay={true}>
             <Dialog.Trigger>Open Dialog</Dialog.Trigger>
-            <Dialog.Content>
+            <Dialog.Popup>
                 <Dialog.Header>
                     <Dialog.Title>Large Dialog</Dialog.Title>
                 </Dialog.Header>
                 <Dialog.Body>Content</Dialog.Body>
-            </Dialog.Content>
+            </Dialog.Popup>
         </Dialog.Root>
     );
 };
