@@ -2,15 +2,21 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Badge } from '.';
 
+const OPTIONS = {
+    colorPalette: ['primary', 'success', 'warning', 'danger', 'contrast', 'hint'] as const,
+    size: ['sm', 'md', 'lg'] as const,
+    shape: ['square', 'pill'] as const,
+};
+
 export default {
     title: 'Badge',
     argTypes: {
         colorPalette: {
             control: 'inline-radio',
-            options: ['primary', 'success', 'warning', 'danger', 'contrast', 'hint'],
+            options: OPTIONS.colorPalette,
         },
-        size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
-        shape: { control: 'inline-radio', options: ['square', 'pill'] },
+        size: { control: 'inline-radio', options: OPTIONS.size },
+        shape: { control: 'inline-radio', options: OPTIONS.shape },
     },
 } as Meta<typeof Badge>;
 
@@ -21,5 +27,27 @@ export const Default: Story = {
 };
 
 export const TestBed: Story = {
-    render: (args) => <Badge {...args}>Badge</Badge>,
+    render: () => (
+        <div>
+            {OPTIONS.colorPalette.map((colorPalette) => (
+                <div key={colorPalette} style={{ marginBottom: '1rem' }}>
+                    {OPTIONS.size.map((size) => (
+                        <div key={size} style={{ marginBottom: '0.5rem' }}>
+                            {OPTIONS.shape.map((shape) => (
+                                <Badge
+                                    key={shape}
+                                    colorPalette={colorPalette}
+                                    size={size}
+                                    shape={shape}
+                                    style={{ marginRight: '0.5rem' }}
+                                >
+                                    {`${colorPalette} | ${size} | ${shape}`}
+                                </Badge>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            ))}
+        </div>
+    ),
 };
