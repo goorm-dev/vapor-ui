@@ -45,15 +45,16 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             element.openingElement.name.type === 'JSXIdentifier' &&
             element.openingElement.name.name === avatarImportName
         ) {
-            // Change Avatar to Avatar.Simple
-            transformToMemberExpression(j, element, avatarImportName, 'Simple');
+            // Change Avatar to Avatar.Root
+            transformToMemberExpression(j, element, avatarImportName, 'Root');
 
             const attributes = element.openingElement.attributes || [];
             let hasSquareProp = false;
             let hasSrcInChildren = false;
             let srcValue: JSXAttribute['value'] = null;
+            let altValue: JSXAttribute['value'] = null;
 
-            // Check for Avatar.Image children and extract src
+            // Check for Avatar.Image children and extract src/alt
             element.children?.forEach((child) => {
                 if (
                     child.type === 'JSXElement' &&
@@ -63,10 +64,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     child.openingElement.name.property.name === 'Image'
                 ) {
                     hasSrcInChildren = true;
-                    // Extract src prop from Avatar.Image
+                    // Extract src and alt props from Avatar.Image
                     child.openingElement.attributes?.forEach((attr) => {
-                        if (attr.type === 'JSXAttribute' && attr.name.name === 'src') {
-                            srcValue = attr.value;
+                        if (attr.type === 'JSXAttribute') {
+                            if (attr.name.name === 'src') {
+                                srcValue = attr.value;
+                            } else if (attr.name.name === 'alt') {
+                                altValue = attr.value;
+                            }
                         }
                     });
                 }
@@ -153,8 +158,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             // Build attributes in desired order: alt, other props, shape, src
             const newAttributes: (JSXAttribute | JSXSpreadAttribute)[] = [];
 
+            // Use alt from Avatar.Image if label doesn't exist on parent
             if (altAttr) {
                 newAttributes.push(altAttr);
+            } else if (altValue) {
+                newAttributes.push(j.jsxAttribute(j.jsxIdentifier('alt'), altValue));
             }
 
             newAttributes.push(...otherAttrs);

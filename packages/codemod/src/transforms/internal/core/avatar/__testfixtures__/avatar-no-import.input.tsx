@@ -1,7 +1,6 @@
 // @ts-nocheck
-import { useState } from 'react';
+import { Button } from '@goorm-dev/vapor-core';
 
 export const Component = () => {
-    const [count, setCount] = useState(0);
-    return <div>{count}</div>;
+    return <Button>Click me</Button>;
 };

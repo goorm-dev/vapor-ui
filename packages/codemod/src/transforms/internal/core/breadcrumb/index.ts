@@ -36,7 +36,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
     const transformedSpecifiers = transformSpecifier(j, specifiersToMove, {});
 
-    const transformBreadcrumbItem = (item: JSXElement): JSXElement => {
+const transformBreadcrumbItem = (item: JSXElement): JSXElement => {
         let hrefAttr: JSXAttribute | undefined;
         let activeAttr: JSXAttribute | undefined;
         const otherAttrs: JSXAttribute[] = [];
@@ -60,34 +60,13 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             }
         });
 
-        if (!hrefAttr && !activeAttr) {
-            return item;
-        }
-
-        const linkAttrs: JSXAttribute[] = [];
+        const itemAttrs: JSXAttribute[] = [...otherAttrs];
         if (hrefAttr) {
-            linkAttrs.push(j.jsxAttribute(j.jsxIdentifier('href'), hrefAttr.value));
+            itemAttrs.push(j.jsxAttribute(j.jsxIdentifier('href'), hrefAttr.value));
         }
         if (activeAttr) {
-            linkAttrs.push(j.jsxAttribute(j.jsxIdentifier('current'), activeAttr.value));
+            itemAttrs.push(j.jsxAttribute(j.jsxIdentifier('current'), activeAttr.value));
         }
-
-        const linkElement = j.jsxElement(
-            j.jsxOpeningElement(
-                j.jsxMemberExpression(
-                    j.jsxIdentifier(breadcrumbImportName as string),
-                    j.jsxIdentifier('Link'),
-                ),
-                linkAttrs,
-            ),
-            j.jsxClosingElement(
-                j.jsxMemberExpression(
-                    j.jsxIdentifier(breadcrumbImportName as string),
-                    j.jsxIdentifier('Link'),
-                ),
-            ),
-            item.children,
-        );
 
         return j.jsxElement(
             j.jsxOpeningElement(
@@ -95,7 +74,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     j.jsxIdentifier(breadcrumbImportName as string),
                     j.jsxIdentifier('Item'),
                 ),
-                otherAttrs,
+                itemAttrs,
             ),
             j.jsxClosingElement(
                 j.jsxMemberExpression(
@@ -103,7 +82,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     j.jsxIdentifier('Item'),
                 ),
             ),
-            [j.jsxText('\n      '), linkElement, j.jsxText('\n    ')],
+            item.children,
         );
     };
 
@@ -270,23 +249,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     return child;
                 });
 
-                const listElement = j.jsxElement(
-                    j.jsxOpeningElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier(breadcrumbImportName),
-                            j.jsxIdentifier('List'),
-                        ),
-                        [],
-                    ),
-                    j.jsxClosingElement(
-                        j.jsxMemberExpression(
-                            j.jsxIdentifier(breadcrumbImportName),
-                            j.jsxIdentifier('List'),
-                        ),
-                    ),
-                    [j.jsxText('\n            '), ...transformedChildren, j.jsxText('\n        ')],
-                );
-                element.children = [j.jsxText('\n        '), listElement, j.jsxText('\n    ')];
+                element.children = transformedChildren;
                 return;
             }
 
@@ -313,26 +276,9 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 }
             });
 
-            newChildren.push(j.jsxText('\n  '));
+            newChildren.push(j.jsxText('\n'));
 
-            const listElement = j.jsxElement(
-                j.jsxOpeningElement(
-                    j.jsxMemberExpression(
-                        j.jsxIdentifier(breadcrumbImportName),
-                        j.jsxIdentifier('List'),
-                    ),
-                    [],
-                ),
-                j.jsxClosingElement(
-                    j.jsxMemberExpression(
-                        j.jsxIdentifier(breadcrumbImportName),
-                        j.jsxIdentifier('List'),
-                    ),
-                ),
-                newChildren,
-            );
-
-            element.children = [j.jsxText('\n  '), listElement, j.jsxText('\n')];
+            element.children = newChildren;
         }
 
         if (
