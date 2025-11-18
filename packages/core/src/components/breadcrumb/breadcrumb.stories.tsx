@@ -8,7 +8,6 @@ export default {
     component: Breadcrumb.Root,
     subcomponents: {
         Item: Breadcrumb.Item,
-        Link: Breadcrumb.Link,
     },
     argTypes: {
         size: {
@@ -25,47 +24,30 @@ export const Default: Story = {
         return (
             <>
                 <Breadcrumb.Root {...args}>
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
+                    <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
 
-                        <Breadcrumb.Separator />
+                    <Breadcrumb.Separator />
 
-                        <Breadcrumb.Item>
-                            <Dialog.Root>
-                                <Dialog.Trigger aria-label="More">
-                                    <Breadcrumb.Ellipsis />
-                                </Dialog.Trigger>
+                    <Breadcrumb.ItemPrimitive>
+                        <Dialog.Root>
+                            <Dialog.Trigger aria-label="More">
+                                <Breadcrumb.EllipsisPrimitive />
+                            </Dialog.Trigger>
 
-                                <Dialog.Portal>
-                                    <Dialog.Overlay />
-                                    <Dialog.Content>
-                                        <Dialog.Header></Dialog.Header>
-                                    </Dialog.Content>
-                                </Dialog.Portal>
-                            </Dialog.Root>
-                        </Breadcrumb.Item>
+                            <Dialog.Popup>
+                                <Dialog.Header></Dialog.Header>
+                            </Dialog.Popup>
+                        </Dialog.Root>
+                    </Breadcrumb.ItemPrimitive>
 
-                        <Breadcrumb.Separator />
-
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Products</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Electronics</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-
-                        <Breadcrumb.Separator />
-
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>
-                                Laptops
-                            </Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#">Electronics</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#" current>
+                        Laptops
+                    </Breadcrumb.Item>
                 </Breadcrumb.Root>
             </>
         );
@@ -77,47 +59,27 @@ export const TestBed: Story = {
         return (
             <>
                 <Breadcrumb.Root {...args}>
-                    <Breadcrumb.List>
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-                        </Breadcrumb.Item>
+                    <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.ItemPrimitive>
+                        <Dialog.Root>
+                            <Dialog.Trigger aria-label="More">
+                                <Breadcrumb.EllipsisPrimitive />
+                            </Dialog.Trigger>
 
-                        <Breadcrumb.Separator />
-
-                        <Breadcrumb.Item>
-                            <Dialog.Root>
-                                <Dialog.Trigger>
-                                    <Breadcrumb.Ellipsis />
-                                </Dialog.Trigger>
-
-                                <Dialog.Portal>
-                                    <Dialog.Overlay />
-                                    <Dialog.Content>
-                                        <Dialog.Header></Dialog.Header>
-                                    </Dialog.Content>
-                                </Dialog.Portal>
-                            </Dialog.Root>
-                        </Breadcrumb.Item>
-
-                        <Breadcrumb.Separator />
-
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Products</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-
-                        <Breadcrumb.Separator />
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#">Electronics</Breadcrumb.Link>
-                        </Breadcrumb.Item>
-
-                        <Breadcrumb.Separator />
-
-                        <Breadcrumb.Item>
-                            <Breadcrumb.Link href="#" current>
-                                Laptops
-                            </Breadcrumb.Link>
-                        </Breadcrumb.Item>
-                    </Breadcrumb.List>
+                            <Dialog.Popup>
+                                <Dialog.Header></Dialog.Header>
+                            </Dialog.Popup>
+                        </Dialog.Root>
+                    </Breadcrumb.ItemPrimitive>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#">Electronics</Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item href="#" current>
+                        Laptops
+                    </Breadcrumb.Item>
                 </Breadcrumb.Root>
             </>
         );

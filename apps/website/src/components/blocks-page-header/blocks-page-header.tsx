@@ -26,7 +26,7 @@ const ResponsiveTitle = ({ children }: { children: React.ReactNode }) => (
 export const BlocksPageHeader = () => (
     <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start">
         <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-start w-full">
-            <Badge color="hint" shape="pill" size="lg">
+            <Badge colorPalette="hint" shape="pill" size="lg">
                 UI Blocks
             </Badge>
         </div>
