@@ -9,7 +9,11 @@ const items = [
 export const Component = () => (
     <Breadcrumb.Root>
         {items.map((item) => {
-            return <Breadcrumb.Item href={item.href} current={item.active}>{item.label}</Breadcrumb.Item>;
+            return (
+                <Breadcrumb.Item href={item.href} current={item.active}>
+                    {item.label}
+                </Breadcrumb.Item>
+            );
         })}
     </Breadcrumb.Root>
 );

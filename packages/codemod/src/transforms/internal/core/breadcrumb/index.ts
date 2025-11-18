@@ -36,7 +36,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
     const transformedSpecifiers = transformSpecifier(j, specifiersToMove, {});
 
-const transformBreadcrumbItem = (item: JSXElement): JSXElement => {
+    const transformBreadcrumbItem = (item: JSXElement): JSXElement => {
         let hrefAttr: JSXAttribute | undefined;
         let activeAttr: JSXAttribute | undefined;
         const otherAttrs: JSXAttribute[] = [];
