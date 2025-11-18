@@ -85,6 +85,7 @@ export const generateColorCSS = (
     };
 
     const themeResult = generatePrimitiveColorPalette({
+        ...(colorConfig.keyColors && { keyColors: colorConfig.keyColors }),
         brandColor: {
             name: colorConfig.primary.name,
             hexcode: colorConfig.primary.hexcode,
