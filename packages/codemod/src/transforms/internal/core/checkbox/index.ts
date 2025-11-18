@@ -9,42 +9,36 @@ import type {
 } from 'jscodeshift';
 
 import {
-    getFinalImportName,
-    getLocalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+    transformSpecifier,
 } from '~/utils/import-transform';
 import { transformAsChildToRender, transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const OLD_COMPONENT_NAME = 'Checkbox';
-const NEW_COMPONENT_NAME = 'Checkbox';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
+
+    const specifiersToMove = allSpecifiers.filter((spec) => spec.imported.name === 'Checkbox');
+
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    // Get the local import name from the old package (considering aliases like "Checkbox as VaporCheckbox")
     const oldCheckboxImportName =
-        getLocalImportName(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE) || OLD_COMPONENT_NAME;
+        specifiersToMove.find((spec) => spec.imported.name === 'Checkbox')?.local?.name ||
+        'Checkbox';
 
-    // 1. Import migration: Checkbox -> Checkbox
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, {});
 
-    // Get the final import name (considering aliases)
-    const checkboxImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
+    const checkboxImportName = oldCheckboxImportName as string;
 
     // Track if Field import is needed
     let needsFieldImport = false;
@@ -82,8 +76,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     }
 
-    // 3. Transform Checkbox JSX elements to Checkbox.Root
-    // AND handle Checkbox.Label transformation
+    // Handle Checkbox transformation
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
@@ -123,13 +116,9 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 children.splice(labelIndex, 1);
             }
 
-            // Change to checkboxImportName.Root
             transformToMemberExpression(j, element, checkboxImportName, 'Root');
-
-            // Transform asChild prop to render prop
             transformAsChildToRender(j, element);
 
-            // Handle props transformation
             const attributes = element.openingElement.attributes || [];
             const newAttributes: (JSXAttribute | JSXSpreadAttribute)[] = [];
             let hasOnCheckedChange = false;
@@ -177,7 +166,6 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
             element.openingElement.attributes = newAttributes;
 
-            // Add TODO comment if onCheckedChange exists or checked is an expression
             const comments: Array<ReturnType<typeof j.commentLine>> = [];
             if (hasOnCheckedChange) {
                 comments.push(
@@ -201,9 +189,48 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 element.comments = [...(element.comments || []), ...comments];
             }
 
-            // Handle Checkbox.Label wrapping if exists
+            if (!element.children) {
+                element.children = [];
+            }
+
+            const hasIndicator = element.children.some(
+                (child: ASTNode) =>
+                    child.type === 'JSXElement' &&
+                    child.openingElement.name.type === 'JSXMemberExpression' &&
+                    child.openingElement.name.object.type === 'JSXIdentifier' &&
+                    child.openingElement.name.object.name === oldCheckboxImportName &&
+                    child.openingElement.name.property.type === 'JSXIdentifier' &&
+                    child.openingElement.name.property.name === 'Indicator',
+            );
+
+            if (!hasIndicator) {
+                if (element.openingElement.selfClosing) {
+                    element.openingElement.selfClosing = false;
+                    element.closingElement = j.jsxClosingElement(
+                        j.jsxMemberExpression(
+                            j.jsxIdentifier(checkboxImportName),
+                            j.jsxIdentifier('Root'),
+                        ),
+                    );
+                }
+
+                const indicator = j.jsxElement(
+                    j.jsxOpeningElement(
+                        j.jsxMemberExpression(
+                            j.jsxIdentifier(checkboxImportName),
+                            j.jsxIdentifier('IndicatorPrimitive'),
+                        ),
+                        [],
+                        true,
+                    ),
+                );
+
+                element.children.unshift(j.jsxText('\n    '), indicator);
+                if (element.children.length > 2) {
+                    element.children.push(j.jsxText('\n  '));
+                }
+            }
             if (shouldWrapWithFieldLabel && parentPath && parentPath.value) {
-                // Create Field.Label wrapping Checkbox.Root and label text
                 const fieldLabel = j.jsxElement(
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Label')),
@@ -214,52 +241,97 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     ),
 
                     [
-                        j.jsxText('\n  '),
+                        j.jsxText('\n    '),
                         element,
-                        j.jsxText('\n  '),
+                        j.jsxText('\n    '),
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         ...(labelChildren as any),
-                        j.jsxText('\n'),
+                        j.jsxText('\n  '),
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ] as any,
                 );
 
-                // Replace current path with Field.Label
-                j(path).replaceWith(fieldLabel);
+                const fieldRoot = j.jsxElement(
+                    j.jsxOpeningElement(
+                        j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Root')),
+                        [],
+                    ),
+                    j.jsxClosingElement(
+                        j.jsxMemberExpression(j.jsxIdentifier('Field'), j.jsxIdentifier('Root')),
+                    ),
+                    [j.jsxText('\n  '), fieldLabel, j.jsxText('\n')],
+                );
+
+                j(path).replaceWith(fieldRoot);
             }
         }
     });
 
-    // 4. Transform Checkbox.* elements to use the alias (if any)
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === checkboxImportName
+            element.openingElement.name.object.name === oldCheckboxImportName
         ) {
-            // Already using the correct import name, no change needed
-            // This pass ensures closing elements are also updated
+            element.openingElement.name.object.name = checkboxImportName;
+
+            if (
+                element.openingElement.name.property.type === 'JSXIdentifier' &&
+                element.openingElement.name.property.name === 'Indicator'
+            ) {
+                element.openingElement.name.property.name = 'IndicatorPrimitive';
+            }
+
             if (
                 element.closingElement &&
                 element.closingElement.name.type === 'JSXMemberExpression' &&
-                element.closingElement.name.object.type === 'JSXIdentifier' &&
-                element.closingElement.name.object.name !== checkboxImportName
+                element.closingElement.name.object.type === 'JSXIdentifier'
             ) {
                 element.closingElement.name.object.name = checkboxImportName;
+
+                if (
+                    element.closingElement.name.property.type === 'JSXIdentifier' &&
+                    element.closingElement.name.property.name === 'Indicator'
+                ) {
+                    element.closingElement.name.property.name = 'IndicatorPrimitive';
+                }
             }
         }
     });
 
-    const printOptions = {
-        quote: 'auto' as const,
-        trailingComma: true,
-        tabWidth: 4,
-        reuseWhitespace: true,
-    };
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
 
-    return root.toSource(printOptions);
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    if (needsFieldImport) {
+        const existingFieldImport = root.find(j.ImportDeclaration, {
+            source: { value: TARGET_PACKAGE },
+        });
+
+        if (existingFieldImport.length > 0) {
+            const importDecl = existingFieldImport.at(0).get().value;
+            const hasField = importDecl.specifiers?.some(
+                (spec: ImportSpecifier) =>
+                    spec.type === 'ImportSpecifier' && spec.imported.name === 'Field',
+            );
+
+            if (!hasField) {
+                importDecl.specifiers?.push(j.importSpecifier(j.identifier('Field')));
+            }
+        }
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
+
+    return root.toSource();
 };
 
 export default transform;
