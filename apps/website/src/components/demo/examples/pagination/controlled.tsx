@@ -8,15 +8,9 @@ export default function PaginationControlled() {
     return (
         <VStack gap="$200">
             <Pagination.Root totalPages={20} page={page} onPageChange={setPage}>
-                <Pagination.List>
-                    <Pagination.Item>
-                        <Pagination.Previous />
-                    </Pagination.Item>
-                    <Pagination.Items />
-                    <Pagination.Item>
-                        <Pagination.Next />
-                    </Pagination.Item>
-                </Pagination.List>
+                <Pagination.Previous />
+                <Pagination.Items />
+                <Pagination.Next />
             </Pagination.Root>
 
             <HStack justifyContent="space-between" alignItems="center" gap="$100">
