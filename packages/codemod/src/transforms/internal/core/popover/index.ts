@@ -1,9 +1,17 @@
-import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
+import type {
+    API,
+    FileInfo,
+    ImportSpecifier,
+    JSXAttribute,
+    JSXElement,
+    Transform,
+} from 'jscodeshift';
 
 import {
-    getFinalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
 } from '~/utils/import-transform';
 import {
     transformAsChildToRender,
@@ -41,24 +49,23 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    // Track the old Popover local name from @goorm-dev/vapor-core
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
+    const specifiersToMove = allSpecifiers.filter(
+        (spec) => spec.imported.name === OLD_COMPONENT_NAME,
+    );
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    // 1. Import migration
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+    const localName = specifiersToMove[0].local?.name || NEW_COMPONENT_NAME;
+    const hasAlias = localName !== NEW_COMPONENT_NAME;
 
-    // Get the final import name (considering aliases)
-    const popoverImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
+    const transformedSpecifiers: ImportSpecifier[] = hasAlias
+        ? [j.importSpecifier(j.identifier(NEW_COMPONENT_NAME), j.identifier(localName as string))]
+        : [j.importSpecifier(j.identifier(NEW_COMPONENT_NAME))];
+
+    const popoverImportName = localName;
 
     // Track side and align props from Popover root to move to Content
     const rootPropsToMove = new Map<
@@ -125,7 +132,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             });
 
             // Change to Popover.Root
-            transformToMemberExpression(j, element, popoverImportName, 'Root');
+            transformToMemberExpression(j, element, popoverImportName as string, 'Root');
 
             // Transform asChild prop to render prop
             transformAsChildToRender(j, element);
@@ -160,7 +167,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     : null;
 
             // Replace with the new import name
-            updateMemberExpressionObject(element, popoverImportName);
+            updateMemberExpressionObject(element, popoverImportName as string);
 
             // Map component names
             let newPropertyName = propertyName;
@@ -391,14 +398,19 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
-    const printOptions = {
-        quote: 'auto' as const,
-        trailingComma: true,
-        tabWidth: 4,
-        reuseWhitespace: true,
-    };
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
 
-    return root.toSource(printOptions);
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
+
+    return root.toSource();
 };
 
 export default transform;
