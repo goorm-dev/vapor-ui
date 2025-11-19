@@ -71,7 +71,7 @@ const ThemePanelContent = () => {
     };
 
     return (
-        <Card.Root className="bg-[var(--vapor-color-background-overlay-100)]">
+        <Card.Root className="bg-v-overlay-100">
             <Card.Header className="flex justify-between items-center border-b-0 flex-shrink-0">
                 <Popover.Title render={<Text typography="heading5">Theme Setting</Text>} />
 
