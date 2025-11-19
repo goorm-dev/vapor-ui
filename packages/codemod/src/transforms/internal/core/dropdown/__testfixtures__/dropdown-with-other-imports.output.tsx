@@ -7,9 +7,9 @@ export default function App() {
             <Menu.Root>
                 <Menu.Trigger>Open</Menu.Trigger>
                 <Menu.Portal>
-                    <Menu.Content>
+                    <Menu.PopupPrimitive>
                         <Menu.Item>Item</Menu.Item>
-                    </Menu.Content>
+                    </Menu.PopupPrimitive>
                 </Menu.Portal>
             </Menu.Root>
             <Button>Click me</Button>

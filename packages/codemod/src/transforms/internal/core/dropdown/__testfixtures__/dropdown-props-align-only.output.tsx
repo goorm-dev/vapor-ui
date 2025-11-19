@@ -5,10 +5,12 @@ export default function App() {
         <Menu.Root>
             <Menu.Trigger>Open</Menu.Trigger>
             <Menu.Portal>
-                <Menu.PopupPrimitive>
-                    <Menu.Item>Item 1</Menu.Item>
-                    <Menu.Separator />
-                    <Menu.Item>Item 2</Menu.Item>
+                <Menu.PopupPrimitive
+                    positionerProps={{
+                        align: 'end',
+                    }}
+                >
+                    <Menu.Item>Item</Menu.Item>
                 </Menu.PopupPrimitive>
             </Menu.Portal>
         </Menu.Root>

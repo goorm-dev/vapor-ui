@@ -7,7 +7,6 @@ export const Component = () => {
     return (
         <Dialog.Root size="lg" open={open} onOpenChange={setOpen} closeOnClickOverlay={true}>
             <Dialog.Trigger>Open Dialog</Dialog.Trigger>
-
             <Dialog.Popup>
                 <Dialog.Header>
                     <Dialog.Title>Large Dialog</Dialog.Title>

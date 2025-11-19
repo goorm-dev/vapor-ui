@@ -5,7 +5,7 @@ export default function App() {
         <Menu.Root>
             <Menu.Trigger>Open</Menu.Trigger>
             <Menu.Portal>
-                <Menu.Content>
+                <Menu.PopupPrimitive>
                     <Menu.Group>
                         <Menu.Item>A</Menu.Item>
                         <Menu.Item>B</Menu.Item>
@@ -13,7 +13,7 @@ export default function App() {
                     <Menu.Group>
                         <Menu.Item>C</Menu.Item>
                     </Menu.Group>
-                </Menu.Content>
+                </Menu.PopupPrimitive>
             </Menu.Portal>
         </Menu.Root>
     );

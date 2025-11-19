@@ -1,9 +1,17 @@
-import type { API, FileInfo, JSXAttribute, JSXElement, Transform } from 'jscodeshift';
+import type {
+    API,
+    FileInfo,
+    ImportSpecifier,
+    JSXAttribute,
+    JSXElement,
+    Transform,
+} from 'jscodeshift';
 
 import {
-    getFinalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
 } from '~/utils/import-transform';
 import {
     transformAsChildToRender,
@@ -21,28 +29,26 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    // Track the old Dropdown local name from @goorm-dev/vapor-core
+    // 1. Collect Dropdown import specifiers from @goorm-dev/vapor-core
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
+    const specifiersToMove = allSpecifiers.filter(
+        (spec) => spec.imported.name === OLD_COMPONENT_NAME,
+    );
 
-    // 1. Import migration: Dropdown (named) -> { Menu } (named with rename)
-
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    // 1. Import migration: Alert -> Callout
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+    const oldDropdownImportName =
+        specifiersToMove.find((spec) => spec.imported.name === OLD_COMPONENT_NAME)?.local?.name ||
+        OLD_COMPONENT_NAME;
 
-    // Merge multiple @vapor-ui/core imports
+    // Create new Menu import specifier
+    const transformedSpecifiers: ImportSpecifier[] = [
+        j.importSpecifier(j.identifier(NEW_COMPONENT_NAME)),
+    ];
 
-    // Get the final import name (considering aliases)
-    const menuImportName = getFinalImportName(root, j, NEW_COMPONENT_NAME, TARGET_PACKAGE);
+    const menuImportName = NEW_COMPONENT_NAME;
 
     // Track side and align props from Dropdown root to move to Content
     const rootPropsToMove = new Map<
@@ -62,7 +68,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         // Transform <Dropdown> or <OldDropdownAlias> to <Menu.Root>
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === OLD_COMPONENT_NAME
+            element.openingElement.name.name === oldDropdownImportName
         ) {
             // Store side and align props to move to Content later
             const attributes = element.openingElement.attributes || [];
@@ -116,7 +122,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         if (
             element.openingElement.name.type === 'JSXMemberExpression' &&
             element.openingElement.name.object.type === 'JSXIdentifier' &&
-            element.openingElement.name.object.name === OLD_COMPONENT_NAME
+            element.openingElement.name.object.name === oldDropdownImportName
         ) {
             // Get the property name
             const propertyName =
@@ -132,7 +138,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             switch (propertyName) {
                 case 'Contents':
                 case 'CombinedContent':
-                    newPropertyName = 'Content';
+                    newPropertyName = 'Popup';
                     break;
                 case 'Divider':
                     newPropertyName = 'Separator';
@@ -146,9 +152,27 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 case 'SubContents':
                 case 'SubCombinedContent':
                 case 'SubContent':
-                    newPropertyName = 'SubmenuContent';
+                    newPropertyName = 'SubmenuPopup';
                     break;
                 // Trigger, Portal, Group, Item stay the same
+            }
+
+            // Transform Content to PopupPrimitive when inside Portal
+            if (propertyName === 'Content') {
+                const parentPath = path.parent;
+                if (parentPath && parentPath.value && parentPath.value.type === 'JSXElement') {
+                    const parentElement = parentPath.value;
+                    const isInsidePortal =
+                        parentElement.openingElement.name.type === 'JSXMemberExpression' &&
+                        parentElement.openingElement.name.object.type === 'JSXIdentifier' &&
+                        parentElement.openingElement.name.object.name === menuImportName &&
+                        parentElement.openingElement.name.property.type === 'JSXIdentifier' &&
+                        parentElement.openingElement.name.property.name === 'Portal';
+
+                    if (isInsidePortal) {
+                        newPropertyName = 'PopupPrimitive';
+                    }
+                }
             }
 
             if (newPropertyName !== propertyName && newPropertyName) {
@@ -166,8 +190,8 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                 transformForceMountToKeepMounted(j, element);
             }
 
-            // Handle Content-specific transformations
-            if (newPropertyName === 'Content') {
+            // Handle Popup-specific transformations
+            if (newPropertyName === 'Popup' || newPropertyName === 'PopupPrimitive') {
                 const attributes = element.openingElement.attributes || [];
 
                 // Find parent Root to check if we need to move side/align props
@@ -282,6 +306,19 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             transformAsChildToRender(j, element);
         }
     });
+
+    // Add transformed imports
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
+
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
 
     return root.toSource();
 };

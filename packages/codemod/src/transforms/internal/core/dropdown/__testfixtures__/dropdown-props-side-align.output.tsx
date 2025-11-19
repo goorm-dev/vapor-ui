@@ -5,14 +5,14 @@ export default function App() {
         <Menu.Root>
             <Menu.Trigger>Open</Menu.Trigger>
             <Menu.Portal>
-                <Menu.Content
+                <Menu.PopupPrimitive
                     positionerProps={{
                         side: 'top',
                         align: 'end',
                     }}
                 >
                     <Menu.Item>Item</Menu.Item>
-                </Menu.Content>
+                </Menu.PopupPrimitive>
             </Menu.Portal>
         </Menu.Root>
     );

@@ -5,18 +5,18 @@ export default function App() {
         <Menu.Root>
             <Menu.Trigger>Open</Menu.Trigger>
             <Menu.Portal>
-                <Menu.Content>
+                <Menu.PopupPrimitive>
                     <Menu.Item>Item 1</Menu.Item>
                     <Menu.SubmenuRoot>
                         <Menu.SubmenuTriggerItem>Submenu</Menu.SubmenuTriggerItem>
                         <Menu.Portal>
-                            <Menu.SubmenuContent>
+                            <Menu.SubmenuPopup>
                                 <Menu.Item>Sub 1</Menu.Item>
                                 <Menu.Item>Sub 2</Menu.Item>
-                            </Menu.SubmenuContent>
+                            </Menu.SubmenuPopup>
                         </Menu.Portal>
                     </Menu.SubmenuRoot>
-                </Menu.Content>
+                </Menu.PopupPrimitive>
             </Menu.Portal>
         </Menu.Root>
     );

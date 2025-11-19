@@ -5,7 +5,7 @@ export default function App() {
         <Menu.Root>
             <Menu.Trigger>Open</Menu.Trigger>
             <Menu.Portal>
-                <Menu.Content
+                <Menu.PopupPrimitive
                     style={{
                         width: '200px',
                         maxHeight: '300px',
@@ -13,7 +13,7 @@ export default function App() {
                 >
                     <Menu.Item>Item 1</Menu.Item>
                     <Menu.Item>Item 2</Menu.Item>
-                </Menu.Content>
+                </Menu.PopupPrimitive>
             </Menu.Portal>
         </Menu.Root>
     );

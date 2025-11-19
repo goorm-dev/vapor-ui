@@ -5,9 +5,9 @@ export default function App() {
         <Menu.Root modal={false}>
             <Menu.Trigger>Open</Menu.Trigger>
             <Menu.Portal keepMounted>
-                <Menu.Content>
+                <Menu.PopupPrimitive>
                     <Menu.Item>Item</Menu.Item>
-                </Menu.Content>
+                </Menu.PopupPrimitive>
             </Menu.Portal>
         </Menu.Root>
     );
