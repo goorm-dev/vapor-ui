@@ -1,10 +1,17 @@
 export {
     PaginationRoot as Root,
-    PaginationList as List,
-    PaginationItem as Item,
     PaginationButton as Button,
+    PaginationItems as Items,
     PaginationPrevious as Previous,
     PaginationNext as Next,
-    PaginationItems as Items,
     PaginationEllipsis as Ellipsis,
+
+    // primitives
+    PaginationRootPrimitive as RootPrimitive,
+    PaginationListPrimitive as ListPrimitive,
+    PaginationItemPrimitive as ItemPrimitive,
+    PaginationButtonPrimitive as ButtonPrimitive,
+    PaginationPreviousPrimitive as PreviousPrimitive,
+    PaginationNextPrimitive as NextPrimitive,
+    PaginationEllipsisPrimitive as EllipsisPrimitive,
 } from './pagination';

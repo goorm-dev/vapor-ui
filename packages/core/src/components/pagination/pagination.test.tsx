@@ -12,15 +12,9 @@ describe('<Pagination />', () => {
     it('should have no accessibility violations', async () => {
         const rendered = render(
             <Pagination.Root totalPages={10} defaultPage={1}>
-                <Pagination.List>
-                    <Pagination.Item>
-                        <Pagination.Previous />
-                    </Pagination.Item>
-                    <Pagination.Items />
-                    <Pagination.Item>
-                        <Pagination.Next />
-                    </Pagination.Item>
-                </Pagination.List>
+                <Pagination.Previous />
+                <Pagination.Items />
+                <Pagination.Next />
             </Pagination.Root>,
         );
 
@@ -32,15 +26,9 @@ describe('<Pagination />', () => {
         it('should focus the first page button when page is 1 and tabbing from outside the component', async () => {
             const rendered = render(
                 <Pagination.Root totalPages={10} defaultPage={1}>
-                    <Pagination.List>
-                        <Pagination.Item>
-                            <Pagination.Previous />
-                        </Pagination.Item>
-                        <Pagination.Items />
-                        <Pagination.Item>
-                            <Pagination.Next />
-                        </Pagination.Item>
-                    </Pagination.List>
+                    <Pagination.Previous />
+                    <Pagination.Items />
+                    <Pagination.Next />
                 </Pagination.Root>,
             );
 
@@ -55,15 +43,9 @@ describe('<Pagination />', () => {
         it('should focus the previous button when page is not 1 and tabbing from outside the component', async () => {
             const rendered = render(
                 <Pagination.Root totalPages={10} defaultPage={2}>
-                    <Pagination.List>
-                        <Pagination.Item>
-                            <Pagination.Previous />
-                        </Pagination.Item>
-                        <Pagination.Items />
-                        <Pagination.Item>
-                            <Pagination.Next />
-                        </Pagination.Item>
-                    </Pagination.List>
+                    <Pagination.Previous />
+                    <Pagination.Items />
+                    <Pagination.Next />
                 </Pagination.Root>,
             );
 
@@ -77,9 +59,7 @@ describe('<Pagination />', () => {
         it('should change page when pressed Enter on a page number', async () => {
             const rendered = render(
                 <Pagination.Root totalPages={10} defaultPage={1}>
-                    <Pagination.List>
-                        <Pagination.Items />
-                    </Pagination.List>
+                    <Pagination.Items />
                 </Pagination.Root>,
             );
 
@@ -96,9 +76,7 @@ describe('<Pagination />', () => {
         it('should change page when pressed Space on a page number', async () => {
             const rendered = render(
                 <Pagination.Root totalPages={10} defaultPage={1}>
-                    <Pagination.List>
-                        <Pagination.Items />
-                    </Pagination.List>
+                    <Pagination.Items />
                 </Pagination.Root>,
             );
 
@@ -117,12 +95,8 @@ describe('<Pagination />', () => {
 
             const rendered = render(
                 <Pagination.Root totalPages={3} defaultPage={3}>
-                    <Pagination.List>
-                        <Pagination.Item>
-                            <Pagination.Previous data-testid="Previous" />
-                        </Pagination.Item>
-                        <Pagination.Items />
-                    </Pagination.List>
+                    <Pagination.Previous data-testid="Previous" />
+                    <Pagination.Items />
                 </Pagination.Root>,
             );
 
@@ -143,12 +117,8 @@ describe('<Pagination />', () => {
         it('should not change page when page is 1 and pressed previous button', async () => {
             const rendered = render(
                 <Pagination.Root totalPages={3} defaultPage={2}>
-                    <Pagination.List>
-                        <Pagination.Item>
-                            <Pagination.Previous data-testid="Previous" />
-                        </Pagination.Item>
-                        <Pagination.Items />
-                    </Pagination.List>
+                    <Pagination.Previous data-testid="Previous" />
+                    <Pagination.Items />
                 </Pagination.Root>,
             );
 
@@ -169,12 +139,8 @@ describe('<Pagination />', () => {
         it('should change page when pressed next button', async () => {
             const rendered = render(
                 <Pagination.Root totalPages={3} defaultPage={2}>
-                    <Pagination.List>
-                        <Pagination.Items />
-                        <Pagination.Item>
-                            <Pagination.Next data-testid="Next" />
-                        </Pagination.Item>
-                    </Pagination.List>
+                    <Pagination.Items />
+                    <Pagination.Next data-testid="Next" />
                 </Pagination.Root>,
             );
 
@@ -190,12 +156,8 @@ describe('<Pagination />', () => {
         it('should not change page when page is 1 and pressed next button', async () => {
             const rendered = render(
                 <Pagination.Root totalPages={3} defaultPage={2}>
-                    <Pagination.List>
-                        <Pagination.Items />
-                        <Pagination.Item>
-                            <Pagination.Next data-testid="Next" />
-                        </Pagination.Item>
-                    </Pagination.List>
+                    <Pagination.Items />
+                    <Pagination.Next data-testid="Next" />
                 </Pagination.Root>,
             );
 
@@ -262,9 +224,7 @@ describe('<Pagination />', () => {
         it('should render the correct number of pages', () => {
             const rendered = render(
                 <Pagination.Root totalPages={20} defaultPage={1}>
-                    <Pagination.List>
-                        <Pagination.Items />
-                    </Pagination.List>
+                    <Pagination.Items />
                 </Pagination.Root>,
             );
 
@@ -280,9 +240,7 @@ describe('<Pagination />', () => {
         it('should render the correct number of sibling pages', () => {
             const rendered = render(
                 <Pagination.Root totalPages={20} defaultPage={10} siblingCount={2}>
-                    <Pagination.List>
-                        <Pagination.Items />
-                    </Pagination.List>
+                    <Pagination.Items />
                 </Pagination.Root>,
             );
 
@@ -299,15 +257,9 @@ const ControlledPaginationTest = ({ page: pageProp, ...props }: Pagination.Root.
 
     return (
         <Pagination.Root page={page} onPageChange={setPage} {...props}>
-            <Pagination.List>
-                <Pagination.Item>
-                    <Pagination.Previous data-testid="Previous" />
-                </Pagination.Item>
-                <Pagination.Items />
-                <Pagination.Item>
-                    <Pagination.Next data-testid="Next" />
-                </Pagination.Item>
-            </Pagination.List>
+            <Pagination.Previous data-testid="Previous" />
+            <Pagination.Items />
+            <Pagination.Next data-testid="Next" />
         </Pagination.Root>
     );
 };

@@ -37,76 +37,93 @@ const [PaginationProvider, usePaginationContext] = createContext<PaginationConte
  * -----------------------------------------------------------------------------------------------*/
 
 export const PaginationRoot = forwardRef<HTMLElement, PaginationRoot.Props>((props, ref) => {
-    const {
-        render,
-        page: pageProp,
-        defaultPage = 1,
-        onPageChange: onPageChangeProp,
+    const { children, ...componentProps } = props;
 
-        totalPages,
-        siblingCount = 1,
-        boundaryCount = 1,
-        disabled = false,
-        className,
-        ...componentProps
-    } = props;
-
-    const [variantProps, otherProps] = createSplitProps<PaginationVariants>()(componentProps, [
-        'size',
-    ]);
-
-    const [page, setPageUnwrapped] = useControlled({
-        controlled: pageProp,
-        default: defaultPage,
-        name: 'Pagination',
-        state: 'page',
-    });
-
-    const onPageChange = useEventCallback(onPageChangeProp);
-
-    const setPage = useEventCallback(
-        (newPage: number, eventDetails: PaginationRoot.ChangeEventDetails) => {
-            onPageChange?.(newPage, eventDetails);
-
-            if (eventDetails.isCanceled) {
-                return;
-            }
-
-            setPageUnwrapped(newPage);
-        },
+    return (
+        <PaginationRootPrimitive ref={ref} {...componentProps}>
+            <PaginationListPrimitive>{children}</PaginationListPrimitive>
+        </PaginationRootPrimitive>
     );
-
-    const element = useRender({
-        ref,
-        render: render || <nav />,
-        props: {
-            'aria-label': 'Pagination',
-            ...otherProps,
-        },
-    });
-
-    const context: PaginationContext = useMemo(
-        () => ({
-            ...variantProps,
-            totalPages,
-            siblingCount,
-            boundaryCount,
-            page,
-            setPage,
-            disabled,
-        }),
-        [totalPages, page, setPage, siblingCount, boundaryCount, disabled, variantProps],
-    );
-
-    return <PaginationProvider value={context}>{element}</PaginationProvider>;
 });
 PaginationRoot.displayName = 'Pagination.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Pagination.List
+ * Pagination.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const PaginationList = forwardRef<HTMLOListElement, PaginationList.Props>(
+export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPrimitive.Props>(
+    (props, ref) => {
+        const {
+            render,
+            page: pageProp,
+            defaultPage = 1,
+            onPageChange: onPageChangeProp,
+
+            totalPages,
+            siblingCount = 1,
+            boundaryCount = 1,
+            disabled = false,
+            className,
+            ...componentProps
+        } = props;
+
+        const [variantProps, otherProps] = createSplitProps<PaginationVariants>()(componentProps, [
+            'size',
+        ]);
+
+        const [page, setPageUnwrapped] = useControlled({
+            controlled: pageProp,
+            default: defaultPage,
+            name: 'Pagination',
+            state: 'page',
+        });
+
+        const onPageChange = useEventCallback(onPageChangeProp);
+
+        const setPage = useEventCallback(
+            (newPage: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => {
+                onPageChange?.(newPage, eventDetails);
+
+                if (eventDetails.isCanceled) {
+                    return;
+                }
+
+                setPageUnwrapped(newPage);
+            },
+        );
+
+        const element = useRender({
+            ref,
+            render: render || <nav />,
+            props: {
+                'aria-label': 'Pagination',
+                ...otherProps,
+            },
+        });
+
+        const context: PaginationContext = useMemo(
+            () => ({
+                ...variantProps,
+                totalPages,
+                siblingCount,
+                boundaryCount,
+                page,
+                setPage,
+                disabled,
+            }),
+            [totalPages, page, setPage, siblingCount, boundaryCount, disabled, variantProps],
+        );
+
+        return <PaginationProvider value={context}>{element}</PaginationProvider>;
+    },
+);
+PaginationRootPrimitive.displayName = 'Pagination.Root';
+
+/* -------------------------------------------------------------------------------------------------
+ * Pagination.ListPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const PaginationListPrimitive = forwardRef<HTMLOListElement, PaginationListPrimitive.Props>(
     ({ render, className, ...props }, ref) => {
         return useRender({
             ref,
@@ -118,13 +135,13 @@ export const PaginationList = forwardRef<HTMLOListElement, PaginationList.Props>
         });
     },
 );
-PaginationList.displayName = 'Pagination.List';
+PaginationListPrimitive.displayName = 'Pagination.ListPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Pagination.Item
+ * Pagination.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const PaginationItem = forwardRef<HTMLLIElement, PaginationItem.Props>(
+export const PaginationItemPrimitive = forwardRef<HTMLLIElement, PaginationItemPrimitive.Props>(
     ({ render, className, ...props }, ref) => {
         return useRender({
             ref,
@@ -136,87 +153,115 @@ export const PaginationItem = forwardRef<HTMLLIElement, PaginationItem.Props>(
         });
     },
 );
-PaginationItem.displayName = 'Pagination.Item';
+PaginationItemPrimitive.displayName = 'Pagination.ItemPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * Pagination.ButtonPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const PaginationButtonPrimitive = forwardRef<
+    HTMLButtonElement,
+    PaginationButtonPrimitive.Props
+>(({ page, render, disabled: disabledProp, className, ...props }, ref) => {
+    const { page: contextPage, setPage, size, disabled: contextDisabled } = usePaginationContext();
+
+    const handleClick = useEventCallback((event: MouseEvent) => {
+        const details = createChangeEventDetails('item-press', event.nativeEvent);
+
+        setPage(page, details);
+    });
+
+    const disabled = disabledProp || contextDisabled;
+    const current = page === contextPage;
+
+    return useRender({
+        ref,
+        render: render || <button />,
+        state: { current, disabled },
+        props: {
+            'aria-label': `Page ${page}`,
+            'aria-current': current ? 'page' : undefined,
+            disabled,
+            onClick: handleClick,
+            className: clsx(styles.button({ size }), className),
+            ...props,
+        },
+    });
+});
+PaginationButtonPrimitive.displayName = 'Pagination.ButtonPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Pagination.Button
  * -----------------------------------------------------------------------------------------------*/
 
 export const PaginationButton = forwardRef<HTMLButtonElement, PaginationButton.Props>(
-    ({ page, render, disabled: disabledProp, className, ...props }, ref) => {
-        const {
-            page: contextPage,
-            setPage,
-            size,
-            disabled: contextDisabled,
-        } = usePaginationContext();
-
-        const handleClick = useEventCallback((event: MouseEvent) => {
-            const details = createChangeEventDetails('item-press', event.nativeEvent);
-
-            setPage(page, details);
-        });
-
-        const disabled = disabledProp || contextDisabled;
-        const current = page === contextPage;
-
-        return useRender({
-            ref,
-            render: render || <button />,
-            state: { current, disabled },
-            props: {
-                'aria-label': `Page ${page}`,
-                'aria-current': current ? 'page' : undefined,
-                disabled,
-                onClick: handleClick,
-                className: clsx(styles.button({ size }), className),
-                ...props,
-            },
-        });
+    (props, ref) => {
+        return (
+            <PaginationItemPrimitive>
+                <PaginationButtonPrimitive ref={ref} {...props} />
+            </PaginationItemPrimitive>
+        );
     },
 );
 PaginationButton.displayName = 'Pagination.Button';
+
+/* -------------------------------------------------------------------------------------------------
+ * Pagination.PreviousPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const PaginationPreviousPrimitive = forwardRef<
+    HTMLButtonElement,
+    PaginationPreviousPrimitive.Props
+>(({ render, disabled: disabledProp, className, children: childrenProp, ...props }, ref) => {
+    const { page, setPage, size, disabled: contextDisabled } = usePaginationContext();
+
+    const disabled = disabledProp || contextDisabled || page <= 1;
+
+    const onClick = useEventCallback((event: MouseEvent) => {
+        if (disabled) return;
+
+        const details = createChangeEventDetails('item-press', event.nativeEvent);
+        setPage(page - 1, details);
+    });
+
+    const IconElement = createSlot(childrenProp || <ChevronLeftOutlineIcon size="100%" />);
+
+    return useRender({
+        ref,
+        render: render || <button />,
+        props: {
+            'aria-label': 'Previous Page',
+            'data-disabled': disabled ? '' : undefined,
+            disabled,
+            className: clsx(styles.button({ size }), className),
+            onClick,
+            children: <IconElement className={styles.icon({ size })} />,
+            ...props,
+        },
+    });
+});
+PaginationPreviousPrimitive.displayName = 'Pagination.PreviousPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Pagination.Previous
  * -----------------------------------------------------------------------------------------------*/
 
 export const PaginationPrevious = forwardRef<HTMLButtonElement, PaginationPrevious.Props>(
-    ({ render, disabled: disabledProp, className, children: childrenProp, ...props }, ref) => {
-        const { page, setPage, size, disabled: contextDisabled } = usePaginationContext();
-
-        const disabled = disabledProp || contextDisabled || page <= 1;
-
-        const onClick = useEventCallback((event: MouseEvent) => {
-            if (disabled) return;
-
-            const details = createChangeEventDetails('item-press', event.nativeEvent);
-            setPage(page - 1, details);
-        });
-
-        const IconElement = createSlot(childrenProp || <ChevronLeftOutlineIcon size="100%" />);
-
-        return useRender({
-            ref,
-            render: render || <button />,
-            props: {
-                'aria-label': 'Previous Page',
-                'data-disabled': disabled ? '' : undefined,
-                disabled,
-                className: clsx(styles.button({ size }), className),
-                onClick,
-                children: <IconElement className={styles.icon({ size })} />,
-                ...props,
-            },
-        });
+    (props, ref) => {
+        return (
+            <PaginationItemPrimitive>
+                <PaginationPreviousPrimitive ref={ref} {...props} />
+            </PaginationItemPrimitive>
+        );
     },
 );
 PaginationPrevious.displayName = 'Pagination.Previous';
+
 /* -------------------------------------------------------------------------------------------------
- * Pagination.Next
+ * Pagination.NextPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const PaginationNext = forwardRef<HTMLButtonElement, PaginationNext.Props>(
+export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationNextPrimitive.Props>(
     ({ render, disabled: disabledProp, className, children: childrenProp, ...props }, ref) => {
         const {
             totalPages,
@@ -252,30 +297,59 @@ export const PaginationNext = forwardRef<HTMLButtonElement, PaginationNext.Props
         });
     },
 );
+PaginationNextPrimitive.displayName = 'Pagination.NextPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * Pagination.Next
+ * -----------------------------------------------------------------------------------------------*/
+
+export const PaginationNext = forwardRef<HTMLButtonElement, PaginationNext.Props>((props, ref) => {
+    return (
+        <PaginationItemPrimitive>
+            <PaginationNextPrimitive ref={ref} {...props} />
+        </PaginationItemPrimitive>
+    );
+});
 PaginationNext.displayName = 'Pagination.Next';
+
+/* -------------------------------------------------------------------------------------------------
+ * Pagination.EllipsisPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const PaginationEllipsisPrimitive = forwardRef<
+    HTMLSpanElement,
+    PaginationEllipsisPrimitive.Props
+>(({ render, className, children: childrenProp, ...props }, ref) => {
+    const { size, disabled } = usePaginationContext();
+
+    const IconElement = createSlot(childrenProp || <MoreCommonOutlineIcon size="100%" />);
+
+    return useRender({
+        ref,
+        render: render || <span />,
+        props: {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            'data-disabled': disabled ? '' : undefined,
+            className: clsx(styles.ellipsis({ size }), className),
+            children: <IconElement className={styles.icon({ size })} />,
+            ...props,
+        },
+    });
+});
+PaginationEllipsisPrimitive.displayName = 'Pagination.EllipsisPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Pagination.Ellipsis
  * -----------------------------------------------------------------------------------------------*/
 
 export const PaginationEllipsis = forwardRef<HTMLSpanElement, PaginationEllipsis.Props>(
-    ({ render, className, children: childrenProp, ...props }, ref) => {
-        const { size, disabled } = usePaginationContext();
-
-        const IconElement = createSlot(childrenProp || <MoreCommonOutlineIcon size="100%" />);
-
-        return useRender({
-            ref,
-            render: render || <span />,
-            props: {
-                role: 'presentation',
-                'aria-hidden': 'true',
-                'data-disabled': disabled ? '' : undefined,
-                className: clsx(styles.ellipsis({ size }), className),
-                children: <IconElement className={styles.icon({ size })} />,
-                ...props,
-            },
-        });
+    (props, ref) => {
+        return (
+            <PaginationItemPrimitive>
+                <PaginationEllipsisPrimitive ref={ref} {...props} />
+            </PaginationItemPrimitive>
+        );
     },
 );
 PaginationEllipsis.displayName = 'Pagination.Ellipsis';
@@ -294,17 +368,13 @@ export const PaginationItems = ({ children: childrenProp }: PaginationItems.Prop
         : (childrenProp ??
               pages.map(({ type, value }) => {
                   if (type === 'BREAK') {
-                      return (
-                          <PaginationItem key={`${type}-${value}`}>
-                              <PaginationEllipsis />
-                          </PaginationItem>
-                      );
+                      return <PaginationEllipsis key={`${type}-${value}`} />;
                   }
 
                   return (
-                      <PaginationItem key={`${type}-${value}`}>
-                          <PaginationButton page={value}>{value}</PaginationButton>
-                      </PaginationItem>
+                      <PaginationButton key={`${type}-${value}`} page={value}>
+                          {value}
+                      </PaginationButton>
                   );
               }));
 };
@@ -441,7 +511,7 @@ export function createPaginationRange({
 interface PaginationContext extends PaginationVariants {
     totalPages: number;
     page: number;
-    setPage: (page: number, eventDetails: PaginationRoot.ChangeEventDetails) => void;
+    setPage: (page: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => void;
     siblingCount: number;
     boundaryCount: number;
     disabled: boolean;
@@ -452,7 +522,7 @@ export interface PaginationRootProps extends RootPrimitiveProps, PaginationVaria
     totalPages: number;
     page?: number;
     defaultPage?: number;
-    onPageChange?: (page: number, eventDetails: PaginationRoot.ChangeEventDetails) => void;
+    onPageChange?: (page: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => void;
 
     siblingCount?: number;
     boundaryCount?: number;
@@ -469,12 +539,19 @@ export namespace PaginationRoot {
     export type ChangeEventDetails = PaginationRootChangeEventDetails;
 }
 
-export namespace PaginationList {
+export namespace PaginationRootPrimitive {
+    export type Props = PaginationRootProps;
+
+    export type ChangeEventReason = PaginationRootChangeEventReason;
+    export type ChangeEventDetails = PaginationRootChangeEventDetails;
+}
+
+export namespace PaginationListPrimitive {
     type ListPrimitiveProps = VComponentProps<'ol'>;
     export interface Props extends ListPrimitiveProps {}
 }
 
-export namespace PaginationItem {
+export namespace PaginationItemPrimitive {
     type ItemPrimitiveProps = VComponentProps<'li'>;
     export interface Props extends ItemPrimitiveProps {}
 }
@@ -484,20 +561,32 @@ export interface PaginationButtonProps extends ButtonPrimitiveProps {
     page: number;
 }
 
-export namespace PaginationButton {
+export namespace PaginationButtonPrimitive {
     export type Props = PaginationButtonProps;
 }
 
-export namespace PaginationPrevious {
+export namespace PaginationButton {
+    export type Props = PaginationButtonPrimitive.Props;
+}
+
+export namespace PaginationPreviousPrimitive {
     type PreviousPrimitiveProps = VComponentProps<'button'>;
 
     export interface Props extends PreviousPrimitiveProps {}
 }
 
-export namespace PaginationNext {
+export namespace PaginationPrevious {
+    export interface Props extends PaginationPreviousPrimitive.Props {}
+}
+
+export namespace PaginationNextPrimitive {
     type NextPrimitiveProps = VComponentProps<'button'>;
 
     export interface Props extends NextPrimitiveProps {}
+}
+
+export namespace PaginationNext {
+    export interface Props extends PaginationNextPrimitive.Props {}
 }
 
 export namespace PaginationItems {
@@ -508,8 +597,12 @@ export namespace PaginationItems {
     }
 }
 
-export namespace PaginationEllipsis {
+export namespace PaginationEllipsisPrimitive {
     type EllipsisPrimitiveProps = VComponentProps<'span'>;
 
     export interface Props extends EllipsisPrimitiveProps {}
+}
+
+export namespace PaginationEllipsis {
+    export interface Props extends PaginationEllipsisPrimitive.Props {}
 }
