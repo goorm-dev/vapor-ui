@@ -95,7 +95,7 @@ function generateLightModeSemanticTokens(
     // Adaptive Contrast Rule: lightness >= 0.65이면 color-black, 아니면 color-white
     const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
     const lightness = extractOklchLightness(primary200Chip?.oklch || lowestDeltaEChip.oklch);
-    const buttonForegroundPrimary =
+    const primaryPrimaryInverse =
         lightness >= 0.65 ? baseTokens['color-black'].name : baseTokens['color-white'].name;
 
     return {
@@ -107,7 +107,7 @@ function generateLightModeSemanticTokens(
         'color-background-canvas-100': backgroundCanvas100,
         'color-background-canvas-200': backgroundCanvas200,
         'color-background-overlay-100': backgroundOverlay100,
-        'color-button-foreground-primary': buttonForegroundPrimary,
+        'color-foreground-inverse': primaryPrimaryInverse,
     };
 }
 
@@ -142,7 +142,7 @@ function generateDarkModeSemanticTokens(
 
     const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
     const lightness = extractOklchLightness(primary200Chip?.oklch || lowestDeltaEChip.oklch);
-    const buttonForegroundPrimary =
+    const primaryPrimaryInverse =
         lightness >= 0.65 ? baseTokens['color-black'].name : baseTokens['color-white'].name;
 
     return {
@@ -154,7 +154,7 @@ function generateDarkModeSemanticTokens(
         'color-background-canvas-100': backgroundCanvas100,
         'color-background-canvas-200': backgroundCanvas200,
         'color-background-overlay-100': backgroundOverlay100,
-        'color-button-foreground-primary': buttonForegroundPrimary,
+        'color-foreground-inverse': primaryPrimaryInverse,
     };
 }
 

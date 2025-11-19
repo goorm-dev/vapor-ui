@@ -5532,9 +5532,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should a
     "color-background-primary-100": "color-lightRed-050",
     "color-background-primary-200": "color-lightRed-900",
     "color-border-primary": "color-lightRed-900",
-    "color-button-foreground-primary": "color-black",
     "color-foreground-100": "color-lightRed-900",
     "color-foreground-200": "color-lightRed-900",
+    "color-foreground-inverse": "color-black",
   },
   "lightModeTokens": {
     "color-background-canvas-100": "color-background-canvas",
@@ -5543,9 +5543,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should a
     "color-background-primary-100": "color-lightRed-050",
     "color-background-primary-200": "color-lightRed-050",
     "color-border-primary": "color-lightRed-050",
-    "color-button-foreground-primary": "color-black",
     "color-foreground-100": "color-lightRed-100",
     "color-foreground-200": "color-lightRed-200",
+    "color-foreground-inverse": "color-black",
   },
 }
 `;
@@ -5559,9 +5559,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should g
     "color-background-primary-100": "color-mint-050",
     "color-background-primary-200": "color-mint-700",
     "color-border-primary": "color-mint-700",
-    "color-button-foreground-primary": "color-black",
     "color-foreground-100": "color-mint-800",
     "color-foreground-200": "color-mint-900",
+    "color-foreground-inverse": "color-black",
   },
   "lightModeTokens": {
     "color-background-canvas-100": "color-background-canvas",
@@ -5570,9 +5570,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should g
     "color-background-primary-100": "color-mint-100",
     "color-background-primary-200": "color-mint-200",
     "color-border-primary": "color-mint-200",
-    "color-button-foreground-primary": "color-black",
     "color-foreground-100": "color-mint-300",
     "color-foreground-200": "color-mint-400",
+    "color-foreground-inverse": "color-black",
   },
 }
 `;
@@ -5586,9 +5586,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should h
     "color-background-primary-100": "color-teal-050",
     "color-background-primary-200": "color-teal-400",
     "color-border-primary": "color-teal-400",
-    "color-button-foreground-primary": "color-white",
     "color-foreground-100": "color-teal-500",
     "color-foreground-200": "color-teal-600",
+    "color-foreground-inverse": "color-white",
   },
   "lightModeTokens": {
     "color-background-canvas-100": "color-background-canvas",
@@ -5597,9 +5597,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should h
     "color-background-primary-100": "color-teal-100",
     "color-background-primary-200": "color-teal-500",
     "color-border-primary": "color-teal-500",
-    "color-button-foreground-primary": "color-white",
     "color-foreground-100": "color-teal-600",
     "color-foreground-200": "color-teal-700",
+    "color-foreground-inverse": "color-white",
   },
 }
 `;
@@ -5613,9 +5613,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should h
     "color-background-primary-100": "color-darkRed-050",
     "color-background-primary-200": "color-darkRed-050",
     "color-border-primary": "color-darkRed-050",
-    "color-button-foreground-primary": "color-white",
     "color-foreground-100": "color-darkRed-100",
     "color-foreground-200": "color-darkRed-200",
+    "color-foreground-inverse": "color-white",
   },
   "lightModeTokens": {
     "color-background-canvas-100": "color-background-canvas",
@@ -5624,9 +5624,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should h
     "color-background-primary-100": "color-darkRed-100",
     "color-background-primary-200": "color-darkRed-900",
     "color-border-primary": "color-darkRed-900",
-    "color-button-foreground-primary": "color-white",
     "color-foreground-100": "color-darkRed-900",
     "color-foreground-200": "color-darkRed-900",
+    "color-foreground-inverse": "color-white",
   },
 }
 `;
