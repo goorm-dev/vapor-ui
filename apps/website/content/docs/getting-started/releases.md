@@ -3,6 +3,38 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0-beta.6
+
+### @vapor-ui/codemod
+
+#### Minor Changes
+
+- b2d053c: add checkbox, collapsible, dialog transform
+- 939c845: add avatar, breadcrumb, card transform
+- eb3fdc7: add codemod cli packages
+
+### @vapor-ui/color-generator
+
+#### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+
+### @vapor-ui/core
+
+#### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+
+### @vapor-ui/css-generator
+
+#### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+- Updated dependencies [bd523c7]
+    - @vapor-ui/color-generator@1.0.0
+
+---
+
 ## 1.0.0-beta.5
 
 ### @vapor-ui/codemod
