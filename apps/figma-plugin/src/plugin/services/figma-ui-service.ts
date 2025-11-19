@@ -690,16 +690,28 @@ async function createDependentTokenListItem(tokenData: DependentTokenData): Prom
     valueColumn.layoutSizingVertical = 'HUG';
 
     // Color Swatch (hex 값이 있는 경우에만)
-    if (tokenData.hex) {
+    if (
+        tokenData.hex ||
+        tokenData.dependentValue === 'color-white' ||
+        tokenData.dependentValue === 'color-black'
+    ) {
         const colorSwatch = figma.createFrame();
         colorSwatch.name = 'Dependent Color Swatch';
         colorSwatch.resize(32, 32);
         colorSwatch.cornerRadius = 8;
-        colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor(tokenData.hex) }];
         colorSwatch.strokes = [
             { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) },
         ];
         colorSwatch.strokeWeight = 1;
+
+        if (tokenData.hex) {
+            colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor(tokenData.hex) }];
+        } else if (tokenData.dependentValue === 'color-white') {
+            colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor('#FFFFFF') }];
+        } else {
+            colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor('#000000') }];
+        }
+
         valueColumn.appendChild(colorSwatch);
     }
 
