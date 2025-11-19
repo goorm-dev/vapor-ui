@@ -4,7 +4,7 @@ export const Component = () => (
     <div>
         <Field.Label>
             <Checkbox.Root id="terms" size="md" invalid={false}>
-                <Checkbox.Indicator />
+                <Checkbox.IndicatorPrimitive />
             </Checkbox.Root>
             약관에 동의합니다
         </Field.Label>

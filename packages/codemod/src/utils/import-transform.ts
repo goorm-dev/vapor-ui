@@ -1,4 +1,15 @@
-import type { API, ASTPath, Collection, ImportDeclaration, ImportSpecifier } from 'jscodeshift';
+import type {
+    API,
+    ASTPath,
+    Collection,
+    Identifier,
+    ImportDeclaration,
+    ImportDefaultSpecifier,
+    ImportNamespaceSpecifier,
+    ImportSpecifier,
+    JSXIdentifier,
+    JSXMemberExpression,
+} from 'jscodeshift';
 
 export interface ComponentImportInfo {
     /** The local name of the component (could be aliased) */
@@ -119,15 +130,6 @@ function handleSimplePackageMigration(
         if (oldComponentName !== newComponentName && importDeclaration.specifiers) {
             importDeclaration.specifiers = importDeclaration.specifiers.map((spec) => {
                 if (spec.type === 'ImportSpecifier' && spec.imported.name === oldComponentName) {
-                    const localName = getLocalName(spec, oldComponentName);
-                    const hasAlias = localName !== oldComponentName;
-
-                    if (hasAlias) {
-                        return j.importSpecifier(
-                            j.identifier(newComponentName),
-                            j.identifier(localName),
-                        );
-                    }
                     return j.importSpecifier(j.identifier(newComponentName));
                 }
                 return spec;
@@ -304,13 +306,6 @@ export const transformImportDeclaration = ({
         return;
     }
 
-    const hasTargetComponent = importDeclarationFromSourcePackage.value.specifiers?.some(
-        (spec) => spec.type === 'ImportSpecifier' && spec.imported.name === oldComponentName,
-    );
-    if (!hasTargetComponent) {
-        return;
-    }
-
     const sourceImportCount = getImportSpecifierCount(importDeclarationFromSourcePackage);
 
     if (importDeclarationFromTargetPackage === null) {
@@ -341,4 +336,215 @@ export const transformImportDeclaration = ({
             newComponentName,
         });
     }
+};
+
+/**
+ * Collect all import specifiers from a given source package
+ * @param j - jscodeshift API
+ * @param root = AST root collection
+ * @param sourcePackage  - The source package to collect imports from
+ * @returns Array of ImportSpecifier objects
+ */
+
+export const collectImportSpecifiersToMove = (
+    j: API['jscodeshift'],
+    root: Collection<File>,
+    sourcePackage: string,
+): ImportSpecifier[] => {
+    const specifiersMap = new Map<string, ImportSpecifier>();
+
+    root.find(j.ImportDeclaration, {
+        source: { value: sourcePackage },
+    }).forEach((importPath) => {
+        (importPath.node as ImportDeclaration).specifiers?.forEach((specifier) => {
+            if (specifier.type === 'ImportSpecifier') {
+                const localName = specifier.local?.name as string;
+
+                if (!specifiersMap.has(localName)) {
+                    specifiersMap.set(localName, specifier);
+                }
+            }
+        });
+    });
+    return Array.from(specifiersMap.values());
+};
+
+export const getUniqueSortedSpecifiers = (
+    specifiers: (ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier)[],
+): (ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier)[] => {
+    const namedSpecifiersMap = new Map<string, ImportSpecifier>();
+    const otherSpecifiers: (ImportDefaultSpecifier | ImportNamespaceSpecifier)[] = [];
+
+    specifiers.forEach((specifier) => {
+        if (specifier.type === 'ImportSpecifier') {
+            const localName = specifier.local?.name as string;
+            if (!namedSpecifiersMap.has(localName)) {
+                namedSpecifiersMap.set(localName, specifier);
+            }
+        } else {
+            otherSpecifiers.push(specifier);
+        }
+    });
+
+    const sortedNamedSpecifiers = Array.from(namedSpecifiersMap.values()).sort((a, b) =>
+        (a.imported.name as string).localeCompare(b.imported.name as string),
+    );
+
+    return [...sortedNamedSpecifiers, ...otherSpecifiers];
+};
+
+export const mergeIntoExistingImport = (
+    targetImport: Collection<ImportDeclaration>,
+    specifiersToMove: ImportSpecifier[],
+) => {
+    const targetImportPath = targetImport.at(0).get();
+
+    const existingSpecifiers = targetImportPath.value.specifiers || [];
+
+    const combinedSpecifiers = [...existingSpecifiers, ...specifiersToMove];
+
+    const finalSpecifiers = getUniqueSortedSpecifiers(combinedSpecifiers);
+
+    targetImportPath.value.specifiers = finalSpecifiers;
+};
+
+export const createNewImportDeclaration = (
+    j: API['jscodeshift'],
+    root: Collection<File>,
+    targetPackage: string,
+    specifiersToMove: ImportSpecifier[],
+) => {
+    const sortedSpecifiers = getUniqueSortedSpecifiers(specifiersToMove);
+
+    const newImport = j.importDeclaration(sortedSpecifiers, j.literal(targetPackage));
+
+    const lastImport = root.find(j.ImportDeclaration).at(-1);
+    if (lastImport.size() > 0) {
+        lastImport.insertAfter(newImport);
+    } else {
+        root.get().node.program.body.unshift(newImport);
+    }
+};
+
+export const cleanUpSourcePackage = (
+    j: API['jscodeshift'],
+    root: Collection<File>,
+    sourcePackage: string,
+    specifiersToMove: ImportSpecifier[],
+) => {
+    const movedLocalNames = new Set<string>(
+        specifiersToMove.map((spec) => spec.local?.name as string),
+    );
+
+    root.find(j.ImportDeclaration, {
+        source: { value: sourcePackage },
+    }).forEach((importPath) => {
+        const remainingSpecifiers = (importPath.node as ImportDeclaration).specifiers?.filter(
+            (specifier) => {
+                if (specifier.type !== 'ImportSpecifier') {
+                    return true;
+                }
+                return !movedLocalNames.has(specifier.local?.name as string);
+            },
+        );
+
+        if (remainingSpecifiers && remainingSpecifiers.length > 0) {
+            importPath.node.specifiers = remainingSpecifiers;
+        } else {
+            j(importPath).remove();
+        }
+    });
+};
+
+export const transformSpecifier = (
+    j: API['jscodeshift'],
+    specifiersToMove: ImportSpecifier[],
+    renameMap: { [oldName: string]: ComponentRenameRule },
+): ImportSpecifier[] => {
+    if (Object.keys(renameMap).length === 0) {
+        return specifiersToMove;
+    }
+
+    return specifiersToMove.map((specifier) => {
+        const originalImportedName = specifier.imported.name as string;
+        const rule = renameMap[originalImportedName];
+        if (!rule || !rule.newImport) {
+            return specifier;
+        }
+        const newImportedName = rule.newImport;
+        const newImported: Identifier = j.identifier(newImportedName);
+        let newLocal: Identifier;
+
+        if (specifier.imported.name === specifier.local?.name) {
+            newLocal = j.identifier(newImportedName);
+        } else {
+            newLocal = specifier.local as Identifier;
+        }
+
+        return j.importSpecifier(newImported, newLocal);
+    });
+};
+
+export interface ComponentRenameRule {
+    newImport: string;
+    newJSX: string;
+}
+
+export const buildJsxTransformMap = (
+    specifiersToMove: ImportSpecifier[],
+    renameMap: { [oldName: string]: ComponentRenameRule },
+): Map<string, string> => {
+    const jsxMap = new Map<string, string>();
+
+    specifiersToMove.forEach((specifier) => {
+        const originalImportedName = specifier.imported.name as string;
+        const rule = renameMap[originalImportedName];
+
+        if (rule && rule.newJSX) {
+            const localName = specifier.local?.name as string;
+            jsxMap.set(localName, rule.newJSX);
+        }
+    });
+
+    return jsxMap;
+};
+
+export function transformJsxUsage(
+    j: API['jscodeshift'],
+    root: Collection<File>,
+    jsxMap: Map<string, string>,
+) {
+    root.find(j.JSXIdentifier, (node) => jsxMap.has(node.name)).forEach((jsxIdentifierPath) => {
+        const newJsxName = jsxMap.get(jsxIdentifierPath.node.name)!;
+
+        if (!newJsxName.includes('.')) {
+            jsxIdentifierPath.replace(j.jsxIdentifier(newJsxName));
+        } else {
+            const parts = newJsxName.split('.');
+            const [first, ...rest] = parts.map((part) => j.jsxIdentifier(part));
+            const newAstNode = rest.reduce(
+                (obj, prop) => j.jsxMemberExpression(obj, prop),
+                first as JSXIdentifier | JSXMemberExpression,
+            );
+
+            jsxIdentifierPath.replace(newAstNode);
+        }
+    });
+}
+
+export const filterSpecifiersByMap = (
+    allSpecifiers: ImportSpecifier[],
+    renameMap: { [oldName: string]: ComponentRenameRule },
+): ImportSpecifier[] => {
+    const mapKeys = Object.keys(renameMap);
+    return allSpecifiers.filter((spec) => mapKeys.includes(spec.imported.name as string));
+};
+
+export const buildAliasMap = (specifiersToMove: ImportSpecifier[]): Map<string, string> => {
+    const aliasMap = new Map<string, string>();
+
+    specifiersToMove.forEach((specifier) => {
+        aliasMap.set(specifier.imported.name as string, specifier.local?.name as string);
+    });
+    return aliasMap;
 };

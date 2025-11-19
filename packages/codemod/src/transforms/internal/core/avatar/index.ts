@@ -1,39 +1,40 @@
-import type { API, FileInfo, JSXAttribute, JSXSpreadAttribute, Transform } from 'jscodeshift';
+import type {
+    API,
+    FileInfo,
+    ImportSpecifier,
+    JSXAttribute,
+    JSXSpreadAttribute,
+    Transform,
+} from 'jscodeshift';
 
 import {
-    getFinalImportName,
-    hasComponentInPackage,
-    transformImportDeclaration,
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+    transformSpecifier,
 } from '~/utils/import-transform';
 import { transformToMemberExpression } from '~/utils/jsx-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
-const OLD_COMPONENT_NAME = 'Avatar';
-const NEW_COMPONENT_NAME = 'Avatar';
-const COMPONENT_NAME = 'Avatar';
 
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    // Track the old Avatar local name
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    const specifiersToMove = allSpecifiers.filter((spec) => spec.imported.name === 'Avatar');
+
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    //  1. Import migration:
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
-    // Get the final import name
-    const avatarImportName = getFinalImportName(root, j, COMPONENT_NAME, TARGET_PACKAGE);
+    const avatarImportName =
+        specifiersToMove.find((spec) => spec.imported.name === 'Avatar')?.local?.name || 'Avatar';
+
+    const transformedSpecifiers = transformSpecifier(j, specifiersToMove, {});
 
     // 2. Transform Avatar JSX elements
     root.find(j.JSXElement).forEach((path) => {
@@ -44,15 +45,16 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             element.openingElement.name.type === 'JSXIdentifier' &&
             element.openingElement.name.name === avatarImportName
         ) {
-            // Change Avatar to Avatar.Simple
-            transformToMemberExpression(j, element, avatarImportName, 'Simple');
+            // Change Avatar to Avatar.Root
+            transformToMemberExpression(j, element, avatarImportName, 'Root');
 
             const attributes = element.openingElement.attributes || [];
             let hasSquareProp = false;
             let hasSrcInChildren = false;
             let srcValue: JSXAttribute['value'] = null;
+            let altValue: JSXAttribute['value'] = null;
 
-            // Check for Avatar.Image children and extract src
+            // Check for Avatar.Image children and extract src/alt
             element.children?.forEach((child) => {
                 if (
                     child.type === 'JSXElement' &&
@@ -62,10 +64,14 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     child.openingElement.name.property.name === 'Image'
                 ) {
                     hasSrcInChildren = true;
-                    // Extract src prop from Avatar.Image
+                    // Extract src and alt props from Avatar.Image
                     child.openingElement.attributes?.forEach((attr) => {
-                        if (attr.type === 'JSXAttribute' && attr.name.name === 'src') {
-                            srcValue = attr.value;
+                        if (attr.type === 'JSXAttribute') {
+                            if (attr.name.name === 'src') {
+                                srcValue = attr.value;
+                            } else if (attr.name.name === 'alt') {
+                                altValue = attr.value;
+                            }
                         }
                     });
                 }
@@ -152,8 +158,11 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             // Build attributes in desired order: alt, other props, shape, src
             const newAttributes: (JSXAttribute | JSXSpreadAttribute)[] = [];
 
+            // Use alt from Avatar.Image if label doesn't exist on parent
             if (altAttr) {
                 newAttributes.push(altAttr);
+            } else if (altValue) {
+                newAttributes.push(j.jsxAttribute(j.jsxIdentifier('alt'), altValue));
             }
 
             newAttributes.push(...otherAttrs);
@@ -205,6 +214,18 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             }
         }
     });
+
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
+
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
 
     const printOptions = {
         quote: 'auto' as const,

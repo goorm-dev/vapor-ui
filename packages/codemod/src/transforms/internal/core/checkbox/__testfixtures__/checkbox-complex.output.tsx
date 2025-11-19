@@ -19,7 +19,7 @@ export const Component = ({ table }: any) => {
             disabled={isRowNotSelectable}
             onCheckedChange={handleCheckboxChange}
         >
-            <Checkbox.Indicator />
+            <Checkbox.IndicatorPrimitive />
         </Checkbox.Root>
     );
 };

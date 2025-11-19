@@ -21,7 +21,7 @@ export const overlay = layerStyle('components', {
     },
 });
 
-export const content = recipe({
+export const popup = recipe({
     base: layerStyle('components', {
         position: 'fixed',
         top: '50%',
@@ -104,4 +104,4 @@ export const footer = layerStyle('components', {
     width: '100%',
 });
 
-export type DialogContentVariants = NonNullable<RecipeVariants<typeof content>>;
+export type DialogPopupVariants = NonNullable<RecipeVariants<typeof popup>>;

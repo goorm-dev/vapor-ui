@@ -141,12 +141,12 @@ describe('RadioGroup', () => {
             </form>,
         );
 
-        const [radioA] = rendered.getAllByRole('radio');
+        const radioA = rendered.getByLabelText('a');
         const submitButton = rendered.getByRole('button', { name: 'Submit' });
 
         await userEvent.click(submitButton);
 
-        expect(stringifiedFormData).toBe('radio-group-test=');
+        expect(stringifiedFormData).toBe('');
 
         await userEvent.click(radioA);
         await userEvent.click(submitButton);

@@ -1,4 +1,3 @@
-import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -7,19 +6,19 @@ import {
     generateRadiusCSS,
     generateScalingCSS,
 } from '../src/index';
-import type { CompleteCSSConfig } from '../src/types';
+import type { ColorThemeConfig, CompleteCSSConfig } from '../src/types';
 
-const MOCK_COLOR_CONFIG = {
-    primary: { name: 'mint', color: '#6af574ff' },
+const MOCK_COLOR_CONFIG: ColorThemeConfig = {
+    primary: { name: 'mint', hexcode: '#71d378' },
     background: {
         name: 'neutral',
-        color: '#F8FAFC',
+        hexcode: '#F8FAFC',
         lightness: {
             light: 98,
             dark: 8,
         },
     },
-} satisfies SemanticMappingConfig;
+};
 
 const MOCK_TOTAL_CONFIG: CompleteCSSConfig = {
     colors: MOCK_COLOR_CONFIG,

@@ -11,10 +11,10 @@ export default function SheetControlled() {
     return (
         <div className="space-y-4">
             <div className="flex gap-2">
-                <Button onClick={() => setIsOpen(true)} color="primary">
+                <Button onClick={() => setIsOpen(true)} colorPalette="primary">
                     Sheet 열기
                 </Button>
-                <Button onClick={() => setIsOpen(false)} color="danger" variant="outline">
+                <Button onClick={() => setIsOpen(false)} colorPalette="danger" variant="outline">
                     Sheet 닫기
                 </Button>
             </div>
@@ -24,7 +24,7 @@ export default function SheetControlled() {
             </p>
 
             <Sheet.Root open={isOpen} onOpenChange={setIsOpen}>
-                <Sheet.Content>
+                <Sheet.Popup>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
@@ -42,7 +42,7 @@ export default function SheetControlled() {
                     <Sheet.Footer>
                         <Sheet.Close render={<Button variant="ghost" />}>닫기</Sheet.Close>
                     </Sheet.Footer>
-                </Sheet.Content>
+                </Sheet.Popup>
             </Sheet.Root>
         </div>
     );

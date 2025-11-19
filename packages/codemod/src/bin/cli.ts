@@ -86,10 +86,6 @@ function runTransform({
         args = args.concat(jscodeshift);
     }
 
-    if (extensions) {
-        args = args.concat([`--extensions=${extensions.replace(/\s+/g, '')}`]);
-    }
-
     args = args.concat(files);
 
     const jscodeshiftExecutable = require.resolve('jscodeshift/bin/jscodeshift.js');
@@ -194,7 +190,6 @@ const run = async () => {
         --dry               (Advanced) Dry run. Changes are not written to files.
         --jscodeshift       (Advanced) Pass options directly to jscodeshift.
                         See more options: https://jscodeshift.com/run/cli
-      --extensions        Specify additional file extensions to be transformed.
     `,
         {
             importMeta: import.meta,
@@ -247,7 +242,9 @@ const run = async () => {
             choices: TRANSFORMER_INQUIRER_CHOICES,
         });
     }
-    const files = globbySync(cli.input[1] || answers.files);
+    const files = globbySync(cli.input[1] || answers.files, {
+        ignore: ['**/node_modules/**', '**/*.d.ts'],
+    });
 
     if (!files.length) {
         console.log(picocolors.red(`No files found matching ${files.join(' ')}`));
@@ -255,7 +252,7 @@ const run = async () => {
     }
 
     return runTransform({
-        files: globbySync(cli.input[1] || answers.files),
+        files,
         flags: cli.flags,
         transformer: cli.input[0] || answers.transformer,
     });

@@ -25,7 +25,7 @@ export const docsOptions: DocsLayoutProps = {
     ...baseOptions,
     tree: source.pageTree,
     sidebar: {
-        className: 'md:bg-[var(--vapor-color-background-canvas)]',
+        className: 'md:bg-v-canvas',
     },
 };
 
