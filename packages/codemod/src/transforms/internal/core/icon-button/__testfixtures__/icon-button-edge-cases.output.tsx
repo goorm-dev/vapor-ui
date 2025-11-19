@@ -13,7 +13,7 @@ export default function App() {
             {/* Line 86: Non-JSXIdentifier name */}
             <IconButton aria-label="test" />
             {/* Line 132: hint color warning */}
-            <IconButton aria-label="hint" color="hint">
+            <IconButton aria-label="hint" colorPalette="hint">
                 <HeartIcon />
             </IconButton>
             {/* Line 143-144: icon prop conversion */}
