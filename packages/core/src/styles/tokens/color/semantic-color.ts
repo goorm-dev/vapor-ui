@@ -71,9 +71,7 @@ export const LIGHT_SEMANTIC_COLORS = {
             '100': LIGHT_BASIC_COLORS.gray['700'],
             '200': LIGHT_BASIC_COLORS.gray['900'],
         },
-        button: {
-            primary: BASE_BASIC_COLORS.white,
-        },
+        inverse: BASE_BASIC_COLORS.white,
     },
     border: {
         normal: LIGHT_BASIC_COLORS.gray['100'],
@@ -156,9 +154,7 @@ export const DARK_SEMANTIC_COLORS = {
             '100': DARK_BASIC_COLORS.gray['700'],
             '200': DARK_BASIC_COLORS.gray['900'],
         },
-        button: {
-            primary: DARK_BASIC_COLORS.white,
-        },
+        inverse: BASE_BASIC_COLORS.white,
     },
     border: {
         normal: DARK_BASIC_COLORS.gray['300'],
