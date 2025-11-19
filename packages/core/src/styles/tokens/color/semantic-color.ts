@@ -78,7 +78,7 @@ export const LIGHT_SEMANTIC_COLORS = {
     border: {
         normal: LIGHT_BASIC_COLORS.gray['100'],
         primary: LIGHT_BASIC_COLORS.blue['500'],
-        secondary: LIGHT_BASIC_COLORS.gray['200'],
+        secondary: LIGHT_BASIC_COLORS.gray['400'],
         success: LIGHT_BASIC_COLORS.green['500'],
         warning: LIGHT_BASIC_COLORS.orange['500'],
         danger: LIGHT_BASIC_COLORS.red['500'],
@@ -163,7 +163,7 @@ export const DARK_SEMANTIC_COLORS = {
     border: {
         normal: DARK_BASIC_COLORS.gray['300'],
         primary: DARK_BASIC_COLORS.blue['400'],
-        secondary: DARK_BASIC_COLORS.gray['200'],
+        secondary: DARK_BASIC_COLORS.gray['400'],
         success: DARK_BASIC_COLORS.green['400'],
         warning: DARK_BASIC_COLORS.orange['400'],
         danger: DARK_BASIC_COLORS.red['400'],
