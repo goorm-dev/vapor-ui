@@ -179,7 +179,7 @@ Maps primitive palettes to semantic tokens used in applications.
   'color-background-canvas-100': string;    // Main canvas background
   'color-background-canvas-200': string;    // Elevated canvas background
   'color-background-overlay-100': string;   // Overlay/modal background
-  'color-button-foreground-primary': string; // Button text (lightness >= 65: black, < 65: white)
+  'color-foreground-inverse': string; // Inverse text on Primary (lightness >= 65: black, < 65: white)
 }
 ```
 
@@ -201,12 +201,6 @@ const fullTheme = generatePrimitiveColorPalette({
     backgroundColor: { name: 'beige', hexcode: '#FDF7E0' },
 });
 const fullSemantic = getSemanticDependentTokens(fullTheme, 'mint', 'beige');
-
-// Use tokens in application
-const Button = styled.button`
-    background-color: ${fullSemantic.lightModeTokens['color-background-primary-200']};
-    color: ${fullSemantic.lightModeTokens['color-button-foreground-primary']};
-`;
 ```
 
 ### `getColorLightness(colorHex)`
