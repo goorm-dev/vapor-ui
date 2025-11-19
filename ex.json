@@ -1,0 +1,19 @@
+{
+    "componentName": "Dialog.Root",
+    "props": { "size": "md" },
+    "children": [
+        {
+            "componentName": "Dialog.Trigger", // <-- 주입됨
+            "props": {},
+            "children": []
+        },
+        {
+            "componentName": "Dialog.Popup",
+            "children": [
+                { "componentName": "Dialog.Header" },
+                { "componentName": "Dialog.Body" },
+                { "componentName": "Dialog.Footer" }
+            ]
+        }
+    ]
+}
