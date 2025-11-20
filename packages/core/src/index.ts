@@ -1,3 +1,4 @@
+export * from './components/action-bar';
 export * from './components/avatar';
 export * from './components/badge';
 export * from './components/box';

@@ -2,6 +2,7 @@ export {
     ActionBarRoot as Root,
     ActionBarTrigger as Trigger,
     ActionBarPopup as Popup,
+    ActionBarClose as Close,
 
     // primitives
     ActionBarPortalPrimitive as PortalPrimitive,
