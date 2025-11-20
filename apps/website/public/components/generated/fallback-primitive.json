@@ -1,0 +1,21 @@
+{
+    "name": "FallbackPrimitive",
+    "displayName": "Avatar.FallbackPrimitive",
+    "description": "Documentation: 이미지 로드가 실패하거나 제공되지 않았을 때 표시되는 대체 콘텐츠입니다.\n`alt` 속성으로부터 자동으로 이니셜과 일관된 색상을 생성합니다.\nAvatar.Root 컨텍스트로부터 `size`, `alt`, `delay`를 상속받습니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "엘리먼트에 적용되는 CSS 클래스 또는 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "컴포넌트의 HTML 엘리먼트를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 엘리먼트를 반환하는 함수를 받습니다."
+        }
+    ],
+    "generatedAt": "2025-11-20T04:37:55.027Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.parts.ts"
+}

@@ -24,8 +24,9 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     hookName: 'useAvatarContext',
 });
 
-/* -----------------------------------------------------------------------------------------------*/
-
+/**
+ * Documentation: Avatar root component that displays user profile images with fallback support.
+ */
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(componentProps, [
@@ -58,10 +59,10 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
 });
 AvatarRoot.displayName = 'Avatar.Root';
 
-/* -------------------------------------------------------------------------------------------------
- * Avatar.ImagePrimitive
- * -----------------------------------------------------------------------------------------------*/
-
+/**
+ * Documentation: Image element that displays the avatar picture.
+ * Inherits `src` and `alt` from Avatar.Root context.
+ */
 export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -80,10 +81,11 @@ export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrim
 );
 AvatarImagePrimitive.displayName = 'Avatar.ImagePrimitive';
 
-/* -------------------------------------------------------------------------------------------------
- * Avatar.FallbackPrimitive
- * -----------------------------------------------------------------------------------------------*/
-
+/**
+ * Documentation: Fallback content displayed when the image fails to load or is not provided.
+ * Automatically generates initials from `alt` prop and a consistent color.
+ * Inherits `size`, `alt`, and `delay` from Avatar.Root context.
+ */
 export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbackPrimitive.Props>(
     (props, ref) => {
         const { className, style, children, ...componentProps } = resolveStyles(props);
@@ -112,15 +114,10 @@ AvatarFallbackPrimitive.displayName = 'Avatar.FallbackPrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-// get first letter of the name
 const getAvatarInitials = (name = 'vapor') => {
     return name.charAt(0).toUpperCase();
 };
 
-/**
- * Linear Congruential Generator (LCG)
- * @link https://ko.wikipedia.org/wiki/%EC%84%A0%ED%98%95_%ED%95%A9%EB%8F%99_%EC%83%9D%EC%84%B1%EA%B8%B0
- */
 const stringAsciiPRNG = (value: string, m: number) => {
     const charCodes = value.split('').map((letter) => letter.charCodeAt(0));
     const len = charCodes.length;
@@ -171,7 +168,30 @@ const getRandomColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
 
 export namespace AvatarRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
-    export interface Props extends RootPrimitiveProps, AvatarSharedProps {}
+    export interface Props extends RootPrimitiveProps, AvatarSharedProps {
+        /**
+         * The image URL to display
+         */
+        src?: string;
+        /**
+         * Alternative text for the image. Also used to generate initials and fallback color.
+         */
+        alt: string;
+        /**
+         * Size of the avatar
+         * @default 'md'
+         */
+        size?: 'sm' | 'md' | 'lg' | 'xl';
+        /**
+         * Shape of the avatar
+         * @default 'square'
+         */
+        shape?: 'square' | 'circle';
+        /**
+         * Delay (in ms) before showing the fallback
+         */
+        delay?: number;
+    }
 }
 
 export namespace AvatarImagePrimitive {

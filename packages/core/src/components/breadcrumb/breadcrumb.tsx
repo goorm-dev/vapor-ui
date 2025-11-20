@@ -27,6 +27,11 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
  * Breadcrumb.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The primitive root component that wraps the entire breadcrumb navigation.
+ * This component renders as a `<nav>` element with proper ARIA attributes for accessibility.
+ * Use this when you need full control over the breadcrumb structure.
+ */
 export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -52,6 +57,11 @@ BreadcrumbRootPrimitive.displayName = 'Breadcrumb.RootPrimitive';
  * Breadcrumb.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The primitive list component that contains breadcrumb items.
+ * This component renders as an `<ol>` (ordered list) element to maintain semantic structure.
+ * Use this when you need to customize the list container independently.
+ */
 export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbListPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -72,6 +82,11 @@ BreadcrumbListPrimitive.displayName = 'Breadcrumb.ListPrimitive';
  * Breadcrumb.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The main breadcrumb component that combines root and list primitives for convenience.
+ * This is the recommended component to use for most breadcrumb implementations.
+ * It automatically wraps your breadcrumb items with the proper navigation and list structure.
+ */
 export const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     ({ children, ...props }, ref) => {
         return (
@@ -87,6 +102,11 @@ BreadcrumbRoot.displayName = 'Breadcrumb.Root';
  * Breadcrumb.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The primitive list item component that wraps individual breadcrumb items.
+ * This component renders as a `<li>` element and should be used when you need
+ * custom content inside a breadcrumb item beyond a simple link.
+ */
 export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -107,6 +127,11 @@ BreadcrumbItemPrimitive.displayName = 'Breadcrumb.ItemPrimitive';
  * Breadcrumb.LinkPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The primitive link component for breadcrumb navigation items.
+ * Renders as an `<a>` element by default, or a `<span>` when `current` is true.
+ * Automatically applies appropriate ARIA attributes for accessibility based on the current state.
+ */
 export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         const { render, current, className, ...componentProps } = resolveStyles(props);
@@ -133,6 +158,10 @@ BreadcrumbLinkPrimitive.displayName = 'Breadcrumb.LinkPrimitive';
  * Breadcrumb.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * A convenient breadcrumb item component that combines item and link primitives.
+ * This is the recommended component for creating individual breadcrumb links.
+ */
 export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         return (
@@ -143,10 +172,17 @@ export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimit
     },
 );
 
+BreadcrumbItem.displayName = 'Breadcrumb.Item';
+
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * A visual separator component displayed between breadcrumb items.
+ * By default, it renders a slash icon, but you can provide custom children for different separators.
+ * This component is marked with proper ARIA attributes to be hidden from screen readers.
+ */
 export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator.Props>(
     (props, ref) => {
         const { render, className, children, ...componentProps } = resolveStyles(props);
@@ -173,6 +209,11 @@ BreadcrumbSeparator.displayName = 'Breadcrumb.Separator';
  * Breadcrumb.EllipsisPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * The primitive ellipsis component used to indicate collapsed or hidden breadcrumb items.
+ * By default, it renders a "more" icon, but you can provide custom children.
+ * This component is marked with proper ARIA attributes to be hidden from screen readers.
+ */
 export const BreadcrumbEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     BreadcrumbEllipsisPrimitive.Props
@@ -200,6 +241,10 @@ BreadcrumbEllipsisPrimitive.displayName = 'Breadcrumb.EllipsisPrimitive';
  * BreadcrumbEllipsis
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * An ellipsis component that indicates collapsed or hidden breadcrumb items.
+ * Use this when you have many breadcrumb items and want to show only the most relevant ones.
+ */
 export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisPrimitive.Props>(
     (props, ref) => {
         return (
