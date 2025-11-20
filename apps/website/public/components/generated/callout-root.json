@@ -1,0 +1,23 @@
+{
+    "name": "Root",
+    "displayName": "CalloutRoot",
+    "description": "시각적 스타일과 함께 정보 콘텐츠를 표시하는 Callout 컴포넌트의 루트 컨테이너입니다.\n이 컴포넌트는 div 요소를 기반으로, 표준 HTML 속성을 지원합니다.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "컴포넌트의 HTML 엘리먼트를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 엘리먼트를 반환하는 함수를 받습니다."
+        },
+        {
+            "name": "colorPalette",
+            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
+            "required": false,
+            "defaultValue": "primary",
+            "description": "색상 스킴을 제어합니다"
+        }
+    ],
+    "defaultElement": "div",
+    "generatedAt": "2025-11-20T06:04:02.647Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/callout/index.parts.ts"
+}

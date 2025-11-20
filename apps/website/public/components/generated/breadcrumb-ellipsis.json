@@ -1,0 +1,15 @@
+{
+    "name": "Ellipsis",
+    "displayName": "Breadcrumb.Ellipsis",
+    "description": "축소되거나 숨겨진 Breadcrumb 항목들을 나타내는 Ellipsis 컴포넌트입니다.\nBreadcrumb 항목이 많고 가장 관련성 높은 항목만 표시하고 싶을 때 사용하세요.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나\n다른 컴포넌트와 조합할 수 있습니다.\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받습니다."
+        }
+    ],
+    "generatedAt": "2025-11-20T05:30:41.377Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/breadcrumb/index.parts.ts"
+}

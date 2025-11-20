@@ -1,0 +1,29 @@
+{
+    "name": "LinkPrimitive",
+    "displayName": "Breadcrumb.LinkPrimitive",
+    "description": "Breadcrumb 네비게이션 항목을 위한 primitive Link 컴포넌트입니다.\n기본적으로 `<a>` 요소로 렌더링되며, `current`가 true일 때는 `<span>`으로 렌더링됩니다.\n현재 상태에 따라 접근성을 위한 적절한 ARIA 속성을 자동으로 적용합니다.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나\n다른 컴포넌트와 조합할 수 있습니다.\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받습니다."
+        },
+        {
+            "name": "href",
+            "type": ["string"],
+            "required": false,
+            "description": "링크의 목적지 URL을 지정합니다.\n`current`가 true일 때는 무시됩니다."
+        },
+        {
+            "name": "current",
+            "type": ["false", "true"],
+            "required": false,
+            "defaultValue": "false",
+            "description": "`true`로 설정하면 이 링크가 현재 페이지를 나타냄을 표시합니다.\n이 경우, 컴포넌트는 `<span>` 요소로 렌더링되어 클릭할 수 없게 됩니다."
+        }
+    ],
+    "defaultElement": "a",
+    "generatedAt": "2025-11-20T05:30:41.383Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/breadcrumb/index.parts.ts"
+}

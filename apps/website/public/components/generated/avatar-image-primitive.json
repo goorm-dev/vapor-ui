@@ -1,0 +1,26 @@
+{
+    "name": "ImagePrimitive",
+    "displayName": "Avatar.ImagePrimitive",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "onLoadingStatusChange",
+            "type": ["(status: ImageLoadingStatus) => void"],
+            "required": false,
+            "description": "Callback fired when the loading status changes."
+        }
+    ],
+    "generatedAt": "2025-11-20T05:30:30.146Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.parts.ts"
+}

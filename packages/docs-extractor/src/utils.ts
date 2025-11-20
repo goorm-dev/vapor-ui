@@ -57,7 +57,7 @@ export async function writeComponentDataToFile(
     componentData: ComponentData,
     outputPath: string,
 ): Promise<void> {
-    const fileName = `${kebabCase(componentData.name)}.json`;
+    const fileName = `${kebabCase(componentData.displayName?.split('.').join('-'))}.json`;
     const componentOutputPath = path.join(outputPath, fileName);
 
     const jsonString = JSON.stringify(componentData, null, 2);
