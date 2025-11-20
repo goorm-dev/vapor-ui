@@ -1,7 +1,8 @@
 import {
-    generatePrimitiveColorPalette,
-    getSemanticDependentTokens,
-} from '@vapor-ui/color-generator';
+    BASE_BASIC_COLORS,
+    LIGHT_BASIC_COLORS,
+    LIGHT_SEMANTIC_COLORS,
+} from '@vapor-ui/core';
 
 import type {
     BasicColorData,
@@ -26,82 +27,77 @@ const COLOR_ORDER = [
 ];
 
 export function transformPrimitivePalettesToBasicColorData(): BasicColorData {
-    const result = generatePrimitiveColorPalette();
     const colorGroups: ColorGroup[] = [];
 
     for (const colorName of COLOR_ORDER) {
-        const palette = result.lightModeTokens.palettes.find((p) => p.name === colorName);
+        const shades = LIGHT_BASIC_COLORS[colorName as keyof typeof LIGHT_BASIC_COLORS];
 
-        if (palette) {
-            const shades: ColorShadeItem[] = Object.entries(palette.chips)
-                .sort(([shadeA], [shadeB]) => parseInt(shadeA, 10) - parseInt(shadeB, 10))
-                .map(([shade, chip]) => ({
-                    name: `--vapor-color-${colorName}-${shade}`,
-                    value: chip.hex,
-                }));
+        if (shades && typeof shades === 'object' && !Array.isArray(shades)) {
+            if ('050' in shades || '100' in shades) {
+                const colorShadeItems: ColorShadeItem[] = Object.entries(shades)
+                    .sort(([shadeA], [shadeB]) => parseInt(shadeA, 10) - parseInt(shadeB, 10))
+                    .map(([shade, hex]) => ({
+                        name: `--vapor-color-${colorName}-${shade}`,
+                        value: hex as string,
+                    }));
 
-            colorGroups.push({
-                title: colorName,
-                colorShade: shades,
-            });
+                colorGroups.push({
+                    title: colorName,
+                    colorShade: colorShadeItems,
+                });
+            }
         }
     }
 
-    const whiteChip = result.baseTokens['color-white'];
+    colorGroups.push({
+        title: 'white',
+        colorShade: [
+            {
+                name: '--vapor-color-white',
+                value: BASE_BASIC_COLORS.white,
+            },
+        ],
+    });
 
-    if (whiteChip) {
-        colorGroups.push({
-            title: 'white',
-            colorShade: [
-                {
-                    name: '--vapor-color-white',
-                    value: whiteChip.hex,
-                },
-            ],
-        });
-    }
-
-    const blackChip = result.baseTokens['color-black'];
-
-    if (blackChip) {
-        colorGroups.push({
-            title: 'black',
-            colorShade: [
-                {
-                    name: '--vapor-color-black',
-                    value: blackChip.hex,
-                },
-            ],
-        });
-    }
+    colorGroups.push({
+        title: 'black',
+        colorShade: [
+            {
+                name: '--vapor-color-black',
+                value: BASE_BASIC_COLORS.black,
+            },
+        ],
+    });
 
     return colorGroups;
 }
 
 export function transformSemanticTokensToSemanticColorData(): SemanticColorData {
-    const primitiveResult = generatePrimitiveColorPalette();
-
-    const semanticTokens = getSemanticDependentTokens(primitiveResult, 'blue', 'gray');
-
     const categoryMap = new Map<string, ColorShadeItem[]>();
 
-    for (const [tokenName, hexValue] of Object.entries(semanticTokens.lightModeTokens)) {
-        const parts = tokenName.split('-');
+    function flattenSemanticColors(obj: Record<string, unknown>, prefix = ''): void {
+        for (const [key, value] of Object.entries(obj)) {
+            const currentPath = prefix ? `${prefix}-${key}` : key;
 
-        if (parts[0] === 'color' && parts.length >= 2) {
-            const category = parts[1];
-            const cssVarName = `--vapor-${tokenName}`;
+            if (typeof value === 'string' && value.startsWith('#')) {
+                const cssVarName = `--vapor-color-${currentPath}`;
+                const category = currentPath.split('-')[0];
 
-            if (!categoryMap.has(category)) {
-                categoryMap.set(category, []);
+                if (!categoryMap.has(category)) {
+                    categoryMap.set(category, []);
+                }
+
+                categoryMap.get(category)!.push({
+                    name: cssVarName,
+                    value: value,
+                });
+            } else if (typeof value === 'object' && value !== null) {
+                flattenSemanticColors(value as Record<string, unknown>, currentPath);
             }
-
-            categoryMap.get(category)!.push({
-                name: cssVarName,
-                value: hexValue,
-            });
         }
     }
+
+    flattenSemanticColors(LIGHT_SEMANTIC_COLORS);
 
     const semanticGroups: ColorGroup[] = [];
     const categoryOrder = ['background', 'foreground', 'border', 'logo', 'button'];
