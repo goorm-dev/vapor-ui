@@ -55,30 +55,18 @@
             "description": "스위치의 크기를 설정합니다."
         },
         {
-            "prop": "visuallyHidden",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "레이블을 시각적으로 숨깁니다. true 설정 시 레이블이 화면에 표시되지 않지만 스크린 리더는 읽을 수 있습니다."
-        },
-        {
             "prop": "readOnly",
             "type": ["boolean"],
             "default": "false",
             "description": "true일 때 스위치가 읽기 전용 상태가 되어 사용자 상호작용을 방지하지만 폼 제출에는 포함됩니다."
         }
     ],
-    "controlProps": [
+    "ThumbPrimitiveProps": [
         {
             "prop": "render",
             "type": ["ReactElement"],
             "default": "button",
             "description": "스위치 컨트롤을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
-        },
-        {
-            "prop": "id",
-            "type": ["string"],
-            "default": "-",
-            "description": "컨트롤 요소의 id를 지정합니다. 값을 지정하지 않으면 Switch.Root 단계에서 생성된 고유 id가 자동으로 사용됩니다."
         }
     ]
 }

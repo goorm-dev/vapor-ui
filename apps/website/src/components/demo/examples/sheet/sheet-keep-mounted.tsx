@@ -9,7 +9,7 @@ export default function SheetKeepMounted() {
             {/* Normal Sheet */}
             <Sheet.Root>
                 <Sheet.Trigger render={<Button variant="outline" />}>일반 Sheet</Sheet.Trigger>
-                <Sheet.Content>
+                <Sheet.Popup>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
@@ -27,7 +27,7 @@ export default function SheetKeepMounted() {
                             <TextInput placeholder="입력해보세요..." />
                         </div>
                     </Sheet.Body>
-                </Sheet.Content>
+                </Sheet.Popup>
             </Sheet.Root>
 
             {/* Keep Mounted Sheet */}
@@ -35,7 +35,7 @@ export default function SheetKeepMounted() {
                 <Sheet.Trigger render={<Button variant="outline" colorPalette="success" />}>
                     유지 Sheet
                 </Sheet.Trigger>
-                <Sheet.Content portalProps={{ keepMounted: true }}>
+                <Sheet.Popup portalElement={<Sheet.PortalPrimitive keepMounted />}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
@@ -53,7 +53,7 @@ export default function SheetKeepMounted() {
                             <TextInput placeholder="상태 보존 테스트..." />
                         </div>
                     </Sheet.Body>
-                </Sheet.Content>
+                </Sheet.Popup>
             </Sheet.Root>
         </div>
     );

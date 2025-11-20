@@ -54,18 +54,18 @@
             "description": "트리거 요소를 비활성화할지 여부를 설정합니다."
         }
     ],
-    "contentProps": [
+    "popupProps": [
         {
-            "prop": "portalProps",
-            "type": ["PopoverPortalProps"],
+            "prop": "portalElement",
+            "type": ["React.ReactElement"],
             "default": "undefined",
-            "description": "Portal 컴포넌트에 전달될 props입니다. 팝오버가 렌더링될 위치와 관련된 설정을 제어합니다."
+            "description": "Portal 컴포넌트에 전달될 React Element입니다. 팝오버가 렌더링될 위치와 관련된 설정을 제어합니다."
         },
         {
-            "prop": "positionerProps",
-            "type": ["PopoverPositionerProps"],
+            "prop": "positionerElement",
+            "type": ["React.ReactElement"],
             "default": "undefined",
-            "description": "Positioner 컴포넌트에 전달될 props입니다. 팝오버의 위치와 정렬에 관한 설정을 제어합니다."
+            "description": "Positioner 컴포넌트에 전달될 React Element입니다. 팝오버의 위치와 정렬에 관한 설정을 제어합니다."
         },
         {
             "prop": "className",
@@ -74,7 +74,7 @@
             "description": "팝오버 컨텐츠에 적용할 CSS 클래스명입니다."
         }
     ],
-    "portalProps": [
+    "portalPrimitiveProps": [
         {
             "prop": "container",
             "type": ["HTMLElement", "() => HTMLElement", "null"],
@@ -88,7 +88,7 @@
             "description": "팝오버가 닫혀있을 때도 DOM에 마운트된 상태를 유지할지 여부를 설정합니다."
         }
     ],
-    "positionerProps": [
+    "positionerPrimitiveProps": [
         {
             "prop": "side",
             "type": ["'top'", "'right'", "'bottom'", "'left'"],
@@ -141,7 +141,7 @@
             "description": "팝오버가 트리거를 따라 이동할지 여부를 설정합니다. 'partial'로 설정하면 부분적으로만 따라갑니다."
         }
     ],
-    "popupProps": [
+    "popupPrimitiveProps": [
         {
             "prop": "className",
             "type": ["string"],
@@ -162,20 +162,6 @@
             ],
             "default": "undefined",
             "description": "팝업 요소를 렌더링하는 함수 또는 컴포넌트입니다."
-        }
-    ],
-    "arrowProps": [
-        {
-            "prop": "className",
-            "type": ["string"],
-            "default": "undefined",
-            "description": "화살표에 적용할 CSS 클래스명입니다."
-        },
-        {
-            "prop": "render",
-            "type": ["React.ReactElement", "(props: ArrowProps) => React.ReactElement"],
-            "default": "undefined",
-            "description": "화살표 요소를 렌더링하는 함수 또는 컴포넌트입니다."
         }
     ],
     "titleProps": [
@@ -200,26 +186,6 @@
             "type": ["React.ReactElement", "(props: CloseProps) => React.ReactElement"],
             "default": "undefined",
             "description": "닫기 버튼을 렌더링하는 함수 또는 컴포넌트입니다."
-        }
-    ],
-    "backdropProps": [
-        {
-            "prop": "className",
-            "type": ["string"],
-            "default": "undefined",
-            "description": "배경 오버레이에 적용할 CSS 클래스명입니다."
-        },
-        {
-            "prop": "render",
-            "type": ["React.ReactElement", "(props: BackdropProps) => React.ReactElement"],
-            "default": "undefined",
-            "description": "배경 오버레이 요소를 렌더링하는 함수 또는 컴포넌트입니다."
-        },
-        {
-            "prop": "keepMounted",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "팝오버가 닫혀있을 때도 배경을 DOM에 마운트된 상태로 유지할지 여부를 설정합니다."
         }
     ]
 }
