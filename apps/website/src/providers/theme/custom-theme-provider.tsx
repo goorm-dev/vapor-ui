@@ -3,9 +3,8 @@
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
 import { generateColorCSS, generateRadiusCSS, generateScalingCSS } from '@vapor-ui/css-generator';
-import type { CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
+import type { ColorThemeConfig, CompleteCSSConfig, RadiusKey } from '@vapor-ui/css-generator';
 
 /* -------------------------------------------------------------------------------------------------
  * Constants
@@ -22,14 +21,14 @@ const SCALE_VALUES = [0.8, 0.9, 1, 1.1, 1.2] as const;
 type ScaleValue = (typeof SCALE_VALUES)[number];
 
 interface CustomThemeConfig {
-    colors?: SemanticMappingConfig;
+    colors?: ColorThemeConfig;
     scaling?: number;
     radius?: RadiusKey;
 }
 
 interface CustomThemeContextValue {
     applyTheme: (partialConfig: CustomThemeConfig) => void;
-    applyColors: (colors: SemanticMappingConfig) => void;
+    applyColors: (colors: ColorThemeConfig) => void;
     applyScaling: (scaling: number) => void;
     applyRadius: (radius: RadiusKey) => void;
     removeTheme: () => void;
@@ -141,7 +140,7 @@ const CustomThemeProvider = ({ children }: CustomThemeProviderProps) => {
     }, []);
 
     const applyColors = useCallback(
-        (colors: SemanticMappingConfig) => applyTheme({ colors }),
+        (colors: ColorThemeConfig) => applyTheme({ colors }),
         [applyTheme],
     );
 

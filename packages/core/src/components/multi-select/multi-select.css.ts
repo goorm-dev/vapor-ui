@@ -21,7 +21,7 @@ export const trigger = recipe({
 
             width: '100%',
 
-            backgroundColor: vars.color.background.surface[100],
+            backgroundColor: vars.color.background.overlay[100],
 
             selectors: {
                 '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
@@ -168,7 +168,7 @@ export const popup = layerStyle('components', {
     border: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.shadow.md,
-    backgroundColor: vars.color.background.canvas,
+    backgroundColor: vars.color.background.overlay[100],
 
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',

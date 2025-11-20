@@ -27,7 +27,7 @@
         "color-generator": "pnpm --filter @vapor-ui/color-generator",
         "css-generator": "pnpm --filter @vapor-ui/css-generator",
         "docs-extractor": "pnpm --filter @vapor-ui/docs-extractor",
-        "sb": "pnpm --filter storybook",
+        "storybook": "pnpm --filter storybook",
         "website": "pnpm --filter website",
         "figma-plugin": "pnpm --filter figma-plugin",
         "codemod": "pnpm --filter @vapor-ui/codemod",
