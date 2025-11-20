@@ -80,13 +80,15 @@ function generateLightModeSemanticTokens(
     const backgroundPrimary200 = lowestDeltaEChip.name;
     const borderPrimary = backgroundPrimary200;
 
-    const foreground100Step = getNextStep(lowestDeltaEStep);
-    const foreground100 =
-        primaryColorPalette.chips[foreground100Step]?.name || primaryColorPalette.chips['900'].name;
+    const foregroundPrimary100Step = getNextStep(lowestDeltaEStep);
+    const foregroundPrimary100 =
+        primaryColorPalette.chips[foregroundPrimary100Step]?.name ||
+        primaryColorPalette.chips['900'].name;
 
-    const foreground200Step = getNextNextStep(lowestDeltaEStep);
-    const foreground200 =
-        primaryColorPalette.chips[foreground200Step]?.name || primaryColorPalette.chips['900'].name;
+    const foregroundPrimary200Step = getNextNextStep(lowestDeltaEStep);
+    const foregroundPrimary200 =
+        primaryColorPalette.chips[foregroundPrimary200Step]?.name ||
+        primaryColorPalette.chips['900'].name;
 
     const backgroundCanvas100 = backgroundCanvas.name;
     const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || backgroundCanvas.name;
@@ -102,8 +104,8 @@ function generateLightModeSemanticTokens(
         'color-background-primary-100': backgroundPrimary100,
         'color-background-primary-200': backgroundPrimary200,
         'color-border-primary': borderPrimary,
-        'color-foreground-100': foreground100,
-        'color-foreground-200': foreground200,
+        'color-foreground-primary-100': foregroundPrimary100,
+        'color-foreground-primary-200': foregroundPrimary200,
         'color-background-canvas-100': backgroundCanvas100,
         'color-background-canvas-200': backgroundCanvas200,
         'color-background-overlay-100': backgroundOverlay100,
@@ -128,13 +130,15 @@ function generateDarkModeSemanticTokens(
     const backgroundPrimary200 = lowestDeltaEChip.name;
     const borderPrimary = backgroundPrimary200;
 
-    const foreground100Step = getNextStep(lowestDeltaEStep);
-    const foreground100 =
-        primaryColorPalette.chips[foreground100Step]?.name || primaryColorPalette.chips['900'].name;
+    const foregroundPrimary100Step = getNextStep(lowestDeltaEStep);
+    const foregroundPrimary100 =
+        primaryColorPalette.chips[foregroundPrimary100Step]?.name ||
+        primaryColorPalette.chips['900'].name;
 
-    const foreground200Step = getNextNextStep(lowestDeltaEStep);
-    const foreground200 =
-        primaryColorPalette.chips[foreground200Step]?.name || primaryColorPalette.chips['900'].name;
+    const foregroundPrimary200Step = getNextNextStep(lowestDeltaEStep);
+    const foregroundPrimary200 =
+        primaryColorPalette.chips[foregroundPrimary200Step]?.name ||
+        primaryColorPalette.chips['900'].name;
 
     const backgroundCanvas100 = backgroundCanvas.name;
     const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || backgroundCanvas.name;
@@ -149,8 +153,8 @@ function generateDarkModeSemanticTokens(
         'color-background-primary-100': backgroundPrimary100,
         'color-background-primary-200': backgroundPrimary200,
         'color-border-primary': borderPrimary,
-        'color-foreground-100': foreground100,
-        'color-foreground-200': foreground200,
+        'color-foreground-primary-100': foregroundPrimary100,
+        'color-foreground-primary-200': foregroundPrimary200,
         'color-background-canvas-100': backgroundCanvas100,
         'color-background-canvas-200': backgroundCanvas200,
         'color-background-overlay-100': backgroundOverlay100,
