@@ -1,8 +1,4 @@
-import type {
-    PaletteChip,
-    PrimitivePalette,
-    SemanticTokens,
-} from '@vapor-ui/color-generator';
+import type { PaletteChip, PrimitivePalette, SemanticTokens } from '@vapor-ui/color-generator';
 
 export interface ColorShadeItem {
     name: string;

@@ -16,14 +16,16 @@ export const SemanticColor = () => {
 
     return (
         <Box paddingY="$400">
-            {SemanticColorData.map((colorGroup): JSX.Element => (
-                <Box key={colorGroup.title} marginBottom="$600">
-                    <Text typography="heading5">
-                        {sectionTitles[colorGroup.title] || colorGroup.title}
-                    </Text>
-                    <ColorPalette colors={transformToColorSwatchItems([colorGroup])} />
-                </Box>
-            ))}
+            {SemanticColorData.map(
+                (colorGroup): JSX.Element => (
+                    <Box key={colorGroup.title} marginBottom="$600">
+                        <Text typography="heading5">
+                            {sectionTitles[colorGroup.title] || colorGroup.title}
+                        </Text>
+                        <ColorPalette colors={transformToColorSwatchItems([colorGroup])} />
+                    </Box>
+                ),
+            )}
         </Box>
     );
 };

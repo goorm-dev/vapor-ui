@@ -1,8 +1,4 @@
-import {
-    BASE_BASIC_COLORS,
-    LIGHT_BASIC_COLORS,
-    LIGHT_SEMANTIC_COLORS,
-} from '@vapor-ui/core';
+import { BASE_BASIC_COLORS, LIGHT_BASIC_COLORS, LIGHT_SEMANTIC_COLORS } from '@vapor-ui/core';
 
 import type {
     BasicColorData,
