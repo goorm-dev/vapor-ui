@@ -3,6 +3,16 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 1aecc3d: synchronized color tokens with figma
+
+---
+
 ## 1.0.0-beta.6
 
 ### @vapor-ui/codemod
