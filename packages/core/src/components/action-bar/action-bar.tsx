@@ -8,7 +8,10 @@ import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './action-bar.css';
 
-export const ActionBarRoot = (props: ActionBarRoot.Props) => <Popover.Root {...props} />;
+export const ActionBarRoot = (props: ActionBarRoot.Props) => {
+    return <Popover.Root {...props} />;
+};
+ActionBarRoot.displayName = 'ActionBar.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * ActionBar.Trigger
@@ -21,7 +24,7 @@ export const ActionBarTrigger = forwardRef<HTMLButtonElement, ActionBarTrigger.P
         return <Popover.Trigger ref={ref} {...componentProps} />;
     },
 );
-ActionBarTrigger.displayName = 'ActionBarTrigger';
+ActionBarTrigger.displayName = 'ActionBar.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
  * ActionBar.Close
@@ -32,7 +35,7 @@ export const ActionBarClose = forwardRef<HTMLButtonElement, ActionBarClose.Props
 
     return <Popover.Close ref={ref} {...componentProps} />;
 });
-ActionBarClose.displayName = 'ActionBarClose';
+ActionBarClose.displayName = 'ActionBar.Close';
 
 /* -------------------------------------------------------------------------------------------------
  * ActionBar.PortalPrimitive
@@ -41,6 +44,7 @@ ActionBarClose.displayName = 'ActionBarClose';
 export const ActionBarPortalPrimitive = (props: ActionBarPortalPrimitive.Props) => (
     <Popover.Portal {...props} />
 );
+ActionBarPortalPrimitive.displayName = 'ActionBar.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * ActionBar.PositionerPrimitive
@@ -67,7 +71,7 @@ export const ActionBarPositionerPrimitive = forwardRef<
         />
     );
 });
-ActionBarPositionerPrimitive.displayName = 'ActionBarPositionerPrimitive';
+ActionBarPositionerPrimitive.displayName = 'ActionBar.PositionerPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * ActionBar.PopupPrimitive
@@ -86,7 +90,7 @@ export const ActionBarPopupPrimitive = forwardRef<HTMLDivElement, ActionBarPopup
         );
     },
 );
-ActionBarPopupPrimitive.displayName = 'ActionBarPopupPrimitive';
+ActionBarPopupPrimitive.displayName = 'ActionBar.PopupPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * ActionBar.Popup
@@ -101,7 +105,7 @@ export const ActionBarPopup = forwardRef<HTMLDivElement, ActionBarPopup.Props>((
         </ActionBarPortalPrimitive>
     );
 });
-ActionBarPopup.displayName = 'ActionBarPopup';
+ActionBarPopup.displayName = 'ActionBar.Popup';
 
 /* -----------------------------------------------------------------------------------------------*/
 
