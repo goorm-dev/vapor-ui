@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const IntelliSenseEventOutlineIcon: IconType = (props) => (
+const IntelliSenseEventOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M3.17822 2.05298C3.53703 2.05319 3.82764 2.34451 3.82764 2.70337V13.9084C3.82738 14.2671 3.53687 14.5577 3.17822 14.5579C2.81939 14.5579 2.52809 14.2672 2.52783 13.9084V2.70337C2.52783 2.34438 2.81924 2.05298 3.17822 2.05298ZM5.12744 2.88599C5.12744 2.50863 5.52975 2.26717 5.86279 2.44458L11.8491 5.63306C12.5549 6.00952 12.555 7.02225 11.8491 7.39868L5.86279 10.5881C5.52983 10.7655 5.12765 10.5239 5.12744 10.1467V2.88599ZM6.32764 8.98071L10.9526 6.51587L6.32764 4.05103V8.98071Z" />
     </IconBase>

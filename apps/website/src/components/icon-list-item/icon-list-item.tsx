@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 
 import { Badge, Text } from '@vapor-ui/core';
-import type { IconType } from '@vapor-ui/icons';
+import type { IconProps } from '@vapor-ui/icons';
 import { CheckCircleIcon, CopyIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -27,7 +27,7 @@ export const copyToClipboard = async (text: string) => {
 };
 
 export type IconListItemProps = {
-    icon: IconType;
+    icon: FunctionComponent<IconProps>;
     iconName: string;
     className?: string;
 };
