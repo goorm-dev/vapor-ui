@@ -18,6 +18,9 @@ export const item = layerStyle('components', {
 export const link = recipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
+        /**
+         * Controls the typography size of the breadcrumb link
+         */
         size: {
             sm: typography({ style: 'body4' }),
             md: typography({ style: 'body3' }),
@@ -25,6 +28,9 @@ export const link = recipe({
             xl: typography({ style: 'body1' }),
         },
 
+        /**
+         * Controls whether this breadcrumb link represents the current page
+         */
         current: {
             false: [
                 layerStyle('components', {
@@ -61,6 +67,9 @@ export const icon = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Controls the width and height of separator and ellipsis icons
+         */
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },
             md: { width: vars.size.dimension[200], height: vars.size.dimension[200] },

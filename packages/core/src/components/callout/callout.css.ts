@@ -20,6 +20,9 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary' },
     variants: {
+        /**
+         * Controls color scheme
+         */
         colorPalette: {
             primary: layerStyle('components', {
                 border: `.0625rem solid ${vars.color.border.primary}`,

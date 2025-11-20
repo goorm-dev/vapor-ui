@@ -104,9 +104,9 @@ const NewComponentPropsTable: React.FC<NewComponentPropsTableProps> = ({ compone
                         {componentData.props.map((prop, index) => (
                             <tr key={prop.name}>
                                 <td
-                                    className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${index === componentData.props.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
+                                    className={` px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${index === componentData.props.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
                                 >
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] w-fit">
+                                    <div className="prose flex items-center gap-[var(--vapor-size-space-100)] w-fit">
                                         <Text typography="body2" foreground="normal-200">
                                             <span>
                                                 {prop.name}

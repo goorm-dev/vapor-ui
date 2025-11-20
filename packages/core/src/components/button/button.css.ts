@@ -34,6 +34,9 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill', stretch: false },
     variants: {
+        /**
+         * Controls dimensions, spacing, and typography
+         */
         size: {
             sm: [
                 typography({ style: 'subtitle1' }),
@@ -69,6 +72,9 @@ export const root = recipe({
             ],
         },
 
+        /**
+         * Controls color scheme
+         */
         colorPalette: {
             primary: layerStyle('components', {
                 vars: {
@@ -126,6 +132,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * Controls visual style (fill: solid background, outline: bordered, ghost: transparent)
+         */
         variant: {
             fill: layerStyle('components', {
                 backgroundColor: bg,
@@ -142,6 +151,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * Controls width behavior (true: full width)
+         */
         stretch: { true: layerStyle('components', { width: '100%' }) },
     },
 });

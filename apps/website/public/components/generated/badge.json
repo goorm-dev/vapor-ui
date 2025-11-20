@@ -1,0 +1,37 @@
+{
+    "name": "Badge",
+    "displayName": "Badge",
+    "description": "Documentation: 상태나 카테고리 정보를 시각적으로 표시하는 Badge 컴포넌트입니다.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg"],
+            "required": false,
+            "description": "배지의 크기",
+            "defaultValue": "md"
+        },
+        {
+            "name": "shape",
+            "type": ["square", "pill"],
+            "required": false,
+            "description": "배지의 형태",
+            "defaultValue": "square"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "컴포넌트의 HTML 엘리먼트를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n`ReactElement` 또는 렌더링할 엘리먼트를 반환하는 함수를 받습니다."
+        },
+        {
+            "name": "colorPalette",
+            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
+            "required": false,
+            "description": "배지의 색상 테마",
+            "defaultValue": "primary"
+        }
+    ],
+    "defaultElement": "span",
+    "generatedAt": "2025-11-20T05:17:05.231Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/badge/index.ts"
+}
