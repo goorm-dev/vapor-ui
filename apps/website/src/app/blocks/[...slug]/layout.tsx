@@ -1,6 +1,6 @@
 import { BlockPageLayout } from '~/components/block-page-layout';
-import { generatePageMetadata } from '~/lib/metadata';
 import { blockSource } from '~/lib/source';
+import { generatePageMetadata } from '~/utils/metadata';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return <BlockPageLayout>{children}</BlockPageLayout>;

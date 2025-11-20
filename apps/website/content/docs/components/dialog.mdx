@@ -4,30 +4,11 @@ site_name: 'Dialog - Vapor Core'
 description: 'Dialog는 페이지 위에 모달 형태로 정보를 표시하거나 작업을 수행하도록 하는 컴포넌트입니다.'
 ---
 
-<Demo name="default-dialog">
-```tsx
-import { Button, Dialog } from '@vapor-ui/core';
-
-export default function DefaultDialog() {
-    return (
-        <Dialog.Root>
-            <Dialog.Trigger asChild>
-                <Button>클릭</Button>
-            </Dialog.Trigger>
-            <Dialog.CombinedContent>
-                <Dialog.Header>
-                    <Dialog.Title>알림</Dialog.Title>
-                    <Dialog.Close aria-label="Close" />
-                </Dialog.Header>
-                <Dialog.Body>
-                    <Dialog.Description>여기에 다이얼로그 본문 내용이 들어갑니다.</Dialog.Description>
-                </Dialog.Body>
-                <Dialog.Footer style={{ marginLeft: 'auto' }}>
-                    <Button color="primary">확인</Button>
-                </Dialog.Footer>
-            </Dialog.CombinedContent>
-        </Dialog.Root>
-    );
+<Demo name="dialog/default-dialog">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/dialog/default-dialog.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -40,77 +21,11 @@ export default function DefaultDialog() {
 
 Dialog 사이즈는 md, lg, xl로 제공합니다.
 
-<Demo name="dialog-size">
-```tsx
-import { Button, Dialog } from '@vapor-ui/core';
-
-export default function DialogSize() {
-    return (
-        <div className="space-x-4">
-            <Dialog.Root size="md">
-                <Dialog.Trigger asChild>
-                    <Button>Medium Dialog</Button>
-                </Dialog.Trigger>
-                <Dialog.CombinedContent>
-                    <Dialog.Header>
-                        <Dialog.Title>Medium Size</Dialog.Title>
-                        <Dialog.Close aria-label="Close" />
-                    </Dialog.Header>
-                    <Dialog.Body>
-                        <Dialog.Description>Medium 크기의 다이얼로그입니다.</Dialog.Description>
-                    </Dialog.Body>
-                    <Dialog.Footer>
-                        <Dialog.Close asChild>
-                            <Button variant="ghost">취소</Button>
-                        </Dialog.Close>
-                        <Button>확인</Button>
-                    </Dialog.Footer>
-                </Dialog.CombinedContent>
-            </Dialog.Root>
-            
-            <Dialog.Root size="lg">
-                <Dialog.Trigger asChild>
-                    <Button>Large Dialog</Button>
-                </Dialog.Trigger>
-                <Dialog.CombinedContent>
-                    <Dialog.Header>
-                        <Dialog.Title>Large Size</Dialog.Title>
-                        <Dialog.Close aria-label="Close" />
-                    </Dialog.Header>
-                    <Dialog.Body>
-                        <Dialog.Description>Large 크기의 다이얼로그입니다.</Dialog.Description>
-                    </Dialog.Body>
-                    <Dialog.Footer>
-                        <Dialog.Close asChild>
-                            <Button variant="ghost">취소</Button>
-                        </Dialog.Close>
-                        <Button>확인</Button>
-                    </Dialog.Footer>
-                </Dialog.CombinedContent>
-            </Dialog.Root>
-            
-            <Dialog.Root size="xl">
-                <Dialog.Trigger asChild>
-                    <Button>Extra Large Dialog</Button>
-                </Dialog.Trigger>
-                <Dialog.CombinedContent>
-                    <Dialog.Header>
-                        <Dialog.Title>Extra Large Size</Dialog.Title>
-                        <Dialog.Close aria-label="Close" />
-                    </Dialog.Header>
-                    <Dialog.Body>
-                        <Dialog.Description>Extra Large 크기의 다이얼로그입니다.</Dialog.Description>
-                    </Dialog.Body>
-                    <Dialog.Footer>
-                        <Dialog.Close asChild>
-                            <Button variant="ghost">취소</Button>
-                        </Dialog.Close>
-                        <Button>확인</Button>
-                    </Dialog.Footer>
-                </Dialog.CombinedContent>
-            </Dialog.Root>
-        </div>
-    );
+<Demo name="dialog/dialog-size">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/dialog/dialog-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -119,54 +34,11 @@ export default function DialogSize() {
 
 Dialog의 모달 동작을 제어할 수 있습니다.
 
-<Demo name="dialog-modal">
-```tsx
-import { Button, Dialog } from '@vapor-ui/core';
-
-export default function DialogModal() {
-    return (
-        <div className="space-x-4">
-            <Dialog.Root modal={true}>
-                <Dialog.Trigger asChild>
-                    <Button>Modal Dialog</Button>
-                </Dialog.Trigger>
-                <Dialog.CombinedContent>
-                    <Dialog.Header>
-                        <Dialog.Title>Modal Dialog</Dialog.Title>
-                        <Dialog.Close aria-label="Close" />
-                    </Dialog.Header>
-                    <Dialog.Body>
-                        <Dialog.Description>포커스가 다이얼로그 내부에 제한됩니다.</Dialog.Description>
-                    </Dialog.Body>
-                    <Dialog.Footer>
-                        <Dialog.Close asChild>
-                            <Button>확인</Button>
-                        </Dialog.Close>
-                    </Dialog.Footer>
-                </Dialog.CombinedContent>
-            </Dialog.Root>
-            
-            <Dialog.Root modal={false}>
-                <Dialog.Trigger asChild>
-                    <Button>Non-Modal Dialog</Button>
-                </Dialog.Trigger>
-                <Dialog.CombinedContent>
-                    <Dialog.Header>
-                        <Dialog.Title>Non-Modal Dialog</Dialog.Title>
-                        <Dialog.Close aria-label="Close" />
-                    </Dialog.Header>
-                    <Dialog.Body>
-                        <Dialog.Description>배경의 다른 요소들과 상호작용할 수 있습니다.</Dialog.Description>
-                    </Dialog.Body>
-                    <Dialog.Footer>
-                        <Dialog.Close asChild>
-                            <Button>확인</Button>
-                        </Dialog.Close>
-                    </Dialog.Footer>
-                </Dialog.CombinedContent>
-            </Dialog.Root>
-        </div>
-    );
+<Demo name="dialog/dialog-modal">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/dialog/dialog-modal.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -175,140 +47,15 @@ export default function DialogModal() {
 
 ---
 
-### Simple Usage
-
-기본적인 Dialog 사용법입니다.
-
-<Demo name="dialog-simple">
-```tsx
-import { Button, Dialog } from '@vapor-ui/core';
-
-export default function DialogSimple() {
-    return (
-        <Dialog.Root>
-            <Dialog.Trigger asChild>
-                <Button>단순 다이얼로그 열기</Button>
-            </Dialog.Trigger>
-            <Dialog.CombinedContent>
-                <Dialog.Header>
-                    <Dialog.Title>알림</Dialog.Title>
-                    <Dialog.Close aria-label="Close" />
-                </Dialog.Header>
-                <Dialog.Body>
-                    <Dialog.Description>
-                        이것은 기본적인 다이얼로그입니다. 
-                        Escape 키나 배경 클릭으로 닫을 수 있습니다.
-                    </Dialog.Description>
-                </Dialog.Body>
-                <Dialog.Footer>
-                    <Dialog.Close asChild>
-                        <Button>확인</Button>
-                    </Dialog.Close>
-                </Dialog.Footer>
-            </Dialog.CombinedContent>
-        </Dialog.Root>
-    );
-}
-```
-</Demo>
-
-### Composition Pattern
+### Custom Usage
 
 Dialog.Root, Dialog.Trigger, Dialog.CombinedContent, Dialog.Header, Dialog.Body, Dialog.Footer를 조합한 패턴입니다.
 
-<Demo name="dialog-composition">
-```tsx
-import { Button, Dialog } from '@vapor-ui/core';
-
-export default function DialogComposition() {
-    return (
-        <Dialog.Root size="lg" closeOnClickOverlay={false}>
-            <Dialog.Trigger asChild>
-                <Button variant="outline">확인 다이얼로그</Button>
-            </Dialog.Trigger>
-            <Dialog.CombinedContent>
-                <Dialog.Header>
-                    <Dialog.Title>작업 확인</Dialog.Title>
-                    <Dialog.Close aria-label="Close" />
-                </Dialog.Header>
-                <Dialog.Body>
-                    <Dialog.Description>
-                        이 작업을 진행하시겠습니까? 
-                        이 작업은 되돌릴 수 없습니다.
-                    </Dialog.Description>
-                </Dialog.Body>
-                <Dialog.Footer>
-                    <Dialog.Close asChild>
-                        <Button variant="ghost">취소</Button>
-                    </Dialog.Close>
-                    <Dialog.Close asChild>
-                        <Button color="danger">삭제</Button>
-                    </Dialog.Close>
-                </Dialog.Footer>
-            </Dialog.CombinedContent>
-        </Dialog.Root>
-    );
-}
-```
-</Demo>
-
-### Size & Modal Variants
-
-다양한 크기와 모달 설정을 조합한 예시입니다.
-
-<Demo name="dialog-variants">
-```tsx
-import { Button, Dialog } from '@vapor-ui/core';
-
-export default function DialogVariants() {
-    return (
-        <div className="space-y-4">
-            <div className="space-x-4">
-                <Dialog.Root size="md" closeOnEscape={false}>
-                    <Dialog.Trigger asChild>
-                        <Button>Medium + No ESC</Button>
-                    </Dialog.Trigger>
-                    <Dialog.CombinedContent>
-                        <Dialog.Header>
-                            <Dialog.Title>Medium Size</Dialog.Title>
-                            <Dialog.Close aria-label="Close" />
-                        </Dialog.Header>
-                        <Dialog.Body>
-                            <Dialog.Description>ESC 키로 닫을 수 없습니다.</Dialog.Description>
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                            <Dialog.Close asChild>
-                                <Button>확인</Button>
-                            </Dialog.Close>
-                        </Dialog.Footer>
-                    </Dialog.CombinedContent>
-                </Dialog.Root>
-                
-                <Dialog.Root size="xl" modal={false}>
-                    <Dialog.Trigger asChild>
-                        <Button>XL + Non-Modal</Button>
-                    </Dialog.Trigger>
-                    <Dialog.CombinedContent>
-                        <Dialog.Header>
-                            <Dialog.Title>Extra Large Size</Dialog.Title>
-                            <Dialog.Close aria-label="Close" />
-                        </Dialog.Header>
-                        <Dialog.Body>
-                            <Dialog.Description>
-                                매우 큰 크기의 non-modal 다이얼로그입니다.
-                                배경과 상호작용이 가능합니다.
-                            </Dialog.Description>
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                            <Dialog.Close asChild>
-                                <Button>확인</Button>
-                            </Dialog.Close>
-                        </Dialog.Footer>
-                    </Dialog.CombinedContent>
-                </Dialog.Root>
-            </div>
-        </div>
-    );
+<Demo name="dialog/flexible">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/dialog/flexible.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -319,72 +66,72 @@ export default function DialogVariants() {
 
 ### Dialog.Root
 
-Dialog의 최상위 Container입니다. Size, Modal 동작, Open/Close 상태를 관리합니다.
+Dialog의 루트 컨테이너로, 다이얼로그의 상태와 동작을 관리합니다. 크기, 모달 동작, 열림/닫힘 상태를 제어할 수 있습니다.
 
 <ComponentPropsTable file="dialog" section="props" />
 
-### Dialog.Portal
+### Dialog.PortalPrimitive
 
-Dialog를 document.body나 지정된 Container에 Rendering합니다.
+Dialog 콘텐츠를 document.body 또는 지정된 컨테이너에 렌더링합니다. 다이얼로그가 다른 요소들 위에 표시되도록 보장합니다.
 
-<ComponentPropsTable file="dialog" section="portalProps" />
+<ComponentPropsTable file="dialog" section="portalPrimitiveProps" />
 
-### Dialog.Overlay
+### Dialog.OverlayPrimitive
 
-Dialog 배경을 어둡게 처리하고 외부 Click을 감지합니다.
+Dialog의 배경 오버레이입니다. 다이얼로그 외부 영역을 어둡게 하고 클릭 이벤트를 처리합니다.
 
-<ComponentPropsTable file="dialog" section="overlayProps" />
+<ComponentPropsTable file="dialog" section="overlayPrimitiveProps" />
 
-### Dialog.Content
+### Dialog.PopupPrimitive
 
-Dialog의 기본 Content 영역입니다. Portal과 Overlay를 별도로 구성해야 합니다.
+Dialog의 실제 콘텐츠 영역입니다. Portal과 Overlay를 별도로 구성해야 합니다. 세밀한 제어가 필요할 때 사용합니다.
 
-<ComponentPropsTable file="dialog" section="contentProps" />
+<ComponentPropsTable file="dialog" section="popupPrimitiveProps" />
 
-### Dialog.CombinedContent
+### Dialog.Popup
 
-Portal, Overlay, Content가 통합된 편의 Component입니다. 대부분의 경우 이걸 사용하세요.
+`PortalPrimitive`, `OverlayPrimitive`, `PopupPrimitive`가 통합된 편의 컴포넌트입니다. 대부분의 경우 이 컴포넌트를 사용하는 것을 권장합니다.
 
-<ComponentPropsTable file="dialog" section="combinedContentProps" />
+<ComponentPropsTable file="dialog" section="popupProps" />
 
 ### Dialog.Trigger
 
-Dialog를 여는 Button입니다. asChild로 Custom Trigger를 만들 수 있습니다.
+Dialog를 여는 트리거 버튼입니다. render prop을 통해 커스텀 요소로 렌더링할 수 있습니다.
 
 <ComponentPropsTable file="dialog" section="triggerProps" />
 
 ### Dialog.Close
 
-Dialog를 닫는 Button입니다. 어디든 배치 가능하며, asChild로 Custom 요소도 사용 가능합니다.
+Dialog를 닫는 버튼입니다. 다이얼로그 내 어디든 배치할 수 있으며, render prop을 통해 커스텀 요소로 사용할 수 있습니다.
 
 <ComponentPropsTable file="dialog" section="closeProps" />
 
 ### Dialog.Title
 
-Dialog Title입니다. Accessibility를 위해 필수로 포함해야 합니다.
+Dialog의 제목입니다. 접근성을 위해 필수로 포함해야 하며, 스크린 리더가 다이얼로그를 식별할 때 사용됩니다.
 
 <ComponentPropsTable file="dialog" section="titleProps" />
 
 ### Dialog.Description
 
-Dialog 설명 Text입니다. Screen Reader 사용자를 위해 추가하는 것을 권장합니다.
+Dialog의 설명 텍스트입니다. 스크린 리더 사용자에게 추가 컨텍스트를 제공하기 위해 사용하는 것을 권장합니다.
 
 <ComponentPropsTable file="dialog" section="descriptionProps" />
 
 ### Dialog.Header
 
-Dialog 상단 영역입니다. 보통 Title과 Close Button을 배치합니다.
+Dialog의 상단 영역입니다. 일반적으로 Title과 Close 버튼을 배치합니다.
 
 <ComponentPropsTable file="dialog" section="headerProps" />
 
 ### Dialog.Body
 
-Dialog 중앙 Content 영역입니다. Description과 주요 내용을 배치합니다.
+Dialog의 중앙 콘텐츠 영역입니다. Description과 주요 내용을 배치합니다.
 
 <ComponentPropsTable file="dialog" section="bodyProps" />
 
 ### Dialog.Footer
 
-Dialog 하단 영역입니다. 확인, 취소 등의 Action Button을 배치합니다.
+Dialog의 하단 영역입니다. 확인, 취소 등의 액션 버튼들을 배치합니다.
 
 <ComponentPropsTable file="dialog" section="footerProps" />

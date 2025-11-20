@@ -1,8 +1,8 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const overlay = layerStyle('components', {
     position: 'fixed',
@@ -12,7 +12,7 @@ export const overlay = layerStyle('components', {
     transition: 'opacity 0.15s cubic-bezier(.45,1.005,0,1.005)',
 
     opacity: 0.32,
-    backgroundColor: vars.color['black'], // TODO: Use constant z-index value
+    backgroundColor: vars.color.black, // TODO: Use constant z-index value
 
     selectors: {
         '&[data-starting-style], &[data-ending-style]': {
@@ -21,7 +21,7 @@ export const overlay = layerStyle('components', {
     },
 });
 
-export const content = recipe({
+export const popup = recipe({
     base: layerStyle('components', {
         position: 'fixed',
         top: '50%',
@@ -37,7 +37,7 @@ export const content = recipe({
 
         borderRadius: vars.size.borderRadius[300],
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-        backgroundColor: vars.color.background['normal-lighter'], // TODO: Use constant z-index value
+        backgroundColor: vars.color.background.overlay[100], // TODO: Use constant z-index value
 
         selectors: {
             '&[data-starting-style], &[data-ending-style]': {
@@ -60,7 +60,7 @@ export const content = recipe({
 export const title = layerStyle('components', {
     lineHeight: vars.typography.lineHeight['200'],
     letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal'],
+    color: vars.color.foreground.normal[200],
     fontSize: vars.typography.fontSize['200'],
     fontWeight: vars.typography.fontWeight['700'],
 });
@@ -68,7 +68,7 @@ export const title = layerStyle('components', {
 export const description = layerStyle('components', {
     lineHeight: vars.typography.lineHeight['075'],
     letterSpacing: vars.typography.letterSpacing['100'],
-    color: vars.color.foreground['normal'],
+    color: vars.color.foreground.normal[200],
     fontSize: vars.typography.fontSize['075'],
     fontWeight: vars.typography.fontWeight['400'],
 });
@@ -104,4 +104,4 @@ export const footer = layerStyle('components', {
     width: '100%',
 });
 
-export type DialogContentVariants = NonNullable<RecipeVariants<typeof content>>;
+export type DialogPopupVariants = NonNullable<RecipeVariants<typeof popup>>;

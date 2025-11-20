@@ -1,5 +1,93 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.6
+
+### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+
+## 1.0.0-beta.5
+
+### Minor Changes
+
+- 27c0ba9: export component with namespace
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+- c9e4b68: migrate to base-ui beta v4
+- 220cda2: change components interface
+- 216866e: feat: add new component `RadioCard`
+- 6c02d6f: unreflected content revisions
+- f17650a: add uilitiy props
+- b581b9f: add `Form` component
+- 7928a67: add subcomponent props to `Content`
+- e12f4c4: split label into vertical/horizontal
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+- 98170c1: Add white foreground variant to foreground recipe
+
+### Patch Changes
+
+- abeac6d: Unified the Cascade Layer into a single layer `vapor`
+- 3819233: Fix checkbox borderRadius sync error
+- ee61a32: Synchronize the aria-labelledby with the recieved id prop
+- df5cb78: separate `readonly` from `disabled`
+- 707f705: feat: update color tokens
+- f0f643b: feat: Remove Font Loading from CSS Build
+- 43cfefb: feat: add font banner
+- 74dc538: ### Features
+    - **Enabled CSS Tree-shaking:** Component CSS is now imported by its corresponding JS file instead of being in the global `styles.css`. This significantly reduces your production bundle size by only including the CSS for components you actually use.
+
+    ### Bug Fixes
+    - Fixed a CSS dependency order issue where `IconButton` styles loaded before `Button` styles, causing incorrect style inheritance.
+
+- 6f8de5b: correct padding-inline for sm size from 4px(050) to 8px(100)
+- 4df6bcf: resolved interactions layer's color in dark mode
+- 25c235e: adjust indicator size to account for border
+- 716c1d6: restore reset css
+- 9a3c4f6: fix(RadioGroup): Resolving orientation style errors
+- d68304a: fix(text-input): add component layer
+- Updated dependencies [8217749]
+- Updated dependencies [402284e]
+- Updated dependencies [fd4acaa]
+- Updated dependencies [f2950ee]
+    - @vapor-ui/icons@0.5.0
+
+## 0.6.0
+
+### Minor Changes
+
+- 4d7eb69: Add new Textarea component with auto-resize functionality
+- 4026b68: add field components
+- 4a9bad5: add new `MultiSelect` component
+- e64e867: change the overlay component interface
+- 3fff33e: add new `Select` component
+- d294454: remove label components'
+- b92cff1: add new `Collapsible` component
+- b78f3e1: add new `Tabs` component
+- 98dee18: Migrate `Nav` to `NavigationMenu`
+- 0880cf7: add new `Sheet` component
+- 1d2f506: migrate to `Base UI`
+- e1bf119: add inputgroup component
+- b4509b1: add new `Popover` component
+
+### Patch Changes
+
+- 2651ee2: eidt tooltip offset
+- 6de8824: edit spacing style implementation
+- 1ea54c0: fix(Callout): add flex layout for icons and text alignment
+    - Add display: 'flex' to align icons and text horizontally
+    - Add alignItems: 'center' for vertical centering
+    - Add gap spacing between icon and text content
+    - Ensures consistent layout behavior with Button component
+
+- 1ba360b: add readonly props
+- 2b756c5: fix svg rendering issue on safari
+- 6d1a2e3: remove active style when provided readonly
+- 1f4ba60: prioritize focus style over hover
+- Updated dependencies [450b324]
+- Updated dependencies [2b756c5]
+- Updated dependencies [e381247]
+- Updated dependencies [3bfda49]
+    - @vapor-ui/icons@0.4.0
+
 ## 0.5.0
 
 ### Minor Changes

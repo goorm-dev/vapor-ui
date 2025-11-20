@@ -4,17 +4,16 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { TooltipRootProps } from './tooltip';
-import { Tooltip } from './tooltip';
+import { Tooltip } from '.';
 
 const OPEN_DELAY = 1000;
 const CLOSE_DELAY = 100;
 
-const TooltipTest = (props: TooltipRootProps) => {
+const TooltipTest = (props: Tooltip.Root.Props) => {
     return (
         <Tooltip.Root {...props}>
             <Tooltip.Trigger>Hover me</Tooltip.Trigger>
-            <Tooltip.Content>Tooltip content</Tooltip.Content>
+            <Tooltip.Popup>Tooltip content</Tooltip.Popup>
         </Tooltip.Root>
     );
 };
@@ -90,11 +89,9 @@ describe('<Tooltip.Root />', () => {
             const rendered = render(
                 <Tooltip.Root delay={0}>
                     <Tooltip.Trigger>Hover me</Tooltip.Trigger>
-                    <Tooltip.Portal keepMounted>
-                        <Tooltip.Positioner>
-                            <Tooltip.Popup>Tooltip content</Tooltip.Popup>
-                        </Tooltip.Positioner>
-                    </Tooltip.Portal>
+                    <Tooltip.Popup portalElement={<Tooltip.PortalPrimitive keepMounted />}>
+                        Tooltip content
+                    </Tooltip.Popup>
                 </Tooltip.Root>,
             );
 
@@ -155,11 +152,13 @@ describe('<Tooltip.Root />', () => {
             const rendered = render(
                 <Tooltip.Root delay={0} hoverable={false}>
                     <Tooltip.Trigger>Hover me</Tooltip.Trigger>
-                    <Tooltip.Portal>
-                        <Tooltip.Positioner data-testid="tooltip-positioner">
-                            <Tooltip.Popup>Tooltip content</Tooltip.Popup>
-                        </Tooltip.Positioner>
-                    </Tooltip.Portal>
+                    <Tooltip.Popup
+                        positionerElement={
+                            <Tooltip.PositionerPrimitive data-testid="tooltip-positioner" />
+                        }
+                    >
+                        Tooltip content
+                    </Tooltip.Popup>
                 </Tooltip.Root>,
             );
             const trigger = rendered.getByRole('button', { name: 'Hover me' });
@@ -175,11 +174,13 @@ describe('<Tooltip.Root />', () => {
             const rendered = render(
                 <Tooltip.Root delay={0} hoverable>
                     <Tooltip.Trigger>Hover me</Tooltip.Trigger>
-                    <Tooltip.Portal>
-                        <Tooltip.Positioner data-testid="tooltip-positioner">
-                            <Tooltip.Popup>Tooltip content</Tooltip.Popup>
-                        </Tooltip.Positioner>
-                    </Tooltip.Portal>
+                    <Tooltip.Popup
+                        positionerElement={
+                            <Tooltip.PositionerPrimitive data-testid="tooltip-positioner" />
+                        }
+                    >
+                        Tooltip content
+                    </Tooltip.Popup>
                 </Tooltip.Root>,
             );
             const trigger = rendered.getByRole('button', { name: 'Hover me' });

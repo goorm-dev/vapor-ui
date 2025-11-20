@@ -11,14 +11,13 @@ description: Vapor UI를 Tailwind CSS v4 환경에 통합하는 방법을 안내
 /* global.css */
 
 /* 1. 파일 최상단에서 전체 Layer 순서를 정의합니다. */
-@layer tw-theme, theme, reset, components, utilities, tw-utilities;
+@layer tw-theme, vapor, tw-utilities;
+
+@import '@vapor-ui/core/tailwind.css';
 
 /* 2. Tailwind와 Vapor UI 스타일을 불러옵니다. */
 @import 'tailwindcss/theme.css' layer(tw-theme);
 @import 'tailwindcss/utilities.css' layer(tw-utilities);
-
-@import '@vapor-ui/core/styles.css';
-@import '@vapor-ui/core/tailwind.css';
 ```
 
 이 설정만으로 Vapor UI와 Tailwind CSS를 함께 사용하기 위한 모든 준비가 완료됩니다.
@@ -57,10 +56,10 @@ Vapor UI의 디자인 토큰은 `@theme` 규칙을 통해 Tailwind CSS의 네이
 
 **배경색 (Background Colors)**
 
-`bg-v-primary`, `bg-v-secondary`, `bg-v-success`, `bg-v-warning`, `bg-v-danger`, `bg-v-hint`, `bg-v-contrast`, `bg-v-normal`, `bg-v-normal-lighter`, `bg-v-normal-darker`
+`bg-v-primary`, `bg-v-secondary`, `bg-v-success`, `bg-v-warning`, `bg-v-danger`, `bg-v-hint`, `bg-v-contrast`, `bg-v-normal`, `bg-v-normal-100`, `bg-v-normal-200`
 
 **글자색 (Text Colors)**
-`text-v-primary`, `text-v-primary-darker`, `text-v-secondary`, `text-v-secondary-darker`, `text-v-success`, `text-v-success-darker`, `text-v-warning`, `text-v-warning-darker`, `text-v-danger`, `text-v-danger-darker`, `text-v-hint`, `text-v-hint-darker`, `text-v-contrast`, `text-v-contrast-darker`, `text-v-accent`, `text-v-normal`, `text-v-normal-lighter`, `text-v-logo`
+`text-v-primary`, `text-v-primary-200`, `text-v-secondary`, `text-v-secondary-200`, `text-v-success`, `text-v-success-200`, `text-v-warning`, `text-v-warning-200`, `text-v-danger`, `text-v-danger-200`, `text-v-hint`, `text-v-hint-200`, `text-v-contrast`, `text-v-contrast-200`, `text-v-accent`, `text-v-normal`, `text-v-normal-100`, `text-v-logo`
 
 **테두리색 (Border Colors)**
 `border-v-primary`, `border-v-secondary`, `border-v-normal`, `border-v-success`, `border-v-warning`, `border-v-danger`, `border-v-hint`, `border-v-contrast`
@@ -74,10 +73,10 @@ Vapor UI와 Tailwind CSS의 통합은 CSS의 `@layer` 규칙을 기반으로 동
 **우선순위 (낮음 → 높음):**
 
 1. `tw-theme`: Tailwind의 기본 테마 변수
-2. `theme`: Vapor UI의 커스텀 테마 변수
-3. `reset`: Vapor UI의 브라우저 스타일 초기화
-4. `components`: Vapor UI 컴포넌트의 기본 스타일
-5. `utilities`: Vapor UI의 보조 유틸리티 클래스
+2. `vapor.theme`: Vapor UI의 커스텀 테마 변수
+3. `vapor.reset`: Vapor UI의 브라우저 스타일 초기화
+4. `vapor.components`: Vapor UI 컴포넌트의 기본 스타일
+5. `vapor.utilities`: Vapor UI의 보조 유틸리티 클래스
 6. `tw-utilities`: Tailwind의 유틸리티 클래스 **(가장 높은 우선순위)**
 
 이 구조의 핵심은 Tailwind 유틸리티(`tw-utilities`)가 항상 가장 높은 우선순위를 갖는 것입니다.
@@ -89,7 +88,7 @@ Vapor UI와 Tailwind CSS의 통합은 CSS의 `@layer` 규칙을 기반으로 동
 
 <Callout>권장: Vapor UI의 자체 Reset 사용</Callout>
 
-Vapor UI는 `@layer reset`을 통해 자체적으로 필요한 최소한의 브라우저 스타일 초기화를 수행합니다.
+Vapor UI는 `@layer vapor.reset`을 통해 자체적으로 필요한 최소한의 브라우저 스타일 초기화를 수행합니다.
 따라서 **Tailwind CSS의 `preflight.css`를 별도로 불러오는 것을 권장하지 않습니다.** <br />
 두 개의 Reset을 함께 사용하면 예상치 못한 스타일 충돌이 발생하거나, 일관성이 깨질 수 있습니다.
 
@@ -103,15 +102,14 @@ Vapor UI는 `@layer reset`을 통해 자체적으로 필요한 최소한의 브�
 
 ```css
 /* globals.css (예시) */
+/* 👇 tw-base 추가 */
+@layer tw-theme, vapor.theme, tw-base, vapor.reset, vapor.components, vapor.utilities, tw-utilities;
 
-@layer tw-theme, theme, tw-base, reset, components, utilities, tw-utilities;
+@import '@vapor-ui/core/tailwind.css';
 
 @import 'tailwindcss/theme.css' layer(tw-theme);
 @import 'tailwindcss/utilities.css' layer(tw-utilities);
-@import 'tailwindcss/preflight.css' layer(tw-base); /* 추가 */
-
-@import '@vapor-ui/core/styles.css';
-@import '@vapor-ui/core/tailwind.css';
+@import 'tailwindcss/preflight.css' layer(tw-base); /* 👈 추가 */
 ```
 
 **참고**

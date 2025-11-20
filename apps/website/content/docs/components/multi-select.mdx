@@ -1,0 +1,188 @@
+---
+title: 'MultiSelect'
+site_name: 'MultiSelect - Vapor Core'
+description: 'MultiSelect는 사용자가 여러 옵션 중에서 다중 선택할 수 있는 드롭다운 컴포넌트입니다. 선택된 값들은 배지 형태로 표시되며, 태그 선택, 필터링, 카테고리 선택 등에 사용됩니다.'
+---
+
+<Demo name="multi-select/default-multi-select">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/default-multi-select.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Property
+
+---
+
+### Size
+
+MultiSelect의 크기는 sm, md, lg, xl 로 제공합니다. 크기에 따라 선택된 값들의 배지 크기도 자동으로 조정됩니다.
+
+<Demo name="multi-select/multi-select-size">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-size.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Controlled State
+
+MultiSelect의 선택 상태를 외부에서 제어할 수 있습니다. 값은 배열 형태로 관리됩니다.
+
+<Demo name="multi-select/multi-select-controlled">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-controlled.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### States
+
+MultiSelect의 다양한 상태(비활성화, 읽기 전용, 오류)를 설정할 수 있습니다.
+
+<Demo name="multi-select/multi-select-states">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-states.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### Items Configuration
+
+MultiSelect는 배열 형태와 객체 형태의 아이템 데이터를 모두 지원합니다. items prop을 사용하면 자동으로 값이 포맷팅되어 배지로 표시됩니다.
+
+<Demo name="multi-select/multi-select-items">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-items.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Grouping Options
+
+관련된 옵션들을 그룹으로 묶어 구조화할 수 있습니다. Group과 GroupLabel, Separator를 사용하여 명확한 구조를 만들 수 있습니다.
+
+<Demo name="multi-select/multi-select-grouping">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-grouping.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Custom Value Display
+
+MultiSelect.Value에 함수형 children을 제공하여 선택된 값들의 표시 방법을 커스터마이징할 수 있습니다. 기본적으로는 배지 형태로 표시되지만, 문자열이나 커스텀 컴포넌트로 변경할 수 있습니다.
+
+<Demo name="multi-select/multi-select-custom-value">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/multi-select/multi-select-custom-value.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Props Table
+
+---
+
+### MultiSelect.Root
+
+MultiSelect의 루트 컨테이너로, 전체 MultiSelect 컴포넌트의 상태와 동작을 관리합니다.
+
+<ComponentPropsTable file="multi-select" section="rootProps" />
+
+### MultiSelect.Trigger
+
+MultiSelect 드롭다운을 여는 트리거 요소입니다.
+
+<ComponentPropsTable file="multi-select" section="triggerProps" />
+
+### MultiSelect.ValuePrimitive
+
+선택된 값들을 표시하는 컴포넌트입니다. 기본적으로 배지 형태로 표시되며, 함수형 children을 통해 커스텀 값 표시가 가능합니다.
+
+<ComponentPropsTable file="multi-select" section="valuePrimitiveProps" />
+
+### MultiSelect.PlaceholderPrimitive
+
+값이 선택되지 않았을 때 표시되는 플레이스홀더 컴포넌트입니다.
+
+<ComponentPropsTable file="multi-select" section="placeholderPrimitiveProps" />
+
+### MultiSelect.TriggerIconPrimitive
+
+트리거 버튼의 드롭다운 아이콘을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="multi-select" section="triggerIconPrimitiveProps" />
+
+### MultiSelect.PortalPrimitive
+
+MultiSelect 드롭다운을 DOM의 다른 위치에 렌더링하는 포털 컴포넌트입니다.
+
+<ComponentPropsTable file="multi-select" section="portalPrimitiveProps" />
+
+### MultiSelect.PositionerPrimitive
+
+MultiSelect 드롭다운의 위치를 설정하는 컴포넌트입니다.
+
+<ComponentPropsTable file="multi-select" section="positionerPrimitiveProps" />
+
+### MultiSelect.PopupPrimitive
+
+MultiSelect의 실제 드롭다운 팝업 영역입니다.
+
+<ComponentPropsTable file="multi-select" section="popupPrimitiveProps" />
+
+### MultiSelect.Popup
+
+MultiSelect의 드롭다운 콘텐츠를 담는 컨테이너입니다. Portal과 Positioner를 조합하여 구성됩니다.
+
+<ComponentPropsTable file="multi-select" section="popupProps" />
+
+### MultiSelect.Item
+
+개별 선택 옵션을 나타내는 컴포넌트입니다. 다중 선택이 가능합니다.
+
+<ComponentPropsTable file="multi-select" section="itemProps" />
+
+### MultiSelect.ItemIndicatorPrimitive
+
+선택된 아이템에 표시되는 인디케이터 아이콘 컴포넌트입니다.
+
+<ComponentPropsTable file="multi-select" section="itemIndicatorPrimitiveProps" />
+
+### MultiSelect.Group
+
+관련된 아이템들을 그룹화하는 컴포넌트입니다.
+
+<ComponentPropsTable file="multi-select" section="groupProps" />
+
+### MultiSelect.GroupLabel
+
+그룹의 라벨을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="multi-select" section="groupLabelProps" />
+
+### MultiSelect.Separator
+
+그룹 간의 구분선을 표시하는 컴포넌트입니다.
+
+<ComponentPropsTable file="multi-select" section="separatorProps" />

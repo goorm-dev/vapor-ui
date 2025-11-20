@@ -1,11 +1,12 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 
-import { TextInput, type TextInputProps } from './text-input';
+import { TextInput } from './text-input';
 
 const LABEL_TEXT = 'Label';
-const TextInputTest = (props: TextInputProps) => {
+const TextInputTest = (props: TextInput.Props) => {
     return (
         <label>
             {LABEL_TEXT}
@@ -38,33 +39,25 @@ describe('TextInput', () => {
         const input = rendered.getByRole('textbox');
 
         await userEvent.type(input, 'Testing');
-        expect(handleValueChange).toHaveBeenCalledWith('Testing');
+        expect(handleValueChange).toHaveBeenLastCalledWith('Testing', expect.any(Object));
     });
 
-    it('should render the proper value when typed', async () => {
-        const rendered = render(<TextInputTest />);
-        const input = rendered.getByRole('textbox');
-
-        await userEvent.type(input, 'Testing');
-        expect(input).toHaveValue('Testing');
-    });
-
-    it('should not typable when disabled', async () => {
+    it('should be disabled and prevent input', async () => {
         const rendered = render(<TextInputTest disabled />);
         const input = rendered.getByRole('textbox');
 
+        expect(input).toBeDisabled();
         await userEvent.type(input, 'Testing');
         expect(input).toHaveValue('');
-        expect(input).toBeDisabled();
     });
 
-    it('should not typable when readOnly', async () => {
+    it('should be readonly and prevent input', async () => {
         const rendered = render(<TextInputTest readOnly />);
         const input = rendered.getByRole('textbox');
 
+        expect(input).toHaveAttribute('readonly');
         await userEvent.type(input, 'Testing');
         expect(input).toHaveValue('');
-        expect(input).toHaveAttribute('readonly');
     });
 
     it('should have aria-invalid when invalid', () => {

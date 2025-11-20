@@ -1,43 +1,123 @@
-import type { FormEvent } from 'react';
-import { useEffect, useState } from 'react';
+'use client';
 
+import { useEffect, useRef, useState } from 'react';
+
+import { Popover } from '@base-ui-components/react';
 import { Badge, Button, Card, Text } from '@vapor-ui/core';
+import {
+    generateColorCSS,
+    generateCompleteCSS,
+    generateRadiusCSS,
+    generateScalingCSS,
+} from '@vapor-ui/css-generator';
 import { ConfirmOutlineIcon } from '@vapor-ui/icons';
-import cx from 'clsx';
 
-import ColorBoard from '../color-board';
-import Mode from '../panel-mode';
-import Radius from '../panel-radius';
-import Scaling from '../panel-scaling';
-import styles from './theme-panel.module.scss';
+import { useClipboard } from '~/hooks/use-clipboard';
+import { CustomThemeProvider, useCustomTheme } from '~/providers';
+
+import { SectionColor } from '../section-color';
+import { SectionMode } from '../section-mode';
+import { SectionRadius } from '../section-radius';
+import { SectionScaling } from '../section-scaling';
+
+const ThemePanelContent = () => {
+    const { currentConfig } = useCustomTheme();
+    const { copyToClipboard, copied, reset } = useClipboard({
+        onSuccess: () => {
+            setTimeout(() => {
+                reset();
+            }, 1000);
+        },
+        onError: (error) => {
+            console.error('Failed to copy theme:', error);
+        },
+    });
+
+    const hasAnyConfig =
+        Boolean(currentConfig.colors) ||
+        Boolean(currentConfig.scaling) ||
+        Boolean(currentConfig.radius);
+
+    const handleCopyTheme = async () => {
+        const { colors, scaling, radius } = currentConfig;
+
+        let css = '';
+
+        if (colors && scaling && radius) {
+            css = generateCompleteCSS({
+                colors,
+                scaling,
+                radius,
+            });
+        } else {
+            const cssBlocks: string[] = [];
+
+            if (colors) {
+                cssBlocks.push(generateColorCSS(colors));
+            }
+
+            if (scaling) {
+                cssBlocks.push(generateScalingCSS(scaling));
+            }
+
+            if (radius) {
+                cssBlocks.push(generateRadiusCSS(radius));
+            }
+
+            css = cssBlocks.join('\n\n');
+        }
+
+        await copyToClipboard(css);
+    };
+
+    return (
+        <Card.Root className="bg-v-overlay-100">
+            <Card.Header className="flex justify-between items-center border-b-0 flex-shrink-0">
+                <Popover.Title render={<Text typography="heading5">Theme Setting</Text>} />
+
+                <div className="flex items-center gap-[var(--vapor-size-space-050)]">
+                    <Badge colorPalette="hint">V</Badge>
+                    <Text typography="subtitle2" foreground="hint-100">
+                        로 열기/닫기
+                    </Text>
+                </div>
+            </Card.Header>
+
+            <Card.Body className="max-h-[60vh] overflow-y-auto [--scroll-shadow-size:20px] [mask-image:linear-gradient(180deg,#000_calc(100%_-_var(--scroll-shadow-size)),transparent)]">
+                <div className="flex flex-col gap-[var(--vapor-size-space-250)]">
+                    <SectionMode />
+                    <SectionColor />
+                    <SectionRadius />
+                    <SectionScaling />
+                </div>
+            </Card.Body>
+            <Card.Footer className="flex-shrink-0">
+                <Button stretch size="lg" onClick={handleCopyTheme} disabled={!hasAnyConfig}>
+                    {copied ? <ConfirmOutlineIcon /> : 'Copy Theme'}
+                </Button>
+            </Card.Footer>
+        </Card.Root>
+    );
+};
 
 const ThemePanel = () => {
-    const [open, setOpen] = useState(true);
-    const [isCopied, setIsCopied] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
+    const [liveMessage, setLiveMessage] = useState('');
 
-    const onClickCopy = async (text: string) => {
-        await navigator.clipboard.writeText(text);
-        setIsCopied(true);
-        setTimeout(() => {
-            setIsCopied(false);
-        }, 3000);
-    };
-
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const nodes = e.currentTarget.querySelectorAll(
-            'button[role="radio"][aria-checked=true]',
-        ) satisfies NodeListOf<HTMLButtonElement>;
-
-        const providerTemplate = parseThemes(nodes);
-        onClickCopy(providerTemplate);
-    };
+    const anchorRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const clickV = (e: KeyboardEvent) => {
             if (e.metaKey || e.ctrlKey) return;
-            if (e.key === 'v' || e.key === 'ㅍ') setOpen((prev) => !prev);
+            if (e.key === 'v' || e.key === 'ㅍ')
+                setIsOpen((prevOpen) => {
+                    setLiveMessage(
+                        prevOpen
+                            ? '테마 설정 패널이 숨겨졌습니다.'
+                            : '테마 설정 패널이 나타났습니다.',
+                    );
+                    return !prevOpen;
+                });
         };
 
         document.addEventListener('keydown', clickV);
@@ -45,57 +125,59 @@ const ThemePanel = () => {
     }, []);
 
     return (
-        <Card.Root
-            className={cx(styles.panel, 'vapor-core', {
-                [styles.panel_open]: open,
-            })}
-            data-vapor-scaling="1"
-        >
-            <Card.Header className={styles.panel_header}>
-                <Text typography="heading5">Theme Setting</Text>
+        <CustomThemeProvider>
+            <div
+                id="theme-panel-anchor"
+                ref={anchorRef}
+                style={{
+                    position: 'fixed',
+                    top: '0',
+                    right: '0',
+                    width: '1rem',
+                    height: '4rem',
+                    background: 'transparent',
+                }}
+            />
 
-                <div className={styles['panel_hot-key']}>
-                    <Badge color="hint">V</Badge>
-                    <Text typography="subtitle2" foreground="hint">
-                        로 열기/닫기
-                    </Text>
-                </div>
-            </Card.Header>
-
-            <Card.Body className={styles.panel_body}>
-                <form id="theme-panel" className={styles.sections} onSubmit={handleSubmit}>
-                    <ColorBoard />
-                    <Mode />
-                    <Radius />
-                    <Scaling />
-                </form>
-            </Card.Body>
-
-            <Card.Footer>
-                <Button stretch type="submit" form="theme-panel">
-                    {/* onClick={onClickCopy} */}
-                    {isCopied ? <ConfirmOutlineIcon /> : 'Copy Theme'}
-                </Button>
-            </Card.Footer>
-        </Card.Root>
+            <div
+                role="status"
+                aria-live="polite"
+                style={{
+                    position: 'absolute',
+                    width: '1px',
+                    height: '1px',
+                    margin: '-1px',
+                    padding: '0',
+                    overflow: 'hidden',
+                    clip: 'rect(0, 0, 0, 0)',
+                    border: '0',
+                }}
+            >
+                {liveMessage}
+            </div>
+            <Popover.Root open={isOpen} modal="trap-focus" closeDelay={3000}>
+                <Popover.Portal>
+                    <Popover.Positioner
+                        anchor={anchorRef}
+                        side="bottom"
+                        align="end"
+                        alignOffset={16}
+                        sideOffset={16}
+                        positionMethod="fixed"
+                    >
+                        <Popover.Popup
+                            className={`shadow-[0px_4px_16px_0px_rgba(0,0,0,0.2)] outline-none bg-transparent rounded-v-300 
+                                transition-transform duration-300 ease-in-out 
+                                data-[starting-style]:translate-x-full 
+                                data-[ending-style]:translate-x-full`}
+                        >
+                            <ThemePanelContent />
+                        </Popover.Popup>
+                    </Popover.Positioner>
+                </Popover.Portal>
+            </Popover.Root>
+        </CustomThemeProvider>
     );
 };
 
-export default ThemePanel;
-
-function parseThemes(nodes: NodeListOf<HTMLButtonElement>) {
-    let attributes = '';
-
-    nodes.forEach((node) => {
-        const category = node.getAttribute('data-theme-category');
-        if (category === 'border-radius') {
-            attributes += `borderRadiusFactor="${node.value}" `;
-        } else {
-            attributes += `${category}="${node.value}" `;
-        }
-    });
-
-    return `createThemeConfig({
-	primaryColor: "${attributes}",
-});`;
-}
+export { ThemePanel };

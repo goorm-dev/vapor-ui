@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { layerStyle } from '~/styles/utils';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const popup = style({
     outline: 'none',
@@ -10,7 +10,7 @@ export const popup = style({
     borderRadius: vars.size.borderRadius[300],
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background['normal-lighter'],
+    backgroundColor: vars.color.background.overlay[100],
     paddingBlock: vars.size.space[150],
 
     paddingInline: vars.size.space[200],
@@ -20,7 +20,7 @@ export const popup = style({
 
 export const arrow = layerStyle('components', {
     display: 'flex',
-    color: vars.color.background['normal-lighter'],
+    color: vars.color.background.overlay[100], // It's background-color, but since it's an SVG, it's specified as color.
 
     width: vars.size.dimension[100],
     height: vars.size.dimension[200],

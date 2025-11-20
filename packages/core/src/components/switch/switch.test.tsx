@@ -4,8 +4,7 @@ import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
-import type { SwitchRootProps } from './switch';
-import { Switch } from './switch';
+import { Switch } from '.';
 
 describe('Switch', () => {
     afterEach(cleanup);
@@ -138,11 +137,11 @@ describe('Switch', () => {
 
             await userEvent.click(control);
             expect(onCheckedChange).toHaveBeenCalledTimes(1);
-            expect(onCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
+            expect(onCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
 
             await userEvent.click(control);
             expect(onCheckedChange).toHaveBeenCalledTimes(2);
-            expect(onCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
+            expect(onCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
         });
 
         it('should not toggle checked state when blocker is active', async () => {
@@ -209,18 +208,18 @@ describe('Switch', () => {
 
 const LABEL_TEXT = 'Test Switch';
 
-const SwitchTest = (props: SwitchRootProps) => (
+const SwitchTest = (props: Switch.Root.Props) => (
     <>
         <Switch.Root id="switch-test" {...props} />
         <label htmlFor="switch-test">{LABEL_TEXT}</label>
     </>
 );
 
-const ControlledSwitchTest = ({ onCheckedChange, ...props }: SwitchRootProps) => {
+const ControlledSwitchTest = ({ onCheckedChange, ...props }: Switch.Root.Props) => {
     const [checked, setChecked] = useState<boolean>(false);
     const [blocker, setBlocker] = useState<boolean>(false);
 
-    const handleCheckedChange = (checked: boolean, event: Event) => {
+    const handleCheckedChange = (checked: boolean, event: Switch.Root.ChangeEventDetails) => {
         onCheckedChange?.(checked, event);
 
         if (blocker) return;

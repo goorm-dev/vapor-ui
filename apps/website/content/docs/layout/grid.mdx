@@ -4,21 +4,11 @@ site_name: 'Grid - Vapor Core'
 description: '유연하고 강력한 CSS Grid 기반의 레이아웃 컴포넌트입니다'
 ---
 
-<Demo name="default-grid">
-```tsx
-import { Grid } from '@vapor-ui/core';
-
-export function DefaultGrid() {
-  return (
-    <Grid.Root templateColumns="repeat(3, 1fr)" gap="4">
-      <Grid.Item className="bg-gray-100 p-4 rounded">1</Grid.Item>
-      <Grid.Item className="bg-gray-100 p-4 rounded">2</Grid.Item>
-      <Grid.Item className="bg-gray-100 p-4 rounded">3</Grid.Item>
-      <Grid.Item className="bg-gray-100 p-4 rounded">4</Grid.Item>
-      <Grid.Item className="bg-gray-100 p-4 rounded">5</Grid.Item>
-      <Grid.Item className="bg-gray-100 p-4 rounded">6</Grid.Item>
-    </Grid.Root>
-  );
+<Demo name="grid/default-grid">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/grid/default-grid.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -31,32 +21,11 @@ export function DefaultGrid() {
 
 Grid의 행과 열 템플릿을 설정하여 레이아웃 구조를 정의할 수 있습니다.
 
-<Demo name="grid-template">
-```tsx
-import { Grid } from '@vapor-ui/core';
-
-export function GridTemplate() {
-  return (
-    <div className="flex flex-wrap gap-4">
-      <div>
-        <h4 className="text-sm font-medium mb-2">Template Columns</h4>
-        <Grid.Root templateColumns="200px 1fr 100px" gap="2">
-          <Grid.Item className="bg-blue-100 p-2 rounded text-center">200px</Grid.Item>
-          <Grid.Item className="bg-blue-100 p-2 rounded text-center">1fr</Grid.Item>
-          <Grid.Item className="bg-blue-100 p-2 rounded text-center">100px</Grid.Item>
-        </Grid.Root>
-      </div>
-      
-      <div>
-        <h4 className="text-sm font-medium mb-2">Template Rows</h4>
-        <Grid.Root templateColumns="1fr" templateRows="60px 1fr 40px" gap="2" className="h-40">
-          <Grid.Item className="bg-green-100 p-2 rounded text-center">60px</Grid.Item>
-          <Grid.Item className="bg-green-100 p-2 rounded text-center">1fr</Grid.Item>
-          <Grid.Item className="bg-green-100 p-2 rounded text-center">40px</Grid.Item>
-        </Grid.Root>
-      </div>
-    </div>
-  );
+<Demo name="grid/grid-template">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/grid/grid-template.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -65,36 +34,11 @@ export function GridTemplate() {
 
 Grid 아이템들의 자동 배치 방향을 설정할 수 있습니다.
 
-<Demo name="grid-flow">
-```tsx
-import { Grid } from '@vapor-ui/core';
-
-export function GridFlow() {
-  return (
-    <div className="flex flex-wrap gap-4">
-      <div>
-        <h4 className="text-sm font-medium mb-2">Row Flow</h4>
-        <Grid.Root templateColumns="repeat(3, 1fr)" flow="row" gap="2">
-          <Grid.Item className="bg-purple-100 p-2 rounded text-center">1</Grid.Item>
-          <Grid.Item className="bg-purple-100 p-2 rounded text-center">2</Grid.Item>
-          <Grid.Item className="bg-purple-100 p-2 rounded text-center">3</Grid.Item>
-          <Grid.Item className="bg-purple-100 p-2 rounded text-center">4</Grid.Item>
-          <Grid.Item className="bg-purple-100 p-2 rounded text-center">5</Grid.Item>
-        </Grid.Root>
-      </div>
-      
-      <div>
-        <h4 className="text-sm font-medium mb-2">Column Flow</h4>
-        <Grid.Root templateRows="repeat(3, 1fr)" flow="column" gap="2" className="h-32">
-          <Grid.Item className="bg-orange-100 p-2 rounded text-center">1</Grid.Item>
-          <Grid.Item className="bg-orange-100 p-2 rounded text-center">2</Grid.Item>
-          <Grid.Item className="bg-orange-100 p-2 rounded text-center">3</Grid.Item>
-          <Grid.Item className="bg-orange-100 p-2 rounded text-center">4</Grid.Item>
-          <Grid.Item className="bg-orange-100 p-2 rounded text-center">5</Grid.Item>
-        </Grid.Root>
-      </div>
-    </div>
-  );
+<Demo name="grid/grid-flow">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/grid/grid-flow.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -103,32 +47,11 @@ export function GridFlow() {
 
 Grid를 인라인 요소로 표시할 수 있습니다.
 
-<Demo name="grid-inline">
-```tsx
-import { Grid } from '@vapor-ui/core';
-
-export function GridInline() {
-  return (
-    <div className="flex flex-wrap gap-4">
-      <div>
-        <h4 className="text-sm font-medium mb-2">Block Grid (default)</h4>
-        <Grid.Root templateColumns="repeat(2, 1fr)" gap="2">
-          <Grid.Item className="bg-indigo-100 p-2 rounded text-center">1</Grid.Item>
-          <Grid.Item className="bg-indigo-100 p-2 rounded text-center">2</Grid.Item>
-        </Grid.Root>
-        <p className="text-sm text-gray-600 mt-1">Block level grid</p>
-      </div>
-      
-      <div>
-        <h4 className="text-sm font-medium mb-2">Inline Grid</h4>
-        <Grid.Root inline templateColumns="repeat(2, 1fr)" gap="2">
-          <Grid.Item className="bg-pink-100 p-2 rounded text-center">1</Grid.Item>
-          <Grid.Item className="bg-pink-100 p-2 rounded text-center">2</Grid.Item>
-        </Grid.Root>
-        <span className="text-sm text-gray-600 ml-2">Inline grid</span>
-      </div>
-    </div>
-  );
+<Demo name="grid/grid-inline">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/grid/grid-inline.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -137,36 +60,11 @@ export function GridInline() {
 
 Grid 아이템이 차지할 행이나 열의 개수를 설정할 수 있습니다.
 
-<Demo name="grid-span">
-```tsx
-import { Grid } from '@vapor-ui/core';
-
-export function GridSpan() {
-  return (
-    <div className="flex flex-wrap gap-4">
-      <div>
-        <h4 className="text-sm font-medium mb-2">Column Span</h4>
-        <Grid.Root templateColumns="repeat(4, 1fr)" gap="2">
-          <Grid.Item className="bg-red-100 p-2 rounded text-center">1</Grid.Item>
-          <Grid.Item colSpan="2" className="bg-red-200 p-2 rounded text-center">Span 2</Grid.Item>
-          <Grid.Item className="bg-red-100 p-2 rounded text-center">4</Grid.Item>
-          <Grid.Item colSpan="3" className="bg-red-200 p-2 rounded text-center">Span 3</Grid.Item>
-          <Grid.Item className="bg-red-100 p-2 rounded text-center">8</Grid.Item>
-        </Grid.Root>
-      </div>
-      
-      <div>
-        <h4 className="text-sm font-medium mb-2">Row Span</h4>
-        <Grid.Root templateColumns="repeat(3, 1fr)" gap="2">
-          <Grid.Item rowSpan="2" className="bg-teal-200 p-2 rounded text-center">Row Span 2</Grid.Item>
-          <Grid.Item className="bg-teal-100 p-2 rounded text-center">2</Grid.Item>
-          <Grid.Item className="bg-teal-100 p-2 rounded text-center">3</Grid.Item>
-          <Grid.Item className="bg-teal-100 p-2 rounded text-center">5</Grid.Item>
-          <Grid.Item className="bg-teal-100 p-2 rounded text-center">6</Grid.Item>
-        </Grid.Root>
-      </div>
-    </div>
-  );
+<Demo name="grid/grid-span">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/grid/grid-span.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -179,42 +77,11 @@ export function GridSpan() {
 
 일반적인 레이아웃 패턴들을 Grid로 구현할 수 있습니다.
 
-<Demo name="grid-layout">
-```tsx
-import { Grid } from '@vapor-ui/core';
-
-export function GridLayout() {
-  return (
-    <div className="flex flex-wrap gap-4">
-      <div>
-        <h4 className="text-sm font-medium mb-2">Dashboard Layout</h4>
-        <Grid.Root templateColumns="200px 1fr" templateRows="60px 1fr 40px" gap="2" className="h-64 w-full max-w-md">
-          <Grid.Item colSpan="2" className="bg-gray-200 p-2 rounded flex items-center justify-center font-medium">
-            Header
-          </Grid.Item>
-          <Grid.Item className="bg-blue-100 p-2 rounded flex items-center justify-center">
-            Sidebar
-          </Grid.Item>
-          <Grid.Item className="bg-green-100 p-2 rounded flex items-center justify-center">
-            Main Content
-          </Grid.Item>
-          <Grid.Item colSpan="2" className="bg-gray-200 p-2 rounded flex items-center justify-center font-medium">
-            Footer
-          </Grid.Item>
-        </Grid.Root>
-      </div>
-      
-      <div>
-        <h4 className="text-sm font-medium mb-2">Card Layout</h4>
-        <Grid.Root templateColumns="repeat(auto-fit, minmax(120px, 1fr))" gap="2" className="w-full max-w-md">
-          <Grid.Item className="bg-yellow-100 p-4 rounded text-center">Card 1</Grid.Item>
-          <Grid.Item className="bg-yellow-100 p-4 rounded text-center">Card 2</Grid.Item>
-          <Grid.Item className="bg-yellow-100 p-4 rounded text-center">Card 3</Grid.Item>
-          <Grid.Item className="bg-yellow-100 p-4 rounded text-center">Card 4</Grid.Item>
-        </Grid.Root>
-      </div>
-    </div>
-  );
+<Demo name="grid/grid-layout">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/grid/grid-layout.tsx",
+    "codeblock": true
 }
 ```
 </Demo>

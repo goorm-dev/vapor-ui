@@ -2,14 +2,16 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const control = recipe({
     base: [
         interaction(),
         layerStyle('components', {
             position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
             border: 'none',
             borderRadius: '9999px',
             backgroundColor: vars.color.gray[400],
@@ -18,14 +20,32 @@ export const control = recipe({
             flexShrink: 0,
 
             selectors: {
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
-                '&[data-checked]': { backgroundColor: vars.color.background.primary },
+                '&[data-checked]': {
+                    backgroundColor: vars.color.background.primary[200],
+                },
+
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+
+                '&[data-readonly]': {
+                    backgroundColor: vars.color.gray[200],
+                    outline: '0.0625rem solid',
+                    outlineColor: vars.color.border.normal,
+                    outlineOffset: '-0.0625rem',
+                },
+                '&[data-readonly]:active::before': { opacity: 0.08 },
+
+                '&[data-invalid]': {
+                    outline: '0.125rem solid',
+                    outlineColor: vars.color.border.danger,
+                    outlineOffset: '-0.125rem',
+                },
             },
         }),
     ],
 
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 'md', invalid: false },
     variants: {
+        invalid: { true: {}, false: {} },
         size: {
             sm: layerStyle('components', {
                 padding: vars.size.space['025'],
@@ -50,7 +70,7 @@ export const indicator = recipe({
     base: layerStyle('components', {
         display: 'block',
 
-        transition: 'transform 0.1s',
+        transition: 'transform 0.1s ease',
         willChange: 'transform',
         borderRadius: '100%',
 
@@ -58,7 +78,17 @@ export const indicator = recipe({
         backgroundColor: 'white',
 
         selectors: {
-            '&[data-checked]': { transform: 'translateX(100%)' },
+            '&[data-checked]': {
+                transform: 'translateX(100%)',
+            },
+            '&[data-readonly][data-unchecked]': {
+                backgroundColor: vars.color.gray[400],
+                boxShadow: 'none',
+            },
+            '&[data-readonly][data-checked]': {
+                backgroundColor: vars.color.foreground.hint[100],
+                boxShadow: 'none',
+            },
         },
     }),
 

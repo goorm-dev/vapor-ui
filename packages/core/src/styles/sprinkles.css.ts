@@ -2,7 +2,7 @@ import { calc } from '@vanilla-extract/css-utils';
 import { createRainbowSprinkles, defineProperties } from 'rainbow-sprinkles';
 
 import { layers } from './layers.css';
-import { vars } from './vars.css';
+import { vars } from './themes.css';
 
 const spaceTokens = vars.size.space;
 type SpaceKey = keyof typeof spaceTokens;
@@ -23,28 +23,27 @@ const negativeSpaces = Object.keys(spaceTokens).reduce(
 const marginTokens = { ...spaceTokens, ...negativeSpaces };
 const dimensionTokens = vars.size.dimension;
 const radiusTokens = vars.size.borderRadius;
-const { foreground, black, white, logo, ...colors } = vars.color;
 
-const colorTokens = {
-    // Background colors (no prefix)
-    'rgb-primary': colors.background['rgb-primary'],
-    primary: colors.background.primary,
-    'rgb-secondary': colors.background['rgb-secondary'],
-    secondary: colors.background.secondary,
-    'rgb-success': colors.background['rgb-success'],
-    success: colors.background.success,
-    'rgb-warning': colors.background['rgb-warning'],
-    warning: colors.background.warning,
-    'rgb-danger': colors.background['rgb-danger'],
-    danger: colors.background.danger,
-    'rgb-hint': colors.background['rgb-hint'],
-    hint: colors.background.hint,
-    'rgb-contrast': colors.background['rgb-contrast'],
-    contrast: colors.background.contrast,
-    'rgb-normal': colors.background['rgb-normal'],
-    normal: colors.background.normal,
-    'normal-lighter': colors.background['normal-lighter'],
-    'normal-darker': colors.background['normal-darker'],
+const { foreground, border, black, white, ...colors } = vars.color;
+
+const bgColorTokens = {
+    // Background colors
+    'primary-100': colors.background.primary[100],
+    'primary-200': colors.background.primary[200],
+    'secondary-100': colors.background.secondary[100],
+    'success-100': colors.background.success[100],
+    'success-200': colors.background.success[200],
+    'warning-100': colors.background.warning[100],
+    'warning-200': colors.background.warning[200],
+    'danger-100': colors.background.danger[100],
+    'danger-200': colors.background.danger[200],
+    'hint-100': colors.background.hint[100],
+    'hint-200': colors.background.hint[200],
+    'contrast-100': colors.background.contrast[100],
+    'contrast-200': colors.background.contrast[200],
+    'canvas-100': colors.background.canvas[100],
+    'canvas-200': colors.background.canvas[200],
+    'overlay-100': colors.background.overlay[100],
 
     // Blue colors with prefix
     'blue-050': colors.blue['050'],
@@ -83,7 +82,6 @@ const colorTokens = {
     'grape-900': colors.grape['900'],
 
     // Gray colors with prefix
-    'gray-000': colors.gray['000'],
     'gray-050': colors.gray['050'],
     'gray-100': colors.gray['100'],
     'gray-200': colors.gray['200'],
@@ -94,7 +92,6 @@ const colorTokens = {
     'gray-700': colors.gray['700'],
     'gray-800': colors.gray['800'],
     'gray-900': colors.gray['900'],
-    'gray-950': colors.gray['950'],
 
     // Green colors with prefix
     'green-050': colors.green['050'],
@@ -185,6 +182,37 @@ const colorTokens = {
     white,
 };
 
+const colorTokens = {
+    'primary-100': foreground.primary[100],
+    'primary-200': foreground.primary[200],
+    'secondary-100': foreground.secondary[100],
+    'secondary-200': foreground.secondary[200],
+    'success-100': foreground.success[100],
+    'success-200': foreground.success[200],
+    'warning-100': foreground.warning[100],
+    'warning-200': foreground.warning[200],
+    'danger-100': foreground.danger[100],
+    'danger-200': foreground.danger[200],
+    'hint-100': foreground.hint[100],
+    'hint-200': foreground.hint[200],
+    'contrast-100': foreground.contrast[100],
+    'contrast-200': foreground.contrast[200],
+    'normal-100': foreground.normal[100],
+    'normal-200': foreground.normal[200],
+    'button-primary': foreground.inverse,
+};
+
+const borderColorTokens = {
+    primary: border.primary,
+    secondary: border.secondary,
+    success: border.success,
+    warning: border.warning,
+    danger: border.danger,
+    contrast: border.contrast,
+    hint: border.hint,
+    normal: border.normal,
+};
+
 const sprinkleProperties = defineProperties({
     '@layer': layers.utilities,
 
@@ -237,9 +265,10 @@ const sprinkleProperties = defineProperties({
 
         // Visual
         border: true,
+        borderColor: borderColorTokens,
         borderRadius: radiusTokens,
-        backgroundColor: colorTokens,
-        color: foreground,
+        backgroundColor: bgColorTokens,
+        color: colorTokens,
         opacity: true,
 
         // Behavior
@@ -257,6 +286,4 @@ const sprinkleProperties = defineProperties({
 });
 
 export const sprinkles = createRainbowSprinkles(sprinkleProperties);
-export type Sprinkles = Omit<Parameters<typeof sprinkles>[0], 'color'> & {
-    foregroundColor?: `$${keyof typeof foreground}`;
-};
+export type Sprinkles = Parameters<typeof sprinkles>[0];

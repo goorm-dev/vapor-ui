@@ -1,5 +1,5 @@
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = layerStyle('components', {
     display: 'flex',
@@ -8,7 +8,7 @@ export const root = layerStyle('components', {
     border: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius[300],
 
-    backgroundColor: vars.color.background['normal-lighter'],
+    backgroundColor: vars.color.background.overlay[100],
 });
 
 export const header = layerStyle('components', {

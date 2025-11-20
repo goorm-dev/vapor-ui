@@ -1,57 +1,66 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { typography } from '~/styles/mixins/typography.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
-    base: layerStyle('components', {
-        borderRadius: vars.size.borderRadius[300],
-        padding: `${vars.size.space[150]} ${vars.size.space[200]}`,
-        width: '100%',
+    base: [
+        typography({ style: 'subtitle1' }),
+        layerStyle('components', {
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: vars.size.space['075'],
+            borderRadius: vars.size.borderRadius[300],
+            padding: `${vars.size.space[150]} ${vars.size.space[200]}`,
+            width: '100%',
+        }),
+    ],
 
-        lineHeight: vars.typography.lineHeight['075'],
-        letterSpacing: vars.typography.letterSpacing[100],
-        fontSize: vars.typography.fontSize['075'],
-        fontWeight: vars.typography.fontWeight['500'],
-        fontStyle: 'normal',
-    }),
-
-    defaultVariants: { color: 'primary' },
+    defaultVariants: { colorPalette: 'primary' },
     variants: {
-        color: {
+        colorPalette: {
             primary: layerStyle('components', {
-                border: `.0625rem solid ${vars.color.background.primary}`,
-                backgroundColor: `rgba(${vars.color.background['rgb-primary']}, 0.08)`,
-                color: vars.color.foreground['primary-darker'],
+                border: `.0625rem solid ${vars.color.border.primary}`,
+                backgroundColor: vars.color.background.primary[100],
+                color: vars.color.foreground.primary[200],
             }),
             success: layerStyle('components', {
-                border: `.0625rem solid ${vars.color.background['success']}`,
-                backgroundColor: `rgba(${vars.color.background['rgb-success']}, 0.08)`,
-                color: vars.color.foreground['success-darker'],
+                border: `.0625rem solid ${vars.color.border.success}`,
+                backgroundColor: vars.color.background.success[100],
+                color: vars.color.foreground.success[200],
             }),
             warning: layerStyle('components', {
-                border: `.0625rem solid ${vars.color.background['warning']}`,
-                backgroundColor: `rgba(${vars.color.background['rgb-warning']}, 0.08)`,
-                color: vars.color.foreground['warning-darker'],
+                border: `.0625rem solid ${vars.color.border.warning}`,
+                backgroundColor: vars.color.background.warning[100],
+                color: vars.color.foreground.warning[200],
             }),
             danger: layerStyle('components', {
-                border: `.0625rem solid ${vars.color.background['danger']}`,
-                backgroundColor: `rgba(${vars.color.background['rgb-danger']}, 0.08)`,
-                color: vars.color.foreground['danger-darker'],
+                border: `.0625rem solid ${vars.color.border.danger}`,
+                backgroundColor: vars.color.background.danger[100],
+                color: vars.color.foreground.danger[200],
             }),
             hint: layerStyle('components', {
-                border: `.0625rem solid ${vars.color.background['hint']}`,
-                backgroundColor: `rgba(${vars.color.background['rgb-hint']}, 0.08)`,
-                color: vars.color.foreground['hint-darker'],
+                border: `.0625rem solid ${vars.color.border.hint}`,
+                backgroundColor: vars.color.background.hint[100],
+                color: vars.color.foreground.hint[200],
             }),
             contrast: layerStyle('components', {
-                border: `.0625rem solid ${vars.color.background['contrast']}`,
-                backgroundColor: `rgba(${vars.color.background['rgb-contrast']}, 0.08)`,
-                color: vars.color.foreground['contrast-darker'],
+                border: `.0625rem solid ${vars.color.border.contrast}`,
+                backgroundColor: vars.color.background.contrast[100],
+                color: vars.color.foreground.contrast[200],
             }),
         },
     },
+});
+
+export const icon = layerStyle('components', {
+    flex: '0 0 auto',
+    height: vars.typography.lineHeight['075'],
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
 });
 
 export type CalloutVariants = NonNullable<RecipeVariants<typeof root>>;

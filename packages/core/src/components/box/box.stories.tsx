@@ -1,4 +1,4 @@
-import type { Meta } from '@storybook/react';
+import type { Meta } from '@storybook/react-vite';
 
 import { Button } from '../button';
 import { Box } from './box';
@@ -15,6 +15,7 @@ export const Default = {
                 gap="$500"
                 padding="$800"
                 backgroundColor="$gray-500"
+                className="te"
             >
                 <Box style={{ backgroundColor: 'red' }} render={<Button>sadfasdf</Button>} />
                 <Box
@@ -78,7 +79,7 @@ export const TestBed = {
                 padding="$500"
                 backgroundColor="$gray-500"
             >
-                <Box style={{ backgroundColor: 'red' }} render={<Button>I'm Button</Button>} />
+                <Box backgroundColor="$red-500" render={<Button>I'm Button</Button>} />
                 <Box
                     display="flex"
                     justifyContent="center"

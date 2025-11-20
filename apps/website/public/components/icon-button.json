@@ -1,7 +1,13 @@
 {
     "props": [
         {
-            "prop": "color",
+            "prop": "render",
+            "type": ["ReactElement", "function"],
+            "default": "button",
+            "description": "아이콘 버튼을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
+        },
+        {
+            "prop": "colorPalette",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "default": "primary",
             "description": "아이콘 버튼의 주 색상(의미)을 설정합니다."
@@ -26,15 +32,27 @@
         },
         {
             "prop": "disabled",
-            "type": ["boolean", "undefined"],
+            "type": ["boolean"],
             "default": false,
             "description": "버튼을 비활성화합니다."
         },
         {
             "prop": "aria-label",
             "type": ["string"],
-            "default": null,
+            "default": "-",
             "description": "화면 읽기 전용 사용자에게 아이콘 버튼의 용도를 설명하는 텍스트입니다. 가시적 레이블이 없으므로 필수입니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "undefined",
+            "description": "추가적인 CSS 클래스를 적용합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "undefined",
+            "description": "아이콘 버튼에 표시할 아이콘을 포함합니다."
         }
     ]
 }

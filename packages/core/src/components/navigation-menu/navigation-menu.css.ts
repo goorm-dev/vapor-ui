@@ -3,8 +3,8 @@ import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
-import { layerStyle } from '~/styles/utils/layer-style.css';
-import { vars } from '~/styles/vars.css';
+import { layerStyle } from '~/styles/mixins/layer-style.css';
+import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     defaultVariants: { stretch: false },
@@ -53,11 +53,11 @@ export const link = recipe({
             width: '100%',
 
             textWrap: 'nowrap',
-            color: vars.color.foreground['normal-lighter'],
+            color: vars.color.foreground.normal[100],
 
             selectors: {
-                '&[aria-current="page"]': {
-                    color: vars.color.foreground['primary-darker'],
+                '&[data-selected]': {
+                    color: vars.color.foreground.primary[200],
                 },
 
                 '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
@@ -144,7 +144,7 @@ export const popup = layerStyle('components', {
     borderRadius: vars.size.borderRadius[300],
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background['normal-lighter'],
+    backgroundColor: vars.color.background.overlay[100],
 
     transformOrigin: 'var(--transform-origin)',
     transitionProperty: 'opacity, transform, width, height',
@@ -166,13 +166,14 @@ export const popup = layerStyle('components', {
     },
 });
 
-export const panel = layerStyle('components', {
+export const content = layerStyle('components', {
     width: '100%',
     height: '100%',
 
     paddingBlock: vars.size.space[150],
     paddingInline: vars.size.space[200],
 
+    whiteSpace: 'nowrap',
     transition: `opacity calc(${durationVar} * 0.5) ease, transform ${durationVar} ${easingVar}`,
 
     selectors: {
@@ -203,7 +204,7 @@ export const viewport = layerStyle('components', {
 
 export const arrow = layerStyle('components', {
     display: 'flex',
-    color: vars.color.background['normal-lighter'],
+    color: vars.color.background.overlay[100],
 
     transition: `left ${durationVar} ${easingVar}`,
 

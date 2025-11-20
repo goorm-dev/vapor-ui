@@ -25,17 +25,17 @@ const IntroLinkCard = ({
                     <div className="flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
                         {icon}
                         <div className="flex flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch">
-                            <Text typography="heading4" foreground="normal">
+                            <Text typography="heading4" foreground="normal-200">
                                 {title}
                             </Text>
-                            <Text typography="body1" foreground="normal" className="min-h-12">
+                            <Text typography="body1" foreground="normal-200" className="min-h-12">
                                 {description}
                             </Text>
                         </div>
                     </div>
                     <Button
                         size="lg"
-                        color="secondary"
+                        colorPalette="secondary"
                         render={
                             <Link href={link}>
                                 Learn more <ForwardPageOutlineIcon size={20} />

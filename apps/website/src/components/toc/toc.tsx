@@ -31,7 +31,7 @@ export const TOC = ({ toc, containerRef, className }: TOCProps) => {
                     <nav className="flex flex-col gap-[var(--vapor-size-space-100)]">
                         <Text
                             typography="subtitle1"
-                            foreground="normal"
+                            foreground="normal-200"
                             render={<h4>On this page</h4>}
                         />
                         <ul className="flex flex-col items-start gap-[var(--vapor-size-space-050)]">
@@ -39,11 +39,11 @@ export const TOC = ({ toc, containerRef, className }: TOCProps) => {
                                 <li key={item.url}>
                                     <Text
                                         typography="subtitle1"
-                                        foreground="hint-darker"
+                                        foreground="hint-200"
                                         render={
                                             <Base.TOCItem
                                                 href={item.url}
-                                                className="block h-[var(--vapor-size-dimension-400)] leading-[var(--vapor-size-dimension-400)] hover:text-gray-900 data-[active=true]:text-[var(--vapor-color-foreground-primary)] data-[active=true]:font-medium transition-colors"
+                                                className="block h-[var(--vapor-size-dimension-400)] leading-[var(--vapor-size-dimension-400)] hover:text-gray-900 data-[active=true]:text-[var(--vapor-color-foreground-primary-100)] data-[active=true]:font-medium transition-colors"
                                                 style={{
                                                     paddingLeft: `${(item.depth - TOC_CONSTANTS.MIN_DEPTH) * TOC_CONSTANTS.INDENT_SIZE + TOC_CONSTANTS.BASE_PADDING}px`,
                                                 }}

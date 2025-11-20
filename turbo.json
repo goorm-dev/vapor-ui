@@ -2,38 +2,27 @@
     "$schema": "https://turbo.build/schema.json",
     "ui": "tui",
     "tasks": {
-        "build": {
-            "dependsOn": ["^build"],
-            "inputs": ["$TURBO_DEFAULT$", ".env*"],
-            "outputs": [".next/**", "!.next/cache/**", "dist/**"]
-        },
-        "lint": {
-            "outputs": []
-        },
-        "test": {
-            "outputs": []
-        },
-        "format": {
-            "outputs": [],
-            "cache": false
-        },
-        "format:check": {
-            "outputs": []
+        "website#dev": {
+            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
+            "outputs": ["dist/**"]
         },
         "website#start": {
             "dependsOn": ["website#build"],
             "outputs": [".next/**", "!.next/cache/**"]
         },
-        "website#dev": {
-            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
-            "outputs": ["dist/**"]
+        "build": {
+            "dependsOn": ["^build"],
+            "inputs": ["$TURBO_DEFAULT$", ".env*"],
+            "outputs": [".next/**", "!.next/cache/**", "dist/**"]
         },
-        "typecheck": {
-            "dependsOn": ["^typecheck"]
-        },
-        "clean": {
-            "cache": false
-        }
+        "typecheck": { "dependsOn": ["^build"] },
+        "test": { "outputs": [], "dependsOn": ["^build"] },
+        "test:regressions": { "dependsOn": ["storybook#build:storybook"] },
+        "lint": { "outputs": [] },
+        "format": { "outputs": [], "cache": false },
+        "format:check": { "outputs": [] },
+        "clean": { "cache": false },
+        "build:storybook": {}
     },
     "globalEnv": ["NODE_ENV", "CI", "TEST_URL", "PORT", "npm_lifecycle_event"],
     "globalPassThroughEnv": ["FIGMA_API_KEY"]

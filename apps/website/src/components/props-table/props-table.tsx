@@ -56,7 +56,7 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
                 {items.map(({ prop, type, default: defaultValue, description }) => (
                     <tr key={prop}>
                         <td>
-                            <Text typography="body2" foreground="normal">
+                            <Text typography="body2" foreground="normal-200">
                                 {prop}
                             </Text>
                         </td>
@@ -67,7 +67,7 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
                                     return (
                                         <Badge
                                             key={index}
-                                            color="hint"
+                                            colorPalette="hint"
                                             shape="square"
                                             className="w-max"
                                         >
@@ -78,7 +78,7 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
                             </div>
                         </td>
                         <td>
-                            <Badge color="hint" shape="square" className="w-max">
+                            <Badge colorPalette="hint" shape="square" className="w-max">
                                 {defaultValue !== null ? String(defaultValue) : '-'}
                             </Badge>
                         </td>

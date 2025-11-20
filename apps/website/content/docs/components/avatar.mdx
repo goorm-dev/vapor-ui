@@ -4,21 +4,11 @@ site_name: 'Avatar - Vapor Core'
 description: 'Avatar는 사용자가 설정한 프로필 이미지 혹은 텍스트를 UI상에 나타냅니다.'
 ---
 
-<Demo name="default-avatar">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function DefaultAvatar() {
-    return (
-        <Avatar.Root
-            size="md"
-            alt="vapor"
-            src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-        >
-            <Avatar.Image />
-            <Avatar.Fallback>Vapor</Avatar.Fallback>
-        </Avatar.Root>
-    );
+<Demo name="avatar/default-avatar">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar/default-avatar.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -31,47 +21,11 @@ export default function DefaultAvatar() {
 
 Avatar 사이즈는 sm, md, lg, xl 로 제공합니다.
 
-<Demo name="avatar-size">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarSize() {
-    return (
-        <div className="flex flex-wrap items-center gap-4">
-            <Avatar.Root
-                size="sm"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>SM</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root
-                size="md"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>MD</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root
-                size="lg"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>LG</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root
-                size="xl"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>XL</Avatar.Fallback>
-            </Avatar.Root>
-        </div>
-    );
+<Demo name="avatar/avatar-size">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar/avatar-size.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -80,33 +34,11 @@ export default function AvatarSize() {
 
 Avatar 모양은 circle, square 로 제공합니다.
 
-<Demo name="avatar-shape">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarShape() {
-    return (
-        <div className="flex flex-wrap items-center gap-4">
-            <Avatar.Root
-                size="lg"
-                shape="circle"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>Circle</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root
-                size="lg"
-                shape="square"
-                alt="vapor"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback>Square</Avatar.Fallback>
-            </Avatar.Root>
-        </div>
-    );
+<Demo name="avatar/avatar-shape">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar/avatar-shape.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -115,60 +47,15 @@ export default function AvatarShape() {
 
 ---
 
-### Simple Usage
+### Custom Usage
 
-Avatar.Simple을 사용한 가장 간단한 형태입니다.
+Avatar의 유연한 사용 예시입니다.
 
-<Demo name="avatar-simple">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarSimple() {
-    return (
-        <div className="flex gap-4">
-            <Avatar.Simple
-                size="md"
-                shape="circle"
-                alt="Vapor UI"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Simple size="md" alt="Vapor Core" src="/invalid-image.jpg" />
-            <Avatar.Simple size="md" alt="Vapor Design" />
-        </div>
-    );
-}
-```
-</Demo>
-
-### Composition Pattern
-
-Avatar.Root, Avatar.Image, Avatar.Fallback을 조합한 패턴입니다.
-
-<Demo name="avatar-composition">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarComposition() {
-    return (
-        <div className="flex gap-4">
-            <Avatar.Root
-                size="md"
-                alt="Vapor System"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            >
-                <Avatar.Image />
-                <Avatar.Fallback />
-            </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Components" src="/invalid-image.jpg">
-                <Avatar.Image />
-                <Avatar.Fallback />
-            </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Theme">
-                <Avatar.Image />
-                <Avatar.Fallback />
-            </Avatar.Root>
-        </div>
-    );
+<Demo name="avatar/flexible">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar/flexible.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -177,65 +64,11 @@ export default function AvatarComposition() {
 
 이미지 로드 실패 시 표시되는 Fallback 텍스트나 이니셜을 사용하는 패턴입니다.
 
-<Demo name="avatar-fallback-only">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarFallbackOnly() {
-    return (
-        <div className="flex gap-4">
-            <Avatar.Root size="md" alt="Vapor Library">
-                <Avatar.Fallback />
-            </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor tokens">
-                <Avatar.Fallback>VT</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root size="md" alt="Vapor Delay" delayMs={600}>
-                <Avatar.Fallback>VD</Avatar.Fallback>
-            </Avatar.Root>
-        </div>
-    );
-}
-```
-</Demo>
-
-### Size & Shape Variants
-
-다양한 크기와 모양을 조합한 예시입니다.
-
-<Demo name="avatar-variants">
-```tsx
-import { Avatar } from '@vapor-ui/core';
-
-export default function AvatarVariants() {
-    return (
-        <div className="flex items-center gap-4">
-            <Avatar.Simple
-                size="sm"
-                shape="circle"
-                alt="Vapor Small"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Simple
-                size="md"
-                shape="square"
-                alt="Vapor Medium"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Simple
-                size="lg"
-                shape="circle"
-                alt="Vapor Large"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-            <Avatar.Simple
-                size="xl"
-                shape="square"
-                alt="Vapor Extra"
-                src="https://statics.goorm.io/gds/docs/images/vapor-log.svg"
-            />
-        </div>
-    );
+<Demo name="avatar/avatar-fallback-only">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/avatar/avatar-fallback-only.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -250,20 +83,14 @@ Avatar의 메인 컨테이너 컴포넌트입니다. size와 shape 속성을 제
 
 <ComponentPropsTable file="avatar" section="props" />
 
-### Avatar.Image
+### Avatar.ImagePrimitive
 
 Avatar 이미지를 표시하는 컴포넌트입니다. src가 로드되지 않거나 오류가 발생할 경우 자동으로 Fallback 컴포넌트가 표시됩니다.
 
-<ComponentPropsTable file="avatar" section="imageProps" />
+<ComponentPropsTable file="avatar" section="imagePrimitiveProps" />
 
-### Avatar.Fallback
+### Avatar.FallbackPrimitive
 
 이미지가 로드되지 않을 때 표시되는 대체 컴포넌트입니다. alt 속성을 기반으로 자동으로 이니셜을 생성하고, Linear Congruential Generator 알고리즘을 사용해 일관된 배경 색상을 제공합니다.
 
-<ComponentPropsTable file="avatar" section="fallbackProps" />
-
-### Avatar.Simple
-
-Avatar.Root, Avatar.Image, Avatar.Fallback을 하나로 결합한 단순화된 컴포넌트입니다. 복잡한 구성 없이 기본 Avatar 기능을 빠르게 사용할 수 있습니다.
-
-<ComponentPropsTable file="avatar" section="simpleProps" />
+<ComponentPropsTable file="avatar" section="fallbackPrimitiveProps" />

@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'react';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { vars } from '~/styles/vars.css';
+import { vars } from '~/styles/themes.css';
 
 import { Grid } from '.';
 
@@ -86,7 +86,7 @@ const Box = ({ style, ...props }: ComponentProps<'div'>) => {
     return (
         <div
             style={{
-                backgroundColor: vars.color.background.primary,
+                backgroundColor: vars.color.background.primary[200],
                 border: '1px solid red',
                 textAlign: 'center',
                 alignContent: 'center',

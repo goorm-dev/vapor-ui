@@ -4,18 +4,11 @@ site_name: 'HStack - Vapor Core'
 description: '수평으로 아이템들을 배치하는 레이아웃 컴포넌트입니다'
 ---
 
-<Demo name="default-h-stack">
-```tsx
-import { HStack } from '@vapor-ui/core';
-
-export default function DefaultHStack() {
-    return (
-        <HStack gap="4">
-            <div className="bg-blue-100 p-4 rounded">Item 1</div>
-            <div className="bg-blue-100 p-4 rounded">Item 2</div>
-            <div className="bg-blue-100 p-4 rounded">Item 3</div>
-        </HStack>
-    );
+<Demo name="h-stack/default-h-stack">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/h-stack/default-h-stack.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -28,32 +21,11 @@ export default function DefaultHStack() {
 
 HStack의 아이템 순서를 역순으로 배치할 수 있습니다.
 
-<Demo name="h-stack-reverse">
-```tsx
-import { HStack } from '@vapor-ui/core';
-
-export default function HStackReverse() {
-    return (
-        <div className="flex flex-wrap gap-2">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Normal Stack</h4>
-                <HStack gap="3">
-                    <div className="bg-green-100 p-3 rounded text-center">First</div>
-                    <div className="bg-green-200 p-3 rounded text-center">Second</div>
-                    <div className="bg-green-300 p-3 rounded text-center">Third</div>
-                </HStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Reverse Stack</h4>
-                <HStack reverse gap="3">
-                    <div className="bg-purple-100 p-3 rounded text-center">First</div>
-                    <div className="bg-purple-200 p-3 rounded text-center">Second</div>
-                    <div className="bg-purple-300 p-3 rounded text-center">Third</div>
-                </HStack>
-            </div>
-        </div>
-    );
+<Demo name="h-stack/h-stack-reverse">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/h-stack/h-stack-reverse.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -62,130 +34,11 @@ export default function HStackReverse() {
 
 HStack 아이템 간의 간격을 조정할 수 있습니다.
 
-<Demo name="h-stack-spacing">
-```tsx
-import { HStack } from '@vapor-ui/core';
-
-export default function HStackSpacing() {
-    return (
-        <div className="flex flex-wrap gap-2">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap 100</h4>
-                <HStack gap="$100">
-                    <div className="bg-red-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-red-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-red-100 p-2 rounded text-sm">C</div>
-                </HStack>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap 400</h4>
-                <HStack gap="$400">
-                    <div className="bg-orange-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-orange-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-orange-100 p-2 rounded text-sm">C</div>
-                </HStack>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">Gap 800</h4>
-                <HStack gap="$800">
-                    <div className="bg-teal-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-teal-100 p-2 rounded text-sm">B</div>
-                    <div className="bg-teal-100 p-2 rounded text-sm">C</div>
-                </HStack>
-            </div>
-        </div>
-    );
-
-}
-
-````
-</Demo>
-
-### Alignment
-
-HStack 아이템들의 수직 정렬을 조정할 수 있습니다.
-
-<Demo name="h-stack-alignment">
-```tsx
-import { HStack } from '@vapor-ui/core';
-
-export default function HStackAlignment() {
-    return (
-        <div className="flex flex-wrap gap-2">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align Start</h4>
-                <HStack gap="2" alignItems="start" className="h-20 bg-gray-50 p-2 rounded">
-                    <div className="bg-blue-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-blue-200 p-4 rounded text-sm">Medium Height</div>
-                    <div className="bg-blue-300 p-1 rounded text-sm">Tiny</div>
-                </HStack>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align Center</h4>
-                <HStack gap="2" alignItems="center" className="h-20 bg-gray-50 p-2 rounded">
-                    <div className="bg-green-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-green-200 p-4 rounded text-sm">Medium Height</div>
-                    <div className="bg-green-300 p-1 rounded text-sm">Tiny</div>
-                </HStack>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">Align End</h4>
-                <HStack gap="2" alignItems="end" className="h-20 bg-gray-50 p-2 rounded">
-                    <div className="bg-purple-100 p-2 rounded text-sm">Short</div>
-                    <div className="bg-purple-200 p-4 rounded text-sm">Medium Height</div>
-                    <div className="bg-purple-300 p-1 rounded text-sm">Tiny</div>
-                </HStack>
-            </div>
-        </div>
-    );
-}
-````
-
-</Demo>
-
-### Justify Content
-
-HStack 아이템들의 수평 분산을 조정할 수 있습니다.
-
-<Demo name="h-stack-justify">
-```tsx
-import { HStack } from '@vapor-ui/core';
-
-export default function HStackJustify() {
-    return (
-        <div className="space-y-4">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Justify Start</h4>
-                <HStack gap="2" justifyContent="flex-start" className="w-full bg-gray-50 p-2 rounded">
-                    <div className="bg-red-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-red-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-red-300 p-2 rounded text-sm">C</div>
-                </HStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Justify Center</h4>
-                <HStack gap="2" justifyContent="center" className="w-full bg-gray-50 p-2 rounded">
-                    <div className="bg-yellow-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-yellow-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-yellow-300 p-2 rounded text-sm">C</div>
-                </HStack>
-            </div>
-            
-            <div>
-                <h4 className="text-sm font-medium mb-2">Space Between</h4>
-                <HStack gap="2" justifyContent="space-between" className="w-full bg-gray-50 p-2 rounded">
-                    <div className="bg-indigo-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-indigo-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-indigo-300 p-2 rounded text-sm">C</div>
-                </HStack>
-            </div>
-        </div>
-    );
+<Demo name="h-stack/h-stack-spacing">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/h-stack/h-stack-spacing.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
