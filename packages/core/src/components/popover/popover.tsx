@@ -6,7 +6,6 @@ import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { Popover as BasePopover } from '@base-ui-components/react/popover';
 import clsx from 'clsx';
 
-
 import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
