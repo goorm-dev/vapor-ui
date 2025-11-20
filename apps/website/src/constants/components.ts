@@ -1,3 +1,4 @@
+import actionBarData from '../../public/components/action-bar.json';
 import avatarData from '../../public/components/avatar.json';
 import badgeData from '../../public/components/badge.json';
 import boxData from '../../public/components/box.json';
@@ -34,6 +35,7 @@ import vStackData from '../../public/components/v-stack.json';
 // FIXME: TextInput, Switch, Checkbox, RadioGroup, Radio 컴포넌트 props 점검
 // Map of component key -> entire JSON documentation object
 export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
+    'action-bar': actionBarData,
     avatar: avatarData,
     badge: badgeData,
     box: boxData,
