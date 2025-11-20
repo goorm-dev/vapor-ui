@@ -1,0 +1,53 @@
+{
+    "name": "Root",
+    "displayName": "Avatar.Root",
+    "description": "Documentation: 사용자 프로필 이미지를 표시하고 대체 콘텐츠를 지원하는 Avatar 루트 컴포넌트입니다.",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "아바타의 크기",
+            "defaultValue": "'md'"
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "엘리먼트에 적용되는 CSS 클래스 또는 컴포넌트의 상태를 기반으로 클래스를 반환하는 함수"
+        },
+        {
+            "name": "alt",
+            "type": "string",
+            "required": true,
+            "description": "이미지의 대체 텍스트. 이니셜 및 대체 배경 색상 생성에도 사용됩니다."
+        },
+        {
+            "name": "shape",
+            "type": ["circle", "square"],
+            "required": false,
+            "description": "아바타의 형태",
+            "defaultValue": "'square'"
+        },
+        {
+            "name": "src",
+            "type": ["string"],
+            "required": false,
+            "description": "표시할 이미지 URL"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "컴포넌트의 HTML 엘리먼트를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 엘리먼트를 반환하는 함수를 받습니다."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "대체 콘텐츠를 표시하기 전 지연 시간(밀리초)"
+        }
+    ],
+    "generatedAt": "2025-11-20T04:37:54.835Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.parts.ts"
+}

@@ -96,6 +96,9 @@ export const fallback = recipe({
     },
 });
 
+/**
+ * Image styles with full coverage
+ */
 export const image = layerStyle('components', {
     display: 'inline',
     objectFit: 'cover',
