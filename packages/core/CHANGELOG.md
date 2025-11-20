@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 1.0.0
+
+### Minor Changes
+
+- 1aecc3d: synchronized color tokens with figma
+
 ## 1.0.0-beta.6
 
 ### Patch Changes

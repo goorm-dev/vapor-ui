@@ -1,5 +1,12 @@
 # figma-plugin
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [1aecc3d]
+    - @vapor-ui/core@1.0.0
+
 ## 1.0.0-beta.6
 
 ### Patch Changes
