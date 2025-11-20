@@ -28,11 +28,13 @@ export default function Controlled() {
     const [open, setOpen] = useState(selectedCount > 0);
 
     const handleItemChange = (itemId: string, isChecked: boolean) => {
-        setSelectedItems((prev) => ({ ...prev, [itemId]: isChecked }));
+        setSelectedItems((prev) => {
+            const newSelectedItems = { ...prev, [itemId]: isChecked };
+            const newSelectedCount = Object.values(newSelectedItems).filter(Boolean).length;
+            setOpen(newSelectedCount > 0);
 
-        const newSelectedCount = isChecked ? selectedCount + 1 : selectedCount - 1;
-
-        setOpen(newSelectedCount > 0);
+            return newSelectedItems;
+        });
     };
 
     const handleSelectAll = () => {
