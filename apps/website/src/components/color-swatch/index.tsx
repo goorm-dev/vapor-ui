@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useEffect, useState, type ComponentProps } from 'react';
 
 import { Text, VStack, useTheme } from '@vapor-ui/core';
 import { CopyOutlineIcon } from '@vapor-ui/icons';
@@ -30,7 +30,7 @@ const getLabValue = (value: string): LAB | null => {
 export function ColorSwatch({ className, foreground, name, value, variable }: ColorSwatchProps) {
     const { theme } = useTheme();
 
-    const [hexValue, setHexValue] = React.useState<string>('');
+    const [hexValue, setHexValue] = useState<string>('');
     const [checked, onClick] = useCopyButton(async () => {
         if (!hexValue) return;
 
@@ -43,7 +43,7 @@ export function ColorSwatch({ className, foreground, name, value, variable }: Co
         ? foreground
         : `--vapor-color-${foreground}`;
 
-    React.useEffect(() => {
+    useEffect(() => {        
         // Recursively resolve CSS variable references
         const resolveVariable = (varName: string, depth = 0): string => {
             if (depth > 5) return ''; // Max recursion depth
@@ -155,7 +155,7 @@ export function ColorPalette({ className, colors }: ColorPaletteProps) {
     );
 }
 
-const CheckIcon = (props: React.ComponentProps<'svg'>) => {
+const CheckIcon = (props: ComponentProps<'svg'>) => {
     return (
         <svg
             width="15"
