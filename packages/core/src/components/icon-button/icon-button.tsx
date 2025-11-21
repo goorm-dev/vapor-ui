@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 
 import clsx from 'clsx';
 
@@ -25,7 +25,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
 
     const { size } = otherProps;
 
-    const IconElement = createSlot(children);
+    const IconElement = useMemo(() => createSlot(children), [children]);
 
     return (
         <Button
