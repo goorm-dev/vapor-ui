@@ -2,4 +2,4 @@
 '@vapor-ui/core': minor
 ---
 
-add new `ActionBar` component
+add new `FloatingBar` component
