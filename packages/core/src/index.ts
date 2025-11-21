@@ -1,4 +1,3 @@
-export * from './components/action-bar';
 export * from './components/avatar';
 export * from './components/badge';
 export * from './components/box';
@@ -9,6 +8,7 @@ export * from './components/card';
 export * from './components/checkbox';
 export * from './components/collapsible';
 export * from './components/field';
+export * from './components/floating-bar';
 export * from './components/dialog';
 export * from './components/flex';
 export * from './components/form';

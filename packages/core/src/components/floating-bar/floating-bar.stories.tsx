@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { ActionBar } from '.';
+import { FloatingBar } from '.';
 import { Badge } from '../badge';
 import { Box } from '../box';
 import { Button } from '../button';
@@ -11,18 +11,18 @@ import { Field } from '../field';
 import { Text } from '../text';
 
 export default {
-    title: 'ActionBar',
-    component: ActionBar.Root,
-} satisfies Meta<typeof ActionBar.Root>;
+    title: 'FloatingBar',
+    component: FloatingBar.Root,
+} satisfies Meta<typeof FloatingBar.Root>;
 
-type Story = StoryObj<typeof ActionBar.Root>;
+type Story = StoryObj<typeof FloatingBar.Root>;
 
 export const Default: Story = {
     render: (args) => (
-        <ActionBar.Root {...args}>
-            <ActionBar.Trigger>Open Action Bar</ActionBar.Trigger>
-            <ActionBar.Popup>This is the action bar content.</ActionBar.Popup>
-        </ActionBar.Root>
+        <FloatingBar.Root {...args}>
+            <FloatingBar.Trigger>Open Action Bar</FloatingBar.Trigger>
+            <FloatingBar.Popup>This is the action bar content.</FloatingBar.Popup>
+        </FloatingBar.Root>
     ),
 };
 
@@ -56,7 +56,7 @@ export const TestBed: Story = {
         return (
             <>
                 <Text render={<div />} marginBottom="$200">
-                    Select options using the checkboxes below to see the ActionBar in action.
+                    Select options using the checkboxes below to see the FloatingBar in action.
                 </Text>
 
                 {options.map((option) => (
@@ -75,9 +75,9 @@ export const TestBed: Story = {
                     </Field.Root>
                 ))}
 
-                <ActionBar.Root open={hasSelection} {...args} modal={false}>
+                <FloatingBar.Root open={hasSelection} {...args} modal={false}>
                     {/* TODO: initialFocus API from @base-ui-components/react@1.0.0-beta.6 */}
-                    <ActionBar.Popup autoFocus={false}>
+                    <FloatingBar.Popup autoFocus={false}>
                         <Badge colorPalette="primary">{selectedCount} Selected</Badge>
 
                         <Box
@@ -92,8 +92,8 @@ export const TestBed: Story = {
                         <Button colorPalette="danger" onClick={handleClearAll}>
                             Delete
                         </Button>
-                    </ActionBar.Popup>
-                </ActionBar.Root>
+                    </FloatingBar.Popup>
+                </FloatingBar.Root>
             </>
         );
     },

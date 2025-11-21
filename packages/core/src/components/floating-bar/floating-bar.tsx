@@ -6,58 +6,60 @@ import clsx from 'clsx';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
-import * as styles from './action-bar.css';
+import * as styles from './floating-bar.css';
 
-export const ActionBarRoot = (props: ActionBarRoot.Props) => {
+export const FloatingBarRoot = (props: FloatingBarRoot.Props) => {
     return <Popover.Root {...props} />;
 };
-ActionBarRoot.displayName = 'ActionBar.Root';
+FloatingBarRoot.displayName = 'FloatingBar.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * ActionBar.Trigger
+ * FloatingBar.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-export const ActionBarTrigger = forwardRef<HTMLButtonElement, ActionBarTrigger.Props>(
+export const FloatingBarTrigger = forwardRef<HTMLButtonElement, FloatingBarTrigger.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
 
         return <Popover.Trigger ref={ref} {...componentProps} />;
     },
 );
-ActionBarTrigger.displayName = 'ActionBar.Trigger';
+FloatingBarTrigger.displayName = 'FloatingBar.Trigger';
 
 /* -------------------------------------------------------------------------------------------------
- * ActionBar.Close
+ * FloatingBar.Close
  * -----------------------------------------------------------------------------------------------*/
 
-export const ActionBarClose = forwardRef<HTMLButtonElement, ActionBarClose.Props>((props, ref) => {
-    const componentProps = resolveStyles(props);
+export const FloatingBarClose = forwardRef<HTMLButtonElement, FloatingBarClose.Props>(
+    (props, ref) => {
+        const componentProps = resolveStyles(props);
 
-    return <Popover.Close ref={ref} {...componentProps} />;
-});
-ActionBarClose.displayName = 'ActionBar.Close';
+        return <Popover.Close ref={ref} {...componentProps} />;
+    },
+);
+FloatingBarClose.displayName = 'FloatingBar.Close';
 
 /* -------------------------------------------------------------------------------------------------
- * ActionBar.PortalPrimitive
+ * FloatingBar.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const ActionBarPortalPrimitive = (props: ActionBarPortalPrimitive.Props) => (
+export const FloatingBarPortalPrimitive = (props: FloatingBarPortalPrimitive.Props) => (
     <Popover.Portal {...props} />
 );
-ActionBarPortalPrimitive.displayName = 'ActionBar.PortalPrimitive';
+FloatingBarPortalPrimitive.displayName = 'FloatingBar.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * ActionBar.PositionerPrimitive
+ * FloatingBar.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Fixed position styles for the ActionBar
+ * Fixed position styles for the FloatingBar
  */
 const positions = { top: 'initial', left: '50%', transform: 'translateX(-50%)' };
 
-export const ActionBarPositionerPrimitive = forwardRef<
+export const FloatingBarPositionerPrimitive = forwardRef<
     HTMLDivElement,
-    ActionBarPositionerPrimitive.Props
+    FloatingBarPositionerPrimitive.Props
 >((props, ref) => {
     const { style, className, ...componentProps } = resolveStyles(props);
 
@@ -71,68 +73,65 @@ export const ActionBarPositionerPrimitive = forwardRef<
         />
     );
 });
-ActionBarPositionerPrimitive.displayName = 'ActionBar.PositionerPrimitive';
+FloatingBarPositionerPrimitive.displayName = 'FloatingBar.PositionerPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * ActionBar.PopupPrimitive
+ * FloatingBar.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const ActionBarPopupPrimitive = forwardRef<HTMLDivElement, ActionBarPopupPrimitive.Props>(
-    (props, ref) => {
-        const { className, ...componentProps } = resolveStyles(props);
+export const FloatingBarPopupPrimitive = forwardRef<
+    HTMLDivElement,
+    FloatingBarPopupPrimitive.Props
+>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
 
-        return (
-            <Popover.Popup
-                ref={ref}
-                className={clsx(styles.popup, className)}
-                {...componentProps}
-            />
-        );
-    },
-);
-ActionBarPopupPrimitive.displayName = 'ActionBar.PopupPrimitive';
-
-/* -------------------------------------------------------------------------------------------------
- * ActionBar.Popup
- * -----------------------------------------------------------------------------------------------*/
-
-export const ActionBarPopup = forwardRef<HTMLDivElement, ActionBarPopup.Props>((props, ref) => {
     return (
-        <ActionBarPortalPrimitive>
-            <ActionBarPositionerPrimitive>
-                <ActionBarPopupPrimitive ref={ref} {...props} />
-            </ActionBarPositionerPrimitive>
-        </ActionBarPortalPrimitive>
+        <Popover.Popup ref={ref} className={clsx(styles.popup, className)} {...componentProps} />
     );
 });
-ActionBarPopup.displayName = 'ActionBar.Popup';
+FloatingBarPopupPrimitive.displayName = 'FloatingBar.PopupPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * FloatingBar.Popup
+ * -----------------------------------------------------------------------------------------------*/
+
+export const FloatingBarPopup = forwardRef<HTMLDivElement, FloatingBarPopup.Props>((props, ref) => {
+    return (
+        <FloatingBarPortalPrimitive>
+            <FloatingBarPositionerPrimitive>
+                <FloatingBarPopupPrimitive ref={ref} {...props} />
+            </FloatingBarPositionerPrimitive>
+        </FloatingBarPortalPrimitive>
+    );
+});
+FloatingBarPopup.displayName = 'FloatingBar.Popup';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace ActionBarRoot {
+export namespace FloatingBarRoot {
     export type Props = Popover.Root.Props;
 }
 
-export namespace ActionBarTrigger {
+export namespace FloatingBarTrigger {
     export type Props = VComponentProps<typeof Popover.Trigger>;
 }
 
-export namespace ActionBarClose {
+export namespace FloatingBarClose {
     export type Props = VComponentProps<typeof Popover.Close>;
 }
 
-export namespace ActionBarPortalPrimitive {
+export namespace FloatingBarPortalPrimitive {
     export type Props = VComponentProps<typeof Popover.Portal>;
 }
 
-export namespace ActionBarPositionerPrimitive {
+export namespace FloatingBarPositionerPrimitive {
     export type Props = VComponentProps<'div'>;
 }
 
-export namespace ActionBarPopupPrimitive {
+export namespace FloatingBarPopupPrimitive {
     export type Props = VComponentProps<typeof Popover.Popup>;
 }
 
-export namespace ActionBarPopup {
-    export type Props = ActionBarPopupPrimitive.Props;
+export namespace FloatingBarPopup {
+    export type Props = FloatingBarPopupPrimitive.Props;
 }
