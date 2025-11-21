@@ -27,18 +27,26 @@ export const root = recipe({
             selectors: {
                 '&[data-checked], &[data-indeterminate]': {
                     backgroundColor: vars.color.background.primary[200],
+                    border: 'none',
                 },
 
                 // NOTE: Prevents interaction styles from being applied when hovering over the label of a disabled radio button.
                 '&::before': { borderRadius: '0' },
 
                 '&[data-disabled]::before': { opacity: 0 },
-                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+                '&[data-disabled]': {
+                    border: `1px solid ${vars.color.border.normal}`,
+                    opacity: 0.32,
+                    pointerEvents: 'none',
+                },
 
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-readonly]': {
+                    border: `1px solid ${vars.color.border.normal}`,
+                    backgroundColor: vars.color.gray['200'],
+                },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
-                '&[data-invalid]': { borderColor: vars.color.border.danger },
+                '&[data-invalid]': { border: `1px solid ${vars.color.border.danger}` },
             },
         }),
     ],
