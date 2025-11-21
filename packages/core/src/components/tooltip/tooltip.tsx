@@ -6,7 +6,7 @@ import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
 import clsx from 'clsx';
 
-import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { useMutationObserverRef } from '~/hooks/use-mutation-observer-ref';
 import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
@@ -111,7 +111,7 @@ export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrim
             if (initialAlign) setAlign(initialAlign);
         }, []);
 
-        const arrowRef = useMutationObserver<HTMLDivElement>({
+        const arrowRef = useMutationObserverRef<HTMLDivElement>({
             callback: (mutations) => {
                 mutations.forEach((mutation) => {
                     const { attributeName, target: mutationTarget } = mutation;
