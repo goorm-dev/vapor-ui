@@ -4,37 +4,37 @@
             "prop": "open",
             "type": ["boolean"],
             "default": "undefined",
-            "description": "ActionBar의 열림 상태를 제어합니다. 이 prop이 제공되면 컴포넌트가 제어 모드로 동작합니다."
+            "description": "FloatingBar의 열림 상태를 제어합니다. 이 prop이 제공되면 컴포넌트가 제어 모드로 동작합니다."
         },
         {
             "prop": "defaultOpen",
             "type": ["boolean"],
             "default": "false",
-            "description": "ActionBar의 초기 열림 상태를 설정합니다. 비제어 모드에서만 사용됩니다."
+            "description": "FloatingBar의 초기 열림 상태를 설정합니다. 비제어 모드에서만 사용됩니다."
         },
         {
             "prop": "onOpenChange",
             "type": ["(open: boolean, event?: Event, reason?: string) => void"],
             "default": "undefined",
-            "description": "ActionBar의 열림 상태가 변경될 때 호출되는 콜백 함수입니다. open 상태, 이벤트, 그리고 변경 이유를 인자로 받습니다."
+            "description": "FloatingBar의 열림 상태가 변경될 때 호출되는 콜백 함수입니다. open 상태, 이벤트, 그리고 변경 이유를 인자로 받습니다."
         },
         {
             "prop": "modal",
             "type": ["boolean", "{ trapFocus?: boolean }"],
             "default": "true",
-            "description": "ActionBar가 모달 형태로 동작할지 여부를 설정합니다. true일 때 배경을 클릭하면 ActionBar가 닫히고 포커스 트랩이 적용됩니다."
+            "description": "FloatingBar가 모달 형태로 동작할지 여부를 설정합니다. true일 때 배경을 클릭하면 FloatingBar가 닫히고 포커스 트랩이 적용됩니다."
         },
         {
             "prop": "openOnHover",
             "type": ["boolean"],
             "default": "false",
-            "description": "마우스 호버 시 ActionBar를 열지 여부를 설정합니다."
+            "description": "마우스 호버 시 FloatingBar를 열지 여부를 설정합니다."
         },
         {
             "prop": "delay",
             "type": ["number", "{ open?: number; close?: number }"],
             "default": "0",
-            "description": "ActionBar 열기/닫기 지연 시간을 밀리초 단위로 설정합니다."
+            "description": "FloatingBar 열기/닫기 지연 시간을 밀리초 단위로 설정합니다."
         }
     ],
     "triggerProps": [
@@ -59,19 +59,19 @@
             "prop": "portalElement",
             "type": ["React.ReactElement"],
             "default": "undefined",
-            "description": "Portal 컴포넌트에 전달될 React Element입니다. ActionBar가 렌더링될 위치와 관련된 설정을 제어합니다."
+            "description": "Portal 컴포넌트에 전달될 React Element입니다. FloatingBar가 렌더링될 위치와 관련된 설정을 제어합니다."
         },
         {
             "prop": "positionerElement",
             "type": ["React.ReactElement"],
             "default": "undefined",
-            "description": "Positioner 컴포넌트에 전달될 React Element입니다. ActionBar의 위치와 정렬에 관한 설정을 제어합니다."
+            "description": "Positioner 컴포넌트에 전달될 React Element입니다. FloatingBar의 위치와 정렬에 관한 설정을 제어합니다."
         },
         {
             "prop": "className",
             "type": ["string"],
             "default": "undefined",
-            "description": "ActionBar 컨텐츠에 적용할 CSS 클래스명입니다."
+            "description": "FloatingBar 컨텐츠에 적용할 CSS 클래스명입니다."
         }
     ],
     "portalPrimitiveProps": [
@@ -79,13 +79,13 @@
             "prop": "container",
             "type": ["HTMLElement", "() => HTMLElement", "null"],
             "default": "document.body",
-            "description": "ActionBar가 렌더링될 컨테이너 요소를 지정합니다. null을 전달하면 포탈을 사용하지 않고 인라인으로 렌더링합니다."
+            "description": "FloatingBar가 렌더링될 컨테이너 요소를 지정합니다. null을 전달하면 포탈을 사용하지 않고 인라인으로 렌더링합니다."
         },
         {
             "prop": "keepMounted",
             "type": ["boolean"],
             "default": "false",
-            "description": "ActionBar가 닫혀있을 때도 DOM에 마운트된 상태를 유지할지 여부를 설정합니다."
+            "description": "FloatingBar가 닫혀있을 때도 DOM에 마운트된 상태를 유지할지 여부를 설정합니다."
         }
     ],
     "positionerPrimitiveProps": [
@@ -93,13 +93,13 @@
             "prop": "className",
             "type": ["string"],
             "default": "undefined",
-            "description": "ActionBar Positioner에 적용할 CSS 클래스명입니다."
+            "description": "FloatingBar Positioner에 적용할 CSS 클래스명입니다."
         },
         {
             "prop": "style",
             "type": ["CSSProperties"],
             "default": "undefined",
-            "description": "ActionBar Positioner에 적용할 인라인 스타일입니다."
+            "description": "FloatingBar Positioner에 적용할 인라인 스타일입니다."
         },
         {
             "prop": "render",
@@ -116,13 +116,13 @@
             "prop": "className",
             "type": ["string"],
             "default": "undefined",
-            "description": "ActionBar 팝업에 적용할 CSS 클래스명입니다."
+            "description": "FloatingBar 팝업에 적용할 CSS 클래스명입니다."
         },
         {
             "prop": "style",
             "type": ["CSSProperties"],
             "default": "undefined",
-            "description": "ActionBar 팝업에 적용할 인라인 스타일입니다."
+            "description": "FloatingBar 팝업에 적용할 인라인 스타일입니다."
         },
         {
             "prop": "render",

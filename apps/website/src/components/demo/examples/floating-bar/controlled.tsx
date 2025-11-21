@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
 import {
-    ActionBar,
     Badge,
     Box,
     Button,
     Checkbox,
     Field,
+    FloatingBar,
     IconButton,
     Text,
     VStack,
@@ -50,7 +50,7 @@ export default function Controlled() {
     return (
         <>
             <Text render={<div />} marginBottom="$200">
-                Select options below to see the ActionBar.
+                Select options below to see the FloatingBar.
             </Text>
 
             <VStack justifyContent="center">
@@ -71,8 +71,8 @@ export default function Controlled() {
                 ))}
             </VStack>
 
-            <ActionBar.Root open={open} onOpenChange={setOpen}>
-                <ActionBar.Popup>
+            <FloatingBar.Root open={open} onOpenChange={setOpen}>
+                <FloatingBar.Popup>
                     <Badge colorPalette="primary">{selectedCount} Selected</Badge>
 
                     <Box width="1px" backgroundColor="$gray-300" style={{ alignSelf: 'stretch' }} />
@@ -84,19 +84,19 @@ export default function Controlled() {
                         Delete
                     </Button>
 
-                    <ActionBar.Close
+                    <FloatingBar.Close
                         render={
                             <IconButton
-                                aria-label="close action-bar"
+                                aria-label="close floating-bar"
                                 variant="ghost"
                                 colorPalette="secondary"
                             />
                         }
                     >
                         <CloseOutlineIcon />
-                    </ActionBar.Close>
-                </ActionBar.Popup>
-            </ActionBar.Root>
+                    </FloatingBar.Close>
+                </FloatingBar.Popup>
+            </FloatingBar.Root>
         </>
     );
 }
