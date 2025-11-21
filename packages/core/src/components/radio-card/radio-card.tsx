@@ -7,44 +7,42 @@ import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
 import type { RadioCardVariants } from './radio-card.css';
 import * as styles from './radio-card.css';
 
-type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-interface RadioCardProps extends RootPrimitiveProps, RadioCardVariants {}
+export const RadioCard = forwardRef<HTMLButtonElement, RadioCard.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+    const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
-const RadioCard = forwardRef<HTMLButtonElement, RadioCardProps>(
-    ({ className, children, ...props }, ref) => {
-        const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
+    const [variantProps, otherProps] = createSplitProps<RadioCardVariants>()(componentProps, [
+        'invalid',
+        'size',
+    ]);
 
-        const [variantProps, otherProps] = createSplitProps<RadioCardVariants>()(props, [
-            'invalid',
-            'size',
-        ]);
+    const { size: sizeProp, invalid: invalidProp } = variantProps;
 
-        const { size: sizeProp, invalid: invalidProp } = variantProps;
+    const invalid = invalidProp || contextInvalid;
+    const size = sizeProp || contextSize;
 
-        const invalid = invalidProp || contextInvalid;
-        const size = sizeProp || contextSize;
-        const dataAttrs = createDataAttributes({ invalid });
+    const dataAttrs = createDataAttributes({ invalid });
 
-        return (
-            <BaseRadio.Root
-                ref={ref}
-                aria-invalid={invalid}
-                className={clsx(styles.root({ size, invalid }), className)}
-                {...dataAttrs}
-                {...otherProps}
-            >
-                {children}
-            </BaseRadio.Root>
-        );
-    },
-);
+    return (
+        <BaseRadio.Root
+            ref={ref}
+            aria-invalid={invalid}
+            className={clsx(styles.root({ size, invalid }), className)}
+            {...dataAttrs}
+            {...otherProps}
+        />
+    );
+});
 RadioCard.displayName = 'RadioCard';
 
-export { RadioCard };
-export type { RadioCardProps };
+export namespace RadioCard {
+    type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
+    export interface Props extends RootPrimitiveProps, RadioCardVariants {}
+}

@@ -62,12 +62,13 @@ const WebNavigation = () => {
         >
             <NavigationMenu.List className="flex flex-1 flex-row items-center gap-2 p-0 h-full">
                 {NAVIGATION_LINKS.map((item) => (
-                    <NavigationMenu.LinkItem
-                        key={item.href}
-                        href={item.href}
-                        selected={pathname.includes(item.href)}
-                        render={<Link>{item.label}</Link>}
-                    />
+                    <NavigationMenu.Item key={item.href}>
+                        <NavigationMenu.Link
+                            href={item.href}
+                            selected={pathname.includes(item.href)}
+                            render={<Link>{item.label}</Link>}
+                        />
+                    </NavigationMenu.Item>
                 ))}
             </NavigationMenu.List>
 

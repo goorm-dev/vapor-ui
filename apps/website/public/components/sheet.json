@@ -45,24 +45,24 @@
             "description": "트리거 버튼 내부에 표시할 내용입니다."
         }
     ],
-    "contentProps": [
+    "popupProps": [
         {
-            "prop": "portalProps",
-            "type": ["SheetPortalProps"],
+            "prop": "portalElement",
+            "type": ["React.ReactElement"],
             "default": "{}",
-            "description": "Portal 컴포넌트에 전달할 props입니다. keepMounted 옵션을 포함할 수 있습니다."
+            "description": "Portal 컴포넌트에 전달할 ReactElement입니다. keepMounted 옵션을 포함할 수 있습니다."
         },
         {
-            "prop": "overlayProps",
-            "type": ["SheetOverlayProps"],
+            "prop": "overlayElement",
+            "type": ["React.ReactElement"],
             "default": "{}",
-            "description": "Overlay 컴포넌트에 전달할 props입니다."
+            "description": "Overlay 컴포넌트에 전달할 ReactElement입니다."
         },
         {
-            "prop": "positionerProps",
-            "type": ["SheetPositionerProps"],
+            "prop": "positionerElement",
+            "type": ["React.ReactElement"],
             "default": "{}",
-            "description": "Positioner 컴포넌트에 전달할 props입니다. side 옵션을 포함할 수 있습니다."
+            "description": "Positioner 컴포넌트에 전달할 ReactElement입니다. side 옵션을 포함할 수 있습니다."
         },
         {
             "prop": "className",
@@ -77,7 +77,7 @@
             "description": "Sheet 내부에 렌더링할 콘텐츠입니다."
         }
     ],
-    "portalProps": [
+    "portalPrimitiveProps": [
         {
             "prop": "keepMounted",
             "type": ["boolean"],
@@ -91,7 +91,7 @@
             "description": "Portal이 렌더링될 컨테이너 요소를 지정합니다."
         }
     ],
-    "overlayProps": [
+    "overlayPrimitiveProps": [
         {
             "prop": "render",
             "type": ["React.ReactElement"],
@@ -105,7 +105,7 @@
             "description": "오버레이 요소에 적용할 CSS 클래스명입니다."
         }
     ],
-    "popupProps": [
+    "popupPrimitiveProps": [
         {
             "prop": "render",
             "type": ["React.ReactElement"],
@@ -125,7 +125,7 @@
             "description": "팝업 내부에 렌더링할 콘텐츠입니다."
         }
     ],
-    "positionerProps": [
+    "positionerPrimitiveProps": [
         {
             "prop": "side",
             "type": ["\"top\"", "\"right\"", "\"bottom\"", "\"left\""],

@@ -11,7 +11,7 @@ export default {
     component: Sheet.Root,
 } satisfies Meta<Sheet.Root.Props>;
 
-type SheetStory = StoryObj<Sheet.Root.Props & Pick<Sheet.Positioner.Props, 'side'>>;
+type SheetStory = StoryObj<Sheet.Root.Props & Pick<Sheet.PositionerPrimitive.Props, 'side'>>;
 
 export const Default: SheetStory = {
     argTypes: {
@@ -25,7 +25,10 @@ export const Default: SheetStory = {
             <VStack height="1000vh">
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
-                    <Sheet.Content portalProps={{ keepMounted: true }} positionerProps={{ side }}>
+                    <Sheet.Popup
+                        portalElement={<Sheet.PortalPrimitive keepMounted={true} />}
+                        positionerElement={<Sheet.PositionerPrimitive side={side} />}
+                    >
                         <Box
                             aria-label="Close sheet"
                             position="absolute"
@@ -44,11 +47,11 @@ export const Default: SheetStory = {
                         <Sheet.Footer>
                             <Sheet.Close>Close</Sheet.Close>
                         </Sheet.Footer>
-                    </Sheet.Content>
+                    </Sheet.Popup>
                 </Sheet.Root>
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
-                    <Sheet.Content>
+                    <Sheet.Popup>
                         <Box
                             aria-label="Close sheet"
                             position="absolute"
@@ -67,7 +70,7 @@ export const Default: SheetStory = {
                         <Sheet.Footer>
                             <Sheet.Close>Close</Sheet.Close>
                         </Sheet.Footer>
-                    </Sheet.Content>
+                    </Sheet.Popup>
                 </Sheet.Root>
             </VStack>
         );
@@ -80,7 +83,7 @@ export const TestBed: StoryObj<Sheet.Root.Props> = {
             <VStack>
                 <Sheet.Root open={true} {...args}>
                     <Sheet.Trigger render={<Button variant="outline" />}>Open Sheet</Sheet.Trigger>
-                    <Sheet.Content>
+                    <Sheet.Popup>
                         <Box
                             aria-label="Close sheet"
                             position="absolute"
@@ -99,7 +102,7 @@ export const TestBed: StoryObj<Sheet.Root.Props> = {
                         <Sheet.Footer>
                             <Sheet.Close>Close</Sheet.Close>
                         </Sheet.Footer>
-                    </Sheet.Content>
+                    </Sheet.Popup>
                 </Sheet.Root>
             </VStack>
         );

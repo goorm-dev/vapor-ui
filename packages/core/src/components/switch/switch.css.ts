@@ -35,9 +35,9 @@ export const control = recipe({
                 '&[data-readonly]:active::before': { opacity: 0.08 },
 
                 '&[data-invalid]': {
-                    outline: '0.0625rem solid',
+                    outline: '0.125rem solid',
                     outlineColor: vars.color.border.danger,
-                    outlineOffset: '-0.0625rem',
+                    outlineOffset: '-0.125rem',
                 },
             },
         }),

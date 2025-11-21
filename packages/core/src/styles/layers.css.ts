@@ -7,11 +7,12 @@ export const layerName = Object.fromEntries(LAYER_ORDER.map((name) => [name, nam
     string
 >;
 
+const prefix = globalLayer('vapor');
 const createLayersInOrder = () => {
     const layerInstances: Record<string, ReturnType<typeof globalLayer>> = {};
 
     LAYER_ORDER.forEach((layerName) => {
-        layerInstances[layerName] = globalLayer(layerName);
+        layerInstances[layerName] = globalLayer({ parent: prefix }, layerName);
     });
 
     return layerInstances;
