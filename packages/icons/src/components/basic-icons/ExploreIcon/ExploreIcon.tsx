@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const ExploreIcon: IconType = (props) => (
+const ExploreIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M8 7.2002C8.22218 7.2002 8.41087 7.2781 8.56641 7.43359C8.72194 7.58913 8.79978 7.77782 8.7998 8C8.7998 8.22222 8.72196 8.41085 8.56641 8.56641C8.41085 8.72196 8.22222 8.7998 8 8.7998C7.77787 8.81089 7.58911 8.7362 7.43359 8.5752C7.27804 8.41408 7.2002 8.22222 7.2002 8C7.20022 7.77782 7.27806 7.58913 7.43359 7.43359C7.58913 7.27806 7.77782 7.20022 8 7.2002Z" />
         <path

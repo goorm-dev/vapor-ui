@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const CreditCardIcon: IconType = (props) => (
+const CreditCardIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M2.66683 13.3332C2.30016 13.3332 1.98627 13.2026 1.72516 12.9415C1.46405 12.6804 1.3335 12.3665 1.3335 11.9998V3.99984C1.3335 3.63317 1.46405 3.31928 1.72516 3.05817C1.98627 2.79706 2.30016 2.6665 2.66683 2.6665H13.3335C13.7002 2.6665 14.0141 2.79706 14.2752 3.05817C14.5363 3.31928 14.6668 3.63317 14.6668 3.99984V11.9998C14.6668 12.3665 14.5363 12.6804 14.2752 12.9415C14.0141 13.2026 13.7002 13.3332 13.3335 13.3332H2.66683ZM2.66683 7.99984H13.3335V5.33317H2.66683V7.99984Z" />
     </IconBase>

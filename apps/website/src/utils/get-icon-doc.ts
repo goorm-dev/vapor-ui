@@ -1,11 +1,13 @@
+import type { FunctionComponent } from 'react';
+
 import * as allIcons from '@vapor-ui/icons';
-import type { IconType } from '@vapor-ui/icons';
+import type { IconProps } from '@vapor-ui/icons';
 import { markdownTable } from 'markdown-table';
 
 const _ICON_LIST = ['basic', 'outline'] as const;
 
 const initialVaporIcons: {
-    [key in (typeof _ICON_LIST)[number]]: { [key: string]: IconType };
+    [key in (typeof _ICON_LIST)[number]]: { [key: string]: FunctionComponent<IconProps> };
 } = {
     basic: {},
     outline: {},

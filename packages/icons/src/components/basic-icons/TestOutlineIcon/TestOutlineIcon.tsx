@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const TestOutlineIcon: IconType = (props) => (
+const TestOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             fillRule="evenodd"

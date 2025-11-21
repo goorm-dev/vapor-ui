@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const StripeColorIcon: IconType = (props) => (
+const StripeColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <g clipPath="url(#clip0_4394_229)">
             <path fillRule="evenodd" clipRule="evenodd" d="M0 0H16V16H0V0Z" fill="#635BFF" />

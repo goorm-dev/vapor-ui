@@ -1,8 +1,8 @@
 export default (IconName, Icon) => `
 
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const ${IconName}: IconType = props => (
+const ${IconName} = (props : IconProps) => (
 	${Icon}
 );
 

@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const MinusOutlineIcon: IconType = (props) => (
+const MinusOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M4.00016 8.66659C3.81127 8.66659 3.65294 8.6027 3.52516 8.47492C3.39738 8.34714 3.3335 8.18881 3.3335 7.99992C3.3335 7.81103 3.39738 7.6527 3.52516 7.52492C3.65294 7.39714 3.81127 7.33325 4.00016 7.33325H12.0002C12.1891 7.33325 12.3474 7.39714 12.4752 7.52492C12.6029 7.6527 12.6668 7.81103 12.6668 7.99992C12.6668 8.18881 12.6029 8.34714 12.4752 8.47492C12.3474 8.6027 12.1891 8.66659 12.0002 8.66659H4.00016Z" />
     </IconBase>
