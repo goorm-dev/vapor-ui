@@ -100,6 +100,42 @@ function runTransform({
 
 const TRANSFORMER_INQUIRER_CHOICES = [
     {
+        name: 'internal/core/alert: Migrate Alert component',
+        value: 'internal/core/alert',
+    },
+    {
+        name: 'internal/core/avatar: Migrate Avatar component',
+        value: 'internal/core/avatar',
+    },
+    {
+        name: 'internal/core/badge: Migrate Badge component',
+        value: 'internal/core/badge',
+    },
+    {
+        name: 'internal/core/breadcrumb: Migrate Breadcrumb component',
+        value: 'internal/core/breadcrumb',
+    },
+    {
+        name: 'internal/core/button: Migrate Button component',
+        value: 'internal/core/button',
+    },
+    {
+        name: 'internal/core/card: Migrate Card component',
+        value: 'internal/core/card',
+    },
+    {
+        name: 'internal/core/checkbox: Migrate Checkbox component',
+        value: 'internal/core/checkbox',
+    },
+    {
+        name: 'internal/core/collapsible: Migrate Collapsible component',
+        value: 'internal/core/collapsible',
+    },
+    {
+        name: 'internal/core/dialog: Migrate Dialog component',
+        value: 'internal/core/dialog',
+    },
+    {
         name: 'internal/icons: Migrate @goorm-dev/vapor-icons to @vapor-ui/icons',
         value: 'internal/icons/migrate-icons-import',
     },
