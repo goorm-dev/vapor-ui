@@ -191,21 +191,6 @@ export const PaginationButtonPrimitive = forwardRef<
 PaginationButtonPrimitive.displayName = 'Pagination.ButtonPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Pagination.Button
- * -----------------------------------------------------------------------------------------------*/
-
-export const PaginationButton = forwardRef<HTMLButtonElement, PaginationButton.Props>(
-    (props, ref) => {
-        return (
-            <PaginationItemPrimitive>
-                <PaginationButtonPrimitive ref={ref} {...props} />
-            </PaginationItemPrimitive>
-        );
-    },
-);
-PaginationButton.displayName = 'Pagination.Button';
-
-/* -------------------------------------------------------------------------------------------------
  * Pagination.PreviousPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
@@ -340,21 +325,6 @@ export const PaginationEllipsisPrimitive = forwardRef<
 PaginationEllipsisPrimitive.displayName = 'Pagination.EllipsisPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Pagination.Ellipsis
- * -----------------------------------------------------------------------------------------------*/
-
-export const PaginationEllipsis = forwardRef<HTMLSpanElement, PaginationEllipsis.Props>(
-    (props, ref) => {
-        return (
-            <PaginationItemPrimitive>
-                <PaginationEllipsisPrimitive ref={ref} {...props} />
-            </PaginationItemPrimitive>
-        );
-    },
-);
-PaginationEllipsis.displayName = 'Pagination.Ellipsis';
-
-/* -------------------------------------------------------------------------------------------------
  * Pagination.Items
  * -----------------------------------------------------------------------------------------------*/
 
@@ -368,13 +338,19 @@ export const PaginationItems = ({ children: childrenProp }: PaginationItems.Prop
         : (childrenProp ??
               pages.map(({ type, value }) => {
                   if (type === 'BREAK') {
-                      return <PaginationEllipsis key={`${type}-${value}`} />;
+                      return (
+                          <PaginationItemPrimitive key={`${type}-${value}`}>
+                              <PaginationEllipsisPrimitive />
+                          </PaginationItemPrimitive>
+                      );
                   }
 
                   return (
-                      <PaginationButton key={`${type}-${value}`} page={value}>
-                          {value}
-                      </PaginationButton>
+                      <PaginationItemPrimitive key={`${type}-${value}`}>
+                          <PaginationButtonPrimitive page={value}>
+                              {value}
+                          </PaginationButtonPrimitive>
+                      </PaginationItemPrimitive>
                   );
               }));
 };

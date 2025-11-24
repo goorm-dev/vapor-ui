@@ -1,10 +1,8 @@
 export {
     PaginationRoot as Root,
-    PaginationButton as Button,
     PaginationItems as Items,
     PaginationPrevious as Previous,
     PaginationNext as Next,
-    PaginationEllipsis as Ellipsis,
 
     // primitives
     PaginationRootPrimitive as RootPrimitive,
