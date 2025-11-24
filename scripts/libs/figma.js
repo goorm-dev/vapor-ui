@@ -52,6 +52,9 @@ const getNodesWithUrl = async ({ nodes, fileKey }) => {
  */
 const getIconJsx = async ({ url, isColorIcon }) => {
     const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch SVG: ${response.status} ${response.statusText}`);
+    }
     const svgDom = await response.text();
     const IconComponent = svgToIconComponent(svgDom);
     const NewIconComponent = remakeMaskStyle(IconComponent);
