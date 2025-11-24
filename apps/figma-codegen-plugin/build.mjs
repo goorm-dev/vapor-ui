@@ -8,21 +8,25 @@ const __dirname = dirname(__filename);
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+const baseConfig = {
+    entryPoints: [join(__dirname, 'src/code.ts')],
+    bundle: true,
+    outfile: join(__dirname, 'dist/code.js'),
+    platform: 'browser',
+    target: 'es2017',
+    format: 'iife',
+    define: {
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    },
+    logLevel: 'info',
+};
+
 async function build() {
     try {
         await esbuild.build({
-            entryPoints: [join(__dirname, 'src/code.ts')],
-            bundle: true,
-            outfile: join(__dirname, 'dist/code.js'),
-            platform: 'browser',
-            target: 'es2017',
-            format: 'iife',
+            ...baseConfig,
             minify: isProduction,
             sourcemap: !isProduction,
-            define: {
-                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-            },
-            logLevel: 'info',
         });
     } catch (error) {
         console.error(error);
@@ -32,18 +36,12 @@ async function build() {
 
 if (process.argv.includes('--watch')) {
     const ctx = await esbuild.context({
-        entryPoints: [join(__dirname, 'src/code.ts')],
-        bundle: true,
-        outfile: join(__dirname, 'dist/code.js'),
-        platform: 'browser',
-        target: 'es2017',
-        format: 'iife',
+        ...baseConfig,
         minify: false,
         sourcemap: true,
         define: {
             'process.env.NODE_ENV': JSON.stringify('development'),
         },
-        logLevel: 'info',
     });
 
     await ctx.watch();
