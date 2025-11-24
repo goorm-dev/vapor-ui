@@ -51,7 +51,8 @@ const getNodesWithUrl = async ({ nodes, fileKey }) => {
  * Convert svg files from Figma to React components.
  */
 const getIconJsx = async ({ url, isColorIcon }) => {
-    const { data: svgDom } = await fetch(url);
+    const response = await fetch(url);
+    const svgDom = await response.text();
     const IconComponent = svgToIconComponent(svgDom);
     const NewIconComponent = remakeMaskStyle(IconComponent);
 
