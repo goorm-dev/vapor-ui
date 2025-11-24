@@ -1,40 +1,40 @@
-import type { ColorPaletteResult, SemanticTokensResult } from '@vapor-ui/color-generator';
+import type { SemanticResult, ThemeResult } from '@vapor-ui/color-generator';
 
 /* -------------------------------------------------------------------------------------------------
  * Message Types
  * -----------------------------------------------------------------------------------------------*/
 
-type CreatePaletteSectionsMessage = {
-    type: 'create-palette-sections';
-    data: { generatedPalette: Pick<ColorPaletteResult, 'light' | 'dark'> };
+type PaletteGenerationStartedEvent = {
+    type: 'palette-generation-started';
+    data: Record<string, never>;
 };
 
-type CreateFigmaVariablesMessage = {
-    type: 'create-figma-variables';
-    data: { generatedPalette: ColorPaletteResult; collectionName: string };
+type VariableGenerationStartedEvent = {
+    type: 'variable-generation-started';
+    data: Record<string, never>;
 };
 
-type CreateBrandPaletteSectionsMessage = {
-    type: 'create-brand-palette-sections';
+type CreateUnifiedPaletteSectionsMessage = {
+    type: 'create-unified-palette-sections';
     data: {
-        generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
-        dependentTokens: SemanticTokensResult;
+        generatedTheme: ThemeResult;
+        semanticTokens: SemanticResult;
     };
 };
 
-type CreateBrandFigmaVariablesMessage = {
-    type: 'create-brand-figma-variables';
+type CreateUnifiedFigmaVariablesMessage = {
+    type: 'create-unified-figma-variables';
     data: {
-        generatedBrandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>;
+        generatedTheme: ThemeResult;
         collectionName: string;
     };
 };
 
 export type UIMessage =
-    | CreatePaletteSectionsMessage
-    | CreateFigmaVariablesMessage
-    | CreateBrandPaletteSectionsMessage
-    | CreateBrandFigmaVariablesMessage;
+    | PaletteGenerationStartedEvent
+    | VariableGenerationStartedEvent
+    | CreateUnifiedPaletteSectionsMessage
+    | CreateUnifiedFigmaVariablesMessage;
 
 /* -------------------------------------------------------------------------------------------------
  * Message Utilities

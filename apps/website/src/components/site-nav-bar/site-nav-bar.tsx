@@ -62,12 +62,13 @@ const WebNavigation = () => {
         >
             <NavigationMenu.List className="flex flex-1 flex-row items-center gap-2 p-0 h-full">
                 {NAVIGATION_LINKS.map((item) => (
-                    <NavigationMenu.LinkItem
-                        key={item.href}
-                        href={item.href}
-                        selected={pathname.includes(item.href)}
-                        render={<Link>{item.label}</Link>}
-                    />
+                    <NavigationMenu.Item key={item.href}>
+                        <NavigationMenu.Link
+                            href={item.href}
+                            selected={pathname.includes(item.href)}
+                            render={<Link>{item.label}</Link>}
+                        />
+                    </NavigationMenu.Item>
                 ))}
             </NavigationMenu.List>
 
@@ -79,7 +80,7 @@ const WebNavigation = () => {
                             <IconButton
                                 aria-label={item.text}
                                 size="lg"
-                                color="secondary"
+                                colorPalette="secondary"
                                 variant="ghost"
                                 render={
                                     <NavigationMenu.Link
@@ -121,7 +122,7 @@ const MobileNavigation = () => {
                 <Dialog.Trigger asChild>
                     <IconButton
                         size="lg"
-                        color="secondary"
+                        colorPalette="secondary"
                         variant="fill"
                         className="md:hidden"
                         aria-label="menu"
@@ -146,7 +147,7 @@ const MobileNavigation = () => {
                     {/* Mobile Menu Header */}
                     <div className="flex justify-end px-6 py-4">
                         <Dialog.Close asChild>
-                            <IconButton color="secondary" variant="ghost" aria-label="close">
+                            <IconButton colorPalette="secondary" variant="ghost" aria-label="close">
                                 <CloseOutlineIcon size={20} />
                             </IconButton>
                         </Dialog.Close>
@@ -167,7 +168,7 @@ const MobileNavigation = () => {
                                 </Text>
                                 <IconButton
                                     size="md"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     variant="fill"
                                     aria-label={hasUrl(item) ? item.url : ''}
                                 >

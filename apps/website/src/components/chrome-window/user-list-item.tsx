@@ -20,8 +20,8 @@ export function UserListItem({
     return (
         <div className="w-full flex h-[var(--vapor-size-dimension-500)] items-center gap-[var(--vapor-size-space-100)] self-stretch">
             <Avatar.Root alt={avatarAlt || name || 'User'} shape="circle" size="md">
-                <Avatar.Fallback className="!text-[var(--vapor-color-white)]" />
-                <Avatar.Image />
+                <Avatar.FallbackPrimitive className="!text-[var(--vapor-color-white)]" />
+                <Avatar.ImagePrimitive />
             </Avatar.Root>
             <div className="flex flex-col items-start gap-[var(--vapor-size-space-000)] flex-1 basis-0 grow">
                 <div className="flex items-center gap-[var(--vapor-size-space-050)] self-stretch">
@@ -29,7 +29,7 @@ export function UserListItem({
                         {name || '이름 없음'}
                     </Text>
                     {badge && (
-                        <Badge color="primary" shape="pill">
+                        <Badge colorPalette="primary" shape="pill">
                             {badge}
                         </Badge>
                     )}

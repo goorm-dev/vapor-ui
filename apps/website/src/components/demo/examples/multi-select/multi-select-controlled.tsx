@@ -26,19 +26,15 @@ export default function MultiSelectControlled() {
                 onValueChange={handleValueChange}
                 placeholder="폰트 선택"
             >
-                <MultiSelect.Trigger>
-                    <MultiSelect.Value />
-                    <MultiSelect.TriggerIcon />
-                </MultiSelect.Trigger>
+                <MultiSelect.Trigger />
 
-                <MultiSelect.Content>
+                <MultiSelect.Popup>
                     {fonts.map((font) => (
                         <MultiSelect.Item key={font.value} value={font.value}>
                             {font.label}
-                            <MultiSelect.ItemIndicator />
                         </MultiSelect.Item>
                     ))}
-                </MultiSelect.Content>
+                </MultiSelect.Popup>
             </MultiSelect.Root>
 
             <Text typography="body2" foreground="secondary-200">
@@ -49,10 +45,10 @@ export default function MultiSelectControlled() {
             </Text>
 
             <HStack gap="$100">
-                <Button color="primary" onClick={() => setValue(['serif', 'mono'])}>
+                <Button colorPalette="primary" onClick={() => setValue(['serif', 'mono'])}>
                     Serif, Mono 선택
                 </Button>
-                <Button color="secondary" onClick={() => setValue([])}>
+                <Button colorPalette="secondary" onClick={() => setValue([])}>
                     모두 해제
                 </Button>
             </HStack>
