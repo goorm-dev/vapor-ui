@@ -53,6 +53,17 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             element.openingElement.name.type === 'JSXIdentifier' &&
             element.openingElement.name.name === alertLocalName
         ) {
+            // Transform color prop to colorPalette
+            const colorAttr = element.openingElement.attributes?.find(
+                (attr) =>
+                    attr.type === 'JSXAttribute' &&
+                    attr.name.type === 'JSXIdentifier' &&
+                    attr.name.name === 'color',
+            );
+            if (colorAttr && colorAttr.type === 'JSXAttribute') {
+                colorAttr.name.name = 'colorPalette';
+            }
+
             // Transform asChild prop to render prop FIRST
             transformAsChildToRender(j, element);
 

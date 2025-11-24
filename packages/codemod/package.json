@@ -14,7 +14,8 @@
         "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
         "lint": "eslint ./src",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "clean": "rimraf dist node_modules coverage .turbo"
     },
     "dependencies": {
         "@inquirer/prompts": "^7.9.0",
@@ -36,6 +37,7 @@
         "@vapor-ui/icons": "workspace:*",
         "eslint": "^9.37.0",
         "jest": "^30.2.0",
+        "rimraf": "^6.0.1",
         "ts-jest": "^29.1.0",
         "tsup": "^8.5.0"
     },

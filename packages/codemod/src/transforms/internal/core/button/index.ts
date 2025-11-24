@@ -37,7 +37,9 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         ) {
             element.openingElement.attributes?.forEach((attr) => {
                 if (attr.type === 'JSXAttribute') {
-                    if (attr.name.name === 'shape') {
+                    if (attr.name.name === 'color') {
+                        attr.name.name = 'colorPalette';
+                    } else if (attr.name.name === 'shape') {
                         attr.name.name = 'variant';
 
                         if (

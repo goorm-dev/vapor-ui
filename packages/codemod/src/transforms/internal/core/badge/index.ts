@@ -36,7 +36,9 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             element.openingElement.name.name === badgeLocalName
         ) {
             element.openingElement.attributes?.forEach((attr, index) => {
-                if (attr.type === 'JSXAttribute' && attr.name.name === 'pill') {
+                if (attr.type === 'JSXAttribute' && attr.name.name === 'color') {
+                    attr.name.name = 'colorPalette';
+                } else if (attr.type === 'JSXAttribute' && attr.name.name === 'pill') {
                     const pillValue = attr.value;
 
                     if (
