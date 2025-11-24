@@ -240,6 +240,7 @@ export { default as CafeIcon } from './CafeIcon';
 export { default as BedIcon } from './BedIcon';
 export { default as ExploreIcon } from './ExploreIcon';
 export { default as DocktoBottomIcon } from './DocktoBottomIcon';
+export { default as DocktoBottomIcon222 } from './DocktoBottomIcon222';
 export { default as CameraOutlineIcon } from './CameraOutlineIcon';
 export { default as ImageOutlineIcon } from './ImageOutlineIcon';
 export { default as NoImageOutlineIcon } from './NoImageOutlineIcon';
