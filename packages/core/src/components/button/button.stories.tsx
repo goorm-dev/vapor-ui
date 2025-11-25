@@ -15,7 +15,6 @@ export default {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
         variant: { control: 'inline-radio', options: ['fill', 'outline', 'ghost'] },
         disabled: { control: 'boolean' },
-        stretch: { control: 'boolean' },
     },
 } as Meta<typeof Button>;
 type Story = StoryObj<typeof Button>;
@@ -67,7 +66,6 @@ export const TestBed: Story = {
                 <Button size="md">MD</Button>
                 <Button size="lg">LG</Button>
                 <Button size="xl">XL</Button>
-                <Button stretch>Stretch</Button>
             </div>
         </div>
     ),
