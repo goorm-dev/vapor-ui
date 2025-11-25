@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
+import type { CSSProperties, ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui-components/react';
@@ -17,10 +17,10 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
-import type { ItemVariants, LinkVariants, ListVariants } from './navigation-menu.css';
+import type { LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
 
-type NavigationMenuVariants = ListVariants & ItemVariants & LinkVariants;
+type NavigationMenuVariants = ListVariants & LinkVariants;
 type NavigationMenuSharedProps = NavigationMenuVariants & { disabled?: boolean };
 type NavigationMenuContextType = NavigationMenuSharedProps;
 
@@ -52,7 +52,7 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
                     ref={ref}
                     aria-label={ariaLabel}
                     orientation={direction}
-                    className={clsx(styles.root(), className)}
+                    className={className}
                     {...otherProps}
                 />
             </NavigationMenuProvider>
@@ -90,13 +90,7 @@ export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
 
-        return (
-            <BaseNavigationMenu.Item
-                ref={ref}
-                className={clsx(styles.item(), className)}
-                {...componentProps}
-            />
-        );
+        return <BaseNavigationMenu.Item ref={ref} className={className} {...componentProps} />;
     },
 );
 NavigationMenuItem.displayName = 'NavigationMenu.Item';
@@ -441,7 +435,9 @@ export namespace NavigationMenuRoot {
 
 export namespace NavigationMenuList {
     type ListPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.List>;
-    export interface Props extends ListPrimitiveProps {}
+    export interface Props extends Omit<ListPrimitiveProps, 'children'> {
+        children?: ReactNode;
+    }
 }
 
 export namespace NavigationMenuItem {
