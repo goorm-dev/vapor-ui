@@ -6,15 +6,7 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = recipe({
-    defaultVariants: { stretch: false },
-    variants: {
-        stretch: {
-            true: layerStyle('components', { width: '100%' }),
-            false: layerStyle('components', { width: 'fit-content' }),
-        },
-    },
-});
+export const root = recipe({});
 
 export const list = recipe({
     base: layerStyle('components', {
@@ -33,9 +25,7 @@ export const list = recipe({
     },
 });
 
-export const item = recipe({
-    variants: { stretch: { true: layerStyle('components', { flex: 1 }) } },
-});
+export const item = recipe({});
 
 export const link = recipe({
     base: [

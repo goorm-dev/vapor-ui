@@ -41,7 +41,7 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
         const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
         const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(
             componentProps,
-            ['direction', 'size', 'stretch', 'disabled'],
+            ['direction', 'size', 'disabled'],
         );
 
         const { direction } = variantProps;
@@ -52,7 +52,7 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
                     ref={ref}
                     aria-label={ariaLabel}
                     orientation={direction}
-                    className={clsx(styles.root({ stretch: variantProps.stretch }), className)}
+                    className={clsx(styles.root(), className)}
                     {...otherProps}
                 />
             </NavigationMenuProvider>
@@ -89,12 +89,11 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
 export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
-        const { stretch } = useNavigationMenuContext();
 
         return (
             <BaseNavigationMenu.Item
                 ref={ref}
-                className={clsx(styles.item({ stretch }), className)}
+                className={clsx(styles.item(), className)}
                 {...componentProps}
             />
         );
