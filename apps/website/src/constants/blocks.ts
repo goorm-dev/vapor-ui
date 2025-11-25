@@ -1,4 +1,4 @@
-import { FORM_BLOCK_URL, NAVBAR_BLOCK_URL } from './image-urls';
+import { FORM_BLOCK_URL, NAVBAR_BLOCK_URL, TABLE_BLOCK_URL } from './image-urls';
 
 export type Block = {
     id: string;
@@ -29,6 +29,7 @@ export const BLOCKS: Block[] = [
         name: 'Table',
         description: '데이터를 행과 열 단위로 정리해 비교/분석할 수 있는 컴포넌트입니다.',
         href: '/blocks/table',
+        imageUrl: TABLE_BLOCK_URL,
     },
 ];
 
