@@ -7,20 +7,18 @@
         "design-system",
         "css-variables"
     ],
-    "author": "Vapor Team <vapor.ui@goorm.io>",
-    "license": "MIT",
     "homepage": "https://github.com/goorm-dev/vapor-ui",
-    "files": [
-        "dist"
-    ],
+    "bugs": {
+        "url": "https://github.com/goorm-dev/vapor-ui/issues"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/css-generator"
     },
-    "publishConfig": {
-        "access": "public"
-    },
+    "license": "MIT",
+    "author": "Vapor Team <vapor.ui@goorm.io>",
+    "type": "module",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
@@ -28,21 +26,20 @@
             "require": "./dist/index.cjs"
         }
     },
-    "bugs": {
-        "url": "https://github.com/goorm-dev/vapor-ui/issues"
-    },
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
-    "type": "module",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "build": "rimraf dist && tsup",
-        "test": "vitest --run",
-        "test:watch": "vitest",
-        "lint": "eslint ./src",
+        "clean": "rimraf dist node_modules .turbo",
         "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
-        "clean": "rimraf dist node_modules .turbo",
+        "lint": "eslint ./src",
+        "test": "vitest --run",
+        "test:watch": "vitest",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -58,5 +55,8 @@
         "tsx": "^4.19.2",
         "typescript": "^5.9.2",
         "vitest": "^3.2.4"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
