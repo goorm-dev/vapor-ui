@@ -172,11 +172,7 @@ export default function Scroll() {
             <Card.Body style={{ overflow: 'auto', padding: 0 }}>
                 <Table.Root style={{ width: '100%' }}>
                     <Table.ColumnGroup>
-                        <Table.Column width="8%" />
-                        <Table.Column width="20%" />
-                        <Table.Column width="20%" />
-                        <Table.Column width="20%" />
-                        <Table.Column width="20%" />
+                        <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
                     <Table.Header>
