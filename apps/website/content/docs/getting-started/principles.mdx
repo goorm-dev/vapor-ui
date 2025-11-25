@@ -35,7 +35,7 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 
 ## 2. 접근성
 
-포괄적인 WCAG 2.1 AA 준수와 추가 접근성 향상을 위해 [Base UI](https://base-ui.com/)를 기반으로 구축되었습니다.
+포괄적인 [WCAG 2.1](https://www.w3.org/TR/WCAG21/) AA 준수와 추가 접근성 향상을 위해 [Base UI](https://base-ui.com/react/overview/quick-start)를 기반으로 구축되었습니다.
 
 ### 포괄적인 접근성 기능
 
@@ -45,7 +45,7 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 
 ```tsx
 // 적절한 ARIA 속성과 키보드 처리가 자동으로 포함됨
-<Dialog>
+<Dialog.Root>
     <Dialog.Trigger aria-expanded="true" aria-haspopup="dialog" aria-controls="dialog-popup">
         설정 열기
     </Dialog.Trigger>
@@ -56,7 +56,7 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
     >
         {/* 포커스 관리와 ESC 키 처리가 내장됨 */}
     </Dialog.Popup>
-</Dialog>
+</Dialog.Root>
 ```
 
 ### Color Generator 시스템
@@ -76,33 +76,28 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 
 ```tsx
 // 모든 컴포넌트에서 일관된 API
-<Card>
+<Card.Root>
   <Card.Header>
     <Card.Title>프로젝트 상태</Card.Title>
     <Card.Description>현재 개발 진행상황</Card.Description>
   </Card.Header>
-  <Card.Content>
-    <Card.Body>내용이 여기에 표시됩니다</Card.Body>
-  </Card.Content>
+  <Card.Body>내용이 여기에 표시됩니다</Card.Body>
   <Card.Footer>
     <Card.Actions>
       <Button variant="primary">저장</Button>
       <Button variant="secondary">취소</Button>
     </Card.Actions>
   </Card.Footer>
-</Card>
+</Card.Root>
 
-<Accordion>
-  <Accordion.Item>
-    <Accordion.Trigger>
-      <Accordion.Title>섹션 1</Accordion.Title>
-      <Accordion.Icon />
-    </Accordion.Trigger>
-    <Accordion.Content>
-      <Accordion.Body>접을 수 있는 내용</Accordion.Body>
-    </Accordion.Content>
-  </Accordion.Item>
-</Accordion>
+<Select.Root placeholder="선택">
+    <Select.Trigger />
+    <Select.Popup>
+        <Select.Item value="section1">섹션 1</Select.Item>
+        <Select.Item value="section2">섹션 2</Select.Item>
+        <Select.Item value="section3">섹션 3</Select.Item>
+    </Select.Popup>
+</Select.Root>
 ```
 
 ## 4. 예측 가능한 명명 규칙
@@ -141,13 +136,13 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 Vapor UI는 완전한 타입 안전성, 지능적인 IntelliSense, 컴파일 타임 오류 검출을 제공하는 **포괄적인 TypeScript 지원**을 제공합니다.
 
 ```tsx
-import { Button } from '@vapor-ui/react';
+import { Button } from '@vapor-ui/core';
 
 // 완전히 타입화된 컴포넌트 속성
-// - variant 자동완성: 'primary' | 'secondary' | 'danger'
+// - colorPalette 자동완성: 'primary' | 'secondary' | 'danger'
 // - size 자동완성: 'sm' | 'md' | 'lg'
-const CustomButton = ({ variant, size, ...props }: Button.Props) => {
-    return <Button variant={variant} size={size} {...props} />;
+const CustomButton = ({ colorPalette, size, ...props }: Button.Props) => {
+    return <Button colorPalette={colorPalette} size={size} {...props} />;
 };
 
 // 타입 안전 이벤트 핸들러
