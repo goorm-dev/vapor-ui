@@ -35,7 +35,7 @@ export default function Scroll() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: 'ID',
+                header: () => <div style={{ textAlign: 'center' }}>ID</div>,
                 accessorKey: 'id',
                 size: 0, // prevent cumulative layout shift
                 cell: ({ row }) => <div style={{ textAlign: 'center' }}>{row.index + 1}</div>,
@@ -172,11 +172,11 @@ export default function Scroll() {
             <Card.Body style={{ overflow: 'auto', padding: 0 }}>
                 <Table.Root style={{ width: '100%' }}>
                     <Table.ColumnGroup>
-                        <Table.Column width="5%" />
-                        <Table.Column width="15%" />
-                        <Table.Column width="15%" />
-                        <Table.Column width="40%" />
-                        <Table.Column width="25%" />
+                        <Table.Column width="8%" />
+                        <Table.Column width="20%" />
+                        <Table.Column width="20%" />
+                        <Table.Column width="20%" />
+                        <Table.Column width="20%" />
                     </Table.ColumnGroup>
 
                     <Table.Header>
