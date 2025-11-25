@@ -13,7 +13,7 @@ export const textarea = recipe({
         layerStyle('components', {
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
-            backgroundColor: vars.color.background.canvas,
+            backgroundColor: vars.color.background.overlay[100],
             color: vars.color.foreground.normal[200],
             width: '100%',
 

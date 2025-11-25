@@ -11,7 +11,6 @@ const fg = createVar();
 const outlineFg = createVar();
 const ghostFg = createVar();
 const bg = createVar();
-const outlineBg = createVar();
 const border = createVar();
 
 export const root = recipe({
@@ -73,11 +72,10 @@ export const root = recipe({
         colorPalette: {
             primary: layerStyle('components', {
                 vars: {
-                    [fg]: vars.color.button.foreground.primary,
+                    [fg]: vars.color.foreground.inverse,
                     [outlineFg]: vars.color.foreground.primary[200],
                     [ghostFg]: vars.color.foreground.primary[100],
                     [bg]: vars.color.background.primary[200],
-                    [outlineBg]: vars.color.background.primary[100],
                     [border]: vars.color.border.primary,
                 },
             }),
@@ -87,7 +85,6 @@ export const root = recipe({
                     [outlineFg]: vars.color.foreground.secondary[200],
                     [ghostFg]: vars.color.foreground.secondary[100],
                     [bg]: vars.color.background.secondary[200],
-                    [outlineBg]: vars.color.background.secondary[100],
                     [border]: vars.color.border.secondary,
                 },
             }),
@@ -97,7 +94,6 @@ export const root = recipe({
                     [outlineFg]: vars.color.foreground.success[200],
                     [ghostFg]: vars.color.foreground.success[100],
                     [bg]: vars.color.background.success[200],
-                    [outlineBg]: vars.color.background.success[100],
                     [border]: vars.color.border.success,
                 },
             }),
@@ -107,7 +103,6 @@ export const root = recipe({
                     [outlineFg]: vars.color.foreground.warning[200],
                     [ghostFg]: vars.color.foreground.warning[100],
                     [bg]: vars.color.background.warning[200],
-                    [outlineBg]: vars.color.background.warning[100],
                     [border]: vars.color.border.warning,
                 },
             }),
@@ -117,7 +112,6 @@ export const root = recipe({
                     [outlineFg]: vars.color.foreground.danger[200],
                     [ghostFg]: vars.color.foreground.danger[100],
                     [bg]: vars.color.background.danger[200],
-                    [outlineBg]: vars.color.background.danger[100],
                     [border]: vars.color.border.danger,
                 },
             }),
@@ -127,7 +121,6 @@ export const root = recipe({
                     [outlineFg]: vars.color.foreground.contrast[200],
                     [ghostFg]: vars.color.foreground.contrast[100],
                     [bg]: vars.color.background.contrast[200],
-                    [outlineBg]: vars.color.background.contrast[100],
                     [border]: vars.color.border.contrast,
                 },
             }),
@@ -140,7 +133,7 @@ export const root = recipe({
             }),
             outline: layerStyle('components', {
                 boxShadow: `inset 0 0 0 1px ${border}`,
-                backgroundColor: outlineBg,
+                backgroundColor: vars.color.background.canvas[100],
                 color: outlineFg,
             }),
             ghost: layerStyle('components', {

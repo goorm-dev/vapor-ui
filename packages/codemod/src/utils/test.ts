@@ -51,9 +51,14 @@ export const runTestTransform = ({
                 const output = readFileSync(outputFilePath, 'utf8');
                 const cleanRegex = /\/\/\s*@ts-nocheck\s*\r?\n?/;
 
-                const result = applyTransform(transform, transformOptions, {
-                    source: input,
-                });
+                const result = applyTransform(
+                    transform,
+                    transformOptions,
+                    {
+                        source: input,
+                    },
+                    { parser: 'tsx' },
+                );
                 const config = {
                     parser: getParserByExtension(extension),
                     ...prettier.resolveConfig(path.join(process.cwd())),

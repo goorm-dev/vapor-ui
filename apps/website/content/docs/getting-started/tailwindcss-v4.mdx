@@ -69,9 +69,10 @@ Vapor UI가 이미 필요한 스타일 초기화를 처리합니다. 따라서 T
 
 ```css
 /* preflight를 사용해야 하는 경우 */
-@layer tw-theme, tw-base, vapor, tw-utilities;
+@layer tw-theme, vapor.theme, tw-base, vapor.reset, vapor.components, vapor.utilities, tw-utilities;
 
 @import '@vapor-ui/core/tailwind.css';
+
 @import 'tailwindcss/theme.css' layer(tw-theme);
 @import 'tailwindcss/preflight.css' layer(tw-base);
 @import 'tailwindcss/utilities.css' layer(tw-utilities);

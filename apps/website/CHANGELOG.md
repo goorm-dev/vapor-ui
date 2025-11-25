@@ -1,5 +1,15 @@
 # website
 
+## 1.0.0-beta.6
+
+### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+- Updated dependencies [bd523c7]
+    - @vapor-ui/color-generator@1.0.0
+    - @vapor-ui/css-generator@1.0.0
+    - @vapor-ui/core@1.0.0
+
 ## 1.0.0-beta.5
 
 ### Minor Changes
