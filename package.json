@@ -30,6 +30,8 @@
         "release": "turbo run build --filter=./packages/* && changeset publish",
         "start": "turbo run start",
         "storybook": "pnpm --filter storybook",
+        "sync-icons:basic": "TYPE=basic node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs && pnpm format",
+        "sync-icons:symbol": "TYPE=symbol node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs && pnpm format",
         "test": "turbo run test",
         "test:regressions": "turbo run test:regressions",
         "test:update-snapshots": "turbo run test:regressions -- --update-snapshots",
