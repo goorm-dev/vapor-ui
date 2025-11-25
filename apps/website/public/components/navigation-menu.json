@@ -61,12 +61,6 @@
             "description": "Nav.Link의 높이·타이포그래피 크기 등을 제어합니다."
         },
         {
-            "prop": "stretch",
-            "type": ["boolean"],
-            "default": "false",
-            "description": "stretch가 true이면 Nav.List와 Nav.Item이 가용 공간을 가득 채웁니다."
-        },
-        {
             "prop": "disabled",
             "type": ["boolean"],
             "default": "false",
