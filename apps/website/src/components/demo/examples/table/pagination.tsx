@@ -15,6 +15,7 @@ import {
     Card,
     HStack,
     MultiSelect,
+    Pagination,
     Select,
     Table,
     Text,
@@ -30,7 +31,7 @@ const customFilterFn = (row: Row<Data>, columnId: string, filterValue: any) => {
     return filterValue.includes(cellValue);
 };
 
-export default function PaginationExample() {
+export default function Scroll() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
@@ -229,12 +230,25 @@ export default function PaginationExample() {
                         )}
                     </Table.Body>
                 </Table.Root>
-                <Card.Footer display="flex" justifyContent="flex-end">
+                <Card.Footer position="relative" display="flex" justifyContent="center">
+                    <Pagination.Root
+                        totalPages={table.getPageCount()}
+                        page={table.getState().pagination.pageIndex + 1}
+                        onPageChange={(page) => table.setPageIndex(page - 1)}
+                    >
+                        <Pagination.Previous />
+                        <Pagination.Items />
+                        <Pagination.Next />
+                    </Pagination.Root>
+
                     <Select.Root
                         value={table.getState().pagination.pageSize}
                         onValueChange={(value) => table.setPageSize(Number(value))}
                     >
-                        <Select.TriggerPrimitive>
+                        <Select.TriggerPrimitive
+                            position="absolute"
+                            style={{ right: 24, top: '50%', transform: 'translateY(-50%)' }}
+                        >
                             <Select.ValuePrimitive>
                                 {(value) => `${value}개씩 보기`}
                             </Select.ValuePrimitive>
@@ -263,6 +277,16 @@ type Data = {
 };
 
 const datas: Data[] = [
+    { name: 'Olivia Park', status: 'active', role: 'designer', 'last-active': '2 hours ago' },
+    { name: 'Ethan Kim', status: 'active', role: 'developer', 'last-active': '3 days ago' },
+    { name: 'Mia Choi', status: 'inactive', role: 'developer', 'last-active': '10 minutes ago' },
+    { name: 'Noah Lee', status: 'active', role: 'designer', 'last-active': '1 day ago' },
+    { name: 'Ava Jung', status: 'active', role: 'developer', 'last-active': '5 days ago' },
+    { name: 'Liam Han', status: 'inactive', role: 'developer', 'last-active': '5 days ago' },
+    { name: 'Emma Seo', status: 'active', role: 'designer', 'last-active': '7 days ago' },
+    { name: 'Mason Yoo', status: 'active', role: 'designer', 'last-active': '30 minutes ago' },
+    { name: 'Sophia Lim', status: 'inactive', role: 'designer', 'last-active': '4 hours ago' },
+    { name: 'Lucas Park', status: 'active', role: 'developer', 'last-active': '1 hour ago' },
     { name: 'Olivia Park', status: 'active', role: 'designer', 'last-active': '2 hours ago' },
     { name: 'Ethan Kim', status: 'active', role: 'developer', 'last-active': '3 days ago' },
     { name: 'Mia Choi', status: 'inactive', role: 'developer', 'last-active': '10 minutes ago' },
