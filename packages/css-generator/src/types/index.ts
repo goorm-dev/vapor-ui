@@ -1,8 +1,14 @@
-import type { SemanticMappingConfig } from '@vapor-ui/color-generator';
+import type { BackgroundColor, KeyColor } from '@vapor-ui/color-generator';
 
-import type { RadiusKey } from '../generators/radius';
-
-export type ColorThemeConfig = SemanticMappingConfig;
+export interface ColorThemeConfig {
+    primary: KeyColor;
+    background: BackgroundColor;
+    /**
+     * 시스템 기본 키 컬러 (11개)
+     * 생략 시 DEFAULT_KEY_COLORS가 사용됩니다.
+     */
+    keyColors?: Record<string, string>;
+}
 
 export interface CompleteCSSConfig {
     colors: ColorThemeConfig;
@@ -10,15 +16,11 @@ export interface CompleteCSSConfig {
     radius: RadiusKey;
 }
 
-export interface ThemeClassNames {
-    light: string;
-    dark: string;
-}
-
 export interface CSSGeneratorOptions {
-    classNames?: ThemeClassNames;
     prefix?: string;
     format?: 'compact' | 'readable';
 }
+
+export type RadiusKey = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 export type ThemeVariant = 'light' | 'dark';

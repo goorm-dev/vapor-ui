@@ -11,7 +11,7 @@ const languages = {
 
 const renderRestValue = (value: string[]) => {
     if (!value.length) {
-        return <MultiSelect.Placeholder>언어 선택</MultiSelect.Placeholder>;
+        return <MultiSelect.PlaceholderPrimitive>언어 선택</MultiSelect.PlaceholderPrimitive>;
     }
 
     const displayValues = value.slice(0, 2);
@@ -25,7 +25,7 @@ const renderRestValue = (value: string[]) => {
                 </Badge>
             ))}
             {remainingCount > 0 && (
-                <Badge size="sm" color="hint">
+                <Badge size="sm" colorPalette="hint">
                     +{remainingCount} more
                 </Badge>
             )}
@@ -35,7 +35,7 @@ const renderRestValue = (value: string[]) => {
 
 const renderStringValue = (value: string[]) => {
     if (!value.length) {
-        return <MultiSelect.Placeholder>언어 선택</MultiSelect.Placeholder>;
+        return <MultiSelect.PlaceholderPrimitive>언어 선택</MultiSelect.PlaceholderPrimitive>;
     }
 
     return value.map((v) => languages[v as keyof typeof languages]).join(', ');
@@ -48,17 +48,16 @@ export default function MultiSelectCustomValue() {
                 <Text typography="body2">커스텀 값 표시 (최대 2개 + 더보기)</Text>
                 <MultiSelect.Root items={languages} placeholder="언어 선택">
                     <MultiSelect.Trigger>
-                        <MultiSelect.Value>{renderRestValue}</MultiSelect.Value>
-                        <MultiSelect.TriggerIcon />
+                        <MultiSelect.ValuePrimitive>{renderRestValue}</MultiSelect.ValuePrimitive>
+                        <MultiSelect.TriggerIconPrimitive />
                     </MultiSelect.Trigger>
-                    <MultiSelect.Content>
+                    <MultiSelect.Popup>
                         {Object.entries(languages).map(([value, label]) => (
                             <MultiSelect.Item key={value} value={value}>
                                 {label}
-                                <MultiSelect.ItemIndicator />
                             </MultiSelect.Item>
                         ))}
-                    </MultiSelect.Content>
+                    </MultiSelect.Popup>
                 </MultiSelect.Root>
             </VStack>
 
@@ -66,17 +65,16 @@ export default function MultiSelectCustomValue() {
                 <Text typography="body2">문자열 형태 표시</Text>
                 <MultiSelect.Root items={languages} placeholder="언어 선택">
                     <MultiSelect.Trigger>
-                        <MultiSelect.Value>{renderStringValue}</MultiSelect.Value>
-                        <MultiSelect.TriggerIcon />
+                        <MultiSelect.ValuePrimitive>{renderStringValue}</MultiSelect.ValuePrimitive>
+                        <MultiSelect.TriggerIconPrimitive />
                     </MultiSelect.Trigger>
-                    <MultiSelect.Content>
+                    <MultiSelect.Popup>
                         {Object.entries(languages).map(([value, label]) => (
                             <MultiSelect.Item key={value} value={value}>
                                 {label}
-                                <MultiSelect.ItemIndicator />
                             </MultiSelect.Item>
                         ))}
-                    </MultiSelect.Content>
+                    </MultiSelect.Popup>
                 </MultiSelect.Root>
             </VStack>
         </Grid.Root>

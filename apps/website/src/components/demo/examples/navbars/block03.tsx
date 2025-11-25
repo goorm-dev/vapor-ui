@@ -39,7 +39,7 @@ export default function Block3() {
                     <Avatar.Root shape="circle" alt="bell" render={<button />}>
                         <BellOnIcon />
                     </Avatar.Root>
-                    <Avatar.Simple shape="circle" alt="goorm" />
+                    <Avatar.Root shape="circle" alt="goorm" />
 
                     <Sheet.Root>
                         <Sheet.Trigger
@@ -47,110 +47,96 @@ export default function Block3() {
                                 <IconButton
                                     aria-label="Open Menu"
                                     variant="ghost"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     className="navbar-mobile"
                                 />
                             }
                         >
                             <MenuOutlineIcon />
                         </Sheet.Trigger>
-                        <Sheet.Portal>
-                            <Sheet.Overlay />
-                            <Sheet.Positioner side="top">
-                                <Sheet.Popup>
-                                    <Sheet.Header>
-                                        <HStack
-                                            gap="$200"
-                                            justifyContent="space-between"
-                                            width="100%"
+
+                        <Sheet.Popup
+                            positionerElement={
+                                <Sheet.PositionerPrimitive side="top"></Sheet.PositionerPrimitive>
+                            }
+                        >
+                            <Sheet.Header>
+                                <HStack gap="$200" justifyContent="space-between" width="100%">
+                                    <LogoSvg className="logo" />
+
+                                    <HStack gap="$100">
+                                        <Avatar.Root shape="circle" alt="bell" render={<button />}>
+                                            <BellOnIcon />
+                                        </Avatar.Root>
+                                        <Avatar.Root shape="circle" alt="goorm" />
+                                        <Sheet.Close
+                                            render={
+                                                <IconButton
+                                                    aria-label="Close Sheet"
+                                                    variant="ghost"
+                                                    colorPalette="secondary"
+                                                />
+                                            }
                                         >
-                                            <LogoSvg className="logo" />
+                                            <CloseOutlineIcon />
+                                        </Sheet.Close>
+                                    </HStack>
+                                </HStack>
+                            </Sheet.Header>
 
-                                            <HStack gap="$100">
-                                                <Avatar.Root
-                                                    shape="circle"
-                                                    alt="bell"
-                                                    render={<button />}
+                            <Sheet.Body>
+                                <NavigationMenu.Root
+                                    aria-label="Main"
+                                    direction="vertical"
+                                    className="vertical-navigation-menu"
+                                >
+                                    <NavigationMenu.List>
+                                        <NavigationMenu.Item>
+                                            <Collapsible.Root>
+                                                <Collapsible.Trigger
+                                                    className={'collapsible-trigger'}
+                                                    render={<NavigationMenu.Link />}
                                                 >
-                                                    <BellOnIcon />
-                                                </Avatar.Root>
-                                                <Avatar.Simple shape="circle" alt="goorm" />
-                                                <Sheet.Close
-                                                    render={
-                                                        <IconButton
-                                                            aria-label="Close Sheet"
-                                                            variant="ghost"
-                                                            color="secondary"
-                                                        />
-                                                    }
-                                                >
-                                                    <CloseOutlineIcon />
-                                                </Sheet.Close>
-                                            </HStack>
-                                        </HStack>
-                                    </Sheet.Header>
+                                                    Features
+                                                    <ChevronDownOutlineIcon />
+                                                </Collapsible.Trigger>
 
-                                    <Sheet.Body>
-                                        <NavigationMenu.Root
-                                            aria-label="Main"
-                                            direction="vertical"
-                                            className="vertical-navigation-menu"
-                                        >
-                                            <NavigationMenu.List>
-                                                <NavigationMenu.Item>
-                                                    <Collapsible.Root>
-                                                        <Collapsible.Trigger
-                                                            className={'collapsible-trigger'}
-                                                            render={<NavigationMenu.Link />}
-                                                        >
-                                                            Features
-                                                            <ChevronDownOutlineIcon />
-                                                        </Collapsible.Trigger>
-
-                                                        <Collapsible.Panel>
-                                                            <NavigationMenu.List>
-                                                                <NavigationMenu.Item>
-                                                                    <NavigationMenu.Link
-                                                                        href="#"
-                                                                        className="nested-link-item"
-                                                                    >
-                                                                        Container
-                                                                    </NavigationMenu.Link>
-                                                                </NavigationMenu.Item>
-                                                                <NavigationMenu.Item>
-                                                                    <NavigationMenu.Link
-                                                                        href="#"
-                                                                        className="nested-link-item"
-                                                                    >
-                                                                        SBOM
-                                                                    </NavigationMenu.Link>
-                                                                </NavigationMenu.Item>
-                                                            </NavigationMenu.List>
-                                                        </Collapsible.Panel>
-                                                    </Collapsible.Root>
-                                                </NavigationMenu.Item>
-                                                <NavigationMenu.Item>
-                                                    <NavigationMenu.Link
-                                                        className="link-item"
-                                                        href="#"
-                                                    >
-                                                        Pricing
-                                                    </NavigationMenu.Link>
-                                                </NavigationMenu.Item>
-                                                <NavigationMenu.Item>
-                                                    <NavigationMenu.Link
-                                                        className="link-item"
-                                                        href="#"
-                                                    >
-                                                        Templates
-                                                    </NavigationMenu.Link>
-                                                </NavigationMenu.Item>
-                                            </NavigationMenu.List>
-                                        </NavigationMenu.Root>
-                                    </Sheet.Body>
-                                </Sheet.Popup>
-                            </Sheet.Positioner>
-                        </Sheet.Portal>
+                                                <Collapsible.Panel>
+                                                    <NavigationMenu.List>
+                                                        <NavigationMenu.Item>
+                                                            <NavigationMenu.Link
+                                                                href="#"
+                                                                className="nested-link-item"
+                                                            >
+                                                                Container
+                                                            </NavigationMenu.Link>
+                                                        </NavigationMenu.Item>
+                                                        <NavigationMenu.Item>
+                                                            <NavigationMenu.Link
+                                                                href="#"
+                                                                className="nested-link-item"
+                                                            >
+                                                                SBOM
+                                                            </NavigationMenu.Link>
+                                                        </NavigationMenu.Item>
+                                                    </NavigationMenu.List>
+                                                </Collapsible.Panel>
+                                            </Collapsible.Root>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link className="link-item" href="#">
+                                                Pricing
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                        <NavigationMenu.Item>
+                                            <NavigationMenu.Link className="link-item" href="#">
+                                                Templates
+                                            </NavigationMenu.Link>
+                                        </NavigationMenu.Item>
+                                    </NavigationMenu.List>
+                                </NavigationMenu.Root>
+                            </Sheet.Body>
+                        </Sheet.Popup>
                     </Sheet.Root>
                 </HStack>
             </HStack>

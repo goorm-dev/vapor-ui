@@ -1,7 +1,7 @@
 {
     "name": "figma-plugin",
     "private": true,
-    "version": "0.0.0",
+    "version": "1.0.0-beta.6",
     "type": "module",
     "scripts": {
         "dev": "vite --config vite.config.ui.ts",
@@ -19,9 +19,10 @@
     },
     "dependencies": {
         "@vapor-ui/color-generator": "workspace:*",
-        "@vapor-ui/css-generator": "workspace:*",
         "@vapor-ui/core": "workspace:*",
+        "@vapor-ui/css-generator": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
+        "culori": "^4.0.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
     },
@@ -30,6 +31,7 @@
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@tailwindcss/vite": "^4.1.12",
+        "@types/culori": "^4.0.0",
         "@types/react": "^18.3.23",
         "@types/react-dom": "^18.3.7",
         "@vitejs/plugin-react": "^5.0.0",

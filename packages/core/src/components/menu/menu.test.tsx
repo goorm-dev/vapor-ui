@@ -10,13 +10,13 @@ const MenuTest = (props: Omit<Menu.Root.Props, 'children'>) => {
     return (
         <Menu.Root {...props} modal={false}>
             <Menu.Trigger>Open Menu</Menu.Trigger>
-            <Menu.Content>
+            <Menu.Popup>
                 <Menu.Group>
                     <Menu.Item>item1</Menu.Item>
                     <Menu.Item>item2</Menu.Item>
                     <Menu.Item>item3</Menu.Item>
                 </Menu.Group>
-            </Menu.Content>
+            </Menu.Popup>
         </Menu.Root>
     );
 };
@@ -127,11 +127,11 @@ describe('<Menu.Root />', () => {
                 <Menu.Root>
                     <Menu.Trigger>Open Menu</Menu.Trigger>
 
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.Item>1</Menu.Item>
                         <Menu.Item disabled>2</Menu.Item>
                         <Menu.Item>3</Menu.Item>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const trigger = rendered.getByRole('button', { name: 'Open Menu' });
@@ -166,14 +166,14 @@ describe('<Menu.Root />', () => {
         it('should change the highlighted item when typed character matches', async () => {
             const rendered = render(
                 <Menu.Root open>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.Item>Aa</Menu.Item>
                         <Menu.Item>Ba</Menu.Item>
                         <Menu.Item>Bb</Menu.Item>
                         <Menu.Item>Ca</Menu.Item>
                         <Menu.Item>Cb</Menu.Item>
                         <Menu.Item>Cd</Menu.Item>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
 
@@ -211,11 +211,11 @@ describe('<Menu.Root />', () => {
             const handleClick = vi.fn();
             const rendered = render(
                 <Menu.Root open>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.Item onClick={handleClick}>Item One</Menu.Item>
                         <Menu.Item onClick={handleClick}>Item Two</Menu.Item>
                         <Menu.Item onClick={handleClick}>Item Three</Menu.Item>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
 
@@ -264,7 +264,9 @@ describe('<Menu.Root />', () => {
 
             const items = rendered.getAllByRole('menuitem');
             const lastItem = items[items.length - 1];
-            expect(lastItem).toHaveFocus();
+            await waitFor(() => {
+                expect(lastItem).toHaveFocus();
+            });
             expect(lastItem).toHaveAttribute('data-highlighted');
         });
 
@@ -287,13 +289,13 @@ describe('<Menu.Root />', () => {
             const rendered = render(
                 <Menu.Root>
                     <Menu.Trigger>Open Menu</Menu.Trigger>
-                    <Menu.Portal keepMounted>
-                        <Menu.Content>
+                    <Menu.PortalPrimitive keepMounted>
+                        <Menu.Popup>
                             <Menu.Item>A a</Menu.Item>
                             <Menu.Item>B a</Menu.Item>
                             <Menu.Item>B b</Menu.Item>
-                        </Menu.Content>
-                    </Menu.Portal>
+                        </Menu.Popup>
+                    </Menu.PortalPrimitive>
                 </Menu.Root>,
             );
             const trigger = rendered.getByRole('button', { name: 'Open Menu' });
@@ -310,14 +312,14 @@ describe('<Menu.Root />', () => {
     describe('<Menu.Group />', () => {
         const Test = ({ id }: { id?: string }) => (
             <Menu.Root defaultOpen>
-                <Menu.Content>
+                <Menu.Popup>
                     <Menu.Group>
                         <Menu.GroupLabel id={id || undefined}>Group Label</Menu.GroupLabel>
                         <Menu.Item>Item 1</Menu.Item>
                         <Menu.Item>Item 2</Menu.Item>
                     </Menu.Group>
                     <Menu.Separator />
-                </Menu.Content>
+                </Menu.Popup>
             </Menu.Root>
         );
 
@@ -360,18 +362,18 @@ describe('<Menu.SubmenuRoot />', () => {
                 const rendered = render(
                     <DirectionProvider direction={direction}>
                         <Menu.Root open>
-                            <Menu.Content>
+                            <Menu.Popup>
                                 <Menu.SubmenuRoot>
                                     <Menu.SubmenuTriggerItem>
                                         Submenu Trigger
                                     </Menu.SubmenuTriggerItem>
 
-                                    <Menu.SubmenuContent>
+                                    <Menu.SubmenuPopup>
                                         <Menu.Item>Item 1</Menu.Item>
                                         <Menu.Item>Item 1</Menu.Item>
-                                    </Menu.SubmenuContent>
+                                    </Menu.SubmenuPopup>
                                 </Menu.SubmenuRoot>
-                            </Menu.Content>
+                            </Menu.Popup>
                         </Menu.Root>
                     </DirectionProvider>,
                 );
@@ -384,8 +386,8 @@ describe('<Menu.SubmenuRoot />', () => {
 
                 await userEvent.keyboard(`[${openKey}]`);
 
-                const [_, submenuContent] = rendered.getAllByRole('menu');
-                const submenuItem = submenuContent.querySelector('[role="menuitem"]');
+                const [_, submenuPopup] = rendered.getAllByRole('menu');
+                const submenuItem = submenuPopup.querySelector('[role="menuitem"]');
 
                 expect(submenuItem).toBeInTheDocument();
                 expect(submenuItem).toHaveAttribute('data-highlighted');
@@ -393,7 +395,7 @@ describe('<Menu.SubmenuRoot />', () => {
                 await userEvent.keyboard(`[${closeKey}]`);
 
                 expect(submenuItem).not.toHaveAttribute('data-highlighted');
-                expect(submenuContent).not.toBeInTheDocument();
+                expect(submenuPopup).not.toBeInTheDocument();
                 expect(submenuTrigger).toHaveFocus();
             },
         );
@@ -409,16 +411,16 @@ describe('<Menu.SubmenuRoot />', () => {
             const rendered = render(
                 <DirectionProvider direction={direction}>
                     <Menu.Root defaultOpen>
-                        <Menu.Content>
+                        <Menu.Popup>
                             <Menu.SubmenuRoot defaultOpen>
                                 <Menu.SubmenuTriggerItem>Submenu Trigger</Menu.SubmenuTriggerItem>
 
-                                <Menu.SubmenuContent>
+                                <Menu.SubmenuPopup>
                                     <Menu.Item>Item 1</Menu.Item>
                                     <Menu.Item>Item 2</Menu.Item>
-                                </Menu.SubmenuContent>
+                                </Menu.SubmenuPopup>
                             </Menu.SubmenuRoot>
-                        </Menu.Content>
+                        </Menu.Popup>
                     </Menu.Root>
                 </DirectionProvider>,
             );
@@ -428,12 +430,12 @@ describe('<Menu.SubmenuRoot />', () => {
             act(() => trigger.focus());
             await userEvent.keyboard(`[${openKey}]`);
 
-            const [content, submenuContent] = rendered.getAllByRole('menu');
-            expect(submenuContent).toBeInTheDocument();
+            const [content, submenuPopup] = rendered.getAllByRole('menu');
+            expect(submenuPopup).toBeInTheDocument();
 
             await userEvent.keyboard('[Escape]');
 
-            expect(submenuContent).not.toBeInTheDocument();
+            expect(submenuPopup).not.toBeInTheDocument();
             expect(content).toBeInTheDocument();
             expect(trigger).toHaveFocus();
         });
@@ -443,11 +445,11 @@ describe('<Menu.SubmenuRoot />', () => {
 describe('<Menu.CheckboxItem>', () => {
     const Test = () => (
         <Menu.Root defaultOpen modal={false}>
-            <Menu.Content>
+            <Menu.Popup>
                 <Menu.CheckboxItem>Checkbox Item 1</Menu.CheckboxItem>
                 <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
                 <Menu.CheckboxItem>Checkbox Item 3</Menu.CheckboxItem>
-            </Menu.Content>
+            </Menu.Popup>
         </Menu.Root>
     );
 
@@ -525,11 +527,11 @@ describe('<Menu.CheckboxItem>', () => {
             const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
                             Checkbox Item
                         </Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const checkitem = rendered.getByRole('menuitemcheckbox');
@@ -538,11 +540,11 @@ describe('<Menu.CheckboxItem>', () => {
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(1);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
+            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(2);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
+            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
         });
 
         // it('should keep the state when closed and reopened', async () => {});
@@ -552,10 +554,10 @@ describe('<Menu.CheckboxItem>', () => {
         it('should close the menu when clicked', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem closeOnClick>Checkbox Item 1</Menu.CheckboxItem>
                         <Menu.CheckboxItem closeOnClick>Checkbox Item 2</Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
@@ -575,10 +577,10 @@ describe('<Menu.CheckboxItem>', () => {
                 <Menu.Root defaultOpen>
                     <Menu.Trigger />
 
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem defaultChecked>Checkbox Item 1</Menu.CheckboxItem>
                         <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [check1] = rendered.getAllByRole('menuitemcheckbox');
@@ -599,10 +601,10 @@ describe('<Menu.CheckboxItem>', () => {
                 <Menu.Root defaultOpen>
                     <Menu.Trigger>메뉴 열기</Menu.Trigger>
 
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem disabled>Checkbox Item 1</Menu.CheckboxItem>
                         <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [checkitem] = rendered.getAllByRole('menuitemcheckbox');
@@ -620,10 +622,10 @@ describe('<Menu.CheckboxItem>', () => {
                 <Menu.Root>
                     <Menu.Trigger />
 
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem disabled>Checkbox Item 1</Menu.CheckboxItem>
                         <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
 
@@ -653,10 +655,10 @@ describe('<Menu.CheckboxItem>', () => {
         it('should set the initial checked state', () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem defaultChecked>Checkbox Item 1</Menu.CheckboxItem>
                         <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
@@ -670,10 +672,10 @@ describe('<Menu.CheckboxItem>', () => {
         it('should set the checked state when controlled', () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem checked>Checkbox Item 1</Menu.CheckboxItem>
                         <Menu.CheckboxItem>Checkbox Item 2</Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [check1, check2] = rendered.getAllByRole('menuitemcheckbox');
@@ -688,20 +690,20 @@ describe('<Menu.CheckboxItem>', () => {
             const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
                             Checkbox Item
                         </Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const checkitem = rendered.getByRole('menuitemcheckbox');
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
+            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
 
             await userEvent.click(checkitem);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
+            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
         });
     });
 });
@@ -709,13 +711,13 @@ describe('<Menu.CheckboxItem>', () => {
 describe('<Menu.RadioGroupItem>', () => {
     const Test = () => (
         <Menu.Root defaultOpen>
-            <Menu.Content>
+            <Menu.Popup>
                 <Menu.RadioGroup>
                     <Menu.RadioItem value="item1">Checkbox Item 1</Menu.RadioItem>
                     <Menu.RadioItem value="item2">Checkbox Item 2</Menu.RadioItem>
                     <Menu.RadioItem value="item3">Checkbox Item 3</Menu.RadioItem>
                 </Menu.RadioGroup>
-            </Menu.Content>
+            </Menu.Popup>
         </Menu.Root>
     );
 
@@ -796,11 +798,11 @@ describe('<Menu.RadioGroupItem>', () => {
             const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.CheckboxItem onCheckedChange={handleCheckedChange}>
                             Checkbox Item
                         </Menu.CheckboxItem>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const checkitem = rendered.getByRole('menuitemcheckbox');
@@ -809,11 +811,11 @@ describe('<Menu.RadioGroupItem>', () => {
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(1);
-            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Event));
+            expect(handleCheckedChange).toHaveBeenCalledWith(true, expect.any(Object));
 
             await userEvent.click(checkitem);
             expect(handleCheckedChange).toHaveBeenCalledTimes(2);
-            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Event));
+            expect(handleCheckedChange).toHaveBeenCalledWith(false, expect.any(Object));
         });
     });
 
@@ -821,7 +823,7 @@ describe('<Menu.RadioGroupItem>', () => {
         it('should close the menu when clicked', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.RadioGroup>
                             <Menu.RadioItem value="item1" closeOnClick>
                                 Radio Item 1
@@ -830,7 +832,7 @@ describe('<Menu.RadioGroupItem>', () => {
                                 Radio Item 2
                             </Menu.RadioItem>
                         </Menu.RadioGroup>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
@@ -850,12 +852,12 @@ describe('<Menu.RadioGroupItem>', () => {
                 <Menu.Root defaultOpen>
                     <Menu.Trigger />
 
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.RadioGroup defaultValue="item1">
                             <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
                             <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
                         </Menu.RadioGroup>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [radio1] = rendered.getAllByRole('menuitemradio');
@@ -876,14 +878,14 @@ describe('<Menu.RadioGroupItem>', () => {
                 <Menu.Root defaultOpen>
                     <Menu.Trigger>메뉴 열기</Menu.Trigger>
 
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.RadioGroup>
                             <Menu.RadioItem disabled value="item1">
                                 Radio Item 1
                             </Menu.RadioItem>
                             <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
                         </Menu.RadioGroup>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [checkitem] = rendered.getAllByRole('menuitemradio');
@@ -901,14 +903,14 @@ describe('<Menu.RadioGroupItem>', () => {
                 <Menu.Root>
                     <Menu.Trigger />
 
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.RadioGroup>
                             <Menu.RadioItem disabled value="item1">
                                 Radio Item 1
                             </Menu.RadioItem>
                             <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
                         </Menu.RadioGroup>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
 
@@ -944,12 +946,12 @@ describe('<Menu.RadioGroupItem>', () => {
         it('should set the initial value state', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.RadioGroup defaultValue="item1">
                             <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
                             <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
                         </Menu.RadioGroup>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
@@ -968,12 +970,12 @@ describe('<Menu.RadioGroupItem>', () => {
         it('should set the value state when controlled', async () => {
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.RadioGroup value="item1">
                             <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
                             <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
                         </Menu.RadioGroup>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
@@ -993,21 +995,21 @@ describe('<Menu.RadioGroupItem>', () => {
             const handleCheckedChange = vi.fn();
             const rendered = render(
                 <Menu.Root defaultOpen>
-                    <Menu.Content>
+                    <Menu.Popup>
                         <Menu.RadioGroup onValueChange={handleCheckedChange}>
                             <Menu.RadioItem value="item1">Radio Item 1</Menu.RadioItem>
                             <Menu.RadioItem value="item2">Radio Item 2</Menu.RadioItem>
                         </Menu.RadioGroup>
-                    </Menu.Content>
+                    </Menu.Popup>
                 </Menu.Root>,
             );
             const [radio1, radio2] = rendered.getAllByRole('menuitemradio');
 
             await userEvent.click(radio1);
-            expect(handleCheckedChange).toHaveBeenCalledWith('item1', expect.any(Event));
+            expect(handleCheckedChange).toHaveBeenCalledWith('item1', expect.any(Object));
 
             await userEvent.click(radio2);
-            expect(handleCheckedChange).toHaveBeenCalledWith('item2', expect.any(Event));
+            expect(handleCheckedChange).toHaveBeenCalledWith('item2', expect.any(Object));
         });
     });
 });

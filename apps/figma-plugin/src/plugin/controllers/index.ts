@@ -1,2 +1,1 @@
-export { primitiveController } from './primitive-controller';
-export { brandController } from './brand-controller';
+export { unifiedController } from './unified-controller';
