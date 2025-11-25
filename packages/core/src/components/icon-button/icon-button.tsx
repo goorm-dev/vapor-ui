@@ -33,7 +33,6 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
             aria-label={ariaLabel}
             className={clsx(styles.root(variantProps), className)}
             {...otherProps}
-            stretch={false}
         >
             <IconElement aria-hidden className={styles.icon({ size })} />
         </Button>
@@ -42,7 +41,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
 IconButton.displayName = 'IconButton';
 
 export namespace IconButton {
-    type IconButtonPrimitiveProps = Omit<VComponentProps<typeof Button>, 'stretch'>;
+    type IconButtonPrimitiveProps = VComponentProps<typeof Button>;
 
     export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {
         'aria-label': string;
