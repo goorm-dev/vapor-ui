@@ -145,7 +145,7 @@ function generateDarkModeSemanticTokens(
     const backgroundCanvas100 = backgroundCanvas.name;
     const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || backgroundCanvas.name;
     const backgroundOverlay100 = canvasColorPalette.chips['100']?.name || backgroundCanvas.name;
-    const borderNormal = canvasColorPalette.chips['100']?.name || backgroundCanvas.name;
+    const borderNormal = canvasColorPalette.chips['300']?.name || backgroundCanvas.name;
 
     const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
     const lightness = extractOklchLightness(primary200Chip?.oklch || lowestDeltaEChip.oklch);
