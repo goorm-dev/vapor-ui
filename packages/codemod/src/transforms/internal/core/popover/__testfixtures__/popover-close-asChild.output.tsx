@@ -4,11 +4,9 @@ export default function App() {
     return (
         <Popover.Root>
             <Popover.Trigger>Open</Popover.Trigger>
-            <Popover.Portal>
-                <Popover.Content>
-                    <Popover.Close render={<button>Close</button>} />
-                </Popover.Content>
-            </Popover.Portal>
+            <Popover.Popup>
+                <Popover.Close render={<button>Close</button>} />
+            </Popover.Popup>
         </Popover.Root>
     );
 }

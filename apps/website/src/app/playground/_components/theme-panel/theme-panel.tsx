@@ -71,12 +71,12 @@ const ThemePanelContent = () => {
     };
 
     return (
-        <Card.Root>
+        <Card.Root className="bg-v-overlay-100">
             <Card.Header className="flex justify-between items-center border-b-0 flex-shrink-0">
                 <Popover.Title render={<Text typography="heading5">Theme Setting</Text>} />
 
                 <div className="flex items-center gap-[var(--vapor-size-space-050)]">
-                    <Badge color="hint">V</Badge>
+                    <Badge colorPalette="hint">V</Badge>
                     <Text typography="subtitle2" foreground="hint-100">
                         로 열기/닫기
                     </Text>
@@ -125,7 +125,7 @@ const ThemePanel = () => {
     }, []);
 
     return (
-        <>
+        <CustomThemeProvider>
             <div
                 id="theme-panel-anchor"
                 ref={anchorRef}
@@ -171,14 +171,12 @@ const ThemePanel = () => {
                                 data-[starting-style]:translate-x-full 
                                 data-[ending-style]:translate-x-full`}
                         >
-                            <CustomThemeProvider>
-                                <ThemePanelContent />
-                            </CustomThemeProvider>
+                            <ThemePanelContent />
                         </Popover.Popup>
                     </Popover.Positioner>
                 </Popover.Portal>
             </Popover.Root>
-        </>
+        </CustomThemeProvider>
     );
 };
 

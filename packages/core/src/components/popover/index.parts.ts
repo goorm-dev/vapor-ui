@@ -1,11 +1,13 @@
 export {
     PopoverRoot as Root,
     PopoverTrigger as Trigger,
-    PopoverPortal as Portal,
-    PopoverPositioner as Positioner,
     PopoverPopup as Popup,
-    PopoverContent as Content,
     PopoverTitle as Title,
     PopoverDescription as Description,
     PopoverClose as Close,
+
+    // primitives
+    PopoverPortalPrimitive as PortalPrimitive,
+    PopoverPositionerPrimitive as PositionerPrimitive,
+    PopoverPopupPrimitive as PopupPrimitive,
 } from './popover';

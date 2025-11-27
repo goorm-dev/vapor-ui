@@ -4,10 +4,10 @@ site_name: 'Checkbox - Vapor Core'
 description: 'Checkbox는 여러 항목 중 복수 선택을 가능하게 하는 입력 컴포넌트입니다.'
 ---
 
-<Demo name="default-checkbox">
+<Demo name="checkbox/default-checkbox">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/default-checkbox.tsx",
+    "file": "./src/components/demo/examples/checkbox/default-checkbox.tsx",
     "codeblock": true
 }
 ```
@@ -21,10 +21,10 @@ description: 'Checkbox는 여러 항목 중 복수 선택을 가능하게 하는
 
 Checkbox 사이즈는 md, lg 로 제공합니다.
 
-<Demo name="checkbox-size">
+<Demo name="checkbox/checkbox-size">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/checkbox-size.tsx",
+    "file": "./src/components/demo/examples/checkbox/checkbox-size.tsx",
     "codeblock": true
 }
 ```
@@ -34,10 +34,10 @@ Checkbox 사이즈는 md, lg 로 제공합니다.
 
 비활성화된 상태의 Checkbox입니다. 사용자가 상호작용할 수 없습니다.
 
-<Demo name="checkbox-disabled">
+<Demo name="checkbox/checkbox-disabled">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/checkbox-disabled.tsx",
+    "file": "./src/components/demo/examples/checkbox/checkbox-disabled.tsx",
     "codeblock": true
 }
 ```
@@ -47,10 +47,10 @@ Checkbox 사이즈는 md, lg 로 제공합니다.
 
 유효하지 않은 상태의 Checkbox입니다. 폼 검증 실패 시 사용됩니다.
 
-<Demo name="checkbox-invalid">
+<Demo name="checkbox/checkbox-invalid">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/checkbox-invalid.tsx",
+    "file": "./src/components/demo/examples/checkbox/checkbox-invalid.tsx",
     "codeblock": true
 }
 ```
@@ -60,10 +60,10 @@ Checkbox 사이즈는 md, lg 로 제공합니다.
 
 부분적으로 선택된 상태의 Checkbox입니다. 하위 항목 중 일부만 선택되었을 때 사용됩니다.
 
-<Demo name="checkbox-indeterminate">
+<Demo name="checkbox/checkbox-indeterminate">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/checkbox-indeterminate.tsx",
+    "file": "./src/components/demo/examples/checkbox/checkbox-indeterminate.tsx",
     "codeblock": true
 }
 ```
@@ -73,10 +73,10 @@ Checkbox 사이즈는 md, lg 로 제공합니다.
 
 사용자는 체크박스 상태를 변경할 수 없지만, 현재 상태를 확인할 수 있도록 허용하는 상태입니다.
 
-<Demo name="checkbox-readonly">
+<Demo name="checkbox/checkbox-readonly">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/checkbox-readonly.tsx",
+    "file": "./src/components/demo/examples/checkbox/checkbox-readonly.tsx",
     "codeblock": true
 }
 ```
@@ -92,8 +92,8 @@ Checkbox의 메인 컨테이너 컴포넌트입니다. Base UI의 Checkbox를 �
 
 <ComponentPropsTable file="checkbox" section="rootProps" />
 
-### Checkbox.Indicator
+### Checkbox.IndicatorPrimitive
 
 체크박스의 체크 상태를 시각적으로 표시하는 인디케이터 컴포넌트입니다. 체크됨/미체크됨/불확정 상태에 따라 적절한 아이콘을 표시합니다. Root 컴포넌트에서 자동으로 포함되므로 대부분의 경우 직접 사용할 필요가 없습니다. 이 컴포넌트는 `div` 요소를 기반으로 합니다.
 
-<ComponentPropsTable file="checkbox" section="indicatorProps" />
+<ComponentPropsTable file="checkbox" section="indicatorPrimitiveProps" />

@@ -1,14 +1,11 @@
-import type {
-    API,
-    FileInfo,
-    ImportDefaultSpecifier,
-    ImportNamespaceSpecifier,
-    ImportSpecifier,
-    JSXElement,
-    Transform,
-} from 'jscodeshift';
+import type { API, FileInfo, ImportSpecifier, JSXElement, Transform } from 'jscodeshift';
 
-import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
+import {
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+} from '~/utils/import-transform';
 
 const SOURCE_PACKAGE = '@goorm-dev/vapor-core';
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -21,19 +18,18 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
     let needsFieldImport = false;
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
+    const specifiersToMove = allSpecifiers.filter(
+        (spec) => spec.imported.name === OLD_COMPONENT_NAME,
+    );
+
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    // 1. Import migration
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+    const transformedSpecifiers: ImportSpecifier[] = [
+        j.importSpecifier(j.identifier(NEW_COMPONENT_NAME)),
+    ];
     // 2. Transform Switch JSX elements (Compound pattern -> Switch.Root + Field wrapped)
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
@@ -82,14 +78,15 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
             if (indicatorElement) {
                 // Get props from root and indicator
                 const rootProps = element.openingElement.attributes || [];
+
                 const indicatorProps = indicatorElement.openingElement.attributes || [];
 
-                // Create Switch.Thumb element
+                // Create Switch.ThumbPrimitive element
                 const thumbElement = j.jsxElement(
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier(NEW_COMPONENT_NAME),
-                            j.jsxIdentifier('Thumb'),
+                            j.jsxIdentifier('ThumbPrimitive'),
                         ),
                         indicatorProps,
                         true,
@@ -169,26 +166,36 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
         }
     });
 
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
+
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
     // 3. Add Field import if needed
     if (needsFieldImport) {
-        const targetImports = root.find(j.ImportDeclaration, {
+        const existingTargetImport = root.find(j.ImportDeclaration, {
             source: { value: TARGET_PACKAGE },
         });
 
-        if (targetImports.length > 0) {
-            const firstImport = targetImports.at(0).get().value;
-            const hasFieldImport = firstImport.specifiers?.some(
-                (spec: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) =>
+        if (existingTargetImport.length > 0) {
+            const importDecl = existingTargetImport.at(0).get().value;
+            const hasField = importDecl.specifiers?.some(
+                (spec: ImportSpecifier) =>
                     spec.type === 'ImportSpecifier' && spec.imported.name === 'Field',
             );
 
-            if (!hasFieldImport) {
-                firstImport.specifiers?.push(j.importSpecifier(j.identifier('Field')));
+            if (!hasField) {
+                importDecl.specifiers?.push(j.importSpecifier(j.identifier('Field')));
             }
         }
-
-        // Merge imports again after adding Field
     }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
 
     return root.toSource();
 };

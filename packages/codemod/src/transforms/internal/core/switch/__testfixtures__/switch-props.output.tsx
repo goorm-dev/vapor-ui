@@ -4,13 +4,13 @@ export function PropsExample() {
     return (
         <div>
             <Switch.Root size="sm" disabled>
-                <Switch.Thumb />
+                <Switch.ThumbPrimitive />
             </Switch.Root>
             <Field.Root>
                 <Field.Label>
                     Enable feature
                     <Switch.Root size="lg" defaultChecked>
-                        <Switch.Thumb />
+                        <Switch.ThumbPrimitive />
                     </Switch.Root>
                 </Field.Label>
             </Field.Root>

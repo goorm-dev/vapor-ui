@@ -46,3 +46,6 @@ storybook-static
 
 # docs
 /.source/
+
+# AI Outputs
+.claude

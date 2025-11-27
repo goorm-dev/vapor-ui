@@ -12,7 +12,7 @@ export default defineConfig([
         minify: false,
         external: ['jscodeshift'],
     },
-    // Library build - preserve folder structure in dist/
+    // Library build - preserve folder structure in dist/src/
     {
         entry: ['src/transforms/**/*.ts', '!src/**/*.test.ts', '!src/**/*.spec.ts'],
         format: ['esm'],

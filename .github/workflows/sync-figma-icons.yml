@@ -27,7 +27,7 @@ jobs:
                   TYPE: basic
               run: |
                   echo "🚀 Syncing basic icons"
-                  TYPE=basic node ./scripts/syncFigmaIcons.js | tee basic_sync_output.txt
+                  TYPE=basic node --experimental-fetch ./scripts/syncFigmaIcons.mjs | tee basic_sync_output.txt
 
                   # Extract sync results from output
                   NEW_BASIC=$(grep "FIGMA_SYNC_NEW_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
@@ -43,7 +43,7 @@ jobs:
                   TYPE: symbol
               run: |
                   echo "🚀 Syncing symbol icons"
-                  TYPE=symbol node ./scripts/syncFigmaIcons.js | tee symbol_sync_output.txt
+                  TYPE=symbol node --experimental-fetch ./scripts/syncFigmaIcons.mjs | tee symbol_sync_output.txt
 
                   # Extract sync results from output
                   NEW_SYMBOL=$(grep "FIGMA_SYNC_NEW_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")

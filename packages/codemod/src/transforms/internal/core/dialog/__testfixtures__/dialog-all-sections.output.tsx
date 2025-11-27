@@ -4,7 +4,7 @@ import { Dialog } from '@vapor-ui/core';
 export const Component = () => (
     <Dialog.Root size="xl" closeOnClickOverlay={false}>
         <Dialog.Trigger>Open Full Dialog</Dialog.Trigger>
-        <Dialog.Content>
+        <Dialog.Popup>
             <Dialog.Header>
                 <Dialog.Title>Dialog Title</Dialog.Title>
                 <Dialog.Description>This is a dialog description</Dialog.Description>
@@ -17,6 +17,6 @@ export const Component = () => (
                 <Dialog.Close>Cancel</Dialog.Close>
                 <Dialog.Close render={<button className="primary">Confirm</button>} />
             </Dialog.Footer>
-        </Dialog.Content>
+        </Dialog.Popup>
     </Dialog.Root>
 );

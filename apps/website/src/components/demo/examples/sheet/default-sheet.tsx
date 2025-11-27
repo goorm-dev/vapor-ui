@@ -7,7 +7,7 @@ export default function DefaultSheet() {
     return (
         <Sheet.Root>
             <Sheet.Trigger render={<Button variant="outline" />}>Open Sheet</Sheet.Trigger>
-            <Sheet.Content>
+            <Sheet.Popup>
                 <div className="absolute top-4 right-4">
                     <Sheet.Close aria-label="Close sheet" className="flex">
                         <CloseOutlineIcon />
@@ -24,9 +24,9 @@ export default function DefaultSheet() {
                 </Sheet.Body>
                 <Sheet.Footer>
                     <Sheet.Close render={<Button variant="ghost" />}>닫기</Sheet.Close>
-                    <Button color="primary">확인</Button>
+                    <Button colorPalette="primary">확인</Button>
                 </Sheet.Footer>
-            </Sheet.Content>
+            </Sheet.Popup>
         </Sheet.Root>
     );
 }

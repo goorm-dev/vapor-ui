@@ -21,7 +21,7 @@ export const overlay = layerStyle('components', {
     },
 });
 
-export const content = recipe({
+export const popup = recipe({
     base: layerStyle('components', {
         position: 'fixed',
         top: '50%',
@@ -37,7 +37,7 @@ export const content = recipe({
 
         borderRadius: vars.size.borderRadius[300],
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-        backgroundColor: vars.color.background.surface[100], // TODO: Use constant z-index value
+        backgroundColor: vars.color.background.overlay[100], // TODO: Use constant z-index value
 
         selectors: {
             '&[data-starting-style], &[data-ending-style]': {
@@ -104,4 +104,4 @@ export const footer = layerStyle('components', {
     width: '100%',
 });
 
-export type DialogContentVariants = NonNullable<RecipeVariants<typeof content>>;
+export type DialogPopupVariants = NonNullable<RecipeVariants<typeof popup>>;

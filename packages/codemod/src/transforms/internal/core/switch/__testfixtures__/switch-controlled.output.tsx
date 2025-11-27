@@ -10,7 +10,7 @@ export function ControlledExample() {
             <Field.Label>
                 Notifications
                 <Switch.Root size="md" checked={enabled} onCheckedChange={setEnabled}>
-                    <Switch.Thumb />
+                    <Switch.ThumbPrimitive />
                 </Switch.Root>
             </Field.Label>
         </Field.Root>

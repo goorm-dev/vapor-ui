@@ -6,9 +6,7 @@ export default function App() {
             <div>Anchor</div>
             <Popover.Trigger>Open</Popover.Trigger>
 
-            <Popover.Portal>
-                <Popover.Content>Content</Popover.Content>
-            </Popover.Portal>
+            <Popover.Popup>Content</Popover.Popup>
         </Popover.Root>
     );
 }

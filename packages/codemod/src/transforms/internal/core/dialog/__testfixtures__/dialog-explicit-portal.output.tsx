@@ -6,12 +6,12 @@ export const Component = () => (
         <Dialog.Trigger>Open</Dialog.Trigger>
         <Dialog.Portal>
             <Dialog.Overlay />
-            <Dialog.Popup>
+            <Dialog.PopupPrimitive>
                 <Dialog.Header>
                     <Dialog.Title>Title</Dialog.Title>
                 </Dialog.Header>
                 <Dialog.Body>Content</Dialog.Body>
-            </Dialog.Popup>
+            </Dialog.PopupPrimitive>
         </Dialog.Portal>
     </Dialog.Root>
 );

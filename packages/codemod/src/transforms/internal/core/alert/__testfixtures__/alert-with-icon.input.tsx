@@ -1,10 +1,10 @@
 // @ts-nocheck
-import { Alert } from '@goorm-dev/vapor-core';
+import { Alert as MyAlert } from '@goorm-dev/vapor-core';
 import { CheckIcon } from '@vapor-ui/icons';
 
 export const Component = () => (
-    <Alert color="success">
+    <MyAlert color="success">
         <CheckIcon />
         Success operation completed
-    </Alert>
+    </MyAlert>
 );

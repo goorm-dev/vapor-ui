@@ -4,15 +4,9 @@ export default function App() {
     return (
         <Popover.Root>
             <Popover.Trigger>Open</Popover.Trigger>
-            <Popover.Portal>
-                <Popover.Content
-                    positionerProps={{
-                        side: 'bottom',
-                    }}
-                >
-                    Content
-                </Popover.Content>
-            </Popover.Portal>
+            <Popover.Popup positionerElement={<Popover.PositionerPrimitive side="bottom" />}>
+                Content
+            </Popover.Popup>
         </Popover.Root>
     );
 }

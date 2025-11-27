@@ -4,7 +4,7 @@ export function MergeImportsExample() {
     return (
         <div>
             <Switch.Root size="md">
-                <Switch.Thumb />
+                <Switch.ThumbPrimitive />
             </Switch.Root>
             <Button>Submit</Button>
         </div>

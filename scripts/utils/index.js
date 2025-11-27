@@ -1,8 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { promisify } from 'util';
-
-const writeFile = promisify(fs.writeFile);
+import fs from 'node:fs';
+import fsp from 'node:fs/promises';
+import path from 'node:path';
 
 /**
  * Gets the names of all files in a folder and returns an array.
@@ -11,7 +9,7 @@ const getFilesInFolder = (folderPath) => {
     const files = [];
 
     const traverseFolder = (currentPath) => {
-        const entries = fs.readdirSync(currentPath, { withFileTypes: true });
+        const entries = fs.readdir(currentPath, { withFileTypes: true });
         entries.forEach((entry) => {
             const fullPath = path.join(currentPath, entry.name);
 
@@ -32,11 +30,11 @@ const getFilesInFolder = (folderPath) => {
  */
 const getSubfolders = async (parentFolder) => {
     try {
-        const subfolders = await promisify(fs.readdir)(parentFolder);
+        const subfolders = await fsp.readdir(parentFolder);
 
         return subfolders.filter((folder) => {
             const folderPath = path.join(parentFolder, folder);
-            return fs.statSync(folderPath).isDirectory();
+            return fsp.stat(folderPath).isDirectory();
         });
     } catch (error) {
         console.error('Error:', error.message);
@@ -44,8 +42,4 @@ const getSubfolders = async (parentFolder) => {
     }
 };
 
-export {
-    writeFile,
-    getFilesInFolder,
-    getSubfolders,
-};
+export { getFilesInFolder, getSubfolders };

@@ -4,11 +4,9 @@ export default function App() {
     return (
         <Menu.Root modal={false}>
             <Menu.Trigger>Open</Menu.Trigger>
-            <Menu.Portal keepMounted>
-                <Menu.Content>
-                    <Menu.Item>Item</Menu.Item>
-                </Menu.Content>
-            </Menu.Portal>
+            <Menu.Popup portalElement={<Menu.PortalPrimitive keepMounted />}>
+                <Menu.Item>Item</Menu.Item>
+            </Menu.Popup>
         </Menu.Root>
     );
 }

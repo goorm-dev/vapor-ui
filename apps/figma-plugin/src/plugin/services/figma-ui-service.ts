@@ -1,9 +1,8 @@
-import type { ColorPaletteResult, ColorToken, TokenContainer } from '@vapor-ui/color-generator';
+import type { PaletteChip } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
 import { formatFamilyTitle } from '~/plugin/utils/color';
 import { hexToFigmaColor } from '~/plugin/utils/color';
-import { loadDefaultFont } from '~/plugin/utils/figma-font';
 
 // ============================================================================
 // Constants & Types
@@ -45,7 +44,7 @@ interface DependentTokenData {
 }
 
 interface ThemeTokens {
-    [tokenName: string]: ColorToken | string;
+    [tokenName: string]: PaletteChip | string;
 }
 
 interface ThemeData {
@@ -79,33 +78,8 @@ const UI_CONSTANTS: PaletteConfig = {
 } as const;
 
 // ============================================================================
-// Font Loading
+// Font Utilities
 // ============================================================================
-async function loadRequiredFonts(): Promise<void> {
-    const requiredFonts = [
-        { family: 'Inter', style: 'Bold' },
-        { family: 'Inter', style: 'Medium' },
-        { family: 'Inter', style: 'Regular' },
-    ];
-
-    // 기본 폰트 로드 시도 (Pretendard 또는 Inter Regular)
-    try {
-        await loadDefaultFont();
-    } catch (error) {
-        Logger.error('Default font loading failed, continuing with Inter', error);
-    }
-
-    // 필요한 Inter 폰트 스타일들 로드
-    for (const font of requiredFonts) {
-        try {
-            await figma.loadFontAsync(font);
-            Logger.info(`Font loaded: ${font.family} ${font.style}`);
-        } catch (error) {
-            Logger.error(`Failed to load font: ${font.family} ${font.style}`, error);
-        }
-    }
-}
-
 async function setTextSafely(
     textNode: TextNode,
     text: string,
@@ -140,11 +114,6 @@ async function setTextSafely(
 export const figmaUIService = {
     async generatePalette(themeData: ThemeData, sectionTitle: string): Promise<SectionNode> {
         try {
-            Logger.info(`Starting palette generation for: ${sectionTitle}`);
-
-            // 필요한 모든 폰트 스타일 로드
-            await loadRequiredFonts();
-
             // 색상 패밀리별로 그룹화
             const colorFamilies = extractColorFamilies(themeData.tokens);
 
@@ -225,18 +194,16 @@ export const figmaUIService = {
      */
     async generateDependentTokensListOnly(
         dependentTokensByTheme: {
-            light: TokenContainer;
-            dark: TokenContainer;
+            light: ThemeData;
+            dark: ThemeData;
         },
         sectionTitle: string,
-        brandPalette: Pick<ColorPaletteResult, 'light' | 'dark'>,
+        brandPalette: {
+            light: ThemeData;
+            dark: ThemeData;
+        },
     ): Promise<SectionNode[]> {
         try {
-            Logger.info(`Starting dependent tokens list generation for: ${sectionTitle}`);
-
-            // 필요한 모든 폰트 스타일 로드
-            await loadRequiredFonts();
-
             const sections: SectionNode[] = [];
             const themeOrder: ('light' | 'dark')[] = ['light', 'dark'];
 
@@ -343,9 +310,9 @@ function extractColorFamilies(tokens: ThemeTokens): Record<string, ColorData[]> 
     const colorFamilies: Record<string, ColorData[]> = {};
 
     Object.entries(tokens).forEach(([tokenName, tokenData]) => {
-        // primitive token만 처리 (ColorToken 타입)
+        // primitive token만 처리 (PaletteChip 타입)
         if (tokenData && typeof tokenData === 'object' && 'hex' in tokenData) {
-            const colorToken = tokenData as ColorToken;
+            const colorToken = tokenData as PaletteChip;
             const familyName = extractColorFamily(tokenName);
 
             if (!colorFamilies[familyName]) {
@@ -366,8 +333,8 @@ function extractColorFamilies(tokens: ThemeTokens): Record<string, ColorData[]> 
 }
 
 function createDependentTokenList(
-    tokens: Record<string, string | ColorToken>,
-    brandPaletteTheme?: { tokens: Record<string, ColorToken | string> },
+    tokens: Record<string, string | PaletteChip>,
+    brandPaletteTheme?: { tokens: Record<string, PaletteChip | string> },
 ): DependentTokenData[] {
     return Object.entries(tokens).map(([tokenName, dependentValue]) => {
         // dependentValue가 string인지 ColorToken인지 확인
@@ -723,16 +690,28 @@ async function createDependentTokenListItem(tokenData: DependentTokenData): Prom
     valueColumn.layoutSizingVertical = 'HUG';
 
     // Color Swatch (hex 값이 있는 경우에만)
-    if (tokenData.hex) {
+    if (
+        tokenData.hex ||
+        tokenData.dependentValue === 'color-white' ||
+        tokenData.dependentValue === 'color-black'
+    ) {
         const colorSwatch = figma.createFrame();
         colorSwatch.name = 'Dependent Color Swatch';
         colorSwatch.resize(32, 32);
         colorSwatch.cornerRadius = 8;
-        colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor(tokenData.hex) }];
         colorSwatch.strokes = [
             { type: 'SOLID', color: hexToFigmaColor(UI_CONSTANTS.colors.border) },
         ];
         colorSwatch.strokeWeight = 1;
+
+        if (tokenData.hex) {
+            colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor(tokenData.hex) }];
+        } else if (tokenData.dependentValue === 'color-white') {
+            colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor('#FFFFFF') }];
+        } else {
+            colorSwatch.fills = [{ type: 'SOLID', color: hexToFigmaColor('#000000') }];
+        }
+
         valueColumn.appendChild(colorSwatch);
     }
 

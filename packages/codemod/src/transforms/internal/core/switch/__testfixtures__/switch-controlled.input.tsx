@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 
 import { Switch } from '@goorm-dev/vapor-core';

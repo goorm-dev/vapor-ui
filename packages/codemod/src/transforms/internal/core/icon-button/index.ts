@@ -1,13 +1,19 @@
 import type {
     API,
     FileInfo,
+    ImportSpecifier,
     JSXAttribute,
     JSXElement,
     JSXSpreadAttribute,
     Transform,
 } from 'jscodeshift';
 
-import { hasComponentInPackage, transformImportDeclaration } from '~/utils/import-transform';
+import {
+    cleanUpSourcePackage,
+    collectImportSpecifiersToMove,
+    createNewImportDeclaration,
+    mergeIntoExistingImport,
+} from '~/utils/import-transform';
 import { transformAsChildToRender } from '~/utils/jsx-transform';
 
 const TARGET_PACKAGE = '@vapor-ui/core';
@@ -19,30 +25,48 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
 
-    if (!hasComponentInPackage(root, j, OLD_COMPONENT_NAME, SOURCE_PACKAGE)) {
-        return fileInfo.source;
+    const allSpecifiers: ImportSpecifier[] = collectImportSpecifiersToMove(j, root, SOURCE_PACKAGE);
+    const specifiersToMove = allSpecifiers.filter(
+        (spec) => spec.imported.name === OLD_COMPONENT_NAME,
+    );
+
+    if (specifiersToMove.length === 0) {
+        return root.toSource();
     }
 
-    // 1. Import migration: Alert -> Callout
-    transformImportDeclaration({
-        root,
-        j,
-        oldComponentName: OLD_COMPONENT_NAME,
-        newComponentName: NEW_COMPONENT_NAME,
-        sourcePackage: SOURCE_PACKAGE,
-        targetPackage: TARGET_PACKAGE,
-    });
+    const oldIconButtonLocalName =
+        specifiersToMove.find((spec) => spec.imported.name === OLD_COMPONENT_NAME)?.local?.name ||
+        OLD_COMPONENT_NAME;
+
+    const localName = specifiersToMove[0].local?.name || NEW_COMPONENT_NAME;
+    const hasAlias = localName !== NEW_COMPONENT_NAME;
+
+    const transformedSpecifiers: ImportSpecifier[] = hasAlias
+        ? [j.importSpecifier(j.identifier(NEW_COMPONENT_NAME), j.identifier(localName as string))]
+        : [j.importSpecifier(j.identifier(NEW_COMPONENT_NAME))];
 
     root.find(j.JSXElement).forEach((path) => {
         const element = path.value;
 
         if (
             element.openingElement.name.type === 'JSXIdentifier' &&
-            element.openingElement.name.name === 'IconButton'
+            element.openingElement.name.name === oldIconButtonLocalName
         ) {
             transformIconButton(j, element);
         }
     });
+
+    const targetImport = root.find(j.ImportDeclaration, {
+        source: { value: TARGET_PACKAGE },
+    });
+
+    if (targetImport.length > 0) {
+        mergeIntoExistingImport(targetImport, transformedSpecifiers);
+    } else {
+        createNewImportDeclaration(j, root, TARGET_PACKAGE, transformedSpecifiers);
+    }
+
+    cleanUpSourcePackage(j, root, SOURCE_PACKAGE, specifiersToMove);
 
     return root.toSource();
 };
@@ -115,16 +139,20 @@ function transformIconButton(j: API['jscodeshift'], element: JSXElement) {
                 return null;
             }
 
-            // Warn about 'hint' color
-            if (
-                attrName === 'color' &&
-                attr.value &&
-                attr.value.type === 'StringLiteral' &&
-                attr.value.value === 'hint'
-            ) {
-                console.warn(
-                    `[IconButton] 'hint' color is not supported in new version. Consider using 'secondary' instead. Found in ${element.loc?.start.line}`,
-                );
+            if (attrName === 'color') {
+                const newAttr = j.jsxAttribute(j.jsxIdentifier('colorPalette'), attr.value);
+
+                if (
+                    attr.value &&
+                    attr.value.type === 'StringLiteral' &&
+                    attr.value.value === 'hint'
+                ) {
+                    console.warn(
+                        `[IconButton] 'hint' color is not supported in new version. Consider using 'secondary' instead. Found in ${element.loc?.start.line}`,
+                    );
+                }
+
+                return newAttr;
             }
 
             return attr;
