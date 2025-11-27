@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 import { Radio as BaseRadio } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { createSlot } from '~/libs/create-slot';
+import { useSlot } from '~/hooks/use-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -36,7 +36,7 @@ export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, 
 
     const dataAttrs = createDataAttributes({ invalid });
 
-    const IndicatorElement = createSlot(children || <RadioIndicatorPrimitive />);
+    const IndicatorElement = useSlot(children, <RadioIndicatorPrimitive />);
 
     return (
         <BaseRadio.Root

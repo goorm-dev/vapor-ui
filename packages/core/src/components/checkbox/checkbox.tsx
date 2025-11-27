@@ -6,8 +6,8 @@ import { forwardRef } from 'react';
 import { Checkbox as BaseCheckbox } from '@base-ui-components/react/checkbox';
 import clsx from 'clsx';
 
+import { useSlot } from '~/hooks/use-slot';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -40,7 +40,7 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((p
     const { size, invalid, indeterminate } = variantProps;
     const dataAttrs = createDataAttributes({ invalid });
 
-    const IndicatorElement = createSlot(children || <CheckboxIndicatorPrimitive />);
+    const IndicatorElement = useSlot(children, <CheckboxIndicatorPrimitive />);
 
     return (
         <CheckboxProvider value={{ size, indeterminate }}>
