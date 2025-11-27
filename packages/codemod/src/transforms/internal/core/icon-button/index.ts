@@ -42,7 +42,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const hasAlias = localName !== NEW_COMPONENT_NAME;
 
     const transformedSpecifiers: ImportSpecifier[] = hasAlias
-        ? [j.importSpecifier(j.identifier(NEW_COMPONENT_NAME), j.identifier(localName))]
+        ? [j.importSpecifier(j.identifier(NEW_COMPONENT_NAME), j.identifier(localName as string))]
         : [j.importSpecifier(j.identifier(NEW_COMPONENT_NAME))];
 
     root.find(j.JSXElement).forEach((path) => {

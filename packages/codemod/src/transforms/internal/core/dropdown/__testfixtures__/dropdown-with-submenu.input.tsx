@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Dropdown } from '@goorm-dev/vapor-core';
 
 export default function App() {

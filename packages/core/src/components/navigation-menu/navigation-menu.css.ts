@@ -144,7 +144,7 @@ export const popup = layerStyle('components', {
     borderRadius: vars.size.borderRadius[300],
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background.surface[100],
+    backgroundColor: vars.color.background.overlay[100],
 
     transformOrigin: 'var(--transform-origin)',
     transitionProperty: 'opacity, transform, width, height',
@@ -204,7 +204,7 @@ export const viewport = layerStyle('components', {
 
 export const arrow = layerStyle('components', {
     display: 'flex',
-    color: vars.color.background.surface[100],
+    color: vars.color.background.overlay[100],
 
     transition: `left ${durationVar} ${easingVar}`,
 

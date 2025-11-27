@@ -24,7 +24,7 @@ const marginTokens = { ...spaceTokens, ...negativeSpaces };
 const dimensionTokens = vars.size.dimension;
 const radiusTokens = vars.size.borderRadius;
 
-const { foreground, button, border, black, white, logo, ...colors } = vars.color;
+const { foreground, border, black, white, ...colors } = vars.color;
 
 const bgColorTokens = {
     // Background colors
@@ -41,9 +41,9 @@ const bgColorTokens = {
     'hint-200': colors.background.hint[200],
     'contrast-100': colors.background.contrast[100],
     'contrast-200': colors.background.contrast[200],
-    canvas: colors.background.canvas,
-    'surface-100': colors.background.surface[100],
-    'surface-200': colors.background.surface[200],
+    'canvas-100': colors.background.canvas[100],
+    'canvas-200': colors.background.canvas[200],
+    'overlay-100': colors.background.overlay[100],
 
     // Blue colors with prefix
     'blue-050': colors.blue['050'],
@@ -82,7 +82,6 @@ const bgColorTokens = {
     'grape-900': colors.grape['900'],
 
     // Gray colors with prefix
-    'gray-000': colors.gray['000'],
     'gray-050': colors.gray['050'],
     'gray-100': colors.gray['100'],
     'gray-200': colors.gray['200'],
@@ -93,7 +92,6 @@ const bgColorTokens = {
     'gray-700': colors.gray['700'],
     'gray-800': colors.gray['800'],
     'gray-900': colors.gray['900'],
-    'gray-950': colors.gray['950'],
 
     // Green colors with prefix
     'green-050': colors.green['050'],
@@ -201,7 +199,7 @@ const colorTokens = {
     'contrast-200': foreground.contrast[200],
     'normal-100': foreground.normal[100],
     'normal-200': foreground.normal[200],
-    'button-primary': button.foreground.primary,
+    'button-primary': foreground.inverse,
 };
 
 const borderColorTokens = {

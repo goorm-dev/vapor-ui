@@ -10,7 +10,7 @@ export const DEFAULT_KEY_COLORS = {
     violet: '#8662F3',
     blue: '#2A72E5',
     cyan: '#1EBAD2',
-    green: '#04A37E',
+    green: '#058765',
     lime: '#8FD327',
     yellow: '#FFC107',
     orange: '#ED670C',

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, Dropdown } from '@goorm-dev/vapor-core';
 
 export default function App() {

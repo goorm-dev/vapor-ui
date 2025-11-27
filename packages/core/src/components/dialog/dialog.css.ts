@@ -37,7 +37,7 @@ export const popup = recipe({
 
         borderRadius: vars.size.borderRadius[300],
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
-        backgroundColor: vars.color.background.surface[100], // TODO: Use constant z-index value
+        backgroundColor: vars.color.background.overlay[100], // TODO: Use constant z-index value
 
         selectors: {
             '&[data-starting-style], &[data-ending-style]': {

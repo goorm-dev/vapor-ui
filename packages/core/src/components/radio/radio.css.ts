@@ -24,7 +24,7 @@ export const root = recipe({
             border: `${borderWidth} solid ${vars.color.border.normal}`,
             borderRadius: 9999,
 
-            backgroundColor: vars.color.background.canvas,
+            backgroundColor: vars.color.background.canvas[100],
             cursor: 'pointer',
 
             padding: vars.size.space['000'],

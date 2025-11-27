@@ -55,7 +55,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     return (
         <div
             className={clsx(
-                'bg-[var(--vapor-color-background-canvas)] rounded-[var(--vapor-size-borderRadius-500)] shadow-lg overflow-hidden w-full border border-[var(--vapor-color-border-normal)]',
+                'bg-[var(--vapor-color-background-canvas)] rounded-xl shadow-lg overflow-hidden w-full border border-[var(--vapor-color-border-normal)]',
                 className,
             )}
         >
@@ -99,7 +99,7 @@ const BrowserHeader = () => {
                     <span className="absolute left-[-6px] bottom-0">
                         <TabLeftCurvedIcon color="var(--vapor-color-background-secondary-200)" />
                     </span>
-                    <div className="flex items-center gap-[9px] p-[var(--vapor-size-space-100)] pl-[var(--vapor-size-space-200)] min-w-0 flex-shrink-0 relative bg-[var(--vapor-color-background-secondary-200)] rounded-t-[var(--vapor-size-borderRadius-300)]">
+                    <div className="flex items-center gap-[9px] p-[var(--vapor-size-space-100)] pl-[var(--vapor-size-space-200)] min-w-0 flex-shrink-0 relative bg-[var(--vapor-color-background-secondary-200)] rounded-t-lg">
                         <div className="flex gap-[9px]">
                             <Text typography="subtitle2" foreground="normal-200">
                                 Vapor UI
@@ -548,7 +548,7 @@ const UserSidebar = () => {
     return (
         <div className="flex w-[371px] p-[var(--vapor-size-space-300)] items-end bg-[var(--vapor-color-background-canvas)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
             <div className="w-full h-full flex flex-col gap-[var(--vapor-size-space-300)]">
-                <div className="relative w-full flex items-center border rounded-lg">
+                <div className="relative w-full flex items-center border rounded-[var(--vapor-size-borderRadius-300)]">
                     <div className="absolute z-[1] h-full flex items-center justify-center ml-[var(--vapor-size-space-200)]">
                         <SearchOutlineIcon
                             size="20"

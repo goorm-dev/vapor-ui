@@ -22,7 +22,7 @@ export const popup = layerStyle('components', {
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background.surface[100],
+    backgroundColor: vars.color.background.overlay[100],
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',
 
@@ -58,7 +58,7 @@ export const item = style([
 
         borderRadius: vars.size.borderRadius['300'],
         cursor: 'pointer',
-        paddingRight: vars.size.space['075'],
+        paddingRight: vars.size.space['150'],
         paddingLeft: vars.size.space['250'],
         paddingBlock: vars.size.space['050'],
 
