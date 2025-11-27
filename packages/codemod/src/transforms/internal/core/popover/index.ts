@@ -333,7 +333,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
                     return true;
                 });
 
-                const positionerProps: { name: string; value: any }[] = [];
+                const positionerProps: { name: string; value: JSXAttribute['value'] }[] = [];
 
                 if (parentRoot) {
                     const rootProps = rootPropsToMove.get(parentRoot);
