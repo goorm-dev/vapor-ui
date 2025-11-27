@@ -77,25 +77,16 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
             if (indicatorElement) {
                 // Get props from root and indicator
-                let rootProps = element.openingElement.attributes || [];
+                const rootProps = element.openingElement.attributes || [];
 
-                // Transform color prop to colorPalette
-                rootProps = rootProps.map((attr) => {
-                    if (attr.type === 'JSXAttribute' && attr.name.type === 'JSXIdentifier') {
-                        if (attr.name.name === 'color') {
-                            return j.jsxAttribute(j.jsxIdentifier('colorPalette'), attr.value);
-                        }
-                    }
-                    return attr;
-                });
                 const indicatorProps = indicatorElement.openingElement.attributes || [];
 
-                // Create Switch.Thumb element
+                // Create Switch.ThumbPrimitive element
                 const thumbElement = j.jsxElement(
                     j.jsxOpeningElement(
                         j.jsxMemberExpression(
                             j.jsxIdentifier(NEW_COMPONENT_NAME),
-                            j.jsxIdentifier('Thumb'),
+                            j.jsxIdentifier('ThumbPrimitive'),
                         ),
                         indicatorProps,
                         true,

@@ -6,7 +6,7 @@ export function LabelExample() {
             <Field.Label>
                 Dark Mode
                 <Switch.Root size="md">
-                    <Switch.Thumb />
+                    <Switch.ThumbPrimitive />
                 </Switch.Root>
             </Field.Label>
         </Field.Root>

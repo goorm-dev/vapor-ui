@@ -5,7 +5,7 @@ export function SpreadExample() {
 
     return (
         <Switch.Root {...switchProps}>
-            <Switch.Thumb />
+            <Switch.ThumbPrimitive />
         </Switch.Root>
     );
 }

@@ -6,7 +6,7 @@ export function NamedImportExample() {
             <Field.Label>
                 Auto Save
                 <Switch.Root size="md">
-                    <Switch.Thumb />
+                    <Switch.ThumbPrimitive />
                 </Switch.Root>
             </Field.Label>
         </Field.Root>

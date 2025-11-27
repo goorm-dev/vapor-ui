@@ -7,12 +7,12 @@ export function DefaultCheckedExample() {
                 <Field.Label>
                     Remember me
                     <Switch.Root defaultChecked size="sm">
-                        <Switch.Thumb />
+                        <Switch.ThumbPrimitive />
                     </Switch.Root>
                 </Field.Label>
             </Field.Root>
             <Switch.Root defaultChecked={false} size="md">
-                <Switch.Thumb />
+                <Switch.ThumbPrimitive />
             </Switch.Root>
         </div>
     );

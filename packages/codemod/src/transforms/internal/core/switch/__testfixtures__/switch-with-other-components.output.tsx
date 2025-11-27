@@ -5,7 +5,7 @@ export function WithOtherComponentsExample() {
     return (
         <div>
             <Switch.Root size="md">
-                <Switch.Thumb />
+                <Switch.ThumbPrimitive />
             </Switch.Root>
             <Button>Save</Button>
         </div>

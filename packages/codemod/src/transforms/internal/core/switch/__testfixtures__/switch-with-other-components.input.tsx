@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, Switch } from '@goorm-dev/vapor-core';
 
 export function WithOtherComponentsExample() {
