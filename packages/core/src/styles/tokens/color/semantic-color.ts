@@ -7,8 +7,8 @@ export const LIGHT_SEMANTIC_COLORS = {
             '200': LIGHT_BASIC_COLORS.blue['500'],
         },
         secondary: {
-            '100': LIGHT_BASIC_COLORS.gray['100'],
-            '200': LIGHT_BASIC_COLORS.gray['200'],
+            '100': LIGHT_BASIC_COLORS.gray['050'],
+            '200': LIGHT_BASIC_COLORS.gray['100'],
         },
         success: {
             '100': LIGHT_BASIC_COLORS.green['100'],
