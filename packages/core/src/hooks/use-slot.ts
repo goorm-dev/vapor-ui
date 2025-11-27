@@ -30,8 +30,8 @@ export const useSlot = <Element extends Any, Props extends SlotProps>(
                 }
 
                 return cloneElement(children, props);
-                // eslint-disable-next-line react-hooks/exhaustive-deps
             }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [_children],
     );
 
