@@ -36,6 +36,10 @@ const colorThemeMap = Object.entries(LIGHT_BASIC_COLORS).reduce<Record<string, s
     (acc, [colorName, colorScale]) => {
         const contractColorGroup = vars.color[colorName as keyof typeof LIGHT_BASIC_COLORS];
 
+        if (colorName === 'background') {
+            return acc;
+        }
+
         if (typeof colorScale === 'object' && colorScale !== null && contractColorGroup) {
             for (const shade in colorScale) {
                 if (Object.prototype.hasOwnProperty.call(colorScale, shade)) {
