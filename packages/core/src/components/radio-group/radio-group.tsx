@@ -35,6 +35,9 @@ export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGro
  * RadioGroup.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 라디오 버튼들을 그룹화하는 컴포넌트
+ */
 export const RadioGroupRoot = forwardRef<HTMLDivElement, RadioGroupRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -67,6 +70,9 @@ RadioGroupRoot.displayName = 'RadioGroup.Root';
  * RadioGroup.Label
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 라디오 그룹 레이블
+ */
 export const RadioGroupLabel = forwardRef<HTMLSpanElement, RadioGroupLabel.Props>((props, ref) => {
     const { render, id: idProp, className, ...componentProps } = resolveStyles(props);
     const { setLabelElementId, invalid } = useRadioGroupContext();

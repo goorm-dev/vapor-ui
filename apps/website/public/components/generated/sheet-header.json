@@ -1,0 +1,15 @@
+{
+    "name": "Header",
+    "displayName": "Sheet.Header",
+    "description": "시트 헤더 영역",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "generatedAt": "2025-11-27T11:57:46.156Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/index.parts.ts"
+}

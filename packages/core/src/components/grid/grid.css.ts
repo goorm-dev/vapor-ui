@@ -15,6 +15,10 @@ export const root = recipe({
 
     defaultVariants: { flow: 'row' },
     variants: {
+        /**
+         * 그리드 아이템 배치 방향
+         * @default 'row'
+         */
         flow: {
             row: layerStyle('components', { gridAutoFlow: 'row' }),
             column: layerStyle('components', { gridAutoFlow: 'column' }),

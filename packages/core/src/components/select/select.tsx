@@ -34,6 +34,9 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
  * Select.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 단일 선택 셀렉트 컴포넌트
+ */
 export const SelectRoot = (props: SelectRoot.Props) => {
     const [sharedProps, otherProps] = createSplitProps<SelectSharedProps>()(props, [
         'placeholder',
@@ -55,6 +58,9 @@ SelectRoot.displayName = 'Select.Root';
  * Select.TriggerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 트리거 프리미티브
+ */
 export const SelectTriggerPrimitive = forwardRef<HTMLButtonElement, SelectTriggerPrimitive.Props>(
     (props, ref) => {
         const {
@@ -87,6 +93,9 @@ SelectTriggerPrimitive.displayName = 'Select.TriggerPrimitive';
  * Select.ValuePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 값 표시 프리미티브
+ */
 export const SelectValuePrimitive = forwardRef<HTMLSpanElement, SelectValuePrimitive.Props>(
     (props, ref) => {
         const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
@@ -125,6 +134,9 @@ SelectValuePrimitive.displayName = 'Select.ValuePrimitive';
  * Select.PlaceholderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 플레이스홀더 프리미티브
+ */
 export const SelectPlaceholderPrimitive = forwardRef<
     HTMLSpanElement,
     SelectPlaceholderPrimitive.Props
@@ -145,6 +157,9 @@ SelectPlaceholderPrimitive.displayName = 'Select.PlaceholderPrimitive';
  * Select.TriggerIconPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 트리거 아이콘 프리미티브
+ */
 export const SelectTriggerIconPrimitive = forwardRef<
     HTMLDivElement,
     SelectTriggerIconPrimitive.Props
@@ -171,6 +186,9 @@ SelectTriggerIconPrimitive.displayName = 'Select.TriggerIconPrimitive';
  * Select.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 트리거 컴포넌트
+ */
 export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerPrimitive.Props>(
     (props, ref) => {
         return (
@@ -187,6 +205,7 @@ SelectTrigger.displayName = 'Select.Trigger';
  * Select.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/** 셀렉트 포털 프리미티브 */
 export const SelectPortalPrimitive = (props: SelectPortalPrimitive.Props) => {
     return <BaseSelect.Portal {...props} />;
 };
@@ -195,6 +214,9 @@ export const SelectPortalPrimitive = (props: SelectPortalPrimitive.Props) => {
  * Select.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 위치 지정 프리미티브
+ */
 export const SelectPositionerPrimitive = forwardRef<
     HTMLDivElement,
     SelectPositionerPrimitive.Props
@@ -226,6 +248,9 @@ SelectPositionerPrimitive.displayName = 'Select.PositionerPrimitive';
  * Select.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 팝업 프리미티브
+ */
 export const SelectPopupPrimitive = forwardRef<HTMLDivElement, SelectPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -245,6 +270,9 @@ SelectPopupPrimitive.displayName = 'Select.PopupPrimitive';
  * Select.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 팝업 컴포넌트
+ */
 export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const PortalElement = createSlot(portalElement || <SelectPortalPrimitive />);
@@ -265,6 +293,9 @@ SelectPopup.displayName = 'Select.Popup';
  * Select.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 항목 프리미티브
+ */
 export const SelectItemPrimitive = forwardRef<HTMLDivElement, SelectItemPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -284,6 +315,9 @@ SelectItemPrimitive.displayName = 'Select.ItemPrimitive';
  * Select.ItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 항목 인디케이터 프리미티브
+ */
 export const SelectItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     SelectItemIndicatorPrimitive.Props
@@ -307,6 +341,9 @@ SelectItemIndicatorPrimitive.displayName = 'Select.ItemIndicatorPrimitive';
  * Select.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 항목 컴포넌트
+ */
 export const SelectItem = forwardRef<HTMLDivElement, SelectItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
@@ -324,6 +361,9 @@ SelectItem.displayName = 'Select.Item';
  * Select.Group
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 항목 그룹
+ */
 export const SelectGroup = forwardRef<HTMLDivElement, SelectGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -335,6 +375,9 @@ SelectGroup.displayName = 'Select.Group';
  * Select.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 그룹 레이블
+ */
 export const SelectGroupLabel = forwardRef<HTMLDivElement, SelectGroupLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -352,6 +395,9 @@ SelectGroupLabel.displayName = 'Select.GroupLabel';
  * Select.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 셀렉트 항목 구분선
+ */
 export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 

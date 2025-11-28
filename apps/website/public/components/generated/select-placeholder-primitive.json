@@ -1,0 +1,15 @@
+{
+    "name": "PlaceholderPrimitive",
+    "displayName": "Select.PlaceholderPrimitive",
+    "description": "셀렉트 플레이스홀더 프리미티브",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "generatedAt": "2025-11-27T11:57:54.609Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/select/index.parts.ts"
+}

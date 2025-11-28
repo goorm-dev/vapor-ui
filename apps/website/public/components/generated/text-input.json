@@ -1,0 +1,55 @@
+{
+    "name": "TextInput",
+    "displayName": "TextInput",
+    "description": "한 줄 텍스트를 입력할 수 있는 인풋 컴포넌트",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "defaultValue": "md"
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "type",
+            "type": ["search", "text", "email", "password", "url", "tel"],
+            "required": false
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "onValueChange",
+            "type": [
+                "(value: string, event: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; }) => void"
+            ],
+            "required": false
+        },
+        {
+            "name": "invalid",
+            "type": ["false", "true"],
+            "required": false,
+            "defaultValue": "false"
+        }
+    ],
+    "generatedAt": "2025-11-27T12:01:07.155Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/text-input/index.ts"
+}

@@ -132,7 +132,7 @@ function getDefaultValue(
 ): string | undefined {
     // Try CSS file first
     const cssFilePath = findCssFile(program, sourceFile.fileName);
-    
+
     if (cssFilePath) {
         const defaultValue = extractDefaultValue(program, cssFilePath, propName);
         if (defaultValue !== undefined) {

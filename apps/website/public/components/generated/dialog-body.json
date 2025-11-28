@@ -1,0 +1,16 @@
+{
+    "name": "Body",
+    "displayName": "Dialog.Body",
+    "description": "다이얼로그 본문 영역",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "defaultElement": "div",
+    "generatedAt": "2025-11-27T12:19:02.840Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/dialog/index.parts.ts"
+}

@@ -1,0 +1,62 @@
+{
+    "name": "Root",
+    "displayName": "Field.Root",
+    "description": "폼 입력 필드를 구성하는 컨테이너 컴포넌트",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "폼 제출 시 필드를 식별하는 이름\n`<Field.Control>` 컴포넌트의 `name` prop보다 우선합니다."
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "사용자 상호작용을 무시할지 여부\n`<Field.Control>` 컴포넌트의 `disabled` prop보다 우선합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "validate",
+            "type": [
+                "(value: unknown, formValues: Record<string, unknown>) => string | string[] | Promise<string | string[] | null> | null"
+            ],
+            "required": false,
+            "description": "커스텀 유효성 검사 함수\n값이 유효하지 않으면 에러 메시지 문자열 또는 문자열 배열을 반환하고, 유효하면 `null`을 반환합니다."
+        },
+        {
+            "name": "validationMode",
+            "type": ["onBlur", "onChange"],
+            "required": false,
+            "description": "필드 유효성 검사 시점\n\n- **onBlur**: 컨트롤이 포커스를 잃을 때 검사\n- **onChange**: 컨트롤 값이 변경될 때마다 검사",
+            "defaultValue": "'onBlur'"
+        },
+        {
+            "name": "validationDebounceTime",
+            "type": ["number"],
+            "required": false,
+            "description": "`validationMode=\"onChange\"` 사용 시 `validate` 콜백 사이의 대기 시간 (밀리초)",
+            "defaultValue": "0"
+        },
+        {
+            "name": "invalid",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "필드를 강제로 유효하지 않은 상태로 표시할지 여부"
+        }
+    ],
+    "generatedAt": "2025-11-27T11:51:21.746Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/field/index.parts.ts"
+}

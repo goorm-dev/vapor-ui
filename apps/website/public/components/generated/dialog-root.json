@@ -1,0 +1,74 @@
+{
+    "name": "Root",
+    "displayName": "Dialog.Root",
+    "description": "사용자 상호작용을 위한 모달 다이얼로그 컴포넌트",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "open",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the dialog is currently open."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "modal",
+            "type": ["false", "true", "trap-focus"],
+            "required": false,
+            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the dialog is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the dialog is opened or closed."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the dialog will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the dialog manually.\nUseful when the dialog's animation is controlled by an external library."
+        },
+        {
+            "name": "size",
+            "type": ["md", "lg", "xl"],
+            "required": false,
+            "description": "다이얼로그 크기",
+            "defaultValue": "'md'"
+        }
+    ],
+    "generatedAt": "2025-11-27T12:19:02.647Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/dialog/index.parts.ts"
+}

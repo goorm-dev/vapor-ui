@@ -46,8 +46,16 @@ export const root = recipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /**
+         * 유효성 검사 실패 상태
+         * @default false
+         */
         invalid: { true: {}, false: {} },
 
+        /**
+         * 체크박스 크기
+         * @default 'md'
+         */
         size: {
             md: layerStyle('components', {
                 borderRadius: vars.size.borderRadius[100],
@@ -78,6 +86,10 @@ export const indicator = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * 인디케이터 크기
+         * @default 'md'
+         */
         size: {
             md: layerStyle('components', {
                 width: vars.size.dimension[100],

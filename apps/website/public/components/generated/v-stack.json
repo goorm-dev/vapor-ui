@@ -1,0 +1,27 @@
+{
+    "name": "VStack",
+    "displayName": "VStack",
+    "description": "자식 요소를 세로 방향으로 쌓는 레이아웃 컴포넌트",
+    "props": [
+        {
+            "name": "inline",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "인라인 플렉스 여부"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "reverse",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "자식 요소의 쌓이는 순서를 반대로 할지 여부"
+        }
+    ],
+    "generatedAt": "2025-11-27T23:52:32.644Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/v-stack/index.ts"
+}

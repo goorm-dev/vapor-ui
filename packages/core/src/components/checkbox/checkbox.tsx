@@ -29,6 +29,9 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 사용자 선택 입력을 위한 체크박스 컴포넌트
+ */
 export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((props, ref) => {
     const { render, className, children, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
@@ -63,6 +66,9 @@ CheckboxRoot.displayName = 'Checkbox.Root';
  * Checkbox.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 체크박스 선택 상태 표시 프리미티브
+ */
 export const CheckboxIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     CheckboxIndicatorPrimitive.Props

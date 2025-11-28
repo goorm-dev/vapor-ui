@@ -1,6 +1,7 @@
 {
     "name": "ImagePrimitive",
     "displayName": "Avatar.ImagePrimitive",
+    "description": "아바타 이미지 요소",
     "props": [
         {
             "name": "className",
@@ -18,9 +19,9 @@
             "name": "onLoadingStatusChange",
             "type": ["(status: ImageLoadingStatus) => void"],
             "required": false,
-            "description": "Callback fired when the loading status changes."
+            "description": "로딩 상태가 변경될 때 호출되는 콜백"
         }
     ],
-    "generatedAt": "2025-11-20T05:30:30.146Z",
+    "generatedAt": "2025-11-27T11:45:13.590Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.parts.ts"
 }

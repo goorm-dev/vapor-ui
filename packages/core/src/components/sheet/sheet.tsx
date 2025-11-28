@@ -42,6 +42,9 @@ const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 화면 가장자리에서 슬라이드되어 나타나는 패널 컴포넌트
+ */
 export const SheetRoot = ({
     open: openProp,
     defaultOpen,
@@ -92,6 +95,7 @@ SheetRoot.displayName = 'Sheet.Root';
  * Sheet.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/** 시트 열기 트리거 */
 export const SheetTrigger = Dialog.Trigger;
 SheetTrigger.displayName = 'Sheet.Trigger';
 
@@ -99,6 +103,7 @@ SheetTrigger.displayName = 'Sheet.Trigger';
  * Sheet.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/** 시트 닫기 버튼 */
 export const SheetClose = Dialog.Close;
 SheetClose.displayName = 'Sheet.Close';
 
@@ -106,6 +111,7 @@ SheetClose.displayName = 'Sheet.Close';
  * Sheet.OverlayPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/** 시트 배경 오버레이 프리미티브 */
 export const SheetOverlayPrimitive = Dialog.OverlayPrimitive;
 SheetOverlayPrimitive.displayName = 'Sheet.OverlayPrimitive';
 
@@ -113,6 +119,7 @@ SheetOverlayPrimitive.displayName = 'Sheet.OverlayPrimitive';
  * Sheet.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/** 시트 포털 프리미티브 */
 export const SheetPortalPrimitive = (props: SheetPortalPrimitive.Props) => {
     return <Dialog.PortalPrimitive {...props} />;
 };
@@ -130,6 +137,9 @@ const [SheetPositionerProvider, useSheetPositionerContext] = createContext<Posit
     hookName: 'useSheetPositionerContext',
 });
 
+/**
+ * 시트 위치 지정 프리미티브
+ */
 export const SheetPositionerPrimitive = forwardRef<HTMLDivElement, SheetPositionerPrimitive.Props>(
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
@@ -161,6 +171,9 @@ SheetPositionerPrimitive.displayName = 'Sheet.PositionerPrimitive';
  * Sheet.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 시트 팝업 프리미티브
+ */
 export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -188,6 +201,9 @@ SheetPopupPrimitive.displayName = 'Sheet.PopupPrimitive';
  * Sheet.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 시트 팝업 컴포넌트
+ */
 export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
         const PortalElement = createSlot(portalElement || <SheetPortalPrimitive />);
@@ -210,6 +226,9 @@ SheetPopup.displayName = 'Sheet.Popup';
  * Sheet.Header
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 시트 헤더 영역
+ */
 export const SheetHeader = forwardRef<HTMLDivElement, SheetHeader.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -223,6 +242,9 @@ SheetHeader.displayName = 'Sheet.Header';
  * Sheet.Body
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 시트 본문 영역
+ */
 export const SheetBody = forwardRef<HTMLDivElement, SheetBody.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -234,6 +256,9 @@ SheetBody.displayName = 'Sheet.Body';
  * Sheet.Footer
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 시트 푸터 영역
+ */
 export const SheetFooter = forwardRef<HTMLDivElement, SheetFooter.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -247,6 +272,7 @@ SheetFooter.displayName = 'Sheet.Footer';
  * Sheet.Title
  * -----------------------------------------------------------------------------------------------*/
 
+/** 시트 제목 */
 export const SheetTitle = Dialog.Title;
 SheetTitle.displayName = 'Sheet.Title';
 
@@ -254,6 +280,7 @@ SheetTitle.displayName = 'Sheet.Title';
  * Sheet.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/** 시트 설명 */
 export const SheetDescription = Dialog.Description;
 SheetDescription.displayName = 'Sheet.Description';
 

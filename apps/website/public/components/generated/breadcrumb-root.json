@@ -1,23 +1,22 @@
 {
     "name": "Root",
     "displayName": "Breadcrumb.Root",
-    "description": "편의를 위해 Root와 List primitive를 결합한 메인 Breadcrumb 컴포넌트입니다.\n대부분의 Breadcrumb 구현에 사용하도록 권장되는 컴포넌트입니다.\nBreadcrumb 항목들을 적절한 네비게이션과 리스트 구조로 자동으로 감싸줍니다.",
+    "description": "현재 페이지 위치를 계층적으로 표시하는 네비게이션 컴포넌트",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "defaultValue": "md",
-            "description": "Breadcrumb 링크의 타이포그래피 크기를 제어합니다"
+            "description": "브레드크럼 크기",
+            "defaultValue": "'md'"
         },
         {
             "name": "render",
             "type": ["ReactElement"],
             "required": false,
-            "defaultValue": "nav",
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나\n다른 컴포넌트와 조합할 수 있습니다.\n\n렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 받습니다."
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ],
-    "generatedAt": "2025-11-20T05:30:41.200Z",
+    "generatedAt": "2025-11-27T11:46:03.448Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/breadcrumb/index.parts.ts"
 }

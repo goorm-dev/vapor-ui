@@ -1,0 +1,88 @@
+{
+    "name": "Root",
+    "displayName": "RadioGroup.Root",
+    "description": "라디오 버튼들을 그룹화하는 컴포넌트",
+    "props": [
+        {
+            "name": "size",
+            "type": ["md", "lg"],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "폼 제출 시 필드를 식별하는 이름"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["unknown"],
+            "required": false,
+            "description": "The uncontrolled value of the radio button that should be initially selected.\n\nTo render a controlled radio group, use the `value` prop instead."
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "사용자 상호작용을 비활성화할지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "value",
+            "type": ["unknown"],
+            "required": false,
+            "description": "The controlled value of the radio item that should be currently selected.\n\nTo render an uncontrolled radio group, use the `defaultValue` prop instead."
+        },
+        {
+            "name": "readOnly",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the user should be unable to select a different radio button in the group.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "required",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "폼 제출 전 값을 반드시 선택해야 하는지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "onValueChange",
+            "type": [
+                "(value: unknown, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; }) => void"
+            ],
+            "required": false,
+            "description": "값이 변경될 때 호출되는 콜백"
+        },
+        {
+            "name": "inputRef",
+            "type": [
+                "null",
+                "(instance: HTMLInputElement | null) => void",
+                "RefObject<HTMLInputElement>"
+            ],
+            "required": false,
+            "description": "숨겨진 input 요소에 접근하기 위한 ref"
+        },
+        {
+            "name": "invalid",
+            "type": ["false", "true"],
+            "required": false
+        }
+    ],
+    "generatedAt": "2025-11-27T11:57:30.800Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/radio-group/index.parts.ts"
+}

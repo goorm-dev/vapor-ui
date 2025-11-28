@@ -1,0 +1,103 @@
+{
+    "name": "SubmenuRoot",
+    "displayName": "Menu.SubmenuRoot",
+    "description": "서브메뉴 루트 컴포넌트",
+    "props": [
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys.",
+            "defaultValue": "'vertical'"
+        },
+        {
+            "name": "children",
+            "type": [
+                "undefined",
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": true
+        },
+        {
+            "name": "loop",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "open",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the menu is currently open."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the menu is initially open.\n\nTo render a controlled menu, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the menu is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the menu is closed."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before the menu may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "defaultValue": "100"
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the menu that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "openOnHover",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the submenu should open when the trigger is hovered.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the menu will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the menu manually.\nUseful when the menu's animation is controlled by an external library."
+        }
+    ],
+    "generatedAt": "2025-11-27T12:30:25.923Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+}

@@ -120,7 +120,7 @@ const NewComponentPropsTable: React.FC<NewComponentPropsTableProps> = ({ compone
                                     className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[100px] w-px ${index === componentData.props.length - 1 ? 'border-b-0' : ''}`}
                                 >
                                     {prop.defaultValue ? (
-                                        <Badge color="hint" size="md">
+                                        <Badge colorPalette="hint" size="md">
                                             {prop.defaultValue}
                                         </Badge>
                                     ) : (
@@ -133,7 +133,11 @@ const NewComponentPropsTable: React.FC<NewComponentPropsTableProps> = ({ compone
                                     <div className="flex flex-wrap gap-[var(--vapor-size-space-100)]">
                                         {Array.isArray(prop.type) ? (
                                             prop.type.map((typeValue) => (
-                                                <Badge key={typeValue} color="hint" size="md">
+                                                <Badge
+                                                    key={typeValue}
+                                                    colorPalette="hint"
+                                                    size="md"
+                                                >
                                                     {typeValue}
                                                 </Badge>
                                             ))

@@ -1,0 +1,40 @@
+{
+    "name": "Error",
+    "displayName": "Field.Error",
+    "description": "필드 오류 메시지",
+    "props": [
+        {
+            "name": "match",
+            "type": [
+                "false",
+                "true",
+                "badInput",
+                "customError",
+                "patternMismatch",
+                "rangeOverflow",
+                "rangeUnderflow",
+                "stepMismatch",
+                "tooLong",
+                "tooShort",
+                "typeMismatch",
+                "valueMissing"
+            ],
+            "required": false,
+            "description": "특정 유효성 검사 상태에 대한 오류 메시지를 표시할지 여부\n\n- **false**: 모든 오류 메시지를 표시\n- **true**: 모든 오류 메시지를 숨김\n- **기타 문자열**: 해당 유효성 검사 상태에 대한 오류 메시지만 표시"
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "generatedAt": "2025-11-27T11:51:21.918Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/field/index.parts.ts"
+}

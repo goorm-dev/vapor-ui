@@ -19,6 +19,9 @@ import * as styles from './textarea.css';
  * Textarea
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 여러 줄 텍스트를 입력할 수 있는 텍스트 영역 컴포넌트
+ */
 export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>((props, ref) => {
     const {
         render,

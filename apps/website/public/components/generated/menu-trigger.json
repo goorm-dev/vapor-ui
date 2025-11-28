@@ -1,0 +1,49 @@
+{
+    "name": "Trigger",
+    "displayName": "Menu.Trigger",
+    "description": "메뉴 열기 트리거",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
+            "defaultValue": "true"
+        }
+    ],
+    "generatedAt": "2025-11-27T12:30:25.901Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+}

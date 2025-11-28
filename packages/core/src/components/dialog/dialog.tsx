@@ -30,6 +30,9 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
  * Dialog
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 사용자 상호작용을 위한 모달 다이얼로그 컴포넌트
+ */
 export const DialogRoot = ({ size, closeOnClickOverlay, children, ...props }: DialogRoot.Props) => {
     return (
         <DialogProvider value={{ size }}>
@@ -40,16 +43,21 @@ export const DialogRoot = ({ size, closeOnClickOverlay, children, ...props }: Di
     );
 };
 
+DialogRoot.applyName = 'Dialog.Root';
 /* -------------------------------------------------------------------------------------------------
  * Dialog.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/** 다이얼로그 포털 프리미티브 */
 export const DialogPortalPrimitive = BaseDialog.Portal;
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog.OverlayPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 배경 오버레이 프리미티브
+ */
 export const DialogOverlayPrimitive = forwardRef<HTMLDivElement, DialogOverlayPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -69,6 +77,9 @@ DialogOverlayPrimitive.displayName = 'Dialog.OverlayPrimitive';
  * Dialog.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 팝업 프리미티브
+ */
 export const DialogPopupPrimitive = forwardRef<HTMLDivElement, DialogPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -89,6 +100,9 @@ DialogPopupPrimitive.displayName = 'Dialog.PopupPrimitive';
  * Dialog.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 팝업 컴포넌트
+ */
 export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>((props, ref) => {
     const { portalElement, overlayElement, ...componentProps } = resolveStyles(props);
 
@@ -108,6 +122,9 @@ DialogPopup.displayName = 'Dialog.Popup';
  * Dialog.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 열기 트리거
+ */
 export const DialogTrigger = forwardRef<HTMLButtonElement, DialogTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -119,6 +136,9 @@ DialogTrigger.displayName = 'Dialog.Trigger';
  * Dialog.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 닫기 버튼
+ */
 export const DialogClose = forwardRef<HTMLButtonElement, DialogClose.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -130,6 +150,9 @@ DialogClose.displayName = 'Dialog.Close';
  * Dialog.Title
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 제목
+ */
 export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitle.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -143,6 +166,9 @@ DialogTitle.displayName = 'Dialog.Title';
  * Dialog.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 설명
+ */
 export const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescription.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -162,6 +188,9 @@ DialogDescription.displayName = 'Dialog.Description';
  * Dialog.Header
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 헤더 영역
+ */
 export const DialogHeader = forwardRef<HTMLDivElement, DialogHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -180,6 +209,9 @@ DialogHeader.displayName = 'Dialog.Header';
  * Dialog.Body
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 본문 영역
+ */
 export const DialogBody = forwardRef<HTMLDivElement, DialogBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -198,6 +230,9 @@ DialogBody.displayName = 'Dialog.Body';
  * Dialog.Footer
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 다이얼로그 푸터 영역
+ */
 export const DialogFooter = forwardRef<HTMLDivElement, DialogFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -217,6 +252,7 @@ DialogFooter.displayName = 'Dialog.Footer';
 export namespace DialogRoot {
     type DialogPrimitiveProps = Omit<VComponentProps<typeof BaseDialog.Root>, 'dismissible'>;
     export interface Props extends DialogPrimitiveProps, DialogSharedProps {
+        /** 오버레이 클릭 시 닫기 여부 */
         closeOnClickOverlay?: boolean;
     }
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;

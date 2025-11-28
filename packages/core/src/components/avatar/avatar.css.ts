@@ -22,6 +22,10 @@ export const root = recipe({
 
     defaultVariants: { size: 'md', shape: 'square' },
     variants: {
+        /**
+         * 아바타 크기
+         * @default 'md'
+         */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension[300],
@@ -44,6 +48,10 @@ export const root = recipe({
                 vars: { [radii]: vars.size.borderRadius[400] },
             }),
         },
+        /**
+         * 아바타 모서리 형태
+         * @default 'square'
+         */
         shape: {
             square: layerStyle('components', { borderRadius: radii }),
             circle: layerStyle('components', { borderRadius: '50%' }),

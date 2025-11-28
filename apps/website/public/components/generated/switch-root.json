@@ -1,0 +1,102 @@
+{
+    "name": "Root",
+    "displayName": "Switch.Root",
+    "description": "두 가지 상태(켜짐/꺼짐)를 전환하는 토글 스위치 컴포넌트",
+    "props": [
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg"],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "스위치 요소의 id"
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "폼 제출 시 필드를 식별하는 이름"
+        },
+        {
+            "name": "defaultChecked",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "스위치의 초기 활성화 상태\n\n제어 컴포넌트로 사용하려면 `checked` prop을 사용하세요.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "사용자 상호작용을 비활성화할지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "checked",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "스위치의 현재 활성화 상태\n\n비제어 컴포넌트로 사용하려면 `defaultChecked` prop을 사용하세요."
+        },
+        {
+            "name": "readOnly",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "사용자가 스위치를 활성화하거나 비활성화할 수 없도록 할지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "required",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "폼 제출 전 스위치를 반드시 활성화해야 하는지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "inputRef",
+            "type": [
+                "null",
+                "(instance: HTMLInputElement | null) => void",
+                "RefObject<HTMLInputElement>"
+            ],
+            "required": false,
+            "description": "숨겨진 `<input>` 요소에 접근하기 위한 ref"
+        },
+        {
+            "name": "onCheckedChange",
+            "type": [
+                "(checked: boolean, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; }) => void"
+            ],
+            "required": false,
+            "description": "스위치가 활성화되거나 비활성화될 때 호출되는 이벤트 핸들러"
+        },
+        {
+            "name": "nativeButton",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "render prop으로 교체할 때 네이티브 `<button>` 요소를 렌더링할지 여부\n렌더링되는 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정하세요.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "invalid",
+            "type": ["false", "true"],
+            "required": false
+        }
+    ],
+    "generatedAt": "2025-11-27T12:00:18.234Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/switch/index.parts.ts"
+}

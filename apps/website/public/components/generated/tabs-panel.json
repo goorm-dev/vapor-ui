@@ -1,0 +1,34 @@
+{
+    "name": "Panel",
+    "displayName": "Tabs.Panel",
+    "description": "탭에 연결된 콘텐츠를 표시하는 패널",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": false,
+            "description": "The value of the TabPanel. It will be shown when the Tab with the corresponding value is selected.\nIf not provided, it will fall back to the index of the panel.\nIt is recommended to explicitly provide it, as it's required for the tab panel to be rendered on the server."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether to keep the HTML element in the DOM while the panel is hidden.",
+            "defaultValue": "false"
+        }
+    ],
+    "generatedAt": "2025-11-27T12:00:24.507Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tabs/index.parts.ts"
+}

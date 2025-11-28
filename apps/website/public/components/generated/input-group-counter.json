@@ -1,0 +1,31 @@
+{
+    "name": "Counter",
+    "displayName": "InputGroup.Counter",
+    "description": "입력 문자 수 표시 컴포넌트",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal",
+                "(props: CounterRenderProps) => ReactNode"
+            ],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "defaultElement": "span",
+    "generatedAt": "2025-11-27T11:54:54.901Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/input-group/index.parts.ts"
+}

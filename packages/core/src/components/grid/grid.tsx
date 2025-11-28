@@ -19,12 +19,19 @@ import * as styles from './grid.css';
  * -----------------------------------------------------------------------------------------------*/
 
 type GridVariants = RootVariants & {
+    /** 인라인 그리드 여부 */
     inline?: boolean;
+    /** 그리드 행 템플릿 */
     templateRows?: string;
+    /** 그리드 열 템플릿 */
     templateColumns?: string;
+    /** 그리드 아이템 배치 방향 */
     flow?: CSSProperties['gridAutoFlow'];
 };
 
+/**
+ * CSS 그리드 레이아웃 컴포넌트
+ */
 export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>((props, ref) => {
     const { className, style, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<GridVariants>()(componentProps, [
@@ -51,12 +58,15 @@ export const GridRoot = forwardRef<HTMLDivElement, GridRoot.Props>((props, ref) 
         />
     );
 });
-GridRoot.displayName = 'Grid';
+GridRoot.displayName = 'Grid.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Grid.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 그리드 아이템 컴포넌트
+ */
 export const GridItem = forwardRef<HTMLDivElement, GridItem.Props>((props, ref) => {
     const { rowSpan, colSpan, className, style, ...componentProps } = resolveStyles(props);
 
@@ -86,7 +96,12 @@ export namespace GridRoot {
 
 export namespace GridItem {
     type GridItemPrimitiveProps = VComponentProps<typeof Box>;
-    type GridItemVariants = { rowSpan?: string; colSpan?: string };
+    type GridItemVariants = {
+        /** 행 범위 지정 */
+        rowSpan?: string;
+        /** 열 범위 지정 */
+        colSpan?: string;
+    };
 
     export interface Props extends GridItemPrimitiveProps, GridItemVariants {}
 }

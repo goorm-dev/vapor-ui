@@ -14,6 +14,9 @@ import * as styles from './field.css';
  * Field
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 폼 입력 필드를 구성하는 컨테이너 컴포넌트
+ */
 export const FieldRoot = forwardRef<HTMLDivElement, FieldRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -28,6 +31,9 @@ FieldRoot.displayName = 'Field.Root';
  * Field.Label
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 필드 레이블
+ */
 export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -41,6 +47,9 @@ FieldLabel.displayName = 'Field.Label';
  * Field.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 필드 설명 텍스트
+ */
 export const FieldDescription = forwardRef<HTMLParagraphElement, FieldDescription.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -60,6 +69,9 @@ FieldDescription.displayName = 'Field.Description';
  * Field.Error
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 필드 오류 메시지
+ */
 export const FieldError = forwardRef<HTMLDivElement, FieldError.Props>((props, ref) => {
     const { match, className, ...componentProps } = resolveStyles(props);
 
@@ -78,6 +90,9 @@ FieldError.displayName = 'Field.Error';
  * Field.Success
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 필드 성공 메시지
+ */
 export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>((props, ref) => {
     const { match = 'valid', className, ...componentProps } = resolveStyles(props);
 

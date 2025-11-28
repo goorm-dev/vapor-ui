@@ -1,0 +1,64 @@
+{
+    "name": "Root",
+    "displayName": "Tabs.Root",
+    "description": "탭 네비게이션의 최상위 컨테이너 컴포넌트",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["any"],
+            "required": false,
+            "description": "기본값. 비제어 컴포넌트에서 사용\n값이 `null`이면 탭이 선택되지 않습니다.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": false,
+            "description": "현재 선택된 탭의 값. 제어 컴포넌트에서 사용\n값이 `null`이면 탭이 선택되지 않습니다."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "컴포넌트 방향(레이아웃 흐름 방향)",
+            "defaultValue": "'horizontal'"
+        },
+        {
+            "name": "onValueChange",
+            "type": [
+                "(value: any, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; } & { activationDirection: ActivationDirection; }) => void"
+            ],
+            "required": false,
+            "description": "새 값이 설정될 때 호출되는 콜백"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "variant",
+            "type": ["line", "plain"],
+            "required": false
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false
+        }
+    ],
+    "generatedAt": "2025-11-27T12:00:24.334Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tabs/index.parts.ts"
+}

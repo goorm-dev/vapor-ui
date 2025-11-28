@@ -1,0 +1,43 @@
+{
+    "name": "PopupPrimitive",
+    "displayName": "Dialog.PopupPrimitive",
+    "description": "다이얼로그 팝업 프리미티브",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "initialFocus",
+            "type": [
+                "false",
+                "true",
+                "RefObject<HTMLElement | null>",
+                "(openType: InteractionType) => boolean | void | HTMLElement | null"
+            ],
+            "required": false,
+            "description": "Determines the element to focus when the dialog is opened.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (first tabbable element or popup).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "finalFocus",
+            "type": [
+                "false",
+                "true",
+                "RefObject<HTMLElement | null>",
+                "(closeType: InteractionType) => boolean | void | HTMLElement | null"
+            ],
+            "required": false,
+            "description": "Determines the element to focus when the dialog is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+        }
+    ],
+    "generatedAt": "2025-11-27T12:19:02.828Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/dialog/index.parts.ts"
+}

@@ -1,0 +1,40 @@
+{
+    "name": "Root",
+    "displayName": "Grid.Root",
+    "description": "CSS 그리드 레이아웃 컴포넌트",
+    "props": [
+        {
+            "name": "inline",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "인라인 그리드 여부"
+        },
+        {
+            "name": "flow",
+            "type": ["column", "row", "row-dense", "column-dense"],
+            "required": false,
+            "description": "그리드 아이템 배치 방향",
+            "defaultValue": "'row'"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "templateRows",
+            "type": ["string"],
+            "required": false,
+            "description": "그리드 행 템플릿"
+        },
+        {
+            "name": "templateColumns",
+            "type": ["string"],
+            "required": false,
+            "description": "그리드 열 템플릿"
+        }
+    ],
+    "generatedAt": "2025-11-27T23:50:54.061Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/grid/index.parts.ts"
+}

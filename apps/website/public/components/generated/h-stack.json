@@ -1,0 +1,27 @@
+{
+    "name": "HStack",
+    "displayName": "HStack",
+    "description": "가로 방향 스택 레이아웃 컴포넌트",
+    "props": [
+        {
+            "name": "inline",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "인라인 플렉스 여부"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "reverse",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "역방향 배치 여부"
+        }
+    ],
+    "generatedAt": "2025-11-27T11:54:28.206Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/h-stack/index.ts"
+}

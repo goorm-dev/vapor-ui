@@ -1,0 +1,58 @@
+{
+    "name": "SubmenuTriggerItem",
+    "displayName": "Menu.SubmenuTriggerItem",
+    "description": "서브메뉴 열기 트리거 항목",
+    "props": [
+        {
+            "name": "label",
+            "type": ["string"],
+            "required": false,
+            "description": "Overrides the text label to use when the item is matched during keyboard text navigation."
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "onClick",
+            "type": ["MouseEventHandler<HTMLElement>"],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        }
+    ],
+    "generatedAt": "2025-11-27T12:30:25.931Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+}

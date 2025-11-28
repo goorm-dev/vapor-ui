@@ -1,0 +1,47 @@
+{
+    "name": "PortalPrimitive",
+    "displayName": "Sheet.PortalPrimitive",
+    "description": "시트 포털 프리미티브",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "container",
+            "type": [
+                "null",
+                "HTMLElement",
+                "ShadowRoot",
+                "RefObject<HTMLElement | ShadowRoot | null>"
+            ],
+            "required": false,
+            "description": "포털 요소를 렌더링할 부모 요소"
+        },
+        {
+            "name": "keepMounted",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "팝업이 숨겨진 동안 포탈을 DOM에 유지할지 여부",
+            "defaultValue": "false"
+        }
+    ],
+    "generatedAt": "2025-11-27T11:57:46.160Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/index.parts.ts"
+}

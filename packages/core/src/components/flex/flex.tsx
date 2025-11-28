@@ -6,8 +6,14 @@ import type { VComponentProps } from '~/utils/types';
 
 import { Box } from '../box';
 
-type FlexVariants = { inline?: boolean };
+type FlexVariants = {
+    /** 인라인 플렉스 여부 */
+    inline?: boolean;
+};
 
+/**
+ * 플렉스박스 레이아웃 컴포넌트
+ */
 export const Flex = forwardRef<HTMLDivElement, Flex.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
     const [{ inline }, otherProps] = createSplitProps<FlexVariants>()(componentProps, ['inline']);

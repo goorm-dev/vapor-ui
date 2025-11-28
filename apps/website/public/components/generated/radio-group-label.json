@@ -1,0 +1,16 @@
+{
+    "name": "Label",
+    "displayName": "RadioGroup.Label",
+    "description": "라디오 그룹 레이블",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "defaultElement": "span",
+    "generatedAt": "2025-11-27T11:57:30.982Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/radio-group/index.parts.ts"
+}

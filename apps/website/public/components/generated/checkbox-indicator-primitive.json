@@ -1,0 +1,28 @@
+{
+    "name": "IndicatorPrimitive",
+    "displayName": "Checkbox.IndicatorPrimitive",
+    "description": "체크박스 선택 상태 표시 프리미티브",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether to keep the element in the DOM when the checkbox is not checked.",
+            "defaultValue": "false"
+        }
+    ],
+    "generatedAt": "2025-11-27T11:49:42.316Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/checkbox/index.parts.ts"
+}

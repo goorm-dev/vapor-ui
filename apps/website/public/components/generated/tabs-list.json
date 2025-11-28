@@ -1,0 +1,41 @@
+{
+    "name": "List",
+    "displayName": "Tabs.List",
+    "description": "탭 트리거들을 감싸는 컨테이너",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "variant",
+            "type": ["line", "plain"],
+            "required": false
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false
+        }
+    ],
+    "generatedAt": "2025-11-27T12:00:24.500Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tabs/index.parts.ts"
+}

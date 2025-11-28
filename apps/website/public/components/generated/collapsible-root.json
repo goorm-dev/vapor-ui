@@ -1,0 +1,47 @@
+{
+    "name": "Root",
+    "displayName": "Collapsible.Root",
+    "description": "콘텐츠를 접고 펼칠 수 있는 컴포넌트",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "사용자 상호작용을 비활성화할지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "open",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "collapsible 패널의 현재 열림 상태\n\n비제어 컴포넌트로 사용하려면 `defaultOpen` prop을 사용하세요."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "collapsible 패널의 초기 열림 상태 (비제어 컴포넌트)\n\n제어 컴포넌트로 사용하려면 `open` prop을 사용하세요.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
+            "required": false,
+            "description": "패널이 열리거나 닫힐 때 호출되는 이벤트 핸들러"
+        }
+    ],
+    "generatedAt": "2025-11-27T11:50:10.249Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/collapsible/index.parts.ts"
+}

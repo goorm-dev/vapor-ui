@@ -1,0 +1,78 @@
+{
+    "name": "CheckboxItemPrimitive",
+    "displayName": "Menu.CheckboxItemPrimitive",
+    "description": "체크박스 메뉴 항목 프리미티브",
+    "props": [
+        {
+            "name": "label",
+            "type": ["string"],
+            "required": false,
+            "description": "Overrides the text label to use when the item is matched during keyboard text navigation."
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "onClick",
+            "type": ["MouseEventHandler<HTMLElement>"],
+            "required": false,
+            "description": "The click handler for the menu item."
+        },
+        {
+            "name": "defaultChecked",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the checkbox item is initially ticked.\n\nTo render a controlled checkbox item, use the `checked` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "checked",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the checkbox item is currently ticked.\n\nTo render an uncontrolled checkbox item, use the `defaultChecked` prop instead."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "closeOnClick",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Whether to close the menu when the item is clicked.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onCheckedChange",
+            "type": ["(checked: boolean, eventDetails: ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the checkbox item is ticked or unticked."
+        }
+    ],
+    "generatedAt": "2025-11-27T12:30:25.944Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+}

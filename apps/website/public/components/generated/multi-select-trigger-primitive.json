@@ -1,0 +1,49 @@
+{
+    "name": "TriggerPrimitive",
+    "displayName": "MultiSelect.TriggerPrimitive",
+    "description": "멀티 셀렉트 트리거 프리미티브",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "사용자 상호작용을 비활성화할지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "render prop으로 교체할 때 네이티브 `<button>` 엘리먼트를 렌더링할지 여부\n렌더링되는 요소가 네이티브 버튼이면 `true`로 설정하세요.",
+            "defaultValue": "false"
+        }
+    ],
+    "generatedAt": "2025-11-27T11:56:48.797Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/multi-select/index.parts.ts"
+}

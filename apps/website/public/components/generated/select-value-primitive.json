@@ -1,0 +1,37 @@
+{
+    "name": "ValuePrimitive",
+    "displayName": "Select.ValuePrimitive",
+    "description": "셀렉트 값 표시 프리미티브",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal",
+                "(value: any) => ReactNode"
+            ],
+            "required": false,
+            "description": "선택된 값의 포맷을 지정하는 `ReactNode`를 반환하는 함수를 받습니다."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "generatedAt": "2025-11-27T11:57:54.607Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/select/index.parts.ts"
+}

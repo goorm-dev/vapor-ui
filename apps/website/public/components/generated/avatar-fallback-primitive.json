@@ -1,6 +1,7 @@
 {
     "name": "FallbackPrimitive",
     "displayName": "Avatar.FallbackPrimitive",
+    "description": "이미지 로드 실패 시 표시되는 폴백 요소",
     "props": [
         {
             "name": "className",
@@ -15,6 +16,6 @@
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ],
-    "generatedAt": "2025-11-20T05:30:30.148Z",
+    "generatedAt": "2025-11-27T11:45:13.592Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.parts.ts"
 }

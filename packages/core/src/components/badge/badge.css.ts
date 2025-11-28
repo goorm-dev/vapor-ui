@@ -14,7 +14,8 @@ export const root = recipe({
     defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
         /**
-         * Controls the foreground and background color of the badge
+         * 뱃지 색상
+         * @default 'primary'
          */
         colorPalette: {
             primary: layerStyle('components', {
@@ -44,7 +45,8 @@ export const root = recipe({
         },
 
         /**
-         * Controls the border radius of the badge
+         * 뱃지 모서리 형태
+         * @default 'square'
          */
         shape: {
             square: layerStyle('components', {
@@ -56,7 +58,8 @@ export const root = recipe({
         },
 
         /**
-         * Controls dimensions, spacing, and typography
+         * 뱃지 크기
+         * @default 'md'
          */
         size: {
             sm: layerStyle('components', {

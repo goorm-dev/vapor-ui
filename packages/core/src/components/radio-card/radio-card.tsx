@@ -14,6 +14,9 @@ import { useRadioGroupContext } from '../radio-group';
 import type { RadioCardVariants } from './radio-card.css';
 import * as styles from './radio-card.css';
 
+/**
+ * 카드 형태의 라디오 버튼 컴포넌트
+ */
 export const RadioCard = forwardRef<HTMLButtonElement, RadioCard.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();

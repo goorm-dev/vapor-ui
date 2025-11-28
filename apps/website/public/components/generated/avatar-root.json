@@ -1,11 +1,14 @@
 {
     "name": "Root",
     "displayName": "Avatar.Root",
+    "description": "사용자 또는 엔티티를 이미지나 이니셜로 표현하는 컴포넌트",
     "props": [
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
-            "required": false
+            "required": false,
+            "description": "아바타 크기",
+            "defaultValue": "'md'"
         },
         {
             "name": "className",
@@ -15,18 +18,22 @@
         },
         {
             "name": "alt",
-            "type": "string",
-            "required": true
+            "type": ["string"],
+            "required": true,
+            "description": "대체 텍스트, 폴백 이니셜 생성에도 사용"
         },
         {
             "name": "shape",
             "type": ["circle", "square"],
-            "required": false
+            "required": false,
+            "description": "아바타 모서리 형태",
+            "defaultValue": "'square'"
         },
         {
             "name": "src",
             "type": ["string"],
-            "required": false
+            "required": false,
+            "description": "이미지 소스 URL"
         },
         {
             "name": "render",
@@ -37,9 +44,10 @@
         {
             "name": "delay",
             "type": ["number"],
-            "required": false
+            "required": false,
+            "description": "폴백 표시 전 지연 시간 (밀리초)"
         }
     ],
-    "generatedAt": "2025-11-20T05:30:29.952Z",
+    "generatedAt": "2025-11-27T11:45:13.401Z",
     "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.parts.ts"
 }

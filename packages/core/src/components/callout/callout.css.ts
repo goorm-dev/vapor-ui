@@ -21,7 +21,8 @@ export const root = recipe({
     defaultVariants: { colorPalette: 'primary' },
     variants: {
         /**
-         * Controls color scheme
+         * 콜아웃 색상
+         * @default 'primary'
          */
         colorPalette: {
             primary: layerStyle('components', {

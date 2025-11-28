@@ -19,7 +19,8 @@ export const link = recipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
         /**
-         * Controls the typography size of the breadcrumb link
+         * 브레드크럼 크기
+         * @default 'md'
          */
         size: {
             sm: typography({ style: 'body4' }),
@@ -29,7 +30,8 @@ export const link = recipe({
         },
 
         /**
-         * Controls whether this breadcrumb link represents the current page
+         * 현재 페이지 여부
+         * @default false
          */
         current: {
             false: [
@@ -68,7 +70,8 @@ export const icon = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         /**
-         * Controls the width and height of separator and ellipsis icons
+         * 구분자 및 말줄임표 아이콘 크기
+         * @default 'md'
          */
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },

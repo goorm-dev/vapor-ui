@@ -11,8 +11,7 @@ import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
 /**
- * A clickable button component that triggers actions or events when activated by the user.
- * This component is based on a button element and supports standard HTML attributes.
+ * 사용자 행동을 유도하는 클릭 가능한 컴포넌트
  */
 export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);

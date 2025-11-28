@@ -1,0 +1,100 @@
+{
+    "name": "Root",
+    "displayName": "NavigationMenu.Root",
+    "description": "네비게이션 메뉴 컴포넌트",
+    "props": [
+        {
+            "name": "direction",
+            "type": ["horizontal", "vertical"],
+            "required": false
+        },
+        {
+            "name": "stretch",
+            "type": ["false", "true"],
+            "required": false
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "The orientation of the navigation menu.",
+            "defaultValue": "'horizontal'"
+        },
+        {
+            "name": "aria-label",
+            "type": ["string"],
+            "required": true,
+            "description": "Defines a string value that labels the current element."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["any"],
+            "required": false,
+            "description": "The uncontrolled value of the item that should be initially selected.\n\nTo render a controlled navigation menu, use the `value` prop instead.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": false,
+            "description": "The controlled value of the navigation menu item that should be currently open.\nWhen non-nullish, the menu will be open. When nullish, the menu will be closed.\n\nTo render an uncontrolled navigation menu, use the `defaultValue` prop instead.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "A ref to imperative actions."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the navigation menu is closed."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: any, eventDetails: ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Callback fired when the value changes."
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before opening the navigation menu. Specified in milliseconds.",
+            "defaultValue": "50"
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the navigation menu. Specified in milliseconds.",
+            "defaultValue": "50"
+        }
+    ],
+    "generatedAt": "2025-11-27T12:36:11.240Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/navigation-menu/index.parts.ts"
+}

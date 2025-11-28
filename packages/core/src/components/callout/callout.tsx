@@ -15,8 +15,7 @@ import * as styles from './callout.css';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Root container for callout component that displays informational content with visual styling.
- * This component is based on a div element and supports standard HTML attributes.
+ * 중요한 정보를 강조하여 표시하는 컴포넌트
  */
 export const CalloutRoot = forwardRef<HTMLDivElement, CalloutRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
@@ -40,8 +39,7 @@ CalloutRoot.displayName = 'CalloutRoot';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Icon container for callout component.
- * This component is based on a div element and supports standard HTML attributes.
+ * 콜아웃 아이콘 컨테이너
  */
 export const CalloutIcon = forwardRef<HTMLDivElement, CalloutIcon.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);

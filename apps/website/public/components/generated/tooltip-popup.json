@@ -1,0 +1,31 @@
+{
+    "name": "Popup",
+    "displayName": "Tooltip.Popup",
+    "description": "포털과 포지셔너가 포함된 툴팁 팝업 조합 컴포넌트",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: State) => string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "portalElement",
+            "type": ["ReactElement"],
+            "required": false
+        },
+        {
+            "name": "positionerElement",
+            "type": ["ReactElement"],
+            "required": false
+        }
+    ],
+    "generatedAt": "2025-11-27T23:42:15.068Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tooltip/index.parts.ts"
+}

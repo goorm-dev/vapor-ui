@@ -660,7 +660,7 @@ importers:
         version: 20.19.17
       '@types/yargs':
         specifier: ^17.0.0
-        version: 17.0.34
+        version: 17.0.35
       eslint:
         specifier: ^9.36.0
         version: 9.36.0(jiti@2.6.0)

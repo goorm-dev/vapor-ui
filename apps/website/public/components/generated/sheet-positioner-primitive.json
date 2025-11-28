@@ -1,0 +1,21 @@
+{
+    "name": "PositionerPrimitive",
+    "displayName": "Sheet.PositionerPrimitive",
+    "description": "시트 위치 지정 프리미티브",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "side",
+            "type": ["bottom", "left", "right", "top"],
+            "required": false
+        }
+    ],
+    "defaultElement": "div",
+    "generatedAt": "2025-11-27T11:57:46.165Z",
+    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/index.parts.ts"
+}
