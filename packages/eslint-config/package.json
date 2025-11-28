@@ -3,6 +3,15 @@
     "version": "0.0.0",
     "private": true,
     "type": "module",
+    "exports": {
+        "./base": "./index.js",
+        "./next": "./next.js",
+        "./react-package": "./react-package.js",
+        "./vanilla-extract": "./vanilla-extract.js",
+        "./typescript": "./typescript.js",
+        "./turbo": "./turbo.js",
+        "./storybook": "./storybook.js"
+    },
     "main": "./index.js",
     "devDependencies": {
         "@antebudimir/eslint-plugin-vanilla-extract": "^1.11.0",
@@ -24,14 +33,5 @@
     "peerDependencies": {
         "eslint": ">=9.18",
         "typescript": ">=5.0.3"
-    },
-    "exports": {
-        "./base": "./index.js",
-        "./next": "./next.js",
-        "./react-package": "./react-package.js",
-        "./vanilla-extract": "./vanilla-extract.js",
-        "./typescript": "./typescript.js",
-        "./turbo": "./turbo.js",
-        "./storybook": "./storybook.js"
     }
 }
