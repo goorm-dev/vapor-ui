@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const TaegukColorIcon: IconType = (props) => (
+const TaegukColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             d="M14.6921 5.94015C14.2832 4.56816 12.3721 1.81357 8.93701 1.81357C5.69064 1.81357 3.3994 4.30701 3.3994 6.50408C3.3994 6.91156 3.45609 7.10011 3.55662 7.4832C3.51444 7.3157 3.49211 7.14764 3.49211 6.98383C3.49211 4.69595 5.783 3.11043 8.13786 3.11043C11.3259 3.11043 13.91 5.69484 13.91 8.88204C13.91 11.3811 12.4724 13.5435 10.3827 14.5828L10.3834 14.5845C13.077 13.6091 15 11.0297 15 8.00025C15 7.28324 14.9037 6.65114 14.6921 5.94015Z"

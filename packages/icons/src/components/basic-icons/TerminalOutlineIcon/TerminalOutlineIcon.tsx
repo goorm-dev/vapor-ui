@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const TerminalOutlineIcon: IconType = (props) => (
+const TerminalOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 17 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             fillRule="evenodd"

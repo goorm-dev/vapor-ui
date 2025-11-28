@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const GoogleDrawingIcon: IconType = (props) => (
+const GoogleDrawingIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M6.66697 9.78138C5.90325 9.78138 5.28217 9.15999 5.28217 8.3959C5.28217 7.63181 5.90325 7.01042 6.66697 7.01042C7.43068 7.01042 8.05176 7.63181 8.05176 8.3959C8.05176 9.15999 7.43068 9.78138 6.66697 9.78138Z" />
         <path
