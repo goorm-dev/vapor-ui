@@ -17,7 +17,6 @@ import {
     SPACE,
 } from './tokens';
 
-// default themes
 const THEME_TOKENS = {
     color: { ...LIGHT_BASIC_COLORS, ...LIGHT_SEMANTIC_COLORS },
     shadow: BOX_SHADOW,
@@ -31,25 +30,31 @@ const THEME_TOKENS = {
     },
 };
 
-export const vars = createGlobalThemeContract(THEME_TOKENS, (_, path) => `vapor-${path.join('-')}`);
-createGlobalTheme(':root', vars, {
-    '@layer': layers.theme,
-    ...THEME_TOKENS,
-});
-
-// dark themes
-const DARK_CLASS_NAME = 'vapor-dark-theme';
 const DARK_THEME_TOKENS = {
     ...DARK_BASIC_COLORS,
     ...DARK_SEMANTIC_COLORS,
 };
 
-createGlobalTheme(`:root.${DARK_CLASS_NAME}`, vars.color, {
+/* -------------------------------------------------------------------------------------------------
+ * CSS Variables
+ * -----------------------------------------------------------------------------------------------*/
+
+const vars = createGlobalThemeContract(THEME_TOKENS, (_, path) => `vapor-${path.join('-')}`);
+
+createGlobalTheme(`:root, [data-vapor-theme='light']`, vars, {
+    '@layer': layers.theme,
+    ...THEME_TOKENS,
+});
+
+createGlobalTheme(`[data-vapor-theme='dark']`, vars.color, {
     '@layer': layers.theme,
     ...DARK_THEME_TOKENS,
 });
 
-// reset styles
+/* -------------------------------------------------------------------------------------------------
+ * Reset Styles
+ * -----------------------------------------------------------------------------------------------*/
+
 globalStyle('*', {
     '@layer': {
         [layers.reset]: {
@@ -66,7 +71,7 @@ globalStyle('*', {
 globalStyle('html, body', {
     '@layer': {
         [layers.reset]: {
-            backgroundColor: vars.color.background.canvas,
+            backgroundColor: vars.color.background.canvas[100],
             color: vars.color.foreground.normal[200],
         },
     },
@@ -137,3 +142,5 @@ globalStyle('button, a', {
         },
     },
 });
+
+export { vars };

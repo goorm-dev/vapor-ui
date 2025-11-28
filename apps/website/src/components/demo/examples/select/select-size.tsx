@@ -14,20 +14,11 @@ export default function SelectSize() {
 const SelectTemplate = (props: Select.Root.Props) => {
     return (
         <Select.Root {...props}>
-            <Select.Trigger>
-                <Select.Value />
-                <Select.TriggerIcon />
-            </Select.Trigger>
-            <Select.Content>
-                <Select.Item value="option1">
-                    옵션 1
-                    <Select.ItemIndicator />
-                </Select.Item>
-                <Select.Item value="option2">
-                    옵션 2
-                    <Select.ItemIndicator />
-                </Select.Item>
-            </Select.Content>
+            <Select.Trigger />
+            <Select.Popup>
+                <Select.Item value="option1">옵션 1</Select.Item>
+                <Select.Item value="option2">옵션 2</Select.Item>
+            </Select.Popup>
         </Select.Root>
     );
 };

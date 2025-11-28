@@ -9,7 +9,7 @@ export default function SheetSide() {
             {/* Right Side (Default) */}
             <Sheet.Root>
                 <Sheet.Trigger render={<Button variant="outline" />}>Right</Sheet.Trigger>
-                <Sheet.Content positionerProps={{ side: 'right' }}>
+                <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="right" />}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
@@ -23,13 +23,13 @@ export default function SheetSide() {
                             화면 우측에서 슬라이드됩니다. (기본값)
                         </Sheet.Description>
                     </Sheet.Body>
-                </Sheet.Content>
+                </Sheet.Popup>
             </Sheet.Root>
 
             {/* Left Side */}
             <Sheet.Root>
                 <Sheet.Trigger render={<Button variant="outline" />}>Left</Sheet.Trigger>
-                <Sheet.Content positionerProps={{ side: 'left' }}>
+                <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="left" />}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
@@ -41,13 +41,13 @@ export default function SheetSide() {
                     <Sheet.Body>
                         <Sheet.Description>화면 좌측에서 슬라이드됩니다.</Sheet.Description>
                     </Sheet.Body>
-                </Sheet.Content>
+                </Sheet.Popup>
             </Sheet.Root>
 
             {/* Top Side */}
             <Sheet.Root>
                 <Sheet.Trigger render={<Button variant="outline" />}>Top</Sheet.Trigger>
-                <Sheet.Content positionerProps={{ side: 'top' }}>
+                <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="top" />}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
@@ -59,13 +59,13 @@ export default function SheetSide() {
                     <Sheet.Body>
                         <Sheet.Description>화면 상단에서 슬라이드됩니다.</Sheet.Description>
                     </Sheet.Body>
-                </Sheet.Content>
+                </Sheet.Popup>
             </Sheet.Root>
 
             {/* Bottom Side */}
             <Sheet.Root>
                 <Sheet.Trigger render={<Button variant="outline" />}>Bottom</Sheet.Trigger>
-                <Sheet.Content positionerProps={{ side: 'bottom' }}>
+                <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="bottom" />}>
                     <div className="absolute top-4 right-4">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
@@ -77,7 +77,7 @@ export default function SheetSide() {
                     <Sheet.Body>
                         <Sheet.Description>화면 하단에서 슬라이드됩니다.</Sheet.Description>
                     </Sheet.Body>
-                </Sheet.Content>
+                </Sheet.Popup>
             </Sheet.Root>
         </div>
     );

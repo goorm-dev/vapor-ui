@@ -71,7 +71,7 @@ Generate scaling variable.
 
 ```typescript
 const scalingCSS = generateScalingCSS(1.25);
-// Output: :root { --vapor-scale-factor: 1.25; }
+// Output: :root, [data-vapor-theme=light] { --vapor-scale-factor: 1.25; }
 ```
 
 ### generateRadiusCSS(radius, options?)
@@ -82,7 +82,7 @@ Generate radius variable.
 type RadiusKey = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 const radiusCSS = generateRadiusCSS('lg');
-// Output: :root { --vapor-radius-factor: 1.5; }
+// Output: :root, [data-vapor-theme=light] { --vapor-radius-factor: 1.5; }
 ```
 
 ## Options
@@ -93,10 +93,6 @@ All functions support these options:
 {
   prefix?: string;                    // Default: 'vapor'
   format?: 'compact' | 'readable';    // Default: 'readable'
-  classNames?: {                      // Theme class names
-    light: string;                    // Default: 'vapor-light-theme'
-    dark: string;                     // Default: 'vapor-dark-theme'
-  };
 }
 ```
 
@@ -158,14 +154,15 @@ The `generateRadiusCSS` function accepts predefined radius keys:
 ## Output Example
 
 ```css
-:root {
+:root,
+[data-vapor-theme='light'] {
     --vapor-color-mint-500: #6af574ff;
     --vapor-color-background-canvas: #f8fafc;
     --vapor-scale-factor: 1.15;
     --vapor-radius-factor: 1.5;
 }
 
-:root.vapor-dark-theme {
+[data-vapor-theme='dark'] {
     --vapor-color-mint-800: #62e96b;
     --vapor-color-background-canvas: #161717;
 }
