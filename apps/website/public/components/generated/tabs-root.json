@@ -1,7 +1,7 @@
 {
     "name": "Root",
     "displayName": "Tabs.Root",
-    "description": "탭 네비게이션의 최상위 컨테이너 컴포넌트",
+    "description": "Tabs의 모든 부봠4을 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "className",
@@ -46,17 +46,20 @@
         {
             "name": "variant",
             "type": ["line", "plain"],
-            "required": false
+            "required": false,
+            "description": "Tabs의 스타일 변형을 지정합니다."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
-            "required": false
+            "required": false,
+            "description": "Tabs의 크기를 지정합니다."
         },
         {
             "name": "disabled",
             "type": ["false", "true"],
-            "required": false
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부입니다."
         }
     ],
     "generatedAt": "2025-11-27T12:00:24.334Z",

@@ -1,7 +1,7 @@
 {
     "name": "Root",
     "displayName": "Tooltip.Root",
-    "description": "툴팁의 상태와 동작을 관리하는 최상위 컴포넌트",
+    "description": "툴팁의 모든 부분을 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "children",
@@ -21,14 +21,14 @@
             "name": "disabled",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the tooltip is disabled.",
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "open",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the tooltip is currently open."
+            "description": "툴팁이 현재 열려 있는지 여부입니다."
         },
         {
             "name": "render",
@@ -40,54 +40,54 @@
             "name": "defaultOpen",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the tooltip is initially open.\n\nTo render a controlled tooltip, use the `open` prop instead.",
+            "description": "툴팁이 초기에 열려 있는지 여부입니다.\n\n제어 컴포넌트로 렌더링하려면 `open` prop을 대신 사용하세요.",
             "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
             "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
             "required": false,
-            "description": "Event handler called when the tooltip is opened or closed."
+            "description": "툴팁이 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
         },
         {
             "name": "onOpenChangeComplete",
             "type": ["(open: boolean) => void"],
             "required": false,
-            "description": "Event handler called after any animations complete when the tooltip is opened or closed."
+            "description": "툴팁이 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
         },
         {
             "name": "hoverable",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the tooltip contents can be hovered without closing the tooltip.",
+            "description": "툴팁 내용에 마우스를 올려도 툴팁이 닫히지 않을지 여부입니다.",
             "defaultValue": "true"
         },
         {
             "name": "trackCursorAxis",
             "type": ["none", "x", "y", "both"],
             "required": false,
-            "description": "Determines which axis the tooltip should track the cursor on.",
+            "description": "툴팁이 커서를 추적할 축을 결정합니다.",
             "defaultValue": "none"
         },
         {
             "name": "delay",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait before opening the tooltip. Specified in milliseconds.",
+            "description": "툴팁을 열기 전에 대기할 시간입니다. 밀리초 단위로 지정됩니다.",
             "defaultValue": "600"
         },
         {
             "name": "closeDelay",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait before closing the tooltip. Specified in milliseconds.",
+            "description": "툴팁을 닫기 전에 대기할 시간입니다. 밀리초 단위로 지정됩니다.",
             "defaultValue": "0"
         },
         {
             "name": "actionsRef",
             "type": ["RefObject<Actions>"],
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: When specified, the tooltip will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the tooltip manually.\nUseful when the tooltip's animation is controlled by an external library."
+            "description": "명령형 작업에 대한 ref입니다.\n- `unmount`: 지정된 경우, 툴팁은 닫힐 때 언마운트되지 않습니다.\n대신 `unmount` 함수를 수동으로 호출하여 툴팁을 언마운트해야 합니다.\n외부 라이브러리에서 툴팁의 애니메이션을 제어할 때 유용합니다."
         }
     ],
     "generatedAt": "2025-11-27T23:42:14.824Z",
