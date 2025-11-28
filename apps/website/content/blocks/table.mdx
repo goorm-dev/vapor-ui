@@ -4,6 +4,12 @@ description: 데이터의 구조화된 표현을 제공하는 데 사용됩니�
 previewImageUrl: /images/table-preview.svg
 ---
 
+이 페이지에서는 대량의 데이터를 처리하는 Data Table에 대한 예시를 설명합니다.
+
+Data Table은 대량의 데이터를 효율적으로 표시하고 관리하는 데 유용하지만, 내부적으로 수많은 복잡한 기능을 포함하고 있습니다.
+이를 Table 컴포넌트에서 처리하게 된다면 컴포넌트가 지나치게 무거워지고, 유연하게 사용할 수 없게 될 것입니다.
+따라서, Vapor UI의 Table 컴포넌트는 기본적인 테이블 구조와 스타일링만을 제공하며, 다양한 기능은 @tanstack/react-table과 같은 외부 라이브러리를 활용하여 구현할 수 있도록 예시를 제공합니다.
+
 ### Basic
 
 <Demo name="table/basic">
