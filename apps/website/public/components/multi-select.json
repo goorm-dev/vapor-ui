@@ -14,8 +14,8 @@
         },
         {
             "prop": "size",
-            "type": ["'sm'", "'md'", "'lg'", "'xl'"],
-            "default": "'md'",
+            "type": ["sm", "md", "lg", "xl"],
+            "default": "md",
             "description": "MultiSelect의 크기를 설정합니다. 선택된 값들이 배지 형태로 표시될 때 크기도 함께 조정됩니다."
         },
         {
@@ -158,14 +158,14 @@
     "positionerPrimitiveProps": [
         {
             "prop": "side",
-            "type": ["'top'", "'right'", "'bottom'", "'left'"],
-            "default": "'bottom'",
+            "type": ["top", "right", "bottom", "left"],
+            "default": "bottom",
             "description": "드롭다운이 나타날 위치를 설정합니다."
         },
         {
             "prop": "align",
-            "type": ["'start'", "'center'", "'end'"],
-            "default": "'start'",
+            "type": ["start", "center", "end"],
+            "default": "start",
             "description": "드롭다운의 정렬 방향을 설정합니다."
         },
         {

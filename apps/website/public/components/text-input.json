@@ -21,7 +21,7 @@
         {
             "prop": "defaultValue",
             "type": ["string"],
-            "default": "''",
+            "default": "",
             "description": "비제어형 컴포넌트 초기 입력 값입니다."
         },
         {
