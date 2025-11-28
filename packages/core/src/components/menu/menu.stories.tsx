@@ -11,17 +11,17 @@ export const Default = {
     render: () => (
         <Menu.Root modal={true}>
             <Menu.Trigger>메뉴 열기</Menu.Trigger>
-            <Menu.Content>
+            <Menu.Popup>
                 <Menu.Item disabled>항목 1</Menu.Item>
                 <Menu.Item>항목 2</Menu.Item>
                 <Menu.Item>항목 3</Menu.Item>
                 <Menu.Separator />
                 <Menu.SubmenuRoot>
                     <Menu.SubmenuTriggerItem>서브 메뉴</Menu.SubmenuTriggerItem>
-                    <Menu.SubmenuContent>
+                    <Menu.SubmenuPopup>
                         <Menu.Item disabled>서브 항목 1</Menu.Item>
                         <Menu.Item>서브 항목 2</Menu.Item>
-                    </Menu.SubmenuContent>
+                    </Menu.SubmenuPopup>
                 </Menu.SubmenuRoot>
                 <Menu.Separator />
                 <Menu.Group>
@@ -43,7 +43,7 @@ export const Default = {
                         <Menu.RadioItem value="selected">선택</Menu.RadioItem>
                     </Menu.RadioGroup>
                 </Menu.Group>
-            </Menu.Content>
+            </Menu.Popup>
         </Menu.Root>
     ),
 };
@@ -52,17 +52,17 @@ export const TestBed = {
     render: () => (
         <Menu.Root open>
             <Menu.Trigger>메뉴 열기</Menu.Trigger>
-            <Menu.Content>
+            <Menu.Popup>
                 <Menu.Item disabled>항목 1</Menu.Item>
                 <Menu.Item>항목 2</Menu.Item>
                 <Menu.Item>항목 3</Menu.Item>
                 <Menu.Separator />
                 <Menu.SubmenuRoot open>
                     <Menu.SubmenuTriggerItem>서브 메뉴</Menu.SubmenuTriggerItem>
-                    <Menu.SubmenuContent>
+                    <Menu.SubmenuPopup>
                         <Menu.Item disabled>서브 항목 1</Menu.Item>
                         <Menu.Item>서브 항목 2</Menu.Item>
-                    </Menu.SubmenuContent>
+                    </Menu.SubmenuPopup>
                 </Menu.SubmenuRoot>
                 <Menu.Separator />
                 <Menu.Group>
@@ -86,7 +86,7 @@ export const TestBed = {
                         <Menu.RadioItem value="selected">선택</Menu.RadioItem>
                     </Menu.RadioGroup>
                 </Menu.Group>
-            </Menu.Content>
+            </Menu.Popup>
         </Menu.Root>
     ),
 };

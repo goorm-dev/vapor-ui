@@ -135,7 +135,27 @@
             "description": "커스텀 렌더링을 위한 요소나 함수를 설정합니다."
         }
     ],
-    "portalProps": [
+    "positionerPrimitiveProps": [
+        {
+            "prop": "side",
+            "type": ["\"top\"", "\"right\"", "\"bottom\"", "\"left\""],
+            "default": "\"right\"",
+            "description": "Tooltip이 나타날 화면의 위치를 설정합니다."
+        },
+        {
+            "prop": "render",
+            "type": ["React.ReactElement"],
+            "default": "div",
+            "description": "포지셔너 요소를 렌더링할 때 사용할 커스텀 렌더링 prop입니다."
+        },
+        {
+            "prop": "className",
+            "type": ["string"],
+            "default": "null",
+            "description": "포지셔너 요소에 적용할 CSS 클래스명입니다."
+        }
+    ],
+    "portalPrimitiveProps": [
         {
             "prop": "container",
             "type": ["Element", "function"],
@@ -149,7 +169,7 @@
             "description": "닫힌 상태에서도 DOM에 마운트된 상태를 유지할지 여부를 설정합니다."
         }
     ],
-    "contentProps": [
+    "popupProps": [
         {
             "prop": "className",
             "type": ["string"],

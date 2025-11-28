@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 import { IconButton, useTheme } from '@vapor-ui/core';
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';
 
@@ -9,40 +7,38 @@ interface ThemeToggleProps {
     size?: 'sm' | 'md' | 'lg';
     color?: 'primary' | 'secondary';
     variant?: 'fill' | 'ghost' | 'outline';
-    className?: string;
 }
 
 export const ThemeToggle = ({
     size = 'lg',
     color = 'secondary',
     variant = 'ghost',
-    className,
 }: ThemeToggleProps) => {
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const { resolvedTheme, setTheme, mounted } = useTheme();
 
     const toggleTheme = () => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
+        setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
     };
 
-    if (!mounted) {
-        return null;
-    }
+    const getThemeIcon = () => {
+        if (!mounted || !resolvedTheme) return '';
+        return resolvedTheme === 'dark' ? <LightIcon /> : <DarkIcon />;
+    };
+
+    const getAriaLabel = () => {
+        if (!resolvedTheme) return 'Toggle theme';
+        return `Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`;
+    };
 
     return (
         <IconButton
             size={size}
-            color={color}
-            variant={variant}
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            colorPalette={color}
+            variant={mounted ? variant : 'fill'}
+            aria-label={getAriaLabel()}
             onClick={toggleTheme}
-            className={className}
         >
-            {theme === 'dark' ? <LightIcon /> : <DarkIcon />}
+            {getThemeIcon()}
         </IconButton>
     );
 };

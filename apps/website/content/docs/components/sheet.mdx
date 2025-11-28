@@ -60,14 +60,14 @@ Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정할 수 �
 
 ---
 
-### Basic Usage
+### Custom Usage
 
-Sheet는 다양한 용도로 활용할 수 있는 기본적인 오버레이 컴포넌트입니다.
+유연한 Sheet 사용 예시입니다.
 
-<Demo name="sheet/sheet-simple">
+<Demo name="sheet/flexible">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/sheet/sheet-simple.tsx",
+    "file": "./src/components/demo/examples/sheet/flexible.tsx",
     "codeblock": true
 }
 ```
@@ -89,35 +89,35 @@ Sheet를 여는 트리거 요소입니다.
 
 <ComponentPropsTable file="sheet" section="triggerProps" />
 
-### Sheet.Content
+### Sheet.Popup
 
 Sheet의 실제 콘텐츠를 담는 컨테이너입니다. Portal, Overlay, Positioner를 조합하여 구성됩니다.
 
-<ComponentPropsTable file="sheet" section="contentProps" />
+<ComponentPropsTable file="sheet" section="popupProps" />
 
-### Sheet.Portal
+### Sheet.PortalPrimitive
 
 Sheet를 DOM의 다른 위치에 렌더링하는 포털 컴포넌트입니다.
 
-<ComponentPropsTable file="sheet" section="portalProps" />
+<ComponentPropsTable file="sheet" section="portalPrimitiveProps" />
 
-### Sheet.Overlay
+### Sheet.OverlayPrimitive
 
 Sheet 뒤의 배경 오버레이를 담당합니다.
 
-<ComponentPropsTable file="sheet" section="overlayProps" />
+<ComponentPropsTable file="sheet" section="overlayPrimitiveProps" />
 
-### Sheet.Popup
+### Sheet.PopupPrimitive
 
 Sheet의 실제 팝업 콘텐츠 영역입니다.
 
-<ComponentPropsTable file="sheet" section="popupProps" />
+<ComponentPropsTable file="sheet" section="popupPrimitiveProps" />
 
-### Sheet.Positioner
+### Sheet.PositionerPrimitive
 
 Sheet의 위치를 설정하는 컴포넌트입니다.
 
-<ComponentPropsTable file="sheet" section="positionerProps" />
+<ComponentPropsTable file="sheet" section="positionerPrimitiveProps" />
 
 ### Sheet.Header
 

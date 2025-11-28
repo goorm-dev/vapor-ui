@@ -55,7 +55,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     return (
         <div
             className={clsx(
-                'bg-[var(--vapor-color-background-canvas)] rounded-[var(--vapor-size-borderRadius-500)] shadow-lg overflow-hidden w-full border border-[var(--vapor-color-border-normal)]',
+                'bg-[var(--vapor-color-background-canvas)] rounded-xl shadow-lg overflow-hidden w-full border border-[var(--vapor-color-border-normal)]',
                 className,
             )}
         >
@@ -99,7 +99,7 @@ const BrowserHeader = () => {
                     <span className="absolute left-[-6px] bottom-0">
                         <TabLeftCurvedIcon color="var(--vapor-color-background-secondary-200)" />
                     </span>
-                    <div className="flex items-center gap-[9px] p-[var(--vapor-size-space-100)] pl-[var(--vapor-size-space-200)] min-w-0 flex-shrink-0 relative bg-[var(--vapor-color-background-secondary-200)] rounded-t-[var(--vapor-size-borderRadius-300)]">
+                    <div className="flex items-center gap-[9px] p-[var(--vapor-size-space-100)] pl-[var(--vapor-size-space-200)] min-w-0 flex-shrink-0 relative bg-[var(--vapor-color-background-secondary-200)] rounded-t-lg">
                         <div className="flex gap-[9px]">
                             <Text typography="subtitle2" foreground="normal-200">
                                 Vapor UI
@@ -164,7 +164,7 @@ const CreditPurchaseCard = () => {
 
                         <Button
                             size="lg"
-                            color="secondary"
+                            colorPalette="secondary"
                             stretch
                             variant="outline"
                             className="mt-2"
@@ -261,7 +261,7 @@ const TemplateListCard = () => (
                             Template {index + 1}
                         </Text>
                         {index === 0 && (
-                            <Badge color="primary" size="sm">
+                            <Badge colorPalette="primary" size="sm">
                                 <Text typography="subtitle2">기본</Text>
                             </Badge>
                         )}
@@ -510,10 +510,10 @@ const PublicDialogCard = () => (
         {/* Footer */}
         <div className="flex px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] justify-end items-center gap-[var(--vapor-size-space-100)] self-stretch">
             <div className="flex h-[40px] p-0 justify-end items-start gap-[var(--vapor-size-space-100)] flex-1">
-                <Button size="lg" color="secondary">
+                <Button size="lg" colorPalette="secondary">
                     취소
                 </Button>
-                <Button size="lg" color="primary" className="text-white">
+                <Button size="lg" colorPalette="primary" className="text-white">
                     <SwitchIcon />
                     Public으로 변경
                 </Button>
@@ -548,7 +548,7 @@ const UserSidebar = () => {
     return (
         <div className="flex w-[371px] p-[var(--vapor-size-space-300)] items-end bg-[var(--vapor-color-background-canvas)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
             <div className="w-full h-full flex flex-col gap-[var(--vapor-size-space-300)]">
-                <div className="relative w-full flex items-center border rounded-lg">
+                <div className="relative w-full flex items-center border rounded-[var(--vapor-size-borderRadius-300)]">
                     <div className="absolute z-[1] h-full flex items-center justify-center ml-[var(--vapor-size-space-200)]">
                         <SearchOutlineIcon
                             size="20"
