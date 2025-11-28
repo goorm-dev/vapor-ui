@@ -1,7 +1,6 @@
 import { Box, Text } from '@vapor-ui/core';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
-import * as TabsComponents from 'fumadocs-ui/components/tabs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 import Image from 'next/image';
@@ -18,7 +17,6 @@ import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
 
 import { ColorPalette } from './components/color-swatch';
-import { Tabs } from './components/docs-tabs';
 import { BasicColor, SemanticColor } from './components/foundation-color-tabs';
 import IntroLinkCardContainer from './components/intro-link-card-container';
 
@@ -27,12 +25,11 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         ...defaultMdxComponents,
 
         pre: ({ ref: _ref, ...props }) => (
-            <CodeBlock {...props}>
+            <CodeBlock {...props} className="bg-v-background-canvas-100">
                 <Pre>{props.children}</Pre>
             </CodeBlock>
         ),
         CodeBlock,
-        ...TabsComponents,
         Demo,
         InstallSelector,
         AllComponentsContainer,
@@ -44,7 +41,6 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         PropsTable,
         LiveCodeBlock,
         ColorPalette,
-        Tabs,
         Text,
         Box,
         BasicColor,

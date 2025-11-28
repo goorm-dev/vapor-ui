@@ -17,7 +17,7 @@ Vapor UI는 라이트 모드, 다크 모드, 그리고 시스템 설정에 동�
 npm install @vapor-ui/core@beta
 ```
 
-### 2. `ThemeProvider` 설정
+### 2. ThemeProvider 설정
 
 애플리케이션의 최상위(`root`)를 `ThemeProvider`로 감싸고, 필요한 스타일을 import 합니다.
 
@@ -68,37 +68,37 @@ export function ThemeToggle() {
 }
 ```
 
-## `useTheme` Hook
+## useTheme Hook
 
-`useTheme` 훅은 다음과 같은 유용한 값들을 반환합니다.
+다음과 같은 유용한 값들을 반환합니다.
 
-| Key             | Type                                                                         | Description                                                                                       |
-| :-------------- | :--------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------ |
-| `theme`         | `'light' \| 'dark' \| 'system' \| undefined`                                 | 현재 설정된 테마. SSR 환경에서 `mounted`가 `false`일 때는 `undefined`.                            |
-| `setTheme`      | `(theme: 'light' \| 'dark' \| 'system' \| ((prev: Theme) => Theme)) => void` | 테마를 변경하는 함수. 함수형 업데이트도 지원하며 `localStorage`에 자동 저장됩니다.                |
-| `themes`        | `('light' \| 'dark' \| 'system')[]`                                          | 사용 가능한 테마 목록. 항상 `['light', 'dark', 'system']`을 포함합니다.                           |
-| `resolvedTheme` | `'light' \| 'dark' \| undefined`                                             | 실제로 적용된 테마. `theme`이 `'system'`일 때 현재 시스템 테마를 반영합니다.                      |
-| `systemTheme`   | `'light' \| 'dark' \| undefined`                                             | 현재 사용자의 시스템 테마. `theme`이 `'system'`일 때만 제공됩니다.                                |
-| `forcedTheme`   | `'light' \| 'dark' \| 'system' \| undefined`                                 | 강제로 적용된 테마. 설정되지 않았을 때는 `undefined`.                                             |
-| `resetTheme`    | `() => void`                                                                 | 테마 설정을 기본값으로 초기화하고 `localStorage`에서 저장된 값을 제거합니다.                      |
-| `mounted`       | `boolean`                                                                    | ThemeProvider가 클라이언트에서 마운트되었는지 여부. SSR 환경에서 hydration 이슈 방지를 위해 사용. |
+| Key           | Type                                                                         | Description                                                                                       |
+| :------------ | :--------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------ |
+| theme         | `'light' \| 'dark' \| 'system' \| undefined`                                 | 현재 설정된 테마. SSR 환경에서 mounted가 `false`일 때는 `undefined`.                              |
+| setTheme      | `(theme: 'light' \| 'dark' \| 'system' \| ((prev: Theme) => Theme)) => void` | 테마를 변경하는 함수. 함수형 업데이트도 지원하며 localStorage에 자동 저장됩니다.                  |
+| themes        | `('light' \| 'dark' \| 'system')[]`                                          | 사용 가능한 테마 목록. 항상 `['light', 'dark', 'system']`을 포함합니다.                           |
+| resolvedTheme | `'light' \| 'dark' \| undefined`                                             | 실제로 적용된 테마. theme가 `'system'`일 때 현재 시스템 테마를 반영합니다.                        |
+| systemTheme   | `'light' \| 'dark' \| undefined`                                             | 현재 사용자의 시스템 테마. theme가 `'system'`일 때만 제공됩니다.                                  |
+| forcedTheme   | `'light' \| 'dark' \| 'system' \| undefined`                                 | 강제로 적용된 테마. 설정되지 않았을 때는 `undefined`.                                             |
+| resetTheme    | `() => void`                                                                 | 테마 설정을 기본값으로 초기화하고 localStorage에서 저장된 값을 제거합니다.                        |
+| mounted       | `boolean`                                                                    | ThemeProvider가 클라이언트에서 마운트되었는지 여부. SSR 환경에서 hydration 이슈 방지를 위해 사용. |
 
-## `ThemeProvider` Props
+## ThemeProvider Props
 
-`ThemeProvider`에 전달할 수 있는 props는 다음과 같습니다.
+전달할 수 있는 props는 다음과 같습니다.
 
-| Prop                        | Type                            | Default            | Description                                                                                              |
-| :-------------------------- | :------------------------------ | :----------------- | :------------------------------------------------------------------------------------------------------- |
-| `defaultTheme`              | `'light' \| 'dark' \| 'system'` | `'system'`         | 테마 동작을 결정합니다. `'light'`/`'dark'`는 고정 테마, `'system'`은 시스템 테마에 자동 동기화됩니다.    |
-| `storageKey`                | `string`                        | `'vapor-ui-theme'` | `localStorage`에 테마를 저장할 때 사용될 키.                                                             |
-| `forcedTheme`               | `'light' \| 'dark' \| 'system'` | `undefined`        | 특정 테마를 강제로 적용합니다. 이 값이 설정되면 다른 모든 테마 관련 설정을 무시합니다.                   |
-| `disableTransitionOnChange` | `boolean`                       | `false`            | `true`일 경우, 테마 변경 시 발생하는 CSS 트랜지션을 비활성화합니다.                                      |
-| `enableColorScheme`         | `boolean`                       | `true`             | `true`일 경우, `color-scheme` CSS 속성을 자동으로 설정하여 브라우저 UI(스크롤바 등)의 테마를 조정합니다. |
-| `nonce`                     | `string \| undefined`           | `undefined`        | CSP(Content Security Policy) nonce 값. 보안 정책이 적용된 환경에서 사용.                                 |
+| Prop                      | Type                            | Default            | Description                                                                                              |
+| :------------------------ | :------------------------------ | :----------------- | :------------------------------------------------------------------------------------------------------- |
+| defaultTheme              | `'light' \| 'dark' \| 'system'` | `'system'`         | 테마 동작을 결정합니다. `'light'`, `'dark'`는 고정 테마, `'system'`은 시스템 테마에 자동 동기화됩니다.   |
+| storageKey                | `string`                        | `'vapor-ui-theme'` | localStorage에 테마를 저장할 때 사용될 키.                                                               |
+| forcedTheme`              | `'light' \| 'dark' \| 'system'` | `undefined`        | 특정 테마를 강제로 적용합니다. 이 값이 설정되면 다른 모든 테마 관련 설정을 무시합니다.                   |
+| disableTransitionOnChange | `boolean`                       | `false`            | `true`일 경우, 테마 변경 시 발생하는 CSS 트랜지션을 비활성화합니다.                                      |
+| enableColorScheme         | `boolean`                       | `true`             | `true`일 경우, `color-scheme` CSS 속성을 자동으로 설정하여 브라우저 UI(스크롤바 등)의 테마를 조정합니다. |
+| nonce                     | `string \| undefined`           | `undefined`        | CSP(Content Security Policy) nonce 값. 보안 정책이 적용된 환경에서 사용.                                 |
 
 ## 로컬 테마 스코프 (ThemeScope)
 
-`ThemeScope` 컴포넌트를 사용하여 특정 영역에만 다른 테마를 적용할 수 있습니다.
+해당 컴포넌트를 사용하여 특정 영역에만 다른 테마를 적용할 수 있습니다.
 
 ```tsx title="components/theme-scope-example.tsx"
 import { Card } from '@vapor-ui/components/ui/card';
@@ -137,13 +137,13 @@ Portal 컴포넌트(Dialog, Popover, Tooltip 등)가 `ThemeScope`의 테마를 �
 </ThemeScope>
 ```
 
-### `ThemeScope` Props
+### ThemeScope Props
 
-| Prop          | Type                         | Description                                   |
-| :------------ | :--------------------------- | :-------------------------------------------- |
-| `forcedTheme` | `'light' \| 'dark'`          | 해당 영역에 강제로 적용할 테마.               |
-| `children`    | `React.ReactNode`            | 테마가 적용될 자식 컴포넌트들.                |
-| `style`       | `CSSProperties \| undefined` | 추가 스타일. `colorScheme`는 자동으로 설정됨. |
+| Prop        | Type                         | Description                                   |
+| :---------- | :--------------------------- | :-------------------------------------------- |
+| forcedTheme | `'light' \| 'dark'`          | 해당 영역에 강제로 적용할 테마.               |
+| children    | `React.ReactNode`            | 테마가 적용될 자식 컴포넌트들.                |
+| style       | `CSSProperties \| undefined` | 추가 스타일. `colorScheme`는 자동으로 설정됨. |
 
 ## 고급 사용법
 
