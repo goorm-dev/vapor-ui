@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import { Badge, Text } from '@vapor-ui/core';
 
@@ -74,7 +75,17 @@ const NewComponentPropsTable: React.FC<NewComponentPropsTableProps> = ({ compone
             }}
         >
             <Text typography="body1" foreground="normal-200">
-                {componentData.description.split('Documentation')[0].trim()}
+                <ReactMarkdown
+                    components={{
+                        code: ({ children }) => (
+                            <code className="px-1 py-0.5 rounded bg-gray-100 text-sm font-mono">
+                                {children}
+                            </code>
+                        ),
+                    }}
+                >
+                    {componentData.description.split('Documentation')[0].trim()}
+                </ReactMarkdown>
             </Text>
             <div className="w-full overflow-auto flex flex-col items-start gap-0 self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
                 <table
@@ -106,14 +117,28 @@ const NewComponentPropsTable: React.FC<NewComponentPropsTableProps> = ({ compone
                                 <td
                                     className={` px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${index === componentData.props.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
                                 >
-                                    <div className="prose flex items-center gap-[var(--vapor-size-space-100)] w-fit">
+                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] w-fit">
                                         <Text typography="body2" foreground="normal-200">
                                             <span>
                                                 {prop.name}
                                                 {!prop.required && '?'}
                                             </span>
                                         </Text>
-                                        <InfoPopover>{prop.description}</InfoPopover>
+                                        {prop.description && (
+                                            <InfoPopover>
+                                                <ReactMarkdown
+                                                    components={{
+                                                        code: ({ children }) => (
+                                                            <code className="px-1 py-0.5 rounded bg-gray-100 text-sm font-mono">
+                                                                {children}
+                                                            </code>
+                                                        ),
+                                                    }}
+                                                >
+                                                    {prop.description}
+                                                </ReactMarkdown>
+                                            </InfoPopover>
+                                        )}
                                     </div>
                                 </td>
                                 <td

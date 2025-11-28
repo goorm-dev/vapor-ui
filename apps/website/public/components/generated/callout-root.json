@@ -1,7 +1,7 @@
 {
     "name": "Root",
     "displayName": "CalloutRoot",
-    "description": "시각적 스타일과 함께 정보 콘텐츠를 표시하는 Callout 컴포넌트의 루트 컨테이너입니다.\n이 컴포넌트는 div 요소를 기반으로, 표준 HTML 속성을 지원합니다.",
+    "description": "Callout의 하위 요소를 그룹화합니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "render",

@@ -1,7 +1,7 @@
 {
     "name": "Icon",
     "displayName": "CalloutIcon",
-    "description": "Callout 컴포넌트의 아이콘 컨테이너입니다.\n이 컴포넌트는 div 요소를 기반으로, 표준 HTML 속성을 지원합니다.",
+    "description": "아이콘을 표시하는 경우, 정렬을 보장합니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "render",

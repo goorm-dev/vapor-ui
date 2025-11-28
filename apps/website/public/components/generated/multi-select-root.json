@@ -5,13 +5,17 @@
     "props": [
         {
             "name": "id",
-            "type": ["string"],
+            "type": [
+                "string"
+            ],
             "required": false,
             "description": "Select의 id"
         },
         {
             "name": "name",
-            "type": ["string"],
+            "type": [
+                "string"
+            ],
             "required": false,
             "description": "폼 제출 시 필드를 식별하는 이름"
         },
@@ -31,53 +35,74 @@
         },
         {
             "name": "defaultValue",
-            "type": ["null", "Value[]"],
+            "type": [
+                "null",
+                "Value[]"
+            ],
             "required": false,
             "description": "The uncontrolled value of the select when it’s initially rendered.\n\nTo render a controlled select, use the `value` prop instead.",
             "defaultValue": "null"
         },
         {
             "name": "disabled",
-            "type": ["false", "true"],
+            "type": [
+                "false",
+                "true"
+            ],
             "required": false,
             "description": "사용자 상호작용을 비활성화할지 여부",
             "defaultValue": "false"
         },
         {
             "name": "value",
-            "type": ["Value[]"],
+            "type": [
+                "Value[]"
+            ],
             "required": false,
             "description": "select의 현재 값"
         },
         {
             "name": "open",
-            "type": ["false", "true"],
+            "type": [
+                "false",
+                "true"
+            ],
             "required": false,
             "description": "select 팝업의 현재 열림 상태"
         },
         {
             "name": "readOnly",
-            "type": ["false", "true"],
+            "type": [
+                "false",
+                "true"
+            ],
             "required": false,
             "description": "사용자가 select 팝업에서 다른 옵션을 선택할 수 없도록 할지 여부",
             "defaultValue": "false"
         },
         {
             "name": "required",
-            "type": ["false", "true"],
+            "type": [
+                "false",
+                "true"
+            ],
             "required": false,
             "description": "폼 제출 전 값을 반드시 선택해야 하는지 여부",
             "defaultValue": "false"
         },
         {
             "name": "render",
-            "type": ["ReactElement"],
+            "type": [
+                "ReactElement"
+            ],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
         },
         {
             "name": "onValueChange",
-            "type": ["(value: Value[], eventDetails: ChangeEventDetails) => void"],
+            "type": [
+                "(value: Value[], eventDetails: ChangeEventDetails) => void"
+            ],
             "required": false,
             "description": "셀렉트 값이 변경될 때 호출되는 콜백. 제어 컴포넌트에서 사용"
         },
@@ -93,68 +118,97 @@
         },
         {
             "name": "defaultOpen",
-            "type": ["false", "true"],
+            "type": [
+                "false",
+                "true"
+            ],
             "required": false,
             "description": "select 팝업의 초기 열림 상태 (비제어 컴포넌트)\n\n제어 컴포넌트로 사용하려면 `open` prop을 사용하세요.",
             "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
+            "type": [
+                "(open: boolean, eventDetails: ChangeEventDetails) => void"
+            ],
             "required": false,
             "description": "셀렉트 팝업이 열리거나 닫힐 때 호출되는 이벤트 핸들러"
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["(open: boolean) => void"],
+            "type": [
+                "(open: boolean) => void"
+            ],
             "required": false,
             "description": "셀렉트 팝업이 열리거나 닫힌 후 애니메이션이 완료되면 호출되는 이벤트 핸들러"
         },
         {
             "name": "modal",
-            "type": ["false", "true"],
+            "type": [
+                "false",
+                "true"
+            ],
             "required": false,
             "description": "select 열림 시 모달 상태 진입 여부\n- `true`: select로 상호작용이 제한됩니다. 문서 스크롤이 잠기고 외부 요소와의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용이 가능합니다.",
             "defaultValue": "true"
         },
         {
             "name": "actionsRef",
-            "type": ["RefObject<Actions>"],
+            "type": [
+                "RefObject<Actions>"
+            ],
             "required": false,
             "description": "명령형 동작을 위한 ref\n- `unmount`: 지정 시 select가 닫힐 때 언마운트되지 않습니다. 대신 수동으로 `unmount` 함수를 호출해야 합니다.\n외부 라이브러리로 애니메이션을 제어할 때 유용합니다."
         },
         {
             "name": "items",
-            "type": ["Record<string, ReactNode>", "readonly { label: ReactNode; value: Value; }[]"],
+            "type": [
+                "Record<string, ReactNode>",
+                "readonly { label: ReactNode; value: Value; }[]"
+            ],
             "required": false,
             "description": "select 팝업에 렌더링되는 아이템 데이터 구조\n지정 시 `<Select.Value>`가 원시 값 대신 선택된 아이템의 라벨을 렌더링합니다."
         },
         {
             "name": "itemToStringLabel",
-            "type": ["(itemValue: Value) => string"],
+            "type": [
+                "(itemValue: Value) => string"
+            ],
             "required": false,
             "description": "아이템 값이 객체인 경우(`<Select.Item value={object}>`) 트리거에 표시하기 위해 객체 값을 문자열로 변환하는 함수\n객체 형태가 `{ value, label }`이면 이 prop 없이도 자동으로 라벨이 사용됩니다."
         },
         {
             "name": "itemToStringValue",
-            "type": ["(itemValue: Value) => string"],
+            "type": [
+                "(itemValue: Value) => string"
+            ],
             "required": false,
             "description": "아이템 값이 객체인 경우(`<Select.Item value={object}>`) 폼 제출을 위해 객체 값을 문자열로 변환하는 함수\n객체 형태가 `{ value, label }`이면 이 prop 없이도 자동으로 값이 사용됩니다."
         },
         {
             "name": "isItemEqualToValue",
-            "type": ["(itemValue: Value, value: Value) => boolean"],
+            "type": [
+                "(itemValue: Value, value: Value) => boolean"
+            ],
             "required": false,
             "description": "select 아이템 값이 현재 선택된 값과 일치하는지 판단하는 커스텀 비교 로직\n참조가 다른 객체 값을 사용할 때 유용합니다. 기본값은 `Object.is` 비교입니다."
         },
         {
             "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
+            "type": [
+                "sm",
+                "md",
+                "lg",
+                "xl"
+            ],
             "required": false
         },
         {
             "name": "invalid",
-            "type": ["false", "true"],
+            "type": [
+                "false",
+                "true"
+            ],
             "required": false
         }
     ],
