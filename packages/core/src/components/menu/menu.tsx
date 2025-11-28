@@ -7,8 +7,8 @@ import { Menu as BaseMenu } from '@base-ui-components/react';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
+import { useSlot } from '~/hooks/use-slot';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { composeRefs } from '~/utils/compose-refs';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -104,8 +104,8 @@ MenuPopupPrimitive.displayName = 'Menu.PopupPrimitive';
 
 export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <MenuPortalPrimitive />);
-        const PositionerElement = createSlot(positionerElement || <MenuPositionerPrimitive />);
+        const PortalElement = useSlot(portalElement, <MenuPortalPrimitive />);
+        const PositionerElement = useSlot(positionerElement, <MenuPositionerPrimitive />);
 
         return (
             <PortalElement>
@@ -270,9 +270,10 @@ MenuSubmenuPopupPrimitive.displayName = 'Menu.SubmenuPopupPrimitive';
 
 export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <MenuPortalPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement || <MenuPositionerPrimitive side="right" sideOffset={0} />,
+        const PortalElement = useSlot(portalElement, <MenuPortalPrimitive />);
+        const PositionerElement = useSlot(
+            positionerElement,
+            <MenuPositionerPrimitive side="right" sideOffset={0} />,
         );
 
         return (

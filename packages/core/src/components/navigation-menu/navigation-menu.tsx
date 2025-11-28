@@ -8,8 +8,8 @@ import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { useSlot } from '~/hooks/use-slot';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -167,7 +167,7 @@ export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
 
-    const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
+    const IconElement = useSlot(children, <ChevronDownOutlineIcon />);
 
     return (
         <BaseNavigationMenu.Icon
@@ -403,11 +403,9 @@ NavigationMenuViewportPrimitive.displayName = 'NavigationMenu.ViewportPrimitive'
 
 export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
     ({ portalElement, positionerElement, popupElement, className, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement ?? <NavigationMenuPortalPrimitive />);
-        const PopupElement = createSlot(popupElement ?? <NavigationMenuPopupPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement ?? <NavigationMenuPositionerPrimitive />,
-        );
+        const PortalElement = useSlot(portalElement, <NavigationMenuPortalPrimitive />);
+        const PopupElement = useSlot(popupElement, <NavigationMenuPopupPrimitive />);
+        const PositionerElement = useSlot(positionerElement, <NavigationMenuPositionerPrimitive />);
 
         return (
             <PortalElement>
