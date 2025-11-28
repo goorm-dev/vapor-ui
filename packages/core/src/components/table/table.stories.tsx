@@ -138,3 +138,5 @@ const data: Array<Data> = [
         },
     },
 ];
+
+export const TestBed: StoryObj<typeof Table.Root> = Default;
