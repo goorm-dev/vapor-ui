@@ -214,12 +214,15 @@ const columnSizingHandler = (
     column: Column<Data>,
 ) => {
     if (!thElem) return;
-    if (table.getState().columnSizing[column.id] !== undefined) return;
-    if (table.getState().columnSizing[column.id] === thElem.getBoundingClientRect().width) return;
+
+    const currentSize = table.getState().columnSizing[column.id];
+    const elementWidth = thElem.getBoundingClientRect().width;
+
+    if (currentSize === elementWidth) return;
 
     table.setColumnSizing((prevSizes) => ({
         ...prevSizes,
-        [column.id]: thElem.getBoundingClientRect().width,
+        [column.id]: elementWidth,
     }));
 };
 
