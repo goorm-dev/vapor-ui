@@ -1,22 +1,17 @@
 {
     "name": "SubmenuPopup",
     "displayName": "Menu.SubmenuPopup",
-    "description": "서브메뉴 팝업 컴포넌트",
+    "description": "Submenu의 컨텐츠를 표시합니다. `<PortalPrimitive>`, `<PositionerPrimitive>`, `<SubmenuPopupPrimitive>`의 중첩 구조로 이루어져 있습니다.",
     "props": [
         {
             "name": "className",
-            "type": [
-                "string",
-                "(state: State) => string"
-            ],
+            "type": ["string", "(state: State) => string"],
             "required": false,
             "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
         },
         {
             "name": "id",
-            "type": [
-                "string"
-            ],
+            "type": ["string"],
             "required": false
         },
         {
@@ -35,9 +30,7 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
         },
@@ -50,20 +43,16 @@
                 "(closeType: InteractionType) => boolean | void | HTMLElement | null"
             ],
             "required": false,
-            "description": "Determines the element to focus when the menu is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+            "description": "메뉴가 닫힐 때 포커스를 이동할 요소를 결정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작에 따라 포커스를 이동합니다 (트리거 또는 이전에 포커스된 요소).\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 인터랙션 타입(`mouse`, `touch`, `pen`, 또는 `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, `true`를 반환하여 기본 동작을 사용하거나, `false`/`undefined`를 반환하여 아무 작업도 수행하지 않습니다."
         },
         {
             "name": "portalElement",
-            "type": [
-                "ReactElement"
-            ],
+            "type": ["ReactElement"],
             "required": false
         },
         {
             "name": "positionerElement",
-            "type": [
-                "ReactElement"
-            ],
+            "type": ["ReactElement"],
             "required": false
         }
     ],

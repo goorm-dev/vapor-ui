@@ -1,13 +1,13 @@
 {
     "name": "SubmenuRoot",
     "displayName": "Menu.SubmenuRoot",
-    "description": "서브메뉴 루트 컴포넌트",
+    "description": "Submenu 하위의 요소를 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "orientation",
             "type": ["horizontal", "vertical"],
             "required": false,
-            "description": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys.",
+            "description": "메뉴의 시각적 방향.\n회전 초점이 위쪽/아래쪽 화살표 키를 사용하는지 왼쪽/오른쪽 화살표 키를 사용하는지 제어합니다.",
             "defaultValue": "vertical"
         },
         {
@@ -29,21 +29,21 @@
             "name": "loop",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
+            "description": "키보드 포커스를 화살표 키를 사용하여 목록 끝에 도달했을 때 첫 번째 항목으로 다시 루프할지 여부입니다.",
             "defaultValue": "true"
         },
         {
             "name": "disabled",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the component should ignore user interaction.",
+            "description": "컴포넌트가 사용자 상호작용을 무시해야 하는지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "open",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the menu is currently open."
+            "description": "메뉴가 현재 열려 있는지 여부입니다."
         },
         {
             "name": "render",
@@ -55,47 +55,47 @@
             "name": "defaultOpen",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the menu is initially open.\n\nTo render a controlled menu, use the `open` prop instead.",
+            "description": "메뉴가 처음에 열려 있는지 여부입니다.\n\n제어되는 메뉴를 렌더링하려면 대신 `open` 속성을 사용하세요.",
             "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
             "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
             "required": false,
-            "description": "Event handler called when the menu is opened or closed."
+            "description": "메뉴가 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
         },
         {
             "name": "onOpenChangeComplete",
             "type": ["(open: boolean) => void"],
             "required": false,
-            "description": "Event handler called after any animations complete when the menu is closed."
+            "description": "메뉴가 닫힐 때 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
         },
         {
             "name": "delay",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait before the menu may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "description": "메뉴가 호버될 때 열리기 전에 대기하는 시간입니다. 밀리초 단위로 지정합니다.\n\n`openOnHover` 속성이 필요합니다.",
             "defaultValue": "100"
         },
         {
             "name": "closeDelay",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait before closing the menu that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "description": "메뉴가 호버되어 열렸을 때 닫히기 전에 대기하는 시간입니다. 밀리초 단위로 지정합니다.\n\n`openOnHover` 속성이 필요합니다.",
             "defaultValue": "0"
         },
         {
             "name": "openOnHover",
             "type": ["false", "true"],
             "required": false,
-            "description": "Whether the submenu should open when the trigger is hovered.",
+            "description": "서브메뉴가 트리거에 마우스를 올렸을 때 열릴지 여부입니다.",
             "defaultValue": "true"
         },
         {
             "name": "actionsRef",
             "type": ["RefObject<Actions>"],
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: When specified, the menu will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the menu manually.\nUseful when the menu's animation is controlled by an external library."
+            "description": "명령적 행동에 대한 참조.\n- `unmount`: 지정되면 메뉴를 닫았을 때 언마운트되지 않습니다.\n대신 메뉴를 수동으로 마운트 해제하려면 'unmount' 기능을 호출해야 합니다.\n메뉴의 애니메이션이 외부 라이브러리에 의해 제어될 때 유용합니다.\n- `close`: 지정하면 메뉴를 긴급하게 닫을 수 있습니다."
         }
     ],
     "generatedAt": "2025-11-27T12:30:25.923Z",

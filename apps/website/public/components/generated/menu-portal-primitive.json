@@ -1,7 +1,7 @@
 {
     "name": "PortalPrimitive",
     "displayName": "Menu.PortalPrimitive",
-    "description": "메뉴 포털 프리미티브",
+    "description": "팝업을 DOM의 다른 부분으로 이동시키는 포털 요소입니다. 기본적으로 포털 요소는 `<body>`에 추가됩니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "children",
@@ -19,20 +19,15 @@
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
         },
         {
             "name": "keepMounted",
-            "type": [
-                "false",
-                "true"
-            ],
+            "type": ["false", "true"],
             "required": false,
-            "description": "Whether to keep the portal mounted in the DOM while the popup is hidden.",
+            "description": "팝업이 숨겨진 상태에서 포털을 DOM에 마운트할지 여부.",
             "defaultValue": "false"
         },
         {
@@ -44,7 +39,7 @@
                 "RefObject<HTMLElement | ShadowRoot | null>"
             ],
             "required": false,
-            "description": "A parent element to render the portal element into."
+            "description": "포털 요소를 렌더링하기 위해 상위 요소입니다."
         }
     ],
     "generatedAt": "2025-11-27T12:30:25.904Z",
