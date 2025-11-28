@@ -1,4 +1,5 @@
-import { style } from '@vanilla-extract/css';
+// tabs.css.ts
+import { createVar, style } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -7,6 +8,14 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
+
+const listBorderBottom = createVar();
+const listBorderRight = createVar();
+const listBorder = createVar();
+const triggerBorderRadius = createVar();
+const triggerDefaultBg = createVar();
+const triggerSelectedBg = createVar();
+const indicatorDisplay = createVar();
 
 export const root = recipe({
     base: layerStyle('components', { display: 'flex' }),
@@ -28,35 +37,51 @@ export const list = recipe({
     base: layerStyle('components', {
         position: 'relative',
         gap: vars.size.space[100],
+        borderBottom: listBorderBottom,
+        borderRight: listBorderRight,
     }),
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
     variants: {
-        variant: { line: {}, plain: {} },
         orientation: {
             horizontal: layerStyle('components', {
                 display: 'flex',
+                vars: {
+                    [listBorderBottom]: listBorder,
+                    [listBorderRight]: 'none',
+                },
             }),
             vertical: layerStyle('components', {
                 display: 'inline-flex',
                 flexDirection: 'column',
+                vars: {
+                    [listBorderBottom]: 'none',
+                    [listBorderRight]: listBorder,
+                },
+            }),
+        },
+
+        variant: {
+            line: layerStyle('components', {
+                vars: {
+                    [listBorder]: `1px solid ${vars.color.border.normal}`,
+                    [triggerDefaultBg]: 'transparent',
+                    [triggerBorderRadius]: '0',
+                    [triggerSelectedBg]: 'transparent',
+                    [indicatorDisplay]: 'block',
+                },
+            }),
+            fill: layerStyle('components', {
+                vars: {
+                    [listBorder]: 'none',
+                    [triggerDefaultBg]: vars.color.background.hint[100],
+                    [triggerBorderRadius]: vars.size.borderRadius[300],
+                    [triggerSelectedBg]: vars.color.background.primary[100],
+                    [indicatorDisplay]: 'none',
+                },
             }),
         },
     },
-    compoundVariants: [
-        {
-            variants: { variant: 'line', orientation: 'horizontal' },
-            style: layerStyle('components', {
-                borderBottom: `1px solid ${vars.color.border.normal}`,
-            }),
-        },
-        {
-            variants: { variant: 'line', orientation: 'vertical' },
-            style: layerStyle('components', {
-                borderRight: `1px solid ${vars.color.border.normal}`,
-            }),
-        },
-    ],
 });
 
 const triggerBase = style([
@@ -68,16 +93,20 @@ const triggerBase = style([
         alignItems: 'center',
         justifyContent: 'center',
         gap: vars.size.space['075'],
-        borderRadius: vars.size.borderRadius['300'],
+        backgroundColor: triggerDefaultBg,
+        borderRadius: triggerBorderRadius,
 
         selectors: {
-            '&[data-selected]': { color: vars.color.foreground.primary[100] },
+            '&[data-selected]': {
+                color: vars.color.foreground.primary[100],
+                backgroundColor: triggerSelectedBg,
+            },
         },
     }),
 ]);
 
 export const trigger = recipe({
-    base: triggerBase,
+    base: [triggerBase, typography({ style: 'subtitle1' })],
 
     defaultVariants: { size: 'md', disabled: false, orientation: 'horizontal' },
     variants: {
@@ -86,14 +115,8 @@ export const trigger = recipe({
                 typography({ style: 'subtitle2' }),
                 layerStyle('components', { height: vars.size.space['300'] }),
             ],
-            md: [
-                typography({ style: 'subtitle1' }),
-                layerStyle('components', { height: vars.size.space['400'] }),
-            ],
-            lg: [
-                typography({ style: 'subtitle1' }),
-                layerStyle('components', { height: vars.size.space['500'] }),
-            ],
+            md: [layerStyle('components', { height: vars.size.space['400'] })],
+            lg: [layerStyle('components', { height: vars.size.space['500'] })],
             xl: [
                 typography({ style: 'heading6' }),
                 layerStyle('components', { height: vars.size.space['600'] }),
@@ -118,6 +141,7 @@ export const trigger = recipe({
 export const indicator = recipe({
     base: layerStyle('components', {
         position: 'absolute',
+        display: indicatorDisplay,
 
         transitionDuration: '200ms',
         transitionProperty: `translate, width`,
