@@ -1,0 +1,14 @@
+// @ts-nocheck
+import { Dropdown } from '@goorm-dev/vapor-core';
+import { Button } from '@vapor-ui/core';
+
+export default function App() {
+    return (
+        <Dropdown>
+            <Dropdown.Trigger>Open</Dropdown.Trigger>
+            <Dropdown.Contents>
+                <Dropdown.Item>Item</Dropdown.Item>
+            </Dropdown.Contents>
+        </Dropdown>
+    );
+}
