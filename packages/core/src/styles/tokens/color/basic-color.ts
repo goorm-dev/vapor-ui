@@ -276,3 +276,9 @@ export const DARK_BASIC_COLORS = {
         '900': '#fafafa',
     },
 };
+
+/**
+ * LIGHT_BASIC_COLORS의 전체 구조를 나타내는 타입
+ * 색상 팔레트의 모든 색상(red, blue, gray 등)과 그 shade들을 포함
+ */
+export type BasicColorPalette = typeof LIGHT_BASIC_COLORS;

@@ -1,4 +1,16 @@
-import type { BackgroundKey, BaseColorName, ColorName, ColorShade } from './types';
+import type { BASE_BASIC_COLORS, LIGHT_BASIC_COLORS } from './basic-color';
+
+/** 색상 이름 타입 (background, black, white 제외) */
+type ColorName = Exclude<keyof typeof LIGHT_BASIC_COLORS, 'background' | 'black' | 'white'>;
+
+/** 색상 단계(shade) 타입 */
+type ColorShade = keyof (typeof LIGHT_BASIC_COLORS)['blue'];
+
+/** 기본 색상 이름 타입 (black, white) */
+type BaseColorName = keyof typeof BASE_BASIC_COLORS;
+
+/** 배경 색상 키 타입 */
+type BackgroundKey = keyof (typeof LIGHT_BASIC_COLORS)['background'];
 
 const colorRef = <C extends ColorName, S extends ColorShade>(color: C, shade: S) =>
     `var(--vapor-color-${color}-${shade})` as const;
