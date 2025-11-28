@@ -1,7 +1,7 @@
 {
     "name": "PositionerPrimitive",
     "displayName": "Popover.PositionerPrimitive",
-    "description": "팝오버 위치 지정 프리미티브",
+    "description": "Poover를 트리거 요소에 대해 올바르게 배치하고 위치를 관리하는 컴포넌트입니다. 충돌 회피, 정렬, 오프셋 등의 위치 관련 로직을 처리하며, `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "sticky",

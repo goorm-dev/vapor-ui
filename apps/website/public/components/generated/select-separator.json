@@ -1,7 +1,7 @@
 {
     "name": "Separator",
     "displayName": "Select.Separator",
-    "description": "셀렉트 항목 구분선",
+    "description": "화면 리더가 접근할 수 있는 분리 요소. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "className",

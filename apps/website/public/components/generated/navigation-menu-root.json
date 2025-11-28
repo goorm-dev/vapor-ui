@@ -1,7 +1,7 @@
 {
     "name": "Root",
     "displayName": "NavigationMenu.Root",
-    "description": "네비게이션 메뉴 컴포넌트",
+    "description": "네비게이션 메뉴의 최상위 컴포넌트입니다. 메뉴의 방향, 크기, 열림/닫힘 상태를 관리하며 접근성 속성을 제공합니다. 루트에 `<nav>` 요소를 렌더링하거나 중첩된 경우 `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "direction",
@@ -28,20 +28,20 @@
             "name": "orientation",
             "type": ["horizontal", "vertical"],
             "required": false,
-            "description": "The orientation of the navigation menu.",
+            "description": "네비게이션 메뉴의 방향을 지정합니다.",
             "defaultValue": "horizontal"
         },
         {
             "name": "aria-label",
             "type": ["string"],
             "required": true,
-            "description": "Defines a string value that labels the current element."
+            "description": "현재 요소를 설명하는 레이블 문자열을 정의합니다. 스크린 리더 사용자를 위한 접근성 속성입니다."
         },
         {
             "name": "defaultValue",
             "type": ["any"],
             "required": false,
-            "description": "The uncontrolled value of the item that should be initially selected.\n\nTo render a controlled navigation menu, use the `value` prop instead.",
+            "description": "초기에 선택되어야 하는 항목의 비제어 값입니다.\n\n제어 방식의 네비게이션 메뉴를 렌더링하려면 `value` prop을 대신 사용하세요.",
             "defaultValue": "null"
         },
         {
@@ -53,7 +53,7 @@
             "name": "value",
             "type": ["any"],
             "required": false,
-            "description": "The controlled value of the navigation menu item that should be currently open.\nWhen non-nullish, the menu will be open. When nullish, the menu will be closed.\n\nTo render an uncontrolled navigation menu, use the `defaultValue` prop instead.",
+            "description": "현재 열려있어야 하는 네비게이션 메뉴 항목의 제어 값입니다.\n값이 null이 아닐 때 메뉴가 열리고, null일 때 메뉴가 닫힙니다.\n\n비제어 방식의 네비게이션 메뉴를 렌더링하려면 `defaultValue` prop을 대신 사용하세요.",
             "defaultValue": "null"
         },
         {
@@ -66,32 +66,32 @@
             "name": "actionsRef",
             "type": ["RefObject<Actions>"],
             "required": false,
-            "description": "A ref to imperative actions."
+            "description": "명령형 작업을 위한 ref입니다."
         },
         {
             "name": "onOpenChangeComplete",
             "type": ["(open: boolean) => void"],
             "required": false,
-            "description": "Event handler called after any animations complete when the navigation menu is closed."
+            "description": "네비게이션 메뉴가 닫힐 때 모든 애니메이션이 완료된 후 호출되는 이벤트 핸들러입니다."
         },
         {
             "name": "onValueChange",
             "type": ["(value: any, eventDetails: ChangeEventDetails) => void"],
             "required": false,
-            "description": "Callback fired when the value changes."
+            "description": "값이 변경될 때 호출되는 콜백 함수입니다."
         },
         {
             "name": "delay",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait before opening the navigation menu. Specified in milliseconds.",
+            "description": "네비게이션 메뉴를 열기 전에 대기하는 시간입니다. 밀리초 단위로 지정됩니다.",
             "defaultValue": "50"
         },
         {
             "name": "closeDelay",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait before closing the navigation menu. Specified in milliseconds.",
+            "description": "네비게이션 메뉴를 닫기 전에 대기하는 시간입니다. 밀리초 단위로 지정됩니다.",
             "defaultValue": "50"
         }
     ],

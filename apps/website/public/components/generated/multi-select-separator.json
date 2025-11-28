@@ -1,7 +1,7 @@
 {
     "name": "Separator",
     "displayName": "MultiSelect.Separator",
-    "description": "멀티 셀렉트 항목 구분선",
+    "description": "셀렉트 항목들 사이에 시각적인 구분선을 표시하는 컴포넌트입니다. 항목 그룹을 구분하거나 시각적 계층 구조를 만드는 데 사용합니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "className",

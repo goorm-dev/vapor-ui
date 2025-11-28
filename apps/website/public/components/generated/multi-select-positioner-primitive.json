@@ -1,7 +1,7 @@
 {
     "name": "PositionerPrimitive",
     "displayName": "MultiSelect.PositionerPrimitive",
-    "description": "멀티 셀렉트 위치 지정 프리미티브",
+    "description": "팝업의 위치를 트리거 요소 기준으로 자동 조정하는 컴포넌트입니다. 충돌 방지, 정렬, 오프셋 등 다양한 위치 설정을 지원합니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "sticky",

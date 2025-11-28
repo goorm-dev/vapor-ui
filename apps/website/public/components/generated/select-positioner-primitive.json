@@ -1,7 +1,7 @@
 {
     "name": "PositionerPrimitive",
     "displayName": "Select.PositionerPrimitive",
-    "description": "셀렉트 위치 지정 프리미티브",
+    "description": "Select 팝업을 트리거에 대해 위치시킵니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "sticky",
