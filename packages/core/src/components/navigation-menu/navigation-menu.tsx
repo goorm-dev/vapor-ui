@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties, ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
+import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui-components/react';
@@ -434,10 +434,7 @@ export namespace NavigationMenuRoot {
 }
 
 export namespace NavigationMenuList {
-    type ListPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.List>;
-    export interface Props extends Omit<ListPrimitiveProps, 'children'> {
-        children?: ReactNode;
-    }
+    export interface Props extends VComponentProps<typeof BaseNavigationMenu.List> {}
 }
 
 export namespace NavigationMenuItem {
