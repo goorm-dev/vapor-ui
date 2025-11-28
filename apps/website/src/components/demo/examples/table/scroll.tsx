@@ -59,9 +59,9 @@ export default function Scroll() {
     return (
         <Card.Root width="100%">
             <Card.Body overflow="auto" padding="$000">
-                <Table.Root width="150%">
+                <Table.Root width="200%">
                     <Table.ColumnGroup>
-                        <Table.Column width="10%" />
+                        <Table.Column width="5%" />
                     </Table.ColumnGroup>
 
                     <Table.Header>

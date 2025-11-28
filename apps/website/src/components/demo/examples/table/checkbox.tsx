@@ -16,6 +16,7 @@ export default function Basic() {
                         checked={table.getIsAllRowsSelected()}
                         indeterminate={table.getIsSomeRowsSelected()}
                         onCheckedChange={(value) => table.toggleAllRowsSelected(value)}
+                        style={{ justifySelf: 'center' }}
                     />
                 ),
                 cell: ({ row }) => (
@@ -25,6 +26,7 @@ export default function Basic() {
                         disabled={!row.getCanSelect()}
                         indeterminate={row.getIsSomeSelected()}
                         onCheckedChange={(value) => row.toggleSelected(value)}
+                        style={{ justifySelf: 'center' }}
                     />
                 ),
             },
@@ -74,11 +76,7 @@ export default function Basic() {
             <Card.Body padding="$000">
                 <Table.Root width="100%">
                     <Table.ColumnGroup>
-                        <Table.Column width="5%" />
-                        <Table.Column width="20%" />
-                        <Table.Column width="15%" />
-                        <Table.Column width="30%" />
-                        <Table.Column width="30%" />
+                        <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
                     <Table.Header backgroundColor="$gray-050">

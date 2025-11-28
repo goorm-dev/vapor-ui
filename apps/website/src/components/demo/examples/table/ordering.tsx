@@ -61,11 +61,7 @@ export default function Ordering() {
             <Card.Body padding="$000">
                 <Table.Root width="100%">
                     <Table.ColumnGroup>
-                        <Table.Column width="5%" />
-                        <Table.Column width="17.5%" />
-                        <Table.Column width="17.5%" />
-                        <Table.Column width="30%" />
-                        <Table.Column width="30%" />
+                        <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
                     <Table.Header backgroundColor="$gray-050">

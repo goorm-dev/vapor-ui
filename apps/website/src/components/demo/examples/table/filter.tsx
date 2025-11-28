@@ -175,10 +175,6 @@ export default function Scroll() {
                 <Table.Root style={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
-                        <Table.Column width="15%" />
-                        <Table.Column width="15%" />
-                        <Table.Column width="40%" />
-                        <Table.Column width="25%" />
                     </Table.ColumnGroup>
 
                     <Table.Header>

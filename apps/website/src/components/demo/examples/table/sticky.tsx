@@ -11,7 +11,7 @@ export default function Basic() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: 'ID',
+                header: () => <Box textAlign="center">ID</Box>,
                 accessorKey: 'id',
                 cell: ({ row }) => <Box textAlign="center">{row.index + 1}</Box>,
             },
@@ -61,11 +61,11 @@ export default function Basic() {
     return (
         <Card.Root width="100%">
             <Card.Body overflow="auto" padding="$000">
-                <Table.Root width="150%">
+                <Table.Root width="200%">
                     <Table.ColumnGroup>
-                        <Table.Column width="64px" />
-                        <Table.Column width="128px" />
-                        <Table.Column width="256px" />
+                        <Table.Column width="0" />
+                        <Table.Column width="0" />
+                        <Table.Column width="0" />
                     </Table.ColumnGroup>
                     <Table.Header>
                         {table.getHeaderGroups().map((headerGroup) => (
