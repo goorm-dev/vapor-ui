@@ -1,1 +1,1 @@
-export { HStack } from './h-stack';
+export * from './h-stack';

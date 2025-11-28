@@ -14,9 +14,6 @@ import * as styles from './collapsible.css';
  * Collapsible.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 콘텐츠를 접고 펼칠 수 있는 컴포넌트
- */
 export const CollapsibleRoot = forwardRef<HTMLDivElement, CollapsibleRoot.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -28,9 +25,6 @@ CollapsibleRoot.displayName = 'Collapsible.Root';
  * Collapsible.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 콜랩서블 열기/닫기 트리거
- */
 export const CollapsibleTrigger = forwardRef<HTMLButtonElement, CollapsibleTrigger.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -44,9 +38,6 @@ CollapsibleTrigger.displayName = 'Collapsible.Trigger';
  * Collapsible.Panel
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 콜랩서블 콘텐츠 패널
- */
 export const CollapsiblePanel = forwardRef<HTMLDivElement, CollapsiblePanel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 

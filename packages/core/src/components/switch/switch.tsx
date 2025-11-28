@@ -28,9 +28,6 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 두 가지 상태(켜짐/꺼짐)를 전환하는 토글 스위치 컴포넌트
- */
 export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
@@ -67,9 +64,6 @@ SwitchRoot.displayName = 'Switch.Root';
  * Switch.ThumbPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 스위치의 상태를 시각적으로 나타내는 핸들 요소
- */
 export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);

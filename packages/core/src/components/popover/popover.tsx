@@ -19,9 +19,6 @@ import * as styles from './popover.css';
  * Popover.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 트리거 요소 기준으로 표시되는 팝오버 컴포넌트
- */
 export const PopoverRoot = (props: PopoverRoot.Props) => {
     return <BasePopover.Root {...props} />;
 };
@@ -31,9 +28,6 @@ PopoverRoot.displayName = 'Popover.Root';
  * Popover.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 팝오버 열기 트리거
- */
 export const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -45,9 +39,6 @@ PopoverTrigger.displayName = 'Popover.Trigger';
  * Popover.Close
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 팝오버 닫기 버튼
- */
 export const PopoverClose = forwardRef<HTMLButtonElement, PopoverClose.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -59,7 +50,6 @@ PopoverClose.displayName = 'Popover.Close';
  * Popover.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/** 팝오버 포털 프리미티브 */
 export const PopoverPortalPrimitive = (props: PopoverPortalPrimitive.Props) => {
     return <BasePopover.Portal {...props} />;
 };
@@ -69,9 +59,6 @@ PopoverPortalPrimitive.displayName = 'Popover.PortalPrimitive';
  * Popover.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 팝오버 위치 지정 프리미티브
- */
 export const PopoverPositionerPrimitive = forwardRef<
     HTMLDivElement,
     PopoverPositionerPrimitive.Props
@@ -104,9 +91,6 @@ PopoverPositionerPrimitive.displayName = 'Popover.PositionerPrimitive';
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-/**
- * 팝오버 팝업 프리미티브
- */
 export const PopoverPopupPrimitive = forwardRef<HTMLDivElement, PopoverPopupPrimitive.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
@@ -171,9 +155,6 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Popover.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 팝오버 팝업 컴포넌트
- */
 export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const PortalElement = createSlot(portalElement || <PopoverPortalPrimitive />);
@@ -194,9 +175,6 @@ PopoverPopup.displayName = 'Popover.Popup';
  * Popover.Title
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 팝오버 제목
- */
 export const PopoverTitle = forwardRef<HTMLHeadingElement, PopoverTitle.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -209,9 +187,6 @@ PopoverTitle.displayName = 'Popover.Title';
  * Popover.Description
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 팝오버 설명
- */
 export const PopoverDescription = forwardRef<HTMLParagraphElement, PopoverDescription.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);

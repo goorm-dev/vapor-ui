@@ -5,14 +5,8 @@ import type { VComponentProps } from '~/utils/types';
 
 import { Flex } from '../flex';
 
-type HStackVariants = {
-    /** 역방향 배치 여부 */
-    reverse?: boolean;
-};
+type HStackVariants = { reverse?: boolean };
 
-/**
- * 가로 방향 스택 레이아웃 컴포넌트
- */
 export const HStack = forwardRef<HTMLDivElement, HStack.Props>((props, ref) => {
     const [{ reverse }, otherProps] = createSplitProps<HStackVariants>()(props, ['reverse']);
 

@@ -14,9 +14,6 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 관련 정보를 그룹화하여 표시하는 컨테이너 컴포넌트
- */
 export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -35,9 +32,6 @@ CardRoot.displayName = 'Card.Root';
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 카드 헤더 영역
- */
 export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -56,9 +50,6 @@ CardHeader.displayName = 'Card.Header';
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 카드 본문 영역
- */
 export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -77,9 +68,6 @@ CardBody.displayName = 'Card.Body';
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 카드 푸터 영역
- */
 export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 

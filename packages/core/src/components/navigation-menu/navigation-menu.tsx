@@ -36,9 +36,6 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
  * NavigationMenu.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 컴포넌트
- */
 export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Props>(
     (props, ref) => {
         const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
@@ -68,9 +65,6 @@ NavigationMenuRoot.displayName = 'NavigationMenu.Root';
  * NavigationMenu.List
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 항목 목록
- */
 export const NavigationMenuList = forwardRef<HTMLDivElement, NavigationMenuList.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -92,9 +86,6 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
  * NavigationMenu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 항목
- */
 export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -115,9 +106,6 @@ NavigationMenuItem.displayName = 'NavigationMenu.Item';
  * NavigationMenu.Link
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 링크
- */
 export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLink.Props>(
     (props, ref) => {
         const {
@@ -154,9 +142,6 @@ NavigationMenuLink.displayName = 'NavigationMenu.Link';
  * NavigationMenu.TriggerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 트리거 프리미티브
- */
 export const NavigationMenuTriggerPrimitive = forwardRef<
     HTMLButtonElement,
     NavigationMenuTriggerPrimitive.Props
@@ -183,9 +168,6 @@ NavigationMenuTriggerPrimitive.displayName = 'NavigationMenu.TriggerPrimitive';
  * NavigationMenu.TriggerIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 트리거 인디케이터 프리미티브
- */
 export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuTriggerIndicatorPrimitive.Props
@@ -210,9 +192,6 @@ NavigationMenuTriggerIndicatorPrimitive.displayName = 'NavigationMenu.TriggerInd
  * NavigationMenu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 트리거
- */
 export const NavigationMenuTrigger = forwardRef<HTMLButtonElement, NavigationMenuTrigger.Props>(
     (props, ref) => {
         const { children, ...componentProps } = props;
@@ -232,9 +211,6 @@ NavigationMenuTrigger.displayName = 'NavigationMenu.Trigger';
  * NavigationMenu.Content
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 콘텐츠 영역
- */
 export const NavigationMenuContent = forwardRef<HTMLDivElement, NavigationMenuContent.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -254,7 +230,6 @@ NavigationMenuContent.displayName = 'NavigationMenu.Content';
  * NavigationMenu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/** 네비게이션 메뉴 포털 프리미티브 */
 export const NavigationMenuPortalPrimitive = (props: NavigationMenuPortalPrimitive.Props) => {
     return <BaseNavigationMenu.Portal {...props} />;
 };
@@ -264,9 +239,6 @@ NavigationMenuPortalPrimitive.displayName = 'NavigationMenu.PortalPrimitive';
  * NavigationMenu.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 위치 지정 프리미티브
- */
 export const NavigationMenuPositionerPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuPositionerPrimitive.Props
@@ -301,9 +273,6 @@ NavigationMenuPositionerPrimitive.displayName = 'NavigationMenu.PositionerPrimit
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-/**
- * 네비게이션 메뉴 팝업 프리미티브
- */
 export const NavigationMenuPopupPrimitive = forwardRef<
     HTMLElement,
     NavigationMenuPopupPrimitive.Props
@@ -419,9 +388,6 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
  * NavigationMenu.ViewportPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 뷰포트 프리미티브
- */
 export const NavigationMenuViewportPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuViewportPrimitive.Props
@@ -442,9 +408,6 @@ NavigationMenuViewportPrimitive.displayName = 'NavigationMenu.ViewportPrimitive'
  * NavigationMenu.Viewport
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 네비게이션 메뉴 뷰포트 컴포넌트
- */
 export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
     ({ portalElement, positionerElement, popupElement, className, ...props }, ref) => {
         const PortalElement = createSlot(portalElement ?? <NavigationMenuPortalPrimitive />);

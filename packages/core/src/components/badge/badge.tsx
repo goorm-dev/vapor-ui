@@ -10,9 +10,6 @@ import type { VComponentProps } from '~/utils/types';
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
-/**
- * 상태 또는 카테고리를 시각적으로 표시하는 컴포넌트
- */
 export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(componentProps, [

@@ -1,1 +1,1 @@
-export { RadioCard } from './radio-card';
+export * from './radio-card';

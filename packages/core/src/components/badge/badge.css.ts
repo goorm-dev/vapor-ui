@@ -13,10 +13,6 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
-        /**
-         * 뱃지 색상
-         * @default 'primary'
-         */
         colorPalette: {
             primary: layerStyle('components', {
                 color: vars.color.foreground.primary[200],
@@ -44,10 +40,6 @@ export const root = recipe({
             }),
         },
 
-        /**
-         * 뱃지 모서리 형태
-         * @default 'square'
-         */
         shape: {
             square: layerStyle('components', {
                 borderRadius: vars.size.borderRadius['300'],
@@ -57,10 +49,6 @@ export const root = recipe({
             }),
         },
 
-        /**
-         * 뱃지 크기
-         * @default 'md'
-         */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['025'],

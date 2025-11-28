@@ -10,9 +10,6 @@ import type { VComponentProps } from '~/utils/types';
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
-/**
- * 사용자 행동을 유도하는 클릭 가능한 컴포넌트
- */
 export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [

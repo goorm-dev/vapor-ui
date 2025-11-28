@@ -27,9 +27,6 @@ const [TabsProvider, useTabsContext] = createContext<TabsContext>({
  * Tabs.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 탭 네비게이션의 최상위 컨테이너 컴포넌트
- */
 export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [sharedProps, otherProps] = createSplitProps<TabsSharedProps>()(componentProps, [
@@ -60,9 +57,6 @@ TabsRoot.displayName = 'Tabs.Root';
  * Tabs.List
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 탭 트리거들을 감싸는 컨테이너
- */
 export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const { activateOnFocus, loop, variant, orientation } = useTabsContext();
@@ -83,9 +77,6 @@ TabsList.displayName = 'Tabs.List';
  * Tabs.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 탭 패널을 활성화하는 클릭 가능한 버튼
- */
 export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: rootDisabled, size, orientation } = useTabsContext();
@@ -107,9 +98,6 @@ TabsTrigger.displayName = 'Tabs.Trigger';
  * Tabs.Indicator
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 현재 활성화된 탭을 시각적으로 나타내는 인디케이터
- */
 export const TabsIndicator = forwardRef<HTMLDivElement, TabsIndicator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const { orientation } = useTabsContext();
@@ -128,9 +116,6 @@ TabsIndicator.displayName = 'Tabs.Indicator';
  * Tabs.Panel
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 탭에 연결된 콘텐츠를 표시하는 패널
- */
 export const TabsPanel = forwardRef<HTMLDivElement, TabsPanel.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 

@@ -9,9 +9,6 @@ import { type Typography, typography } from '~/styles/mixins/typography.css';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
-/**
- * 타이포그래피 스타일을 적용하는 텍스트 컴포넌트
- */
 export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
     const {
         render,

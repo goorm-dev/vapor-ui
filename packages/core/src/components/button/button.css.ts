@@ -34,10 +34,6 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill', stretch: false },
     variants: {
-        /**
-         * 버튼 크기
-         * @default 'md'
-         */
         size: {
             sm: [
                 typography({ style: 'subtitle1' }),
@@ -73,10 +69,6 @@ export const root = recipe({
             ],
         },
 
-        /**
-         * 버튼 색상
-         * @default 'primary'
-         */
         colorPalette: {
             primary: layerStyle('components', {
                 vars: {
@@ -134,10 +126,6 @@ export const root = recipe({
             }),
         },
 
-        /**
-         * 버튼 스타일 (fill: 채움, outline: 테두리, ghost: 투명)
-         * @default 'fill'
-         */
         variant: {
             fill: layerStyle('components', {
                 backgroundColor: bg,
@@ -154,10 +142,6 @@ export const root = recipe({
             }),
         },
 
-        /**
-         * 버튼 너비 확장 여부
-         * @default false
-         */
         stretch: { true: layerStyle('components', { width: '100%' }) },
     },
 });

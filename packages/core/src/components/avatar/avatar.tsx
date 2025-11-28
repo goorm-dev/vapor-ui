@@ -16,14 +16,7 @@ import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
 
 type AvatarVariants = RootVariants & FallbackVariants;
-type AvatarSharedProps = AvatarVariants & {
-    /** 이미지 소스 URL */
-    src?: string;
-    /** 대체 텍스트, 폴백 이니셜 생성에도 사용 */
-    alt: string;
-    /** 폴백 표시 전 지연 시간 (밀리초) */
-    delay?: number;
-};
+type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delay?: number };
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     name: 'AvatarContext',
@@ -33,9 +26,6 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-/**
- * 사용자 또는 엔티티를 이미지나 이니셜로 표현하는 컴포넌트
- */
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(componentProps, [
@@ -72,9 +62,6 @@ AvatarRoot.displayName = 'Avatar.Root';
  * Avatar.ImagePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 아바타 이미지 요소
- */
 export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -97,9 +84,6 @@ AvatarImagePrimitive.displayName = 'Avatar.ImagePrimitive';
  * Avatar.FallbackPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 이미지 로드 실패 시 표시되는 폴백 요소
- */
 export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbackPrimitive.Props>(
     (props, ref) => {
         const { className, style, children, ...componentProps } = resolveStyles(props);

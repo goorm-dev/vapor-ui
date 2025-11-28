@@ -27,9 +27,6 @@ const [MenuProvider, useMenuContext] = createContext<MenuContext>({
  * Menu.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 옵션 목록을 표시하는 메뉴 컴포넌트
- */
 export const MenuRoot = (props: MenuRoot.Props) => {
     const { disabled } = props;
 
@@ -45,9 +42,6 @@ MenuRoot.displayName = 'Menu.Root';
  * Menu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 메뉴 열기 트리거
- */
 export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTrigger.Props>((props, ref) => {
     const { disabled: disabledProp, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
@@ -62,20 +56,12 @@ MenuTrigger.displayName = 'Menu.Trigger';
  * Menu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/** 메뉴 포털 프리미티브 */
-export const MenuPortalPrimitive = (props: MenuPortalPrimitive.Props) => {
-    return <BaseMenu.Portal {...props} />;
-};
-
-MenuPortalPrimitive.displayName = 'Menu.PortalPrimitive';
+export const MenuPortalPrimitive = BaseMenu.Portal;
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 메뉴 위치 지정 프리미티브
- */
 export const MenuPositionerPrimitive = forwardRef<HTMLDivElement, MenuPositionerPrimitive.Props>(
     (props, ref) => {
         // FIXME: Using resolveStyles causes all positioning-related style properties to reset, so it's temporarily disabled.
@@ -93,14 +79,10 @@ export const MenuPositionerPrimitive = forwardRef<HTMLDivElement, MenuPositioner
     },
 );
 
-MenuPositionerPrimitive.displayName = 'Menu.PositionerPrimitive';
 /* -------------------------------------------------------------------------------------------------
  * Menu.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 메뉴 팝업 프리미티브
- */
 export const MenuPopupPrimitive = forwardRef<HTMLDivElement, MenuPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -120,9 +102,6 @@ MenuPopupPrimitive.displayName = 'Menu.PopupPrimitive';
  * Menu.Content
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 메뉴 팝업 컴포넌트
- */
 export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const PortalElement = createSlot(portalElement || <MenuPortalPrimitive />);
@@ -143,9 +122,6 @@ MenuPopup.displayName = 'Menu.Popup';
  * Menu.Item
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 메뉴 항목
- */
 export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: contextDisabled } = useMenuContext();
@@ -167,9 +143,6 @@ MenuItem.displayName = 'Menu.Item';
  * Menu.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 메뉴 항목 구분선
- */
 export const MenuSeparator = forwardRef<HTMLDivElement, MenuSeparator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -187,9 +160,6 @@ MenuSeparator.displayName = 'Menu.Separator';
  * Menu.Group
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 메뉴 항목 그룹
- */
 export const MenuGroup = forwardRef<HTMLDivElement, MenuGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -201,9 +171,6 @@ MenuGroup.displayName = 'Menu.Group';
  * Menu.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 메뉴 그룹 레이블
- */
 export const MenuGroupLabel = forwardRef<HTMLDivElement, MenuGroupLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -228,9 +195,6 @@ type SubmenuContext = {
 
 const [SubmenuProvider, useSubmenuContext] = createContext<SubmenuContext>();
 
-/**
- * 서브메뉴 루트 컴포넌트
- */
 export const MenuSubmenuRoot = ({
     closeParentOnEsc = false,
     disabled: disabledProp,
@@ -257,9 +221,6 @@ MenuSubmenuRoot.displayName = 'Menu.SubmenuRoot';
  * Menu.SubmenuTriggerItem
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 서브메뉴 열기 트리거 항목
- */
 export const MenuSubmenuTriggerItem = forwardRef<HTMLDivElement, MenuSubmenuTriggerItem.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
@@ -285,9 +246,6 @@ MenuSubmenuTriggerItem.displayName = 'Menu.SubmenuTriggerItem';
  * Menu.SubmenuPopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 서브메뉴 팝업 프리미티브
- */
 export const MenuSubmenuPopupPrimitive = forwardRef<
     HTMLDivElement,
     MenuSubmenuPopupPrimitive.Props
@@ -310,9 +268,6 @@ MenuSubmenuPopupPrimitive.displayName = 'Menu.SubmenuPopupPrimitive';
  * Menu.SubmenuPopup
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 서브메뉴 팝업 컴포넌트
- */
 export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const PortalElement = createSlot(portalElement || <MenuPortalPrimitive />);
@@ -335,9 +290,6 @@ MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
  * Menu.CheckboxItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 체크박스 메뉴 항목 프리미티브
- */
 export const MenuCheckboxItemPrimitive = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>(
     (props, ref) => {
         const {
@@ -368,9 +320,6 @@ MenuCheckboxItemPrimitive.displayName = 'Menu.CheckboxItemPrimitive';
  * MenuCheckboxItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 체크박스 메뉴 항목 인디케이터 프리미티브
- */
 export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuCheckboxItemIndicatorPrimitive.Props
@@ -387,16 +336,12 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
         </BaseMenu.CheckboxItemIndicator>
     );
 });
-
 MenuCheckboxItemIndicatorPrimitive.displayName = 'Menu.CheckboxItemIndicatorPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
  * Menu.CheckboxItem
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 체크박스 메뉴 항목
- */
 export const MenuCheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
@@ -414,9 +359,6 @@ MenuCheckboxItem.displayName = 'Menu.CheckboxItem';
  * Menu.RadioGroup
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 라디오 메뉴 그룹
- */
 export const MenuRadioGroup = forwardRef<HTMLDivElement, MenuRadioGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -428,9 +370,6 @@ MenuRadioGroup.displayName = 'Menu.RadioGroup';
  * Menu.RadioItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 라디오 메뉴 항목 프리미티브
- */
 export const MenuRadioItemPrimitive = forwardRef<HTMLDivElement, MenuRadioItemPrimitive.Props>(
     (props, ref) => {
         const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
@@ -454,9 +393,6 @@ MenuRadioItemPrimitive.displayName = 'Menu.RadioItemPrimitive';
  * Menu.RadioItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 라디오 메뉴 항목 인디케이터 프리미티브
- */
 export const MenuRadioItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuRadioItemIndicatorPrimitive.Props
@@ -474,14 +410,10 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
     );
 });
 
-MenuRadioItemIndicatorPrimitive.displayName = 'Menu.RadioItemIndicatorPrimitive';
 /* -------------------------------------------------------------------------------------------------
  * Menu.RadioItem
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 라디오 메뉴 항목
- */
 export const MenuRadioItem = forwardRef<HTMLDivElement, MenuRadioItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 

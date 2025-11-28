@@ -18,10 +18,6 @@ export const item = layerStyle('components', {
 export const link = recipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
-        /**
-         * 브레드크럼 크기
-         * @default 'md'
-         */
         size: {
             sm: typography({ style: 'body4' }),
             md: typography({ style: 'body3' }),
@@ -29,10 +25,6 @@ export const link = recipe({
             xl: typography({ style: 'body1' }),
         },
 
-        /**
-         * 현재 페이지 여부
-         * @default false
-         */
         current: {
             false: [
                 layerStyle('components', {
@@ -69,10 +61,6 @@ export const icon = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
-        /**
-         * 구분자 및 말줄임표 아이콘 크기
-         * @default 'md'
-         */
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },
             md: { width: vars.size.dimension[200], height: vars.size.dimension[200] },

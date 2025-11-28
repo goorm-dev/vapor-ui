@@ -9,9 +9,6 @@ import { Flex } from '../flex';
 type VStackVariants = { reverse?: boolean };
 type VStackPrimitiveProps = VComponentProps<typeof Flex>;
 
-/**
- * 자식 요소를 세로 방향으로 쌓는 레이아웃 컴포넌트
- */
 export const VStack = forwardRef<HTMLDivElement, VStack.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
     const [vStackProps, otherProps] = createSplitProps<VStackVariants>()(componentProps, [

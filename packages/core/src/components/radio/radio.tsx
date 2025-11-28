@@ -21,9 +21,6 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
-/**
- * 단일 선택 입력을 위한 라디오 버튼 컴포넌트
- */
 export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
@@ -59,9 +56,6 @@ RadioRoot.displayName = 'Radio.Root';
  * Radio.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 라디오 선택 상태 표시 프리미티브
- */
 export const RadioIndicatorPrimitive = forwardRef<HTMLDivElement, RadioIndicatorPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);

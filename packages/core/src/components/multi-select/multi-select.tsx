@@ -36,9 +36,6 @@ const [MultiSelectProvider, useMultiSelectContext] = createContext<MultiSelectCo
  * MultiSelect.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 다중 선택 가능한 셀렉트 컴포넌트
- */
 export const MultiSelectRoot = <Value,>(props: MultiSelectRoot.Props<Value>) => {
     const [sharedProps, otherProps] = createSplitProps<MultiSelectSharedProps>()(props, [
         'placeholder',
@@ -60,9 +57,6 @@ MultiSelectRoot.displayName = 'MultiSelect.Root';
  * MultiSelect.TriggerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 트리거 프리미티브
- */
 export const MultiSelectTriggerPrimitive = forwardRef<
     HTMLButtonElement,
     MultiSelectTriggerPrimitive.Props
@@ -96,9 +90,6 @@ MultiSelectTriggerPrimitive.displayName = 'MultiSelect.TriggerPrimitive';
  * Select.ValuePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 값 표시 프리미티브
- */
 export const MultiSelectValuePrimitive = forwardRef<
     HTMLSpanElement,
     MultiSelectValuePrimitive.Props
@@ -162,9 +153,6 @@ const badgeSizeMap: Record<
  * Select.PlaceholderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 플레이스홀더 프리미티브
- */
 export const MultiSelectPlaceholderPrimitive = forwardRef<
     HTMLSpanElement,
     MultiSelectPlaceholderPrimitive.Props
@@ -186,9 +174,6 @@ MultiSelectPlaceholderPrimitive.displayName = 'MultiSelect.PlaceholderPrimitive'
  * MultiSelect.TriggerIconPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 트리거 아이콘 프리미티브
- */
 export const MultiSelectTriggerIconPrimitive = forwardRef<
     HTMLDivElement,
     MultiSelectTriggerIconPrimitive.Props
@@ -214,9 +199,6 @@ MultiSelectTriggerIconPrimitive.displayName = 'MultiSelect.TriggerIconPrimitive'
  * MultiSelect.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 트리거 컴포넌트
- */
 export const MultiSelectTrigger = forwardRef<HTMLButtonElement, MultiSelectTrigger.Props>(
     (props, ref) => {
         return (
@@ -233,7 +215,6 @@ MultiSelectTrigger.displayName = 'MultiSelect.Trigger';
  * MultiSelect.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/** 멀티 셀렉트 포털 프리미티브 */
 export const MultiSelectPortalPrimitive = (props: MultiSelectPortalPrimitive.Props) => {
     return <BaseSelect.Portal {...props} />;
 };
@@ -243,9 +224,6 @@ MultiSelectPortalPrimitive.displayName = 'MultiSelect.PortalPrimitive';
  * MultiSelect.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 위치 지정 프리미티브
- */
 export const MultiSelectPositionerPrimitive = forwardRef<
     HTMLDivElement,
     MultiSelectPositionerPrimitive.Props
@@ -277,9 +255,6 @@ MultiSelectPositionerPrimitive.displayName = 'MultiSelect.PositionerPrimitive';
  * MultiSelect.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 팝업 프리미티브
- */
 export const MultiSelectPopupPrimitive = forwardRef<
     HTMLDivElement,
     MultiSelectPopupPrimitive.Props
@@ -296,9 +271,6 @@ MultiSelectPopupPrimitive.displayName = 'MultiSelect.PopupPrimitive';
  * Select.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 팝업 컴포넌트
- */
 export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const PortalElement = createSlot(portalElement || <MultiSelectPortalPrimitive />);
@@ -321,9 +293,6 @@ MultiSelectPopup.displayName = 'MultiSelect.Popup';
  * MultiSelect.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 항목 프리미티브
- */
 export const MultiSelectItemPrimitive = forwardRef<HTMLDivElement, MultiSelectItemPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -343,9 +312,6 @@ MultiSelectItemPrimitive.displayName = 'MultiSelect.ItemPrimitive';
  * MultiSelect.ItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 항목 인디케이터 프리미티브
- */
 export const MultiSelectItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MultiSelectItemIndicatorPrimitive.Props
@@ -370,9 +336,6 @@ MultiSelectItemIndicatorPrimitive.displayName = 'MultiSelect.ItemIndicatorPrimit
  * MultiSelect.Item
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 항목 컴포넌트
- */
 export const MultiSelectItem = forwardRef<HTMLDivElement, MultiSelectItemPrimitive.Props>(
     (props, ref) => {
         const { children, ...componentProps } = resolveStyles(props);
@@ -392,9 +355,6 @@ MultiSelectItem.displayName = 'MultiSelect.Item';
  * MultiSelect.Group
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 항목 그룹
- */
 export const MultiSelectGroup = forwardRef<HTMLDivElement, MultiSelectGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -406,9 +366,6 @@ MultiSelectGroup.displayName = 'MultiSelect.Group';
  * MultiSelect.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 그룹 레이블
- */
 export const MultiSelectGroupLabel = forwardRef<HTMLDivElement, MultiSelectGroupLabel.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -428,9 +385,6 @@ MultiSelectGroupLabel.displayName = 'MultiSelect.GroupLabel';
  * MultiSelect.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 멀티 셀렉트 항목 구분선
- */
 export const MultiSelectSeparator = forwardRef<HTMLDivElement, MultiSelectSeparator.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);

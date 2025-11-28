@@ -36,9 +36,6 @@ export const [InputGroupProvider, useInputGroupContext] = createContext<InputGro
  * InputGroup Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 입력 필드와 관련 요소를 그룹화하는 컴포넌트
- */
 export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((props, ref) => {
     const { className, render, ...componentProps } = resolveStyles(props);
 
@@ -72,9 +69,6 @@ InputGroupRoot.displayName = 'InputGroup.Root';
  * InputGroup Count
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 입력 문자 수 표시 컴포넌트
- */
 export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.Props>(
     (props, ref) => {
         const {

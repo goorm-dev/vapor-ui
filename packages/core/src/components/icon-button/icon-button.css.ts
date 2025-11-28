@@ -14,10 +14,6 @@ export const root = recipe({
     ],
     defaultVariants: { shape: 'square' },
     variants: {
-        /**
-         * 버튼 모양
-         * @default 'square'
-         */
         shape: {
             square: {},
             circle: layerStyle('components', { borderRadius: '9999px' }),

@@ -11,9 +11,6 @@ import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
-/**
- * 아이콘만 포함하는 버튼 컴포넌트
- */
 export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props, ref) => {
     const {
         'aria-label': ariaLabel,

@@ -27,9 +27,6 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
  * Breadcrumb.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 브레드크럼 네비게이션 루트 프리미티브
- */
 export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -55,9 +52,6 @@ BreadcrumbRootPrimitive.displayName = 'Breadcrumb.RootPrimitive';
  * Breadcrumb.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 브레드크럼 항목을 포함하는 리스트 프리미티브
- */
 export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbListPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -78,9 +72,6 @@ BreadcrumbListPrimitive.displayName = 'Breadcrumb.ListPrimitive';
  * Breadcrumb.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 현재 페이지 위치를 계층적으로 표시하는 네비게이션 컴포넌트
- */
 export const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     ({ children, ...props }, ref) => {
         return (
@@ -96,9 +87,6 @@ BreadcrumbRoot.displayName = 'Breadcrumb.Root';
  * Breadcrumb.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 브레드크럼 항목 프리미티브
- */
 export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -119,9 +107,6 @@ BreadcrumbItemPrimitive.displayName = 'Breadcrumb.ItemPrimitive';
  * Breadcrumb.LinkPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 브레드크럼 링크 프리미티브
- */
 export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         const { render, current, className, ...componentProps } = resolveStyles(props);
@@ -148,9 +133,6 @@ BreadcrumbLinkPrimitive.displayName = 'Breadcrumb.LinkPrimitive';
  * Breadcrumb.Item
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 브레드크럼 항목 컴포넌트
- */
 export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         return (
@@ -161,15 +143,10 @@ export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimit
     },
 );
 
-BreadcrumbItem.displayName = 'Breadcrumb.Item';
-
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Separator
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 브레드크럼 항목 간 구분자
- */
 export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator.Props>(
     (props, ref) => {
         const { render, className, children, ...componentProps } = resolveStyles(props);
@@ -196,9 +173,6 @@ BreadcrumbSeparator.displayName = 'Breadcrumb.Separator';
  * Breadcrumb.EllipsisPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 생략된 항목을 나타내는 말줄임표 프리미티브
- */
 export const BreadcrumbEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     BreadcrumbEllipsisPrimitive.Props
@@ -226,9 +200,6 @@ BreadcrumbEllipsisPrimitive.displayName = 'Breadcrumb.EllipsisPrimitive';
  * BreadcrumbEllipsis
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 생략된 항목을 나타내는 말줄임표 컴포넌트
- */
 export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisPrimitive.Props>(
     (props, ref) => {
         return (
@@ -268,7 +239,6 @@ export namespace BreadcrumbLinkPrimitive {
     type LinkPrimitiveProps = VComponentProps<'a'>;
 
     export interface Props extends LinkPrimitiveProps {
-        /** 현재 페이지 여부 */
         current?: boolean;
     }
 }

@@ -27,9 +27,6 @@ type BaseProps = TextInputVariants & {
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 한 줄 텍스트를 입력할 수 있는 인풋 컴포넌트
- */
 export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, ref) => {
     const {
         value: valueProp,

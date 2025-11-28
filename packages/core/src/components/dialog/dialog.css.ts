@@ -49,10 +49,6 @@ export const popup = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
-        /**
-         * 다이얼로그 크기
-         * @default 'md'
-         */
         size: {
             md: layerStyle('components', { width: '31.25rem' }),
             lg: layerStyle('components', { width: '50rem' }),

@@ -21,21 +21,14 @@ import * as styles from './tooltip.css';
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 툴팁의 상태와 동작을 관리하는 최상위 컴포넌트
- */
 export const TooltipRoot = (props: TooltipRoot.Props) => {
     return <BaseTooltip.Root {...props} />;
 };
 
-TooltipRoot.displayName = 'Tooltip.Root';
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 호버 또는 포커스 시 툴팁을 표시하는 트리거 요소
- */
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -47,9 +40,6 @@ TooltipTrigger.displayName = 'Tooltip.Trigger';
  * Tooltip.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 툴팁을 DOM 트리 외부에 렌더링하는 포털
- */
 export const TooltipPortalPrimitive = (props: TooltipPortalPrimitive.Props) => {
     return <BaseTooltip.Portal {...props} />;
 };
@@ -59,9 +49,6 @@ TooltipPortalPrimitive.displayName = 'Tooltip.PortalPrimitive';
  * Tooltip.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 툴팁의 위치를 트리거 기준으로 계산하는 컴포넌트
- */
 export const TooltipPositionerPrimitive = forwardRef<
     HTMLDivElement,
     TooltipPositionerPrimitive.Props
@@ -94,9 +81,6 @@ TooltipPositionerPrimitive.displayName = 'Tooltip.PositionerPrimitive';
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
-/**
- * 도움말이나 정보를 표시하는 툴팁 팝업
- */
 export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrimitive.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
@@ -169,9 +153,6 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Tooltip.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-/**
- * 포털과 포지셔너가 포함된 툴팁 팝업 조합 컴포넌트
- */
 export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const PortalElement = createSlot(portalElement || <TooltipPortalPrimitive />);
