@@ -19,10 +19,9 @@ export default function Collapsed() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: 'ID',
+                header: () => <Box textAlign="center">ID</Box>,
                 accessorKey: 'id',
-                size: 0, // prevent cumulative layout shift
-                cell: ({ row }) => <div style={{ textAlign: 'center' }}>{row.index + 1}</div>,
+                cell: ({ row }) => <Box textAlign="center">{row.index + 1}</Box>,
             },
 
             {
@@ -49,7 +48,6 @@ export default function Collapsed() {
                     );
                 },
                 accessorKey: 'name',
-                size: 0, // prevent cumulative layout shift
                 cell: ({ row, column }) => {
                     const isCollapsed = column.getIsCollapsed();
 
@@ -57,8 +55,8 @@ export default function Collapsed() {
                         <Box
                             display={isCollapsed ? 'block' : 'flex'}
                             width={isCollapsed ? '32px' : '240px'}
+                            overflow="hidden"
                             style={{
-                                overflow: 'hidden',
                                 whiteSpace: 'nowrap',
                                 textOverflow: 'ellipsis',
                                 wordBreak: 'break-all',
@@ -73,12 +71,11 @@ export default function Collapsed() {
             {
                 header: 'Status',
                 accessorKey: 'status',
-                size: 128,
                 cell: ({ row }) => {
                     const status = row.getValue<string>('status');
 
                     return (
-                        <Box width="128px">
+                        <Box>
                             <Badge color={activeness[status]} shape="pill">
                                 {status.toUpperCase()}
                             </Badge>
@@ -88,12 +85,12 @@ export default function Collapsed() {
             },
 
             {
-                header: () => <Box width="400px">Role</Box>,
+                header: () => <Box>Role</Box>,
                 accessorKey: 'role',
             },
 
             {
-                header: () => <Box width="400px">Last Active</Box>,
+                header: () => <Box>Last Active</Box>,
                 accessorKey: 'last-active',
             },
         ],
@@ -116,11 +113,12 @@ export default function Collapsed() {
     });
 
     return (
-        <Card.Root style={{ width: '100%' }}>
-            <Card.Body style={{ overflow: 'auto', padding: 0 }}>
-                <Table.Root style={{ width: '100%' }}>
+        <Card.Root width="100%">
+            <Card.Body overflow="auto" padding="$000">
+                <Table.Root width="100%">
                     <Table.ColumnGroup>
-                        <Table.Column width="62px" />
+                        <Table.Column width="10%" />
+                        <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
                     <Table.Header>
@@ -132,10 +130,8 @@ export default function Collapsed() {
                                         ref={(thElem) =>
                                             columnSizingHandler(thElem, table, header.column)
                                         }
-                                        style={{
-                                            backgroundColor: 'var(--vapor-color-gray-050)',
-                                            ...getCommonPinningStyles(header.column),
-                                        }}
+                                        backgroundColor="$gray-050"
+                                        style={{ ...getCommonPinningStyles(header.column) }}
                                     >
                                         {flexRender(
                                             header.column.columnDef.header,
@@ -154,10 +150,8 @@ export default function Collapsed() {
                                     {row.getVisibleCells().map((cell) => (
                                         <Table.Cell
                                             key={cell.id}
-                                            style={{
-                                                backgroundColor: 'var(--vapor-color-white)',
-                                                ...getCommonPinningStyles(cell.column),
-                                            }}
+                                            backgroundColor="$white"
+                                            style={{ ...getCommonPinningStyles(cell.column) }}
                                         >
                                             {flexRender(
                                                 cell.column.columnDef.cell,

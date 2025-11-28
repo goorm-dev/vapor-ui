@@ -17,7 +17,7 @@ export default function Scroll() {
             {
                 header: 'Name',
                 accessorKey: 'name',
-                cell: ({ row }) => <div style={{ textWrap: 'nowrap' }}>{row.getValue('name')}</div>,
+                cell: ({ row }) => <Box style={{ textWrap: 'nowrap' }}>{row.getValue('name')}</Box>,
             },
 
             {
@@ -57,23 +57,18 @@ export default function Scroll() {
     });
 
     return (
-        <Card.Root style={{ width: '100%' }}>
-            <Card.Body style={{ overflow: 'auto', padding: 0 }}>
-                <Table.Root style={{ width: '150%' }}>
+        <Card.Root width="100%">
+            <Card.Body overflow="auto" padding="$000">
+                <Table.Root width="150%">
                     <Table.ColumnGroup>
-                        <Table.Column width="64px" />
-                        <Table.Column width="128px" />
-                        <Table.Column width="256px" />
+                        <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
                     <Table.Header>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
-                                    <Table.Heading
-                                        key={header.id}
-                                        style={{ backgroundColor: 'var(--vapor-color-gray-050)' }}
-                                    >
+                                    <Table.Heading key={header.id} backgroundColor="$gray-050">
                                         {flexRender(
                                             header.column.columnDef.header,
                                             header.getContext(),
@@ -89,10 +84,7 @@ export default function Scroll() {
                             return (
                                 <Table.Row key={row.id}>
                                     {row.getVisibleCells().map((cell) => (
-                                        <Table.Cell
-                                            key={cell.id}
-                                            style={{ backgroundColor: 'var(--vapor-color-white)' }}
-                                        >
+                                        <Table.Cell key={cell.id} backgroundColor="$white">
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext(),

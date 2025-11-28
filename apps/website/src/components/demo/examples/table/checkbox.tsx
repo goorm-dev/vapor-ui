@@ -70,9 +70,9 @@ export default function Basic() {
     });
 
     return (
-        <Card.Root style={{ width: '100%' }}>
-            <Card.Body style={{ padding: 0 }}>
-                <Table.Root style={{ width: '100%' }}>
+        <Card.Root width="100%">
+            <Card.Body padding="$000">
+                <Table.Root width="100%">
                     <Table.ColumnGroup>
                         <Table.Column width="5%" />
                         <Table.Column width="20%" />
@@ -81,7 +81,7 @@ export default function Basic() {
                         <Table.Column width="30%" />
                     </Table.ColumnGroup>
 
-                    <Table.Header style={{ backgroundColor: 'var(--vapor-color-gray-050)' }}>
+                    <Table.Header backgroundColor="$gray-050">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
@@ -101,11 +101,9 @@ export default function Basic() {
                             return (
                                 <Table.Row
                                     key={row.id}
-                                    style={{
-                                        backgroundColor: row.getIsSelected()
-                                            ? 'var(--vapor-color-background-primary-100)'
-                                            : '',
-                                    }}
+                                    backgroundColor={
+                                        row.getIsSelected() ? '$primary-100' : 'inherit'
+                                    }
                                 >
                                     {row.getVisibleCells().map((cell) => {
                                         return (

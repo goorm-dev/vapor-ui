@@ -59,9 +59,9 @@ export default function Basic() {
     });
 
     return (
-        <Card.Root style={{ width: '100%' }}>
-            <Card.Body style={{ overflow: 'auto', padding: 0 }}>
-                <Table.Root style={{ width: '150%' }}>
+        <Card.Root width="100%">
+            <Card.Body overflow="auto" padding="$000">
+                <Table.Root width="150%">
                     <Table.ColumnGroup>
                         <Table.Column width="64px" />
                         <Table.Column width="128px" />
@@ -76,10 +76,8 @@ export default function Basic() {
                                         ref={(thElem) =>
                                             columnSizingHandler(thElem, table, header.column)
                                         }
-                                        style={{
-                                            backgroundColor: 'var(--vapor-color-gray-050)',
-                                            ...getCommonPinningStyles(header.column),
-                                        }}
+                                        backgroundColor="$white"
+                                        style={{ ...getCommonPinningStyles(header.column) }}
                                     >
                                         {flexRender(
                                             header.column.columnDef.header,
@@ -98,10 +96,8 @@ export default function Basic() {
                                     {row.getVisibleCells().map((cell) => (
                                         <Table.Cell
                                             key={cell.id}
-                                            style={{
-                                                backgroundColor: 'var(--vapor-color-white)',
-                                                ...getCommonPinningStyles(cell.column),
-                                            }}
+                                            backgroundColor="$white"
+                                            style={{ ...getCommonPinningStyles(cell.column) }}
                                         >
                                             {flexRender(
                                                 cell.column.columnDef.cell,
