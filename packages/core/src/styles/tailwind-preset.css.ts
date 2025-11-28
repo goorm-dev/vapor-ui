@@ -3,6 +3,7 @@ import { globalStyle } from '@vanilla-extract/css';
 import { vars } from './themes.css';
 import {
     BORDER_RADIUS,
+    type BasicColorPalette,
     FONT_FAMILY,
     FONT_SIZE,
     FONT_WEIGHT,
@@ -11,7 +12,6 @@ import {
     LIGHT_SEMANTIC_COLORS,
     LINE_HEIGHT,
     SPACE,
-    type BasicColorPalette,
 } from './tokens';
 
 /**
