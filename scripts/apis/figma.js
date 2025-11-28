@@ -14,6 +14,9 @@ const getFileNodes = async ({ fileKey, nodeIds, depth = 1 }) => {
         `https://api.figma.com/v1/files/${fileKey}/nodes?ids=${nodeIds}&depth=${depth}`,
         { headers },
     );
+    if (!result.ok) {
+        throw new Error(`Figma API error: ${result.status} ${result.statusText}`);
+    }
     return result.json();
 };
 
@@ -29,7 +32,9 @@ const getImage = async ({ fileKey, nodeIds, format = 'svg' }) => {
             headers,
         },
     );
-
+    if (!result.ok) {
+        throw new Error(`Figma API error: ${result.status} ${result.statusText}`);
+    }
     return result.json();
 };
 
