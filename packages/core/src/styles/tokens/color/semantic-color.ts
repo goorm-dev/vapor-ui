@@ -1,10 +1,4 @@
-import type { BASE_BASIC_COLORS, LIGHT_BASIC_COLORS } from './basic-color';
-
-type ColorPalette = typeof LIGHT_BASIC_COLORS;
-type ColorName = Exclude<keyof ColorPalette, 'background' | 'black' | 'white'>;
-type ColorShade = keyof ColorPalette['blue'];
-type BaseColorName = keyof typeof BASE_BASIC_COLORS;
-type BackgroundKey = keyof ColorPalette['background'];
+import type { BackgroundKey, BaseColorName, ColorName, ColorShade } from './types';
 
 const colorRef = <C extends ColorName, S extends ColorShade>(color: C, shade: S) =>
     `var(--vapor-color-${color}-${shade})` as const;

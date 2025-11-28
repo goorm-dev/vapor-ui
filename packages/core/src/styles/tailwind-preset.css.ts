@@ -11,6 +11,7 @@ import {
     LIGHT_SEMANTIC_COLORS,
     LINE_HEIGHT,
     SPACE,
+    type BasicColorPalette,
 } from './tokens';
 
 /**
@@ -34,7 +35,7 @@ type TailwindThemeNamespace =
 // Basic Tokens - Colors
 const colorThemeMap = Object.entries(LIGHT_BASIC_COLORS).reduce<Record<string, string>>(
     (acc, [colorName, colorScale]) => {
-        const contractColorGroup = vars.color[colorName as keyof typeof LIGHT_BASIC_COLORS];
+        const contractColorGroup = vars.color[colorName as keyof BasicColorPalette];
 
         if (colorName === 'background') {
             return acc;
