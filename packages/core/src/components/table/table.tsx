@@ -24,7 +24,7 @@ export const TableRoot = forwardRef<HTMLTableElement, TableRoot.Props>((props, r
         },
     });
 });
-TableRoot.displayName = 'TableRoot';
+TableRoot.displayName = 'Table.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Header
@@ -39,7 +39,7 @@ export const TableHeader = forwardRef<HTMLTableSectionElement, TableHeader.Props
         props: componentProps,
     });
 });
-TableHeader.displayName = 'TableHeader';
+TableHeader.displayName = 'Table.Header';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Body
@@ -54,7 +54,7 @@ export const TableBody = forwardRef<HTMLTableSectionElement, TableBody.Props>((p
         props: componentProps,
     });
 });
-TableBody.displayName = 'TableBody';
+TableBody.displayName = 'Table.Body';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Footer
@@ -69,7 +69,7 @@ export const TableFooter = forwardRef<HTMLTableSectionElement, TableFooter.Props
         props: componentProps,
     });
 });
-TableFooter.displayName = 'TableFooter';
+TableFooter.displayName = 'Table.Footer';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Row
@@ -87,7 +87,7 @@ export const TableRow = forwardRef<HTMLTableRowElement, TableRow.Props>((props, 
         },
     });
 });
-TableRow.displayName = 'TableRow';
+TableRow.displayName = 'Table.Row';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Heading
@@ -105,7 +105,7 @@ export const TableHeading = forwardRef<HTMLTableCellElement, TableHeading.Props>
         },
     });
 });
-TableHeading.displayName = 'TableHeading';
+TableHeading.displayName = 'Table.Heading';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Cell
@@ -123,7 +123,7 @@ export const TableCell = forwardRef<HTMLTableCellElement, TableCell.Props>((prop
         },
     });
 });
-TableCell.displayName = 'TableCell';
+TableCell.displayName = 'Table.Cell';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.ColumnGroup
@@ -140,7 +140,7 @@ export const TableColumnGroup = forwardRef<HTMLTableColElement, TableColumnGroup
         });
     },
 );
-TableColumnGroup.displayName = 'TableColumnGroup';
+TableColumnGroup.displayName = 'Table.ColumnGroup';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Column
@@ -155,7 +155,7 @@ export const TableColumn = forwardRef<HTMLTableColElement, TableColumn.Props>((p
         props: componentProps,
     });
 });
-TableColumn.displayName = 'TableColumn';
+TableColumn.displayName = 'Table.Column';
 
 /* -----------------------------------------------------------------------------------------------*/
 
