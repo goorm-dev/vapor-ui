@@ -35,7 +35,7 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 
 ## 2. 접근성
 
-포괄적인 [WCAG 2.1](https://www.w3.org/TR/WCAG21/) AA 준수와 추가 접근성 향상을 위해 [Base UI](https://base-ui.com/react/overview/quick-start)를 기반으로 구축되었습니다.
+포괄적인 [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA 준수와 [키보드 네비게이션](https://www.w3.org/TR/WCAG22/#keyboard-accessible), [포커스 형태](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance) 등의 접근성 향상을 위해 [Base UI](https://base-ui.com/react/overview/quick-start)를 기반으로 구축되었습니다.
 
 ### 포괄적인 접근성 기능
 
@@ -70,24 +70,33 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 <Badge colorPalette="warning">Warning</Badge>
 ```
 
-## 3. 일관된 Dot Notation API
+## 3. 일관된 네이밍 규칙
 
-모든 컴포넌트는 전체 컴포넌트 라이브러리에서 예측 가능하고 직관적인 사용을 위한 **통합된 dot notation 패턴**을 따릅니다.
+모든 컴포넌트는 예측 가능하고 직관적인 사용 경험을 제공하기 위해 일관된 네이밍 규칙을 따릅니다.
+
+- 독립 컴포넌트: 단일 이름
+- 합성 컴포넌트: Dot Notation 표기법
 
 ```tsx
-// 모든 컴포넌트에서 일관된 API
+// 단일 컴포넌트
+
+<Button>확인</Button>
+
+<Badge>상태</Badge>
+
+// 합성 컴포넌트
+
 <Card.Root>
-  <Card.Header>
-    <Card.Title>프로젝트 상태</Card.Title>
-    <Card.Description>현재 개발 진행상황</Card.Description>
-  </Card.Header>
-  <Card.Body>내용이 여기에 표시됩니다</Card.Body>
-  <Card.Footer>
-    <Card.Actions>
-      <Button variant="primary">저장</Button>
-      <Button variant="secondary">취소</Button>
-    </Card.Actions>
-  </Card.Footer>
+    <Card.Header>
+        <Text typography="heading3">프로젝트 상태</Text>
+    </Card.Header>
+    <Card.Body>
+        <Text typography="body3">현재 개발 진행상황</Text>
+    </Card.Body>
+    <Card.Footer>
+        <Button>저장</Button>
+        <Button variant="outline">취소</Button>
+    </Card.Footer>
 </Card.Root>
 
 <Select.Root placeholder="선택">
