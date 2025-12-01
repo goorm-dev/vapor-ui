@@ -131,7 +131,8 @@ const radiusCSS = generateRadiusCSS('xl');
 ### Colors
 
 - `--{prefix}-color-{name}-{050-900}`: Color palettes
-- `--{prefix}-color-background-*`: Background colors
+- `--{prefix}-color-canvas`: Canvas background color
+- `--{prefix}-color-background-*`: Background semantic colors
 - `--{prefix}-color-foreground-*`: Text colors
 - `--{prefix}-color-border-*`: Border colors
 
@@ -157,13 +158,13 @@ The `generateRadiusCSS` function accepts predefined radius keys:
 :root,
 [data-vapor-theme='light'] {
     --vapor-color-mint-500: #6af574ff;
-    --vapor-color-background-canvas: #f8fafc;
+    --vapor-color-canvas: #f8fafc;
     --vapor-scale-factor: 1.15;
     --vapor-radius-factor: 1.5;
 }
 
 [data-vapor-theme='dark'] {
     --vapor-color-mint-800: #62e96b;
-    --vapor-color-background-canvas: #161717;
+    --vapor-color-canvas: #161717;
 }
 ```
