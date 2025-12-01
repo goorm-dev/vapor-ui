@@ -20,17 +20,11 @@ const activeness: Record<string, Badge.Props['color']> = {
 
 export default function Basic() {
     return (
-        <Card.Root style={{ width: '100%' }}>
-            <Card.Body style={{ padding: 0 }}>
-                <Table.Root style={{ width: '100%' }}>
-                    <Table.ColumnGroup>
-                        <Table.Column width="20%" />
-                        <Table.Column width="20%" />
-                        <Table.Column width="30%" />
-                        <Table.Column width="30%" />
-                    </Table.ColumnGroup>
+        <Card.Root width="100%">
+            <Card.Body padding="$000">
+                <Table.Root width="100%">
                     <Table.Header>
-                        <Table.Row style={{ backgroundColor: 'var(--vapor-color-gray-050)' }}>
+                        <Table.Row backgroundColor="$gray-050">
                             <Table.Heading>Name</Table.Heading>
                             <Table.Heading>Status</Table.Heading>
                             <Table.Heading>Role</Table.Heading>

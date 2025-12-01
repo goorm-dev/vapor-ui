@@ -8,7 +8,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { Badge, Card, HStack, IconButton, Table } from '@vapor-ui/core';
+import { Badge, Box, Card, HStack, IconButton, Table } from '@vapor-ui/core';
 import { ControlCommonIcon } from '@vapor-ui/icons';
 
 export default function Sort() {
@@ -18,7 +18,7 @@ export default function Sort() {
                 id: 'index',
                 header: 'ID',
                 accessorFn: (_, index) => index + 1,
-                cell: ({ getValue }) => getValue(),
+                cell: ({ getValue }) => <Box textAlign="center">{String(getValue() ?? '.')}</Box>,
             },
 
             {
@@ -67,23 +67,22 @@ export default function Sort() {
     });
 
     return (
-        <Card.Root style={{ width: '100%' }}>
-            <Card.Body style={{ padding: 0 }}>
-                <Table.Root style={{ width: '100%' }}>
+        <Card.Root width="100%">
+            <Card.Body padding="$000">
+                <Table.Root width="100%">
                     <Table.ColumnGroup>
-                        <Table.Column width="5%" />
-                        <Table.Column width="15%" />
-                        <Table.Column width="45%" />
+                        <Table.Column width="10%" />
                     </Table.ColumnGroup>
-                    <Table.Header style={{ borderRadius: 'inherit' }}>
+                    <Table.Header borderRadius="inherit">
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <Table.Row
-                                key={headerGroup.id}
-                                style={{ backgroundColor: 'var(--vapor-color-gray-050)' }}
-                            >
+                            <Table.Row key={headerGroup.id} backgroundColor="$gray-050">
                                 {headerGroup.headers.map((header) => (
                                     <Table.Heading key={header.id}>
-                                        <HStack>
+                                        <HStack
+                                            justifyContent={
+                                                header.id === 'index' ? 'center' : 'flex-start'
+                                            }
+                                        >
                                             {flexRender(
                                                 header.column.columnDef.header,
                                                 header.getContext(),

@@ -27,7 +27,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         ...defaultMdxComponents,
 
         pre: ({ ref: _ref, ...props }) => (
-            <CodeBlock {...props}>
+            <CodeBlock {...props} className="bg-v-background-canvas-100">
                 <Pre>{props.children}</Pre>
             </CodeBlock>
         ),
@@ -44,12 +44,11 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         PropsTable,
         LiveCodeBlock,
         ColorPalette,
-        Tabs,
         Text,
         Box,
         BasicColor,
         SemanticColor,
-
+        Tabs,
         Image,
         IntroLinkCardContainer,
         Step,

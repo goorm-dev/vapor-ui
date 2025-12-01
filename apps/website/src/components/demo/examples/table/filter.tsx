@@ -11,6 +11,7 @@ import {
 } from '@tanstack/react-table';
 import {
     Badge,
+    Box,
     Button,
     Card,
     HStack,
@@ -30,14 +31,14 @@ const customFilterFn = (row: Row<Data>, columnId: string, filterValue: any) => {
     return filterValue.includes(cellValue);
 };
 
-export default function PaginationExample() {
+export default function Scroll() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: 'ID',
+                header: () => <Box textAlign="center"> ID</Box>,
                 accessorKey: 'id',
                 size: 0, // prevent cumulative layout shift
-                cell: ({ row }) => <div style={{ textAlign: 'center' }}>{row.index + 1}</div>,
+                cell: ({ row }) => <Box textAlign="center">{row.index + 1}</Box>,
             },
 
             {
@@ -91,7 +92,7 @@ export default function PaginationExample() {
     });
 
     return (
-        <Card.Root style={{ width: '100%' }}>
+        <Card.Root width="100%">
             <Card.Header>
                 <HStack justifyContent="space-between" alignItems="center">
                     <Text typography="heading6" foreground="normal-200" style={{ flexShrink: 0 }}>
@@ -103,13 +104,15 @@ export default function PaginationExample() {
                             alignItems="center"
                             gap="10px"
                             paddingX="$150"
-                            border="1px solid var(--vapor-color-border-normal)"
+                            border="1px solid"
+                            borderColor="$normal"
                             borderRadius="$300"
                         >
                             <SearchOutlineIcon />
                             <TextInput
                                 placeholder="이름으로 검색"
-                                style={{ border: 'none', paddingInline: 0 }}
+                                border="none"
+                                paddingX="$000"
                                 onValueChange={(value) =>
                                     table.getColumn('name')?.setFilterValue(value)
                                 }
@@ -171,21 +174,14 @@ export default function PaginationExample() {
             <Card.Body style={{ overflow: 'auto', padding: 0 }}>
                 <Table.Root style={{ width: '100%' }}>
                     <Table.ColumnGroup>
-                        <Table.Column width="5%" />
-                        <Table.Column width="15%" />
-                        <Table.Column width="15%" />
-                        <Table.Column width="40%" />
-                        <Table.Column width="25%" />
+                        <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
                     <Table.Header>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
-                                    <Table.Heading
-                                        key={header.id}
-                                        style={{ backgroundColor: 'var(--vapor-color-gray-050)' }}
-                                    >
+                                    <Table.Heading key={header.id} backgroundColor="$gray-050">
                                         {flexRender(
                                             header.column.columnDef.header,
                                             header.getContext(),
@@ -202,12 +198,7 @@ export default function PaginationExample() {
                                 return (
                                     <Table.Row key={row.id}>
                                         {row.getVisibleCells().map((cell) => (
-                                            <Table.Cell
-                                                key={cell.id}
-                                                style={{
-                                                    backgroundColor: 'var(--vapor-color-white)',
-                                                }}
-                                            >
+                                            <Table.Cell key={cell.id} backgroundColor="$white">
                                                 {flexRender(
                                                     cell.column.columnDef.cell,
                                                     cell.getContext(),
@@ -221,7 +212,8 @@ export default function PaginationExample() {
                             <Table.Row>
                                 <Table.Cell
                                     colSpan={columns.length}
-                                    style={{ textAlign: 'center', height: 410 }}
+                                    textAlign="center"
+                                    height="410px"
                                 >
                                     검색 결과가 없습니다.
                                 </Table.Cell>

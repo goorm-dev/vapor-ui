@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './table.css';
@@ -11,148 +12,150 @@ import * as styles from './table.css';
  * Table.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const TableRoot = forwardRef<HTMLTableElement, TableRoot.Props>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <table />,
-            props: {
-                className: clsx(styles.table, className),
-                ...props,
-            },
-        });
-    },
-);
-TableRoot.displayName = 'TableRoot';
+export const TableRoot = forwardRef<HTMLTableElement, TableRoot.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <table />,
+        props: {
+            className: clsx(styles.table, className),
+            ...componentProps,
+        },
+    });
+});
+TableRoot.displayName = 'Table.Root';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Header
  * -----------------------------------------------------------------------------------------------*/
 
-export const TableHeader = forwardRef<HTMLTableSectionElement, TableHeader.Props>(
-    ({ render, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <thead />,
-            props,
-        });
-    },
-);
-TableHeader.displayName = 'TableHeader';
+export const TableHeader = forwardRef<HTMLTableSectionElement, TableHeader.Props>((props, ref) => {
+    const { render, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <thead />,
+        props: componentProps,
+    });
+});
+TableHeader.displayName = 'Table.Header';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Body
  * -----------------------------------------------------------------------------------------------*/
 
-export const TableBody = forwardRef<HTMLTableSectionElement, TableBody.Props>(
-    ({ render, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <tbody />,
-            props,
-        });
-    },
-);
-TableBody.displayName = 'TableBody';
+export const TableBody = forwardRef<HTMLTableSectionElement, TableBody.Props>((props, ref) => {
+    const { render, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <tbody />,
+        props: componentProps,
+    });
+});
+TableBody.displayName = 'Table.Body';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Footer
  * -----------------------------------------------------------------------------------------------*/
 
-export const TableFooter = forwardRef<HTMLTableSectionElement, TableFooter.Props>(
-    ({ render, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <tfoot />,
-            props,
-        });
-    },
-);
-TableFooter.displayName = 'TableFooter';
+export const TableFooter = forwardRef<HTMLTableSectionElement, TableFooter.Props>((props, ref) => {
+    const { render, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <tfoot />,
+        props: componentProps,
+    });
+});
+TableFooter.displayName = 'Table.Footer';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Row
  * -----------------------------------------------------------------------------------------------*/
 
-export const TableRow = forwardRef<HTMLTableRowElement, TableRow.Props>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <tr />,
-            props: {
-                className: clsx(styles.row, className),
-                ...props,
-            },
-        });
-    },
-);
-TableRow.displayName = 'TableRow';
+export const TableRow = forwardRef<HTMLTableRowElement, TableRow.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <tr />,
+        props: {
+            className: clsx(styles.row, className),
+            ...componentProps,
+        },
+    });
+});
+TableRow.displayName = 'Table.Row';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Heading
  * -----------------------------------------------------------------------------------------------*/
 
-export const TableHeading = forwardRef<HTMLTableCellElement, TableHeading.Props>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <th />,
-            props: {
-                className: clsx(styles.heading, className),
-                ...props,
-            },
-        });
-    },
-);
-TableHeading.displayName = 'TableHeading';
+export const TableHeading = forwardRef<HTMLTableCellElement, TableHeading.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <th />,
+        props: {
+            className: clsx(styles.heading, className),
+            ...componentProps,
+        },
+    });
+});
+TableHeading.displayName = 'Table.Heading';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Cell
  * -----------------------------------------------------------------------------------------------*/
 
-export const TableCell = forwardRef<HTMLTableCellElement, TableCell.Props>(
-    ({ render, className, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <td />,
-            props: {
-                className: clsx(styles.cell, className),
-                ...props,
-            },
-        });
-    },
-);
-TableCell.displayName = 'TableCell';
+export const TableCell = forwardRef<HTMLTableCellElement, TableCell.Props>((props, ref) => {
+    const { render, className, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <td />,
+        props: {
+            className: clsx(styles.cell, className),
+            ...componentProps,
+        },
+    });
+});
+TableCell.displayName = 'Table.Cell';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.ColumnGroup
  * -----------------------------------------------------------------------------------------------*/
 
 export const TableColumnGroup = forwardRef<HTMLTableColElement, TableColumnGroup.Props>(
-    ({ render, ...props }, ref) => {
+    (props, ref) => {
+        const { render, ...componentProps } = resolveStyles(props);
+
         return useRender({
             ref,
             render: render || <colgroup />,
-            props,
+            props: componentProps,
         });
     },
 );
-TableColumnGroup.displayName = 'TableColumnGroup';
+TableColumnGroup.displayName = 'Table.ColumnGroup';
 
 /* -------------------------------------------------------------------------------------------------
  * Table.Column
  * -----------------------------------------------------------------------------------------------*/
 
-export const TableColumn = forwardRef<HTMLTableColElement, TableColumn.Props>(
-    ({ render, ...props }, ref) => {
-        return useRender({
-            ref,
-            render: render || <col />,
-            props,
-        });
-    },
-);
-TableColumn.displayName = 'TableColumn';
+export const TableColumn = forwardRef<HTMLTableColElement, TableColumn.Props>((props, ref) => {
+    const { render, ...componentProps } = resolveStyles(props);
+
+    return useRender({
+        ref,
+        render: render || <col />,
+        props: componentProps,
+    });
+});
+TableColumn.displayName = 'Table.Column';
 
 /* -----------------------------------------------------------------------------------------------*/
 

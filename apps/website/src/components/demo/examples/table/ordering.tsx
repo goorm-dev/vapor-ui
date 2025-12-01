@@ -57,18 +57,14 @@ export default function Ordering() {
     });
 
     return (
-        <Card.Root style={{ width: '100%' }}>
-            <Card.Body style={{ padding: 0 }}>
-                <Table.Root style={{ width: '100%' }}>
+        <Card.Root width="100%">
+            <Card.Body padding="$000">
+                <Table.Root width="100%">
                     <Table.ColumnGroup>
-                        <Table.Column width="5%" />
-                        <Table.Column width="17.5%" />
-                        <Table.Column width="17.5%" />
-                        <Table.Column width="30%" />
-                        <Table.Column width="30%" />
+                        <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
-                    <Table.Header style={{ backgroundColor: 'var(--vapor-color-gray-050)' }}>
+                    <Table.Header backgroundColor="$gray-050">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
