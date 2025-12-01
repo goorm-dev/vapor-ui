@@ -16,7 +16,6 @@ export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) =
         'colorPalette',
         'size',
         'variant',
-        'stretch',
     ]);
 
     const { disabled } = otherProps;

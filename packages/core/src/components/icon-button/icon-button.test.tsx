@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import { type ComponentProps, forwardRef } from 'react';
 
 import { cleanup, render } from '@testing-library/react';
 import user from '@testing-library/user-event';
@@ -6,16 +6,17 @@ import type { Mock } from 'vitest';
 import { axe } from 'vitest-axe';
 
 import { IconButton } from '.';
+import { Tooltip } from '../tooltip';
 
 const ARIA_LABEL = 'Like';
 
-const IconButtonTest = (props: IconButton.Props) => {
+const IconButtonTest = forwardRef<HTMLButtonElement, IconButton.Props>((props, ref) => {
     return (
-        <IconButton {...props}>
+        <IconButton {...props} ref={ref}>
             <HeartIcon data-testid="icon" />
         </IconButton>
     );
-};
+});
 
 describe('IconButton', () => {
     afterEach(cleanup);
@@ -58,6 +59,31 @@ describe('IconButton', () => {
         const svg = rendered.getByTestId('icon');
 
         expect(svg).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    it('should handle click on icon area when used with Tooltip', async () => {
+        const handleClickMock: Mock = vi.fn();
+
+        const rendered = render(
+            <Tooltip.Root>
+                <Tooltip.Trigger
+                    render={<IconButton aria-label={ARIA_LABEL} onClick={handleClickMock} />}
+                >
+                    <HeartIcon data-testid="icon" />
+                </Tooltip.Trigger>
+                <Tooltip.Popup>Tooltip Content</Tooltip.Popup>
+            </Tooltip.Root>,
+        );
+
+        const button = rendered.getByLabelText(ARIA_LABEL);
+        const icon = rendered.getByTestId('icon');
+
+        await user.click(button);
+
+        const icon2 = rendered.getByTestId('icon');
+
+        expect(handleClickMock).toHaveBeenCalledTimes(1);
+        expect(icon).toBe(icon2);
     });
 });
 

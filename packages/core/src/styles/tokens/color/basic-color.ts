@@ -5,7 +5,7 @@ export const BASE_BASIC_COLORS = {
 
 export const LIGHT_BASIC_COLORS = {
     ...BASE_BASIC_COLORS,
-    background: { canvas: '#ffffff' },
+    canvas: '#ffffff',
     red: {
         '050': '#fff5f4',
         '100': '#ffd8d7',
@@ -142,7 +142,7 @@ export const LIGHT_BASIC_COLORS = {
 
 export const DARK_BASIC_COLORS = {
     ...BASE_BASIC_COLORS,
-    background: { canvas: '#232323' },
+    canvas: '#232323',
     red: {
         '050': '#590000',
         '100': '#750000',
@@ -276,3 +276,9 @@ export const DARK_BASIC_COLORS = {
         '900': '#fafafa',
     },
 };
+
+/**
+ * LIGHT_BASIC_COLORS의 전체 구조를 나타내는 타입
+ * 색상 팔레트의 모든 색상(red, blue, gray 등)과 그 shade들을 포함
+ */
+export type BasicColorPalette = typeof LIGHT_BASIC_COLORS;

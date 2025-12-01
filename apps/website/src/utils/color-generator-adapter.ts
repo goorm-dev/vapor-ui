@@ -75,7 +75,10 @@ export function transformSemanticTokensToSemanticColorData(): SemanticColorData 
         for (const [key, value] of Object.entries(obj)) {
             const currentPath = prefix ? `${prefix}-${key}` : key;
 
-            if (typeof value === 'string' && value.startsWith('#')) {
+            if (
+                typeof value === 'string' &&
+                (value.startsWith('#') || value.startsWith('var(--vapor-color-'))
+            ) {
                 const cssVarName = `--vapor-color-${currentPath}`;
                 const category = currentPath.split('-')[0];
 

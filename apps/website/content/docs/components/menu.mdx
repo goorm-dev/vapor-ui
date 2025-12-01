@@ -1,7 +1,7 @@
 ---
 title: 'Menu'
 site_name: 'Menu - Vapor Core'
-description: '드롭다운 메뉴와 컨텍스트 메뉴를 제공하는 컴포넌트입니다'
+description: '드롭다운 Menu와 컨텍스트 Menu를 제공하는 컴포넌트입니다'
 ---
 
 <Demo name="menu/default-menu">
@@ -17,35 +17,9 @@ description: '드롭다운 메뉴와 컨텍스트 메뉴를 제공하는 컴포�
 
 ---
 
-### Positioning
-
-Menu의 표시 위치를 설정할 수 있습니다.
-
-<Demo name="menu/menu-positioning">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/menu/menu-positioning.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Groups
-
-Menu 아이템을 그룹으로 구성할 수 있습니다.
-
-<Demo name="menu/menu-groups">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/menu/menu-groups.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
 ### Disabled
 
-Menu와 개별 아이템을 비활성화할 수 있습니다.
+Menu의 비활성화 상태를 설정합니다.
 
 <Demo name="menu/menu-disabled">
 ```json doc-gen:file
@@ -60,9 +34,35 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 
 ---
 
-### Checkbox Items
+### Positioning
 
-체크박스 형태의 메뉴 아이템을 사용할 수 있습니다.
+Menu의 표시 위치를 설정합니다.
+
+<Demo name="menu/menu-positioning">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/menu/menu-positioning.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Groups
+
+Menu 아이템을 그룹화합니다.
+
+<Demo name="menu/menu-groups">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/menu/menu-groups.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### With Checkbox Items
+
+Checkbox Item을 사용합니다.
 
 <Demo name="menu/menu-checkbox">
 ```json doc-gen:file
@@ -73,9 +73,9 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 ```
 </Demo>
 
-### Radio Items
+### With Radio Items
 
-라디오 버튼 형태의 메뉴 아이템을 사용할 수 있습니다.
+Radio Item을 사용합니다.
 
 <Demo name="menu/menu-radio">
 ```json doc-gen:file
@@ -86,9 +86,9 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 ```
 </Demo>
 
-### Submenu
+### With Submenu
 
-서브메뉴를 구성할 수 있습니다.
+Submenu를 구성할 수 있습니다.
 
 <Demo name="menu/menu-submenu">
 ```json doc-gen:file
@@ -105,15 +105,83 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 
 ### Menu.Root
 
-Menu의 루트 컨테이너 컴포넌트입니다. 위치 관련 props와 Base UI Menu.Root의 모든 props를 지원합니다.
+Menu의 하위 요소를 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.
 
 <ComponentPropsTable file="menu" section="props" />
 
 ### Menu.Trigger
 
-Menu를 트리거하는 컴포넌트입니다.
+Menu를 여는 버튼입니다. `<button>` 요소를 렌더링합니다.
 
 <ComponentPropsTable file="menu" section="triggerProps" />
+
+### Menu.Popup
+
+Menu의 컨텐츠를 표시합니다. `<PortalPrimitive>`, `<PositionerPrimitive>`, `<PopupPrimitive>`의 중첩 구조로 이루어져 있습니다.
+
+<ComponentPropsTable file="menu" section="popupProps" />
+
+### Menu.Item
+
+각각의 Menu 항목입니다. `<div>` 요소를 렌더링합니다.
+
+<ComponentPropsTable file="menu" section="itemProps" />
+
+### Menu.Separator
+
+스크린 리더가 접근 가능한 구분자입니다. `<div>` 요소를 렌더링합니다.
+
+<ComponentPropsTable file="menu" section="separatorProps" />
+
+### Menu.Group
+
+여러 Menu Item을 그룹화합니다. `<div>` 요소를 렌더링합니다.
+
+<ComponentPropsTable file="menu" section="groupProps" />
+
+### Menu.GroupLabel
+
+Menu Group의 레이블을 표시합니다. `<div>` 요소를 렌더링합니다.
+
+<ComponentPropsTable file="menu" section="groupLabelProps" />
+
+### Menu.SubmenuRoot
+
+Submenu 하위의 요소를 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.
+
+<ComponentPropsTable file="menu" section="submenuRootProps" />
+
+### Menu.SubmenuPopup
+
+Submenu의 컨텐츠를 표시합니다. `<PortalPrimitive>`, `<PositionerPrimitive>`, `<SubmenuPopupPrimitive>`의 중첩 구조로 이루어져 있습니다.
+
+<ComponentPropsTable file="menu" section="submenuPopupProps" />
+
+### Menu.SubmenuTriggerItem
+
+Submenu를 여는 요소입니다. `<div>` 요소를 렌더링합니다.
+
+<ComponentPropsTable file="menu" section="submenuTriggerItemProps" />
+
+### Menu.CheckboxItem
+
+다중 선택할 수 있는 Menu Item입니다. `<div>` 요소를 렌더링합니다.
+
+<ComponentPropsTable file="menu" section="checkboxItemProps" />
+
+### Menu.RadioGroup
+
+Radio Item을 그룹화합니다. `<div>` 요소를 렌더링합니다.
+
+<ComponentPropsTable file="menu" section="radioGroupProps" />
+
+### Menu.RadioItem
+
+단일 선택할 수 있는 Menu Item입니다. `<div>` 요소를 렌더링합니다.
+
+<ComponentPropsTable file="menu" section="radioItemProps" />
+
+---
 
 ### Menu.PortalPrimitive
 
@@ -121,68 +189,20 @@ Menu 콘텐츠를 DOM 트리의 다른 위치로 렌더링하는 컴포넌트입
 
 <ComponentPropsTable file="menu" section="portalPrimitiveProps" />
 
-### Menu.Popup
+### Menu.PositionerPrimitive
 
-Menu의 실제 콘텐츠를 포함하는 컴포넌트입니다. 내장된 Positioner, Popup을 포함하며, 자동으로 위치가 조정됩니다.
+트리거를 기준으로 Menu 콘텐츠의 위치를 설정합니다. `<div>` 요소를 렌더링합니다.
 
-<ComponentPropsTable file="menu" section="popupProps" />
+<ComponentPropsTable file="menu" section="portalPrimitiveProps" />
 
-### Menu.Item
+### Menu.CheckboxItemIndicatorPrimitive
 
-개별 메뉴 아이템 컴포넌트입니다.
+Checkbox Item의 선택 여부를 표시합니다. `<div>` 요소를 렌더링합니다.
 
-<ComponentPropsTable file="menu" section="itemProps" />
+<ComponentPropsTable file="menu" section="checkboxItemIndicatorPrimitiveProps" />
 
-### Menu.Separator
+### Menu.RadioItemIndicatorPrimitive
 
-메뉴 아이템들 사이의 구분선을 표시하는 컴포넌트입니다.
+Radio Item의 선택 여부를 표시합니다. `<div>` 요소를 렌더링합니다.
 
-<ComponentPropsTable file="menu" section="separatorProps" />
-
-### Menu.Group
-
-메뉴 아이템들을 그룹화하는 컨테이너 컴포넌트입니다.
-
-<ComponentPropsTable file="menu" section="groupProps" />
-
-### Menu.GroupLabel
-
-메뉴 그룹의 라벨을 표시하는 컴포넌트입니다.
-
-<ComponentPropsTable file="menu" section="groupLabelProps" />
-
-### Menu.SubmenuRoot
-
-서브메뉴의 루트 컨테이너 컴포넌트입니다.
-
-<ComponentPropsTable file="menu" section="submenuRootProps" />
-
-### Menu.SubmenuPopup
-
-서브메뉴의 실제 콘텐츠를 포함하는 컴포넌트입니다. finalFocus가 자동으로 설정되어 서브메뉴가 닫힐 때 트리거로 포커스가 돌아갑니다.
-
-<ComponentPropsTable file="menu" section="submenuPopupProps" />
-
-### Menu.SubmenuTriggerItem
-
-서브메뉴를 트리거하는 메뉴 아이템 컴포넌트입니다. ChevronRightOutlineIcon이 자동으로 추가됩니다.
-
-<ComponentPropsTable file="menu" section="submenuTriggerItemProps" />
-
-### Menu.CheckboxItem
-
-체크박스 형태의 메뉴 아이템 컴포넌트입니다.
-
-<ComponentPropsTable file="menu" section="checkboxItemProps" />
-
-### Menu.RadioGroup
-
-라디오 그룹 메뉴 컴포넌트입니다.
-
-<ComponentPropsTable file="menu" section="radioGroupProps" />
-
-### Menu.RadioItem
-
-라디오 아이템 메뉴 컴포넌트입니다.
-
-<ComponentPropsTable file="menu" section="radioItemProps" />
+<ComponentPropsTable file="menu" section="radioItemIndicatorPrimitiveProps" />
