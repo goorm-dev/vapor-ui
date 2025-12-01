@@ -30,7 +30,7 @@ export const Default: StoryObj<typeof Table.Root> = {
                         <Table.Cell>{item.type}</Table.Cell>
                         <Table.Cell>
                             <time dateTime={new Date(item.updatedAt).toISOString()}>
-                                {new Date(item.updatedAt).toLocaleDateString()}
+                                {new Date(item.updatedAt).toLocaleDateString('ko-KR')}
                             </time>
                         </Table.Cell>
                     </Table.Row>
