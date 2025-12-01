@@ -55,7 +55,7 @@ export const root = recipe({
         left: 'auto',
 
         // transform: `translateX(${outers.swipeMoveX}) translateY(calc(${outers.swipeMoveY} + (${outers.index} * ${inners.peek}) + (${inners.shrink} * ${inners.height}))) scale(${inners.scale})`,
-        transform: `translateX(${outers.swipeMoveX}) translateY(calc(${outers.swipeMoveY} + (${outers.index} * ${inners.peek}) + (${inners.shrink} * ${inners.height}))) scale(${calc.subtract(1, calc.multiply(outers.index, 0.05))})`,
+        transform: `translateX(${outers.swipeMoveX}) translateY(calc(${outers.swipeMoveY} + (${outers.index} * ${inners.peek}) + (${inners.shrink} * ${inners.height}))) scale(${inners.scale})`,
         transformOrigin: 'top center',
         transition: 'transform 400ms, opacity 400ms, height 200ms, box-shadow 200ms',
 
@@ -93,10 +93,6 @@ export const root = recipe({
             },
 
             '&[data-limited]': {
-                opacity: 0,
-            },
-
-            '&[data-ending-style]': {
                 opacity: 0,
             },
 

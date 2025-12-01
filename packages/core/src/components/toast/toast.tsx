@@ -153,9 +153,7 @@ export const ToastList = () => {
                                     </VStack>
                                 </HStack>
                                 <HStack gap="$100" alignItems="center">
-                                    {/* <ToastActionPrimitive /> */}
                                     <ActionElement />
-                                    {/* <ToastClosePrimitive /> */}
                                     <CloseElement />
                                 </HStack>
                             </ToastContentPrimitive>
@@ -182,11 +180,6 @@ export const ToastProviderPrimitive = ({
         />
     );
 };
-// export const ToastProviderPrimitive = BaseToast.Provider as React.ComponentType<
-//     Omit<BaseToast.Provider.Props, 'toastManager'> & {
-//         toastManager?: ToastManager;
-//     }
-// >;
 
 /* -------------------------------------------------------------------------------------------------
  * Toast.PortalPrimitive
@@ -325,7 +318,7 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const render = renderProp ?? (
             <IconButton
                 aria-label="Close Toast"
-                color="var(--vapor-color-white)"
+                color="$inverse"
                 colorPalette="secondary"
                 variant="ghost"
             />
