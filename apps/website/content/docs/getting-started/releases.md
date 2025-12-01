@@ -3,6 +3,62 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0-beta.7
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 40bfa0a: change components interface
+- 1aecc3d: synchronized color tokens with figma
+- dbb74cf: add new `Table` component
+- d4be5bb: add new `Pagination` component
+- 9f9b700: **BREAKING CHANGE**: Remove `stretch` prop from Button, IconButton, and NavigationMenu components
+
+    The `stretch` prop has been removed to align with Figma's component variant system. In Figma, width control is handled via "Fill Container" (Auto Layout), not as a component variant.
+
+    **Migration Guide:**
+
+    Replace `stretch` prop with Tailwind's `w-full` utility class:
+
+    ```tsx
+    // Before
+    <Button stretch>Submit</Button>
+    <NavigationMenu stretch>...</NavigationMenu>
+
+    // After
+    <Button className="w-full">Submit</Button>
+    <NavigationMenu className="w-full">...</NavigationMenu>
+    ```
+
+    **Why this change:**
+    - Maintains Figma-React design system parity (SSOT principle)
+    - Follows "React Props = Figma Variants" architectural principle
+    - Aligns with Vapor UI's 4-layer component architecture (Container, Interaction, Contents, Slot)
+    - Layout concerns should be handled by parent containers, not component props
+
+#### Patch Changes
+
+- 1fd7efc: Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification
+- ed63947: Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec
+
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+
+
+### @vapor-ui/css-generator
+
+#### Patch Changes
+
+- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+- Updated dependencies [174d004]
+    - @vapor-ui/color-generator@1.0.0-beta.7
+
+---
+
 ## 1.0.0-beta.6
 
 ### @vapor-ui/codemod
