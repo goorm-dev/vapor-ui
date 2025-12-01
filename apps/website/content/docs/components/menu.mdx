@@ -1,7 +1,7 @@
 ---
 title: 'Menu'
 site_name: 'Menu - Vapor Core'
-description: '드롭다운 메뉴와 컨텍스트 메뉴를 제공하는 컴포넌트입니다'
+description: '드롭다운 Menu와 컨텍스트 Menu를 제공하는 컴포넌트입니다'
 ---
 
 <Demo name="menu/default-menu">
@@ -17,35 +17,9 @@ description: '드롭다운 메뉴와 컨텍스트 메뉴를 제공하는 컴포�
 
 ---
 
-### Positioning
-
-Menu의 표시 위치를 설정할 수 있습니다.
-
-<Demo name="menu/menu-positioning">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/menu/menu-positioning.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Groups
-
-Menu 아이템을 그룹으로 구성할 수 있습니다.
-
-<Demo name="menu/menu-groups">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/menu/menu-groups.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
 ### Disabled
 
-Menu와 개별 아이템을 비활성화할 수 있습니다.
+Menu의 비활성화 상태를 설정합니다.
 
 <Demo name="menu/menu-disabled">
 ```json doc-gen:file
@@ -60,9 +34,35 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 
 ---
 
-### Checkbox Items
+### Positioning
 
-체크박스 형태의 메뉴 아이템을 사용할 수 있습니다.
+Menu의 표시 위치를 설정합니다.
+
+<Demo name="menu/menu-positioning">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/menu/menu-positioning.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Groups
+
+Menu 아이템을 그룹화합니다.
+
+<Demo name="menu/menu-groups">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/menu/menu-groups.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### With Checkbox Items
+
+Checkbox Item을 사용합니다.
 
 <Demo name="menu/menu-checkbox">
 ```json doc-gen:file
@@ -73,9 +73,9 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 ```
 </Demo>
 
-### Radio Items
+### With Radio Items
 
-라디오 버튼 형태의 메뉴 아이템을 사용할 수 있습니다.
+Radio Item을 사용합니다.
 
 <Demo name="menu/menu-radio">
 ```json doc-gen:file
@@ -86,9 +86,9 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 ```
 </Demo>
 
-### Submenu
+### With Submenu
 
-서브메뉴를 구성할 수 있습니다.
+Submenu를 구성할 수 있습니다.
 
 <Demo name="menu/menu-submenu">
 ```json doc-gen:file
@@ -111,7 +111,7 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 
 <NewComponentPropsTable componentName="menu-trigger" />
 
-### Menu.Popup
+### Menu.PositionerPrimitive
 
 <NewComponentPropsTable componentName="menu-popup" />
 
@@ -127,11 +127,11 @@ Menu와 개별 아이템을 비활성화할 수 있습니다.
 
 <NewComponentPropsTable componentName="menu-popup-primitive" />
 
-### Menu.Item
+### Menu.CheckboxItemIndicatorPrimitive
 
 <NewComponentPropsTable componentName="menu-item" />
 
-### Menu.Separator
+### Menu.RadioItemIndicatorPrimitive
 
 <NewComponentPropsTable componentName="menu-separator" />
 

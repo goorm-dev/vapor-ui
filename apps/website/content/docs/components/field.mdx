@@ -19,7 +19,7 @@ description: Field는 폼 요소들을 감싸는 컨테이너 컴포넌트로, �
 
 ### Invalid State
 
-`invalid` prop을 사용하여 필드의 유효하지 않은 상태를 표시할 수 있습니다.
+Field의 유효하지 않은 상태를 설정합니다.
 
 <Demo name="field/field-invalid">
 ```json doc-gen:file
@@ -32,25 +32,12 @@ description: Field는 폼 요소들을 감싸는 컨테이너 컴포넌트로, �
 
 ### Validation Mode
 
-`validationMode` prop을 사용하여 언제 검증을 수행할지 제어할 수 있습니다. `onChange`는 입력할 때마다, `onBlur`는 포커스를 잃을 때 검증을 수행합니다.
+유효성 검사 타이밍을 설정합니다.
 
 <Demo name="field/field-validation-mode">
 ```json doc-gen:file
 {
     "file": "./src/components/demo/examples/field/field-validation-mode.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Match
-
-`Field.Error`의 `match` prop을 사용하여 특정 조건에 따라 에러 메시지 표시를 제어할 수 있습니다.
-
-<Demo name="field/field-match">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/field/field-match.tsx",
     "codeblock": true
 }
 ```
@@ -62,7 +49,7 @@ description: Field는 폼 요소들을 감싸는 컨테이너 컴포넌트로, �
 
 ### With Description
 
-Field.Description을 사용하여 필드에 대한 추가 설명을 제공할 수 있습니다.
+Field에 대한 추가 설명을 표시합니다.
 
 <Demo name="field/field-description">
 ```json doc-gen:file
@@ -73,9 +60,9 @@ Field.Description을 사용하여 필드에 대한 추가 설명을 제공할 �
 ```
 </Demo>
 
-### With Validation
+### Validation
 
-Field.Error와 Field.Success를 사용하여 유효성 검사 결과를 표시할 수 있습니다.
+입력된 값에 대한 유효성을 검사합니다.
 
 <Demo name="field/field-validation">
 ```json doc-gen:file
@@ -86,27 +73,27 @@ Field.Error와 Field.Success를 사용하여 유효성 검사 결과를 표시�
 ```
 </Demo>
 
-### With Checkbox
+### Required
 
-Checkbox 컴포넌트와 Field를 함께 사용하는 예제입니다.
+필수 Field와 선택 Field를 구분하여 표시합니다.
 
-<Demo name="field/field-checkbox">
+<Demo name="field/field-required">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/field/field-checkbox.tsx",
+    "file": "./src/components/demo/examples/field/field-required.tsx",
     "codeblock": true
 }
 ```
 </Demo>
 
-### With Switch
+### Disabled
 
-Switch 컴포넌트와 Field를 함께 사용하는 예제입니다.
+disabled 속성을 사용하여 비활성화된 Field를 만들 수 있습니다.
 
-<Demo name="field/field-switch">
+<Demo name="field/field-disabled">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/field/field-switch.tsx",
+    "file": "./src/components/demo/examples/field/field-disabled.tsx",
     "codeblock": true
 }
 ```
@@ -114,7 +101,7 @@ Switch 컴포넌트와 Field를 함께 사용하는 예제입니다.
 
 ### With RadioGroup
 
-RadioGroup과 Field를 함께 사용하여 선택지가 있는 필드를 만드는 예제입니다.
+RadioGroup과 Field를 함께 사용합니다.
 
 <Demo name = "field/field-radio-group">
 
@@ -155,9 +142,9 @@ export default function FieldRadioGroup() {
 
 </Demo>
 
-### With Different Input Types
+### With Form Elements
 
-다양한 폼 컨트롤(TextInput, Checkbox, Switch, Select 등)과 Field를 함께 사용하는 예제입니다.
+다양한 폼 요소(TextInput, Checkbox, Switch, Select 등)와 Field를 함께 사용합니다.
 
 <Demo name="field/field-with-inputs">
 ```json doc-gen:file
@@ -168,53 +155,14 @@ export default function FieldRadioGroup() {
 ```
 </Demo>
 
-### Required Fields
+### Controlled
 
-필수 필드와 선택 필드를 구분하여 표시하는 예제입니다.
-
-<Demo name="field/field-required">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/field/field-required.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Field States
-
-다양한 필드 상태(일반, 오류, 성공, 비활성화)를 보여주는 예제입니다.
-
-<Demo name="field/field-states">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/field/field-states.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Controlled Fields
-
-제어 컴포넌트로 필드를 관리하고 실시간으로 상태를 표시하는 예제입니다.
+제어 컴포넌트로 Field를 관리하고 실시간으로 상태를 표시합니다.
 
 <Demo name="field/field-controlled">
 ```json doc-gen:file
 {
     "file": "./src/components/demo/examples/field/field-controlled.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Disabled
-
-disabled 속성을 사용하여 비활성화된 필드를 만들 수 있습니다.
-
-<Demo name="field/field-disabled">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/field/field-disabled.tsx",
     "codeblock": true
 }
 ```

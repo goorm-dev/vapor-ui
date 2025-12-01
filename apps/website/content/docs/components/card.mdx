@@ -5,16 +5,10 @@ description: 'Card는 이미지와 텍스트, 일부 기능 버튼을 포함한 
 ---
 
 <Demo name="card/default-card">
-```tsx import {Card} from '@vapor-ui/core';
-
-export default function DefaultCard() {
-    return (
-        <Card.Root>
-            <Card.Header>Basic Template</Card.Header>
-            <Card.Body>This is a Basic Template</Card.Body>
-            <Card.Footer style={{ display: 'flex', justifyContent: 'center' }}>Footer</Card.Footer>
-        </Card.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/card/default-card.tsx",
+    "codeblock": true
 }
 ```
 </Demo>
@@ -23,27 +17,27 @@ export default function DefaultCard() {
 
 ---
 
-### Simple Usage
-
-기본적인 Card 사용법입니다.
-
-<Demo name="card/card-basic">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/card/card-basic.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
 ### Layout
 
-Card의 레이아웃은 Header, Body, Footer를 조합하여 다양한 구성으로 제공합니다.
+상황에 따라, 일부 영역을 생략하여 Card를 구성할 수 있습니다.
 
 <Demo name="card/card-layout">
 ```json doc-gen:file
 {
     "file": "./src/components/demo/examples/card/card-layout.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Within Form
+
+`<Form  />` 컴포넌트와 함께 사용하여 관련된 필드를 그룹화할 수 있습니다.
+
+<Demo name="card/card-basic">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/card/card-basic.tsx",
     "codeblock": true
 }
 ```

@@ -33,7 +33,6 @@ export default {
             control: { type: 'inline-radio' },
             options: ['horizontal', 'vertical'],
         },
-        stretch: { control: { type: 'boolean' } },
         disabled: { control: { type: 'boolean' } },
     },
 };

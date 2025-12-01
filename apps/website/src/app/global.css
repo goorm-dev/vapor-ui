@@ -23,10 +23,10 @@
     /* To respond immediately to side effects, the existing code is left as a comment. */
     /* --color-fd-accent: var(--vapor-color-background-secondary-100); */
     /* --color-fd-accent-foreground: var(--vapor-color-foreground-secondary-100); */
-    --color-fd-muted: var(--vapor-color-background-secondary-200);
+    --color-fd-muted: var(--vapor-color-background-secondary-100);
     --color-fd-muted-foreground: var(--vapor-color-foreground-secondary-100);
     --color-fd-foreground: var(--vapor-color-foreground-secondary-100);
-    --color-fd-secondary: var(--vapor-color-background-secondary-200);
+    --color-fd-secondary: var(--vapor-color-background-secondary-100);
     --color-fd-secondary-foreground: var(--vapor-color-foreground-secondary-100);
     --color-fd-card: var(--vapor-color-background-surface-100);
     --color-fd-card-foreground: var(--vapor-color-foreground-secondary-100);
@@ -35,6 +35,7 @@
     --color-fd-primary-foreground: var(--vapor-color-foreground-primary-100);
     --color-fd-foreground: var(--vapor-color-foreground-normal-100);
     --fd-nav-height: 64px;
+    --fd-tocnav-height: 64px;
 }
 
 a[data-active='true'] {
