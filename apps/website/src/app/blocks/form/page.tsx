@@ -1,30 +1,31 @@
 'use client';
 
+import { Badge, Text } from '@vapor-ui/core';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
 
-const BUILT_IN_FORMS = [
+const FORM_FRAMEWORK = [
     {
         id: 'built-in',
         name: '내장 폼 예제',
         description: 'Vapor UI의 내장 폼 컴포넌트를 사용한 예제들입니다.',
         imageUrl: '/icons/logo-vapor.svg',
-        href: '/blocks/forms/built-in',
+        href: '/blocks/form/built-in',
     },
     {
         id: 'tanstack-form',
         name: 'TanStack Form 예제',
         description: 'TanStack Form을 사용한 폼 예제들입니다.',
-        imageUrl: '/images/forms/tanstack-form.svg',
-        href: '/blocks/forms/tanstack-form',
+        imageUrl: '/images/form/tanstack-form.svg',
+        href: '/blocks/form/tanstack-form',
     },
     {
         id: 'react-hook-form',
         name: 'React Hook Form 예제',
         description: 'React Hook Form을 사용한 폼 예제들입니다.',
-        imageUrl: '/images/forms/react-hook-form.svg',
-        href: '/blocks/forms/react-hook-form',
+        imageUrl: '/images/form/react-hook-form.svg',
+        href: '/blocks/form/react-hook-form',
     },
 ];
 
@@ -33,9 +34,17 @@ export default function FormList() {
         <div>
             <SiteNavBar />
             <main className="pt-[62px]">
-                <div className="flex flex-col py-[100px] px-[146px] gap-[100px] max-lg:pt-[var(--vapor-size-space-900)] max-lg:px-[var(--vapor-size-space-400)] max-lg:gap-[var(--vapor-size-space-900)] max-sm:py-[var(--vapor-size-space-800)] max-sm:gap-[var(--vapor-size-space-400)]">
+                <div className="flex flex-col py-[100px] px-[146px] gap-[50px] max-lg:pt-[var(--vapor-size-space-900)] max-lg:px-[var(--vapor-size-space-400)] max-lg:gap-[var(--vapor-size-space-900)] max-sm:py-[var(--vapor-size-space-800)] max-sm:gap-[var(--vapor-size-space-400)]">
+                    <div className="flex flex-col gap-[var(--vapor-size-space-300)]">
+                        <Badge colorPalette="hint" shape="pill" size="lg" className="flex-0">
+                            Form
+                        </Badge>
+                        <Text typography="body1" foreground="normal-100">
+                            Form 프레임워크를 선택하여 다양한 폼 예제들을 확인해보세요.
+                        </Text>
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[var(--vapor-size-space-400)] [&>*]:min-h-[263px]">
-                        {BUILT_IN_FORMS.map((block) => (
+                        {FORM_FRAMEWORK.map((block) => (
                             <Link
                                 key={block.id}
                                 href={block.href}
