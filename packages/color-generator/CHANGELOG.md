@@ -1,5 +1,11 @@
 # @vapor-ui/color-generator
 
+## 1.0.0
+
+### Minor Changes
+
+- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+
 ## 1.0.0-beta.6
 
 ### Patch Changes

@@ -1,5 +1,47 @@
 # website
 
+## 1.0.0
+
+### Minor Changes
+
+- 9f9b700: **BREAKING CHANGE**: Remove `stretch` prop from Button, IconButton, and NavigationMenu components
+
+    The `stretch` prop has been removed to align with Figma's component variant system. In Figma, width control is handled via "Fill Container" (Auto Layout), not as a component variant.
+
+    **Migration Guide:**
+
+    Replace `stretch` prop with Tailwind's `w-full` utility class:
+
+    ```tsx
+    // Before
+    <Button stretch>Submit</Button>
+    <NavigationMenu stretch>...</NavigationMenu>
+
+    // After
+    <Button className="w-full">Submit</Button>
+    <NavigationMenu className="w-full">...</NavigationMenu>
+    ```
+
+    **Why this change:**
+    - Maintains Figma-React design system parity (SSOT principle)
+    - Follows "React Props = Figma Variants" architectural principle
+    - Aligns with Vapor UI's 4-layer component architecture (Container, Interaction, Contents, Slot)
+    - Layout concerns should be handled by parent containers, not component props
+
+### Patch Changes
+
+- Updated dependencies [40bfa0a]
+- Updated dependencies [1aecc3d]
+- Updated dependencies [1fd7efc]
+- Updated dependencies [dbb74cf]
+- Updated dependencies [174d004]
+- Updated dependencies [d4be5bb]
+- Updated dependencies [ed63947]
+- Updated dependencies [9f9b700]
+    - @vapor-ui/core@1.0.0
+    - @vapor-ui/color-generator@1.0.0
+    - @vapor-ui/css-generator@1.0.0
+
 ## 1.0.0-beta.6
 
 ### Patch Changes
