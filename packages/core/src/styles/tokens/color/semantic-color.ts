@@ -9,15 +9,12 @@ type ColorShade = keyof (typeof LIGHT_BASIC_COLORS)['blue'];
 /** 기본 색상 이름 타입 (black, white) */
 type BaseColorName = keyof typeof BASE_BASIC_COLORS;
 
-/** 배경 색상 키 타입 */
-type BackgroundKey = keyof (typeof LIGHT_BASIC_COLORS)['background'];
-
 const colorRef = <C extends ColorName, S extends ColorShade>(color: C, shade: S) =>
     `var(--vapor-color-${color}-${shade})` as const;
 
 const baseRef = <C extends BaseColorName>(color: C) => `var(--vapor-color-${color})` as const;
 
-const bgRef = <K extends BackgroundKey>(key: K) => `var(--vapor-color-background-${key})` as const;
+const canvasRef = () => `var(--vapor-color-canvas)` as const;
 
 export const LIGHT_SEMANTIC_COLORS = {
     background: {
@@ -50,11 +47,11 @@ export const LIGHT_SEMANTIC_COLORS = {
             '200': colorRef('gray', '800'),
         },
         canvas: {
-            '100': bgRef('canvas'),
+            '100': canvasRef(),
             '200': colorRef('gray', '050'),
         },
         overlay: {
-            '100': bgRef('canvas'),
+            '100': canvasRef(),
         },
     },
     foreground: {
@@ -135,7 +132,7 @@ export const DARK_SEMANTIC_COLORS = {
             '200': colorRef('gray', '300'),
         },
         canvas: {
-            '100': bgRef('canvas'),
+            '100': canvasRef(),
             '200': colorRef('gray', '050'),
         },
         overlay: {

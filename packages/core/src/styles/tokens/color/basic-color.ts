@@ -5,7 +5,7 @@ export const BASE_BASIC_COLORS = {
 
 export const LIGHT_BASIC_COLORS = {
     ...BASE_BASIC_COLORS,
-    background: { canvas: '#ffffff' },
+    canvas: '#ffffff',
     red: {
         '050': '#fff5f4',
         '100': '#ffd8d7',
@@ -142,7 +142,7 @@ export const LIGHT_BASIC_COLORS = {
 
 export const DARK_BASIC_COLORS = {
     ...BASE_BASIC_COLORS,
-    background: { canvas: '#232323' },
+    canvas: '#232323',
     red: {
         '050': '#590000',
         '100': '#750000',
