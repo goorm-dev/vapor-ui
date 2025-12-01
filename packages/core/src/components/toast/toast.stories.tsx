@@ -122,7 +122,7 @@ export const TestBed: Story = {
                 });
 
             const id = Toast.toastManager.add({
-                title: 'Notification',
+                title: 'This is Notification. This is Notification. This is Notification. ',
                 description: description ?? 'This is a toast notification.',
                 colorPalette,
                 action: <Button onClick={() => updateToast(id)}>Update</Button>,
@@ -139,7 +139,7 @@ export const TestBed: Story = {
         }, []);
 
         return (
-            <Toast.Toaster {...args} limit={6}>
+            <Toast.Toaster {...args} limit={6} timeout={9999999}>
                 <Button colorPalette="secondary" onClick={() => handleClick('danger')}>
                     Danger
                 </Button>
