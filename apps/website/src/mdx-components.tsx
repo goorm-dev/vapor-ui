@@ -17,6 +17,7 @@ import { LiveCodeBlock } from '~/components/live-code-block';
 import PropsTable from '~/components/props-table';
 
 import { ColorPalette } from './components/color-swatch';
+import { Tabs } from './components/docs-tabs';
 import { BasicColor, SemanticColor } from './components/foundation-color-tabs';
 import IntroLinkCardContainer from './components/intro-link-card-container';
 
@@ -45,7 +46,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         Box,
         BasicColor,
         SemanticColor,
-
+        Tabs,
         Image,
         IntroLinkCardContainer,
         Step,
