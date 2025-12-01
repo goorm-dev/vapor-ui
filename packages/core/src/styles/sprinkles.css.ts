@@ -199,7 +199,6 @@ const colorTokens = {
     'contrast-200': foreground.contrast[200],
     'normal-100': foreground.normal[100],
     'normal-200': foreground.normal[200],
-    'button-primary': foreground.inverse,
     inverse: foreground.inverse,
 };
 
