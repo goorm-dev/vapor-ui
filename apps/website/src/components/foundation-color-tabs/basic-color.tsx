@@ -9,10 +9,10 @@ export const BasicColor = () => {
     return (
         <Box paddingY="$400">
             {BasicColorData.map((colorGroup): JSX.Element => {
-                const isStaticColor = colorGroup.title === 'white' || colorGroup.title === 'black';
-                const sectionTitle = isStaticColor
-                    ? 'Static Colors'
-                    : `${colorGroup.title.charAt(0).toUpperCase() + colorGroup.title.slice(1)} Scales`;
+                const sectionTitle =
+                    colorGroup.title === 'base'
+                        ? 'Base Colors'
+                        : `${colorGroup.title.charAt(0).toUpperCase() + colorGroup.title.slice(1)} Scales`;
 
                 return (
                     <Box key={colorGroup.title} marginBottom="$600">
