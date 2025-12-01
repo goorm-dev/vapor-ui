@@ -1,6 +1,7 @@
 import { Box, Text } from '@vapor-ui/core';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
+import * as TabsComponents from 'fumadocs-ui/components/tabs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 import Image from 'next/image';
@@ -31,6 +32,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
             </CodeBlock>
         ),
         CodeBlock,
+        ...TabsComponents,
         Demo,
         InstallSelector,
         AllComponentsContainer,
