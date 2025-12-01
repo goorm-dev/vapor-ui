@@ -36,7 +36,7 @@ export default function FormList() {
             <main className="pt-[62px]">
                 <div className="flex flex-col py-[100px] px-[146px] gap-[50px] max-lg:pt-[var(--vapor-size-space-900)] max-lg:px-[var(--vapor-size-space-400)] max-lg:gap-[var(--vapor-size-space-900)] max-sm:py-[var(--vapor-size-space-800)] max-sm:gap-[var(--vapor-size-space-400)]">
                     <div className="flex flex-col gap-[var(--vapor-size-space-300)]">
-                        <Badge colorPalette="hint" shape="pill" size="lg" className="flex-0">
+                        <Badge colorPalette="hint" shape="pill" size="lg" className="w-fit">
                             Form
                         </Badge>
                         <Text typography="body1" foreground="normal-100">
