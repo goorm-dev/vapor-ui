@@ -17,10 +17,10 @@ import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
-import type { ItemVariants, LinkVariants, ListVariants } from './navigation-menu.css';
+import type { LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
 
-type NavigationMenuVariants = ListVariants & ItemVariants & LinkVariants;
+type NavigationMenuVariants = ListVariants & LinkVariants;
 type NavigationMenuSharedProps = NavigationMenuVariants & { disabled?: boolean };
 type NavigationMenuContextType = NavigationMenuSharedProps;
 
@@ -41,7 +41,7 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
         const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
         const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(
             componentProps,
-            ['direction', 'size', 'stretch', 'disabled'],
+            ['direction', 'size', 'disabled'],
         );
 
         const { direction } = variantProps;
@@ -52,7 +52,7 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
                     ref={ref}
                     aria-label={ariaLabel}
                     orientation={direction}
-                    className={clsx(styles.root({ stretch: variantProps.stretch }), className)}
+                    className={className}
                     {...otherProps}
                 />
             </NavigationMenuProvider>
@@ -89,15 +89,8 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
 export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
-        const { stretch } = useNavigationMenuContext();
 
-        return (
-            <BaseNavigationMenu.Item
-                ref={ref}
-                className={clsx(styles.item({ stretch }), className)}
-                {...componentProps}
-            />
-        );
+        return <BaseNavigationMenu.Item ref={ref} className={className} {...componentProps} />;
     },
 );
 NavigationMenuItem.displayName = 'NavigationMenu.Item';
@@ -441,8 +434,7 @@ export namespace NavigationMenuRoot {
 }
 
 export namespace NavigationMenuList {
-    type ListPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.List>;
-    export interface Props extends ListPrimitiveProps {}
+    export interface Props extends VComponentProps<typeof BaseNavigationMenu.List> {}
 }
 
 export namespace NavigationMenuItem {

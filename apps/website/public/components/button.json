@@ -25,12 +25,6 @@
             "description": "버튼의 스타일 변형을 선택합니다."
         },
         {
-            "prop": "stretch",
-            "type": ["boolean"],
-            "default": false,
-            "description": "true일 경우 버튼이 컨테이너의 전체 너비를 차지합니다."
-        },
-        {
             "prop": "disabled",
             "type": ["boolean"],
             "default": false,

@@ -92,7 +92,12 @@ const ThemePanelContent = () => {
                 </div>
             </Card.Body>
             <Card.Footer className="flex-shrink-0">
-                <Button stretch size="lg" onClick={handleCopyTheme} disabled={!hasAnyConfig}>
+                <Button
+                    size="lg"
+                    className="w-full"
+                    onClick={handleCopyTheme}
+                    disabled={!hasAnyConfig}
+                >
                     {copied ? <ConfirmOutlineIcon /> : 'Copy Theme'}
                 </Button>
             </Card.Footer>
