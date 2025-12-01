@@ -110,7 +110,5 @@
             "required": false,
             "description": "명령형 작업에 대한 ref입니다.\n- `unmount`: 지정된 경우, 메뉴가 닫힐 때 마운트 해제되지 않습니다.\n대신, `unmount` 함수를 호출하여 메뉴를 수동으로 마운트 해제해야 합니다.\n메뉴의 애니메이션이 외부 라이브러리에 의해 제어되는 경우에 유용합니다."
         }
-    ],
-    "generatedAt": "2025-11-27T12:30:25.697Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+    ]
 }

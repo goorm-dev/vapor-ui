@@ -16,7 +16,7 @@ interface ComponentDoc {
 
 export const replaceComponentDoc = (text: string) => {
     return text.replace(
-        /<NewComponentPropsTable\s+componentName="([^"]+)"\s*\/>/g,
+        /<ComponentPropsTable\s+componentName="([^"]+)"\s*\/>/g,
         (_, componentName: string) => {
             try {
                 const jsonPath = path.join(

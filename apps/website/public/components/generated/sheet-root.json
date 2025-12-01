@@ -67,7 +67,5 @@
             "required": false,
             "description": "오버레이 클릭 시 닫기 여부"
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:45.962Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/index.parts.ts"
+    ]
 }

@@ -16,7 +16,5 @@
             "description": "Sheet가 나타날 화면의 방향입니다."
         }
     ],
-    "defaultElement": "div",
-    "generatedAt": "2025-11-27T11:57:46.165Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/index.parts.ts"
+    "defaultElement": "div"
 }

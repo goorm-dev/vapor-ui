@@ -82,7 +82,5 @@
             "description": "팝오버가 열릴 때 모달 상태에 들어가는지 여부를 결정합니다.\n- `true`: 사용자 상호작용이 팝오버로 제한됩니다: 문서 페이지 스크롤이 잠기고, 외부 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용이 허용됩니다.\n- `'trap-focus'`: 포커스가 팝오버 내부에 갇히지만, 문서 페이지 스크롤은 잠기지 않고 외부에 대한 포인터 상호작용은 계속 활성화됩니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T11:56:55.688Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/popover/index.parts.ts"
+    ]
 }

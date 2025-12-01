@@ -89,7 +89,5 @@
             "required": false,
             "description": "명령형 작업에 대한 ref입니다.\n- `unmount`: 지정된 경우, 툴팁은 닫힐 때 언마운트되지 않습니다.\n대신 `unmount` 함수를 수동으로 호출하여 툴팁을 언마운트해야 합니다.\n외부 라이브러리에서 툴팁의 애니메이션을 제어할 때 유용합니다."
         }
-    ],
-    "generatedAt": "2025-11-27T23:42:14.824Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tooltip/index.parts.ts"
+    ]
 }

@@ -111,7 +111,5 @@
             "required": false,
             "description": "팝업을 배치할 때 충돌을 처리하는 방법을 결정합니다."
         }
-    ],
-    "generatedAt": "2025-11-27T23:42:15.073Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tooltip/index.parts.ts"
+    ]
 }

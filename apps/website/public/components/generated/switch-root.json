@@ -98,7 +98,5 @@
             "required": false,
             "description": "Switch가 유효하지 않은 상태인지 여부입니다."
         }
-    ],
-    "generatedAt": "2025-11-27T12:00:18.234Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/switch/index.parts.ts"
+    ]
 }

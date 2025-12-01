@@ -22,7 +22,5 @@
             "description": "render prop으로 교체할 때 네이티브 `<button>` 요소를 렌더링할지 여부\n렌더링되는 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정하세요.",
             "defaultValue": "true"
         }
-    ],
-    "generatedAt": "2025-11-27T11:50:10.416Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/collapsible/index.parts.ts"
+    ]
 }

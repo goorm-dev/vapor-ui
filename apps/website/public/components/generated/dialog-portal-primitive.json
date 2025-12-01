@@ -41,7 +41,5 @@
             "description": "포털이 숨겨져 있는 동안 DOM에 유지할지 여부입니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T12:19:02.823Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/dialog/index.parts.ts"
+    ]
 }

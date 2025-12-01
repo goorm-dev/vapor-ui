@@ -68,7 +68,5 @@
             "description": "Dialog 크기",
             "defaultValue": "md"
         }
-    ],
-    "generatedAt": "2025-11-27T12:19:02.647Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/dialog/index.parts.ts"
+    ]
 }

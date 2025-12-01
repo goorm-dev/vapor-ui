@@ -157,7 +157,5 @@
             "type": ["false", "true"],
             "required": false
         }
-    ],
-    "generatedAt": "2025-11-27T11:56:48.587Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/multi-select/index.parts.ts"
+    ]
 }

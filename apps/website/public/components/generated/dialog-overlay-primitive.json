@@ -22,7 +22,5 @@
             "description": "중첩되어 있을 때도 백드롭이 강제로 렌더링되는지 여부입니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T12:19:02.825Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/dialog/index.parts.ts"
+    ]
 }

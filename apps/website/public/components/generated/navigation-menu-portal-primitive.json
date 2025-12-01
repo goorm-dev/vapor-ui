@@ -36,7 +36,5 @@
             "description": "팝업이 숨겨져 있는 동안 DOM에 포털을 마운트된 상태로 유지할지 여부를 결정합니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T12:36:11.501Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/navigation-menu/index.parts.ts"
+    ]
 }

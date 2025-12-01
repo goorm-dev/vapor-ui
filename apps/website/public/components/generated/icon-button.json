@@ -43,7 +43,5 @@
             "description": "버튼 스타일 (fill: 채움, outline: 테두리, ghost: 투명)",
             "defaultValue": "fill"
         }
-    ],
-    "generatedAt": "2025-11-27T11:54:44.788Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/icon-button/index.ts"
+    ]
 }

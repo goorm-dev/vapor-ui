@@ -120,7 +120,5 @@
             "description": "유효성 검사 실패 상태",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T11:49:42.105Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/checkbox/index.parts.ts"
+    ]
 }

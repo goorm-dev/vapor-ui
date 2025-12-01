@@ -39,7 +39,5 @@
             "required": false,
             "description": "컴포넌트가 사용자 상호작용을 무시할지 여부입니다."
         }
-    ],
-    "generatedAt": "2025-11-27T12:00:24.500Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tabs/index.parts.ts"
+    ]
 }

@@ -41,7 +41,5 @@
             "description": "팝업이 숨겨진 동안 포탈을 DOM에 유지할지 여부",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:46.160Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/index.parts.ts"
+    ]
 }

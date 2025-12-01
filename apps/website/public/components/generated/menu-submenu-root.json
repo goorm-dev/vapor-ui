@@ -97,7 +97,5 @@
             "required": false,
             "description": "명령적 행동에 대한 참조.\n- `unmount`: 지정되면 메뉴를 닫았을 때 언마운트되지 않습니다.\n대신 메뉴를 수동으로 마운트 해제하려면 'unmount' 기능을 호출해야 합니다.\n메뉴의 애니메이션이 외부 라이브러리에 의해 제어될 때 유용합니다.\n- `close`: 지정하면 메뉴를 긴급하게 닫을 수 있습니다."
         }
-    ],
-    "generatedAt": "2025-11-27T12:30:25.923Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+    ]
 }

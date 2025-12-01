@@ -94,7 +94,5 @@
             "description": "네비게이션 메뉴를 닫기 전에 대기하는 시간입니다. 밀리초 단위로 지정됩니다.",
             "defaultValue": "50"
         }
-    ],
-    "generatedAt": "2025-11-27T12:36:11.240Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/navigation-menu/index.parts.ts"
+    ]
 }

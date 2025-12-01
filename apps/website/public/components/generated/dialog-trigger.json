@@ -22,7 +22,5 @@
             "description": "컴포넌트가 `render` 속성을 통해 대체될 때 네이티브 `<button>` 요소를 렌더링할지 여부입니다.\n렌더링된 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정하세요.",
             "defaultValue": "true"
         }
-    ],
-    "generatedAt": "2025-11-27T12:19:02.821Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/dialog/index.parts.ts"
+    ]
 }

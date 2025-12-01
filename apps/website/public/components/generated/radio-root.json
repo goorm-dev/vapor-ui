@@ -69,7 +69,5 @@
             "type": ["false", "true"],
             "required": false
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:05.146Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/radio/index.parts.ts"
+    ]
 }

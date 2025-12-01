@@ -22,7 +22,5 @@
             "description": "다이얼로그가 중첩되어 있어도 백드롭을 강제로 렌더링할지 여부입니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:46.161Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/index.parts.ts"
+    ]
 }

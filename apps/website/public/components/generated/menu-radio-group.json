@@ -55,7 +55,5 @@
             "required": false,
             "description": "선택된 값이 변경될 때 호출되는 함수입니다."
         }
-    ],
-    "generatedAt": "2025-11-27T12:30:25.951Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+    ]
 }

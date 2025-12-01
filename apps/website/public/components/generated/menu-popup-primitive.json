@@ -45,7 +45,5 @@
             "required": false,
             "description": "메뉴가 닫힐 때 포커스를 이동할 요소를 결정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작(트리거 또는 이전에 포커스된 요소)을 기준으로 포커스를 이동합니다.\n- `RefObject`: 참조 요소로 포커스를 이동합니다.\n- `function`: 상호작용 유형(`mouse`, `touch`, `pen`, 또는 `keyboard`)과 함께 호출됩니다.\n  포커스를 이동할 요소를 반환하거나, 기본 동작을 사용하려면 `true`, 아무 작업도 하지 않으려면 `false` 또는 `undefined`를 반환합니다."
         }
-    ],
-    "generatedAt": "2025-11-27T12:30:25.910Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+    ]
 }

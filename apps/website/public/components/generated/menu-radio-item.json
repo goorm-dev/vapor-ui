@@ -72,7 +72,5 @@
             "required": false,
             "description": "항목을 클릭했을 때 메뉴를 닫을지 여부입니다."
         }
-    ],
-    "generatedAt": "2025-11-27T12:30:25.953Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+    ]
 }

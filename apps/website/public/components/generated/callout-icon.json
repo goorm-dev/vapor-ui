@@ -10,7 +10,5 @@
             "description": "컴포넌트의 HTML 엘리먼트를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 엘리먼트를 반환하는 함수를 받습니다."
         }
     ],
-    "defaultElement": "div",
-    "generatedAt": "2025-11-20T06:04:02.833Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/callout/index.parts.ts"
+    "defaultElement": "div"
 }

@@ -32,7 +32,5 @@
             "description": "링크를 클릭했을 때 네비게이션 메뉴를 닫을지 여부를 결정합니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T12:36:11.489Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/navigation-menu/index.parts.ts"
+    ]
 }

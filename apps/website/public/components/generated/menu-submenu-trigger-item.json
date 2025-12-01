@@ -52,7 +52,5 @@
             "description": "구성 요소가 교체할 때 네이티브 `<button>` 요소를 렌더링하는지 여부\n`render` 소품을 통해.\n렌더링된 요소가 네이티브 버튼인 경우 `true`로 설정합니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T12:30:25.931Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+    ]
 }

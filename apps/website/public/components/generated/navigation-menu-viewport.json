@@ -30,7 +30,5 @@
             "type": ["ReactElement"],
             "required": false
         }
-    ],
-    "generatedAt": "2025-11-27T12:36:11.493Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/navigation-menu/index.parts.ts"
+    ]
 }

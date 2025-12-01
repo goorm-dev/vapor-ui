@@ -41,7 +41,5 @@
             "required": false,
             "description": "패널이 열리거나 닫힐 때 호출되는 이벤트 핸들러"
         }
-    ],
-    "generatedAt": "2025-11-27T11:50:10.249Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/collapsible/index.parts.ts"
+    ]
 }

@@ -37,7 +37,5 @@
             "required": false,
             "description": "팝오버가 닫혔을 때 집중할 요소를 결정합니다.\n- 'false': 초점을 움직이지 마세요.\n- 'true': 기본 동작(트리거 또는 이전에 집중된 요소)에 따라 초점을 이동합니다.\n- 'RefObject': 초점을 참조 요소로 이동합니다.\n- 'function': 상호작용 유형('마우스', '터치', '펜' 또는 '키보드')으로 호출됩니다.\n  요소를 초점 맞추기 위해 'true'을, 기본 동작을 사용하기 위해 'true'을, 아무것도 하지 않기 위해 'false'/'undefined'을 반환합니다."
         }
-    ],
-    "generatedAt": "2025-11-27T11:56:55.872Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/popover/index.parts.ts"
+    ]
 }

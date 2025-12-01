@@ -47,7 +47,5 @@
             "type": ["ReactElement"],
             "required": false
         }
-    ],
-    "generatedAt": "2025-11-27T11:56:55.858Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/popover/index.parts.ts"
+    ]
 }

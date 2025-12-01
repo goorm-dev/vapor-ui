@@ -5,31 +5,21 @@
     "props": [
         {
             "name": "inline",
-            "type": [
-                "false",
-                "true"
-            ],
+            "type": ["false", "true"],
             "required": false,
             "description": "인라인 플렉스 여부"
         },
         {
             "name": "render",
-            "type": [
-                "ReactElement"
-            ],
+            "type": ["ReactElement"],
             "required": false,
             "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
         },
         {
             "name": "reverse",
-            "type": [
-                "false",
-                "true"
-            ],
+            "type": ["false", "true"],
             "required": false,
             "description": "역방향 배치 여부"
         }
-    ],
-    "generatedAt": "2025-11-27T11:54:28.206Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/h-stack/index.ts"
+    ]
 }

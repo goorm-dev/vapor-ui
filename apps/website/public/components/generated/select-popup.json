@@ -41,7 +41,5 @@
             "required": false,
             "description": "사용자 정의 Positioner 요소"
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:54.599Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/select/index.parts.ts"
+    ]
 }

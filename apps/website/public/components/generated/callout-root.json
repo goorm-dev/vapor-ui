@@ -17,7 +17,5 @@
             "description": "색상 스킴을 제어합니다"
         }
     ],
-    "defaultElement": "div",
-    "generatedAt": "2025-11-20T06:04:02.647Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/callout/index.parts.ts"
+    "defaultElement": "div"
 }

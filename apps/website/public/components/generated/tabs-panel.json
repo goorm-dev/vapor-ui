@@ -28,7 +28,5 @@
             "description": "패널이 숨겨져 있는 동안 HTML 요소를 DOM에 유지할지 여부입니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T12:00:24.507Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tabs/index.parts.ts"
+    ]
 }

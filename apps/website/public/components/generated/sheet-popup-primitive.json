@@ -37,7 +37,5 @@
             "required": false,
             "description": "다이얼로그가 닫힐 때 포커스할 요소를 결정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작에 따라 포커스를 이동합니다 (트리거 또는 이전에 포커스된 요소).\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 상호작용 유형(`mouse`, `touch`, `pen` 또는 `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, 기본 동작을 사용하려면 `true`를, 아무 작업도 하지 않으려면 `false`/`undefined`를 반환합니다."
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:46.163Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/sheet/index.parts.ts"
+    ]
 }

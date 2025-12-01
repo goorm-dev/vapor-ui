@@ -22,7 +22,5 @@
             "description": "라디오 항목이 비활성화되어 있을 때 HTML 요소를 DOM에 유지할지 여부입니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T12:30:25.973Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/menu/index.parts.ts"
+    ]
 }

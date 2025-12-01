@@ -47,7 +47,5 @@
             "required": false,
             "description": "폴백 표시 전 지연 시간 (밀리초)"
         }
-    ],
-    "generatedAt": "2025-11-27T11:45:13.401Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/avatar/index.parts.ts"
+    ]
 }

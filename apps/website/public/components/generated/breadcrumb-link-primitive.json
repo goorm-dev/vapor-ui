@@ -17,7 +17,5 @@
             "description": "현재 페이지 여부"
         }
     ],
-    "defaultElement": "a",
-    "generatedAt": "2025-11-27T11:46:03.682Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/breadcrumb/index.parts.ts"
+    "defaultElement": "a"
 }

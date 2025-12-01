@@ -118,7 +118,5 @@
             "required": false,
             "description": "팝업 위치 지정 시 충돌 처리 방법을 결정"
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:54.615Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/select/index.parts.ts"
+    ]
 }

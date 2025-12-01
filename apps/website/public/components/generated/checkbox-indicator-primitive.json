@@ -22,7 +22,5 @@
             "description": "체크박스가 선택되지 않은 경우에도 Indicator를 DOM에 유지할지 여부",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T11:49:42.316Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/checkbox/index.parts.ts"
+    ]
 }

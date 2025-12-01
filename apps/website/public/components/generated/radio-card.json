@@ -71,7 +71,5 @@
             "required": false,
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:24.729Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/radio-card/index.ts"
+    ]
 }

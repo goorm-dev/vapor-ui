@@ -36,7 +36,5 @@
             "description": "아이템이 선택되지 않았을 때 HTML 요소를 DOM에 유지할지 여부입니다.",
             "defaultValue": "false"
         }
-    ],
-    "generatedAt": "2025-11-27T11:57:54.623Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/select/index.parts.ts"
+    ]
 }

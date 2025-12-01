@@ -22,7 +22,5 @@
             "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
             "defaultValue": "true"
         }
-    ],
-    "generatedAt": "2025-11-27T12:36:11.491Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/navigation-menu/index.parts.ts"
+    ]
 }

@@ -34,7 +34,5 @@
             "required": false,
             "description": "그리드 열 템플릿"
         }
-    ],
-    "generatedAt": "2025-11-27T23:50:54.061Z",
-    "sourceFile": "/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/grid/index.parts.ts"
+    ]
 }
