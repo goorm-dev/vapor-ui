@@ -5,12 +5,6 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 ## 1.0.0-beta.7
 
-### @vapor-ui/color-generator
-
-#### Minor Changes
-
-- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
-
 ### @vapor-ui/core
 
 #### Minor Changes
@@ -47,6 +41,13 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 
 - 1fd7efc: Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification
 - ed63947: Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec
+
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+
 
 ### @vapor-ui/css-generator
 
