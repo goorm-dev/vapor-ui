@@ -3,9 +3,9 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import { Badge, Text } from '@vapor-ui/core';
+import { Badge, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 
-import { InfoPopover } from '~/components/Info';
+import { InfoPopover } from '~/components/info';
 
 interface PropDefinition {
     name: string;
@@ -28,7 +28,7 @@ interface ComponentPropsTableProps {
     componentName: string;
 }
 
-export const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ componentName }) => {
+export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps) => {
     const [componentData, setComponentData] = React.useState<ComponentData | null>(null);
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
@@ -65,15 +65,7 @@ export const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ compon
     }
 
     return (
-        <div
-            className="w-full not-prose"
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: 'var(--vapor-size-space-200)',
-            }}
-        >
+        <VStack className="w-full not-prose" alignItems="flex-start" gap="$200">
             <Text typography="body1" foreground="normal-200">
                 <ReactMarkdown
                     components={{
@@ -84,16 +76,23 @@ export const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ compon
                         ),
                     }}
                 >
-                    {componentData.description.split('Documentation')[0].trim()}
+                    {componentData.description}
                 </ReactMarkdown>
             </Text>
-            <div className="w-full overflow-auto flex flex-col items-start gap-0 self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
+            <VStack
+                width="100%"
+                overflow="auto"
+                alignItems="flex-start"
+                gap="$0"
+                alignContent="stretch"
+                borderRadius="$300"
+            >
                 <table
-                    className="w-full border-separate border-spacing-0 overflow-hidden border border-[var(--vapor-color-border-normal)] rounded-[var(--vapor-size-borderRadius-300)]"
+                    className="w-full  border-separate border-spacing-0 overflow-hidden border border-[var(--vapor-color-border-normal)] rounded-[var(--vapor-size-borderRadius-300)]"
                     style={{ tableLayout: 'auto' }}
                 >
-                    <thead className="flex, items-start self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
-                        <tr className="bg-[var(--vapor-color-background-surface-200)] border-b border-b-[var(--vapor-color-border-normal)]">
+                    <thead className="w-full items-start self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
+                        <tr className="w-full bg-[var(--vapor-color-background-surface-200)] border-b border-b-[var(--vapor-color-border-normal)]">
                             <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left rounded-tl-[var(--vapor-size-borderRadius-300)] min-w-[140px] w-px">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Prop
@@ -104,7 +103,7 @@ export const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ compon
                                     Default
                                 </Text>
                             </th>
-                            <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left font-medium">
+                            <th className="w-full px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left font-medium">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Type
                                 </Text>
@@ -117,7 +116,7 @@ export const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ compon
                                 <td
                                     className={` px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${index === componentData.props.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
                                 >
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)] w-fit">
+                                    <HStack alignItems="center" gap="$100" width="fit-content">
                                         <Text typography="body2" foreground="normal-200">
                                             <span>
                                                 {prop.name}
@@ -139,7 +138,7 @@ export const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ compon
                                                 </ReactMarkdown>
                                             </InfoPopover>
                                         )}
-                                    </div>
+                                    </HStack>
                                 </td>
                                 <td
                                     className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[100px] w-px ${index === componentData.props.length - 1 ? 'border-b-0' : ''}`}
@@ -155,7 +154,7 @@ export const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ compon
                                 <td
                                     className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${index === componentData.props.length - 1 ? 'rounded-br-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
                                 >
-                                    <div className="flex flex-wrap gap-[var(--vapor-size-space-100)]">
+                                    <Flex gap="$100" className="flex-wrap">
                                         {Array.isArray(prop.type) ? (
                                             prop.type.map((typeValue) => (
                                                 <Badge
@@ -167,17 +166,17 @@ export const ComponentPropsTable: React.FC<ComponentPropsTableProps> = ({ compon
                                                 </Badge>
                                             ))
                                         ) : (
-                                            <Badge color="hint" size="md">
+                                            <Badge colorPalette="hint" size="md">
                                                 {prop.type}
                                             </Badge>
                                         )}
-                                    </div>
+                                    </Flex>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
-        </div>
+            </VStack>
+        </VStack>
     );
 };
