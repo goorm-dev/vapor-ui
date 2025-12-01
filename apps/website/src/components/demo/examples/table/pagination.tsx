@@ -31,7 +31,7 @@ const customFilterFn = (row: Row<Data>, columnId: string, filterValue: any) => {
     return filterValue.includes(cellValue);
 };
 
-export default function Scroll() {
+export default function WithPagination() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
