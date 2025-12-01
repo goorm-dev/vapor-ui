@@ -1,7 +1,6 @@
 import './filter-form.css';
 
 import { useForm, useStore } from '@tanstack/react-form';
-
 import {
     Box,
     Button,

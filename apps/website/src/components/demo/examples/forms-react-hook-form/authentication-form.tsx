@@ -108,9 +108,7 @@ export default function AuthenticationForm() {
                         />
                     </Box>
 
-                    {errors.phoneNumber && (
-                        <Field.Error>{errors.phoneNumber.message}</Field.Error>
-                    )}
+                    {errors.phoneNumber && <Field.Error>{errors.phoneNumber.message}</Field.Error>}
                 </Field.Root>
 
                 <Field.Root invalid={!!errors.verificationCode}>

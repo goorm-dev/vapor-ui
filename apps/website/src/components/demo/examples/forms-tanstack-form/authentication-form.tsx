@@ -3,7 +3,6 @@ import { Children, cloneElement, isValidElement } from 'react';
 import './authentication-form.css';
 
 import { useForm } from '@tanstack/react-form';
-
 import { Box, Button, Field, Form, Select, Text, TextInput, VStack } from '@vapor-ui/core';
 
 const codes = {
@@ -116,9 +115,7 @@ export default function AuthenticationForm() {
                             </Box>
 
                             {phoneField.state.meta.errors.length > 0 && (
-                                <Field.Error match>
-                                    {phoneField.state.meta.errors[0]}
-                                </Field.Error>
+                                <Field.Error match>{phoneField.state.meta.errors[0]}</Field.Error>
                             )}
                         </Field.Root>
                     )}
@@ -148,9 +145,7 @@ export default function AuthenticationForm() {
                                 />
                             </Box>
                             {field.state.meta.errors.length > 0 && (
-                                <Field.Error match>
-                                    {field.state.meta.errors[0]}
-                                </Field.Error>
+                                <Field.Error match>{field.state.meta.errors[0]}</Field.Error>
                             )}
                         </Field.Root>
                     )}

@@ -1,7 +1,6 @@
 import './signup-form.css';
 
 import { useForm } from '@tanstack/react-form';
-
 import {
     Box,
     Button,
@@ -90,9 +89,7 @@ export default function SignupForm() {
                                     />
                                 </Box>
                                 {field.state.meta.errors.length > 0 && (
-                                    <Field.Error match>
-                                        {field.state.meta.errors[0]}
-                                    </Field.Error>
+                                    <Field.Error match>{field.state.meta.errors[0]}</Field.Error>
                                 )}
                             </Field.Root>
                         )}
@@ -103,9 +100,7 @@ export default function SignupForm() {
                         validators={{
                             onChange: ({ value }) => {
                                 if (!value) return '비밀번호를 입력해주세요.';
-                                if (
-                                    !/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,16}/.test(value)
-                                )
+                                if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,16}/.test(value))
                                     return '유효한 비밀번호 형식이 아닙니다.';
                                 return undefined;
                             },
@@ -132,9 +127,7 @@ export default function SignupForm() {
                                     8~16자, 대소문자 영문, 숫자, 특수문자 포함
                                 </Field.Description>
                                 {field.state.meta.errors.length > 0 && (
-                                    <Field.Error match>
-                                        {field.state.meta.errors[0]}
-                                    </Field.Error>
+                                    <Field.Error match>{field.state.meta.errors[0]}</Field.Error>
                                 )}
                             </Field.Root>
                         )}
@@ -173,9 +166,7 @@ export default function SignupForm() {
                                     8~16자, 대소문자 영문, 특수문자 포함
                                 </Field.Description>
                                 {field.state.meta.errors.length > 0 && (
-                                    <Field.Error match>
-                                        {field.state.meta.errors[0]}
-                                    </Field.Error>
+                                    <Field.Error match>{field.state.meta.errors[0]}</Field.Error>
                                 )}
                             </Field.Root>
                         )}
@@ -207,9 +198,7 @@ export default function SignupForm() {
                                     />
                                 </Box>
                                 {field.state.meta.errors.length > 0 && (
-                                    <Field.Error match>
-                                        {field.state.meta.errors[0]}
-                                    </Field.Error>
+                                    <Field.Error match>{field.state.meta.errors[0]}</Field.Error>
                                 )}
                             </Field.Root>
                         )}

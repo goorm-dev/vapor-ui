@@ -3,6 +3,7 @@
 import { Badge, Text } from '@vapor-ui/core';
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
 
 const FORM_FRAMEWORK = [
@@ -45,11 +46,7 @@ export default function FormList() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[var(--vapor-size-space-400)] [&>*]:min-h-[263px]">
                         {FORM_FRAMEWORK.map((block) => (
-                            <Link
-                                key={block.id}
-                                href={block.href}
-                                className="group no-underline"
-                            >
+                            <Link key={block.id} href={block.href} className="group no-underline">
                                 <div className="border border-v-border-dark rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out h-full flex flex-col">
                                     <div className="p-0 overflow-hidden aspect-[5/3]">
                                         <Image

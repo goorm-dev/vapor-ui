@@ -1,7 +1,6 @@
 import './research-form.css';
 
 import { useForm } from '@tanstack/react-form';
-
 import {
     Box,
     Button,
@@ -99,9 +98,7 @@ export default function ResearchForm() {
                                 />
                             </Box>
                             {field.state.meta.errors.length > 0 && (
-                                <Field.Error match>
-                                    {field.state.meta.errors[0]}
-                                </Field.Error>
+                                <Field.Error match>{field.state.meta.errors[0]}</Field.Error>
                             )}
                         </Field.Root>
                     )}

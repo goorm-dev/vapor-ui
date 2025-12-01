@@ -410,7 +410,9 @@ export default function SheetForm() {
                             <RefreshOutlineIcon />
                             Refresh
                         </Button>
-                        <Sheet.Close render={<Button type="submit" size="lg" className="apply-button" />}>
+                        <Sheet.Close
+                            render={<Button type="submit" size="lg" className="apply-button" />}
+                        >
                             Apply
                         </Sheet.Close>
                     </Sheet.Footer>
