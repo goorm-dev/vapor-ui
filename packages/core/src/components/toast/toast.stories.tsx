@@ -114,7 +114,7 @@ export const Custom: Story = {
 
 export const TestBed: Story = {
     render: (args) => {
-        const handleClick = (colorPalette: 'danger' | 'success' | 'info') => {
+        const handleClick = (colorPalette: 'danger' | 'success' | 'info', description?: string) => {
             const updateToast = (id: string) =>
                 Toast.toastManager.update(id, {
                     title: 'Updated',
@@ -123,20 +123,23 @@ export const TestBed: Story = {
 
             const id = Toast.toastManager.add({
                 title: 'Notification',
-                description: 'This is a toast notification.',
+                description: description ?? 'This is a toast notification.',
                 colorPalette,
                 action: <Button onClick={() => updateToast(id)}>Update</Button>,
             });
         };
 
         useEffect(() => {
-            handleClick('danger');
-            handleClick('success');
-            handleClick('info');
+            handleClick('danger', 'This is a toast notification.');
+            handleClick('success', 'This is a toast notification.This is a toast notification.');
+            handleClick(
+                'info',
+                'This is a toast notification.This is a toast notification.This is a toast notification.',
+            );
         }, []);
 
         return (
-            <Toast.Toaster {...args} limit={6} timeout={10000}>
+            <Toast.Toaster {...args} limit={6}>
                 <Button colorPalette="secondary" onClick={() => handleClick('danger')}>
                     Danger
                 </Button>

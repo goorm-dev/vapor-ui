@@ -34,7 +34,7 @@ export const viewport = layerStyle('components', {
     left: 'auto',
 
     margin: '0 auto',
-    width: '356px',
+
     maxWidth: '100vw',
 
     '@media': {
@@ -62,7 +62,8 @@ export const root = recipe({
         boxShadow: vars.shadow.md,
         backgroundClip: 'padding-box',
         padding: vars.size.space[200],
-        width: '100%',
+        width: 'max-content',
+        maxWidth: '500px',
         height: inners.height,
 
         userSelect: 'none',
