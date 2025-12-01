@@ -54,7 +54,6 @@ export const root = recipe({
         bottom: 'auto',
         left: 'auto',
 
-        // transform: `translateX(${outers.swipeMoveX}) translateY(calc(${outers.swipeMoveY} + (${outers.index} * ${inners.peek}) + (${inners.shrink} * ${inners.height}))) scale(${inners.scale})`,
         transform: `translateX(${outers.swipeMoveX}) translateY(calc(${outers.swipeMoveY} + (${outers.index} * ${inners.peek}) + (${inners.shrink} * ${inners.height}))) scale(${inners.scale})`,
         transformOrigin: 'top center',
         transition: 'transform 400ms, opacity 400ms, height 200ms, box-shadow 200ms',
@@ -71,7 +70,7 @@ export const root = recipe({
         vars: {
             [inners.gap]: '0.75rem',
             [inners.peek]: '0.5rem',
-            [inners.scale]: `calc(max(0, 1 - (${outers.index} * 0.1)))`,
+            [inners.scale]: `calc(max(0, 1 - (${outers.index} * 0.05)))`,
             [inners.shrink]: calc.subtract('1', inners.scale),
             [inners.height]: fallbackVar(outers.frontmostHeight, outers.height),
             [inners.offsetY]: calc.add(
