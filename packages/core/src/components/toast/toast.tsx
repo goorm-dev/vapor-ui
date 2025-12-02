@@ -22,8 +22,6 @@ import type { RootVariants } from './toast.css';
 export const createToastManager = BaseToast.createToastManager as () => ToastManager;
 export const useToastManager = BaseToast.useToastManager as () => UseToastManager;
 
-export const toastManager: ToastManager = createToastManager();
-
 /* -------------------------------------------------------------------------------------------------
  * ToastProvider
  * -----------------------------------------------------------------------------------------------*/
@@ -32,7 +30,7 @@ export const ToastProvider = (props: ToastProvider.Props) => {
     const { timeout = 4000, children, ...componentProps } = props;
 
     return (
-        <ToastProviderPrimitive toastManager={toastManager} timeout={timeout} {...componentProps}>
+        <ToastProviderPrimitive timeout={timeout} {...componentProps}>
             {children}
             <ToastList />
         </ToastProviderPrimitive>
@@ -214,7 +212,7 @@ const TOAST_ICONS: IconMapper = {
     danger: <WarningIcon color="white" size="16" />,
 };
 
-export const ToastIconPrimitive = forwardRef<HTMLSpanElement, ToastIconPrimitive.Props>(
+export const ToastIconPrimitive = forwardRef<SVGSVGElement, ToastIconPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
         const { icon, colorPalette } = useToastContext();
@@ -235,12 +233,12 @@ export const ToastActionPrimitive = forwardRef<HTMLButtonElement, ToastActionPri
         const componentProps = resolveStyles(props);
         const { actionProps } = useToastContext();
 
-        const { colorPalette = 'secondary', ...otherProps } = actionProps ?? {};
+        const { colorPalette = 'secondary', size, variant } = actionProps ?? {};
 
         return (
             <BaseToast.Action
                 ref={ref}
-                render={<Button colorPalette={colorPalette} {...otherProps} />}
+                render={<Button colorPalette={colorPalette} size={size} variant={variant} />}
                 {...componentProps}
             />
         );
@@ -281,9 +279,15 @@ ToastClosePrimitive.displayName = 'Toast.ClosePrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-type BaseReturnValue = Omit<BaseToast.useToastManager.ReturnValue, 'toasts'>;
-interface UseToastManager extends BaseReturnValue {
+interface UseToastManager {
     toasts: ToastObjectType<AnyProp>[];
+    add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
+    update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
+    close: (id: string) => void;
+    promise: <Value, Data extends object>(
+        promise: Promise<Value>,
+        options: ToastManagerPromiseOptions<Value, Data>,
+    ) => Promise<Value>;
 }
 
 type ToastVariants = RootVariants;
@@ -335,9 +339,12 @@ export interface ToastManager extends BaseToastManager {
 
 export namespace useToastManager {
     export type ReturnValue = UseToastManager;
-    export type AddOptions = ToastManagerAddOptions<AnyProp>;
-    export type UpdateOptions = ToastManagerUpdateOptions<AnyProp>;
-    export type PromiseOptions<Value> = ToastManagerPromiseOptions<Value, AnyProp>;
+    export type AddOptions<Data extends object> = ToastManagerAddOptions<Data>;
+    export type UpdateOptions<Data extends object> = ToastManagerUpdateOptions<Data>;
+    export type PromiseOptions<Value, Data extends object> = ToastManagerPromiseOptions<
+        Value,
+        Data
+    >;
 }
 
 export namespace ToastProviderPrimitive {
