@@ -1,5 +1,5 @@
 export {
-    Toaster,
+    ToastProvider as Provider,
     toastManager,
     createToastManager,
     useToastManager,

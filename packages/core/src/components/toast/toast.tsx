@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import { Toast as BaseToast } from '@base-ui-components/react/toast';
-import { CheckCircleIcon, CloseOutlineIcon, SlotIcon, WarningIcon } from '@vapor-ui/icons';
+import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createSlot } from '~/libs/create-slot';
@@ -15,53 +15,35 @@ import { HStack } from '../h-stack';
 import { IconButton } from '../icon-button';
 import { VStack } from '../v-stack';
 import * as styles from './toast.css';
+import type { RootVariants } from './toast.css';
 
-/* -------------------------------------------------------------------------------------------------
- * Icons
- * -----------------------------------------------------------------------------------------------*/
+type ToastVariants = RootVariants;
+// type ButtonProps = ComponentPropsWithoutRef<'button'> & ButtonVariants;
+type ToastElementProps = { icon?: ReactNode; close?: boolean };
 
-type IconMapper = { [key: string]: ReactNode };
-const TOAST_ICONS: IconMapper = {
-    success: <CheckCircleIcon size="16" />,
-    danger: <WarningIcon size="16" />,
-    info: <SlotIcon size="16" />,
-};
-
-/* -------------------------------------------------------------------------------------------------
- * Types
- * -----------------------------------------------------------------------------------------------*/
-
-export type ToastType = 'success' | 'danger' | 'info';
-
-export interface ToastData {
-    icon?: ReactNode;
-    [key: string]: AnyProp;
-}
+export type ToastManagerOptions = ToastVariants & ToastElementProps;
 
 type BaseToastManager = BaseToast.createToastManager.ToastManager;
-type BaseAddOptions = Parameters<BaseToastManager['add']>[0];
-type BaseUpdateOptions = Parameters<BaseToastManager['update']>[1];
-type BasePromiseOptions = Parameters<BaseToastManager['promise']>[1];
 
-export interface ToastManagerAddOptions extends Omit<BaseAddOptions, 'type' | 'actionProps'> {
-    colorPalette?: ToastType;
-    icon?: ReactNode;
-    action?: ReactNode;
-    close?: ReactNode;
-}
+type BaseAddOptions = Omit<Parameters<BaseToastManager['add']>[0], 'type'>;
+type BaseUpdateOptions = Omit<Parameters<BaseToastManager['update']>[1], 'type'>;
+type BasePromiseOptions = Omit<
+    Parameters<BaseToastManager['promise']>[1],
+    'loading' | 'success' | 'error'
+>;
 
-export interface ToastManagerUpdateOptions extends Omit<BaseUpdateOptions, 'type' | 'actionProps'> {
-    colorPalette?: ToastType;
-    icon?: ReactNode;
-    action?: ReactNode;
-    close?: ReactNode;
-}
-
-export interface ToastManagerPromiseOptions<Value>
-    extends Omit<BasePromiseOptions, 'loading' | 'success' | 'error'> {
+export interface ToastManagerAddOptions extends BaseAddOptions, ToastManagerOptions {}
+export interface ToastManagerUpdateOptions extends BaseUpdateOptions, ToastManagerOptions {}
+export interface ToastManagerPromiseOptions<Value> extends BasePromiseOptions {
     loading: string | ToastManagerAddOptions;
-    success: string | BaseUpdateOptions | ((result: Value) => string | BaseUpdateOptions);
-    error: string | BaseUpdateOptions | ((error: AnyProp) => string | BaseUpdateOptions);
+    success:
+        | string
+        | ToastManagerUpdateOptions
+        | ((result: Value) => string | ToastManagerUpdateOptions);
+    error:
+        | string
+        | ToastManagerUpdateOptions
+        | ((error: AnyProp) => string | ToastManagerUpdateOptions);
 }
 
 export interface ToastManager extends Omit<BaseToastManager, 'add' | 'update' | 'promise'> {
@@ -78,21 +60,16 @@ export const createToastManager = BaseToast.createToastManager;
 export const useToastManager = BaseToast.useToastManager;
 const baseToastManager = BaseToast.createToastManager();
 
-const buildToastData = (options: {
-    action?: ReactNode;
-    close?: ReactNode;
-    icon?: ReactNode;
-    colorPalette?: ToastType;
-    data?: AnyProp;
-}) => {
-    const { action, close, icon, colorPalette, data: defaultData, ...rest } = options;
-    const data = { action, close, icon, colorPalette, ...defaultData };
+const buildToastData = (options: ToastManagerAddOptions) => {
+    const { close, icon, data: defaultData, ...rest } = options;
+    const data = { close, icon, ...defaultData };
 
-    return { type: colorPalette, data, ...rest };
+    return { type: rest.colorPalette, data, ...rest };
 };
 
 export const toastManager: ToastManager = {
     ...baseToastManager,
+
     add: (optionsParams) => {
         const options = buildToastData(optionsParams);
 
@@ -109,10 +86,10 @@ export const toastManager: ToastManager = {
 };
 
 /* -------------------------------------------------------------------------------------------------
- * Toaster
+ * ToastProvider
  * -----------------------------------------------------------------------------------------------*/
 
-export const Toaster = (props: Toaster.Props) => {
+export const ToastProvider = (props: ToastProvider.Props) => {
     const { timeout = 4000, children, ...componentProps } = props;
 
     return (
@@ -127,6 +104,12 @@ export const Toaster = (props: Toaster.Props) => {
  * Toast.List
  * -----------------------------------------------------------------------------------------------*/
 
+type IconMapper = { [key: string]: ReactNode };
+const TOAST_ICONS: IconMapper = {
+    success: <CheckCircleIcon size="16" />,
+    danger: <WarningIcon size="16" />,
+};
+
 export const ToastList = () => {
     const { toasts } = BaseToast.useToastManager();
 
@@ -134,11 +117,8 @@ export const ToastList = () => {
         <ToastPortalPrimitive>
             <ToastViewportPrimitive>
                 {toasts.map((toast) => {
-                    const { action, close, icon, colorPalette } = toast.data;
+                    const { close = true, icon, colorPalette } = toast.data;
                     const IconElement = createSlot(icon ?? TOAST_ICONS[colorPalette || 'info']);
-
-                    const ActionElement = createSlot(action ?? <ToastActionPrimitive />);
-                    const CloseElement = createSlot(close ?? <ToastClosePrimitive />);
 
                     return (
                         <ToastRootPrimitive key={toast.id} toast={toast}>
@@ -153,8 +133,8 @@ export const ToastList = () => {
                                     </VStack>
                                 </HStack>
                                 <HStack gap="$100" alignItems="center">
-                                    <ActionElement />
-                                    <CloseElement />
+                                    <ToastActionPrimitive />
+                                    {close && <ToastClosePrimitive />}
                                 </HStack>
                             </ToastContentPrimitive>
                         </ToastRootPrimitive>
@@ -296,13 +276,7 @@ export const ToastActionPrimitive = forwardRef<HTMLButtonElement, ToastActionPri
     (props, ref) => {
         const componentProps = resolveStyles(props);
 
-        return (
-            <BaseToast.Action
-                render={<Button colorPalette="secondary" />}
-                ref={ref}
-                {...componentProps}
-            />
-        );
+        return <BaseToast.Action render={<Button />} ref={ref} {...componentProps} />;
     },
 );
 ToastActionPrimitive.displayName = 'Toast.ActionPrimitive';
@@ -341,7 +315,7 @@ export namespace ToastProviderPrimitive {
     }
 }
 
-export namespace Toaster {
+export namespace ToastProvider {
     export interface Props extends BaseToast.Provider.Props {}
 }
 

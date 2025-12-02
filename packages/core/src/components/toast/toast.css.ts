@@ -1,5 +1,6 @@
 import { createGlobalVar, fallbackVar } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
+import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { foregrounds } from '~/styles/mixins/foreground.css';
@@ -145,3 +146,5 @@ export const content = layerStyle('components', {
 
 export const title = [foregrounds({ color: 'white' }), typography({ style: 'subtitle1' })];
 export const description = [foregrounds({ color: 'white' }), typography({ style: 'body2' })];
+
+export type RootVariants = NonNullable<RecipeVariants<typeof root>>;

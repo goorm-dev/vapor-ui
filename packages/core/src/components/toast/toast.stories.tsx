@@ -10,10 +10,10 @@ import { VStack } from '../v-stack';
 
 export default {
     title: 'Toast',
-    component: Toast.Toaster,
-} satisfies Meta<typeof Toast.Toaster>;
+    component: Toast.Provider,
+} satisfies Meta<typeof Toast.Provider>;
 
-type Story = StoryObj<typeof Toast.Toaster>;
+type Story = StoryObj<typeof Toast.Provider>;
 
 export const Default: Story = {
     render: (args) => {
@@ -21,25 +21,17 @@ export const Default: Story = {
             const id = Toast.toastManager.add({
                 title: 'Notification',
                 description: 'This is a toast notification.',
+                actionProps: {
+                    children: 'Update',
+                    onClick: () =>
+                        Toast.toastManager.update(id, { title: 'Updated', description: '' }),
+                },
                 colorPalette,
-                action: (
-                    <Button
-                        colorPalette="secondary"
-                        onClick={() =>
-                            Toast.toastManager.update(id, {
-                                title: 'Updated',
-                                colorPalette: 'success',
-                            })
-                        }
-                    >
-                        Action
-                    </Button>
-                ),
             });
         };
 
         return (
-            <Toast.Toaster {...args}>
+            <Toast.Provider {...args}>
                 <Button colorPalette="secondary" onClick={() => handleClick('danger')}>
                     Danger
                 </Button>
@@ -49,7 +41,7 @@ export const Default: Story = {
                 <Button colorPalette="secondary" onClick={() => handleClick('info')}>
                     Info
                 </Button>
-            </Toast.Toaster>
+            </Toast.Provider>
         );
     },
 };
@@ -91,6 +83,7 @@ export const Custom: Story = {
             toastManager.add({
                 title: 'Custom Toast',
                 description: 'This is a custom toast content.',
+                data: {},
             });
         };
 
@@ -118,14 +111,17 @@ export const TestBed: Story = {
             const updateToast = (id: string) =>
                 Toast.toastManager.update(id, {
                     title: 'Updated',
-                    colorPalette: 'success',
+                    data: { colorPalette: 'success' },
                 });
 
             const id = Toast.toastManager.add({
                 title: 'This is Notification. This is Notification. This is Notification. ',
                 description: description ?? 'This is a toast notification.',
-                colorPalette,
-                action: <Button onClick={() => updateToast(id)}>Update</Button>,
+
+                data: {
+                    colorPalette,
+                    action: <Button onClick={() => updateToast(id)}>Update</Button>,
+                },
             });
         };
 
@@ -139,7 +135,7 @@ export const TestBed: Story = {
         }, []);
 
         return (
-            <Toast.Toaster {...args} limit={6} timeout={9999999}>
+            <Toast.Provider {...args} limit={6} timeout={9999999}>
                 <Button colorPalette="secondary" onClick={() => handleClick('danger')}>
                     Danger
                 </Button>
@@ -149,7 +145,7 @@ export const TestBed: Story = {
                 <Button colorPalette="secondary" onClick={() => handleClick('info')}>
                     Info
                 </Button>
-            </Toast.Toaster>
+            </Toast.Provider>
         );
     },
 };
