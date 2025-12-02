@@ -12,7 +12,7 @@ npm install @vapor-ui/css-generator @vapor-ui/color-generator
 
 ## Quick Start
 
-> 💡 **Try it first!** You can visually customize and preview themes in the [Theme Playground](https://vapor-ui.goorm.io/playground) before writing any code.
+> **Try it first!** You can visually customize and preview themes in the [Theme Playground](https://vapor-ui.goorm.io/playground) before writing any code.
 
 ```typescript
 import { generateCompleteCSS } from '@vapor-ui/css-generator';
