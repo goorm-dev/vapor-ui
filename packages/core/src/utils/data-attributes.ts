@@ -1,15 +1,17 @@
-type DataAttr = { [key: string]: string };
+type DataAttr = Record<string, string>;
+
+type Falsy = null | undefined | false;
 
 type SingleDataAttrValue = string | number | boolean | null | undefined;
 
-type ReturnByValue<T> = T extends null | undefined ? {} : DataAttr;
+type ReturnByValue<T> = T extends Falsy ? {} : DataAttr;
 
 export function createDataAttribute<T extends SingleDataAttrValue>(
     key: string,
     value: T,
 ): ReturnByValue<T> {
     if (value == null || value === false) {
-        return {} as ReturnByValue<T>;
+        return {};
     }
 
     const lowerCaseKey = key.toLowerCase();
@@ -17,7 +19,7 @@ export function createDataAttribute<T extends SingleDataAttrValue>(
 
     return {
         [dataKey]: value === true ? '' : String(value),
-    } as ReturnByValue<T>;
+    };
 }
 
 type MultiDataAttrValue = Record<string, SingleDataAttrValue>;
