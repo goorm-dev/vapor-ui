@@ -4384,8 +4384,8 @@ packages:
   collapse-white-space@2.1.0:
     resolution: {integrity: sha512-loKTxY1zCOuG4j9f6EPnuyyYkf58RnhhWTvRoZEokgB+WbdXehfjFviyOVYkqzEWz1Q5kRiZdBYS5SwxbQYwzw==}
 
-  collect-v8-coverage@1.0.3:
-    resolution: {integrity: sha512-1L5aqIkwPfiodaMgQunkF1zRhNqifHBmtbbbxcr6yVxxBnliw4TDOW6NxpO8DJLgJ16OT+Y4ztZqP6p/FtXnAw==}
+  collect-v8-coverage@1.0.2:
+    resolution: {integrity: sha512-lHl4d5/ONEbLlJvaJNtsF/Lz+WvB07u2ycqTYbdrq7UypDXailES4valYb2eWiJFxZlVmpGekfqoxQhzyFdT4Q==}
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -8841,7 +8841,7 @@ snapshots:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.7.2
+      semver: 7.7.3
 
   '@changesets/assemble-release-plan@6.0.9':
     dependencies:
@@ -8850,7 +8850,7 @@ snapshots:
       '@changesets/should-skip-package': 0.1.2
       '@changesets/types': 6.1.0
       '@manypkg/get-packages': 1.1.3
-      semver: 7.7.2
+      semver: 7.7.3
 
   '@changesets/changelog-git@0.2.1':
     dependencies:
@@ -8908,7 +8908,7 @@ snapshots:
       '@changesets/types': 6.1.0
       '@manypkg/get-packages': 1.1.3
       picocolors: 1.1.1
-      semver: 7.7.2
+      semver: 7.7.3
 
   '@changesets/get-release-plan@4.0.13':
     dependencies:
@@ -9551,7 +9551,7 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.31
       '@types/node': 22.18.6
       chalk: 4.1.2
-      collect-v8-coverage: 1.0.3
+      collect-v8-coverage: 1.0.2
       exit-x: 0.2.2
       glob: 10.4.5
       graceful-fs: 4.2.11
@@ -9595,7 +9595,7 @@ snapshots:
       '@jest/console': 30.2.0
       '@jest/types': 30.2.0
       '@types/istanbul-lib-coverage': 2.0.6
-      collect-v8-coverage: 1.0.3
+      collect-v8-coverage: 1.0.2
 
   '@jest/test-sequencer@30.2.0':
     dependencies:
@@ -12041,7 +12041,7 @@ snapshots:
 
   collapse-white-space@2.1.0: {}
 
-  collect-v8-coverage@1.0.3: {}
+  collect-v8-coverage@1.0.2: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -13388,7 +13388,7 @@ snapshots:
 
   is-bun-module@2.0.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   is-callable@1.2.7: {}
 
@@ -13530,7 +13530,7 @@ snapshots:
       '@babel/parser': 7.28.4
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
-      semver: 7.7.2
+      semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
 
@@ -13858,7 +13858,7 @@ snapshots:
       '@types/node': 22.18.6
       chalk: 4.1.2
       cjs-module-lexer: 2.1.1
-      collect-v8-coverage: 1.0.3
+      collect-v8-coverage: 1.0.2
       glob: 10.4.5
       graceful-fs: 4.2.11
       jest-haste-map: 30.2.0
@@ -13894,7 +13894,7 @@ snapshots:
       jest-message-util: 30.2.0
       jest-util: 30.2.0
       pretty-format: 30.2.0
-      semver: 7.7.2
+      semver: 7.7.3
       synckit: 0.11.11
     transitivePeerDependencies:
       - supports-color
@@ -14176,7 +14176,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   make-error@1.3.6: {}
 
@@ -15588,7 +15588,7 @@ snapshots:
     dependencies:
       '@img/colour': 1.0.0
       detect-libc: 2.1.0
-      semver: 7.7.2
+      semver: 7.7.3
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.4
       '@img/sharp-darwin-x64': 0.34.4
