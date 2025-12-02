@@ -38,12 +38,12 @@ const css = generateCompleteCSS({
 Generate complete theme CSS with colors, scaling, and radius.
 
 ```typescript
-import type { KeyColor, BackgroundColor } from '@vapor-ui/color-generator';
+import type { BackgroundColor, KeyColor } from '@vapor-ui/color-generator';
 
 interface ColorThemeConfig {
-    primary: KeyColor;    // { name: string; hexcode: string }
-    background: BackgroundColor;    // { name: string; hexcode: string; lightness?: { light: number; dark: number } }
-    keyColors?: Record<string, string>;    // Optional: Override default system key colors (11 colors)
+    primary: KeyColor; // { name: string; hexcode: string }
+    background: BackgroundColor; // { name: string; hexcode: string; lightness?: { light: number; dark: number } }
+    keyColors?: Record<string, string>; // Optional: Override default system key colors (11 colors)
 }
 
 interface CompleteCSSConfig {
