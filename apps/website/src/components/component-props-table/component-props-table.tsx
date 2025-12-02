@@ -70,7 +70,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                 <ReactMarkdown
                     components={{
                         code: ({ children }) => (
-                            <code className="px-1 py-0.5 rounded bg-v-gray-100 text-sm font-mono">
+                            <code className="px-1 py-0.5 rounded bg-v-gray-100 text-sm">
                                 {children}
                             </code>
                         ),
