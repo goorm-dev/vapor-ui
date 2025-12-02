@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
 
+import { Toast as BaseToast } from '@base-ui-components/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { HeartIcon } from '@vapor-ui/icons';
 
 import { Toast } from '.';
 import { Button } from '../button';
+import { HStack } from '../h-stack';
 import { IconButton } from '../icon-button';
 import { Text } from '../text';
 import { VStack } from '../v-stack';
@@ -22,9 +25,15 @@ export const Default: Story = {
                 title: 'Notification',
                 description: 'This is a toast notification.',
                 actionProps: {
+                    colorPalette: 'danger',
                     children: 'Update',
                     onClick: () =>
-                        Toast.toastManager.update(id, { title: 'Updated', description: '' }),
+                        Toast.toastManager.update(id, {
+                            title: 'Updated',
+                            description: '',
+                            colorPalette: 'info',
+                            actionProps: {},
+                        }),
                 },
                 colorPalette,
             });
@@ -47,7 +56,7 @@ export const Default: Story = {
 };
 
 const CustomToastList = () => {
-    const { toasts } = Toast.useToastManager();
+    const { toasts } = BaseToast.useToastManager();
 
     return toasts.map((toast) => {
         return (
@@ -60,10 +69,14 @@ const CustomToastList = () => {
                 padding="$200"
             >
                 <Toast.ContentPrimitive>
-                    <VStack>
-                        <Toast.TitlePrimitive color="$normal-200" />
-                        <Toast.DescriptionPrimitive color="$normal-200" />
-                    </VStack>
+                    <HStack gap="$100">
+                        <Toast.IconPrimitive marginY="3px" />
+
+                        <VStack>
+                            <Toast.TitlePrimitive color="$normal-200" />
+                            <Toast.DescriptionPrimitive color="$normal-200" />
+                        </VStack>
+                    </HStack>
                     <Toast.ClosePrimitive
                         render={<IconButton aria-label="Close toast" size="sm" variant="ghost" />}
                         position="absolute"
@@ -80,10 +93,13 @@ export const Custom: Story = {
     render: () => {
         const toastManager = Toast.createToastManager();
         const handleToast = () => {
-            toastManager.add({
+            toastManager.add<{ hi: string }>({
                 title: 'Custom Toast',
                 description: 'This is a custom toast content.',
-                data: {},
+                icon: <HeartIcon />,
+                data: {
+                    hi: 'asdf',
+                },
             });
         };
 
@@ -117,10 +133,10 @@ export const TestBed: Story = {
             const id = Toast.toastManager.add({
                 title: 'This is Notification. This is Notification. This is Notification. ',
                 description: description ?? 'This is a toast notification.',
-
-                data: {
-                    colorPalette,
-                    action: <Button onClick={() => updateToast(id)}>Update</Button>,
+                colorPalette,
+                actionProps: {
+                    children: 'Update',
+                    onClick: () => updateToast(id),
                 },
             });
         };

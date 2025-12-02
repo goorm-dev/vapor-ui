@@ -14,4 +14,5 @@ export {
     ToastDescriptionPrimitive as DescriptionPrimitive,
     ToastActionPrimitive as ActionPrimitive,
     ToastClosePrimitive as ClosePrimitive,
+    ToastIconPrimitive as IconPrimitive,
 } from './toast';
