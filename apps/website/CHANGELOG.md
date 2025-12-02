@@ -1,15 +1,5 @@
 # website
 
-## 1.0.0
-
-### Patch Changes
-
-- Updated dependencies [308fd25]
-- Updated dependencies [bb41c2e]
-    - @vapor-ui/core@1.0.0
-    - @vapor-ui/color-generator@1.0.0
-    - @vapor-ui/css-generator@1.0.0
-
 ## 1.0.0-beta.6
 
 ### Patch Changes

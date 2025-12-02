@@ -1,6 +1,6 @@
 # @vapor-ui/color-generator
 
-## 1.0.0
+## 1.0.0-beta.8
 
 ### Minor Changes
 
