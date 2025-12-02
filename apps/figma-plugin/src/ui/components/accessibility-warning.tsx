@@ -100,7 +100,7 @@ export const AccessibilityWarning = ({
 
                 <VStack gap="$050">
                     <Text typography="body3" foreground="hint-200">
-                        <Text typography="body3" foreground="normal-100" render={<span />}>
+                        <Text typography="body3" foreground="normal-100">
                             {primaryColorName}
                         </Text>
                         가{' '}
