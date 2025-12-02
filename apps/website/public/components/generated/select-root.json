@@ -1,0 +1,166 @@
+{
+    "name": "Root",
+    "displayName": "Select.Root",
+    "description": "Select의 모든 부분을 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "Select의 id"
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "폼 제출 시 필드를 식별하는 이름"
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "false",
+                "true",
+                "ReactElement",
+                "Iterable<ReactNode>",
+                "ReactPortal"
+            ],
+            "required": false
+        },
+        {
+            "name": "defaultValue",
+            "type": ["unknown"],
+            "required": false,
+            "description": "처음 렌더링될 때 select의 비제어 값입니다.\n\n제어 컴포넌트로 렌더링하려면 `value` prop을 대신 사용하세요.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "disabled",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "사용자 상호작용을 비활성화할지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "value",
+            "type": ["unknown"],
+            "required": false,
+            "description": "select의 현재 값"
+        },
+        {
+            "name": "open",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "select 팝업의 현재 열림 상태"
+        },
+        {
+            "name": "readOnly",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "사용자가 select 팝업에서 다른 옵션을 선택할 수 없도록 할지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "required",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "폼 제출 전 값을 반드시 선택해야 하는지 여부",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: unknown, eventDetails: ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Select의 값이 변경될 때 호출되는 콜백입니다. 제어 컴포넌트에서 사용합니다."
+        },
+        {
+            "name": "inputRef",
+            "type": [
+                "null",
+                "(instance: HTMLInputElement | null) => void",
+                "RefObject<HTMLInputElement>"
+            ],
+            "required": false,
+            "description": "숨겨진 input 요소에 접근하기 위한 ref"
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Select 팝업의 초기 열림 상태입니다.\n\n제어 컴포넌트로 렌더링하려면 `open` prop을 대신 사용하세요.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Select 팝업이 열리거나 닫힐 때 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "셀렉트 팝업이 열리거나 닫힌 후 애니메이션이 완료되면 호출되는 이벤트 핸들러"
+        },
+        {
+            "name": "modal",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Select가 열릴 때 모달 상태로 진입할지 결정합니다.\n- `true`: 사용자 상호작용이 Select로 제한됩니다. 문서 스크롤이 잠기고 외부 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용이 허용됩니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "actionsRef",
+            "type": ["RefObject<Actions>"],
+            "required": false,
+            "description": "명령형 액션을 위한 ref입니다.\n- `unmount`: 지정되면, Select가 닫힐 때 언마운트되지 않습니다.\n대신 `unmount` 함수를 수동으로 호출해야 합니다.\nSelect의 애니메이션이 외부 라이브러리에 의해 제어될 때 유용합니다."
+        },
+        {
+            "name": "items",
+            "type": [
+                "Record<string, ReactNode>",
+                "readonly { label: ReactNode; value: unknown; }[]"
+            ],
+            "required": false,
+            "description": "Select 팝업에 렌더링되는 아이템 데이터 구조입니다.\n지정시 `<Select.Value>`가 원시 값 대신 선택된 아이템의 라벨을 렌더링합니다."
+        },
+        {
+            "name": "itemToStringLabel",
+            "type": ["(itemValue: unknown) => string"],
+            "required": false,
+            "description": "아이템 값이 객체인 경우(`<Select.Item value={object}>`) 트리거에 표시하기 위해 객체 값을 문자열로 변환하는 함수입니다.\n객체 형태가 `{ value, label }`이면 이 prop 없이도 자동으로 라벨이 사용됩니다."
+        },
+        {
+            "name": "itemToStringValue",
+            "type": ["(itemValue: unknown) => string"],
+            "required": false,
+            "description": "아이템 값이 객체인 경우(`<Select.Item value={object}>`) 폼 제출을 위해 객체 값을 문자열로 변환하는 함수입니다.\n객체 형태가 `{ value, label }`이면 이 prop 없이도 자동으로 값이 사용됩니다."
+        },
+        {
+            "name": "isItemEqualToValue",
+            "type": ["(itemValue: unknown, value: unknown) => boolean"],
+            "required": false,
+            "description": "Select 아이템 값이 현재 선택된 값과 일치하는지 판단하는 커스텀 비교 로직입니다.\n참조가 다른 객체 값을 사용할 때 유용합니다. 기본값은 `Object.is` 비교입니다."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Select의 크기"
+        },
+        {
+            "name": "invalid",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "Select가 유효하지 않은 상태인지 여부"
+        }
+    ]
+}
