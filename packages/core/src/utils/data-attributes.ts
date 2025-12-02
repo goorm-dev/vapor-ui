@@ -11,7 +11,13 @@ export function createDataAttribute<T extends SingleDataAttrValue>(
     if (value == null || value === false) {
         return {} as ReturnByValue<T>;
     }
-    return { [`data-${key}`]: value === true ? '' : String(value) } as ReturnByValue<T>;
+
+    const lowerCaseKey = key.toLowerCase();
+    const dataKey = `data-${lowerCaseKey}`;
+
+    return {
+        [dataKey]: value === true ? '' : String(value),
+    } as ReturnByValue<T>;
 }
 
 type MultiDataAttrValue = Record<string, SingleDataAttrValue>;

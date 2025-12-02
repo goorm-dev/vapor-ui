@@ -2,12 +2,13 @@ import './global.css';
 
 import type { ReactNode } from 'react';
 
-import { ThemeProvider } from '@vapor-ui/core';
+import { ThemeProvider } from '@vapor-ui/core/theme-provider';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 
 import DefaultSearchDialog from '~/components/search/search';
+import { ThemeSync } from '~/components/theme-sync';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -38,7 +39,8 @@ export default function Layout({ children }: { children: ReactNode }) {
                     }}
                     theme={{ enabled: false }}
                 >
-                    <ThemeProvider defaultTheme="system" enableSystem>
+                    <ThemeProvider defaultTheme="system" storageKey="vapor-ui-docs">
+                        <ThemeSync />
                         {children}
                     </ThemeProvider>
                 </RootProvider>

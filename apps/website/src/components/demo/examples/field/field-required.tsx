@@ -1,44 +1,37 @@
 'use client';
 
-import { useState } from 'react';
-
-import { Field, TextInput } from '@vapor-ui/core';
+import { Box, Field, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldRequired() {
-    const [value, setValue] = useState('');
-    const showError = value.length === 0;
-
     return (
-        <div className="v-space-y-6">
-            {/* Required Field */}
-            <Field.Root name="required-field" className="v-space-y-2">
-                <Field.Label>
-                    필수 입력 필드 <span className="v-text-red-500">*</span>
+        <VStack gap="$200" width="300px">
+            <Field.Root name="required-field" validationMode="onChange">
+                <Field.Label flexDirection="column">
+                    <Text typography="subtitle2" foreground="secondary-100">
+                        필수 입력 필드 <Text foreground="danger-100">*</Text>
+                    </Text>
+                    <TextInput required placeholder="필수 입력 항목입니다" />
                 </Field.Label>
-                <TextInput
-                    placeholder="필수 입력 항목입니다"
-                    className="v-w-full"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    required
-                />
                 <Field.Description>
                     이 필드는 반드시 입력해야 하는 필수 항목입니다.
                 </Field.Description>
-                <Field.Error match={showError}>이 필드는 필수 입력 항목입니다.</Field.Error>
-                {!showError && value.length > 0 && (
-                    <Field.Success>입력이 완료되었습니다.</Field.Success>
-                )}
+                <Field.Error match="valueMissing">이 필드는 필수 입력 항목입니다.</Field.Error>
+                <Field.Success>입력이 완료되었습니다.</Field.Success>
             </Field.Root>
 
             {/* Optional Field */}
-            <Field.Root name="optional-field" className="v-space-y-2">
-                <Field.Label>
-                    선택 입력 필드 <span className="v-text-gray-400">(선택사항)</span>
-                </Field.Label>
-                <TextInput placeholder="선택적으로 입력하세요" className="v-w-full" />
+            <Field.Root name="optional-field">
+                <Box render={<Field.Label />} flexDirection="column">
+                    <Text typography="subtitle2" foreground="secondary-100">
+                        선택 입력 필드{' '}
+                        <Text foreground="hint-100" typography="subtitle2">
+                            (선택사항)
+                        </Text>
+                    </Text>
+                    <TextInput placeholder="선택적으로 입력하세요" />
+                </Box>
                 <Field.Description>이 필드는 선택적으로 입력할 수 있습니다.</Field.Description>
             </Field.Root>
-        </div>
+        </VStack>
     );
 }

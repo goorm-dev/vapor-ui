@@ -3,6 +3,7 @@ import { globalStyle } from '@vanilla-extract/css';
 import { vars } from './themes.css';
 import {
     BORDER_RADIUS,
+    type BasicColorPalette,
     FONT_FAMILY,
     FONT_SIZE,
     FONT_WEIGHT,
@@ -34,7 +35,11 @@ type TailwindThemeNamespace =
 // Basic Tokens - Colors
 const colorThemeMap = Object.entries(LIGHT_BASIC_COLORS).reduce<Record<string, string>>(
     (acc, [colorName, colorScale]) => {
-        const contractColorGroup = vars.color[colorName as keyof typeof LIGHT_BASIC_COLORS];
+        const contractColorGroup = vars.color[colorName as keyof BasicColorPalette];
+
+        if (colorName === 'background') {
+            return acc;
+        }
 
         if (typeof colorScale === 'object' && colorScale !== null && contractColorGroup) {
             for (const shade in colorScale) {
@@ -170,5 +175,5 @@ semanticMappings.forEach(({ prefix, property, contractGroup, tokenGroup }) => {
 });
 
 globalStyle('@utility text-v-logo', {
-    color: vars.color.logo.normal,
+    color: vars.color.foreground.secondary[200],
 });

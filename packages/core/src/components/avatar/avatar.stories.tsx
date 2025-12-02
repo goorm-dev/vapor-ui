@@ -19,24 +19,27 @@ export const Default: Story = {
     render: (args) => (
         <>
             <Flex>
-                <Avatar.Simple size="sm" src={IMAGE_URL} {...args} alt="hi" />
-                <Avatar.Simple size="md" src={IMAGE_URL} {...args} alt="hi" />
-                <Avatar.Simple size="lg" src={IMAGE_URL} {...args} alt="hi" />
-                <Avatar.Simple size="xl" src={IMAGE_URL} {...args} alt="hi" />
+                <Avatar.Root size="sm" src={IMAGE_URL} {...args} alt="hi" />
+                <Avatar.Root size="md" src={IMAGE_URL} {...args} alt="hi" />
+                <Avatar.Root size="lg" src={IMAGE_URL} {...args} alt="hi" />
+                <Avatar.Root size="xl" src={IMAGE_URL} {...args} alt="hi">
+                    <Avatar.ImagePrimitive />
+                    <Avatar.FallbackPrimitive>hi</Avatar.FallbackPrimitive>
+                </Avatar.Root>
             </Flex>
             <Flex>
-                <Avatar.Simple size="sm" {...args} alt="1" />
-                <Avatar.Simple size="md" {...args} alt="2" />
-                <Avatar.Simple size="lg" {...args} alt="3" />
-                <Avatar.Simple size="xl" {...args} alt="4" />
+                <Avatar.Root size="sm" {...args} alt="1" />
+                <Avatar.Root size="md" {...args} alt="2" />
+                <Avatar.Root size="lg" {...args} alt="3" />
+                <Avatar.Root size="xl" {...args} alt="4" />
             </Flex>
             <Flex>
-                <Avatar.Simple size="sm" {...args} alt="noah.choi" />
-                <Avatar.Simple size="md" {...args} alt="noah.choi" />
-                <Avatar.Simple size="lg" {...args} alt="noah.choi" />
+                <Avatar.Root size="sm" {...args} alt="noah.choi" />
+                <Avatar.Root size="md" {...args} alt="noah.choi" />
+                <Avatar.Root size="lg" {...args} alt="noah.choi" />
                 <Avatar.Root size="xl" {...args} alt="noah.choi">
-                    <Avatar.Image />
-                    <Avatar.Fallback>asdf</Avatar.Fallback>
+                    <Avatar.ImagePrimitive />
+                    <Avatar.FallbackPrimitive>ㅇㅇ</Avatar.FallbackPrimitive>
                 </Avatar.Root>
             </Flex>
         </>
@@ -47,22 +50,22 @@ export const TestBed: Story = {
     render: (args) => (
         <>
             <Flex>
-                <Avatar.Simple size="sm" src={IMAGE_URL} {...args} alt="hi" />
-                <Avatar.Simple size="md" src={IMAGE_URL} {...args} alt="hi" />
-                <Avatar.Simple size="lg" src={IMAGE_URL} {...args} alt="hi" />
-                <Avatar.Simple size="xl" src={IMAGE_URL} {...args} alt="hi" />
+                <Avatar.Root size="sm" src={IMAGE_URL} {...args} alt="hi" />
+                <Avatar.Root size="md" src={IMAGE_URL} {...args} alt="hi" />
+                <Avatar.Root size="lg" src={IMAGE_URL} {...args} alt="hi" />
+                <Avatar.Root size="xl" src={IMAGE_URL} {...args} alt="hi" />
             </Flex>
             <Flex>
-                <Avatar.Simple size="sm" {...args} alt="1" />
-                <Avatar.Simple size="md" {...args} alt="2" />
-                <Avatar.Simple size="lg" {...args} alt="3" />
-                <Avatar.Simple size="xl" {...args} alt="4" />
+                <Avatar.Root size="sm" {...args} alt="1" />
+                <Avatar.Root size="md" {...args} alt="2" />
+                <Avatar.Root size="lg" {...args} alt="3" />
+                <Avatar.Root size="xl" {...args} alt="4" />
             </Flex>
             <Flex>
-                <Avatar.Simple size="sm" {...args} alt="noah.choi" />
-                <Avatar.Simple size="md" {...args} alt="noah.choi" />
-                <Avatar.Simple size="lg" {...args} alt="noah.choi" />
-                <Avatar.Simple size="xl" {...args} alt="noah.choi" />
+                <Avatar.Root size="sm" {...args} alt="noah.choi" />
+                <Avatar.Root size="md" {...args} alt="noah.choi" />
+                <Avatar.Root size="lg" {...args} alt="noah.choi" />
+                <Avatar.Root size="xl" {...args} alt="noah.choi" />
             </Flex>
         </>
     ),

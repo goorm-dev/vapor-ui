@@ -4,10 +4,10 @@ site_name: 'IconButton - Vapor Core'
 description: 'IconButton은 특정 작업이나 기능을 나타내며, 텍스트 없이 아이콘만으로 명령을 전달하는 버튼입니다.'
 ---
 
-<Demo name="default-icon-button">
+<Demo name="icon-button/default-icon-button">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/default-icon-button.tsx",
+    "file": "./src/components/demo/examples/icon-button/default-icon-button.tsx",
     "codeblock": true
 }
 ```
@@ -19,25 +19,25 @@ description: 'IconButton은 특정 작업이나 기능을 나타내며, 텍스�
 
 ### Size
 
-IconButton 사이즈는 sm, md, lg, xl 로 제공합니다.
+IconButton의 크기를 설정합니다.
 
-<Demo name="icon-button-size">
+<Demo name="icon-button/icon-button-size">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/icon-button-size.tsx",
+    "file": "./src/components/demo/examples/icon-button/icon-button-size.tsx",
     "codeblock": true
 }
 ```
 </Demo>
 
-### Color
+### ColorPalette
 
-IconButton 색상은 primary, secondary, success, warning, danger, contrast 로 제공합니다.
+IconButton의 색상을 설정합니다.
 
-<Demo name="icon-button-color">
+<Demo name="icon-button/icon-button-color">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/icon-button-color.tsx",
+    "file": "./src/components/demo/examples/icon-button/icon-button-color.tsx",
     "codeblock": true
 }
 ```
@@ -45,12 +45,12 @@ IconButton 색상은 primary, secondary, success, warning, danger, contrast 로 
 
 ### Variant
 
-IconButton 스타일 변형은 fill, outline, ghost 로 제공합니다.
+IconButton의 시각적 변형을 설정합니다.
 
-<Demo name="icon-button-variant">
+<Demo name="icon-button/icon-button-variant">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/icon-button-variant.tsx",
+    "file": "./src/components/demo/examples/icon-button/icon-button-variant.tsx",
     "codeblock": true
 }
 ```
@@ -58,12 +58,12 @@ IconButton 스타일 변형은 fill, outline, ghost 로 제공합니다.
 
 ### Shape
 
-IconButton 모양은 square, circle 로 제공합니다.
+IconButton의 모양을 설정합니다.
 
-<Demo name="icon-button-shape">
+<Demo name="icon-button/icon-button-shape">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/icon-button-shape.tsx",
+    "file": "./src/components/demo/examples/icon-button/icon-button-shape.tsx",
     "codeblock": true
 }
 ```
@@ -71,12 +71,12 @@ IconButton 모양은 square, circle 로 제공합니다.
 
 ### Disabled
 
-비활성화된 상태의 IconButton입니다. 사용자가 상호작용할 수 없습니다.
+IconButton의 비활성화 상태를 설정합니다.
 
-<Demo name="icon-button-disabled">
+<Demo name="icon-button/icon-button-disabled">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/icon-button-disabled.tsx",
+    "file": "./src/components/demo/examples/icon-button/icon-button-disabled.tsx",
     "codeblock": true
 }
 ```
@@ -86,6 +86,6 @@ IconButton 모양은 square, circle 로 제공합니다.
 
 ---
 
-IconButton은 아이콘만으로 작업을 수행하는 버튼 컴포넌트입니다. Button 컴포넌트를 확장하여 추가적인 shape 속성과 아이콘 전용 스타일링을 제공합니다. 접근성을 위해 적절한 `aria-label`을 반드시 제공해야 합니다. 이 컴포넌트는 `button` 요소를 기반으로 합니다.
+아이콘만으로 작업을 수행하는 버튼입니다. `<button>` 요소를 렌더링합니다.
 
 <ComponentPropsTable file="icon-button" section="props" />

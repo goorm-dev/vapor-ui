@@ -4,10 +4,10 @@ site_name: 'Tooltip - Vapor Core'
 description: '요소에 대한 추가 정보를 제공하는 툴팁 컴포넌트입니다'
 ---
 
-<Demo name="default-tooltip">
+<Demo name="tooltip/default-tooltip">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/default-tooltip.tsx",
+    "file": "./src/components/demo/examples/tooltip/default-tooltip.tsx",
     "codeblock": true
 }
 ```
@@ -19,12 +19,12 @@ description: '요소에 대한 추가 정보를 제공하는 툴팁 컴포넌트
 
 ### Positioning
 
-Tooltip의 표시 위치를 설정할 수 있습니다.
+Tooltip의 표시 위치를 설정합니다.
 
-<Demo name="tooltip-positioning">
+<Demo name="tooltip/tooltip-positioning">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/tooltip-positioning.tsx",
+    "file": "./src/components/demo/examples/tooltip/tooltip-positioning.tsx",
     "codeblock": true
 }
 ```
@@ -32,12 +32,12 @@ Tooltip의 표시 위치를 설정할 수 있습니다.
 
 ### Alignment
 
-Tooltip의 정렬 위치를 조정할 수 있습니다.
+Tooltip의 정렬 위치를 설정합니다.
 
-<Demo name="tooltip-alignment">
+<Demo name="tooltip/tooltip-alignment">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/tooltip-alignment.tsx",
+    "file": "./src/components/demo/examples/tooltip/tooltip-alignment.tsx",
     "codeblock": true
 }
 ```
@@ -45,12 +45,12 @@ Tooltip의 정렬 위치를 조정할 수 있습니다.
 
 ### Delay
 
-Tooltip이 표시되는 지연 시간을 조정할 수 있습니다.
+Tooltip의 지연 시간을 설정합니다.
 
-<Demo name="tooltip-delay">
+<Demo name="tooltip/tooltip-delay">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/tooltip-delay.tsx",
+    "file": "./src/components/demo/examples/tooltip/tooltip-delay.tsx",
     "codeblock": true
 }
 ```
@@ -60,10 +60,10 @@ Tooltip이 표시되는 지연 시간을 조정할 수 있습니다.
 
 Tooltip의 거리와 정렬 오프셋을 조정할 수 있습니다.
 
-<Demo name="tooltip-offset">
+<Demo name="tooltip/tooltip-offset">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/tooltip-offset.tsx",
+    "file": "./src/components/demo/examples/tooltip/tooltip-offset.tsx",
     "codeblock": true
 }
 ```
@@ -77,10 +77,10 @@ Tooltip의 거리와 정렬 오프셋을 조정할 수 있습니다.
 
 다양한 형태의 툴팁 내용을 표시할 수 있습니다.
 
-<Demo name="tooltip-content">
+<Demo name="tooltip/tooltip-content">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/tooltip-content.tsx",
+    "file": "./src/components/demo/examples/tooltip/tooltip-content.tsx",
     "codeblock": true
 }
 ```
@@ -106,10 +106,16 @@ Tooltip을 트리거하는 컴포넌트입니다.
 
 Tooltip 콘텐츠를 DOM 트리의 다른 위치로 렌더링하는 컴포넌트입니다.
 
-<ComponentPropsTable file="tooltip" section="portalProps" />
+<ComponentPropsTable file="tooltip" section="portalPrimitiveProps" />
 
-### Tooltip.Content
+### Tooltip.PositionerPrimitive
 
-Tooltip의 실제 콘텐츠를 포함하는 컴포넌트입니다. 내장된 Positioner, Popup, Arrow를 포함하며, 자동으로 화살표가 포함되어 위치에 따라 화살표 방향이 조정됩니다.
+Tooltip의 위치를 설정하는 컴포넌트입니다.
 
-<ComponentPropsTable file="tooltip" section="contentProps" />
+<ComponentPropsTable file="tooltip" section="positionerPrimitiveProps" />
+
+### Tooltip.Popup
+
+Tooltip의 실제 콘텐츠를 포함하는 컴포넌트입니다. 내장된 Portal, Positioner, Popup, Arrow를 포함하며, 자동으로 화살표가 포함되어 위치에 따라 화살표 방향이 조정됩니다.
+
+<ComponentPropsTable file="tooltip" section="popupProps" />

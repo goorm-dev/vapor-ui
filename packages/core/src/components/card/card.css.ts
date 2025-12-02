@@ -8,7 +8,7 @@ export const root = layerStyle('components', {
     border: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius[300],
 
-    backgroundColor: vars.color.background.surface[100],
+    backgroundColor: vars.color.background.overlay[100],
 });
 
 export const header = layerStyle('components', {

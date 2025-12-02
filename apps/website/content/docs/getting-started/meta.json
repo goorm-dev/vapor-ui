@@ -1,5 +1,13 @@
 {
     "title": "Getting Started",
-    "pages": ["overview", "installation", "releases", "llms-txt", "tailwindcss-v4"],
+    "pages": [
+        "overview",
+        "principles",
+        "installation",
+        "theming",
+        "releases",
+        "llms-txt",
+        "tailwindcss-v4"
+    ],
     "defaultOpen": true
 }

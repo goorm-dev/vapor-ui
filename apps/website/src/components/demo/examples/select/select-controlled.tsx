@@ -14,32 +14,17 @@ export default function SelectControlled() {
     return (
         <div className="space-y-4">
             <Select.Root placeholder="폰트 선택" value={value} onValueChange={handleValueChange}>
-                <Select.Trigger>
-                    <Select.Value />
-                    <Select.TriggerIcon />
-                </Select.Trigger>
+                <Select.Trigger />
 
-                <Select.Content>
+                <Select.Popup>
                     <Select.Group>
                         <Select.GroupLabel>폰트</Select.GroupLabel>
-                        <Select.Item value="sans">
-                            Sans-serif
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        <Select.Item value="serif">
-                            Serif
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        <Select.Item value="mono">
-                            Monospace
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        <Select.Item value="cursive">
-                            Cursive
-                            <Select.ItemIndicator />
-                        </Select.Item>
+                        <Select.Item value="sans">Sans-serif</Select.Item>
+                        <Select.Item value="serif">Serif</Select.Item>
+                        <Select.Item value="mono">Monospace</Select.Item>
+                        <Select.Item value="cursive">Cursive</Select.Item>
                     </Select.Group>
-                </Select.Content>
+                </Select.Popup>
             </Select.Root>
 
             <Text typography="body2" foreground="secondary-200">
@@ -47,10 +32,10 @@ export default function SelectControlled() {
             </Text>
 
             <HStack gap="$100">
-                <Button color="primary" onClick={() => setValue('serif')}>
+                <Button colorPalette="primary" onClick={() => setValue('serif')}>
                     Serif 선택
                 </Button>
-                <Button onClick={() => setValue('')} color="secondary">
+                <Button onClick={() => setValue('')} colorPalette="secondary">
                     선택 해제
                 </Button>
             </HStack>

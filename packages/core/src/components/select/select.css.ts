@@ -19,13 +19,15 @@ export const trigger = recipe({
             border: `1px solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
 
-            backgroundColor: vars.color.background.surface[100],
+            backgroundColor: vars.color.background.overlay[100],
 
             selectors: {
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
 
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
+
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
             },
         }),
     ],
@@ -54,14 +56,13 @@ export const trigger = recipe({
                 height: vars.size.space['600'],
             }),
         },
-        invalid: {
-            true: layerStyle('components', { borderColor: vars.color.border.danger }),
-        },
+
+        invalid: { true: {}, false: {} },
     },
 });
 
 export const value = recipe({
-    base: foregrounds({ color: 'normal-200' }),
+    base: [foregrounds({ color: 'normal-200' }), { whiteSpace: 'nowrap' }],
 
     defaultVariants: { size: 'md' },
     variants: {
@@ -123,7 +124,7 @@ export const popup = layerStyle('components', {
 
     boxShadow: vars.shadow.md,
 
-    backgroundColor: vars.color.background.surface[100],
+    backgroundColor: vars.color.background.overlay[100],
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',
 

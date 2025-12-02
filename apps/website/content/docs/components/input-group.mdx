@@ -4,10 +4,10 @@ site_name: 'InputGroup - Vapor Core'
 description: 'InputGroup은 입력 필드(TextInput, Textarea)와 관련 요소들을 그룹화하여 문자 수 카운터와 같은 추가 기능을 제공합니다.'
 ---
 
-<Demo name="default-input-group">
+<Demo name="input-group/default-input-group">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/default-input-group.tsx",
+    "file": "./src/components/demo/examples/input-group/default-input-group.tsx",
     "codeblock": true
 }
 ```
@@ -17,40 +17,14 @@ description: 'InputGroup은 입력 필드(TextInput, Textarea)와 관련 요소�
 
 ---
 
-### Basic Usage
-
-InputGroup은 입력 컴포넌트(TextInput, Textarea)와 Counter를 조합하여 사용합니다. 입력 컴포넌트에 maxLength가 설정되면 자동으로 "현재글자수/최대글자수" 형태로 표시되고, maxLength가 없으면 현재 글자 수만 표시됩니다.
-
-<Demo name="input-group-basic">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/input-group-basic.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### With Textarea
-
-InputGroup은 Textarea와도 함께 사용할 수 있습니다.
-
-<Demo name="input-group-textarea">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/input-group-textarea.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
 ### Custom Counter
 
-Counter는 함수형 children을 지원하여 커스텀 카운터 UI를 구현할 수 있습니다.
+커스텀 카운터 UI를 구현합니다.
 
-<Demo name="input-group-custom-counter">
+<Demo name="input-group/input-group-custom-counter">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/input-group-custom-counter.tsx",
+    "file": "./src/components/demo/examples/input-group/input-group-custom-counter.tsx",
     "codeblock": true
 }
 ```
@@ -62,12 +36,12 @@ Counter는 함수형 children을 지원하여 커스텀 카운터 UI를 구현�
 
 ### InputGroup.Root
 
-InputGroup의 루트 컨테이너로, 입력 컴포넌트(TextInput, Textarea)와 Counter를 감싸는 래퍼 역할을 합니다.
+InputGroup의 하위 요소를 그룹화합니다. `<div>` 요소를 렌더링합니다.
 
 <ComponentPropsTable file="input-group" section="props" />
 
 ### InputGroup.Counter
 
-문자 수를 표시하는 카운터 컴포넌트입니다. 함수형 children을 통해 커스텀 카운터를 구현할 수 있습니다.
+글자 수를 표시합니다. `<span>` 요소를 렌더링합니다.
 
 <ComponentPropsTable file="input-group" section="counterProps" />
