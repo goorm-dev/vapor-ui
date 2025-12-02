@@ -64,7 +64,7 @@ const IconListItem = ({ icon: Icon, iconName }: IconListItemProps) => {
             onMouseLeave={handleMouseLeave}
         >
             <span className={styles.iconContainer}>
-                <Icon size="40" color="var(--vapor-color-foreground-secondary-darker)" />
+                <Icon size="40" color="var(--vapor-color-foreground-secondary-200)" />
             </span>
             <Text typography="body3" foreground="normal-200" className={styles.text}>
                 {iconName}

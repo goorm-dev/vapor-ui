@@ -4,7 +4,7 @@ import { CheckIcon } from '@vapor-ui/icons';
 
 export const Component = () => (
     <>
-        <Callout.Root color="success">
+        <Callout.Root colorPalette="success">
             <Callout.Icon>
                 <CheckIcon />
             </Callout.Icon>

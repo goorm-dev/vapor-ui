@@ -100,23 +100,15 @@ export const AccessibilityWarning = ({
 
                 <VStack gap="$050">
                     <Text typography="body3" foreground="hint-200">
-                        <Text typography="body3" foreground="normal-100" render={<span />}>
+                        <Text typography="body3" foreground="normal-100">
                             {primaryColorName}
                         </Text>
                         가{' '}
-                        <Text
-                            typography="body3"
-                            foreground="warning-100"
-                            render={<span className="font-semibold" />}
-                        >
+                        <Text typography="body3" foreground="warning-100" className="font-semibold">
                             {primaryMappedStep}
                         </Text>
                         단계에 매핑되어, 배경 대비 명암비가 약{' '}
-                        <Text
-                            typography="body3"
-                            foreground="warning-100"
-                            render={<span className="font-semibold" />}
-                        >
+                        <Text typography="body3" foreground="warning-100" className="font-semibold">
                             {contrastRatio}:1
                         </Text>
                         이에요.

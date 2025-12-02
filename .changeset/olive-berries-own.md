@@ -1,8 +1,6 @@
 ---
 '@vapor-ui/color-generator': minor
 '@vapor-ui/css-generator': minor
-'figma-plugin': minor
-'website': minor
 ---
 
 **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas`
