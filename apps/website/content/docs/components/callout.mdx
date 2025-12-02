@@ -19,7 +19,7 @@ description: 'Callout은 중요한 정보를 시각적으로 강조하여 사용
 
 ### ColorPalette
 
-Callout 색상은 primary, success, warning, danger, hint, contrast 로 제공합니다.
+Callout의 역할에 따른 색상을 설정합니다.
 
 <Demo name="callout/callout-color">
 ```json doc-gen:file
@@ -36,7 +36,7 @@ Callout 색상은 primary, success, warning, danger, hint, contrast 로 제공�
 
 ### Callout with Icon
 
-아이콘과 함께 사용하는 Callout 예제입니다. 아이콘은 `Callout.Icon`으로 감싸서 고정된 크기를 유지합니다.
+Callout의 역할을 직관적으로 표현하기 위해 아이콘과 함께 사용합니다.
 
 <Demo name="callout/callout-with-icon">
 ```json doc-gen:file
@@ -53,12 +53,12 @@ Callout 색상은 primary, success, warning, danger, hint, contrast 로 제공�
 
 ### Callout.Root
 
-이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
+Callout의 하위 요소를 그룹화합니다. `<div>` 요소를 렌더링합니다.
 
 <ComponentPropsTable file="callout" section="rootProps" />
 
 ### Callout.Icon
 
-Callout 내에서 아이콘을 표시하는 데 사용되는 컴포넌트입니다. 아이콘의 크기와 위치를 적절히 조정하여 일관된 시각적 경험을 제공합니다. 이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성을 지원합니다.
+아이콘을 표시하는 경우, 정렬을 보장합니다. `<div>` 요소를 렌더링합니다.
 
 <ComponentPropsTable file="callout" section="iconProps" />

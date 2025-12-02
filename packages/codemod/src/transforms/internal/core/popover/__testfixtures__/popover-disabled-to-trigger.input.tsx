@@ -1,0 +1,12 @@
+import { Popover } from '@goorm-dev/vapor-core';
+
+export default function App() {
+    return (
+        <Popover disabled>
+            <Popover.Trigger>Open</Popover.Trigger>
+            <Popover.Portal>
+                <Popover.Content>Content</Popover.Content>
+            </Popover.Portal>
+        </Popover>
+    );
+}

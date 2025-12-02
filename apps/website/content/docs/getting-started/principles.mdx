@@ -1,0 +1,176 @@
+---
+title: Design Principles
+description: Vapor UI의 컴포넌트 아키텍처와 개발 철학을 이끄는 핵심 디자인 원칙
+---
+
+Vapor UI는 합성, 접근성, 일관성, 개발자 경험을 우선시하는 6가지 기본 디자인 원칙을 따르면서 유연한 커스터마이징 기능을 유지합니다.
+
+## 1. Preset 기반의 컴파운드 패턴
+
+Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 패턴**을 채택합니다. 빠른 구현을 위한 **Preset 컴포넌트**와 완전한 커스터마이징 제어를 위한 **Primitive 컴포넌트**를 함께 제공합니다.
+
+```tsx
+// Preset 패턴 (빠르고 간편)
+<Popover.Root>
+    <Popover.Trigger>Trigger</Popover.Trigger>
+    <Popover.Popup>Contents</Popover.Popup>
+</Popover.Root>
+
+// Primitive 패턴 (완전한 제어)
+<Popover.Root>
+    <Popover.Trigger>Trigger</Popover.Trigger>
+    <Popover.PortalPrimitive>
+        <Popover.PositionerPrimitive>
+            <Popover.PopupPrimitive>Contents</Popover.PopupPrimitive>
+        </Popover.PositionerPrimitive>
+    </Popover.PortalPrimitive>
+</Popover.Root>
+```
+
+이러한 이중 접근법을 통해 개발자는 다음과 같은 이점을 얻을 수 있습니다:
+
+- **빠른 시작** - 바로 사용 가능한 preset 컴포넌트로 즉시 구현
+- **깊은 확장** - 커스텀 동작이 필요할 때 primitive 컴포넌트 활용
+- **혼합 사용** - 동일한 애플리케이션 내에서 두 패턴을 모두 사용
+
+## 2. 접근성
+
+포괄적인 [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA 준수와 [키보드 네비게이션](https://www.w3.org/TR/WCAG22/#keyboard-accessible), [포커스 형태](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance) 등의 접근성 향상을 위해 [Base UI](https://base-ui.com/react/overview/quick-start)를 기반으로 구축되었습니다.
+
+### 포괄적인 접근성 기능
+
+- **Base UI 통합** — 자동 ARIA 속성, 키보드 내비게이션, 스크린 리더 지원
+- **색상 대비 준수** — 자체 개발한 Color Generator가 WCAG AA/AAA 대비 비율을 보장
+- **수학적 디자인 토큰** — 일관된 시각적 위계를 위해 수학적 비율로 생성된 디자인 토큰
+
+```tsx
+// 적절한 ARIA 속성과 키보드 처리가 자동으로 포함됨
+<Dialog.Root>
+    <Dialog.Trigger aria-expanded="true" aria-haspopup="dialog" aria-controls="dialog-popup">
+        설정 열기
+    </Dialog.Trigger>
+    <Dialog.Popup
+        id="dialog-popup"
+        aria-label="write dialog title"
+        aria-description="write dialog description (optional)"
+    >
+        {/* 포커스 관리와 ESC 키 처리가 내장됨 */}
+    </Dialog.Popup>
+</Dialog.Root>
+```
+
+### Color Generator 시스템
+
+내부 Color Generator가 지각적 색상 모델을 사용하여 접근성 있는 색상 팔레트를 생성합니다:
+
+```tsx
+// 색상이 자동으로 대비 요구사항을 충족함
+<Badge colorPalette="primary">Primary</Badge>
+<Badge colorPalette="success">Success</Badge>
+<Badge colorPalette="warning">Warning</Badge>
+```
+
+## 3. 일관된 네이밍 규칙
+
+모든 컴포넌트는 예측 가능하고 직관적인 사용 경험을 제공하기 위해 일관된 네이밍 규칙을 따릅니다.
+
+- 독립 컴포넌트: 단일 이름
+- 합성 컴포넌트: Dot Notation 표기법
+
+```tsx
+// 단일 컴포넌트
+
+<Button>확인</Button>
+
+<Badge>상태</Badge>
+
+// 합성 컴포넌트
+
+<Card.Root>
+    <Card.Header>
+        <Text typography="heading3">프로젝트 상태</Text>
+    </Card.Header>
+    <Card.Body>
+        <Text typography="body3">현재 개발 진행상황</Text>
+    </Card.Body>
+    <Card.Footer>
+        <Button>저장</Button>
+        <Button variant="outline">취소</Button>
+    </Card.Footer>
+</Card.Root>
+
+<Select.Root placeholder="선택">
+    <Select.Trigger />
+    <Select.Popup>
+        <Select.Item value="section1">섹션 1</Select.Item>
+        <Select.Item value="section2">섹션 2</Select.Item>
+        <Select.Item value="section3">섹션 3</Select.Item>
+    </Select.Popup>
+</Select.Root>
+```
+
+## 4. 예측 가능한 명명 규칙
+
+컴포넌트의 속성은 최대한의 예측 가능성을 위해 **시각적 옵션**과 **논리적 상태**를 기반으로 한 체계적 규칙을 따릅니다.
+
+### 시각적 옵션
+
+```tsx
+// 크기 변형은 일관된 스케일을 따름
+<Button size="sm" />    // 작음
+<Button size="md" />    // 보통 (기본값)
+<Button size="lg" />    // 큼
+
+// 색상 팔레트는 의미론적 명명 사용
+<Badge colorPalette="primary" />
+<Badge colorPalette="success" />
+<Badge colorPalette="danger" />
+```
+
+### 논리적 상태 (동작 기반)
+
+```tsx
+// 상태 속성은 일관된 명명 사용
+<Button disabled={!isValid} />  // 비활성화 상태
+
+// 변형명은 의미론적 의도를 반영
+<Switch.Root checked />   // 선택 상태
+<Switch.Root disabled />   // 비활성 상태
+<Switch.Root required />   // 필수 상태
+<Switch.Root readOnly />  // 읽기 전용 상태
+```
+
+## 5. 완전한 TypeScript 통합
+
+Vapor UI는 완전한 타입 안전성, 지능적인 IntelliSense, 컴파일 타임 오류 검출을 제공하는 **포괄적인 TypeScript 지원**을 제공합니다.
+
+```tsx
+import { Button } from '@vapor-ui/core';
+
+// 완전히 타입화된 컴포넌트 속성
+// - colorPalette 자동완성: 'primary' | 'secondary' | 'danger'
+// - size 자동완성: 'sm' | 'md' | 'lg'
+const CustomButton = ({ colorPalette, size, ...props }: Button.Props) => {
+    return <Button colorPalette={colorPalette} size={size} {...props} />;
+};
+
+// 타입 안전 이벤트 핸들러
+<Button
+    onClick={(event) => console.log(event.target)} // event는 MouseEvent로 적절히 타입화됨
+/>;
+```
+
+## 6. Cascade Layer 아키텍처
+
+Vapor UI는 CSS Cascade Layer를 사용하여 스타일 충돌을 방지합니다:
+
+```css
+@layer vapor, components;
+
+/* 커스텀 스타일을 안전하게 확장할 수 있음 */
+@layer components {
+    .custom-button {
+        /* 여기 있는 스타일은 충돌하지 않음 */
+    }
+}
+```
