@@ -165,9 +165,8 @@ const CreditPurchaseCard = () => {
                         <Button
                             size="lg"
                             colorPalette="secondary"
-                            stretch
                             variant="outline"
-                            className="mt-2"
+                            className="mt-2 w-full"
                             onClick={() => setCount((prev) => prev + 100)}
                         >
                             <span className="flex items-center gap-[var(--vapor-size-space-100)]">
@@ -235,7 +234,7 @@ const AttendanceCard = () => (
                     </div>
                 </div>
             </div>
-            <Button size="lg" stretch className="text-white">
+            <Button size="lg" className="text-white w-full">
                 <AchievementIcon size="20" />
                 45 포인트 획득
             </Button>

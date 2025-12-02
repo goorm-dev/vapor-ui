@@ -1,0 +1,58 @@
+{
+    "rootProps": [
+        {
+            "prop": "defaultPage",
+            "type": ["number"],
+            "default": "1",
+            "description": "초기 렌더링 시 활성화되어야 하는 페이지 번호입니다."
+        },
+        {
+            "prop": "page",
+            "type": ["number"],
+            "default": "-",
+            "description": "활성화할 페이지의 제어된 값입니다. onPageChange와 함께 사용해야 합니다."
+        },
+        {
+            "prop": "onPageChange",
+            "type": ["function"],
+            "default": "-",
+            "description": "값이 변경될 때 호출되는 이벤트 핸들러입니다."
+        },
+        {
+            "prop": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "default": "md",
+            "description": "Pagination의 높이·타이포그래피 크기 등을 제어합니다."
+        },
+        {
+            "prop": "disabled",
+            "type": ["boolean"],
+            "default": "false",
+            "description": "Pagination의 비활성화 여부를 설정합니다."
+        },
+        {
+            "prop": "totalPages",
+            "type": ["number"],
+            "default": "1",
+            "description": "화면에 표시할 전체 페이지 수를 설정합니다."
+        },
+        {
+            "prop": "siblingCount",
+            "type": ["number"],
+            "default": "1",
+            "description": "현재 페이지 양쪽에 표시할 페이지 번호의 개수를 설정합니다."
+        },
+        {
+            "prop": "boundaryCount",
+            "type": ["number"],
+            "default": "1",
+            "description": "처음과 마지막에 표시할 페이지 번호의 개수를 설정합니다."
+        },
+        {
+            "prop": "children",
+            "type": ["ReactNode"],
+            "default": "-",
+            "description": "네비게이션 메뉴의 자식 컴포넌트들입니다."
+        }
+    ]
+}
