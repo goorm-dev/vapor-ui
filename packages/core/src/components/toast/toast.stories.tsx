@@ -164,7 +164,7 @@ export const TestBed: Story = {
         }, []);
 
         return (
-            <Toast.Provider {...args} limit={6} timeout={9999999}>
+            <Toast.Provider toastManager={toastManager} {...args} limit={6} timeout={9999999}>
                 <Button colorPalette="secondary" onClick={() => handleClick('danger')}>
                     Danger
                 </Button>
