@@ -61,7 +61,7 @@ const CustomBox = ({ size = 50, ...props }: ComponentProps<typeof Box> & { size?
             border="1px solid white"
             textAlign="center"
             alignContent="center"
-            color="$button-primary"
+            color="$inverse"
             {...props}
         />
     );
