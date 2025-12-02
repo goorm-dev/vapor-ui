@@ -20,9 +20,9 @@ exports[`New Architecture Snapshot Tests > generatePrimitiveColorPalette > shoul
   },
   "darkModeTokens": {
     "backgroundCanvas": {
-      "codeSyntax": "vapor-color-background-canvas",
+      "codeSyntax": "vapor-color-canvas",
       "hex": "#232323",
-      "name": "color-background-canvas",
+      "name": "color-canvas",
       "oklch": "oklch(0.26 0 0)",
     },
     "palettes": [
@@ -930,9 +930,9 @@ exports[`New Architecture Snapshot Tests > generatePrimitiveColorPalette > shoul
   },
   "lightModeTokens": {
     "backgroundCanvas": {
-      "codeSyntax": "vapor-color-background-canvas",
+      "codeSyntax": "vapor-color-canvas",
       "hex": "#ffffff",
-      "name": "color-background-canvas",
+      "name": "color-canvas",
       "oklch": "oklch(1 0 0)",
     },
     "palettes": [
@@ -1861,9 +1861,9 @@ exports[`New Architecture Snapshot Tests > generatePrimitiveColorPalette > shoul
   },
   "darkModeTokens": {
     "backgroundCanvas": {
-      "codeSyntax": "vapor-color-background-canvas",
+      "codeSyntax": "vapor-color-canvas",
       "hex": "#232323",
-      "name": "color-background-canvas",
+      "name": "color-canvas",
       "oklch": "oklch(0.26 0 0)",
     },
     "palettes": [
@@ -2696,9 +2696,9 @@ exports[`New Architecture Snapshot Tests > generatePrimitiveColorPalette > shoul
   },
   "lightModeTokens": {
     "backgroundCanvas": {
-      "codeSyntax": "vapor-color-background-canvas",
+      "codeSyntax": "vapor-color-canvas",
       "hex": "#ffffff",
-      "name": "color-background-canvas",
+      "name": "color-canvas",
       "oklch": "oklch(1 0 0)",
     },
     "palettes": [
@@ -3552,9 +3552,9 @@ exports[`New Architecture Snapshot Tests > generatePrimitiveColorPalette > shoul
   },
   "darkModeTokens": {
     "backgroundCanvas": {
-      "codeSyntax": "vapor-color-background-canvas",
+      "codeSyntax": "vapor-color-canvas",
       "hex": "#000000",
-      "name": "color-background-canvas",
+      "name": "color-canvas",
       "oklch": "oklch(0 0 0)",
     },
     "palettes": [
@@ -4537,9 +4537,9 @@ exports[`New Architecture Snapshot Tests > generatePrimitiveColorPalette > shoul
   },
   "lightModeTokens": {
     "backgroundCanvas": {
-      "codeSyntax": "vapor-color-background-canvas",
+      "codeSyntax": "vapor-color-canvas",
       "hex": "#fcf6df",
-      "name": "color-background-canvas",
+      "name": "color-canvas",
       "oklch": "oklch(0.97 0.03 94.89)",
     },
     "palettes": [
@@ -5526,7 +5526,7 @@ exports[`New Architecture Snapshot Tests > generatePrimitiveColorPalette > shoul
 exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should apply semantic order inversion prevention for very light brand colors 1`] = `
 {
   "darkModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-100": "color-canvas",
     "color-background-canvas-200": "color-gray-050",
     "color-background-overlay-100": "color-gray-100",
     "color-background-primary-100": "color-lightRed-050",
@@ -5538,9 +5538,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should a
     "color-foreground-primary-200": "color-lightRed-900",
   },
   "lightModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-100": "color-canvas",
     "color-background-canvas-200": "color-gray-050",
-    "color-background-overlay-100": "color-background-canvas",
+    "color-background-overlay-100": "color-canvas",
     "color-background-primary-100": "color-lightRed-050",
     "color-background-primary-200": "color-lightRed-050",
     "color-border-normal": "color-gray-100",
@@ -5555,7 +5555,7 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should a
 exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should generate semantic tokens with standard brand color mapping 1`] = `
 {
   "darkModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-100": "color-canvas",
     "color-background-canvas-200": "color-neutral-050",
     "color-background-overlay-100": "color-neutral-100",
     "color-background-primary-100": "color-mint-050",
@@ -5567,9 +5567,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should g
     "color-foreground-primary-200": "color-mint-900",
   },
   "lightModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-100": "color-canvas",
     "color-background-canvas-200": "color-neutral-050",
-    "color-background-overlay-100": "color-background-canvas",
+    "color-background-overlay-100": "color-canvas",
     "color-background-primary-100": "color-mint-100",
     "color-background-primary-200": "color-mint-200",
     "color-border-normal": "color-neutral-100",
@@ -5584,7 +5584,7 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should g
 exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should handle custom background colors correctly 1`] = `
 {
   "darkModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-100": "color-canvas",
     "color-background-canvas-200": "color-cream-050",
     "color-background-overlay-100": "color-cream-100",
     "color-background-primary-100": "color-teal-050",
@@ -5596,9 +5596,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should h
     "color-foreground-primary-200": "color-teal-600",
   },
   "lightModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-100": "color-canvas",
     "color-background-canvas-200": "color-cream-050",
-    "color-background-overlay-100": "color-background-canvas",
+    "color-background-overlay-100": "color-canvas",
     "color-background-primary-100": "color-teal-100",
     "color-background-primary-200": "color-teal-500",
     "color-border-normal": "color-cream-100",
@@ -5613,7 +5613,7 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should h
 exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should handle semantic token mapping for very dark brand colors 1`] = `
 {
   "darkModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-100": "color-canvas",
     "color-background-canvas-200": "color-gray-050",
     "color-background-overlay-100": "color-gray-100",
     "color-background-primary-100": "color-darkRed-050",
@@ -5625,9 +5625,9 @@ exports[`New Architecture Snapshot Tests > getSemanticDependentTokens > should h
     "color-foreground-primary-200": "color-darkRed-200",
   },
   "lightModeTokens": {
-    "color-background-canvas-100": "color-background-canvas",
+    "color-background-canvas-100": "color-canvas",
     "color-background-canvas-200": "color-gray-050",
-    "color-background-overlay-100": "color-background-canvas",
+    "color-background-overlay-100": "color-canvas",
     "color-background-primary-100": "color-darkRed-100",
     "color-background-primary-200": "color-darkRed-900",
     "color-border-normal": "color-gray-100",

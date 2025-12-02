@@ -151,7 +151,7 @@ const full = generatePrimitiveColorPalette({
 
 // Access palette data
 console.log(full.lightModeTokens.palettes.find((p) => p.name === 'mint'));
-console.log(full.lightModeTokens.backgroundCanvas); // { name: 'color-background-canvas', hex: '#fcf6df', ... }
+console.log(full.lightModeTokens.backgroundCanvas); // { name: 'color-canvas', hex: '#fcf6df', ... }
 console.log(full.baseTokens['color-white']); // { name: 'color-white', hex: '#ffffff', ... }
 ```
 

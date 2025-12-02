@@ -25,6 +25,25 @@ const COLOR_ORDER = [
 export function transformPrimitivePalettesToBasicColorData(): BasicColorData {
     const colorGroups: ColorGroup[] = [];
 
+    // Base Colors (canvas, white, black)
+    colorGroups.push({
+        title: 'base',
+        colorShade: [
+            {
+                name: '--vapor-color-canvas',
+                value: LIGHT_BASIC_COLORS.canvas,
+            },
+            {
+                name: '--vapor-color-white',
+                value: BASE_BASIC_COLORS.white,
+            },
+            {
+                name: '--vapor-color-black',
+                value: BASE_BASIC_COLORS.black,
+            },
+        ],
+    });
+
     for (const colorName of COLOR_ORDER) {
         const shades = LIGHT_BASIC_COLORS[colorName as keyof typeof LIGHT_BASIC_COLORS];
 
@@ -44,26 +63,6 @@ export function transformPrimitivePalettesToBasicColorData(): BasicColorData {
             }
         }
     }
-
-    colorGroups.push({
-        title: 'white',
-        colorShade: [
-            {
-                name: '--vapor-color-white',
-                value: BASE_BASIC_COLORS.white,
-            },
-        ],
-    });
-
-    colorGroups.push({
-        title: 'black',
-        colorShade: [
-            {
-                name: '--vapor-color-black',
-                value: BASE_BASIC_COLORS.black,
-            },
-        ],
-    });
 
     return colorGroups;
 }
