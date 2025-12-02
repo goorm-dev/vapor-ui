@@ -91,14 +91,14 @@
     "positionerPrimitiveProps": [
         {
             "prop": "side",
-            "type": ["'top'", "'right'", "'bottom'", "'left'"],
-            "default": "'bottom'",
+            "type": ["top", "right", "bottom", "left"],
+            "default": "bottom",
             "description": "팝오버가 표시될 기본 방향을 설정합니다. 공간이 부족할 경우 자동으로 다른 방향으로 조정될 수 있습니다."
         },
         {
             "prop": "align",
-            "type": ["'start'", "'center'", "'end'"],
-            "default": "'center'",
+            "type": ["start", "center", "end"],
+            "default": "center",
             "description": "팝오버의 정렬 방향을 설정합니다. side 축에 수직인 축에서의 정렬을 제어합니다."
         },
         {
@@ -136,7 +136,7 @@
         },
         {
             "prop": "sticky",
-            "type": ["boolean", "'partial'"],
+            "type": ["boolean", "partial"],
             "default": "false",
             "description": "팝오버가 트리거를 따라 이동할지 여부를 설정합니다. 'partial'로 설정하면 부분적으로만 따라갑니다."
         }
