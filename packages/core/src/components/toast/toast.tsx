@@ -24,8 +24,6 @@ export const useToastManager = BaseToast.useToastManager as () => UseToastManage
 
 export const toastManager: ToastManager = createToastManager();
 
-/* -----------------------------------------------------------------------------------------------*/
-
 /* -------------------------------------------------------------------------------------------------
  * ToastProvider
  * -----------------------------------------------------------------------------------------------*/
@@ -45,7 +43,7 @@ export const ToastProvider = (props: ToastProvider.Props) => {
  * Toast.List
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToastList = () => {
+const ToastList = () => {
     const { toasts } = useToastManager();
 
     return (
@@ -212,8 +210,8 @@ ToastDescriptionPrimitive.displayName = 'Toast.DescriptionPrimitive';
 
 type IconMapper = { [key: string]: ReactNode };
 const TOAST_ICONS: IconMapper = {
-    success: <CheckCircleIcon color="var(--vapor-color-foreground-inverse)" size="16" />,
-    danger: <WarningIcon color="var(--vapor-color-foreground-inverse)" size="16" />,
+    success: <CheckCircleIcon color="white" size="16" />,
+    danger: <WarningIcon color="white" size="16" />,
 };
 
 export const ToastIconPrimitive = forwardRef<HTMLSpanElement, ToastIconPrimitive.Props>(
@@ -237,10 +235,12 @@ export const ToastActionPrimitive = forwardRef<HTMLButtonElement, ToastActionPri
         const componentProps = resolveStyles(props);
         const { actionProps } = useToastContext();
 
+        const { colorPalette = 'secondary', ...otherProps } = actionProps ?? {};
+
         return (
             <BaseToast.Action
                 ref={ref}
-                render={<Button colorPalette="secondary" {...actionProps} />}
+                render={<Button colorPalette={colorPalette} {...otherProps} />}
                 {...componentProps}
             />
         );
@@ -254,7 +254,7 @@ ToastActionPrimitive.displayName = 'Toast.ActionPrimitive';
 
 export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimitive.Props>(
     (props, ref) => {
-        const { render: renderProp, ...componentProps } = resolveStyles(props);
+        const { render: renderProp, children, ...componentProps } = resolveStyles(props);
         const { close = true } = useToastContext();
 
         if (!close) return null;
@@ -268,9 +268,11 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
             />
         );
 
+        const IconElement = createSlot(children ?? <CloseOutlineIcon />);
+
         return (
             <BaseToast.Close ref={ref} render={render} {...componentProps}>
-                <CloseOutlineIcon />
+                <IconElement />
             </BaseToast.Close>
         );
     },

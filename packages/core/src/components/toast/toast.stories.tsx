@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { Toast as BaseToast } from '@base-ui-components/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { HeartIcon } from '@vapor-ui/icons';
+import { HeartIcon, InfoCircleIcon } from '@vapor-ui/icons';
 
 import { Toast } from '.';
 import { Button } from '../button';
@@ -82,7 +82,9 @@ const CustomToastList = () => {
                         position="absolute"
                         color="$normal-200"
                         style={{ right: 8, top: 8 }}
-                    />
+                    >
+                        <InfoCircleIcon />
+                    </Toast.ClosePrimitive>
                 </Toast.ContentPrimitive>
             </Toast.RootPrimitive>
         );
