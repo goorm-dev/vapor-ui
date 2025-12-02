@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 1.0.0
+
+### Minor Changes
+
+- 308fd25: add new `Toast` component
+
 ## 1.0.0-beta.7
 
 ### Minor Changes
