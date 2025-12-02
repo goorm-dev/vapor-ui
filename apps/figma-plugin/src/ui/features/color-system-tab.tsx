@@ -353,7 +353,7 @@ export const ColorSystemTab = () => {
                                 onClick={handleCreateFigmaVariables}
                                 variant="outline"
                                 color="secondary"
-                                stretch
+                                className="w-full"
                             >
                                 Create Figma Variables
                             </Button>
@@ -361,7 +361,7 @@ export const ColorSystemTab = () => {
                                 onClick={handleCopyCssVariables}
                                 variant="outline"
                                 color="primary"
-                                stretch
+                                className="w-full"
                                 disabled={isCopying}
                             >
                                 {isCopying ? <ConfirmOutlineIcon /> : 'Copy CSS Variables'}
