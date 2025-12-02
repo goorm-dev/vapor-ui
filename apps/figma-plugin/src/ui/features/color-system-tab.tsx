@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
     type ContrastRatios,
@@ -17,10 +17,41 @@ import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { Logger } from '~/common/logger';
 import { postMessage } from '~/common/messages';
+import { AccessibilityWarning } from '~/ui/components/accessibility-warning';
 import { ColorInput } from '~/ui/components/color-input';
 import { LabeledInput } from '~/ui/components/labeled-input';
 import { RangeSlider } from '~/ui/components/range-slider';
 import { Section } from '~/ui/components/section';
+
+/**
+ * 시맨틱 토큰 이름에서 매핑된 단계(step)를 추출합니다.
+ * 예: 'color-green-050' → '050'
+ */
+const extractStepFromTokenName = (tokenName: string): string => {
+    const match = tokenName.match(/(\d{3})$/);
+    return match ? match[1] : '500';
+};
+
+/**
+ * 생성된 테마에서 background-primary-200에 해당하는 실제 HEX 값을 추출합니다.
+ */
+const getPrimaryBackgroundHex = (
+    themeResult: ThemeResult,
+    semanticResult: SemanticResult,
+    primaryColorName: string,
+): { hex: string; step: string } | null => {
+    const tokenName = semanticResult.lightModeTokens['color-background-primary-200'];
+    if (!tokenName) return null;
+
+    const step = extractStepFromTokenName(tokenName);
+    const palette = themeResult.lightModeTokens.palettes.find((p) => p.name === primaryColorName);
+    if (!palette) return null;
+
+    const chip = palette.chips[step];
+    if (!chip) return null;
+
+    return { hex: chip.hex, step };
+};
 
 export const ColorSystemTab = () => {
     // Key Colors (10 colors, excluding gray)
@@ -50,6 +81,24 @@ export const ColorSystemTab = () => {
     const [semanticTokens, setSemanticTokens] = useState<SemanticResult | null>(null);
     const [collectionName, setCollectionName] = useState<string>('Color Tokens');
     const [isCopying, setIsCopying] = useState<boolean>(false);
+
+    // 접근성 경고를 위한 primary background 정보 계산
+    const accessibilityInfo = useMemo(() => {
+        if (!generatedTheme || !semanticTokens) return null;
+
+        const primaryInfo = getPrimaryBackgroundHex(
+            generatedTheme,
+            semanticTokens,
+            primaryColorName,
+        );
+        if (!primaryInfo) return null;
+
+        return {
+            primaryBackgroundHex: primaryInfo.hex,
+            primaryMappedStep: primaryInfo.step,
+            canvasBackgroundHex: generatedTheme.lightModeTokens.backgroundCanvas.hex,
+        };
+    }, [generatedTheme, semanticTokens, primaryColorName]);
 
     // Dynamic lightness calculation when background color changes
     useEffect(() => {
@@ -326,6 +375,19 @@ export const ColorSystemTab = () => {
                 <>
                     <div className="border-t border-gray-300" />
                     <VStack gap="$200">
+                        {/* 접근성 경고 */}
+                        {accessibilityInfo && (
+                            <AccessibilityWarning
+                                primaryBackgroundHex={accessibilityInfo.primaryBackgroundHex}
+                                canvasBackgroundHex={accessibilityInfo.canvasBackgroundHex}
+                                primaryColorName={primaryColorName}
+                                backgroundColorName={backgroundName}
+                                primaryMappedStep={accessibilityInfo.primaryMappedStep}
+                                backgroundLightness={lightness.light}
+                                contrastRatios={contrastRatios}
+                            />
+                        )}
+
                         <LabeledInput
                             label="Collection Name"
                             value={collectionName}
