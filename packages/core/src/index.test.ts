@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 describe('@vapor-ui/core', () => {
-    it('should export all components from the components directory', async () => {
+    it('should export all components from the components directory', () => {
         const componentsDir = path.join(__dirname, 'components');
 
         // Get all component folder names (excluding _internal and .DS_Store)
@@ -17,8 +17,9 @@ describe('@vapor-ui/core', () => {
         const missingExports: string[] = [];
 
         componentFolders.forEach((folder) => {
-            const exportPattern = `export * from './components/${folder}'`;
-            if (!indexContent.includes(exportPattern)) {
+            const regex = new RegExp(`^export \\* from ['"]\\./components/${folder}['"];?$`, 'm');
+
+            if (!regex.test(indexContent)) {
                 missingExports.push(folder);
             }
         });
