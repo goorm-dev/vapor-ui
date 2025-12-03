@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 import AllComponentsContainer from '~/components/all-components-container';
 import ComponentsCard from '~/components/component-card/component-card';
-import ComponentPropsTable from '~/components/component-props-table';
+import { ComponentPropsTable } from '~/components/component-props-table';
 import { Demo } from '~/components/demo/demo';
 import FoundationSizeTabs from '~/components/foundation-size-tabs';
 import FoundationTypographyTabs from '~/components/foundation-typography-tabs';
