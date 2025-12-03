@@ -3,7 +3,79 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0-beta.9
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- afa45da: remove toastManager
+
+---
+
+## 1.0.0-beta.8
+
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- bb41c2e: **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas`
+
+    The canvas background token has been renamed for better semantic clarity and consistency:
+    - Token name: `color-background-canvas` → `color-canvas`
+    - CSS variable: `--vapor-color-background-canvas` → `--vapor-color-canvas`
+
+    **Migration required:**
+    - Update all references from `color-background-canvas` to `color-canvas`
+    - Replace CSS variables from `--vapor-color-background-canvas` to `--vapor-color-canvas`
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 308fd25: add new `Toast` component
+
+### @vapor-ui/css-generator
+
+#### Minor Changes
+
+- bb41c2e: **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas`
+
+    The canvas background token has been renamed for better semantic clarity and consistency:
+    - Token name: `color-background-canvas` → `color-canvas`
+    - CSS variable: `--vapor-color-background-canvas` → `--vapor-color-canvas`
+
+    **Migration required:**
+    - Update all references from `color-background-canvas` to `color-canvas`
+    - Replace CSS variables from `--vapor-color-background-canvas` to `--vapor-color-canvas`
+
+#### Patch Changes
+
+- Updated dependencies [bb41c2e]
+    - @vapor-ui/color-generator@1.0.0
+
+---
+
 ## 1.0.0-beta.7
+
+### @vapor-ui/codemod
+
+#### Major Changes
+
+- 2c8f651: Add Tabs, Text, Textinput transform
+- 441e481: Add Dropdown, IconButton, Nav transformer
+- 441e481: add avatar, breadcrumb, card transform
+- 441e481: Add Popover, RadioGroup, Switch Transform
+
+#### Minor Changes
+
+- 441e481: Add codemod for icon packages name import
+- 441e481: add codemod cli packages
+
+#### Patch Changes
+
+- 15a2f7c: add cli options
+- 88da973: add button, badge, alert component color props to colorPalette
 
 ### @vapor-ui/color-generator
 
