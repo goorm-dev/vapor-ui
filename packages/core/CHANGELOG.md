@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.9
+
+### Minor Changes
+
+- afa45da: remove toastManager
+
 ## 1.0.0-beta.8
 
 ### Minor Changes

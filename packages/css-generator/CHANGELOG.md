@@ -17,7 +17,7 @@
 ### Patch Changes
 
 - Updated dependencies [bb41c2e]
-    - @vapor-ui/color-generator@1.0.0
+    - @vapor-ui/color-generator@1.0.0-beta.8
 
 ## 1.0.0-beta.7
 
