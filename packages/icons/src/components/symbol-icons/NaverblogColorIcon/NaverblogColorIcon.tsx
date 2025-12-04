@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const NaverblogColorIcon: IconType = (props) => (
+const NaverblogColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             d="M3.91384 6.21252C3.63832 6.21252 3.41504 6.43581 3.41504 6.71132C3.41504 6.98684 3.63832 7.21115 3.91384 7.21115C4.18936 7.21115 4.41264 6.98786 4.41264 6.71132C4.41366 6.43581 4.18936 6.21252 3.91384 6.21252Z"

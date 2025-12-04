@@ -1,12 +1,14 @@
+import type { FunctionComponent } from 'react';
+
 import * as allIcons from '@vapor-ui/icons';
-import type { IconType } from '@vapor-ui/icons';
+import type { IconProps } from '@vapor-ui/icons';
 
 import { SYMBOL_ICONS } from '~/constants/icon';
 
 export const ICON_LIST = ['basic', 'outline', 'symbol', 'symbol-black'] as const;
 
 const initialVaporIcons: {
-    [key in (typeof ICON_LIST)[number]]: { [key: string]: IconType };
+    [key in (typeof ICON_LIST)[number]]: { [key: string]: FunctionComponent<IconProps> };
 } = {
     basic: {},
     outline: {},

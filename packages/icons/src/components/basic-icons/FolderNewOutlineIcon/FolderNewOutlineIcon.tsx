@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const FolderNewOutlineIcon: IconType = (props) => (
+const FolderNewOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M7.46186 10.5442V9.20166H6.11933C5.8323 9.20166 5.59961 8.96897 5.59961 8.68194C5.59961 8.39491 5.8323 8.16222 6.11933 8.16222H7.46186V6.81953C7.46186 6.53249 7.69454 6.2998 7.98158 6.2998C8.26861 6.2998 8.5013 6.53249 8.5013 6.81953V8.16222H9.84399C10.131 8.16222 10.3637 8.39491 10.3637 8.68194C10.3637 8.96897 10.131 9.20166 9.84399 9.20166H8.5013V10.5442C8.5013 10.8312 8.26861 11.0639 7.98158 11.0639C7.69454 11.0639 7.46186 10.8312 7.46186 10.5442Z" />
         <path

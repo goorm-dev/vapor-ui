@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const CaretUpIcon: IconType = (props) => (
+const CaretUpIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M4.46512 10C4.32558 10 4.21318 9.95745 4.12791 9.87234C4.04264 9.78723 4 9.68794 4 9.57447C4 9.5461 4.04651 9.44681 4.13953 9.2766L7.51163 6.19149C7.58915 6.12057 7.66667 6.07092 7.74419 6.04255C7.82171 6.01418 7.90698 6 8 6C8.09302 6 8.17829 6.01418 8.25581 6.04255C8.33333 6.07092 8.41085 6.12057 8.48837 6.19149L11.8605 9.2766C11.907 9.31915 11.9419 9.36525 11.9651 9.41489C11.9884 9.46454 12 9.51773 12 9.57447C12 9.68794 11.9574 9.78723 11.8721 9.87234C11.7868 9.95745 11.6744 10 11.5349 10H4.46512Z" />
     </IconBase>
