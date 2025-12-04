@@ -1,8 +1,11 @@
+import { useState } from 'react';
+
 import { cleanup, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 
 import { Sheet } from '.';
+import { Tabs } from '../tabs';
 
 describe('Sheet', () => {
     const consoleWarnMockFunction = vi.spyOn(console, 'warn').mockImplementation(vi.fn());
@@ -154,6 +157,22 @@ describe('Sheet', () => {
         expect(popup).toBeInTheDocument();
         expect(popup).not.toBeVisible();
     });
+
+    it('should keeping value tab in sheet when rerender', async () => {
+        const rendered = render(<RerenderSheetTest />);
+        const trigger = rendered.getByText(TRIGGER_TEXT);
+
+        // Open Sheet
+        await userEvent.click(trigger);
+        const packageTab = rendered.getByRole('tab', { name: 'Package' });
+
+        // Switch to Package tab
+        await userEvent.click(packageTab);
+        const packagePanel = rendered.getByTestId('package-panel');
+        expect(packagePanel).toBeVisible();
+        await userEvent.click(rendered.getByTestId('package-button'));
+        expect(packagePanel).toBeVisible();
+    });
 });
 
 const TRIGGER_TEXT = 'Trigger';
@@ -195,6 +214,36 @@ const UndefinedDescriptionSheetTest = (props: Sheet.Root.Props) => {
                 <Sheet.Footer>
                     <Sheet.Close>{CLOSE_TEXT}</Sheet.Close>
                 </Sheet.Footer>
+            </Sheet.Popup>
+        </Sheet.Root>
+    );
+};
+
+const RerenderSheetTest = (props: Sheet.Root.Props) => {
+    const [, rerender] = useState({});
+    return (
+        <Sheet.Root {...props}>
+            <Sheet.Trigger>{TRIGGER_TEXT}</Sheet.Trigger>
+            <Sheet.Popup>
+                <Sheet.Body>
+                    <Tabs.Root defaultValue={'sort'}>
+                        <Tabs.List>
+                            <Tabs.Trigger value="sort">Sort</Tabs.Trigger>
+                            <Tabs.Trigger value="package">Package</Tabs.Trigger>
+                            <Tabs.Trigger value="status">Status</Tabs.Trigger>
+                            <Tabs.Trigger value="tag">Tag</Tabs.Trigger>
+                            <Tabs.Indicator />
+                        </Tabs.List>
+                        <Tabs.Panel value="sort">1</Tabs.Panel>
+                        <Tabs.Panel value="package" data-testid="package-panel">
+                            <button data-testid="package-button" onClick={() => rerender({})}>
+                                rerender
+                            </button>
+                        </Tabs.Panel>
+                        <Tabs.Panel value="status">3</Tabs.Panel>
+                        <Tabs.Panel value="tag">4</Tabs.Panel>
+                    </Tabs.Root>
+                </Sheet.Body>
             </Sheet.Popup>
         </Sheet.Root>
     );
