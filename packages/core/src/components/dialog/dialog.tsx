@@ -7,8 +7,8 @@ import { Dialog as BaseDialog } from '@base-ui-components/react/dialog';
 import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -92,8 +92,10 @@ DialogPopupPrimitive.displayName = 'Dialog.PopupPrimitive';
 export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>((props, ref) => {
     const { portalElement, overlayElement, ...componentProps } = resolveStyles(props);
 
-    const PortalElement = createSlot(portalElement || <DialogPortalPrimitive />);
-    const DialogOverlayPrimitiveElement = createSlot(overlayElement || <DialogOverlayPrimitive />);
+    const PortalElement = useRenderElement(portalElement ?? <DialogPortalPrimitive />);
+    const DialogOverlayPrimitiveElement = useRenderElement(
+        overlayElement ?? <DialogOverlayPrimitive />,
+    );
 
     return (
         <PortalElement>

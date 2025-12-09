@@ -14,8 +14,8 @@ import {
 } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import type { MakeChangeEventDetails } from '~/utils/create-event-details';
 import { createChangeEventDetails } from '~/utils/create-event-details';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -209,7 +209,7 @@ export const PaginationPreviousPrimitive = forwardRef<
         setPage(page - 1, details);
     });
 
-    const IconElement = createSlot(childrenProp || <ChevronLeftOutlineIcon size="100%" />);
+    const IconElement = useRenderElement(childrenProp ?? <ChevronLeftOutlineIcon size="100%" />);
 
     return useRender({
         ref,
@@ -265,7 +265,9 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             setPage(page + 1, details);
         });
 
-        const IconElement = createSlot(childrenProp || <ChevronRightOutlineIcon size="100%" />);
+        const IconElement = useRenderElement(
+            childrenProp ?? <ChevronRightOutlineIcon size="100%" />,
+        );
 
         return useRender({
             ref,
@@ -307,7 +309,7 @@ export const PaginationEllipsisPrimitive = forwardRef<
 >(({ render, className, children: childrenProp, ...props }, ref) => {
     const { size, disabled } = usePaginationContext();
 
-    const IconElement = createSlot(childrenProp || <MoreCommonOutlineIcon size="100%" />);
+    const IconElement = useRenderElement(childrenProp ?? <MoreCommonOutlineIcon size="100%" />);
 
     return useRender({
         ref,

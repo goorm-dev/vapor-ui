@@ -6,8 +6,8 @@ import { useRender } from '@base-ui-components/react';
 import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -152,7 +152,7 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
         const { render, className, children, ...componentProps } = resolveStyles(props);
 
         const { size } = useBreadcrumbContext();
-        const IconElement = createSlot(children || <SlashOutlineIcon size="100%" />);
+        const IconElement = useRenderElement(children ?? <SlashOutlineIcon size="100%" />);
 
         return useRender({
             ref,
@@ -180,7 +180,7 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
     const { render, className, children, ...componentProps } = resolveStyles(props);
 
     const { size } = useBreadcrumbContext();
-    const IconElement = createSlot(children || <MoreCommonOutlineIcon size="100%" />);
+    const IconElement = useRenderElement(children ?? <MoreCommonOutlineIcon size="100%" />);
 
     return useRender({
         ref,

@@ -5,8 +5,8 @@ import { Toast as BaseToast } from '@base-ui-components/react/toast';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { AnyProp, VComponentProps } from '~/utils/types';
 
@@ -217,7 +217,7 @@ export const ToastIconPrimitive = forwardRef<SVGSVGElement, ToastIconPrimitive.P
         const componentProps = resolveStyles(props);
         const { icon, colorPalette } = useToastContext();
 
-        const IconElement = createSlot(icon ?? TOAST_ICONS[colorPalette ?? 'info']);
+        const IconElement = useRenderElement(icon ?? TOAST_ICONS[colorPalette ?? 'info']);
 
         return <IconElement ref={ref} {...componentProps} />;
     },
@@ -255,6 +255,8 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const { render: renderProp, children, ...componentProps } = resolveStyles(props);
         const { close = true } = useToastContext();
 
+        const IconElement = useRenderElement(children ?? <CloseOutlineIcon />);
+
         if (!close) return null;
 
         const render = renderProp ?? (
@@ -265,8 +267,6 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
                 variant="ghost"
             />
         );
-
-        const IconElement = createSlot(children ?? <CloseOutlineIcon />);
 
         return (
             <BaseToast.Close ref={ref} render={render} {...componentProps}>

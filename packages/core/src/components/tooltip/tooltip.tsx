@@ -7,7 +7,7 @@ import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
-import { createSlot } from '~/libs/create-slot';
+import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -155,9 +155,9 @@ const extractPositions = (dataset: DOMStringMap) => {
 
 export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <TooltipPortalPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement || <TooltipPositionerPrimitive side="top" align="center" />,
+        const PortalElement = useRenderElement(portalElement ?? <TooltipPortalPrimitive />);
+        const PositionerElement = useRenderElement(
+            positionerElement ?? <TooltipPositionerPrimitive side="top" align="center" />,
         );
 
         return (

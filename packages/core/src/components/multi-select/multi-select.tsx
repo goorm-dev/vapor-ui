@@ -7,8 +7,8 @@ import { Select as BaseSelect } from '@base-ui-components/react';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -181,7 +181,7 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
     const { className, children, ...componentProps } = resolveStyles(props);
 
     const { size } = useMultiSelectContext();
-    const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
+    const IconElement = useRenderElement(children ?? <ChevronDownOutlineIcon size="100%" />);
 
     return (
         <BaseSelect.Icon
@@ -273,9 +273,9 @@ MultiSelectPopupPrimitive.displayName = 'MultiSelect.PopupPrimitive';
 
 export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <MultiSelectPortalPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement || <MultiSelectPositionerPrimitive />,
+        const PortalElement = useRenderElement(portalElement ?? <MultiSelectPortalPrimitive />);
+        const PositionerElement = useRenderElement(
+            positionerElement ?? <MultiSelectPositionerPrimitive />,
         );
 
         return (
@@ -318,7 +318,7 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
 
-    const IconElement = createSlot(children || <ConfirmOutlineIcon size="100%" />);
+    const IconElement = useRenderElement(children ?? <ConfirmOutlineIcon size="100%" />);
 
     return (
         <BaseSelect.ItemIndicator

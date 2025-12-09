@@ -1,8 +1,8 @@
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 
 import clsx from 'clsx';
 
-import { createSlot } from '~/libs/create-slot';
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -25,7 +25,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
 
     const { size } = otherProps;
 
-    const IconElement = useMemo(() => createSlot(children), [children]);
+    // const IconElement = useMemo(() => createSlot(children), [children]);
+    const IconElement = useRenderElement(children);
 
     return (
         <Button

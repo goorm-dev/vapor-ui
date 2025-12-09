@@ -7,8 +7,8 @@ import { Select as BaseSelect } from '@base-ui-components/react';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -153,7 +153,7 @@ export const SelectTriggerIconPrimitive = forwardRef<
 
     const { size } = useSelectContext();
 
-    const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
+    const IconElement = useRenderElement(children ?? <ChevronDownOutlineIcon />);
 
     return (
         <BaseSelect.Icon
@@ -247,8 +247,10 @@ SelectPopupPrimitive.displayName = 'Select.PopupPrimitive';
 
 export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <SelectPortalPrimitive />);
-        const PositionerElement = createSlot(positionerElement || <SelectPositionerPrimitive />);
+        const PortalElement = useRenderElement(portalElement ?? <SelectPortalPrimitive />);
+        const PositionerElement = useRenderElement(
+            positionerElement ?? <SelectPositionerPrimitive />,
+        );
 
         return (
             <PortalElement>
@@ -289,7 +291,7 @@ export const SelectItemIndicatorPrimitive = forwardRef<
     SelectItemIndicatorPrimitive.Props
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
-    const IconElement = createSlot(children || <ConfirmOutlineIcon />);
+    const IconElement = useRenderElement(children ?? <ConfirmOutlineIcon />);
 
     return (
         <BaseSelect.ItemIndicator

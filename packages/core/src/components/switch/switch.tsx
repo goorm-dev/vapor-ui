@@ -1,12 +1,12 @@
 'use client';
 
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 
 import { Switch as BaseSwitch } from '@base-ui-components/react';
 import clsx from 'clsx';
 
+import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -40,8 +40,7 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
 
     const dataAttrs = createDataAttributes({ invalid });
 
-    const ThumbElement = useMemo(() => createSlot(<SwitchThumbPrimitive />), []);
-    const children = childrenProp || <ThumbElement />;
+    const ThumbElement = useRenderElement(childrenProp ?? <SwitchThumbPrimitive />);
 
     return (
         <SwitchProvider value={variantProps}>
@@ -53,7 +52,7 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
                 {...dataAttrs}
                 {...otherProps}
             >
-                {children}
+                <ThumbElement />
             </BaseSwitch.Root>
         </SwitchProvider>
     );
