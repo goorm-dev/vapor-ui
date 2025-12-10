@@ -40,7 +40,7 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((p
     const { size, invalid, indeterminate } = variantProps;
     const dataAttrs = createDataAttributes({ invalid });
 
-    const IndicatorElement = useRenderElement(children ?? <CheckboxIndicatorPrimitive />);
+    const IndicatorElement = useRenderElement(children, <CheckboxIndicatorPrimitive />);
 
     return (
         <CheckboxProvider value={{ size, indeterminate }}>
@@ -67,10 +67,13 @@ export const CheckboxIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     CheckboxIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, children, ...componentProps } = resolveStyles(props);
 
     const { size, invalid, indeterminate } = useCheckboxContext();
     const dataAttrs = createDataAttributes({ invalid });
+
+    const Icon = indeterminate ? DashIcon : CheckIcon;
+    const IconElement = useRenderElement<IconProps>(children, <Icon />);
 
     return (
         <BaseCheckbox.Indicator
@@ -79,7 +82,7 @@ export const CheckboxIndicatorPrimitive = forwardRef<
             {...dataAttrs}
             {...componentProps}
         >
-            {indeterminate ? <DashIcon /> : <CheckIcon />}
+            <IconElement width="100%" height="100%" />
         </BaseCheckbox.Indicator>
     );
 });

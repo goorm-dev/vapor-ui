@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import { Toast as BaseToast } from '@base-ui-components/react/toast';
+import type { IconProps } from '@vapor-ui/icons';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -206,7 +207,7 @@ ToastDescriptionPrimitive.displayName = 'Toast.DescriptionPrimitive';
  * Toast.IconPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-type IconMapper = { [key: string]: ReactNode };
+type IconMapper = { [key: string]: ReactElement };
 const TOAST_ICONS: IconMapper = {
     success: <CheckCircleIcon color="white" size="16" />,
     danger: <WarningIcon color="white" size="16" />,
@@ -217,7 +218,10 @@ export const ToastIconPrimitive = forwardRef<SVGSVGElement, ToastIconPrimitive.P
         const componentProps = resolveStyles(props);
         const { icon, colorPalette } = useToastContext();
 
-        const IconElement = useRenderElement(icon ?? TOAST_ICONS[colorPalette ?? 'info']);
+        const IconElement = useRenderElement<ToastIconPrimitive.Props>(
+            icon,
+            TOAST_ICONS[colorPalette ?? 'info'],
+        );
 
         return <IconElement ref={ref} {...componentProps} />;
     },
@@ -255,7 +259,7 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const { render: renderProp, children, ...componentProps } = resolveStyles(props);
         const { close = true } = useToastContext();
 
-        const IconElement = useRenderElement(children ?? <CloseOutlineIcon />);
+        const IconElement = useRenderElement<IconProps>(children, <CloseOutlineIcon />);
 
         if (!close) return null;
 

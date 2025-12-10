@@ -155,9 +155,10 @@ const extractPositions = (dataset: DOMStringMap) => {
 
 export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement ?? <TooltipPortalPrimitive />);
+        const PortalElement = useRenderElement(portalElement, <TooltipPortalPrimitive />);
         const PositionerElement = useRenderElement(
-            positionerElement ?? <TooltipPositionerPrimitive side="top" align="center" />,
+            positionerElement,
+            <TooltipPositionerPrimitive side="top" align="center" />,
         );
 
         return (

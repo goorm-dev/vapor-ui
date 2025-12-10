@@ -7,6 +7,7 @@ import { forwardRef, useMemo } from 'react';
 import { useRender } from '@base-ui-components/react';
 import { useControlled } from '@base-ui-components/utils/useControlled';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import type { IconProps } from '@vapor-ui/icons';
 import {
     ChevronLeftOutlineIcon,
     ChevronRightOutlineIcon,
@@ -197,7 +198,7 @@ PaginationButtonPrimitive.displayName = 'Pagination.ButtonPrimitive';
 export const PaginationPreviousPrimitive = forwardRef<
     HTMLButtonElement,
     PaginationPreviousPrimitive.Props
->(({ render, disabled: disabledProp, className, children: childrenProp, ...props }, ref) => {
+>(({ render, disabled: disabledProp, className, children, ...props }, ref) => {
     const { page, setPage, size, disabled: contextDisabled } = usePaginationContext();
 
     const disabled = disabledProp || contextDisabled || page <= 1;
@@ -209,7 +210,7 @@ export const PaginationPreviousPrimitive = forwardRef<
         setPage(page - 1, details);
     });
 
-    const IconElement = useRenderElement(childrenProp ?? <ChevronLeftOutlineIcon size="100%" />);
+    const IconElement = useRenderElement<IconProps>(children, <ChevronLeftOutlineIcon />);
 
     return useRender({
         ref,
@@ -220,7 +221,7 @@ export const PaginationPreviousPrimitive = forwardRef<
             disabled,
             className: clsx(styles.button({ size }), className),
             onClick,
-            children: <IconElement className={styles.icon({ size })} />,
+            children: <IconElement width="max(16px, 50%)" height="max(16px, 50%)" />,
             ...props,
         },
     });
@@ -265,9 +266,7 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             setPage(page + 1, details);
         });
 
-        const IconElement = useRenderElement(
-            childrenProp ?? <ChevronRightOutlineIcon size="100%" />,
-        );
+        const IconElement = useRenderElement<IconProps>(childrenProp, <ChevronRightOutlineIcon />);
 
         return useRender({
             ref,
@@ -278,7 +277,7 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
                 disabled,
                 className: clsx(styles.button({ size }), className),
                 onClick,
-                children: <IconElement className={styles.icon({ size })} />,
+                children: <IconElement width="max(16px, 50%)" height="max(16px, 50%)" />,
                 ...props,
             },
         });
@@ -306,10 +305,10 @@ PaginationNext.displayName = 'Pagination.Next';
 export const PaginationEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     PaginationEllipsisPrimitive.Props
->(({ render, className, children: childrenProp, ...props }, ref) => {
+>(({ render, className, children, ...props }, ref) => {
     const { size, disabled } = usePaginationContext();
 
-    const IconElement = useRenderElement(childrenProp ?? <MoreCommonOutlineIcon size="100%" />);
+    const IconElement = useRenderElement<IconProps>(children, <MoreCommonOutlineIcon />);
 
     return useRender({
         ref,
@@ -319,7 +318,7 @@ export const PaginationEllipsisPrimitive = forwardRef<
             'aria-hidden': 'true',
             'data-disabled': disabled ? '' : undefined,
             className: clsx(styles.ellipsis({ size }), className),
-            children: <IconElement className={styles.icon({ size })} />,
+            children: <IconElement width="max(16px, 50%)" height="max(16px, 50%)" />,
             ...props,
         },
     });

@@ -4,6 +4,7 @@ import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'reac
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui-components/react';
+import type { IconProps } from '@vapor-ui/icons';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -167,7 +168,7 @@ export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
 
-    const IconElement = useRenderElement(children ?? <ChevronDownOutlineIcon />);
+    const IconElement = useRenderElement<IconProps>(children, <ChevronDownOutlineIcon />);
 
     return (
         <BaseNavigationMenu.Icon
@@ -403,10 +404,11 @@ NavigationMenuViewportPrimitive.displayName = 'NavigationMenu.ViewportPrimitive'
 
 export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
     ({ portalElement, positionerElement, popupElement, className, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement ?? <NavigationMenuPortalPrimitive />);
-        const PopupElement = useRenderElement(popupElement ?? <NavigationMenuPopupPrimitive />);
+        const PortalElement = useRenderElement(portalElement, <NavigationMenuPortalPrimitive />);
+        const PopupElement = useRenderElement(popupElement, <NavigationMenuPopupPrimitive />);
         const PositionerElement = useRenderElement(
-            positionerElement ?? <NavigationMenuPositionerPrimitive />,
+            positionerElement,
+            <NavigationMenuPositionerPrimitive />,
         );
 
         return (

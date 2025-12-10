@@ -190,11 +190,9 @@ SheetPopupPrimitive.displayName = 'Sheet.PopupPrimitive';
 
 export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement ?? <SheetPortalPrimitive />);
-        const OverlayElement = useRenderElement(overlayElement ?? <SheetOverlayPrimitive />);
-        const PositionerElement = useRenderElement(
-            positionerElement ?? <SheetPositionerPrimitive />,
-        );
+        const PortalElement = useRenderElement(portalElement, <SheetPortalPrimitive />);
+        const OverlayElement = useRenderElement(overlayElement, <SheetOverlayPrimitive />);
+        const PositionerElement = useRenderElement(positionerElement, <SheetPositionerPrimitive />);
 
         return (
             <PortalElement>

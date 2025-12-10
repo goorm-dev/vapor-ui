@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 
+import type { IconProps } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { useRenderElement } from '~/hooks/use-render-element';
@@ -23,10 +24,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
         'shape',
     ]);
 
-    const { size } = otherProps;
-
-    // const IconElement = useMemo(() => createSlot(children), [children]);
-    const IconElement = useRenderElement(children);
+    const IconElement = useRenderElement<IconProps>(children);
 
     return (
         <Button
@@ -35,7 +33,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
             className={clsx(styles.root(variantProps), className)}
             {...otherProps}
         >
-            <IconElement aria-hidden className={styles.icon({ size })} />
+            <IconElement aria-hidden width="max(16px, 50%)" height="max(16px, 50%)" />
         </Button>
     );
 });

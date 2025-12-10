@@ -92,14 +92,12 @@ DialogPopupPrimitive.displayName = 'Dialog.PopupPrimitive';
 export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>((props, ref) => {
     const { portalElement, overlayElement, ...componentProps } = resolveStyles(props);
 
-    const PortalElement = useRenderElement(portalElement ?? <DialogPortalPrimitive />);
-    const DialogOverlayPrimitiveElement = useRenderElement(
-        overlayElement ?? <DialogOverlayPrimitive />,
-    );
+    const PortalElement = useRenderElement(portalElement, <DialogPortalPrimitive />);
+    const OverlayElement = useRenderElement(overlayElement, <DialogOverlayPrimitive />);
 
     return (
         <PortalElement>
-            <DialogOverlayPrimitiveElement />
+            <OverlayElement />
             <DialogPopupPrimitive ref={ref} {...componentProps} />
         </PortalElement>
     );

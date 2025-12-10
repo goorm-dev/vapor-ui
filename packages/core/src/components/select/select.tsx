@@ -4,6 +4,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import { Select as BaseSelect } from '@base-ui-components/react';
+import type { IconProps } from '@vapor-ui/icons';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -153,7 +154,7 @@ export const SelectTriggerIconPrimitive = forwardRef<
 
     const { size } = useSelectContext();
 
-    const IconElement = useRenderElement(children ?? <ChevronDownOutlineIcon />);
+    const IconElement = useRenderElement<IconProps>(children, <ChevronDownOutlineIcon />);
 
     return (
         <BaseSelect.Icon
@@ -247,9 +248,10 @@ SelectPopupPrimitive.displayName = 'Select.PopupPrimitive';
 
 export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement ?? <SelectPortalPrimitive />);
+        const PortalElement = useRenderElement(portalElement, <SelectPortalPrimitive />);
         const PositionerElement = useRenderElement(
-            positionerElement ?? <SelectPositionerPrimitive />,
+            positionerElement,
+            <SelectPositionerPrimitive />,
         );
 
         return (
@@ -291,7 +293,7 @@ export const SelectItemIndicatorPrimitive = forwardRef<
     SelectItemIndicatorPrimitive.Props
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
-    const IconElement = useRenderElement(children ?? <ConfirmOutlineIcon />);
+    const IconElement = useRenderElement<IconProps>(children, <ConfirmOutlineIcon />);
 
     return (
         <BaseSelect.ItemIndicator

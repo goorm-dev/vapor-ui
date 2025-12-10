@@ -157,9 +157,10 @@ const extractPositions = (dataset: DOMStringMap) => {
 
 export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement ?? <PopoverPortalPrimitive />);
+        const PortalElement = useRenderElement(portalElement, <PopoverPortalPrimitive />);
         const PositionerElement = useRenderElement(
-            positionerElement ?? <PopoverPositionerPrimitive />,
+            positionerElement,
+            <PopoverPositionerPrimitive />,
         );
 
         return (

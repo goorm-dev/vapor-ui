@@ -29,7 +29,7 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * -----------------------------------------------------------------------------------------------*/
 
 export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props, ref) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const { className, children, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
         'size',
         'invalid',
@@ -40,7 +40,7 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
 
     const dataAttrs = createDataAttributes({ invalid });
 
-    const ThumbElement = useRenderElement(childrenProp ?? <SwitchThumbPrimitive />);
+    const ThumbElement = useRenderElement(children, <SwitchThumbPrimitive />);
 
     return (
         <SwitchProvider value={variantProps}>

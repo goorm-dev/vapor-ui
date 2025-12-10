@@ -36,7 +36,7 @@ export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, 
 
     const dataAttrs = createDataAttributes({ invalid });
 
-    const IndicatorElement = useRenderElement(children ?? <RadioIndicatorPrimitive />);
+    const IndicatorElement = useRenderElement(children, <RadioIndicatorPrimitive />);
 
     return (
         <BaseRadio.Root

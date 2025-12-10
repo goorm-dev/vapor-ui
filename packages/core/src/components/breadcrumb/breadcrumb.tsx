@@ -3,6 +3,7 @@
 import { forwardRef } from 'react';
 
 import { useRender } from '@base-ui-components/react';
+import type { IconProps } from '@vapor-ui/icons';
 import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -152,7 +153,7 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
         const { render, className, children, ...componentProps } = resolveStyles(props);
 
         const { size } = useBreadcrumbContext();
-        const IconElement = useRenderElement(children ?? <SlashOutlineIcon size="100%" />);
+        const IconElement = useRenderElement<IconProps>(children, <SlashOutlineIcon />);
 
         return useRender({
             ref,
@@ -161,7 +162,7 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
                 role: 'presentation',
                 'aria-hidden': 'true',
                 className: clsx(styles.icon({ size }), className),
-                children: <IconElement />,
+                children: <IconElement width="100%" height="100%" />,
                 ...componentProps,
             },
         });
@@ -180,7 +181,7 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
     const { render, className, children, ...componentProps } = resolveStyles(props);
 
     const { size } = useBreadcrumbContext();
-    const IconElement = useRenderElement(children ?? <MoreCommonOutlineIcon size="100%" />);
+    const IconElement = useRenderElement<IconProps>(children, <MoreCommonOutlineIcon />);
 
     return useRender({
         ref,
@@ -189,7 +190,7 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
             role: 'presentation',
             'aria-hidden': 'true',
             className: clsx(styles.icon({ size }), className),
-            children: <IconElement />,
+            children: <IconElement width="100%" height="100%" />,
             ...componentProps,
         },
     });

@@ -104,10 +104,8 @@ MenuPopupPrimitive.displayName = 'Menu.PopupPrimitive';
 
 export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement ?? <MenuPortalPrimitive />);
-        const PositionerElement = useRenderElement(
-            positionerElement ?? <MenuPositionerPrimitive />,
-        );
+        const PortalElement = useRenderElement(portalElement, <MenuPortalPrimitive />);
+        const PositionerElement = useRenderElement(positionerElement, <MenuPositionerPrimitive />);
 
         return (
             <PortalElement>
@@ -272,9 +270,10 @@ MenuSubmenuPopupPrimitive.displayName = 'Menu.SubmenuPopupPrimitive';
 
 export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement ?? <MenuPortalPrimitive />);
+        const PortalElement = useRenderElement(portalElement, <MenuPortalPrimitive />);
         const PositionerElement = useRenderElement(
-            positionerElement ?? <MenuPositionerPrimitive side="right" sideOffset={0} />,
+            positionerElement,
+            <MenuPositionerPrimitive side="right" sideOffset={0} />,
         );
 
         return (

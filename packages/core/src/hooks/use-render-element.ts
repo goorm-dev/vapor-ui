@@ -14,30 +14,24 @@ import { getElementRef } from '~/utils/get-element-ref';
 import { mergeProps } from '~/utils/merge-props';
 import type { AnyProp } from '~/utils/types';
 
-export const useRenderElement = <Element extends AnyProp, Props extends SlotProps>(
+export const useRenderElement = <Props extends object = HTMLAttributes<HTMLDivElement>>(
     children: ReactNode,
     fallback?: ReactElement,
 ) => {
-    // children을 ref로 저장하여 최신 값 참조
     const childrenRef = useRef(children);
     childrenRef.current = children;
 
     const fallbackRef = useRef(fallback);
-    // fallback은 변경되지 않는다고 가정하고 최초 값 유지
 
-    const Slot = useMemo(
-        () => createSlot<Element, Props>(childrenRef.current ?? fallbackRef.current),
+    const element = useMemo(
+        () => createSlot<AnyProp, Props>(childrenRef.current ?? fallbackRef.current),
         [],
     );
 
-    return Slot;
+    return element;
 };
 
-interface SlotProps extends HTMLAttributes<HTMLElement> {}
-
-export const createSlot = <Element extends AnyProp, Props extends SlotProps>(
-    children: ReactNode,
-) => {
+export const createSlot = <Element extends AnyProp, Props>(children: ReactNode) => {
     const Slot = forwardRef<Element, Props>((slotProps, forwardedRef) => {
         if (!isValidElement(children)) {
             return Children.count(children) > 1 ? Children.only(null) : children;

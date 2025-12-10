@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { Select as BaseSelect } from '@base-ui-components/react';
+import type { IconProps } from '@vapor-ui/icons';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -181,7 +182,7 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
     const { className, children, ...componentProps } = resolveStyles(props);
 
     const { size } = useMultiSelectContext();
-    const IconElement = useRenderElement(children ?? <ChevronDownOutlineIcon size="100%" />);
+    const IconElement = useRenderElement<IconProps>(children, <ChevronDownOutlineIcon />);
 
     return (
         <BaseSelect.Icon
@@ -189,7 +190,7 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
             className={clsx(styles.triggerIcon({ size }), className)}
             {...componentProps}
         >
-            <IconElement />
+            <IconElement width="100%" height="100%" />
         </BaseSelect.Icon>
     );
 });
@@ -273,9 +274,10 @@ MultiSelectPopupPrimitive.displayName = 'MultiSelect.PopupPrimitive';
 
 export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement ?? <MultiSelectPortalPrimitive />);
+        const PortalElement = useRenderElement(portalElement, <MultiSelectPortalPrimitive />);
         const PositionerElement = useRenderElement(
-            positionerElement ?? <MultiSelectPositionerPrimitive />,
+            positionerElement,
+            <MultiSelectPositionerPrimitive />,
         );
 
         return (
@@ -318,7 +320,7 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children, ...componentProps } = resolveStyles(props);
 
-    const IconElement = useRenderElement(children ?? <ConfirmOutlineIcon size="100%" />);
+    const IconElement = useRenderElement<IconProps>(children, <ConfirmOutlineIcon />);
 
     return (
         <BaseSelect.ItemIndicator
@@ -326,7 +328,7 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
             className={clsx(styles.itemIndicator, className)}
             {...componentProps}
         >
-            <IconElement />
+            <IconElement width="100%" height="100%" />
         </BaseSelect.ItemIndicator>
     );
 });
