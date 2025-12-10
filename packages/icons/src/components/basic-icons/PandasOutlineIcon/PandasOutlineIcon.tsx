@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const PandasOutlineIcon: IconType = (props) => (
+const PandasOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M2.85742 5.85714C2.85742 5.38376 3.24118 5 3.71456 5C4.18795 5 4.57171 5.38376 4.57171 5.85714V14.1429C4.57171 14.6162 4.18795 15 3.71456 15C3.24118 15 2.85742 14.6162 2.85742 14.1429V5.85714Z" />
         <path d="M11.4288 1.85714C11.4288 1.38376 11.8126 1 12.286 1C12.7594 1 13.1431 1.38376 13.1431 1.85714V10.1429C13.1431 10.6162 12.7594 11 12.286 11C11.8126 11 11.4288 10.6162 11.4288 10.1429V1.85714Z" />

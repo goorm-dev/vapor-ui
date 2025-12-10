@@ -1,10 +1,8 @@
-import type { FunctionComponent, SVGProps } from 'react';
+import type { ComponentProps } from 'react';
 
-export interface IconBaseProps extends SVGProps<SVGSVGElement> {
+export interface IconProps extends ComponentProps<'svg'> {
     size?: string | number;
 }
-
-export interface IconType extends FunctionComponent<Omit<IconBaseProps, 'children'>> {}
 
 function IconBase({
     size = 16,
@@ -12,7 +10,7 @@ function IconBase({
     height: heightProp,
     color = 'currentColor',
     ...props
-}: IconBaseProps) {
+}: IconProps) {
     const width = widthProp ?? size;
     const height = heightProp ?? size;
 

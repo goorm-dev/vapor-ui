@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const VscodeColorIcon: IconType = (props) => (
+const VscodeColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             d="M14.5475 2.48323L11.6479 1.08714C11.3123 0.925544 10.9112 0.99371 10.6478 1.25711L1.15565 9.9117C0.900338 10.1445 0.900631 10.5465 1.15629 10.7789L1.93163 11.4837C2.14064 11.6737 2.45541 11.6877 2.68044 11.517L14.1111 2.84541C14.4946 2.5545 15.0454 2.82801 15.0454 3.30936V3.27569C15.0454 2.93781 14.8519 2.62981 14.5475 2.48323Z"
