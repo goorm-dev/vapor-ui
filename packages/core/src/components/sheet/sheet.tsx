@@ -9,10 +9,10 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import clsx from 'clsx';
 
 import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
+import { useSlot } from '~/hooks/use-slot';
 import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -190,9 +190,9 @@ SheetPopupPrimitive.displayName = 'Sheet.PopupPrimitive';
 
 export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <SheetPortalPrimitive />);
-        const OverlayElement = createSlot(overlayElement || <SheetOverlayPrimitive />);
-        const PositionerElement = createSlot(positionerElement || <SheetPositionerPrimitive />);
+        const PortalElement = useSlot(portalElement, <SheetPortalPrimitive />);
+        const OverlayElement = useSlot(overlayElement, <SheetOverlayPrimitive />);
+        const PositionerElement = useSlot(positionerElement, <SheetPositionerPrimitive />);
 
         return (
             <PortalElement>
