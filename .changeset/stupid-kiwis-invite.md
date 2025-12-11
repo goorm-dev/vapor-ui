@@ -4,4 +4,4 @@
 '@vapor-ui/core': patch
 ---
 
-memoize elements & enhance customizability
+clone elements & enhance customizability
