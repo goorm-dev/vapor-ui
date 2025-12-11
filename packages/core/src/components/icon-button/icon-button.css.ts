@@ -21,7 +21,6 @@ export const root = recipe({
 });
 
 export const icon = layerStyle('components', {
-    color: 'white',
     selectors: {
         [`${root.classNames.base} > &:is(svg)`]: {
             width: 'max(16px, 50%)',
