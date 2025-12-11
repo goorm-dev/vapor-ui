@@ -4,12 +4,13 @@ import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
 import { Menu as BaseMenu } from '@base-ui-components/react';
+import type { IconProps } from '@vapor-ui/icons';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
-import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { composeRefs } from '~/utils/compose-refs';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -104,16 +105,17 @@ MenuPopupPrimitive.displayName = 'Menu.PopupPrimitive';
 
 export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement, <MenuPortalPrimitive />);
-        const PositionerElement = useRenderElement(positionerElement, <MenuPositionerPrimitive />);
+        const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <MenuPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const positioner = createDefaultElement(positionerElement ?? <MenuPositionerPrimitive />, {
+            children: popup,
+        });
+
+        const portal = createDefaultElement(portalElement ?? <MenuPortalPrimitive />, {
+            children: positioner,
+        });
+
+        return portal;
     },
 );
 MenuPopup.displayName = 'Menu.Popup';
@@ -270,19 +272,18 @@ MenuSubmenuPopupPrimitive.displayName = 'Menu.SubmenuPopupPrimitive';
 
 export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement, <MenuPortalPrimitive />);
-        const PositionerElement = useRenderElement(
-            positionerElement,
-            <MenuPositionerPrimitive side="right" sideOffset={0} />,
+        const popup = <MenuPopupPrimitive ref={ref} {...props} />;
+
+        const positioner = createDefaultElement(
+            positionerElement ?? <MenuPositionerPrimitive side="right" sideOffset={0} />,
+            { children: popup },
         );
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <MenuSubmenuPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const portal = createDefaultElement(portalElement ?? <MenuPortalPrimitive />, {
+            children: positioner,
+        });
+
+        return portal;
     },
 );
 MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
@@ -325,7 +326,12 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuCheckboxItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+
+    const children = createDefaultElement<IconProps>(childrenProp ?? <ConfirmOutlineIcon />, {
+        width: '100%',
+        height: '100%',
+    });
 
     return (
         <BaseMenu.CheckboxItemIndicator
@@ -333,7 +339,7 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
             className={clsx(styles.indicator, className)}
             {...componentProps}
         >
-            <ConfirmOutlineIcon size="100%" />
+            {children}
         </BaseMenu.CheckboxItemIndicator>
     );
 });
@@ -398,7 +404,12 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuRadioItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+
+    const children = createDefaultElement<IconProps>(childrenProp ?? <ConfirmOutlineIcon />, {
+        width: '100%',
+        height: '100%',
+    });
 
     return (
         <BaseMenu.RadioItemIndicator
@@ -406,7 +417,7 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
             className={clsx(styles.indicator, className)}
             {...componentProps}
         >
-            <ConfirmOutlineIcon size="100%" />
+            {children}
         </BaseMenu.RadioItemIndicator>
     );
 });

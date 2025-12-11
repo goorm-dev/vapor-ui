@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 import { Radio as BaseRadio } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { useRenderElement } from '~/hooks/use-render-element';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -22,7 +22,7 @@ import * as styles from './radio.css';
 type RadioVariants = RootVariants;
 
 export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
     const [variantProps, otherProps] = createSplitProps<RadioVariants>()(componentProps, [
@@ -36,7 +36,7 @@ export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, 
 
     const dataAttrs = createDataAttributes({ invalid });
 
-    const IndicatorElement = useRenderElement(children, <RadioIndicatorPrimitive />);
+    const children = createDefaultElement(childrenProp ?? <RadioIndicatorPrimitive />);
 
     return (
         <BaseRadio.Root
@@ -46,7 +46,7 @@ export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, 
             {...dataAttrs}
             {...otherProps}
         >
-            <IndicatorElement />
+            {children}
         </BaseRadio.Root>
     );
 });

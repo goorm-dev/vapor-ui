@@ -77,7 +77,7 @@ export const value = recipe({
 
 export const placeholder = style([foregrounds({ color: 'hint-100' })]);
 
-export const icon = layerStyle('components', { display: 'flex' });
+export const icon = layerStyle('components', { display: 'flex', flexShrink: 0 });
 
 export const triggerIcon = recipe({
     base: [foregrounds({ color: 'hint-100' }), icon],

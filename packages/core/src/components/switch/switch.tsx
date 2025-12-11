@@ -5,8 +5,8 @@ import { forwardRef } from 'react';
 import { Switch as BaseSwitch } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -29,7 +29,7 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * -----------------------------------------------------------------------------------------------*/
 
 export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
         'size',
         'invalid',
@@ -37,22 +37,21 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
 
     const { size, invalid } = variantProps;
     const { required } = otherProps;
-
     const dataAttrs = createDataAttributes({ invalid });
 
-    const ThumbElement = useRenderElement(children, <SwitchThumbPrimitive />);
+    const children = createDefaultElement(childrenProp ?? <SwitchThumbPrimitive />);
 
     return (
         <SwitchProvider value={variantProps}>
             <BaseSwitch.Root
                 ref={ref}
-                aria-required={required || undefined}
-                aria-invalid={invalid || undefined}
+                aria-required={required}
+                aria-invalid={invalid}
                 className={clsx(styles.control({ size }), className)}
                 {...dataAttrs}
                 {...otherProps}
             >
-                <ThumbElement />
+                {children}
             </BaseSwitch.Root>
         </SwitchProvider>
     );

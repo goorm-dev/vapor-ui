@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import type { IconProps } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
-import { useRenderElement } from '~/hooks/use-render-element';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -16,7 +16,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
     const {
         'aria-label': ariaLabel,
         className,
-        children,
+        children: childrenProp,
         ...componentProps
     } = resolveStyles(props);
 
@@ -24,7 +24,10 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
         'shape',
     ]);
 
-    const IconElement = useRenderElement<IconProps>(children);
+    const children = createDefaultElement<IconProps>(childrenProp, {
+        'aria-hidden': 'true',
+        className: styles.icon,
+    });
 
     return (
         <Button
@@ -33,7 +36,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
             className={clsx(styles.root(variantProps), className)}
             {...otherProps}
         >
-            <IconElement aria-hidden width="max(16px, 50%)" height="max(16px, 50%)" />
+            {children}
         </Button>
     );
 });

@@ -7,9 +7,9 @@ import { Popover as BasePopover } from '@base-ui-components/react/popover';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
-import { useRenderElement } from '~/hooks/use-render-element';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -157,19 +157,18 @@ const extractPositions = (dataset: DOMStringMap) => {
 
 export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = useRenderElement(portalElement, <PopoverPortalPrimitive />);
-        const PositionerElement = useRenderElement(
-            positionerElement,
-            <PopoverPositionerPrimitive />,
+        const popup = <PopoverPopupPrimitive ref={ref} {...props} />;
+
+        const positioner = createDefaultElement(
+            positionerElement ?? <PopoverPositionerPrimitive />,
+            { children: popup },
         );
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <PopoverPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const portal = createDefaultElement(portalElement ?? <PopoverPortalPrimitive />, {
+            children: positioner,
+        });
+
+        return portal;
     },
 );
 PopoverPopup.displayName = 'Popover.Popup';

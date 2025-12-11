@@ -101,4 +101,13 @@ export const button = recipe({
     variants: { size: sizeVariants },
 });
 
+export const icon = layerStyle('components', {
+    selectors: {
+        [`${button.classNames.base} > &:is(svg)`]: {
+            width: 'max(16px, 50%)',
+            height: 'max(16px, 50%)',
+        },
+    },
+});
+
 export type ButtonVariants = NonNullable<RecipeVariants<typeof button>>;
