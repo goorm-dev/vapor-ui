@@ -1,1 +1,2 @@
-export { default } from './foundation-color-tabs';
+export { SemanticColor } from './semantic-color';
+export { BasicColor } from './basic-color';

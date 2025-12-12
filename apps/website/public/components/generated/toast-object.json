@@ -1,0 +1,63 @@
+{
+    "name": "ToastObject",
+    "displayName": "Toast.ToastObject",
+    "description": "Toast를 구성하는 ToastOptions 객체입니다.",
+    "props": [
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "Toast의 고유 식별자입니다. 지정하지 않으면 자동으로 생성됩니다."
+        },
+        {
+            "name": "title",
+            "type": ["string"],
+            "required": false,
+            "description": "Toast의 제목입니다."
+        },
+        {
+            "name": "description",
+            "type": ["string"],
+            "required": false,
+            "description": "Toast의 설명 텍스트입니다."
+        },
+        {
+            "name": "colorPalette",
+            "type": ["success", "danger", "info"],
+            "required": false,
+            "description": "Toast의 색상 팔레트입니다. 각 팔레트에 따라 기본 아이콘이 자동으로 설정됩니다.",
+            "defaultValue": "info"
+        },
+        {
+            "name": "icon",
+            "type": ["ReactNode"],
+            "required": false,
+            "description": "Toast에 표시할 커스텀 아이콘입니다. 지정하지 않으면 `colorPalette`에 따른 기본 아이콘이 사용됩니다."
+        },
+        {
+            "name": "close",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "닫기 버튼을 표시할지 여부입니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "actionProps",
+            "type": ["ActionProps"],
+            "required": false,
+            "description": "Toast 액션 버튼에 전달할 props입니다. `children`, `onClick`, `colorPalette`, `size`, `variant` 등 Button 컴포넌트의 props를 포함합니다."
+        },
+        {
+            "name": "data",
+            "type": ["object"],
+            "required": false,
+            "description": "Toast에 연결할 커스텀 데이터 객체입니다. 제네릭 타입으로 타입 안전성을 제공합니다."
+        },
+        {
+            "name": "priority",
+            "type": ["number"],
+            "required": false,
+            "description": "Toast의 우선순위입니다. 높은 값이 먼저 표시됩니다."
+        }
+    ]
+}

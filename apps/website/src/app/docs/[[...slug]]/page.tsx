@@ -40,6 +40,8 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
             <DocsBody>
                 <MDX components={getMDXComponents({})} />
             </DocsBody>
+
+            <div role="none" />
         </DocsPage>
     );
 }

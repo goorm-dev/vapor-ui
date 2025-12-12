@@ -21,13 +21,15 @@ export const trigger = recipe({
 
             width: '100%',
 
-            backgroundColor: vars.color.background.surface[100],
+            backgroundColor: vars.color.background.overlay[100],
 
             selectors: {
-                '&:disabled': { opacity: 0.32, pointerEvents: 'none' },
-                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
 
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
                 '&[data-readonly]:active::before': { opacity: 0.08 },
+
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
             },
         }),
     ],
@@ -52,9 +54,8 @@ export const trigger = recipe({
                 paddingInline: vars.size.space['300'],
             }),
         },
-        invalid: {
-            true: layerStyle('components', { borderColor: vars.color.border.danger }),
-        },
+
+        invalid: { true: {}, false: {} },
     },
 });
 
@@ -146,7 +147,11 @@ export const triggerIcon = recipe({
     },
 });
 
-export const itemIndicator = style([foregrounds({ color: 'normal-200' }), icon]);
+export const itemIndicator = style([
+    foregrounds({ color: 'normal-200' }),
+    icon,
+    { width: vars.size.dimension['200'], height: vars.size.dimension['200'] },
+]);
 
 export const positioner = layerStyle('components', {
     position: 'relative',
@@ -163,7 +168,7 @@ export const popup = layerStyle('components', {
     border: `1px solid ${vars.color.border.normal}`,
     borderRadius: vars.size.borderRadius['300'],
     boxShadow: vars.shadow.md,
-    backgroundColor: vars.color.background.canvas,
+    backgroundColor: vars.color.background.overlay[100],
 
     padding: vars.size.space['050'],
     minWidth: 'max(var(--anchor-width), 12.5rem)',

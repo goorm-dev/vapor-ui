@@ -14,8 +14,8 @@
         },
         {
             "prop": "size",
-            "type": ["'sm'", "'md'", "'lg'", "'xl'"],
-            "default": "'md'",
+            "type": ["sm", "md", "lg", "xl"],
+            "default": "md",
             "description": "Select의 크기를 설정합니다."
         },
         {
@@ -93,7 +93,7 @@
             "description": "네이티브 button 요소의 동작을 사용할지 여부를 설정합니다."
         }
     ],
-    "valueProps": [
+    "valuePrimitiveProps": [
         {
             "prop": "children",
             "type": ["React.ReactNode", "(value: unknown) => React.ReactNode"],
@@ -113,7 +113,7 @@
             "description": "값 요소에 적용할 CSS 클래스명입니다."
         }
     ],
-    "placeholderProps": [
+    "placeholderPrimitiveProps": [
         {
             "prop": "render",
             "type": ["React.ReactElement"],
@@ -127,7 +127,7 @@
             "description": "플레이스홀더 요소에 적용할 CSS 클래스명입니다."
         }
     ],
-    "triggerIconProps": [
+    "triggerIconPrimitiveProps": [
         {
             "prop": "children",
             "type": ["React.ReactNode"],
@@ -147,7 +147,7 @@
             "description": "트리거 아이콘 요소에 적용할 CSS 클래스명입니다."
         }
     ],
-    "portalProps": [
+    "portalPrimitiveProps": [
         {
             "prop": "container",
             "type": ["HTMLElement", "() => HTMLElement"],
@@ -155,17 +155,17 @@
             "description": "포털이 렌더링될 컨테이너 요소입니다."
         }
     ],
-    "positionerProps": [
+    "positionerPrimitiveProps": [
         {
             "prop": "side",
-            "type": ["'top'", "'right'", "'bottom'", "'left'"],
-            "default": "'bottom'",
+            "type": ["top", "right", "bottom", "left"],
+            "default": "bottom",
             "description": "드롭다운이 나타날 위치를 설정합니다."
         },
         {
             "prop": "align",
-            "type": ["'start'", "'center'", "'end'"],
-            "default": "'start'",
+            "type": ["start", "center", "end"],
+            "default": "start",
             "description": "드롭다운의 정렬 방향을 설정합니다."
         },
         {
@@ -193,7 +193,7 @@
             "description": "포지셔너 요소에 적용할 CSS 클래스명입니다."
         }
     ],
-    "popupProps": [
+    "popupPrimitiveProps": [
         {
             "prop": "render",
             "type": ["React.ReactElement"],
@@ -207,7 +207,7 @@
             "description": "팝업 요소에 적용할 CSS 클래스명입니다."
         }
     ],
-    "contentProps": [
+    "popupProps": [
         {
             "prop": "portalProps",
             "type": ["SelectPortalProps"],
@@ -259,7 +259,7 @@
             "description": "아이템 내부에 렌더링할 콘텐츠입니다."
         }
     ],
-    "itemIndicatorProps": [
+    "itemIndicatorPrimitiveProps": [
         {
             "prop": "children",
             "type": ["React.ReactNode"],

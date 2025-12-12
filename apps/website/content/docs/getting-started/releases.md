@@ -3,6 +3,290 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0-beta.10
+
+### @vapor-ui/core
+
+#### Patch Changes
+
+- af2d36f: avoid overflowing when toast width is wider than view port width
+
+---
+
+## 1.0.0-beta.9
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- afa45da: remove toastManager
+
+---
+
+## 1.0.0-beta.8
+
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- bb41c2e: **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas`
+
+    The canvas background token has been renamed for better semantic clarity and consistency:
+    - Token name: `color-background-canvas` → `color-canvas`
+    - CSS variable: `--vapor-color-background-canvas` → `--vapor-color-canvas`
+
+    **Migration required:**
+    - Update all references from `color-background-canvas` to `color-canvas`
+    - Replace CSS variables from `--vapor-color-background-canvas` to `--vapor-color-canvas`
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 308fd25: add new `Toast` component
+
+### @vapor-ui/css-generator
+
+#### Minor Changes
+
+- bb41c2e: **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas`
+
+    The canvas background token has been renamed for better semantic clarity and consistency:
+    - Token name: `color-background-canvas` → `color-canvas`
+    - CSS variable: `--vapor-color-background-canvas` → `--vapor-color-canvas`
+
+    **Migration required:**
+    - Update all references from `color-background-canvas` to `color-canvas`
+    - Replace CSS variables from `--vapor-color-background-canvas` to `--vapor-color-canvas`
+
+#### Patch Changes
+
+- Updated dependencies [bb41c2e]
+    - @vapor-ui/color-generator@1.0.0
+
+---
+
+## 1.0.0-beta.7
+
+### @vapor-ui/codemod
+
+#### Major Changes
+
+- 2c8f651: Add Tabs, Text, Textinput transform
+- 441e481: Add Dropdown, IconButton, Nav transformer
+- 441e481: add avatar, breadcrumb, card transform
+- 441e481: Add Popover, RadioGroup, Switch Transform
+
+#### Minor Changes
+
+- 441e481: Add codemod for icon packages name import
+- 441e481: add codemod cli packages
+
+#### Patch Changes
+
+- 15a2f7c: add cli options
+- 88da973: add button, badge, alert component color props to colorPalette
+
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 40bfa0a: change components interface
+- 1aecc3d: synchronized color tokens with figma
+- dbb74cf: add new `Table` component
+- d4be5bb: add new `Pagination` component
+- 9f9b700: **BREAKING CHANGE**: Remove `stretch` prop from Button, IconButton, and NavigationMenu components
+
+    The `stretch` prop has been removed to align with Figma's component variant system. In Figma, width control is handled via "Fill Container" (Auto Layout), not as a component variant.
+
+    **Migration Guide:**
+
+    Replace `stretch` prop with Tailwind's `w-full` utility class:
+
+    ```tsx
+    // Before
+    <Button stretch>Submit</Button>
+    <NavigationMenu stretch>...</NavigationMenu>
+
+    // After
+    <Button className="w-full">Submit</Button>
+    <NavigationMenu className="w-full">...</NavigationMenu>
+    ```
+
+    **Why this change:**
+    - Maintains Figma-React design system parity (SSOT principle)
+    - Follows "React Props = Figma Variants" architectural principle
+    - Aligns with Vapor UI's 4-layer component architecture (Container, Interaction, Contents, Slot)
+    - Layout concerns should be handled by parent containers, not component props
+
+#### Patch Changes
+
+- 1fd7efc: Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification
+- ed63947: Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec
+
+### @vapor-ui/css-generator
+
+#### Patch Changes
+
+- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+- Updated dependencies [174d004]
+    - @vapor-ui/color-generator@1.0.0-beta.7
+
+---
+
+## 1.0.0-beta.6
+
+### @vapor-ui/codemod
+
+#### Minor Changes
+
+- b2d053c: add checkbox, collapsible, dialog transform
+- 939c845: add avatar, breadcrumb, card transform
+- eb3fdc7: add codemod cli packages
+
+### @vapor-ui/color-generator
+
+#### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+
+### @vapor-ui/core
+
+#### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+
+### @vapor-ui/css-generator
+
+#### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+- Updated dependencies [bd523c7]
+    - @vapor-ui/color-generator@1.0.0
+
+---
+
+## 1.0.0-beta.5
+
+### @vapor-ui/codemod
+
+#### Minor Changes
+
+- a8de0b0: Add codemod for icon packages name import
+
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
+
+#### Patch Changes
+
+- 707f705: feat: update color tokens
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 27c0ba9: export component with namespace
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+- c9e4b68: migrate to base-ui beta v4
+- 220cda2: change components interface
+- 216866e: feat: add new component `RadioCard`
+- 6c02d6f: unreflected content revisions
+- f17650a: add uilitiy props
+- b581b9f: add `Form` component
+- 7928a67: add subcomponent props to `Content`
+- e12f4c4: split label into vertical/horizontal
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+- 98170c1: Add white foreground variant to foreground recipe
+
+#### Patch Changes
+
+- abeac6d: Unified the Cascade Layer into a single layer `vapor`
+- 3819233: Fix checkbox borderRadius sync error
+- ee61a32: Synchronize the aria-labelledby with the recieved id prop
+- df5cb78: separate `readonly` from `disabled`
+- 707f705: feat: update color tokens
+- f0f643b: feat: Remove Font Loading from CSS Build
+- 43cfefb: feat: add font banner
+- 74dc538: ### Features
+    - **Enabled CSS Tree-shaking:** Component CSS is now imported by its corresponding JS file instead of being in the global `styles.css`. This significantly reduces your production bundle size by only including the CSS for components you actually use.
+
+    ### Bug Fixes
+    - Fixed a CSS dependency order issue where `IconButton` styles loaded before `Button` styles, causing incorrect style inheritance.
+
+- 6f8de5b: correct padding-inline for sm size from 4px(050) to 8px(100)
+- 4df6bcf: resolved interactions layer's color in dark mode
+- 25c235e: adjust indicator size to account for border
+- 716c1d6: restore reset css
+- 9a3c4f6: fix(RadioGroup): Resolving orientation style errors
+- d68304a: fix(text-input): add component layer
+- Updated dependencies [8217749]
+- Updated dependencies [402284e]
+- Updated dependencies [fd4acaa]
+- Updated dependencies [f2950ee]
+    - @vapor-ui/icons@0.5.0
+
+### @vapor-ui/css-generator
+
+#### Minor Changes
+
+- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+
+#### Patch Changes
+
+- 707f705: feat: update color tokens
+- Updated dependencies [caf13a1]
+- Updated dependencies [707f705]
+    - @vapor-ui/color-generator@0.1.0
+
+### @vapor-ui/hooks
+
+#### Minor Changes
+
+- 68b001c: create avatar , badge , box , button , card , dialog , flex , grid , h-stack , icon-button, nav , text-input , text , theme-provider , v-stack
+
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- 8217749: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- 402284e: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `DocktoBottomOutlineIcon`, `SideNavOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- fd4acaa: Add new icons from Figma
+
+    **New Basic Icons:** `SideNavIcon`, `DocktoBottomIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+#### Patch Changes
+
+- f2950ee: Update icons from Figma
+
+    **Updated Basic Icons:** `TreeCollapseIcon`
+
+---
+
 ## 0.6.0
 
 ### @vapor-ui/core
@@ -209,12 +493,6 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - Updated dependencies [68b001c]
     - @vapor-ui/hooks@0.1.0
     - @vapor-ui/icons@0.1.0
-
-### @vapor-ui/hooks
-
-#### Minor Changes
-
-- 68b001c: create avatar , badge , box , button , card , dialog , flex , grid , h-stack , icon-button, nav , text-input , text , theme-provider , v-stack
 
 ### @vapor-ui/icons
 

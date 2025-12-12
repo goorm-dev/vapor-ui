@@ -21,36 +21,28 @@ export default function MultiSelectItems() {
             <VStack gap="$100" width="300px">
                 <MultiSelect.Root placeholder="폰트 선택" items={fonts}>
                     <Text typography="body2">배열 형태의 아이템</Text>
-                    <MultiSelect.Trigger>
-                        <MultiSelect.Value />
-                        <MultiSelect.TriggerIcon />
-                    </MultiSelect.Trigger>
-                    <MultiSelect.Content>
+                    <MultiSelect.Trigger />
+                    <MultiSelect.Popup>
                         {fonts.map((font) => (
                             <MultiSelect.Item key={font.value} value={font.value}>
                                 {font.label}
-                                <MultiSelect.ItemIndicator />
                             </MultiSelect.Item>
                         ))}
-                    </MultiSelect.Content>
+                    </MultiSelect.Popup>
                 </MultiSelect.Root>
             </VStack>
 
             <VStack gap="$100" width="300px">
                 <MultiSelect.Root placeholder="언어 선택" items={languages}>
                     <Text typography="body2">객체 형태의 아이템</Text>
-                    <MultiSelect.Trigger>
-                        <MultiSelect.Value />
-                        <MultiSelect.TriggerIcon />
-                    </MultiSelect.Trigger>
-                    <MultiSelect.Content>
+                    <MultiSelect.Trigger />
+                    <MultiSelect.Popup>
                         {Object.entries(languages).map(([value, label]) => (
                             <MultiSelect.Item key={value} value={value}>
                                 {label}
-                                <MultiSelect.ItemIndicator />
                             </MultiSelect.Item>
                         ))}
-                    </MultiSelect.Content>
+                    </MultiSelect.Popup>
                 </MultiSelect.Root>
             </VStack>
         </HStack>

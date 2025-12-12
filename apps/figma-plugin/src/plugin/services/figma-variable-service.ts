@@ -1,7 +1,23 @@
-import type { ColorToken, TokenContainer } from '@vapor-ui/color-generator';
+import type { PaletteChip, ThemeResult } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
 import { hexToFigmaColor } from '~/plugin/utils/color';
+
+/* -------------------------------------------------------------------------------------------------
+ * Internal Types
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Internal type for token container used within Figma plugin
+ * This is not exported from color-generator as it's an implementation detail
+ */
+interface TokenContainer {
+    tokens: Record<string, PaletteChip | string>;
+    metadata?: {
+        type: string;
+        theme: string;
+    };
+}
 
 /* -------------------------------------------------------------------------------------------------
  * Public API
@@ -36,6 +52,101 @@ export const figmaVariableService = {
             collectionName,
             context: 'Brand',
         });
+    },
+
+    /**
+     * Creates Figma variables from unified theme result (new architecture)
+     * Handles the new ThemeResult structure with palettes array format
+     */
+    async createUnifiedVariables(themeResult: ThemeResult, collectionName: string): Promise<void> {
+        try {
+            Logger.variables.creating(collectionName);
+
+            // Convert new ThemeResult structure to the format expected by createVariables
+            const convertedPalette: Record<string, TokenContainer> = {};
+
+            // Convert lightModeTokens
+            if (themeResult.lightModeTokens) {
+                convertedPalette.light = {
+                    tokens: {
+                        // Convert palettes array to flat structure
+                        ...themeResult.lightModeTokens.palettes.reduce(
+                            (acc: Record<string, PaletteChip>, palette) => {
+                                Object.values(palette.chips).forEach((chip) => {
+                                    acc[chip.name] = chip;
+                                });
+                                return acc;
+                            },
+                            {},
+                        ),
+                        // Add background canvas (convert BackgroundCanvas to PaletteChip format)
+                        'color-canvas': {
+                            name: themeResult.lightModeTokens.backgroundCanvas.name,
+                            hex: themeResult.lightModeTokens.backgroundCanvas.hex,
+                            oklch: themeResult.lightModeTokens.backgroundCanvas.oklch,
+                            codeSyntax: themeResult.lightModeTokens.backgroundCanvas.codeSyntax,
+                            deltaE: 0,
+                        },
+                    },
+                    metadata: {
+                        theme: 'light',
+                        type: 'primitive',
+                    },
+                };
+            }
+
+            // Convert darkModeTokens
+            if (themeResult.darkModeTokens) {
+                convertedPalette.dark = {
+                    tokens: {
+                        // Convert palettes array to flat structure
+                        ...themeResult.darkModeTokens.palettes.reduce(
+                            (acc: Record<string, PaletteChip>, palette) => {
+                                Object.values(palette.chips).forEach((chip) => {
+                                    acc[chip.name] = chip;
+                                });
+                                return acc;
+                            },
+                            {},
+                        ),
+                        // Add background canvas (convert BackgroundCanvas to PaletteChip format)
+                        'color-canvas': {
+                            name: themeResult.darkModeTokens.backgroundCanvas.name,
+                            hex: themeResult.darkModeTokens.backgroundCanvas.hex,
+                            oklch: themeResult.darkModeTokens.backgroundCanvas.oklch,
+                            codeSyntax: themeResult.darkModeTokens.backgroundCanvas.codeSyntax,
+                            deltaE: 0,
+                        },
+                    },
+                    metadata: {
+                        theme: 'dark',
+                        type: 'primitive',
+                    },
+                };
+            }
+
+            // Add base tokens if available
+            if (themeResult.baseTokens) {
+                convertedPalette.base = {
+                    tokens: themeResult.baseTokens,
+                    metadata: {
+                        theme: 'base',
+                        type: 'primitive',
+                    },
+                };
+            }
+
+            await createVariables({
+                palette: convertedPalette,
+                collectionName,
+                context: 'Unified',
+            });
+
+            Logger.variables.created(collectionName, Object.keys(convertedPalette).length);
+        } catch (error) {
+            Logger.variables.error('통합 변수 생성 실패', error);
+            throw error;
+        }
     },
 
     /**
@@ -84,7 +195,7 @@ async function createVariables(data: {
             await createVariablesFromGroups(collection, groups);
         } else {
             // Create variables without groups (flatten all tokens)
-            const allTokens: Record<string, ColorToken | string> = {};
+            const allTokens: Record<string, PaletteChip | string> = {};
 
             Object.values(palette).forEach((tokenContainer) => {
                 if (!tokenContainer) return;
@@ -135,15 +246,15 @@ async function createVariablesFromGroups(
 
 async function createVariablesFromTokens(
     collection: VariableCollection,
-    tokens: Record<string, ColorToken | string>,
+    tokens: Record<string, PaletteChip | string>,
     groupPrefix: string,
 ): Promise<void> {
     const variablePromises: Promise<Variable>[] = [];
 
     Object.entries(tokens).forEach(([tokenName, tokenValue]) => {
-        // Only process ColorToken objects (not string references)
+        // Only process PaletteChip objects (not string references)
         if (typeof tokenValue === 'object' && tokenValue !== null && 'hex' in tokenValue) {
-            const colorToken = tokenValue as ColorToken;
+            const paletteChip = tokenValue as PaletteChip;
 
             // Create variable name with or without group prefix
             const variableName = groupPrefix
@@ -151,7 +262,7 @@ async function createVariablesFromTokens(
                 : formatTokenName(tokenName);
 
             variablePromises.push(
-                createVariable(collection, variableName, colorToken.hex, colorToken.codeSyntax),
+                createVariable(collection, variableName, paletteChip.hex, paletteChip.codeSyntax),
             );
         }
     });
@@ -229,7 +340,7 @@ function formatTokenName(tokenName: string): string {
             return parts[0];
         }
     } else if (tokenName.startsWith(SEMANTIC_PREFIX)) {
-        // Handle "vapor-color-background-canvas" -> "background/background-canvas"
+        // Handle "vapor-color-canvas" -> "canvas"
         const parts = tokenName.substring(SEMANTIC_PREFIX.length).split('-'); // Remove "vapor-color-" prefix
         if (parts.length >= 2) {
             const colorFamily = parts.slice(0, -1).join('-');

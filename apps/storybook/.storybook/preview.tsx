@@ -32,7 +32,7 @@ const preview: Preview = {
                 <ThemeProvider forcedTheme={context.globals.appearance}>
                     <div
                         style={{
-                            background: 'var(--vapor-color-background-canvas)',
+                            background: 'var(--vapor-color-background-canvas-100)',
                             padding: '1rem',
                         }}
                     >

@@ -2,20 +2,20 @@
     "rootProps": [
         {
             "prop": "variant",
-            "type": ["'line'", "'plain'"],
-            "default": "'line'",
+            "type": ["line", "plain"],
+            "default": "line",
             "description": "Tabs의 시각적 스타일을 설정합니다. 'line'은 하단에 보더가 있는 스타일, 'plain'은 심플한 스타일입니다."
         },
         {
             "prop": "size",
-            "type": ["'sm'", "'md'", "'lg'", "'xl'"],
-            "default": "'md'",
+            "type": ["sm", "md", "lg", "xl"],
+            "default": "md",
             "description": "Tabs의 크기를 설정합니다."
         },
         {
             "prop": "orientation",
-            "type": ["'horizontal'", "'vertical'"],
-            "default": "'horizontal'",
+            "type": ["horizontal", "vertical"],
+            "default": "horizontal",
             "description": "탭의 배치 방향을 설정합니다. horizontal은 가로, vertical은 세로 배치입니다."
         },
         {

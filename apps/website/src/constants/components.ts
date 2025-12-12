@@ -17,7 +17,9 @@ import inputGroupData from '../../public/components/input-group.json';
 import menuData from '../../public/components/menu.json';
 import multiSelectData from '../../public/components/multi-select.json';
 import navigationMenuData from '../../public/components/navigation-menu.json';
+import paginationData from '../../public/components/pagination.json';
 import popoverData from '../../public/components/popover.json';
+import radioCardData from '../../public/components/radio-card.json';
 import radioGroupData from '../../public/components/radio-group.json';
 import radioData from '../../public/components/radio.json';
 import selectData from '../../public/components/select.json';
@@ -58,10 +60,12 @@ export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
     switch: switchData,
     tabs: tabsData,
     radio: radioData,
+    'radio-card': radioCardData,
     'radio-group': radioGroupData,
     select: selectData,
     sheet: sheetData,
     tooltip: tooltipData,
     'input-group': inputGroupData,
     textarea: textareaData,
+    paginationData,
 };

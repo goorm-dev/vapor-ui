@@ -19,7 +19,7 @@ description: 'Collapsible은 콘텐츠를 접었다 펼칠 수 있는 대화형 
 
 ### Open State
 
-Collapsible의 열림/닫힘 상태를 제어할 수 있습니다. `defaultOpen`으로 초기 상태를 설정하거나, `open`과 `onOpenChange`로 완전히 제어할 수 있습니다.
+Collapsible의 열림/닫힘 상태를 설정합니다.
 
 <Demo name="collapsible/collapsible-open-state">
 ```json doc-gen:file
@@ -32,7 +32,7 @@ Collapsible의 열림/닫힘 상태를 제어할 수 있습니다. `defaultOpen`
 
 ### Keep Mounted
 
-`keepMounted` 속성을 사용하여 패널이 닫힌 상태에서도 DOM에 유지할 수 있습니다.
+패널이 닫힌 상태에서도 DOM에 유지합니다.
 
 <Demo name="collapsible/collapsible-keep-mounted">
 ```json doc-gen:file
@@ -45,7 +45,7 @@ Collapsible의 열림/닫힘 상태를 제어할 수 있습니다. `defaultOpen`
 
 ### Disabled
 
-Collapsible을 비활성화하여 사용자 상호작용을 막을 수 있습니다.
+Collapsible의 비활성화 상태를 설정합니다.
 
 <Demo name="collapsible/collapsible-disabled">
 ```json doc-gen:file
@@ -62,18 +62,12 @@ Collapsible을 비활성화하여 사용자 상호작용을 막을 수 있습니
 
 ### Collapsible.Root
 
-이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
-
-<ComponentPropsTable file="collapsible" section="root" />
+<ComponentPropsTable componentName="collapsible-root" />
 
 ### Collapsible.Trigger
 
-이 컴포넌트는 `button` 요소를 기반으로, 표준 HTML 속성(`onClick`, `disabled` 등)을 지원합니다.
-
-<ComponentPropsTable file="collapsible" section="trigger" />
+<ComponentPropsTable componentName="collapsible-trigger" />
 
 ### Collapsible.Panel
 
-이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
-
-<ComponentPropsTable file="collapsible" section="panel" />
+<ComponentPropsTable componentName="collapsible-panel" />

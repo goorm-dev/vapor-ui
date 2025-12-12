@@ -1,0 +1,26 @@
+import { Button, Dialog } from '@vapor-ui/core';
+
+export default function Flexible() {
+    return (
+        <Dialog.Root size="lg" closeOnClickOverlay={false}>
+            <Dialog.Trigger render={<Button variant="outline">확인 다이얼로그</Button>} />
+            <Dialog.PortalPrimitive>
+                <Dialog.OverlayPrimitive />
+                <Dialog.PopupPrimitive>
+                    <Dialog.Header>
+                        <Dialog.Title>작업 확인</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <Dialog.Description>
+                            이 작업을 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                        </Dialog.Description>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.Close render={<Button variant="ghost">취소</Button>} />
+                        <Dialog.Close render={<Button colorPalette="danger">삭제</Button>} />
+                    </Dialog.Footer>
+                </Dialog.PopupPrimitive>
+            </Dialog.PortalPrimitive>
+        </Dialog.Root>
+    );
+}
