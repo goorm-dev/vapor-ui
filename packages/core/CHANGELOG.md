@@ -1,5 +1,11 @@
 # @vapor-ui/core
 
+## 1.0.0
+
+### Patch Changes
+
+- af2d36f: avoid overflowing when toast width is wider than view port width
+
 ## 1.0.0-beta.9
 
 ### Minor Changes

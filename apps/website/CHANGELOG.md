@@ -1,5 +1,12 @@
 # website
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [af2d36f]
+    - @vapor-ui/core@1.0.0
+
 ## 1.0.0-beta.6
 
 ### Patch Changes
