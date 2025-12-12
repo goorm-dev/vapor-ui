@@ -1,6 +1,6 @@
 # @vapor-ui/core
 
-## 1.0.0
+## 1.0.0-beta.10
 
 ### Patch Changes
 
