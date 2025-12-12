@@ -3,11 +3,12 @@
 import { forwardRef } from 'react';
 
 import { useRender } from '@base-ui-components/react';
+import type { IconProps } from '@vapor-ui/icons';
 import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -149,21 +150,32 @@ export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimit
 
 export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator.Props>(
     (props, ref) => {
-        const { render, className, children, ...componentProps } = resolveStyles(props);
+        const {
+            render,
+            className,
+            children: childrenProp,
+            ...componentProps
+        } = resolveStyles(props);
 
         const { size } = useBreadcrumbContext();
-        const IconElement = createSlot(children || <SlashOutlineIcon size="100%" />);
+
+        const children = createDefaultElement<IconProps>(childrenProp ?? <SlashOutlineIcon />, {
+            width: '100%',
+            height: '100%',
+        });
+
+        const defaultProps: useRender.ElementProps<'li'> = {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            className: clsx(styles.icon({ size }), className),
+            children,
+            ...componentProps,
+        };
 
         return useRender({
             ref,
             render: render || <li />,
-            props: {
-                role: 'presentation',
-                'aria-hidden': 'true',
-                className: clsx(styles.icon({ size }), className),
-                children: <IconElement />,
-                ...componentProps,
-            },
+            props: defaultProps,
         });
     },
 );
@@ -177,21 +189,27 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     BreadcrumbEllipsisPrimitive.Props
 >((props, ref) => {
-    const { render, className, children, ...componentProps } = resolveStyles(props);
+    const { render, className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const { size } = useBreadcrumbContext();
-    const IconElement = createSlot(children || <MoreCommonOutlineIcon size="100%" />);
+
+    const children = createDefaultElement<IconProps>(childrenProp ?? <MoreCommonOutlineIcon />, {
+        width: '100%',
+        height: '100%',
+    });
+
+    const defaultProps: useRender.ElementProps<'span'> = {
+        role: 'presentation',
+        'aria-hidden': 'true',
+        className: clsx(styles.icon({ size }), className),
+        children,
+        ...componentProps,
+    };
 
     return useRender({
         ref,
         render: render || <span />,
-        props: {
-            role: 'presentation',
-            'aria-hidden': 'true',
-            className: clsx(styles.icon({ size }), className),
-            children: <IconElement />,
-            ...componentProps,
-        },
+        props: defaultProps,
     });
 });
 BreadcrumbEllipsisPrimitive.displayName = 'Breadcrumb.EllipsisPrimitive';

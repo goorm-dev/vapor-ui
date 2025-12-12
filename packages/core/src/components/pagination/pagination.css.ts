@@ -1,7 +1,6 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { foregrounds } from '~/styles/mixins/foreground.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
@@ -102,39 +101,11 @@ export const button = recipe({
     variants: { size: sizeVariants },
 });
 
-export const icon = recipe({
-    base: [
-        foregrounds({ color: 'hint-100' }),
-        layerStyle('components', {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-
-            selectors: {
-                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
-            },
-        }),
-    ],
-
-    defaultVariants: { size: 'md' },
-    variants: {
-        size: {
-            sm: layerStyle('components', {
-                width: vars.size.dimension[200],
-                height: vars.size.dimension[200],
-            }),
-            md: layerStyle('components', {
-                width: vars.size.dimension[200],
-                height: vars.size.dimension[200],
-            }),
-            lg: layerStyle('components', {
-                width: vars.size.dimension[250],
-                height: vars.size.dimension[250],
-            }),
-            xl: layerStyle('components', {
-                width: vars.size.dimension[300],
-                height: vars.size.dimension[300],
-            }),
+export const icon = layerStyle('components', {
+    selectors: {
+        [`${button.classNames.base} > &:is(svg)`]: {
+            width: 'max(16px, 50%)',
+            height: 'max(16px, 50%)',
         },
     },
 });

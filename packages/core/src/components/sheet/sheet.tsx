@@ -12,8 +12,8 @@ import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
 import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { composeRefs } from '~/utils/compose-refs';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -190,18 +190,24 @@ SheetPopupPrimitive.displayName = 'Sheet.PopupPrimitive';
 
 export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <SheetPortalPrimitive />);
-        const OverlayElement = createSlot(overlayElement || <SheetOverlayPrimitive />);
-        const PositionerElement = createSlot(positionerElement || <SheetPositionerPrimitive />);
+        const popup = <SheetPopupPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <OverlayElement />
-                <PositionerElement>
-                    <SheetPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const positioner = createDefaultElement(positionerElement ?? <SheetPositionerPrimitive />, {
+            children: popup,
+        });
+
+        const overlay = createDefaultElement(overlayElement ?? <SheetOverlayPrimitive />);
+
+        const portal = createDefaultElement(portalElement ?? <SheetPortalPrimitive />, {
+            children: (
+                <>
+                    {overlay}
+                    {positioner}
+                </>
+            ),
+        });
+
+        return portal;
     },
 );
 SheetPopup.displayName = 'Sheet.Popup';

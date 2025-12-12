@@ -8,7 +8,7 @@ import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -89,19 +89,24 @@ DialogPopupPrimitive.displayName = 'Dialog.PopupPrimitive';
  * Dialog.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>((props, ref) => {
-    const { portalElement, overlayElement, ...componentProps } = resolveStyles(props);
+export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
+    ({ portalElement, overlayElement, ...props }, ref) => {
+        const popup = <DialogPopupPrimitive ref={ref} {...props} />;
 
-    const PortalElement = createSlot(portalElement || <DialogPortalPrimitive />);
-    const DialogOverlayPrimitiveElement = createSlot(overlayElement || <DialogOverlayPrimitive />);
+        const overlay = createDefaultElement(overlayElement ?? <DialogOverlayPrimitive />, {});
 
-    return (
-        <PortalElement>
-            <DialogOverlayPrimitiveElement />
-            <DialogPopupPrimitive ref={ref} {...componentProps} />
-        </PortalElement>
-    );
-});
+        const portal = createDefaultElement(portalElement ?? <DialogPortalPrimitive />, {
+            children: (
+                <>
+                    {overlay}
+                    {popup}
+                </>
+            ),
+        });
+
+        return portal;
+    },
+);
 DialogPopup.displayName = 'Dialog.Popup';
 
 /* -------------------------------------------------------------------------------------------------

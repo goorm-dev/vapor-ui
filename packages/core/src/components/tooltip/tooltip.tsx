@@ -7,9 +7,9 @@ import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
-import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -155,18 +155,18 @@ const extractPositions = (dataset: DOMStringMap) => {
 
 export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <TooltipPortalPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement || <TooltipPositionerPrimitive side="top" align="center" />,
+        const popup = <TooltipPopupPrimitive ref={ref} {...props} />;
+
+        const positioner = createDefaultElement(
+            positionerElement ?? <TooltipPositionerPrimitive side="top" align="center" />,
+            { children: popup },
         );
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <TooltipPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const portal = createDefaultElement(portalElement ?? <TooltipPortalPrimitive />, {
+            children: positioner,
+        });
+
+        return portal;
     },
 );
 TooltipPopup.displayName = 'Tooltip.Popup';

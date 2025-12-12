@@ -9,9 +9,9 @@ import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -165,9 +165,9 @@ export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuTriggerIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
+    const children = createDefaultElement(childrenProp ?? <ChevronDownOutlineIcon />);
 
     return (
         <BaseNavigationMenu.Icon
@@ -175,7 +175,7 @@ export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
             className={clsx(styles.icon, className)}
             {...componentProps}
         >
-            <IconElement />
+            {children}
         </BaseNavigationMenu.Icon>
     );
 });
@@ -402,22 +402,23 @@ NavigationMenuViewportPrimitive.displayName = 'NavigationMenu.ViewportPrimitive'
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
-    ({ portalElement, positionerElement, popupElement, className, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement ?? <NavigationMenuPortalPrimitive />);
-        const PopupElement = createSlot(popupElement ?? <NavigationMenuPopupPrimitive />);
-        const PositionerElement = createSlot(
+    ({ portalElement, positionerElement, popupElement, ...props }, ref) => {
+        const viewport = <NavigationMenuViewportPrimitive ref={ref} {...props} />;
+
+        const popup = createDefaultElement(popupElement ?? <NavigationMenuPopupPrimitive />, {
+            children: viewport,
+        });
+
+        const positioner = createDefaultElement(
             positionerElement ?? <NavigationMenuPositionerPrimitive />,
+            { children: popup },
         );
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <PopupElement>
-                        <NavigationMenuViewportPrimitive ref={ref} {...props} />
-                    </PopupElement>
-                </PositionerElement>
-            </PortalElement>
-        );
+        const portal = createDefaultElement(portalElement ?? <NavigationMenuPortalPrimitive />, {
+            children: positioner,
+        });
+
+        return portal;
     },
 );
 NavigationMenuViewport.displayName = 'NavigationMenu.Viewport';

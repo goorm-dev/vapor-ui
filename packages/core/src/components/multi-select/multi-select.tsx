@@ -8,7 +8,7 @@ import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createDefaultElement } from '~/utils/create-default-element';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -178,10 +178,14 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
     HTMLDivElement,
     MultiSelectTriggerIconPrimitive.Props
 >((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const { size } = useMultiSelectContext();
-    const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
+
+    const children = createDefaultElement(childrenProp ?? <ChevronDownOutlineIcon />, {
+        width: '100%',
+        height: '100%',
+    });
 
     return (
         <BaseSelect.Icon
@@ -189,7 +193,7 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
             className={clsx(styles.triggerIcon({ size }), className)}
             {...componentProps}
         >
-            <IconElement />
+            {children}
         </BaseSelect.Icon>
     );
 });
@@ -273,18 +277,18 @@ MultiSelectPopupPrimitive.displayName = 'MultiSelect.PopupPrimitive';
 
 export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <MultiSelectPortalPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement || <MultiSelectPositionerPrimitive />,
+        const popup = <MultiSelectPopupPrimitive ref={ref} {...props} />;
+
+        const positioner = createDefaultElement(
+            positionerElement ?? <MultiSelectPositionerPrimitive />,
+            { children: popup },
         );
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <MultiSelectPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const portal = createDefaultElement(portalElement ?? <MultiSelectPortalPrimitive />, {
+            children: positioner,
+        });
+
+        return portal;
     },
 );
 MultiSelectPopup.displayName = 'MultiSelect.Popup';
@@ -316,9 +320,12 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MultiSelectItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const IconElement = createSlot(children || <ConfirmOutlineIcon size="100%" />);
+    const children = createDefaultElement(childrenProp ?? <ConfirmOutlineIcon />, {
+        width: '100%',
+        height: '100%',
+    });
 
     return (
         <BaseSelect.ItemIndicator
@@ -326,7 +333,7 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
             className={clsx(styles.itemIndicator, className)}
             {...componentProps}
         >
-            <IconElement />
+            {children}
         </BaseSelect.ItemIndicator>
     );
 });
