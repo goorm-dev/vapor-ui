@@ -79,7 +79,7 @@ TabsList.displayName = 'Tabs.List';
 
 export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
-    const { disabled: rootDisabled, size, orientation } = useTabsContext();
+    const { disabled: rootDisabled, size, variant, orientation } = useTabsContext();
 
     const disabled = disabledProp || rootDisabled;
 
@@ -87,7 +87,7 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>((pro
         <BaseTabs.Tab
             ref={ref}
             disabled={disabled}
-            className={clsx(styles.trigger({ size, disabled, orientation }), className)}
+            className={clsx(styles.trigger({ size, variant, disabled, orientation }), className)}
             {...componentProps}
         />
     );
