@@ -36,12 +36,13 @@ export const viewport = layerStyle('components', {
 
     margin: '0 auto',
     width: '25rem',
-    maxWidth: '100vw',
+    maxWidth: calc.subtract('100vw', calc.multiply('1rem', 2)),
 
     '@media': {
         '(min-width: 600px)': {
             top: '1.5rem',
             right: '1.5rem',
+            maxWidth: calc.subtract('100vw', calc.multiply('1.5rem', 2)),
         },
     },
 });
