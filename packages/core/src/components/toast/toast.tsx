@@ -128,7 +128,13 @@ const [ToastContextProvider, useToastContext] = createContext<ToastProps>({
 
 export const ToastRootPrimitive = forwardRef<HTMLDivElement, ToastRootPrimitive.Props>(
     (props, ref) => {
-        const { toast, className, ...componentProps } = resolveStyles(props);
+        const {
+            toast,
+            swipeDirection = ['up', 'right'],
+            className,
+            ...componentProps
+        } = resolveStyles(props);
+
         const { colorPalette, icon, close, actionProps } = toast;
 
         return (
@@ -136,6 +142,7 @@ export const ToastRootPrimitive = forwardRef<HTMLDivElement, ToastRootPrimitive.
                 <BaseToast.Root
                     ref={ref}
                     toast={toast as BaseToast.Root.ToastObject}
+                    swipeDirection={swipeDirection}
                     className={clsx(styles.root({ colorPalette }), className)}
                     {...componentProps}
                 />
