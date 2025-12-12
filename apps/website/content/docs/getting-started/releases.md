@@ -62,7 +62,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 #### Patch Changes
 
 - Updated dependencies [bb41c2e]
-    - @vapor-ui/color-generator@1.0.0-beta.8
+    - @vapor-ui/color-generator@1.0.0
 
 ---
 
