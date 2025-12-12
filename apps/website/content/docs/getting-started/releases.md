@@ -3,6 +3,16 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0
+
+### @vapor-ui/core
+
+#### Patch Changes
+
+- af2d36f: avoid overflowing when toast width is wider than view port width
+
+---
+
 ## 1.0.0-beta.9
 
 ### @vapor-ui/core
@@ -52,7 +62,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 #### Patch Changes
 
 - Updated dependencies [bb41c2e]
-    - @vapor-ui/color-generator@1.0.0
+    - @vapor-ui/color-generator@1.0.0-beta.8
 
 ---
 
