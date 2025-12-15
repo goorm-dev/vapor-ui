@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
 
-import type { IconProps } from '@vapor-ui/icons';
+import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -24,9 +24,12 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
         'shape',
     ]);
 
-    const children = createDefaultElement<IconProps>(childrenProp, {
-        'aria-hidden': 'true',
-        className: styles.icon,
+    const children = useRender({
+        render: createRender(childrenProp),
+        props: {
+            'aria-hidden': 'true',
+            className: styles.icon,
+        },
     });
 
     return (

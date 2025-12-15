@@ -15,9 +15,9 @@ import {
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createDefaultElement } from '~/utils/create-default-element';
 import type { MakeChangeEventDetails } from '~/utils/create-event-details';
 import { createChangeEventDetails } from '~/utils/create-event-details';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -218,9 +218,9 @@ export const PaginationPreviousPrimitive = forwardRef<
         setPage(page - 1, details);
     });
 
-    const children = createDefaultElement(childrenProp ?? <ChevronLeftOutlineIcon />, {
-        'aria-hidden': 'true',
-        className: styles.icon,
+    const children = useRender({
+        render: createRender(childrenProp, <ChevronLeftOutlineIcon />),
+        props: { 'aria-hidden': 'true', className: styles.icon },
     });
 
     const defaultProps: useRender.ElementProps<'button'> = {
@@ -287,9 +287,9 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             setPage(page + 1, details);
         });
 
-        const children = createDefaultElement(childrenProp ?? <ChevronRightOutlineIcon />, {
-            'aria-hidden': 'true',
-            className: styles.icon,
+        const children = useRender({
+            render: createRender(childrenProp, <ChevronRightOutlineIcon />),
+            props: { 'aria-hidden': 'true', className: styles.icon },
         });
 
         const defaultProps: useRender.ElementProps<'button'> = {
@@ -336,9 +336,9 @@ export const PaginationEllipsisPrimitive = forwardRef<
 
     const { size, disabled } = usePaginationContext();
 
-    const children = createDefaultElement(childrenProp ?? <MoreCommonOutlineIcon />, {
-        width: 'max(16px, 50%)',
-        height: 'max(16px, 50%)',
+    const children = useRender({
+        render: createRender(childrenProp, <MoreCommonOutlineIcon />),
+        props: { width: 'max(16px, 50%)', height: 'max(16px, 50%)' },
     });
 
     const defaultProps: useRender.ElementProps<'span'> = {

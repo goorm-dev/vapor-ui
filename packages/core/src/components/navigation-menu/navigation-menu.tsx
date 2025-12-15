@@ -3,7 +3,7 @@
 import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { NavigationMenu as BaseNavigationMenu } from '@base-ui-components/react';
+import { NavigationMenu as BaseNavigationMenu, useRender } from '@base-ui-components/react';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -11,7 +11,7 @@ import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -167,7 +167,9 @@ export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const children = createDefaultElement(childrenProp ?? <ChevronDownOutlineIcon />);
+    const children = useRender({
+        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+    });
 
     return (
         <BaseNavigationMenu.Icon
@@ -405,17 +407,19 @@ export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuV
     ({ portalElement, positionerElement, popupElement, ...props }, ref) => {
         const viewport = <NavigationMenuViewportPrimitive ref={ref} {...props} />;
 
-        const popup = createDefaultElement(popupElement ?? <NavigationMenuPopupPrimitive />, {
-            children: viewport,
+        const popup = useRender({
+            render: createRender(popupElement, <NavigationMenuPopupPrimitive />),
+            props: { children: viewport },
         });
 
-        const positioner = createDefaultElement(
-            positionerElement ?? <NavigationMenuPositionerPrimitive />,
-            { children: popup },
-        );
+        const positioner = useRender({
+            render: createRender(positionerElement, <NavigationMenuPositionerPrimitive />),
+            props: { children: popup },
+        });
 
-        const portal = createDefaultElement(portalElement ?? <NavigationMenuPortalPrimitive />, {
-            children: positioner,
+        const portal = useRender({
+            render: createRender(portalElement, <NavigationMenuPortalPrimitive />),
+            props: { children: positioner },
         });
 
         return portal;

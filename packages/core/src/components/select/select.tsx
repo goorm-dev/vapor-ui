@@ -3,12 +3,12 @@
 import type { ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
-import { Select as BaseSelect } from '@base-ui-components/react';
+import { Select as BaseSelect, useRender } from '@base-ui-components/react';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -153,7 +153,9 @@ export const SelectTriggerIconPrimitive = forwardRef<
 
     const { size } = useSelectContext();
 
-    const children = createDefaultElement(childrenProp ?? <ChevronDownOutlineIcon />);
+    const children = useRender({
+        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+    });
 
     return (
         <BaseSelect.Icon
@@ -249,13 +251,14 @@ export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <SelectPopupPrimitive ref={ref} {...props} />;
 
-        const positioner = createDefaultElement(
-            positionerElement ?? <SelectPositionerPrimitive />,
-            { children: popup },
-        );
+        const positioner = useRender({
+            render: createRender(positionerElement, <SelectPositionerPrimitive />),
+            props: { children: popup },
+        });
 
-        const portal = createDefaultElement(portalElement ?? <SelectPortalPrimitive />, {
-            children: positioner,
+        const portal = useRender({
+            render: createRender(portalElement, <SelectPortalPrimitive />),
+            props: { children: positioner },
         });
 
         return portal;
@@ -292,7 +295,9 @@ export const SelectItemIndicatorPrimitive = forwardRef<
 >((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const children = createDefaultElement(childrenProp ?? <ConfirmOutlineIcon />);
+    const children = useRender({
+        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+    });
 
     return (
         <BaseSelect.ItemIndicator

@@ -8,7 +8,7 @@ import { useRender } from '@base-ui-components/react/use-render';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -93,15 +93,20 @@ export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
     ({ portalElement, overlayElement, ...props }, ref) => {
         const popup = <DialogPopupPrimitive ref={ref} {...props} />;
 
-        const overlay = createDefaultElement(overlayElement ?? <DialogOverlayPrimitive />, {});
+        const overlay = useRender({
+            render: createRender(overlayElement ?? <DialogOverlayPrimitive />),
+        });
 
-        const portal = createDefaultElement(portalElement ?? <DialogPortalPrimitive />, {
-            children: (
-                <>
-                    {overlay}
-                    {popup}
-                </>
-            ),
+        const portal = useRender({
+            render: createRender(portalElement, <DialogPortalPrimitive />),
+            props: {
+                children: (
+                    <>
+                        {overlay}
+                        {popup}
+                    </>
+                ),
+            },
         });
 
         return portal;

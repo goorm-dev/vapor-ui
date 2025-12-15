@@ -3,13 +3,14 @@
 import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
+import { useRender } from '@base-ui-components/react';
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -157,13 +158,14 @@ export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <TooltipPopupPrimitive ref={ref} {...props} />;
 
-        const positioner = createDefaultElement(
-            positionerElement ?? <TooltipPositionerPrimitive side="top" align="center" />,
-            { children: popup },
-        );
+        const positioner = useRender({
+            render: createRender(positionerElement, <TooltipPositionerPrimitive />),
+            props: { children: popup },
+        });
 
-        const portal = createDefaultElement(portalElement ?? <TooltipPortalPrimitive />, {
-            children: positioner,
+        const portal = useRender({
+            render: createRender(portalElement, <TooltipPortalPrimitive />),
+            props: { children: positioner },
         });
 
         return portal;

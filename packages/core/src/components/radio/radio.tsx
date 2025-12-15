@@ -2,10 +2,10 @@
 
 import { forwardRef } from 'react';
 
-import { Radio as BaseRadio } from '@base-ui-components/react';
+import { Radio as BaseRadio, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -36,7 +36,9 @@ export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, 
 
     const dataAttrs = createDataAttributes({ invalid });
 
-    const children = createDefaultElement(childrenProp ?? <RadioIndicatorPrimitive />);
+    const children = useRender({
+        render: createRender(childrenProp, <RadioIndicatorPrimitive />),
+    });
 
     return (
         <BaseRadio.Root

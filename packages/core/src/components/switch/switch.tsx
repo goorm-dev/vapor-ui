@@ -2,11 +2,11 @@
 
 import { forwardRef } from 'react';
 
-import { Switch as BaseSwitch } from '@base-ui-components/react';
+import { Switch as BaseSwitch, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -39,7 +39,9 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
     const { required } = otherProps;
     const dataAttrs = createDataAttributes({ invalid });
 
-    const children = createDefaultElement(childrenProp ?? <SwitchThumbPrimitive />);
+    const children = useRender({
+        render: createRender(childrenProp, <SwitchThumbPrimitive />),
+    });
 
     return (
         <SwitchProvider value={variantProps}>

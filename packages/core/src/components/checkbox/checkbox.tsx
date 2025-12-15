@@ -8,7 +8,7 @@ import { Checkbox as BaseCheckbox } from '@base-ui-components/react/checkbox';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -40,7 +40,9 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((p
 
     const { size, invalid, indeterminate } = variantProps;
 
-    const children = createDefaultElement(childrenProp ?? <CheckboxIndicatorPrimitive />);
+    const children = useRender({
+        render: createRender(childrenProp, <CheckboxIndicatorPrimitive />),
+    });
 
     const defaultProps: useRender.ElementProps<typeof BaseCheckbox.Root> = {
         'aria-invalid': invalid,
@@ -75,9 +77,9 @@ export const CheckboxIndicatorPrimitive = forwardRef<
     const dataAttrs = createDataAttributes({ invalid });
 
     const Icon = indeterminate ? DashIcon : CheckIcon;
-    const children = createDefaultElement<IconProps>(childrenProp ?? <Icon />, {
-        width: '100%',
-        height: '100%',
+    const children = useRender({
+        render: createRender(childrenProp, <Icon />),
+        props: { width: '100%', height: '100%' },
     });
 
     return (

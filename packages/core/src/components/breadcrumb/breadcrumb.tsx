@@ -3,12 +3,11 @@
 import { forwardRef } from 'react';
 
 import { useRender } from '@base-ui-components/react';
-import type { IconProps } from '@vapor-ui/icons';
 import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -159,9 +158,9 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator
 
         const { size } = useBreadcrumbContext();
 
-        const children = createDefaultElement<IconProps>(childrenProp ?? <SlashOutlineIcon />, {
-            width: '100%',
-            height: '100%',
+        const children = useRender({
+            render: createRender(childrenProp, <SlashOutlineIcon />),
+            props: { width: '100%', height: '100%' },
         });
 
         const defaultProps: useRender.ElementProps<'li'> = {
@@ -193,9 +192,9 @@ export const BreadcrumbEllipsisPrimitive = forwardRef<
 
     const { size } = useBreadcrumbContext();
 
-    const children = createDefaultElement<IconProps>(childrenProp ?? <MoreCommonOutlineIcon />, {
-        width: '100%',
-        height: '100%',
+    const children = useRender({
+        render: createRender(childrenProp, <MoreCommonOutlineIcon />),
+        props: { width: '100%', height: '100%' },
     });
 
     const defaultProps: useRender.ElementProps<'span'> = {

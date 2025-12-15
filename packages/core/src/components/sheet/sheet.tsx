@@ -13,7 +13,7 @@ import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { createContext } from '~/libs/create-context';
 import { composeRefs } from '~/utils/compose-refs';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -192,19 +192,25 @@ export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
         const popup = <SheetPopupPrimitive ref={ref} {...props} />;
 
-        const positioner = createDefaultElement(positionerElement ?? <SheetPositionerPrimitive />, {
-            children: popup,
+        const positioner = useRender({
+            render: createRender(positionerElement, <SheetPositionerPrimitive />),
+            props: { children: popup },
         });
 
-        const overlay = createDefaultElement(overlayElement ?? <SheetOverlayPrimitive />);
+        const overlay = useRender({
+            render: createRender(overlayElement, <SheetOverlayPrimitive />),
+        });
 
-        const portal = createDefaultElement(portalElement ?? <SheetPortalPrimitive />, {
-            children: (
-                <>
-                    {overlay}
-                    {positioner}
-                </>
-            ),
+        const portal = useRender({
+            render: createRender(portalElement, <SheetPortalPrimitive />),
+            props: {
+                children: (
+                    <>
+                        {overlay}
+                        {positioner}
+                    </>
+                ),
+            },
         });
 
         return portal;

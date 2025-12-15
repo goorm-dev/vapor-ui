@@ -7,7 +7,7 @@ import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons'
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createDefaultElement } from '~/utils/create-default-element';
+import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { AnyProp, VComponentProps } from '~/utils/types';
 
@@ -269,7 +269,9 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         } = resolveStyles(props);
         const { close = true } = useToastContext();
 
-        const children = createDefaultElement(childrenProp ?? <CloseOutlineIcon />);
+        const children = useRender({
+            render: createRender(childrenProp, <CloseOutlineIcon />),
+        });
 
         if (!close) return null;
 
