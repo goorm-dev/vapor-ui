@@ -79,7 +79,7 @@ TabsList.displayName = 'Tabs.List';
 
 export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
-    const { disabled: rootDisabled, size, variant, orientation } = useTabsContext();
+    const { disabled: rootDisabled, size, orientation, variant } = useTabsContext();
 
     const disabled = disabledProp || rootDisabled;
 
@@ -100,12 +100,12 @@ TabsTrigger.displayName = 'Tabs.Trigger';
 
 export const TabsIndicator = forwardRef<HTMLDivElement, TabsIndicator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
-    const { orientation } = useTabsContext();
+    const { orientation, variant } = useTabsContext();
 
     return (
         <BaseTabs.Indicator
             ref={ref}
-            className={clsx(styles.indicator({ orientation }), className)}
+            className={clsx(styles.indicator({ orientation, variant }), className)}
             {...componentProps}
         />
     );

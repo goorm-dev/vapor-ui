@@ -1,5 +1,6 @@
 // tabs.css.ts
 import { createVar } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -9,15 +10,26 @@ import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
+const EXTERNAL_VARS = {
+    activeTabWidth: '--active-tab-width',
+    activeTabHeight: '--active-tab-height',
+    activeTabLeft: '--active-tab-left',
+    activeTabTop: '--active-tab-top',
+} as const;
+
+const BORDER_WIDTH = '0.0625rem'; // 1px
+
 const listBorderBottom = createVar();
 const listBorderRight = createVar();
 const listBorder = createVar();
-const triggerSelectedBg = createVar();
-const indicatorDisplay = createVar();
+
+const indicatorVerticalWidth = createVar();
+const indicatorHorizontalHeight = createVar();
+const indicatorBottomPosition = createVar();
+const indicatorRightPosition = createVar();
 
 export const root = recipe({
     base: layerStyle('components', { display: 'flex' }),
-
     defaultVariants: { orientation: 'horizontal' },
     variants: {
         orientation: {
@@ -26,6 +38,7 @@ export const root = recipe({
             }),
             vertical: layerStyle('components', {
                 flexDirection: 'row',
+                height: '100%',
             }),
         },
     },
@@ -37,6 +50,7 @@ export const list = recipe({
         gap: vars.size.space[100],
         borderBottom: listBorderBottom,
         borderRight: listBorderRight,
+        isolation: 'isolate', // NOTE: Creates a new stacking context to manage z-index only within the Tabs component.
     }),
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
@@ -58,19 +72,15 @@ export const list = recipe({
                 },
             }),
         },
-
         variant: {
             line: layerStyle('components', {
                 vars: {
-                    [listBorder]: `1px solid ${vars.color.border.normal}`,
-
-                    [indicatorDisplay]: 'block',
+                    [listBorder]: `${BORDER_WIDTH} solid ${vars.color.border.normal}`,
                 },
             }),
             fill: layerStyle('components', {
                 vars: {
                     [listBorder]: 'none',
-                    [indicatorDisplay]: 'none',
                 },
             }),
         },
@@ -88,18 +98,11 @@ export const trigger = recipe({
             alignItems: 'center',
             justifyContent: 'center',
             gap: vars.size.space['075'],
-            borderRadius: vars.size.borderRadius[300],
-
-            selectors: {
-                '&[data-selected]': {
-                    color: vars.color.foreground.primary[100],
-                    backgroundColor: triggerSelectedBg,
-                },
-            },
+            zIndex: 1,
         }),
     ],
 
-    defaultVariants: { size: 'md', variant: 'line', disabled: false, orientation: 'horizontal' },
+    defaultVariants: { size: 'md', disabled: false, variant: 'line', orientation: 'horizontal' },
     variants: {
         size: {
             sm: [
@@ -113,24 +116,22 @@ export const trigger = recipe({
                 layerStyle('components', { height: vars.size.space['600'] }),
             ],
         },
-
         variant: {
             line: layerStyle('components', {
-                vars: {
-                    [triggerSelectedBg]: 'transparent',
-                },
+                borderRadius: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
             }),
             fill: layerStyle('components', {
-                vars: {
-                    [triggerSelectedBg]: vars.color.background.primary[100],
+                borderRadius: vars.size.borderRadius[300],
+                selectors: {
+                    '&[data-selected]': {
+                        color: vars.color.foreground.primary['100'],
+                    },
                 },
             }),
         },
-
         disabled: {
             true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
         },
-
         orientation: {
             horizontal: layerStyle('components', {
                 paddingInline: vars.size.space['050'],
@@ -145,33 +146,48 @@ export const trigger = recipe({
 export const indicator = recipe({
     base: layerStyle('components', {
         position: 'absolute',
-        display: indicatorDisplay,
-
-        transitionDuration: '200ms',
-        transitionProperty: `translate, width`,
+        transitionDuration: '100ms',
         transitionTimingFunction: 'ease-in-out',
-
-        backgroundColor: vars.color.border.primary,
+        zIndex: 0,
     }),
 
-    defaultVariants: { orientation: 'horizontal' },
+    defaultVariants: { orientation: 'horizontal', variant: 'line' },
     variants: {
         orientation: {
             horizontal: layerStyle('components', {
-                bottom: -2,
-                left: 0,
-
-                width: `var(--active-tab-width)`,
-                height: '2px',
-                translate: `var(--active-tab-left) -50%`,
+                bottom: indicatorBottomPosition,
+                transform: `translateX(var(${EXTERNAL_VARS.activeTabLeft}))`,
+                width: calc.add(`var(${EXTERNAL_VARS.activeTabWidth})`, '0.06rem'),
+                height: indicatorHorizontalHeight,
+                transitionProperty: 'transform, width',
             }),
             vertical: layerStyle('components', {
-                top: 0,
-                right: -2,
-
-                width: '2px',
-                height: `var(--active-tab-height)`,
-                translate: `-50% var(--active-tab-top)`,
+                right: indicatorRightPosition,
+                transform: `translateY(var(${EXTERNAL_VARS.activeTabTop}))`,
+                height: `var(${EXTERNAL_VARS.activeTabHeight})`,
+                width: indicatorVerticalWidth,
+                transitionProperty: 'transform, height',
+            }),
+        },
+        variant: {
+            line: layerStyle('components', {
+                backgroundColor: vars.color.border.primary,
+                vars: {
+                    [indicatorBottomPosition]: `-${BORDER_WIDTH}`,
+                    [indicatorRightPosition]: `-${BORDER_WIDTH}`,
+                    [indicatorHorizontalHeight]: `${BORDER_WIDTH}`,
+                    [indicatorVerticalWidth]: `${BORDER_WIDTH}`,
+                },
+            }),
+            fill: layerStyle('components', {
+                backgroundColor: vars.color.background.primary['100'],
+                borderRadius: vars.size.borderRadius[300],
+                vars: {
+                    [indicatorBottomPosition]: '0',
+                    [indicatorRightPosition]: '0',
+                    [indicatorHorizontalHeight]: '100%',
+                    [indicatorVerticalWidth]: `100%`,
+                },
             }),
         },
     },
