@@ -54,9 +54,9 @@ export const popup = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('components', { width: '500px' }),
-            lg: layerStyle('components', { width: '800px' }),
-            xl: layerStyle('components', { width: '1140px' }),
+            md: layerStyle('components', { width: '31.25rem' }),
+            lg: layerStyle('components', { width: '50rem' }),
+            xl: layerStyle('components', { width: '71.25rem' }),
         },
     },
 });
