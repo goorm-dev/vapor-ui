@@ -117,7 +117,7 @@ const [value, setValue] = useState('tab1');
 | `disabled`        | (none)                                                 | `boolean`                                              | **New Prop**         | Disable all tabs                            |
 | `activateOnFocus` | (none)                                                 | `boolean` (default: `false`)                           | **New Prop**         | Auto-activate on focus                      |
 | `loop`            | (none)                                                 | `boolean` (default: `true`)                            | **New Prop**         | Keyboard navigation loop                    |
-| `variant`         | (none)                                                 | `'line' \| 'fill'` (default: `'line'`)                | **New Prop**         | Tab style variant                           |
+| `variant`         | (none)                                                 | `'line' \| 'fill'` (default: `'line'`)                 | **New Prop**         | Tab style variant                           |
 
 ### Tabs.List Props
 
