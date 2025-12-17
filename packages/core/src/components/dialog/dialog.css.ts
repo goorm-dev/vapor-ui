@@ -22,6 +22,8 @@ export const overlay = layerStyle('components', {
     },
 });
 
+const SPACING = '32px';
+
 export const popup = recipe({
     base: layerStyle('components', {
         position: 'fixed',
@@ -33,7 +35,7 @@ export const popup = recipe({
         flexDirection: 'column',
         alignItems: 'flex-start',
 
-        maxWidth: calc.subtract('100dvw', '64px'),
+        maxWidth: calc.subtract('100dvw', calc.multiply(SPACING, 2)),
 
         transform: 'translate(-50%,-50%)',
         transitionProperty: 'transform, opacity',
