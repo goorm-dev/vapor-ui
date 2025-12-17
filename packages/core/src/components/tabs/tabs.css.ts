@@ -17,7 +17,7 @@ const EXTERNAL_VARS = {
     activeTabTop: '--active-tab-top',
 } as const;
 
-const BORDER_WIDTH = '0.0625rem'; // 1px
+const BORDER_WIDTH = '0.125rem'; // 2px
 
 const listBorderBottom = createVar();
 const listBorderRight = createVar();
