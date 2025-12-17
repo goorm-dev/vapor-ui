@@ -23,6 +23,9 @@ const listBorderBottom = createVar();
 const listBorderRight = createVar();
 const listBorder = createVar();
 
+const triggerVerticalBorderRadius = createVar();
+const triggerHorizontalBorderRadius = createVar();
+
 const indicatorVerticalWidth = createVar();
 const indicatorHorizontalHeight = createVar();
 const indicatorBottomPosition = createVar();
@@ -116,12 +119,28 @@ export const trigger = recipe({
                 layerStyle('components', { height: vars.size.space['600'] }),
             ],
         },
+        orientation: {
+            horizontal: layerStyle('components', {
+                borderRadius: triggerHorizontalBorderRadius,
+                paddingInline: vars.size.space['050'],
+            }),
+            vertical: layerStyle('components', {
+                borderRadius: triggerVerticalBorderRadius,
+                paddingInline: vars.size.space[200],
+            }),
+        },
         variant: {
             line: layerStyle('components', {
-                borderRadius: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
+                vars: {
+                    [triggerHorizontalBorderRadius]: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
+                    [triggerVerticalBorderRadius]: `${vars.size.borderRadius[300]} 0 0 ${vars.size.borderRadius[300]}`,
+                },
             }),
             fill: layerStyle('components', {
-                borderRadius: vars.size.borderRadius[300],
+                vars: {
+                    [triggerHorizontalBorderRadius]: vars.size.borderRadius[300],
+                    [triggerVerticalBorderRadius]: vars.size.borderRadius[300],
+                },
                 selectors: {
                     '&[data-selected]': {
                         color: vars.color.foreground.primary['100'],
@@ -131,14 +150,6 @@ export const trigger = recipe({
         },
         disabled: {
             true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
-        },
-        orientation: {
-            horizontal: layerStyle('components', {
-                paddingInline: vars.size.space['050'],
-            }),
-            vertical: layerStyle('components', {
-                paddingInline: vars.size.space[200],
-            }),
         },
     },
 });
