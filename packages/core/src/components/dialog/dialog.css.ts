@@ -1,3 +1,4 @@
+import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -32,8 +33,11 @@ export const popup = recipe({
         flexDirection: 'column',
         alignItems: 'flex-start',
 
+        maxWidth: calc.subtract('100dvw', '64px'),
+
         transform: 'translate(-50%,-50%)',
-        transition: 'all 0.15s',
+        transitionProperty: 'transform, opacity',
+        transitionDuration: '0.15s',
 
         borderRadius: vars.size.borderRadius[300],
         boxShadow: '0 1rem 2rem 0 rgba(0, 0, 0, 0.2)',
@@ -50,9 +54,9 @@ export const popup = recipe({
     defaultVariants: { size: 'md' },
     variants: {
         size: {
-            md: layerStyle('components', { width: '31.25rem' }),
-            lg: layerStyle('components', { width: '50rem' }),
-            xl: layerStyle('components', { width: '71.25rem' }),
+            md: layerStyle('components', { width: '500px' }),
+            lg: layerStyle('components', { width: '800px' }),
+            xl: layerStyle('components', { width: '1140px' }),
         },
     },
 });
