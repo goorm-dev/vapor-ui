@@ -117,7 +117,7 @@ const [value, setValue] = useState('tab1');
 | `disabled`        | (none)                                                 | `boolean`                                              | **New Prop**         | Disable all tabs                            |
 | `activateOnFocus` | (none)                                                 | `boolean` (default: `false`)                           | **New Prop**         | Auto-activate on focus                      |
 | `loop`            | (none)                                                 | `boolean` (default: `true`)                            | **New Prop**         | Keyboard navigation loop                    |
-| `variant`         | (none)                                                 | `'line' \| 'plain'` (default: `'line'`)                | **New Prop**         | Tab style variant                           |
+| `variant`         | (none)                                                 | `'line' \| 'fill'` (default: `'line'`)                | **New Prop**         | Tab style variant                           |
 
 ### Tabs.List Props
 
@@ -167,7 +167,7 @@ Root container of Tabs. Provides state management and Context.
 - `orientation`: Layout direction ('horizontal' | 'vertical')
 - `value`, `onValueChange`, `defaultValue`: State control props
 - `disabled`: Disable all tabs (boolean)
-- `variant`: Tab style variant ('line' | 'plain')
+- `variant`: Tab style variant ('line' | 'fill')
 - `activateOnFocus`, `loop`: Keyboard navigation options
 
 ### Tabs.List
@@ -241,7 +241,7 @@ The codemod automatically handles the following changes:
 3. **Props Automatic Conversion**:
     - `direction` → `orientation`
     - `hasBorder={true}` → `variant="line"` (added to Root)
-    - `hasBorder={false}` → `variant="plain"` (added to Root)
+    - `hasBorder={false}` → `variant="fill"` (added to Root)
     - Removes `hasBorder`, `stretch`, `position`, `align` props
 
 4. **Structure Conversion**:
