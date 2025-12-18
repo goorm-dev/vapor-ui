@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { CloseOutlineIcon, CopyOutlineIcon, TrashOutlineIcon } from '@vapor-ui/icons';
 
 import { FloatingBar } from '.';
 import { Badge } from '../badge';
@@ -8,7 +9,10 @@ import { Box } from '../box';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Field } from '../field';
+import { HStack } from '../h-stack';
+import { IconButton } from '../icon-button';
 import { Text } from '../text';
+import { VStack } from '../v-stack';
 
 export default {
     title: 'FloatingBar',
@@ -24,6 +28,117 @@ export const Default: Story = {
             <FloatingBar.Popup>This is the floating bar content.</FloatingBar.Popup>
         </FloatingBar.Root>
     ),
+};
+
+export const Controlled: Story = {
+    render: () => {
+        const [tasks, setTasks] = useState([
+            { id: '1', name: 'Weekly Status Report', checked: false },
+            { id: '2', name: 'Client Invoice Review', checked: false },
+            { id: '3', name: 'Product Roadmap', checked: false },
+            { id: '4', name: 'Team Standup Notes', checked: false },
+        ]);
+
+        const handleCheckedChange = (id: string, checked: boolean) => {
+            setTasks((prevTasks) =>
+                prevTasks.map((task) => (task.id === id ? { ...task, checked } : task)),
+            );
+        };
+
+        const onDuplicate = () => {
+            const selectedTasks = tasks.filter((task) => task.checked);
+            const duplicates = selectedTasks.map((task) => ({
+                ...task,
+                id: crypto.randomUUID(),
+                name: `${task.name} (copy)`,
+                checked: false,
+            }));
+            setTasks([...tasks, ...duplicates]);
+        };
+
+        const onDelete = () => {
+            setTasks(tasks.filter((task) => !task.checked));
+        };
+
+        const onUncheckAll = () => {
+            setTasks((prevTasks) => prevTasks.map((task) => ({ ...task, checked: false })));
+        };
+
+        return (
+            <VStack width="100%" gap="$100">
+                (Select tasks to see the FloatingBar in action)
+                <Text typography="heading5">Tasks</Text>
+                <VStack gap="$050">
+                    {tasks.map((task) => (
+                        <Field.Root
+                            key={task.id}
+                            gap="$100"
+                            flexDirection="row"
+                            alignItems="center"
+                        >
+                            <Checkbox.Root
+                                checked={task.checked}
+                                onCheckedChange={(checked) => {
+                                    handleCheckedChange(task.id, checked);
+                                }}
+                            />
+                            <Field.Label>{task.name}</Field.Label>
+                        </Field.Root>
+                    ))}
+                </VStack>
+                <FloatingBar.Root open={tasks.some((task) => task.checked)}>
+                    <FloatingBar.Popup>
+                        <HStack
+                            border="1px dashed"
+                            borderColor="$normal"
+                            paddingY="$050"
+                            paddingLeft="$150"
+                            paddingRight="$100"
+                            borderRadius="$200"
+                            alignItems="center"
+                            gap="$050"
+                        >
+                            <Text style={{ whiteSpace: 'nowrap' }}>
+                                {tasks.filter((task) => task.checked).length} selected
+                            </Text>
+
+                            <FloatingBar.Close
+                                onClick={onUncheckAll}
+                                render={
+                                    <IconButton
+                                        size="sm"
+                                        aria-label="Remove selected tasks"
+                                        colorPalette="secondary"
+                                        variant="ghost"
+                                    />
+                                }
+                            >
+                                <CloseOutlineIcon />
+                            </FloatingBar.Close>
+                        </HStack>
+
+                        <HStack gap="$150">
+                            <FloatingBar.Close
+                                render={<Button colorPalette="secondary" variant="outline" />}
+                                onClick={onDuplicate}
+                            >
+                                <CopyOutlineIcon />
+                                Duplicate
+                            </FloatingBar.Close>
+
+                            <FloatingBar.Close
+                                render={<Button colorPalette="danger" />}
+                                onClick={onDelete}
+                            >
+                                <TrashOutlineIcon />
+                                Delete
+                            </FloatingBar.Close>
+                        </HStack>
+                    </FloatingBar.Popup>
+                </FloatingBar.Root>
+            </VStack>
+        );
+    },
 };
 
 export const TestBed: Story = {
