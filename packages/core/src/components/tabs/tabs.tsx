@@ -1,11 +1,12 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, forwardRef } from 'react';
+import { type ComponentPropsWithoutRef, type ReactElement, forwardRef } from 'react';
 
 import { Tabs as BaseTabs } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
+import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign } from '~/utils/types';
@@ -60,10 +61,10 @@ export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) 
 TabsRoot.displayName = 'Tabs.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Tabs.List
+ * Tabs.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) => {
+export const TabsListPrimitive = forwardRef<HTMLDivElement, TabsListPrimitive.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const { activateOnFocus, loop, variant, orientation } = useTabsContext();
 
@@ -75,6 +76,42 @@ export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) 
             className={clsx(styles.list({ variant, orientation }), className)}
             {...componentProps}
         />
+    );
+});
+TabsListPrimitive.displayName = 'Tabs.ListPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * Tabs.IndicatorPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const TabsIndicatorPrimitive = forwardRef<HTMLDivElement, TabsIndicatorPrimitive.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+    const { orientation, variant } = useTabsContext();
+
+    return (
+        <BaseTabs.Indicator
+            ref={ref}
+            className={clsx(styles.indicator({ orientation, variant }), className)}
+            {...componentProps}
+        />
+    );
+});
+TabsIndicatorPrimitive.displayName = 'Tabs.IndicatorPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * Tabs.List
+ * -----------------------------------------------------------------------------------------------*/
+
+export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) => {
+    const { children, indicatorElement, ...componentProps } = resolveStyles(props);
+
+    const IndicatorElement = createSlot(indicatorElement || <TabsIndicatorPrimitive />);
+
+    return (
+        <TabsListPrimitive ref={ref} {...componentProps}>
+            {children}
+            <IndicatorElement />
+        </TabsListPrimitive>
     );
 });
 TabsList.displayName = 'Tabs.List';
@@ -101,24 +138,6 @@ export const TabsButton = forwardRef<HTMLButtonElement, TabsButton.Props>((props
 TabsButton.displayName = 'Tabs.Button';
 
 /* -------------------------------------------------------------------------------------------------
- * Tabs.Indicator
- * -----------------------------------------------------------------------------------------------*/
-
-export const TabsIndicator = forwardRef<HTMLDivElement, TabsIndicator.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
-    const { orientation, variant } = useTabsContext();
-
-    return (
-        <BaseTabs.Indicator
-            ref={ref}
-            className={clsx(styles.indicator({ orientation, variant }), className)}
-            {...componentProps}
-        />
-    );
-});
-TabsIndicator.displayName = 'Tabs.Indicator';
-
-/* -------------------------------------------------------------------------------------------------
  * Tabs.Panel
  * -----------------------------------------------------------------------------------------------*/
 
@@ -138,10 +157,20 @@ export namespace TabsRoot {
     export type ChangeEventDetails = BaseTabs.Root.ChangeEventDetails;
 }
 
-export namespace TabsList {
+export namespace TabsListPrimitive {
     type BaseProps = ComponentPropsWithoutRef<typeof BaseTabs.List>;
 
     export interface Props extends Assign<BaseProps, TabsContextValue> {}
+}
+
+export namespace TabsIndicatorPrimitive {
+    export interface Props extends ComponentPropsWithoutRef<typeof BaseTabs.Indicator> {}
+}
+
+export namespace TabsList {
+    export interface Props extends TabsListPrimitive.Props {
+        indicatorElement?: ReactElement<typeof TabsIndicatorPrimitive>;
+    }
 }
 
 export namespace TabsButton {
