@@ -6,14 +6,20 @@ export default function TabsCustomIndicator() {
             <Tabs.List
                 indicatorElement={
                     <Tabs.IndicatorPrimitive
-                        className="bg-gradient-to-r from-blue-500 to-purple-500"
+                        className="bg-gradient-to-r from-red-600 to-orange-400"
                         style={{ height: '4px', borderRadius: '2px' }}
                     />
                 }
             >
-                <Tabs.Button value="home">홈</Tabs.Button>
-                <Tabs.Button value="about">소개</Tabs.Button>
-                <Tabs.Button value="services">서비스</Tabs.Button>
+                <Tabs.Button value="home" width="5rem">
+                    홈
+                </Tabs.Button>
+                <Tabs.Button value="about" width="5rem">
+                    소개
+                </Tabs.Button>
+                <Tabs.Button value="services" width="5rem">
+                    서비스
+                </Tabs.Button>
             </Tabs.List>
         </Tabs.Root>
     );
