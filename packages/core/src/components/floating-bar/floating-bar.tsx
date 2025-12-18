@@ -1,8 +1,10 @@
+import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Popover } from '@base-ui-components/react';
+import { Popover, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
+import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -96,13 +98,21 @@ FloatingBarPopupPrimitive.displayName = 'FloatingBar.PopupPrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 export const FloatingBarPopup = forwardRef<HTMLDivElement, FloatingBarPopup.Props>((props, ref) => {
-    return (
-        <FloatingBarPortalPrimitive>
-            <FloatingBarPositionerPrimitive>
-                <FloatingBarPopupPrimitive ref={ref} {...props} />
-            </FloatingBarPositionerPrimitive>
-        </FloatingBarPortalPrimitive>
-    );
+    const { portalElement, ...componentProps } = props;
+
+    const popup = <FloatingBarPopupPrimitive ref={ref} {...componentProps} />;
+
+    const positioner = useRender({
+        render: createRender(<FloatingBarPositionerPrimitive />),
+        props: { children: popup },
+    });
+
+    const portal = useRender({
+        render: createRender(portalElement, <FloatingBarPortalPrimitive />),
+        props: { children: positioner },
+    });
+
+    return portal;
 });
 FloatingBarPopup.displayName = 'FloatingBar.Popup';
 
@@ -121,7 +131,7 @@ export namespace FloatingBarClose {
 }
 
 export namespace FloatingBarPortalPrimitive {
-    export type Props = VComponentProps<typeof Popover.Portal>;
+    export type Props = Popover.Portal.Props;
 }
 
 export namespace FloatingBarPositionerPrimitive {
@@ -133,5 +143,9 @@ export namespace FloatingBarPopupPrimitive {
 }
 
 export namespace FloatingBarPopup {
-    export type Props = FloatingBarPopupPrimitive.Props;
+    export type PopupProps = FloatingBarPopupPrimitive.Props;
+
+    export interface Props extends PopupProps {
+        portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
+    }
 }
