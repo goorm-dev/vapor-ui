@@ -10,7 +10,6 @@ export default function TabsOrientation() {
                         <Tabs.Button value={1}>Tab 1</Tabs.Button>
                         <Tabs.Button value={2}>Tab 2</Tabs.Button>
                         <Tabs.Button value={3}>Tab 3</Tabs.Button>
-                        <Tabs.Indicator />
                     </Tabs.List>
                 </Tabs.Root>
             </Grid.Item>
@@ -22,7 +21,6 @@ export default function TabsOrientation() {
                         <Tabs.Button value={1}>Tab 1</Tabs.Button>
                         <Tabs.Button value={2}>Tab 2</Tabs.Button>
                         <Tabs.Button value={3}>Tab 3</Tabs.Button>
-                        <Tabs.Indicator />
                     </Tabs.List>
                 </Tabs.Root>
             </Grid.Item>

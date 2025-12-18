@@ -8,7 +8,6 @@ export default function DefaultTabs() {
                 <Tabs.Button value="overview">개요</Tabs.Button>
                 <Tabs.Button value="features">기능</Tabs.Button>
                 <Tabs.Button value="examples">예시</Tabs.Button>
-                <Tabs.Indicator />
             </Tabs.List>
 
             <Tabs.Panel value="overview" className="h-[100px] flex items-center justify-center">

@@ -9,7 +9,6 @@ export default function TabsVariant() {
                     <Tabs.Button value="home">홈</Tabs.Button>
                     <Tabs.Button value="about">소개</Tabs.Button>
                     <Tabs.Button value="services">서비스</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
 
@@ -19,7 +18,6 @@ export default function TabsVariant() {
                     <Tabs.Button value="home">홈</Tabs.Button>
                     <Tabs.Button value="about">소개</Tabs.Button>
                     <Tabs.Button value="services">서비스</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
         </VStack>

@@ -11,7 +11,6 @@ export default function TabsKeyboard() {
                     <Tabs.Button value="tab1">탭 1</Tabs.Button>
                     <Tabs.Button value="tab2">탭 2</Tabs.Button>
                     <Tabs.Button value="tab3">탭 3</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
 
@@ -23,7 +22,6 @@ export default function TabsKeyboard() {
                     <Tabs.Button value="tab1">탭 1</Tabs.Button>
                     <Tabs.Button value="tab2">탭 2</Tabs.Button>
                     <Tabs.Button value="tab3">탭 3</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
 
@@ -35,7 +33,6 @@ export default function TabsKeyboard() {
                     <Tabs.Button value="tab1">탭 1</Tabs.Button>
                     <Tabs.Button value="tab2">탭 2</Tabs.Button>
                     <Tabs.Button value="tab3">탭 3</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
         </VStack>

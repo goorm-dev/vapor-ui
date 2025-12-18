@@ -15,7 +15,6 @@ export default function TabsControlled() {
                     <Tabs.Button value="account">계정</Tabs.Button>
                     <Tabs.Button value="security">보안</Tabs.Button>
                     <Tabs.Button value="notifications">알림</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
 

@@ -9,7 +9,6 @@ export default function TabsSize() {
                     <Tabs.Button value="tab1">Tab 1</Tabs.Button>
                     <Tabs.Button value="tab2">Tab 2</Tabs.Button>
                     <Tabs.Button value="tab3">Tab 3</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
 
@@ -19,7 +18,6 @@ export default function TabsSize() {
                     <Tabs.Button value="tab1">Tab 1</Tabs.Button>
                     <Tabs.Button value="tab2">Tab 2</Tabs.Button>
                     <Tabs.Button value="tab3">Tab 3</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
 
@@ -29,7 +27,6 @@ export default function TabsSize() {
                     <Tabs.Button value="tab1">Tab 1</Tabs.Button>
                     <Tabs.Button value="tab2">Tab 2</Tabs.Button>
                     <Tabs.Button value="tab3">Tab 3</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
 
@@ -39,7 +36,6 @@ export default function TabsSize() {
                     <Tabs.Button value="tab1">Tab 1</Tabs.Button>
                     <Tabs.Button value="tab2">Tab 2</Tabs.Button>
                     <Tabs.Button value="tab3">Tab 3</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
         </VStack>

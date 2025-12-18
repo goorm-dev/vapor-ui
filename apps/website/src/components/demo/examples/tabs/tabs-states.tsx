@@ -11,7 +11,6 @@ export default function TabsStates() {
                         비활성화 탭
                     </Tabs.Button>
                     <Tabs.Button value="normal">일반 탭</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
 
@@ -21,7 +20,6 @@ export default function TabsStates() {
                     <Tabs.Button value="enabled">활성화 탭</Tabs.Button>
                     <Tabs.Button value="disabled">비활성화 탭</Tabs.Button>
                     <Tabs.Button value="normal">일반 탭</Tabs.Button>
-                    <Tabs.Indicator />
                 </Tabs.List>
             </Tabs.Root>
         </VStack>
