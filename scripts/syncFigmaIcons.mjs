@@ -1,3 +1,15 @@
+/**
+ * Sync icons from Figma to local React components
+ *
+ * Usage:
+ *   node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs
+ *
+ * Environment variables required:
+ *   - FIGMA_TOKEN: Your Figma personal access token
+ *   - TYPE: Icon type to sync ('basic' or 'symbol')
+ *
+ * Note: Node.js 20.6+ required for --env-file flag
+ */
 import { camelCase, startCase } from 'lodash-es';
 import fs, { constants } from 'node:fs/promises';
 import path from 'node:path';
@@ -17,8 +29,18 @@ import getIconsIndex from './templates/icon/iconsIndex.js';
 
 const TYPE = process.env.TYPE;
 const CURRENT_DIRECTORY = process.cwd();
+const FIGMA_EMOJI_PREFIX_PATTERN = /❤️\s*/g;
+
+function normalizeIconName(name) {
+    return startCase(camelCase(name.replace(FIGMA_EMOJI_PREFIX_PATTERN, ''))).replace(/ /g, '');
+}
 
 console.log('\x1b[33m---------------- GDS FIGMA EXPORT -----------------\x1b[0m');
+
+if (!process.env.FIGMA_TOKEN) {
+    console.error('\x1b[31m GDS FIGMA EXPORT ERROR: FIGMA_TOKEN environment variable is not set.\x1b[0m');
+    process.exit(1);
+}
 
 try {
     const { nodeIds, targetPath } = ICON_TYPES[TYPE];
@@ -26,7 +48,7 @@ try {
 
     // Get nodes (icons) set as COMPONENT in the file.
     let components = [];
-    if (TYPE === 'basic' || 'symbol') {
+    if (TYPE === 'basic' || TYPE === 'symbol') {
         FILE_KEY = FIGMA_ICONS_FILE_KEY;
         // Basic icons are composed of 2 frames, so nodeIds are in array form
         for (const nodeId of nodeIds) {
@@ -49,11 +71,17 @@ try {
 
     const componentsInfo = {
         total: components.length,
-        nameArr: components.map(({ name }) => startCase(camelCase(name)).replace(/ /g, '')),
+        nameArr: components.map(({ name }) => normalizeIconName(name)),
     };
     console.log(
         `\x1b[33m GDS FIGMA EXPORT: \x1b[0m ${componentsInfo.total} icons extraction complete`,
     );
+
+    // Exit early if no icons found to prevent overwriting existing files
+    if (components.length === 0) {
+        console.error('\x1b[31m GDS FIGMA EXPORT ERROR: No icons found! Check FIGMA_TOKEN and API access.\x1b[0m');
+        process.exit(1);
+    }
 
     // Separate the IDs of extracted icons with commas and get URLs of svg images at once.
     console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Loading svg files...`);
@@ -69,7 +97,7 @@ try {
     const newIconNameArr = [];
     const updatedIconNameArr = [];
     const promiseCreateIcons = componentsWithUrl.map(async ({ name, url, parentId }) => {
-        const iconName = startCase(camelCase(name)).replace(/ /g, '');
+        const iconName = normalizeIconName(name);
         const saveTargetPath = path.join(parentIconPath, iconName);
         const iconFilePath = path.resolve(saveTargetPath, `${iconName}.tsx`);
 

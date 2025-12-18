@@ -21,6 +21,7 @@ export interface SemanticTokens {
     'color-background-primary-100': string;
     'color-background-primary-200': string;
     'color-border-primary': string;
+    'color-border-normal': string;
     'color-foreground-primary-100': string;
     'color-foreground-primary-200': string;
     'color-background-canvas-100': string;

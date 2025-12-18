@@ -36,7 +36,9 @@
         "typecheck": "turbo typecheck",
         "release": "turbo run build --filter=./packages/* && changeset publish",
         "version": "changeset version && pnpm install --lockfile-only",
-        "update-releases": "node scripts/update-releases.mjs"
+        "update-releases": "node scripts/update-releases.mjs",
+        "sync-icons:basic": "TYPE=basic node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs && pnpm format",
+        "sync-icons:symbol": "TYPE=symbol node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs && pnpm format"
     },
     "devDependencies": {
         "@changesets/cli": "^2.28.1",

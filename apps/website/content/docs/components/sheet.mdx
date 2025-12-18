@@ -19,7 +19,7 @@ description: 'Sheet는 화면의 가장자리에서 슬라이드되어 나타나
 
 ### Side
 
-Sheet가 나타날 위치를 설정할 수 있습니다. 기본값은 'right'입니다.
+Sheet가 나타날 위치를 설정합니다. 기본값은 'right'입니다.
 
 <Demo name="sheet/sheet-side">
 ```json doc-gen:file
@@ -32,7 +32,7 @@ Sheet가 나타날 위치를 설정할 수 있습니다. 기본값은 'right'입
 
 ### Controlled State
 
-Sheet의 열림/닫힘 상태를 외부에서 제어할 수 있습니다.
+Sheet의 열림/닫힘 상태를 외부에서 제어합니다.
 
 <Demo name="sheet/sheet-controlled">
 ```json doc-gen:file
@@ -45,7 +45,7 @@ Sheet의 열림/닫힘 상태를 외부에서 제어할 수 있습니다.
 
 ### Keep Mounted
 
-Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정할 수 있습니다.
+Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정합니다.
 
 <Demo name="sheet/sheet-keep-mounted">
 ```json doc-gen:file
@@ -62,7 +62,7 @@ Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정할 수 �
 
 ### Custom Usage
 
-유연한 Sheet 사용 예시입니다.
+유연하게 Sheet를 사용합니다.
 
 <Demo name="sheet/flexible">
 ```json doc-gen:file
@@ -79,78 +79,52 @@ Sheet가 닫혀도 DOM에서 제거되지 않고 유지되도록 설정할 수 �
 
 ### Sheet.Root
 
-Sheet의 루트 컨테이너로, 전체 Sheet 컴포넌트의 상태와 동작을 관리합니다.
-
-<ComponentPropsTable file="sheet" section="rootProps" />
+<ComponentPropsTable componentName="sheet-root" />
 
 ### Sheet.Trigger
 
-Sheet를 여는 트리거 요소입니다.
-
-<ComponentPropsTable file="sheet" section="triggerProps" />
+<ComponentPropsTable componentName="sheet-trigger" />
 
 ### Sheet.Popup
 
-Sheet의 실제 콘텐츠를 담는 컨테이너입니다. Portal, Overlay, Positioner를 조합하여 구성됩니다.
+<ComponentPropsTable componentName="sheet-popup" />
 
-<ComponentPropsTable file="sheet" section="popupProps" />
+#### Sheet.PortalPrimitive
 
-### Sheet.PortalPrimitive
+<ComponentPropsTable componentName="sheet-portal-primitive" />
 
-Sheet를 DOM의 다른 위치에 렌더링하는 포털 컴포넌트입니다.
+#### Sheet.OverlayPrimitive
 
-<ComponentPropsTable file="sheet" section="portalPrimitiveProps" />
+<ComponentPropsTable componentName="sheet-overlay-primitive" />
 
-### Sheet.OverlayPrimitive
+#### Sheet.PopupPrimitive
 
-Sheet 뒤의 배경 오버레이를 담당합니다.
+<ComponentPropsTable componentName="sheet-popup-primitive" />
 
-<ComponentPropsTable file="sheet" section="overlayPrimitiveProps" />
+#### Sheet.PositionerPrimitive
 
-### Sheet.PopupPrimitive
-
-Sheet의 실제 팝업 콘텐츠 영역입니다.
-
-<ComponentPropsTable file="sheet" section="popupPrimitiveProps" />
-
-### Sheet.PositionerPrimitive
-
-Sheet의 위치를 설정하는 컴포넌트입니다.
-
-<ComponentPropsTable file="sheet" section="positionerPrimitiveProps" />
+<ComponentPropsTable componentName="sheet-positioner-primitive" />
 
 ### Sheet.Header
 
-Sheet의 헤더 영역을 담당합니다.
-
-<ComponentPropsTable file="sheet" section="headerProps" />
+<ComponentPropsTable componentName="sheet-header" />
 
 ### Sheet.Body
 
-Sheet의 본문 영역을 담당합니다.
-
-<ComponentPropsTable file="sheet" section="bodyProps" />
+<ComponentPropsTable componentName="sheet-body" />
 
 ### Sheet.Footer
 
-Sheet의 푸터 영역을 담당합니다.
-
-<ComponentPropsTable file="sheet" section="footerProps" />
+<ComponentPropsTable componentName="sheet-footer" />
 
 ### Sheet.Title
 
-Sheet의 제목을 표시하는 컴포넌트입니다.
-
-<ComponentPropsTable file="sheet" section="titleProps" />
+<ComponentPropsTable componentName="sheet-title" />
 
 ### Sheet.Description
 
-Sheet의 설명을 표시하는 컴포넌트입니다.
-
-<ComponentPropsTable file="sheet" section="descriptionProps" />
+<ComponentPropsTable componentName="sheet-description" />
 
 ### Sheet.Close
 
-Sheet를 닫는 버튼 컴포넌트입니다.
-
-<ComponentPropsTable file="sheet" section="closeProps" />
+<ComponentPropsTable componentName="sheet-close" />

@@ -49,8 +49,8 @@ export function generatePrimitiveColorPalette(
     const backgroundLightness =
         mergedOptions.backgroundColor.lightness ?? DEFAULT_THEME_OPTIONS.backgroundColor.lightness;
 
-    const lightLightness = backgroundLightness!.light;
-    const darkLightness = backgroundLightness!.dark;
+    const lightLightness = backgroundLightness.light;
+    const darkLightness = backgroundLightness.dark;
 
     const lightModeTokens = colorGeneratorPort.generatePalette({
         colors,

@@ -21,7 +21,7 @@ Vapor는 React 기반의 UI 라이브러리로, 접근성, 커스터마이징, �
 
 ## 문서
 
-- **[사용법](https://vapor-ui.goorm.io/docs/overview/installation)**: 라이브러리 설치 및 설정 방법을 안내합니다.
+- **[사용법](https://vapor-ui.goorm.io/docs/getting-started/installation)**: 라이브러리 설치 및 설정 방법을 안내합니다.
 - **[기여하기](https://github.com/goorm-dev/vapor-ui/blob/main/CONTRIBUTING.md)**: 프로젝트 기여 가이드라인과 로컬 설정 방법을 안내합니다.
 - **[릴리즈](https://github.com/goorm-dev/vapor-ui/releases)**: 각 버전의 변경 사항을 확인할 수 있습니다.
 

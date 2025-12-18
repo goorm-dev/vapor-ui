@@ -29,7 +29,7 @@ function convertThemeResultToThemeData(
     return {
         tokens: {
             // Add background canvas token
-            'color-background-canvas': {
+            'color-canvas': {
                 name: modeData.backgroundCanvas.name,
                 hex: modeData.backgroundCanvas.hex,
                 oklch: modeData.backgroundCanvas.oklch,

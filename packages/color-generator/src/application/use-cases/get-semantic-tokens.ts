@@ -90,9 +90,11 @@ function generateLightModeSemanticTokens(
         primaryColorPalette.chips[foregroundPrimary200Step]?.name ||
         primaryColorPalette.chips['900'].name;
 
-    const backgroundCanvas100 = backgroundCanvas.name;
-    const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || backgroundCanvas.name;
-    const backgroundOverlay100 = backgroundCanvas.name;
+    const colorCanvas = backgroundCanvas.name;
+    const backgroundCanvas100 = colorCanvas;
+    const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || colorCanvas;
+    const backgroundOverlay100 = colorCanvas;
+    const borderNormal = canvasColorPalette.chips['100']?.name || colorCanvas;
 
     // Adaptive Contrast Rule: lightness >= 0.65이면 color-black, 아니면 color-white
     const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
@@ -104,6 +106,7 @@ function generateLightModeSemanticTokens(
         'color-background-primary-100': backgroundPrimary100,
         'color-background-primary-200': backgroundPrimary200,
         'color-border-primary': borderPrimary,
+        'color-border-normal': borderNormal,
         'color-foreground-primary-100': foregroundPrimary100,
         'color-foreground-primary-200': foregroundPrimary200,
         'color-background-canvas-100': backgroundCanvas100,
@@ -140,9 +143,11 @@ function generateDarkModeSemanticTokens(
         primaryColorPalette.chips[foregroundPrimary200Step]?.name ||
         primaryColorPalette.chips['900'].name;
 
-    const backgroundCanvas100 = backgroundCanvas.name;
-    const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || backgroundCanvas.name;
-    const backgroundOverlay100 = canvasColorPalette.chips['100']?.name || backgroundCanvas.name;
+    const colorCanvas = backgroundCanvas.name;
+    const backgroundCanvas100 = colorCanvas;
+    const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || colorCanvas;
+    const backgroundOverlay100 = canvasColorPalette.chips['100']?.name || colorCanvas;
+    const borderNormal = canvasColorPalette.chips['300']?.name || colorCanvas;
 
     const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
     const lightness = extractOklchLightness(primary200Chip?.oklch || lowestDeltaEChip.oklch);
@@ -153,6 +158,7 @@ function generateDarkModeSemanticTokens(
         'color-background-primary-100': backgroundPrimary100,
         'color-background-primary-200': backgroundPrimary200,
         'color-border-primary': borderPrimary,
+        'color-border-normal': borderNormal,
         'color-foreground-primary-100': foregroundPrimary100,
         'color-foreground-primary-200': foregroundPrimary200,
         'color-background-canvas-100': backgroundCanvas100,
