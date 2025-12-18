@@ -13,11 +13,17 @@ import type { Assign } from '~/utils/types';
 import * as styles from './tabs.css';
 import type { ListVariants, TriggerVariants } from './tabs.css';
 
-type TabsVariants = ListVariants & TriggerVariants;
-type TabsSharedProps = TabsVariants & { activateOnFocus?: boolean; loop?: boolean };
-type TabsContext = TabsSharedProps;
+type StyleVariants = ListVariants & TriggerVariants;
 
-const [TabsProvider, useTabsContext] = createContext<TabsContext>({
+type RootControlledProps = {
+    activateOnFocus?: boolean;
+    loop?: boolean;
+    disabled?: boolean;
+};
+
+type TabsContextValue = StyleVariants & RootControlledProps;
+
+const [TabsProvider, useTabsContext] = createContext<TabsContextValue>({
     name: 'TabsContext',
     hookName: 'useTabsContext',
     providerName: 'TabsProvider',
@@ -29,7 +35,7 @@ const [TabsProvider, useTabsContext] = createContext<TabsContext>({
 
 export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
-    const [sharedProps, otherProps] = createSplitProps<TabsSharedProps>()(componentProps, [
+    const [contextProps, otherProps] = createSplitProps<TabsContextValue>()(componentProps, [
         'activateOnFocus',
         'loop',
         'variant',
@@ -38,10 +44,10 @@ export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) 
         'orientation',
     ]);
 
-    const { orientation } = sharedProps;
+    const { orientation } = contextProps;
 
     return (
-        <TabsProvider value={sharedProps}>
+        <TabsProvider value={contextProps}>
             <BaseTabs.Root
                 ref={ref}
                 orientation={orientation}
@@ -87,7 +93,7 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>((pro
         <BaseTabs.Tab
             ref={ref}
             disabled={disabled}
-            className={clsx(styles.trigger({ size, variant, disabled, orientation }), className)}
+            className={clsx(styles.trigger({ size, variant, orientation }), className)}
             {...componentProps}
         />
     );
@@ -126,16 +132,16 @@ TabsPanel.displayName = 'Tabs.Panel';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TabsRoot {
-    type RootPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.Root>;
+    type BaseProps = ComponentPropsWithoutRef<typeof BaseTabs.Root>;
 
-    export interface Props extends RootPrimitiveProps, TabsSharedProps {}
+    export interface Props extends BaseProps, StyleVariants, RootControlledProps {}
     export type ChangeEventDetails = BaseTabs.Root.ChangeEventDetails;
 }
 
 export namespace TabsList {
-    type ListPrimitiveProps = ComponentPropsWithoutRef<typeof BaseTabs.List>;
+    type BaseProps = ComponentPropsWithoutRef<typeof BaseTabs.List>;
 
-    export interface Props extends Assign<ListPrimitiveProps, TabsSharedProps> {}
+    export interface Props extends Assign<BaseProps, TabsContextValue> {}
 }
 
 export namespace TabsTrigger {

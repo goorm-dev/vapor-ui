@@ -102,10 +102,17 @@ export const trigger = recipe({
             justifyContent: 'center',
             gap: vars.size.space['075'],
             zIndex: 1,
+
+            selectors: {
+                '&[data-disabled]': {
+                    opacity: 0.32,
+                    pointerEvents: 'none',
+                },
+            },
         }),
     ],
 
-    defaultVariants: { size: 'md', disabled: false, variant: 'line', orientation: 'horizontal' },
+    defaultVariants: { size: 'md', variant: 'line', orientation: 'horizontal' },
     variants: {
         size: {
             sm: [
@@ -147,9 +154,6 @@ export const trigger = recipe({
                     },
                 },
             }),
-        },
-        disabled: {
-            true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
         },
     },
 });
