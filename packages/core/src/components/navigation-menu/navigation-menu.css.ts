@@ -106,6 +106,7 @@ export const trigger = layerStyle('components', {
 
 export const icon = layerStyle('components', {
     display: 'flex',
+    flexShrink: 0,
 });
 
 const durationVar = createVar('duration');

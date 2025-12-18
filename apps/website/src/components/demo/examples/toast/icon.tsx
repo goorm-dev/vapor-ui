@@ -1,14 +1,15 @@
 import './styles.css';
 
-import type { ReactNode } from 'react';
-
 import { Button, HStack, Toast } from '@vapor-ui/core';
 import { CertificateIcon, HeartIcon, WarningIcon } from '@vapor-ui/icons';
 
 const toastManager = Toast.createToastManager();
 
 export default function Icon() {
-    const addToast = (colorPalette: 'info' | 'danger' | 'success', icon: ReactNode) => {
+    const addToast = (
+        colorPalette: Toast.RootPrimitive.ToastObject['colorPalette'],
+        icon: Toast.RootPrimitive.ToastObject['icon'],
+    ) => {
         toastManager.add({
             title: 'This is a color palette toast message!',
             description: 'Here is a description for the color palette toast message.',

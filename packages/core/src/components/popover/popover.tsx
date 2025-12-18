@@ -3,13 +3,14 @@
 import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
+import { useRender } from '@base-ui-components/react';
 import { Popover as BasePopover } from '@base-ui-components/react/popover';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
-import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
+import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -157,16 +158,19 @@ const extractPositions = (dataset: DOMStringMap) => {
 
 export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <PopoverPortalPrimitive />);
-        const PositionerElement = createSlot(positionerElement || <PopoverPositionerPrimitive />);
+        const popup = <PopoverPopupPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <PopoverPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const positioner = useRender({
+            render: createRender(positionerElement, <PopoverPositionerPrimitive />),
+            props: { children: popup },
+        });
+
+        const portal = useRender({
+            render: createRender(portalElement ?? <PopoverPortalPrimitive />),
+            props: { children: positioner },
+        });
+
+        return portal;
     },
 );
 PopoverPopup.displayName = 'Popover.Popup';

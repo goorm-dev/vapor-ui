@@ -2,12 +2,14 @@
 
 import { forwardRef } from 'react';
 
+import { useRender } from '@base-ui-components/react';
 import { Avatar as BaseAvatar } from '@base-ui-components/react/avatar';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -37,12 +39,15 @@ export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, 
     ]);
     const { shape, size } = variantProps;
 
-    const children = childrenProp ?? (
-        <>
-            <AvatarImagePrimitive />
-            <AvatarFallbackPrimitive />
-        </>
-    );
+    const children = useRender({
+        render: createRender(
+            childrenProp,
+            <>
+                <AvatarImagePrimitive />
+                <AvatarFallbackPrimitive />
+            </>,
+        ),
+    });
 
     return (
         <AvatarProvider value={variantProps}>
