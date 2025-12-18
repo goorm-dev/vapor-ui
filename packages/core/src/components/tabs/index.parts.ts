@@ -1,7 +1,7 @@
 export {
     TabsRoot as Root,
     TabsList as List,
-    TabsTrigger as Trigger,
+    TabsButton as Button,
     TabsIndicator as Indicator,
     TabsPanel as Panel,
 } from './tabs';

@@ -11,9 +11,9 @@ import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign } from '~/utils/types';
 
 import * as styles from './tabs.css';
-import type { ListVariants, TriggerVariants } from './tabs.css';
+import type { ListVariants, ButtonVariants } from './tabs.css';
 
-type StyleVariants = ListVariants & TriggerVariants;
+type StyleVariants = ListVariants & ButtonVariants;
 
 type RootControlledProps = {
     activateOnFocus?: boolean;
@@ -80,10 +80,10 @@ export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) 
 TabsList.displayName = 'Tabs.List';
 
 /* -------------------------------------------------------------------------------------------------
- * Tabs.Trigger
+ * Tabs.Button
  * -----------------------------------------------------------------------------------------------*/
 
-export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>((props, ref) => {
+export const TabsButton = forwardRef<HTMLButtonElement, TabsButton.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: rootDisabled, size, orientation, variant } = useTabsContext();
 
@@ -93,12 +93,12 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTrigger.Props>((pro
         <BaseTabs.Tab
             ref={ref}
             disabled={disabled}
-            className={clsx(styles.trigger({ size, variant, orientation }), className)}
+            className={clsx(styles.button({ size, variant, orientation }), className)}
             {...componentProps}
         />
     );
 });
-TabsTrigger.displayName = 'Tabs.Trigger';
+TabsButton.displayName = 'Tabs.Button';
 
 /* -------------------------------------------------------------------------------------------------
  * Tabs.Indicator
@@ -144,7 +144,7 @@ export namespace TabsList {
     export interface Props extends Assign<BaseProps, TabsContextValue> {}
 }
 
-export namespace TabsTrigger {
+export namespace TabsButton {
     export interface Props extends ComponentPropsWithoutRef<typeof BaseTabs.Tab> {}
 }
 

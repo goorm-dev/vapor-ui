@@ -23,8 +23,8 @@ const listBorderBottom = createVar();
 const listBorderRight = createVar();
 const listBorder = createVar();
 
-const triggerVerticalBorderRadius = createVar();
-const triggerHorizontalBorderRadius = createVar();
+const buttonVerticalBorderRadius = createVar();
+const buttonHorizontalBorderRadius = createVar();
 
 const indicatorVerticalWidth = createVar();
 const indicatorHorizontalHeight = createVar();
@@ -90,7 +90,7 @@ export const list = recipe({
     },
 });
 
-export const trigger = recipe({
+export const button = recipe({
     base: [
         foregrounds({ color: 'normal-100' }),
         interaction({ scale: 'light' }),
@@ -128,25 +128,25 @@ export const trigger = recipe({
         },
         orientation: {
             horizontal: layerStyle('components', {
-                borderRadius: triggerHorizontalBorderRadius,
+                borderRadius: buttonHorizontalBorderRadius,
                 paddingInline: vars.size.space['050'],
             }),
             vertical: layerStyle('components', {
-                borderRadius: triggerVerticalBorderRadius,
+                borderRadius: buttonVerticalBorderRadius,
                 paddingInline: vars.size.space[200],
             }),
         },
         variant: {
             line: layerStyle('components', {
                 vars: {
-                    [triggerHorizontalBorderRadius]: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
-                    [triggerVerticalBorderRadius]: `${vars.size.borderRadius[300]} 0 0 ${vars.size.borderRadius[300]}`,
+                    [buttonHorizontalBorderRadius]: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
+                    [buttonVerticalBorderRadius]: `${vars.size.borderRadius[300]} 0 0 ${vars.size.borderRadius[300]}`,
                 },
             }),
             fill: layerStyle('components', {
                 vars: {
-                    [triggerHorizontalBorderRadius]: vars.size.borderRadius[300],
-                    [triggerVerticalBorderRadius]: vars.size.borderRadius[300],
+                    [buttonHorizontalBorderRadius]: vars.size.borderRadius[300],
+                    [buttonVerticalBorderRadius]: vars.size.borderRadius[300],
                 },
                 selectors: {
                     '&[data-selected]': {
@@ -209,4 +209,4 @@ export const indicator = recipe({
 });
 
 export type ListVariants = NonNullable<RecipeVariants<typeof list>>;
-export type TriggerVariants = NonNullable<RecipeVariants<typeof trigger>>;
+export type ButtonVariants = NonNullable<RecipeVariants<typeof button>>;
