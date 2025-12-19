@@ -11,11 +11,10 @@ export default function TabsControlled() {
         <VStack gap="$200">
             <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
                 <Tabs.List>
-                    <Tabs.Trigger value="profile">프로필</Tabs.Trigger>
-                    <Tabs.Trigger value="account">계정</Tabs.Trigger>
-                    <Tabs.Trigger value="security">보안</Tabs.Trigger>
-                    <Tabs.Trigger value="notifications">알림</Tabs.Trigger>
-                    <Tabs.Indicator />
+                    <Tabs.Button value="profile">프로필</Tabs.Button>
+                    <Tabs.Button value="account">계정</Tabs.Button>
+                    <Tabs.Button value="security">보안</Tabs.Button>
+                    <Tabs.Button value="notifications">알림</Tabs.Button>
                 </Tabs.List>
             </Tabs.Root>
 

@@ -9,11 +9,10 @@ export const Tabs = ({ lists, ...props }: TabsProps) => {
         <VaporTabs.Root {...props}>
             <VaporTabs.List>
                 {lists.map((list) => (
-                    <VaporTabs.Trigger key={list.value} value={list.value}>
+                    <VaporTabs.Button key={list.value} value={list.value}>
                         {list.trigger}
-                    </VaporTabs.Trigger>
+                    </VaporTabs.Button>
                 ))}
-                <VaporTabs.Indicator />
             </VaporTabs.List>
 
             {lists.map((list) => (
