@@ -17,6 +17,8 @@ import type { ButtonVariants, ListVariants } from './tabs.css';
 type TabsVariants = ListVariants & ButtonVariants;
 type RootControlledProps = {
     activateOnFocus?: boolean;
+    // TODO: base-ui v1.0.0-beta.5+ changed `loop` -> `loopFocus`
+    // https://base-ui.com/react/overview/releases#v1-0-0-beta-5
     loop?: boolean;
     disabled?: boolean;
 };
