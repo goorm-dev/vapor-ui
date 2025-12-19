@@ -14,17 +14,15 @@ import type { Assign, VComponentProps } from '~/utils/types';
 import * as styles from './tabs.css';
 import type { ButtonVariants, ListVariants } from './tabs.css';
 
-type StyleVariants = ListVariants & ButtonVariants;
-
+type TabsVariants = ListVariants & ButtonVariants;
 type RootControlledProps = {
     activateOnFocus?: boolean;
     loop?: boolean;
     disabled?: boolean;
 };
+type TabsContext = TabsVariants & RootControlledProps;
 
-type TabsContextValue = StyleVariants & RootControlledProps;
-
-const [TabsProvider, useTabsContext] = createContext<TabsContextValue>({
+const [TabsProvider, useTabsContext] = createContext<TabsContext>({
     name: 'TabsContext',
     hookName: 'useTabsContext',
     providerName: 'TabsProvider',
@@ -36,7 +34,7 @@ const [TabsProvider, useTabsContext] = createContext<TabsContextValue>({
 
 export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
-    const [contextProps, otherProps] = createSplitProps<TabsContextValue>()(componentProps, [
+    const [contextProps, otherProps] = createSplitProps<TabsContext>()(componentProps, [
         'activateOnFocus',
         'loop',
         'variant',
@@ -157,14 +155,14 @@ TabsPanel.displayName = 'Tabs.Panel';
 export namespace TabsRoot {
     type BaseProps = VComponentProps<typeof BaseTabs.Root>;
 
-    export interface Props extends BaseProps, StyleVariants, RootControlledProps {}
+    export interface Props extends BaseProps, TabsVariants, RootControlledProps {}
     export type ChangeEventDetails = BaseTabs.Root.ChangeEventDetails;
 }
 
 export namespace TabsListPrimitive {
     type BaseProps = VComponentProps<typeof BaseTabs.List>;
 
-    export interface Props extends Assign<BaseProps, TabsContextValue> {}
+    export interface Props extends Assign<BaseProps, TabsContext> {}
 }
 
 export namespace TabsIndicatorPrimitive {
