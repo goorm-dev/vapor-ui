@@ -5,6 +5,9 @@ import { forwardRef } from 'react';
 import { Field as BaseField } from '@base-ui-components/react/field';
 import clsx from 'clsx';
 
+import type { Foregrounds } from '~/styles/mixins/foreground.css';
+import { foregrounds } from '~/styles/mixins/foreground.css';
+import { type Typography, typography } from '~/styles/mixins/typography.css';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
 
@@ -29,10 +32,24 @@ FieldRoot.displayName = 'Field.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const {
+        typography: typographyStyle = 'body2',
+        foreground = 'normal-100',
+        className,
+        ...componentProps
+    } = resolveStyles(props);
 
     return (
-        <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...componentProps} />
+        <BaseField.Label
+            ref={ref}
+            className={clsx(
+                styles.label,
+                typography({ style: typographyStyle }),
+                foregrounds({ color: foreground }),
+                className,
+            )}
+            {...componentProps}
+        />
     );
 });
 FieldLabel.displayName = 'Field.Label';
@@ -94,12 +111,17 @@ FieldSuccess.displayName = 'Field.Success';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+interface FieldTypographyProps {
+    typography?: Typography['style'];
+    foreground?: Foregrounds['color'];
+}
+
 export namespace FieldRoot {
     export interface Props extends VComponentProps<typeof BaseField.Root> {}
 }
 
 export namespace FieldLabel {
-    export interface Props extends VComponentProps<typeof BaseField.Label> {}
+    export interface Props extends VComponentProps<typeof BaseField.Label>, FieldTypographyProps {}
 }
 
 export namespace FieldDescription {

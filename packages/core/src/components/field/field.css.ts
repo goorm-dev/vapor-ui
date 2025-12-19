@@ -41,16 +41,11 @@ export const success = style([
     }),
 ]);
 
-export const label = [
-    typography({ style: 'body2' }),
-    foregrounds({ color: 'normal-100' }),
+export const label = layerStyle('components', {
+    display: 'flex',
+    gap: vars.size.space['100'],
 
-    layerStyle('components', {
-        display: 'flex',
-        gap: vars.size.space['100'],
-
-        selectors: {
-            '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
-        },
-    }),
-];
+    selectors: {
+        '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+    },
+});
