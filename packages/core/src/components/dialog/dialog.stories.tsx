@@ -36,6 +36,7 @@ export const Default: Story = {
 };
 
 export const TestBed: Story = {
+    parameters: { docs: { disable: true } },
     render: (args) => (
         <>
             {['xl', 'lg', 'md'].map((size) => (
