@@ -1,4 +1,4 @@
-import { DiscordColorIcon, FigmaColorIcon, GithubIcon } from '@vapor-ui/icons';
+import { FigmaColorIcon, GithubIcon } from '@vapor-ui/icons';
 import type { IconItemType } from 'fumadocs-ui/layouts/links';
 
 export const externalLinks = [
@@ -7,13 +7,6 @@ export const externalLinks = [
         text: 'Figma',
         url: 'https://www.figma.com/community/file/1508829832204351721/vapor-design-system',
         label: 'Vapor figma comunity file',
-        type: 'icon',
-    },
-    {
-        icon: <DiscordColorIcon size={20} />,
-        text: 'Discord',
-        url: 'https://discord.gg/7Z8Ecur63D',
-        label: 'Vapor Discord comunity',
         type: 'icon',
     },
     {
