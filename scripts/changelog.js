@@ -114,7 +114,7 @@ const changelogFunctions = {
         ].join('');
 
         // Include scope information in the output using a special marker
-        const scopeInfo = scopeFromPR ? `[SCOPE:${scopeFromPR}]` : '[SCOPE:Other]';
+        const scopeInfo = scopeFromPR ? `[SCOPE:${scopeFromPR}]` : '[SCOPE:ETC]';
 
         return `\n\n${scopeInfo}- ${firstLine}${suffix}\n${futureLines
             .map((l) => `  ${l}`)
@@ -130,7 +130,9 @@ const changelogFunctions = {
         }
         if (dependenciesUpdated.length === 0) return '';
 
-        const changesetLink = `- Updated dependencies [${(
+        const scopeInfo = '[SCOPE:Updated Dependencies]';
+
+        const changesetLink = `- [${(
             await Promise.all(
                 changesets.map(async (cs) => {
                     if (cs.commit) {
@@ -147,10 +149,10 @@ const changelogFunctions = {
             .join(', ')}]:`;
 
         const updatedDepenenciesList = dependenciesUpdated.map(
-            (dependency) => `  - ${dependency.name}@${dependency.newVersion}`,
+            (dependency) => `    - ${dependency.name}@${dependency.newVersion}`,
         );
 
-        return [changesetLink, ...updatedDepenenciesList].join('\n');
+        return [scopeInfo, changesetLink, ...updatedDepenenciesList].join('\n');
     },
 };
 
