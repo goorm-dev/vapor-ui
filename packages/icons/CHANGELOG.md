@@ -1,5 +1,17 @@
 # @vapor-ui/icons
 
+## 1.0.0
+
+### Minor Changes
+
+- e9e83a8: Add new icons from Figma
+
+    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
+
+### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
+
 ## 1.0.0-beta.5
 
 ### Minor Changes

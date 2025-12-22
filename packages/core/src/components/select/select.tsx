@@ -3,12 +3,12 @@
 import type { ReactElement, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
-import { Select as BaseSelect } from '@base-ui-components/react';
+import { Select as BaseSelect, useRender } from '@base-ui-components/react';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -149,11 +149,13 @@ export const SelectTriggerIconPrimitive = forwardRef<
     HTMLDivElement,
     SelectTriggerIconPrimitive.Props
 >((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const { size } = useSelectContext();
 
-    const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
+    const children = useRender({
+        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+    });
 
     return (
         <BaseSelect.Icon
@@ -161,7 +163,7 @@ export const SelectTriggerIconPrimitive = forwardRef<
             className={clsx(styles.triggerIcon({ size }), className)}
             {...componentProps}
         >
-            <IconElement />
+            {children}
         </BaseSelect.Icon>
     );
 });
@@ -247,16 +249,19 @@ SelectPopupPrimitive.displayName = 'Select.PopupPrimitive';
 
 export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <SelectPortalPrimitive />);
-        const PositionerElement = createSlot(positionerElement || <SelectPositionerPrimitive />);
+        const popup = <SelectPopupPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <SelectPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const positioner = useRender({
+            render: createRender(positionerElement, <SelectPositionerPrimitive />),
+            props: { children: popup },
+        });
+
+        const portal = useRender({
+            render: createRender(portalElement, <SelectPortalPrimitive />),
+            props: { children: positioner },
+        });
+
+        return portal;
     },
 );
 SelectPopup.displayName = 'Select.Popup';
@@ -288,8 +293,11 @@ export const SelectItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     SelectItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
-    const IconElement = createSlot(children || <ConfirmOutlineIcon />);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+
+    const children = useRender({
+        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+    });
 
     return (
         <BaseSelect.ItemIndicator
@@ -297,7 +305,7 @@ export const SelectItemIndicatorPrimitive = forwardRef<
             className={clsx(styles.itemIndicator, className)}
             {...componentProps}
         >
-            <IconElement />
+            {children}
         </BaseSelect.ItemIndicator>
     );
 });
