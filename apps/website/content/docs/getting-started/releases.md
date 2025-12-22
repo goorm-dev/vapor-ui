@@ -3,7 +3,7 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
-## 1.0.0
+## 1.0.0-beta.11
 
 ### @vapor-ui/core
 
@@ -13,8 +13,8 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - 8c5c755: clone elements & enhance customizability
 - Updated dependencies [8c5c755]
 - Updated dependencies [e9e83a8]
-    - @vapor-ui/hooks@1.0.0
-    - @vapor-ui/icons@1.0.0
+    - @vapor-ui/hooks@1.0.0-beta.6
+    - @vapor-ui/icons@1.0.0-beta.6
 
 ### @vapor-ui/hooks
 
