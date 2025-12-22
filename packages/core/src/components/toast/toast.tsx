@@ -1,12 +1,13 @@
-import type { ReactNode } from 'react';
+import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
+import { useRender } from '@base-ui-components/react';
 import { Toast as BaseToast } from '@base-ui-components/react/toast';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { AnyProp, VComponentProps } from '~/utils/types';
 
@@ -213,7 +214,7 @@ ToastDescriptionPrimitive.displayName = 'Toast.DescriptionPrimitive';
  * Toast.IconPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-type IconMapper = { [key: string]: ReactNode };
+type IconMapper = { [key: string]: ReactElement };
 const TOAST_ICONS: IconMapper = {
     success: <CheckCircleIcon color="white" size="16" />,
     danger: <WarningIcon color="white" size="16" />,
@@ -224,9 +225,11 @@ export const ToastIconPrimitive = forwardRef<SVGSVGElement, ToastIconPrimitive.P
         const componentProps = resolveStyles(props);
         const { icon, colorPalette } = useToastContext();
 
-        const IconElement = createSlot(icon ?? TOAST_ICONS[colorPalette ?? 'info']);
-
-        return <IconElement ref={ref} {...componentProps} />;
+        return useRender({
+            ref,
+            render: icon ?? TOAST_ICONS[colorPalette || ''],
+            props: { ...componentProps },
+        });
     },
 );
 ToastIconPrimitive.displayName = 'Toast.IconPrimitive';
@@ -259,8 +262,16 @@ ToastActionPrimitive.displayName = 'Toast.ActionPrimitive';
 
 export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimitive.Props>(
     (props, ref) => {
-        const { render: renderProp, children, ...componentProps } = resolveStyles(props);
+        const {
+            render: renderProp,
+            children: childrenProp,
+            ...componentProps
+        } = resolveStyles(props);
         const { close = true } = useToastContext();
+
+        const children = useRender({
+            render: createRender(childrenProp, <CloseOutlineIcon />),
+        });
 
         if (!close) return null;
 
@@ -273,11 +284,9 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
             />
         );
 
-        const IconElement = createSlot(children ?? <CloseOutlineIcon />);
-
         return (
             <BaseToast.Close ref={ref} render={render} {...componentProps}>
-                <IconElement />
+                {children}
             </BaseToast.Close>
         );
     },
@@ -299,7 +308,7 @@ interface UseToastManager {
 
 type ToastVariants = RootVariants;
 type ActionProps = BaseToastObject<AnyProp>['actionProps'] & ButtonVariants;
-type ToastOptions = { icon?: ReactNode; close?: boolean; actionProps?: ActionProps };
+type ToastOptions = { icon?: ReactElement<unknown>; close?: boolean; actionProps?: ActionProps };
 
 type ToastProps = ToastVariants & ToastOptions;
 
