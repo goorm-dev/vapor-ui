@@ -4,6 +4,7 @@
 export interface PropertyDoc {
     name: string;
     type: string;
+    detailedType?: string; // Prettier로 포맷팅된 멀티라인 타입 (render, className 등 복잡한 타입용)
     required: boolean;
     description?: string;
     defaultValue?: string;

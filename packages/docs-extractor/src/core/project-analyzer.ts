@@ -1,6 +1,6 @@
-import type { SourceFile} from 'ts-morph';
-import { Project, ts } from 'ts-morph';
 import path from 'path';
+import { Project, type SourceFile, ts } from 'ts-morph';
+
 import type { Logger } from '../utils/logger.js';
 
 /**

@@ -3,6 +3,7 @@
     "version": "2.0.0",
     "description": "Extract TypeScript documentation from Vapor UI components with external JSDoc merging",
     "main": "dist/index.mjs",
+    "private": true,
     "bin": {
         "docs-extractor": "./dist/bin/cli.mjs"
     },
@@ -21,7 +22,8 @@
         "meow": "^14.0.0",
         "@inquirer/prompts": "^7.9.0",
         "globby": "^15.0.0",
-        "picocolors": "^1.1.1"
+        "picocolors": "^1.1.1",
+        "prettier": "^3.3.3"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",

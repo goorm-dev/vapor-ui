@@ -2,20 +2,30 @@ import type { PropertySignature, JSDoc } from 'ts-morph';
 import type { PropertyDoc } from '../types/index.js';
 import type { TypeResolver } from './type-resolver.js';
 import type { Logger } from '../utils/logger.js';
+import { TypeFormatter, type TypeFormatterContext } from '../type-resolution/type-formatter.js';
 
 /**
  * Extracts JSDoc documentation from TypeScript properties
  */
 export class DocExtractor {
+    private typeFormatter: TypeFormatter;
+
     constructor(
         private typeResolver: TypeResolver,
         private logger: Logger,
-    ) {}
+    ) {
+        this.typeFormatter = new TypeFormatter(logger);
+    }
 
     /**
      * Extract JSDoc documentation from a property signature
+     * @param prop - Property signature to extract docs from
+     * @param context - Optional context for type formatting (e.g., component displayName)
      */
-    extractPropertyDoc(prop: PropertySignature): PropertyDoc {
+    async extractPropertyDoc(
+        prop: PropertySignature,
+        context?: TypeFormatterContext,
+    ): Promise<PropertyDoc> {
         const jsDocs = prop.getJsDocs();
         const type = prop.getType();
         const propName = prop.getName();
@@ -25,9 +35,18 @@ export class DocExtractor {
         const typeText = type.getText();
         const values = this.parseUnionType(typeText);
 
+        // render와 className 같은 특수 prop은 타입 포맷팅 적용
+        // context에 컴포넌트 displayName이 있으면 State → ComponentName.State로 변환
+        const { type: formattedType, detailedType } = await this.typeFormatter.formatPropType(
+            propName,
+            typeText,
+            context,
+        );
+
         return {
             name: propName,
-            type: typeText,
+            type: formattedType,
+            detailedType,
             required: !prop.hasQuestionToken(),
             description: this.extractDescription(jsDocs),
             defaultValue: this.extractDefaultValue(jsDocs),
