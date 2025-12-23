@@ -36,7 +36,7 @@
         "typecheck": "turbo typecheck",
         "release": "turbo run build --filter=./packages/* && changeset publish",
         "version": "changeset version && pnpm version:changelog && pnpm install --lockfile-only",
-        "version:changelog": "node ./scripts/post-process-changelog.js",
+        "version:changelog": "node ./scripts/changelog/post-process.js",
         "update-releases": "node scripts/update-releases.mjs",
         "sync-icons:basic": "TYPE=basic node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs && pnpm format",
         "sync-icons:symbol": "TYPE=symbol node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs && pnpm format"

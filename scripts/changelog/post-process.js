@@ -4,19 +4,19 @@
  * 기능:
  * - changesets에서 생성한 체인지로그의 "Minor Changes", "Patch Changes" 등 타입별 그룹을 제거
  * - PR 제목에서 추출한 스코프 정보를 기반으로 컴포넌트별로 재그룹화
- * - Git을 활용해 실제 변경된 CHANGELOG.md 파일만 처리하여 효율성 향상
  */
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import prettierInstance from 'prettier';
 
-// ==========================================
-// Utility Functions
-// ==========================================
+/* -------------------------------------------------------------------------------------------------
+ * Utility Functions
+ * -----------------------------------------------------------------------------------------------*/
 
 /**
  * 문자열을 Title Case로 변환하는 함수
+ *
  * @example
  * - "button" -> "Button"
  * - "menu-item" -> "Menu Item"
@@ -29,13 +29,8 @@ function TitleCase(str) {
 }
 
 /**
- * 정규식에서 특수문자를 이스케이프하는 함수
- */
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-/**
+ * Prettier를 사용해 마크다운 파일을 포맷팅하는 함수
+ *
  * @param {string} filePath
  * @param {string} content
  */
@@ -49,9 +44,9 @@ async function writeFormattedMarkdownFile(filePath, content) {
     fs.writeFileSync(filePath, formatted);
 }
 
-// ==========================================
-// Main Execution Flow
-// ==========================================
+/* -------------------------------------------------------------------------------------------------
+ * Main Execution Flow
+ * -----------------------------------------------------------------------------------------------*/
 
 /**
  * 메인 실행 함수
@@ -69,11 +64,10 @@ function main() {
 
         files.forEach((changelogPath) => {
             if (!fs.existsSync(changelogPath)) {
-                console.log(`⚠️  ${changelogPath}: 파일을 찾을 수 없어 건너뜁니다`);
+                console.log(`⚠️ ${changelogPath}: 파일을 찾을 수 없어 건너뜁니다`);
                 return;
             }
 
-            // 패키지명 추출 (예: packages/core/CHANGELOG.md -> core)
             const packageName = changelogPath.split(path.sep)[1] || 'unknown';
             processChangelogFile(changelogPath, packageName);
         });
@@ -92,7 +86,7 @@ function getFilesToProcess(packagesDir) {
     // 1. Git으로 변경된 파일이 감지된 경우
     if (changedFiles !== null) {
         if (changedFiles.length === 0) {
-            console.log('ℹ️  변경된 CHANGELOG.md 파일이 없습니다');
+            console.log('ℹ️ 변경된 CHANGELOG.md 파일이 없습니다');
             return [];
         }
 
@@ -125,13 +119,13 @@ function getChangedChangelogFiles() {
         // packages 디렉토리의 CHANGELOG.md 파일들만 필터링
         return gitOutput
             .split('\n')
-            .filter((line) => line.trim() !== '') // 빈 줄 제거
-            .map((line) => line.substring(3).trim()) // git status 접두사 제거 (예: " M ", "??" 등)
+            .filter((line) => line.trim() !== '')
+            .map((line) => line.split(' ').pop()) // git status 접두사 제거
             .filter((file) => file.endsWith('/CHANGELOG.md'));
     } catch (error) {
         console.warn('⚠️  Git 상태를 가져올 수 없어 모든 체인지로그 처리로 fallback합니다');
         console.warn('    Git 저장소 내에서 실행하고 Git이 설치되어 있는지 확인하세요');
-        return null; // 모든 파일 처리로 fallback을 위해 null 반환
+        return null;
     }
 }
 
@@ -144,11 +138,9 @@ function getChangedChangelogFiles() {
  */
 function processChangelogFile(changelogPath, packageName) {
     try {
-        // 원본 체인지로그 내용 읽기
         const changelogContent = fs.readFileSync(changelogPath, 'utf-8');
         const processedContent = postProcessChangelog(changelogContent);
 
-        // 처리된 체인지로그 쓰기
         fs.writeFileSync(changelogPath, processedContent);
         writeFormattedMarkdownFile(changelogPath, processedContent);
 
@@ -169,19 +161,15 @@ function processChangelogFile(changelogPath, packageName) {
  * 4. 스코프별 ### 헤더로 재구성하여 출력
  */
 function postProcessChangelog(changelogContent) {
-    // 첫 번째 버전 섹션 추출
     const { packageName, versionHeader, versionContent, afterTargetVersion } =
         extractTargetVersion(changelogContent);
 
-    // 버전 섹션이 없으면 원본 내용 그대로 반환
     if (!versionHeader) {
         return changelogContent;
     }
 
-    // 버전 내용을 스코프별로 그룹화
     const { groupedEntries, otherEntries } = processVersionContent(versionContent);
 
-    // 결과 재구성
     return reconstructChangelog({
         packageName,
         versionHeader,
@@ -191,21 +179,22 @@ function postProcessChangelog(changelogContent) {
     });
 }
 
-// ==========================================
-// Content Processing Helpers
-// ==========================================
+/* -------------------------------------------------------------------------------------------------
+ * Content Processing Helpers
+ * -----------------------------------------------------------------------------------------------*/
 
 /**
  * 체인지로그에서 첫 번째 버전 섹션을 추출하는 함수
+ * 성능 개선: 전체 파일을 split하지 않고 정규식으로 위치만 찾아 slice함
  *
  * @param {string} content - 전체 체인지로그 내용
  * @returns {Object} - { packageName, versionHeader, versionContent, afterTargetVersion }
  */
 function extractTargetVersion(content) {
-    // 첫 번째 버전 섹션을 정규식으로 추출
-    const versionSectionMatch = content.match(/^([\s\S]*?)(^## \d+[^\n]*\n)([\s\S]*?)(?=^## |\Z)/m);
+    const versionHeaderRegex = /^## \d/gm;
+    const firstMatch = versionHeaderRegex.exec(content);
 
-    if (!versionSectionMatch) {
+    if (!firstMatch) {
         return {
             packageName: content,
             versionHeader: '',
@@ -214,20 +203,34 @@ function extractTargetVersion(content) {
         };
     }
 
-    const [, packageName, versionHeader, versionContent] = versionSectionMatch;
+    const firstHeaderStartIndex = firstMatch.index;
 
-    // 첫 번째 버전 섹션 이후의 내용 찾기
-    const afterFirstVersionRegex = new RegExp(
-        `${escapeRegExp(versionHeader + versionContent)}([\\s\\S]*)`,
-    );
-    const afterMatch = content.match(afterFirstVersionRegex);
-    const afterTargetVersion = afterMatch?.[1] ?? '';
+    const firstLineEndIndex = content.indexOf('\n', firstHeaderStartIndex);
+    const versionHeaderEndIndex = firstLineEndIndex !== -1 ? firstLineEndIndex : content.length;
+
+    const secondMatch = versionHeaderRegex.exec(content);
+
+    const packageName = content.slice(0, firstHeaderStartIndex);
+    const versionHeader = content.slice(firstHeaderStartIndex, versionHeaderEndIndex);
+
+    let versionContent;
+    let afterTargetVersion;
+
+    if (secondMatch) {
+        const secondHeaderStartIndex = secondMatch.index;
+
+        versionContent = content.slice(versionHeaderEndIndex + 1, secondHeaderStartIndex);
+        afterTargetVersion = content.slice(secondHeaderStartIndex);
+    } else {
+        versionContent = content.slice(versionHeaderEndIndex + 1);
+        afterTargetVersion = '';
+    }
 
     return {
         packageName: packageName.trim(),
         versionHeader: versionHeader.trim(),
-        versionContent,
-        afterTargetVersion,
+        versionContent: versionContent,
+        afterTargetVersion: afterTargetVersion,
     };
 }
 
@@ -238,11 +241,10 @@ function extractTargetVersion(content) {
  * @returns {Object} - { groupedEntries, otherEntries }
  */
 function processVersionContent(versionContent) {
-    // 1. 불필요한 헤더 제거
-    const cleanedContent = versionContent.replace(/^### (Major|Minor|Patch) Changes\s*\n/gm, '');
+    const changesetTemplate = /^### (Major|Minor|Patch) Changes.*/gm;
+    const cleanedContent = versionContent.replace(changesetTemplate, '');
     const lines = cleanedContent.split('\n');
 
-    // 2. 파싱 (Parsing): 텍스트를 { scope, content } 목록으로 변환
     const entries = [];
     let currentScope = null;
     let currentBuffer = [];
@@ -250,49 +252,55 @@ function processVersionContent(versionContent) {
     const commitBuffer = () => {
         if (currentBuffer.length === 0) return;
 
-        const currentContent = currentBuffer.join('\n').trim();
+        // 첫 번째 라인이 비어있는지 확인 (헤더만 있는 경우)
+        const isFirstLineEmpty = currentBuffer[0].trim() === '';
+
+        const formattedBuffer = currentBuffer.map((line, index) => {
+            // 제목 라인은 그대로 유지
+            if (index === 0) return line;
+
+            // 개행 라인은 그대로 유지
+            if (line.trim() === '') return line;
+
+            // 첫 번째 라인이 비어있으면 들여쓰기 하지 않음 (형제 항목들)
+            if (isFirstLineEmpty) return line;
+
+            // 첫 번째 라인이 있으면 들여쓰기 함 (하위 항목들)
+            return '\t' + line;
+        });
+
+        const currentContent = formattedBuffer.join('\n').trim();
         entries.push({ scope: currentScope, content: currentContent });
 
-        // 버퍼 초기화
         currentBuffer = [];
     };
 
     lines.forEach((line) => {
         const trimmedLine = line.trim();
-        const isScope = line.match(/^\[SCOPE:([^\]]+)\]/);
-        const isNewItem = trimmedLine.startsWith('-') || trimmedLine.startsWith('*');
+        const isScope = line.match(/^\s*\[SCOPE:([^\]]+)\]/);
 
         if (isScope) {
-            commitBuffer(); // 이전 항목 저장
+            commitBuffer();
             const [, rawScope] = isScope;
-            currentScope = rawScope === 'ETC' ? null : TitleCase(rawScope);
-            // 마커 제거 후 내용을 버퍼에 추가
-            currentBuffer.push(line.replace(/^\[SCOPE:[^\]]+\]\s*/, ''));
+
+            currentScope = rawScope === 'etc' ? null : TitleCase(rawScope);
+            currentBuffer.push(line.replace(/^\s*\[SCOPE:[^\]]+\]\s*/, ''));
+
             return;
         }
 
-        if (isNewItem) {
-            commitBuffer(); // 이전 항목 저장
-            // 스코프 유지, 내용 추가
-            currentBuffer.push(line);
-            return;
-        }
-
-        // 내용 이어짐 (빈 줄이거나 들여쓰기 된 내용 등)
         if (currentBuffer.length > 0 || trimmedLine) {
             currentBuffer.push(line);
         }
     });
-    commitBuffer(); // 마지막 항목 저장
+    commitBuffer();
 
-    // 3. 분류 (Grouping): 목록을 스코프별로 분류
     const groupedEntries = {};
     const otherEntries = [];
 
     entries.forEach(({ scope, content }) => {
         if (!content) return;
 
-        // 스코프가 없고 단일 항목인 경우 'Other Changes'로 분류
         if (!scope && content.startsWith('- ')) {
             otherEntries.push(content);
             return;
@@ -341,7 +349,7 @@ function reconstructChangelog({
 
         // 기타 엔트리 추가
         if (otherEntries.length > 0) {
-            pushEntry({ parts, title: 'ETC', entries: otherEntries });
+            pushEntry({ parts, title: 'etc', entries: otherEntries });
         }
     }
 
