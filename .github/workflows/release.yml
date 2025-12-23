@@ -41,19 +41,15 @@ jobs:
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Update releases documentation
+            - name: Update Release Notes
               if: steps.changesets.outputs.published == 'false'
-              run: node scripts/update-releases.mjs
+              run: node scripts/changelog/release-note.js
 
-            - name: Format releases documentation
-              if: steps.changesets.outputs.published == 'false'
-              run: pnpm prettier --write apps/website/content/docs/getting-started/releases.md
-
-            - name: Commit updated releases documentation
+            - name: Commit Changes
               if: steps.changesets.outputs.published == 'false'
               run: |
                   if [[ -n $(git status --porcelain) ]]; then
-                      git add apps/website/content/docs/getting-started/releases.md
-                      git commit -m "docs: update releases.md with latest changelogs"
+                      git add apps/website/content/docs/getting-started/releases
+                      git commit -m "docs: update release notes"
                       git push --set-upstream origin changeset-release/main
                   fi
