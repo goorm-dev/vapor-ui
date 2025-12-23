@@ -8,7 +8,7 @@ import { extractVersion } from './extract-version.js';
 config();
 
 function readEnv() {
-    const PUBLISHED_PACKAGES = process.env.PUBLISHED_PACKAGES || [];
+    const PUBLISHED_PACKAGES = process.env.PUBLISHED_PACKAGES;
     const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL || '';
 
     return { PUBLISHED_PACKAGES, SLACK_WEBHOOK_URL };
@@ -23,8 +23,7 @@ const getPublishedPackages = () => {
     const { PUBLISHED_PACKAGES } = readEnv();
 
     if (!PUBLISHED_PACKAGES) {
-        console.error('❌ PUBLISHED_PACKAGES environment variable is not set.');
-        process.exit(0); // 에러로 처리하지 않고 종료 (배포된 게 없을 수도 있음)
+        console.log('ℹ️ Missing PUBLISHED_PACKAGES environment variable.');
     }
 
     let publishedPackages;
@@ -189,8 +188,6 @@ async function sendSlackNotification(packages) {
             },
             body: JSON.stringify({ blocks }),
         });
-
-        // const responseText = await response.text();
 
         if (response.ok) {
             console.log('✅ Slack notification sent successfully!');

@@ -10,7 +10,7 @@ import fs from 'fs';
 import path from 'path';
 import prettierInstance from 'prettier';
 
-import { extractVersion } from './helpers.js';
+import { extractVersion } from './extract-version.js';
 
 /* -------------------------------------------------------------------------------------------------
  * Utility Functions
