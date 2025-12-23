@@ -1,10 +1,10 @@
-name: 'Release Packages'
+name: "Release Packages"
 
 on:
     push:
         paths:
-            - '.changeset/**'
-            - 'packages/**'
+            - ".changeset/**"
+            - "packages/**"
         branches:
             - main
 
@@ -18,18 +18,8 @@ jobs:
             - name: Checkout branch
               uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version-file: package.json
-                  registry-url: 'https://registry.npmjs.org/'
-                  always-auth: true
-
-            - uses: pnpm/action-setup@v4
-
-            - name: Install Dependencies
-              run: |
-                  pnpm install --frozen-lockfile
+            - name: Install
+              uses: ./.github/composite/install
 
             - name: Create .npmrc file
               run: |
@@ -39,18 +29,13 @@ jobs:
               env:
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - name: Setup Git User
-              run: |
-                  git config --global user.name "github-actions[bot]"
-                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
             - name: Create Release Pull Request or Publish to npm
               id: changesets
               uses: changesets/action@v1
               with:
                   publish: pnpm run release
-                  commit: 'ci(changesets): version packages'
-                  setupGitUser: false
+                  version: pnpm run version
+                  commit: "ci(changesets): version packages"
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
