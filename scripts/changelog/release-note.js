@@ -2,9 +2,6 @@ import fs from 'fs';
 import { fileURLToPath } from 'node:url';
 import path from 'path';
 
-// const fs = require('fs');
-// const path = require('path');
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -16,8 +13,9 @@ function getDirectories(srcPath) {
     if (!fs.existsSync(srcPath)) return [];
 
     return fs
-        .readdirSync(srcPath)
-        .filter((file) => fs.statSync(path.join(srcPath, file)).isDirectory());
+        .readdirSync(srcPath, { withFileTypes: true })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
 }
 
 function processDirectory(baseDir) {
