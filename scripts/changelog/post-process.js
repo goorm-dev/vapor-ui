@@ -10,6 +10,8 @@ import fs from 'fs';
 import path from 'path';
 import prettierInstance from 'prettier';
 
+import { extractVersion } from './helpers.js';
+
 /* -------------------------------------------------------------------------------------------------
  * Utility Functions
  * -----------------------------------------------------------------------------------------------*/
@@ -161,78 +163,25 @@ function processChangelogFile(changelogPath, packageName) {
  * 4. 스코프별 ### 헤더로 재구성하여 출력
  */
 function postProcessChangelog(changelogContent) {
-    const { packageName, versionHeader, versionContent, afterTargetVersion } =
-        extractTargetVersion(changelogContent);
+    const parsed = extractVersion(changelogContent);
 
-    if (!versionHeader) {
-        return changelogContent;
-    }
+    if (!parsed) return changelogContent;
 
-    const { groupedEntries, otherEntries } = processVersionContent(versionContent);
+    const { preamble: packageName, header, content, rest } = parsed;
+    const { groupedEntries, otherEntries } = processVersionContent(content);
 
     return reconstructChangelog({
         packageName,
-        versionHeader,
+        versionHeader: header,
         groupedEntries,
         otherEntries,
-        afterTargetVersion,
+        afterTargetVersion: rest,
     });
 }
 
 /* -------------------------------------------------------------------------------------------------
  * Content Processing Helpers
  * -----------------------------------------------------------------------------------------------*/
-
-/**
- * 체인지로그에서 첫 번째 버전 섹션을 추출하는 함수
- * 성능 개선: 전체 파일을 split하지 않고 정규식으로 위치만 찾아 slice함
- *
- * @param {string} content - 전체 체인지로그 내용
- * @returns {Object} - { packageName, versionHeader, versionContent, afterTargetVersion }
- */
-function extractTargetVersion(content) {
-    const versionHeaderRegex = /^## \d/gm;
-    const firstMatch = versionHeaderRegex.exec(content);
-
-    if (!firstMatch) {
-        return {
-            packageName: content,
-            versionHeader: '',
-            versionContent: '',
-            afterTargetVersion: '',
-        };
-    }
-
-    const firstHeaderStartIndex = firstMatch.index;
-
-    const firstLineEndIndex = content.indexOf('\n', firstHeaderStartIndex);
-    const versionHeaderEndIndex = firstLineEndIndex !== -1 ? firstLineEndIndex : content.length;
-
-    const secondMatch = versionHeaderRegex.exec(content);
-
-    const packageName = content.slice(0, firstHeaderStartIndex);
-    const versionHeader = content.slice(firstHeaderStartIndex, versionHeaderEndIndex);
-
-    let versionContent;
-    let afterTargetVersion;
-
-    if (secondMatch) {
-        const secondHeaderStartIndex = secondMatch.index;
-
-        versionContent = content.slice(versionHeaderEndIndex + 1, secondHeaderStartIndex);
-        afterTargetVersion = content.slice(secondHeaderStartIndex);
-    } else {
-        versionContent = content.slice(versionHeaderEndIndex + 1);
-        afterTargetVersion = '';
-    }
-
-    return {
-        packageName: packageName.trim(),
-        versionHeader: versionHeader.trim(),
-        versionContent: versionContent,
-        afterTargetVersion: afterTargetVersion,
-    };
-}
 
 /**
  * 버전 섹션의 내용을 처리하여 스코프별로 그룹화하는 함수
