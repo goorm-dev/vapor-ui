@@ -38,7 +38,7 @@
         "release:slack": "node scripts/changelog/slack.js",
         "version": "changeset version && pnpm version:changelog && pnpm install --lockfile-only",
         "version:changelog": "node ./scripts/changelog/post-process.js",
-        "update-releases": "node scripts/update-releases.mjs",
+        "version:release-note": "node ./scripts/changelog/release-note.js",
         "sync-icons:basic": "TYPE=basic node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs && pnpm format",
         "sync-icons:symbol": "TYPE=symbol node --env-file=.env --experimental-fetch ./scripts/syncFigmaIcons.mjs && pnpm format"
     },
