@@ -37,7 +37,7 @@ const ComponentError = ({
 
 function ComponentLoading() {
     return (
-        <div className="p-5 text-center text-gray-500">
+        <div className="p-5 text-center text-gray-500 bg-v-canvas-100">
             <div className="animate-spin w-6 h-6 border-2 border-v-gray-300 border-t-v-blue-500 rounded-full mx-auto mb-2" />
             <p>Loading component...</p>
         </div>
