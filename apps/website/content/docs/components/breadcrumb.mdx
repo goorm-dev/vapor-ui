@@ -4,10 +4,10 @@ site_name: 'Breadcrumb - Vapor Core'
 description: '사용자가 현재 페이지의 위치를 파악하고 이전 페이지로 쉽게 이동할 수 있도록 도와주는 네비게이션 컴포넌트입니다.'
 ---
 
-<Demo name="default-breadcrumb">
+<Demo name="breadcrumb/default-breadcrumb">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/default-breadcrumb.tsx",
+    "file": "./src/components/demo/examples/breadcrumb/default-breadcrumb.tsx",
     "codeblock": true
 }
 ```
@@ -19,12 +19,12 @@ description: '사용자가 현재 페이지의 위치를 파악하고 이전 페
 
 ### Size
 
-브레드크럼 사이즈는 sm, md, lg, xl 로 제공합니다.
+Breadcrumb 사이즈는 sm, md, lg, xl 로 제공합니다.
 
-<Demo name="breadcrumb-size">
+<Demo name="breadcrumb/breadcrumb-size">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/breadcrumb-size.tsx",
+    "file": "./src/components/demo/examples/breadcrumb/breadcrumb-size.tsx",
     "codeblock": true
 }
 ```
@@ -34,10 +34,10 @@ description: '사용자가 현재 페이지의 위치를 파악하고 이전 페
 
 현재 페이지를 나타내는 링크의 상태를 설정할 수 있습니다.
 
-<Demo name="breadcrumb-current">
+<Demo name="breadcrumb/breadcrumb-current">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/breadcrumb-current.tsx",
+    "file": "./src/components/demo/examples/breadcrumb/breadcrumb-current.tsx",
     "codeblock": true
 }
 ```
@@ -51,10 +51,10 @@ description: '사용자가 현재 페이지의 위치를 파악하고 이전 페
 
 긴 네비게이션 경로에서 중간 단계를 생략 표시로 나타낸 패턴입니다.
 
-<Demo name="breadcrumb-ellipsis">
+<Demo name="breadcrumb/breadcrumb-ellipsis">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/breadcrumb-ellipsis.tsx",
+    "file": "./src/components/demo/examples/breadcrumb/breadcrumb-ellipsis.tsx",
     "codeblock": true
 }
 ```
@@ -62,12 +62,12 @@ description: '사용자가 현재 페이지의 위치를 파악하고 이전 페
 
 ### Composition Pattern
 
-브레드크럼 컴포넌트의 다양한 구성 패턴입니다.
+Breadcrumb 컴포넌트의 다양한 구성 패턴입니다.
 
-<Demo name="breadcrumb-composition">
+<Demo name="breadcrumb/breadcrumb-composition">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/breadcrumb-composition.tsx",
+    "file": "./src/components/demo/examples/breadcrumb/breadcrumb-composition.tsx",
     "codeblock": true
 }
 ```
@@ -79,36 +79,36 @@ description: '사용자가 현재 페이지의 위치를 파악하고 이전 페
 
 ### Breadcrumb.Root
 
-브레드크럼의 메인 컨테이너 컴포넌트입니다. size 속성을 제공하며, 모든 하위 컴포넌트에서 공통으로 사용할 수 있도록 컨텍스트를 제공합니다.
+<ComponentPropsTable componentName="breadcrumb-root" />
 
-<ComponentPropsTable file="breadcrumb" section="props" />
+#### Breadcrumb.RootPrimitive
 
-### Breadcrumb.List
+<ComponentPropsTable componentName="breadcrumb-root-primitive" />
 
-브레드크럼 항목들을 담는 순서가 있는 리스트 컨테이너입니다. 의미적으로 올바른 구조를 위해 `<ol>` 요소를 기반으로 합니다.
+#### Breadcrumb.ListPrimitive
 
-<ComponentPropsTable file="breadcrumb" section="listProps" />
+<ComponentPropsTable componentName="breadcrumb-list-primitive" />
 
 ### Breadcrumb.Item
 
-개별 브레드크럼 항목을 나타내는 컴포넌트입니다. 각각의 링크나 구분자를 감싸는 역할을 합니다.
+<ComponentPropsTable componentName="breadcrumb-item" />
 
-<ComponentPropsTable file="breadcrumb" section="itemProps" />
+#### Breadcrumb.ItemPrimitive
 
-### Breadcrumb.Link
+<ComponentPropsTable componentName="breadcrumb-item-primitive" />
 
-브레드크럼 내의 클릭 가능한 링크 컴포넌트입니다. 현재 페이지인지 여부에 따라 시각적 스타일과 접근성 속성이 자동으로 조정됩니다.
+#### Breadcrumb.LinkPrimitive
 
-<ComponentPropsTable file="breadcrumb" section="linkProps" />
+<ComponentPropsTable componentName="breadcrumb-link-primitive" />
 
 ### Breadcrumb.Separator
 
-브레드크럼 항목들 사이의 구분자를 표시하는 컴포넌트입니다. 기본적으로 슬래시(/) 아이콘을 사용하며, 커스텀 아이콘으로 변경할 수 있습니다.
-
-<ComponentPropsTable file="breadcrumb" section="separatorProps" />
+<ComponentPropsTable componentName="breadcrumb-separator" />
 
 ### Breadcrumb.Ellipsis
 
-긴 네비게이션 경로에서 중간 단계를 생략할 때 사용하는 컴포넌트입니다. 기본적으로 점 3개(...) 아이콘을 표시하며, 커스텀 아이콘으로 변경할 수 있습니다.
+<ComponentPropsTable componentName="breadcrumb-ellipsis" />
 
-<ComponentPropsTable file="breadcrumb" section="ellipsisProps" />
+#### Breadcrumb.EllipsisPrimitive
+
+<ComponentPropsTable componentName="breadcrumb-ellipsis-primitive" />

@@ -7,8 +7,9 @@ import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './breadcrumb.css';
@@ -23,12 +24,15 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
 });
 
 /* -------------------------------------------------------------------------------------------------
- * Breadcrumb.Root
+ * Breadcrumb.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRoot.Props>(
-    ({ render, className, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(props, ['size']);
+export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
+    (props, ref) => {
+        const { render, className, ...componentProps } = resolveStyles(props);
+        const [variantProps, otherProps] = createSplitProps<BreadcrumbVariants>()(componentProps, [
+            'size',
+        ]);
 
         const element = useRender({
             ref,
@@ -42,50 +46,70 @@ export const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRoot.Props>(
         return <BreadcrumbProvider value={variantProps}>{element}</BreadcrumbProvider>;
     },
 );
-BreadcrumbRoot.displayName = 'Breadcrumb.Root';
+BreadcrumbRootPrimitive.displayName = 'Breadcrumb.RootPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Breadcrumb.List
+ * Breadcrumb.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const BreadcrumbList = forwardRef<HTMLOListElement, BreadcrumbList.Props>(
-    ({ render, className, ...props }, ref) => {
+export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbListPrimitive.Props>(
+    (props, ref) => {
+        const { render, className, ...componentProps } = resolveStyles(props);
+
         return useRender({
             ref,
             render: render || <ol />,
             props: {
                 className: clsx(styles.list, className),
-                ...props,
+                ...componentProps,
             },
         });
     },
 );
-BreadcrumbList.displayName = 'Breadcrumb.List';
+BreadcrumbListPrimitive.displayName = 'Breadcrumb.ListPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Breadcrumb.Item
+ * Breadcrumb.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const BreadcrumbItem = forwardRef<HTMLLIElement, BreadcrumbItem.Props>(
-    ({ render, className, ...props }, ref) => {
+export const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
+    ({ children, ...props }, ref) => {
+        return (
+            <BreadcrumbRootPrimitive ref={ref} {...props}>
+                <BreadcrumbListPrimitive>{children}</BreadcrumbListPrimitive>
+            </BreadcrumbRootPrimitive>
+        );
+    },
+);
+BreadcrumbRoot.displayName = 'Breadcrumb.Root';
+
+/* -------------------------------------------------------------------------------------------------
+ * Breadcrumb.ItemPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemPrimitive.Props>(
+    (props, ref) => {
+        const { render, className, ...componentProps } = resolveStyles(props);
+
         return useRender({
             ref,
             render: render || <li />,
             props: {
                 className: clsx(styles.item, className),
-                ...props,
+                ...componentProps,
             },
         });
     },
 );
-BreadcrumbItem.displayName = 'Breadcrumb.Item';
+BreadcrumbItemPrimitive.displayName = 'Breadcrumb.ItemPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
- * Breadcrumb.Link
+ * Breadcrumb.LinkPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLink.Props>(
-    ({ render, current, className, ...props }, ref) => {
+export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
+    (props, ref) => {
+        const { render, current, className, ...componentProps } = resolveStyles(props);
         const Component = current ? 'span' : 'a';
 
         const { size } = useBreadcrumbContext();
@@ -98,87 +122,146 @@ export const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLink.Props
                 'aria-disabled': current ? 'true' : undefined,
                 'aria-current': current ? 'page' : undefined,
                 className: clsx(styles.link({ size, current }), className),
-                ...props,
+                ...componentProps,
             },
         });
     },
 );
-BreadcrumbLink.displayName = 'Breadcrumb.Link';
+BreadcrumbLinkPrimitive.displayName = 'Breadcrumb.LinkPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * Breadcrumb.Item
+ * -----------------------------------------------------------------------------------------------*/
+
+export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
+    (props, ref) => {
+        return (
+            <BreadcrumbItemPrimitive>
+                <BreadcrumbLinkPrimitive ref={ref} {...props} />
+            </BreadcrumbItemPrimitive>
+        );
+    },
+);
 
 /* -------------------------------------------------------------------------------------------------
  * Breadcrumb.Separator
  * -----------------------------------------------------------------------------------------------*/
 
 export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator.Props>(
-    ({ render, className, children, ...props }, ref) => {
+    (props, ref) => {
+        const {
+            render,
+            className,
+            children: childrenProp,
+            ...componentProps
+        } = resolveStyles(props);
+
         const { size } = useBreadcrumbContext();
-        const Icon = createSlot(children || <SlashOutlineIcon size="100%" />);
+
+        const children = useRender({
+            render: createRender(childrenProp, <SlashOutlineIcon />),
+            props: { width: '100%', height: '100%' },
+        });
+
+        const defaultProps: useRender.ElementProps<'li'> = {
+            role: 'presentation',
+            'aria-hidden': 'true',
+            className: clsx(styles.icon({ size }), className),
+            children,
+            ...componentProps,
+        };
 
         return useRender({
             ref,
             render: render || <li />,
-            props: {
-                role: 'presentation',
-                'aria-hidden': 'true',
-                className: clsx(styles.icon({ size }), className),
-                children: <Icon />,
-                ...props,
-            },
+            props: defaultProps,
         });
     },
 );
 BreadcrumbSeparator.displayName = 'Breadcrumb.Separator';
 
 /* -------------------------------------------------------------------------------------------------
- * Breadcrumb.Ellipsis
+ * Breadcrumb.EllipsisPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsis.Props>(
-    ({ render, className, children, ...props }, ref) => {
-        const { size } = useBreadcrumbContext();
-        const Icon = createSlot(children || <MoreCommonOutlineIcon size="100%" />);
+export const BreadcrumbEllipsisPrimitive = forwardRef<
+    HTMLSpanElement,
+    BreadcrumbEllipsisPrimitive.Props
+>((props, ref) => {
+    const { render, className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-        return useRender({
-            ref,
-            render: render || <span />,
-            props: {
-                role: 'presentation',
-                'aria-hidden': 'true',
-                className: clsx(styles.icon({ size }), className),
-                children: <Icon />,
-                ...props,
-            },
-        });
+    const { size } = useBreadcrumbContext();
+
+    const children = useRender({
+        render: createRender(childrenProp, <MoreCommonOutlineIcon />),
+        props: { width: '100%', height: '100%' },
+    });
+
+    const defaultProps: useRender.ElementProps<'span'> = {
+        role: 'presentation',
+        'aria-hidden': 'true',
+        className: clsx(styles.icon({ size }), className),
+        children,
+        ...componentProps,
+    };
+
+    return useRender({
+        ref,
+        render: render || <span />,
+        props: defaultProps,
+    });
+});
+BreadcrumbEllipsisPrimitive.displayName = 'Breadcrumb.EllipsisPrimitive';
+
+/* -------------------------------------------------------------------------------------------------
+ * BreadcrumbEllipsis
+ * -----------------------------------------------------------------------------------------------*/
+
+export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisPrimitive.Props>(
+    (props, ref) => {
+        return (
+            <BreadcrumbItemPrimitive>
+                <BreadcrumbEllipsisPrimitive ref={ref} {...props} />
+            </BreadcrumbItemPrimitive>
+        );
     },
 );
 BreadcrumbEllipsis.displayName = 'Breadcrumb.Ellipsis';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export namespace BreadcrumbRoot {
+export namespace BreadcrumbRootPrimitive {
     type RootPrimitiveProps = VComponentProps<'nav'>;
 
     export interface Props extends RootPrimitiveProps, BreadcrumbVariants {}
 }
 
-export namespace BreadcrumbList {
+export namespace BreadcrumbListPrimitive {
     type ListPrimitiveProps = VComponentProps<'ol'>;
 
     export interface Props extends ListPrimitiveProps {}
 }
 
-export namespace BreadcrumbItem {
+export namespace BreadcrumbRoot {
+    export interface Props extends BreadcrumbRootPrimitive.Props {}
+}
+
+export namespace BreadcrumbItemPrimitive {
     type ItemPrimitiveProps = VComponentProps<'li'>;
 
     export interface Props extends ItemPrimitiveProps {}
 }
 
-export namespace BreadcrumbLink {
+export namespace BreadcrumbLinkPrimitive {
     type LinkPrimitiveProps = VComponentProps<'a'>;
 
     export interface Props extends LinkPrimitiveProps {
         current?: boolean;
     }
+}
+
+export namespace BreadcrumbItem {
+    export interface Props extends BreadcrumbLinkPrimitive.Props {}
 }
 
 export namespace BreadcrumbSeparator {
@@ -187,8 +270,12 @@ export namespace BreadcrumbSeparator {
     export interface Props extends SeparatorPrimitiveProps {}
 }
 
-export namespace BreadcrumbEllipsis {
+export namespace BreadcrumbEllipsisPrimitive {
     type EllipsisPrimitiveProps = VComponentProps<'span'>;
 
     export interface Props extends EllipsisPrimitiveProps {}
+}
+
+export namespace BreadcrumbEllipsis {
+    export interface Props extends BreadcrumbEllipsisPrimitive.Props {}
 }

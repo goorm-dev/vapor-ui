@@ -13,14 +13,15 @@ export const root = recipe({
             outline: 0,
             border: `0.0625rem solid ${vars.color.border.normal}`,
             borderRadius: vars.size.borderRadius['300'],
-            backgroundColor: vars.color.background.canvas,
+            backgroundColor: vars.color.background.canvas[100],
             paddingBlock: vars.size.space['000'],
 
             color: vars.color.foreground.normal[200],
 
             selectors: {
-                '&:read-only': { backgroundColor: vars.color.gray['200'] },
-                '&:disabled': { pointerEvents: 'none', opacity: 0.32 },
+                '&[data-disabled]': { pointerEvents: 'none', opacity: 0.32 },
+                '&[data-readonly]': { backgroundColor: vars.color.gray['200'] },
+                '&[data-invalid]': { borderColor: vars.color.border.danger },
                 '&::placeholder': { color: vars.color.foreground.hint[100] },
                 '&::-webkit-search-cancel-button': { display: 'none' },
             },
@@ -30,11 +31,7 @@ export const root = recipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
-        invalid: {
-            true: layerStyle('components', {
-                borderColor: vars.color.border.danger,
-            }),
-        },
+        invalid: { true: {}, false: {} },
 
         size: {
             sm: layerStyle('components', {

@@ -1,5 +1,48 @@
 # @vapor-ui/icons
 
+## 1.0.0-beta.6
+
+### Minor Changes
+
+- e9e83a8: Add new icons from Figma
+
+    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
+
+### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
+
+## 1.0.0-beta.5
+
+### Minor Changes
+
+- 8217749: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- 402284e: Add new icons from Figma
+
+    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `DocktoBottomOutlineIcon`, `SideNavOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+- fd4acaa: Add new icons from Figma
+
+    **New Basic Icons:** `SideNavIcon`, `DocktoBottomIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+
+    **Also Updated:**
+    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
+
+### Patch Changes
+
+- f2950ee: Update icons from Figma
+
+    **Updated Basic Icons:** `TreeCollapseIcon`
+
 ## 0.4.0
 
 ### Minor Changes

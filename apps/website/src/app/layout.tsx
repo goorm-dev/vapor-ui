@@ -8,6 +8,7 @@ import { Inter } from 'next/font/google';
 import Script from 'next/script';
 
 import DefaultSearchDialog from '~/components/search/search';
+import { ThemeSync } from '~/components/theme-sync';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -31,7 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     content="IbSc093-S7vjF7ZyDjbY43LENvMA-pguxJhDuSMuCmo"
                 />
             </head>
-            <body className="flex flex-col min-h-screen bg-[var(--vapor-color-background-canvas)]">
+            <body className="flex flex-col min-h-screen bg-[var(--vapor-color-canvas)]">
                 <RootProvider
                     search={{
                         SearchDialog: DefaultSearchDialog,
@@ -39,6 +40,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     theme={{ enabled: false }}
                 >
                     <ThemeProvider defaultTheme="system" storageKey="vapor-ui-docs">
+                        <ThemeSync />
                         {children}
                     </ThemeProvider>
                 </RootProvider>

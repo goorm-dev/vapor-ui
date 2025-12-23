@@ -44,7 +44,7 @@ const renderAvatars = () => {
     const combinations = getCartesianProduct(AVATAR_SHAPES, SIZES);
 
     return combinations.map(([shape, size]) => (
-        <Avatar.Simple key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
+        <Avatar.Root key={`${shape}-${size}`} shape={shape} size={size} {...AVATAR_PROPS} />
     ));
 };
 
@@ -53,7 +53,7 @@ const renderBadges = () => {
     const combinations = getCartesianProduct(BADGE_SHAPES, badgeSizes, BADGE_COLORS);
 
     return combinations.map(([shape, size, color]) => (
-        <Badge key={`${shape}-${size}-${color}`} shape={shape} size={size} color={color}>
+        <Badge key={`${shape}-${size}-${color}`} shape={shape} size={size} colorPalette={color}>
             Badge
         </Badge>
     ));
@@ -67,7 +67,7 @@ const renderButtons = () => {
             key={`${variant}-${size}-${color}`}
             variant={variant === 'solid' ? undefined : variant}
             size={size}
-            color={color}
+            colorPalette={color}
         >
             Button
         </Button>
@@ -83,7 +83,7 @@ const renderIconButtons = () => {
             aria-label="icon-button"
             variant={variant === 'solid' ? undefined : variant}
             size={size}
-            color={color}
+            colorPalette={color}
         >
             <HeartIcon />
         </IconButton>
@@ -161,12 +161,12 @@ const renderTextElements = (typographies: readonly string[], title: string) => (
 
 const Page = () => {
     return (
-        <div className="px-8 py-16 min-h-screen bg-[var(--vapor-color-background-canvas)]">
+        <div className="px-8 py-16 min-h-screen bg-[var(--vapor-color-canvas)]">
             <div className="w-max flex flex-col gap-12 [&>header]:flex [&>header]:flex-col [&>header]:gap-4 [&>section]:flex [&>section]:flex-col [&>section]:gap-[var(--vapor-size-space-800)]">
                 <header>
                     <Text typography="heading1">Theme Playground</Text>
                     <Link href="/docs/getting-started/theming">
-                        <Button variant="outline" color="secondary">
+                        <Button variant="outline" colorPalette="secondary">
                             <OpenInNewOutlineIcon />
                             Theme Provider Usage 보러가기
                         </Button>
@@ -247,14 +247,11 @@ const Page = () => {
                             <Dialog.Root>
                                 <Dialog.Trigger render={<Button>트리거</Button>} />
 
-                                <Dialog.Portal>
-                                    <Dialog.Overlay />
-                                    <Dialog.Content>
-                                        <Dialog.Header>Header</Dialog.Header>
-                                        <Dialog.Body>Body</Dialog.Body>
-                                        <Dialog.Footer>Footer</Dialog.Footer>
-                                    </Dialog.Content>
-                                </Dialog.Portal>
+                                <Dialog.Popup>
+                                    <Dialog.Header>Header</Dialog.Header>
+                                    <Dialog.Body>Body</Dialog.Body>
+                                    <Dialog.Footer>Footer</Dialog.Footer>
+                                </Dialog.Popup>
                             </Dialog.Root>
                         </RenderingTemplate.Component>
                     </RenderingTemplate>

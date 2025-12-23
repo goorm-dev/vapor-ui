@@ -1,0 +1,8 @@
+{
+    "extends": "@repo/typescript-config/base",
+    "compilerOptions": {
+        "typeRoots": ["./node_modules/@types", "./node_modules/@figma"]
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
+}

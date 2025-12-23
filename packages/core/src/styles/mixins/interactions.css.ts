@@ -23,7 +23,7 @@ export const interaction = recipe({
                 opacity: 0,
                 border: 'none',
                 borderRadius: 'inherit',
-                backgroundColor: vars.color['black'],
+                backgroundColor: vars.color.gray[900],
                 pointerEvents: 'none',
 
                 width: '100%',
@@ -52,7 +52,8 @@ export const interaction = recipe({
                 selectors: {
                     '&:active::before': { opacity: calc.multiply(ratio, 2) },
                     '&:focus-visible': {
-                        boxShadow: `0 0 0 2px hsl(0, 0%, 100%), 0 0 0 4px ${vars.color.foreground.normal[200]}`,
+                        outline: `2px solid ${vars.color.foreground.normal[200]}`,
+                        outlineOffset: '2px',
                     },
                 },
 
@@ -76,7 +77,7 @@ export const interaction = recipe({
                     '(hover: hover)': {
                         selectors: {
                             '&:hover:not(:focus)': {
-                                borderColor: `rgba(${vars.color.gray['rgb-950']}, 0.24)`,
+                                borderColor: `color-mix(in srgb, ${vars.color.gray[900]} 32%, transparent)`,
                             },
                         },
                     },

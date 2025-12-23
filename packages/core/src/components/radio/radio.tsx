@@ -2,11 +2,13 @@
 
 import { forwardRef } from 'react';
 
-import { Radio as BaseRadio } from '@base-ui-components/react';
+import { Radio as BaseRadio, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
+import { createDataAttributes } from '~/utils/data-attributes';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { useRadioGroupContext } from '../radio-group';
@@ -19,51 +21,61 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
-export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>(
-    ({ className, children, ...props }, ref) => {
-        const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
+export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, ref) => {
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
-        const [variantProps, otherProps] = createSplitProps<RadioVariants>()(props, [
-            'invalid',
-            'size',
-        ]);
-        const { size: sizeProp, invalid: invalidProp } = variantProps;
+    const [variantProps, otherProps] = createSplitProps<RadioVariants>()(componentProps, [
+        'invalid',
+        'size',
+    ]);
+    const { size: sizeProp, invalid: invalidProp } = variantProps;
 
-        const size = sizeProp || contextSize;
-        const invalid = invalidProp || contextInvalid;
+    const size = sizeProp || contextSize;
+    const invalid = invalidProp || contextInvalid;
 
-        const IndicatorElement = createSlot(children || <RadioIndicator />);
+    const dataAttrs = createDataAttributes({ invalid });
 
-        return (
-            <BaseRadio.Root
-                ref={ref}
-                aria-invalid={invalid}
-                className={clsx(styles.root({ size, invalid }), className)}
-                {...otherProps}
-            >
-                <IndicatorElement />
-            </BaseRadio.Root>
-        );
-    },
-);
+    const children = useRender({
+        render: createRender(childrenProp, <RadioIndicatorPrimitive />),
+    });
+
+    return (
+        <BaseRadio.Root
+            ref={ref}
+            aria-invalid={invalid}
+            className={clsx(styles.root({ size, invalid }), className)}
+            {...dataAttrs}
+            {...otherProps}
+        >
+            {children}
+        </BaseRadio.Root>
+    );
+});
 RadioRoot.displayName = 'Radio.Root';
 
 /* -------------------------------------------------------------------------------------------------
- * Radio.Indicator
+ * Radio.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const RadioIndicator = forwardRef<HTMLDivElement, RadioIndicator.Props>(
-    ({ className, ...props }, ref) => {
+export const RadioIndicatorPrimitive = forwardRef<HTMLDivElement, RadioIndicatorPrimitive.Props>(
+    (props, ref) => {
+        const { className, ...componentProps } = resolveStyles(props);
+
+        const { invalid } = useRadioGroupContext();
+        const dataAttrs = createDataAttributes({ invalid });
+
         return (
             <BaseRadio.Indicator
                 ref={ref}
                 className={clsx(styles.indicator, className)}
-                {...props}
+                {...dataAttrs}
+                {...componentProps}
             />
         );
     },
 );
-RadioIndicator.displayName = 'Radio.Indicator';
+RadioIndicatorPrimitive.displayName = 'Radio.IndicatorPrimitive';
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -73,7 +85,7 @@ export namespace RadioRoot {
     export interface Props extends RootPrimitiveProps, RadioVariants {}
 }
 
-export namespace RadioIndicator {
+export namespace RadioIndicatorPrimitive {
     type IndicatorPrimitiveProps = VComponentProps<typeof BaseRadio.Indicator>;
 
     export interface Props extends IndicatorPrimitiveProps {}

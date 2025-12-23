@@ -62,12 +62,13 @@ const WebNavigation = () => {
         >
             <NavigationMenu.List className="flex flex-1 flex-row items-center gap-2 p-0 h-full">
                 {NAVIGATION_LINKS.map((item) => (
-                    <NavigationMenu.LinkItem
-                        key={item.href}
-                        href={item.href}
-                        selected={pathname.includes(item.href)}
-                        render={<Link>{item.label}</Link>}
-                    />
+                    <NavigationMenu.Item key={item.href}>
+                        <NavigationMenu.Link
+                            href={item.href}
+                            selected={pathname.includes(item.href)}
+                            render={<Link>{item.label}</Link>}
+                        />
+                    </NavigationMenu.Item>
                 ))}
             </NavigationMenu.List>
 
@@ -79,7 +80,7 @@ const WebNavigation = () => {
                             <IconButton
                                 aria-label={item.text}
                                 size="lg"
-                                color="secondary"
+                                colorPalette="secondary"
                                 variant="ghost"
                                 render={
                                     <NavigationMenu.Link
@@ -121,7 +122,7 @@ const MobileNavigation = () => {
                 <Dialog.Trigger asChild>
                     <IconButton
                         size="lg"
-                        color="secondary"
+                        colorPalette="secondary"
                         variant="fill"
                         className="md:hidden"
                         aria-label="menu"
@@ -137,7 +138,7 @@ const MobileNavigation = () => {
 
                 {/* Mobile Menu Content */}
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-background-canvas)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
+                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-canvas)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >
@@ -146,7 +147,7 @@ const MobileNavigation = () => {
                     {/* Mobile Menu Header */}
                     <div className="flex justify-end px-6 py-4">
                         <Dialog.Close asChild>
-                            <IconButton color="secondary" variant="ghost" aria-label="close">
+                            <IconButton colorPalette="secondary" variant="ghost" aria-label="close">
                                 <CloseOutlineIcon size={20} />
                             </IconButton>
                         </Dialog.Close>
@@ -167,7 +168,7 @@ const MobileNavigation = () => {
                                 </Text>
                                 <IconButton
                                     size="md"
-                                    color="secondary"
+                                    colorPalette="secondary"
                                     variant="fill"
                                     aria-label={hasUrl(item) ? item.url : ''}
                                 >
@@ -207,7 +208,7 @@ export const SiteNavBar = () => {
         <header
             className={`z-10 flex w-full py-3 px-4 md:px-8 gap-v-500 items-center fixed top-0 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
                 isScrolled
-                    ? 'bg-[var(--vapor-color-background-canvas)] shadow-lg backdrop-blur-sm z-20'
+                    ? 'bg-[var(--vapor-color-canvas)] shadow-lg backdrop-blur-sm z-20'
                     : 'bg-transparent'
             }`}
         >

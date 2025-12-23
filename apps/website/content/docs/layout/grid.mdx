@@ -4,10 +4,10 @@ site_name: 'Grid - Vapor Core'
 description: '유연하고 강력한 CSS Grid 기반의 레이아웃 컴포넌트입니다'
 ---
 
-<Demo name="default-grid">
+<Demo name="grid/default-grid">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/default-grid.tsx",
+    "file": "./src/components/demo/examples/grid/default-grid.tsx",
     "codeblock": true
 }
 ```
@@ -21,10 +21,10 @@ description: '유연하고 강력한 CSS Grid 기반의 레이아웃 컴포넌�
 
 Grid의 행과 열 템플릿을 설정하여 레이아웃 구조를 정의할 수 있습니다.
 
-<Demo name="grid-template">
+<Demo name="grid/grid-template">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/grid-template.tsx",
+    "file": "./src/components/demo/examples/grid/grid-template.tsx",
     "codeblock": true
 }
 ```
@@ -34,10 +34,10 @@ Grid의 행과 열 템플릿을 설정하여 레이아웃 구조를 정의할 �
 
 Grid 아이템들의 자동 배치 방향을 설정할 수 있습니다.
 
-<Demo name="grid-flow">
+<Demo name="grid/grid-flow">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/grid-flow.tsx",
+    "file": "./src/components/demo/examples/grid/grid-flow.tsx",
     "codeblock": true
 }
 ```
@@ -47,10 +47,10 @@ Grid 아이템들의 자동 배치 방향을 설정할 수 있습니다.
 
 Grid를 인라인 요소로 표시할 수 있습니다.
 
-<Demo name="grid-inline">
+<Demo name="grid/grid-inline">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/grid-inline.tsx",
+    "file": "./src/components/demo/examples/grid/grid-inline.tsx",
     "codeblock": true
 }
 ```
@@ -60,10 +60,10 @@ Grid를 인라인 요소로 표시할 수 있습니다.
 
 Grid 아이템이 차지할 행이나 열의 개수를 설정할 수 있습니다.
 
-<Demo name="grid-span">
+<Demo name="grid/grid-span">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/grid-span.tsx",
+    "file": "./src/components/demo/examples/grid/grid-span.tsx",
     "codeblock": true
 }
 ```
@@ -77,10 +77,10 @@ Grid 아이템이 차지할 행이나 열의 개수를 설정할 수 있습니�
 
 일반적인 레이아웃 패턴들을 Grid로 구현할 수 있습니다.
 
-<Demo name="grid-layout">
+<Demo name="grid/grid-layout">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/grid-layout.tsx",
+    "file": "./src/components/demo/examples/grid/grid-layout.tsx",
     "codeblock": true
 }
 ```
@@ -92,12 +92,8 @@ Grid 아이템이 차지할 행이나 열의 개수를 설정할 수 있습니�
 
 ### Grid.Root
 
-Grid 컨테이너 역할을 하는 루트 컴포넌트입니다.
-
-<ComponentPropsTable file="grid" section="props" />
+<ComponentPropsTable componentName="grid-root" />
 
 ### Grid.Item
 
-Grid 아이템 역할을 하는 컴포넌트입니다.
-
-<ComponentPropsTable file="grid" section="subComponentProps" />
+<ComponentPropsTable componentName="grid-item" />

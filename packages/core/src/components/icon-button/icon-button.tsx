@@ -1,38 +1,52 @@
 import { forwardRef } from 'react';
 
+import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
-export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>(
-    ({ 'aria-label': ariaLabel, className, children, ...props }, ref) => {
-        const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(props, ['shape']);
+export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props, ref) => {
+    const {
+        'aria-label': ariaLabel,
+        className,
+        children: childrenProp,
+        ...componentProps
+    } = resolveStyles(props);
 
-        const IconSlot = createSlot(children);
+    const [variantProps, otherProps] = createSplitProps<IconButtonVariants>()(componentProps, [
+        'shape',
+    ]);
 
-        return (
-            <Button
-                ref={ref}
-                aria-label={ariaLabel}
-                className={clsx(styles.root(variantProps), className)}
-                {...otherProps}
-                stretch={false}
-            >
-                <IconSlot aria-hidden className={styles.icon({ size: otherProps.size })} />
-            </Button>
-        );
-    },
-);
+    const children = useRender({
+        render: createRender(childrenProp),
+        props: {
+            'aria-hidden': 'true',
+            className: styles.icon,
+        },
+    });
+
+    return (
+        <Button
+            ref={ref}
+            aria-label={ariaLabel}
+            className={clsx(styles.root(variantProps), className)}
+            {...otherProps}
+        >
+            {children}
+        </Button>
+    );
+});
 IconButton.displayName = 'IconButton';
 
 export namespace IconButton {
-    type IconButtonPrimitiveProps = Omit<VComponentProps<typeof Button>, 'stretch'>;
+    type IconButtonPrimitiveProps = VComponentProps<typeof Button>;
 
     export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {
         'aria-label': string;

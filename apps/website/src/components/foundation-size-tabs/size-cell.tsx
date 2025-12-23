@@ -14,7 +14,7 @@ const SemanticSizeRow = ({ sizeType = 'width', name, value }: SemanticSizeRowPro
     return (
         <tr tabIndex={0} role="button">
             <td>
-                <Badge size="sm" color="hint">
+                <Badge size="sm" colorPalette="hint">
                     {name}
                 </Badge>
             </td>

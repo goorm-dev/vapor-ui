@@ -7,7 +7,7 @@
             "description": "버튼을 렌더링할 때 사용할 커스텀 렌더링 요소입니다."
         },
         {
-            "prop": "color",
+            "prop": "colorPalette",
             "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
             "default": "primary",
             "description": "버튼의 주 색상(의미)을 설정합니다."
@@ -23,12 +23,6 @@
             "type": ["fill", "outline", "ghost"],
             "default": "fill",
             "description": "버튼의 스타일 변형을 선택합니다."
-        },
-        {
-            "prop": "stretch",
-            "type": ["boolean"],
-            "default": false,
-            "description": "true일 경우 버튼이 컨테이너의 전체 너비를 차지합니다."
         },
         {
             "prop": "disabled",

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { HeartIcon } from '@vapor-ui/icons';
 
 import { Checkbox } from '.';
 import { HStack } from '../h-stack';
@@ -20,8 +21,19 @@ export const Default: Story = {
         required: { control: 'boolean' },
         indeterminate: { control: 'boolean' },
     },
+    args: { size: 'lg', defaultChecked: true },
     render: (args) => {
-        return <Checkbox.Root {...args} />;
+        return (
+            <>
+                <Checkbox.Root {...args} />
+
+                <Checkbox.Root {...args}>
+                    <Checkbox.IndicatorPrimitive>
+                        <HeartIcon />
+                    </Checkbox.IndicatorPrimitive>
+                </Checkbox.Root>
+            </>
+        );
     },
 };
 

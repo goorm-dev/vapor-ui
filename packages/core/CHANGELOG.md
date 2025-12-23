@@ -1,5 +1,121 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.11
+
+### Patch Changes
+
+- af4ea2b: Correct background-color of TextInput component
+- 8c5c755: clone elements & enhance customizability
+- Updated dependencies [8c5c755]
+- Updated dependencies [e9e83a8]
+    - @vapor-ui/hooks@1.0.0-beta.6
+    - @vapor-ui/icons@1.0.0-beta.6
+
+## 1.0.0-beta.10
+
+### Patch Changes
+
+- af2d36f: avoid overflowing when toast width is wider than view port width
+
+## 1.0.0-beta.9
+
+### Minor Changes
+
+- afa45da: remove toastManager
+
+## 1.0.0-beta.8
+
+### Minor Changes
+
+- 308fd25: add new `Toast` component
+
+## 1.0.0-beta.7
+
+### Minor Changes
+
+- 40bfa0a: change components interface
+- 1aecc3d: synchronized color tokens with figma
+- dbb74cf: add new `Table` component
+- d4be5bb: add new `Pagination` component
+- 9f9b700: **BREAKING CHANGE**: Remove `stretch` prop from Button, IconButton, and NavigationMenu components
+
+    The `stretch` prop has been removed to align with Figma's component variant system. In Figma, width control is handled via "Fill Container" (Auto Layout), not as a component variant.
+
+    **Migration Guide:**
+
+    Replace `stretch` prop with Tailwind's `w-full` utility class:
+
+    ```tsx
+    // Before
+    <Button stretch>Submit</Button>
+    <NavigationMenu stretch>...</NavigationMenu>
+
+    // After
+    <Button className="w-full">Submit</Button>
+    <NavigationMenu className="w-full">...</NavigationMenu>
+    ```
+
+    **Why this change:**
+    - Maintains Figma-React design system parity (SSOT principle)
+    - Follows "React Props = Figma Variants" architectural principle
+    - Aligns with Vapor UI's 4-layer component architecture (Container, Interaction, Contents, Slot)
+    - Layout concerns should be handled by parent containers, not component props
+
+### Patch Changes
+
+- 1fd7efc: Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification
+- ed63947: Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec
+
+## 1.0.0-beta.6
+
+### Patch Changes
+
+- bd523c7: feat: update color generator & color palette
+
+## 1.0.0-beta.5
+
+### Minor Changes
+
+- 27c0ba9: export component with namespace
+- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
+- c9e4b68: migrate to base-ui beta v4
+- 220cda2: change components interface
+- 216866e: feat: add new component `RadioCard`
+- 6c02d6f: unreflected content revisions
+- f17650a: add uilitiy props
+- b581b9f: add `Form` component
+- 7928a67: add subcomponent props to `Content`
+- e12f4c4: split label into vertical/horizontal
+- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
+- 98170c1: Add white foreground variant to foreground recipe
+
+### Patch Changes
+
+- abeac6d: Unified the Cascade Layer into a single layer `vapor`
+- 3819233: Fix checkbox borderRadius sync error
+- ee61a32: Synchronize the aria-labelledby with the recieved id prop
+- df5cb78: separate `readonly` from `disabled`
+- 707f705: feat: update color tokens
+- f0f643b: feat: Remove Font Loading from CSS Build
+- 43cfefb: feat: add font banner
+- 74dc538: ### Features
+    - **Enabled CSS Tree-shaking:** Component CSS is now imported by its corresponding JS file instead of being in the global `styles.css`. This significantly reduces your production bundle size by only including the CSS for components you actually use.
+
+    ### Bug Fixes
+    - Fixed a CSS dependency order issue where `IconButton` styles loaded before `Button` styles, causing incorrect style inheritance.
+
+- 6f8de5b: correct padding-inline for sm size from 4px(050) to 8px(100)
+- 4df6bcf: resolved interactions layer's color in dark mode
+- 25c235e: adjust indicator size to account for border
+- 716c1d6: restore reset css
+- 9a3c4f6: fix(RadioGroup): Resolving orientation style errors
+- d68304a: fix(text-input): add component layer
+- Updated dependencies [8217749]
+- Updated dependencies [402284e]
+- Updated dependencies [fd4acaa]
+- Updated dependencies [f2950ee]
+    - @vapor-ui/icons@0.5.0
+
 ## 0.6.0
 
 ### Minor Changes

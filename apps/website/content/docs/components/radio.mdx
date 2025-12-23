@@ -1,13 +1,13 @@
 ---
 title: 'Radio'
 site_name: 'Radio - Vapor Core'
-description: 'Radio는 여러 옵션 중 하나만 선택할 수 있는 입력 컴포넌트입니다. 개별 라디오 버튼으로 사용되며 선택 상태를 시각적으로 표현합니다.'
+description: 'Radio는 여러 옵션 중 하나만 선택할 수 있는 입력 컴포넌트입니다. RadioGroup과 함께 사용하여 라디오 버튼 그룹을 구성할 수 있습니다.'
 ---
 
-<Demo name="radio/default-radio">
+<Demo name="radio-group/default-radio-group">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/radio/default-radio.tsx",
+    "file": "./src/components/demo/examples/radio-group/default-radio-group.tsx",
     "codeblock": true
 }
 ```
@@ -19,25 +19,68 @@ description: 'Radio는 여러 옵션 중 하나만 선택할 수 있는 입력 �
 
 ### Size
 
-Radio 버튼의 크기는 `md`와 `lg` 두 가지 크기로 제공합니다.
+RadioGroup의 크기를 설정합니다.
 
-<Demo name="radio/radio-size">
+<Demo name="radio-group/radio-group-size">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/radio/radio-size.tsx",
+    "file": "./src/components/demo/examples/radio-group/radio-group-size.tsx",
     "codeblock": true
 }
 ```
 </Demo>
 
-### States
+### Disabled
 
-Radio는 다양한 상태를 지원하여 사용자 인터페이스에서 적절한 피드백을 제공합니다.
+RadioGroup의 비활성화 상태를 설정합니다.
 
-<Demo name="radio/radio-states">
+<Demo name="radio-group/radio-group-disabled">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/radio/radio-states.tsx",
+    "file": "./src/components/demo/examples/radio-group/radio-group-disabled.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Read Only
+
+RadioGroup의 읽기 전용 상태입니다. 사용자가 값을 변경할 수 없지만 현재 선택된 상태를 확인할 수 있습니다.
+
+<Demo name="radio-group/radio-readonly">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio-group/radio-readonly.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+## Examples
+
+---
+
+### Direction
+
+Radio 그룹의 방향을 조절할 수 있습니다. VStack과 HStack을 사용하여 세로 및 가로 방향으로 배치할 수 있습니다.
+
+<Demo name="radio-group/radio-direction">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio-group/radio-direction.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Flexible
+
+Radio의 유연한 사용예시입니다.
+
+<Demo name="radio-group/flexible">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/radio-group/flexible.tsx",
     "codeblock": true
 }
 ```
@@ -47,14 +90,18 @@ Radio는 다양한 상태를 지원하여 사용자 인터페이스에서 적절
 
 ---
 
+### RadioGroup.Root
+
+<ComponentPropsTable componentName="radio-group-root" />
+
+### RadioGroup.Label
+
+<ComponentPropsTable componentName="radio-group-label" />
+
 ### Radio.Root
 
-Radio의 루트 컴포넌트로, 실제 라디오 버튼 요소를 렌더링합니다. 개별 라디오 선택 옵션을 제공합니다.
+<ComponentPropsTable componentName="radio-root" />
 
-<ComponentPropsTable file="radio" section="radioRootProps" />
+### Radio.IndicatorPrimitive
 
-### Radio.Indicator
-
-라디오 버튼의 선택 상태를 시각적으로 표시하는 인디케이터 컴포넌트입니다.
-
-<ComponentPropsTable file="radio" section="radioIndicatorProps" />
+<ComponentPropsTable componentName="radio-indicator-primitive" />
