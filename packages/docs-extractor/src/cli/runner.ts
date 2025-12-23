@@ -16,6 +16,7 @@ import type {
     ExtractorOutput,
 } from '../types/index.js';
 import { Logger } from '../utils/logger.js';
+import { COMPOUND_COMPONENT_BASES } from '../constants/compound-components.js';
 import type { CliFlags } from './config.js';
 
 /**
@@ -145,7 +146,7 @@ export class CliRunner {
                         exports.push({
                             type: 'component',
                             name: compName,
-                            displayName: compName,
+                            displayName: displayName,
                             props,
                             ...(variants && { variants }),
                         });
@@ -185,39 +186,24 @@ export class CliRunner {
      * Examples:
      *   "MenuPopup" → "Menu.Popup"
      *   "CheckboxRoot" → "Checkbox.Root"
+     *   "InputGroupRoot" → "InputGroup.Root"
+     *   "NavigationMenuTrigger" → "NavigationMenu.Trigger"
      *   "Button" → "Button" (no change)
      *   "IconButton" → "IconButton" (no change, not a compound component)
      */
     private formatDisplayName(compName: string): string {
-        // Known compound component base names
-        const compoundBases = [
-            'Accordion',
-            'AlertDialog',
-            'Checkbox',
-            'Collapsible',
-            'Dialog',
-            'Field',
-            'Form',
-            'Menu',
-            'Popover',
-            'Progress',
-            'Radio',
-            'Select',
-            'Slider',
-            'Tabs',
-            'Toast',
-            'Toolbar',
-            'Tooltip',
-        ];
+        // Use shared compound component base names
+        // See: src/constants/compound-components.ts
+        const compoundBases = COMPOUND_COMPONENT_BASES;
 
-        // Try to detect compound pattern (e.g., "MenuPopup" → "Menu" + "Popup")
-        const compoundMatch = compName.match(/^([A-Z][a-z]{2,})([A-Z][a-z]+(?:[A-Z][a-z]+)*)$/);
-        if (compoundMatch) {
-            const [, baseComponent, subComponent] = compoundMatch;
-
-            // Only split if it's a known compound component pattern
-            if (compoundBases.includes(baseComponent)) {
-                return `${baseComponent}.${subComponent}`;
+        // Try each compound base (longer names first to avoid partial matches)
+        for (const base of compoundBases) {
+            if (compName.startsWith(base) && compName.length > base.length) {
+                const subComponent = compName.slice(base.length);
+                // Check if remaining part starts with uppercase (valid sub-component)
+                if (/^[A-Z]/.test(subComponent)) {
+                    return `${base}.${subComponent}`;
+                }
             }
         }
 

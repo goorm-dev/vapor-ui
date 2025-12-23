@@ -19,11 +19,18 @@ export const replaceComponentDoc = (text: string) => {
         /<ComponentPropsTable\s+componentName="([^"]+)"\s*\/>/g,
         (_, componentName: string) => {
             try {
+                // Parse componentName with slash separator (e.g., "Button/Button", "Dialog/Root")
+                const [folder, filename] = componentName.split('/');
+                if (!folder || !filename) {
+                    return `> ⚠️ Invalid componentName format: \`${componentName}\`. Expected format: "Folder/Filename"`;
+                }
+
                 const jsonPath = path.join(
                     process.cwd(),
                     'public',
-                    'components/generated',
-                    `${componentName}.json`,
+                    'References',
+                    folder,
+                    `${filename}.json`,
                 );
 
                 if (!fs.existsSync(jsonPath)) {

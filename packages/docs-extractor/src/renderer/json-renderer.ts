@@ -1,7 +1,36 @@
-import type { ExtractorOutput, ComponentExport, MergedPropertyDoc } from '../types/index.js';
-import type { Logger } from '../utils/logger.js';
 import fs from 'fs/promises';
 import path from 'path';
+
+import { COMPOUND_COMPONENT_BASES } from '../constants/compound-components.js';
+import type { ComponentExport, ExtractorOutput } from '../types/index.js';
+import type { Logger } from '../utils/logger.js';
+
+/**
+ * Output format for ComponentPropsTable compatibility
+ */
+interface ComponentPropsTableOutput {
+    name: string;
+    displayName: string;
+    description: string;
+    props: Array<{
+        name: string;
+        type: string[];
+        required: boolean;
+        description: string;
+        defaultValue?: string;
+    }>;
+    variants?: {
+        sourceFile: string;
+        variants: Array<{
+            name: string;
+            values: string[];
+            defaultValue?: string;
+            description?: string;
+        }>;
+    };
+    generatedAt: string;
+    sourceFile: string;
+}
 
 /**
  * Renders the extracted documentation as JSON
@@ -29,7 +58,8 @@ export class JsonRenderer {
 
     /**
      * Write component files to individual JSON files organized by folder
-     * Creates structure like: outputDir/button/button.json, outputDir/checkbox/root.json
+     * Creates structure like: outputDir/Button/Button.json, outputDir/Dialog/Root.json
+     * Uses PascalCase for folder and file names
      */
     async writeComponentFiles(output: ExtractorOutput, outputDir: string): Promise<void> {
         this.logger.debug(`Writing component files to ${outputDir}`);
@@ -41,19 +71,24 @@ export class JsonRenderer {
 
         for (const component of output.components) {
             for (const exportData of component.exports) {
-                // Remove source file paths from the export
-                const cleanedExport = this.stripSourceFilePaths(exportData);
-
-                // Get folder and filename from display name
-                const { folder, filename } = this.getFilePathFromDisplayName(exportData.displayName);
+                // Get folder and filename from display name (PascalCase)
+                const { folder, filename } = this.getFilePathFromDisplayName(
+                    exportData.displayName,
+                );
 
                 // Create component directory
                 const componentDir = path.join(outputDir, folder);
                 await fs.mkdir(componentDir, { recursive: true });
 
+                // Convert to ComponentPropsTable format
+                const propsTableOutput = this.convertToPropsTableFormat(
+                    exportData,
+                    component.description,
+                );
+
                 // Write the component file
                 const filePath = path.join(componentDir, filename);
-                const json = this.renderComponentExport(cleanedExport);
+                const json = JSON.stringify(propsTableOutput, null, 2);
                 await fs.writeFile(filePath, json, 'utf-8');
 
                 this.logger.debug(`Wrote ${filePath}`);
@@ -65,22 +100,22 @@ export class JsonRenderer {
     }
 
     /**
-     * Convert a display name to a file path structure
+     * Convert a display name to a file path structure (PascalCase)
      * Examples:
-     *   "Button" → {folder: "button", filename: "button.json"}
-     *   "IconButton" → {folder: "icon-button", filename: "icon-button.json"}
-     *   "Checkbox.Root" → {folder: "checkbox", filename: "root.json"}
-     *   "CheckboxRoot" → {folder: "checkbox", filename: "root.json"}
-     *   "CheckboxIndicatorPrimitive" → {folder: "checkbox", filename: "indicator-primitive.json"}
+     *   "Button" → {folder: "Button", filename: "Button.json"}
+     *   "IconButton" → {folder: "IconButton", filename: "IconButton.json"}
+     *   "Checkbox.Root" → {folder: "Checkbox", filename: "Root.json"}
+     *   "CheckboxRoot" → {folder: "Checkbox", filename: "Root.json"}
+     *   "CheckboxIndicatorPrimitive" → {folder: "Checkbox", filename: "IndicatorPrimitive.json"}
      */
     private getFilePathFromDisplayName(displayName: string): { folder: string; filename: string } {
         // Check for dot notation (compound pattern with explicit dot)
         if (displayName.includes('.')) {
             const [componentName, ...subParts] = displayName.split('.');
-            const subComponent = subParts.join('-');
+            const subComponent = subParts.join('');
             return {
-                folder: this.toKebabCase(componentName),
-                filename: `${this.toKebabCase(subComponent)}.json`,
+                folder: componentName,
+                filename: `${subComponent}.json`,
             };
         }
 
@@ -94,62 +129,125 @@ export class JsonRenderer {
             // Only split if it's a known compound component pattern
             if (this.isCompoundPattern(baseComponent)) {
                 return {
-                    folder: this.toKebabCase(baseComponent),
-                    filename: `${this.toKebabCase(subComponent)}.json`,
+                    folder: baseComponent,
+                    filename: `${subComponent}.json`,
                 };
             }
         }
 
-        // Single component case (default)
-        const kebab = this.toKebabCase(displayName);
-        return { folder: kebab, filename: `${kebab}.json` };
+        // Single component case (default) - folder and filename are the same
+        return { folder: displayName, filename: `${displayName}.json` };
     }
 
     /**
      * Check if a component base name is a known compound component pattern
      * Compound components are those that have sub-components like Checkbox.Root, Dialog.Content, etc.
+     * See: src/constants/compound-components.ts for the shared list
      */
     private isCompoundPattern(baseComponent: string): boolean {
-        // Known compound component base names
-        const compoundBases = ['Checkbox', 'Radio', 'Dialog', 'Popover', 'Menu', 'Select', 'Tabs'];
-        return compoundBases.includes(baseComponent);
+        return (COMPOUND_COMPONENT_BASES as readonly string[]).includes(baseComponent);
     }
 
     /**
-     * Convert PascalCase to kebab-case
-     * Examples: "Button" → "button", "CheckboxRoot" → "checkbox-root"
+     * Convert ComponentExport to ComponentPropsTable format
+     * - Converts type to always be an array
+     * - Adds generatedAt and sourceFile fields
      */
-    private toKebabCase(str: string): string {
-        return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-    }
+    private convertToPropsTableFormat(
+        exportData: ComponentExport,
+        componentDescription?: string,
+    ): ComponentPropsTableOutput {
+        // Get description from export or component level
+        const description = this.getExportDescription(exportData) || componentDescription || '';
 
-    /**
-     * Remove source file paths and unnecessary nested docs from the export data
-     * This prevents absolute paths from being exposed in the JSON output
-     */
-    private stripSourceFilePaths(exportData: ComponentExport): ComponentExport {
+        // Convert props to the expected format with type always as array
+        const props = exportData.props.map((prop) => {
+            // Determine type array: use values if available, otherwise parse type string
+            let typeArray: string[];
+
+            if (prop.values && prop.values.length > 0) {
+                // Use parsed union values if available
+                typeArray = prop.values;
+            } else if (prop.type) {
+                // Parse type string - handle union types and wrap single types
+                typeArray = this.parseTypeToArray(prop.type);
+            } else {
+                typeArray = ['unknown'];
+            }
+
+            return {
+                name: prop.name,
+                type: typeArray,
+                required: prop.required,
+                description: prop.description || '',
+                ...(prop.defaultValue !== undefined && { defaultValue: prop.defaultValue }),
+            };
+        });
+
         return {
-            ...exportData,
-            // Remove sourceFile, localDoc, and externalDoc from props
-            props: exportData.props.map((prop) => {
-                const { sourceFile, localDoc, externalDoc, ...rest } = prop;
-                return rest as MergedPropertyDoc;
-            }),
-            // Remove sourceFile from variants if present
-            variants: exportData.variants
-                ? {
-                      sourceFile: '', // Empty string to satisfy type requirement
-                      variants: exportData.variants.variants,
-                  }
-                : undefined,
+            name: this.getExportShortName(exportData.displayName),
+            displayName: exportData.displayName,
+            description,
+            props,
+            ...(exportData.variants && { variants: exportData.variants }),
+            generatedAt: new Date().toISOString(),
+            sourceFile: '',
         };
     }
 
     /**
-     * Render a single component export as JSON
-     * This renders just the component data without the metadata wrapper
+     * Get description from export data
+     * Looks for description in props or other metadata
      */
-    private renderComponentExport(exportData: ComponentExport): string {
-        return JSON.stringify(exportData, null, 2);
+    private getExportDescription(_exportData: ComponentExport): string | undefined {
+        // Check if there's a description in the first prop or metadata
+        // This is a simplified approach - can be enhanced based on actual data structure
+        return undefined;
+    }
+
+    /**
+     * Get the short name from display name (last part after dot)
+     * Examples: "Dialog.Root" → "Root", "Button" → "Button"
+     */
+    private getExportShortName(displayName: string): string {
+        if (displayName.includes('.')) {
+            const parts = displayName.split('.');
+            return parts[parts.length - 1];
+        }
+        return displayName;
+    }
+
+    /**
+     * Parse a type string into an array of type values
+     * Handles union types like "string | number" → ["string", "number"]
+     */
+    private parseTypeToArray(typeStr: string): string[] {
+        // Handle union types - split by | and trim
+        if (typeStr.includes('|')) {
+            return typeStr
+                .split('|')
+                .map((t) => t.trim())
+                .filter((t) => t.length > 0)
+                .map((t) => this.cleanTypeValue(t));
+        }
+
+        // Single type - return as array
+        return [this.cleanTypeValue(typeStr)];
+    }
+
+    /**
+     * Clean a type value - remove quotes from string literals
+     * Examples: '"primary"' → 'primary', 'string' → 'string'
+     */
+    private cleanTypeValue(value: string): string {
+        // Remove surrounding quotes from string literals
+        const trimmed = value.trim();
+        if (
+            (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+            (trimmed.startsWith("'") && trimmed.endsWith("'"))
+        ) {
+            return trimmed.slice(1, -1);
+        }
+        return trimmed;
     }
 }

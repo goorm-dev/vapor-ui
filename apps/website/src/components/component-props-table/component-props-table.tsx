@@ -36,7 +36,13 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
     React.useEffect(() => {
         const loadComponentData = async () => {
             try {
-                const response = await fetch(`/components/generated/${componentName}.json`);
+                // Parse componentName with slash separator (e.g., "Button/Button", "Dialog/Root")
+                const [folder, filename] = componentName.split('/');
+                if (!folder || !filename) {
+                    throw new Error(`Invalid componentName format: ${componentName}. Expected format: "Folder/Filename"`);
+                }
+
+                const response = await fetch(`/References/${folder}/${filename}.json`);
                 if (!response.ok) {
                     throw new Error(`Failed to load component data for ${componentName}`);
                 }
