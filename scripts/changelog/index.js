@@ -11,7 +11,7 @@ function readEnv() {
 }
 
 const changelogFunctions = {
-    getReleaseLine: async (changeset, type, options) => {
+    getReleaseLine: async (changeset, _, options) => {
         const { GITHUB_SERVER_URL, GITHUB_TOKEN } = readEnv();
         if (!options || !options.repo) {
             throw new Error(
@@ -122,7 +122,7 @@ const changelogFunctions = {
     },
 
     // same as default implementation
-    getDependencyReleaseLine: async (changesets, dependenciesUpdated, options) => {
+    getDependencyReleaseLine: async (_, dependenciesUpdated, options) => {
         if (!options.repo) {
             throw new Error(
                 'Please provide a repo to this changelog generator like this:\n"changelog": ["@changesets/changelog-github", { "repo": "org/repo" }]',
@@ -131,18 +131,6 @@ const changelogFunctions = {
         if (dependenciesUpdated.length === 0) return '';
 
         const scopeInfo = '[SCOPE:Updated Dependencies]';
-
-        const commits = await Promise.all(
-            changesets.map(async (cs) => {
-                if (cs.commit) {
-                    let { links } = await getInfo({
-                        repo: options.repo,
-                        commit: cs.commit,
-                    });
-                    return links.commit;
-                }
-            }),
-        );
 
         const updatedDepenenciesList = dependenciesUpdated.map(
             (dependency) => `- ${dependency.name}@${dependency.newVersion}`,
