@@ -43,7 +43,7 @@ jobs:
 
             - name: Update Release Notes
               if: steps.changesets.outputs.published == 'false'
-              run: node scripts/changelog/release-note.js
+              run: pnpm run version:release-note
 
             - name: Commit Changes
               if: steps.changesets.outputs.published == 'false'
