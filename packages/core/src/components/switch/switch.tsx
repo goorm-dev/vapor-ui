@@ -1,12 +1,12 @@
 'use client';
 
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 
-import { Switch as BaseSwitch } from '@base-ui-components/react';
+import { Switch as BaseSwitch, useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -37,18 +37,18 @@ export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props
 
     const { size, invalid } = variantProps;
     const { required } = otherProps;
-
     const dataAttrs = createDataAttributes({ invalid });
 
-    const ThumbElement = useMemo(() => createSlot(<SwitchThumbPrimitive />), []);
-    const children = childrenProp || <ThumbElement />;
+    const children = useRender({
+        render: createRender(childrenProp, <SwitchThumbPrimitive />),
+    });
 
     return (
         <SwitchProvider value={variantProps}>
             <BaseSwitch.Root
                 ref={ref}
-                aria-required={required || undefined}
-                aria-invalid={invalid || undefined}
+                aria-required={required}
+                aria-invalid={invalid}
                 className={clsx(styles.control({ size }), className)}
                 {...dataAttrs}
                 {...otherProps}

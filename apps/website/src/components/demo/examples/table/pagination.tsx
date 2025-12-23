@@ -177,12 +177,9 @@ export default function WithPagination() {
 
                     <Table.Header>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <Table.Row key={headerGroup.id}>
+                            <Table.Row key={headerGroup.id} backgroundColor="$gray-050">
                                 {headerGroup.headers.map((header) => (
-                                    <Table.Heading
-                                        key={header.id}
-                                        style={{ backgroundColor: 'var(--vapor-color-gray-050)' }}
-                                    >
+                                    <Table.Heading key={header.id}>
                                         {flexRender(
                                             header.column.columnDef.header,
                                             header.getContext(),
@@ -199,12 +196,7 @@ export default function WithPagination() {
                                 return (
                                     <Table.Row key={row.id}>
                                         {row.getVisibleCells().map((cell) => (
-                                            <Table.Cell
-                                                key={cell.id}
-                                                style={{
-                                                    backgroundColor: 'var(--vapor-color-white)',
-                                                }}
-                                            >
+                                            <Table.Cell key={cell.id}>
                                                 {flexRender(
                                                     cell.column.columnDef.cell,
                                                     cell.getContext(),
