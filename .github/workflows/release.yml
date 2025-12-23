@@ -53,3 +53,10 @@ jobs:
                       git commit -m "docs: update release notes"
                       git push --set-upstream origin changeset-release/main
                   fi
+
+            - name: Send Slack Notification
+              if: steps.changesets.outputs.published == 'true'
+              run: pnpm run release:slack
+              env:
+                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+                  PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}

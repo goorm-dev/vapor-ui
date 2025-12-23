@@ -35,6 +35,7 @@
         "prepare": "husky",
         "typecheck": "turbo typecheck",
         "release": "turbo run build --filter=./packages/* && changeset publish",
+        "release:slack": "node scripts/changelog/slack.js",
         "version": "changeset version && pnpm version:changelog && pnpm install --lockfile-only",
         "version:changelog": "node ./scripts/changelog/post-process.js",
         "update-releases": "node scripts/update-releases.mjs",
