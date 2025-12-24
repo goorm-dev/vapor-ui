@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/hooks",
-    "version": "1.0.0-beta.6",
+    "version": "1.0.0",
     "description": "A collection of React hooks for the Vapor Design System.",
     "keywords": [
         "react",

@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/icons",
-    "version": "1.0.0-beta.6",
+    "version": "1.0.0",
     "description": "A set of React components for icons in the Vapor Design System.",
     "keywords": [
         "react",

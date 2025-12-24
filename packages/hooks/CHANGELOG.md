@@ -1,5 +1,11 @@
 # @vapor-ui/hooks
 
+## 1.0.0
+
+### Patch Changes
+
+- a935156: clone elements & enhance customizability
+
 ## 1.0.0-beta.6
 
 ### Patch Changes

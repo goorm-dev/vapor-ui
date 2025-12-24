@@ -1,5 +1,21 @@
 # @vapor-ui/core
 
+## 1.0.0
+
+### Minor Changes
+
+- a935156: add new `FloatingBar` component
+
+### Patch Changes
+
+- b6bd4db: adjust to max-width in dialog
+- a935156: clone elements & enhance customizability
+- Updated dependencies [c968e76]
+- Updated dependencies [a935156]
+- Updated dependencies [712585a]
+    - @vapor-ui/icons@1.0.0
+    - @vapor-ui/hooks@1.0.0
+
 ## 1.0.0-beta.11
 
 ### Patch Changes
