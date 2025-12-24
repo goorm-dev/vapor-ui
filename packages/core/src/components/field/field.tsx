@@ -5,12 +5,10 @@ import { forwardRef } from 'react';
 import { Field as BaseField } from '@base-ui-components/react/field';
 import clsx from 'clsx';
 
-import type { Foregrounds } from '~/styles/mixins/foreground.css';
-import { foregrounds } from '~/styles/mixins/foreground.css';
-import { type Typography, typography } from '~/styles/mixins/typography.css';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
 
+import type { LabelVariants } from './field.css';
 import * as styles from './field.css';
 
 /* -------------------------------------------------------------------------------------------------
@@ -32,22 +30,12 @@ FieldRoot.displayName = 'Field.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>((props, ref) => {
-    const {
-        typography: typographyStyle = 'body2',
-        foreground = 'normal-100',
-        className,
-        ...componentProps
-    } = resolveStyles(props);
+    const { typography, foreground, className, ...componentProps } = resolveStyles(props);
 
     return (
         <BaseField.Label
             ref={ref}
-            className={clsx(
-                styles.label,
-                typography({ style: typographyStyle }),
-                foregrounds({ color: foreground }),
-                className,
-            )}
+            className={clsx(styles.label({ typography, foreground }), className)}
             {...componentProps}
         />
     );
@@ -111,17 +99,12 @@ FieldSuccess.displayName = 'Field.Success';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-interface FieldTypographyProps {
-    typography?: Typography['style'];
-    foreground?: Foregrounds['color'];
-}
-
 export namespace FieldRoot {
     export interface Props extends VComponentProps<typeof BaseField.Root> {}
 }
 
 export namespace FieldLabel {
-    export interface Props extends VComponentProps<typeof BaseField.Label>, FieldTypographyProps {}
+    export interface Props extends VComponentProps<typeof BaseField.Label>, LabelVariants {}
 }
 
 export namespace FieldDescription {
