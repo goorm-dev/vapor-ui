@@ -10,6 +10,10 @@ import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './floating-bar.css';
 
+/* -------------------------------------------------------------------------------------------------
+ * FloatingBar.Root
+ * -----------------------------------------------------------------------------------------------*/
+
 export const FloatingBarRoot = (props: FloatingBarRoot.Props) => {
     return <Popover.Root {...props} />;
 };
