@@ -102,6 +102,11 @@ export const trigger = recipe({
             justifyContent: 'center',
             gap: vars.size.space['075'],
             zIndex: 1,
+            selectors: {
+                '&[data-selected]': {
+                    color: vars.color.foreground.primary['100'],
+                },
+            },
         }),
     ],
 
@@ -140,11 +145,6 @@ export const trigger = recipe({
                 vars: {
                     [triggerHorizontalBorderRadius]: vars.size.borderRadius[300],
                     [triggerVerticalBorderRadius]: vars.size.borderRadius[300],
-                },
-                selectors: {
-                    '&[data-selected]': {
-                        color: vars.color.foreground.primary['100'],
-                    },
                 },
             }),
         },
