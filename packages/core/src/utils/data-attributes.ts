@@ -6,7 +6,7 @@ type SingleDataAttrValue = string | number | boolean | null | undefined;
 
 type ReturnByValue<T> = T extends Falsy ? {} : DataAttr;
 
-export function createDataAttribute<T extends SingleDataAttrValue>(
+function createDataAttribute<T extends SingleDataAttrValue>(
     key: string,
     value: T,
 ): ReturnByValue<T> {
