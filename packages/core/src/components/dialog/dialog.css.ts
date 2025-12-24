@@ -22,7 +22,7 @@ export const overlay = layerStyle('components', {
     },
 });
 
-const SPACING = '32px';
+const SPACING = '2rem';
 
 export const popup = recipe({
     base: layerStyle('components', {
