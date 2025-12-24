@@ -1,5 +1,7 @@
 @layer tw-theme, tw-base, base, vapor, tw-utilities;
 
+@import url(https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css);
+
 @import 'tailwindcss/preflight' layer(tw-base);
 @import 'tailwindcss/theme' layer(tw-theme);
 @import 'tailwindcss/utilities' layer(tw-utilities);
@@ -45,6 +47,12 @@
     --fd-tocnav-height: 64px;
 }
 
+@theme {
+    --font-mono:
+        'Fira Code', Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+        Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
 /* ==========================================================================
    Base Styles
    ========================================================================== */
@@ -70,4 +78,8 @@ a[data-active='true'] {
 }
 button {
     border-color: var(--vapor-color-border-normal);
+}
+code,
+code * {
+    font-family: var(--font-mono);
 }
