@@ -3,6 +3,42 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- a935156: add new `FloatingBar` component
+
+#### Patch Changes
+
+- b6bd4db: adjust to max-width in dialog
+- a935156: clone elements & enhance customizability
+- Updated dependencies [c968e76]
+- Updated dependencies [a935156]
+- Updated dependencies [712585a]
+    - @vapor-ui/icons@1.0.0
+    - @vapor-ui/hooks@1.0.0
+
+### @vapor-ui/hooks
+
+#### Patch Changes
+
+- a935156: clone elements & enhance customizability
+
+### @vapor-ui/icons
+
+#### Patch Changes
+
+- c968e76: remove iconType
+- a935156: clone elements & enhance customizability
+- 712585a: Update icons from Figma
+
+    **Updated Basic Icons:** `Heading2OutlineIcon`, `StrikeOutlineIcon`, `ChecklistOutlineIcon`, `Heading3OutlineIcon`, `Heading4OutlineIcon`, `Heading1OutlineIcon`
+
+---
+
 ## 1.0.0-beta.11
 
 ### @vapor-ui/core
@@ -15,24 +51,6 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - Updated dependencies [e9e83a8]
     - @vapor-ui/hooks@1.0.0-beta.6
     - @vapor-ui/icons@1.0.0-beta.6
-
-### @vapor-ui/hooks
-
-#### Patch Changes
-
-- 8c5c755: clone elements & enhance customizability
-
-### @vapor-ui/icons
-
-#### Minor Changes
-
-- e9e83a8: Add new icons from Figma
-
-    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
-
-#### Patch Changes
-
-- 8c5c755: clone elements & enhance customizability
 
 ---
 
@@ -202,6 +220,24 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 - bd523c7: feat: update color generator & color palette
 - Updated dependencies [bd523c7]
     - @vapor-ui/color-generator@1.0.0
+
+### @vapor-ui/hooks
+
+#### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
+
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- e9e83a8: Add new icons from Figma
+
+    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
+
+#### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
 
 ---
 
