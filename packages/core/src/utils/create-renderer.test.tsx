@@ -1,5 +1,6 @@
-import { render } from '@testing-library/react';
 import { isValidElement } from 'react';
+
+import { render } from '@testing-library/react';
 
 import { createRender } from './create-renderer';
 
