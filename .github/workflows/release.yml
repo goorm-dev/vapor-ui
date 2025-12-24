@@ -1,10 +1,10 @@
-name: "Release Packages"
+name: 'Release Packages'
 
 on:
     push:
         paths:
-            - ".changeset/**"
-            - "packages/**"
+            - '.changeset/**'
+            - 'packages/**'
         branches:
             - main
 
@@ -35,7 +35,7 @@ jobs:
               with:
                   publish: pnpm run release
                   version: pnpm run version
-                  commit: "ci(changesets): version packages"
+                  commit: 'ci(changesets): version packages'
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
