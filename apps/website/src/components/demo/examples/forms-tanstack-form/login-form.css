@@ -1,0 +1,26 @@
+.input-label {
+    color: var(--vapor-color-foreground-normal-100, #525463);
+
+    font-size: var(--vapor-typography-fontSize-050, 0.75rem);
+    font-weight: var(--vapor-typography-fontWeight-500);
+    line-height: var(--vapor-typography-lineHeight-050, 1.125rem); /* 150% */
+    letter-spacing: var(--vapor-typography-letterSpacing-000, 0);
+}
+
+.checkbox-label {
+    color: var(--vapor-color-foreground-normal-100, #2b2d36);
+
+    font-size: var(--vapor-typography-fontSize-075, 0.875rem);
+    font-weight: var(--vapor-typography-fontWeight-400);
+    line-height: var(--vapor-typography-lineHeight-075, 1.375rem); /* 157.143% */
+    letter-spacing: var(--vapor-typography-letterSpacing-100, -0.00625rem);
+}
+
+.helper-text {
+    color: var(--vapor-color-foreground-hint, #6c6e7e);
+
+    font-size: var(--vapor-typography-fontSize-075, 0.875rem);
+    font-weight: var(--vapor-typography-fontWeight-400);
+    line-height: var(--vapor-typography-lineHeight-075, 1.375rem); /* 157.143% */
+    letter-spacing: var(--vapor-typography-letterSpacing-100, -0.00625rem);
+}
