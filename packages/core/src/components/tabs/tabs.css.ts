@@ -113,10 +113,7 @@ export const trigger = recipe({
     defaultVariants: { size: 'md', disabled: false, variant: 'line', orientation: 'horizontal' },
     variants: {
         size: {
-            sm: [
-                typography({ style: 'subtitle2' }),
-                layerStyle('components', { height: vars.size.space['300'] }),
-            ],
+            sm: [layerStyle('components', { height: vars.size.space['300'] })],
             md: [layerStyle('components', { height: vars.size.space['400'] })],
             lg: [layerStyle('components', { height: vars.size.space['500'] })],
             xl: [
