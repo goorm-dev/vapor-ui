@@ -198,7 +198,7 @@ export default function Scroll() {
                                 return (
                                     <Table.Row key={row.id}>
                                         {row.getVisibleCells().map((cell) => (
-                                            <Table.Cell key={cell.id} backgroundColor="$white">
+                                            <Table.Cell key={cell.id}>
                                                 {flexRender(
                                                     cell.column.columnDef.cell,
                                                     cell.getContext(),
