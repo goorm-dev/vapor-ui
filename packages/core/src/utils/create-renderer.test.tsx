@@ -1,32 +1,84 @@
+import { isValidElement } from 'react';
+
 import { render } from '@testing-library/react';
 
 import { createRender } from './create-renderer';
 
-describe('renderer', () => {
-    it('should return the children if it is a valid React element', () => {
-        const element = <div>hello</div>;
-        const result = createRender(element);
-        // React elements are objects, so compare type and props
-        expect(result).toBe(element);
+describe('createRender', () => {
+    describe('when children is a valid element', () => {
+        it('should return the element as-is for regular elements', () => {
+            const element = <div>hello</div>;
+            const result = createRender(element);
+            expect(result).toBe(element);
+        });
+
+        it('should return a render callback for Fragment children', () => {
+            const fragment = (
+                <>
+                    <span>a</span>
+                    <span>b</span>
+                </>
+            );
+            const result = createRender(fragment);
+
+            expect(typeof result).toBe('function');
+
+            if (typeof result === 'function') {
+                const rendered = result({}, {});
+                expect(rendered).toBe(fragment);
+            }
+        });
     });
 
-    it('should return fallback if children is not a valid React element', () => {
-        const fallback = <span>fallback</span>;
-        const result = createRender('not-element', fallback);
-        // fallback should be returned as is
-        expect(result).toBe(fallback);
+    describe('when fallback is provided', () => {
+        it('should return the fallback as-is for regular elements', () => {
+            const fallback = <span>fallback</span>;
+            const result = createRender('not-element', fallback);
+            expect(result).toBe(fallback);
+        });
+
+        it('should return a render callback for Fragment fallback', () => {
+            const fragmentFallback = (
+                <>
+                    <span>fallback-a</span>
+                    <span>fallback-b</span>
+                </>
+            );
+            const result = createRender('not-element', fragmentFallback);
+
+            expect(typeof result).toBe('function');
+
+            if (typeof result === 'function') {
+                const rendered = result({}, {});
+                expect(rendered).toBe(fragmentFallback);
+            }
+        });
     });
 
-    it('should wrap non-element children in a fragment if no fallback', () => {
-        const result = createRender('text');
-        // Render the result and check the output
-        const { container } = render(result);
-        expect(container.textContent).toBe('text');
-    });
+    describe('when no fallback is provided', () => {
+        it('should return a render callback that wraps non-element children in a Fragment', () => {
+            const result = createRender('text');
 
-    it('should render null as empty fragment if no fallback', () => {
-        const result = createRender(null);
-        const { container } = render(result);
-        expect(container.textContent).toBe('');
+            expect(typeof result).toBe('function');
+
+            if (typeof result === 'function') {
+                const rendered = result({}, {});
+                expect(isValidElement(rendered)).toBe(true);
+                const { container } = render(rendered);
+                expect(container.textContent).toBe('text');
+            }
+        });
+
+        it('should return a render callback that wraps null in an empty Fragment', () => {
+            const result = createRender(null);
+
+            expect(typeof result).toBe('function');
+
+            if (typeof result === 'function') {
+                const rendered = result({}, {});
+                const { container } = render(rendered);
+                expect(container.textContent).toBe('');
+            }
+        });
     });
 });
