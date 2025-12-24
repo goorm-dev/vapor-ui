@@ -69,7 +69,7 @@ export const FloatingBarPositionerPrimitive = forwardRef<
         <Popover.Positioner
             ref={ref}
             positionMethod="fixed"
-            style={{ ...style, ...positions }}
+            style={{ ...positions, ...style }}
             className={clsx(styles.positioner, className)}
             {...componentProps}
         />
