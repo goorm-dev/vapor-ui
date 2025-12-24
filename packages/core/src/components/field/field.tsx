@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
 
+import type { LabelVariants } from './field.css';
 import * as styles from './field.css';
 
 /* -------------------------------------------------------------------------------------------------
@@ -29,10 +30,14 @@ FieldRoot.displayName = 'Field.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabel.Props>((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { typography, foreground, className, ...componentProps } = resolveStyles(props);
 
     return (
-        <BaseField.Label ref={ref} className={clsx(styles.label, className)} {...componentProps} />
+        <BaseField.Label
+            ref={ref}
+            className={clsx(styles.label({ typography, foreground }), className)}
+            {...componentProps}
+        />
     );
 });
 FieldLabel.displayName = 'Field.Label';
@@ -99,7 +104,7 @@ export namespace FieldRoot {
 }
 
 export namespace FieldLabel {
-    export interface Props extends VComponentProps<typeof BaseField.Label> {}
+    export interface Props extends VComponentProps<typeof BaseField.Label>, LabelVariants {}
 }
 
 export namespace FieldDescription {

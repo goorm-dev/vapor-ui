@@ -1,8 +1,10 @@
 import { style } from '@vanilla-extract/css';
+import type { RecipeVariants } from '@vanilla-extract/recipes';
+import { recipe } from '@vanilla-extract/recipes';
 
-import { foregrounds } from '~/styles/mixins/foreground.css';
+import { foregroundVariants, foregrounds } from '~/styles/mixins/foreground.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
-import { typography } from '~/styles/mixins/typography.css';
+import { typography, typographyVariants } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 export const root = layerStyle('components', {
@@ -41,11 +43,8 @@ export const success = style([
     }),
 ]);
 
-export const label = [
-    typography({ style: 'body2' }),
-    foregrounds({ color: 'normal-100' }),
-
-    layerStyle('components', {
+export const label = recipe({
+    base: layerStyle('components', {
         display: 'flex',
         gap: vars.size.space['100'],
 
@@ -53,4 +52,16 @@ export const label = [
             '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
         },
     }),
-];
+
+    defaultVariants: {
+        typography: 'body2',
+        foreground: 'normal-100',
+    },
+
+    variants: {
+        typography: typographyVariants,
+        foreground: foregroundVariants,
+    },
+});
+
+export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;
