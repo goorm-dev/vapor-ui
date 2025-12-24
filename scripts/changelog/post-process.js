@@ -23,7 +23,7 @@ import { extractVersion } from './extract-version.js';
  * - "button" -> "Button"
  * - "menu-item" -> "Menu Item"
  */
-function TitleCase(str) {
+function titleCase(str) {
     return str
         .toLowerCase()
         .replace(/\b\w/g, (char) => char.toUpperCase())
@@ -232,7 +232,7 @@ function processVersionContent(versionContent) {
             commitBuffer();
             const [, rawScope] = isScope;
 
-            currentScope = rawScope === 'etc' ? null : TitleCase(rawScope);
+            currentScope = rawScope === 'etc' ? null : titleCase(rawScope);
             currentBuffer.push(line.replace(/^\s*\[SCOPE:[^\]]+\]\s*/, ''));
 
             return;
@@ -293,7 +293,7 @@ function reconstructChangelog({
         Object.keys(groupedEntries)
             .sort()
             .forEach((scope) => {
-                pushEntry({ parts, title: TitleCase(scope), entries: groupedEntries[scope] });
+                pushEntry({ parts, title: titleCase(scope), entries: groupedEntries[scope] });
             });
 
         // 기타 엔트리 추가
