@@ -1,4 +1,4 @@
-import { Badge, Card, Table } from '@vapor-ui/core';
+import { Badge, Table } from '@vapor-ui/core';
 
 const datas = [
     { name: 'Olivia Park', status: 'active', role: 'designer', 'last-active': '2 hours ago' },
@@ -13,41 +13,37 @@ const datas = [
     { name: 'Lucas Park', status: 'active', role: 'developer', 'last-active': '1 hour ago' },
 ];
 
-const activeness: Record<string, Badge.Props['color']> = {
+const activeness: Record<string, Badge.Props['colorPalette']> = {
     active: 'success',
     inactive: 'hint',
 };
 
 export default function Basic() {
     return (
-        <Card.Root width="100%">
-            <Card.Body padding="$000">
-                <Table.Root width="100%">
-                    <Table.Header>
-                        <Table.Row backgroundColor="$gray-050">
-                            <Table.Heading>Name</Table.Heading>
-                            <Table.Heading>Status</Table.Heading>
-                            <Table.Heading>Role</Table.Heading>
-                            <Table.Heading>Last Active</Table.Heading>
-                        </Table.Row>
-                    </Table.Header>
+        <Table.Root width="100%">
+            <Table.Header>
+                <Table.Row backgroundColor="$gray-050">
+                    <Table.Heading>Name</Table.Heading>
+                    <Table.Heading>Status</Table.Heading>
+                    <Table.Heading>Role</Table.Heading>
+                    <Table.Heading>Last Active</Table.Heading>
+                </Table.Row>
+            </Table.Header>
 
-                    <Table.Body>
-                        {datas.map((data, index) => (
-                            <Table.Row key={index}>
-                                <Table.Cell>{data.name}</Table.Cell>
-                                <Table.Cell>
-                                    <Badge color={activeness[data.status]} shape="pill">
-                                        {data.status.toUpperCase()}
-                                    </Badge>
-                                </Table.Cell>
-                                <Table.Cell>{data.role}</Table.Cell>
-                                <Table.Cell>{data['last-active']}</Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </Table.Body>
-                </Table.Root>
-            </Card.Body>
-        </Card.Root>
+            <Table.Body>
+                {datas.map((data, index) => (
+                    <Table.Row key={index}>
+                        <Table.Cell>{data.name}</Table.Cell>
+                        <Table.Cell>
+                            <Badge colorPalette={activeness[data.status]} shape="pill">
+                                {data.status.toUpperCase()}
+                            </Badge>
+                        </Table.Cell>
+                        <Table.Cell>{data.role}</Table.Cell>
+                        <Table.Cell>{data['last-active']}</Table.Cell>
+                    </Table.Row>
+                ))}
+            </Table.Body>
+        </Table.Root>
     );
 }

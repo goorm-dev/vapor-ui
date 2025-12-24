@@ -15,10 +15,11 @@ import {
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import type { MakeChangeEventDetails } from '~/utils/create-event-details';
 import { createChangeEventDetails } from '~/utils/create-event-details';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './pagination.css';
@@ -197,7 +198,15 @@ PaginationButtonPrimitive.displayName = 'Pagination.ButtonPrimitive';
 export const PaginationPreviousPrimitive = forwardRef<
     HTMLButtonElement,
     PaginationPreviousPrimitive.Props
->(({ render, disabled: disabledProp, className, children: childrenProp, ...props }, ref) => {
+>((props, ref) => {
+    const {
+        render,
+        disabled: disabledProp,
+        className,
+        children: childrenProp,
+        ...componentProps
+    } = resolveStyles(props);
+
     const { page, setPage, size, disabled: contextDisabled } = usePaginationContext();
 
     const disabled = disabledProp || contextDisabled || page <= 1;
@@ -209,20 +218,25 @@ export const PaginationPreviousPrimitive = forwardRef<
         setPage(page - 1, details);
     });
 
-    const IconElement = createSlot(childrenProp || <ChevronLeftOutlineIcon size="100%" />);
+    const children = useRender({
+        render: createRender(childrenProp, <ChevronLeftOutlineIcon />),
+        props: { 'aria-hidden': 'true', className: styles.icon },
+    });
+
+    const defaultProps: useRender.ElementProps<'button'> = {
+        'aria-label': 'Previous Page',
+        disabled,
+        className: clsx(styles.button({ size }), className),
+        onClick,
+        children,
+        ...componentProps,
+    };
 
     return useRender({
         ref,
         render: render || <button />,
-        props: {
-            'aria-label': 'Previous Page',
-            'data-disabled': disabled ? '' : undefined,
-            disabled,
-            className: clsx(styles.button({ size }), className),
-            onClick,
-            children: <IconElement className={styles.icon({ size })} />,
-            ...props,
-        },
+        state: { disabled },
+        props: defaultProps,
     });
 });
 PaginationPreviousPrimitive.displayName = 'Pagination.PreviousPrimitive';
@@ -247,7 +261,15 @@ PaginationPrevious.displayName = 'Pagination.Previous';
  * -----------------------------------------------------------------------------------------------*/
 
 export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationNextPrimitive.Props>(
-    ({ render, disabled: disabledProp, className, children: childrenProp, ...props }, ref) => {
+    (props, ref) => {
+        const {
+            render,
+            disabled: disabledProp,
+            className,
+            children: childrenProp,
+            ...componentProps
+        } = resolveStyles(props);
+
         const {
             totalPages,
             page,
@@ -265,20 +287,25 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
             setPage(page + 1, details);
         });
 
-        const IconElement = createSlot(childrenProp || <ChevronRightOutlineIcon size="100%" />);
+        const children = useRender({
+            render: createRender(childrenProp, <ChevronRightOutlineIcon />),
+            props: { 'aria-hidden': 'true', className: styles.icon },
+        });
+
+        const defaultProps: useRender.ElementProps<'button'> = {
+            'aria-label': 'Next Page',
+            disabled,
+            className: clsx(styles.button({ size }), className),
+            onClick,
+            children,
+            ...componentProps,
+        };
 
         return useRender({
             ref,
             render: render || <button />,
-            props: {
-                'aria-label': 'Next Page',
-                'data-disabled': disabled ? '' : undefined,
-                disabled,
-                className: clsx(styles.button({ size }), className),
-                onClick,
-                children: <IconElement className={styles.icon({ size })} />,
-                ...props,
-            },
+            state: { disabled },
+            props: defaultProps,
         });
     },
 );
@@ -304,22 +331,29 @@ PaginationNext.displayName = 'Pagination.Next';
 export const PaginationEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     PaginationEllipsisPrimitive.Props
->(({ render, className, children: childrenProp, ...props }, ref) => {
+>((props, ref) => {
+    const { render, className, children: childrenProp, ...componentProps } = resolveStyles(props);
+
     const { size, disabled } = usePaginationContext();
 
-    const IconElement = createSlot(childrenProp || <MoreCommonOutlineIcon size="100%" />);
+    const children = useRender({
+        render: createRender(childrenProp, <MoreCommonOutlineIcon />),
+        props: { width: 'max(16px, 50%)', height: 'max(16px, 50%)' },
+    });
+
+    const defaultProps: useRender.ElementProps<'span'> = {
+        role: 'presentation',
+        'aria-hidden': 'true',
+        className: clsx(styles.ellipsis({ size }), className),
+        children,
+        ...componentProps,
+    };
 
     return useRender({
         ref,
         render: render || <span />,
-        props: {
-            role: 'presentation',
-            'aria-hidden': 'true',
-            'data-disabled': disabled ? '' : undefined,
-            className: clsx(styles.ellipsis({ size }), className),
-            children: <IconElement className={styles.icon({ size })} />,
-            ...props,
-        },
+        state: { disabled },
+        props: defaultProps,
     });
 });
 PaginationEllipsisPrimitive.displayName = 'Pagination.EllipsisPrimitive';
