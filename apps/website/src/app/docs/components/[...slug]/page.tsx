@@ -15,6 +15,8 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
     if (!page) notFound();
     const { body: MDX, toc, lastModified } = await page.data.load();
 
+    // test
+
     return (
         <DocsPage
             toc={toc}
