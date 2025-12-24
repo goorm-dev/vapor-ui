@@ -3,6 +3,176 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0-beta.11
+
+### @vapor-ui/core
+
+#### Patch Changes
+
+- af4ea2b: Correct background-color of TextInput component
+- 8c5c755: clone elements & enhance customizability
+- Updated dependencies [8c5c755]
+- Updated dependencies [e9e83a8]
+    - @vapor-ui/hooks@1.0.0-beta.6
+    - @vapor-ui/icons@1.0.0-beta.6
+
+### @vapor-ui/hooks
+
+#### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
+
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- e9e83a8: Add new icons from Figma
+
+    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
+
+#### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
+
+---
+
+## 1.0.0-beta.10
+
+### @vapor-ui/core
+
+#### Patch Changes
+
+- af2d36f: avoid overflowing when toast width is wider than view port width
+
+---
+
+## 1.0.0-beta.9
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- afa45da: remove toastManager
+
+---
+
+## 1.0.0-beta.8
+
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- bb41c2e: **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas`
+
+    The canvas background token has been renamed for better semantic clarity and consistency:
+    - Token name: `color-background-canvas` → `color-canvas`
+    - CSS variable: `--vapor-color-background-canvas` → `--vapor-color-canvas`
+
+    **Migration required:**
+    - Update all references from `color-background-canvas` to `color-canvas`
+    - Replace CSS variables from `--vapor-color-background-canvas` to `--vapor-color-canvas`
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 308fd25: add new `Toast` component
+
+### @vapor-ui/css-generator
+
+#### Minor Changes
+
+- bb41c2e: **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas`
+
+    The canvas background token has been renamed for better semantic clarity and consistency:
+    - Token name: `color-background-canvas` → `color-canvas`
+    - CSS variable: `--vapor-color-background-canvas` → `--vapor-color-canvas`
+
+    **Migration required:**
+    - Update all references from `color-background-canvas` to `color-canvas`
+    - Replace CSS variables from `--vapor-color-background-canvas` to `--vapor-color-canvas`
+
+#### Patch Changes
+
+- Updated dependencies [bb41c2e]
+    - @vapor-ui/color-generator@1.0.0-beta.8
+
+---
+
+## 1.0.0-beta.7
+
+### @vapor-ui/codemod
+
+#### Major Changes
+
+- 2c8f651: Add Tabs, Text, Textinput transform
+- 441e481: Add Dropdown, IconButton, Nav transformer
+- 441e481: add avatar, breadcrumb, card transform
+- 441e481: Add Popover, RadioGroup, Switch Transform
+
+#### Minor Changes
+
+- 441e481: Add codemod for icon packages name import
+- 441e481: add codemod cli packages
+
+#### Patch Changes
+
+- 15a2f7c: add cli options
+- 88da973: add button, badge, alert component color props to colorPalette
+
+### @vapor-ui/color-generator
+
+#### Minor Changes
+
+- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+
+### @vapor-ui/core
+
+#### Minor Changes
+
+- 40bfa0a: change components interface
+- 1aecc3d: synchronized color tokens with figma
+- dbb74cf: add new `Table` component
+- d4be5bb: add new `Pagination` component
+- 9f9b700: **BREAKING CHANGE**: Remove `stretch` prop from Button, IconButton, and NavigationMenu components
+
+    The `stretch` prop has been removed to align with Figma's component variant system. In Figma, width control is handled via "Fill Container" (Auto Layout), not as a component variant.
+
+    **Migration Guide:**
+
+    Replace `stretch` prop with Tailwind's `w-full` utility class:
+
+    ```tsx
+    // Before
+    <Button stretch>Submit</Button>
+    <NavigationMenu stretch>...</NavigationMenu>
+
+    // After
+    <Button className="w-full">Submit</Button>
+    <NavigationMenu className="w-full">...</NavigationMenu>
+    ```
+
+    **Why this change:**
+    - Maintains Figma-React design system parity (SSOT principle)
+    - Follows "React Props = Figma Variants" architectural principle
+    - Aligns with Vapor UI's 4-layer component architecture (Container, Interaction, Contents, Slot)
+    - Layout concerns should be handled by parent containers, not component props
+
+#### Patch Changes
+
+- 1fd7efc: Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification
+- ed63947: Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec
+
+### @vapor-ui/css-generator
+
+#### Patch Changes
+
+- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+- Updated dependencies [174d004]
+    - @vapor-ui/color-generator@1.0.0-beta.7
+
+---
+
 ## 1.0.0-beta.6
 
 ### @vapor-ui/codemod

@@ -26,8 +26,8 @@
         },
         {
             "prop": "validationMode",
-            "type": ["'onBlur'", "'onChange'"],
-            "default": "'onBlur'",
+            "type": ["onBlur", "onChange"],
+            "default": "onBlur",
             "description": "유효성 검사가 실행되는 타이밍을 설정합니다."
         },
         {

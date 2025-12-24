@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/codemod",
-    "version": "1.0.0-beta.6",
+    "version": "1.0.0-beta.7",
     "description": "Code migration tools using jscodeshift",
     "keywords": [
         "vapor-ui migration",
@@ -22,7 +22,8 @@
         "lint": "eslint ./src",
         "test": "jest",
         "test:watch": "jest --watchAll",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "clean": "rimraf dist node_modules coverage .turbo"
     },
     "dependencies": {
         "@inquirer/prompts": "^7.9.0",
@@ -44,6 +45,7 @@
         "@vapor-ui/icons": "workspace:*",
         "eslint": "^9.37.0",
         "jest": "^30.2.0",
+        "rimraf": "^6.0.1",
         "ts-jest": "^29.1.0",
         "tsup": "^8.5.0"
     },

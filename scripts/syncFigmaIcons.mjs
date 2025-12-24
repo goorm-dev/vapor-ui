@@ -29,6 +29,11 @@ import getIconsIndex from './templates/icon/iconsIndex.js';
 
 const TYPE = process.env.TYPE;
 const CURRENT_DIRECTORY = process.cwd();
+const FIGMA_EMOJI_PREFIX_PATTERN = /❤️\s*/g;
+
+function normalizeIconName(name) {
+    return startCase(camelCase(name.replace(FIGMA_EMOJI_PREFIX_PATTERN, ''))).replace(/ /g, '');
+}
 
 console.log('\x1b[33m---------------- GDS FIGMA EXPORT -----------------\x1b[0m');
 
@@ -66,7 +71,7 @@ try {
 
     const componentsInfo = {
         total: components.length,
-        nameArr: components.map(({ name }) => startCase(camelCase(name)).replace(/ /g, '')),
+        nameArr: components.map(({ name }) => normalizeIconName(name)),
     };
     console.log(
         `\x1b[33m GDS FIGMA EXPORT: \x1b[0m ${componentsInfo.total} icons extraction complete`,
@@ -92,7 +97,7 @@ try {
     const newIconNameArr = [];
     const updatedIconNameArr = [];
     const promiseCreateIcons = componentsWithUrl.map(async ({ name, url, parentId }) => {
-        const iconName = startCase(camelCase(name)).replace(/ /g, '');
+        const iconName = normalizeIconName(name);
         const saveTargetPath = path.join(parentIconPath, iconName);
         const iconFilePath = path.resolve(saveTargetPath, `${iconName}.tsx`);
 

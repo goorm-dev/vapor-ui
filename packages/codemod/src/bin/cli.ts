@@ -100,8 +100,113 @@ function runTransform({
 
 const TRANSFORMER_INQUIRER_CHOICES = [
     {
+        name: 'internal/core/alert: Migrate Alert component',
+        value: 'internal/core/alert',
+    },
+    {
+        name: 'internal/core/avatar: Migrate Avatar component',
+        value: 'internal/core/avatar',
+    },
+    {
+        name: 'internal/core/badge: Migrate Badge component',
+        value: 'internal/core/badge',
+    },
+    {
+        name: 'internal/core/breadcrumb: Migrate Breadcrumb component',
+        value: 'internal/core/breadcrumb',
+    },
+    {
+        name: 'internal/core/button: Migrate Button component',
+        value: 'internal/core/button',
+    },
+    {
+        name: 'internal/core/card: Migrate Card component',
+        value: 'internal/core/card',
+    },
+    {
+        name: 'internal/core/checkbox: Migrate Checkbox component',
+        value: 'internal/core/checkbox',
+    },
+    {
+        name: 'internal/core/collapsible: Migrate Collapsible component',
+        value: 'internal/core/collapsible',
+    },
+    {
+        name: 'internal/core/dialog: Migrate Dialog component',
+        value: 'internal/core/dialog',
+    },
+    {
         name: 'internal/icons: Migrate @goorm-dev/vapor-icons to @vapor-ui/icons',
         value: 'internal/icons/migrate-icons-import',
+    },
+    {
+        name: 'internal/core/alert: Migrate Alert component to @vapor-ui/core Callout',
+        value: 'internal/core/alert',
+    },
+    {
+        name: 'internal/core/avatar: Migrate Avatar component to @vapor-ui/core',
+        value: 'internal/core/avatar',
+    },
+    {
+        name: 'internal/core/badge: Migrate Badge component to @vapor-ui/core',
+        value: 'internal/core/badge',
+    },
+    {
+        name: 'internal/core/breadcrumb: Migrate Breadcrumb component to @vapor-ui/core',
+        value: 'internal/core/breadcrumb',
+    },
+    {
+        name: 'internal/core/button: Migrate Button component to @vapor-ui/core',
+        value: 'internal/core/button',
+    },
+    {
+        name: 'internal/core/card: Migrate Card component to @vapor-ui/core',
+        value: 'internal/core/card',
+    },
+    {
+        name: 'internal/core/checkbox: Migrate Checkbox component to @vapor-ui/core',
+        value: 'internal/core/checkbox',
+    },
+
+    {
+        name: 'internal/core/collapsible: Migrate Collapsible component to @vapor-ui/core',
+        value: 'internal/core/collapsible',
+    },
+    {
+        name: 'internal/core/dialog: Migrate Dialog component to @vapor-ui/core',
+        value: 'internal/core/dialog',
+    },
+    {
+        name: 'internal/core/dropdown: Migrate Dropdown component to @vapor-ui/core',
+        value: 'internal/core/dropdown',
+    },
+    {
+        name: 'internal/core/icon-button: Migrate IconButton component to @vapor-ui/core',
+        value: 'internal/core/icon-button',
+    },
+    {
+        name: 'internal/core/popover: Migrate Popover component to @vapor-ui/core',
+        value: 'internal/core/popover',
+    },
+    {
+        name: 'internal/core/radio-group: Migrate RadioGroup component to @vapor-ui/core',
+        value: 'internal/core/radio-group',
+    },
+    {
+        name: 'internal/core/switch: Migrate Switch component to @vapor-ui/core',
+        value: 'internal/core/switch',
+    },
+    {
+        name: 'internal/core/tabs: Migrate Tabs component to @vapor-ui/core',
+        value: 'internal/core/tabs',
+    },
+    {
+        name: 'internal/core/text: Migrate Text component to @vapor-ui/core',
+        value: 'internal/core/text',
+    },
+    {
+        name: 'internal/core/text-input: Migrate TextInput component to @vapor-ui/core',
+        value: 'internal/core/text-input',
     },
 ];
 const run = async () => {

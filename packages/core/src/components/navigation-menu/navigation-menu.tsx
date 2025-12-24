@@ -3,24 +3,24 @@
 import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { NavigationMenu as BaseNavigationMenu } from '@base-ui-components/react';
+import { NavigationMenu as BaseNavigationMenu, useRender } from '@base-ui-components/react';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
-import type { ItemVariants, LinkVariants, ListVariants } from './navigation-menu.css';
+import type { LinkVariants, ListVariants } from './navigation-menu.css';
 import * as styles from './navigation-menu.css';
 
-type NavigationMenuVariants = ListVariants & ItemVariants & LinkVariants;
+type NavigationMenuVariants = ListVariants & LinkVariants;
 type NavigationMenuSharedProps = NavigationMenuVariants & { disabled?: boolean };
 type NavigationMenuContextType = NavigationMenuSharedProps;
 
@@ -41,7 +41,7 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
         const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
         const [variantProps, otherProps] = createSplitProps<NavigationMenuSharedProps>()(
             componentProps,
-            ['direction', 'size', 'stretch', 'disabled'],
+            ['direction', 'size', 'disabled'],
         );
 
         const { direction } = variantProps;
@@ -52,7 +52,7 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Pro
                     ref={ref}
                     aria-label={ariaLabel}
                     orientation={direction}
-                    className={clsx(styles.root({ stretch: variantProps.stretch }), className)}
+                    className={className}
                     {...otherProps}
                 />
             </NavigationMenuProvider>
@@ -89,15 +89,8 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
 export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
-        const { stretch } = useNavigationMenuContext();
 
-        return (
-            <BaseNavigationMenu.Item
-                ref={ref}
-                className={clsx(styles.item({ stretch }), className)}
-                {...componentProps}
-            />
-        );
+        return <BaseNavigationMenu.Item ref={ref} className={className} {...componentProps} />;
     },
 );
 NavigationMenuItem.displayName = 'NavigationMenu.Item';
@@ -172,9 +165,11 @@ export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuTriggerIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const IconElement = createSlot(children || <ChevronDownOutlineIcon />);
+    const children = useRender({
+        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+    });
 
     return (
         <BaseNavigationMenu.Icon
@@ -182,7 +177,7 @@ export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
             className={clsx(styles.icon, className)}
             {...componentProps}
         >
-            <IconElement />
+            {children}
         </BaseNavigationMenu.Icon>
     );
 });
@@ -409,22 +404,25 @@ NavigationMenuViewportPrimitive.displayName = 'NavigationMenu.ViewportPrimitive'
  * -----------------------------------------------------------------------------------------------*/
 
 export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
-    ({ portalElement, positionerElement, popupElement, className, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement ?? <NavigationMenuPortalPrimitive />);
-        const PopupElement = createSlot(popupElement ?? <NavigationMenuPopupPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement ?? <NavigationMenuPositionerPrimitive />,
-        );
+    ({ portalElement, positionerElement, popupElement, ...props }, ref) => {
+        const viewport = <NavigationMenuViewportPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <PopupElement>
-                        <NavigationMenuViewportPrimitive ref={ref} {...props} />
-                    </PopupElement>
-                </PositionerElement>
-            </PortalElement>
-        );
+        const popup = useRender({
+            render: createRender(popupElement, <NavigationMenuPopupPrimitive />),
+            props: { children: viewport },
+        });
+
+        const positioner = useRender({
+            render: createRender(positionerElement, <NavigationMenuPositionerPrimitive />),
+            props: { children: popup },
+        });
+
+        const portal = useRender({
+            render: createRender(portalElement, <NavigationMenuPortalPrimitive />),
+            props: { children: positioner },
+        });
+
+        return portal;
     },
 );
 NavigationMenuViewport.displayName = 'NavigationMenu.Viewport';
@@ -441,8 +439,7 @@ export namespace NavigationMenuRoot {
 }
 
 export namespace NavigationMenuList {
-    type ListPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.List>;
-    export interface Props extends ListPrimitiveProps {}
+    export interface Props extends VComponentProps<typeof BaseNavigationMenu.List> {}
 }
 
 export namespace NavigationMenuItem {

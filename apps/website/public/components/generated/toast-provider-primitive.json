@@ -1,0 +1,31 @@
+{
+    "name": "ProviderPrimitive",
+    "displayName": "Toast.ProviderPrimitive",
+    "description": "Toast 시스템의 컨텍스트를 제공하는 프로바이더입니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "toastManager",
+            "type": ["ToastManager"],
+            "required": true,
+            "description": "Toast의 상태를 관리하는 ToastManager 인스턴스입니다."
+        },
+        {
+            "name": "timeout",
+            "type": ["number"],
+            "required": false,
+            "description": "Toast가 자동으로 닫히기까지의 시간(밀리초)입니다.",
+            "defaultValue": "4000"
+        },
+        {
+            "name": "limit",
+            "type": ["number"],
+            "required": false,
+            "description": "동시에 표시할 수 있는 최대 Toast 개수입니다."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "required": false
+        }
+    ]
+}

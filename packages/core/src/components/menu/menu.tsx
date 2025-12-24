@@ -3,13 +3,13 @@
 import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
-import { Menu as BaseMenu } from '@base-ui-components/react';
+import { Menu as BaseMenu, useRender } from '@base-ui-components/react';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { composeRefs } from '~/utils/compose-refs';
+import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -65,7 +65,7 @@ export const MenuPortalPrimitive = BaseMenu.Portal;
 export const MenuPositionerPrimitive = forwardRef<HTMLDivElement, MenuPositionerPrimitive.Props>(
     (props, ref) => {
         // FIXME: Using resolveStyles causes all positioning-related style properties to reset, so it's temporarily disabled.
-        const { side = 'bottom', align = 'start', sideOffset = 8, ...componentProps } = props;
+        const { side = 'bottom', align = 'start', sideOffset = 4, ...componentProps } = props;
 
         return (
             <BaseMenu.Positioner
@@ -104,16 +104,19 @@ MenuPopupPrimitive.displayName = 'Menu.PopupPrimitive';
 
 export const MenuPopup = forwardRef<HTMLDivElement, MenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <MenuPortalPrimitive />);
-        const PositionerElement = createSlot(positionerElement || <MenuPositionerPrimitive />);
+        const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <MenuPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const positioner = useRender({
+            render: createRender(positionerElement, <MenuPositionerPrimitive />),
+            props: { children: popup },
+        });
+
+        const portal = useRender({
+            render: createRender(portalElement, <MenuPortalPrimitive />),
+            props: { children: positioner },
+        });
+
+        return portal;
     },
 );
 MenuPopup.displayName = 'Menu.Popup';
@@ -270,18 +273,22 @@ MenuSubmenuPopupPrimitive.displayName = 'Menu.SubmenuPopupPrimitive';
 
 export const MenuSubmenuPopup = forwardRef<HTMLDivElement, MenuSubmenuPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <MenuPortalPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement || <MenuPositionerPrimitive side="right" sideOffset={0} />,
-        );
+        const popup = <MenuPopupPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <MenuSubmenuPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const positioner = useRender({
+            render: createRender(
+                positionerElement,
+                <MenuPositionerPrimitive side="right" sideOffset={0} />,
+            ),
+            props: { children: popup },
+        });
+
+        const portal = useRender({
+            render: createRender(portalElement, <MenuPortalPrimitive />),
+            props: { children: positioner },
+        });
+
+        return portal;
     },
 );
 MenuSubmenuPopup.displayName = 'Menu.SubmenuPopup';
@@ -324,7 +331,12 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuCheckboxItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+
+    const children = useRender({
+        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        props: { width: '100%', height: '100%' },
+    });
 
     return (
         <BaseMenu.CheckboxItemIndicator
@@ -332,7 +344,7 @@ export const MenuCheckboxItemIndicatorPrimitive = forwardRef<
             className={clsx(styles.indicator, className)}
             {...componentProps}
         >
-            <ConfirmOutlineIcon size="100%" />
+            {children}
         </BaseMenu.CheckboxItemIndicator>
     );
 });
@@ -397,7 +409,12 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MenuRadioItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+
+    const children = useRender({
+        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        props: { width: '100%', height: '100%' },
+    });
 
     return (
         <BaseMenu.RadioItemIndicator
@@ -405,7 +422,7 @@ export const MenuRadioItemIndicatorPrimitive = forwardRef<
             className={clsx(styles.indicator, className)}
             {...componentProps}
         >
-            <ConfirmOutlineIcon size="100%" />
+            {children}
         </BaseMenu.RadioItemIndicator>
     );
 });
