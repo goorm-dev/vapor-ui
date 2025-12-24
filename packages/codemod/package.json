@@ -16,14 +16,14 @@
     ],
     "scripts": {
         "build": "tsup",
+        "clean": "rimraf dist node_modules coverage .turbo",
         "dev": "tsup --watch",
         "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
         "lint": "eslint ./src",
         "test": "jest",
         "test:watch": "jest --watchAll",
-        "typecheck": "tsc --noEmit",
-        "clean": "rimraf dist node_modules coverage .turbo"
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "@inquirer/prompts": "^7.9.0",

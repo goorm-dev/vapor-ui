@@ -22,7 +22,7 @@
         "figma-codegen-plugin": "pnpm --filter figma-codegen-plugin",
         "figma-plugin": "pnpm --filter figma-plugin",
         "format": "pnpm format:package && turbo run format",
-        "format:check": "pnpm format:package && turbo run format:check",
+        "format:check": "pnpm format:package -c && turbo run format:check",
         "format:package": "npx sort-package-json \"**/package.json\" --ignore \"**/node_modules\" \"dist\"",
         "hooks": "pnpm --filter @vapor-ui/hooks",
         "icons": "pnpm --filter @vapor-ui/icons",
