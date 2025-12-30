@@ -1,5 +1,71 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.11
+
+### Patch Changes
+
+- af4ea2b: Correct background-color of TextInput component
+- 8c5c755: clone elements & enhance customizability
+- Updated dependencies [8c5c755]
+- Updated dependencies [e9e83a8]
+    - @vapor-ui/hooks@1.0.0-beta.6
+    - @vapor-ui/icons@1.0.0-beta.6
+
+## 1.0.0-beta.10
+
+### Patch Changes
+
+- af2d36f: avoid overflowing when toast width is wider than view port width
+
+## 1.0.0-beta.9
+
+### Minor Changes
+
+- afa45da: remove toastManager
+
+## 1.0.0-beta.8
+
+### Minor Changes
+
+- 308fd25: add new `Toast` component
+
+## 1.0.0-beta.7
+
+### Minor Changes
+
+- 40bfa0a: change components interface
+- 1aecc3d: synchronized color tokens with figma
+- dbb74cf: add new `Table` component
+- d4be5bb: add new `Pagination` component
+- 9f9b700: **BREAKING CHANGE**: Remove `stretch` prop from Button, IconButton, and NavigationMenu components
+
+    The `stretch` prop has been removed to align with Figma's component variant system. In Figma, width control is handled via "Fill Container" (Auto Layout), not as a component variant.
+
+    **Migration Guide:**
+
+    Replace `stretch` prop with Tailwind's `w-full` utility class:
+
+    ```tsx
+    // Before
+    <Button stretch>Submit</Button>
+    <NavigationMenu stretch>...</NavigationMenu>
+
+    // After
+    <Button className="w-full">Submit</Button>
+    <NavigationMenu className="w-full">...</NavigationMenu>
+    ```
+
+    **Why this change:**
+    - Maintains Figma-React design system parity (SSOT principle)
+    - Follows "React Props = Figma Variants" architectural principle
+    - Aligns with Vapor UI's 4-layer component architecture (Container, Interaction, Contents, Slot)
+    - Layout concerns should be handled by parent containers, not component props
+
+### Patch Changes
+
+- 1fd7efc: Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification
+- ed63947: Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec
+
 ## 1.0.0-beta.6
 
 ### Patch Changes

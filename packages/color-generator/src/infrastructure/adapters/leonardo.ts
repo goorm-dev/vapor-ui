@@ -176,10 +176,10 @@ const extractBackgroundCanvas = (backgroundObj: ContrastColorBackground): Backgr
     }
 
     return {
-        name: 'color-background-canvas',
+        name: 'color-canvas',
         hex: backgroundObj.background,
         oklch: formatOklchForWeb(oklchValue),
-        codeSyntax: 'vapor-color-background-canvas',
+        codeSyntax: 'vapor-color-canvas',
     };
 };
 

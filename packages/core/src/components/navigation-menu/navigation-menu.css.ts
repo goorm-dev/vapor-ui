@@ -6,16 +6,6 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
-export const root = recipe({
-    defaultVariants: { stretch: false },
-    variants: {
-        stretch: {
-            true: layerStyle('components', { width: '100%' }),
-            false: layerStyle('components', { width: 'fit-content' }),
-        },
-    },
-});
-
 export const list = recipe({
     base: layerStyle('components', {
         display: 'flex',
@@ -31,10 +21,6 @@ export const list = recipe({
             vertical: layerStyle('components', { flexDirection: 'column' }),
         },
     },
-});
-
-export const item = recipe({
-    variants: { stretch: { true: layerStyle('components', { flex: 1 }) } },
 });
 
 export const link = recipe({
@@ -120,6 +106,7 @@ export const trigger = layerStyle('components', {
 
 export const icon = layerStyle('components', {
     display: 'flex',
+    flexShrink: 0,
 });
 
 const durationVar = createVar('duration');
@@ -233,5 +220,4 @@ export const arrow = layerStyle('components', {
 });
 
 export type ListVariants = NonNullable<RecipeVariants<typeof list>>;
-export type ItemVariants = NonNullable<RecipeVariants<typeof item>>;
 export type LinkVariants = NonNullable<RecipeVariants<typeof link>>;

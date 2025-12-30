@@ -179,8 +179,8 @@ export default function HomePage() {
                         style={{
                             background:
                                 resolvedTheme === 'light'
-                                    ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--vapor-color-background-canvas, #FFF) 100%)'
-                                    : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--vapor-color-background-canvas, #23272E) 100%)',
+                                    ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--vapor-color-canvas, #FFF) 100%)'
+                                    : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--vapor-color-canvas, #23272E) 100%)',
                         }}
                     />
                     <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
@@ -301,7 +301,7 @@ export default function HomePage() {
                         ></Button>
                     </div>
                 </section>
-                <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-background-canvas)]">
+                <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-canvas)]">
                     <div className="w-full justify-center flex flex-col items-center gap-[var(--vapor-size-space-200)] ">
                         <div className="flex flex-col items-center gap-[var(--vapor-size-space-100)] text-center">
                             <Text

@@ -296,9 +296,9 @@ function extractColorFamily(tokenName: string): string {
     // color-myBlue-500 -> myBlue, color-red-500 -> red
     const parts = tokenName.split('-');
     if (parts.length >= 3 && parts[0] === 'color') {
-        // color-myBlue-500 -> myBlue, color-background-canvas -> background
+        // color-myBlue-500 -> myBlue, color-canvas -> canvas
         if (parts.length > 3) {
-            // 여러 단어인 경우 (color-background-canvas)
+            // 여러 단어인 경우 (color-background-primary 등)
             return parts.slice(1, -1).join('-');
         }
         return parts[1]; // red, blue, green, etc.

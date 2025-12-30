@@ -119,7 +119,7 @@ export const placeholder = recipe({
     },
 });
 
-const icon = layerStyle('components', { display: 'flex' });
+const icon = layerStyle('components', { display: 'flex', flexShrink: 0 });
 
 export const triggerIcon = recipe({
     base: [foregrounds({ color: 'hint-100' }), icon],

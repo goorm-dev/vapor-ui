@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const BackPageOutlineIcon: IconType = (props) => (
+const BackPageOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M8.28523 3.13064C8.5446 2.87372 8.54658 2.45519 8.28966 2.19583C8.03275 1.93646 7.61422 1.93448 7.35485 2.1914L2.03464 7.46142C1.73519 7.75804 1.7352 8.24196 2.03464 8.53858L7.35485 13.8086C7.61422 14.0655 8.03275 14.0635 8.28966 13.8042C8.54658 13.5448 8.5446 13.1263 8.28523 12.8694L3.98567 8.61037H13.515C13.8801 8.61037 14.176 8.31442 14.176 7.94935C14.176 7.58428 13.8801 7.28833 13.515 7.28833H4.08794L8.28523 3.13064Z" />
     </IconBase>

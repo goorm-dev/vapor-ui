@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const OperaColorIcon: IconType = (props) => (
+const OperaColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <mask
             id="mask0_1346_2956"

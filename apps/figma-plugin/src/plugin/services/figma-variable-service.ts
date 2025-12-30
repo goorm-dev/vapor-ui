@@ -80,7 +80,7 @@ export const figmaVariableService = {
                             {},
                         ),
                         // Add background canvas (convert BackgroundCanvas to PaletteChip format)
-                        'color-background-canvas': {
+                        'color-canvas': {
                             name: themeResult.lightModeTokens.backgroundCanvas.name,
                             hex: themeResult.lightModeTokens.backgroundCanvas.hex,
                             oklch: themeResult.lightModeTokens.backgroundCanvas.oklch,
@@ -110,7 +110,7 @@ export const figmaVariableService = {
                             {},
                         ),
                         // Add background canvas (convert BackgroundCanvas to PaletteChip format)
-                        'color-background-canvas': {
+                        'color-canvas': {
                             name: themeResult.darkModeTokens.backgroundCanvas.name,
                             hex: themeResult.darkModeTokens.backgroundCanvas.hex,
                             oklch: themeResult.darkModeTokens.backgroundCanvas.oklch,
@@ -340,7 +340,7 @@ function formatTokenName(tokenName: string): string {
             return parts[0];
         }
     } else if (tokenName.startsWith(SEMANTIC_PREFIX)) {
-        // Handle "vapor-color-background-canvas" -> "background/background-canvas"
+        // Handle "vapor-color-canvas" -> "canvas"
         const parts = tokenName.substring(SEMANTIC_PREFIX.length).split('-'); // Remove "vapor-color-" prefix
         if (parts.length >= 2) {
             const colorFamily = parts.slice(0, -1).join('-');

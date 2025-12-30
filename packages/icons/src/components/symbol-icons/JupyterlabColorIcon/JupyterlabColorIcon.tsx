@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const JupyterlabColorIcon: IconType = (props) => (
+const JupyterlabColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <g clipPath="url(#clip0_3319_106)">
             <path
