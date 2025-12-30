@@ -47,27 +47,28 @@
             "groupName": "Vanilla Extract",
             "labels": ["type: dependencies"],
             "automerge": false,
-            "matchPackageNames": ["/@vanilla-extract/*/"]
+            "matchPackageNames": ["/^@vanilla-extract\\/.*/"]
         },
         {
             "description": "Base UI - Unstyled component library",
             "groupName": "Base UI",
             "labels": ["type: dependencies"],
             "automerge": false,
-            "matchPackageNames": ["/@base-ui-components/*/"]
+            "matchPackageNames": ["/^@base-ui-components\\/.*/"]
         },
         {
             "description": "All other dependencies grouped together",
             "groupName": "Other Dependencies",
             "labels": ["type: dependencies"],
             "automerge": false,
-            "matchPackageNames": [
-                "!react",
-                "!react-dom",
-                "!@types/react",
-                "!@types/react-dom",
-                "!/@vanilla-extract/*/",
-                "!/@base-ui-components/*/"
+            "matchPackageNames": ["*"],
+            "excludePackageNames": [
+                "react",
+                "react-dom",
+                "@types/react",
+                "@types/react-dom",
+                "/^@vanilla-extract\\/.*/",
+                "/^@base-ui-components\\/.*/"
             ]
         }
     ]
