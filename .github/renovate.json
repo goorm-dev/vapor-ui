@@ -1,7 +1,7 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:base", "config:recommended", "group:monorepos", ":dependencyDashboard"],
-    "baseBranchPatterns": ["main"],
+    "extends": ["config:recommended", "group:monorepos", ":dependencyDashboard"],
+    "baseBranches": ["main"],
     "rebaseWhen": "auto",
     "labels": ["type: dependencies"],
     "automergeStrategy": "squash",
@@ -61,14 +61,14 @@
             "groupName": "Other Dependencies",
             "labels": ["type: dependencies"],
             "automerge": false,
-            "matchPackageNames": ["*"],
-            "excludePackageNames": [
-                "react",
-                "react-dom",
-                "@types/react",
-                "@types/react-dom",
-                "/^@vanilla-extract\\/.*/",
-                "/^@base-ui-components\\/.*/"
+            "matchPackageNames": [
+                "*",
+                "!react",
+                "!react-dom",
+                "!@types/react",
+                "!@types/react-dom",
+                "!/^@vanilla-extract\\/.*/",
+                "!/^@base-ui-components\\/.*/"
             ]
         }
     ]
