@@ -91,8 +91,7 @@ const BrowserHeader = () => {
     return (
         <>
             {/* Window Controls */}
-            {/* TODO: surface 토큰 없음 - secondary로 대체 */}
-            <div className="h-[42px] px-3  flex items-center justify-start bg-v-secondary-100 border-b border-v-normal gap-[7px]">
+            <div className="h-[42px] px-3  flex items-center justify-start bg-v-canvas-200 border-b border-v-normal gap-[7px]">
                 <div className="flex items-center gap-2">
                     <BrowserControlsIcon />
                 </div>
@@ -359,8 +358,7 @@ const PaymentMethodCard = () => {
 const ProblemTable = () => (
     <table className="w-full">
         <thead>
-            {/* TODO: surface 토큰 없음 - secondary로 대체 */}
-            <tr className="h-v-500 bg-v-secondary-200 border-b border-v-normal">
+            <tr className="h-v-500 bg-v-canvas-200 border-b border-v-normal">
                 <th className="w-[101px] px-v-300 text-left align-middle">
                     <Text typography="subtitle1" foreground="normal-100">
                         순서

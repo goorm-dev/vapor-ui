@@ -239,8 +239,7 @@ export default function HomePage() {
                                 className="max-w-[720px] w-full rounded-v-400 flex flex-col items-center gap-4 bg-[rgba(0,0,0,0.16)] border border-v-normal shadow-[var(--vapor-shadow-100)] p-3 md:p-4"
                                 onClick={() => setIsSearchOpen(true)}
                             >
-                                {/* TODO: surface 토큰 없음 - secondary로 대체 */}
-                                <div className="flex items-center w-full px-6 h-12 justify-between rounded-v-300 border border-v-normal bg-v-secondary-100">
+                                <div className="flex items-center w-full px-6 h-12 justify-between rounded-v-300 border border-v-normal bg-v-overlay-100">
                                     <div className="flex items-center gap-v-100">
                                         <SearchOutlineIcon
                                             size={24}

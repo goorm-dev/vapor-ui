@@ -46,9 +46,8 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
 
             {/* Preview Section */}
 
-            {/* TODO: surface 토큰 없음 - secondary로 대체 */}
             {previewImageUrl && (
-                <div className="bg-v-secondary-200 flex items-center justify-center px-v-300 py-v-400 rounded-v-500 border border-v-normal w-full">
+                <div className="bg-v-canvas-200 flex items-center justify-center px-v-300 py-v-400 rounded-v-500 border border-v-normal w-full">
                     <div className="flex flex-col items-center justify-center overflow-hidden rounded-[8px] w-full">
                         <Image
                             src={previewImageUrl}

@@ -92,8 +92,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                     style={{ tableLayout: 'auto' }}
                 >
                     <thead className="w-full items-start self-stretch rounded-v-300">
-                        {/* TODO: surface 토큰 없음 - secondary로 대체 */}
-                        <tr className="w-full bg-v-secondary-200 border-b border-b-v-normal">
+                        <tr className="w-full bg-v-canvas-200 border-b border-b-v-normal">
                             <th className="px-v-300 h-v-500 text-left rounded-tl-v-300 min-w-[140px] w-px">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Prop
