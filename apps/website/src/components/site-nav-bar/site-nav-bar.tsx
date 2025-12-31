@@ -138,7 +138,7 @@ const MobileNavigation = () => {
 
                 {/* Mobile Menu Content */}
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 w-[300px] bg-[var(--vapor-color-canvas)] shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
+                    className="fixed inset-y-0 right-0 w-[300px] bg-v-canvas-100 shadow-lg flex flex-col  md:hidden focus:outline-none z-50"
                     onEscapeKeyDown={() => setIsOpen(false)}
                     onPointerDownOutside={() => setIsOpen(false)}
                 >
@@ -207,16 +207,11 @@ export const SiteNavBar = () => {
     return (
         <header
             className={`z-10 flex w-full py-3 px-4 md:px-8 gap-v-500 items-center fixed top-0 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
-                isScrolled
-                    ? 'bg-[var(--vapor-color-canvas)] shadow-lg backdrop-blur-sm z-20'
-                    : 'bg-transparent'
+                isScrolled ? 'bg-v-canvas-100 shadow-lg backdrop-blur-sm z-20' : 'bg-transparent'
             }`}
         >
             {/* Logo */}
-            <Link
-                href="/"
-                className="inline-flex items-center gap-2.5 font-semibold text-[var(--vapor-color-logo-normal)]"
-            >
+            <Link href="/" className="inline-flex items-center gap-2.5 font-semibold text-v-logo">
                 <LogoVapor
                     width={68}
                     height={24}

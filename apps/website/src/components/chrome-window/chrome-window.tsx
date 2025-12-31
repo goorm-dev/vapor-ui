@@ -55,7 +55,7 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
     return (
         <div
             className={clsx(
-                'bg-[var(--vapor-color-canvas)] rounded-xl shadow-lg overflow-hidden w-full border border-[var(--vapor-color-border-normal)]',
+                'bg-v-canvas-100 rounded-xl shadow-lg overflow-hidden w-full border border-v-normal',
                 className,
             )}
         >
@@ -63,17 +63,17 @@ export function ChromeWindow({ className = '' }: ChromeWindowProps) {
             <BrowserHeader />
 
             {/* Main Content Area */}
-            <div className="bg-[var(--vapor-color-canvas)] flex items-center justify-center max-[767px]:px-0 pb-[var(--vapor-size-space-400)]">
-                <div className="flex gap-[var(--vapor-size-space-400)] w-full items-stretch">
+            <div className="bg-v-canvas-100 flex items-center justify-center max-[767px]:px-0 pb-v-400">
+                <div className="flex gap-v-400 w-full items-stretch">
                     {/* Left Column - Cards */}
-                    <div className="flex items-center flex-col gap-[var(--vapor-size-space-400)] flex-1 pt-[var(--vapor-size-space-400)] pl-[var(--vapor-size-space-400)] max-[991px]:p-[var(--vapor-size-space-400)] max-[767px]:px-0 max-[767px]:py-[var(--vapor-size-space-400)]">
+                    <div className="flex items-center flex-col gap-v-400 flex-1 pt-v-400 pl-v-400 max-[991px]:p-v-400 max-[767px]:px-0 max-[767px]:py-v-400">
                         <CreditPurchaseCard />
                         <AttendanceCard />
                         <TemplateListCard />
                     </div>
 
                     {/* Middle Column - Payment & Table & Dialog */}
-                    <div className="flex flex-col items-start gap-6 flex-1 pt-[var(--vapor-size-space-400)] max-[1199px]:hidden">
+                    <div className="flex flex-col items-start gap-6 flex-1 pt-v-400 max-[1199px]:hidden">
                         <PaymentMethodCard />
                         <ProblemTable />
                         <PublicDialogCard />
@@ -91,7 +91,7 @@ const BrowserHeader = () => {
     return (
         <>
             {/* Window Controls */}
-            <div className="h-[42px] px-3  flex items-center justify-start bg-[var(--vapor-color-background-surface-100)] border-b border-[var(--vapor-color-border-normal)] gap-[7px]">
+            <div className="h-[42px] px-3  flex items-center justify-start bg-v-canvas-200 border-b border-v-normal gap-[7px]">
                 <div className="flex items-center gap-2">
                     <BrowserControlsIcon />
                 </div>
@@ -99,7 +99,7 @@ const BrowserHeader = () => {
                     <span className="absolute left-[-6px] bottom-0">
                         <TabLeftCurvedIcon color="var(--vapor-color-background-secondary-200)" />
                     </span>
-                    <div className="flex items-center gap-[9px] p-[var(--vapor-size-space-100)] pl-[var(--vapor-size-space-200)] min-w-0 flex-shrink-0 relative bg-[var(--vapor-color-background-secondary-200)] rounded-t-lg">
+                    <div className="flex items-center gap-[9px] p-v-100 pl-v-200 min-w-0 flex-shrink-0 relative bg-v-secondary-200 rounded-t-lg">
                         <div className="flex gap-[9px]">
                             <Text typography="subtitle2" foreground="normal-200">
                                 Vapor UI
@@ -117,8 +117,8 @@ const BrowserHeader = () => {
             </div>
 
             {/* Address Bar */}
-            <div className="flex h-[38px] bg-[var(--vapor-color-background-secondary-200)] items-center px-3">
-                <div className="h-[28px] rounded-[14px] bg-[var(--vapor-color-canvas)] w-full">
+            <div className="flex h-[38px] bg-v-secondary-200 items-center px-3">
+                <div className="h-[28px] rounded-[14px] bg-v-canvas-100 w-full">
                     <div className="flex items-center gap-2 px-3 py-1 h-full">
                         <SecureIcon color="var(--vapor-color-foreground-secondary-100)" />
                         <Text typography="subtitle2" foreground="secondary-100">
@@ -150,7 +150,7 @@ const CreditPurchaseCard = () => {
                 </Text>
             </Card.Header>
             <Card.Body>
-                <div className="flex items-center gap-[var(--vapor-size-space-400)] flex-col">
+                <div className="flex items-center gap-v-400 flex-col">
                     <div className="w-full">
                         <TextInput
                             aria-label="크레딧 개수"
@@ -169,7 +169,7 @@ const CreditPurchaseCard = () => {
                             className="mt-2 w-full"
                             onClick={() => setCount((prev) => prev + 100)}
                         >
-                            <span className="flex items-center gap-[var(--vapor-size-space-100)]">
+                            <span className="flex items-center gap-v-100">
                                 <PlusOutlineIcon
                                     size="20"
                                     color="var(--vapor-color-foreground-secondary-200)"
@@ -180,8 +180,8 @@ const CreditPurchaseCard = () => {
                             </span>
                         </Button>
                     </div>
-                    <div className="w-full h-[1px] bg-[var(--vapor-color-border-normal)]"></div>
-                    <div className="flex flex-col w-full items-center justify-between gap-[var(--vapor-size-space-050)]">
+                    <div className="w-full h-[1px] bg-v-gray-100"></div>
+                    <div className="flex flex-col w-full items-center justify-between gap-v-50">
                         <div className="flex items-center gap-2 w-full justify-between">
                             <Text typography="heading5" foreground="normal-200">
                                 최종 가격
@@ -204,16 +204,16 @@ const CreditPurchaseCard = () => {
 
 const AttendanceCard = () => (
     <Card.Root className="w-full max-[767px]:border-l-0 max-[767px]:border-r-0 max-[767px]:rounded-none">
-        <Card.Body className="flex flex-col items-start gap-[var(--vapor-size-space-250)] self-stretch">
-            <div className="flex items-center gap-[var(--vapor-size-space-200)] self-stretch">
+        <Card.Body className="flex flex-col items-start gap-v-250 self-stretch">
+            <div className="flex items-center gap-v-200 self-stretch">
                 <Image
                     src="https://statics.goorm.io/exp/v1/svgs/light/badge_success.svg"
                     alt="Success badge"
                     width={64}
                     height={64}
                 />
-                <div className="flex flex-col justify-center items-start gap-[var(--vapor-size-space-100)]">
-                    <div className="flex flex-col items-start gap-[var(--vapor-size-space-025)] self-stretch">
+                <div className="flex flex-col justify-center items-start gap-v-100">
+                    <div className="flex flex-col items-start gap-v-25 self-stretch">
                         <Text typography="heading5" foreground="normal-200">
                             출석체크
                         </Text>
@@ -221,7 +221,7 @@ const AttendanceCard = () => (
                             출석 체크하고 포인트를 획득하세요!
                         </Text>
                     </div>
-                    <div className="flex items-center gap-[var(--vapor-size-space-050)] self-stretch">
+                    <div className="flex items-center gap-v-50 self-stretch">
                         <Text typography="subtitle1" foreground="secondary-100">
                             4회
                         </Text>
@@ -250,11 +250,11 @@ const TemplateListCard = () => (
             </Text>
         </Card.Header>
         <Card.Body>
-            <ul className="flex flex-col w-full gap-[var(--vapor-size-space-200)]">
+            <ul className="flex flex-col w-full gap-v-200">
                 {Array.from({ length: 4 }).map((_, index) => (
                     <li
                         key={index}
-                        className="flex pb-[var(--vapor-size-space-100)] items-center gap-[var(--vapor-size-space-100)] self-stretch border-b border-[var(--vapor-color-border-normal)]"
+                        className="flex pb-v-100 items-center gap-v-100 self-stretch border-b border-v-normal"
                     >
                         <Text typography="subtitle1" foreground="secondary-100">
                             Template {index + 1}
@@ -292,7 +292,7 @@ const PaymentMethodCard = () => {
                         className="flex flex-row items-center gap-1.5"
                     >
                         <Radio.Root value="card" />
-                        <span className="flex items-center gap-[var(--vapor-size-space-050)]">
+                        <span className="flex items-center gap-v-50">
                             <CreditCardIcon
                                 size="16"
                                 color="var(--vapor-color-foreground-normal-100)"
@@ -358,18 +358,18 @@ const PaymentMethodCard = () => {
 const ProblemTable = () => (
     <table className="w-full">
         <thead>
-            <tr className="h-[var(--vapor-size-dimension-500)] bg-[var(--vapor-color-background-surface-200)] border-b border-[var(--vapor-color-border-normal)]">
-                <th className="w-[101px] px-[var(--vapor-size-space-300)] text-left align-middle">
+            <tr className="h-v-500 bg-v-canvas-200 border-b border-v-normal">
+                <th className="w-[101px] px-v-300 text-left align-middle">
                     <Text typography="subtitle1" foreground="normal-100">
                         순서
                     </Text>
                 </th>
-                <th className="px-[var(--vapor-size-space-300)] text-left align-middle">
+                <th className="px-v-300 text-left align-middle">
                     <Text typography="subtitle1" foreground="normal-100">
                         제목
                     </Text>
                 </th>
-                <th className="w-[84px] px-[var(--vapor-size-space-300)] text-left align-middle">
+                <th className="w-[84px] px-v-300 text-left align-middle">
                     <Text typography="subtitle1" foreground="normal-100">
                         난이도
                     </Text>
@@ -401,14 +401,14 @@ const ProblemTable = () => (
                 },
             ].map((problem) => (
                 <tr key={problem.id} className="h-[53px]">
-                    <td className="w-[101px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
-                        <div className="flex p-[var(--vapor-size-space-300)] items-center gap-[var(--vapor-size-space-100)] flex-1 self-stretch">
+                    <td className="w-[101px] h-[53px] border-b border-v-normal">
+                        <div className="flex p-v-300 items-center gap-v-100 flex-1 self-stretch">
                             <Text typography="body2" foreground="normal-100">
                                 {problem.id}
                             </Text>
                         </div>
                     </td>
-                    <td className="h-[53px] p-[var(--vapor-size-space-200)] border-b border-[var(--vapor-color-border-normal)]">
+                    <td className="h-[53px] p-v-200 border-b border-v-normal">
                         <div className="flex flex-col items-start flex-1">
                             <Text
                                 typography="body2"
@@ -422,7 +422,7 @@ const ProblemTable = () => (
                             </Text>
                         </div>
                     </td>
-                    <td className="w-[84px] h-[53px] border-b border-[var(--vapor-color-border-normal)]">
+                    <td className="w-[84px] h-[53px] border-b border-v-normal">
                         <div
                             className="flex h-[54px] px-6 items-center gap-2 self-stretch"
                             style={{ padding: '10px 24px 11px 24px' }}
@@ -438,7 +438,7 @@ const ProblemTable = () => (
                             >
                                 <Text
                                     typography="subtitle2"
-                                    className={`text-[var(--vapor-color-${problem.color}-700)]`}
+                                    className={`text-v-${problem.color}-700`}
                                 >
                                     {problem.difficulty}
                                 </Text>
@@ -452,23 +452,23 @@ const ProblemTable = () => (
 );
 
 const PublicDialogCard = () => (
-    <div className="flex flex-col items-end self-stretch rounded-[var(--vapor-size-borderRadius-300)] bg-[var(--vapor-color-canvas)] shadow-[0_16px_32px_0_rgba(0,0,0,0.20)]">
+    <div className="flex flex-col items-end self-stretch rounded-v-300 bg-v-canvas-100 shadow-[0_16px_32px_0_rgba(0,0,0,0.20)]">
         {/* Header */}
-        <div className="flex h-[var(--vapor-size-dimension-700)] px-[var(--vapor-size-space-300)] py-0 items-center gap-[var(--vapor-size-space-150)] self-stretch">
+        <div className="flex h-v-700 px-v-300 py-0 items-center gap-v-150 self-stretch">
             {/* Header content can go here */}
         </div>
 
         {/* Body/Contents */}
-        <div className="flex flex-col items-center gap-[var(--vapor-size-space-200)] self-stretch">
-            <div className="flex px-[var(--vapor-size-space-300)] py-0 flex-col items-start self-stretch">
-                <div className="flex flex-col items-center gap-[var(--vapor-size-space-200)] self-stretch">
+        <div className="flex flex-col items-center gap-v-200 self-stretch">
+            <div className="flex px-v-300 py-0 flex-col items-start self-stretch">
+                <div className="flex flex-col items-center gap-v-200 self-stretch">
                     <NoticeCircleIcon
                         size="100"
                         color="var(--vapor-color-foreground-primary-100)"
                         className="w-[100px] h-[100px]"
                     />
                     <div
-                        className="self-stretch text-center text-[var(--vapor-color-foreground-normal-100)]"
+                        className="self-stretch text-center text-v-normal-100"
                         style={{
                             fontFamily: 'Pretendard',
                             fontSize: '18px',
@@ -483,19 +483,19 @@ const PublicDialogCard = () => (
                     </div>
 
                     {/* Information Section */}
-                    <div className="flex p-[var(--vapor-size-space-200)] flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch rounded-[var(--vapor-size-borderRadius-300)] bg-[rgba(148,150,163,0.08)]">
+                    <div className="flex p-v-200 flex-col items-start gap-v-100 self-stretch rounded-v-300 bg-[rgba(148,150,163,0.08)]">
                         <Text typography="subtitle1" foreground="hint-200">
                             Public으로 설정 시 이런게 바뀌어요
                         </Text>
-                        <ul className="flex flex-col gap-[var(--vapor-size-space-050)]">
+                        <ul className="flex flex-col gap-v-50">
                             <li className="flex items-center gap-2 leading-[18px]">
-                                <div className="w-[2.5px] h-[2.5px] rounded-full bg-[var(--vapor-color-foreground-hint-200)] flex-shrink-0"></div>
+                                <div className="w-[2.5px] h-[2.5px] rounded-full bg-v-hint-200 flex-shrink-0"></div>
                                 <Text typography="body3" foreground="secondary-100">
                                     허브에 공개되어 누구나 접속 할 수 있습니다.
                                 </Text>
                             </li>
                             <li className="flex items-center gap-2 leading-[18px]">
-                                <div className="w-[2.5px] h-[2.5px] rounded-full bg-[var(--vapor-color-foreground-hint-200)] flex-shrink-0"></div>
+                                <div className="w-[2.5px] h-[2.5px] rounded-full bg-v-hint-200 flex-shrink-0"></div>
                                 <Text typography="body3" foreground="secondary-100">
                                     정보 노출에 주의해 주세요.
                                 </Text>
@@ -507,8 +507,8 @@ const PublicDialogCard = () => (
         </div>
 
         {/* Footer */}
-        <div className="flex px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] justify-end items-center gap-[var(--vapor-size-space-100)] self-stretch">
-            <div className="flex h-[40px] p-0 justify-end items-start gap-[var(--vapor-size-space-100)] flex-1">
+        <div className="flex px-v-300 py-v-200 justify-end items-center gap-v-100 self-stretch">
+            <div className="flex h-[40px] p-0 justify-end items-start gap-v-100 flex-1">
                 <Button size="lg" colorPalette="secondary">
                     취소
                 </Button>
@@ -545,10 +545,10 @@ const UserSidebar = () => {
     const filteredActiveUsers = filterUsers(activeUsers);
     const filteredUnActiveUsers = filterUsers(unActiveUsers);
     return (
-        <div className="flex w-[371px] p-[var(--vapor-size-space-300)] items-end bg-[var(--vapor-color-canvas)] shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
-            <div className="w-full h-full flex flex-col gap-[var(--vapor-size-space-300)]">
-                <div className="relative w-full flex items-center border rounded-[var(--vapor-size-borderRadius-300)]">
-                    <div className="absolute z-[1] h-full flex items-center justify-center ml-[var(--vapor-size-space-200)]">
+        <div className="flex w-[371px] p-v-300 items-end bg-v-canvas-100 shadow-[0px_16px_32px_0px_rgba(0,0,0,0.20)] max-[991px]:hidden">
+            <div className="w-full h-full flex flex-col gap-v-300">
+                <div className="relative w-full flex items-center border rounded-v-300">
+                    <div className="absolute z-[1] h-full flex items-center justify-center ml-v-200">
                         <SearchOutlineIcon
                             size="20"
                             color="var(--vapor-color-foreground-hint-100)"
@@ -556,7 +556,7 @@ const UserSidebar = () => {
                     </div>
 
                     <TextInput
-                        className="w-full border-none !pl-[var(--vapor-size-space-500)]"
+                        className="w-full border-none !pl-v-500"
                         size="lg"
                         placeholder="이름, 이메일로 검색"
                         value={searchQuery}
@@ -564,8 +564,8 @@ const UserSidebar = () => {
                     />
                 </div>
 
-                <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
-                    <div className="flex items-start gap-[var(--vapor-size-space-050)]">
+                <div className="w-full flex flex-col items-start gap-v-200 self-stretch">
+                    <div className="flex items-start gap-v-50">
                         <Text typography="subtitle2" foreground="hint-200">
                             접속 중
                         </Text>
@@ -575,8 +575,8 @@ const UserSidebar = () => {
                     </div>
                     <UserList users={filteredActiveUsers} />
                 </div>
-                <div className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch flex-1">
-                    <div className="w-full flex items-start gap-[var(--vapor-size-space-050)]">
+                <div className="w-full flex flex-col items-start gap-v-200 self-stretch flex-1">
+                    <div className="w-full flex items-start gap-v-50">
                         <Text typography="subtitle2" foreground="hint-200">
                             미접속
                         </Text>

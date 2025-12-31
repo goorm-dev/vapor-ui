@@ -35,7 +35,7 @@ const LINK_LIST = [
 
 const IntroLinkCardContainer = () => {
     return (
-        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-[var(--vapor-size-space-400)] w-full">
+        <div className="not-prose grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-v-400 w-full">
             {LINK_LIST.map((link) => (
                 <IntroLinkCard
                     icon={link.icon}

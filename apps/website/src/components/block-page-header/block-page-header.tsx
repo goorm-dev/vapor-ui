@@ -11,10 +11,10 @@ interface BlockPageHeaderProps {
 
 export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPageHeaderProps) => {
     return (
-        <div className="flex gap-[var(--vapor-size-space-400)] items-start justify-between w-full max-[1200px]:flex-col">
+        <div className="flex gap-v-400 items-start justify-between w-full max-[1200px]:flex-col">
             {/* Header Section */}
-            <div className="flex  flex-col gap-[var(--vapor-size-space-250)] items-start justify-start min-w-[424px]">
-                <div className="flex flex-col gap-[var(--vapor-size-space-100)] items-start justify-start w-full">
+            <div className="flex  flex-col gap-v-250 items-start justify-start min-w-[424px]">
+                <div className="flex flex-col gap-v-100 items-start justify-start w-full">
                     <Text
                         render={
                             <h1 className="text-[38px] leading-[56px] tracking-[-0.4px] font-bold">
@@ -47,7 +47,7 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
             {/* Preview Section */}
 
             {previewImageUrl && (
-                <div className="bg-[var(--vapor-color-background-surface-200)] flex items-center justify-center px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-400)] rounded-[var(--vapor-size-borderRadius-500)] border border-[var(--vapor-color-border-normal)] w-full">
+                <div className="bg-v-canvas-200 flex items-center justify-center px-v-300 py-v-400 rounded-v-500 border border-v-normal w-full">
                     <div className="flex flex-col items-center justify-center overflow-hidden rounded-[8px] w-full">
                         <Image
                             src={previewImageUrl}

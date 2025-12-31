@@ -29,7 +29,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
             }}
             lastUpdate={lastModified}
             article={{
-                className: isRoot ? 'gap-[var(--vapor-size-space-800)]' : '',
+                className: isRoot ? 'gap-v-800' : '',
             }}
         >
             <DocsPageHeader

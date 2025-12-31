@@ -11,7 +11,7 @@ export interface UserListProps {
 
 export function UserList({ users }: UserListProps) {
     return (
-        <ul className="w-full flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
+        <ul className="w-full flex flex-col items-start gap-v-200 self-stretch">
             {users.map((user, idx) => (
                 <li className="w-full" key={idx}>
                     <UserListItem {...user} />

@@ -21,8 +21,8 @@ const ComingSoonContent = ({ name, description }: { name: string; description: s
                 Coming Soon
             </Badge>
         </Card.Header>
-        <Card.Body className="p-[var(--vapor-size-space-300)] min-h-[120px] flex flex-col justify-between">
-            <div className="flex flex-col gap-[var(--vapor-size-space-150)]">
+        <Card.Body className="p-v-300 min-h-[120px] flex flex-col justify-between">
+            <div className="flex flex-col gap-v-150">
                 <Text typography="heading5" foreground="normal-100">
                     {name}
                 </Text>
@@ -54,8 +54,8 @@ const RegularContent = ({
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
         </Card.Header>
-        <Card.Body className="p-[var(--vapor-size-space-300)] min-h-[120px] flex flex-col justify-between">
-            <div className="flex flex-col gap-[var(--vapor-size-space-150)]">
+        <Card.Body className="p-v-300 min-h-[120px] flex flex-col justify-between">
+            <div className="flex flex-col gap-v-150">
                 <Text typography="heading5" foreground="normal-100">
                     {name}
                 </Text>
@@ -83,7 +83,7 @@ export const BlockCard = ({
 
     const cardClasses = clsx(
         'overflow-hidden transition-all duration-200 ease-in-out',
-        'rounded-[var(--vapor-size-borderRadius-300)]',
+        'rounded-v-300',
         !isComingSoon &&
             'cursor-pointer group hover:-translate-y-0.5 hover:shadow-[var(--vapor-effect-shadow-300)]',
     );

@@ -17,7 +17,7 @@ export const BlockPageBody = ({ children, toc }: BlockPageBodyProps) => {
     return (
         <div
             ref={containerRef}
-            className="prose w-full flex items-start justify-between self-stretch gap-[var(--vapor-size-space-500)]"
+            className="prose w-full flex items-start justify-between self-stretch gap-v-500"
         >
             <div className="w-full overflow-auto">{children}</div>
             <TOC toc={toc} containerRef={containerRef} className="max-[1200px]:hidden" />
