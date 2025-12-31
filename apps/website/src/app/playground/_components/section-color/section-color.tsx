@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-import { Slider } from '@base-ui-components/react/slider';
+import { Slider } from '@base-ui/react/slider';
 import { getColorLightness } from '@vapor-ui/color-generator';
 import type { ColorThemeConfig } from '@vapor-ui/css-generator';
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';
@@ -47,12 +47,11 @@ const LightnessSlider = ({
                 onValueCommitted={onValueCommitted}
                 min={min}
                 max={max}
-                aria-label={ariaLabel}
             >
                 <Slider.Control className="box-border flex items-center w-full py-3 touch-none select-none">
                     <Slider.Track className="w-full h-1 bg-gray-200 rounded shadow-[inset_0_0_0_1px_rgb(229_231_235)] select-none">
                         <Slider.Indicator className="rounded bg-v-primary-200 select-none" />
-                        <Slider.Thumb className="w-4 h-4 rounded-full bg-v-primary-200 outline outline-1 outline-gray-300 select-none focus-visible:outline-2 focus-visible:outline-blue-500" />
+                        <Slider.Thumb aria-label={ariaLabel} className="w-4 h-4 rounded-full bg-v-primary-200 outline outline-1 outline-gray-300 select-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-blue-500" />
                     </Slider.Track>
                 </Slider.Control>
             </Slider.Root>
