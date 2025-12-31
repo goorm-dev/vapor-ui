@@ -88,22 +88,23 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                 borderRadius="$300"
             >
                 <table
-                    className="w-full  border-separate border-spacing-0 overflow-hidden border border-[var(--vapor-color-border-normal)] rounded-[var(--vapor-size-borderRadius-300)]"
+                    className="w-full  border-separate border-spacing-0 overflow-hidden border border-v-normal rounded-v-300"
                     style={{ tableLayout: 'auto' }}
                 >
-                    <thead className="w-full items-start self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
-                        <tr className="w-full bg-[var(--vapor-color-background-surface-200)] border-b border-b-[var(--vapor-color-border-normal)]">
-                            <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left rounded-tl-[var(--vapor-size-borderRadius-300)] min-w-[140px] w-px">
+                    <thead className="w-full items-start self-stretch rounded-v-300">
+                        {/* TODO: surface 토큰 없음 - secondary로 대체 */}
+                        <tr className="w-full bg-v-secondary-200 border-b border-b-v-normal">
+                            <th className="px-v-300 h-[var(--vapor-size-dimension-500)] text-left rounded-tl-v-300 min-w-[140px] w-px">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Prop
                                 </Text>
                             </th>
-                            <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left min-w-[100px] w-px">
+                            <th className="px-v-300 h-[var(--vapor-size-dimension-500)] text-left min-w-[100px] w-px">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Default
                                 </Text>
                             </th>
-                            <th className="w-full px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left font-medium">
+                            <th className="w-full px-v-300 h-[var(--vapor-size-dimension-500)] text-left font-medium">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Type
                                 </Text>
@@ -114,7 +115,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                         {componentData.props.map((prop, index) => (
                             <tr key={prop.name}>
                                 <td
-                                    className={` px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${index === componentData.props.length - 1 ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
+                                    className={` px-v-300 py-v-200 border-b border-b-v-normal min-w-[140px] w-px ${index === componentData.props.length - 1 ? 'rounded-bl-v-300 border-b-0' : ''}`}
                                 >
                                     <HStack alignItems="center" gap="$100" width="fit-content">
                                         <Text typography="body2" foreground="normal-200">
@@ -141,7 +142,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                                     </HStack>
                                 </td>
                                 <td
-                                    className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[100px] w-px ${index === componentData.props.length - 1 ? 'border-b-0' : ''}`}
+                                    className={`px-v-300 py-v-200 border-b border-b-v-normal min-w-[100px] w-px ${index === componentData.props.length - 1 ? 'border-b-0' : ''}`}
                                 >
                                     {prop.defaultValue ? (
                                         <Badge colorPalette="hint" size="md">
@@ -152,7 +153,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                                     )}
                                 </td>
                                 <td
-                                    className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${index === componentData.props.length - 1 ? 'rounded-br-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
+                                    className={`px-v-300 py-v-200 border-b border-b-v-normal ${index === componentData.props.length - 1 ? 'rounded-br-v-300 border-b-0' : ''}`}
                                 >
                                     <Flex gap="$100" className="flex-wrap">
                                         {Array.isArray(prop.type) ? (

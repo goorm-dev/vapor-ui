@@ -21,10 +21,10 @@ const IntroLinkCard = ({
     return (
         <Card.Root>
             <Card.Body>
-                <div className="flex flex-col items-start gap-[var(--vapor-size-space-250)] self-stretch">
-                    <div className="flex flex-col items-start gap-[var(--vapor-size-space-200)] self-stretch">
+                <div className="flex flex-col items-start gap-v-250 self-stretch">
+                    <div className="flex flex-col items-start gap-v-200 self-stretch">
                         {icon}
-                        <div className="flex flex-col items-start gap-[var(--vapor-size-space-100)] self-stretch">
+                        <div className="flex flex-col items-start gap-v-100 self-stretch">
                             <Text typography="heading4" foreground="normal-200">
                                 {title}
                             </Text>

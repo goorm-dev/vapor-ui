@@ -24,10 +24,11 @@ export function Demo(props: DemoProps) {
 
     return (
         <ErrorBoundary>
+            {/* TODO: surface 토큰 없음 - secondary로 대체 */}
             <Tabs
                 items={['Preview', 'Code']}
                 defaultIndex={0}
-                className="my-0 w-full bg-[var(--vapor-color-background-surface-100)] ]"
+                className="my-0 w-full bg-v-secondary-100"
             >
                 <Tab value="Preview" className="rounded-t-none">
                     <Preview name={name} />
