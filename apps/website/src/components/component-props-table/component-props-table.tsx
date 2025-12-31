@@ -94,17 +94,17 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                     <thead className="w-full items-start self-stretch rounded-v-300">
                         {/* TODO: surface 토큰 없음 - secondary로 대체 */}
                         <tr className="w-full bg-v-secondary-200 border-b border-b-v-normal">
-                            <th className="px-v-300 h-[var(--vapor-size-dimension-500)] text-left rounded-tl-v-300 min-w-[140px] w-px">
+                            <th className="px-v-300 h-v-500 text-left rounded-tl-v-300 min-w-[140px] w-px">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Prop
                                 </Text>
                             </th>
-                            <th className="px-v-300 h-[var(--vapor-size-dimension-500)] text-left min-w-[100px] w-px">
+                            <th className="px-v-300 h-v-500 text-left min-w-[100px] w-px">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Default
                                 </Text>
                             </th>
-                            <th className="w-full px-v-300 h-[var(--vapor-size-dimension-500)] text-left font-medium">
+                            <th className="w-full px-v-300 h-v-500 text-left font-medium">
                                 <Text typography="subtitle1" foreground="normal-100">
                                     Type
                                 </Text>

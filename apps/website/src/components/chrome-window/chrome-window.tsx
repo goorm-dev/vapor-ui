@@ -360,7 +360,7 @@ const ProblemTable = () => (
     <table className="w-full">
         <thead>
             {/* TODO: surface 토큰 없음 - secondary로 대체 */}
-            <tr className="h-[var(--vapor-size-dimension-500)] bg-v-secondary-200 border-b border-v-normal">
+            <tr className="h-v-500 bg-v-secondary-200 border-b border-v-normal">
                 <th className="w-[101px] px-v-300 text-left align-middle">
                     <Text typography="subtitle1" foreground="normal-100">
                         순서
@@ -440,7 +440,7 @@ const ProblemTable = () => (
                             >
                                 <Text
                                     typography="subtitle2"
-                                    className={`text-[var(--vapor-color-${problem.color}-700)]`}
+                                    className={`text-v-${problem.color}-700`}
                                 >
                                     {problem.difficulty}
                                 </Text>
@@ -456,7 +456,7 @@ const ProblemTable = () => (
 const PublicDialogCard = () => (
     <div className="flex flex-col items-end self-stretch rounded-v-300 bg-v-canvas-100 shadow-[0_16px_32px_0_rgba(0,0,0,0.20)]">
         {/* Header */}
-        <div className="flex h-[var(--vapor-size-dimension-700)] px-v-300 py-0 items-center gap-v-150 self-stretch">
+        <div className="flex h-v-700 px-v-300 py-0 items-center gap-v-150 self-stretch">
             {/* Header content can go here */}
         </div>
 

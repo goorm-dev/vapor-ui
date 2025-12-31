@@ -57,7 +57,7 @@ const LocalTabsList = forwardRef<HTMLDivElement, LocalTabsListProps>(({ children
     return (
         <Tabs.List
             ref={ref}
-            className="relative justify-center flex w-[600px] max-[991px]:w-full h-[var(--vapor-size-dimension-500)] px-v-0 py-0 items-start gap-v-100 border-b border-v-normal"
+            className="relative justify-center flex w-[600px] max-[991px]:w-full h-v-500 px-v-0 py-0 items-start gap-v-100 border-b border-v-normal"
         >
             {children}
             <LocalTabsIndicator />
@@ -70,7 +70,7 @@ const LocalTab = forwardRef<HTMLButtonElement, LocalTabProps>(({ children, value
         <Tabs.Tab
             ref={ref}
             value={value}
-            className="flex px-v-0 py-0 justify-center items-center gap-[var(--space-075)] flex-1 self-stretch bg-transparent border-none cursor-pointer text-v-hint-100 text-sm font-normal transition-all duration-200 ease-in-out data-[selected]:text-v-primary-100 data-[selected]:font-medium [&[data-selected]_span]:!text-v-primary-100"
+            className="flex px-v-0 py-0 justify-center items-center gap-v-075 flex-1 self-stretch bg-transparent border-none cursor-pointer text-v-hint-100 text-sm font-normal transition-all duration-200 ease-in-out data-[selected]:text-v-primary-100 data-[selected]:font-medium [&[data-selected]_span]:!text-v-primary-100"
         >
             {children}
         </Tabs.Tab>

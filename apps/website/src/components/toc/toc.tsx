@@ -43,7 +43,7 @@ export const TOC = ({ toc, containerRef, className }: TOCProps) => {
                                         render={
                                             <Base.TOCItem
                                                 href={item.url}
-                                                className="block h-[var(--vapor-size-dimension-400)] leading-[var(--vapor-size-dimension-400)] hover:text-gray-900 data-[active=true]:text-v-primary-100 data-[active=true]:font-medium transition-colors"
+                                                className="block h-v-400 leading-v-400 hover:text-gray-900 data-[active=true]:text-v-primary-100 data-[active=true]:font-medium transition-colors"
                                                 style={{
                                                     paddingLeft: `${(item.depth - TOC_CONSTANTS.MIN_DEPTH) * TOC_CONSTANTS.INDENT_SIZE + TOC_CONSTANTS.BASE_PADDING}px`,
                                                 }}
