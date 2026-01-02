@@ -145,7 +145,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                     className="w-full border-separate border-spacing-0 overflow-hidden border border-[var(--vapor-color-border-normal)] rounded-[var(--vapor-size-borderRadius-300)]"
                     style={{ tableLayout: 'auto' }}
                 >
-                    <thead className="w-full items-start self-stretch rounded-[var(--vapor-size-borderRadius-300)]">
+                    <thead className="w-full items-start self-stretch rounded-[var(--vapor-size-borderRadius-300)] bg-v-canvas-200">
                         <tr className="w-full bg-[var(--vapor-color-background-surface-200)] border-b border-b-[var(--vapor-color-border-normal)]">
                             <th className="px-[var(--vapor-size-space-300)] h-[var(--vapor-size-dimension-500)] text-left rounded-tl-[var(--vapor-size-borderRadius-300)] min-w-[140px] w-px">
                                 <Text typography="subtitle1" foreground="normal-100">
