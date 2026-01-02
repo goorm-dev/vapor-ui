@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const CodevisorIcon: IconType = (props) => (
+const CodevisorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <g clipPath="url(#clip0_830_453)">
             <path d="M1.4 1.4L0 2.1L1.4 2.8L2.1 4.2L2.8 2.8L4.2 2.1L2.8 1.4L2.1 0L1.4 1.4Z" />

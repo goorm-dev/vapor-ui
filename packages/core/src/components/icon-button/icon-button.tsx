@@ -1,8 +1,9 @@
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 
+import { useRender } from '@base-ui-components/react';
 import clsx from 'clsx';
 
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
@@ -15,7 +16,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
     const {
         'aria-label': ariaLabel,
         className,
-        children,
+        children: childrenProp,
         ...componentProps
     } = resolveStyles(props);
 
@@ -23,9 +24,13 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
         'shape',
     ]);
 
-    const { size } = otherProps;
-
-    const IconElement = useMemo(() => createSlot(children), [children]);
+    const children = useRender({
+        render: createRender(childrenProp),
+        props: {
+            'aria-hidden': 'true',
+            className: styles.icon,
+        },
+    });
 
     return (
         <Button
@@ -34,7 +39,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props
             className={clsx(styles.root(variantProps), className)}
             {...otherProps}
         >
-            <IconElement aria-hidden className={styles.icon({ size })} />
+            {children}
         </Button>
     );
 });

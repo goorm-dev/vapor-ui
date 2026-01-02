@@ -9,7 +9,7 @@ export default {
     component: Tabs.Root,
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
-        variant: { control: 'inline-radio', options: ['line', 'plain'] },
+        variant: { control: 'inline-radio', options: ['line', 'fill'] },
         orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
         disabled: { control: 'boolean' },
         activateOnFocus: { control: 'boolean' },
@@ -53,7 +53,7 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
             <VStack gap="$300">
                 <HStack>
                     <Tabs.Root
-                        variant="plain"
+                        variant="line"
                         defaultValue={'tab1'}
                         activateOnFocus={false}
                         {...args}
@@ -153,7 +153,7 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
 
                     <Tabs.Root
                         orientation="vertical"
-                        variant="plain"
+                        variant="line"
                         defaultValue={'tab2'}
                         activateOnFocus={false}
                         {...args}

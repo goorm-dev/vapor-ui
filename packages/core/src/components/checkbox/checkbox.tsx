@@ -3,11 +3,12 @@
 import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 
+import { useRender } from '@base-ui-components/react';
 import { Checkbox as BaseCheckbox } from '@base-ui-components/react/checkbox';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -30,7 +31,7 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * -----------------------------------------------------------------------------------------------*/
 
 export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((props, ref) => {
-    const { render, className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
         'size',
         'invalid',
@@ -38,24 +39,27 @@ export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((p
     ]);
 
     const { size, invalid, indeterminate } = variantProps;
-    const dataAttrs = createDataAttributes({ invalid });
 
-    const IndicatorElement = createSlot(children || <CheckboxIndicatorPrimitive />);
+    const children = useRender({
+        render: createRender(childrenProp, <CheckboxIndicatorPrimitive />),
+    });
 
-    return (
-        <CheckboxProvider value={{ size, indeterminate }}>
-            <BaseCheckbox.Root
-                ref={ref}
-                aria-invalid={invalid}
-                indeterminate={indeterminate}
-                className={clsx(styles.root({ invalid, size }), className)}
-                {...dataAttrs}
-                {...otherProps}
-            >
-                <IndicatorElement />
-            </BaseCheckbox.Root>
-        </CheckboxProvider>
-    );
+    const defaultProps: useRender.ElementProps<typeof BaseCheckbox.Root> = {
+        'aria-invalid': invalid,
+        indeterminate,
+        className: clsx(styles.root({ invalid, size }), className),
+        children,
+        ...otherProps,
+    };
+
+    const root = useRender({
+        ref,
+        state: { invalid },
+        render: <BaseCheckbox.Root />,
+        props: defaultProps,
+    });
+
+    return <CheckboxProvider value={{ size, indeterminate }}>{root}</CheckboxProvider>;
 });
 CheckboxRoot.displayName = 'Checkbox.Root';
 
@@ -67,10 +71,16 @@ export const CheckboxIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     CheckboxIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const { size, invalid, indeterminate } = useCheckboxContext();
     const dataAttrs = createDataAttributes({ invalid });
+
+    const Icon = indeterminate ? DashIcon : CheckIcon;
+    const children = useRender({
+        render: createRender(childrenProp, <Icon />),
+        props: { width: '100%', height: '100%' },
+    });
 
     return (
         <BaseCheckbox.Indicator
@@ -79,7 +89,7 @@ export const CheckboxIndicatorPrimitive = forwardRef<
             {...dataAttrs}
             {...componentProps}
         >
-            {indeterminate ? <DashIcon /> : <CheckIcon />}
+            {children}
         </BaseCheckbox.Indicator>
     );
 });
