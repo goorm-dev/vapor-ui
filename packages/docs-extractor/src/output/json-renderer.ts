@@ -23,6 +23,7 @@ interface ComponentPropsTableOutput {
     variants?: Array<{
         name: string;
         type: string[];
+        required: boolean;
         defaultValue?: string;
         description?: string;
     }>;
@@ -197,6 +198,7 @@ export class JsonRenderer {
                 variants: exportData.variants.variants.map((v) => ({
                     name: v.name,
                     type: v.values,
+                    required: v.required,
                     ...(v.defaultValue !== undefined && { defaultValue: v.defaultValue }),
                     ...(v.description && { description: v.description }),
                 })),

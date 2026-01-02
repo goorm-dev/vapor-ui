@@ -100,29 +100,30 @@ export class VariantsExtractor {
             if (!Node.isObjectLiteralExpression(variantObj)) return;
 
             // Extract values (keys of the variant object)
-            const values = variantObj
+            const type = variantObj
                 .getProperties()
                 .filter(Node.isPropertyAssignment)
                 .map((p) => p.getName());
 
             // Extract JSDoc description if available
             let description: string | undefined;
-            try {
-                const jsDocs = prop.getJsDocs?.();
-                description =
-                    jsDocs && jsDocs.length > 0 ? jsDocs[0].getDescription().trim() : undefined;
-            } catch {
-                // JSDoc not available for this property
-                description = undefined;
+            const fullText = prop.getFullText(); // Gets text including leading comments
+            const jsDocRegex = /\/\*\*\s*\n?\s*\*\s*([^\n*]+)/;
+            const match = fullText.match(jsDocRegex);
+            if (match && match[1]) {
+                description = match[1].trim();
+                this.logger.debug(`Extracted description for ${variantName}: ${description}`);
             }
 
-            this.logger.debug(`Found variant: ${variantName} with values [${values.join(', ')}]`);
+            this.logger.debug(`Found variant: ${variantName} with type [${type.join(', ')}]`);
 
+            const defaultValue = defaults.get(variantName);
             variants.push({
                 name: variantName,
-                values,
-                defaultValue: defaults.get(variantName),
+                type,
+                defaultValue,
                 description,
+                required: defaultValue === undefined,
             });
         });
 

@@ -42,12 +42,16 @@
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
-            "defaultValue": "md"
+            "required": false,
+            "defaultValue": "md",
+            "description": "Sizes for the avatar component"
         },
         {
             "name": "shape",
             "type": ["square", "circle"],
-            "defaultValue": "square"
+            "required": false,
+            "defaultValue": "square",
+            "description": "Shapes for the avatar component"
         }
     ]
 }

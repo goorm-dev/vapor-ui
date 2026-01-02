@@ -54,9 +54,10 @@ export interface ComponentMetadata {
  */
 export interface VariantInfo {
     name: string; // "size", "colorPalette"
-    values: string[]; // ["sm", "md", "lg"]
+    type: string[]; // ["sm", "md", "lg"]
     defaultValue?: string; // "md"
     description?: string; // JSDoc description if available
+    required: boolean; // true if no defaultValue, false if has defaultValue
 }
 
 /**
