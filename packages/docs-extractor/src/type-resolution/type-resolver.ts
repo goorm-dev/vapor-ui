@@ -124,6 +124,7 @@ export class TypeResolver {
 
     /**
      * Get all properties from a type, including inherited ones
+     * @deprecated Use getAllPropertiesAsSymbols for better mapped type support
      */
     getAllProperties(type: Type): PropertySignature[] {
         const properties: PropertySignature[] = [];
@@ -139,6 +140,47 @@ export class TypeResolver {
         }
 
         return properties;
+    }
+
+    /**
+     * Get all properties from a type as Symbols, including inherited ones and mapped type properties
+     * This method properly handles mapped types (e.g., RecipeVariants) where PropertySignature may not exist
+     */
+    getAllPropertiesAsSymbols(type: Type): Symbol[] {
+        return type.getProperties();
+    }
+
+    /**
+     * Check if a symbol represents an optional property
+     */
+    isOptionalProperty(symbol: Symbol): boolean {
+        return symbol.isOptional();
+    }
+
+    /**
+     * Get the type of a property from its symbol
+     */
+    getPropertyType(symbol: Symbol, parentType: Type): Type | undefined {
+        // Try to get type from the parent type's property
+        const propSymbol = parentType.getProperty(symbol.getName());
+        if (propSymbol) {
+            const declarations = propSymbol.getDeclarations();
+            if (declarations.length > 0) {
+                return propSymbol.getTypeAtLocation(declarations[0]);
+            }
+        }
+        return undefined;
+    }
+
+    /**
+     * Get the source file path from a symbol
+     */
+    getSymbolSourceFile(symbol: Symbol): string | undefined {
+        const declarations = symbol.getDeclarations();
+        if (declarations.length > 0) {
+            return declarations[0].getSourceFile().getFilePath();
+        }
+        return undefined;
     }
 
     /**

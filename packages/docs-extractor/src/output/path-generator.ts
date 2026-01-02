@@ -29,9 +29,9 @@ export class PathGenerator {
      * Generate output path from a display name (PascalCase folders and files)
      *
      * @example
-     *   "Button" → { directory: "Button", filename: "Buttonon" }
-     *   "Checkbox.Root" → { directory: "Checkbox", filename: "Rooton" }
-     *   "CheckboxRoot" → { directory: "Checkbox", filename: "Rooton" }
+     *   "Button" → { directory: "Button", filename: "Button.json" }
+     *   "Checkbox.Root" → { directory: "Checkbox", filename: "Root.json" }
+     *   "CheckboxRoot" → { directory: "Checkbox", filename: "Root.json" }
      */
     generatePath(displayName: string): OutputPath {
         const { folder, filename } = this.getFilePathFromDisplayName(displayName);
@@ -47,15 +47,15 @@ export class PathGenerator {
      * Generate output path using kebab-case convention
      *
      * @example
-     *   "Button" → { directory: "button", filename: "buttonon" }
-     *   "Checkbox.Root" → { directory: "checkbox", filename: "rooton" }
-     *   "NavigationMenu.Trigger" → { directory: "navigation-menu", filename: "triggeron" }
+     *   "Button" → { directory: "button", filename: "button.json" }
+     *   "Checkbox.Root" → { directory: "checkbox", filename: "root.json" }
+     *   "NavigationMenu.Trigger" → { directory: "navigation-menu", filename: "trigger.json" }
      */
     generateKebabPath(displayName: string): OutputPath {
         const { folder, filename } = this.getFilePathFromDisplayName(displayName);
 
         const kebabFolder = toKebabCase(folder);
-        const kebabFilename = toKebabCase(filename.replace('on', '')) + 'on';
+        const kebabFilename = toKebabCase(filename.replace('.json', '')) + '.json';
 
         return {
             directory: kebabFolder,
@@ -74,7 +74,7 @@ export class PathGenerator {
             const subComponent = subParts.join('');
             return {
                 folder: componentName,
-                filename: `${subComponent}on`,
+                filename: `${subComponent}.json`,
             };
         }
 
@@ -87,12 +87,12 @@ export class PathGenerator {
             if (isCompoundBase(baseComponent)) {
                 return {
                     folder: baseComponent,
-                    filename: `${subComponent}on`,
+                    filename: `${subComponent}.json`,
                 };
             }
         }
 
         // Single component case (default) - folder and filename are the same
-        return { folder: displayName, filename: `${displayName}on` };
+        return { folder: displayName, filename: `${displayName}.json` };
     }
 }

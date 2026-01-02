@@ -135,6 +135,19 @@ export class CliRunner {
                                     .getProject()
                                     .addSourceFileAtPath(cssFile);
                                 variants = variantsExtractor.extractVariants(cssSourceFile);
+
+                                // Filter variants to only include those that exist in Props
+                                if (variants) {
+                                    const propNames = new Set(props.map((p) => p.name));
+                                    variants.variants = variants.variants.filter((v) =>
+                                        propNames.has(v.name),
+                                    );
+
+                                    // If no variants match, set to null
+                                    if (variants.variants.length === 0) {
+                                        variants = null;
+                                    }
+                                }
                             } catch (error) {
                                 this.logger.warn(
                                     `Failed to extract variants from ${cssFile}: ${error}`,

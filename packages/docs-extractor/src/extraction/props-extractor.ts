@@ -82,16 +82,22 @@ export class PropsExtractor {
 
         // Get the type of the interface
         const type = propsInterface.getType();
-        const properties = typeResolver.getAllProperties(type);
+        // Use Symbol-based extraction to properly handle mapped types (e.g., RecipeVariants)
+        const propertySymbols = typeResolver.getAllPropertiesAsSymbols(type);
 
-        logger.debug(`Found ${properties.length} properties (including inherited)`);
+        logger.debug(`Found ${propertySymbols.length} properties (including inherited)`);
 
         // Context for type formatting (State → ComponentName.State 변환에 사용)
         const formatterContext = componentDisplayName ? { componentDisplayName } : undefined;
 
-        // Extract docs for each property (async due to TypeFormatter)
-        for (const prop of properties) {
-            const propDoc = await docExtractor.extractPropertyDoc(prop, formatterContext);
+        // Extract docs for each property using Symbol-based extraction
+        // This properly handles mapped types (e.g., RecipeVariants from vanilla-extract)
+        for (const symbol of propertySymbols) {
+            const propDoc = await docExtractor.extractPropertyDocFromSymbol(
+                symbol,
+                type,
+                formatterContext,
+            );
             allProps.push(propDoc);
         }
 

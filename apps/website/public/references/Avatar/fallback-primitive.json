@@ -12,24 +12,12 @@
         {
             "name": "render",
             "type": [
-                "ReactElement",
                 "((props: HTMLProps, state: Avatar.FallbackPrimitive.State) => ReactElement)",
+                "ReactElement",
                 "undefined"
             ],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
-        }
-    ],
-    "variants": [
-        {
-            "name": "size",
-            "values": ["sm", "md", "lg", "xl"],
-            "defaultValue": "md"
-        },
-        {
-            "name": "shape",
-            "values": ["square", "circle"],
-            "defaultValue": "square"
         }
     ]
 }

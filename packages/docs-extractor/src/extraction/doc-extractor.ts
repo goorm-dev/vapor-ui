@@ -1,4 +1,5 @@
-import type { JSDoc, PropertySignature } from 'ts-morph';
+import type { JSDoc, PropertySignature, Symbol, Type } from 'ts-morph';
+import { SyntaxKind } from 'ts-morph';
 
 import type { TypeResolver } from '../type-resolution';
 import type { PropertyDoc } from '../types';
@@ -56,6 +57,76 @@ export class DocExtractor {
             isExternal: !this.typeResolver.isLocalProperty(prop),
             isHTMLIntrinsic: this.typeResolver.isHTMLIntrinsicProp(prop),
             sourceFile: prop.getSourceFile().getFilePath(),
+            ...(values && { values }),
+        };
+    }
+
+    /**
+     * Extract property documentation from a Symbol
+     * This method handles properties that don't have a PropertySignature declaration
+     * (e.g., properties from mapped types like RecipeVariants)
+     * @param symbol - Symbol representing the property
+     * @param parentType - The parent type containing this property
+     * @param context - Optional context for type formatting
+     */
+    async extractPropertyDocFromSymbol(
+        symbol: Symbol,
+        parentType: Type,
+        context?: TypeFormatterContext,
+    ): Promise<PropertyDoc> {
+        const propName = symbol.getName();
+        this.logger.debug(`Extracting docs for property (from symbol): ${propName}`);
+
+        // Try to get the PropertySignature declaration for JSDoc and other info
+        const declarations = symbol.getDeclarations();
+        const propSignature = declarations.find((d) => d.isKind(SyntaxKind.PropertySignature)) as
+            | PropertySignature
+            | undefined;
+
+        // If we have a PropertySignature, use the existing method
+        if (propSignature) {
+            return this.extractPropertyDoc(propSignature, context);
+        }
+
+        // Otherwise, extract info from the symbol itself
+        const propType = this.typeResolver.getPropertyType(symbol, parentType);
+        const typeText = propType?.getText() ?? 'unknown';
+        const values = this.parseUnionType(typeText);
+
+        // Get JSDoc from any available declaration (may be from type alias, mapped type, etc.)
+        const jsDocs: JSDoc[] = [];
+        for (const decl of declarations) {
+            if ('getJsDocs' in decl && typeof decl.getJsDocs === 'function') {
+                jsDocs.push(...(decl.getJsDocs() as JSDoc[]));
+            }
+        }
+
+        // Format the type
+        const { type: formattedType, detailedType } = await this.typeFormatter.formatPropType(
+            propName,
+            typeText,
+            context,
+        );
+
+        // Determine source file
+        const sourceFile =
+            declarations.length > 0 ? declarations[0].getSourceFile().getFilePath() : undefined;
+
+        // Check if external (from node_modules)
+        const isExternal = sourceFile ? sourceFile.includes('node_modules') : false;
+
+        return {
+            name: propName,
+            type: formattedType,
+            detailedType,
+            required: !symbol.isOptional(),
+            description: this.extractDescription(jsDocs),
+            defaultValue: this.extractDefaultValue(jsDocs),
+            deprecated: this.isDeprecated(jsDocs),
+            tags: this.extractTags(jsDocs),
+            isExternal,
+            isHTMLIntrinsic: false, // Mapped type properties are typically not HTML intrinsic
+            sourceFile,
             ...(values && { values }),
         };
     }

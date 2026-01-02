@@ -12,8 +12,8 @@
         {
             "name": "render",
             "type": [
-                "ReactElement",
                 "((props: HTMLProps, state: Avatar.ImagePrimitive.State) => ReactElement)",
+                "ReactElement",
                 "undefined"
             ],
             "required": false,
@@ -24,18 +24,6 @@
             "type": ["((status: ImageLoadingStatus) => void)", "undefined"],
             "required": false,
             "description": "Callback fired when the loading status changes."
-        }
-    ],
-    "variants": [
-        {
-            "name": "size",
-            "values": ["sm", "md", "lg", "xl"],
-            "defaultValue": "md"
-        },
-        {
-            "name": "shape",
-            "values": ["square", "circle"],
-            "defaultValue": "square"
         }
     ]
 }

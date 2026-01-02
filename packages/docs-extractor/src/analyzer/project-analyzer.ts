@@ -12,7 +12,7 @@ export class ProjectAnalyzer {
 
     constructor(rootPath: string, logger: Logger, tsConfigPath?: string) {
         this.logger = logger;
-        const configPath = tsConfigPath || path.join(rootPath, 'packages/core/tsconfigon');
+        const configPath = tsConfigPath || path.join(rootPath, 'packages/core/tsconfig.json');
 
         this.logger.debug(`Initializing ts-morph Project with tsconfig: ${configPath}`);
 

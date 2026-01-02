@@ -54,7 +54,7 @@ export class JsonRenderer {
 
     /**
      * Write component files to individual JSON files organized by folder
-     * Creates structure like: outputDir/button/buttonon, outputDir/dialog/rooton
+     * Creates structure like: outputDir/button/button.json, outputDir/dialog/root.json
      * Uses kebab-case for folder and file names (as per STRUCTURE.md)
      */
     async writeComponentFiles(output: ExtractorOutput, outputDir: string): Promise<void> {
@@ -99,11 +99,11 @@ export class JsonRenderer {
     /**
      * Convert a display name to a file path structure (PascalCase)
      * Examples:
-     *   "Button" → {folder: "Button", filename: "Buttonon"}
-     *   "IconButton" → {folder: "IconButton", filename: "IconButtonon"}
-     *   "Checkbox.Root" → {folder: "Checkbox", filename: "Rooton"}
-     *   "CheckboxRoot" → {folder: "Checkbox", filename: "Rooton"}
-     *   "CheckboxIndicatorPrimitive" → {folder: "Checkbox", filename: "IndicatorPrimitiveon"}
+     *   "Button" → {folder: "Button", filename: "Button.json"}
+     *   "IconButton" → {folder: "IconButton", filename: "IconButton.json"}
+     *   "Checkbox.Root" → {folder: "Checkbox", filename: "Root.json"}
+     *   "CheckboxRoot" → {folder: "Checkbox", filename: "Root.json"}
+     *   "CheckboxIndicatorPrimitive" → {folder: "Checkbox", filename: "IndicatorPrimitive.json"}
      */
     private getFilePathFromDisplayName(displayName: string): { folder: string; filename: string } {
         // Check for dot notation (compound pattern with explicit dot)
@@ -112,7 +112,7 @@ export class JsonRenderer {
             const subComponent = subParts.join('');
             return {
                 folder: componentName,
-                filename: `${subComponent}on`,
+                filename: `${subComponent}.json`,
             };
         }
 
@@ -127,13 +127,13 @@ export class JsonRenderer {
             if (this.isCompoundPattern(baseComponent)) {
                 return {
                     folder: baseComponent,
-                    filename: `${subComponent}on`,
+                    filename: `${subComponent}.json`,
                 };
             }
         }
 
         // Single component case (default) - folder and filename are the same
-        return { folder: displayName, filename: `${displayName}on` };
+        return { folder: displayName, filename: `${displayName}.json` };
     }
 
     /**
@@ -157,8 +157,15 @@ export class JsonRenderer {
         // Get description from export or component level
         const description = this.getExportDescription(exportData) || componentDescription || '';
 
-        // Convert props to the expected format with type always as array
-        const props = exportData.props.map((prop) => {
+        // Get variant names to exclude from props (variants have their own field with defaultValue)
+        const variantNames = new Set(
+            exportData.variants?.variants.map((v) => v.name) ?? [],
+        );
+
+        // Filter out variant props and convert to the expected format
+        const props = exportData.props
+            .filter((prop) => !variantNames.has(prop.name))
+            .map((prop) => {
             // Determine type array: use values if available, otherwise parse type string
             let typeArray: string[];
 

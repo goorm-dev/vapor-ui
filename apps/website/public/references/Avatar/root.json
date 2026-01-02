@@ -12,8 +12,8 @@
         {
             "name": "render",
             "type": [
-                "ReactElement",
                 "((props: HTMLProps, state: Avatar.Root.State) => ReactElement)",
+                "ReactElement",
                 "undefined"
             ],
             "required": false,
