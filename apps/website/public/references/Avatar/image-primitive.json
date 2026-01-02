@@ -1,0 +1,41 @@
+{
+    "name": "ImagePrimitive",
+    "displayName": "Avatar.ImagePrimitive",
+    "description": "",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "((state: Avatar.ImagePrimitive.State) => string)", "undefined"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": [
+                "ReactElement",
+                "((props: HTMLProps, state: Avatar.ImagePrimitive.State) => ReactElement)",
+                "undefined"
+            ],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "onLoadingStatusChange",
+            "type": ["((status: ImageLoadingStatus) => void)", "undefined"],
+            "required": false,
+            "description": "Callback fired when the loading status changes."
+        }
+    ],
+    "variants": [
+        {
+            "name": "size",
+            "values": ["sm", "md", "lg", "xl"],
+            "defaultValue": "md"
+        },
+        {
+            "name": "shape",
+            "values": ["square", "circle"],
+            "defaultValue": "square"
+        }
+    ]
+}
