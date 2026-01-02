@@ -5,4 +5,3 @@
  */
 export { VariantsExtractor } from './variants-extractor';
 export { RecipeDefaultsExtractor } from './recipe-defaults-extractor';
-export { RecipeParser, type ParsedRecipe } from './recipe-parser';

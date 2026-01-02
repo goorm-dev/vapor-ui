@@ -6,12 +6,4 @@ export {
     isCompoundBase,
     type CompoundComponentBase,
 } from './compound-config';
-export {
-    formatDisplayName,
-    parseDisplayName,
-    splitDisplayName,
-    isCompoundDisplayName,
-    getCompoundSubComponents,
-} from './alias-mapper';
-export { CompoundResolver, type CompoundComponentInfo } from './compound-resolver';
-export { ComponentResolver, type ResolvedComponent } from './component-resolver';
+export { formatDisplayName } from './alias-mapper';
