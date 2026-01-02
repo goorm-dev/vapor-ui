@@ -74,6 +74,7 @@ export interface ComponentExport {
     type: 'component' | 'namespace';
     name: string; // "Button" or "CheckboxRoot"
     displayName: string; // "Button" or "Checkbox.Root"
+    description?: string; // JSDoc description of the component
     props: MergedPropertyDoc[];
     variants?: ComponentVariants; // Vanilla-extract variants if available
     typeParameters?: string[];

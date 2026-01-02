@@ -26,8 +26,13 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     hookName: 'useAvatarContext',
 });
 
-/* -----------------------------------------------------------------------------------------------*/
+/* -------------------------------------------------------------------------------------------------
+ * Avatar.Root
+ * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Avatar의 하위 요소를 그룹화합니다. `<span>` 요소를 렌더링합니다.
+ */
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(componentProps, [
@@ -67,6 +72,9 @@ AvatarRoot.displayName = 'Avatar.Root';
  * Avatar.ImagePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 프로필 이미지를 표시합니다. `<img>` 요소를 렌더링합니다.
+ */
 export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -89,6 +97,9 @@ AvatarImagePrimitive.displayName = 'Avatar.ImagePrimitive';
  * Avatar.FallbackPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * 이미지를 표시할 수 없을 때 나타나는 대체 콘텐츠입니다. `<span>` 요소를 렌더링합니다.
+ */
 export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbackPrimitive.Props>(
     (props, ref) => {
         const { className, style, children, ...componentProps } = resolveStyles(props);
@@ -176,7 +187,20 @@ const getRandomColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
 
 export namespace AvatarRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
-    export interface Props extends RootPrimitiveProps, AvatarSharedProps {}
+    export interface Props extends RootPrimitiveProps, AvatarSharedProps {
+        /**
+         * 이미지 소스 URL
+         */
+        src?: string;
+        /**
+         * 대체 텍스트, 폴백 이니셜 생성에도 사용
+         */
+        alt: string;
+        /**
+         * 폴백 표시 전 지연 시간 (밀리초)
+         */
+        delay?: number;
+    }
 }
 
 export namespace AvatarImagePrimitive {

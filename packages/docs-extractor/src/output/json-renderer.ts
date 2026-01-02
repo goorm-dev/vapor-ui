@@ -199,12 +199,10 @@ export class JsonRenderer {
 
     /**
      * Get description from export data
-     * Looks for description in props or other metadata
+     * Returns the JSDoc description of the component
      */
-    private getExportDescription(_exportData: ComponentExport): string | undefined {
-        // Check if there's a description in the first prop or metadata
-        // This is a simplified approach - can be enhanced based on actual data structure
-        return undefined;
+    private getExportDescription(exportData: ComponentExport): string | undefined {
+        return exportData.description;
     }
 
     /**
