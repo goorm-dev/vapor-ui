@@ -20,6 +20,8 @@ interface VariantDefinition {
     name: string;
     type: string[];
     defaultValue?: string;
+    description?: string;
+    required: boolean;
 }
 
 interface ComponentData {
@@ -137,47 +139,6 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                     <tbody>
                         {tableRows.map((row, index) => {
                             const isLast = index === tableRows.length - 1;
-
-                            if (row.kind === 'variant') {
-                                const variant = row.data;
-                                return (
-                                    <tr key={`variant-${variant.name}`}>
-                                        <td
-                                            className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[140px] w-px ${isLast ? 'rounded-bl-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
-                                        >
-                                            <Text typography="body2" foreground="normal-200">
-                                                {variant.name}
-                                            </Text>
-                                        </td>
-                                        <td
-                                            className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] min-w-[100px] w-px ${isLast ? 'border-b-0' : ''}`}
-                                        >
-                                            {variant.defaultValue ? (
-                                                <Badge colorPalette="hint" size="md">
-                                                    {variant.defaultValue}
-                                                </Badge>
-                                            ) : (
-                                                '-'
-                                            )}
-                                        </td>
-                                        <td
-                                            className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${isLast ? 'rounded-br-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
-                                        >
-                                            <Flex gap="$100" className="flex-wrap">
-                                                {variant.type.map((value) => (
-                                                    <Badge
-                                                        key={value}
-                                                        colorPalette="hint"
-                                                        size="md"
-                                                    >
-                                                        {value}
-                                                    </Badge>
-                                                ))}
-                                            </Flex>
-                                        </td>
-                                    </tr>
-                                );
-                            }
 
                             const prop = row.data;
                             return (
