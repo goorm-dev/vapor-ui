@@ -1,15 +1,14 @@
+import path from 'path';
 import type {
     IndexedAccessTypeNode,
     InterfaceDeclaration,
     PropertySignature,
-    SourceFile} from 'ts-morph';
-import {
-    Node,
-    SyntaxKind,
+    SourceFile,
 } from 'ts-morph';
-import path from 'path';
-import type { Logger } from '../utils/logger.js';
-import type { ProjectAnalyzer } from './project-analyzer.js';
+import { Node, SyntaxKind } from 'ts-morph';
+
+import type { ProjectAnalyzer } from '../analyzer';
+import type { Logger } from '../utils/logger';
 
 /**
  * Information about a recipe-based type
@@ -40,13 +39,17 @@ export class RecipeDefaultsExtractor {
         const defaults = new Map<string, string>();
         const sourceFile = propsInterface.getSourceFile();
 
-        this.logger.debug(`Extracting recipe defaults for props interface: ${propsInterface.getName()}`);
+        this.logger.debug(
+            `Extracting recipe defaults for props interface: ${propsInterface.getName()}`,
+        );
         this.logger.debug(`Interface file: ${sourceFile.getFilePath()}`);
 
         // Get all properties from the interface
         const properties = propsInterface.getProperties();
 
-        this.logger.debug(`Found ${properties.length} properties in interface using getProperties()`);
+        this.logger.debug(
+            `Found ${properties.length} properties in interface using getProperties()`,
+        );
 
         for (const prop of properties) {
             const propName = prop.getName();
@@ -64,15 +67,10 @@ export class RecipeDefaultsExtractor {
             );
 
             // Resolve import to find the recipe file
-            const recipeFilePath = this.resolveRecipeImport(
-                recipeInfo.objectTypeName,
-                sourceFile,
-            );
+            const recipeFilePath = this.resolveRecipeImport(recipeInfo.objectTypeName, sourceFile);
 
             if (!recipeFilePath) {
-                this.logger.debug(
-                    `Could not resolve import for ${recipeInfo.objectTypeName}`,
-                );
+                this.logger.debug(`Could not resolve import for ${recipeInfo.objectTypeName}`);
                 continue;
             }
 
@@ -90,10 +88,7 @@ export class RecipeDefaultsExtractor {
             }
 
             // Extract defaults from the recipe
-            const recipeDefaults = this.getRecipeDefaults(
-                recipeSourceFile,
-                recipeFilePath,
-            );
+            const recipeDefaults = this.getRecipeDefaults(recipeSourceFile, recipeFilePath);
 
             // Get the default value for this specific variant key
             const defaultValue = recipeDefaults.get(recipeInfo.indexKey);
@@ -122,7 +117,9 @@ export class RecipeDefaultsExtractor {
         }
 
         const kind = typeNode.getKind();
-        this.logger.debug(`Type node kind for ${prop.getName()}: ${kind} (IndexedAccessType is ${SyntaxKind.IndexedAccessType})`);
+        this.logger.debug(
+            `Type node kind for ${prop.getName()}: ${kind} (IndexedAccessType is ${SyntaxKind.IndexedAccessType})`,
+        );
 
         // Check if it's an indexed access type (e.g., Typography['style'])
         if (kind !== SyntaxKind.IndexedAccessType) {
@@ -156,10 +153,7 @@ export class RecipeDefaultsExtractor {
     /**
      * Resolve the import source of a type to find the recipe file path
      */
-    private resolveRecipeImport(
-        typeName: string,
-        sourceFile: SourceFile,
-    ): string | null {
+    private resolveRecipeImport(typeName: string, sourceFile: SourceFile): string | null {
         this.logger.debug(`Resolving import for type: ${typeName}`);
 
         // Find import declaration for the type
@@ -169,9 +163,7 @@ export class RecipeDefaultsExtractor {
         for (const importDecl of imports) {
             const namedImports = importDecl.getNamedImports();
             const typeImport = namedImports.find(
-                (ni) =>
-                    ni.getName() === typeName ||
-                    ni.getAliasNode()?.getText() === typeName,
+                (ni) => ni.getName() === typeName || ni.getAliasNode()?.getText() === typeName,
             );
 
             if (typeImport) {
@@ -293,9 +285,7 @@ export class RecipeDefaultsExtractor {
                     if (initializer) {
                         const value = initializer.getText().replace(/['"]/g, '');
                         defaults.set(variantKey, value);
-                        this.logger.debug(
-                            `Extracted default: ${variantKey} = ${value}`,
-                        );
+                        this.logger.debug(`Extracted default: ${variantKey} = ${value}`);
                     }
                 }
             });

@@ -1,9 +1,10 @@
-import type { SourceFile} from 'ts-morph';
-import { Node, SyntaxKind } from 'ts-morph';
-import type { VariantInfo, ComponentVariants } from '../types/index.js';
-import type { Logger } from '../utils/logger.js';
-import path from 'path';
 import fs from 'fs/promises';
+import path from 'path';
+import type { SourceFile } from 'ts-morph';
+import { Node, SyntaxKind } from 'ts-morph';
+
+import type { ComponentVariants, VariantInfo } from '../types';
+import type { Logger } from '../utils/logger';
 
 /**
  * Extracts vanilla-extract variants from .css.ts files
@@ -36,10 +37,12 @@ export class VariantsExtractor {
         this.logger.debug(`Extracting variants from ${sourceFile.getFilePath()}`);
 
         // Find all recipe() calls
-        const recipeCall = sourceFile.getDescendantsOfKind(SyntaxKind.CallExpression).find((call) => {
-            const expr = call.getExpression();
-            return expr.getText() === 'recipe';
-        });
+        const recipeCall = sourceFile
+            .getDescendantsOfKind(SyntaxKind.CallExpression)
+            .find((call) => {
+                const expr = call.getExpression();
+                return expr.getText() === 'recipe';
+            });
 
         if (!recipeCall) {
             this.logger.debug('No recipe() call found');
@@ -106,15 +109,14 @@ export class VariantsExtractor {
             let description: string | undefined;
             try {
                 const jsDocs = prop.getJsDocs?.();
-                description = jsDocs && jsDocs.length > 0 ? jsDocs[0].getDescription().trim() : undefined;
+                description =
+                    jsDocs && jsDocs.length > 0 ? jsDocs[0].getDescription().trim() : undefined;
             } catch {
                 // JSDoc not available for this property
                 description = undefined;
             }
 
-            this.logger.debug(
-                `Found variant: ${variantName} with values [${values.join(', ')}]`,
-            );
+            this.logger.debug(`Found variant: ${variantName} with values [${values.join(', ')}]`);
 
             variants.push({
                 name: variantName,

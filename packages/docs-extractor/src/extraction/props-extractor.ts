@@ -1,12 +1,12 @@
 import type { InterfaceDeclaration, SourceFile } from 'ts-morph';
 
-import type { DocExtractor } from '../core/doc-extractor.js';
-import type { MergeEngine } from '../core/merge-engine.js';
-import type { ProjectAnalyzer } from '../core/project-analyzer.js';
-import type { RecipeDefaultsExtractor } from '../core/recipe-defaults-extractor.js';
-import type { TypeResolver } from '../type-resolution/index.js';
-import type { MergedPropertyDoc, PropertyDoc } from '../types/index.js';
-import type { Logger } from '../utils/logger.js';
+import type { ProjectAnalyzer } from '../analyzer';
+import type { MergeEngine } from '../core/merge-engine';
+import type { RecipeDefaultsExtractor } from '../recipe';
+import type { TypeResolver } from '../type-resolution';
+import type { MergedPropertyDoc, PropertyDoc } from '../types';
+import type { Logger } from '../utils/logger';
+import type { DocExtractor } from './doc-extractor';
 
 /**
  * Options for props extraction
@@ -42,10 +42,7 @@ export class PropsExtractor {
     /**
      * Find the Props interface for a component
      */
-    findPropsInterface(
-        sourceFile: SourceFile,
-        componentName: string,
-    ): InterfaceDeclaration | null {
+    findPropsInterface(sourceFile: SourceFile, componentName: string): InterfaceDeclaration | null {
         const { logger } = this.deps;
 
         // Look for namespace with component name
@@ -115,7 +112,8 @@ export class PropsExtractor {
         // This is done after merging to avoid interference with the merge process
         if (typeResolver.extendsVComponentProps(propsInterface)) {
             logger.debug('Interface extends VComponentProps, injecting sprinkles props');
-            const syntheticSprinklesProps = typeResolver.createSyntheticSprinklesProps(corePackagePath);
+            const syntheticSprinklesProps =
+                typeResolver.createSyntheticSprinklesProps(corePackagePath);
             mergedProps.push(...syntheticSprinklesProps);
             logger.debug(`Injected ${syntheticSprinklesProps.length} synthetic sprinkles props`);
         }

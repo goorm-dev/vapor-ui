@@ -1,7 +1,8 @@
 import { globby } from 'globby';
 import path from 'path';
-import type { ComponentMetadata } from '../types/index.js';
-import type { Logger } from '../utils/logger.js';
+
+import type { ComponentMetadata } from '../types';
+import type { Logger } from '../utils/logger';
 
 /**
  * Scans the codebase to find component files
@@ -12,13 +13,19 @@ export class ComponentScanner {
     /**
      * Scan for component files in the given directory
      */
-    async scanComponents(corePackagePath: string, componentName?: string): Promise<ComponentMetadata[]> {
+    async scanComponents(
+        corePackagePath: string,
+        componentName?: string,
+    ): Promise<ComponentMetadata[]> {
         let pattern: string;
 
         if (componentName) {
             // Scan specific component
             const lowerCaseName = componentName.toLowerCase();
-            pattern = path.join(corePackagePath, `src/components/${lowerCaseName}/${lowerCaseName}.tsx`);
+            pattern = path.join(
+                corePackagePath,
+                `src/components/${lowerCaseName}/${lowerCaseName}.tsx`,
+            );
             this.logger.debug(`Scanning for specific component: ${componentName}`);
         } else {
             // Scan all components

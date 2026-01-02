@@ -1,5 +1,5 @@
-import type { PropertyDoc, MergedPropertyDoc } from '../types/index.js';
-import type { Logger } from '../utils/logger.js';
+import type { MergedPropertyDoc, PropertyDoc } from '../types';
+import type { Logger } from '../utils/logger';
 
 /**
  * Merges local and external JSDoc documentation with local precedence
@@ -73,7 +73,11 @@ export class MergeEngine {
     /**
      * Filter props to only include local or external ones
      */
-    filterPropsBySource(props: PropertyDoc[], includeLocal: boolean, includeExternal: boolean): PropertyDoc[] {
+    filterPropsBySource(
+        props: PropertyDoc[],
+        includeLocal: boolean,
+        includeExternal: boolean,
+    ): PropertyDoc[] {
         return props.filter((prop) => {
             if (includeLocal && !prop.isExternal) return true;
             if (includeExternal && prop.isExternal) return true;

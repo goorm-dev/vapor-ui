@@ -1,4 +1,5 @@
 import type {
+    ExpressionWithTypeArguments,
     InterfaceDeclaration,
     Project,
     PropertySignature,
@@ -9,11 +10,11 @@ import type {
 } from 'ts-morph';
 import { SyntaxKind } from 'ts-morph';
 
-import { SprinklesTypeExtractor } from '../sprinkles/index.js';
-import type { PropertyDoc } from '../types/index.js';
-import type { Logger } from '../utils/logger.js';
-import { ExternalTypeChecker } from './external-type-checker.js';
-import { PropsFilter } from './props-filter.js';
+import { SprinklesTypeExtractor } from '../sprinkles';
+import type { PropertyDoc } from '../types';
+import type { Logger } from '../utils/logger';
+import { ExternalTypeChecker } from './external-type-checker';
+import { PropsFilter } from './props-filter';
 
 /**
  * Resolves type information and determines if types are external
@@ -162,6 +163,26 @@ export class TypeResolver {
      * @returns True if the interface extends VComponentProps
      */
     extendsVComponentProps(interfaceDecl: InterfaceDeclaration): boolean {
+        // First, check the extends clause's raw text
+        // This catches cases like: extends Omit<VComponentProps<...>, ...>
+        const extendsExpressions = interfaceDecl.getExtends();
+        for (const ext of extendsExpressions) {
+            const extText = ext.getText();
+            if (extText.includes('VComponentProps')) {
+                this.logger.debug(
+                    `Interface extends VComponentProps (via extends clause): ${extText}`,
+                );
+                return true;
+            }
+
+            // Check for type aliases used in the extends clause (e.g., Omit<FallbackPrimitiveProps, ...>)
+            // where FallbackPrimitiveProps is defined as VComponentProps<...>
+            if (this.checkExtendsClauseForVComponentProps(ext, interfaceDecl)) {
+                return true;
+            }
+        }
+
+        // Check resolved base types for direct VComponentProps usage
         const baseTypes = interfaceDecl.getBaseTypes();
 
         for (const baseType of baseTypes) {
@@ -181,6 +202,52 @@ export class TypeResolver {
                     const declText = decl.getText();
                     if (declText.includes('VComponentProps')) {
                         this.logger.debug(`Interface extends VComponentProps via type alias`);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the extends clause contains a type alias that references VComponentProps
+     * This handles patterns like: extends Omit<FallbackPrimitiveProps, ...>
+     * where FallbackPrimitiveProps = VComponentProps<...>
+     */
+    private checkExtendsClauseForVComponentProps(
+        ext: ExpressionWithTypeArguments,
+        interfaceDecl: InterfaceDeclaration,
+    ): boolean {
+        // Get the namespace containing this interface (if any)
+        const parent = interfaceDecl.getParent();
+        if (!parent || !parent.isKind(SyntaxKind.ModuleBlock)) {
+            return false;
+        }
+
+        const namespaceBlock = parent;
+        const namespace = namespaceBlock.getParent();
+        if (!namespace || !namespace.isKind(SyntaxKind.ModuleDeclaration)) {
+            return false;
+        }
+
+        // Get all type aliases in the namespace
+        const typeAliases = namespace.getTypeAliases();
+
+        // Get type argument names from the extends clause (e.g., "FallbackPrimitiveProps" from Omit<FallbackPrimitiveProps, ...>)
+        const typeArgs = ext.getTypeArguments();
+        for (const typeArg of typeArgs) {
+            const typeArgText = typeArg.getText();
+
+            // Check if this type argument matches a local type alias
+            for (const typeAlias of typeAliases) {
+                if (typeAlias.getName() === typeArgText) {
+                    const aliasTypeText = typeAlias.getTypeNode()?.getText() || '';
+                    if (aliasTypeText.includes('VComponentProps')) {
+                        this.logger.debug(
+                            `Interface extends VComponentProps via local type alias: ${typeArgText} = ${aliasTypeText}`,
+                        );
                         return true;
                     }
                 }

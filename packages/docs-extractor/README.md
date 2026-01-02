@@ -73,55 +73,55 @@ The tool generates JSON with the following structure:
 
 ```json
 {
-  "metadata": {
-    "version": "1.0.0-beta.1",
-    "generatedAt": "2025-12-19T01:15:52.754Z",
-    "rootPath": "/path/to/project",
-    "componentCount": 1
-  },
-  "components": [
-    {
-      "name": "Button",
-      "exports": [
+    "metadata": {
+        "version": "1.0.0-beta.1",
+        "generatedAt": "2025-12-19T01:15:52.754Z",
+        "rootPath": "/path/to/project",
+        "componentCount": 1
+    },
+    "components": [
         {
-          "type": "component",
-          "name": "Button",
-          "displayName": "Button",
-          "props": [
-            {
-              "name": "disabled",
-              "type": "boolean | undefined",
-              "required": false,
-              "description": "Whether the component should ignore user interaction.",
-              "isExternal": true,
-              "isHTMLIntrinsic": false,
-              "source": "external"
-            }
-          ],
-          "variants": {
-            "sourceFile": "/path/to/button.css.ts",
-            "variants": [
-              {
-                "name": "size",
-                "values": ["sm", "md", "lg", "xl"],
-                "defaultValue": "md"
-              },
-              {
-                "name": "colorPalette",
-                "values": ["primary", "secondary", "success", "warning", "danger"],
-                "defaultValue": "primary"
-              },
-              {
-                "name": "variant",
-                "values": ["fill", "outline", "ghost"],
-                "defaultValue": "fill"
-              }
+            "name": "Button",
+            "exports": [
+                {
+                    "type": "component",
+                    "name": "Button",
+                    "displayName": "Button",
+                    "props": [
+                        {
+                            "name": "disabled",
+                            "type": "boolean | undefined",
+                            "required": false,
+                            "description": "Whether the component should ignore user interaction.",
+                            "isExternal": true,
+                            "isHTMLIntrinsic": false,
+                            "source": "external"
+                        }
+                    ],
+                    "variants": {
+                        "sourceFile": "/path/to/button.css.ts",
+                        "variants": [
+                            {
+                                "name": "size",
+                                "values": ["sm", "md", "lg", "xl"],
+                                "defaultValue": "md"
+                            },
+                            {
+                                "name": "colorPalette",
+                                "values": ["primary", "secondary", "success", "warning", "danger"],
+                                "defaultValue": "primary"
+                            },
+                            {
+                                "name": "variant",
+                                "values": ["fill", "outline", "ghost"],
+                                "defaultValue": "fill"
+                            }
+                        ]
+                    }
+                }
             ]
-          }
         }
-      ]
-    }
-  ]
+    ]
 }
 ```
 
@@ -153,6 +153,7 @@ export namespace CheckboxRoot {
 ```
 
 The tool:
+
 - Resolves `BaseCheckbox.Root` from `@base-ui-components/react`
 - Extracts JSDoc from the external `.d.ts` files
 - Merges external docs with local docs (local wins on conflicts)
@@ -189,6 +190,7 @@ export const root = recipe({
 ```
 
 The tool will extract:
+
 - Variant names (size, colorPalette, variant)
 - Possible values for each variant
 - Default values
@@ -197,6 +199,7 @@ The tool will extract:
 #### Type Resolution
 
 Handles complex TypeScript patterns:
+
 - Generic types: `VComponentProps<typeof BaseCheckbox.Root>`
 - Namespace access: `BaseCheckbox.Root.Props`
 - Multiple inheritance: `extends A, B, C`

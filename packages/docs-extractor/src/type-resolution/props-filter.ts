@@ -2,8 +2,8 @@ import path from 'path';
 import type { Project, SourceFile } from 'ts-morph';
 import { SyntaxKind } from 'ts-morph';
 
-import type { PropertyDoc } from '../types/index.js';
-import type { Logger } from '../utils/logger.js';
+import type { PropertyDoc } from '../types';
+import type { Logger } from '../utils/logger';
 
 /**
  * Filters properties based on various criteria (React props, Sprinkles props, etc.)

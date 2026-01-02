@@ -1,4 +1,14 @@
 /**
+ * Prop source classification based on origin file path
+ * - base-ui: Props from @base-ui-components
+ * - sprinkles: Props from sprinkles.css.ts (style system)
+ * - variant: Props from .css.ts recipe files
+ * - local: Props defined in project .tsx/.ts files
+ * - native: Props from @types/react (HTML intrinsic)
+ */
+export type PropSource = 'base-ui' | 'sprinkles' | 'variant' | 'local' | 'native';
+
+/**
  * Metadata about a component property
  */
 export interface PropertyDoc {
@@ -22,6 +32,8 @@ export interface PropertyDoc {
  */
 export interface MergedPropertyDoc extends PropertyDoc {
     source: 'local' | 'external' | 'merged';
+    propSource?: PropSource; // Origin classification
+    originFile?: string; // Source file path for the prop
     localDoc?: PropertyDoc;
     externalDoc?: PropertyDoc;
 }

@@ -1,6 +1,6 @@
 import type { PropertySignature, SourceFile, Symbol } from 'ts-morph';
 
-import type { Logger } from '../utils/logger.js';
+import type { Logger } from '../utils/logger';
 
 /**
  * Checks if types/properties are external (from node_modules)

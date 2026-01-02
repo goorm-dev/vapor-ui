@@ -2,7 +2,7 @@
  * CLI module - handles command line interface configuration and execution
  */
 
-export { createCli } from './config.js';
-export type { CliFlags, CliInstance } from './config.js';
+export { createCli } from './config';
+export type { CliFlags, CliInstance } from './config';
 
-export { CliRunner } from './runner.js';
+export { CliRunner } from './runner';

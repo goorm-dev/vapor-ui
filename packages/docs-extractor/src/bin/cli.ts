@@ -5,8 +5,7 @@
  * This file serves as the entry point for the CLI.
  * All logic has been moved to the cli/ module for better organization.
  */
-
-import { createCli, CliRunner } from '../cli/index.js';
+import { CliRunner, createCli } from '../cli';
 
 const cli = createCli();
 const runner = new CliRunner(cli.flags);

@@ -1,8 +1,9 @@
-import type { PropertySignature, JSDoc } from 'ts-morph';
-import type { PropertyDoc } from '../types/index.js';
-import type { TypeResolver } from './type-resolver.js';
-import type { Logger } from '../utils/logger.js';
-import { TypeFormatter, type TypeFormatterContext } from '../type-resolution/type-formatter.js';
+import type { JSDoc, PropertySignature } from 'ts-morph';
+
+import type { TypeResolver } from '../type-resolution';
+import type { PropertyDoc } from '../types';
+import type { Logger } from '../utils/logger';
+import { TypeFormatter, type TypeFormatterContext } from './type-formatter';
 
 /**
  * Extracts JSDoc documentation from TypeScript properties
@@ -89,7 +90,9 @@ export class DocExtractor {
      * Check if property is deprecated
      */
     private isDeprecated(jsDocs: JSDoc[]): boolean {
-        return jsDocs.some((jsDoc) => jsDoc.getTags().some((tag) => tag.getTagName() === 'deprecated'));
+        return jsDocs.some((jsDoc) =>
+            jsDoc.getTags().some((tag) => tag.getTagName() === 'deprecated'),
+        );
     }
 
     /**

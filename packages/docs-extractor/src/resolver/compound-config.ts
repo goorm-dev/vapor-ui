@@ -1,8 +1,10 @@
 /**
- * List of compound component base names
+ * Compound component configuration
+ *
+ * List of compound component base names.
  * Components in this list have sub-components (e.g., Dialog.Root, Menu.Item)
  *
- * IMPORTANT: Sorted by length descending for proper prefix matching
+ * IMPORTANT: Sorted by length descending for proper prefix matching.
  * Longer names must come first to avoid partial matches
  * (e.g., "NavigationMenu" before "Menu", "InputGroup" before "Input")
  */
@@ -38,3 +40,12 @@ export const COMPOUND_COMPONENT_BASES = [
     'Menu', // 4 chars
     'Tabs', // 4 chars
 ] as const;
+
+export type CompoundComponentBase = (typeof COMPOUND_COMPONENT_BASES)[number];
+
+/**
+ * Check if a component name is a known compound component base
+ */
+export function isCompoundBase(name: string): name is CompoundComponentBase {
+    return COMPOUND_COMPONENT_BASES.includes(name as CompoundComponentBase);
+}

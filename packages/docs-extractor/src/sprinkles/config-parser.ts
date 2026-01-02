@@ -2,7 +2,7 @@ import path from 'path';
 import type { Project, SourceFile } from 'ts-morph';
 import { SyntaxKind } from 'ts-morph';
 
-import type { Logger } from '../utils/logger.js';
+import type { Logger } from '../utils/logger';
 
 /**
  * Property configuration type for sprinkles

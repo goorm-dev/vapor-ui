@@ -1,6 +1,6 @@
 import * as prettier from 'prettier';
 
-import type { Logger } from '../utils/logger.js';
+import type { Logger } from '../utils/logger';
 
 /**
  * 포맷팅된 타입 정보

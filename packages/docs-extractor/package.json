@@ -1,42 +1,8 @@
 {
     "name": "@vapor-ui/docs-extractor",
     "version": "2.0.0",
-    "description": "Extract TypeScript documentation from Vapor UI components with external JSDoc merging",
-    "main": "dist/index.mjs",
     "private": true,
-    "bin": {
-        "docs-extractor": "./dist/bin/cli.mjs"
-    },
-    "scripts": {
-        "build": "tsup",
-        "dev": "tsup --watch",
-        "test": "vitest",
-        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
-        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
-        "lint": "eslint ./src",
-        "typecheck": "tsc --noEmit",
-        "clean": "rimraf dist node_modules .turbo"
-    },
-    "dependencies": {
-        "ts-morph": "^22.0.0",
-        "meow": "^14.0.0",
-        "@inquirer/prompts": "^7.9.0",
-        "globby": "^15.0.0",
-        "picocolors": "^1.1.1",
-        "prettier": "^3.3.3"
-    },
-    "devDependencies": {
-        "@repo/eslint-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
-        "@types/node": "^20.0.0",
-        "tsup": "^8.5.0",
-        "typescript": "^5.9.2",
-        "vitest": "^3.2.4",
-        "rimraf": "^6.0.1"
-    },
-    "files": [
-        "dist"
-    ],
+    "description": "Extract TypeScript documentation from Vapor UI components with external JSDoc merging",
     "keywords": [
         "vapor-ui",
         "documentation",
@@ -44,6 +10,40 @@
         "jsdoc",
         "cli"
     ],
+    "main": "dist/index.mjs",
+    "bin": {
+        "docs-extractor": "./dist/bin/cli.mjs"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "clean": "rimraf dist node_modules .turbo",
+        "dev": "tsup --watch",
+        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
+        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
+        "lint": "eslint ./src",
+        "test": "vitest",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@inquirer/prompts": "^7.9.0",
+        "globby": "^15.0.0",
+        "meow": "^14.0.0",
+        "picocolors": "^1.1.1",
+        "prettier": "^3.3.3",
+        "ts-morph": "^22.0.0"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/node": "^20.0.0",
+        "rimraf": "^6.0.1",
+        "tsup": "^8.5.0",
+        "typescript": "^5.9.2",
+        "vitest": "^3.2.4"
+    },
     "engines": {
         "node": ">=20.19"
     },

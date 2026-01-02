@@ -39,7 +39,9 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                 // Parse componentName with slash separator (e.g., "Button/Button", "Dialog/Root")
                 const [folder, filename] = componentName.split('/');
                 if (!folder || !filename) {
-                    throw new Error(`Invalid componentName format: ${componentName}. Expected format: "Folder/Filename"`);
+                    throw new Error(
+                        `Invalid componentName format: ${componentName}. Expected format: "Folder/Filename"`,
+                    );
                 }
 
                 const response = await fetch(`/References/${folder}/${filename}.json`);

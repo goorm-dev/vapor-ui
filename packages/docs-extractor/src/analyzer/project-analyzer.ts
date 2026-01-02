@@ -1,7 +1,7 @@
 import path from 'path';
 import { Project, type SourceFile, ts } from 'ts-morph';
 
-import type { Logger } from '../utils/logger.js';
+import type { Logger } from '../utils/logger';
 
 /**
  * Manages the ts-morph Project and loads TypeScript source files
@@ -12,7 +12,7 @@ export class ProjectAnalyzer {
 
     constructor(rootPath: string, logger: Logger, tsConfigPath?: string) {
         this.logger = logger;
-        const configPath = tsConfigPath || path.join(rootPath, 'packages/core/tsconfig.json');
+        const configPath = tsConfigPath || path.join(rootPath, 'packages/core/tsconfigon');
 
         this.logger.debug(`Initializing ts-morph Project with tsconfig: ${configPath}`);
 

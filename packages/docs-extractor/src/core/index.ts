@@ -1,13 +1,19 @@
 /**
- * Core module - re-exports all core extractors and analyzers
+ * Core module - remaining core utilities
+ *
+ * Note: Most modules have been moved to specialized directories:
+ * - scanner/ for ComponentScanner, EntryScanner
+ * - analyzer/ for ProjectAnalyzer, TypeAnalyzer
+ * - extraction/ for DocExtractor, PropsExtractor
+ * - recipe/ for VariantsExtractor, RecipeDefaultsExtractor
+ * - type-resolution/ for TypeResolver, ExternalTypeChecker, PropsFilter
  */
 
-export { ComponentScanner } from './component-scanner.js';
-export { DocExtractor } from './doc-extractor.js';
-export { MergeEngine } from './merge-engine.js';
-export { ProjectAnalyzer } from './project-analyzer.js';
-export { RecipeDefaultsExtractor } from './recipe-defaults-extractor.js';
-export { VariantsExtractor } from './variants-extractor.js';
+export { MergeEngine } from './merge-engine';
 
-// Re-export TypeResolver from the new location for backward compatibility
-export { TypeResolver, ExternalTypeChecker, PropsFilter } from './type-resolver.js';
+// Re-exports for backward compatibility
+export { ComponentScanner } from '../scanner';
+export { ProjectAnalyzer } from '../analyzer';
+export { DocExtractor } from '../extraction';
+export { VariantsExtractor, RecipeDefaultsExtractor } from '../recipe';
+export { TypeResolver, ExternalTypeChecker, PropsFilter } from '../type-resolution';

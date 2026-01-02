@@ -1,23 +1,17 @@
 import { input, select } from '@inquirer/prompts';
 import path from 'path';
 
-import { ComponentScanner } from '../core/component-scanner.js';
-import { DocExtractor } from '../core/doc-extractor.js';
-import { MergeEngine } from '../core/merge-engine.js';
-import { ProjectAnalyzer } from '../core/project-analyzer.js';
-import { RecipeDefaultsExtractor } from '../core/recipe-defaults-extractor.js';
-import { VariantsExtractor } from '../core/variants-extractor.js';
-import { PropsExtractor } from '../extraction/index.js';
-import { JsonRenderer } from '../renderer/json-renderer.js';
-import { TypeResolver } from '../type-resolution/index.js';
-import type {
-    ComponentDocumentation,
-    ComponentExport,
-    ExtractorOutput,
-} from '../types/index.js';
-import { Logger } from '../utils/logger.js';
-import { COMPOUND_COMPONENT_BASES } from '../constants/compound-components.js';
-import type { CliFlags } from './config.js';
+import { ProjectAnalyzer } from '../analyzer';
+import { MergeEngine } from '../core/merge-engine';
+import { DocExtractor, PropsExtractor } from '../extraction';
+import { JsonRenderer } from '../output';
+import { RecipeDefaultsExtractor, VariantsExtractor } from '../recipe';
+import { formatDisplayName } from '../resolver';
+import { ComponentScanner } from '../scanner';
+import { TypeResolver } from '../type-resolution';
+import type { ComponentDocumentation, ComponentExport, ExtractorOutput } from '../types';
+import { Logger } from '../utils/logger';
+import type { CliFlags } from './config';
 
 /**
  * CLI Runner - orchestrates the documentation extraction process
@@ -74,7 +68,10 @@ export class CliRunner {
 
             // Scan for components
             this.logger.info('Scanning for components...');
-            const components = await componentScanner.scanComponents(corePackagePath, componentName);
+            const components = await componentScanner.scanComponents(
+                corePackagePath,
+                componentName,
+            );
             this.logger.info(`Found ${components.length} components`);
 
             if (components.length === 0) {
@@ -107,7 +104,9 @@ export class CliRunner {
                 });
 
                 // Find all exported namespaces
-                const _exportedNamespaces = sourceFile.getModules().filter((mod) => mod.isExported());
+                const _exportedNamespaces = sourceFile
+                    .getModules()
+                    .filter((mod) => mod.isExported());
 
                 // Extract props from exported variables (components)
                 for (const varDecl of exportedVars) {
@@ -120,7 +119,7 @@ export class CliRunner {
                     if (propsInterface) {
                         // displayName을 전달하여 State → ComponentName.State 변환에 사용
                         // 복합 컴포넌트는 점 표기법으로 변환 (예: MenuPopup → Menu.Popup)
-                        const displayName = this.formatDisplayName(compName);
+                        const displayName = formatDisplayName(compName);
                         const props = await propsExtractor.extractPropsFromInterface(
                             propsInterface,
                             displayName,
@@ -179,36 +178,6 @@ export class CliRunner {
             this.logger.error('Extraction failed:', error);
             process.exit(1);
         }
-    }
-
-    /**
-     * Format component name to display name with dot notation for compound components
-     * Examples:
-     *   "MenuPopup" → "Menu.Popup"
-     *   "CheckboxRoot" → "Checkbox.Root"
-     *   "InputGroupRoot" → "InputGroup.Root"
-     *   "NavigationMenuTrigger" → "NavigationMenu.Trigger"
-     *   "Button" → "Button" (no change)
-     *   "IconButton" → "IconButton" (no change, not a compound component)
-     */
-    private formatDisplayName(compName: string): string {
-        // Use shared compound component base names
-        // See: src/constants/compound-components.ts
-        const compoundBases = COMPOUND_COMPONENT_BASES;
-
-        // Try each compound base (longer names first to avoid partial matches)
-        for (const base of compoundBases) {
-            if (compName.startsWith(base) && compName.length > base.length) {
-                const subComponent = compName.slice(base.length);
-                // Check if remaining part starts with uppercase (valid sub-component)
-                if (/^[A-Z]/.test(subComponent)) {
-                    return `${base}.${subComponent}`;
-                }
-            }
-        }
-
-        // Return as-is for single components
-        return compName;
     }
 
     /**

@@ -1,7 +1,7 @@
 import path from 'path';
 import type { Project, SourceFile, Type } from 'ts-morph';
 
-import type { Logger } from '../utils/logger.js';
+import type { Logger } from '../utils/logger';
 
 /**
  * Extracts actual CSS values from the Sprinkles type that rainbow-sprinkles generates
@@ -71,7 +71,9 @@ export class SprinklesTypeIntrospector {
             );
             return values;
         } catch (error) {
-            this.logger.warn(`[Introspector] Error extracting CSS values for ${propName}: ${error}`);
+            this.logger.warn(
+                `[Introspector] Error extracting CSS values for ${propName}: ${error}`,
+            );
             return null;
         }
     }
@@ -177,7 +179,10 @@ export class SprinklesTypeIntrospector {
 
             // Skip string escape hatch: (string & {})
             const typeText = unionType.getText();
-            if (typeText.includes('string & {}') || typeText.includes('string & Record<never, never>')) {
+            if (
+                typeText.includes('string & {}') ||
+                typeText.includes('string & Record<never, never>')
+            ) {
                 continue;
             }
 

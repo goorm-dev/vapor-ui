@@ -1,9 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { COMPOUND_COMPONENT_BASES } from '../constants/compound-components.js';
-import type { ComponentExport, ExtractorOutput } from '../types/index.js';
-import type { Logger } from '../utils/logger.js';
+import { isCompoundBase } from '../resolver';
+import type { ComponentExport, ExtractorOutput } from '../types';
+import type { Logger } from '../utils/logger';
+import { PathGenerator } from './path-generator';
 
 /**
  * Output format for ComponentPropsTable compatibility
@@ -19,17 +20,12 @@ interface ComponentPropsTableOutput {
         description: string;
         defaultValue?: string;
     }>;
-    variants?: {
-        sourceFile: string;
-        variants: Array<{
-            name: string;
-            values: string[];
-            defaultValue?: string;
-            description?: string;
-        }>;
-    };
-    generatedAt: string;
-    sourceFile: string;
+    variants?: Array<{
+        name: string;
+        values: string[];
+        defaultValue?: string;
+        description?: string;
+    }>;
 }
 
 /**
@@ -58,8 +54,8 @@ export class JsonRenderer {
 
     /**
      * Write component files to individual JSON files organized by folder
-     * Creates structure like: outputDir/Button/Button.json, outputDir/Dialog/Root.json
-     * Uses PascalCase for folder and file names
+     * Creates structure like: outputDir/button/buttonon, outputDir/dialog/rooton
+     * Uses kebab-case for folder and file names (as per STRUCTURE.md)
      */
     async writeComponentFiles(output: ExtractorOutput, outputDir: string): Promise<void> {
         this.logger.debug(`Writing component files to ${outputDir}`);
@@ -67,17 +63,18 @@ export class JsonRenderer {
         // Create the output directory if it doesn't exist
         await fs.mkdir(outputDir, { recursive: true });
 
+        const pathGenerator = new PathGenerator();
         let filesWritten = 0;
 
         for (const component of output.components) {
             for (const exportData of component.exports) {
-                // Get folder and filename from display name (PascalCase)
-                const { folder, filename } = this.getFilePathFromDisplayName(
+                // Get folder and filename from display name (kebab-case)
+                const { directory, filename } = pathGenerator.generateKebabPath(
                     exportData.displayName,
                 );
 
                 // Create component directory
-                const componentDir = path.join(outputDir, folder);
+                const componentDir = path.join(outputDir, directory);
                 await fs.mkdir(componentDir, { recursive: true });
 
                 // Convert to ComponentPropsTable format
@@ -102,11 +99,11 @@ export class JsonRenderer {
     /**
      * Convert a display name to a file path structure (PascalCase)
      * Examples:
-     *   "Button" → {folder: "Button", filename: "Button.json"}
-     *   "IconButton" → {folder: "IconButton", filename: "IconButton.json"}
-     *   "Checkbox.Root" → {folder: "Checkbox", filename: "Root.json"}
-     *   "CheckboxRoot" → {folder: "Checkbox", filename: "Root.json"}
-     *   "CheckboxIndicatorPrimitive" → {folder: "Checkbox", filename: "IndicatorPrimitive.json"}
+     *   "Button" → {folder: "Button", filename: "Buttonon"}
+     *   "IconButton" → {folder: "IconButton", filename: "IconButtonon"}
+     *   "Checkbox.Root" → {folder: "Checkbox", filename: "Rooton"}
+     *   "CheckboxRoot" → {folder: "Checkbox", filename: "Rooton"}
+     *   "CheckboxIndicatorPrimitive" → {folder: "Checkbox", filename: "IndicatorPrimitiveon"}
      */
     private getFilePathFromDisplayName(displayName: string): { folder: string; filename: string } {
         // Check for dot notation (compound pattern with explicit dot)
@@ -115,7 +112,7 @@ export class JsonRenderer {
             const subComponent = subParts.join('');
             return {
                 folder: componentName,
-                filename: `${subComponent}.json`,
+                filename: `${subComponent}on`,
             };
         }
 
@@ -130,22 +127,22 @@ export class JsonRenderer {
             if (this.isCompoundPattern(baseComponent)) {
                 return {
                     folder: baseComponent,
-                    filename: `${subComponent}.json`,
+                    filename: `${subComponent}on`,
                 };
             }
         }
 
         // Single component case (default) - folder and filename are the same
-        return { folder: displayName, filename: `${displayName}.json` };
+        return { folder: displayName, filename: `${displayName}on` };
     }
 
     /**
      * Check if a component base name is a known compound component pattern
      * Compound components are those that have sub-components like Checkbox.Root, Dialog.Content, etc.
-     * See: src/constants/compound-components.ts for the shared list
+     * See: src/resolver/compound-config.ts for the shared list
      */
     private isCompoundPattern(baseComponent: string): boolean {
-        return (COMPOUND_COMPONENT_BASES as readonly string[]).includes(baseComponent);
+        return isCompoundBase(baseComponent);
     }
 
     /**
@@ -189,9 +186,7 @@ export class JsonRenderer {
             displayName: exportData.displayName,
             description,
             props,
-            ...(exportData.variants && { variants: exportData.variants }),
-            generatedAt: new Date().toISOString(),
-            sourceFile: '',
+            ...(exportData.variants && { variants: exportData.variants.variants }),
         };
     }
 

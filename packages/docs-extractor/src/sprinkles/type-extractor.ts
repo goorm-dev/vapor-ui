@@ -1,8 +1,8 @@
 import type { Project } from 'ts-morph';
 
-import type { Logger } from '../utils/logger.js';
-import { SprinklesConfigParser } from './config-parser.js';
-import { SprinklesTypeIntrospector } from './type-introspector.js';
+import type { Logger } from '../utils/logger';
+import { SprinklesConfigParser } from './config-parser';
+import { SprinklesTypeIntrospector } from './type-introspector';
 
 /**
  * Extracts accurate type information for sprinkles props
@@ -111,7 +111,9 @@ export class SprinklesTypeExtractor {
         // 1순위: Sprinkles 타입에서 추출
         const extractedValues = this.introspector.getCssValuesForProperty(propName);
         if (extractedValues && extractedValues.length > 0) {
-            this.logger.debug(`Using ${extractedValues.length} extracted CSS values for ${propName}`);
+            this.logger.debug(
+                `Using ${extractedValues.length} extracted CSS values for ${propName}`,
+            );
             const unionType = extractedValues.map((v) => `"${v}"`).join(' | ');
             return `${unionType} | (string & {}) | undefined`;
         }
@@ -149,7 +151,10 @@ export class SprinklesTypeExtractor {
             const spaceTokens = this.configParser.extractTokenKeys('tokens/size/space.ts', 'SPACE');
             tokenValues = [...spaceTokens, ...spaceTokens.map((t) => `-${t}`)];
         } else if (tokenType === 'dimensionTokens') {
-            tokenValues = this.configParser.extractTokenKeys('tokens/size/dimension.ts', 'DIMENSION');
+            tokenValues = this.configParser.extractTokenKeys(
+                'tokens/size/dimension.ts',
+                'DIMENSION',
+            );
         } else if (tokenType === 'radiusTokens') {
             tokenValues = this.configParser.extractTokenKeys(
                 'tokens/size/border-radius.ts',
