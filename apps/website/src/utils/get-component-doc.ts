@@ -2,6 +2,8 @@ import fs from 'fs';
 import { markdownTable } from 'markdown-table';
 import path from 'path';
 
+import { parseComponentName } from './component-path';
+
 interface PropDef {
     name: string;
     type: string[] | string;
@@ -12,44 +14,16 @@ interface PropDef {
 
 interface VariantDef {
     name: string;
-    values: string[];
+    type: string[];
     defaultValue?: string;
+    required?: boolean;
+    description?: string;
 }
 
 interface ComponentDoc {
     props: PropDef[];
     variants?: VariantDef[];
 }
-
-/**
- * kebab-case를 PascalCase로 변환
- * @example "avatar" -> "Avatar", "text-input" -> "TextInput"
- */
-const kebabToPascal = (str: string): string => {
-    return str
-        .split('-')
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join('');
-};
-
-/**
- * componentName을 폴더와 파일명으로 파싱
- * @example "avatar-root" -> { folder: "Avatar", filename: "root" }
- * @example "button" -> { folder: "Button", filename: "Button" }
- */
-const parseComponentName = (componentName: string): { folder: string; filename: string } => {
-    const parts = componentName.split('-');
-    const folder = kebabToPascal(parts[0]);
-
-    if (parts.length === 1) {
-        // 단일 컴포넌트: "button" -> Button/Button
-        return { folder, filename: folder };
-    }
-
-    // 복합 컴포넌트: "avatar-root" -> Avatar/root
-    const filename = parts.slice(1).join('-');
-    return { folder, filename };
-};
 
 export const replaceComponentDoc = (text: string) => {
     return text.replace(
@@ -130,7 +104,7 @@ export const replaceComponentDoc = (text: string) => {
                         ['Variant', 'Values', 'Default'],
                         ...variants.map((variant) => {
                             const name = `\`${escapeContent(variant.name)}\``;
-                            const values = variant.values
+                            const values = variant.type
                                 .map((v) => `\`${escapeContent(v)}\``)
                                 .join(', ');
                             const defaultVal = variant.defaultValue

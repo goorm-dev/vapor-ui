@@ -22,7 +22,7 @@ interface ComponentPropsTableOutput {
     }>;
     variants?: Array<{
         name: string;
-        values: string[];
+        type: string[];
         defaultValue?: string;
         description?: string;
     }>;
@@ -193,7 +193,14 @@ export class JsonRenderer {
             displayName: exportData.displayName,
             description,
             props,
-            ...(exportData.variants && { variants: exportData.variants.variants }),
+            ...(exportData.variants && {
+                variants: exportData.variants.variants.map((v) => ({
+                    name: v.name,
+                    type: v.values,
+                    ...(v.defaultValue !== undefined && { defaultValue: v.defaultValue }),
+                    ...(v.description && { description: v.description }),
+                })),
+            }),
         };
     }
 

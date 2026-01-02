@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import { Badge, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 
 import { InfoPopover } from '~/components/info';
+import { parseComponentName } from '~/utils/component-path';
 
 interface PropDefinition {
     name: string;
@@ -17,7 +18,7 @@ interface PropDefinition {
 
 interface VariantDefinition {
     name: string;
-    values: string[];
+    type: string[];
     defaultValue?: string;
 }
 
@@ -34,36 +35,6 @@ interface ComponentData {
 interface ComponentPropsTableProps {
     componentName: string;
 }
-
-/**
- * kebab-case를 PascalCase로 변환
- * @example "avatar" -> "Avatar", "text-input" -> "TextInput"
- */
-const kebabToPascal = (str: string): string => {
-    return str
-        .split('-')
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join('');
-};
-
-/**
- * componentName을 폴더와 파일명으로 파싱
- * @example "avatar-root" -> { folder: "Avatar", filename: "root" }
- * @example "button" -> { folder: "Button", filename: "Button" }
- */
-const parseComponentName = (componentName: string): { folder: string; filename: string } => {
-    const parts = componentName.split('-');
-    const folder = kebabToPascal(parts[0]);
-
-    if (parts.length === 1) {
-        // 단일 컴포넌트: "button" -> Button/Button
-        return { folder, filename: folder };
-    }
-
-    // 복합 컴포넌트: "avatar-root" -> Avatar/root
-    const filename = parts.slice(1).join('-');
-    return { folder, filename };
-};
 
 export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps) => {
     const [componentData, setComponentData] = React.useState<ComponentData | null>(null);
@@ -117,7 +88,6 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
         ),
         ...(componentData?.props ?? []).map((prop) => ({ kind: 'prop', data: prop }) as TableRow),
     ];
-
     return (
         <VStack className="w-full not-prose" alignItems="flex-start" gap="$400">
             <Text typography="body1" foreground="normal-200">
@@ -194,7 +164,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                                             className={`px-[var(--vapor-size-space-300)] py-[var(--vapor-size-space-200)] border-b border-b-[var(--vapor-color-border-normal)] ${isLast ? 'rounded-br-[var(--vapor-size-borderRadius-300)] border-b-0' : ''}`}
                                         >
                                             <Flex gap="$100" className="flex-wrap">
-                                                {variant.values.map((value) => (
+                                                {variant.type.map((value) => (
                                                     <Badge
                                                         key={value}
                                                         colorPalette="hint"

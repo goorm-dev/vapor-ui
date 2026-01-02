@@ -41,12 +41,12 @@
     "variants": [
         {
             "name": "size",
-            "values": ["sm", "md", "lg", "xl"],
+            "type": ["sm", "md", "lg", "xl"],
             "defaultValue": "md"
         },
         {
             "name": "shape",
-            "values": ["square", "circle"],
+            "type": ["square", "circle"],
             "defaultValue": "square"
         }
     ]
