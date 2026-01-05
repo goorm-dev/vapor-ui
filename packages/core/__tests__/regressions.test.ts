@@ -29,8 +29,22 @@ async function navigate(page, storybookUrl, id) {
     try {
         const url = getStoryUrl(storybookUrl, id);
 
+        // 1. Navigate to page
         await page.goto(url);
+
+        // 2. Inject CSS
+        await page.addStyleTag({
+            content: `
+            * {
+                font-family: system-ui !important;
+            }
+            `,
+        });
+
+        // 3. Wait for font loading to complete
         await page.waitForFunction(() => document.fonts.ready);
+
+        // 4. Wait for additional loading
         await page.waitForLoadState('networkidle');
         await page.waitForSelector('#storybook-root');
     } catch (error) {
