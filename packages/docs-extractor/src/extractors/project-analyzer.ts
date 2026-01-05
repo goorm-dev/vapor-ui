@@ -28,6 +28,7 @@ export class ProjectAnalyzer {
 
     /**
      * Load source files matching the given patterns
+     * Support glob patterns as well as single file paths
      */
     loadFiles(patterns: string | string[]): SourceFile[] {
         this.logger.debug(`Loading files matching patterns: ${JSON.stringify(patterns)}`);
