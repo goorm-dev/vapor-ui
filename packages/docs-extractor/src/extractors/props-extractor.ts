@@ -86,7 +86,7 @@ export class PropsExtractor {
 
         logger.debug(`Found ${propertySymbols.length} properties (including inherited)`);
 
-        // Context for type formatting (State → ComponentName.State 변환에 사용)
+        // Context for type formatting (State → ComponentName.State)
         const formatterContext = componentDisplayName ? { componentDisplayName } : undefined;
 
         // Extract docs for each property using Symbol-based extraction

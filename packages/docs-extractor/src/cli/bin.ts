@@ -127,8 +127,8 @@ export class CliRunner {
                     const propsInterface = propsExtractor.findPropsInterface(sourceFile, compName);
 
                     if (propsInterface) {
-                        // displayName을 전달하여 State → ComponentName.State 변환에 사용
-                        // 복합 컴포넌트는 점 표기법으로 변환 (예: MenuPopup → Menu.Popup)
+                        // Pass displayName to convert State → ComponentName.State
+                        // Compound components are converted using dot notation (e.g., MenuPopup → Menu.Popup)
                         const displayName = formatDisplayName(compName);
                         const props = await propsExtractor.extractPropsFromInterface(
                             propsInterface,
