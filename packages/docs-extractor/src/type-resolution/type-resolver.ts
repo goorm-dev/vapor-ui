@@ -11,7 +11,7 @@ import type {
 import { SyntaxKind } from 'ts-morph';
 
 import { SprinklesTypeExtractor } from '../sprinkles';
-import type { PropertyDoc } from '../types';
+import type { MergedPropertyDoc, PropertyDoc } from '../types';
 import type { Logger } from '../utils/logger';
 import { ExternalTypeChecker } from './external-type-checker';
 import { PropsFilter } from './props-filter';
@@ -79,7 +79,7 @@ export class TypeResolver {
     /**
      * Filter out React special props from a property list
      */
-    filterReactSpecialProps(props: PropertyDoc[], includeReactProps: boolean): PropertyDoc[] {
+    filterReactSpecialProps<T extends PropertyDoc>(props: T[], includeReactProps: boolean): T[] {
         return this.propsFilter.filterReactSpecialProps(props, includeReactProps);
     }
 
@@ -93,11 +93,11 @@ export class TypeResolver {
     /**
      * Filter sprinkles props based on CLI option
      */
-    filterSprinklesProps(
-        props: PropertyDoc[],
+    filterSprinklesProps<T extends PropertyDoc>(
+        props: T[],
         stylePropsOption: string | undefined,
         projectRoot: string,
-    ): PropertyDoc[] {
+    ): T[] {
         return this.propsFilter.filterSprinklesProps(props, stylePropsOption, projectRoot);
     }
 
@@ -319,9 +319,9 @@ export class TypeResolver {
      * Create synthetic PropertyDoc objects for all sprinkles props
      * These are injected when a component extends VComponentProps
      * @param projectRoot - Root path of the project
-     * @returns Array of PropertyDoc objects for all sprinkles props
+     * @returns Array of MergedPropertyDoc objects for all sprinkles props
      */
-    createSyntheticSprinklesProps(projectRoot: string): PropertyDoc[] {
+    createSyntheticSprinklesProps(projectRoot: string): MergedPropertyDoc[] {
         const sprinklesProps = Array.from(this.propsFilter.getSprinklesPropsSet(projectRoot));
         const typeExtractor = this.getSprinklesTypeExtractor(projectRoot);
 

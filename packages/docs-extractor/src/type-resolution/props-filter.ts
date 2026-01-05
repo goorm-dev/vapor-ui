@@ -30,7 +30,7 @@ export class PropsFilter {
      * @param includeReactProps - If true, keeps React special props; if false, filters them out
      * @returns Filtered property list
      */
-    filterReactSpecialProps(props: PropertyDoc[], includeReactProps: boolean): PropertyDoc[] {
+    filterReactSpecialProps<T extends PropertyDoc>(props: T[], includeReactProps: boolean): T[] {
         if (includeReactProps) {
             return props;
         }
@@ -52,11 +52,11 @@ export class PropsFilter {
      * @param projectRoot - Root path of the project
      * @returns Filtered property list
      */
-    filterSprinklesProps(
-        props: PropertyDoc[],
+    filterSprinklesProps<T extends PropertyDoc>(
+        props: T[],
         stylePropsOption: string | undefined,
         projectRoot: string,
-    ): PropertyDoc[] {
+    ): T[] {
         // Default: exclude all sprinkles props
         if (stylePropsOption === undefined) {
             return props.filter((prop) => !this.isSprinklesProp(prop.name, projectRoot));

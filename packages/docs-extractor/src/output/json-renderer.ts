@@ -195,7 +195,7 @@ export class JsonRenderer {
             ...(exportData.variants && {
                 variants: exportData.variants.variants.map((v) => ({
                     name: v.name,
-                    type: v.values,
+                    type: v.type,
                     required: v.required,
                     ...(v.defaultValue !== undefined && { defaultValue: v.defaultValue }),
                     ...(v.description && { description: v.description }),
