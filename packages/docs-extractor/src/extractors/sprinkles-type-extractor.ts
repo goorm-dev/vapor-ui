@@ -1,8 +1,8 @@
 import type { Project } from 'ts-morph';
 
 import type { Logger } from '../utils/logger';
-import { SprinklesConfigParser } from './config-parser';
-import { SprinklesTypeIntrospector } from './type-introspector';
+import { SprinklesConfigParser } from './sprinkles-config-parser';
+import { SprinklesTypeIntrospector } from './sprinkles-type-introspector';
 
 /**
  * Extracts accurate type information for sprinkles props

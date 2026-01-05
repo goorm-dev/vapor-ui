@@ -1,5 +1,5 @@
-import type { MergedPropertyDoc, PropertyDoc } from '../types';
 import type { Logger } from '../utils/logger';
+import type { MergedPropertyDoc, PropertyDoc } from './types';
 
 /**
  * Merges local and external JSDoc documentation with local precedence

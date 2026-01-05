@@ -2,7 +2,7 @@ import path from 'path';
 import type { Project, SourceFile } from 'ts-morph';
 import { SyntaxKind } from 'ts-morph';
 
-import type { PropertyDoc } from '../types';
+import type { PropertyDoc } from '../models';
 import type { Logger } from '../utils/logger';
 
 /**

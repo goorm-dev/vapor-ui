@@ -1,7 +1,7 @@
 import { globby } from 'globby';
 import path from 'path';
 
-import type { ComponentMetadata } from '../types';
+import type { ComponentMetadata } from '../models';
 import type { Logger } from '../utils/logger';
 
 /**

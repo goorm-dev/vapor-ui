@@ -6,7 +6,7 @@
  * - Kebab-case conversion
  * - Compound component folder structure
  */
-import { isCompoundBase } from '../resolver';
+import { isCompoundBase } from '../models';
 import { toKebabCase } from '../utils/text';
 
 /**

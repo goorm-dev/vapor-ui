@@ -1,9 +1,9 @@
 import type { JSDoc, PropertySignature, Symbol, Type } from 'ts-morph';
 import { SyntaxKind } from 'ts-morph';
 
-import type { TypeResolver } from '../type-resolution';
-import type { PropertyDoc } from '../types';
+import type { PropertyDoc } from '../models';
 import type { Logger } from '../utils/logger';
+import type { TypeResolver } from './type-resolver';
 import { TypeFormatter, type TypeFormatterContext } from './type-formatter';
 
 /**

@@ -12,7 +12,7 @@
     ],
     "main": "dist/index.mjs",
     "bin": {
-        "docs-extractor": "./dist/bin/cli.mjs"
+        "docs-extractor": "./dist/cli/bin.mjs"
     },
     "files": [
         "dist"

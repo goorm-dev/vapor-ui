@@ -10,9 +10,9 @@ import type {
 } from 'ts-morph';
 import { SyntaxKind } from 'ts-morph';
 
-import { SprinklesTypeExtractor } from '../sprinkles';
-import type { MergedPropertyDoc, PropertyDoc } from '../types';
+import type { MergedPropertyDoc, PropertyDoc } from '../models';
 import type { Logger } from '../utils/logger';
+import { SprinklesTypeExtractor } from './sprinkles-type-extractor';
 import { ExternalTypeChecker } from './external-type-checker';
 import { PropsFilter } from './props-filter';
 

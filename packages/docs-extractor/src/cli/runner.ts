@@ -1,15 +1,18 @@
 import { input, select } from '@inquirer/prompts';
 import path from 'path';
 
-import { ProjectAnalyzer } from '../analyzer';
-import { MergeEngine } from '../core/merge-engine';
-import { DocExtractor, PropsExtractor } from '../extraction';
+import {
+    ComponentScanner,
+    DocExtractor,
+    ProjectAnalyzer,
+    PropsExtractor,
+    RecipeDefaultsExtractor,
+    TypeResolver,
+    VariantsExtractor,
+} from '../extractors';
+import { formatDisplayName, MergeEngine } from '../models';
+import type { ComponentDocumentation, ComponentExport, ExtractorOutput } from '../models';
 import { JsonRenderer } from '../output';
-import { RecipeDefaultsExtractor, VariantsExtractor } from '../recipe';
-import { formatDisplayName } from '../resolver';
-import { ComponentScanner } from '../scanner';
-import { TypeResolver } from '../type-resolution';
-import type { ComponentDocumentation, ComponentExport, ExtractorOutput } from '../types';
 import { Logger } from '../utils/logger';
 import type { CliFlags } from './config';
 

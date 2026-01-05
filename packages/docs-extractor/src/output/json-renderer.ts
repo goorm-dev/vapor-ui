@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { isCompoundBase } from '../resolver';
-import type { ComponentExport, ExtractorOutput } from '../types';
+import { isCompoundBase } from '../models';
+import type { ComponentExport, ExtractorOutput } from '../models';
 import type { Logger } from '../utils/logger';
 import { PathGenerator } from './path-generator';
 

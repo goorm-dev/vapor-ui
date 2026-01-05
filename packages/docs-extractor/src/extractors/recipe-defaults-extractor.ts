@@ -7,8 +7,8 @@ import type {
 } from 'ts-morph';
 import { Node, SyntaxKind } from 'ts-morph';
 
-import type { ProjectAnalyzer } from '../analyzer';
 import type { Logger } from '../utils/logger';
+import type { ProjectAnalyzer } from './project-analyzer';
 
 /**
  * Information about a recipe-based type

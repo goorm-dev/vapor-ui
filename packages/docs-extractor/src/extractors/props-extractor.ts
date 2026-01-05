@@ -1,12 +1,11 @@
 import type { InterfaceDeclaration, SourceFile } from 'ts-morph';
 
-import type { ProjectAnalyzer } from '../analyzer';
-import type { MergeEngine } from '../core/merge-engine';
-import type { RecipeDefaultsExtractor } from '../recipe';
-import type { TypeResolver } from '../type-resolution';
-import type { MergedPropertyDoc, PropertyDoc } from '../types';
+import type { MergeEngine, MergedPropertyDoc, PropertyDoc } from '../models';
 import type { Logger } from '../utils/logger';
 import type { DocExtractor } from './doc-extractor';
+import type { ProjectAnalyzer } from './project-analyzer';
+import type { RecipeDefaultsExtractor } from './recipe-defaults-extractor';
+import type { TypeResolver } from './type-resolver';
 
 /**
  * Options for props extraction

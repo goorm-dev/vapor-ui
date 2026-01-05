@@ -3,7 +3,7 @@ import path from 'path';
 import type { SourceFile } from 'ts-morph';
 import { Node, SyntaxKind } from 'ts-morph';
 
-import type { ComponentVariants, VariantInfo } from '../types';
+import type { ComponentVariants, VariantInfo } from '../models';
 import type { Logger } from '../utils/logger';
 
 /**
