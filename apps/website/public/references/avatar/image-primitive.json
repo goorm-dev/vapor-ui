@@ -1,7 +1,7 @@
 {
     "name": "ImagePrimitive",
     "displayName": "Avatar.ImagePrimitive",
-    "description": "프로필 이미지를 표시합니다. `<img>` 요소를 렌더링합니다.",
+    "description": "",
     "props": [
         {
             "name": "className",

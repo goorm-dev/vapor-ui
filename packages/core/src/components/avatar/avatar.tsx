@@ -18,15 +18,7 @@ import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
 
 type AvatarVariants = RootVariants & FallbackVariants;
-
-interface AvatarSharedProps extends AvatarVariants {
-    /** 프로필 이미지 URL */
-    src?: string;
-    /** 대체 텍스트 */
-    alt: string;
-    /** Fallback 표시 지연 시간(ms) */
-    delay?: number;
-}
+type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delay?: number };
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     name: 'AvatarContext',
@@ -34,11 +26,8 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     hookName: 'useAvatarContext',
 });
 
-/* -------------------------------------------------------------------------------------------------
- * Avatar.Root
- * -----------------------------------------------------------------------------------------------*/
+/* -----------------------------------------------------------------------------------------------*/
 
-/** 하위 컴포넌트를 감싸는 컨테이너 역할을 합니다. `<span>` 요소를 렌더링합니다. */
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(componentProps, [
@@ -78,7 +67,6 @@ AvatarRoot.displayName = 'Avatar.Root';
  * Avatar.ImagePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/** 프로필 이미지를 표시합니다. `<img>` 요소를 렌더링합니다. */
 export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -101,7 +89,6 @@ AvatarImagePrimitive.displayName = 'Avatar.ImagePrimitive';
  * Avatar.FallbackPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-/** 이미지 로딩에 실패하거나 이미지가 없을 때 표시되는 대체 콘텐츠입니다. `<span>` 요소를 렌더링합니다. */
 export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbackPrimitive.Props>(
     (props, ref) => {
         const { className, style, children, ...componentProps } = resolveStyles(props);

@@ -1,7 +1,7 @@
 {
     "name": "Root",
     "displayName": "Avatar.Root",
-    "description": "하위 컴포넌트를 감싸는 컨테이너 역할을 합니다. `<span>` 요소를 렌더링합니다.",
+    "description": "",
     "props": [
         {
             "name": "className",
@@ -23,19 +23,19 @@
             "name": "src",
             "type": ["string", "undefined"],
             "required": false,
-            "description": "프로필 이미지 URL"
+            "description": ""
         },
         {
             "name": "alt",
             "type": ["string"],
             "required": true,
-            "description": "대체 텍스트"
+            "description": ""
         },
         {
             "name": "delay",
             "type": ["number", "undefined"],
             "required": false,
-            "description": "Fallback 표시 지연 시간(ms)"
+            "description": ""
         }
     ],
     "variants": [
