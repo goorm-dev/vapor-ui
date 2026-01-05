@@ -10,7 +10,6 @@
         "jsdoc",
         "cli"
     ],
-    "main": "dist/index.mjs",
     "bin": {
         "docs-extractor": "./dist/cli/bin.mjs"
     },
