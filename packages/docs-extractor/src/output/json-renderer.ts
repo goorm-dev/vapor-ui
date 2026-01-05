@@ -159,35 +159,33 @@ export class JsonRenderer {
         const description = this.getExportDescription(exportData) || componentDescription || '';
 
         // Get variant names to exclude from props (variants have their own field with defaultValue)
-        const variantNames = new Set(
-            exportData.variants?.variants.map((v) => v.name) ?? [],
-        );
+        const variantNames = new Set(exportData.variants?.variants.map((v) => v.name) ?? []);
 
         // Filter out variant props and convert to the expected format
         const props = exportData.props
             .filter((prop) => !variantNames.has(prop.name))
             .map((prop) => {
-            // Determine type array: use values if available, otherwise parse type string
-            let typeArray: string[];
+                // Determine type array: use values if available, otherwise parse type string
+                let typeArray: string[];
 
-            if (prop.values && prop.values.length > 0) {
-                // Use parsed union values if available
-                typeArray = prop.values;
-            } else if (prop.type) {
-                // Parse type string - handle union types and wrap single types
-                typeArray = this.parseTypeToArray(prop.type);
-            } else {
-                typeArray = ['unknown'];
-            }
+                if (prop.values && prop.values.length > 0) {
+                    // Use parsed union values if available
+                    typeArray = prop.values;
+                } else if (prop.type) {
+                    // Parse type string - handle union types and wrap single types
+                    typeArray = this.parseTypeToArray(prop.type);
+                } else {
+                    typeArray = ['unknown'];
+                }
 
-            return {
-                name: prop.name,
-                type: typeArray,
-                required: prop.required,
-                description: prop.description || '',
-                ...(prop.defaultValue !== undefined && { defaultValue: prop.defaultValue }),
-            };
-        });
+                return {
+                    name: prop.name,
+                    type: typeArray,
+                    required: prop.required,
+                    description: prop.description || '',
+                    ...(prop.defaultValue !== undefined && { defaultValue: prop.defaultValue }),
+                };
+            });
 
         return {
             name: this.getExportShortName(exportData.displayName),

@@ -116,7 +116,8 @@ export class CliRunner {
                     // Extract JSDoc description from the component
                     const varStatement = varDecl.getVariableStatement();
                     const jsDocs = varStatement?.getJsDocs() ?? [];
-                    const description = jsDocs.length > 0 ? jsDocs[0].getDescription().trim() : undefined;
+                    const description =
+                        jsDocs.length > 0 ? jsDocs[0].getDescription().trim() : undefined;
 
                     // Find the Props interface in the namespace
                     const propsInterface = propsExtractor.findPropsInterface(sourceFile, compName);
