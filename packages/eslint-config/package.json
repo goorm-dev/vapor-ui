@@ -32,6 +32,7 @@
         "./vanilla-extract": "./vanilla-extract.js",
         "./typescript": "./typescript.js",
         "./turbo": "./turbo.js",
-        "./storybook": "./storybook.js"
+        "./storybook": "./storybook.js",
+        "./import": "./import.js"
     }
 }
