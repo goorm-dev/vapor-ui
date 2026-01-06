@@ -173,10 +173,6 @@ export namespace TabsButton {
     export interface Props extends VComponentProps<typeof BaseTabs.Tab> {}
 }
 
-export namespace TabsIndicator {
-    export interface Props extends VComponentProps<typeof BaseTabs.Indicator> {}
-}
-
 export namespace TabsPanel {
     export interface Props extends VComponentProps<typeof BaseTabs.Panel> {}
 }
