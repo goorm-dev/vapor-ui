@@ -3,9 +3,6 @@
     "version": "0.0.1",
     "description": "ESLint configuration for Vapor UI projects",
     "type": "module",
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
@@ -13,22 +10,21 @@
             "require": "./dist/index.cjs"
         }
     },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
         "dist"
     ],
     "scripts": {
         "build": "tsup",
+        "clean": "rimraf dist node_modules coverage .turbo",
         "dev": "tsup --watch",
-        "test": "vitest run",
         "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
         "lint": "eslint ./src",
-        "typecheck": "tsc --noEmit",
-        "clean": "rimraf dist node_modules coverage .turbo"
-    },
-    "peerDependencies": {
-        "eslint": "^8.57.0 || ^9.0.0",
-        "eslint-plugin-jsx-a11y": ">=6.10.2"
+        "test": "vitest run",
+        "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
@@ -42,6 +38,10 @@
         "tsup": "^8.3.0",
         "typescript": "^5.5.0",
         "vitest": "^3.2.4"
+    },
+    "peerDependencies": {
+        "eslint": "^8.57.0 || ^9.0.0",
+        "eslint-plugin-jsx-a11y": ">=6.10.2"
     },
     "publishConfig": {
         "access": "public"
