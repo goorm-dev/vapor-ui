@@ -19,9 +19,12 @@
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
-        "lint": "eslint .",
         "test": "vitest run",
-        "prepublishOnly": "npm run build"
+        "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
+        "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
+        "lint": "eslint ./src",
+        "typecheck": "tsc --noEmit",
+        "clean": "rimraf dist node_modules coverage .turbo"
     },
     "peerDependencies": {
         "eslint": "^8.57.0 || ^9.0.0",
