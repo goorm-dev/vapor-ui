@@ -106,7 +106,7 @@ export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) 
     return (
         <TabsListPrimitive ref={ref} {...componentProps}>
             {children}
-            {indicatorElement || <TabsIndicatorPrimitive />}
+            {indicatorElement ?? <TabsIndicatorPrimitive />}
         </TabsListPrimitive>
     );
 });
