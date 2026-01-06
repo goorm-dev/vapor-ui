@@ -80,16 +80,22 @@ git checkout -b fix/button-loading-state
 pnpm test
 ```
 
-4. 변경사항이 사용자에게 영향을 미치는 경우 changeset을 추가하세요:
+4. UI가 변경되었다면 스냅샷을 업데이트 하세요:
+
+```bash
+pnpm test:regressions -- --update-snapshots
+```
+
+5. 변경사항이 사용자에게 영향을 미치는 경우 changeset을 추가하세요:
 
 ```bash
 pnpm changeset
 ```
 
-5. [Conventional Commits](https://www.conventionalcommits.org/)를 사용하여 변경사항을 커밋하세요:
+6. [Conventional Commits](https://www.conventionalcommits.org/)를 사용하여 변경사항을 커밋하세요:
 
 ```bash
 git commit -m "fix(Button): correct loading state styling"
 ```
 
-6. 변경사항을 푸시하고 Pull Request를 생성하세요
+7. 변경사항을 푸시하고 Pull Request를 생성하세요
