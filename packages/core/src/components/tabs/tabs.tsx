@@ -6,7 +6,6 @@ import { Tabs as BaseTabs } from '@base-ui-components/react';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { Assign, VComponentProps } from '~/utils/types';
@@ -109,12 +108,10 @@ TabsIndicatorPrimitive.displayName = 'Tabs.IndicatorPrimitive';
 export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) => {
     const { children, indicatorElement, ...componentProps } = resolveStyles(props);
 
-    const IndicatorElement = createSlot(indicatorElement || <TabsIndicatorPrimitive />);
-
     return (
         <TabsListPrimitive ref={ref} {...componentProps}>
             {children}
-            <IndicatorElement />
+            {indicatorElement || <TabsIndicatorPrimitive />}
         </TabsListPrimitive>
     );
 });
