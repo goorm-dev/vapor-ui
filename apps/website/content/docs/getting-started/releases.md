@@ -3,6 +3,39 @@ title: Releases
 description: 각 Vapor UI 릴리스의 Changelogs입니다.
 ---
 
+## 1.0.0-beta.11
+
+### @vapor-ui/core
+
+#### Patch Changes
+
+- af4ea2b: Correct background-color of TextInput component
+- 8c5c755: clone elements & enhance customizability
+- Updated dependencies [8c5c755]
+- Updated dependencies [e9e83a8]
+    - @vapor-ui/hooks@1.0.0-beta.6
+    - @vapor-ui/icons@1.0.0-beta.6
+
+### @vapor-ui/hooks
+
+#### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
+
+### @vapor-ui/icons
+
+#### Minor Changes
+
+- e9e83a8: Add new icons from Figma
+
+    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
+
+#### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
+
+---
+
 ## 1.0.0-beta.10
 
 ### @vapor-ui/core
@@ -62,7 +95,7 @@ description: 각 Vapor UI 릴리스의 Changelogs입니다.
 #### Patch Changes
 
 - Updated dependencies [bb41c2e]
-    - @vapor-ui/color-generator@1.0.0
+    - @vapor-ui/color-generator@1.0.0-beta.8
 
 ---
 

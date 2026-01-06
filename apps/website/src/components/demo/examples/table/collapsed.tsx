@@ -150,7 +150,6 @@ export default function Collapsed() {
                                     {row.getVisibleCells().map((cell) => (
                                         <Table.Cell
                                             key={cell.id}
-                                            backgroundColor="$white"
                                             style={{ ...getCommonPinningStyles(cell.column) }}
                                         >
                                             {flexRender(

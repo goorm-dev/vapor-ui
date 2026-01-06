@@ -108,6 +108,9 @@ export const button = recipe({
                     opacity: 0.32,
                     pointerEvents: 'none',
                 },
+                '&[data-selected]': {
+                    color: vars.color.foreground.primary['100'],
+                },
             },
         }),
     ],
