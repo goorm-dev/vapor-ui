@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const SchoolOutlineIcon: IconType = (props) => (
+const SchoolOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M7.83008 11.5C8.65851 11.5 9.33008 10.8284 9.33008 10C9.33008 9.17157 8.65851 8.5 7.83008 8.5C7.00165 8.5 6.33008 9.17157 6.33008 10C6.33008 10.8284 7.00165 11.5 7.83008 11.5Z" />
         <path

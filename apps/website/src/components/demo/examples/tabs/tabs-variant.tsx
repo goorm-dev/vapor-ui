@@ -13,8 +13,8 @@ export default function TabsVariant() {
                 </Tabs.List>
             </Tabs.Root>
 
-            <Tabs.Root defaultValue="home" variant="plain">
-                <h4 className="text-sm font-medium mb-4">Plain 변형</h4>
+            <Tabs.Root defaultValue="home" variant="fill">
+                <h4 className="text-sm font-medium mb-4">fill 변형</h4>
                 <Tabs.List>
                     <Tabs.Trigger value="home">홈</Tabs.Trigger>
                     <Tabs.Trigger value="about">소개</Tabs.Trigger>
