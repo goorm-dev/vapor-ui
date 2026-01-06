@@ -1,4 +1,4 @@
-name: 'Tests'
+name: 'Visual Regression'
 
 on:
     workflow_dispatch:
@@ -25,7 +25,7 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    regressions:
+    test:
         runs-on: macos-latest
         strategy:
             fail-fast: false
@@ -35,7 +35,7 @@ jobs:
                         { name: firefox, project: firefox },
                         { name: webkit, project: webkit },
                         { name: chromium, project: chromium },
-                        { name: 'Microsoft Edge', project: msedge },
+                        { name: 'Microsoft Edge', project: chromium },
                     ]
 
         steps:
@@ -66,7 +66,7 @@ jobs:
 
     merge-reports:
         if: ${{ !cancelled() }}
-        needs: [regressions]
+        needs: [test]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -144,7 +144,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ contains(needs.regressions.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ contains(needs.test.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |
