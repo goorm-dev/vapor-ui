@@ -1,4 +1,4 @@
-name: 'Visual Regression'
+name: "Visual Regression"
 
 on:
     workflow_dispatch:
@@ -18,7 +18,7 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ''
+    REPORT_PATH: ""
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -34,8 +34,8 @@ jobs:
                     [
                         { name: firefox, project: firefox },
                         { name: webkit, project: webkit },
-                        { name: chromium, project: chromium },
-                        { name: 'Microsoft Edge', project: chromium },
+                        { name: chrome, project: chromium },
+                        { name: edge, project: chromium },
                     ]
 
         steps:
@@ -60,7 +60,7 @@ jobs:
               if: ${{ !cancelled() }}
               uses: actions/upload-artifact@v4
               with:
-                  name: blob-report-${{ matrix.shard.project }}
+                  name: blob-report-${{ matrix.shard.name }}
                   path: packages/core/blob-report
                   retention-days: 1
 
