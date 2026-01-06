@@ -1,6 +1,7 @@
 import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
 
+import { getSource } from '~/utils/get-source';
 import type { Any } from '~/utils/guard';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
 
@@ -17,12 +18,9 @@ export const ariaLabelOnNavigationRule: Rule.RuleModule = {
         },
     },
     create(context) {
-        const sourceToComponent: Record<string, string> = {
-            '@vapor-ui/core/navigation-menu': 'NavigationMenu',
-            '@vapor-ui/core/breadcrumb': 'Breadcrumb',
-        };
-
         const components = new Set(['NavigationMenu', 'Breadcrumb']);
+        const sourceToComponent = getSource(components);
+
         const importedNames = new Set<string>(); // import { NavigationMenu }
         const namespaces = new Set<string>(); // import * as Vapor
 
