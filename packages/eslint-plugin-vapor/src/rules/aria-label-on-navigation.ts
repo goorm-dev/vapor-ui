@@ -2,7 +2,6 @@ import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
 
 import { getSource } from '~/utils/get-source';
-import type { Any } from '~/utils/guard';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
 
 export const ariaLabelOnNavigationRule: Rule.RuleModule = {
@@ -93,7 +92,7 @@ export const ariaLabelOnNavigationRule: Rule.RuleModule = {
 
                 // 속성 검사 로직
                 const hasAriaLabel = node.attributes.some(
-                    (attr: Any) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
+                    (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
                 );
 
                 if (!hasAriaLabel) {

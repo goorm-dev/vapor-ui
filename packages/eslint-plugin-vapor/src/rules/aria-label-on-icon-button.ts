@@ -2,7 +2,6 @@ import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
 
 import { getSource } from '~/utils/get-source';
-import type { Any } from '~/utils/guard';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
 
 // estree와 estree-jsx 타입을 활용하여 AST 노드에 접근합니다.
@@ -89,7 +88,7 @@ export const ariaLabelOnIconButtonRule: Rule.RuleModule = {
                 if (!isTarget) return;
 
                 const hasAriaLabel = node.attributes.some(
-                    (attr: Any) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
+                    (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
                 );
 
                 if (!hasAriaLabel) {
