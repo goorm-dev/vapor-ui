@@ -5,10 +5,10 @@ function kebabCase(str: string) {
 }
 
 export function getSource(components: Set<string>): Record<string, string> {
-    return Array.from(components).reduce((acc, component) => {
-        return {
-            ...acc,
-            [`${packageName}/${kebabCase(component)}`]: component,
-        };
-    }, {});
+    return Object.fromEntries(
+        Array.from(components).map((component) => [
+            `${packageName}/${kebabCase(component)}`,
+            component,
+        ]),
+    );
 }
