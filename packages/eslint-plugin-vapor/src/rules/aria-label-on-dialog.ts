@@ -1,6 +1,7 @@
 import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
 
+import { getSource } from '~/utils/get-source';
 import type { Any } from '~/utils/guard';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
 
@@ -17,13 +18,9 @@ export const ariaLabelOnDialogRule: Rule.RuleModule = {
         },
     },
     create(context) {
-        const sourceToComponent: Record<string, string> = {
-            '@vapor-ui/core/dialog': 'Dialog',
-            '@vapor-ui/core/popover': 'Popover',
-            '@vapor-ui/core/sheet': 'Sheet',
-        };
-
         const targetComponents = new Set(['Dialog', 'Popover', 'Sheet']);
+        const sourceToComponent = getSource(targetComponents);
+
         const importedNames = new Set<string>(); // import { Dialog }
         const namespaces = new Set<string>(); // import * as Vapor
 

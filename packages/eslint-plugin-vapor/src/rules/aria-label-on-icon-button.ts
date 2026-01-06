@@ -1,6 +1,7 @@
 import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
 
+import { getSource } from '~/utils/get-source';
 import type { Any } from '~/utils/guard';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
 
@@ -17,11 +18,9 @@ export const ariaLabelOnIconButtonRule: Rule.RuleModule = {
         },
     },
     create(context: Rule.RuleContext) {
-        const sourceToComponent: Record<string, string> = {
-            '@vapor-ui/core/icon-button': 'IconButton',
-        };
-
         const components = new Set(['IconButton']);
+        const sourceToComponent = getSource(components);
+
         const importedNames = new Set<string>();
         const namespaces = new Set<string>();
 
