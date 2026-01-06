@@ -5,10 +5,9 @@ export default function DefaultTabs() {
     return (
         <Tabs.Root defaultValue="overview" className="max-w-[200px] w-full mx-auto">
             <Tabs.List>
-                <Tabs.Trigger value="overview">개요</Tabs.Trigger>
-                <Tabs.Trigger value="features">기능</Tabs.Trigger>
-                <Tabs.Trigger value="examples">예시</Tabs.Trigger>
-                <Tabs.Indicator />
+                <Tabs.Button value="overview">개요</Tabs.Button>
+                <Tabs.Button value="features">기능</Tabs.Button>
+                <Tabs.Button value="examples">예시</Tabs.Button>
             </Tabs.List>
 
             <Tabs.Panel value="overview" className="h-[100px] flex items-center justify-center">
