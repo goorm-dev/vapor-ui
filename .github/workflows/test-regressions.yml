@@ -33,7 +33,7 @@ jobs:
                 shard:
                     [
                         { name: firefox, project: firefox },
-                        { name: webkit, project: webkit },
+                        { name: safari, project: webkit },
                         { name: chrome, project: chromium },
                         { name: edge, project: chromium },
                     ]
