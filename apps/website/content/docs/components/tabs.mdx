@@ -19,7 +19,7 @@ description: 'Tabs는 관련된 콘텐츠를 탭 형태로 구성하여 사용�
 
 ### Size
 
-Tabs의 크기를 설정합니다.
+Tabs의 크기를 지정합니다. `sm`, `md`, `lg`, `xl` 네 가지 크기를 제공합니다.
 
 <Demo name="tabs/tabs-size">
 ```json doc-gen:file
@@ -32,7 +32,7 @@ Tabs의 크기를 설정합니다.
 
 ### Variant
 
-line과 fill 두 가지 스타일을 설정합니다.
+Tabs의 스타일 변형을 설정합니다. `line`과 `fill` 두 가지 스타일을 제공합니다.
 
 <Demo name="tabs/tabs-variant">
 ```json doc-gen:file
@@ -71,7 +71,7 @@ Tabs의 활성 상태를 외부에서 제어합니다.
 
 ### States
 
-Tabs의 다양한 상태(개별 탭 비활성화, 전체 탭 그룹 비활성화)를 설정합니다.
+개별 탭 또는 전체 탭 그룹을 비활성화할 수 있습니다.
 
 <Demo name="tabs/tabs-states">
 ```json doc-gen:file
@@ -88,12 +88,38 @@ Tabs의 다양한 상태(개별 탭 비활성화, 전체 탭 그룹 비활성화
 
 ### Keyboard Navigation
 
-Tabs는 완전한 키보드 내비게이션을 지원합니다. 포커스 동작과 순환 내비게이션을 세밀하게 제어할 수 있습니다.
+`activateOnFocus`와 `loop` props를 사용하여 키보드 내비게이션 동작을 세밀하게 제어할 수 있습니다.
 
 <Demo name="tabs/tabs-keyboard">
 ```json doc-gen:file
 {
     "file": "./src/components/demo/examples/tabs/tabs-keyboard.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Without Panel
+
+`Tabs.Panel` 없이 외부 상태로 콘텐츠를 관리할 수 있습니다.
+
+<Demo name="tabs/tabs-with-panel">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/tabs-with-panel.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Custom Indicator
+
+`Tabs.List`는 기본적으로 `Tabs.IndicatorPrimitive`를 포함합니다. Indicator를 커스터마이징하려면 `indicatorElement` prop을 사용하세요.
+
+<Demo name="tabs/tabs-custom-indicator">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/tabs/tabs-custom-indicator.tsx",
     "codeblock": true
 }
 ```
@@ -111,13 +137,17 @@ Tabs는 완전한 키보드 내비게이션을 지원합니다. 포커스 동작
 
 <ComponentPropsTable componentName="tabs-list" />
 
-### Tabs.Trigger
+#### Tabs.ListPrimitive
 
-<ComponentPropsTable componentName="tabs-trigger" />
+<ComponentPropsTable componentName="tabs-list-primitive" />
 
-### Tabs.Indicator
+#### Tabs.IndicatorPrimitive
 
-<ComponentPropsTable componentName="tabs-indicator" />
+<ComponentPropsTable componentName="tabs-indicator-primitive" />
+
+### Tabs.Button
+
+<ComponentPropsTable componentName="tabs-button" />
 
 ### Tabs.Panel
 
