@@ -1,6 +1,6 @@
 {
-    "name": "Trigger",
-    "displayName": "Tabs.Trigger",
+    "name": "Button",
+    "displayName": "Tabs.Button",
     "description": "Tab 패널을 활성화하는 버튼입니다. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
