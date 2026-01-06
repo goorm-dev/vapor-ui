@@ -14,14 +14,9 @@ import * as styles from './tabs.css';
 import type { ButtonVariants, ListVariants } from './tabs.css';
 
 type TabsVariants = ListVariants & ButtonVariants;
-type RootControlledProps = {
-    activateOnFocus?: boolean;
-    // TODO: base-ui v1.0.0-beta.5+ changed `loop` -> `loopFocus`
-    // https://base-ui.com/react/overview/releases#v1-0-0-beta-5
-    loop?: boolean;
-    disabled?: boolean;
-};
-type TabsContext = TabsVariants & RootControlledProps;
+type TabsSharedProps = Pick<BaseTabs.List.Props, 'activateOnFocus' | 'loop'> &
+    Pick<BaseTabs.Tab.Props, 'disabled'>;
+type TabsContext = TabsVariants & TabsSharedProps;
 
 const [TabsProvider, useTabsContext] = createContext<TabsContext>({
     name: 'TabsContext',
@@ -154,7 +149,7 @@ TabsPanel.displayName = 'Tabs.Panel';
 export namespace TabsRoot {
     type BaseProps = VComponentProps<typeof BaseTabs.Root>;
 
-    export interface Props extends BaseProps, TabsVariants, RootControlledProps {}
+    export interface Props extends BaseProps, TabsVariants, TabsSharedProps {}
     export type ChangeEventDetails = BaseTabs.Root.ChangeEventDetails;
 }
 
