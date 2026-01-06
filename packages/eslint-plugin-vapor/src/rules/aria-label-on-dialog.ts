@@ -2,7 +2,6 @@ import type { Rule } from 'eslint';
 import type { ImportDeclaration } from 'estree';
 
 import { getSource } from '~/utils/get-source';
-import type { Any } from '~/utils/guard';
 import { isJSXIdentifier, isJSXMemberExpression } from '~/utils/guard';
 
 export const ariaLabelOnDialogRule: Rule.RuleModule = {
@@ -59,7 +58,7 @@ export const ariaLabelOnDialogRule: Rule.RuleModule = {
                 }
             },
 
-            JSXOpeningElement(node: Any) {
+            JSXOpeningElement(node) {
                 const targetName = new Set(['Popup', 'PopupPrimitive']);
                 const nodeName = node.name;
                 let isTarget = false;
@@ -95,7 +94,7 @@ export const ariaLabelOnDialogRule: Rule.RuleModule = {
                 if (!isTarget) return;
 
                 const hasAriaLabel = node.attributes.some(
-                    (attr: Any) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
+                    (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
                 );
 
                 if (!hasAriaLabel) {
