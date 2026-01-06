@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     test: {
-        globals: true, // 전역 describe, it 사용 허용 (하지만 코드 내 할당이 더 확실함)
+        globals: true,
         environment: 'node',
     },
 
