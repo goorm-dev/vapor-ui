@@ -48,9 +48,7 @@
 }
 
 @theme {
-    --font-mono:
-        'Fira Code', Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-        Bitstream Vera Sans Mono, Courier New, monospace;
+    --font-mono: var(--vapor-typography-fontFamily-code);
 }
 
 /* ==========================================================================
