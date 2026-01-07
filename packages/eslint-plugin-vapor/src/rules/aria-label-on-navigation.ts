@@ -65,18 +65,16 @@ export const ariaLabelOnNavigationRule: Rule.RuleModule = {
 
                 if (!isJSXMemberExpression(nodeName) || nodeName.property.name !== 'Root') return;
 
-                const nodeObject = nodeName.object;
-
                 // ex) <NavigationMenu.Root />
-                if (isJSXIdentifier(nodeObject) && importedNames.has(nodeObject.name)) {
+                if (isJSXIdentifier(nodeName.object) && importedNames.has(nodeName.object.name)) {
                     isTarget = true;
-                    detectedName = `${nodeObject.name}.Root`;
+                    detectedName = `${nodeName.object.name}.Root`;
                 }
 
                 // ex) <Vapor.NavigationMenu.Root />
-                if (isJSXMemberExpression(nodeObject)) {
-                    const nsObject = nodeObject.object;
-                    const nsProperty = nodeObject.property;
+                if (isJSXMemberExpression(nodeName.object)) {
+                    const nsObject = nodeName.object.object;
+                    const nsProperty = nodeName.object.property;
 
                     if (
                         isJSXIdentifier(nsObject) &&

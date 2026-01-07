@@ -68,18 +68,16 @@ export const ariaLabelOnDialogRule: Rule.RuleModule = {
                     return;
                 }
 
-                const nodeObject = nodeName.object;
-
                 // 1. 일반 합성 컴포넌트 형태: <Dialog.Popup />
-                if (isJSXIdentifier(nodeObject) && importedNames.has(nodeObject.name)) {
+                if (isJSXIdentifier(nodeName.object) && importedNames.has(nodeName.object.name)) {
                     isTarget = true;
-                    detectedName = `${nodeObject.name}.${nodeName.property.name}`;
+                    detectedName = `${nodeName.object.name}.${nodeName.property.name}`;
                 }
 
                 // 2. 네임스페이스 합성 컴포넌트 형태: <Vapor.Dialog.Popup />
-                if (isJSXMemberExpression(nodeObject)) {
-                    const nsObject = nodeObject.object;
-                    const nsProperty = nodeObject.property;
+                if (isJSXMemberExpression(nodeName.object)) {
+                    const nsObject = nodeName.object.object;
+                    const nsProperty = nodeName.object.property;
 
                     if (
                         isJSXIdentifier(nsObject) &&
