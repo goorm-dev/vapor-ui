@@ -48,7 +48,5 @@ IconButton.displayName = 'IconButton';
 export namespace IconButton {
     type IconButtonPrimitiveProps = VComponentProps<typeof Button>;
 
-    export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {
-        'aria-label': string;
-    }
+    export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {}
 }
