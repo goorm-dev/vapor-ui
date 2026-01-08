@@ -32,7 +32,7 @@
         "@repo/typescript-config": "workspace:*",
         "@tailwindcss/vite": "^4.1.12",
         "@types/culori": "^4.0.0",
-        "@types/react": "^18.3.23",
+        "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "@vitejs/plugin-react": "^5.0.0",
         "concurrently": "^8.2.2",

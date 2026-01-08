@@ -82,7 +82,7 @@
         "@testing-library/react": "^16.3.0",
         "@testing-library/user-event": "^14.6.1",
         "@types/node": "^22.15.4",
-        "@types/react": "^18.3.24",
+        "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "@vanilla-extract/rollup-plugin": "^1.4.1",
         "@vanilla-extract/vite-plugin": "^5.1.1",
