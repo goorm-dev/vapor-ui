@@ -2,9 +2,9 @@
 
 ## 1.0.0-beta.8
 
-### Minor Changes
+### Tokens
 
-- bb41c2e: **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas`
+- **BREAKING CHANGE**: rename `color-background-canvas` token to `color-canvas` ([#378](https://github.com/goorm-dev/vapor-ui/pull/378)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
     The canvas background token has been renamed for better semantic clarity and consistency:
     - Token name: `color-background-canvas` → `color-canvas`
@@ -14,10 +14,9 @@
     - Update all references from `color-background-canvas` to `color-canvas`
     - Replace CSS variables from `--vapor-color-background-canvas` to `--vapor-color-canvas`
 
-### Patch Changes
+### Updated Dependencies
 
-- Updated dependencies [bb41c2e]
-    - @vapor-ui/color-generator@1.0.0-beta.8
+- @vapor-ui/color-generator@1.0.0-beta.8
 
 ## 1.0.0-beta.7
 

@@ -61,9 +61,9 @@
 
 ## 1.0.0-beta.8
 
-### Minor Changes
+### Toast
 
-- 308fd25: add new `Toast` component
+- add new `Toast` component ([#376](https://github.com/goorm-dev/vapor-ui/pull/376)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ## 1.0.0-beta.7
 
