@@ -55,9 +55,9 @@
 
 ## 1.0.0-beta.9
 
-### Minor Changes
+### Toast
 
-- afa45da: remove toastManager
+- remove toastManager ([#383](https://github.com/goorm-dev/vapor-ui/pull/383)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ## 1.0.0-beta.8
 
