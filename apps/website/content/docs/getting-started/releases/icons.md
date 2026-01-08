@@ -5,6 +5,34 @@ description: '@vapor-ui/icons 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/icons
 
+## 1.0.0
+
+### Floatingbar
+
+- clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Icon Base
+
+- remove iconType ([#231](https://github.com/goorm-dev/vapor-ui/pull/231)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### etc
+
+- Update icons from Figma ([#406](https://github.com/goorm-dev/vapor-ui/pull/406)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **Updated Basic Icons:** `Heading2OutlineIcon`, `StrikeOutlineIcon`, `ChecklistOutlineIcon`, `Heading3OutlineIcon`, `Heading4OutlineIcon`, `Heading1OutlineIcon`
+
+## 1.0.0-beta.6
+
+### Minor Changes
+
+- e9e83a8: Add new icons from Figma
+
+    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
+
+### Patch Changes
+
+- 8c5c755: clone elements & enhance customizability
+
 ## 1.0.0-beta.5
 
 ### Minor Changes
