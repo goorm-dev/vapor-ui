@@ -14,15 +14,13 @@
 
 ## 1.0.0-beta.6
 
-### Minor Changes
+### etc
 
-- e9e83a8: Add new icons from Figma
+- clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- Add new icons from Figma ([#396](https://github.com/goorm-dev/vapor-ui/pull/396)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
     **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
-
-### Patch Changes
-
-- 8c5c755: clone elements & enhance customizability
 
 ## 1.0.0-beta.5
 

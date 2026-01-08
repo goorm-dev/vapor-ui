@@ -34,14 +34,18 @@
 
 ## 1.0.0-beta.11
 
-### Patch Changes
+### Text Input
 
-- af4ea2b: Correct background-color of TextInput component
-- 8c5c755: clone elements & enhance customizability
-- Updated dependencies [8c5c755]
-- Updated dependencies [e9e83a8]
-    - @vapor-ui/hooks@1.0.0-beta.6
-    - @vapor-ui/icons@1.0.0-beta.6
+- Correct background-color of TextInput component ([#387](https://github.com/goorm-dev/vapor-ui/pull/387)) - Thanks [@agetbase](https://github.com/agetbase)!
+
+### etc
+
+- clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Updated Dependencies
+
+- @vapor-ui/hooks@1.0.0-beta.6
+- @vapor-ui/icons@1.0.0-beta.6
 
 ## 1.0.0-beta.10
 
