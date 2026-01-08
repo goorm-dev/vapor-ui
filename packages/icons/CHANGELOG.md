@@ -20,7 +20,7 @@
 
 - Add new icons from Figma ([#396](https://github.com/goorm-dev/vapor-ui/pull/396)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
+    **New:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
 
 ## 1.0.0-beta.5
 
@@ -39,22 +39,22 @@
 
 ## 0.4.0
 
-### Minor Changes
+### Icon Base
 
-- e381247: Add new icons from Figma
+- adjust prop precedence for dimensions(width, height, size) ([#182](https://github.com/goorm-dev/vapor-ui/pull/182)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-    **New Symbol Icons:** `MediumIcon`
+### Etc
 
-    **Also Updated:**
+- Add new icons from Figma ([#207](https://github.com/goorm-dev/vapor-ui/pull/207)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **New:** `MediumIcon`
+
+    **Updated:**
     - Symbol Icons: `FirefoxColorIcon`
 
-### Patch Changes
+- update icons from Figma ([#217](https://github.com/goorm-dev/vapor-ui/pull/217)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-- 450b324: conditionally add CSS variables only when isCssVariable is true
-- 2b756c5: fix icon size
-- 3bfda49: Update icons from Figma
-
-    **Updated Basic Icons:** `TerminalWindowOutlineIcon`
+    **Updated:** `TerminalWindowOutlineIcon`
 
 ## 0.3.0
 

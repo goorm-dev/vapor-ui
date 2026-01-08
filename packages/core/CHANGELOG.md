@@ -196,41 +196,75 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.6.0
 
-### Minor Changes
+### Callout
 
-- 4d7eb69: Add new Textarea component with auto-resize functionality
-- 4026b68: add field components
-- 4a9bad5: add new `MultiSelect` component
-- e64e867: change the overlay component interface
-- 3fff33e: add new `Select` component
-- d294454: remove label components'
-- b92cff1: add new `Collapsible` component
-- b78f3e1: add new `Tabs` component
-- 98dee18: Migrate `Nav` to `NavigationMenu`
-- 0880cf7: add new `Sheet` component
-- 1d2f506: migrate to `Base UI`
-- e1bf119: add inputgroup component
-- b4509b1: add new `Popover` component
+- add flex layout for icons and text alignment ([#181](https://github.com/goorm-dev/vapor-ui/pull/181)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Patch Changes
+### Collapsible
 
-- 2651ee2: eidt tooltip offset
-- 6de8824: edit spacing style implementation
-- 1ea54c0: fix(Callout): add flex layout for icons and text alignment
-    - Add display: 'flex' to align icons and text horizontally
-    - Add alignItems: 'center' for vertical centering
-    - Add gap spacing between icon and text content
-    - Ensures consistent layout behavior with Button component
+- add new `Collapsible` component ([#197](https://github.com/goorm-dev/vapor-ui/pull/197)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-- 1ba360b: add readonly props
-- 2b756c5: fix svg rendering issue on safari
-- 6d1a2e3: remove active style when provided readonly
-- 1f4ba60: prioritize focus style over hover
-- Updated dependencies [450b324]
-- Updated dependencies [2b756c5]
-- Updated dependencies [e381247]
-- Updated dependencies [3bfda49]
-    - @vapor-ui/icons@0.4.0
+### Field
+
+- add new `Field` components ([#224](https://github.com/goorm-dev/vapor-ui/pull/224)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Input Group
+
+- add new `InputGroup` component ([#230](https://github.com/goorm-dev/vapor-ui/pull/230)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Multi Select
+
+- add new `MultiSelect` component ([#225](https://github.com/goorm-dev/vapor-ui/pull/225)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Navigation Menu
+
+- Migrate `Nav` to `NavigationMenu` ([#211](https://github.com/goorm-dev/vapor-ui/pull/211)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Popover
+
+- add new `Popover` component ([#156](https://github.com/goorm-dev/vapor-ui/pull/156)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Select
+
+- add new `Select` component ([#222](https://github.com/goorm-dev/vapor-ui/pull/222)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Sheet
+
+- add new `Sheet` component ([#187](https://github.com/goorm-dev/vapor-ui/pull/187)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- edit spacing style implementation ([#238](https://github.com/goorm-dev/vapor-ui/pull/238)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Tabs
+
+- add new `Tabs` component ([#157](https://github.com/goorm-dev/vapor-ui/pull/157)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Textarea
+
+- Add new `Textarea` component ([#209](https://github.com/goorm-dev/vapor-ui/pull/209)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Tooltip
+
+- eidt tooltip offset ([#212](https://github.com/goorm-dev/vapor-ui/pull/212)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Etc
+
+- change the overlay component interface ([#195](https://github.com/goorm-dev/vapor-ui/pull/195)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- remove `Label` sub-component from all form elements ([#204](https://github.com/goorm-dev/vapor-ui/pull/204)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- migrate to `Base UI` ([#186](https://github.com/goorm-dev/vapor-ui/pull/186)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- support readonly props in all of form elements ([#208](https://github.com/goorm-dev/vapor-ui/pull/208)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- fix svg rendering issue on safari ([#237](https://github.com/goorm-dev/vapor-ui/pull/237)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- remove active style when provided readonly ([#246](https://github.com/goorm-dev/vapor-ui/pull/246)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- ensure focus styles take precedence over hover styles ([#200](https://github.com/goorm-dev/vapor-ui/pull/200)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@0.4.0
 
 ## 0.5.0
 
