@@ -1,9 +1,7 @@
 {
     "name": "@vapor-ui/icons",
-    "description": "A set of React components for icons in the Vapor Design System.",
     "version": "1.0.0-beta.6",
-    "author": "Vapor Team <vapor.ui@goorm.io>",
-    "type": "module",
+    "description": "A set of React components for icons in the Vapor Design System.",
     "keywords": [
         "react",
         "icon",
@@ -11,22 +9,18 @@
         "design-system",
         "vapor-ui"
     ],
-    "license": "MIT",
     "homepage": "https://github.com/goorm-dev/vapor-ui",
+    "bugs": {
+        "url": "https://github.com/goorm-dev/vapor-ui/issues"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/goorm-dev/vapor-ui.git",
         "directory": "packages/icons"
     },
-    "publishConfig": {
-        "access": "public"
-    },
-    "bugs": {
-        "url": "https://github.com/goorm-dev/vapor-ui/issues"
-    },
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/types/index.d.ts",
+    "license": "MIT",
+    "author": "Vapor Team <vapor.ui@goorm.io>",
+    "type": "module",
     "exports": {
         ".": {
             "import": {
@@ -39,20 +33,22 @@
             }
         }
     },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/types/index.d.ts",
     "files": [
         "dist"
     ],
     "scripts": {
         "build": "rimraf dist && tsup",
-        "lint": "eslint ./src",
+        "clean": "rimraf dist .turbo node_modules",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
-        "clean": "rimraf dist .turbo node_modules",
+        "lint": "eslint ./src",
         "typecheck": "tsc --noEmit"
     },
-    "peerDependencies": {
-        "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    "dependencies": {
+        "clsx": "^2.1.1"
     },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
@@ -66,7 +62,11 @@
         "tsup": "^8.4.0",
         "typescript": "^5.9.2"
     },
-    "dependencies": {
-        "clsx": "^2.1.1"
+    "peerDependencies": {
+        "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }

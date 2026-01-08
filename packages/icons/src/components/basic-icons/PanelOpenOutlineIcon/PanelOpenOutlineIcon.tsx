@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const PanelOpenOutlineIcon: IconType = (props) => (
+const PanelOpenOutlineIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M3.19643 14C2.86738 14 2.58571 13.8829 2.35143 13.6486C2.11714 13.4143 2 13.1326 2 12.8036V3.19643C2 2.86738 2.11714 2.58571 2.35143 2.35143C2.58571 2.11714 2.86738 2 3.19643 2H12.8036C13.1326 2 13.4143 2.11714 13.6486 2.35143C13.8829 2.58571 14 2.86738 14 3.19643V12.8036C14 13.1326 13.8829 13.4143 13.6486 13.6486C13.4143 13.8829 13.1326 14 12.8036 14H3.19643ZM10.5714 12.7143H12.7143V3.28571H10.5714V12.7143ZM9.28571 12.7143V3.28571H3.28571V12.7143H9.28571Z" />
     </IconBase>
