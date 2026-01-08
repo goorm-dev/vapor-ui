@@ -289,14 +289,24 @@ function reconstructChangelog({
 
     // 그룹화된 엔트리들이 있는 경우
     if (Object.keys(groupedEntries).length > 0 || otherEntries.length > 0) {
-        // 스코프별 엔트리 추가 (알파벳 순으로 정렬)
+        // 1. General Changes 우선 처리
+        const generalKey = Object.keys(groupedEntries).find(
+            (key) => key.toLowerCase() === 'general changes',
+        );
+
+        if (generalKey) {
+            pushEntry({ parts, title: titleCase(generalKey), entries: groupedEntries[generalKey] });
+            delete groupedEntries[generalKey];
+        }
+
+        // 2. 스코프별 엔트리 추가 (알파벳 순으로 정렬)
         Object.keys(groupedEntries)
             .sort()
             .forEach((scope) => {
                 pushEntry({ parts, title: titleCase(scope), entries: groupedEntries[scope] });
             });
 
-        // 기타 엔트리 추가
+        // 3. 기타 엔트리 추가
         if (otherEntries.length > 0) {
             pushEntry({ parts, title: 'etc', entries: otherEntries });
         }
