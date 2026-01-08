@@ -111,9 +111,7 @@
 
 ## 1.0.0-beta.6
 
-### Patch Changes
-
-- bd523c7: feat: update color generator & color palette
+It contains the same code as the previous version. Please refer to that version.
 
 ## 1.0.0-beta.5
 

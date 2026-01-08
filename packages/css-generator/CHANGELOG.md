@@ -26,11 +26,13 @@
 
 ## 1.0.0-beta.6
 
-### Patch Changes
+### etc
 
-- bd523c7: feat: update color generator & color palette
-- Updated dependencies [bd523c7]
-    - @vapor-ui/color-generator@1.0.0
+- feat: update color generator & color palette ([#337](https://github.com/goorm-dev/vapor-ui/pull/337)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+### Updated Dependencies
+
+- @vapor-ui/color-generator@1.0.0-beta.6
 
 ## 1.0.0-beta.5
 

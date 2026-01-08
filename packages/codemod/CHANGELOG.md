@@ -22,11 +22,13 @@
 
 ## 1.0.0-beta.6
 
-### Minor Changes
+### CLI
 
-- b2d053c: add checkbox, collapsible, dialog transform
-- 939c845: add avatar, breadcrumb, card transform
-- eb3fdc7: add codemod cli packages
+- add checkbox, collapsible, dialog transform ([#316](https://github.com/goorm-dev/vapor-ui/pull/316)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- add avatar, breadcrumb, card transform ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- add codemod cli packages ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 ## 1.0.0-beta.5
 
