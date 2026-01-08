@@ -37,9 +37,9 @@ export default function ResearchForm() {
     return (
         <VStack
             gap="$500"
-            width="400px"
             padding="$300"
             borderRadius="$300"
+            width="100%"
             border="1px solid var(--vapor-color-border-normal)"
             render={<Form onSubmit={(event) => event.preventDefault()} />}
         >

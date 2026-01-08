@@ -21,7 +21,11 @@ export function Preview(props: PreviewProps) {
 
     return (
         <React.Suspense fallback={null}>
-            <div className="not-prose example-reset example-enter min-h-[300px] w-full flex flex-col justify-center items-center">
+            <div
+                className={
+                    'not-prose p-v-300 min-h-[300px] flex flex-col justify-center items-center'
+                }
+            >
                 {Preview}
             </div>
         </React.Suspense>

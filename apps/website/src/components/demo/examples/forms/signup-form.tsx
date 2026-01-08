@@ -31,7 +31,7 @@ export default function SignupForm() {
     return (
         <VStack
             gap="$250"
-            width="400px"
+            width="100%"
             padding="$300"
             borderRadius="$300"
             border="1px solid var(--vapor-color-border-normal)"
