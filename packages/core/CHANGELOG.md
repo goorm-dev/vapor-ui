@@ -1,5 +1,37 @@
 # @vapor-ui/core
 
+## 1.0.0-beta.12
+
+### Button
+
+- Update secondary button fill variant text color to use foreground.secondary[200] for improved contrast ([#427](https://github.com/goorm-dev/vapor-ui/pull/427)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Dialog
+
+- adjust to max-width in dialog ([#394](https://github.com/goorm-dev/vapor-ui/pull/394)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Field
+
+- feat(field): add typography and foreground props to Field.Label ([#399](https://github.com/goorm-dev/vapor-ui/pull/399)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Floatingbar
+
+- add new `FloatingBar` component ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Tabs
+
+- Refactor Tabs component structure for better customization ([#429](https://github.com/goorm-dev/vapor-ui/pull/429)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+    - Changed `Tabs.Trigger` to `Tabs.Button` for clearer semantics
+    - Extracted `Tabs.ListPrimitive` and `Tabs.IndicatorPrimitive` for enhanced customization
+    - Added fill and line variant support with updated styles
+    - Updated type definitions and utility props for better developer experience
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.0.0-beta.7
+
 ## 1.0.0-beta.11
 
 ### Patch Changes
