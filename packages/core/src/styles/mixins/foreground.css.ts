@@ -69,5 +69,4 @@ export const foregrounds = recipe({
     },
 });
 
-export type ForegroundVariants = typeof foregroundVariants;
 export type Foregrounds = NonNullable<RecipeVariants<typeof foregrounds>>;
