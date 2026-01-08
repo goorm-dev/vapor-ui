@@ -334,9 +334,9 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.3.1
 
-### Patch Changes
+### Theme Provider
 
-- ca267e9: feat: Added primary color custom functionality
+- add `primaryColor` props for user custom ([#87](https://github.com/goorm-dev/vapor-ui/pull/87)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
 ## 0.3.0
 
