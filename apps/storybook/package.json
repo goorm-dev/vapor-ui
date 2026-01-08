@@ -1,15 +1,15 @@
 {
     "name": "storybook",
-    "private": true,
     "version": "0.0.0",
+    "private": true,
     "type": "module",
     "scripts": {
-        "dev": "storybook dev -p 9009",
         "build:storybook": "storybook build",
-        "lint": "eslint ./.storybook",
+        "clean": "rimraf dist node_modules .turbo",
+        "dev": "storybook dev -p 9009",
         "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
-        "clean": "rimraf dist node_modules .turbo"
+        "lint": "eslint ./.storybook"
     },
     "dependencies": {
         "react": "^19.2.1",

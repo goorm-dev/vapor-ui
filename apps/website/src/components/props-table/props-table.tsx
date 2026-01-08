@@ -61,7 +61,7 @@ const PropsTable = ({ file, section = 'props', className }: PropsTableProps) => 
                             </Text>
                         </td>
                         <td>
-                            <div className="flex flex-col gap-[var(--vapor-size-space-100)]">
+                            <div className="flex flex-col gap-v-100">
                                 {type.split('|').map((segment, index) => {
                                     const value = segment.trim();
                                     return (

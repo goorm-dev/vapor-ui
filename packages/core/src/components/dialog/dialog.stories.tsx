@@ -35,24 +35,33 @@ export const Default: Story = {
     ),
 };
 
-export const AA: Story = {
+export const TestBed: Story = {
+    parameters: { docs: { disable: true } },
     render: (args) => (
-        <Dialog.Root {...args} onOpenChange={(open) => console.log(open)}>
-            <Dialog.Trigger>hihi</Dialog.Trigger>
-            <Dialog.PortalPrimitive>
-                <Dialog.OverlayPrimitive />
-                <Dialog.PopupPrimitive>
-                    <Dialog.Header>
-                        <Dialog.Title>다이얼로그입니다.</Dialog.Title>
-                    </Dialog.Header>
-                    <Dialog.Body>
-                        <Dialog.Description>기본 형태의 다이얼로그입니다.</Dialog.Description>
-                    </Dialog.Body>
-                    <Dialog.Footer>
-                        <Dialog.Close render={<Button colorPalette="contrast">닫기</Button>} />
-                    </Dialog.Footer>
-                </Dialog.PopupPrimitive>
-            </Dialog.PortalPrimitive>
-        </Dialog.Root>
+        <>
+            {['xl', 'lg', 'md'].map((size) => (
+                <Dialog.Root key={size} {...args} open size={size as 'md' | 'lg' | 'xl'}>
+                    <Dialog.Trigger>hihi</Dialog.Trigger>
+                    <Dialog.PortalPrimitive>
+                        {size === 'xl' && <Dialog.OverlayPrimitive />}
+                        <Dialog.PopupPrimitive>
+                            <Dialog.Header>
+                                <Dialog.Title>다이얼로그입니다.</Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body>
+                                <Dialog.Description>
+                                    기본 형태의 다이얼로그입니다.
+                                </Dialog.Description>
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                                <Dialog.Close
+                                    render={<Button colorPalette="contrast">닫기</Button>}
+                                />
+                            </Dialog.Footer>
+                        </Dialog.PopupPrimitive>
+                    </Dialog.PortalPrimitive>
+                </Dialog.Root>
+            ))}
+        </>
     ),
 };

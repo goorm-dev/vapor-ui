@@ -75,7 +75,7 @@ const ThemePanelContent = () => {
             <Card.Header className="flex justify-between items-center border-b-0 flex-shrink-0">
                 <Popover.Title render={<Text typography="heading5">Theme Setting</Text>} />
 
-                <div className="flex items-center gap-[var(--vapor-size-space-050)]">
+                <div className="flex items-center gap-v-50">
                     <Badge colorPalette="hint">V</Badge>
                     <Text typography="subtitle2" foreground="hint-100">
                         로 열기/닫기
@@ -84,7 +84,7 @@ const ThemePanelContent = () => {
             </Card.Header>
 
             <Card.Body className="max-h-[60vh] overflow-y-auto [--scroll-shadow-size:20px] [mask-image:linear-gradient(180deg,#000_calc(100%_-_var(--scroll-shadow-size)),transparent)]">
-                <div className="flex flex-col gap-[var(--vapor-size-space-250)]">
+                <div className="flex flex-col gap-v-250">
                     <SectionMode />
                     <SectionColor />
                     <SectionRadius />

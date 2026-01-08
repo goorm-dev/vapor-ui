@@ -92,7 +92,7 @@ export const LIGHT_SEMANTIC_COLORS = {
     border: {
         normal: colorRef('gray', '100'),
         primary: colorRef('blue', '500'),
-        secondary: colorRef('gray', '400'),
+        secondary: colorRef('gray', '200'),
         success: colorRef('green', '500'),
         warning: colorRef('orange', '500'),
         danger: colorRef('red', '500'),
@@ -177,7 +177,7 @@ export const DARK_SEMANTIC_COLORS = {
     border: {
         normal: colorRef('gray', '300'),
         primary: colorRef('blue', '400'),
-        secondary: colorRef('gray', '400'),
+        secondary: colorRef('gray', '200'),
         success: colorRef('green', '400'),
         warning: colorRef('orange', '400'),
         danger: colorRef('red', '400'),
