@@ -386,12 +386,6 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.1.0
 
-### Minor Changes
+### Etc
 
-- 68b001c: create avatar , badge , box , button , card , dialog , flex , grid , h-stack , icon-button, nav , text-input , text , theme-provider , v-stack
-
-### Patch Changes
-
-- Updated dependencies [68b001c]
-    - @vapor-ui/hooks@0.1.0
-    - @vapor-ui/icons@0.1.0
+- create package ([#48](https://github.com/goorm-dev/vapor-ui/pull/48)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
