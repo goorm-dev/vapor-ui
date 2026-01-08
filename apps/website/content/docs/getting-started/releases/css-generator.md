@@ -31,7 +31,7 @@ description: '@vapor-ui/css-generator 패키지의 릴리즈 노트입니다.'
 
 ## 1.0.0-beta.6
 
-### Etc
+### Etc.
 
 - feat: update color generator & color palette ([#337](https://github.com/goorm-dev/vapor-ui/pull/337)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
@@ -45,7 +45,7 @@ description: '@vapor-ui/css-generator 패키지의 릴리즈 노트입니다.'
 
 - feat(theme): Add ThemeScope component and migrate to data-attribute based theming ([#278](https://github.com/goorm-dev/vapor-ui/pull/278)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
-### Etc
+### Etc.
 
 - feat: create @vapor-ui/color-generator & @vapor-ui/css-generator ([#234](https://github.com/goorm-dev/vapor-ui/pull/234)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 

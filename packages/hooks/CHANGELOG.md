@@ -2,7 +2,7 @@
 
 ## 1.0.0-beta.6
 
-### etc
+### Etc.
 
 - clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 

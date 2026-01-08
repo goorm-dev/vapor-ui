@@ -6,7 +6,7 @@
 
 - remove iconType ([#231](https://github.com/goorm-dev/vapor-ui/pull/231)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Etc
+### Etc.
 
 - Update icons from Figma ([#406](https://github.com/goorm-dev/vapor-ui/pull/406)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
@@ -14,7 +14,7 @@
 
 ## 1.0.0-beta.6
 
-### Etc
+### Etc.
 
 - clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -24,7 +24,7 @@
 
 ## 1.0.0-beta.5
 
-### Etc
+### Etc.
 
 - Add new icons from Figma ([#264](https://github.com/goorm-dev/vapor-ui/pull/264)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
@@ -43,7 +43,7 @@
 
 - adjust prop precedence for dimensions(width, height, size) ([#182](https://github.com/goorm-dev/vapor-ui/pull/182)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Etc
+### Etc.
 
 - Add new icons from Figma ([#207](https://github.com/goorm-dev/vapor-ui/pull/207)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
@@ -58,7 +58,7 @@
 
 ## 0.3.0
 
-### Etc
+### Etc.
 
 - add new icons from Figma ([#179](https://github.com/goorm-dev/vapor-ui/pull/179)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
@@ -74,7 +74,7 @@
 
 ## 0.2.0
 
-### Etc
+### Etc.
 
 - add new icons and update existing icon components ([#119](https://github.com/goorm-dev/vapor-ui/pull/119)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 

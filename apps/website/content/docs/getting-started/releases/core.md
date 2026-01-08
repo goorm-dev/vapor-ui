@@ -43,7 +43,7 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 - Correct background-color of TextInput component ([#387](https://github.com/goorm-dev/vapor-ui/pull/387)) - Thanks [@agetbase](https://github.com/agetbase)!
 
-### Etc
+### Etc.
 
 - clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -86,7 +86,7 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 - add new `Table` component ([#294](https://github.com/goorm-dev/vapor-ui/pull/294)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Etc
+### Etc.
 
 - synchronized color tokens with figma ([#340](https://github.com/goorm-dev/vapor-ui/pull/340)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -166,7 +166,7 @@ It contains the same code as the previous version. Please refer to that version.
 
 - remove ThemeScript and simplify ThemeProvider ([#240](https://github.com/goorm-dev/vapor-ui/pull/240)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
-### Etc
+### Etc.
 
 - enabled CSS tree shaking ([#298](https://github.com/goorm-dev/vapor-ui/pull/298)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
     - Component CSS is now automatically imported by each component file.
@@ -251,7 +251,7 @@ It contains the same code as the previous version. Please refer to that version.
 
 - eidt tooltip offset ([#212](https://github.com/goorm-dev/vapor-ui/pull/212)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Etc
+### Etc.
 
 - change the overlay component interface ([#195](https://github.com/goorm-dev/vapor-ui/pull/195)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -297,7 +297,7 @@ It contains the same code as the previous version. Please refer to that version.
 
 - add new `Tooltip` component ([#150](https://github.com/goorm-dev/vapor-ui/pull/150)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Etc
+### Etc.
 
 - enhance vanillaExtractPlugin identifiers ([#161](https://github.com/goorm-dev/vapor-ui/pull/161)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -323,7 +323,7 @@ It contains the same code as the previous version. Please refer to that version.
 
 - remove incorrectly injected props ([#125](https://github.com/goorm-dev/vapor-ui/pull/125)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Etc
+### Etc.
 
 - change CSS layer names to `theme`, `reset`, `components`, and `utilities` ([#138](https://github.com/goorm-dev/vapor-ui/pull/138)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
@@ -345,7 +345,7 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.3.0
 
-### Etc
+### Etc.
 
 - remove sprinkles on each components ([#88](https://github.com/goorm-dev/vapor-ui/pull/88)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -379,7 +379,7 @@ It contains the same code as the previous version. Please refer to that version.
 
 - add new `Switch` component - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Etc
+### Etc.
 
 - remove `@vapor-ui/icons` for resolving storybook build error ([#57](https://github.com/goorm-dev/vapor-ui/pull/57)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -391,6 +391,6 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.1.0
 
-### Etc
+### Etc.
 
 - create package ([#48](https://github.com/goorm-dev/vapor-ui/pull/48)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
