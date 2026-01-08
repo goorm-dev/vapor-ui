@@ -310,19 +310,27 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.4.0
 
-### Minor Changes
+### Badge
 
-- 2ce16a6: refactor(build): Improve DX by Overhauling CSS Bundling Strategy
-- 482e447: feat: The CSS layer names have been changed to “theme,” “reset,” “components,” and “utilities.”
-- f5e6651: feat: Add Tailwind CSS v4 Preset
+- align text to center ([#137](https://github.com/goorm-dev/vapor-ui/pull/137)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
-### Patch Changes
+### Radio Group
 
-- 0c6d39c: fix(RadioGroup): remove incorrectly injected props
-- a813633: fix(Text): Add foreground mixin to style entry point
-- 242d1e8: style(Badge): add center alignment
-- Updated dependencies [30ebcde]
-    - @vapor-ui/icons@0.2.0
+- remove incorrectly injected props ([#125](https://github.com/goorm-dev/vapor-ui/pull/125)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Etc
+
+- change CSS layer names to `theme`, `reset`, `components`, and `utilities` ([#138](https://github.com/goorm-dev/vapor-ui/pull/138)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+- add Tailwind CSS v4 preset ([#98](https://github.com/goorm-dev/vapor-ui/pull/98)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+- improve DX by overhauling CSS bundling strategy ([#121](https://github.com/goorm-dev/vapor-ui/pull/121)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+- add foreground mixin to style entry point ([#142](https://github.com/goorm-dev/vapor-ui/pull/142)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@0.2.0
 
 ## 0.3.1
 

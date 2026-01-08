@@ -74,14 +74,14 @@
 
 ## 0.2.0
 
-### Minor Changes
+### Etc
 
-- 30ebcde: feat: Add new icons and update existing icon components
+- add new icons and update existing icon components ([#119](https://github.com/goorm-dev/vapor-ui/pull/119)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-    ## New Icons Added
+    **New Icons Added**
     - `AlignJustifyOutlineIcon`, `CopyAsMarkdownOutlineIcon`, `IndentDecreaseOutlineIcon`, `SlotIcon`, `TextScanOutlineIcon`
 
-    ## Updated Icons
+    **Updated**
     - Updated approximately 190 existing icons with refined SVG paths and improved rendering
     - Minor coordinate adjustments for better visual consistency
     - Enhanced clipPath definitions where needed
