@@ -5,6 +5,14 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.0.0
+
+### etc
+
+- fix: prevent passing props to Fragment in `createRender` ([#403](https://github.com/goorm-dev/vapor-ui/pull/403)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    Fixed React warning `Invalid prop 'ref' supplied to 'React.Fragment'` by wrapping Fragment returns in a render callback to avoid `cloneElement` props merging.
+
 ## 1.0.0-beta.12
 
 ### Button
