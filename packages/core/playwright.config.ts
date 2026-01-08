@@ -14,9 +14,9 @@ export default defineConfig({
     use: { baseURL: BASE_URL, trace: 'on' },
     projects: [
         { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-        { name: 'webkit', use: { ...devices['Desktop Safari'] } },
-        { name: 'chromium', use: { ...devices['Desktop Chrome'], channel: 'chrome' } },
-        { name: 'Microsoft Edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
+        { name: 'safari', use: { ...devices['Desktop Safari'] } },
+        { name: 'chrome', use: { ...devices['Desktop Chrome'] } },
+        { name: 'edge', use: { ...devices['Desktop Edge'] } },
     ],
 
     fullyParallel: true,
