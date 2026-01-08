@@ -354,20 +354,35 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.2.0
 
-### Minor Changes
+### Callout
 
-- 55f2f42: Callout: added new callout component
-- 4725a73: RadioGroup: add new component
-- 9f96e2c: Checkbox: Add New `Checkbox` Component
-- b59dd77: Switch: add new Switch component
-- 267a998: IconButton: remove @vapor-ui/icons for resolving storybook build error
-- d7c2714: fix: resolve circular dependency in vanilla-extract and improve tsup build
+- add new `Callout` component ([#67](https://github.com/goorm-dev/vapor-ui/pull/67)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Patch Changes
+### Checkbox
 
-- c5cd0fc: edit dialog & interaction animation functions
-- a0c1ff0: chore: tsup spliting disable
-- d7c2714: build(tsup): Optimize build system with per-component bundling
+- add new `Checkbox` Component ([#58](https://github.com/goorm-dev/vapor-ui/pull/58)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Dialog
+
+- edit dialog animation style ([#72](https://github.com/goorm-dev/vapor-ui/pull/72)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Radio Group
+
+- add new `RadioGroup` component ([#76](https://github.com/goorm-dev/vapor-ui/pull/76)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Switch
+
+- add new `Switch` component - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Etc
+
+- remove `@vapor-ui/icons` for resolving storybook build error ([#57](https://github.com/goorm-dev/vapor-ui/pull/57)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- prevent code splitting while tsup build ([#81](https://github.com/goorm-dev/vapor-ui/pull/81)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+- resolve circular dependency in vanilla-extract ([#73](https://github.com/goorm-dev/vapor-ui/pull/73)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+- optimize build system for component bundling ([#73](https://github.com/goorm-dev/vapor-ui/pull/73)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
 ## 0.1.0
 
