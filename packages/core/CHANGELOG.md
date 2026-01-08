@@ -348,9 +348,9 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.2.1
 
-### Patch Changes
+### Theme Provider
 
-- 6749d80: fix(createThemeConfig): support RSC
+- support RSC ([#82](https://github.com/goorm-dev/vapor-ui/pull/82)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
 ## 0.2.0
 
