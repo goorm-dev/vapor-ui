@@ -5,7 +5,7 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
-## 1.0.0
+## 1.0.0-beta.12
 
 ### Button
 
@@ -35,8 +35,7 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 ### Updated Dependencies
 
-- @vapor-ui/icons@1.0.0
-- @vapor-ui/hooks@1.0.0
+- @vapor-ui/icons@1.0.0-beta.7
 
 ## 1.0.0-beta.11
 

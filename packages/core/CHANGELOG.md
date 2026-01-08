@@ -1,6 +1,6 @@
 # @vapor-ui/core
 
-## 1.0.0
+## 1.0.0-beta.12
 
 ### Button
 
@@ -30,8 +30,7 @@
 
 ### Updated Dependencies
 
-- @vapor-ui/icons@1.0.0
-- @vapor-ui/hooks@1.0.0
+- @vapor-ui/icons@1.0.0-beta.7
 
 ## 1.0.0-beta.11
 

@@ -5,11 +5,7 @@ description: '@vapor-ui/icons 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/icons
 
-## 1.0.0
-
-### Floatingbar
-
-- clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+## 1.0.0-beta.7
 
 ### Icon Base
 
