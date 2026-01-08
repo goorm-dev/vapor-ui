@@ -1,0 +1,5 @@
+{
+    "title": "Releases",
+    "pages": ["core", "icons", "color-generator", "css-generator", "codemod"],
+    "defaultOpen": false
+}

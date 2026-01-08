@@ -161,8 +161,8 @@ const renderTextElements = (typographies: readonly string[], title: string) => (
 
 const Page = () => {
     return (
-        <div className="px-8 py-16 min-h-screen bg-[var(--vapor-color-canvas)]">
-            <div className="w-max flex flex-col gap-12 [&>header]:flex [&>header]:flex-col [&>header]:gap-4 [&>section]:flex [&>section]:flex-col [&>section]:gap-[var(--vapor-size-space-800)]">
+        <div className="px-8 py-16 min-h-screen bg-v-canvas-100">
+            <div className="w-max flex flex-col gap-12 [&>header]:flex [&>header]:flex-col [&>header]:gap-4 [&>section]:flex [&>section]:flex-col [&>section]:gap-v-800">
                 <header>
                     <Text typography="heading1">Theme Playground</Text>
                     <Link href="/docs/getting-started/theming">
