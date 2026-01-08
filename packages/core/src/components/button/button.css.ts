@@ -81,7 +81,7 @@ export const root = recipe({
             }),
             secondary: layerStyle('components', {
                 vars: {
-                    [fg]: vars.color.foreground.secondary[100],
+                    [fg]: vars.color.foreground.secondary[200],
                     [outlineFg]: vars.color.foreground.secondary[200],
                     [ghostFg]: vars.color.foreground.secondary[100],
                     [bg]: vars.color.background.secondary[200],

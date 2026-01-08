@@ -25,7 +25,7 @@ const page = async ({ params }: { params: Promise<{ slug?: string[] }> }) => {
             }}
             lastUpdate={lastModified}
             article={{
-                className: 'gap-[var(--vapor-size-space-500)]',
+                className: 'gap-v-500',
             }}
             breadcrumb={{
                 enabled: false,

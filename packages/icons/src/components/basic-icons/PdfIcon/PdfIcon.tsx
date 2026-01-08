@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const PdfIcon: IconType = (props) => (
+const PdfIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M5.85706 11.9415C5.85488 11.9614 5.8491 12.014 5.9508 12.0919C5.9832 12.0817 6.17241 11.9954 6.52473 11.3449C6.05997 11.606 5.87054 11.8207 5.85706 11.9415Z" />
         <path d="M7.73415 7.10839C7.7435 7.10534 7.96142 7.34776 7.75503 7.80759C7.4449 7.49038 7.71283 7.11556 7.73415 7.10839Z" />
