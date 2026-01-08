@@ -49,9 +49,9 @@
 
 ## 1.0.0-beta.10
 
-### Patch Changes
+### Toast
 
-- af2d36f: avoid overflowing when toast width is wider than view port width
+- avoid overflowing when toast width is wider than view port width ([#390](https://github.com/goorm-dev/vapor-ui/pull/390)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ## 1.0.0-beta.9
 
