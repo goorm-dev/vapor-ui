@@ -1,7 +1,7 @@
 {
     "name": "Root",
     "displayName": "Tabs.Root",
-    "description": "Tabs의 모든 부봠4을 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "description": "Tabs의 모든 부분을 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
     "props": [
         {
             "name": "className",
@@ -45,7 +45,7 @@
         },
         {
             "name": "variant",
-            "type": ["line", "plain"],
+            "type": ["line", "fill"],
             "required": false,
             "description": "Tabs의 스타일 변형을 지정합니다."
         },
@@ -59,7 +59,21 @@
             "name": "disabled",
             "type": ["false", "true"],
             "required": false,
-            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부입니다."
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부입니다. Root에 설정 시 모든 하위 탭에 자동으로 적용됩니다."
+        },
+        {
+            "name": "activateOnFocus",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "포커스 시 즉시 탭을 활성화할지 여부. `false`일 경우 Enter 또는 Space 키로 활성화합니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "loop",
+            "type": ["false", "true"],
+            "required": false,
+            "description": "키보드 내비게이션 시 첫 번째/마지막 탭에서 순환할지 여부. `true`일 경우 마지막 탭에서 화살표 키를 누르면 첫 번째 탭으로 이동합니다.",
+            "defaultValue": "true"
         }
     ]
 }

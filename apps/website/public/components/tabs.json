@@ -2,9 +2,9 @@
     "rootProps": [
         {
             "prop": "variant",
-            "type": ["line", "plain"],
+            "type": ["line", "fill"],
             "default": "line",
-            "description": "Tabs의 시각적 스타일을 설정합니다. 'line'은 하단에 보더가 있는 스타일, 'plain'은 심플한 스타일입니다."
+            "description": "Tabs의 시각적 스타일을 설정합니다. 'line'은 하단에 보더가 있는 스타일, 'fill'은 배경이 채워진 스타일입니다."
         },
         {
             "prop": "size",

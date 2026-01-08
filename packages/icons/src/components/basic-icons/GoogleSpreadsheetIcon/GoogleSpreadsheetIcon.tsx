@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const GoogleSpreadsheetIcon: IconType = (props) => (
+const GoogleSpreadsheetIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M8.37505 9.7937H10.524V8.53171H8.37505V9.7937Z" />
         <path d="M7.62467 9.79381V8.53171H5.47577V9.79381H7.62467Z" />

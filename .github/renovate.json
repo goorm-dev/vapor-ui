@@ -1,70 +1,75 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended", "group:monorepos"],
-    "baseBranches": ["main"],
-    "rebaseWhen": "conflicted",
+    "extends": ["config:recommended", "group:monorepos", ":dependencyDashboard"],
+    "baseBranchPatterns": ["main"],
+    "rebaseWhen": "auto",
     "labels": ["type: dependencies"],
     "automergeStrategy": "squash",
-    "prHourlyLimit": 2,
-    "prNotPendingHours": 48,
-    "groupName": "all",
+    "prHourlyLimit": 10,
+    "rangeStrategy": "bump",
     "vulnerabilityAlerts": {
         "enabled": true,
         "labels": ["type: security"],
-        "automerge": false
+        "automerge": false,
+        "dependencyDashboardApproval": true
     },
     "packageRules": [
+        {
+            "description": "patch make auto PR, auto merge",
+            "matchUpdateTypes": ["patch"],
+            "automerge": true,
+            "dependencyDashboardApproval": false,
+            "labels": ["type: dependencies"]
+        },
+        {
+            "description": "minor make auto PR, no auto merge",
+            "matchUpdateTypes": ["minor"],
+            "automerge": false,
+            "dependencyDashboardApproval": false,
+            "labels": ["type: dependencies"]
+        },
+        {
+            "description": "major make auto PR, require dashboard approval",
+            "matchUpdateTypes": ["major"],
+            "automerge": false,
+            "dependencyDashboardApproval": true,
+            "labels": ["type: dependencies", "major"]
+        },
         {
             "description": "React and React DOM - Core framework",
             "groupName": "React Core",
             "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
             "labels": ["type: dependencies"],
-            "automerge": false,
-            "dependencyDashboardApproval": true
+            "automerge": false
         },
         {
             "description": "Vanilla Extract - CSS-in-TS styling",
             "groupName": "Vanilla Extract",
-            "matchPackagePatterns": ["@vanilla-extract/*"],
             "labels": ["type: dependencies"],
             "automerge": false,
-            "matchUpdateTypes": ["patch", "minor"]
+            "matchPackageNames": ["/^@vanilla-extract\\/.*/"]
         },
         {
             "description": "Base UI - Unstyled component library",
             "groupName": "Base UI",
-            "matchPackagePatterns": ["@base-ui-components/*"],
             "labels": ["type: dependencies"],
             "automerge": false,
-            "dependencyDashboardApproval": true
+            "matchPackageNames": ["/^@base-ui-components\\/.*/"]
         },
         {
             "description": "All other dependencies grouped together",
             "groupName": "Other Dependencies",
-            "excludePackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
-            "excludePackagePatterns": ["@vanilla-extract/*", "@base-ui-components/*"],
             "labels": ["type: dependencies"],
-            "automerge": true,
-            "matchUpdateTypes": ["patch"]
-        },
-        {
-            "description": "Manual review required for minor and major updates",
-            "matchUpdateTypes": ["minor", "major"],
             "automerge": false,
-            "dependencyDashboardApproval": true
-        },
-        {
-            "description": "Auto-merge lockfile maintenance",
-            "matchUpdateTypes": ["lockFileMaintenance"],
-            "automerge": true,
-            "automergeType": "branch"
-        },
-        {
-            "description": "Security updates require manual review with alerts",
-            "matchPackagePatterns": ["*"],
-            "isVulnerabilityAlert": true,
-            "automerge": false,
-            "labels": ["type: security"]
+            "matchPackageNames": [
+                "*",
+                "!react",
+                "!react-dom",
+                "!@types/react",
+                "!@types/react-dom",
+                "!/^@vanilla-extract\\/.*/",
+                "!/^@base-ui-components\\/.*/"
+            ]
         }
     ]
 }
