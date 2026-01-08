@@ -1,4 +1,6 @@
-import { style } from '@vanilla-extract/css';
+// tabs.css.ts
+import { createVar } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -8,9 +10,29 @@ import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
+const EXTERNAL_VARS = {
+    activeTabWidth: '--active-tab-width',
+    activeTabHeight: '--active-tab-height',
+    activeTabLeft: '--active-tab-left',
+    activeTabTop: '--active-tab-top',
+} as const;
+
+const BORDER_WIDTH = '0.125rem'; // 2px
+
+const listBorderBottom = createVar();
+const listBorderRight = createVar();
+const listBorder = createVar();
+
+const buttonVerticalBorderRadius = createVar();
+const buttonHorizontalBorderRadius = createVar();
+
+const indicatorVerticalWidth = createVar();
+const indicatorHorizontalHeight = createVar();
+const indicatorBottomPosition = createVar();
+const indicatorRightPosition = createVar();
+
 export const root = recipe({
     base: layerStyle('components', { display: 'flex' }),
-
     defaultVariants: { orientation: 'horizontal' },
     variants: {
         orientation: {
@@ -19,6 +41,7 @@ export const root = recipe({
             }),
             vertical: layerStyle('components', {
                 flexDirection: 'row',
+                height: '100%',
             }),
         },
     },
@@ -28,88 +51,111 @@ export const list = recipe({
     base: layerStyle('components', {
         position: 'relative',
         gap: vars.size.space[100],
+        borderBottom: listBorderBottom,
+        borderRight: listBorderRight,
+        isolation: 'isolate', // NOTE: Creates a new stacking context to manage z-index only within the Tabs component.
     }),
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
     variants: {
-        variant: { line: {}, plain: {} },
         orientation: {
             horizontal: layerStyle('components', {
                 display: 'flex',
+                vars: {
+                    [listBorderBottom]: listBorder,
+                    [listBorderRight]: 'none',
+                },
             }),
             vertical: layerStyle('components', {
                 display: 'inline-flex',
                 flexDirection: 'column',
+                vars: {
+                    [listBorderBottom]: 'none',
+                    [listBorderRight]: listBorder,
+                },
+            }),
+        },
+        variant: {
+            line: layerStyle('components', {
+                vars: {
+                    [listBorder]: `${BORDER_WIDTH} solid ${vars.color.border.normal}`,
+                },
+            }),
+            fill: layerStyle('components', {
+                vars: {
+                    [listBorder]: 'none',
+                },
             }),
         },
     },
-    compoundVariants: [
-        {
-            variants: { variant: 'line', orientation: 'horizontal' },
-            style: layerStyle('components', {
-                borderBottom: `1px solid ${vars.color.border.normal}`,
-            }),
-        },
-        {
-            variants: { variant: 'line', orientation: 'vertical' },
-            style: layerStyle('components', {
-                borderRight: `1px solid ${vars.color.border.normal}`,
-            }),
-        },
-    ],
 });
 
-const triggerBase = style([
-    foregrounds({ color: 'normal-100' }),
-    interaction({ scale: 'light' }),
-    layerStyle('components', {
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: vars.size.space['075'],
-        borderRadius: vars.size.borderRadius['300'],
+export const button = recipe({
+    base: [
+        foregrounds({ color: 'normal-100' }),
+        interaction({ scale: 'light' }),
+        typography({ style: 'subtitle1' }),
+        layerStyle('components', {
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: vars.size.space['075'],
+            zIndex: 1,
 
-        selectors: {
-            '&[data-selected]': { color: vars.color.foreground.primary[100] },
-        },
-    }),
-]);
+            selectors: {
+                '&[data-disabled]': {
+                    opacity: 0.32,
+                    pointerEvents: 'none',
+                },
+                '&[data-selected]': {
+                    color: vars.color.foreground.primary['100'],
+                },
+            },
+        }),
+    ],
 
-export const trigger = recipe({
-    base: triggerBase,
-
-    defaultVariants: { size: 'md', disabled: false, orientation: 'horizontal' },
+    defaultVariants: { size: 'md', variant: 'line', orientation: 'horizontal' },
     variants: {
         size: {
             sm: [
                 typography({ style: 'subtitle2' }),
                 layerStyle('components', { height: vars.size.space['300'] }),
             ],
-            md: [
-                typography({ style: 'subtitle1' }),
-                layerStyle('components', { height: vars.size.space['400'] }),
-            ],
-            lg: [
-                typography({ style: 'subtitle1' }),
-                layerStyle('components', { height: vars.size.space['500'] }),
-            ],
+            md: [layerStyle('components', { height: vars.size.space['400'] })],
+            lg: [layerStyle('components', { height: vars.size.space['500'] })],
             xl: [
                 typography({ style: 'heading6' }),
                 layerStyle('components', { height: vars.size.space['600'] }),
             ],
         },
-
-        disabled: {
-            true: layerStyle('components', { opacity: 0.32, pointerEvents: 'none' }),
-        },
-
         orientation: {
             horizontal: layerStyle('components', {
+                borderRadius: buttonHorizontalBorderRadius,
                 paddingInline: vars.size.space['050'],
             }),
             vertical: layerStyle('components', {
+                borderRadius: buttonVerticalBorderRadius,
                 paddingInline: vars.size.space[200],
+            }),
+        },
+        variant: {
+            line: layerStyle('components', {
+                vars: {
+                    [buttonHorizontalBorderRadius]: `${vars.size.borderRadius[300]} ${vars.size.borderRadius[300]} 0 0`,
+                    [buttonVerticalBorderRadius]: `${vars.size.borderRadius[300]} 0 0 ${vars.size.borderRadius[300]}`,
+                },
+            }),
+            fill: layerStyle('components', {
+                vars: {
+                    [buttonHorizontalBorderRadius]: vars.size.borderRadius[300],
+                    [buttonVerticalBorderRadius]: vars.size.borderRadius[300],
+                },
+                selectors: {
+                    '&[data-selected]': {
+                        color: vars.color.foreground.primary['100'],
+                    },
+                },
             }),
         },
     },
@@ -118,36 +164,52 @@ export const trigger = recipe({
 export const indicator = recipe({
     base: layerStyle('components', {
         position: 'absolute',
-
-        transitionDuration: '200ms',
-        transitionProperty: `translate, width`,
+        transitionDuration: '100ms',
         transitionTimingFunction: 'ease-in-out',
-
-        backgroundColor: vars.color.border.primary,
+        zIndex: 0,
     }),
 
-    defaultVariants: { orientation: 'horizontal' },
+    defaultVariants: { orientation: 'horizontal', variant: 'line' },
     variants: {
         orientation: {
             horizontal: layerStyle('components', {
-                bottom: -2,
-                left: 0,
-
-                width: `var(--active-tab-width)`,
-                height: '2px',
-                translate: `var(--active-tab-left) -50%`,
+                bottom: indicatorBottomPosition,
+                transform: `translateX(var(${EXTERNAL_VARS.activeTabLeft}))`,
+                width: calc.add(`var(${EXTERNAL_VARS.activeTabWidth})`, '0.06rem'),
+                height: indicatorHorizontalHeight,
+                transitionProperty: 'transform, width',
             }),
             vertical: layerStyle('components', {
-                top: 0,
-                right: -2,
-
-                width: '2px',
-                height: `var(--active-tab-height)`,
-                translate: `-50% var(--active-tab-top)`,
+                right: indicatorRightPosition,
+                transform: `translateY(var(${EXTERNAL_VARS.activeTabTop}))`,
+                height: `var(${EXTERNAL_VARS.activeTabHeight})`,
+                width: indicatorVerticalWidth,
+                transitionProperty: 'transform, height',
+            }),
+        },
+        variant: {
+            line: layerStyle('components', {
+                backgroundColor: vars.color.border.primary,
+                vars: {
+                    [indicatorBottomPosition]: `-${BORDER_WIDTH}`,
+                    [indicatorRightPosition]: `-${BORDER_WIDTH}`,
+                    [indicatorHorizontalHeight]: `${BORDER_WIDTH}`,
+                    [indicatorVerticalWidth]: `${BORDER_WIDTH}`,
+                },
+            }),
+            fill: layerStyle('components', {
+                backgroundColor: vars.color.background.primary['100'],
+                borderRadius: vars.size.borderRadius[300],
+                vars: {
+                    [indicatorBottomPosition]: '0',
+                    [indicatorRightPosition]: '0',
+                    [indicatorHorizontalHeight]: '100%',
+                    [indicatorVerticalWidth]: `100%`,
+                },
             }),
         },
     },
 });
 
 export type ListVariants = NonNullable<RecipeVariants<typeof list>>;
-export type TriggerVariants = NonNullable<RecipeVariants<typeof trigger>>;
+export type ButtonVariants = NonNullable<RecipeVariants<typeof button>>;

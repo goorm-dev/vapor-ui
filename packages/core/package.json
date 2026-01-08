@@ -1,7 +1,7 @@
 {
     "name": "@vapor-ui/core",
-    "description": "An open-source component library for building high-quality, accessible web applications. Features easy customization and AI-friendly components. Maintained by @goorm-dev.",
     "version": "1.0.0-beta.11",
+    "description": "An open-source component library for building high-quality, accessible web applications. Features easy customization and AI-friendly components. Maintained by @goorm-dev.",
     "keywords": [
         "react",
         "react-components",
@@ -9,12 +9,21 @@
         "design-system",
         "accessible"
     ],
-    "author": "Vapor Team <vapor.ui@goorm.io>",
-    "license": "MIT",
     "homepage": "https://github.com/goorm-dev/vapor-ui",
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "bugs": {
+        "url": "https://github.com/goorm-dev/vapor-ui/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/goorm-dev/vapor-ui.git",
+        "directory": "packages/react"
+    },
+    "license": "MIT",
+    "author": "Vapor Team <vapor.ui@goorm.io>",
+    "sideEffects": [
+        "**/*.css",
+        "**/*.css.ts"
+    ],
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
@@ -29,34 +38,22 @@
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
         "./styles.css": "./dist/styles/themes.css.ts.vanilla.css"
     },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
         "dist"
     ],
-    "sideEffects": [
-        "**/*.css",
-        "**/*.css.ts"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/goorm-dev/vapor-ui.git",
-        "directory": "packages/react"
-    },
-    "publishConfig": {
-        "access": "public"
-    },
-    "bugs": {
-        "url": "https://github.com/goorm-dev/vapor-ui/issues"
-    },
     "scripts": {
         "build": "rimraf dist && rollup -c rollup.config.mjs",
-        "lint": "eslint ./src",
+        "clean": "rimraf dist node_modules .turbo",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
-        "clean": "rimraf dist node_modules .turbo",
+        "lint": "eslint ./src",
         "test": "vitest --run",
-        "test:watch": "vitest",
         "test:coverage": "vitest --coverage",
         "test:regressions": "npx playwright test -c ./playwright.config.ts",
+        "test:watch": "vitest",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -112,5 +109,8 @@
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
         "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }

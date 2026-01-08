@@ -10,6 +10,7 @@ import collapsibleData from '../../public/components/collapsible.json';
 import dialogData from '../../public/components/dialog.json';
 import fieldData from '../../public/components/field.json';
 import flexData from '../../public/components/flex.json';
+import floatingBarData from '../../public/components/floating-bar.json';
 import gridData from '../../public/components/grid.json';
 import hStackData from '../../public/components/h-stack.json';
 import iconButtonData from '../../public/components/icon-button.json';
@@ -36,6 +37,7 @@ import vStackData from '../../public/components/v-stack.json';
 // FIXME: TextInput, Switch, Checkbox, RadioGroup, Radio 컴포넌트 props 점검
 // Map of component key -> entire JSON documentation object
 export const ComponentDocsMap: Record<string, Record<string, unknown>> = {
+    'floating-bar': floatingBarData,
     avatar: avatarData,
     badge: badgeData,
     box: boxData,

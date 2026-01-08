@@ -125,7 +125,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
 
             // Add variant prop based on hasBorder
             if (hasBorder !== null) {
-                const variantValue = hasBorder ? 'line' : 'plain';
+                const variantValue = hasBorder ? 'line' : 'fill';
                 element.openingElement.attributes.push(
                     j.jsxAttribute(j.jsxIdentifier('variant'), j.stringLiteral(variantValue)),
                 );

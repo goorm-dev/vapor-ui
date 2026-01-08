@@ -104,11 +104,10 @@ export default function SheetForm() {
                     <Sheet.Body className="body">
                         <Tabs.Root defaultValue={'sort'} className={'tabs'}>
                             <Tabs.List className={'tabs-list'}>
-                                <Tabs.Trigger value="sort">Sort</Tabs.Trigger>
-                                <Tabs.Trigger value="package">Package</Tabs.Trigger>
-                                <Tabs.Trigger value="status">Status</Tabs.Trigger>
-                                <Tabs.Trigger value="tag">Tag</Tabs.Trigger>
-                                <Tabs.Indicator />
+                                <Tabs.Button value="sort">Sort</Tabs.Button>
+                                <Tabs.Button value="package">Package</Tabs.Button>
+                                <Tabs.Button value="status">Status</Tabs.Button>
+                                <Tabs.Button value="tag">Tag</Tabs.Button>
                             </Tabs.List>
                             <Tabs.Panel value="sort" className={'tabs-panel'}>
                                 <VStack gap="$100">
