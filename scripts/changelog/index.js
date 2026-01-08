@@ -114,7 +114,7 @@ const changelogFunctions = {
         ].join('');
 
         // Include scope information in the output using a special marker
-        const scopeInfo = scopeFromPR ? `[SCOPE:${scopeFromPR}]` : '[SCOPE:etc]';
+        const scopeInfo = scopeFromPR ? `[SCOPE:${scopeFromPR}]` : '[SCOPE:etc.]';
 
         return `\n\n${scopeInfo}- ${firstLine}${suffix}\n${futureLines
             .map((l) => `  ${l}`)
