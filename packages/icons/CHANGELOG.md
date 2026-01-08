@@ -6,7 +6,7 @@
 
 - remove iconType ([#231](https://github.com/goorm-dev/vapor-ui/pull/231)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### etc
+### Etc
 
 - Update icons from Figma ([#406](https://github.com/goorm-dev/vapor-ui/pull/406)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
@@ -14,7 +14,7 @@
 
 ## 1.0.0-beta.6
 
-### etc
+### Etc
 
 - clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -24,34 +24,18 @@
 
 ## 1.0.0-beta.5
 
-### Minor Changes
+### Etc
 
-- 8217749: Add new icons from Figma
+- Add new icons from Figma ([#264](https://github.com/goorm-dev/vapor-ui/pull/264)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+    **New:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
 
-    **Also Updated:**
+    **Updated:**
     - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
 
-- 402284e: Add new icons from Figma
+- Update icons from Figma ([#285](https://github.com/goorm-dev/vapor-ui/pull/285)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `DocktoBottomOutlineIcon`, `SideNavOutlineIcon`
-
-    **Also Updated:**
-    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
-
-- fd4acaa: Add new icons from Figma
-
-    **New Basic Icons:** `SideNavIcon`, `DocktoBottomIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
-
-    **Also Updated:**
-    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
-
-### Patch Changes
-
-- f2950ee: Update icons from Figma
-
-    **Updated Basic Icons:** `TreeCollapseIcon`
+    **Updated:** `TreeCollapseIcon`
 
 ## 0.4.0
 

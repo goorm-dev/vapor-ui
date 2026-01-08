@@ -22,16 +22,14 @@
 
 ## 1.0.0-beta.6
 
-### etc
+### Etc
 
 - feat: update color generator & color palette ([#337](https://github.com/goorm-dev/vapor-ui/pull/337)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
 ## 1.0.0-beta.5
 
-### Minor Changes
+### Etc
 
-- caf13a1: feat: create @vapor-ui/color-generator & @vapor-ui/css-generator
+- feat: create @vapor-ui/color-generator & @vapor-ui/css-generator ([#234](https://github.com/goorm-dev/vapor-ui/pull/234)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
-### Patch Changes
-
-- 707f705: feat: update color tokens
+- feat: update color tokens ([#261](https://github.com/goorm-dev/vapor-ui/pull/261)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!

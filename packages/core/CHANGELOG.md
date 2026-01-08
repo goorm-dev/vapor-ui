@@ -38,7 +38,7 @@
 
 - Correct background-color of TextInput component ([#387](https://github.com/goorm-dev/vapor-ui/pull/387)) - Thanks [@agetbase](https://github.com/agetbase)!
 
-### etc
+### Etc
 
 - clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -67,7 +67,21 @@
 
 ## 1.0.0-beta.7
 
-### General
+### Menu
+
+- Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification ([#325](https://github.com/goorm-dev/vapor-ui/pull/325)) - Thanks [@agetbase](https://github.com/agetbase)!
+
+- Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec ([#342](https://github.com/goorm-dev/vapor-ui/pull/342)) - Thanks [@agetbase](https://github.com/agetbase)!
+
+### Pagination
+
+- add new `Pagination` component ([#329](https://github.com/goorm-dev/vapor-ui/pull/329)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Table
+
+- add new `Table` component ([#294](https://github.com/goorm-dev/vapor-ui/pull/294)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Etc
 
 - synchronized color tokens with figma ([#340](https://github.com/goorm-dev/vapor-ui/pull/340)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
@@ -95,67 +109,90 @@
     - Aligns with Vapor UI's 4-layer component architecture (Container, Interaction, Contents, Slot)
     - Layout concerns should be handled by parent containers, not component props
 
-### Menu
-
-- Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification ([#325](https://github.com/goorm-dev/vapor-ui/pull/325)) - Thanks [@agetbase](https://github.com/agetbase)!
-
-- Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec ([#342](https://github.com/goorm-dev/vapor-ui/pull/342)) - Thanks [@agetbase](https://github.com/agetbase)!
-
-### Pagination
-
-- add new `Pagination` component ([#329](https://github.com/goorm-dev/vapor-ui/pull/329)) - Thanks [@noahchoii](https://github.com/noahchoii)!
-
-### Table
-
-- add new `Table` component ([#294](https://github.com/goorm-dev/vapor-ui/pull/294)) - Thanks [@noahchoii](https://github.com/noahchoii)!
-
 ## 1.0.0-beta.6
 
 It contains the same code as the previous version. Please refer to that version.
 
 ## 1.0.0-beta.5
 
-### Minor Changes
+### Button
 
-- 27c0ba9: export component with namespace
-- f8af6e2: feat: remove ThemeScript & simplify ThemeProvider
-- c9e4b68: migrate to base-ui beta v4
-- 220cda2: change components interface
-- 216866e: feat: add new component `RadioCard`
-- 6c02d6f: unreflected content revisions
-- f17650a: add uilitiy props
-- b581b9f: add `Form` component
-- 7928a67: add subcomponent props to `Content`
-- e12f4c4: split label into vertical/horizontal
-- 5357a54: feat(theme): Add ThemeScope component and migrate to data-attribute based theming
-- 98170c1: Add white foreground variant to foreground recipe
+- update horizontal padding for small size (`050 (4px)` -> `100 (8px)`) ([#323](https://github.com/goorm-dev/vapor-ui/pull/323)) - Thanks [@agetbase](https://github.com/agetbase)!
 
-### Patch Changes
+### Checkbox
 
-- abeac6d: Unified the Cascade Layer into a single layer `vapor`
-- 3819233: Fix checkbox borderRadius sync error
-- ee61a32: Synchronize the aria-labelledby with the recieved id prop
-- df5cb78: separate `readonly` from `disabled`
-- 707f705: feat: update color tokens
-- f0f643b: feat: Remove Font Loading from CSS Build
-- 43cfefb: feat: add font banner
-- 74dc538: ### Features
-    - **Enabled CSS Tree-shaking:** Component CSS is now imported by its corresponding JS file instead of being in the global `styles.css`. This significantly reduces your production bundle size by only including the CSS for components you actually use.
+- fix checkbox borderRadius sync error ([#267](https://github.com/goorm-dev/vapor-ui/pull/267)) - Thanks [@SimYunSup](https://github.com/SimYunSup)!
 
-    ### Bug Fixes
-    - Fixed a CSS dependency order issue where `IconButton` styles loaded before `Button` styles, causing incorrect style inheritance.
+### Field
 
-- 6f8de5b: correct padding-inline for sm size from 4px(050) to 8px(100)
-- 4df6bcf: resolved interactions layer's color in dark mode
-- 25c235e: adjust indicator size to account for border
-- 716c1d6: restore reset css
-- 9a3c4f6: fix(RadioGroup): Resolving orientation style errors
-- d68304a: fix(text-input): add component layer
-- Updated dependencies [8217749]
-- Updated dependencies [402284e]
-- Updated dependencies [fd4acaa]
-- Updated dependencies [f2950ee]
-    - @vapor-ui/icons@0.5.0
+- add default layout styles to field.label ([#289](https://github.com/goorm-dev/vapor-ui/pull/289)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Form
+
+- add new `Form` component ([#256](https://github.com/goorm-dev/vapor-ui/pull/256)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Icon Button
+
+- Fixed a CSS dependency order issue where `IconButton` styles loaded before `Button` styles, causing incorrect style inheritance.
+
+### Radio
+
+- adjust indicator size to account for border ([#291](https://github.com/goorm-dev/vapor-ui/pull/291)) - Thanks [@SimYunSup](https://github.com/SimYunSup)!
+
+### Radio Card
+
+- add new component `RadioCard` ([#284](https://github.com/goorm-dev/vapor-ui/pull/284)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+### Radio Group
+
+- synchronize the aria-labelledby with the recieved id prop ([#327](https://github.com/goorm-dev/vapor-ui/pull/327)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- replace layout styles into layout component like VStack, HStack ([#288](https://github.com/goorm-dev/vapor-ui/pull/288)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+### Text Input
+
+- add component layer ([#253](https://github.com/goorm-dev/vapor-ui/pull/253)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+### Theme
+
+- add ThemeScope component and migrate to data-attribute based theming ([#278](https://github.com/goorm-dev/vapor-ui/pull/278)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+### Theme Provider
+
+- remove ThemeScript and simplify ThemeProvider ([#240](https://github.com/goorm-dev/vapor-ui/pull/240)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+### Etc
+
+- enabled CSS tree shaking ([#298](https://github.com/goorm-dev/vapor-ui/pull/298)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+    - Component CSS is now automatically imported by each component file.
+
+- add white foreground variant to foreground recipe ([#305](https://github.com/goorm-dev/vapor-ui/pull/305)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- export component with namespace ([#276](https://github.com/goorm-dev/vapor-ui/pull/276)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- migrate to base-ui beta v4 ([#292](https://github.com/goorm-dev/vapor-ui/pull/292)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- change components interface ([#360](https://github.com/goorm-dev/vapor-ui/pull/360)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- missing component exports in entry file ([#248](https://github.com/goorm-dev/vapor-ui/pull/248)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add uilitiy css props ([#326](https://github.com/goorm-dev/vapor-ui/pull/326)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- rename `CombinedContent` to `Content` ([#247](https://github.com/goorm-dev/vapor-ui/pull/247)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- unify cascade layers under `vapor` namespace ([#334](https://github.com/goorm-dev/vapor-ui/pull/334)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- standardize state attributes for form components ([#282](https://github.com/goorm-dev/vapor-ui/pull/282)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- feat: rename color tokens ([#261](https://github.com/goorm-dev/vapor-ui/pull/261)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+- prevent loading font while building CSS ([#265](https://github.com/goorm-dev/vapor-ui/pull/265)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+- correct background color of interaction layer in dark mode ([#335](https://github.com/goorm-dev/vapor-ui/pull/335)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.0.0-beta.5
 
 ## 0.6.0
 

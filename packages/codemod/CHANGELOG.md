@@ -32,6 +32,6 @@
 
 ## 1.0.0-beta.5
 
-### Minor Changes
+### CLI
 
-- a8de0b0: Add codemod for icon packages name import
+- Add codemod for icon packages name import ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
