@@ -16,9 +16,9 @@
 
 ## 1.0.0-beta.7
 
-### Minor Changes
+### Color Generator
 
-- 174d004: add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step)
+- add color-border-normal semantic token that dynamically adapts to background color customization (light: 100 step, dark: 300 step) ([#370](https://github.com/goorm-dev/vapor-ui/pull/370)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
 ## 1.0.0-beta.6
 

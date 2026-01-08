@@ -67,13 +67,11 @@
 
 ## 1.0.0-beta.7
 
-### Minor Changes
+### General
 
-- 40bfa0a: change components interface
-- 1aecc3d: synchronized color tokens with figma
-- dbb74cf: add new `Table` component
-- d4be5bb: add new `Pagination` component
-- 9f9b700: **BREAKING CHANGE**: Remove `stretch` prop from Button, IconButton, and NavigationMenu components
+- synchronized color tokens with figma ([#340](https://github.com/goorm-dev/vapor-ui/pull/340)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- **BREAKING CHANGE**: Remove `stretch` prop from Button, IconButton, and NavigationMenu components ([#368](https://github.com/goorm-dev/vapor-ui/pull/368)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
     The `stretch` prop has been removed to align with Figma's component variant system. In Figma, width control is handled via "Fill Container" (Auto Layout), not as a component variant.
 
@@ -97,10 +95,19 @@
     - Aligns with Vapor UI's 4-layer component architecture (Container, Interaction, Contents, Slot)
     - Layout concerns should be handled by parent containers, not component props
 
-### Patch Changes
+### Menu
 
-- 1fd7efc: Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification
-- ed63947: Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec
+- Updated Menu.Item paddingRight from 6px to 12px to match Figma design specification ([#325](https://github.com/goorm-dev/vapor-ui/pull/325)) - Thanks [@agetbase](https://github.com/agetbase)!
+
+- Correct MenuPositionerPrimitive sideOffset from 8px to 4px to match Figma spec ([#342](https://github.com/goorm-dev/vapor-ui/pull/342)) - Thanks [@agetbase](https://github.com/agetbase)!
+
+### Pagination
+
+- add new `Pagination` component ([#329](https://github.com/goorm-dev/vapor-ui/pull/329)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Table
+
+- add new `Table` component ([#294](https://github.com/goorm-dev/vapor-ui/pull/294)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
 ## 1.0.0-beta.6
 
