@@ -58,19 +58,19 @@
 
 ## 0.3.0
 
-### Minor Changes
+### Etc
 
-- c4d0e8e: Add new icons from Figma
+- add new icons from Figma ([#179](https://github.com/goorm-dev/vapor-ui/pull/179)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `LinearScaleOutlineIcon`
+    **New:** `LinearScaleOutlineIcon`
 
-    **Also Updated:**
+    **Updated:**
     - Basic Icons: `PlayIcon`, `ReplaceIcon`, `ClassIcon`, `ArrowUpOutlineIcon`, `ArrowDownOutlineIcon`, `TerminalOutlineIcon`, `ViewShrinkOutlineIcon`, `FolderSearchIcon`, `StarOutlineIcon`, `PriceOutlineIcon`, `HistoryOutlineIcon`, `CardsOutlineIcon`, `ZoomOutOutlineIcon`, `IntelliSensePropertyOutlineIcon`, `CorrectOutlineIcon`, `ChevronDoubleRightOutlineIcon`, `AutoCodeOutlineIcon`, `ChapterOutlineIcon`
     - Symbol Icons: `RstudioColorIcon`
 
-- a156f82: Add new icons from Figma
+- add new icons from Figma ([#198](https://github.com/goorm-dev/vapor-ui/pull/198)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `SidenavIcon`
+    **New:** `SidenavIcon`
 
 ## 0.2.0
 

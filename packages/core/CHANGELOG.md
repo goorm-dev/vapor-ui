@@ -268,25 +268,45 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.5.0
 
-### Minor Changes
+### Avatar
 
-- df2dbc4: add new `Tooltip` component
-- fdbf49d: enhance token structure
-- 263874c: add new `Menu` component
-- 66a0032: add new `Breadcrumb` component
+- align CSS variable with build identifiers config ([#176](https://github.com/goorm-dev/vapor-ui/pull/176)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Patch Changes
+### Breadcrumb
 
-- b498ae2: Fix RadioGroup indicator color to use white background instead of theme-dependent background normal
-- fe0d153: Align CSS variable naming with new build identifiers config
-- 7b1b889: remove hover state when used touchscreen
-- 74b7c97: add VComponentProps
-- 3611d89: style(Button): add no-wrap
-- 9188b0e: Enhance vanillaExtractPlugin identifiers for better debugging
-- 96c0f7a: add box-shadow tokens
-- Updated dependencies [c4d0e8e]
-- Updated dependencies [a156f82]
-    - @vapor-ui/icons@0.3.0
+- add new `Breadcrumb` component ([#151](https://github.com/goorm-dev/vapor-ui/pull/151)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Button
+
+- add `no-wrap` CSS properties ([#114](https://github.com/goorm-dev/vapor-ui/pull/114)) - Thanks [@jun094](https://github.com/jun094)!
+
+### Menu
+
+- add new `Menu` component ([#147](https://github.com/goorm-dev/vapor-ui/pull/147)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Radio Group
+
+- add background-color(white) to RadioGroup Indicator ([#146](https://github.com/goorm-dev/vapor-ui/pull/146)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Tooltip
+
+- add new `Tooltip` component ([#150](https://github.com/goorm-dev/vapor-ui/pull/150)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Etc
+
+- enhance vanillaExtractPlugin identifiers ([#161](https://github.com/goorm-dev/vapor-ui/pull/161)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- remove hover state when used touchscreen ([#158](https://github.com/goorm-dev/vapor-ui/pull/158)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add `VComponentProps` ([#168](https://github.com/goorm-dev/vapor-ui/pull/168)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- add `box-shadow` tokens ([#143](https://github.com/goorm-dev/vapor-ui/pull/143)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+- enhance vanillaExtractPlugin identifiers for better debugging ([#149](https://github.com/goorm-dev/vapor-ui/pull/149)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.0.0
 
 ## 0.4.0
 
