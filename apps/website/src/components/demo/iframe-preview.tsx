@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import { useTheme } from '@vapor-ui/core';
+
 import type { DeviceType } from '~/constants/code-block';
 import { DEVICE_WIDTH_MAP } from '~/constants/code-block';
 
@@ -17,13 +19,13 @@ const getIframeWidth = (device: DeviceType) => {
 export function IframePreview(props: IframePreviewProps) {
     const { name, device } = props;
     const iframeRef = React.useRef<HTMLIFrameElement>(null);
-
+    const { resolvedTheme } = useTheme();
     React.useEffect(() => {
-        if (iframeRef.current) {
-            // Set the iframe src to the dedicated preview page
-            iframeRef.current.src = `/preview/component?path=${encodeURIComponent(name)}`;
+        if (iframeRef.current && resolvedTheme) {
+            // Set the iframe src with theme parameter
+            iframeRef.current.src = `/preview/component?path=${encodeURIComponent(name)}&theme=${resolvedTheme}`;
         }
-    }, [name]);
+    }, [name, resolvedTheme]);
 
     return (
         <div className={'iframe-preview-container flex justify-center p-v-300'}>

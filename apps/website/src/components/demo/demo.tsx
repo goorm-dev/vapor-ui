@@ -79,11 +79,11 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
             >
                 <Tabs.List>
                     {Object.values(TAB_TYPES).map((tab) => (
-                        <Tabs.Trigger key={tab} value={tab}>
+                        <Tabs.Button key={tab} value={tab}>
                             {tab}
-                        </Tabs.Trigger>
+                        </Tabs.Button>
                     ))}
-                    <Tabs.Indicator renderBeforeHydration />
+                    <Tabs.IndicatorPrimitive renderBeforeHydration />
                 </Tabs.List>
                 {shouldShowDeviceToggle && (
                     <ButtonToggleGroup
@@ -144,7 +144,7 @@ const DemoContent = ({
                 value={selectedTab}
                 onValueChange={onTabChange}
                 className="w-full rounded-v-300"
-                variant="plain"
+                variant="line"
                 size="lg"
             >
                 <DemoHeader
