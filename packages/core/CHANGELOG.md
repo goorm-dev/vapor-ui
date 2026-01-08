@@ -340,14 +340,11 @@ It contains the same code as the previous version. Please refer to that version.
 
 ## 0.3.0
 
-### Minor Changes
+### Etc
 
-- e139a7f: remove sprinkles on each components
+- remove sprinkles on each components ([#88](https://github.com/goorm-dev/vapor-ui/pull/88)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-### Patch Changes
-
-- 03655b1: fix(tsup): Correct CSS Layer Priority for vapor-components
-- 488c614: refactor: replace text sprinkles into mixins
+- correct CSS layer priority ([#94](https://github.com/goorm-dev/vapor-ui/pull/94)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
 
 ## 0.2.1
 
