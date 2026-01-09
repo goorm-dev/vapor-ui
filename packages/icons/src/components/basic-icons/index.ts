@@ -496,6 +496,7 @@ export { default as UnderlineOutlineIcon } from './UnderlineOutlineIcon';
 export { default as BlockOutlineIcon } from './BlockOutlineIcon';
 export { default as IndentIncreaseOutlineIcon } from './IndentIncreaseOutlineIcon';
 export { default as CodeBlockOutlineIcon } from './CodeBlockOutlineIcon';
+export { default as HeadingOutlineIcon } from './HeadingOutlineIcon';
 export { default as HardBreakOutlineIcon } from './HardBreakOutlineIcon';
 export { default as AlignJustifyOutlineIcon } from './AlignJustifyOutlineIcon';
 export { default as IndentDecreaseOutlineIcon } from './IndentDecreaseOutlineIcon';
