@@ -3,7 +3,8 @@ import path from 'node:path';
 
 import { findTsconfig } from '~/core/config';
 import { addSourceFiles, createProject, getNamespaces } from '~/core/project';
-import { findComponentFiles } from '~/core/scanner';
+import { findComponentFiles, findFileByComponentName } from '~/core/scanner';
+import { promptComponentSelection } from './prompts';
 
 const cli = meow(
     `
@@ -14,11 +15,12 @@ const cli = meow(
     --tsconfig, -c       Path to tsconfig.json (default: auto-detect)
     --ignore, -i         Additional ignore patterns (added to defaults)
     --no-default-ignore  Disable default ignore patterns (.stories.tsx, .css.ts)
+    --component, -n      Component name to process (e.g., Button, TextInput)
 
   Examples
     $ ts-api-extractor docs-generate ./packages/core
-    $ ts-api-extractor docs-generate ./packages/core --ignore .test.tsx
-    $ ts-api-extractor docs-generate ./packages/core --no-default-ignore --ignore .git
+    $ ts-api-extractor docs-generate ./packages/core --component Button
+    $ ts-api-extractor docs-generate ./packages/core -n TextInput
 `,
     {
         importMeta: import.meta,
@@ -35,6 +37,10 @@ const cli = meow(
             defaultIgnore: {
                 type: 'boolean',
                 default: true,
+            },
+            component: {
+                type: 'string',
+                shortFlag: 'n',
             },
         },
     },
@@ -62,27 +68,49 @@ async function run() {
 
         const ignore = cli.flags.ignore ?? [];
         const noDefaultIgnore = !cli.flags.defaultIgnore;
-        const files = await findComponentFiles(absolutePath, { ignore, noDefaultIgnore });
 
-        if (files.length === 0) {
+        const allFiles = await findComponentFiles(absolutePath, { ignore, noDefaultIgnore });
+
+        if (allFiles.length === 0) {
             console.log('No .tsx files found');
             return;
         }
 
+        let targetFiles: string[];
+        let componentName = cli.flags.component;
+
+        if (!componentName) {
+            const result = await promptComponentSelection();
+
+            if (result.type === 'all') {
+                targetFiles = allFiles;
+            } else {
+                componentName = result.name;
+            }
+        }
+
+        if (componentName) {
+            const file = findFileByComponentName(allFiles, componentName);
+
+            if (!file) {
+                console.error(`Error: Component "${componentName}" not found`);
+                process.exit(1);
+            }
+
+            targetFiles = [file];
+        }
+
         const project = createProject(tsconfigPath);
-        const sourceFiles = addSourceFiles(project, files);
+        const sourceFiles = addSourceFiles(project, targetFiles!);
 
         for (const sourceFile of sourceFiles) {
             const namespaces = getNamespaces(sourceFile);
 
             if (namespaces.length > 0) {
                 console.log(`\n${sourceFile.getFilePath()}`);
-
-                if (namespaces.length > 0) {
-                    console.log('  Namespaces:');
-                    for (const name of namespaces) {
-                        console.log(`    - ${name}`);
-                    }
+                console.log('  Namespaces:');
+                for (const name of namespaces) {
+                    console.log(`    - ${name}`);
                 }
             }
         }

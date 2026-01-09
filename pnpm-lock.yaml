@@ -800,6 +800,9 @@ importers:
 
   tools/typescript-api-extractor:
     dependencies:
+      '@inquirer/prompts':
+        specifier: ^7.9.0
+        version: 7.10.1(@types/node@20.19.17)
       glob:
         specifier: ^10.3.0
         version: 10.4.5

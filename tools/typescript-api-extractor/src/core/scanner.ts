@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { glob } from 'glob';
 
 const DEFAULT_IGNORE = ['.stories.tsx', '.css.ts'];
@@ -5,6 +7,21 @@ const DEFAULT_IGNORE = ['.stories.tsx', '.css.ts'];
 export interface ScannerOptions {
     ignore?: string[];
     noDefaultIgnore?: boolean;
+}
+
+export function normalizeComponentName(name: string): string {
+    return name.toLowerCase().replace(/-/g, '');
+}
+
+export function findFileByComponentName(files: string[], componentName: string): string | null {
+    const normalizedInput = normalizeComponentName(componentName);
+
+    return (
+        files.find((file) => {
+            const fileName = path.basename(file, path.extname(file));
+            return normalizeComponentName(fileName) === normalizedInput;
+        }) ?? null
+    );
 }
 
 export async function findComponentFiles(
