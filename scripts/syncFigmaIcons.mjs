@@ -38,7 +38,9 @@ function normalizeIconName(name) {
 console.log('\x1b[33m---------------- GDS FIGMA EXPORT -----------------\x1b[0m');
 
 if (!process.env.FIGMA_TOKEN) {
-    console.error('\x1b[31m GDS FIGMA EXPORT ERROR: FIGMA_TOKEN environment variable is not set.\x1b[0m');
+    console.error(
+        '\x1b[31m GDS FIGMA EXPORT ERROR: FIGMA_TOKEN environment variable is not set.\x1b[0m',
+    );
     process.exit(1);
 }
 
@@ -79,7 +81,9 @@ try {
 
     // Exit early if no icons found to prevent overwriting existing files
     if (components.length === 0) {
-        console.error('\x1b[31m GDS FIGMA EXPORT ERROR: No icons found! Check FIGMA_TOKEN and API access.\x1b[0m');
+        console.error(
+            '\x1b[31m GDS FIGMA EXPORT ERROR: No icons found! Check FIGMA_TOKEN and API access.\x1b[0m',
+        );
         process.exit(1);
     }
 
@@ -169,10 +173,7 @@ try {
     const figmaIconNames = new Set(componentsInfo.nameArr);
 
     // Get existing icon directories
-    const existingIconDirs = await fs.readdir(parentIconPath, {
-        withFileTypes: true,
-    });
-    const existingIconNames = existingIconDirs
+    const existingIconNames = (await fs.readdir(parentIconPath, { withFileTypes: true }))
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name);
 
