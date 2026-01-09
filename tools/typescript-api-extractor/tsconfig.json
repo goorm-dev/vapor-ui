@@ -6,6 +6,10 @@
     "lib": ["ES2022"],
     "outDir": "./dist",
     "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
