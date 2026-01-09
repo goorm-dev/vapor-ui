@@ -22,7 +22,8 @@
         "test:run": "vitest run",
         "test:coverage": "vitest run --coverage",
         "lint": "eslint ./src",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "format": "prettier --write ./src"
     },
     "devDependencies": {
         "@types/node": "^20.10.0",

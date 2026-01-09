@@ -1,4 +1,4 @@
-import { Project, type SourceFile } from 'ts-morph';
+import { type ExportedDeclarations, Project, type SourceFile } from 'ts-morph';
 
 export function createProject(tsconfigPath: string): Project {
     return new Project({ tsConfigFilePath: tsconfigPath });
@@ -6,4 +6,10 @@ export function createProject(tsconfigPath: string): Project {
 
 export function addSourceFiles(project: Project, filePaths: string[]): SourceFile[] {
     return project.addSourceFilesAtPaths(filePaths);
+}
+
+export function getExportedNodes(
+    sourceFile: SourceFile,
+): ReadonlyMap<string, ExportedDeclarations[]> {
+    return sourceFile.getExportedDeclarations();
 }

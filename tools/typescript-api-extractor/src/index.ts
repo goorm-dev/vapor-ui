@@ -1,2 +1,2 @@
 export { findComponentFiles } from './core/scanner';
-export { createProject, addSourceFiles } from './core/project';
+export { createProject, addSourceFiles, getExportedNodes } from './core/project';
