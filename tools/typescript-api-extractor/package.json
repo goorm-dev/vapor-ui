@@ -34,8 +34,9 @@
         "vitest": "^2.0.0"
     },
     "dependencies": {
-        "commander": "^12.0.0",
-        "glob": "^10.3.0"
+        "glob": "^10.3.0",
+        "meow": "^14.0.0",
+        "ts-morph": "^22.0.0"
     },
     "peerDependencies": {
         "typescript": ">=5.0.0"

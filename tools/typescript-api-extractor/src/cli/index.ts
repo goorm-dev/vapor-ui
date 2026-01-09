@@ -1,28 +1,39 @@
-import { Command } from 'commander';
+import meow from 'meow';
 
-import { findComponentFiles } from '../core/scanner';
+import { findComponentFiles } from '~/core/scanner';
 
-const program = new Command();
+const cli = meow(
+    `
+  Usage
+    $ ts-api-extractor <command> <path>
 
-program
-    .name('ts-api-extractor')
-    .description('TypeScript AST-based API extractor for documentation generation')
-    .version('0.0.1');
+  Commands
+    docs-generate  Find component files in given path
 
-program
-    .command('docs-generate')
-    .description('Find component files in given path')
-    .argument('<path>', 'Directory path to scan')
-    .action(async (inputPath: string) => {
-        try {
-            const files = await findComponentFiles(inputPath);
-            files.forEach((file) => {
-                console.log(file);
-            });
-        } catch (error) {
-            console.error('Error:', error instanceof Error ? error.message : error);
+  Examples
+    $ ts-api-extractor docs-generate ./src
+`,
+    {
+        importMeta: import.meta,
+    },
+);
+
+const [command, inputPath] = cli.input;
+
+async function run() {
+    if (command === 'docs-generate') {
+        if (!inputPath) {
+            console.error('Error: path is required');
             process.exit(1);
         }
-    });
 
-program.parse();
+        const files = await findComponentFiles(inputPath);
+        files.forEach((file) => {
+            console.log(file);
+        });
+    } else {
+        cli.showHelp();
+    }
+}
+
+run();
