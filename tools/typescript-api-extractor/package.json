@@ -23,7 +23,7 @@
         "test:coverage": "vitest run --coverage",
         "lint": "eslint ./src",
         "typecheck": "tsc --noEmit",
-        "format": "prettier --write ./src"
+        "format": "prettier --write \"./**/*.{ts,md}\""
     },
     "devDependencies": {
         "@types/node": "^20.10.0",

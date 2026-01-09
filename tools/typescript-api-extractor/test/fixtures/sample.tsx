@@ -1,3 +1,3 @@
 export function SampleComponent() {
-  return <div>Sample</div>;
+    return <div>Sample</div>;
 }
