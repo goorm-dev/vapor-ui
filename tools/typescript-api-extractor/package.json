@@ -1,0 +1,48 @@
+{
+    "name": "@vapor-ui/typescript-api-extractor",
+    "version": "0.0.1",
+    "description": "TypeScript AST-based API extractor for documentation generation",
+    "type": "module",
+    "bin": {
+        "ts-api-extractor": "./bin/cli.js"
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "test": "vitest",
+        "test:run": "vitest run",
+        "test:coverage": "vitest run --coverage",
+        "lint": "eslint ./src",
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "@vitest/coverage-v8": "^2.0.0",
+        "eslint": "^9.39.2",
+        "tsup": "^8.0.0",
+        "typescript": "^5.3.0",
+        "vitest": "^2.0.0"
+    },
+    "dependencies": {
+        "commander": "^12.0.0",
+        "glob": "^10.3.0"
+    },
+    "peerDependencies": {
+        "typescript": ">=5.0.0"
+    },
+    "engines": {
+        "node": ">=20.19"
+    },
+    "files": [
+        "bin",
+        "dist"
+    ]
+}

@@ -1,6 +1,6 @@
 {
     "name": "@vapor-ui/docs-extractor",
-    "version": "2.0.0",
+    "version": "1.0.0",
     "private": true,
     "description": "Extract TypeScript documentation from Vapor UI components with external JSDoc merging",
     "keywords": [
