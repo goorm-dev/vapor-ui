@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { addSourceFiles, createProject, getExportedNodes } from '~/core/project';
+import { addSourceFiles, createProject, getExportedNodes, getNamespaces } from '~/core/project';
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
 
@@ -37,5 +37,21 @@ describe('getExportedNodes', () => {
         const exported = getExportedNodes(sourceFile);
 
         expect(exported.has('SampleComponent')).toBe(true);
+    });
+});
+
+describe('getNamespaces', () => {
+    it('should return namespace names from SourceFile', () => {
+        const tsconfigPath = path.join(FIXTURES_DIR, 'tsconfig.json');
+        const project = createProject(tsconfigPath);
+        const [sourceFile] = addSourceFiles(project, [
+            path.join(FIXTURES_DIR, 'component-with-namespace.tsx'),
+        ]);
+
+        const namespaces = getNamespaces(sourceFile);
+
+        expect(namespaces).toContain('Button');
+        expect(namespaces).toContain('Input');
+        expect(namespaces).toHaveLength(2);
     });
 });

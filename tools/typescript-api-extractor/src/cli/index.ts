@@ -2,7 +2,7 @@ import meow from 'meow';
 import path from 'node:path';
 
 import { findTsconfig } from '~/core/config';
-import { addSourceFiles, createProject, getExportedNodes } from '~/core/project';
+import { addSourceFiles, createProject, getNamespaces } from '~/core/project';
 import { findComponentFiles } from '~/core/scanner';
 
 const cli = meow(
@@ -73,11 +73,16 @@ async function run() {
         const sourceFiles = addSourceFiles(project, files);
 
         for (const sourceFile of sourceFiles) {
-            const exported = getExportedNodes(sourceFile);
-            if (exported.size > 0) {
+            const namespaces = getNamespaces(sourceFile);
+
+            if (namespaces.length > 0) {
                 console.log(`\n${sourceFile.getFilePath()}`);
-                for (const [name] of exported) {
-                    console.log(`  - ${name}`);
+
+                if (namespaces.length > 0) {
+                    console.log('  Namespaces:');
+                    for (const name of namespaces) {
+                        console.log(`    - ${name}`);
+                    }
                 }
             }
         }
