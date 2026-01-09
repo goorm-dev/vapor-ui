@@ -163,6 +163,39 @@ try {
     await Promise.all(promiseCreateIcons);
     console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m React component conversion complete!`);
 
+    // Detect and remove deleted icons
+    console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Checking for deleted icons...`);
+    const deletedIconNameArr = [];
+    const figmaIconNames = new Set(componentsInfo.nameArr);
+
+    // Get existing icon directories
+    const existingIconDirs = await fs.readdir(parentIconPath, {
+        withFileTypes: true,
+    });
+    const existingIconNames = existingIconDirs
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
+
+    // Find icons that exist locally but not in Figma
+    const iconsToDelete = existingIconNames.filter((iconName) => !figmaIconNames.has(iconName));
+
+    // Delete removed icons
+    if (iconsToDelete.length > 0) {
+        const promiseDeleteIcons = iconsToDelete.map(async (iconName) => {
+            const deleteTargetPath = path.join(parentIconPath, iconName);
+            await fs.rm(deleteTargetPath, { recursive: true, force: true });
+            deletedIconNameArr.push(iconName);
+            console.log(`\x1b[31m GDS FIGMA EXPORT: 🗑️  Deleted: ${iconName}\x1b[0m`);
+        });
+
+        await Promise.all(promiseDeleteIcons);
+        console.log(
+            `\x1b[33m GDS FIGMA EXPORT: \x1b[0m Removed ${deletedIconNameArr.length} deleted icons`,
+        );
+    } else {
+        console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m No deleted icons found`);
+    }
+
     // // export to entry file
     console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Exporting to entry file...`);
     const iconsIndex = getIconsIndex(componentsInfo.nameArr);
@@ -178,6 +211,11 @@ try {
     if (updatedIconNameArr.length > 0) {
         console.log(
             `FIGMA_SYNC_UPDATED_ICONS_${TYPE.toUpperCase()}=${updatedIconNameArr.join(',')}`,
+        );
+    }
+    if (deletedIconNameArr.length > 0) {
+        console.log(
+            `FIGMA_SYNC_DELETED_ICONS_${TYPE.toUpperCase()}=${deletedIconNameArr.join(',')}`,
         );
     }
     console.log(`FIGMA_SYNC_TOTAL_${TYPE.toUpperCase()}=${componentsInfo.total}`);
