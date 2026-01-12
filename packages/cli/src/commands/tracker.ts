@@ -94,20 +94,8 @@ export function resolveFile(baseDir: string, importPath: string, matcher: PathsM
  * Loads tsconfig.json and creates a path matcher for alias resolution.
  * Attempts to find the closest tsconfig relative to the target files.
  */
-function getPathsMatcher(cwd: string, targets: string[]) {
-    const validPathTarget = targets.find(
-        (t) => !glob.hasMagic(t) && fs.existsSync(path.resolve(cwd, t)),
-    );
-
-    let tsconfigBase = path.join(cwd, 'dummy.ts');
-    if (validPathTarget) {
-        const resolvedPath = path.resolve(cwd, validPathTarget);
-        tsconfigBase = fs.statSync(resolvedPath).isDirectory()
-            ? path.join(resolvedPath, 'dummy.ts')
-            : resolvedPath;
-    }
-
-    const tsconfigResult = getTsconfig(tsconfigBase);
+function getPathsMatcher() {
+    const tsconfigResult = getTsconfig();
 
     if (!tsconfigResult) {
         console.log('No tsconfig.json found. Alias resolution will be disabled.');
@@ -350,12 +338,12 @@ export async function run(targets: string[], options: TrackerOptions) {
     const initialTargets = targets.length > 0 ? targets : ['.'];
     const cwd = process.cwd();
 
-    const pathsMatcher = getPathsMatcher(cwd, initialTargets);
+    const pathsMatcher = getPathsMatcher();
     const queue = await initializeQueue(cwd, initialTargets);
 
-    console.log(
-        `Analyzing targets: ${initialTargets.join(', ')} (Mode: ${shallow ? 'Shallow' : 'Deep'})`,
-    );
+    console.log(`Analyzing targets (Mode: ${shallow ? 'Shallow' : 'Deep'})`);
+    console.log(`\n- ${initialTargets.join('\n- ')}`);
+    console.log(`\nFound ${queue.length} files to analyze.`);
 
     const usageMap = collectUsages({ shallow, pathsMatcher, queue });
 
