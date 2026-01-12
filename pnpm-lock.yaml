@@ -770,6 +770,9 @@ importers:
         specifier: ^22.0.0
         version: 22.0.0
     devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@types/node':
         specifier: ^20.10.0
         version: 20.19.17
