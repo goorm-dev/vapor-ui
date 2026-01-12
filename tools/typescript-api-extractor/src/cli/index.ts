@@ -1,6 +1,8 @@
-import meow from 'meow';
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+
+import meow from 'meow';
 
 import { findTsconfig } from '~/core/config';
 import { addSourceFiles, createProject } from '~/core/project';
@@ -14,6 +16,15 @@ function toKebabCase(str: string): string {
 function logProgress(message: string, hasFileOutput: boolean) {
     if (hasFileOutput) {
         console.error(message);
+    }
+}
+
+function formatWithPrettier(filePaths: string[]) {
+    if (filePaths.length === 0) return;
+    try {
+        execSync(`npx prettier --write ${filePaths.join(' ')}`, { stdio: 'inherit' });
+    } catch {
+        // prettier not available, skip formatting
     }
 }
 
@@ -169,17 +180,21 @@ async function run() {
             fs.mkdirSync(outputDir, { recursive: true });
         }
 
+        const writtenFiles: string[] = [];
         for (const prop of allProps) {
             const fileName = toKebabCase(prop.name) + '.json';
             const filePath = path.join(outputDir, fileName);
             fs.writeFileSync(filePath, JSON.stringify(prop, null, 2));
+            writtenFiles.push(filePath);
             console.log(`Written to ${filePath}`);
         }
+        formatWithPrettier(writtenFiles);
     } else if (cli.flags.output) {
         const outputPath = path.resolve(cwd, cli.flags.output);
         const output = allProps.length === 1 ? allProps[0] : allProps;
         fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
         console.log(`Written to ${outputPath}`);
+        formatWithPrettier([outputPath]);
     } else {
         const output = allProps.length === 1 ? allProps[0] : allProps;
         console.log(JSON.stringify(output, null, 2));

@@ -6,6 +6,39 @@
  */
 import type { Type } from 'ts-morph';
 
+function extractPropsName(typeText: string): string | null {
+    // Omit<...ComponentName.Props, "ref"> 패턴에서 Props 이름 추출
+    const match = typeText.match(/["']([^"']+)["']\)\.(\w+)\.Props/);
+    if (match) {
+        return `${match[2]}.Props`;
+    }
+    return null;
+}
+
+function simplifyReactElementType(type: Type): string | null {
+    const symbol = type.getSymbol() || type.getAliasSymbol();
+    if (!symbol) return null;
+
+    const name = symbol.getName();
+    if (name !== 'ReactElement') return null;
+
+    const typeArgs = type.getTypeArguments();
+    if (typeArgs.length === 0) return 'ReactElement';
+
+    const innerType = typeArgs[0];
+    const innerText = innerType.getText();
+
+    // ForwardRefExoticComponent 패턴 확인
+    if (innerText.includes('ForwardRefExoticComponent')) {
+        const propsName = extractPropsName(innerText);
+        if (propsName) {
+            return `ReactElement<${propsName}>`;
+        }
+    }
+
+    return 'ReactElement';
+}
+
 export function resolveType(type: Type): string {
     if (type.isUnion()) {
         const types = type.getUnionTypes().map((t) => resolveType(t));
@@ -34,6 +67,10 @@ export function resolveType(type: Type): string {
     if (type.isBoolean()) return 'boolean';
     if (type.isString()) return 'string';
     if (type.isNumber()) return 'number';
+
+    // ReactElement<ComplexType> 단순화
+    const simplified = simplifyReactElementType(type);
+    if (simplified) return simplified;
 
     return type.getText();
 }

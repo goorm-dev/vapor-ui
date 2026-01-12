@@ -58,8 +58,8 @@ function removeGenericState(type: string): string {
 function simplifyRenderType(type: string): TypeCleanResult | null {
     if (!type.includes('ComponentRenderFn')) return null;
     return {
-        type: 'ReactElement | ((props: HTMLProps) => ReactElement) | undefined',
-        values: ['ReactElement', '(props: HTMLProps) => ReactElement', 'undefined'],
+        type: 'ReactElement | ((props: HTMLProps) => ReactElement)',
+        values: ['ReactElement', '(props: HTMLProps) => ReactElement'],
     };
 }
 
@@ -72,17 +72,24 @@ function extractStringValue(literal: string): string {
     return literal.trim().slice(1, -1);
 }
 
+function removeUndefined(type: string): string {
+    return type
+        .split(' | ')
+        .map((p) => p.trim())
+        .filter((p) => p !== 'undefined')
+        .join(' | ');
+}
+
 function extractUnionValues(type: string): TypeCleanResult {
-    const parts = type.split(' | ').map((p) => p.trim());
-    const nonUndefined = parts.filter((p) => p !== 'undefined');
+    const cleanedType = removeUndefined(type);
+    const parts = cleanedType.split(' | ').map((p) => p.trim());
+    const stringLiterals = parts.filter(isStringLiteral);
 
-    const stringLiterals = nonUndefined.filter(isStringLiteral);
-
-    if (stringLiterals.length === nonUndefined.length && stringLiterals.length > 0) {
-        return { type, values: stringLiterals.map(extractStringValue) };
+    if (stringLiterals.length === parts.length && stringLiterals.length > 0) {
+        return { type: cleanedType, values: stringLiterals.map(extractStringValue) };
     }
 
-    return { type };
+    return { type: cleanedType, values: parts.length > 0 ? parts : undefined };
 }
 
 export function cleanType(type: string): TypeCleanResult {

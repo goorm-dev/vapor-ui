@@ -40,29 +40,25 @@ describe('simplifyStateCallback', () => {
 describe('cleanType', () => {
     it('simplifies and removes duplicates', () => {
         const type = 'string | ((state: TabsRoot.State) => string) | undefined';
-        expect(cleanType(type).type).toBe('string | undefined');
+        expect(cleanType(type).type).toBe('string');
     });
 
     it('handles complex import paths', () => {
         const type =
             'string | ((state: import("/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/tabs/root/TabsRoot").TabsRoot.State) => string) | undefined';
-        expect(cleanType(type).type).toBe('string | undefined');
+        expect(cleanType(type).type).toBe('string');
     });
 
     it('preserves types without state callback', () => {
-        expect(cleanType('"fill" | "line" | undefined').type).toBe('"fill" | "line" | undefined');
+        expect(cleanType('"fill" | "line" | undefined').type).toBe('"fill" | "line"');
     });
 
     it('simplifies render prop with ComponentRenderFn', () => {
         const type =
             '((React.ReactElement<Record<string, unknown>> | ComponentRenderFn<HTMLProps<any>, TabsRoot.State>) & (React.ReactElement<Record<string, unknown>> | ComponentRenderFn<HTMLProps, {}>)) | undefined';
         const result = cleanType(type);
-        expect(result.type).toBe('ReactElement | ((props: HTMLProps) => ReactElement) | undefined');
-        expect(result.values).toEqual([
-            'ReactElement',
-            '(props: HTMLProps) => ReactElement',
-            'undefined',
-        ]);
+        expect(result.type).toBe('ReactElement | ((props: HTMLProps) => ReactElement)');
+        expect(result.values).toEqual(['ReactElement', '(props: HTMLProps) => ReactElement']);
     });
 
     it('extracts values from string literal unions', () => {
@@ -72,11 +68,11 @@ describe('cleanType', () => {
         expect(result.values).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']);
     });
 
-    it('extracts values excluding undefined', () => {
-        const type = '"a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | undefined';
+    it('removes undefined from type', () => {
+        const type = '"a" | "b" | "c" | undefined';
         const result = cleanType(type);
-        expect(result.type).toBe(type);
-        expect(result.values).toHaveLength(10);
+        expect(result.type).toBe('"a" | "b" | "c"');
+        expect(result.values).toEqual(['a', 'b', 'c']);
     });
 
     it('extracts values from small unions', () => {

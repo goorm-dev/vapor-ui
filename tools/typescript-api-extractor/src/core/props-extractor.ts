@@ -60,6 +60,13 @@ function getJsDocDescription(symbol: Symbol): string | undefined {
     return ts.displayPartsToString(docs) || undefined;
 }
 
+function getJsDocDefault(symbol: Symbol): string | undefined {
+    const tags = symbol.compilerSymbol.getJsDocTags();
+    const defaultTag = tags.find((tag) => tag.name === 'default');
+    if (!defaultTag?.text) return undefined;
+    return ts.displayPartsToString(defaultTag.text) || undefined;
+}
+
 function getSymbolSourcePath(symbol: Symbol): string | undefined {
     const declarations = symbol.getDeclarations();
     if (!declarations.length) return undefined;
@@ -175,7 +182,7 @@ export function extractProps(
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
             const typeResult = cleanType(resolveType(symbol.getTypeAtLocation(propsInterface)));
-            const defaultValue = defaultVariants[name];
+            const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
 
             return {
                 name,
