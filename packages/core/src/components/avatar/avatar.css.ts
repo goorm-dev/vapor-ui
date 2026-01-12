@@ -22,9 +22,6 @@ export const root = recipe({
 
     defaultVariants: { size: 'md', shape: 'square' },
     variants: {
-        /**
-         * Sizes for the avatar component
-         */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension[300],
@@ -47,9 +44,6 @@ export const root = recipe({
                 vars: { [radii]: vars.size.borderRadius[400] },
             }),
         },
-        /**
-         * Shapes for the avatar component
-         */
         shape: {
             square: layerStyle('components', { borderRadius: radii }),
             circle: layerStyle('components', { borderRadius: '50%' }),
