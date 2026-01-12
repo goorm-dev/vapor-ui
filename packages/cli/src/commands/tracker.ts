@@ -1,6 +1,7 @@
 import type { NodePath } from '@babel/core';
 import { parseSync, traverse } from '@babel/core';
 import type {
+    CallExpression,
     ExportAllDeclaration,
     ExportNamedDeclaration,
     ImportDeclaration,
@@ -292,6 +293,15 @@ function analyzeFile(file: string, context: AnalyzeContext) {
             ExportAllDeclaration(path: NodePath<ExportAllDeclaration>) {
                 if (!path.node.source) return;
                 processSource({ ...sources, sourceValue: path.node.source.value });
+            },
+            CallExpression(path: NodePath<CallExpression>) {
+                const { callee, arguments: nodeArgs } = path.node;
+
+                if (callee.type !== 'Import') return;
+                if (nodeArgs.length === 0) return;
+                if (nodeArgs[0].type !== 'StringLiteral') return;
+
+                processSource({ ...sources, sourceValue: nodeArgs[0].value });
             },
             JSXOpeningElement(path: NodePath<JSXOpeningElement>) {
                 processJSXUsage({ path, vaporImports, usageMap, fileUsage });

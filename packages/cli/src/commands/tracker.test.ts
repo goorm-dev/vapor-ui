@@ -19,9 +19,13 @@ vi.mock('get-tsconfig', () => ({
 
 describe('collectUsages', () => {
     const fsReadFileSyncMockFunction = vi.spyOn(fs, 'readFileSync');
+    const fsExistsSyncMockFunction = vi.spyOn(fs, 'existsSync');
+    const fsStatSyncMockFunction = vi.spyOn(fs, 'statSync');
 
     afterAll(() => {
         fsReadFileSyncMockFunction.mockClear();
+        fsExistsSyncMockFunction.mockClear();
+        fsStatSyncMockFunction.mockClear();
     });
 
     it('should return empty map if queue is empty', () => {
@@ -100,8 +104,7 @@ describe('collectUsages', () => {
         const file1 = '/mock/cwd/src/Page1.tsx';
         const file2 = '/mock/cwd/src/Page2.tsx';
 
-        // @ts-ignore
-        fsReadFileSyncMockFunction.mockImplementation((path: string) => {
+        fsReadFileSyncMockFunction.mockImplementation((path) => {
             if (path === file1) {
                 return `
                     import { Button } from '@vapor-ui/core';
@@ -127,5 +130,50 @@ describe('collectUsages', () => {
 
         expect(stats.get('Button')).toBe(2);
         expect(stats.get('TextField')).toBe(1);
+    });
+
+    it('Lazy Loading (Dynamic Import Traversal)', () => {
+        const appPath = '/params/App.tsx';
+        const lazyPath = '/params/LazyComp.tsx';
+
+        const appContent = `
+            import { lazy } from 'react';
+            const LazyComp = lazy(() => import('./LazyComp'));
+            export const App = () => <LazyComp />;
+        `;
+        const lazyContent = `
+            import { Button } from '@vapor-ui/core';
+            export default () => <Button />;
+        `;
+
+        fsReadFileSyncMockFunction.mockImplementation((path) => {
+            if (path === appPath) {
+                return appContent;
+            }
+
+            if (path === lazyPath) {
+                return lazyContent;
+            }
+
+            return '';
+        });
+
+        fsExistsSyncMockFunction.mockImplementation((path) => {
+            return path === appPath || path === lazyPath;
+        });
+
+        fsStatSyncMockFunction.mockReturnValue({
+            isDirectory: () => false,
+            isFile: () => true,
+        } as fs.Stats);
+
+        const usageMap = collectUsages({
+            shallow: false,
+            pathsMatcher: null,
+            queue: [appPath],
+        });
+
+        expect(usageMap.has('Button')).toBe(true);
+        expect(usageMap.get('Button')).toBe(1);
     });
 });
