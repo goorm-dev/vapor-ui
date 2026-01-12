@@ -1,6 +1,7 @@
 import { type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
 import type { ExtendedType, FilePropsResult, Property, PropsInfo } from '~/types/props';
+import { cleanType } from './type-cleaner';
 
 export interface ExtractOptions {
     filterExternal?: boolean;
@@ -92,7 +93,7 @@ export function extractProps(
 
         const resolvedProperties: Property[] = filteredSymbols.map((symbol) => ({
             name: symbol.getName(),
-            type: symbol.getTypeAtLocation(propsInterface).getText(),
+            type: cleanType(symbol.getTypeAtLocation(propsInterface).getText()),
             optional: symbol.isOptional(),
             description: getJsDocDescription(symbol),
         }));
