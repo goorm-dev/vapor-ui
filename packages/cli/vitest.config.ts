@@ -10,12 +10,12 @@ export default defineConfig({
     },
     test: {
         exclude: ['node_modules', 'dist'],
-        include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
+        include: ['src/**/*.{test,spec}.{ts,tsx}'],
         globals: true,
         coverage: {
             provider: 'v8',
-            include: ['src/**/*.{js,mjs,jsx,ts,tsx}'],
-            exclude: ['src/index.mjs'],
+            include: ['src/**/*.{ts,tsx}'],
+            exclude: ['src/index.mjs', 'src/index.ts'],
         },
     },
 });
