@@ -10,7 +10,6 @@
 
 const STATE_MARKER = '.State)';
 const GENERIC_STATE_PATTERN = /,\s*[^,<>]*\.State(?:>|\))/g;
-const UNION_COMPRESSION_THRESHOLD = 10;
 
 export interface TypeCleanResult {
     type: string;
@@ -56,13 +55,12 @@ function removeGenericState(type: string): string {
     });
 }
 
-function simplifyRenderType(type: string): string {
-    if (!type.includes('ComponentRenderFn')) return type;
-
-    const hasUndefined = type.includes('undefined');
-    return hasUndefined
-        ? 'ReactElement | ((props: HTMLProps) => ReactElement) | undefined'
-        : 'ReactElement | ((props: HTMLProps) => ReactElement)';
+function simplifyRenderType(type: string): TypeCleanResult | null {
+    if (!type.includes('ComponentRenderFn')) return null;
+    return {
+        type: 'ReactElement | ((props: HTMLProps) => ReactElement) | undefined',
+        values: ['ReactElement', '(props: HTMLProps) => ReactElement', 'undefined'],
+    };
 }
 
 function isStringLiteral(part: string): boolean {
@@ -74,32 +72,23 @@ function extractStringValue(literal: string): string {
     return literal.trim().slice(1, -1);
 }
 
-function compressLargeUnion(type: string): TypeCleanResult {
-    const parts = type.split(' | ');
-    const nonUndefined = parts.filter((p) => p.trim() !== 'undefined');
-    const hasUndefined = parts.some((p) => p.trim() === 'undefined');
+function extractUnionValues(type: string): TypeCleanResult {
+    const parts = type.split(' | ').map((p) => p.trim());
+    const nonUndefined = parts.filter((p) => p !== 'undefined');
 
     const stringLiterals = nonUndefined.filter(isStringLiteral);
-    const shouldCompress =
-        stringLiterals.length >= UNION_COMPRESSION_THRESHOLD &&
-        stringLiterals.length === nonUndefined.length;
 
-    if (!shouldCompress) {
-        return { type };
+    if (stringLiterals.length === nonUndefined.length && stringLiterals.length > 0) {
+        return { type, values: stringLiterals.map(extractStringValue) };
     }
 
-    const values = stringLiterals.map(extractStringValue);
-    const compressedType = hasUndefined
-        ? `string (${stringLiterals.length} variants) | undefined`
-        : `string (${stringLiterals.length} variants)`;
-
-    return { type: compressedType, values };
+    return { type };
 }
 
 export function cleanType(type: string): TypeCleanResult {
-    const renderSimplified = simplifyRenderType(type);
-    if (renderSimplified !== type) {
-        return { type: renderSimplified };
+    const renderResult = simplifyRenderType(type);
+    if (renderResult) {
+        return renderResult;
     }
 
     const noGenericState = removeGenericState(type);
@@ -107,5 +96,5 @@ export function cleanType(type: string): TypeCleanResult {
     const noEmpty = removeEmptyUnion(simplified);
     const cleaned = removeDuplicateTypes(noEmpty);
 
-    return compressLargeUnion(cleaned);
+    return extractUnionValues(cleaned);
 }

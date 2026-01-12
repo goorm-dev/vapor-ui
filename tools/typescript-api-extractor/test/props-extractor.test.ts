@@ -18,17 +18,12 @@ describe('extractProps', () => {
         const result = setup();
 
         expect(result.props.length).toBe(4);
-        expect(result.props.map((p) => p.name)).toEqual([
-            'Simple.Props',
-            'Button.Props',
-            'Dialog.Props',
-            'TabsList.Props',
-        ]);
+        expect(result.props.map((p) => p.name)).toEqual(['Simple', 'Button', 'Dialog', 'TabsList']);
     });
 
     it('should extract all resolved properties including inherited', () => {
         const result = setup();
-        const button = result.props.find((p) => p.name === 'Button.Props');
+        const button = result.props.find((p) => p.name === 'Button');
 
         expect(button?.props.length).toBeGreaterThan(0);
         expect(button?.props.some((p) => p.name === 'variant')).toBe(true);
@@ -41,7 +36,7 @@ describe('extractProps', () => {
         const [sourceFile] = addSourceFiles(project, [path.join(FIXTURES_DIR, 'props-sample.tsx')]);
 
         const result = extractProps(sourceFile, { filterExternal: true });
-        const button = result.props.find((p) => p.name === 'Button.Props');
+        const button = result.props.find((p) => p.name === 'Button');
 
         expect(button?.props.some((p) => p.name === 'variant')).toBe(true);
         expect(button?.props.some((p) => p.name === 'size')).toBe(true);

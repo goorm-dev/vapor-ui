@@ -34,6 +34,9 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill' },
     variants: {
+        /**
+         * 버튼의 크기 옵션입니다.
+         */
         size: {
             sm: [
                 typography({ style: 'subtitle1' }),
@@ -68,7 +71,9 @@ export const root = recipe({
                 }),
             ],
         },
-
+        /**
+         * 버튼의 색상 팔레트 옵션입니다.
+         */
         colorPalette: {
             primary: layerStyle('components', {
                 vars: {
@@ -125,7 +130,9 @@ export const root = recipe({
                 },
             }),
         },
-
+        /**
+         * 버튼의 스타일 옵션입니다.
+         */
         variant: {
             fill: layerStyle('components', {
                 backgroundColor: bg,

@@ -4,7 +4,7 @@
     "description": "TypeScript AST-based API extractor for documentation generation",
     "type": "module",
     "bin": {
-        "ts-api-extractor": "./bin/cli.js"
+        "ts-api-extractor": "./dist/cli/index.js"
     },
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -17,7 +17,6 @@
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
-        "extract": "node dist/cli/index.js",
         "test": "vitest",
         "test:run": "vitest run",
         "test:coverage": "vitest run --coverage",

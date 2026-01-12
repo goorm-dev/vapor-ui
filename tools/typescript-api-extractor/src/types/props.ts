@@ -1,16 +1,17 @@
 export interface Property {
     name: string;
-    type: string;
-    optional: boolean;
+    type: string[];
+    required: boolean;
     description?: string;
     defaultValue?: string;
-    values?: string[];
 }
 
 export interface PropsInfo {
     name: string;
+    displayName: string;
     description?: string;
     props: Property[];
+    defaultElement?: string;
 }
 
 export interface FilePropsResult {

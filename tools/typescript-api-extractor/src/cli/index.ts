@@ -91,7 +91,7 @@ const cli = meow(
 );
 
 const [inputPath] = cli.input;
-const cwd = process.env.INIT_CWD || process.cwd();
+const cwd = process.cwd();
 
 async function run() {
     if (!inputPath) {
@@ -160,8 +160,8 @@ async function run() {
         return extractProps(sf, extractOptions);
     });
 
-    const totalComponents = results.reduce((sum, r) => sum + r.props.length, 0);
-    logProgress(`Done! Extracted ${totalComponents} components.`, hasFileOutput);
+    const allProps = results.flatMap((r) => r.props);
+    logProgress(`Done! Extracted ${allProps.length} components.`, hasFileOutput);
 
     if (cli.flags.outputDir) {
         const outputDir = path.resolve(cwd, cli.flags.outputDir);
@@ -169,21 +169,20 @@ async function run() {
             fs.mkdirSync(outputDir, { recursive: true });
         }
 
-        for (const result of results) {
-            for (const prop of result.props) {
-                const name = prop.name.replace('.Props', '');
-                const fileName = toKebabCase(name) + '.json';
-                const filePath = path.join(outputDir, fileName);
-                fs.writeFileSync(filePath, JSON.stringify(prop, null, 2));
-                console.log(`Written to ${filePath}`);
-            }
+        for (const prop of allProps) {
+            const fileName = toKebabCase(prop.name) + '.json';
+            const filePath = path.join(outputDir, fileName);
+            fs.writeFileSync(filePath, JSON.stringify(prop, null, 2));
+            console.log(`Written to ${filePath}`);
         }
     } else if (cli.flags.output) {
         const outputPath = path.resolve(cwd, cli.flags.output);
-        fs.writeFileSync(outputPath, JSON.stringify(results, null, 2));
+        const output = allProps.length === 1 ? allProps[0] : allProps;
+        fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
         console.log(`Written to ${outputPath}`);
     } else {
-        console.log(JSON.stringify(results, null, 2));
+        const output = allProps.length === 1 ? allProps[0] : allProps;
+        console.log(JSON.stringify(output, null, 2));
     }
 }
 

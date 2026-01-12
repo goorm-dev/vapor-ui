@@ -56,29 +56,33 @@ describe('cleanType', () => {
     it('simplifies render prop with ComponentRenderFn', () => {
         const type =
             '((React.ReactElement<Record<string, unknown>> | ComponentRenderFn<HTMLProps<any>, TabsRoot.State>) & (React.ReactElement<Record<string, unknown>> | ComponentRenderFn<HTMLProps, {}>)) | undefined';
-        expect(cleanType(type).type).toBe(
-            'ReactElement | ((props: HTMLProps) => ReactElement) | undefined',
-        );
+        const result = cleanType(type);
+        expect(result.type).toBe('ReactElement | ((props: HTMLProps) => ReactElement) | undefined');
+        expect(result.values).toEqual([
+            'ReactElement',
+            '(props: HTMLProps) => ReactElement',
+            'undefined',
+        ]);
     });
 
-    it('compresses large unions with 10+ string literals', () => {
+    it('extracts values from string literal unions', () => {
         const type = '"a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"';
         const result = cleanType(type);
-        expect(result.type).toBe('string (10 variants)');
+        expect(result.type).toBe(type);
         expect(result.values).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']);
     });
 
-    it('preserves undefined in compressed unions', () => {
+    it('extracts values excluding undefined', () => {
         const type = '"a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | undefined';
         const result = cleanType(type);
-        expect(result.type).toBe('string (10 variants) | undefined');
+        expect(result.type).toBe(type);
         expect(result.values).toHaveLength(10);
     });
 
-    it('does not compress unions with fewer than 10 members', () => {
+    it('extracts values from small unions', () => {
         const type = '"a" | "b" | "c"';
         const result = cleanType(type);
         expect(result.type).toBe('"a" | "b" | "c"');
-        expect(result.values).toBeUndefined();
+        expect(result.values).toEqual(['a', 'b', 'c']);
     });
 });

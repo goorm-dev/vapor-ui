@@ -1,4 +1,4 @@
-import { type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
+import { type SourceFile, type Symbol, SyntaxKind, ts, type ModuleDeclaration } from 'ts-morph';
 
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 
@@ -6,6 +6,45 @@ import { getDefaultVariantsForComponent } from './default-variants';
 import { isHtmlAttribute } from './html-attributes';
 import { cleanType } from './type-cleaner';
 import { resolveType } from './type-resolver';
+
+function findComponentVariableStatement(sourceFile: SourceFile, nsName: string) {
+    return sourceFile
+        .getVariableStatements()
+        .find((stmt) => stmt.getDeclarations().some((d) => d.getName() === nsName));
+}
+
+function getComponentDescription(sourceFile: SourceFile, nsName: string): string | undefined {
+    const variableStatement = findComponentVariableStatement(sourceFile, nsName);
+    if (!variableStatement) return undefined;
+
+    const jsDocs = variableStatement.getJsDocs();
+    if (jsDocs.length === 0) return undefined;
+
+    return jsDocs[0].getDescription().trim() || undefined;
+}
+
+function getDefaultElement(sourceFile: SourceFile, nsName: string): string | undefined {
+    const variableStatement = findComponentVariableStatement(sourceFile, nsName);
+    if (!variableStatement) return undefined;
+
+    const text = variableStatement.getText();
+    const match = text.match(/render:\s*render\s*\|\|\s*<(\w+)/);
+    return match?.[1];
+}
+
+function getPropsDescription(
+    sourceFile: SourceFile,
+    ns: ModuleDeclaration,
+    propsInterface: ReturnType<ModuleDeclaration['getInterfaces']>[number],
+): string | undefined {
+    const jsDocs = propsInterface.getJsDocs();
+    if (jsDocs.length > 0) {
+        const desc = jsDocs[0].getDescription().trim();
+        if (desc) return desc;
+    }
+
+    return getComponentDescription(sourceFile, ns.getName());
+}
 
 export interface ExtractOptions {
     filterExternal?: boolean;
@@ -61,21 +100,30 @@ const SOURCE_ORDER: Record<PropSource, number> = {
     variants: 2,
 };
 
-interface PropertyWithSource extends Property {
+interface InternalProperty {
+    name: string;
+    type: string[];
+    required: boolean;
+    description?: string;
+    defaultValue?: string;
     _source: PropSource;
 }
 
-function sortProps(props: PropertyWithSource[]): Property[] {
+function sortProps(props: InternalProperty[]): Property[] {
     return props
         .sort((a, b) => {
-            // 소스 카테고리 순서로 먼저 정렬
             const sourceOrder = SOURCE_ORDER[a._source] - SOURCE_ORDER[b._source];
             if (sourceOrder !== 0) return sourceOrder;
-
-            // 같은 카테고리 내에서는 알파벳순
             return a.name.localeCompare(b.name);
         })
         .map(({ _source: _, ...prop }) => prop);
+}
+
+function toTypeArray(typeResult: { type: string; values?: string[] }): string[] {
+    if (typeResult.values) {
+        return typeResult.values;
+    }
+    return [typeResult.type];
 }
 
 export function extractProps(
@@ -98,10 +146,7 @@ export function extractProps(
 
         if (!propsInterface) continue;
 
-        // Props 인터페이스의 JSDoc description 추출
-        const jsDocs = propsInterface.getJsDocs();
-        const description = jsDocs.length > 0 ? jsDocs[0].getDescription().trim() : undefined;
-
+        const description = getPropsDescription(sourceFile, ns, propsInterface);
         const propsType = propsInterface.getType();
         const allSymbols = propsType.getProperties();
         const includeSet = new Set(options.include ?? []);
@@ -127,28 +172,30 @@ export function extractProps(
             return true;
         });
 
-        const propsWithSource: PropertyWithSource[] = filteredSymbols.map((symbol) => {
+        const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
             const typeResult = cleanType(resolveType(symbol.getTypeAtLocation(propsInterface)));
             const defaultValue = defaultVariants[name];
 
             return {
                 name,
-                type: typeResult.type,
-                optional: symbol.isOptional(),
+                type: toTypeArray(typeResult),
+                required: !symbol.isOptional(),
                 description: getJsDocDescription(symbol),
                 defaultValue,
-                values: typeResult.values,
                 _source: getPropSource(symbol),
             };
         });
 
         const sortedProps = sortProps(propsWithSource);
+        const defaultElement = getDefaultElement(sourceFile, nsName);
 
         props.push({
-            name: `${nsName}.Props`,
+            name: nsName,
+            displayName: nsName,
             description: description || undefined,
             props: sortedProps,
+            defaultElement,
         });
     }
 
