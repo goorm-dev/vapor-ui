@@ -57,18 +57,35 @@
             "matchPackageNames": ["/^@base-ui-components\\/.*/"]
         },
         {
-            "description": "All other dependencies grouped together",
-            "groupName": "Other Dependencies",
+            "description": "Group patch updates for other dependencies",
+            "groupName": "Other Dependencies (patch)",
+            "matchUpdateTypes": ["patch"],
+            "automerge": true,
             "labels": ["type: dependencies"],
+            "matchPackageNames": ["*"],
+            "excludePackageNames": [
+                "react",
+                "react-dom",
+                "@types/react",
+                "@types/react-dom",
+                "/^@vanilla-extract\\/.*/",
+                "/^@base-ui-components\\/.*/"
+            ]
+        },
+        {
+            "description": "Group minor updates for other dependencies",
+            "groupName": "Other Dependencies (minor)",
+            "matchUpdateTypes": ["minor"],
             "automerge": false,
-            "matchPackageNames": [
-                "*",
-                "!react",
-                "!react-dom",
-                "!@types/react",
-                "!@types/react-dom",
-                "!/^@vanilla-extract\\/.*/",
-                "!/^@base-ui-components\\/.*/"
+            "labels": ["type: dependencies"],
+            "matchPackageNames": ["*"],
+            "excludePackageNames": [
+                "react",
+                "react-dom",
+                "@types/react",
+                "@types/react-dom",
+                "/^@vanilla-extract\\/.*/",
+                "/^@base-ui-components\\/.*/"
             ]
         }
     ]
