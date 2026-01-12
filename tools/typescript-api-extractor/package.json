@@ -17,7 +17,7 @@
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
-        "docs-generate": "tsup --silent && node dist/cli/index.js docs-generate",
+        "extract": "node dist/cli/index.js",
         "test": "vitest",
         "test:run": "vitest run",
         "test:coverage": "vitest run --coverage",
