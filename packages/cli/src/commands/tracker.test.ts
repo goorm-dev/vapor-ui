@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { afterAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { collectUsages } from './tracker';
 
@@ -12,15 +12,22 @@ vi.mock('node:fs', async () => ({
     },
 }));
 
-vi.mock('get-tsconfig', () => ({
-    getTsconfig: vi.fn(),
-    createPathsMatcher: vi.fn(),
-}));
+// vi.mock('get-tsconfig', () => ({
+//     getTsconfig: vi.fn(),
+//     createPathsMatcher: vi.fn(),
+// }));
 
 describe('collectUsages', () => {
     const fsReadFileSyncMockFunction = vi.spyOn(fs, 'readFileSync');
     const fsExistsSyncMockFunction = vi.spyOn(fs, 'existsSync');
     const fsStatSyncMockFunction = vi.spyOn(fs, 'statSync');
+
+    beforeAll(() => {
+        fsStatSyncMockFunction.mockReturnValue({
+            isDirectory: () => false,
+            isFile: () => true,
+        } as fs.Stats);
+    });
 
     afterAll(() => {
         fsReadFileSyncMockFunction.mockClear();
@@ -162,10 +169,40 @@ describe('collectUsages', () => {
             return path === appPath || path === lazyPath;
         });
 
-        fsStatSyncMockFunction.mockReturnValue({
-            isDirectory: () => false,
-            isFile: () => true,
-        } as fs.Stats);
+        const usageMap = collectUsages({
+            shallow: false,
+            pathsMatcher: null,
+            queue: [appPath],
+        });
+
+        expect(usageMap.has('Button')).toBe(true);
+        expect(usageMap.get('Button')).toBe(1);
+    });
+
+    it('Next.js Dynamic Import Traversal', () => {
+        const appPath = '/params/NextApp.tsx';
+        const dynamicPath = '/params/DynamicComp.tsx';
+
+        const appContent = `
+            import dynamic from 'next/dynamic';
+            const DynamicComp = dynamic(() => import('./DynamicComp'));
+            export const App = () => <DynamicComp />;
+        `;
+        const dynamicContent = `
+            import { Button } from '@vapor-ui/core';
+            export default () => <Button />;
+        `;
+
+        fsReadFileSyncMockFunction.mockImplementation((path) => {
+            if (path === appPath) return appContent;
+            if (path === dynamicPath) return dynamicContent;
+
+            return '';
+        });
+
+        fsExistsSyncMockFunction.mockImplementation((path) => {
+            return path === appPath || path === dynamicPath;
+        });
 
         const usageMap = collectUsages({
             shallow: false,
@@ -175,5 +212,49 @@ describe('collectUsages', () => {
 
         expect(usageMap.has('Button')).toBe(true);
         expect(usageMap.get('Button')).toBe(1);
+    });
+
+    it('should resolve path aliases using pathsMatcher', () => {
+        const appPath = '/alias-test/App.tsx';
+        const componentPath = '/alias-test/components/Button.tsx';
+
+        const appContent = `
+            import { MyButton } from '@components/Button';
+            export const App = () => <MyButton />;
+        `;
+        const componentContent = `
+            import { Button, Text } from '@vapor-ui/core';
+            export const MyButton = () => <><Button /></>;
+        `;
+
+        const pathsMatcher = (importPath: string) => {
+            if (importPath === '@components/Button') {
+                return ['/alias-test/components/Button.tsx'];
+            }
+            return [];
+        };
+
+        fsReadFileSyncMockFunction.mockImplementation((path) => {
+            if (path === appPath) return appContent;
+            if (path === componentPath) return componentContent;
+
+            return '';
+        });
+
+        fsExistsSyncMockFunction.mockImplementation((path) => {
+            return path === appPath || path === componentPath;
+        });
+
+        const usageMap = collectUsages({
+            shallow: false,
+            pathsMatcher,
+            queue: [appPath],
+        });
+
+        expect(usageMap.has('Button')).toBe(true);
+        expect(usageMap.get('Button')).toBe(1);
+
+        expect(usageMap.has('Text')).toBe(false);
+        expect(usageMap.get('Text')).toBeUndefined();
     });
 });
