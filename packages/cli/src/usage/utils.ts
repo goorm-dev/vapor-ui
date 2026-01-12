@@ -151,3 +151,21 @@ export function getTsconfigPathsMatcher() {
 
     return createPathsMatcher(tsconfigResult);
 }
+
+export function createAnalysisCache<K extends string, V>() {
+    const cache = new Map<K, V>();
+
+    return {
+        get: (file: K): V | undefined => {
+            return cache.get(file) as V;
+        },
+        set: (file: K, result: V) => {
+            cache.set(file, result);
+        },
+        update: (file: K, updater: (prev: V | undefined) => V) => {
+            const prev = cache.get(file);
+            const updated = updater(prev);
+            cache.set(file, updated);
+        },
+    };
+}

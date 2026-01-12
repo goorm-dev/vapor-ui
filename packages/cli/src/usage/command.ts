@@ -6,7 +6,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { PathsMatcher } from './utils';
-import { expandTargetFiles, getTsconfigPathsMatcher, resolveImportPath } from './utils';
+import {
+    createAnalysisCache,
+    expandTargetFiles,
+    getTsconfigPathsMatcher,
+    resolveImportPath,
+} from './utils';
 
 /**
  * Tracks Vapor UI component imports in a file.
@@ -171,9 +176,7 @@ export async function usageCommand(targets: string[], options: RunOptions) {
     const initialTargets = targets.length > 0 ? targets : ['.'];
     const cwd = process.cwd();
 
-    console.log(
-        `Analyzing targets (Mode: ${shallow ? 'Shallow' : 'Deep'}, Package: ${packageName})`,
-    );
+    console.log(`Analyzing targets (mode: ${shallow ? 'Shallow' : 'Deep'})`);
     console.log(`\n- ${initialTargets.join('\n- ')}`);
 
     const pathsMatcher = getTsconfigPathsMatcher();
@@ -182,7 +185,7 @@ export async function usageCommand(targets: string[], options: RunOptions) {
     console.log(`\nFound ${entries.length} entry files to analyze.`);
 
     // --- Usage Analysis Loop ---
-    const fileAnalysisCache = new Map<string, AnalyzeFileResult>();
+    const fileAnalysisCache = createAnalysisCache<string, AnalyzeFileResult>();
     const usageByEntry = new Map<string, Map<string, number>>();
 
     for (const entry of entries) {
@@ -199,16 +202,16 @@ export async function usageCommand(targets: string[], options: RunOptions) {
             visited.add(file);
 
             // 1. Check Cache or Analyze
-            let analysisResult = fileAnalysisCache.get(file);
-
-            if (!analysisResult) {
-                analysisResult = analyzeSourceFile(file, { shallow, pathsMatcher, packageName });
-                fileAnalysisCache.set(file, analysisResult);
-            }
+            fileAnalysisCache.update(
+                file,
+                (prev) => prev || analyzeSourceFile(file, { shallow, pathsMatcher, packageName }),
+            );
+            const analysisResult = fileAnalysisCache.get(file)!;
 
             // 2. Aggregate Usages
             for (const [component, count] of analysisResult.componentsMap) {
-                pageUsageMap.set(component, (pageUsageMap.get(component) || 0) + count);
+                const currentCount = pageUsageMap.get(component) || 0;
+                pageUsageMap.set(component, currentCount + count);
             }
 
             // 3. Enqueue Dependencies (if deep mode)
