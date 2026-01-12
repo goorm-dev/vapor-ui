@@ -47,7 +47,19 @@ function removeGenericState(type: string): string {
     });
 }
 
+function simplifyRenderType(type: string): string {
+    if (!type.includes('ComponentRenderFn')) return type;
+
+    const hasUndefined = type.includes('undefined');
+    return hasUndefined
+        ? 'ReactElement | ((props: HTMLProps) => ReactElement) | undefined'
+        : 'ReactElement | ((props: HTMLProps) => ReactElement)';
+}
+
 export function cleanType(type: string): string {
+    const renderSimplified = simplifyRenderType(type);
+    if (renderSimplified !== type) return renderSimplified;
+
     const noGenericState = removeGenericState(type);
     const simplified = simplifyStateCallback(noGenericState);
     const noEmpty = removeEmptyUnion(simplified);

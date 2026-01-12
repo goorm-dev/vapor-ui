@@ -53,11 +53,11 @@ describe('cleanType', () => {
         expect(cleanType('"fill" | "line" | undefined')).toBe('"fill" | "line" | undefined');
     });
 
-    it('removes State from render prop generic', () => {
+    it('simplifies render prop with ComponentRenderFn', () => {
         const type =
             '((React.ReactElement<Record<string, unknown>> | ComponentRenderFn<HTMLProps<any>, TabsRoot.State>) & (React.ReactElement<Record<string, unknown>> | ComponentRenderFn<HTMLProps, {}>)) | undefined';
         expect(cleanType(type)).toBe(
-            '((React.ReactElement<Record<string, unknown>> | ComponentRenderFn<HTMLProps<any>>) & (React.ReactElement<Record<string, unknown>> | ComponentRenderFn<HTMLProps, {}>)) | undefined',
+            'ReactElement | ((props: HTMLProps) => ReactElement) | undefined',
         );
     });
 });
