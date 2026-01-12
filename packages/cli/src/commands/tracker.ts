@@ -13,7 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const PACKAGE_NAME = '@vapor-ui/core';
-const EXTENSIONS = ['.tsx', '.ts', '.jsx', '.js'];
+const extensions = ['.tsx', '.ts', '.jsx', '.js'];
 
 // --- Path Helper Functions ---
 
@@ -27,13 +27,13 @@ export const isFile = (filePath: string) =>
  * Checks if the file lacks an extension or has a supported extension (.tsx, .ts, .jsx, .js).
  */
 export const isSupportedExtension = (filePath: string) =>
-    EXTENSIONS.includes(path.extname(filePath));
+    extensions.includes(path.extname(filePath));
 
 /**
  * Attempts to find a file by appending supported extensions to the base path.
  */
 export function findFileWithExtensions(basePath: string) {
-    for (const ext of EXTENSIONS) {
+    for (const ext of extensions) {
         const candidate = basePath + ext;
         if (isFile(candidate)) return candidate;
     }
