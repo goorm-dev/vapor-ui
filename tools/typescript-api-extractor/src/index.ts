@@ -7,4 +7,4 @@ export {
 export { createProject, addSourceFiles, getExportedNodes, getNamespaces } from './core/project';
 export { findTsconfig } from './core/config';
 export { extractProps } from './core/props-extractor';
-export type { ExtendedType, Property, PropsInfo, FilePropsResult } from './types/props';
+export type { Property, PropsInfo, FilePropsResult } from './types/props';

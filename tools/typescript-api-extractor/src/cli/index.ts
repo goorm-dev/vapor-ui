@@ -9,6 +9,10 @@ import { findComponentFiles, findFileByComponentName } from '~/core/scanner';
 
 import { promptComponentSelection } from './prompts';
 
+function toKebabCase(str: string): string {
+    return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
 const cli = meow(
     `
   Usage
@@ -20,6 +24,7 @@ const cli = meow(
     --no-default-ignore  Disable default ignore patterns (.stories.tsx, .css.ts)
     --component, -n      Component name to process (e.g., Button, TextInput)
     --output, -o         Output file path (default: stdout)
+    --output-dir, -d     Output directory for per-component files
     --all, -a            Include all props (node_modules + sprinkles)
     --sprinkles, -s      Include sprinkles props
     --include            Include specific props (can be used multiple times)
@@ -27,8 +32,8 @@ const cli = meow(
   Examples
     $ ts-api-extractor ./packages/core
     $ ts-api-extractor ./packages/core --component Tabs
+    $ ts-api-extractor ./packages/core --component Tabs --output-dir ./output
     $ ts-api-extractor ./packages/core --sprinkles
-    $ ts-api-extractor ./packages/core --include padding --include margin
 `,
     {
         importMeta: import.meta,
@@ -53,6 +58,10 @@ const cli = meow(
             output: {
                 type: 'string',
                 shortFlag: 'o',
+            },
+            outputDir: {
+                type: 'string',
+                shortFlag: 'd',
             },
             all: {
                 type: 'boolean',
@@ -134,14 +143,28 @@ async function run() {
         include: cli.flags.include,
     };
     const results = sourceFiles.map((sf) => extractProps(sf, extractOptions));
-    const json = JSON.stringify(results, null, 2);
 
-    if (cli.flags.output) {
+    if (cli.flags.outputDir) {
+        const outputDir = path.resolve(cwd, cli.flags.outputDir);
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+
+        for (const result of results) {
+            for (const prop of result.props) {
+                const name = prop.name.replace('.Props', '');
+                const fileName = toKebabCase(name) + '.json';
+                const filePath = path.join(outputDir, fileName);
+                fs.writeFileSync(filePath, JSON.stringify(prop, null, 2));
+                console.log(`Written to ${filePath}`);
+            }
+        }
+    } else if (cli.flags.output) {
         const outputPath = path.resolve(cwd, cli.flags.output);
-        fs.writeFileSync(outputPath, json);
+        fs.writeFileSync(outputPath, JSON.stringify(results, null, 2));
         console.log(`Written to ${outputPath}`);
     } else {
-        console.log(json);
+        console.log(JSON.stringify(results, null, 2));
     }
 }
 

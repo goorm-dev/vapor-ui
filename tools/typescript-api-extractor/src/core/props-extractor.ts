@@ -1,6 +1,6 @@
 import { type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
-import type { ExtendedType, FilePropsResult, Property, PropsInfo } from '~/types/props';
+import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 
 import { cleanType } from './type-cleaner';
 import { resolveType } from './type-resolver';
@@ -43,7 +43,6 @@ export function extractProps(
     sourceFile: SourceFile,
     options: ExtractOptions = {},
 ): FilePropsResult {
-    const filePath = sourceFile.getFilePath();
     const props: PropsInfo[] = [];
 
     const namespaces = sourceFile
@@ -58,21 +57,9 @@ export function extractProps(
 
         if (!propsInterface) continue;
 
-        const localTypeAliases = new Map(
-            ns.getTypeAliases().map((ta) => [ta.getName(), ta.getTypeNode()?.getText() ?? '']),
-        );
-
-        const extendsTypes: ExtendedType[] = propsInterface.getExtends().map((ext) => {
-            const name = ext.getExpression().getText();
-            const resolved = localTypeAliases.get(name) ?? name;
-            return { name, resolved };
-        });
-
-        const properties: Property[] = propsInterface.getProperties().map((prop) => ({
-            name: prop.getName(),
-            type: prop.getTypeNode()?.getText() ?? 'unknown',
-            optional: prop.hasQuestionToken(),
-        }));
+        // Props 인터페이스의 JSDoc description 추출
+        const jsDocs = propsInterface.getJsDocs();
+        const description = jsDocs.length > 0 ? jsDocs[0].getDescription().trim() : undefined;
 
         const propsType = propsInterface.getType();
         const allSymbols = propsType.getProperties();
@@ -93,26 +80,19 @@ export function extractProps(
             return true;
         });
 
-        const resolvedProperties: Property[] = filteredSymbols.map((symbol) => ({
+        const propsArray: Property[] = filteredSymbols.map((symbol) => ({
             name: symbol.getName(),
             type: cleanType(resolveType(symbol.getTypeAtLocation(propsInterface))),
             optional: symbol.isOptional(),
             description: getJsDocDescription(symbol),
         }));
 
-        const associatedTypes = ns
-            .getTypeAliases()
-            .filter((ta) => ta.isExported())
-            .map((ta) => ta.getName());
-
         props.push({
             name: `${nsName}.Props`,
-            extends: extendsTypes,
-            properties,
-            resolvedProperties,
-            associatedTypes,
+            description: description || undefined,
+            props: propsArray,
         });
     }
 
-    return { filePath, props };
+    return { props };
 }

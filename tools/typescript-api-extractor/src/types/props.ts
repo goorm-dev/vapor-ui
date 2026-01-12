@@ -1,8 +1,3 @@
-export interface ExtendedType {
-    name: string;
-    resolved: string;
-}
-
 export interface Property {
     name: string;
     type: string;
@@ -12,13 +7,10 @@ export interface Property {
 
 export interface PropsInfo {
     name: string;
-    extends: ExtendedType[];
-    properties: Property[];
-    resolvedProperties: Property[];
-    associatedTypes: string[];
+    description?: string;
+    props: Property[];
 }
 
 export interface FilePropsResult {
-    filePath: string;
     props: PropsInfo[];
 }
