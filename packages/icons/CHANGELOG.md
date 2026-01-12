@@ -1,5 +1,11 @@
 # @vapor-ui/icons
 
+## 1.0.0
+
+### etc
+
+- Sync icons from Figma and remove deleted HeadingOutlineIcon ([#430](https://github.com/goorm-dev/vapor-ui/pull/430)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
 ## 1.0.0-beta.7
 
 ### Icon Base
