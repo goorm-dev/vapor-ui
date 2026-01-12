@@ -5,6 +5,12 @@ description: '@vapor-ui/icons 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/icons
 
+## 1.0.0
+
+### etc
+
+- Sync icons from Figma and remove deleted HeadingOutlineIcon ([#430](https://github.com/goorm-dev/vapor-ui/pull/430)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
 ## 1.0.0-beta.7
 
 ### Icon Base
