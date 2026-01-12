@@ -27,6 +27,9 @@ const [BreadcrumbProvider, useBreadcrumbContext] = createContext<BreadcrumbVaria
  * Breadcrumb.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Navigation wrapper for Breadcrumb. Renders a `<nav>` element.
+ */
 export const BreadcrumbRootPrimitive = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -52,6 +55,9 @@ BreadcrumbRootPrimitive.displayName = 'Breadcrumb.RootPrimitive';
  * Breadcrumb.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Ordered list container for Breadcrumb items. Renders an `<ol>` element.
+ */
 export const BreadcrumbListPrimitive = forwardRef<HTMLOListElement, BreadcrumbListPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -72,6 +78,9 @@ BreadcrumbListPrimitive.displayName = 'Breadcrumb.ListPrimitive';
  * Breadcrumb.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Complete Breadcrumb navigation with built-in list. Renders a `<nav>` element.
+ */
 export const BreadcrumbRoot = forwardRef<HTMLElement, BreadcrumbRootPrimitive.Props>(
     ({ children, ...props }, ref) => {
         return (
@@ -87,6 +96,9 @@ BreadcrumbRoot.displayName = 'Breadcrumb.Root';
  * Breadcrumb.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * List item wrapper for Breadcrumb links. Renders a `<li>` element.
+ */
 export const BreadcrumbItemPrimitive = forwardRef<HTMLLIElement, BreadcrumbItemPrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
@@ -107,6 +119,9 @@ BreadcrumbItemPrimitive.displayName = 'Breadcrumb.ItemPrimitive';
  * Breadcrumb.LinkPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Link or text element for Breadcrumb navigation. Renders an `<a>` or `<span>` element.
+ */
 export const BreadcrumbLinkPrimitive = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         const { render, current, className, ...componentProps } = resolveStyles(props);
@@ -133,6 +148,9 @@ BreadcrumbLinkPrimitive.displayName = 'Breadcrumb.LinkPrimitive';
  * Breadcrumb.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combined Breadcrumb item with link. Renders a `<li>` element.
+ */
 export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimitive.Props>(
     (props, ref) => {
         return (
@@ -147,6 +165,9 @@ export const BreadcrumbItem = forwardRef<HTMLAnchorElement, BreadcrumbLinkPrimit
  * Breadcrumb.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Visual separator between Breadcrumb items. Renders a `<li>` element.
+ */
 export const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparator.Props>(
     (props, ref) => {
         const {
@@ -184,6 +205,9 @@ BreadcrumbSeparator.displayName = 'Breadcrumb.Separator';
  * Breadcrumb.EllipsisPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Ellipsis icon for collapsed Breadcrumb items. Renders a `<span>` element.
+ */
 export const BreadcrumbEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     BreadcrumbEllipsisPrimitive.Props
@@ -217,6 +241,9 @@ BreadcrumbEllipsisPrimitive.displayName = 'Breadcrumb.EllipsisPrimitive';
  * BreadcrumbEllipsis
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Combined ellipsis item for collapsed navigation. Renders a `<li>` element.
+ */
 export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, BreadcrumbEllipsisPrimitive.Props>(
     (props, ref) => {
         return (
@@ -256,6 +283,10 @@ export namespace BreadcrumbLinkPrimitive {
     type LinkPrimitiveProps = VComponentProps<'a'>;
 
     export interface Props extends LinkPrimitiveProps {
+        /**
+         * Whether this link represents the current page
+         * @default false
+         */
         current?: boolean;
     }
 }

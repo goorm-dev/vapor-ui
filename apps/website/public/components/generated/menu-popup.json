@@ -1,59 +1,52 @@
 {
-    "name": "Popup",
-    "displayName": "Menu.Popup",
-    "description": "Menu의 컨텐츠를 표시합니다. `<PortalPrimitive>`, `<PositionerPrimitive>`, `<PopupPrimitive>`의 중첩 구조로 이루어져 있습니다.",
+    "name": "MenuPopup",
+    "displayName": "MenuPopup",
+    "description": "Composed Menu popup with portal and positioner. Renders a `<div>` element.",
     "props": [
-        {
-            "name": "className",
-            "type": ["string", "(state: State) => string"],
-            "required": false,
-            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
-        },
-        {
-            "name": "id",
-            "type": ["string"],
-            "required": false
-        },
         {
             "name": "children",
             "type": [
                 "null",
                 "string",
                 "number",
-                "false",
-                "true",
                 "ReactElement",
-                "Iterable<ReactNode>",
-                "ReactPortal"
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "boolean"
             ],
             "required": false
-        },
-        {
-            "name": "render",
-            "type": ["ReactElement"],
-            "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
         },
         {
             "name": "finalFocus",
             "type": [
-                "false",
-                "true",
-                "RefObject<HTMLElement | null>",
-                "(closeType: InteractionType) => boolean | void | HTMLElement | null"
+                "React.RefObject<HTMLElement",
+                "null>",
+                "(closeType: import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+utils@0.1.2_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/utils/esm/useEnhancedClickHandler\").InteractionType) => boolean",
+                "void",
+                "HTMLElement",
+                "null",
+                "boolean"
             ],
             "required": false,
-            "description": "메뉴가 닫힐 때 집중할 요소를 결정합니다.\n- `false`: 초점을 움직이지 마세요.\n- `true`: 기본 동작(트리거 또는 이전에 집중된 요소)에 따라 초점을 이동합니다.\n- `RefObject`: 초점을 참조 요소로 이동합니다.\n- `기능`: 상호작용 유형(`마우스`, `터치`, `펜` 또는 `키보드`)으로 호출됩니다.\n  요소를 초점 맞추기 위해 `참`을, 기본 동작을 사용하기 위해 `참`을, 아무것도 하지 않기 위해 `거짓`/`정의되지 않음`을 반환합니다."
+            "description": "Determines the element to focus when the menu is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
             "name": "portalElement",
             "type": ["ReactElement"],
-            "required": false
+            "required": false,
+            "description": "Custom portal element to replace the default portal."
         },
         {
             "name": "positionerElement",
             "type": ["ReactElement"],
-            "required": false
+            "required": false,
+            "description": "Custom positioner element to replace the default positioner."
         }
     ]
 }

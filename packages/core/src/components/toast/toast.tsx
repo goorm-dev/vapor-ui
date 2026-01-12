@@ -27,6 +27,9 @@ export const useToastManager = BaseToast.useToastManager as () => UseToastManage
  * ToastProvider
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Provider component that manages toast notifications and displays them.
+ */
 export const ToastProvider = (props: ToastProvider.Props) => {
     const { timeout = 4000, children, ...componentProps } = props;
 
@@ -76,6 +79,9 @@ const ToastList = () => {
  * Toast.ProviderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Primitive provider for toast notifications with custom toast manager support.
+ */
 export const ToastProviderPrimitive = ({
     toastManager,
     ...props
@@ -92,6 +98,9 @@ export const ToastProviderPrimitive = ({
  * Toast.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal component for rendering toasts outside the main DOM hierarchy.
+ */
 export const ToastPortalPrimitive = (props: ToastPortalPrimitive.Props) => {
     return <BaseToast.Portal {...props} />;
 };
@@ -101,6 +110,9 @@ ToastPortalPrimitive.displayName = 'Toast.PortalPrimitive';
  * Toast.ViewportPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Viewport container that positions and displays toast notifications. Renders a `<div>` element.
+ */
 export const ToastViewportPrimitive = forwardRef<HTMLDivElement, ToastViewportPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -126,6 +138,9 @@ const [ToastContextProvider, useToastContext] = createContext<ToastProps>({
     hookName: 'useToastContext',
 });
 
+/**
+ * Root component for an individual toast notification. Renders a `<div>` element.
+ */
 export const ToastRootPrimitive = forwardRef<HTMLDivElement, ToastRootPrimitive.Props>(
     (props, ref) => {
         const {
@@ -156,6 +171,9 @@ ToastRootPrimitive.displayName = 'Toast.RootPrimitive';
  * Toast.ContentPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Container for toast content including title, description, and actions. Renders a `<div>` element.
+ */
 export const ToastContentPrimitive = forwardRef<HTMLDivElement, ToastContentPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -175,6 +193,9 @@ ToastContentPrimitive.displayName = 'Toast.ContentPrimitive';
  * Toast.TitlePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Title element for the toast notification. Renders an `<h3>` element.
+ */
 export const ToastTitlePrimitive = forwardRef<HTMLHeadingElement, ToastTitlePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -194,6 +215,9 @@ ToastTitlePrimitive.displayName = 'Toast.TitlePrimitive';
  * Toast.DescriptionPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Description element for additional toast details. Renders a `<p>` element.
+ */
 export const ToastDescriptionPrimitive = forwardRef<
     HTMLParagraphElement,
     ToastDescriptionPrimitive.Props
@@ -220,6 +244,9 @@ const TOAST_ICONS: IconMapper = {
     danger: <WarningIcon color="white" size="16" />,
 };
 
+/**
+ * Icon element that displays status-based icons for toasts. Renders an `<svg>` element.
+ */
 export const ToastIconPrimitive = forwardRef<SVGSVGElement, ToastIconPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -238,6 +265,9 @@ ToastIconPrimitive.displayName = 'Toast.IconPrimitive';
  * Toast.ActionPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Action button for toast interactions. Renders a `<button>` element.
+ */
 export const ToastActionPrimitive = forwardRef<HTMLButtonElement, ToastActionPrimitive.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -260,6 +290,9 @@ ToastActionPrimitive.displayName = 'Toast.ActionPrimitive';
  * Toast.ClosePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Close button for dismissing toast notifications. Renders a `<button>` element.
+ */
 export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimitive.Props>(
     (props, ref) => {
         const {

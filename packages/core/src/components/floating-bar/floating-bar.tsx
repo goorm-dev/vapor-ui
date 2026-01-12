@@ -14,6 +14,9 @@ import * as styles from './floating-bar.css';
  * FloatingBar.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of FloatingBar that manages open/close state. Uses Popover internally.
+ */
 export const FloatingBarRoot = (props: FloatingBarRoot.Props) => {
     return <Popover.Root {...props} />;
 };
@@ -23,6 +26,9 @@ FloatingBarRoot.displayName = 'FloatingBar.Root';
  * FloatingBar.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that triggers the FloatingBar to open. Renders a `<button>` element.
+ */
 export const FloatingBarTrigger = forwardRef<HTMLButtonElement, FloatingBarTrigger.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -36,6 +42,9 @@ FloatingBarTrigger.displayName = 'FloatingBar.Trigger';
  * FloatingBar.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that closes the FloatingBar. Renders a `<button>` element.
+ */
 export const FloatingBarClose = forwardRef<HTMLButtonElement, FloatingBarClose.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -63,6 +72,9 @@ FloatingBarPortalPrimitive.displayName = 'FloatingBar.PortalPrimitive';
  */
 const positions = { top: 'initial', left: '50%', transform: 'translateX(-50%)' };
 
+/**
+ * Positioner for FloatingBar with fixed positioning at bottom center. Renders a `<div>` element.
+ */
 export const FloatingBarPositionerPrimitive = forwardRef<
     HTMLDivElement,
     FloatingBarPositionerPrimitive.Props
@@ -85,6 +97,9 @@ FloatingBarPositionerPrimitive.displayName = 'FloatingBar.PositionerPrimitive';
  * FloatingBar.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Popup container for FloatingBar content. Renders a `<div>` element.
+ */
 export const FloatingBarPopupPrimitive = forwardRef<
     HTMLDivElement,
     FloatingBarPopupPrimitive.Props
@@ -101,6 +116,9 @@ FloatingBarPopupPrimitive.displayName = 'FloatingBar.PopupPrimitive';
  * FloatingBar.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Composed FloatingBar popup with portal and positioner. Renders a `<div>` element.
+ */
 export const FloatingBarPopup = forwardRef<HTMLDivElement, FloatingBarPopup.Props>((props, ref) => {
     const { portalElement, ...componentProps } = props;
 
@@ -150,6 +168,9 @@ export namespace FloatingBarPopup {
     export type PopupProps = FloatingBarPopupPrimitive.Props;
 
     export interface Props extends PopupProps {
+        /**
+         * Custom portal element to replace the default portal.
+         */
         portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
     }
 }

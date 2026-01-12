@@ -1,73 +1,71 @@
 {
-    "name": "Root",
-    "displayName": "Radio.Root",
-    "description": "라디오 버튼 자체를 나타냅니다. 옆에 있는 `<span>` 요소와 숨겨진 `<input>`을 렌더링합니다.",
+    "name": "RadioRoot",
+    "displayName": "RadioRoot",
+    "description": "Root component of Radio that renders a circular radio button. Renders a `<button>` element.",
     "props": [
         {
-            "name": "size",
-            "type": ["md", "lg"],
-            "required": false
-        },
-        {
-            "name": "className",
-            "type": ["string", "(state: State) => string"],
-            "required": false,
-            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
-        },
-        {
             "name": "disabled",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "사용자 상호작용을 비활성화할지 여부",
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "inputRef",
+            "type": [
+                "null",
+                "(instance: HTMLInputElement",
+                "null) => void",
+                "React.RefObject<HTMLInputElement>"
+            ],
+            "required": false,
+            "description": "A ref to access the hidden input element."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
+            "defaultValue": "true"
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user should be unable to select the radio button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user must choose a value before submitting a form.",
             "defaultValue": "false"
         },
         {
             "name": "value",
             "type": ["any"],
             "required": true,
-            "description": "라디오 그룹 내에서 고유한 식별 값"
-        },
-        {
-            "name": "readOnly",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "사용자가 라디오 버튼을 선택할 수 없도록 할지 여부",
-            "defaultValue": "false"
-        },
-        {
-            "name": "required",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "폼 제출 전 값을 반드시 선택해야 하는지 여부",
-            "defaultValue": "false"
-        },
-        {
-            "name": "render",
-            "type": ["ReactElement"],
-            "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
-        },
-        {
-            "name": "inputRef",
-            "type": [
-                "null",
-                "(instance: HTMLInputElement | null) => void",
-                "RefObject<HTMLInputElement>"
-            ],
-            "required": false,
-            "description": "숨겨진 input 요소에 접근하기 위한 ref"
-        },
-        {
-            "name": "nativeButton",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "render prop으로 교체할 때 네이티브 `<button>` 요소를 렌더링할지 여부\n렌더링되는 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정하세요.",
-            "defaultValue": "true"
+            "description": "The unique identifying value of the radio in a group."
         },
         {
             "name": "invalid",
-            "type": ["false", "true"],
-            "required": false
+            "type": ["boolean"],
+            "required": false,
+            "description": "Determines whether the radio button is in an invalid state."
+        },
+        {
+            "name": "size",
+            "type": ["md", "lg"],
+            "required": false,
+            "description": "Determines the size of the radio button.",
+            "defaultValue": "md"
         }
     ]
 }

@@ -1,0 +1,22 @@
+{
+    "name": "PaginationItems",
+    "displayName": "PaginationItems",
+    "description": "Automatically renders page number buttons and ellipsis based on pagination configuration.",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "(pages: import(\"/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/pagination/pagination\").PageType[]) => React.ReactNode",
+                "boolean"
+            ],
+            "required": false,
+            "description": "Custom render function or elements to display pagination items"
+        }
+    ]
+}

@@ -4,6 +4,12 @@ import { recipe } from '@vanilla-extract/recipes';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
+/**
+ * Badge root styles
+ * @variant colorPalette - Determines the color theme of the Badge
+ * @variant size - Determines the size of the Badge
+ * @variant shape - Determines the shape of the Badge
+ */
 export const root = recipe({
     base: layerStyle('components', {
         display: 'inline-flex',
@@ -13,6 +19,9 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary', size: 'md', shape: 'square' },
     variants: {
+        /**
+         * Determines the color theme of the Badge.
+         */
         colorPalette: {
             primary: layerStyle('components', {
                 color: vars.color.foreground.primary[200],
@@ -40,6 +49,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * Determines the shape of the Badge.
+         */
         shape: {
             square: layerStyle('components', {
                 borderRadius: vars.size.borderRadius['300'],
@@ -49,6 +61,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * Determines the size of the Badge.
+         */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['025'],

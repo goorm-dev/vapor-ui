@@ -13,6 +13,9 @@ export const root = recipe({
     ],
     defaultVariants: { shape: 'square' },
     variants: {
+        /**
+         * Determines the shape of the IconButton.
+         */
         shape: {
             square: {},
             circle: layerStyle('components', { borderRadius: '9999px' }),

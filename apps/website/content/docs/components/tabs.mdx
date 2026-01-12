@@ -1,7 +1,7 @@
 ---
 title: 'Tabs'
 site_name: 'Tabs - Vapor Core'
-description: 'Tabs는 관련된 콘텐츠를 탭 형태로 구성하여 사용자가 쉽게 전환할 수 있도록 하는 컴포넌트입니다. 키보드 내비게이션, 접근성, 다양한 스타일 변형을 지원합니다.'
+description: 'A component that organizes related content into tabs, allowing users to easily switch between them with support for keyboard navigation, accessibility, and various style variants.'
 ---
 
 <Demo name="tabs/default-tabs">
@@ -19,7 +19,7 @@ description: 'Tabs는 관련된 콘텐츠를 탭 형태로 구성하여 사용�
 
 ### Size
 
-Tabs의 크기를 지정합니다. `sm`, `md`, `lg`, `xl` 네 가지 크기를 제공합니다.
+Sets the size of the Tabs. Provides four sizes: `sm`, `md`, `lg`, `xl`.
 
 <Demo name="tabs/tabs-size">
 ```json doc-gen:file
@@ -32,7 +32,7 @@ Tabs의 크기를 지정합니다. `sm`, `md`, `lg`, `xl` 네 가지 크기를 �
 
 ### Variant
 
-Tabs의 스타일 변형을 설정합니다. `line`과 `fill` 두 가지 스타일을 제공합니다.
+Sets the visual style of the Tabs. Provides two styles: `line` and `fill`.
 
 <Demo name="tabs/tabs-variant">
 ```json doc-gen:file
@@ -45,7 +45,7 @@ Tabs의 스타일 변형을 설정합니다. `line`과 `fill` 두 가지 스타�
 
 ### Orientation
 
-수평(horizontal)과 수직(vertical) 방향을 설정합니다.
+Sets the layout direction to horizontal or vertical.
 
 <Demo name="tabs/tabs-orientation">
 ```json doc-gen:file
@@ -58,7 +58,7 @@ Tabs의 스타일 변형을 설정합니다. `line`과 `fill` 두 가지 스타�
 
 ### Controlled State
 
-Tabs의 활성 상태를 외부에서 제어합니다.
+Controls the active state of Tabs externally.
 
 <Demo name="tabs/tabs-controlled">
 ```json doc-gen:file
@@ -71,7 +71,7 @@ Tabs의 활성 상태를 외부에서 제어합니다.
 
 ### States
 
-개별 탭 또는 전체 탭 그룹을 비활성화할 수 있습니다.
+Allows disabling individual tabs or the entire tab group.
 
 <Demo name="tabs/tabs-states">
 ```json doc-gen:file
@@ -88,7 +88,7 @@ Tabs의 활성 상태를 외부에서 제어합니다.
 
 ### Keyboard Navigation
 
-`activateOnFocus`와 `loop` props를 사용하여 키보드 내비게이션 동작을 세밀하게 제어할 수 있습니다.
+Fine-tune keyboard navigation behavior using the `activateOnFocus` and `loop` props.
 
 <Demo name="tabs/tabs-keyboard">
 ```json doc-gen:file
@@ -101,7 +101,7 @@ Tabs의 활성 상태를 외부에서 제어합니다.
 
 ### Without Panel
 
-`Tabs.Panel` 없이 외부 상태로 콘텐츠를 관리할 수 있습니다.
+Manage content with external state without using `Tabs.Panel`.
 
 <Demo name="tabs/tabs-with-panel">
 ```json doc-gen:file
@@ -114,7 +114,7 @@ Tabs의 활성 상태를 외부에서 제어합니다.
 
 ### Custom Indicator
 
-`Tabs.List`는 기본적으로 `Tabs.IndicatorPrimitive`를 포함합니다. Indicator를 커스터마이징하려면 `indicatorElement` prop을 사용하세요.
+`Tabs.List` includes `Tabs.IndicatorPrimitive` by default. Use the `indicatorElement` prop to customize the indicator.
 
 <Demo name="tabs/tabs-custom-indicator">
 ```json doc-gen:file

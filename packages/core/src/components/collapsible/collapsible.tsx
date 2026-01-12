@@ -14,6 +14,9 @@ import * as styles from './collapsible.css';
  * Collapsible.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of Collapsible that manages open/close state. Renders a `<div>` element.
+ */
 export const CollapsibleRoot = forwardRef<HTMLDivElement, CollapsibleRoot.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -25,6 +28,9 @@ CollapsibleRoot.displayName = 'Collapsible.Root';
  * Collapsible.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that toggles the open/close state of the Collapsible. Renders a `<button>` element.
+ */
 export const CollapsibleTrigger = forwardRef<HTMLButtonElement, CollapsibleTrigger.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -38,6 +44,9 @@ CollapsibleTrigger.displayName = 'Collapsible.Trigger';
  * Collapsible.Panel
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Container for collapsible content with smooth height transition. Renders a `<div>` element.
+ */
 export const CollapsiblePanel = forwardRef<HTMLDivElement, CollapsiblePanel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 

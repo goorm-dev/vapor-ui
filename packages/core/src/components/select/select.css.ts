@@ -8,6 +8,10 @@ import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
+/**
+ * @variant size - Determines the size of the Select trigger.
+ * @variant invalid - Determines whether the Select is in an invalid state.
+ */
 export const trigger = recipe({
     base: [
         interaction(),
@@ -34,6 +38,9 @@ export const trigger = recipe({
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
+        /**
+         * Determines the size of the Select trigger.
+         */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['100'],
@@ -57,15 +64,24 @@ export const trigger = recipe({
             }),
         },
 
+        /**
+         * Determines whether the Select is in an invalid state.
+         */
         invalid: { true: {}, false: {} },
     },
 });
 
+/**
+ * @variant size - Determines the typography size of the Select value.
+ */
 export const value = recipe({
     base: [foregrounds({ color: 'normal-200' }), { whiteSpace: 'nowrap' }],
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the typography size of the Select value.
+         */
         size: {
             sm: typography({ style: 'body3' }),
             md: typography({ style: 'body2' }),
@@ -79,11 +95,17 @@ export const placeholder = style([foregrounds({ color: 'hint-100' })]);
 
 export const icon = layerStyle('components', { display: 'flex', flexShrink: 0 });
 
+/**
+ * @variant size - Determines the size of the Select trigger icon.
+ */
 export const triggerIcon = recipe({
     base: [foregrounds({ color: 'hint-100' }), icon],
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the size of the Select trigger icon.
+         */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension['200'],

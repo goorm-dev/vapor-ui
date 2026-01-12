@@ -22,6 +22,9 @@ import * as styles from './tooltip.css';
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component that manages tooltip state and behavior.
+ */
 export const TooltipRoot = (props: TooltipRoot.Props) => {
     return <BaseTooltip.Root {...props} />;
 };
@@ -30,6 +33,9 @@ export const TooltipRoot = (props: TooltipRoot.Props) => {
  * Tooltip.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Element that triggers the tooltip on hover or focus. Renders a `<button>` element.
+ */
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -41,6 +47,9 @@ TooltipTrigger.displayName = 'Tooltip.Trigger';
  * Tooltip.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal component for rendering tooltip outside the main DOM hierarchy.
+ */
 export const TooltipPortalPrimitive = (props: TooltipPortalPrimitive.Props) => {
     return <BaseTooltip.Portal {...props} />;
 };
@@ -50,6 +59,9 @@ TooltipPortalPrimitive.displayName = 'Tooltip.PortalPrimitive';
  * Tooltip.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Positions the tooltip relative to the trigger element. Renders a `<div>` element.
+ */
 export const TooltipPositionerPrimitive = forwardRef<
     HTMLDivElement,
     TooltipPositionerPrimitive.Props
@@ -82,6 +94,9 @@ TooltipPositionerPrimitive.displayName = 'Tooltip.PositionerPrimitive';
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
+/**
+ * Popup content with arrow indicator. Renders a `<div>` element.
+ */
 export const TooltipPopupPrimitive = forwardRef<HTMLDivElement, TooltipPopupPrimitive.Props>(
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
@@ -154,6 +169,9 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Tooltip.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Composite component combining Portal, Positioner, and PopupPrimitive. Renders a `<div>` element.
+ */
 export const TooltipPopup = forwardRef<HTMLDivElement, TooltipPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <TooltipPopupPrimitive ref={ref} {...props} />;

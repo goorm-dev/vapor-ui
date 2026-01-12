@@ -28,6 +28,9 @@ const [TabsProvider, useTabsContext] = createContext<TabsContext>({
  * Tabs.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of Tabs that manages tab navigation and content switching. Renders a `<div>` element.
+ */
 export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
     const [contextProps, otherProps] = createSplitProps<TabsContext>()(componentProps, [
@@ -58,6 +61,9 @@ TabsRoot.displayName = 'Tabs.Root';
  * Tabs.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Container for tab buttons with styling. Renders a `<div>` element.
+ */
 export const TabsListPrimitive = forwardRef<HTMLDivElement, TabsListPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -80,6 +86,9 @@ TabsListPrimitive.displayName = 'Tabs.ListPrimitive';
  * Tabs.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Visual indicator that highlights the active tab. Renders a `<div>` element.
+ */
 export const TabsIndicatorPrimitive = forwardRef<HTMLDivElement, TabsIndicatorPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -100,6 +109,9 @@ TabsIndicatorPrimitive.displayName = 'Tabs.IndicatorPrimitive';
  * Tabs.List
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Composite component combining ListPrimitive and IndicatorPrimitive. Renders a `<div>` element.
+ */
 export const TabsList = forwardRef<HTMLDivElement, TabsList.Props>((props, ref) => {
     const { children, indicatorElement, ...componentProps } = resolveStyles(props);
 
@@ -116,6 +128,9 @@ TabsList.displayName = 'Tabs.List';
  * Tabs.Button
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Individual tab button for switching between panels. Renders a `<button>` element.
+ */
 export const TabsButton = forwardRef<HTMLButtonElement, TabsButton.Props>((props, ref) => {
     const { disabled: disabledProp, className, ...componentProps } = resolveStyles(props);
     const { disabled: rootDisabled, size, orientation, variant } = useTabsContext();
@@ -137,6 +152,9 @@ TabsButton.displayName = 'Tabs.Button';
  * Tabs.Panel
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Content panel associated with a tab. Renders a `<div>` element.
+ */
 export const TabsPanel = forwardRef<HTMLDivElement, TabsPanel.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 

@@ -61,6 +61,9 @@ export const popup = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the width of the Dialog popup.
+         */
         size: {
             md: layerStyle('components', { width: '31.25rem' }),
             lg: layerStyle('components', { width: '50rem' }),

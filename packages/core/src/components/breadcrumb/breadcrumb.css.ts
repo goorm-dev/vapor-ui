@@ -15,9 +15,17 @@ export const item = layerStyle('components', {
     alignItems: 'center',
 });
 
+/**
+ * Breadcrumb link styles
+ * @variant size - Determines the typography size of the link
+ * @variant current - Determines whether the link is the current page
+ */
 export const link = recipe({
     defaultVariants: { size: 'md', current: false },
     variants: {
+        /**
+         * Determines the typography size of the link.
+         */
         size: {
             sm: typography({ style: 'body4' }),
             md: typography({ style: 'body3' }),
@@ -25,6 +33,9 @@ export const link = recipe({
             xl: typography({ style: 'body1' }),
         },
 
+        /**
+         * Determines whether the link is the current page.
+         */
         current: {
             false: [
                 layerStyle('components', {
@@ -51,6 +62,10 @@ export const link = recipe({
     },
 });
 
+/**
+ * Breadcrumb icon styles
+ * @variant size - Determines the icon size
+ */
 export const icon = recipe({
     base: layerStyle('components', {
         color: vars.color.foreground.hint[100],
@@ -61,6 +76,9 @@ export const icon = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the icon size.
+         */
         size: {
             sm: { width: vars.size.dimension[175], height: vars.size.dimension[175] },
             md: { width: vars.size.dimension[200], height: vars.size.dimension[200] },

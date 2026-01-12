@@ -30,6 +30,9 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
  * Checkbox.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of Checkbox that manages checked state. Renders a `<button>` element.
+ */
 export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
@@ -67,6 +70,9 @@ CheckboxRoot.displayName = 'Checkbox.Root';
  * Checkbox.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Displays the check or dash icon when the Checkbox is checked or indeterminate. Renders a `<div>` element.
+ */
 export const CheckboxIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     CheckboxIndicatorPrimitive.Props

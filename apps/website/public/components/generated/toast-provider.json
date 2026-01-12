@@ -1,31 +1,42 @@
 {
-    "name": "Provider",
-    "displayName": "Toast.Provider",
-    "description": "Toast의 모든 하위 컴포넌트를 그룹화하고 Toast 상태를 관리하는 프로바이더입니다. 내부적으로 `ProviderPrimitive`, `PortalPrimitive`, `ViewportPrimitive`가 통합되어 있습니다.",
+    "name": "ToastProvider",
+    "displayName": "ToastProvider",
+    "description": "Provider component that manages toast notifications and displays them.",
     "props": [
         {
-            "name": "toastManager",
-            "type": ["ToastManager"],
-            "required": true,
-            "description": "Toast의 상태를 관리하는 ToastManager 인스턴스입니다."
-        },
-        {
-            "name": "timeout",
-            "type": ["number"],
-            "required": false,
-            "description": "Toast가 자동으로 닫히기까지의 시간(밀리초)입니다.",
-            "defaultValue": "4000"
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "boolean"
+            ],
+            "required": false
         },
         {
             "name": "limit",
             "type": ["number"],
             "required": false,
-            "description": "동시에 표시할 수 있는 최대 Toast 개수입니다."
+            "description": "The maximum number of toasts that can be displayed at once.\nWhen the limit is reached, the oldest toast will be removed to make room for the new one.",
+            "defaultValue": "3"
         },
         {
-            "name": "children",
-            "type": ["ReactNode"],
-            "required": false
+            "name": "timeout",
+            "type": ["number"],
+            "required": false,
+            "description": "The default amount of time (in ms) before a toast is auto dismissed.\nA value of `0` will prevent the toast from being dismissed automatically.",
+            "defaultValue": "5000"
+        },
+        {
+            "name": "toastManager",
+            "type": [
+                "import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/toast/createToastManager\").createToastManager.ToastManager"
+            ],
+            "required": false,
+            "description": "A global manager for toasts to use outside of a React component."
         }
     ]
 }

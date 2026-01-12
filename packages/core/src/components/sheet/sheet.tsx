@@ -42,6 +42,9 @@ const [SheetRootProvider, useSheetRootContext] = createContext<RootContext>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of Sheet that manages open/close state and settings. Renders a `<div>` element.
+ */
 export const SheetRoot = ({
     open: openProp,
     defaultOpen,
@@ -92,6 +95,9 @@ SheetRoot.displayName = 'Sheet.Root';
  * Sheet.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that triggers the Sheet to open. Renders a `<button>` element.
+ */
 export const SheetTrigger = Dialog.Trigger;
 SheetTrigger.displayName = 'Sheet.Trigger';
 
@@ -99,6 +105,9 @@ SheetTrigger.displayName = 'Sheet.Trigger';
  * Sheet.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that closes the Sheet. Renders a `<button>` element.
+ */
 export const SheetClose = Dialog.Close;
 SheetClose.displayName = 'Sheet.Close';
 
@@ -106,6 +115,9 @@ SheetClose.displayName = 'Sheet.Close';
  * Sheet.OverlayPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Background overlay for Sheet. Renders a `<div>` element.
+ */
 export const SheetOverlayPrimitive = Dialog.OverlayPrimitive;
 SheetOverlayPrimitive.displayName = 'Sheet.OverlayPrimitive';
 
@@ -130,6 +142,9 @@ const [SheetPositionerProvider, useSheetPositionerContext] = createContext<Posit
     hookName: 'useSheetPositionerContext',
 });
 
+/**
+ * Positions the Sheet popup at the specified side of the screen. Renders a `<div>` element.
+ */
 export const SheetPositionerPrimitive = forwardRef<HTMLDivElement, SheetPositionerPrimitive.Props>(
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
@@ -161,6 +176,9 @@ SheetPositionerPrimitive.displayName = 'Sheet.PositionerPrimitive';
  * Sheet.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Sheet popup container that slides in from the screen edge. Renders a `<div>` element.
+ */
 export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -188,6 +206,9 @@ SheetPopupPrimitive.displayName = 'Sheet.PopupPrimitive';
  * Sheet.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Composed popup component that includes portal, overlay, positioner, and popup primitive. Renders a `<div>` element.
+ */
 export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
         const popup = <SheetPopupPrimitive ref={ref} {...props} />;
@@ -222,6 +243,9 @@ SheetPopup.displayName = 'Sheet.Popup';
  * Sheet.Header
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Header section of the Sheet containing title and description. Renders a `<div>` element.
+ */
 export const SheetHeader = forwardRef<HTMLDivElement, SheetHeader.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -235,6 +259,9 @@ SheetHeader.displayName = 'Sheet.Header';
  * Sheet.Body
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Main content area of the Sheet. Renders a `<div>` element.
+ */
 export const SheetBody = forwardRef<HTMLDivElement, SheetBody.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -246,6 +273,9 @@ SheetBody.displayName = 'Sheet.Body';
  * Sheet.Footer
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Footer section of the Sheet typically containing action buttons. Renders a `<div>` element.
+ */
 export const SheetFooter = forwardRef<HTMLDivElement, SheetFooter.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -259,6 +289,9 @@ SheetFooter.displayName = 'Sheet.Footer';
  * Sheet.Title
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Title text displayed in the Sheet header. Renders an `<h2>` element.
+ */
 export const SheetTitle = Dialog.Title;
 SheetTitle.displayName = 'Sheet.Title';
 
@@ -266,6 +299,9 @@ SheetTitle.displayName = 'Sheet.Title';
  * Sheet.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Description text displayed in the Sheet header. Renders a `<p>` element.
+ */
 export const SheetDescription = Dialog.Description;
 SheetDescription.displayName = 'Sheet.Description';
 

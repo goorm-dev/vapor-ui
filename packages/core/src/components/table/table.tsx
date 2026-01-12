@@ -12,6 +12,9 @@ import * as styles from './table.css';
  * Table.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root container for organizing data in rows and columns. Renders a `<table>` element.
+ */
 export const TableRoot = forwardRef<HTMLTableElement, TableRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -30,6 +33,9 @@ TableRoot.displayName = 'Table.Root';
  * Table.Header
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Header section of the table containing column headings. Renders a `<thead>` element.
+ */
 export const TableHeader = forwardRef<HTMLTableSectionElement, TableHeader.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
@@ -45,6 +51,9 @@ TableHeader.displayName = 'Table.Header';
  * Table.Body
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Body section of the table containing data rows. Renders a `<tbody>` element.
+ */
 export const TableBody = forwardRef<HTMLTableSectionElement, TableBody.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
@@ -60,6 +69,9 @@ TableBody.displayName = 'Table.Body';
  * Table.Footer
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Footer section of the table for summary rows. Renders a `<tfoot>` element.
+ */
 export const TableFooter = forwardRef<HTMLTableSectionElement, TableFooter.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 
@@ -75,6 +87,9 @@ TableFooter.displayName = 'Table.Footer';
  * Table.Row
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Row component for grouping cells horizontally. Renders a `<tr>` element.
+ */
 export const TableRow = forwardRef<HTMLTableRowElement, TableRow.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -93,6 +108,9 @@ TableRow.displayName = 'Table.Row';
  * Table.Heading
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Header cell for labeling columns. Renders a `<th>` element.
+ */
 export const TableHeading = forwardRef<HTMLTableCellElement, TableHeading.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -111,6 +129,9 @@ TableHeading.displayName = 'Table.Heading';
  * Table.Cell
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Data cell for displaying table content. Renders a `<td>` element.
+ */
 export const TableCell = forwardRef<HTMLTableCellElement, TableCell.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -129,6 +150,9 @@ TableCell.displayName = 'Table.Cell';
  * Table.ColumnGroup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Container for column specifications. Renders a `<colgroup>` element.
+ */
 export const TableColumnGroup = forwardRef<HTMLTableColElement, TableColumnGroup.Props>(
     (props, ref) => {
         const { render, ...componentProps } = resolveStyles(props);
@@ -146,6 +170,9 @@ TableColumnGroup.displayName = 'Table.ColumnGroup';
  * Table.Column
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Defines properties for a column. Renders a `<col>` element.
+ */
 export const TableColumn = forwardRef<HTMLTableColElement, TableColumn.Props>((props, ref) => {
     const { render, ...componentProps } = resolveStyles(props);
 

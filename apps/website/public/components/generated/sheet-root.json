@@ -1,13 +1,15 @@
 {
-    "name": "Root",
-    "displayName": "Sheet.Root",
-    "description": "Sheet의 모든 부분을 그룹화합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "name": "SheetRoot",
+    "displayName": "SheetRoot",
+    "description": "Root component of Sheet that manages open/close state and settings. Renders a `<div>` element.",
     "props": [
         {
-            "name": "open",
-            "type": ["false", "true"],
+            "name": "actionsRef",
+            "type": [
+                "React.RefObject<import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/dialog/root/DialogRoot\").DialogRoot.Actions>"
+            ],
             "required": false,
-            "description": "다이얼로그가 현재 열려 있는지 여부"
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the dialog will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the dialog manually.\nUseful when the dialog's animation is controlled by an external library."
         },
         {
             "name": "children",
@@ -15,57 +17,45 @@
                 "null",
                 "string",
                 "number",
-                "false",
-                "true",
                 "ReactElement",
-                "Iterable<ReactNode>",
-                "ReactPortal"
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "boolean"
             ],
             "required": false
         },
         {
-            "name": "render",
-            "type": ["ReactElement"],
-            "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
-        },
-        {
             "name": "defaultOpen",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "다이얼로그의 초기 열림 상태입니다.\n\n제어 컴포넌트로 렌더링하려면 `open` prop을 대신 사용하세요.",
+            "description": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead.",
             "defaultValue": "false"
         },
         {
             "name": "modal",
-            "type": ["false", "true", "trap-focus"],
+            "type": ["\"trap-focus\"", "boolean"],
             "required": false,
-            "description": "다이얼로그가 열릴 때 모달 상태로 전환할지 결정합니다.\n- `true`: 사용자 상호작용이 다이얼로그로 제한됩니다: 포커스가 트랩되고, 문서 페이지 스크롤이 잠기며, 외부 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용이 허용됩니다.\n- `'trap-focus'`: 포커스는 다이얼로그 내부에 트랩되지만, 문서 페이지 스크롤은 잠기지 않고 외부 포인터 상호작용은 활성화됩니다.",
+            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
             "defaultValue": "true"
         },
         {
-            "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: ChangeEventDetails) => void"],
+            "name": "open",
+            "type": ["boolean"],
             "required": false,
-            "description": "다이얼로그가 열리거나 닫힐 때 호출되는 이벤트 핸들러"
+            "description": "Whether the dialog is currently open."
         },
         {
-            "name": "onOpenChangeComplete",
-            "type": ["(open: boolean) => void"],
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "다이얼로그가 열리거나 닫힌 후 애니메이션이 완료되면 호출되는 이벤트 핸들러"
-        },
-        {
-            "name": "actionsRef",
-            "type": ["RefObject<Actions>"],
-            "required": false,
-            "description": "명령형 액션을 위한 ref입니다.\n- `unmount`: 지정되면, 다이얼로그가 닫혀도 언마운트되지 않습니다.\n대신 `unmount` 함수를 호출하여 수동으로 다이얼로그를 언마운트해야 합니다.\n다이얼로그의 애니메이션이 외부 라이브러리에 의해 제어될 때 유용합니다."
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
             "name": "closeOnClickOverlay",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "오버레이 클릭 시 닫기 여부"
+            "description": "Whether to close the Dialog when clicking on the overlay.",
+            "defaultValue": "true"
         }
     ]
 }

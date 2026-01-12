@@ -29,7 +29,13 @@ export const textarea = recipe({
     defaultVariants: { invalid: false, size: 'md', autoResize: false },
 
     variants: {
+        /**
+         * Determines whether the textarea is in an invalid state.
+         */
         invalid: { true: {}, false: {} },
+        /**
+         * Determines whether the textarea automatically resizes to fit content.
+         */
         autoResize: {
             true: {
                 resize: 'none',
@@ -38,6 +44,9 @@ export const textarea = recipe({
             },
         },
 
+        /**
+         * Determines the size of the textarea.
+         */
         size: {
             sm: [
                 typography({ style: 'body3' }),

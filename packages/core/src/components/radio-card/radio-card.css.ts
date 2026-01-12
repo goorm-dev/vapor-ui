@@ -6,6 +6,10 @@ import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
+/**
+ * @variant size - Determines the size of the RadioCard.
+ * @variant invalid - Determines whether the RadioCard is in an invalid state.
+ */
 export const root = recipe({
     base: [
         interaction(),
@@ -43,9 +47,15 @@ export const root = recipe({
     },
 
     variants: {
+        /**
+         * Determines whether the RadioCard is in an invalid state.
+         */
         invalid: {
             true: {},
         },
+        /**
+         * Determines the size of the RadioCard.
+         */
         size: {
             md: layerStyle('components', {
                 height: vars.size.dimension['400'],

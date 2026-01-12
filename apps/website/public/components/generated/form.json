@@ -1,0 +1,20 @@
+{
+    "name": "Form",
+    "displayName": "Form",
+    "props": [
+        {
+            "name": "errors",
+            "type": [
+                "import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/form/FormContext\").Errors"
+            ],
+            "required": false,
+            "description": "An object where the keys correspond to the `name` attribute of the form fields,\nand the values correspond to the error(s) related to that field."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

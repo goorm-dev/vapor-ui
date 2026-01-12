@@ -1,7 +1,7 @@
 ---
 title: Field
 site_name: Field - Vapor Core
-description: Field는 폼 요소들을 감싸는 컨테이너 컴포넌트로, 라벨, 설명, 에러 메시지, 성공 메시지 등을 제공합니다.
+description: A form field container component that provides labels, descriptions, error messages, and success messages.
 ---
 
 <Demo name="field/default-field">
@@ -19,7 +19,7 @@ description: Field는 폼 요소들을 감싸는 컨테이너 컴포넌트로, �
 
 ### Invalid State
 
-Field의 유효하지 않은 상태를 설정합니다.
+Sets the invalid state of the Field.
 
 <Demo name="field/field-invalid">
 ```json doc-gen:file
@@ -32,7 +32,7 @@ Field의 유효하지 않은 상태를 설정합니다.
 
 ### Validation Mode
 
-유효성 검사 타이밍을 설정합니다.
+Sets the timing for validation checks.
 
 <Demo name="field/field-validation-mode">
 ```json doc-gen:file
@@ -49,7 +49,7 @@ Field의 유효하지 않은 상태를 설정합니다.
 
 ### With Description
 
-Field에 대한 추가 설명을 표시합니다.
+Displays additional description for the Field.
 
 <Demo name="field/field-description">
 ```json doc-gen:file
@@ -62,7 +62,7 @@ Field에 대한 추가 설명을 표시합니다.
 
 ### Validation
 
-입력된 값에 대한 유효성을 검사합니다.
+Validates the input value.
 
 <Demo name="field/field-validation">
 ```json doc-gen:file
@@ -75,7 +75,7 @@ Field에 대한 추가 설명을 표시합니다.
 
 ### Required
 
-필수 Field와 선택 Field를 구분하여 표시합니다.
+Distinguishes between required and optional Fields.
 
 <Demo name="field/field-required">
 ```json doc-gen:file
@@ -88,7 +88,7 @@ Field에 대한 추가 설명을 표시합니다.
 
 ### Disabled
 
-disabled 속성을 사용하여 비활성화된 Field를 만들 수 있습니다.
+Creates disabled Field using the disabled attribute.
 
 <Demo name="field/field-disabled">
 ```json doc-gen:file
@@ -101,7 +101,7 @@ disabled 속성을 사용하여 비활성화된 Field를 만들 수 있습니다
 
 ### With RadioGroup
 
-RadioGroup과 Field를 함께 사용합니다.
+Uses Field together with RadioGroup.
 
 <Demo name = "field/field-radio-group">
 
@@ -144,7 +144,7 @@ export default function FieldRadioGroup() {
 
 ### With Form Elements
 
-다양한 폼 요소(TextInput, Checkbox, Switch, Select 등)와 Field를 함께 사용합니다.
+Uses Field with various form elements (TextInput, Checkbox, Switch, Select, etc.).
 
 <Demo name="field/field-with-inputs">
 ```json doc-gen:file
@@ -157,7 +157,7 @@ export default function FieldRadioGroup() {
 
 ### Controlled
 
-제어 컴포넌트로 Field를 관리하고 실시간으로 상태를 표시합니다.
+Manages Field as a controlled component and displays state in real-time.
 
 <Demo name="field/field-controlled">
 ```json doc-gen:file

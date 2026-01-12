@@ -59,7 +59,13 @@ export const label = recipe({
     },
 
     variants: {
+        /**
+         * Determines the typography style of the label.
+         */
         typography: typographyVariants,
+        /**
+         * Determines the foreground color of the label.
+         */
         foreground: foregroundVariants,
     },
 });

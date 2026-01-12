@@ -19,6 +19,9 @@ import * as styles from './textarea.css';
  * Textarea
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Input field for entering multi-line text data. Renders a `<textarea>` element.
+ */
 export const Textarea = forwardRef<HTMLTextAreaElement, Textarea.Props>((props, ref) => {
     const {
         render,

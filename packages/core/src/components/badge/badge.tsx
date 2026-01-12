@@ -10,6 +10,9 @@ import type { VComponentProps } from '~/utils/types';
 import type { BadgeVariants } from './badge.css';
 import * as styles from './badge.css';
 
+/**
+ * A label for displaying status or categorization of content. Renders a `<span>` element.
+ */
 export const Badge = forwardRef<HTMLSpanElement, Badge.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<BadgeVariants>()(componentProps, [

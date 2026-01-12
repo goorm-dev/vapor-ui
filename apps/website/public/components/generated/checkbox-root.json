@@ -1,124 +1,106 @@
 {
-    "name": "Root",
-    "displayName": "Checkbox.Root",
-    "description": "체크박스 자체를 나타냅니다. `<button>` 요소와 숨겨진 `<input>`을 렌더링합니다.",
+    "name": "CheckboxRoot",
+    "displayName": "CheckboxRoot",
+    "description": "Root component of Checkbox that manages checked state. Renders a `<button>` element.",
     "props": [
         {
-            "name": "size",
-            "type": ["md", "lg"],
+            "name": "checked",
+            "type": ["boolean"],
             "required": false,
-            "description": "체크박스 크기",
-            "defaultValue": "md"
-        },
-        {
-            "name": "className",
-            "type": ["string", "(state: State) => string"],
-            "required": false,
-            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
-        },
-        {
-            "name": "id",
-            "type": ["string"],
-            "required": false,
-            "description": "input 요소의 고유 식별자"
-        },
-        {
-            "name": "name",
-            "type": ["string"],
-            "required": false,
-            "description": "폼 제출 시 필드를 식별하는 이름",
+            "description": "Whether the checkbox is currently ticked.\n\nTo render an uncontrolled checkbox, use the `defaultChecked` prop instead.",
             "defaultValue": "undefined"
         },
         {
             "name": "defaultChecked",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "초기 상태에서 체크박스가 선택되었는지 여부\n\n제어되는 체크박스를 렌더링하려면 대신 `checked` 속성을 사용하십시오.",
+            "description": "Whether the checkbox is initially ticked.\n\nTo render a controlled checkbox, use the `checked` prop instead.",
             "defaultValue": "false"
         },
         {
             "name": "disabled",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "사용자 상호작용을 비활성화할지 여부",
+            "description": "Whether the component should ignore user interaction.",
             "defaultValue": "false"
-        },
-        {
-            "name": "value",
-            "type": ["string"],
-            "required": false,
-            "description": "폼 제출 시 체크박스의 값"
-        },
-        {
-            "name": "checked",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "체크박스가 현재 선택되었는지 여부\n\n제어되지 않는 체크박스를 렌더링하려면 대신 `defaultChecked` 프로퍼티를 사용하십시오.",
-            "defaultValue": "undefined"
-        },
-        {
-            "name": "readOnly",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "사용자가 체크박스를 선택하거나 선택 해제하지 못하도록 할지 여부",
-            "defaultValue": "false"
-        },
-        {
-            "name": "required",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "사용자가 폼을 제출하기 전에 체크박스를 선택해야 하는지 여부",
-            "defaultValue": "false"
-        },
-        {
-            "name": "render",
-            "type": ["ReactElement"],
-            "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
-        },
-        {
-            "name": "onCheckedChange",
-            "type": ["(checked: boolean, eventDetails: Checkbox.Root.ChangeEventDetails) => void"],
-            "required": false,
-            "description": "체크박스가 선택되거나 해제될 때 호출되는 이벤트 핸들러"
         },
         {
             "name": "indeterminate",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "체크박스가 indeterminate 상태인지 여부: 선택되었거나 선택되지 않음.",
+            "description": "Whether the checkbox is in a mixed state: neither ticked, nor unticked.",
             "defaultValue": "false"
         },
         {
             "name": "inputRef",
             "type": [
                 "null",
-                "(instance: HTMLInputElement | null) => void",
-                "RefObject<HTMLInputElement>"
+                "(instance: HTMLInputElement",
+                "null) => void",
+                "React.RefObject<HTMLInputElement>"
             ],
             "required": false,
-            "description": "숨겨진 `<input>` 요소에 접근하기 위한 ref"
+            "description": "A ref to access the hidden `<input>` element."
         },
         {
-            "name": "parent",
-            "type": ["false", "true"],
+            "name": "name",
+            "type": ["string"],
             "required": false,
-            "description": "체크박스가 하위 체크박스 그룹을 제어하는지 여부\n\n[Checkbox Group](https://base-ui.com/react/components/checkbox-group)에서 사용해야 합니다.",
-            "defaultValue": "false"
+            "description": "Identifies the field when a form is submitted.",
+            "defaultValue": "undefined"
         },
         {
             "name": "nativeButton",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "render prop으로 교체할 때 네이티브 `<button>` 요소를 렌더링할지 여부\n렌더링되는 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정하세요.",
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
             "defaultValue": "true"
         },
         {
-            "name": "invalid",
-            "type": ["false", "true"],
+            "name": "parent",
+            "type": ["boolean"],
             "required": false,
-            "description": "유효성 검사 실패 상태",
+            "description": "Whether the checkbox controls a group of child checkboxes.\n\nMust be used in a [Checkbox Group](https://base-ui.com/react/components/checkbox-group).",
             "defaultValue": "false"
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user should be unable to tick or untick the checkbox.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user must tick the checkbox before submitting a form.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false,
+            "description": "The value of the selected checkbox."
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Indicates whether the Checkbox is in an invalid state."
+        },
+        {
+            "name": "size",
+            "type": ["md", "lg"],
+            "required": false,
+            "description": "Determines the size of the Checkbox.",
+            "defaultValue": "md"
         }
     ]
 }

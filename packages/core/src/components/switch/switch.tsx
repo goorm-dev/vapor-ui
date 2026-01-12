@@ -28,6 +28,9 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of Switch that manages toggle state. Renders a `<button>` element.
+ */
 export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
@@ -64,6 +67,9 @@ SwitchRoot.displayName = 'Switch.Root';
  * Switch.ThumbPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Thumb indicator that slides when the Switch is toggled. Renders a `<div>` element.
+ */
 export const SwitchThumbPrimitive = forwardRef<HTMLDivElement, SwitchThumbPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);

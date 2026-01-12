@@ -14,6 +14,9 @@ import * as styles from './card.css';
  * Card.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component that contains Card child elements. Renders a `<div>` element.
+ */
 export const CardRoot = forwardRef<HTMLDivElement, CardRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -32,6 +35,9 @@ CardRoot.displayName = 'Card.Root';
  * Card.Header
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Displays the header section of the Card. Renders a `<div>` element.
+ */
 export const CardHeader = forwardRef<HTMLDivElement, CardHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -50,6 +56,9 @@ CardHeader.displayName = 'Card.Header';
  * Card.Body
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Displays the main content section of the Card. Renders a `<div>` element.
+ */
 export const CardBody = forwardRef<HTMLDivElement, CardBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -68,6 +77,9 @@ CardBody.displayName = 'Card.Body';
  * Card.Footer
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Displays the footer section of the Card. Renders a `<div>` element.
+ */
 export const CardFooter = forwardRef<HTMLDivElement, CardFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 

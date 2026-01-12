@@ -1,17 +1,19 @@
 {
     "name": "Text",
     "displayName": "Text",
-    "description": "타이포그래피 스타일을 적용하는 텍스트 컴포넌트입니다. `<span>` 요소로 렌더링됩니다.",
+    "description": "Component for displaying styled text with typography and color options. Renders a `<span>` element by default.",
     "props": [
         {
-            "name": "textAlign",
-            "type": ["null", "left", "right", "center", "end", "start", "justify", "match-parent"],
-            "required": false
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
             "name": "foreground",
             "type": [
                 "white",
+                "inverse",
                 "primary-100",
                 "primary-200",
                 "secondary-100",
@@ -30,8 +32,7 @@
                 "normal-200"
             ],
             "required": false,
-            "description": "텍스트의 전경색을 설정합니다.",
-            "defaultValue": "normal-200"
+            "description": "Sets the text color."
         },
         {
             "name": "typography",
@@ -56,14 +57,7 @@
                 "code2"
             ],
             "required": false,
-            "description": "텍스트에 적용할 타이포그래피 스타일을 설정합니다.",
-            "defaultValue": "body2"
-        },
-        {
-            "name": "render",
-            "type": ["ReactElement"],
-            "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
+            "description": "Sets the typography style."
         }
     ],
     "defaultElement": "span"

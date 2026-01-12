@@ -7,6 +7,11 @@ import { vars } from '~/styles/themes.css';
 
 const radii = createVar('border-radius');
 
+/**
+ * Avatar root container styles
+ * @variant size - Determines the size of the Avatar
+ * @variant shape - Determines the shape of the Avatar
+ */
 export const root = recipe({
     base: layerStyle('components', {
         display: 'inline-flex',
@@ -22,6 +27,9 @@ export const root = recipe({
 
     defaultVariants: { size: 'md', shape: 'square' },
     variants: {
+        /**
+         * Determines the size of the Avatar.
+         */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension[300],
@@ -44,6 +52,9 @@ export const root = recipe({
                 vars: { [radii]: vars.size.borderRadius[400] },
             }),
         },
+        /**
+         * Determines the shape of the Avatar.
+         */
         shape: {
             square: layerStyle('components', { borderRadius: radii }),
             circle: layerStyle('components', { borderRadius: '50%' }),
@@ -53,6 +64,10 @@ export const root = recipe({
 
 export const fallbackBgVar = createVar('fallback-background-color');
 
+/**
+ * Avatar fallback text styles
+ * @variant size - Determines the typography size of the fallback text
+ */
 export const fallback = recipe({
     base: layerStyle('components', {
         display: 'inline-flex',
@@ -67,6 +82,9 @@ export const fallback = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the typography size of the fallback text.
+         */
         size: {
             sm: layerStyle('components', {
                 fontSize: vars.typography.fontSize['050'],
@@ -96,6 +114,9 @@ export const fallback = recipe({
     },
 });
 
+/**
+ * Avatar image styles
+ */
 export const image = layerStyle('components', {
     display: 'inline',
     objectFit: 'cover',

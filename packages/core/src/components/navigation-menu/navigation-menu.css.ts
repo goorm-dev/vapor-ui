@@ -16,6 +16,9 @@ export const list = recipe({
 
     defaultVariants: { direction: 'horizontal' },
     variants: {
+        /**
+         * Determines the layout direction of the navigation menu.
+         */
         direction: {
             horizontal: layerStyle('components', { flexDirection: 'row' }),
             vertical: layerStyle('components', { flexDirection: 'column' }),
@@ -55,6 +58,9 @@ export const link = recipe({
         size: 'md',
     },
     variants: {
+        /**
+         * Determines the size of the navigation link.
+         */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['075'],

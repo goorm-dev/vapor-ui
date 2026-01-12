@@ -117,6 +117,9 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'info' },
     variants: {
+        /**
+         * Determines the color theme of the toast.
+         */
         colorPalette: {
             danger: layerStyle('components', {
                 backgroundColor: vars.color.background.danger[200],

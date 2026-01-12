@@ -21,6 +21,9 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
+/**
+ * Root component of Radio that renders a circular radio button. Renders a `<button>` element.
+ */
 export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
@@ -58,6 +61,9 @@ RadioRoot.displayName = 'Radio.Root';
  * Radio.IndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Visual indicator displayed when the radio button is checked. Renders a `<div>` element.
+ */
 export const RadioIndicatorPrimitive = forwardRef<HTMLDivElement, RadioIndicatorPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);

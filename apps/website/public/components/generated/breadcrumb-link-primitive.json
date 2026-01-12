@@ -1,21 +1,21 @@
 {
-    "name": "LinkPrimitive",
-    "displayName": "Breadcrumb.LinkPrimitive",
-    "description": "Breadcrumb 항목 내의 링크를 나타내는 프리미티브 컴포넌트입니다. `<a>` 요소를 렌더링 합니다.",
+    "name": "BreadcrumbLinkPrimitive",
+    "displayName": "BreadcrumbLinkPrimitive",
+    "description": "Link or text element for Breadcrumb navigation. Renders an `<a>` or `<span>` element.",
     "props": [
         {
             "name": "render",
-            "type": ["ReactElement"],
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
             "name": "current",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "defaultValue": "false",
-            "description": "현재 페이지 여부"
+            "description": "Whether this link represents the current page",
+            "defaultValue": "false"
         }
     ],
-    "defaultElement": "a"
+    "defaultElement": "Component"
 }

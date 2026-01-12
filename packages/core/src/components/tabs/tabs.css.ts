@@ -35,6 +35,9 @@ export const root = recipe({
     base: layerStyle('components', { display: 'flex' }),
     defaultVariants: { orientation: 'horizontal' },
     variants: {
+        /**
+         * Determines the layout direction of the tabs.
+         */
         orientation: {
             horizontal: layerStyle('components', {
                 flexDirection: 'column',
@@ -58,6 +61,9 @@ export const list = recipe({
 
     defaultVariants: { variant: 'line', orientation: 'horizontal' },
     variants: {
+        /**
+         * Determines the layout direction of the tab list.
+         */
         orientation: {
             horizontal: layerStyle('components', {
                 display: 'flex',
@@ -75,6 +81,9 @@ export const list = recipe({
                 },
             }),
         },
+        /**
+         * Determines the visual style of the tab list.
+         */
         variant: {
             line: layerStyle('components', {
                 vars: {
@@ -117,6 +126,9 @@ export const button = recipe({
 
     defaultVariants: { size: 'md', variant: 'line', orientation: 'horizontal' },
     variants: {
+        /**
+         * Determines the size of the tab button.
+         */
         size: {
             sm: [
                 typography({ style: 'subtitle2' }),
@@ -129,6 +141,9 @@ export const button = recipe({
                 layerStyle('components', { height: vars.size.space['600'] }),
             ],
         },
+        /**
+         * Determines the layout direction of the tab button.
+         */
         orientation: {
             horizontal: layerStyle('components', {
                 borderRadius: buttonHorizontalBorderRadius,
@@ -139,6 +154,9 @@ export const button = recipe({
                 paddingInline: vars.size.space[200],
             }),
         },
+        /**
+         * Determines the visual style of the tab button.
+         */
         variant: {
             line: layerStyle('components', {
                 vars: {
@@ -171,6 +189,9 @@ export const indicator = recipe({
 
     defaultVariants: { orientation: 'horizontal', variant: 'line' },
     variants: {
+        /**
+         * Determines the layout direction of the indicator.
+         */
         orientation: {
             horizontal: layerStyle('components', {
                 bottom: indicatorBottomPosition,
@@ -187,6 +208,9 @@ export const indicator = recipe({
                 transitionProperty: 'transform, height',
             }),
         },
+        /**
+         * Determines the visual style of the indicator.
+         */
         variant: {
             line: layerStyle('components', {
                 backgroundColor: vars.color.border.primary,

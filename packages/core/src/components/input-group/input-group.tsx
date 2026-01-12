@@ -36,6 +36,9 @@ export const [InputGroupProvider, useInputGroupContext] = createContext<InputGro
  * InputGroup Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root container for InputGroup that manages character count state. Renders a `<div>` element.
+ */
 export const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupRoot.Props>((props, ref) => {
     const { className, render, ...componentProps } = resolveStyles(props);
 
@@ -69,6 +72,9 @@ InputGroupRoot.displayName = 'InputGroup.Root';
  * InputGroup Count
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Counter display for InputGroup showing character count. Renders a `<span>` element.
+ */
 export const InputGroupCounter = forwardRef<HTMLSpanElement, InputGroupCounter.Props>(
     (props, ref) => {
         const {
@@ -148,6 +154,9 @@ export namespace InputGroupCounter {
     type CounterRenderProps = { count: number; maxLength?: number; value: string };
 
     export interface Props extends PrimitiveCounterProps {
+        /**
+         * Content to display. Can be a render function that receives count, maxLength, and value.
+         */
         children?: React.ReactNode | ((props: CounterRenderProps) => React.ReactNode);
     }
 }

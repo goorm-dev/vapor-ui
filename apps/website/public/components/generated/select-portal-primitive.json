@@ -1,0 +1,31 @@
+{
+    "name": "SelectPortalPrimitive",
+    "displayName": "SelectPortalPrimitive",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "boolean"
+            ],
+            "required": false
+        },
+        {
+            "name": "container",
+            "type": ["null", "HTMLElement", "ShadowRoot", "React.RefObject<HTMLElement", "null>"],
+            "required": false,
+            "description": "A parent element to render the portal element into."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

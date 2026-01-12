@@ -36,6 +36,9 @@ export const trigger = recipe({
 
     defaultVariants: { size: 'md', invalid: false },
     variants: {
+        /**
+         * Determines the size of the trigger.
+         */
         size: {
             sm: layerStyle('components', {
                 gap: vars.size.space['100'],
@@ -55,6 +58,9 @@ export const trigger = recipe({
             }),
         },
 
+        /**
+         * Determines the invalid state styling.
+         */
         invalid: { true: {}, false: {} },
     },
 });
@@ -72,6 +78,9 @@ export const value = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the size of the value display.
+         */
         size: {
             sm: [
                 typography({ style: 'body3' }),
@@ -110,6 +119,9 @@ export const placeholder = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the size of the placeholder text.
+         */
         size: {
             sm: typography({ style: 'body3' }),
             md: typography({ style: 'body2' }),
@@ -126,6 +138,9 @@ export const triggerIcon = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the size of the trigger icon.
+         */
         size: {
             sm: layerStyle('components', {
                 width: vars.size.dimension['200'],

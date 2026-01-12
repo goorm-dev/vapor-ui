@@ -1,33 +1,27 @@
 {
-    "name": "Panel",
-    "displayName": "Collapsible.Panel",
-    "description": "접히거나 펼쳐지는 콘텐츠 영역입니다. `<div>` 요소를 렌더링합니다.",
+    "name": "CollapsiblePanel",
+    "displayName": "CollapsiblePanel",
+    "description": "Container for collapsible content with smooth height transition. Renders a `<div>` element.",
     "props": [
         {
-            "name": "className",
-            "type": ["string", "(state: State) => string"],
-            "required": false,
-            "description": "요소에 적용된 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
-        },
-        {
-            "name": "render",
-            "type": ["ReactElement"],
-            "required": false,
-            "description": "컴포넌트의 HTML 요소를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다. 렌더링할 요소를 반환하는 `ReactElement` 또는 함수를 인수로 받습니다."
-        },
-        {
             "name": "hiddenUntilFound",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "체크박스가 현재 선택되었는지 여부\n\n제어되지 않는 체크박스를 렌더링하려면 대신 `defaultChecked` 프로퍼티를 사용하십시오",
+            "description": "Allows the browser’s built-in page search to find and expand the panel contents.\n\nOverrides the `keepMounted` prop and uses `hidden=\"until-found\"`\nto hide the element without removing it from the DOM.",
             "defaultValue": "false"
         },
         {
             "name": "keepMounted",
-            "type": ["false", "true"],
+            "type": ["boolean"],
             "required": false,
-            "description": "요소가 숨겨져 있는 동안 DOM에 유지할지 여부입니다.\n이 속성은 `hiddenUntilFound`가 사용될 때 무시됩니다.",
+            "description": "Whether to keep the element in the DOM while the panel is hidden.\nThis prop is ignored when `hiddenUntilFound` is used.",
             "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ]
 }

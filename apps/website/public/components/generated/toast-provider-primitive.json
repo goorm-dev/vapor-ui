@@ -1,30 +1,40 @@
 {
-    "name": "ProviderPrimitive",
-    "displayName": "Toast.ProviderPrimitive",
-    "description": "Toast 시스템의 컨텍스트를 제공하는 프로바이더입니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "name": "ToastProviderPrimitive",
+    "displayName": "ToastProviderPrimitive",
+    "description": "Primitive provider for toast notifications with custom toast manager support.",
     "props": [
         {
-            "name": "toastManager",
-            "type": ["ToastManager"],
-            "required": true,
-            "description": "Toast의 상태를 관리하는 ToastManager 인스턴스입니다."
-        },
-        {
-            "name": "timeout",
-            "type": ["number"],
-            "required": false,
-            "description": "Toast가 자동으로 닫히기까지의 시간(밀리초)입니다.",
-            "defaultValue": "4000"
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "boolean"
+            ],
+            "required": false
         },
         {
             "name": "limit",
             "type": ["number"],
             "required": false,
-            "description": "동시에 표시할 수 있는 최대 Toast 개수입니다."
+            "description": "The maximum number of toasts that can be displayed at once.\nWhen the limit is reached, the oldest toast will be removed to make room for the new one.",
+            "defaultValue": "3"
         },
         {
-            "name": "children",
-            "type": ["ReactNode"],
+            "name": "timeout",
+            "type": ["number"],
+            "required": false,
+            "description": "The default amount of time (in ms) before a toast is auto dismissed.\nA value of `0` will prevent the toast from being dismissed automatically.",
+            "defaultValue": "5000"
+        },
+        {
+            "name": "toastManager",
+            "type": [
+                "import(\"/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/toast/toast\").ToastManager"
+            ],
             "required": false
         }
     ]

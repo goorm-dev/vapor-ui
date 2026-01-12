@@ -13,6 +13,12 @@ const ghostFg = createVar();
 const bg = createVar();
 const border = createVar();
 
+/**
+ * Button root styles
+ * @variant size - Determines the size of the Button
+ * @variant colorPalette - Determines the color theme of the Button
+ * @variant variant - Determines the visual style of the Button
+ */
 export const root = recipe({
     base: [
         interaction(),
@@ -34,6 +40,9 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill' },
     variants: {
+        /**
+         * Determines the size of the Button.
+         */
         size: {
             sm: [
                 typography({ style: 'subtitle1' }),
@@ -69,6 +78,9 @@ export const root = recipe({
             ],
         },
 
+        /**
+         * Determines the color theme of the Button.
+         */
         colorPalette: {
             primary: layerStyle('components', {
                 vars: {
@@ -126,6 +138,9 @@ export const root = recipe({
             }),
         },
 
+        /**
+         * Determines the visual style of the Button.
+         */
         variant: {
             fill: layerStyle('components', {
                 backgroundColor: bg,

@@ -34,6 +34,9 @@ const [SelectProvider, useSelectContext] = createContext<SelectContext>({
  * Select.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of Select that manages the selection state and provides context. Renders a `<div>` element.
+ */
 export const SelectRoot = (props: SelectRoot.Props) => {
     const [sharedProps, otherProps] = createSplitProps<SelectSharedProps>()(props, [
         'placeholder',
@@ -55,6 +58,9 @@ SelectRoot.displayName = 'Select.Root';
  * Select.TriggerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Primitive trigger button that opens the Select dropdown. Renders a `<button>` element.
+ */
 export const SelectTriggerPrimitive = forwardRef<HTMLButtonElement, SelectTriggerPrimitive.Props>(
     (props, ref) => {
         const {
@@ -87,6 +93,9 @@ SelectTriggerPrimitive.displayName = 'Select.TriggerPrimitive';
  * Select.ValuePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Displays the currently selected value or placeholder. Renders a `<span>` element.
+ */
 export const SelectValuePrimitive = forwardRef<HTMLSpanElement, SelectValuePrimitive.Props>(
     (props, ref) => {
         const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
@@ -125,6 +134,9 @@ SelectValuePrimitive.displayName = 'Select.ValuePrimitive';
  * Select.PlaceholderPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Placeholder text displayed when no value is selected. Renders a `<span>` element.
+ */
 export const SelectPlaceholderPrimitive = forwardRef<
     HTMLSpanElement,
     SelectPlaceholderPrimitive.Props
@@ -145,6 +157,9 @@ SelectPlaceholderPrimitive.displayName = 'Select.PlaceholderPrimitive';
  * Select.TriggerIconPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Icon displayed in the trigger button, typically a chevron. Renders a `<div>` element.
+ */
 export const SelectTriggerIconPrimitive = forwardRef<
     HTMLDivElement,
     SelectTriggerIconPrimitive.Props
@@ -173,6 +188,9 @@ SelectTriggerIconPrimitive.displayName = 'Select.TriggerIconPrimitive';
  * Select.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Composed trigger component that includes value display and icon. Renders a `<button>` element.
+ */
 export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerPrimitive.Props>(
     (props, ref) => {
         return (
@@ -197,6 +215,9 @@ export const SelectPortalPrimitive = (props: SelectPortalPrimitive.Props) => {
  * Select.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Positions the dropdown popup relative to the trigger. Renders a `<div>` element.
+ */
 export const SelectPositionerPrimitive = forwardRef<
     HTMLDivElement,
     SelectPositionerPrimitive.Props
@@ -228,6 +249,9 @@ SelectPositionerPrimitive.displayName = 'Select.PositionerPrimitive';
  * Select.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Dropdown popup container that displays the list of options. Renders a `<div>` element.
+ */
 export const SelectPopupPrimitive = forwardRef<HTMLDivElement, SelectPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -247,6 +271,9 @@ SelectPopupPrimitive.displayName = 'Select.PopupPrimitive';
  * Select.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Composed popup component that includes portal, positioner, and popup primitive. Renders a `<div>` element.
+ */
 export const SelectPopup = forwardRef<HTMLDivElement, SelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <SelectPopupPrimitive ref={ref} {...props} />;
@@ -270,6 +297,9 @@ SelectPopup.displayName = 'Select.Popup';
  * Select.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Primitive selectable option item in the dropdown list. Renders a `<div>` element.
+ */
 export const SelectItemPrimitive = forwardRef<HTMLDivElement, SelectItemPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -289,6 +319,9 @@ SelectItemPrimitive.displayName = 'Select.ItemPrimitive';
  * Select.ItemIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Visual indicator displayed for the selected item. Renders a `<span>` element.
+ */
 export const SelectItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     SelectItemIndicatorPrimitive.Props
@@ -315,6 +348,9 @@ SelectItemIndicatorPrimitive.displayName = 'Select.ItemIndicatorPrimitive';
  * Select.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Composed selectable item that includes indicator. Renders a `<div>` element.
+ */
 export const SelectItem = forwardRef<HTMLDivElement, SelectItem.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
@@ -332,6 +368,9 @@ SelectItem.displayName = 'Select.Item';
  * Select.Group
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Groups related select items together. Renders a `<div>` element.
+ */
 export const SelectGroup = forwardRef<HTMLDivElement, SelectGroup.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -343,6 +382,9 @@ SelectGroup.displayName = 'Select.Group';
  * Select.GroupLabel
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Label for a group of select items. Renders a `<div>` element.
+ */
 export const SelectGroupLabel = forwardRef<HTMLDivElement, SelectGroupLabel.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -360,6 +402,9 @@ SelectGroupLabel.displayName = 'Select.GroupLabel';
  * Select.Separator
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Visual separator between groups or items. Renders a `<div>` element.
+ */
 export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparator.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 

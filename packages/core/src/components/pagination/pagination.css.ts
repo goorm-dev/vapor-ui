@@ -67,7 +67,12 @@ const sizeVariants = {
 export const ellipsis = recipe({
     base: baseElement,
     defaultVariants: { size: 'md' },
-    variants: { size: sizeVariants },
+    variants: {
+        /**
+         * Determines the size of the ellipsis element.
+         */
+        size: sizeVariants,
+    },
 });
 
 // Current page indicator style
@@ -98,7 +103,12 @@ export const button = recipe({
         }),
     ],
     defaultVariants: { size: 'md' },
-    variants: { size: sizeVariants },
+    variants: {
+        /**
+         * Determines the size of the pagination button.
+         */
+        size: sizeVariants,
+    },
 });
 
 export const icon = layerStyle('components', {

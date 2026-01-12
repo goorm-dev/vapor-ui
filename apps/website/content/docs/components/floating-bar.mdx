@@ -1,7 +1,7 @@
 ---
 title: 'FloatingBar'
 site_name: 'FloatingBar - Vapor Core'
-description: 'FloatingBar는 하단에 고정되어 주요 액션을 포함하는 컴포넌트입니다.'
+description: 'A fixed-position bar at the bottom that contains primary actions.'
 ---
 
 <Demo name="floating-bar/default">
@@ -19,7 +19,7 @@ description: 'FloatingBar는 하단에 고정되어 주요 액션을 포함하�
 
 ### Actions
 
-FloatingBar는 다양한 액션 요소를 담을 수 있습니다.
+FloatingBar can contain various action elements.
 
 <Demo name="floating-bar/with-actions">
 ```json doc-gen:file
@@ -32,7 +32,7 @@ FloatingBar는 다양한 액션 요소를 담을 수 있습니다.
 
 ### Controlled
 
-FloatingBar는 제어 형태로 사용되어, 여러 상태를 동시에 관리할 수 있습니다.
+FloatingBar can be used as a controlled component to manage multiple states simultaneously.
 
 <Demo name="floating-bar/controlled">
 ```json doc-gen:file
@@ -49,42 +49,25 @@ FloatingBar는 제어 형태로 사용되어, 여러 상태를 동시에 관리�
 
 ### FloatingBar.Root
 
-FloatingBar의 루트 컨테이너로, 전체 FloatingBar 컴포넌트의 상태와 동작을 관리합니다.
-
-<ComponentPropsTable file="floating-bar" section="rootProps" />
+<ComponentPropsTable componentName="floating-bar-root" />
 
 ### FloatingBar.Trigger
 
-FloatingBar를 여는 트리거 요소입니다.
-
-<ComponentPropsTable file="floating-bar" section="triggerProps" />
-
+<ComponentPropsTable componentName="floating-bar-trigger" />
 ### FloatingBar.Close
 
-FloatingBar를 닫는 버튼 컴포넌트입니다.
-
-<ComponentPropsTable file="floating-bar" section="closeProps" />
+<ComponentPropsTable componentName="floating-bar-close" />
 
 ### FloatingBar.Popup
 
-FloatingBar의 실제 콘텐츠를 담는 컨테이너입니다. Portal과 Positioner를 조합하여 구성됩니다.
-
-<ComponentPropsTable file="floating-bar" section="popupProps" />
-
+<ComponentPropsTable componentName="floating-bar-popup" />
 ### FloatingBar.PortalPrimitive
 
-FloatingBar를 DOM의 다른 위치에 렌더링하는 포털 컴포넌트입니다.
-
-<ComponentPropsTable file="floating-bar" section="portalPrimitiveProps" />
+<ComponentPropsTable componentName="floating-bar-portalPrimitive" />
 
 ### FloatingBar.PositionerPrimitive
 
-FloatingBar의 위치를 설정하는 컴포넌트입니다.
-
-<ComponentPropsTable file="floating-bar" section="positionerPrimitiveProps" />
-
+<ComponentPropsTable componentName="floating-bar-positionerPrimitive" />
 ### FloatingBar.PopupPrimitive
 
-FloatingBar의 실제 팝업 콘텐츠 영역입니다.
-
-<ComponentPropsTable file="floating-bar" section="popupPrimitiveProps" />
+<ComponentPropsTable componentName="floating-bar-popupPrimitive" />

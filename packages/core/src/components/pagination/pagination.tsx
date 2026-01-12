@@ -37,6 +37,9 @@ const [PaginationProvider, usePaginationContext] = createContext<PaginationConte
  * Pagination.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Complete pagination component combining root and list primitives. Renders a `<nav>` element.
+ */
 export const PaginationRoot = forwardRef<HTMLElement, PaginationRoot.Props>((props, ref) => {
     const { children, ...componentProps } = props;
 
@@ -52,6 +55,9 @@ PaginationRoot.displayName = 'Pagination.Root';
  * Pagination.RootPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component that manages pagination state and context. Renders a `<nav>` element.
+ */
 export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPrimitive.Props>(
     (props, ref) => {
         const {
@@ -124,6 +130,9 @@ PaginationRootPrimitive.displayName = 'PaginationRootPrimitive.Root';
  * Pagination.ListPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Ordered list container for pagination items. Renders an `<ol>` element.
+ */
 export const PaginationListPrimitive = forwardRef<HTMLOListElement, PaginationListPrimitive.Props>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -142,6 +151,9 @@ PaginationListPrimitive.displayName = 'Pagination.ListPrimitive';
  * Pagination.ItemPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * List item wrapper for pagination elements. Renders a `<li>` element.
+ */
 export const PaginationItemPrimitive = forwardRef<HTMLLIElement, PaginationItemPrimitive.Props>(
     ({ render, className, ...props }, ref) => {
         return useRender({
@@ -160,6 +172,9 @@ PaginationItemPrimitive.displayName = 'Pagination.ItemPrimitive';
  * Pagination.ButtonPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button for navigating to a specific page number. Renders a `<button>` element.
+ */
 export const PaginationButtonPrimitive = forwardRef<
     HTMLButtonElement,
     PaginationButtonPrimitive.Props
@@ -195,6 +210,9 @@ PaginationButtonPrimitive.displayName = 'Pagination.ButtonPrimitive';
  * Pagination.PreviousPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button for navigating to the previous page. Renders a `<button>` element.
+ */
 export const PaginationPreviousPrimitive = forwardRef<
     HTMLButtonElement,
     PaginationPreviousPrimitive.Props
@@ -245,6 +263,9 @@ PaginationPreviousPrimitive.displayName = 'Pagination.PreviousPrimitive';
  * Pagination.Previous
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Complete previous button wrapped in a list item. Renders a `<button>` element.
+ */
 export const PaginationPrevious = forwardRef<HTMLButtonElement, PaginationPrevious.Props>(
     (props, ref) => {
         return (
@@ -260,6 +281,9 @@ PaginationPrevious.displayName = 'Pagination.Previous';
  * Pagination.NextPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button for navigating to the next page. Renders a `<button>` element.
+ */
 export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationNextPrimitive.Props>(
     (props, ref) => {
         const {
@@ -315,6 +339,9 @@ PaginationNextPrimitive.displayName = 'Pagination.NextPrimitive';
  * Pagination.Next
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Complete next button wrapped in a list item. Renders a `<button>` element.
+ */
 export const PaginationNext = forwardRef<HTMLButtonElement, PaginationNext.Props>((props, ref) => {
     return (
         <PaginationItemPrimitive>
@@ -328,6 +355,9 @@ PaginationNext.displayName = 'Pagination.Next';
  * Pagination.EllipsisPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Ellipsis indicator for skipped page numbers. Renders a `<span>` element.
+ */
 export const PaginationEllipsisPrimitive = forwardRef<
     HTMLSpanElement,
     PaginationEllipsisPrimitive.Props
@@ -362,6 +392,9 @@ PaginationEllipsisPrimitive.displayName = 'Pagination.EllipsisPrimitive';
  * Pagination.Items
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Automatically renders page number buttons and ellipsis based on pagination configuration.
+ */
 export const PaginationItems = ({ children: childrenProp }: PaginationItems.Props) => {
     const { page, totalPages, siblingCount, boundaryCount } = usePaginationContext();
 
@@ -529,14 +562,44 @@ interface PaginationContext extends PaginationVariants {
 
 type RootPrimitiveProps = VComponentProps<'nav'>;
 export interface PaginationRootProps extends RootPrimitiveProps, PaginationVariants {
+    /**
+     * Total number of pages
+     */
     totalPages: number;
+    /**
+     * Current page number (controlled)
+     */
     page?: number;
+    /**
+     * Initial page number (uncontrolled)
+     * @default 1
+     */
     defaultPage?: number;
+    /**
+     * Callback fired when the page changes
+     */
     onPageChange?: (page: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => void;
 
+    /**
+     * Number of page buttons to show on each side of the current page
+     * @default 2
+     */
     siblingCount?: number;
+    /**
+     * Number of page buttons to always show at the start and end
+     * @default 1
+     */
     boundaryCount?: number;
+    /**
+     * Whether the pagination is disabled
+     * @default false
+     */
     disabled?: boolean;
+    /**
+     * Size of the pagination buttons
+     * @default 'md'
+     */
+    size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 type PaginationRootChangeEventReason = 'item-press';
@@ -568,6 +631,9 @@ export namespace PaginationItemPrimitive {
 
 type ButtonPrimitiveProps = VComponentProps<'button'>;
 export interface PaginationButtonProps extends ButtonPrimitiveProps {
+    /**
+     * Page number this button navigates to
+     */
     page: number;
 }
 
@@ -603,6 +669,9 @@ export namespace PaginationItems {
     type ItemsPrimitiveProps = Omit<ComponentPropsWithoutRef<typeof Fragment>, 'children'>;
 
     export interface Props extends ItemsPrimitiveProps {
+        /**
+         * Custom render function or elements to display pagination items
+         */
         children?: React.ReactNode | ((pages: PageType[]) => React.ReactNode);
     }
 }

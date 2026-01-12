@@ -31,8 +31,14 @@ export const root = recipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /**
+         * Determines whether the input is in an invalid state.
+         */
         invalid: { true: {}, false: {} },
 
+        /**
+         * Determines the size of the text input.
+         */
         size: {
             sm: layerStyle('components', {
                 paddingInline: vars.size.space[100],

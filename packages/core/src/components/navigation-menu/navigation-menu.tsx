@@ -36,6 +36,9 @@ const [NavigationMenuProvider, useNavigationMenuContext] = createContext<Navigat
  * NavigationMenu.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of NavigationMenu that manages navigation state and settings. Renders a `<nav>` element.
+ */
 export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRoot.Props>(
     (props, ref) => {
         const { 'aria-label': ariaLabel, className, ...componentProps } = resolveStyles(props);
@@ -65,6 +68,9 @@ NavigationMenuRoot.displayName = 'NavigationMenu.Root';
  * NavigationMenu.List
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Container for navigation menu items. Renders a `<div>` element.
+ */
 export const NavigationMenuList = forwardRef<HTMLDivElement, NavigationMenuList.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -86,6 +92,9 @@ NavigationMenuList.displayName = 'NavigationMenu.List';
  * NavigationMenu.Item
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Individual navigation menu item wrapper. Renders a `<div>` element.
+ */
 export const NavigationMenuItem = forwardRef<HTMLDivElement, NavigationMenuItem.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -99,6 +108,9 @@ NavigationMenuItem.displayName = 'NavigationMenu.Item';
  * NavigationMenu.Link
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Navigation link element that navigates to a URL. Renders an `<a>` element.
+ */
 export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLink.Props>(
     (props, ref) => {
         const {
@@ -135,6 +147,9 @@ NavigationMenuLink.displayName = 'NavigationMenu.Link';
  * NavigationMenu.TriggerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Base trigger button that opens a submenu. Renders a `<button>` element.
+ */
 export const NavigationMenuTriggerPrimitive = forwardRef<
     HTMLButtonElement,
     NavigationMenuTriggerPrimitive.Props
@@ -161,6 +176,9 @@ NavigationMenuTriggerPrimitive.displayName = 'NavigationMenu.TriggerPrimitive';
  * NavigationMenu.TriggerIndicatorPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Icon indicator for the trigger, typically a chevron. Renders a `<div>` element.
+ */
 export const NavigationMenuTriggerIndicatorPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuTriggerIndicatorPrimitive.Props
@@ -187,6 +205,9 @@ NavigationMenuTriggerIndicatorPrimitive.displayName = 'NavigationMenu.TriggerInd
  * NavigationMenu.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Complete trigger button combining content and indicator. Renders a `<button>` element.
+ */
 export const NavigationMenuTrigger = forwardRef<HTMLButtonElement, NavigationMenuTrigger.Props>(
     (props, ref) => {
         const { children, ...componentProps } = props;
@@ -206,6 +227,9 @@ NavigationMenuTrigger.displayName = 'NavigationMenu.Trigger';
  * NavigationMenu.Content
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Container for submenu content. Renders a `<div>` element.
+ */
 export const NavigationMenuContent = forwardRef<HTMLDivElement, NavigationMenuContent.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -225,6 +249,9 @@ NavigationMenuContent.displayName = 'NavigationMenu.Content';
  * NavigationMenu.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal component that renders submenu content outside the DOM hierarchy.
+ */
 export const NavigationMenuPortalPrimitive = (props: NavigationMenuPortalPrimitive.Props) => {
     return <BaseNavigationMenu.Portal {...props} />;
 };
@@ -234,6 +261,9 @@ NavigationMenuPortalPrimitive.displayName = 'NavigationMenu.PortalPrimitive';
  * NavigationMenu.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Positions the submenu popup relative to the trigger. Renders a `<div>` element.
+ */
 export const NavigationMenuPositionerPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuPositionerPrimitive.Props
@@ -265,6 +295,9 @@ NavigationMenuPositionerPrimitive.displayName = 'NavigationMenu.PositionerPrimit
  * NavigationMenu.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Popup container with arrow for submenu content. Renders a `<nav>` element.
+ */
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
@@ -383,6 +416,9 @@ const ArrowIcon = (props: ComponentPropsWithoutRef<'svg'>) => {
  * NavigationMenu.ViewportPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Viewport for rendering submenu content with transitions. Renders a `<div>` element.
+ */
 export const NavigationMenuViewportPrimitive = forwardRef<
     HTMLDivElement,
     NavigationMenuViewportPrimitive.Props
@@ -403,6 +439,9 @@ NavigationMenuViewportPrimitive.displayName = 'NavigationMenu.ViewportPrimitive'
  * NavigationMenu.Viewport
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Complete viewport combining portal, positioner, popup, and viewport primitive. Renders a `<div>` element.
+ */
 export const NavigationMenuViewport = forwardRef<HTMLDivElement, NavigationMenuViewport.Props>(
     ({ portalElement, positionerElement, popupElement, ...props }, ref) => {
         const viewport = <NavigationMenuViewportPrimitive ref={ref} {...props} />;
@@ -433,7 +472,25 @@ export namespace NavigationMenuRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
 
     export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {
+        /**
+         * Accessible label for the navigation menu
+         */
         'aria-label': string;
+        /**
+         * Direction of the navigation menu layout
+         * @default 'horizontal'
+         */
+        direction?: 'horizontal' | 'vertical';
+        /**
+         * Size of the navigation links
+         * @default 'md'
+         */
+        size?: 'sm' | 'md' | 'lg' | 'xl';
+        /**
+         * Whether the entire navigation menu is disabled
+         * @default false
+         */
+        disabled?: boolean;
     }
     export type ChangeEventDetails = BaseNavigationMenu.Root.ChangeEventDetails;
 }
@@ -449,7 +506,15 @@ export namespace NavigationMenuItem {
 export namespace NavigationMenuLink {
     type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNavigationMenu.Link>, 'active'>;
     export interface Props extends LinkPrimitiveProps {
+        /**
+         * Whether the link is currently selected
+         * @default false
+         */
         selected?: boolean;
+        /**
+         * Whether the link is disabled
+         * @default false
+         */
         disabled?: boolean;
     }
 }
@@ -496,8 +561,17 @@ export namespace NavigationMenuViewportPrimitive {
 export namespace NavigationMenuViewport {
     type ContentPrimitiveProps = VComponentProps<typeof NavigationMenuViewportPrimitive>;
     export interface Props extends ContentPrimitiveProps {
+        /**
+         * Custom portal element for rendering content
+         */
         portalElement?: ReactElement<NavigationMenuPortalPrimitive.Props>;
+        /**
+         * Custom positioner element for popup positioning
+         */
         positionerElement?: ReactElement<NavigationMenuPositionerPrimitive.Props>;
+        /**
+         * Custom popup element for content container
+         */
         popupElement?: ReactElement<NavigationMenuPopupPrimitive.Props>;
     }
 }

@@ -18,7 +18,20 @@ import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
 
 type AvatarVariants = RootVariants & FallbackVariants;
-type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delay?: number };
+type AvatarSharedProps = AvatarVariants & {
+    /**
+     * The URL of the profile image to display
+     */
+    src?: string;
+    /**
+     * Alternative text for the image, also used for generating fallback initials and background color
+     */
+    alt: string;
+    /**
+     * Delay in milliseconds before showing the fallback after image load failure
+     */
+    delay?: number;
+};
 
 const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
     name: 'AvatarContext',
@@ -28,6 +41,9 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Displays a user's profile image or fallback text. Renders a `<span>` element.
+ */
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(componentProps, [
@@ -67,6 +83,9 @@ AvatarRoot.displayName = 'Avatar.Root';
  * Avatar.ImagePrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Displays the profile image inside Avatar. Renders an `<img>` element.
+ */
 export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -89,6 +108,9 @@ AvatarImagePrimitive.displayName = 'Avatar.ImagePrimitive';
  * Avatar.FallbackPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Fallback component displayed when no image is available or image loading fails. Renders a `<span>` element.
+ */
 export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbackPrimitive.Props>(
     (props, ref) => {
         const { className, style, children, ...componentProps } = resolveStyles(props);
@@ -176,15 +198,18 @@ const getRandomColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
 
 export namespace AvatarRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
+
     export interface Props extends RootPrimitiveProps, AvatarSharedProps {}
 }
 
 export namespace AvatarImagePrimitive {
     type ImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
+
     export interface Props extends Omit<ImagePrimitiveProps, keyof AvatarSharedProps> {}
 }
 
 export namespace AvatarFallbackPrimitive {
     type FallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
+
     export interface Props extends Omit<FallbackPrimitiveProps, keyof AvatarSharedProps> {}
 }

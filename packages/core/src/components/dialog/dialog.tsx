@@ -30,6 +30,9 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
  * Dialog
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component of Dialog that manages open/close state and settings. Renders a `<div>` element.
+ */
 export const DialogRoot = ({ size, closeOnClickOverlay, children, ...props }: DialogRoot.Props) => {
     return (
         <DialogProvider value={{ size }}>
@@ -50,6 +53,9 @@ export const DialogPortalPrimitive = BaseDialog.Portal;
  * Dialog.OverlayPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Background overlay for Dialog. Renders a `<div>` element.
+ */
 export const DialogOverlayPrimitive = forwardRef<HTMLDivElement, DialogOverlayPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -69,6 +75,9 @@ DialogOverlayPrimitive.displayName = 'Dialog.OverlayPrimitive';
  * Dialog.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Popup container for Dialog content. Renders a `<div>` element.
+ */
 export const DialogPopupPrimitive = forwardRef<HTMLDivElement, DialogPopupPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -89,6 +98,9 @@ DialogPopupPrimitive.displayName = 'Dialog.PopupPrimitive';
  * Dialog.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Composed Dialog popup with portal and overlay. Renders a `<div>` element.
+ */
 export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
     ({ portalElement, overlayElement, ...props }, ref) => {
         const popup = <DialogPopupPrimitive ref={ref} {...props} />;
@@ -118,6 +130,9 @@ DialogPopup.displayName = 'Dialog.Popup';
  * Dialog.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that triggers the Dialog to open. Renders a `<button>` element.
+ */
 export const DialogTrigger = forwardRef<HTMLButtonElement, DialogTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -129,6 +144,9 @@ DialogTrigger.displayName = 'Dialog.Trigger';
  * Dialog.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that closes the Dialog. Renders a `<button>` element.
+ */
 export const DialogClose = forwardRef<HTMLButtonElement, DialogClose.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -140,6 +158,9 @@ DialogClose.displayName = 'Dialog.Close';
  * Dialog.Title
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Title heading for Dialog. Renders an `<h2>` element.
+ */
 export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitle.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
 
@@ -153,6 +174,9 @@ DialogTitle.displayName = 'Dialog.Title';
  * Dialog.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Description text for Dialog. Renders a `<p>` element.
+ */
 export const DialogDescription = forwardRef<HTMLParagraphElement, DialogDescription.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
@@ -172,6 +196,9 @@ DialogDescription.displayName = 'Dialog.Description';
  * Dialog.Header
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Header section for Dialog. Renders a `<div>` element.
+ */
 export const DialogHeader = forwardRef<HTMLDivElement, DialogHeader.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -190,6 +217,9 @@ DialogHeader.displayName = 'Dialog.Header';
  * Dialog.Body
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Body section for Dialog content. Renders a `<div>` element.
+ */
 export const DialogBody = forwardRef<HTMLDivElement, DialogBody.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -208,6 +238,9 @@ DialogBody.displayName = 'Dialog.Body';
  * Dialog.Footer
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Footer section for Dialog actions. Renders a `<div>` element.
+ */
 export const DialogFooter = forwardRef<HTMLDivElement, DialogFooter.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 
@@ -227,6 +260,10 @@ DialogFooter.displayName = 'Dialog.Footer';
 export namespace DialogRoot {
     type DialogPrimitiveProps = Omit<VComponentProps<typeof BaseDialog.Root>, 'dismissible'>;
     export interface Props extends DialogPrimitiveProps, DialogSharedProps {
+        /**
+         * Whether to close the Dialog when clicking on the overlay.
+         * @default true
+         */
         closeOnClickOverlay?: boolean;
     }
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
@@ -246,7 +283,13 @@ export namespace DialogPopupPrimitive {
 
 export namespace DialogPopup {
     export interface Props extends DialogPopupPrimitive.Props {
+        /**
+         * Custom portal element to replace the default portal.
+         */
         portalElement?: ReactElement<typeof DialogPortalPrimitive>;
+        /**
+         * Custom overlay element to replace the default overlay.
+         */
         overlayElement?: ReactElement<typeof DialogOverlayPrimitive>;
     }
 }

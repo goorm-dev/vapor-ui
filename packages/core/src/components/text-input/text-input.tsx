@@ -27,6 +27,9 @@ type BaseProps = TextInputVariants & {
  * TextInput
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Input field for entering single-line text data. Renders an `<input>` element.
+ */
 export const TextInput = forwardRef<HTMLInputElement, TextInput.Props>((props, ref) => {
     const {
         value: valueProp,

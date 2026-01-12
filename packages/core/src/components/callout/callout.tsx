@@ -14,6 +14,9 @@ import * as styles from './callout.css';
  * CalloutRoot
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Groups child elements of a Callout message. Renders a `<div>` element.
+ */
 export const CalloutRoot = forwardRef<HTMLDivElement, CalloutRoot.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CalloutVariants>()(componentProps, [
@@ -35,6 +38,9 @@ CalloutRoot.displayName = 'CalloutRoot';
  * CalloutIcon
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Displays an icon with proper alignment inside Callout. Renders a `<div>` element.
+ */
 export const CalloutIcon = forwardRef<HTMLDivElement, CalloutIcon.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
 

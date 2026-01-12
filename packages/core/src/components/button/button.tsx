@@ -10,6 +10,9 @@ import type { VComponentProps } from '~/utils/types';
 import type { ButtonVariants } from './button.css';
 import * as styles from './button.css';
 
+/**
+ * A clickable button for triggering actions or events. Renders a `<button>` element.
+ */
 export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) => {
     const { render, className, ...componentProps } = resolveStyles(props);
     const [variantsProps, otherProps] = createSplitProps<ButtonVariants>()(componentProps, [

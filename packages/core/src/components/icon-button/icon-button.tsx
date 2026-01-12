@@ -12,6 +12,9 @@ import { Button } from '../button';
 import type { IconButtonVariants } from './icon-button.css';
 import * as styles from './icon-button.css';
 
+/**
+ * Button component designed specifically for icons. Extends Button with icon-specific styling. Renders a `<button>` element.
+ */
 export const IconButton = forwardRef<HTMLButtonElement, IconButton.Props>((props, ref) => {
     const {
         'aria-label': ariaLabel,
@@ -49,6 +52,9 @@ export namespace IconButton {
     type IconButtonPrimitiveProps = VComponentProps<typeof Button>;
 
     export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {
+        /**
+         * Accessible label for the button. Required for screen readers.
+         */
         'aria-label': string;
     }
 }

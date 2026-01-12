@@ -9,6 +9,9 @@ import { type Typography, typography } from '~/styles/mixins/typography.css';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
+/**
+ * Component for displaying styled text with typography and color options. Renders a `<span>` element by default.
+ */
 export const Text = forwardRef<HTMLSpanElement, Text.Props>((props, ref) => {
     const {
         render,
@@ -37,7 +40,13 @@ export namespace Text {
     type TextPrimitiveProps = VComponentProps<'span'>;
 
     export interface Props extends TextPrimitiveProps {
+        /**
+         * Sets the text color.
+         */
         foreground?: Foregrounds['color'];
+        /**
+         * Sets the typography style.
+         */
         typography?: Typography['style'];
     }
 }

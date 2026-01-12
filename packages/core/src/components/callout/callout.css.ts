@@ -20,6 +20,9 @@ export const root = recipe({
 
     defaultVariants: { colorPalette: 'primary' },
     variants: {
+        /**
+         * Determines the color theme of the Callout message.
+         */
         colorPalette: {
             primary: layerStyle('components', {
                 border: `.0625rem solid ${vars.color.border.primary}`,

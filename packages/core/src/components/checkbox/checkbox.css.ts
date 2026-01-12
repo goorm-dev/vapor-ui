@@ -46,8 +46,14 @@ export const root = recipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /**
+         * Indicates whether the Checkbox is in an invalid state.
+         */
         invalid: { true: {}, false: {} },
 
+        /**
+         * Determines the size of the Checkbox.
+         */
         size: {
             md: layerStyle('components', {
                 borderRadius: vars.size.borderRadius[100],
@@ -78,6 +84,9 @@ export const indicator = recipe({
 
     defaultVariants: { size: 'md' },
     variants: {
+        /**
+         * Determines the size of the Checkbox indicator.
+         */
         size: {
             md: layerStyle('components', {
                 width: vars.size.dimension[100],

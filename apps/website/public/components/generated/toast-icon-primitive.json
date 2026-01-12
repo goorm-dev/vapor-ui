@@ -1,13 +1,13 @@
 {
-    "name": "IconPrimitive",
-    "displayName": "Toast.IconPrimitive",
-    "description": "Toast의 아이콘을 표시합니다. `colorPalette`에 따라 기본 아이콘이 자동으로 설정됩니다. `<svg>` 요소를 렌더링합니다.",
+    "name": "ToastIconPrimitive",
+    "displayName": "ToastIconPrimitive",
+    "description": "Icon element that displays status-based icons for toasts. Renders an `<svg>` element.",
     "props": [
         {
-            "name": "className",
-            "type": ["string"],
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "요소에 적용된 CSS 클래스."
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ]
 }

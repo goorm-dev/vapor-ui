@@ -20,6 +20,9 @@ import * as styles from './popover.css';
  * Popover.Root
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Root component that manages popover open/close state. Renders a context provider.
+ */
 export const PopoverRoot = (props: PopoverRoot.Props) => {
     return <BasePopover.Root {...props} />;
 };
@@ -29,6 +32,9 @@ PopoverRoot.displayName = 'Popover.Root';
  * Popover.Trigger
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that toggles the popover visibility. Renders a `<button>` element.
+ */
 export const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTrigger.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -40,6 +46,9 @@ PopoverTrigger.displayName = 'Popover.Trigger';
  * Popover.Close
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Button that closes the popover. Renders a `<button>` element.
+ */
 export const PopoverClose = forwardRef<HTMLButtonElement, PopoverClose.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -51,6 +60,9 @@ PopoverClose.displayName = 'Popover.Close';
  * Popover.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Portal component that renders popup content outside the DOM hierarchy.
+ */
 export const PopoverPortalPrimitive = (props: PopoverPortalPrimitive.Props) => {
     return <BasePopover.Portal {...props} />;
 };
@@ -60,6 +72,9 @@ PopoverPortalPrimitive.displayName = 'Popover.PortalPrimitive';
  * Popover.PositionerPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Positions the popup relative to the trigger. Renders a `<div>` element.
+ */
 export const PopoverPositionerPrimitive = forwardRef<
     HTMLDivElement,
     PopoverPositionerPrimitive.Props
@@ -89,6 +104,9 @@ PopoverPositionerPrimitive.displayName = 'Popover.PositionerPrimitive';
  * Popover.PopupPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Popup container with arrow for popover content. Renders a `<div>` element.
+ */
 const DATA_SIDE = 'data-side';
 const DATA_ALIGN = 'data-align';
 
@@ -156,6 +174,9 @@ const extractPositions = (dataset: DOMStringMap) => {
  * Popover.Popup
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Complete popup combining portal, positioner, and popup primitive. Renders a `<div>` element.
+ */
 export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
         const popup = <PopoverPopupPrimitive ref={ref} {...props} />;
@@ -179,6 +200,9 @@ PopoverPopup.displayName = 'Popover.Popup';
  * Popover.Title
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Title heading for the popover content. Renders an `<h2>` element.
+ */
 export const PopoverTitle = forwardRef<HTMLHeadingElement, PopoverTitle.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
 
@@ -191,6 +215,9 @@ PopoverTitle.displayName = 'Popover.Title';
  * Popover.Description
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Description text for the popover content. Renders a `<p>` element.
+ */
 export const PopoverDescription = forwardRef<HTMLParagraphElement, PopoverDescription.Props>(
     (props, ref) => {
         const componentProps = resolveStyles(props);
@@ -281,7 +308,13 @@ export namespace PopoverPopupPrimitive {
 export namespace PopoverPopup {
     export type PrimitivePopupProps = VComponentProps<typeof PopoverPopupPrimitive>;
     export interface Props extends PrimitivePopupProps {
+        /**
+         * Custom portal element for rendering content
+         */
         portalElement?: ReactElement<PopoverPortalPrimitive.Props>;
+        /**
+         * Custom positioner element for popup positioning
+         */
         positionerElement?: ReactElement<PopoverPositionerPrimitive.Props>;
     }
 }

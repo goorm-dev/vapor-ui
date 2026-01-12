@@ -1,7 +1,7 @@
 ---
 title: 'Pagination'
 site_name: 'Pagination - Vapor Core'
-description: 'Pagination은 중요한 정보를 시각적으로 강조하여 사용자에게 전달하는 메시지 컴포넌트입니다.'
+description: 'A component that divides content across multiple pages and provides navigation between them.'
 ---
 
 <Demo name="pagination/default">
@@ -17,7 +17,7 @@ description: 'Pagination은 중요한 정보를 시각적으로 강조하여 사
 
 ### Sibling Count
 
-Pagination에서 현재 페이지 주변에 표시할 페이지 번호의 개수를 설정합니다.
+Sets the number of page buttons to show on each side of the current page.
 
 <Demo name="pagination/sibling-count">
 ```json doc-gen:file
@@ -30,7 +30,7 @@ Pagination에서 현재 페이지 주변에 표시할 페이지 번호의 개수
 
 ### Boundary Count
 
-Pagination의 시작과 끝에 항상 표시할 페이지 번호의 개수를 설정합니다.
+Sets the number of page buttons to always show at the start and end.
 
 <Demo name="pagination/boundary-count">
 ```json doc-gen:file
@@ -43,7 +43,7 @@ Pagination의 시작과 끝에 항상 표시할 페이지 번호의 개수를 �
 
 ### Size
 
-Pagination의 사이즈는 sm, md, lg, xl로 제공합니다.
+Sets the size of the Pagination.
 
 <Demo name="pagination/size">
 ```json doc-gen:file
@@ -56,20 +56,7 @@ Pagination의 사이즈는 sm, md, lg, xl로 제공합니다.
 
 ### Disabled
 
-Pagination 버튼들의 비활성화 여부를 결정하는 옵션입니다.
-
-<Demo name="pagination/disabled">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/pagination/disabled.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Disabled
-
-Pagination 버튼들의 비활성화 여부를 결정하는 옵션입니다.
+Sets the disabled state of all pagination buttons.
 
 <Demo name="pagination/disabled">
 ```json doc-gen:file
@@ -82,7 +69,7 @@ Pagination 버튼들의 비활성화 여부를 결정하는 옵션입니다.
 
 ### Controlled
 
-Pagination 컴포넌트를 제어 컴포넌트로 사용하는 예시입니다.
+Uses Pagination as a controlled component with state management.
 
 <Demo name="pagination/controlled">
 ```json doc-gen:file
@@ -93,16 +80,50 @@ Pagination 컴포넌트를 제어 컴포넌트로 사용하는 예시입니다.
 ```
 </Demo>
 
+## Props Table
+
 ---
 
 ### Pagination.Root
 
-이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
+<ComponentPropsTable componentName="pagination-root" />
 
-<ComponentPropsTable file="Pagination" section="rootProps" />
+### Pagination.RootPrimitive
 
-### Pagination.Icon
+<ComponentPropsTable componentName="pagination-root-primitive" />
 
-Pagination 내에서 아이콘을 표시하는 데 사용되는 컴포넌트입니다. 아이콘의 크기와 위치를 적절히 조정하여 일관된 시각적 경험을 제공합니다. 이 컴포넌트는 `div` 요소를 기반으로, 표준 HTML 속성을 지원합니다.
+### Pagination.ListPrimitive
 
-<ComponentPropsTable file="Pagination" section="iconProps" />
+<ComponentPropsTable componentName="pagination-list-primitive" />
+
+### Pagination.ItemPrimitive
+
+<ComponentPropsTable componentName="pagination-item-primitive" />
+
+### Pagination.ButtonPrimitive
+
+<ComponentPropsTable componentName="pagination-button-primitive" />
+
+### Pagination.Previous
+
+<ComponentPropsTable componentName="pagination-previous" />
+
+#### Pagination.PreviousPrimitive
+
+<ComponentPropsTable componentName="pagination-previous-primitive" />
+
+### Pagination.Next
+
+<ComponentPropsTable componentName="pagination-next" />
+
+#### Pagination.NextPrimitive
+
+<ComponentPropsTable componentName="pagination-next-primitive" />
+
+### Pagination.EllipsisPrimitive
+
+<ComponentPropsTable componentName="pagination-ellipsis-primitive" />
+
+### Pagination.Items
+
+<ComponentPropsTable componentName="pagination-items" />

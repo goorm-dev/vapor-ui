@@ -9,6 +9,10 @@ import { vars } from '~/styles/themes.css';
 
 const borderWidth = createVar('border-width');
 
+/**
+ * @variant size - Determines the size of the radio button.
+ * @variant invalid - Determines whether the radio button is in an invalid state.
+ */
 export const root = recipe({
     base: [
         interaction(),
@@ -51,8 +55,14 @@ export const root = recipe({
     defaultVariants: { invalid: false, size: 'md' },
 
     variants: {
+        /**
+         * Determines whether the radio button is in an invalid state.
+         */
         invalid: { true: {}, false: {} },
 
+        /**
+         * Determines the size of the radio button.
+         */
         size: {
             md: layerStyle('components', {
                 width: vars.size.dimension[200],

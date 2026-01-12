@@ -1,7 +1,7 @@
 ---
 title: 'Button'
 site_name: 'Button - Vapor Core'
-description: 'Button은 사용자가 주요 작업을 수행하도록 돕는 핵심 상호작용 요소입니다.'
+description: 'A clickable interactive element that allows users to perform actions.'
 ---
 
 <Demo name="button/default-button">
@@ -19,7 +19,7 @@ description: 'Button은 사용자가 주요 작업을 수행하도록 돕는 핵
 
 ### ColorPalette
 
-Button의 역할에 따른 색상을 설정합니다.
+Sets the color theme of the Button.
 
 <Demo name="button/button-color">
 ```json doc-gen:file
@@ -30,22 +30,9 @@ Button의 역할에 따른 색상을 설정합니다.
 ```
 </Demo>
 
-### Size
-
-Button의 크기를 설정합니다.
-
-<Demo name="button/button-size">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/button/button-size.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
 ### Variant
 
-Button의 시각적 다양성을 설정합니다.
+Sets the visual style of the Button.
 
 <Demo name="button/button-variant">
 ```json doc-gen:file
@@ -56,9 +43,22 @@ Button의 시각적 다양성을 설정합니다.
 ```
 </Demo>
 
+### Size
+
+Sets the size of the Button.
+
+<Demo name="button/button-size">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/button/button-size.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
 ### Disabled
 
-Button의 비활성화 상태를 설정합니다.
+Sets the disabled state of the Button.
 
 <Demo name="button/button-disabled">
 ```json doc-gen:file
@@ -75,7 +75,7 @@ Button의 비활성화 상태를 설정합니다.
 
 ### Button with Icon
 
-Button의 역할을 직관적으로 표현하기 위해 아이콘과 함께 사용합니다.
+Use with icons to visually represent the Button's purpose.
 
 <Demo name="button/button-with-icon">
 ```json doc-gen:file
