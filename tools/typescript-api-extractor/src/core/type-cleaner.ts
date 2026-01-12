@@ -6,7 +6,7 @@
  */
 
 const STATE_MARKER = '.State)';
-const GENERIC_STATE_PATTERN = /,\s*[^,<>]*\.state(?:>|\))/g;
+const GENERIC_STATE_PATTERN = /,\s*[^,<>]*\.State(?:>|\))/g;
 
 export function containsStateCallback(type: string): boolean {
     return type.includes(STATE_MARKER);
@@ -20,7 +20,8 @@ export function simplifyStateCallback(type: string): string {
         .map((part) => part.trim())
         .map((part) => {
             if (!part.includes(STATE_MARKER)) return part;
-            const match = part.match(/=>\s*(\w+)\)/);
+            // ((state: ...) => string) 또는 (state: ...) => string 형태 처리
+            const match = part.match(/=>\s*(\w+)\)?$/);
             return match ? match[1] : part;
         })
         .join(' | ');
