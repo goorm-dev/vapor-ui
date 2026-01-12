@@ -1,12 +1,21 @@
 /**
- * State 타입 정리 모듈
+ * 타입 정리 모듈
  *
  * Component.State를 포함한 콜백 타입을 단순화합니다.
  * 예: "string | ((state: X.State) => string)" → "string"
+ *
+ * 10개 이상의 string literal union은 압축합니다.
+ * 예: '"a" | "b" | ... (15개)' → 'string (15 variants)'
  */
 
 const STATE_MARKER = '.State)';
 const GENERIC_STATE_PATTERN = /,\s*[^,<>]*\.State(?:>|\))/g;
+const UNION_COMPRESSION_THRESHOLD = 10;
+
+export interface TypeCleanResult {
+    type: string;
+    values?: string[];
+}
 
 export function containsStateCallback(type: string): boolean {
     return type.includes(STATE_MARKER);
@@ -56,12 +65,47 @@ function simplifyRenderType(type: string): string {
         : 'ReactElement | ((props: HTMLProps) => ReactElement)';
 }
 
-export function cleanType(type: string): string {
+function isStringLiteral(part: string): boolean {
+    const trimmed = part.trim();
+    return trimmed.startsWith('"') && trimmed.endsWith('"');
+}
+
+function extractStringValue(literal: string): string {
+    return literal.trim().slice(1, -1);
+}
+
+function compressLargeUnion(type: string): TypeCleanResult {
+    const parts = type.split(' | ');
+    const nonUndefined = parts.filter((p) => p.trim() !== 'undefined');
+    const hasUndefined = parts.some((p) => p.trim() === 'undefined');
+
+    const stringLiterals = nonUndefined.filter(isStringLiteral);
+    const shouldCompress =
+        stringLiterals.length >= UNION_COMPRESSION_THRESHOLD &&
+        stringLiterals.length === nonUndefined.length;
+
+    if (!shouldCompress) {
+        return { type };
+    }
+
+    const values = stringLiterals.map(extractStringValue);
+    const compressedType = hasUndefined
+        ? `string (${stringLiterals.length} variants) | undefined`
+        : `string (${stringLiterals.length} variants)`;
+
+    return { type: compressedType, values };
+}
+
+export function cleanType(type: string): TypeCleanResult {
     const renderSimplified = simplifyRenderType(type);
-    if (renderSimplified !== type) return renderSimplified;
+    if (renderSimplified !== type) {
+        return { type: renderSimplified };
+    }
 
     const noGenericState = removeGenericState(type);
     const simplified = simplifyStateCallback(noGenericState);
     const noEmpty = removeEmptyUnion(simplified);
-    return removeDuplicateTypes(noEmpty);
+    const cleaned = removeDuplicateTypes(noEmpty);
+
+    return compressLargeUnion(cleaned);
 }

@@ -7,10 +7,14 @@ import { addSourceFiles, createProject } from '~/core/project';
 import { extractProps } from '~/core/props-extractor';
 import { findComponentFiles, findFileByComponentName } from '~/core/scanner';
 
-import { promptComponentSelection } from './prompts';
-
 function toKebabCase(str: string): string {
     return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+function logProgress(message: string, hasFileOutput: boolean) {
+    if (hasFileOutput) {
+        console.error(message);
+    }
 }
 
 const cli = meow(
@@ -25,9 +29,10 @@ const cli = meow(
     --component, -n      Component name to process (e.g., Button, TextInput)
     --output, -o         Output file path (default: stdout)
     --output-dir, -d     Output directory for per-component files
-    --all, -a            Include all props (node_modules + sprinkles)
+    --all, -a            Include all props (node_modules + sprinkles + html)
     --sprinkles, -s      Include sprinkles props
     --include            Include specific props (can be used multiple times)
+    --include-html       Include specific HTML attributes (e.g., --include-html className style)
 
   Examples
     $ ts-api-extractor ./packages/core
@@ -77,6 +82,10 @@ const cli = meow(
                 type: 'string',
                 isMultiple: true,
             },
+            includeHtml: {
+                type: 'string',
+                isMultiple: true,
+            },
         },
     },
 );
@@ -111,17 +120,7 @@ async function run() {
     }
 
     let targetFiles: string[];
-    let componentName = cli.flags.component;
-
-    if (!componentName) {
-        const result = await promptComponentSelection();
-
-        if (result.type === 'all') {
-            targetFiles = allFiles;
-        } else {
-            componentName = result.name;
-        }
-    }
+    const componentName = cli.flags.component;
 
     if (componentName) {
         const file = findFileByComponentName(allFiles, componentName);
@@ -132,7 +131,14 @@ async function run() {
         }
 
         targetFiles = [file];
+    } else {
+        // --component 옵션 없으면 모든 컴포넌트 추출
+        targetFiles = allFiles;
     }
+
+    const hasFileOutput = !!(cli.flags.output || cli.flags.outputDir);
+
+    logProgress('Parsing components...', hasFileOutput);
 
     const project = createProject(tsconfigPath);
     const sourceFiles = addSourceFiles(project, targetFiles!);
@@ -140,9 +146,22 @@ async function run() {
     const extractOptions = {
         filterExternal: !cli.flags.all,
         filterSprinkles: !cli.flags.all && !cli.flags.sprinkles,
+        filterHtml: !cli.flags.all,
+        includeHtmlWhitelist: cli.flags.includeHtml?.length
+            ? new Set(cli.flags.includeHtml)
+            : undefined,
         include: cli.flags.include,
     };
-    const results = sourceFiles.map((sf) => extractProps(sf, extractOptions));
+
+    const total = sourceFiles.length;
+    const results = sourceFiles.map((sf, index) => {
+        const componentName = path.basename(sf.getFilePath(), '.tsx');
+        logProgress(`Processing ${componentName} (${index + 1}/${total})`, hasFileOutput);
+        return extractProps(sf, extractOptions);
+    });
+
+    const totalComponents = results.reduce((sum, r) => sum + r.props.length, 0);
+    logProgress(`Done! Extracted ${totalComponents} components.`, hasFileOutput);
 
     if (cli.flags.outputDir) {
         const outputDir = path.resolve(cwd, cli.flags.outputDir);

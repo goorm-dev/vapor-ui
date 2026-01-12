@@ -3,6 +3,8 @@ export interface Property {
     type: string;
     optional: boolean;
     description?: string;
+    defaultValue?: string;
+    values?: string[];
 }
 
 export interface PropsInfo {
