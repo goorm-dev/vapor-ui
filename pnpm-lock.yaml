@@ -459,7 +459,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@18.0.1)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.1.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   packages/core:
     dependencies:
@@ -561,8 +561,8 @@ importers:
         specifier: ^11.0.3
         version: 11.0.3
       happy-dom:
-        specifier: ^18.0.1
-        version: 18.0.1
+        specifier: ^20.0.0
+        version: 20.1.0
       postcss:
         specifier: ^8.5.4
         version: 8.5.6
@@ -598,7 +598,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@18.0.1)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.1.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       vitest-axe:
         specifier: ^1.0.0-pre.5
         version: 1.0.0-pre.5(vitest@3.2.4)
@@ -635,7 +635,7 @@ importers:
         version: 5.9.2
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@18.0.1)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.1.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
   packages/eslint-config:
     dependencies:
@@ -3741,6 +3741,9 @@ packages:
   '@types/whatwg-mimetype@3.0.2':
     resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
 
+  '@types/ws@8.18.1':
+    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
+
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
 
@@ -5293,8 +5296,8 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
 
-  happy-dom@18.0.1:
-    resolution: {integrity: sha512-qn+rKOW7KWpVTtgIUi6RVmTBZJSe2k0Db0vh1f7CWrWclkkc7/Q+FrOfkZIb2eiErLyqu5AXEzE7XthO9JVxRA==}
+  happy-dom@20.1.0:
+    resolution: {integrity: sha512-ebvqjBqzenBk2LjzNEAzoj7yhw7rW/R2/wVevMu6Mrq3MXtcI/RUz4+ozpcOcqVLEWPqLfg2v9EAU7fFXZUUJw==}
     engines: {node: '>=20.0.0'}
 
   has-bigints@1.1.0:
@@ -11153,6 +11156,10 @@ snapshots:
 
   '@types/whatwg-mimetype@3.0.2': {}
 
+  '@types/ws@8.18.1':
+    dependencies:
+      '@types/node': 22.18.6
+
   '@types/yargs-parser@21.0.3': {}
 
   '@types/yargs@17.0.35':
@@ -11552,7 +11559,7 @@ snapshots:
       magic-string: 0.30.19
       sirv: 3.0.2
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@18.0.1)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.1.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
       ws: 8.18.3
     optionalDependencies:
       playwright: 1.56.1
@@ -11577,7 +11584,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@18.0.1)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.1.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
     optionalDependencies:
       '@vitest/browser': 3.2.4(playwright@1.56.1)(vite@7.1.7(@types/node@22.18.6)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
     transitivePeerDependencies:
@@ -13216,11 +13223,16 @@ snapshots:
     optionalDependencies:
       uglify-js: 3.19.3
 
-  happy-dom@18.0.1:
+  happy-dom@20.1.0:
     dependencies:
       '@types/node': 20.19.17
       '@types/whatwg-mimetype': 3.0.2
+      '@types/ws': 8.18.1
       whatwg-mimetype: 3.0.0
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   has-bigints@1.1.0: {}
 
@@ -16403,9 +16415,9 @@ snapshots:
       axe-core: 4.10.3
       chalk: 5.6.2
       lodash-es: 4.17.21
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@18.0.1)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.1.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5)
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@18.0.1)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.6)(@vitest/browser@3.2.4)(happy-dom@20.1.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -16434,7 +16446,7 @@ snapshots:
       '@types/debug': 4.1.12
       '@types/node': 22.18.6
       '@vitest/browser': 3.2.4(playwright@1.56.1)(vite@7.1.7(@types/node@22.18.6)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.93.1)(tsx@4.20.5))(vitest@3.2.4)
-      happy-dom: 18.0.1
+      happy-dom: 20.1.0
     transitivePeerDependencies:
       - jiti
       - less

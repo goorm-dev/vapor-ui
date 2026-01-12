@@ -91,7 +91,7 @@
         "autoprefixer": "^10.4.21",
         "eslint": "^9.1.0",
         "glob": "^11.0.3",
-        "happy-dom": "^18.0.1",
+        "happy-dom": "^20.0.0",
         "postcss": "^8.5.4",
         "prettier": "^3.2.5",
         "react": "^18.3.1",
