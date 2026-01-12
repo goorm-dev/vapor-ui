@@ -21,18 +21,18 @@ pnpm --filter=typescript-api-extractor extract <path> [options]
 
 ### 옵션
 
-| 옵션 | 단축 | 설명 |
-|------|------|------|
-| `--tsconfig` | `-c` | tsconfig.json 경로 (기본: 자동 감지) |
-| `--component` | `-n` | 추출할 컴포넌트 이름 (예: Tabs, Button). 생략 시 모든 컴포넌트 추출 |
-| `--output` | `-o` | 출력 파일 경로 (기본: stdout) |
-| `--output-dir` | `-d` | 컴포넌트별 파일 출력 디렉토리 |
-| `--all` | `-a` | 모든 props 포함 (node_modules + sprinkles) |
-| `--sprinkles` | `-s` | sprinkles props 포함 |
-| `--include` | | 특정 props 포함 (여러 번 사용 가능) |
-| `--include-html` | | HTML 속성 포함 화이트리스트 (예: `--include-html className style`) |
-| `--ignore` | `-i` | 추가 무시 패턴 |
-| `--no-default-ignore` | | 기본 무시 패턴 비활성화 |
+| 옵션                  | 단축 | 설명                                                                |
+| --------------------- | ---- | ------------------------------------------------------------------- |
+| `--tsconfig`          | `-c` | tsconfig.json 경로 (기본: 자동 감지)                                |
+| `--component`         | `-n` | 추출할 컴포넌트 이름 (예: Tabs, Button). 생략 시 모든 컴포넌트 추출 |
+| `--output`            | `-o` | 출력 파일 경로 (기본: stdout)                                       |
+| `--output-dir`        | `-d` | 컴포넌트별 파일 출력 디렉토리                                       |
+| `--all`               | `-a` | 모든 props 포함 (node_modules + sprinkles)                          |
+| `--sprinkles`         | `-s` | sprinkles props 포함                                                |
+| `--include`           |      | 특정 props 포함 (여러 번 사용 가능)                                 |
+| `--include-html`      |      | HTML 속성 포함 화이트리스트 (예: `--include-html className style`)  |
+| `--ignore`            | `-i` | 추가 무시 패턴                                                      |
+| `--no-default-ignore` |      | 기본 무시 패턴 비활성화                                             |
 
 ### 예시
 
@@ -78,22 +78,22 @@ pnpm --filter=typescript-api-extractor extract ./packages/core --component Butto
 
 ```json
 {
-  "name": "TabsRoot.Props",
-  "description": "컴포넌트 설명 (JSDoc)",
-  "props": [
-    {
-      "name": "className",
-      "type": "undefined | string",
-      "optional": true,
-      "description": "CSS class applied to the element..."
-    },
-    {
-      "name": "variant",
-      "type": "undefined | \"fill\" | \"line\"",
-      "optional": true,
-      "defaultValue": "fill"
-    }
-  ]
+    "name": "TabsRoot.Props",
+    "description": "컴포넌트 설명 (JSDoc)",
+    "props": [
+        {
+            "name": "className",
+            "type": "undefined | string",
+            "optional": true,
+            "description": "CSS class applied to the element..."
+        },
+        {
+            "name": "variant",
+            "type": "undefined | \"fill\" | \"line\"",
+            "optional": true,
+            "defaultValue": "fill"
+        }
+    ]
 }
 ```
 
@@ -101,12 +101,12 @@ pnpm --filter=typescript-api-extractor extract ./packages/core --component Butto
 
 ```typescript
 interface Property {
-  name: string;           // prop 이름
-  type: string;           // 타입 문자열 (TypeScript 문법 그대로)
-  optional: boolean;      // 선택적 여부
-  description?: string;   // JSDoc 설명 (있는 경우만)
-  defaultValue?: string;  // 기본값 (있는 경우만, defaultVariants에서 추출)
-  values?: string[];      // union 압축 시 원본 값 배열 (10개 이상일 때)
+    name: string; // prop 이름
+    type: string; // 타입 문자열 (TypeScript 문법 그대로)
+    optional: boolean; // 선택적 여부
+    description?: string; // JSDoc 설명 (있는 경우만)
+    defaultValue?: string; // 기본값 (있는 경우만, defaultVariants에서 추출)
+    values?: string[]; // union 압축 시 원본 값 배열 (10개 이상일 때)
 }
 ```
 
@@ -233,6 +233,7 @@ export const buttonRecipe = recipe({
 ```
 
 결과:
+
 ```json
 {
   "name": "variant",
@@ -264,9 +265,9 @@ export const Button = ...
 ```typescript
 // 지원하는 패턴: namespace + Props interface
 export namespace Button {
-  export interface Props extends BaseProps {
-    variant?: "primary" | "secondary";
-  }
+    export interface Props extends BaseProps {
+        variant?: 'primary' | 'secondary';
+    }
 }
 ```
 
@@ -302,12 +303,12 @@ output/
 
 ### 필터링 옵션
 
-| 옵션 | 동작 |
-|------|------|
-| `--all` | 모든 props 포함 |
-| `--sprinkles` | sprinkles props 포함 |
+| 옵션                        | 동작                                   |
+| --------------------------- | -------------------------------------- |
+| `--all`                     | 모든 props 포함                        |
+| `--sprinkles`               | sprinkles props 포함                   |
 | `--include-html <props...>` | 지정된 HTML 속성만 포함 (화이트리스트) |
-| `--include <prop>` | 특정 prop 강제 포함 |
+| `--include <prop>`          | 특정 prop 강제 포함                    |
 
 ### 필터링 기준
 
@@ -322,6 +323,7 @@ output/
 ## 에러 처리
 
 **Fail Fast** 전략을 사용합니다:
+
 - 첫 번째 에러 발생 시 즉시 중단
 - 상세한 에러 메시지 출력
 
@@ -330,6 +332,7 @@ output/
 ### 진행 상황 표시
 
 기본적으로 진행 상황을 표시합니다:
+
 ```
 Parsing components...
 Processing Button (1/25)

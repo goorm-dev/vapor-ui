@@ -1,6 +1,5 @@
-import path from 'node:path';
-
 import { glob } from 'glob';
+import path from 'node:path';
 
 const DEFAULT_IGNORE = ['.stories.tsx', '.css.ts'];
 

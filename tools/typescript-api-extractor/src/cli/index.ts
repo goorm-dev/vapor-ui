@@ -1,8 +1,7 @@
+import meow from 'meow';
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-
-import meow from 'meow';
 
 import { findTsconfig } from '~/core/config';
 import { addSourceFiles, createProject } from '~/core/project';

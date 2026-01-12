@@ -1,4 +1,4 @@
-import { type SourceFile, type Symbol, SyntaxKind, ts, type ModuleDeclaration } from 'ts-morph';
+import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 

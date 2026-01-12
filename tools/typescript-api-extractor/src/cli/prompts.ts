@@ -1,8 +1,6 @@
 import { input, select } from '@inquirer/prompts';
 
-export type PromptResult =
-    | { type: 'all' }
-    | { type: 'component'; name: string };
+export type PromptResult = { type: 'all' } | { type: 'component'; name: string };
 
 export async function promptComponentSelection(): Promise<PromptResult> {
     const choice = await select({

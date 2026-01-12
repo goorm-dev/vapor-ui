@@ -65,11 +65,7 @@ describe('normalizeComponentName', () => {
 });
 
 describe('findFileByComponentName', () => {
-    const files = [
-        '/path/to/button.tsx',
-        '/path/to/text-input.tsx',
-        '/path/to/card.tsx',
-    ];
+    const files = ['/path/to/button.tsx', '/path/to/text-input.tsx', '/path/to/card.tsx'];
 
     it('should find file by exact name', () => {
         expect(findFileByComponentName(files, 'button')).toBe('/path/to/button.tsx');

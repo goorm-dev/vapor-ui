@@ -4,7 +4,6 @@
  * 같은 디렉토리의 .css.ts 파일에서 defaultVariants를 파싱합니다.
  * 예: button.css.ts의 defaultVariants: { colorPalette: 'primary', size: 'md' }
  */
-
 import fs from 'node:fs';
 import path from 'node:path';
 
