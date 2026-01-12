@@ -60,4 +60,28 @@ describe('extractProps', () => {
 
         expect(dialog?.associatedTypes).toContain('ChangeEventDetails');
     });
+
+    it('should extract all resolved properties including inherited', () => {
+        const result = setup();
+        const button = result.props.find((p) => p.name === 'Button.Props');
+
+        // Button.Props extends ButtonPrimitiveProps (ref), ButtonVariants (variant, size)
+        expect(button?.resolvedProperties.length).toBeGreaterThan(0);
+        expect(button?.resolvedProperties.some((p) => p.name === 'variant')).toBe(true);
+        expect(button?.resolvedProperties.some((p) => p.name === 'size')).toBe(true);
+    });
+
+    it('should filter out node_modules props by default', () => {
+        const tsconfigPath = path.join(FIXTURES_DIR, 'tsconfig.json');
+        const project = createProject(tsconfigPath);
+        const [sourceFile] = addSourceFiles(project, [path.join(FIXTURES_DIR, 'props-sample.tsx')]);
+
+        const result = extractProps(sourceFile, { filterExternal: true });
+        const button = result.props.find((p) => p.name === 'Button.Props');
+
+        // ref는 VComponentProps에서 오므로 프로젝트 내 정의
+        // variant, size는 ButtonVariants에서 오므로 프로젝트 내 정의
+        expect(button?.resolvedProperties.some((p) => p.name === 'variant')).toBe(true);
+        expect(button?.resolvedProperties.some((p) => p.name === 'size')).toBe(true);
+    });
 });

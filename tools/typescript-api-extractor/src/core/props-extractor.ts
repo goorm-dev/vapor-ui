@@ -1,8 +1,45 @@
-import { type SourceFile, SyntaxKind } from 'ts-morph';
+import { type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
 import type { ExtendedType, FilePropsResult, Property, PropsInfo } from '~/types/props';
 
-export function extractProps(sourceFile: SourceFile): FilePropsResult {
+export interface ExtractOptions {
+    filterExternal?: boolean;
+    filterSprinkles?: boolean;
+    include?: string[];
+}
+
+function getJsDocDescription(symbol: Symbol): string | undefined {
+    const docs = symbol.compilerSymbol.getDocumentationComment(undefined);
+    if (docs.length === 0) return undefined;
+    return ts.displayPartsToString(docs) || undefined;
+}
+
+function getSymbolSourcePath(symbol: Symbol): string | undefined {
+    const declarations = symbol.getDeclarations();
+    if (!declarations.length) return undefined;
+    return declarations[0].getSourceFile().getFilePath();
+}
+
+function isProjectProp(symbol: Symbol): boolean {
+    const filePath = getSymbolSourcePath(symbol);
+    if (!filePath) return true;
+
+    // base-ui는 포함
+    if (filePath.includes('@base-ui-components')) return true;
+
+    return !filePath.includes('node_modules');
+}
+
+function isSprinklesProp(symbol: Symbol): boolean {
+    const filePath = getSymbolSourcePath(symbol);
+    if (!filePath) return false;
+    return filePath.includes('sprinkles.css');
+}
+
+export function extractProps(
+    sourceFile: SourceFile,
+    options: ExtractOptions = {},
+): FilePropsResult {
     const filePath = sourceFile.getFilePath();
     const props: PropsInfo[] = [];
 
@@ -34,6 +71,32 @@ export function extractProps(sourceFile: SourceFile): FilePropsResult {
             optional: prop.hasQuestionToken(),
         }));
 
+        const propsType = propsInterface.getType();
+        const allSymbols = propsType.getProperties();
+        const includeSet = new Set(options.include ?? []);
+
+        const filteredSymbols = allSymbols.filter((symbol) => {
+            const name = symbol.getName();
+
+            // include 옵션에 있으면 항상 포함
+            if (includeSet.has(name)) return true;
+
+            // filterExternal: node_modules 제외
+            if (options.filterExternal && !isProjectProp(symbol)) return false;
+
+            // filterSprinkles: sprinkles.css 제외
+            if (options.filterSprinkles && isSprinklesProp(symbol)) return false;
+
+            return true;
+        });
+
+        const resolvedProperties: Property[] = filteredSymbols.map((symbol) => ({
+            name: symbol.getName(),
+            type: symbol.getTypeAtLocation(propsInterface).getText(),
+            optional: symbol.isOptional(),
+            description: getJsDocDescription(symbol),
+        }));
+
         const associatedTypes = ns
             .getTypeAliases()
             .filter((ta) => ta.isExported())
@@ -43,6 +106,7 @@ export function extractProps(sourceFile: SourceFile): FilePropsResult {
             name: `${nsName}.Props`,
             extends: extendsTypes,
             properties,
+            resolvedProperties,
             associatedTypes,
         });
     }

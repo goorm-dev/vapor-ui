@@ -1,4 +1,5 @@
 import meow from 'meow';
+import fs from 'node:fs';
 import path from 'node:path';
 
 import { findTsconfig } from '~/core/config';
@@ -18,10 +19,16 @@ const cli = meow(
     --ignore, -i         Additional ignore patterns (added to defaults)
     --no-default-ignore  Disable default ignore patterns (.stories.tsx, .css.ts)
     --component, -n      Component name to process (e.g., Button, TextInput)
+    --output, -o         Output file path (default: stdout)
+    --all, -a            Include all props (node_modules + sprinkles)
+    --sprinkles, -s      Include sprinkles props
+    --include            Include specific props (can be used multiple times)
 
   Examples
     $ ts-api-extractor ./packages/core
     $ ts-api-extractor ./packages/core --component Tabs
+    $ ts-api-extractor ./packages/core --sprinkles
+    $ ts-api-extractor ./packages/core --include padding --include margin
 `,
     {
         importMeta: import.meta,
@@ -42,6 +49,24 @@ const cli = meow(
             component: {
                 type: 'string',
                 shortFlag: 'n',
+            },
+            output: {
+                type: 'string',
+                shortFlag: 'o',
+            },
+            all: {
+                type: 'boolean',
+                shortFlag: 'a',
+                default: false,
+            },
+            sprinkles: {
+                type: 'boolean',
+                shortFlag: 's',
+                default: false,
+            },
+            include: {
+                type: 'string',
+                isMultiple: true,
             },
         },
     },
@@ -103,8 +128,21 @@ async function run() {
     const project = createProject(tsconfigPath);
     const sourceFiles = addSourceFiles(project, targetFiles!);
 
-    const results = sourceFiles.map(extractProps);
-    console.log(JSON.stringify(results, null, 2));
+    const extractOptions = {
+        filterExternal: !cli.flags.all,
+        filterSprinkles: !cli.flags.all && !cli.flags.sprinkles,
+        include: cli.flags.include,
+    };
+    const results = sourceFiles.map((sf) => extractProps(sf, extractOptions));
+    const json = JSON.stringify(results, null, 2);
+
+    if (cli.flags.output) {
+        const outputPath = path.resolve(cwd, cli.flags.output);
+        fs.writeFileSync(outputPath, json);
+        console.log(`Written to ${outputPath}`);
+    } else {
+        console.log(json);
+    }
 }
 
 run();
