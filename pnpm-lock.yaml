@@ -755,49 +755,6 @@ importers:
 
   packages/typescript-config: {}
 
-  tools/docs-extractor:
-    dependencies:
-      '@inquirer/prompts':
-        specifier: ^7.9.0
-        version: 7.10.1(@types/node@20.19.17)
-      globby:
-        specifier: ^15.0.0
-        version: 15.0.0
-      meow:
-        specifier: ^14.0.0
-        version: 14.0.0
-      picocolors:
-        specifier: ^1.1.1
-        version: 1.1.1
-      prettier:
-        specifier: ^3.3.3
-        version: 3.6.2
-      ts-morph:
-        specifier: ^22.0.0
-        version: 22.0.0
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.17
-      eslint:
-        specifier: ^9.39.2
-        version: 9.39.2(jiti@2.6.0)
-      rimraf:
-        specifier: ^6.0.1
-        version: 6.0.1
-      tsup:
-        specifier: ^8.5.0
-        version: 8.5.0(jiti@2.6.0)(postcss@8.5.6)(tsx@4.20.5)(typescript@5.9.2)
-      typescript:
-        specifier: ^5.9.2
-        version: 5.9.2
-
   tools/typescript-api-extractor:
     dependencies:
       '@inquirer/prompts':
