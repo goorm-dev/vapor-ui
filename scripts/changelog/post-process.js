@@ -249,8 +249,6 @@ function processVersionContent(versionContent) {
     const otherEntries = [];
     const updatedDependencies = [];
 
-    console.log(entries);
-
     entries.forEach(({ scope, content }) => {
         if (!content) return;
 
