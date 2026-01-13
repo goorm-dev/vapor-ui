@@ -19,7 +19,7 @@
         "core": "pnpm --filter @vapor-ui/core",
         "css-generator": "pnpm --filter @vapor-ui/css-generator",
         "dev": "turbo dev",
-        "docs-extractor": "pnpm --filter docs-extractor",
+        "docs-extractor": "pnpm --filter @vapor-ui/typescript-api-extractor",
         "figma-codegen-plugin": "pnpm --filter figma-codegen-plugin",
         "figma-plugin": "pnpm --filter figma-plugin",
         "format": "pnpm format:package && turbo run format",
