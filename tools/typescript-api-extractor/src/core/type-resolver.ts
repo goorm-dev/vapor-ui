@@ -40,19 +40,6 @@ function simplifyReactElementType(type: Type): string | null {
 }
 
 export function resolveType(type: Type): string {
-    if (type.isUnion()) {
-        const types = type.getUnionTypes().map((t) => resolveType(t));
-        // true | false → boolean으로 합치기
-        const hasTrue = types.includes('true');
-        const hasFalse = types.includes('false');
-        if (hasTrue && hasFalse) {
-            const filtered = types.filter((t) => t !== 'true' && t !== 'false');
-            filtered.push('boolean');
-            return filtered.join(' | ');
-        }
-        return types.join(' | ');
-    }
-
     if (type.isBooleanLiteral()) {
         return type.getText();
     }
