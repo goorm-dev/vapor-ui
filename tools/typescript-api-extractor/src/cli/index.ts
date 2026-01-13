@@ -34,9 +34,9 @@ const cli = meow(
     $ ts-api-extractor [path]
 
   Options
-    --tsconfig, -c       Path to tsconfig.json (default: auto-detect)
-    --ignore, -i         Additional ignore patterns (added to defaults)
-    --no-default-ignore  Disable default ignore patterns (.stories.tsx, .css.ts)
+    --tsconfig, -c         Path to tsconfig.json (default: auto-detect)
+    --exclude, -e          Additional exclude patterns (added to defaults)
+    --no-exclude-defaults  Disable default exclude patterns (.stories.tsx, .css.ts)
     --component, -n      Component name to process (e.g., Button, TextInput)
     --output, -o         Output file path (default: stdout)
     --output-dir, -d     Output directory for per-component files
@@ -59,12 +59,12 @@ const cli = meow(
                 type: 'string',
                 shortFlag: 'c',
             },
-            ignore: {
+            exclude: {
                 type: 'string',
-                shortFlag: 'i',
+                shortFlag: 'e',
                 isMultiple: true,
             },
-            defaultIgnore: {
+            excludeDefaults: {
                 type: 'boolean',
                 default: true,
             },
@@ -108,8 +108,8 @@ export async function run() {
     const rawOptions: RawCliOptions = {
         path: inputPath,
         tsconfig: cli.flags.tsconfig,
-        ignore: cli.flags.ignore ?? [],
-        defaultIgnore: cli.flags.defaultIgnore,
+        exclude: cli.flags.exclude ?? [],
+        excludeDefaults: cli.flags.excludeDefaults,
         component: cli.flags.component,
         output: cli.flags.output,
         outputDir: cli.flags.outputDir,

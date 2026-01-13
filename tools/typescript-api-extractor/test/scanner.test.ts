@@ -22,23 +22,23 @@ describe('findComponentFiles', () => {
         expect(files.some((f) => f.endsWith('.stories.tsx'))).toBe(false);
     });
 
-    it('should add ignore patterns to default when using --ignore', async () => {
-        const files = await findComponentFiles(FIXTURES_DIR, { ignore: ['sample.tsx'] });
+    it('should add exclude patterns to default when using --exclude', async () => {
+        const files = await findComponentFiles(FIXTURES_DIR, { exclude: ['sample.tsx'] });
 
         expect(files.some((f) => f.endsWith('sample.tsx'))).toBe(false);
         expect(files.some((f) => f.endsWith('.stories.tsx'))).toBe(false);
     });
 
-    it('should ignore default patterns when using --no-default-ignore', async () => {
-        const files = await findComponentFiles(FIXTURES_DIR, { noDefaultIgnore: true });
+    it('should skip default excludes when using --no-exclude-defaults', async () => {
+        const files = await findComponentFiles(FIXTURES_DIR, { skipDefaultExcludes: true });
 
         expect(files.some((f) => f.endsWith('.stories.tsx'))).toBe(true);
     });
 
-    it('should use only custom ignore when both options provided', async () => {
+    it('should use only custom exclude when both options provided', async () => {
         const files = await findComponentFiles(FIXTURES_DIR, {
-            noDefaultIgnore: true,
-            ignore: ['sample.tsx'],
+            skipDefaultExcludes: true,
+            exclude: ['sample.tsx'],
         });
 
         expect(files.some((f) => f.endsWith('sample.tsx'))).toBe(false);

@@ -25,8 +25,8 @@ export class CliError extends Error {
 export interface RawCliOptions {
     path?: string;
     tsconfig?: string;
-    ignore: string[];
-    defaultIgnore: boolean;
+    exclude: string[];
+    excludeDefaults: boolean;
     component?: string;
     output?: string;
     outputDir?: string;
@@ -97,11 +97,11 @@ export async function resolvePath(cliPath?: string): Promise<string> {
 
 export async function scanComponents(
     absolutePath: string,
-    options: { ignore: string[]; noDefaultIgnore: boolean },
+    options: { exclude: string[]; skipDefaultExcludes: boolean },
 ): Promise<ScannedComponent[]> {
     const files = await findComponentFiles(absolutePath, {
-        ignore: options.ignore,
-        noDefaultIgnore: options.noDefaultIgnore,
+        exclude: options.exclude,
+        skipDefaultExcludes: options.skipDefaultExcludes,
     });
 
     if (files.length === 0) {
@@ -230,8 +230,8 @@ export async function resolveOptions(raw: RawCliOptions): Promise<ResolvedCliOpt
 
     // Step 2: Scan directory (Source of Truth)
     const scannedComponents = await scanComponents(absolutePath, {
-        ignore: raw.ignore,
-        noDefaultIgnore: !raw.defaultIgnore,
+        exclude: raw.exclude,
+        skipDefaultExcludes: !raw.excludeDefaults,
     });
 
     // Step 3: Resolve component selection (CLI > checkbox prompt)

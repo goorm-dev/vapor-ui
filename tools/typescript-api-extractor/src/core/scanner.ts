@@ -1,11 +1,11 @@
 import { glob } from 'glob';
 import path from 'node:path';
 
-const DEFAULT_IGNORE = ['.stories.tsx', '.css.ts'];
+const DEFAULT_EXCLUDES = ['.stories.tsx', '.css.ts'];
 
 export interface ScannerOptions {
-    ignore?: string[];
-    noDefaultIgnore?: boolean;
+    exclude?: string[];
+    skipDefaultExcludes?: boolean;
 }
 
 export function normalizeComponentName(name: string): string {
@@ -29,13 +29,13 @@ export async function findComponentFiles(
 ): Promise<string[]> {
     const files = await glob('**/*.tsx', { cwd: inputPath, absolute: true });
 
-    const defaultPatterns = options?.noDefaultIgnore ? [] : DEFAULT_IGNORE;
-    const customPatterns = options?.ignore ?? [];
-    const ignorePatterns = [...defaultPatterns, ...customPatterns];
+    const defaultPatterns = options?.skipDefaultExcludes ? [] : DEFAULT_EXCLUDES;
+    const customPatterns = options?.exclude ?? [];
+    const excludePatterns = [...defaultPatterns, ...customPatterns];
 
-    if (ignorePatterns.length === 0) {
+    if (excludePatterns.length === 0) {
         return files;
     }
 
-    return files.filter((file) => !ignorePatterns.some((pattern) => file.endsWith(pattern)));
+    return files.filter((file) => !excludePatterns.some((pattern) => file.endsWith(pattern)));
 }
