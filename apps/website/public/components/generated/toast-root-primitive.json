@@ -11,7 +11,13 @@
         },
         {
             "name": "swipeDirection",
-            "type": ["\"left\"", "\"right\"", "\"up\"", "\"down\"", "(\"left\"", "\"down\")[]"],
+            "type": [
+                "\"left\"",
+                "\"right\"",
+                "\"up\"",
+                "\"down\"",
+                "(\"left\" | \"right\" | \"up\" | \"down\")[]"
+            ],
             "required": false,
             "description": "Direction(s) in which the toast can be swiped to dismiss.",
             "defaultValue": "['down', 'right']"

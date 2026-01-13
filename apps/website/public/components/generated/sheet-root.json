@@ -5,9 +5,7 @@
     "props": [
         {
             "name": "actionsRef",
-            "type": [
-                "React.RefObject<import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/dialog/root/DialogRoot\").DialogRoot.Actions>"
-            ],
+            "type": ["React.RefObject<DialogRoot.Actions>"],
             "required": false,
             "description": "A ref to imperative actions.\n- `unmount`: When specified, the dialog will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the dialog manually.\nUseful when the dialog's animation is controlled by an external library."
         },
@@ -37,6 +35,12 @@
             "required": false,
             "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
             "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: Sheet.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the dialog is opened or closed."
         },
         {
             "name": "open",

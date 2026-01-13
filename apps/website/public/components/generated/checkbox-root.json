@@ -33,12 +33,7 @@
         },
         {
             "name": "inputRef",
-            "type": [
-                "null",
-                "(instance: HTMLInputElement",
-                "null) => void",
-                "React.RefObject<HTMLInputElement>"
-            ],
+            "type": ["React.Ref<HTMLInputElement>"],
             "required": false,
             "description": "A ref to access the hidden `<input>` element."
         },
@@ -55,6 +50,12 @@
             "required": false,
             "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
             "defaultValue": "true"
+        },
+        {
+            "name": "onCheckedChange",
+            "type": ["(checked: boolean, eventDetails: Checkbox.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the checkbox is ticked or unticked."
         },
         {
             "name": "parent",

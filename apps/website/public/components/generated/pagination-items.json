@@ -12,7 +12,7 @@
                 "ReactElement",
                 "Iterable<React.ReactNode>",
                 "React.ReactPortal",
-                "(pages: import(\"/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/pagination/pagination\").PageType[]) => React.ReactNode",
+                "(pages: import(\"/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/pagination/pagination\").PageType[]) => undefined",
                 "boolean"
             ],
             "required": false,

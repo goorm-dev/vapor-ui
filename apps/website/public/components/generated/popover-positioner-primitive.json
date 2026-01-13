@@ -14,7 +14,7 @@
             "name": "alignOffset",
             "type": [
                 "number",
-                "import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/utils/useAnchorPositioning\").OffsetFunction"
+                "(data: { side: Side; align: Align; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number"
             ],
             "required": false,
             "description": "Additional offset along the alignment axis in pixels.\nAlso accepts a function that returns the offset to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",
@@ -26,9 +26,8 @@
                 "null",
                 "Element",
                 "import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@floating-ui+dom@1.7.4/node_modules/@floating-ui/dom/dist/floating-ui.dom\").VirtualElement",
-                "React.RefObject<Element",
-                "null>",
-                "() => Element"
+                "React.RefObject<Element | null>",
+                "() => null"
             ],
             "required": false,
             "description": "An element to position the popup against.\nBy default, the popup will be positioned against the trigger."
@@ -62,11 +61,7 @@
             "name": "collisionPadding",
             "type": [
                 "number",
-                "{ bottom?: number",
-                "undefined; left?: number",
-                "undefined; right?: number",
-                "undefined; top?: number",
-                "undefined; }"
+                "{ bottom?: number | undefined; left?: number | undefined; right?: number | undefined; top?: number | undefined; }"
             ],
             "required": false,
             "description": "Additional space to maintain from the edge of the collision boundary.",
@@ -96,7 +91,7 @@
             "name": "sideOffset",
             "type": [
                 "number",
-                "import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/utils/useAnchorPositioning\").OffsetFunction"
+                "(data: { side: Side; align: Align; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number"
             ],
             "required": false,
             "description": "Distance between the anchor and the popup in pixels.\nAlso accepts a function that returns the distance to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",

@@ -4,20 +4,17 @@
     "props": [
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "boolean"
-            ],
+            "type": ["ReactNode"],
             "required": false
         },
         {
             "name": "container",
-            "type": ["null", "HTMLElement", "ShadowRoot", "React.RefObject<HTMLElement", "null>"],
+            "type": [
+                "null",
+                "HTMLElement",
+                "ShadowRoot",
+                "React.RefObject<HTMLElement | ShadowRoot | null>"
+            ],
             "required": false,
             "description": "A parent element to render the portal element into."
         },

@@ -5,23 +5,13 @@
     "props": [
         {
             "name": "actionsRef",
-            "type": [
-                "React.RefObject<import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/dialog/root/DialogRoot\").DialogRoot.Actions>"
-            ],
+            "type": ["React.RefObject<DialogRoot.Actions>"],
             "required": false,
             "description": "A ref to imperative actions.\n- `unmount`: When specified, the dialog will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the dialog manually.\nUseful when the dialog's animation is controlled by an external library."
         },
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "boolean"
-            ],
+            "type": ["ReactNode"],
             "required": false
         },
         {

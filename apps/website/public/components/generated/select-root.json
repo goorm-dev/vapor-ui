@@ -5,9 +5,7 @@
     "props": [
         {
             "name": "actionsRef",
-            "type": [
-                "React.RefObject<import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/select/root/SelectRoot\").SelectRoot.Actions>"
-            ],
+            "type": ["React.RefObject<SelectRoot.Actions>"],
             "required": false,
             "description": "A ref to imperative actions.\n- `unmount`: When specified, the select will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the select manually.\nUseful when the select's animation is controlled by an external library."
         },
@@ -47,12 +45,7 @@
         },
         {
             "name": "inputRef",
-            "type": [
-                "null",
-                "(instance: HTMLInputElement",
-                "null) => void",
-                "React.RefObject<HTMLInputElement>"
-            ],
+            "type": ["React.Ref<HTMLInputElement>"],
             "required": false,
             "description": "A ref to access the hidden input element."
         },
@@ -95,6 +88,12 @@
             "type": ["string"],
             "required": false,
             "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: Select.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the select popup is opened or closed."
         },
         {
             "name": "open",

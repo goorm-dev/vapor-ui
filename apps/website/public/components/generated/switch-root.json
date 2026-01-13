@@ -25,12 +25,7 @@
         },
         {
             "name": "inputRef",
-            "type": [
-                "null",
-                "(instance: HTMLInputElement",
-                "null) => void",
-                "React.RefObject<HTMLInputElement>"
-            ],
+            "type": ["React.Ref<HTMLInputElement>"],
             "required": false,
             "description": "A ref to access the hidden `<input>` element."
         },

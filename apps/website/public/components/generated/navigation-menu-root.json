@@ -5,9 +5,7 @@
     "props": [
         {
             "name": "actionsRef",
-            "type": [
-                "React.RefObject<import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/navigation-menu/root/NavigationMenuRoot\").NavigationMenuRoot.Actions>"
-            ],
+            "type": ["React.RefObject<NavigationMenuRoot.Actions>"],
             "required": false,
             "description": "A ref to imperative actions."
         },
