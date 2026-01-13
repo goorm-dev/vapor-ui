@@ -2,6 +2,7 @@ import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } 
 
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 
+import { buildBaseUiTypeMap } from './base-ui-type-resolver';
 import { getDefaultVariantsForComponent } from './default-variants';
 import { isHtmlAttribute } from './html-attributes';
 import { cleanType } from './type-cleaner';
@@ -141,6 +142,9 @@ export function extractProps(
     const filePath = sourceFile.getFilePath();
     const defaultVariants = getDefaultVariantsForComponent(filePath);
 
+    // base-ui 타입 맵 빌드
+    const baseUiMap = buildBaseUiTypeMap(sourceFile);
+
     const namespaces = sourceFile
         .getDescendantsOfKind(SyntaxKind.ModuleDeclaration)
         .filter((mod) => mod.isExported());
@@ -181,7 +185,9 @@ export function extractProps(
 
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
-            const typeResult = cleanType(resolveType(symbol.getTypeAtLocation(propsInterface)));
+            const typeResult = cleanType(
+                resolveType(symbol.getTypeAtLocation(propsInterface), baseUiMap),
+            );
             const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
 
             return {
