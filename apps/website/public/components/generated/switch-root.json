@@ -43,6 +43,12 @@
             "defaultValue": "true"
         },
         {
+            "name": "onCheckedChange",
+            "type": ["(checked: boolean, eventDetails: Switch.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the switch is activated or deactivated."
+        },
+        {
             "name": "readOnly",
             "type": ["boolean"],
             "required": false,

@@ -1,6 +1,6 @@
 {
-    "name": "GridItem",
-    "displayName": "GridItem",
+    "name": "VStack",
+    "displayName": "VStack",
     "props": [
         {
             "name": "render",
@@ -9,13 +9,13 @@
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         },
         {
-            "name": "colSpan",
-            "type": ["string"],
+            "name": "inline",
+            "type": ["boolean"],
             "required": false
         },
         {
-            "name": "rowSpan",
-            "type": ["string"],
+            "name": "reverse",
+            "type": ["boolean"],
             "required": false
         }
     ]

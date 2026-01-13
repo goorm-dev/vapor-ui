@@ -44,6 +44,14 @@
             "defaultValue": "false"
         },
         {
+            "name": "onCheckedChange",
+            "type": [
+                "(checked: boolean, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"
+            ],
+            "required": false,
+            "description": "Event handler called when the checkbox item is ticked or unticked."
+        },
+        {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,

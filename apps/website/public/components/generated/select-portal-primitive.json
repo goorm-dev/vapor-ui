@@ -4,15 +4,7 @@
     "props": [
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "boolean"
-            ],
+            "type": ["React.ReactNode"],
             "required": false
         },
         {

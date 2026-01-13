@@ -11,15 +11,7 @@
         },
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "boolean"
-            ],
+            "type": ["React.ReactNode"],
             "required": true
         },
         {
@@ -70,12 +62,6 @@
             "required": false,
             "description": "Determines if the menu enters a modal state when open.\n- `true`: user interaction is limited to the menu: document page scroll is locked and and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.",
             "defaultValue": "true"
-        },
-        {
-            "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"],
-            "required": false,
-            "description": "Event handler called when the menu is opened or closed."
         },
         {
             "name": "open",

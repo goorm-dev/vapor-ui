@@ -11,15 +11,7 @@
         },
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "boolean"
-            ],
+            "type": ["React.ReactNode"],
             "required": false
         },
         {
@@ -90,12 +82,6 @@
             "description": "Identifies the field when a form is submitted."
         },
         {
-            "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: Select.Root.ChangeEventDetails) => void"],
-            "required": false,
-            "description": "Event handler called when the select popup is opened or closed."
-        },
-        {
             "name": "open",
             "type": ["boolean"],
             "required": false,
@@ -129,15 +115,7 @@
         },
         {
             "name": "placeholder",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "boolean"
-            ],
+            "type": ["ReactNode"],
             "required": false
         },
         {

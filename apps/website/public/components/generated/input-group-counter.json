@@ -18,7 +18,7 @@
                 "ReactElement",
                 "Iterable<React.ReactNode>",
                 "React.ReactPortal",
-                "(props: CounterRenderProps) => undefined",
+                "(props: CounterRenderProps) => ReactNode",
                 "boolean"
             ],
             "required": false,

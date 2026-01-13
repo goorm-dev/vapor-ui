@@ -6,9 +6,7 @@
             "name": "finalFocus",
             "type": [
                 "React.RefObject<HTMLElement | null>",
-                "(closeType: \"\" | \"touch\" | \"mouse\" | \"pen\" | \"keyboard\") => null",
-                "void",
-                "HTMLElement",
+                "(closeType: \"\" | \"touch\" | \"mouse\" | \"pen\" | \"keyboard\") => (null | void | HTMLElement | boolean)",
                 "boolean"
             ],
             "required": false,
@@ -18,9 +16,7 @@
             "name": "initialFocus",
             "type": [
                 "React.RefObject<HTMLElement | null>",
-                "(openType: \"\" | \"touch\" | \"mouse\" | \"pen\" | \"keyboard\") => null",
-                "void",
-                "HTMLElement",
+                "(openType: \"\" | \"touch\" | \"mouse\" | \"pen\" | \"keyboard\") => (null | void | HTMLElement | boolean)",
                 "boolean"
             ],
             "required": false,

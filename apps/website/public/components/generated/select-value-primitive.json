@@ -12,7 +12,7 @@
                 "ReactElement",
                 "Iterable<React.ReactNode>",
                 "React.ReactPortal",
-                "(value: any) => undefined",
+                "(value: any) => ReactNode",
                 "boolean"
             ],
             "required": false,

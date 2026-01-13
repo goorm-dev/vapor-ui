@@ -25,9 +25,9 @@
             "type": [
                 "null",
                 "Element",
-                "import(\"/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@floating-ui+dom@1.7.4/node_modules/@floating-ui/dom/dist/floating-ui.dom\").VirtualElement",
+                "VirtualElement",
                 "React.RefObject<Element | null>",
-                "() => null"
+                "() => (null | Element | VirtualElement)"
             ],
             "required": false,
             "description": "An element to position the popup against.\nBy default, the popup will be positioned against the trigger."

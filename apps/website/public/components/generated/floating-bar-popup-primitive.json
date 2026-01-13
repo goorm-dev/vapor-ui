@@ -1,7 +1,7 @@
 {
-    "name": "FloatingBarPopup",
-    "displayName": "FloatingBarPopup",
-    "description": "Composed FloatingBar popup with portal and positioner. Renders a `<div>` element.",
+    "name": "FloatingBarPopupPrimitive",
+    "displayName": "FloatingBarPopupPrimitive",
+    "description": "Popup container for FloatingBar content. Renders a `<div>` element.",
     "props": [
         {
             "name": "finalFocus",
@@ -28,12 +28,6 @@
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
             "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
-        },
-        {
-            "name": "portalElement",
-            "type": ["ReactElement"],
-            "required": false,
-            "description": "Custom portal element to replace the default portal."
         }
     ]
 }

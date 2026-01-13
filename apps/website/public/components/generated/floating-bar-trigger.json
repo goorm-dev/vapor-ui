@@ -1,20 +1,8 @@
 {
-    "name": "MenuTrigger",
-    "displayName": "MenuTrigger",
-    "description": "Button that triggers the Menu to open. Renders a `<button>` element.",
+    "name": "FloatingBarTrigger",
+    "displayName": "FloatingBarTrigger",
+    "description": "Button that triggers the FloatingBar to open. Renders a `<button>` element.",
     "props": [
-        {
-            "name": "children",
-            "type": ["React.ReactNode"],
-            "required": false
-        },
-        {
-            "name": "disabled",
-            "type": ["boolean"],
-            "required": false,
-            "description": "Whether the component should ignore user interaction.",
-            "defaultValue": "false"
-        },
         {
             "name": "nativeButton",
             "type": ["boolean"],

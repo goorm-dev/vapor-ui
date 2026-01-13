@@ -1,7 +1,7 @@
 {
-    "name": "PopoverRoot",
-    "displayName": "PopoverRoot",
-    "description": "Root component that manages popover open/close state. Renders a context provider.",
+    "name": "FloatingBarRoot",
+    "displayName": "FloatingBarRoot",
+    "description": "Root component of FloatingBar that manages open/close state. Uses Popover internally.",
     "props": [
         {
             "name": "actionsRef",
@@ -54,12 +54,6 @@
             "required": false,
             "description": "Whether the popover should also open when the trigger is hovered.",
             "defaultValue": "false"
-        },
-        {
-            "name": "render",
-            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
-            "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
         }
     ]
 }

@@ -141,27 +141,27 @@ FloatingBarPopup.displayName = 'FloatingBar.Popup';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace FloatingBarRoot {
-    export type Props = Popover.Root.Props;
+    export interface Props extends Popover.Root.Props {}
 }
 
 export namespace FloatingBarTrigger {
-    export type Props = VComponentProps<typeof Popover.Trigger>;
+    export interface Props extends VComponentProps<typeof Popover.Trigger> {}
 }
 
 export namespace FloatingBarClose {
-    export type Props = VComponentProps<typeof Popover.Close>;
+    export interface Props extends VComponentProps<typeof Popover.Close> {}
 }
 
 export namespace FloatingBarPortalPrimitive {
-    export type Props = Popover.Portal.Props;
+    export interface Props extends Popover.Portal.Props {}
 }
 
 export namespace FloatingBarPositionerPrimitive {
-    export type Props = VComponentProps<'div'>;
+    export interface Props extends VComponentProps<'div'> {}
 }
 
 export namespace FloatingBarPopupPrimitive {
-    export type Props = VComponentProps<typeof Popover.Popup>;
+    export interface Props extends VComponentProps<typeof Popover.Popup> {}
 }
 
 export namespace FloatingBarPopup {

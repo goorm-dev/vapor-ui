@@ -5,24 +5,14 @@
     "props": [
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "boolean"
-            ],
+            "type": ["React.ReactNode"],
             "required": false
         },
         {
             "name": "finalFocus",
             "type": [
                 "React.RefObject<HTMLElement | null>",
-                "(closeType: \"\" | \"touch\" | \"mouse\" | \"pen\" | \"keyboard\") => null",
-                "void",
-                "HTMLElement",
+                "(closeType: \"\" | \"touch\" | \"mouse\" | \"pen\" | \"keyboard\") => (null | void | HTMLElement | boolean)",
                 "boolean"
             ],
             "required": false,

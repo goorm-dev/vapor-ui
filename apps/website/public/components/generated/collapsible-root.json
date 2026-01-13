@@ -18,12 +18,6 @@
             "defaultValue": "false"
         },
         {
-            "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: Collapsible.Root.ChangeEventDetails) => void"],
-            "required": false,
-            "description": "Event handler called when the panel is opened or closed."
-        },
-        {
             "name": "open",
             "type": ["boolean"],
             "required": false,
