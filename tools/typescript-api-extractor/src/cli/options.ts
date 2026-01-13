@@ -28,7 +28,6 @@ export interface RawCliOptions {
     exclude: string[];
     excludeDefaults: boolean;
     component?: string;
-    output?: string;
     outputDir?: string;
     all: boolean;
     sprinkles: boolean;
@@ -45,10 +44,7 @@ export interface ResolvedCliOptions {
     outputMode: OutputMode;
 }
 
-export type OutputMode =
-    | { type: 'stdout' }
-    | { type: 'file'; path: string }
-    | { type: 'directory'; path: string };
+export type OutputMode = { type: 'stdout' } | { type: 'directory'; path: string };
 
 /** 스캔된 컴포넌트 파일 정보 */
 export interface ScannedComponent {
@@ -184,14 +180,10 @@ export function validateComponent(
 // Output Mode Resolution
 // ============================================================
 
-function resolveOutputMode(output?: string, outputDir?: string): OutputMode {
-    const cwd = process.cwd();
-
+function resolveOutputMode(outputDir?: string): OutputMode {
     if (outputDir) {
+        const cwd = process.cwd();
         return { type: 'directory', path: path.resolve(cwd, outputDir) };
-    }
-    if (output) {
-        return { type: 'file', path: path.resolve(cwd, output) };
     }
     return { type: 'stdout' };
 }
@@ -242,6 +234,6 @@ export async function resolveOptions(raw: RawCliOptions): Promise<ResolvedCliOpt
         tsconfigPath,
         targetFiles,
         extractOptions: buildExtractOptions(raw),
-        outputMode: resolveOutputMode(raw.output, raw.outputDir),
+        outputMode: resolveOutputMode(raw.outputDir),
     };
 }

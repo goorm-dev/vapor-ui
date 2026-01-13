@@ -38,7 +38,6 @@ const cli = meow(
     --exclude, -e          Additional exclude patterns (added to defaults)
     --no-exclude-defaults  Disable default exclude patterns (.stories.tsx, .css.ts)
     --component, -n      Component name to process (e.g., Button, TextInput)
-    --output, -o         Output file path (default: stdout)
     --output-dir, -d     Output directory for per-component files
     --all, -a            Include all props (node_modules + sprinkles + html)
     --sprinkles, -s      Include sprinkles props
@@ -71,10 +70,6 @@ const cli = meow(
             component: {
                 type: 'string',
                 shortFlag: 'n',
-            },
-            output: {
-                type: 'string',
-                shortFlag: 'o',
             },
             outputDir: {
                 type: 'string',
@@ -111,7 +106,6 @@ export async function run() {
         exclude: cli.flags.exclude ?? [],
         excludeDefaults: cli.flags.excludeDefaults,
         component: cli.flags.component,
-        output: cli.flags.output,
         outputDir: cli.flags.outputDir,
         all: cli.flags.all,
         sprinkles: cli.flags.sprinkles,
@@ -153,12 +147,6 @@ export async function run() {
             console.log(`Written to ${filePath}`);
         }
         formatWithPrettier(writtenFiles);
-    } else if (resolved.outputMode.type === 'file') {
-        const outputPath = resolved.outputMode.path;
-        const output = allProps.length === 1 ? allProps[0] : allProps;
-        fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
-        console.log(`Written to ${outputPath}`);
-        formatWithPrettier([outputPath]);
     } else {
         const output = allProps.length === 1 ? allProps[0] : allProps;
         console.log(JSON.stringify(output, null, 2));
