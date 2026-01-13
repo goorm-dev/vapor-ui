@@ -3,10 +3,11 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { findTsconfig } from '~/core/config';
 import { addSourceFiles, createProject } from '~/core/project';
 import { extractProps } from '~/core/props-extractor';
-import { findComponentFiles, findFileByComponentName } from '~/core/scanner';
+
+import type { RawCliOptions } from './options.js';
+import { resolveOptions } from './options.js';
 
 function toKebabCase(str: string): string {
     return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
@@ -30,7 +31,7 @@ function formatWithPrettier(filePaths: string[]) {
 const cli = meow(
     `
   Usage
-    $ ts-api-extractor <path>
+    $ ts-api-extractor [path]
 
   Options
     --tsconfig, -c       Path to tsconfig.json (default: auto-detect)
@@ -49,6 +50,7 @@ const cli = meow(
     $ ts-api-extractor ./packages/core --component Tabs
     $ ts-api-extractor ./packages/core --component Tabs --output-dir ./output
     $ ts-api-extractor ./packages/core --sprinkles
+    $ ts-api-extractor  # Interactive mode: prompts for path and components
 `,
     {
         importMeta: import.meta,
@@ -101,80 +103,43 @@ const cli = meow(
 );
 
 const [inputPath] = cli.input;
-const cwd = process.cwd();
 
-async function run() {
-    if (!inputPath) {
-        cli.showHelp();
-        return;
-    }
+export async function run() {
+    const rawOptions: RawCliOptions = {
+        path: inputPath,
+        tsconfig: cli.flags.tsconfig,
+        ignore: cli.flags.ignore ?? [],
+        defaultIgnore: cli.flags.defaultIgnore,
+        component: cli.flags.component,
+        output: cli.flags.output,
+        outputDir: cli.flags.outputDir,
+        all: cli.flags.all,
+        sprinkles: cli.flags.sprinkles,
+        include: cli.flags.include,
+        includeHtml: cli.flags.includeHtml,
+    };
 
-    const absolutePath = path.resolve(cwd, inputPath);
-    const tsconfigPath = cli.flags.tsconfig
-        ? path.resolve(cwd, cli.flags.tsconfig)
-        : findTsconfig(absolutePath);
+    const resolved = await resolveOptions(rawOptions);
 
-    if (!tsconfigPath) {
-        console.error('Error: tsconfig.json not found');
-        process.exit(1);
-    }
-
-    const ignore = cli.flags.ignore ?? [];
-    const noDefaultIgnore = !cli.flags.defaultIgnore;
-
-    const allFiles = await findComponentFiles(absolutePath, { ignore, noDefaultIgnore });
-
-    if (allFiles.length === 0) {
-        console.log('No .tsx files found');
-        return;
-    }
-
-    let targetFiles: string[];
-    const componentName = cli.flags.component;
-
-    if (componentName) {
-        const file = findFileByComponentName(allFiles, componentName);
-
-        if (!file) {
-            console.error(`Error: Component "${componentName}" not found`);
-            process.exit(1);
-        }
-
-        targetFiles = [file];
-    } else {
-        // --component 옵션 없으면 모든 컴포넌트 추출
-        targetFiles = allFiles;
-    }
-
-    const hasFileOutput = !!(cli.flags.output || cli.flags.outputDir);
+    const hasFileOutput = resolved.outputMode.type !== 'stdout';
 
     logProgress('Parsing components...', hasFileOutput);
 
-    const project = createProject(tsconfigPath);
-    const sourceFiles = addSourceFiles(project, targetFiles!);
-
-    const extractOptions = {
-        filterExternal: !cli.flags.all,
-        filterSprinkles: !cli.flags.all && !cli.flags.sprinkles,
-        filterHtml: !cli.flags.all,
-        includeHtmlWhitelist: cli.flags.includeHtml?.length
-            ? new Set(cli.flags.includeHtml)
-            : undefined,
-        include: cli.flags.include,
-    };
+    const project = createProject(resolved.tsconfigPath);
+    const sourceFiles = addSourceFiles(project, resolved.targetFiles);
 
     const total = sourceFiles.length;
     const results = sourceFiles.map((sf, index) => {
         const componentName = path.basename(sf.getFilePath(), '.tsx');
         logProgress(`Processing ${componentName} (${index + 1}/${total})`, hasFileOutput);
-        return extractProps(sf, extractOptions);
+        return extractProps(sf, resolved.extractOptions);
     });
 
     const allProps = results.flatMap((r) => r.props);
     logProgress(`Done! Extracted ${allProps.length} components.`, hasFileOutput);
 
-    if (cli.flags.outputDir) {
-        const outputDir = path.resolve(cwd, cli.flags.outputDir);
+    if (resolved.outputMode.type === 'directory') {
+        const outputDir = resolved.outputMode.path;
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
         }
@@ -188,8 +153,8 @@ async function run() {
             console.log(`Written to ${filePath}`);
         }
         formatWithPrettier(writtenFiles);
-    } else if (cli.flags.output) {
-        const outputPath = path.resolve(cwd, cli.flags.output);
+    } else if (resolved.outputMode.type === 'file') {
+        const outputPath = resolved.outputMode.path;
         const output = allProps.length === 1 ? allProps[0] : allProps;
         fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
         console.log(`Written to ${outputPath}`);
@@ -199,5 +164,3 @@ async function run() {
         console.log(JSON.stringify(output, null, 2));
     }
 }
-
-run();

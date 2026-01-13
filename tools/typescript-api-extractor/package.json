@@ -12,10 +12,9 @@
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "bin": {
-        "ts-api-extractor": "./dist/cli/index.js"
+        "ts-api-extractor": "./dist/bin/cli.js"
     },
     "files": [
-        "bin",
         "dist"
     ],
     "scripts": {
