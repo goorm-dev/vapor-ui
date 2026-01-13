@@ -134,7 +134,11 @@ function resolveFunctionType(type: Type, baseUiMap?: BaseUiTypeMap): string | nu
     // 반환 타입 변환
     const resolvedReturnType = resolveType(returnType, baseUiMap);
 
-    return `(${paramStrings.join(', ')}) => ${resolvedReturnType}`;
+    // 반환 타입이 유니온일 경우 괄호로 감싸서 splitTopLevelUnion에서 분리되지 않도록 함
+    const needsParens = resolvedReturnType.includes(' | ');
+    const wrappedReturn = needsParens ? `(${resolvedReturnType})` : resolvedReturnType;
+
+    return `(${paramStrings.join(', ')}) => ${wrappedReturn}`;
 }
 
 /**
@@ -217,17 +221,23 @@ export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap): string {
             if (vaporPath) return vaporPath;
         }
         // Fallback: 모든 import 경로를 단순화된 이름으로 대체
-        return simplifyAllBaseUiImports(rawText);
+        return simplifyNodeModulesImports(rawText);
+    }
+
+    // @floating-ui 등 다른 node_modules import 경로 단순화
+    if (rawText.includes('import(')) {
+        return simplifyNodeModulesImports(rawText);
     }
 
     return rawText;
 }
 
 /**
- * 타입 문자열에서 모든 base-ui import 경로를 단순화된 이름으로 대체합니다.
+ * 타입 문자열에서 node_modules import 경로를 단순화된 이름으로 대체합니다.
  * 예: import(".../@base-ui-components/.../types").HTMLProps<any> → HTMLProps<any>
+ * 예: import(".../@floating-ui/dom/...").VirtualElement → VirtualElement
  */
-function simplifyAllBaseUiImports(typeText: string): string {
+function simplifyNodeModulesImports(typeText: string): string {
     // import("...").TypeName 또는 import("...").TypeName<...> 패턴 매칭
-    return typeText.replace(/import\([^)]+@base-ui-components[^)]+\)\.(\w+)/g, '$1');
+    return typeText.replace(/import\([^)]+\)\.(\w+)/g, '$1');
 }

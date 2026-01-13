@@ -1,3 +1,4 @@
+import type { PropertySignature } from 'ts-morph';
 import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
@@ -66,6 +67,39 @@ function getJsDocDefault(symbol: Symbol): string | undefined {
     const defaultTag = tags.find((tag) => tag.name === 'default');
     if (!defaultTag?.text) return undefined;
     return ts.displayPartsToString(defaultTag.text) || undefined;
+}
+
+// 펼치지 않고 보존할 타입 alias 목록
+const PRESERVED_TYPE_ALIASES = new Set([
+    'ReactNode',
+    'ReactElement',
+    'ReactChild',
+    'ReactFragment',
+    'React.ReactNode',
+    'React.ReactElement',
+]);
+
+/**
+ * symbol의 선언에서 직접 타입 텍스트를 가져옵니다.
+ * 명시된 타입 alias를 보존하기 위해 사용합니다.
+ */
+function getDeclaredTypeText(symbol: Symbol): string | null {
+    const declarations = symbol.getDeclarations();
+    if (declarations.length === 0) return null;
+
+    const decl = declarations[0];
+    // PropertySignature에서 타입 annotation 가져오기
+    if (decl.getKind() === SyntaxKind.PropertySignature) {
+        const typeNode = (decl as PropertySignature).getTypeNode?.();
+        if (typeNode) {
+            const typeText = typeNode.getText();
+            // 보존할 타입인지 확인
+            if (PRESERVED_TYPE_ALIASES.has(typeText)) {
+                return typeText;
+            }
+        }
+    }
+    return null;
 }
 
 function getSymbolSourcePath(symbol: Symbol): string | undefined {
@@ -185,9 +219,11 @@ export function extractProps(
 
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
-            const typeResult = cleanType(
-                resolveType(symbol.getTypeAtLocation(propsInterface), baseUiMap),
-            );
+            // 먼저 선언된 타입 텍스트 확인 (ReactNode 등 보존)
+            const declaredType = getDeclaredTypeText(symbol);
+            const typeResult = declaredType
+                ? { type: declaredType }
+                : cleanType(resolveType(symbol.getTypeAtLocation(propsInterface), baseUiMap));
             const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
 
             return {
