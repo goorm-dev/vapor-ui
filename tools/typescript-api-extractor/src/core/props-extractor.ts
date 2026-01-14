@@ -110,6 +110,31 @@ function isSprinklesProp(symbol: Symbol): boolean {
     return filePath.includes('sprinkles.css');
 }
 
+function shouldIncludeSymbol(
+    symbol: Symbol,
+    options: ExtractOptions,
+    includeSet: Set<string>
+): boolean {
+    const name = symbol.getName();
+
+    // include 옵션에 있으면 항상 포함
+    if (includeSet.has(name)) return true;
+
+    // includeHtmlWhitelist에 있으면 다른 필터를 무시하고 포함
+    if (options.includeHtmlWhitelist?.has(name)) return true;
+
+    // filterExternal: node_modules 제외
+    if (options.filterExternal && !isProjectProp(symbol)) return false;
+
+    // filterSprinkles: sprinkles.css 제외
+    if (options.filterSprinkles && isSprinklesProp(symbol)) return false;
+
+    // filterHtml: HTML 네이티브 속성 제외
+    if (options.filterHtml !== false && isHtmlAttribute(name)) return false;
+
+    return true;
+}
+
 type PropSource = 'base-ui' | 'custom' | 'variants';
 
 function getPropSource(symbol: Symbol): PropSource {
@@ -183,26 +208,9 @@ export function extractProps(
         const allSymbols = propsType.getProperties();
         const includeSet = new Set(options.include ?? []);
 
-        const filteredSymbols = allSymbols.filter((symbol) => {
-            const name = symbol.getName();
-
-            // include 옵션에 있으면 항상 포함
-            if (includeSet.has(name)) return true;
-
-            // includeHtmlWhitelist에 있으면 다른 필터를 무시하고 포함
-            if (options.includeHtmlWhitelist?.has(name)) return true;
-
-            // filterExternal: node_modules 제외
-            if (options.filterExternal && !isProjectProp(symbol)) return false;
-
-            // filterSprinkles: sprinkles.css 제외
-            if (options.filterSprinkles && isSprinklesProp(symbol)) return false;
-
-            // filterHtml: HTML 네이티브 속성 제외
-            if (options.filterHtml !== false && isHtmlAttribute(name)) return false;
-
-            return true;
-        });
+        const filteredSymbols = allSymbols.filter((symbol) =>
+            shouldIncludeSymbol(symbol, options, includeSet)
+        );
 
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
