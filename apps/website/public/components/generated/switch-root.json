@@ -10,6 +10,12 @@
             "description": "Whether the switch is currently active.\n\nTo render an uncontrolled switch, use the `defaultChecked` prop instead."
         },
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "defaultChecked",
             "type": ["boolean"],
             "required": false,
@@ -22,6 +28,12 @@
             "required": false,
             "description": "Whether the component should ignore user interaction.",
             "defaultValue": "false"
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "The id of the switch element."
         },
         {
             "name": "inputRef",
@@ -72,7 +84,8 @@
             "name": "invalid",
             "type": ["boolean"],
             "required": false,
-            "description": "Determines whether the switch is in an invalid state."
+            "description": "Determines whether the switch is in an invalid state.",
+            "defaultValue": "false"
         },
         {
             "name": "size",

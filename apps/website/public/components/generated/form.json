@@ -3,10 +3,22 @@
     "displayName": "Form",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "errors",
             "type": ["Errors"],
             "required": false,
             "description": "An object where the keys correspond to the `name` attribute of the form fields,\nand the values correspond to the error(s) related to that field."
+        },
+        {
+            "name": "onClearErrors",
+            "type": ["(errors: Errors) => void"],
+            "required": false,
+            "description": "Event handler called when the `errors` object is cleared."
         },
         {
             "name": "render",

@@ -4,6 +4,12 @@
     "description": "Indicator for checkbox item showing checked state. Renders a `<span>` element.",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "keepMounted",
             "type": ["boolean"],
             "required": false,

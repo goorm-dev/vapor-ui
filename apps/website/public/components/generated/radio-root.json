@@ -4,6 +4,12 @@
     "description": "Root component of Radio that renders a circular radio button. Renders a `<button>` element.",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "disabled",
             "type": ["boolean"],
             "required": false,
@@ -53,7 +59,8 @@
             "name": "invalid",
             "type": ["boolean"],
             "required": false,
-            "description": "Determines whether the radio button is in an invalid state."
+            "description": "Determines whether the radio button is in an invalid state.",
+            "defaultValue": "false"
         },
         {
             "name": "size",

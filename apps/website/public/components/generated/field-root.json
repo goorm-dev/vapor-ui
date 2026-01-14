@@ -4,6 +4,12 @@
     "description": "Root container for Field that groups label, input, and messages. Renders a `<div>` element.",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "disabled",
             "type": ["boolean"],
             "required": false,

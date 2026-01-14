@@ -4,6 +4,18 @@
     "description": "Displays the profile image inside Avatar. Renders an `<img>` element.",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "onLoadingStatusChange",
+            "type": ["(status: \"loading\" | \"idle\" | \"loaded\" | \"error\") => void"],
+            "required": false,
+            "description": "Callback fired when the loading status changes."
+        },
+        {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,

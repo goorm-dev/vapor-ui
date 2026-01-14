@@ -5,9 +5,15 @@
     "props": [
         {
             "name": "children",
-            "type": ["React.ReactNode"],
+            "type": ["ReactNode"],
             "required": false,
             "description": "The content of the component."
+        },
+        {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
         },
         {
             "name": "defaultValue",
@@ -21,6 +27,12 @@
             "required": false,
             "description": "Whether the component should ignore user interaction.",
             "defaultValue": "false"
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: any, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Function called when the selected value changes."
         },
         {
             "name": "render",

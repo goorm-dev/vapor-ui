@@ -11,7 +11,7 @@
         },
         {
             "name": "children",
-            "type": ["React.ReactNode"],
+            "type": ["ReactNode"],
             "required": false
         },
         {
@@ -27,6 +27,18 @@
             "required": false,
             "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
             "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: Sheet.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the dialog is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the dialog is opened or closed."
         },
         {
             "name": "open",

@@ -4,7 +4,7 @@
     "props": [
         {
             "name": "children",
-            "type": ["React.ReactNode"],
+            "type": ["ReactNode"],
             "required": false
         },
         {

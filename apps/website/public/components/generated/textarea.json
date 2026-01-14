@@ -15,6 +15,13 @@
             "required": false
         },
         {
+            "name": "onValueChange",
+            "type": [
+                "(value: string, event: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; }) => void"
+            ],
+            "required": false
+        },
+        {
             "name": "value",
             "type": ["string"],
             "required": false
@@ -23,13 +30,15 @@
             "name": "autoResize",
             "type": ["boolean"],
             "required": false,
-            "description": "Determines whether the textarea automatically resizes to fit content."
+            "description": "Determines whether the textarea automatically resizes to fit content.",
+            "defaultValue": "false"
         },
         {
             "name": "invalid",
             "type": ["boolean"],
             "required": false,
-            "description": "Determines whether the textarea is in an invalid state."
+            "description": "Determines whether the textarea is in an invalid state.",
+            "defaultValue": "false"
         },
         {
             "name": "size",

@@ -11,7 +11,7 @@
         },
         {
             "name": "children",
-            "type": ["React.ReactNode"],
+            "type": ["ReactNode"],
             "required": false
         },
         {
@@ -48,6 +48,18 @@
             "required": false,
             "description": "Whether the tooltip contents can be hovered without closing the tooltip.",
             "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: Tooltip.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the tooltip is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the tooltip is opened or closed."
         },
         {
             "name": "open",

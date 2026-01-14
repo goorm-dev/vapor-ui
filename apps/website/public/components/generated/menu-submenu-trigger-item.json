@@ -5,7 +5,18 @@
     "props": [
         {
             "name": "children",
-            "type": ["React.ReactNode"],
+            "type": ["ReactNode"],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
             "required": false
         },
         {
@@ -20,6 +31,11 @@
             "required": false,
             "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
             "defaultValue": "false"
+        },
+        {
+            "name": "onClick",
+            "type": ["(event: React.MouseEvent<HTMLElement, MouseEvent>) => void"],
+            "required": false
         },
         {
             "name": "render",

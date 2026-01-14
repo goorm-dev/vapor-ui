@@ -3,6 +3,12 @@
     "displayName": "RadioGroupRoot",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "defaultValue",
             "type": ["unknown"],
             "required": false,
@@ -26,6 +32,12 @@
             "type": ["string"],
             "required": false,
             "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: unknown, eventDetails: Radio.GroupRoot.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Callback fired when the value changes."
         },
         {
             "name": "readOnly",

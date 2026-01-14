@@ -4,6 +4,12 @@
     "description": "Viewport for rendering submenu content with transitions. Renders a `<div>` element.",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,

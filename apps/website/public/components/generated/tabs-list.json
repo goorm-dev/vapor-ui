@@ -11,6 +11,12 @@
             "defaultValue": "true"
         },
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "loop",
             "type": ["boolean"],
             "required": false,

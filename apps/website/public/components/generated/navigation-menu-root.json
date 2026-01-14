@@ -10,6 +10,12 @@
             "description": "A ref to imperative actions."
         },
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "closeDelay",
             "type": ["number"],
             "required": false,
@@ -29,6 +35,18 @@
             "required": false,
             "description": "How long to wait before opening the navigation menu. Specified in milliseconds.",
             "defaultValue": "50"
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the navigation menu is closed."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: any, eventDetails: Navigation.MenuRoot.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Callback fired when the value changes."
         },
         {
             "name": "orientation",

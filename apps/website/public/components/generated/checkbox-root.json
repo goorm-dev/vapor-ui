@@ -11,6 +11,12 @@
             "defaultValue": "undefined"
         },
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "defaultChecked",
             "type": ["boolean"],
             "required": false,
@@ -23,6 +29,12 @@
             "required": false,
             "description": "Whether the component should ignore user interaction.",
             "defaultValue": "false"
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "The id of the input element."
         },
         {
             "name": "indeterminate",
@@ -94,7 +106,8 @@
             "name": "invalid",
             "type": ["boolean"],
             "required": false,
-            "description": "Indicates whether the Checkbox is in an invalid state."
+            "description": "Indicates whether the Checkbox is in an invalid state.",
+            "defaultValue": "false"
         },
         {
             "name": "size",

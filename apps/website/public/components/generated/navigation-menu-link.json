@@ -4,6 +4,12 @@
     "description": "Navigation link element that navigates to a URL. Renders an `<a>` element.",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "closeOnClick",
             "type": ["boolean"],
             "required": false,

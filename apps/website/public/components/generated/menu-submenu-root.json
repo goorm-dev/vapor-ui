@@ -11,7 +11,7 @@
         },
         {
             "name": "children",
-            "type": ["React.ReactNode"],
+            "type": ["ReactNode"],
             "required": true
         },
         {
@@ -48,6 +48,18 @@
             "required": false,
             "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
             "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the menu is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the menu is closed."
         },
         {
             "name": "open",

@@ -4,6 +4,12 @@
     "description": "Visual separator between groups or items. Renders a `<div>` element.",
     "props": [
         {
+            "name": "className",
+            "type": ["string"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
             "name": "orientation",
             "type": ["horizontal", "vertical"],
             "required": false,
