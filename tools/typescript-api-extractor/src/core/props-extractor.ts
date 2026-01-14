@@ -4,7 +4,7 @@ import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } 
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 
 import { buildBaseUiTypeMap } from './base-ui-type-resolver';
-import { getDefaultVariantsForComponent } from './default-variants';
+import { getDefaultVariantsForNamespace } from './default-variants';
 import { isHtmlAttribute } from './html-attributes';
 import { cleanType } from './type-cleaner';
 import { resolveType } from './type-resolver';
@@ -173,8 +173,6 @@ export function extractProps(
     options: ExtractOptions = {},
 ): FilePropsResult {
     const props: PropsInfo[] = [];
-    const filePath = sourceFile.getFilePath();
-    const defaultVariants = getDefaultVariantsForComponent(filePath, sourceFile);
 
     // base-ui 타입 맵 빌드
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
@@ -190,6 +188,9 @@ export function extractProps(
             .find((i) => i.getName() === 'Props' && i.isExported());
 
         if (!propsInterface) continue;
+
+        // namespace별로 defaultVariants 추출 (compound component 지원)
+        const defaultVariants = getDefaultVariantsForNamespace(sourceFile, nsName);
 
         const description = getPropsDescription(sourceFile, ns, propsInterface);
         const propsType = propsInterface.getType();
