@@ -151,6 +151,6 @@ export namespace FloatingBarPopupPrimitive {
 export namespace FloatingBarPopup {
     export type PopupProps = FloatingBarPopupPrimitive.Props;
     export interface Props extends PopupProps {
-        portalElement?: ReactElement;
+        portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
     }
 }
