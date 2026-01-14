@@ -1,9 +1,10 @@
-import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
+import { type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 
 import { buildBaseUiTypeMap } from './base-ui-type-resolver';
-import { getDefaultVariantsForComponent } from './default-variants';
+import { getSymbolSourcePath, isSymbolFromExternalSource } from './declaration-source';
+import { getDefaultVariantsForNamespace } from './default-variants';
 import { isHtmlAttribute } from './html-attributes';
 import { cleanType } from './type-cleaner';
 import { resolveType } from './type-resolver';
@@ -33,20 +34,6 @@ function getDefaultElement(sourceFile: SourceFile, nsName: string): string | und
     return match?.[1];
 }
 
-function getPropsDescription(
-    sourceFile: SourceFile,
-    ns: ModuleDeclaration,
-    propsInterface: ReturnType<ModuleDeclaration['getInterfaces']>[number],
-): string | undefined {
-    const jsDocs = propsInterface.getJsDocs();
-    if (jsDocs.length > 0) {
-        const desc = jsDocs[0].getDescription().trim();
-        if (desc) return desc;
-    }
-
-    return getComponentDescription(sourceFile, ns.getName());
-}
-
 export interface ExtractOptions {
     filterExternal?: boolean;
     filterSprinkles?: boolean;
@@ -68,26 +55,35 @@ function getJsDocDefault(symbol: Symbol): string | undefined {
     return ts.displayPartsToString(defaultTag.text) || undefined;
 }
 
-function getSymbolSourcePath(symbol: Symbol): string | undefined {
-    const declarations = symbol.getDeclarations();
-    if (!declarations.length) return undefined;
-    return declarations[0].getSourceFile().getFilePath();
-}
-
-function isProjectProp(symbol: Symbol): boolean {
-    const filePath = getSymbolSourcePath(symbol);
-    if (!filePath) return true;
-
-    // base-ui는 포함
-    if (filePath.includes('@base-ui-components')) return true;
-
-    return !filePath.includes('node_modules');
-}
-
 function isSprinklesProp(symbol: Symbol): boolean {
     const filePath = getSymbolSourcePath(symbol);
     if (!filePath) return false;
     return filePath.includes('sprinkles.css');
+}
+
+function shouldIncludeSymbol(
+    symbol: Symbol,
+    options: ExtractOptions,
+    includeSet: Set<string>,
+): boolean {
+    const name = symbol.getName();
+
+    // include 옵션에 있으면 항상 포함
+    if (includeSet.has(name)) return true;
+
+    // includeHtmlWhitelist에 있으면 다른 필터를 무시하고 포함
+    if (options.includeHtmlWhitelist?.has(name)) return true;
+
+    // filterExternal: React/DOM/외부 라이브러리 타입 제외 (선언 위치 기반)
+    if (options.filterExternal && isSymbolFromExternalSource(symbol)) return false;
+
+    // filterSprinkles: sprinkles.css 제외
+    if (options.filterSprinkles && isSprinklesProp(symbol)) return false;
+
+    // filterHtml: HTML 네이티브 속성 제외
+    if (options.filterHtml !== false && isHtmlAttribute(name)) return false;
+
+    return true;
 }
 
 type PropSource = 'base-ui' | 'custom' | 'variants';
@@ -139,8 +135,6 @@ export function extractProps(
     options: ExtractOptions = {},
 ): FilePropsResult {
     const props: PropsInfo[] = [];
-    const filePath = sourceFile.getFilePath();
-    const defaultVariants = getDefaultVariantsForComponent(filePath);
 
     // base-ui 타입 맵 빌드
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
@@ -157,37 +151,21 @@ export function extractProps(
 
         if (!propsInterface) continue;
 
-        const description = getPropsDescription(sourceFile, ns, propsInterface);
+        // namespace별로 defaultVariants 추출 (compound component 지원)
+        const defaultVariants = getDefaultVariantsForNamespace(sourceFile, nsName);
+
+        const description = getComponentDescription(sourceFile, nsName);
         const propsType = propsInterface.getType();
         const allSymbols = propsType.getProperties();
         const includeSet = new Set(options.include ?? []);
 
-        const filteredSymbols = allSymbols.filter((symbol) => {
-            const name = symbol.getName();
-
-            // include 옵션에 있으면 항상 포함
-            if (includeSet.has(name)) return true;
-
-            // includeHtmlWhitelist에 있으면 다른 필터를 무시하고 포함
-            if (options.includeHtmlWhitelist?.has(name)) return true;
-
-            // filterExternal: node_modules 제외
-            if (options.filterExternal && !isProjectProp(symbol)) return false;
-
-            // filterSprinkles: sprinkles.css 제외
-            if (options.filterSprinkles && isSprinklesProp(symbol)) return false;
-
-            // filterHtml: HTML 네이티브 속성 제외
-            if (options.filterHtml !== false && isHtmlAttribute(name)) return false;
-
-            return true;
-        });
+        const filteredSymbols = allSymbols.filter((symbol) =>
+            shouldIncludeSymbol(symbol, options, includeSet),
+        );
 
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
-            const typeResult = cleanType(
-                resolveType(symbol.getTypeAtLocation(propsInterface), baseUiMap),
-            );
+            const typeResult = cleanType(resolveType(symbol.getTypeAtLocation(propsInterface), baseUiMap));
             const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
 
             return {

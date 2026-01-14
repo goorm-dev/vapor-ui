@@ -53,19 +53,17 @@ export interface ScannedComponent {
 }
 
 /** 유효성 검사 결과 */
-type ValidationResult =
-    | { valid: true; file: string }
-    | { valid: false; available: string[] };
+type ValidationResult = { valid: true; file: string } | { valid: false; available: string[] };
 
 // ============================================================
 // Step 1: Path Resolution (CLI > Prompt)
 // ============================================================
 
-export async function resolvePath(cliPath?: string): Promise<string> {
+export async function resolvePath(filePath?: string): Promise<string> {
     const cwd = process.cwd();
 
-    if (cliPath) {
-        const absolutePath = path.resolve(cwd, cliPath);
+    if (filePath) {
+        const absolutePath = path.resolve(cwd, filePath);
         if (!fs.existsSync(absolutePath)) {
             throw new CliError(`Path does not exist: ${absolutePath}`);
         }
