@@ -11,6 +11,7 @@ import {
     expandTargetFiles,
     getTsconfigPathsMatcher,
     resolveImportPath,
+    submitAnalysis,
 } from './utils';
 
 /**
@@ -152,22 +153,6 @@ function analyzeSourceFile(file: string, config: AnalyzerConfig): AnalyzeFileRes
     return { componentsMap, files };
 }
 
-function displayUsageReport(usageByEntry: Map<string, Map<string, number>>) {
-    if (usageByEntry.size === 0) {
-        console.error('No usage found or no files to analyze.');
-        return;
-    }
-
-    for (const [file, usage] of usageByEntry) {
-        if (usage.size === 0) continue;
-
-        console.log(`\nFile: ${file}`);
-        for (const [component, count] of usage) {
-            console.log(`  - ${component}: ${count}`);
-        }
-    }
-}
-
 /**
  * Main execution function for the usage command.
  */
@@ -193,6 +178,7 @@ export async function usageCommand(targets: string[], options: RunOptions) {
         const visited = new Set<string>();
         const queue = [entry];
 
+        // BFS Traversal of file import graph
         while (queue.length > 0) {
             const file = queue.shift();
 
@@ -214,9 +200,9 @@ export async function usageCommand(targets: string[], options: RunOptions) {
                 pageUsageMap.set(component, currentCount + count);
             }
 
-            // 3. Enqueue Dependencies (if deep mode)
             if (shallow) continue;
 
+            // 3. Enqueue Dependencies (if deep mode)
             for (const depFile of analysisResult.files) {
                 if (!visited.has(depFile)) {
                     queue.push(depFile);
@@ -227,7 +213,11 @@ export async function usageCommand(targets: string[], options: RunOptions) {
         usageByEntry.set(entry, pageUsageMap);
     }
 
-    displayUsageReport(usageByEntry);
+    try {
+        await submitAnalysis(usageByEntry, packageName);
+    } catch (error) {
+        console.error('Failed to update Google Sheet:', error);
+    }
 }
 
 export default new Command('usage')
