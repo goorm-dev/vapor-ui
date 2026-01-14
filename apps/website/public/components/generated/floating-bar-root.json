@@ -44,9 +44,7 @@
         },
         {
             "name": "onOpenChange",
-            "type": [
-                "(open: boolean, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; } | { reason: \"trigger-hover\"; event: MouseEvent; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; } | { reason: \"trigger-focus\"; event: FocusEvent; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; } | { reason: \"trigger-press\"; event: MouseEvent | KeyboardEvent | PointerEvent | TouchEvent; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; } | { reason: \"outside-press\"; event: MouseEvent | PointerEvent; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; } | { reason: \"escape-key\"; event: KeyboardEvent; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; } | { reason: \"focus-out\"; event: FocusEvent; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; } | { reason: \"close-press\"; event: MouseEvent | KeyboardEvent | PointerEvent; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; }) => void"
-            ],
+            "type": ["(open: boolean, eventDetails: FloatingBar.Root.ChangeEventDetails) => void"],
             "required": false,
             "description": "Event handler called when the popover is opened or closed."
         },
