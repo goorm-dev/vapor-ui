@@ -137,19 +137,20 @@ export namespace FloatingBarClose {
 }
 
 export namespace FloatingBarPortalPrimitive {
-    export type Props = VComponentProps<typeof Popover.Portal>;
+    export interface Props extends VComponentProps<typeof Popover.Portal> {}
 }
 
 export namespace FloatingBarPositionerPrimitive {
-    export type Props = VComponentProps<typeof Popover.Positioner>;
+    export interface Props extends VComponentProps<typeof Popover.Positioner> {}
 }
 
 export namespace FloatingBarPopupPrimitive {
-    export type Props = VComponentProps<typeof Popover.Popup>;
+    export interface Props extends VComponentProps<typeof Popover.Popup> {}
 }
 
 export namespace FloatingBarPopup {
     export type PopupProps = FloatingBarPopupPrimitive.Props;
+
     export interface Props extends PopupProps {
         portalElement?: ReactElement<FloatingBarPortalPrimitive.Props>;
     }
