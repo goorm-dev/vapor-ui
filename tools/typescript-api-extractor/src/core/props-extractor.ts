@@ -4,6 +4,7 @@ import { type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 
 import { buildBaseUiTypeMap } from './base-ui-type-resolver';
+import { getSymbolSourcePath, isSymbolFromExternalSource } from './declaration-source';
 import { getDefaultVariantsForNamespace } from './default-variants';
 import { isHtmlAttribute } from './html-attributes';
 import { cleanType } from './type-cleaner';
@@ -71,8 +72,12 @@ const PRESERVED_TYPE_ALIASES = new Set([
  */
 function getDeclaredTypeText(symbol: Symbol): string | null {
     const declarations = symbol.getDeclarations();
+    const project = declarations[0]?.getProject();
     if (declarations.length === 0) return null;
-
+    console.log('--- DECLARED TYPE TEXT ---');
+    console.log(symbol.getName());
+    console.log('--------------------------');
+    console.log(project.getTypeChecker().getTypeAtLocation(declarations[0]).getText());
     const decl = declarations[0];
     // PropertySignature에서 타입 annotation 가져오기
     if (decl.getKind() === SyntaxKind.PropertySignature) {
@@ -88,22 +93,6 @@ function getDeclaredTypeText(symbol: Symbol): string | null {
     return null;
 }
 
-function getSymbolSourcePath(symbol: Symbol): string | undefined {
-    const declarations = symbol.getDeclarations();
-    if (!declarations.length) return undefined;
-    return declarations[0].getSourceFile().getFilePath();
-}
-
-function isProjectProp(symbol: Symbol): boolean {
-    const filePath = getSymbolSourcePath(symbol);
-    if (!filePath) return true;
-
-    // base-ui는 포함
-    if (filePath.includes('@base-ui-components')) return true;
-
-    return !filePath.includes('node_modules');
-}
-
 function isSprinklesProp(symbol: Symbol): boolean {
     const filePath = getSymbolSourcePath(symbol);
     if (!filePath) return false;
@@ -113,7 +102,7 @@ function isSprinklesProp(symbol: Symbol): boolean {
 function shouldIncludeSymbol(
     symbol: Symbol,
     options: ExtractOptions,
-    includeSet: Set<string>
+    includeSet: Set<string>,
 ): boolean {
     const name = symbol.getName();
 
@@ -123,8 +112,8 @@ function shouldIncludeSymbol(
     // includeHtmlWhitelist에 있으면 다른 필터를 무시하고 포함
     if (options.includeHtmlWhitelist?.has(name)) return true;
 
-    // filterExternal: node_modules 제외
-    if (options.filterExternal && !isProjectProp(symbol)) return false;
+    // filterExternal: React/DOM/외부 라이브러리 타입 제외 (선언 위치 기반)
+    if (options.filterExternal && isSymbolFromExternalSource(symbol)) return false;
 
     // filterSprinkles: sprinkles.css 제외
     if (options.filterSprinkles && isSprinklesProp(symbol)) return false;
@@ -209,11 +198,12 @@ export function extractProps(
         const includeSet = new Set(options.include ?? []);
 
         const filteredSymbols = allSymbols.filter((symbol) =>
-            shouldIncludeSymbol(symbol, options, includeSet)
+            shouldIncludeSymbol(symbol, options, includeSet),
         );
 
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
+
             // 먼저 선언된 타입 텍스트 확인 (ReactNode 등 보존)
             const declaredType = getDeclaredTypeText(symbol);
             const typeResult = declaredType
