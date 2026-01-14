@@ -157,7 +157,7 @@ function analyzeSourceFile(file: string, config: AnalyzerConfig): AnalyzeFileRes
  * Main execution function for the usage command.
  */
 export async function usageCommand(targets: string[], options: RunOptions) {
-    const { shallow = false, package: packageName = '@vapor-ui/core' } = options;
+    const { shallow = false, package: packageName = '@vapor-ui/core', repo } = options;
     const initialTargets = targets.length > 0 ? targets : ['.'];
     const cwd = process.cwd();
 
@@ -210,11 +210,14 @@ export async function usageCommand(targets: string[], options: RunOptions) {
             }
         }
 
+        // ignore entries with no usage
+        if (pageUsageMap.size === 0) continue;
+
         usageByEntry.set(entry, pageUsageMap);
     }
 
     try {
-        await submitAnalysis(usageByEntry, packageName);
+        await submitAnalysis({ repo, usageByEntry, packageName });
     } catch (error) {
         console.error('Failed to update Google Sheet:', error);
     }
@@ -223,6 +226,7 @@ export async function usageCommand(targets: string[], options: RunOptions) {
 export default new Command('usage')
     .arguments('[targets...]')
     .description('Analyze Vapor UI component usage')
+    .requiredOption('--repo <repositoryName>', 'Specify the repository name to analyze')
     .option('--package <packageName>', 'Specify the package name to analyze', '@vapor-ui/core')
     .option('--shallow', 'Analyze only specified files without following imports', false)
     .action(usageCommand);
@@ -248,6 +252,7 @@ export interface AnalyzeFileResult {
 }
 
 export interface RunOptions {
+    repo: string;
     shallow?: boolean;
     package?: string;
 }

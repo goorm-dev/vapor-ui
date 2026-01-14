@@ -175,12 +175,12 @@ export function createAnalysisCache<K extends string, V>() {
 
 // --- Spreadsheets ---
 
-async function ensureSheet(sheet: Spreadsheet, repoName: string) {
+async function ensureSheet(sheet: Spreadsheet, repo: string) {
     const sheets = await sheet.getSheets();
 
-    if (!sheets.some((s) => s.properties?.title === repoName)) {
-        console.log(`Sheet '${repoName}' not found. Creating new sheet...`);
-        await sheet.addSheet(repoName);
+    if (!sheets.some((s) => s.properties?.title === repo)) {
+        console.log(`Sheet '${repo}' not found. Creating new sheet...`);
+        await sheet.addSheet(repo);
     }
 }
 
@@ -301,10 +301,16 @@ export function getSprint(date = new Date()) {
     return sprintIndex + 1 + SPRINT_OFFSET;
 }
 
-export async function submitAnalysis(
-    usageByEntry: Map<string, Map<string, number>>,
-    packageName: string,
-) {
+type SubmitAnalysisParams = {
+    repo: string;
+    usageByEntry: Map<string, Map<string, number>>;
+    packageName: string;
+};
+
+/**
+ * Submits the usage analysis results to Google Sheets.
+ */
+export async function submitAnalysis({ repo, usageByEntry, packageName }: SubmitAnalysisParams) {
     if (usageByEntry.size === 0) {
         console.error('No usage found or no files to analyze.');
         return;
@@ -312,11 +318,10 @@ export async function submitAnalysis(
 
     try {
         const sheetClient = await createSheets();
-        const repoName = path.basename(process.cwd());
 
-        await ensureSheet(sheetClient, repoName);
+        await ensureSheet(sheetClient, repo);
 
-        const sheetRange = `${repoName}!A1:ZZ`;
+        const sheetRange = `${repo}!A1:ZZ`;
         const [sheetData] = await sheetClient.getValues([sheetRange]);
         const currentRows = sheetData?.values || [];
 
@@ -348,7 +353,7 @@ export async function submitAnalysis(
         ];
 
         // 4. Save
-        await sheetClient.setValues(`${repoName}!A1`, finalRows);
+        await sheetClient.setValues(`${repo}!A1`, finalRows);
         console.log(`Successfully logged ${newRows.length} entries to Google Sheets.`);
     } catch (error) {
         console.error('Error updating usage report:', error);
