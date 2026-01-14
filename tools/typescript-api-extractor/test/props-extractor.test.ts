@@ -56,6 +56,28 @@ describe('extractProps', () => {
         expect(simpleButton?.description).toBe('A simple button component for testing.');
     });
 
+    describe('React type alias preservation', () => {
+        it('should preserve ReactNode type without expanding', () => {
+            const result = setupSimpleComponent();
+            const simpleButton = result.props.find((p) => p.name === 'SimpleButton');
+            const iconProp = simpleButton?.props.find((p) => p.name === 'icon');
+
+            // ReactNode should be preserved as-is, not expanded to union
+            expect(iconProp).toBeDefined();
+            expect(iconProp?.type).toEqual(['ReactNode']);
+        });
+
+        it('should preserve ReactElement type without expanding', () => {
+            const result = setupSimpleComponent();
+            const simpleButton = result.props.find((p) => p.name === 'SimpleButton');
+            const endContentProp = simpleButton?.props.find((p) => p.name === 'endContent');
+
+            // ReactElement should be preserved as-is
+            expect(endContentProp).toBeDefined();
+            expect(endContentProp?.type).toEqual(['ReactElement']);
+        });
+    });
+
     describe('declaration-based filtering', () => {
         it('should filter React HTML attributes by declaration source when filterExternal is true', () => {
             const tsconfigPath = path.join(FIXTURES_DIR, 'tsconfig.json');

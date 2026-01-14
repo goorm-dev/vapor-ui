@@ -155,7 +155,12 @@ function simplifyReactRefType(typeText: string): string | null {
 }
 
 // spread하지 않고 유지할 React 타입 alias 목록
-const PRESERVED_REACT_ALIASES = new Set(['ReactNode', 'ReactChild', 'ReactFragment']);
+const PRESERVED_REACT_ALIASES = new Set([
+    'ReactNode',
+    'ReactElement',
+    'ReactChild',
+    'ReactFragment',
+]);
 
 export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap): string {
     // 먼저 원본 타입 텍스트 확인
