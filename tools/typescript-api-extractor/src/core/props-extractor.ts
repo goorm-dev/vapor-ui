@@ -1,5 +1,5 @@
 import type { PropertySignature } from 'ts-morph';
-import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
+import { type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 
@@ -32,20 +32,6 @@ function getDefaultElement(sourceFile: SourceFile, nsName: string): string | und
     const text = variableStatement.getText();
     const match = text.match(/render:\s*render\s*\|\|\s*<(\w+)/);
     return match?.[1];
-}
-
-function getPropsDescription(
-    sourceFile: SourceFile,
-    ns: ModuleDeclaration,
-    propsInterface: ReturnType<ModuleDeclaration['getInterfaces']>[number],
-): string | undefined {
-    const jsDocs = propsInterface.getJsDocs();
-    if (jsDocs.length > 0) {
-        const desc = jsDocs[0].getDescription().trim();
-        if (desc) return desc;
-    }
-
-    return getComponentDescription(sourceFile, ns.getName());
 }
 
 export interface ExtractOptions {
@@ -192,7 +178,7 @@ export function extractProps(
         // namespace별로 defaultVariants 추출 (compound component 지원)
         const defaultVariants = getDefaultVariantsForNamespace(sourceFile, nsName);
 
-        const description = getPropsDescription(sourceFile, ns, propsInterface);
+        const description = getComponentDescription(sourceFile, nsName);
         const propsType = propsInterface.getType();
         const allSymbols = propsType.getProperties();
         const includeSet = new Set(options.include ?? []);

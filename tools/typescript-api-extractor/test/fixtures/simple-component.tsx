@@ -11,6 +11,9 @@ type SimpleVariants = {
     variant?: 'fill' | 'outline' | 'ghost';
 };
 
+/**
+ * A simple button component for testing.
+ */
 export const SimpleButton = forwardRef<HTMLButtonElement, SimpleButton.Props>((props, ref) => {
     const { className, colorPalette, size, variant, ...otherProps } = props;
 

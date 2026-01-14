@@ -13,6 +13,13 @@ function setup() {
     return extractProps(sourceFile);
 }
 
+function setupSimpleComponent() {
+    const tsconfigPath = path.join(FIXTURES_DIR, 'tsconfig.json');
+    const project = createProject(tsconfigPath);
+    const [sourceFile] = addSourceFiles(project, [path.join(FIXTURES_DIR, 'simple-component.tsx')]);
+    return extractProps(sourceFile);
+}
+
 describe('extractProps', () => {
     it('should find Props interfaces in namespaces', () => {
         const result = setup();
@@ -40,5 +47,12 @@ describe('extractProps', () => {
 
         expect(button?.props.some((p) => p.name === 'variant')).toBe(true);
         expect(button?.props.some((p) => p.name === 'size')).toBe(true);
+    });
+
+    it('should extract component description from JSDoc', () => {
+        const result = setupSimpleComponent();
+        const simpleButton = result.props.find((p) => p.name === 'SimpleButton');
+
+        expect(simpleButton?.description).toBe('A simple button component for testing.');
     });
 });
