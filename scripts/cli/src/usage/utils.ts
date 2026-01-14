@@ -264,7 +264,7 @@ function createDataRows(
 
     for (const [absolutePath, usage] of usageByEntry) {
         const file = path.relative(cwd, absolutePath);
-        const row = new Array(meta.columnCount).fill('-');
+        const row = new Array(meta.columnCount).fill('.');
 
         row[0] = `${meta.sprint}#${meta.batch}:${file}`;
 
