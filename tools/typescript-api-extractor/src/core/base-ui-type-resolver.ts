@@ -193,10 +193,11 @@ export function collectNamespaceTypeAliases(sourceFile: SourceFile, map: BaseUiT
 /**
  * 내부 namespace 이름을 외부 접근 가능한 경로로 변환합니다.
  * 예: CollapsibleRoot.ChangeEventDetails → Collapsible.Root.ChangeEventDetails
+ * 예: FloatingBarRoot.ChangeEventDetails → FloatingBar.Root.ChangeEventDetails
  */
 function formatVaporTypePath(nsName: string, typeName: string): string {
-    // ComponentNamePart 패턴 (예: CollapsibleRoot, DialogPopup)
-    const match = nsName.match(/^([A-Z][a-z]+)([A-Z].*)$/);
+    // 마지막 대문자 단어를 파트 이름으로 분리
+    const match = nsName.match(/^(.+)([A-Z][a-z]+)$/);
     if (match) {
         const [, componentName, partName] = match;
         return `${componentName}.${partName}.${typeName}`;
