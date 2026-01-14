@@ -123,10 +123,10 @@ export async function run() {
     const sourceFiles = addSourceFiles(project, resolved.targetFiles);
 
     const total = sourceFiles.length;
-    const results = sourceFiles.map((sf, index) => {
-        const componentName = path.basename(sf.getFilePath(), '.tsx');
+    const results = sourceFiles.map((file, index) => {
+        const componentName = path.basename(file.getFilePath(), '.tsx');
         logProgress(`Processing ${componentName} (${index + 1}/${total})`, hasFileOutput);
-        return extractProps(sf, resolved.extractOptions);
+        return extractProps(file, resolved.extractOptions);
     });
 
     const allProps = results.flatMap((r) => r.props);

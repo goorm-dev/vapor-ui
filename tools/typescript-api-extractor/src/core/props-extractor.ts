@@ -174,7 +174,7 @@ export function extractProps(
 ): FilePropsResult {
     const props: PropsInfo[] = [];
     const filePath = sourceFile.getFilePath();
-    const defaultVariants = getDefaultVariantsForComponent(filePath);
+    const defaultVariants = getDefaultVariantsForComponent(filePath, sourceFile);
 
     // base-ui 타입 맵 빌드
     const baseUiMap = buildBaseUiTypeMap(sourceFile);

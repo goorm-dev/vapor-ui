@@ -1,7 +1,7 @@
 import { glob } from 'glob';
 import path from 'node:path';
 
-const DEFAULT_EXCLUDES = ['.stories.tsx', '.css.ts'];
+const DEFAULT_EXCLUDES = ['.stories.tsx', '.css.ts', '.test.tsx'];
 
 export interface ScannerOptions {
     exclude?: string[];
