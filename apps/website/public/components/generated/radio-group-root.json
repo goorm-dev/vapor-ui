@@ -23,7 +23,7 @@
         },
         {
             "name": "inputRef",
-            "type": ["React.Ref<HTMLInputElement>"],
+            "type": ["Ref<HTMLInputElement>"],
             "required": false,
             "description": "A ref to access the hidden input element."
         },
@@ -35,7 +35,7 @@
         },
         {
             "name": "onValueChange",
-            "type": ["(value: unknown, eventDetails: Radio.GroupRoot.ChangeEventDetails) => void"],
+            "type": ["((value: unknown, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Callback fired when the value changes."
         },

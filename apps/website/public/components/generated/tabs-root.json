@@ -32,13 +32,13 @@
         },
         {
             "name": "onValueChange",
-            "type": ["(value: any, eventDetails: Tabs.Root.ChangeEventDetails) => void"],
+            "type": ["((value: TabsTab.Value, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Callback invoked when new value is being set."
         },
         {
             "name": "orientation",
-            "type": ["horizontal", "vertical"],
+            "type": ["BaseOrientation"],
             "required": false,
             "description": "The component orientation (layout flow direction).",
             "defaultValue": "horizontal"

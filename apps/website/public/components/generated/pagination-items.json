@@ -5,16 +5,7 @@
     "props": [
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "(pages: PageType[]) => ReactNode",
-                "boolean"
-            ],
+            "type": ["React.ReactNode", "((pages: PageType[]) => React.ReactNode)"],
             "required": false,
             "description": "Custom render function or elements to display pagination items"
         }

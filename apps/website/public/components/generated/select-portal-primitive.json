@@ -10,10 +10,10 @@
         {
             "name": "container",
             "type": [
-                "null",
                 "HTMLElement",
                 "ShadowRoot",
-                "React.RefObject<HTMLElement | ShadowRoot | null>"
+                "React.RefObject<HTMLElement | ShadowRoot | null>",
+                "null"
             ],
             "required": false,
             "description": "A parent element to render the portal element into."

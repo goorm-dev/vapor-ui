@@ -11,16 +11,7 @@
         },
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "(props: CounterRenderProps) => ReactNode",
-                "boolean"
-            ],
+            "type": ["React.ReactNode", "((props: CounterRenderProps) => React.ReactNode)"],
             "required": false,
             "description": "Content to display. Can be a render function that receives count, maxLength, and value."
         }

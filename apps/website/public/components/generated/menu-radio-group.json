@@ -30,7 +30,7 @@
         },
         {
             "name": "onValueChange",
-            "type": ["(value: any, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"],
+            "type": ["((value: any, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Function called when the selected value changes."
         },

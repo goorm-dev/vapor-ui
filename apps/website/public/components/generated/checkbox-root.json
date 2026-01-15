@@ -45,7 +45,7 @@
         },
         {
             "name": "inputRef",
-            "type": ["React.Ref<HTMLInputElement>"],
+            "type": ["Ref<HTMLInputElement>"],
             "required": false,
             "description": "A ref to access the hidden `<input>` element."
         },
@@ -65,7 +65,7 @@
         },
         {
             "name": "onCheckedChange",
-            "type": ["(checked: boolean, eventDetails: Checkbox.Root.ChangeEventDetails) => void"],
+            "type": ["((checked: boolean, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Event handler called when the checkbox is ticked or unticked."
         },

@@ -18,6 +18,7 @@
         {
             "name": "match",
             "type": [
+                "boolean",
                 "\"badInput\"",
                 "\"customError\"",
                 "\"patternMismatch\"",
@@ -27,8 +28,7 @@
                 "\"tooLong\"",
                 "\"tooShort\"",
                 "\"typeMismatch\"",
-                "\"valueMissing\"",
-                "boolean"
+                "\"valueMissing\""
             ],
             "required": false,
             "description": "Determines when to show the error message. Can be a boolean or a validity state key."

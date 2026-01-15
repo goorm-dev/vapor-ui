@@ -5,7 +5,7 @@
     "props": [
         {
             "name": "actionsRef",
-            "type": ["React.RefObject<TooltipRoot.Actions>"],
+            "type": ["React.RefObject<Actions>"],
             "required": false,
             "description": "A ref to imperative actions.\n- `unmount`: When specified, the tooltip will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the tooltip manually.\nUseful when the tooltip's animation is controlled by an external library."
         },
@@ -51,13 +51,13 @@
         },
         {
             "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: Tooltip.Root.ChangeEventDetails) => void"],
+            "type": ["((open: boolean, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Event handler called when the tooltip is opened or closed."
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["(open: boolean) => void"],
+            "type": ["((open: boolean) => void)"],
             "required": false,
             "description": "Event handler called after any animations complete when the tooltip is opened or closed."
         },

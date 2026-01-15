@@ -17,19 +17,19 @@
         },
         {
             "name": "popupElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<NavigationMenuPopupPrimitive.Props>"],
             "required": false,
             "description": "Custom popup element for content container"
         },
         {
             "name": "portalElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<NavigationMenuPortalPrimitive.Props>"],
             "required": false,
             "description": "Custom portal element for rendering content"
         },
         {
             "name": "positionerElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<NavigationMenuPositionerPrimitive.Props>"],
             "required": false,
             "description": "Custom positioner element for popup positioning"
         }

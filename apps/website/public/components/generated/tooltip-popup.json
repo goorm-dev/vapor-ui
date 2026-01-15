@@ -17,12 +17,12 @@
         },
         {
             "name": "portalElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<TooltipPortalPrimitive.Props>"],
             "required": false
         },
         {
             "name": "positionerElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<TooltipPositionerPrimitive.Props>"],
             "required": false
         }
     ]

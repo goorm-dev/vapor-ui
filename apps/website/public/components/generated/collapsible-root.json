@@ -25,7 +25,7 @@
         },
         {
             "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: Collapsible.Root.ChangeEventDetails) => void"],
+            "type": ["((open: boolean, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Event handler called when the panel is opened or closed."
         },

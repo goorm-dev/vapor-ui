@@ -5,16 +5,7 @@
     "props": [
         {
             "name": "children",
-            "type": [
-                "null",
-                "string",
-                "number",
-                "ReactElement",
-                "Iterable<React.ReactNode>",
-                "React.ReactPortal",
-                "(value: any) => ReactNode",
-                "boolean"
-            ],
+            "type": ["React.ReactNode", "((value: any) => React.ReactNode)"],
             "required": false,
             "description": "Accepts a function that returns a `ReactNode` to format the selected value."
         },

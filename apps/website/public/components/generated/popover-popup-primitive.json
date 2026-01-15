@@ -11,9 +11,9 @@
         {
             "name": "finalFocus",
             "type": [
+                "boolean",
                 "React.RefObject<HTMLElement | null>",
-                "(closeType: \"\" | \"touch\" | \"mouse\" | \"pen\" | \"keyboard\") => (null | void | HTMLElement | boolean)",
-                "boolean"
+                "((closeType: InteractionType) => void | boolean | HTMLElement | null)"
             ],
             "required": false,
             "description": "Determines the element to focus when the popover is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
@@ -21,9 +21,9 @@
         {
             "name": "initialFocus",
             "type": [
+                "boolean",
                 "React.RefObject<HTMLElement | null>",
-                "(openType: \"\" | \"touch\" | \"mouse\" | \"pen\" | \"keyboard\") => (null | void | HTMLElement | boolean)",
-                "boolean"
+                "((openType: InteractionType) => void | boolean | HTMLElement | null)"
             ],
             "required": false,
             "description": "Determines the element to focus when the popover is opened.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (first tabbable element or popup).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."

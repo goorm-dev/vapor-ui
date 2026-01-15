@@ -5,7 +5,7 @@
     "props": [
         {
             "name": "actionsRef",
-            "type": ["React.RefObject<DialogRoot.Actions>"],
+            "type": ["React.RefObject<Actions>"],
             "required": false,
             "description": "A ref to imperative actions.\n- `unmount`: When specified, the dialog will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the dialog manually.\nUseful when the dialog's animation is controlled by an external library."
         },
@@ -23,20 +23,20 @@
         },
         {
             "name": "modal",
-            "type": ["\"trap-focus\"", "boolean"],
+            "type": ["boolean", "\"trap-focus\""],
             "required": false,
             "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
             "defaultValue": "true"
         },
         {
             "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: Sheet.Root.ChangeEventDetails) => void"],
+            "type": ["((open: boolean, eventDetails: DialogRoot.ChangeEventDetails) => void)"],
             "required": false,
             "description": "Event handler called when the dialog is opened or closed."
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["(open: boolean) => void"],
+            "type": ["((open: boolean) => void)"],
             "required": false,
             "description": "Event handler called after any animations complete when the dialog is opened or closed."
         },

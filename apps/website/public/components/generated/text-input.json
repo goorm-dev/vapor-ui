@@ -22,9 +22,7 @@
         },
         {
             "name": "onValueChange",
-            "type": [
-                "(value: string, event: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; }) => void"
-            ],
+            "type": ["((value: string, event: TextInput.ChangeEventDetails) => void)"],
             "required": false
         },
         {

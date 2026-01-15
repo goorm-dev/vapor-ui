@@ -48,7 +48,7 @@
         },
         {
             "name": "onClick",
-            "type": ["(event: React.MouseEvent<HTMLElement, MouseEvent>) => void"],
+            "type": ["React.MouseEventHandler<HTMLElement>"],
             "required": false,
             "description": "The click handler for the menu item."
         },

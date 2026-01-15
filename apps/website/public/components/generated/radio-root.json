@@ -18,7 +18,7 @@
         },
         {
             "name": "inputRef",
-            "type": ["React.Ref<HTMLInputElement>"],
+            "type": ["Ref<HTMLInputElement>"],
             "required": false,
             "description": "A ref to access the hidden input element."
         },

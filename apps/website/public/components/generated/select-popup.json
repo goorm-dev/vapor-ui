@@ -22,12 +22,12 @@
         },
         {
             "name": "portalElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<SelectPortalPrimitive.Props>"],
             "required": false
         },
         {
             "name": "positionerElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<SelectPositionerPrimitive.Props>"],
             "required": false
         }
     ]

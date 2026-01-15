@@ -22,13 +22,13 @@
         },
         {
             "name": "portalElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<MultiSelectPortalPrimitive.Props>"],
             "required": false,
             "description": "Custom portal element for rendering popup content"
         },
         {
             "name": "positionerElement",
-            "type": ["ReactElement"],
+            "type": ["ReactElement<MultiSelectPositionerPrimitive.Props>"],
             "required": false,
             "description": "Custom positioner element for popup positioning"
         }

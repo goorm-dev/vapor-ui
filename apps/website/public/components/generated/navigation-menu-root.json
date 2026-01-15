@@ -5,7 +5,7 @@
     "props": [
         {
             "name": "actionsRef",
-            "type": ["React.RefObject<NavigationMenuRoot.Actions>"],
+            "type": ["React.RefObject<Actions>"],
             "required": false,
             "description": "A ref to imperative actions."
         },
@@ -38,13 +38,13 @@
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["(open: boolean) => void"],
+            "type": ["((open: boolean) => void)"],
             "required": false,
             "description": "Event handler called after any animations complete when the navigation menu is closed."
         },
         {
             "name": "onValueChange",
-            "type": ["(value: any, eventDetails: Navigation.MenuRoot.ChangeEventDetails) => void"],
+            "type": ["((value: any, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Callback fired when the value changes."
         },

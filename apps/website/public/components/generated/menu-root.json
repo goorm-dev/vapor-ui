@@ -5,7 +5,7 @@
     "props": [
         {
             "name": "actionsRef",
-            "type": ["React.RefObject<MenuRoot.Actions>"],
+            "type": ["React.RefObject<Actions>"],
             "required": false,
             "description": "A ref to imperative actions.\n- `unmount`: When specified, the menu will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the menu manually.\nUseful when the menu's animation is controlled by an external library."
         },
@@ -65,13 +65,13 @@
         },
         {
             "name": "onOpenChange",
-            "type": ["(open: boolean, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"],
+            "type": ["((open: boolean, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Event handler called when the menu is opened or closed."
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["(open: boolean) => void"],
+            "type": ["((open: boolean) => void)"],
             "required": false,
             "description": "Event handler called after any animations complete when the menu is closed."
         },
@@ -89,7 +89,7 @@
         },
         {
             "name": "orientation",
-            "type": ["horizontal", "vertical"],
+            "type": ["Orientation"],
             "required": false,
             "description": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys.",
             "defaultValue": "'vertical'"

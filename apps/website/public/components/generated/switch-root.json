@@ -37,7 +37,7 @@
         },
         {
             "name": "inputRef",
-            "type": ["React.Ref<HTMLInputElement>"],
+            "type": ["Ref<HTMLInputElement>"],
             "required": false,
             "description": "A ref to access the hidden `<input>` element."
         },
@@ -56,7 +56,7 @@
         },
         {
             "name": "onCheckedChange",
-            "type": ["(checked: boolean, eventDetails: Switch.Root.ChangeEventDetails) => void"],
+            "type": ["((checked: boolean, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Event handler called when the switch is activated or deactivated."
         },

@@ -56,15 +56,13 @@
         },
         {
             "name": "onCheckedChange",
-            "type": [
-                "(checked: boolean, eventDetails: Menu.RadioGroup.ChangeEventDetails) => void"
-            ],
+            "type": ["((checked: boolean, eventDetails: ChangeEventDetails) => void)"],
             "required": false,
             "description": "Event handler called when the checkbox item is ticked or unticked."
         },
         {
             "name": "onClick",
-            "type": ["(event: React.MouseEvent<HTMLElement, MouseEvent>) => void"],
+            "type": ["React.MouseEventHandler<HTMLElement>"],
             "required": false,
             "description": "The click handler for the menu item."
         },

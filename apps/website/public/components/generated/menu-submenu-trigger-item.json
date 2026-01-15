@@ -34,7 +34,7 @@
         },
         {
             "name": "onClick",
-            "type": ["(event: React.MouseEvent<HTMLElement, MouseEvent>) => void"],
+            "type": ["React.MouseEventHandler<HTMLElement>"],
             "required": false
         },
         {

@@ -10,7 +10,7 @@
         },
         {
             "name": "container",
-            "type": ["null", "HTMLElement", "React.RefObject<HTMLElement | null>"],
+            "type": ["HTMLElement", "React.RefObject<HTMLElement | null>", "null"],
             "required": false,
             "description": "A parent element to render the portal element into."
         }

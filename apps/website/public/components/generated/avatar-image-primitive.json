@@ -11,7 +11,7 @@
         },
         {
             "name": "onLoadingStatusChange",
-            "type": ["(status: \"loading\" | \"idle\" | \"loaded\" | \"error\") => void"],
+            "type": ["((status: ImageLoadingStatus) => void)"],
             "required": false,
             "description": "Callback fired when the loading status changes."
         },

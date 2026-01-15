@@ -5,17 +5,14 @@
     "props": [
         {
             "name": "align",
-            "type": ["center", "end", "start"],
+            "type": ["Align"],
             "required": false,
             "description": "How to align the popup relative to the specified side.",
             "defaultValue": "'center'"
         },
         {
             "name": "alignOffset",
-            "type": [
-                "number",
-                "(data: { side: Side; align: Align; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number"
-            ],
+            "type": ["number", "OffsetFunction"],
             "required": false,
             "description": "Additional offset along the alignment axis in pixels.\nAlso accepts a function that returns the offset to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",
             "defaultValue": "0"
@@ -23,11 +20,11 @@
         {
             "name": "anchor",
             "type": [
-                "null",
                 "Element",
                 "VirtualElement",
                 "React.RefObject<Element | null>",
-                "() => (null | Element | VirtualElement)"
+                "(() => Element | VirtualElement | null)",
+                "null"
             ],
             "required": false,
             "description": "An element to position the popup against.\nBy default, the popup will be positioned against the trigger."
@@ -47,28 +44,20 @@
         },
         {
             "name": "collisionAvoidance",
-            "type": ["SideFlipMode", "SideShiftMode"],
+            "type": ["CollisionAvoidance"],
             "required": false,
             "description": "Determines how to handle collisions when positioning the popup."
         },
         {
             "name": "collisionBoundary",
-            "type": [
-                "Element",
-                "\"clipping-ancestors\"",
-                "Element[]",
-                "{ x: number; y: number; height: number; width: number; }"
-            ],
+            "type": ["Boundary"],
             "required": false,
             "description": "An element or a rectangle that delimits the area that the popup is confined to.",
             "defaultValue": "'clipping-ancestors'"
         },
         {
             "name": "collisionPadding",
-            "type": [
-                "number",
-                "{ bottom?: number | undefined; left?: number | undefined; right?: number | undefined; top?: number | undefined; }"
-            ],
+            "type": ["Padding"],
             "required": false,
             "description": "Additional space to maintain from the edge of the collision boundary.",
             "defaultValue": "5"
@@ -88,17 +77,14 @@
         },
         {
             "name": "side",
-            "type": ["bottom", "left", "right", "top", "inline-end", "inline-start"],
+            "type": ["Side"],
             "required": false,
             "description": "Which side of the anchor element to align the popup against.\nMay automatically change to avoid collisions.",
             "defaultValue": "'top'"
         },
         {
             "name": "sideOffset",
-            "type": [
-                "number",
-                "(data: { side: Side; align: Align; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number"
-            ],
+            "type": ["number", "OffsetFunction"],
             "required": false,
             "description": "Distance between the anchor and the popup in pixels.\nAlso accepts a function that returns the distance to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",
             "defaultValue": "0"

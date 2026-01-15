@@ -11,7 +11,7 @@
         },
         {
             "name": "orientation",
-            "type": ["horizontal", "vertical"],
+            "type": ["Orientation"],
             "required": false,
             "description": "The orientation of the separator.",
             "defaultValue": "'horizontal'"

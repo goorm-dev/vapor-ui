@@ -16,7 +16,7 @@
         },
         {
             "name": "onClearErrors",
-            "type": ["(errors: Errors) => void"],
+            "type": ["((errors: FormContext['errors']) => void)"],
             "required": false,
             "description": "Event handler called when the `errors` object is cleared."
         },
