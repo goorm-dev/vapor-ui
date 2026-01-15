@@ -15,6 +15,7 @@ import {
     LIGHT_SEMANTIC_COLORS,
     LINE_HEIGHT,
     SPACE,
+    Z_INDEX,
 } from './tokens';
 
 const THEME_TOKENS = {
@@ -28,6 +29,7 @@ const THEME_TOKENS = {
         fontFamily: FONT_FAMILY,
         fontWeight: FONT_WEIGHT,
     },
+    stacking: Z_INDEX,
 };
 
 const DARK_THEME_TOKENS = {

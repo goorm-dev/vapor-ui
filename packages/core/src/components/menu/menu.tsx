@@ -65,7 +65,13 @@ export const MenuPortalPrimitive = BaseMenu.Portal;
 export const MenuPositionerPrimitive = forwardRef<HTMLDivElement, MenuPositionerPrimitive.Props>(
     (props, ref) => {
         // FIXME: Using resolveStyles causes all positioning-related style properties to reset, so it's temporarily disabled.
-        const { side = 'bottom', align = 'start', sideOffset = 4, ...componentProps } = props;
+        const {
+            side = 'bottom',
+            align = 'start',
+            sideOffset = 4,
+            className,
+            ...componentProps
+        } = props;
 
         return (
             <BaseMenu.Positioner
@@ -73,6 +79,7 @@ export const MenuPositionerPrimitive = forwardRef<HTMLDivElement, MenuPositioner
                 side={side}
                 align={align}
                 sideOffset={sideOffset}
+                className={clsx(styles.positioner, className)}
                 {...componentProps}
             />
         );

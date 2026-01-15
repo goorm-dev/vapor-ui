@@ -113,6 +113,9 @@ const durationVar = createVar('duration');
 const easingVar = createVar('easing');
 
 export const positioner = layerStyle('components', {
+    position: 'relative',
+    zIndex: vars.stacking.overlay,
+
     transitionProperty: 'top, left, right, bottom',
     transitionDuration: durationVar,
     transitionTimingFunction: easingVar,

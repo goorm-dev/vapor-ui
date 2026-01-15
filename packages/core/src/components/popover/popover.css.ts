@@ -3,6 +3,11 @@ import { style } from '@vanilla-extract/css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { vars } from '~/styles/themes.css';
 
+export const positioner = layerStyle('components', {
+    position: 'relative',
+    zIndex: vars.stacking.overlay,
+});
+
 export const popup = style({
     outline: 'none',
     border: `1px solid ${vars.color.border.normal}`,

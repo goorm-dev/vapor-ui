@@ -59,6 +59,7 @@ export const TooltipPositionerPrimitive = forwardRef<
         align = 'center',
         sideOffset = 8,
         collisionAvoidance,
+        className,
         ...componentProps
     } = resolveStyles(props);
 
@@ -69,6 +70,7 @@ export const TooltipPositionerPrimitive = forwardRef<
             align={align}
             sideOffset={sideOffset}
             collisionAvoidance={{ align: 'none', ...collisionAvoidance }}
+            className={clsx(styles.positioner, className)}
             {...componentProps}
         />
     );

@@ -2,6 +2,11 @@ import { layerStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
+export const positioner = layerStyle('components', {
+    position: 'relative',
+    zIndex: vars.stacking.overlay,
+});
+
 export const popup = [
     typography({ style: 'body3' }),
     layerStyle('components', {
