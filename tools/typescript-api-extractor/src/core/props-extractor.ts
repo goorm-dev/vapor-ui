@@ -1,4 +1,4 @@
-import { type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
+import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
 import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
 
@@ -9,14 +9,19 @@ import { isHtmlAttribute } from './html-attributes';
 import { cleanType } from './type-cleaner';
 import { resolveType } from './type-resolver';
 
-function findComponentVariableStatement(sourceFile: SourceFile, nsName: string) {
+function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
     return sourceFile
         .getVariableStatements()
-        .find((stmt) => stmt.getDeclarations().some((d) => d.getName() === nsName));
+        .find((statement) =>
+            statement.getDeclarations().some((d) => d.getName() === namespaceName),
+        );
 }
 
-function getComponentDescription(sourceFile: SourceFile, nsName: string): string | undefined {
-    const variableStatement = findComponentVariableStatement(sourceFile, nsName);
+function getComponentDescription(
+    sourceFile: SourceFile,
+    namespaceName: string,
+): string | undefined {
+    const variableStatement = findComponentVariableStatement(sourceFile, namespaceName);
     if (!variableStatement) return undefined;
 
     const jsDocs = variableStatement.getJsDocs();
@@ -25,13 +30,28 @@ function getComponentDescription(sourceFile: SourceFile, nsName: string): string
     return jsDocs[0].getDescription().trim() || undefined;
 }
 
-function getDefaultElement(sourceFile: SourceFile, nsName: string): string | undefined {
-    const variableStatement = findComponentVariableStatement(sourceFile, nsName);
+function getDefaultElement(sourceFile: SourceFile, namespaceName: string): string | undefined {
+    const variableStatement = findComponentVariableStatement(sourceFile, namespaceName);
     if (!variableStatement) return undefined;
 
     const text = variableStatement.getText();
     const match = text.match(/render:\s*render\s*\|\|\s*<(\w+)/);
     return match?.[1];
+}
+
+function getExportedNamespaces(sourceFile: SourceFile) {
+    return sourceFile
+        .getDescendantsOfKind(SyntaxKind.ModuleDeclaration)
+        .filter((module) => module.isExported());
+}
+
+function findExportedInterfaceProps(namespace: ModuleDeclaration) {
+    return namespace
+        .getInterfaces()
+        .find(
+            (exportInterface) =>
+                exportInterface.getName() === 'Props' && exportInterface.isExported(),
+        );
 }
 
 export interface ExtractOptions {
@@ -139,23 +159,19 @@ export function extractProps(
     // base-ui 타입 맵 빌드
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
 
-    const namespaces = sourceFile
-        .getDescendantsOfKind(SyntaxKind.ModuleDeclaration)
-        .filter((mod) => mod.isExported());
+    const namespaces = getExportedNamespaces(sourceFile);
 
-    for (const ns of namespaces) {
-        const nsName = ns.getName();
-        const propsInterface = ns
-            .getInterfaces()
-            .find((i) => i.getName() === 'Props' && i.isExported());
+    for (const namespace of namespaces) {
+        const namespaceName = namespace.getName();
+        const exportedInterfaceProps = findExportedInterfaceProps(namespace);
 
-        if (!propsInterface) continue;
+        if (!exportedInterfaceProps) continue;
 
         // namespace별로 defaultVariants 추출 (compound component 지원)
-        const defaultVariants = getDefaultVariantsForNamespace(sourceFile, nsName);
+        const defaultVariants = getDefaultVariantsForNamespace(sourceFile, namespaceName);
 
-        const description = getComponentDescription(sourceFile, nsName);
-        const propsType = propsInterface.getType();
+        const description = getComponentDescription(sourceFile, namespaceName);
+        const propsType = exportedInterfaceProps.getType();
         const allSymbols = propsType.getProperties();
         const includeSet = new Set(options.include ?? []);
 
@@ -165,7 +181,11 @@ export function extractProps(
 
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
-            const typeResult = cleanType(resolveType(symbol.getTypeAtLocation(propsInterface), baseUiMap));
+
+            const typeResult = cleanType(
+                resolveType(symbol.getTypeAtLocation(symbol.getDeclarations()[0]), baseUiMap),
+            );
+
             const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
 
             return {
@@ -179,11 +199,11 @@ export function extractProps(
         });
 
         const sortedProps = sortProps(propsWithSource);
-        const defaultElement = getDefaultElement(sourceFile, nsName);
+        const defaultElement = getDefaultElement(sourceFile, namespaceName);
 
         props.push({
-            name: nsName,
-            displayName: nsName,
+            name: namespaceName,
+            displayName: namespaceName,
             description: description || undefined,
             props: sortedProps,
             defaultElement,
