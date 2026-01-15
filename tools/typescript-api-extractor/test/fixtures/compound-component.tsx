@@ -1,4 +1,6 @@
-import { forwardRef, createContext, useContext } from 'react';
+// @ts-nocheck
+import { createContext, forwardRef, useContext } from 'react';
+
 import clsx from 'clsx';
 
 import * as styles from './compound-component.css';
