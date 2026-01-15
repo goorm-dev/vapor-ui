@@ -7,6 +7,9 @@ const easing = createGlobalVar('easing');
 const animationDuration = createGlobalVar('animation-duration');
 
 export const positioner = layerStyle('components', {
+    position: 'relative',
+    zIndex: vars.stacking.overlay,
+
     bottom: `calc(env(safe-area-inset-bottom) + ${vars.size.space['250']})`,
 
     transitionProperty: 'top, left, right, bottom, transform',

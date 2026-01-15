@@ -28,7 +28,7 @@ const outers = {
 
 export const viewport = layerStyle('components', {
     position: 'fixed',
-    zIndex: 1,
+    zIndex: vars.stacking.overlay,
     top: '1rem',
     right: '1rem',
     bottom: 'auto',

@@ -7,7 +7,7 @@ import { vars } from '~/styles/themes.css';
 
 export const overlay = layerStyle('components', {
     position: 'fixed',
-    zIndex: 50,
+    zIndex: vars.stacking.overlay,
     inset: 0,
 
     transition: 'opacity 0.15s cubic-bezier(.45,1.005,0,1.005)',
@@ -27,7 +27,7 @@ const SPACING = '2rem';
 export const popup = recipe({
     base: layerStyle('components', {
         position: 'fixed',
-        zIndex: 50,
+        zIndex: vars.stacking.overlay,
         top: '50%',
         left: '50%',
 

@@ -8,10 +8,12 @@ import { vars } from '~/styles/themes.css';
 
 export const positioner = layerStyle('components', {
     position: 'relative',
-    zIndex: 50, // TODO: move to vars
+    zIndex: vars.stacking.overlay,
 });
 
 export const popup = layerStyle('components', {
+    position: 'relative',
+
     display: 'flex',
     flexDirection: 'column',
 

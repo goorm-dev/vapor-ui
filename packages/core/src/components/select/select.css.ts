@@ -109,7 +109,7 @@ export const itemIndicator = style([foregrounds({ color: 'normal-200' }), icon])
 
 export const positioner = layerStyle('components', {
     position: 'relative',
-    zIndex: 50, // TODO: move to vars
+    zIndex: vars.stacking.overlay,
 });
 
 export const popup = layerStyle('components', {
