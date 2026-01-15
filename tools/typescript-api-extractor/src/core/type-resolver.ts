@@ -4,13 +4,24 @@
  * ts-morph Type 객체를 실제 타입 문자열로 변환합니다.
  * import 경로 대신 실제 리터럴 값을 추출합니다.
  */
-import type { Type } from 'ts-morph';
+import { type Node, type Type, TypeFormatFlags } from 'ts-morph';
 
 import {
     type BaseUiTypeMap,
     extractSimplifiedTypeName,
     resolveBaseUiType,
 } from './base-ui-type-resolver';
+
+/**
+ * TypeFormatFlags 조합
+ * - UseAliasDefinedOutsideCurrentScope: 외부 alias 이름 유지 (React.Ref → Ref)
+ * - NoTruncation: 타입 잘림 방지
+ * - WriteTypeArgumentsOfSignature: 제네릭 인수 유지
+ */
+const TYPE_FORMAT_FLAGS =
+    TypeFormatFlags.UseAliasDefinedOutsideCurrentScope |
+    TypeFormatFlags.NoTruncation |
+    TypeFormatFlags.WriteTypeArgumentsOfSignature;
 
 function extractPropsName(typeText: string): string | null {
     // Omit<...ComponentName.Props, "ref"> 패턴에서 Props 이름 추출
@@ -71,7 +82,11 @@ function getOriginalTypeText(type: Type): string | null {
 /**
  * 함수 타입을 파싱하여 파라미터와 반환 타입을 재귀적으로 변환합니다.
  */
-function resolveFunctionType(type: Type, baseUiMap?: BaseUiTypeMap): string | null {
+function resolveFunctionType(
+    type: Type,
+    baseUiMap?: BaseUiTypeMap,
+    contextNode?: Node,
+): string | null {
     const callSignatures = type.getCallSignatures();
     if (callSignatures.length === 0) return null;
 
@@ -127,12 +142,12 @@ function resolveFunctionType(type: Type, baseUiMap?: BaseUiTypeMap): string | nu
             }
         }
 
-        const resolvedParamType = resolveType(paramType, baseUiMap);
+        const resolvedParamType = resolveType(paramType, baseUiMap, contextNode);
         return `${paramName}: ${resolvedParamType}`;
     });
 
     // 반환 타입 변환
-    const resolvedReturnType = resolveType(returnType, baseUiMap);
+    const resolvedReturnType = resolveType(returnType, baseUiMap, contextNode);
 
     // 반환 타입이 유니온일 경우 괄호로 감싸서 splitTopLevelUnion에서 분리되지 않도록 함
     const needsParens = resolvedReturnType.includes(' | ');
@@ -142,14 +157,18 @@ function resolveFunctionType(type: Type, baseUiMap?: BaseUiTypeMap): string | nu
 }
 
 /**
- * React.Ref<T> 타입을 텍스트에서 감지하여 단순화합니다.
- * 예: React.Ref<HTMLInputElement> | undefined → React.Ref<HTMLInputElement>
+ * Ref<T> 타입을 감지하여 spread되지 않도록 유지합니다.
+ * TypeScript 컴파일러가 Ref<T>를 union(RefCallback | RefObject | null)으로 풀어버리므로
+ * getText() 결과에서 Ref 패턴을 감지하여 원본 형태로 유지합니다.
+ *
+ * @example
+ * 'React.Ref<HTMLInputElement> | undefined' → 'Ref<HTMLInputElement>'
+ * 'Ref<HTMLDivElement>' → 'Ref<HTMLDivElement>'
  */
-function simplifyReactRefType(typeText: string): string | null {
-    // React.Ref<...> 패턴 매칭
-    const refMatch = typeText.match(/React\.Ref<([^>]+)>/);
+function preserveRefType(typeText: string): string | null {
+    const refMatch = typeText.match(/^(React\.)?Ref<([^>]+)>(\s*\|\s*undefined)?$/);
     if (refMatch) {
-        return `React.Ref<${refMatch[1]}>`;
+        return `Ref<${refMatch[2]}>`;
     }
     return null;
 }
@@ -162,13 +181,13 @@ const PRESERVED_REACT_ALIASES = new Set([
     'ReactFragment',
 ]);
 
-export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap): string {
-    // 먼저 원본 타입 텍스트 확인
-    const rawText = type.getText();
+export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap, contextNode?: Node): string {
+    // contextNode가 있으면 TypeFormatFlags를 사용하여 import 경로를 alias로 변환
+    const rawText = contextNode ? type.getText(contextNode, TYPE_FORMAT_FLAGS) : type.getText();
 
-    // React.Ref<T> 타입은 확장하지 않고 유지
-    const reactRef = simplifyReactRefType(rawText);
-    if (reactRef) return reactRef;
+    // Ref<T> 타입은 컴파일러가 union으로 풀어버리므로 먼저 확인
+    const refType = preserveRefType(rawText);
+    if (refType) return refType;
 
     // Union 타입 처리 전에 alias 확인 (ReactNode 등은 spread하지 않음)
     const aliasSymbol = type.getAliasSymbol();
@@ -177,23 +196,6 @@ export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap): string {
         if (PRESERVED_REACT_ALIASES.has(aliasName)) {
             return aliasName;
         }
-    }
-
-    // Union 타입 처리
-    if (type.isUnion()) {
-        const unionTypes = type.getUnionTypes();
-        const resolvedTypes = unionTypes.map((t) => resolveType(t, baseUiMap));
-
-        // true | false → boolean으로 합치기
-        const hasTrue = resolvedTypes.includes('true');
-        const hasFalse = resolvedTypes.includes('false');
-        if (hasTrue && hasFalse) {
-            const filtered = resolvedTypes.filter((t) => t !== 'true' && t !== 'false');
-            filtered.push('boolean');
-            return filtered.join(' | ');
-        }
-
-        return resolvedTypes.join(' | ');
     }
 
     if (type.isBooleanLiteral()) {
@@ -216,33 +218,59 @@ export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap): string {
     if (simplified) return simplified;
 
     // 함수 타입 처리 (base-ui 타입 포함 여부와 관계없이)
-    const functionResult = resolveFunctionType(type, baseUiMap);
+    const functionResult = resolveFunctionType(type, baseUiMap, contextNode);
     if (functionResult) return functionResult;
 
-    // base-ui 타입 변환
+    // base-ui 타입 변환 (contextNode 없을 때 fallback)
     if (rawText.includes('@base-ui-components')) {
         if (baseUiMap) {
             const vaporPath = resolveBaseUiType(rawText, baseUiMap);
             if (vaporPath) return vaporPath;
         }
-        // Fallback: 모든 import 경로를 단순화된 이름으로 대체
         return simplifyNodeModulesImports(rawText);
     }
 
-    // @floating-ui 등 다른 node_modules import 경로 단순화
+    // import 경로가 남아있으면 제거
     if (rawText.includes('import(')) {
         return simplifyNodeModulesImports(rawText);
     }
 
-    return rawText;
+    // ForwardRefExoticComponent<Omit<X.Props, "ref"> & ...> → X.Props
+    // ReactElement<X, string | React.JSXElementConstructor<any>> → ReactElement<X>
+    return simplifyReactElementGeneric(simplifyForwardRefType(rawText));
+}
+
+export function simplifyNodeModulesImports(typeText: string): string {
+    return typeText.replace(/import\(["'].*?["']\)\./g, '');
 }
 
 /**
- * 타입 문자열에서 node_modules import 경로를 단순화된 이름으로 대체합니다.
- * 예: import(".../@base-ui-components/.../types").HTMLProps<any> → HTMLProps<any>
- * 예: import(".../@floating-ui/dom/...").VirtualElement → VirtualElement
+ * ReactElement의 두 번째 type parameter를 제거합니다.
+ * TypeScript가 기본값을 자동으로 펼쳐서 출력하므로 이를 정리합니다.
+ *
+ * @example
+ * 'ReactElement<X.Props, string | React.JSXElementConstructor<any>>' → 'ReactElement<X.Props>'
+ * 'ReactElement<ComplexType<T>, string | React.JSXElementConstructor<any>>' → 'ReactElement<ComplexType<T>>'
  */
-function simplifyNodeModulesImports(typeText: string): string {
-    // import("...").TypeName 또는 import("...").TypeName<...> 패턴 매칭
-    return typeText.replace(/import\([^)]+\)\.(\w+)/g, '$1');
+export function simplifyReactElementGeneric(typeText: string): string {
+    // 두 번째 인자 패턴만 제거 (첫 번째 인자는 복잡한 중첩 타입일 수 있음)
+    return typeText.replace(
+        /,\s*string \| React\.JSXElementConstructor<any>>/g,
+        '>',
+    );
+}
+
+/**
+ * ForwardRefExoticComponent 타입을 Props로 단순화합니다.
+ * typeof ComponentName이 ForwardRefExoticComponent<...Props...>로 확장되는 것을 방지합니다.
+ *
+ * @example
+ * 'React.ForwardRefExoticComponent<Omit<X.Props, "ref"> & React.RefAttributes<HTMLDivElement>>' → 'X.Props'
+ * 'ReactElement<React.ForwardRefExoticComponent<...>>' → 'ReactElement<X.Props>'
+ */
+export function simplifyForwardRefType(typeText: string): string {
+    return typeText.replace(
+        /React\.ForwardRefExoticComponent<Omit<([^,]+\.Props), "ref"> & React\.RefAttributes<[^>]+>>/g,
+        '$1',
+    );
 }

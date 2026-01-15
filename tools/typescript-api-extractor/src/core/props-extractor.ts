@@ -181,9 +181,9 @@ export function extractProps(
 
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
-
+            const declNode = symbol.getDeclarations()[0] ?? exportedInterfaceProps;
             const typeResult = cleanType(
-                resolveType(symbol.getTypeAtLocation(symbol.getDeclarations()[0]), baseUiMap),
+                resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode),
             );
 
             const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
