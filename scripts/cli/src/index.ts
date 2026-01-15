@@ -8,7 +8,7 @@ const pkgJson = createRequire(import.meta.url)('../package.json');
 const program = new Command()
     .name('@vapor-ui/cli')
     .description('Vapor UI CLI tools')
-    .version(pkgJson.version);
+    .version(pkgJson.version, '-v, --version', 'output the current version');
 
 program.addCommand(usageCommand);
 program.parse(process.argv);

@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 import type { sheets_v4 } from 'googleapis';
 import { GoogleApis } from 'googleapis';
 
-config();
+config({ quiet: true });
 
 function readEnv() {
     const CLIENT_EMAIL = process.env.CLIENT_EMAIL || process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '';

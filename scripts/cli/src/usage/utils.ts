@@ -2,6 +2,7 @@ import { createPathsMatcher, getTsconfig } from 'get-tsconfig';
 import { glob } from 'glob';
 import fs from 'node:fs';
 import path from 'node:path';
+import pico from 'picocolors';
 
 import type { Spreadsheet } from '~/utils/google';
 import { createSheets } from '~/utils/google';
@@ -54,7 +55,7 @@ export async function resolveTargetFiles(cwd: string, target: string) {
     // 2. Glob Pattern
     const files = await findFilesFromGlob(cwd, target);
     if (files.length === 0) {
-        console.warn(`[Warning] No files found for target: ${target}`);
+        console.warn(`[Warning] No files found for target: ${pico.yellow(target)}`);
     }
 
     return files;
@@ -148,7 +149,7 @@ export function getTsconfigPathsMatcher() {
     const tsconfigResult = getTsconfig();
 
     if (!tsconfigResult) {
-        console.log('No tsconfig.json found. Alias resolution will be disabled.');
+        console.log(pico.gray('No tsconfig.json found. Alias resolution will be disabled.'));
         return null;
     }
 
@@ -179,7 +180,7 @@ async function ensureSheet(sheet: Spreadsheet, repo: string) {
     const sheets = await sheet.getSheets();
 
     if (!sheets.some((s) => s.properties?.title === repo)) {
-        console.log(`Sheet '${repo}' not found. Creating new sheet...`);
+        console.log(pico.gray(`Sheet '${repo}' not found. Creating new sheet...`));
         await sheet.addSheet(repo);
     }
 }
@@ -354,7 +355,7 @@ export async function submitAnalysis({ repo, usageByEntry, packageName }: Submit
 
         // 4. Save
         await sheetClient.setValues(`${repo}!A1`, finalRows);
-        console.log(`Successfully logged ${newRows.length} entries to Google Sheets.`);
+        console.log(pico.bold(`Successfully logged ${newRows.length} entries to Google Sheets.`));
     } catch (error) {
         console.error('Error updating usage report:', error);
     }

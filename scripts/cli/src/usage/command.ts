@@ -4,6 +4,7 @@ import type { ImportDeclaration, JSXOpeningElement } from '@babel/types';
 import { Command } from 'commander';
 import fs from 'node:fs';
 import path from 'node:path';
+import pico from 'picocolors';
 
 import type { PathsMatcher } from './utils';
 import {
@@ -161,13 +162,15 @@ export async function usageCommand(targets: string[], options: RunOptions) {
     const initialTargets = targets.length > 0 ? targets : ['.'];
     const cwd = process.cwd();
 
-    console.log(`Analyzing targets (mode: ${shallow ? 'Shallow' : 'Deep'})`);
-    console.log(`\n- ${initialTargets.join('\n- ')}`);
+    console.log(pico.cyan(`\n[ @vapor-ui/cli ]\n`));
+
+    console.log(`Analyzing targets ${pico.gray(`(mode: ${shallow ? 'Shallow' : 'Deep'})`)}`);
+    console.log(pico.gray(`- ${initialTargets.join('\n- ')}`));
 
     const pathsMatcher = getTsconfigPathsMatcher();
     const entries = await expandTargetFiles(cwd, initialTargets);
 
-    console.log(`\nFound ${entries.length} entry files to analyze.`);
+    console.log(`\nFound ${entries.length} entry files to analyze.\n`);
 
     // --- Usage Analysis Loop ---
     const fileAnalysisCache = createAnalysisCache<string, AnalyzeFileResult>();
