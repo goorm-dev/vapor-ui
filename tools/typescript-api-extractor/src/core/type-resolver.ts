@@ -254,10 +254,7 @@ export function simplifyNodeModulesImports(typeText: string): string {
  */
 export function simplifyReactElementGeneric(typeText: string): string {
     // 두 번째 인자 패턴만 제거 (첫 번째 인자는 복잡한 중첩 타입일 수 있음)
-    return typeText.replace(
-        /,\s*string \| React\.JSXElementConstructor<any>>/g,
-        '>',
-    );
+    return typeText.replace(/,\s*string \| React\.JSXElementConstructor<any>>/g, '>');
 }
 
 /**

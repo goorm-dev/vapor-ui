@@ -1,12 +1,12 @@
 import path from 'node:path';
-
-import { describe, expect, it } from 'vitest';
 import { TypeFormatFlags } from 'ts-morph';
+import { describe, expect, it } from 'vitest';
 
 import { addSourceFiles, createProject } from '~/core/project';
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
-const TABS_PATH = '/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tabs/tabs.tsx';
+const TABS_PATH =
+    '/Users/goorm/design-system/gds/vapor-ui/packages/core/src/components/tabs/tabs.tsx';
 
 describe('TypeFormatFlags 실험', () => {
     function setup(fileName: string) {
@@ -20,9 +20,7 @@ describe('TypeFormatFlags 실험', () => {
         const { sourceFile } = setup('simple-component.tsx');
 
         // SimpleButton namespace에서 Props interface 찾기
-        const namespace = sourceFile
-            .getModules()
-            .find((m) => m.getName() === 'SimpleButton');
+        const namespace = sourceFile.getModules().find((m) => m.getName() === 'SimpleButton');
         const propsInterface = namespace?.getInterface('Props');
 
         if (!propsInterface) {
@@ -130,8 +128,7 @@ describe('TypeFormatFlags 실험', () => {
     });
 
     it('tabs.tsx base-ui 타입 비교', () => {
-        const tsconfigPath =
-            '/Users/goorm/design-system/gds/vapor-ui/packages/core/tsconfig.json';
+        const tsconfigPath = '/Users/goorm/design-system/gds/vapor-ui/packages/core/tsconfig.json';
         const project = createProject(tsconfigPath);
         const [sourceFile] = addSourceFiles(project, [TABS_PATH]);
 

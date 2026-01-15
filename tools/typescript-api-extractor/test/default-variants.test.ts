@@ -1,13 +1,13 @@
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { addSourceFiles, createProject } from '~/core/project';
 import {
-    findStyleImports,
     findRecipeUsageInComponent,
-    parseRecipeDefaultVariants,
+    findStyleImports,
     getDefaultVariantsForNamespace,
+    parseRecipeDefaultVariants,
 } from '~/core/default-variants';
+import { addSourceFiles, createProject } from '~/core/project';
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
 
@@ -46,9 +46,7 @@ describe('findStyleImports', () => {
 
     it('should return empty array when no .css imports exist', () => {
         const project = setupProject();
-        const [sourceFile] = addSourceFiles(project, [
-            path.join(FIXTURES_DIR, 'props-sample.tsx'),
-        ]);
+        const [sourceFile] = addSourceFiles(project, [path.join(FIXTURES_DIR, 'props-sample.tsx')]);
 
         const imports = findStyleImports(sourceFile);
 
@@ -98,9 +96,7 @@ describe('findRecipeUsageInComponent', () => {
 
     it('should return null for components without recipe usage', () => {
         const project = setupProject();
-        const [sourceFile] = addSourceFiles(project, [
-            path.join(FIXTURES_DIR, 'props-sample.tsx'),
-        ]);
+        const [sourceFile] = addSourceFiles(project, [path.join(FIXTURES_DIR, 'props-sample.tsx')]);
 
         const recipe = findRecipeUsageInComponent(sourceFile, 'Simple', 'styles');
 
@@ -197,9 +193,7 @@ describe('getDefaultVariantsForNamespace', () => {
 
     it('should return empty object when no style imports exist', () => {
         const project = setupProject();
-        const [sourceFile] = addSourceFiles(project, [
-            path.join(FIXTURES_DIR, 'props-sample.tsx'),
-        ]);
+        const [sourceFile] = addSourceFiles(project, [path.join(FIXTURES_DIR, 'props-sample.tsx')]);
 
         const defaults = getDefaultVariantsForNamespace(sourceFile, 'Simple');
 
