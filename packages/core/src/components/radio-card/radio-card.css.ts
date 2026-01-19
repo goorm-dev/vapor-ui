@@ -3,15 +3,11 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
-import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: [
         interaction(),
-        typography({
-            style: 'subtitle1',
-        }),
         layerStyle('components', {
             display: 'flex',
             alignItems: 'center',
@@ -48,11 +44,11 @@ export const root = recipe({
         },
         size: {
             md: layerStyle('components', {
-                height: vars.size.dimension['400'],
+                paddingBlock: '0.3125rem',
                 paddingInline: vars.size.space['150'],
             }),
             lg: layerStyle('components', {
-                height: vars.size.dimension['500'],
+                paddingBlock: '0.3125rem',
                 paddingInline: vars.size.space['200'],
             }),
         },
