@@ -7,9 +7,7 @@ export default function RadioCardWithContent() {
 
     return (
         <div className="space-y-4">
-            <Text typography="body2">
-                선택된 플랜: {value}
-            </Text>
+            <Text typography="body2">선택된 플랜: {value}</Text>
             <RadioGroup.Root
                 name="pricing-plan"
                 value={value}
