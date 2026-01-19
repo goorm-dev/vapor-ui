@@ -1,0 +1,55 @@
+{
+    "name": "@internal/cli",
+    "version": "0.0.1",
+    "type": "module",
+    "bin": {
+        "vapor": "bin/index.mjs"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "src",
+        "bin"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "clean": "rimraf dist node_modules .turbo",
+        "format": "prettier --write \"./src/**/*.{js,jsx,mjs,ts,tsx,md}\"",
+        "format:check": "prettier --check \"./src/**/*.{js,jsx,mjs,ts,tsx,md}\"",
+        "lint": "eslint ./src",
+        "test": "vitest --run"
+    },
+    "dependencies": {
+        "@babel/core": "^7.28.5",
+        "@babel/types": "^7.28.5",
+        "commander": "^11.0.0",
+        "dotenv": "^17.2.3",
+        "fs-extra": "^11.1.1",
+        "glob": "^13.0.0",
+        "googleapis": "^170.0.0",
+        "picocolors": "^1.1.1"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:^",
+        "@repo/typescript-config": "workspace:^",
+        "@types/babel__core": "^7.20.5",
+        "@types/fs-extra": "^11.0.1",
+        "@types/node": "^25.0.6",
+        "@vitest/coverage-v8": "^3.2.4",
+        "eslint": "^9.39.2",
+        "get-tsconfig": "^4.13.0",
+        "prettier": "^3.7.4",
+        "tsup": "^8.5.1",
+        "typescript": "^5.9.2",
+        "vitest": "^3.2.4"
+    }
+}
