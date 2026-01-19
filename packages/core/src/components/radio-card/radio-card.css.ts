@@ -17,6 +17,8 @@ export const root = recipe({
             borderRadius: vars.size.borderRadius[300],
             color: vars.color.foreground.normal[200],
             cursor: 'pointer',
+            paddingBlock: '0.3125rem',
+            paddingInline: vars.size.space['150'],
 
             selectors: {
                 '&[data-checked]': {
@@ -35,22 +37,11 @@ export const root = recipe({
 
     defaultVariants: {
         invalid: false,
-        size: 'md',
     },
 
     variants: {
         invalid: {
             true: {},
-        },
-        size: {
-            md: layerStyle('components', {
-                paddingBlock: '0.3125rem',
-                paddingInline: vars.size.space['150'],
-            }),
-            lg: layerStyle('components', {
-                paddingBlock: '0.3125rem',
-                paddingInline: vars.size.space['200'],
-            }),
         },
     },
 });
