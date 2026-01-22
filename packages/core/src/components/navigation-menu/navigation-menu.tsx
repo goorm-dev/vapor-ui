@@ -102,7 +102,7 @@ NavigationMenuItem.displayName = 'NavigationMenu.Item';
 export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLink.Props>(
     (props, ref) => {
         const {
-            selected,
+            current,
             href,
             disabled: disabledProp,
             className,
@@ -112,7 +112,7 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
 
         const disabled = disabledProp ?? contextDisabled;
         const dataAttrs = createDataAttributes({
-            selected,
+            current,
             disabled,
         });
 
@@ -120,7 +120,7 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
             <BaseNavigationMenu.Link
                 ref={ref}
                 href={disabled ? undefined : href}
-                aria-current={selected ? 'page' : undefined}
+                aria-current={current ? 'page' : undefined}
                 aria-disabled={disabled ? 'true' : undefined}
                 className={clsx(styles.link({ size }), className)}
                 {...dataAttrs}
@@ -449,7 +449,7 @@ export namespace NavigationMenuItem {
 export namespace NavigationMenuLink {
     type LinkPrimitiveProps = Omit<VComponentProps<typeof BaseNavigationMenu.Link>, 'active'>;
     export interface Props extends LinkPrimitiveProps {
-        selected?: boolean;
+        current?: boolean;
         disabled?: boolean;
     }
 }
