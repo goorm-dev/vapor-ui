@@ -67,7 +67,7 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
     const shouldShowDeviceToggle = selectedTab === TAB_TYPES['PREVIEW'] && showResponsiveToggle;
 
     return (
-        <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-v-300">
+        <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-t-v-300">
             <Box
                 display="flex"
                 justifyContent="space-between"
