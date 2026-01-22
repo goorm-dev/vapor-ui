@@ -13,58 +13,65 @@ Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
 2. Clone your fork:
-   ```bash
-   git clone https://github.com/<YOUR_USERNAME>/vapor-ui.git
-   cd vapor-ui
-   ```
+
+    ```bash
+    git clone https://github.com/<YOUR_USERNAME>/vapor-ui.git
+    cd vapor-ui
+    ```
 
 3. Install dependencies:
-   ```bash
-   pnpm install
-   ```
+
+    ```bash
+    pnpm install
+    ```
 
 4. Navigate to the codemod package:
-   ```bash
-   cd packages/codemod
-   ```
+    ```bash
+    cd packages/codemod
+    ```
 
 ### Making Changes
 
 1. Create your Feature Branch:
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
+
+    ```bash
+    git checkout -b feature/AmazingFeature
+    ```
 
 2. Make your changes and test them:
-   ```bash
-   # Build the codemod
-   pnpm build
 
-   # Test on a sample project
-   node bin/vapor-codemod.js <transform> <path>
-   ```
+    ```bash
+    # Build the codemod
+    pnpm build
+
+    # Test on a sample project
+    node bin/vapor-codemod.js <transform> <path>
+    ```
 
 3. Write or update tests:
-   ```bash
-   pnpm test
-   ```
+
+    ```bash
+    pnpm test
+    ```
 
 4. Commit your Changes using [Conventional Commits](https://www.conventionalcommits.org/):
-   ```bash
-   git commit -m 'feat(transform): Add some AmazingFeature'
-   ```
 
-   Common commit types:
-   - `feat`: New transform or feature
-   - `fix`: Bug fix in existing transform
-   - `docs`: Documentation changes
-   - `test`: Adding or updating tests
-   - `refactor`: Code refactoring
+    ```bash
+    git commit -m 'feat(transform): Add some AmazingFeature'
+    ```
+
+    Common commit types:
+    - `feat`: New transform or feature
+    - `fix`: Bug fix in existing transform
+    - `docs`: Documentation changes
+    - `test`: Adding or updating tests
+    - `refactor`: Code refactoring
 
 5. Push to the Branch:
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
+
+    ```bash
+    git push origin feature/AmazingFeature
+    ```
 
 6. Open a Pull Request
 
@@ -79,6 +86,7 @@ When adding a new transform:
 5. Document the transform in README.md
 
 Example transform structure:
+
 ```
 src/transforms/
   internal/
@@ -104,14 +112,16 @@ src/transforms/
 Before submitting:
 
 1. Run tests:
-   ```bash
-   pnpm test
-   ```
+
+    ```bash
+    pnpm test
+    ```
 
 2. Build the package:
-   ```bash
-   pnpm build
-   ```
+
+    ```bash
+    pnpm build
+    ```
 
 3. Test on real-world code if possible
 
