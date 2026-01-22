@@ -14,6 +14,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+[![Beta][beta-shield]][beta-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -43,7 +44,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#about-the-project">Vapor UI</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
@@ -56,6 +57,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#support">Support</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -64,9 +66,9 @@
   </ol>
 </details>
 
-<!-- ABOUT THE PROJECT -->
+<!-- Vapor UI -->
 
-## About The Project
+## Vapor UI
 
 Vapor UI is a modern, accessible React component library designed to help developers build high-quality web applications quickly. With 34+ components built on top of Base UI primitives and styled with Vanilla Extract, Vapor UI provides a flexible foundation that's easy to customize and integrate into your projects.
 
@@ -148,7 +150,64 @@ function App() {
 }
 ```
 
+### More Examples
+
+**Using with TypeScript:**
+
+```tsx
+import { Button, type ButtonProps } from '@vapor-ui/core';
+
+interface CustomButtonProps extends ButtonProps {
+  label: string;
+}
+
+function CustomButton({ label, ...props }: CustomButtonProps) {
+  return <Button {...props}>{label}</Button>;
+}
+```
+
+**Theming:**
+
+```tsx
+import { Box } from '@vapor-ui/core';
+
+function ThemedComponent() {
+  return (
+    <Box
+      padding="4"
+      backgroundColor="primary"
+      color="white"
+      borderRadius="md"
+    >
+      Themed Box
+    </Box>
+  );
+}
+```
+
 _For comprehensive documentation, examples, and API references, please visit the [Documentation](https://vapor-ui.goorm.io)_
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- SUPPORT -->
+
+## Support
+
+If you need help with Vapor UI, here are some resources:
+
+### Documentation
+- [Official Documentation](https://vapor-ui.goorm.io) - Comprehensive guides and API references
+- [Component Examples](https://vapor-ui.goorm.io/components) - Interactive component demos
+
+### Getting Help
+- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/goorm-dev/vapor-ui/issues)
+- **Discord**: Join our community for real-time discussions at [Discord](https://discord.gg/PMqxs3xaHC)
+- **Email**: Contact the Vapor team at vapor.ui@goorm.io
+
+### Common Questions
+- **Installation issues?** Check our [Getting Started guide](https://vapor-ui.goorm.io/getting-started)
+- **Component not working?** Review the [component documentation](https://vapor-ui.goorm.io/components)
+- **Styling questions?** See our [Theming guide](https://vapor-ui.goorm.io/theming)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -171,22 +230,13 @@ See the [open issues](https://github.com/goorm-dev/vapor-ui/issues) for a full l
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines on:
+- Setting up your development environment
+- Making changes and testing
+- Code quality standards
+- Pull request process
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-### Top contributors:
-
-<a href="https://github.com/goorm-dev/vapor-ui/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=goorm-dev/vapor-ui" alt="contrib.rocks image" />
-</a>
 
 <!-- LICENSE -->
 
@@ -206,6 +256,19 @@ Project Link: [https://github.com/goorm-dev/vapor-ui](https://github.com/goorm-d
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- ACKNOWLEDGMENTS -->
+
+## Acknowledgments
+
+Special thanks to the open-source projects that make Vapor UI possible:
+
+- [React](https://reactjs.org/) - A JavaScript library for building user interfaces
+- [Base UI](https://base-ui.com/) - Unstyled React components and hooks
+- [Vanilla Extract](https://vanilla-extract.style/) - Zero-runtime CSS-in-JS
+- [TypeScript](https://www.typescriptlang.org/) - JavaScript with syntax for types
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
@@ -219,6 +282,8 @@ Project Link: [https://github.com/goorm-dev/vapor-ui](https://github.com/goorm-d
 [issues-url]: https://github.com/goorm-dev/vapor-ui/issues
 [license-shield]: https://img.shields.io/github/license/goorm-dev/vapor-ui.svg?style=for-the-badge
 [license-url]: https://github.com/goorm-dev/vapor-ui/blob/main/LICENSE
+[beta-shield]: https://img.shields.io/badge/status-beta-orange?style=for-the-badge
+[beta-url]: https://github.com/goorm-dev/vapor-ui/releases
 
 <!-- Technology badges -->
 
