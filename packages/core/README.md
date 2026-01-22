@@ -155,14 +155,14 @@ function App() {
 **Using with TypeScript:**
 
 ```tsx
-import { Button, type ButtonProps } from '@vapor-ui/core';
+import { Button } from '@vapor-ui/core';
 
-interface CustomButtonProps extends ButtonProps {
-  label: string;
+interface CustomButtonProps extends Button.Props {
+    label: string;
 }
 
 function CustomButton({ label, ...props }: CustomButtonProps) {
-  return <Button {...props}>{label}</Button>;
+    return <Button {...props}>{label}</Button>;
 }
 ```
 
@@ -172,16 +172,11 @@ function CustomButton({ label, ...props }: CustomButtonProps) {
 import { Box } from '@vapor-ui/core';
 
 function ThemedComponent() {
-  return (
-    <Box
-      padding="4"
-      backgroundColor="primary"
-      color="white"
-      borderRadius="md"
-    >
-      Themed Box
-    </Box>
-  );
+    return (
+        <Box padding="4" backgroundColor="primary" color="white" borderRadius="md">
+            Themed Box
+        </Box>
+    );
 }
 ```
 
@@ -196,18 +191,19 @@ _For comprehensive documentation, examples, and API references, please visit the
 If you need help with Vapor UI, here are some resources:
 
 ### Documentation
+
 - [Official Documentation](https://vapor-ui.goorm.io) - Comprehensive guides and API references
-- [Component Examples](https://vapor-ui.goorm.io/components) - Interactive component demos
+- [Component Examples](https://vapor-ui.goorm.io/docs/getting-started/overview#components) - Interactive component demos
 
 ### Getting Help
+
 - **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/goorm-dev/vapor-ui/issues)
-- **Discord**: Join our community for real-time discussions at [Discord](https://discord.gg/PMqxs3xaHC)
-- **Email**: Contact the Vapor team at vapor.ui@goorm.io
 
 ### Common Questions
-- **Installation issues?** Check our [Getting Started guide](https://vapor-ui.goorm.io/getting-started)
-- **Component not working?** Review the [component documentation](https://vapor-ui.goorm.io/components)
-- **Styling questions?** See our [Theming guide](https://vapor-ui.goorm.io/theming)
+
+- **Installation issues?** Check our [Getting Started guide](https://vapor-ui.goorm.io/docs/getting-started/installation)
+- **Component not working?** Review the [component documentation](https://vapor-ui.goorm.io/docs/getting-started/overview#components)
+- **Styling questions?** See our [Theming guide](https://vapor-ui.goorm.io/docs/getting-started/theming)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -231,6 +227,7 @@ See the [open issues](https://github.com/goorm-dev/vapor-ui/issues) for a full l
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines on:
+
 - Setting up your development environment
 - Making changes and testing
 - Code quality standards

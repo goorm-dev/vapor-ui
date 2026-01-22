@@ -14,6 +14,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+[![Beta][beta-shield]][beta-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -433,7 +434,11 @@ See the [open issues](https://github.com/goorm-dev/vapor-ui/issues) for a full l
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines
+Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines on:
+- Setting up your development environment
+- Making changes and testing
+- Code quality standards
+- Pull request process
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -459,8 +464,12 @@ Project Link: [https://github.com/goorm-dev/vapor-ui](https://github.com/goorm-d
 
 ## Acknowledgments
 
+Special thanks to the open-source projects that make @vapor-ui/codemod possible:
+
 - [jscodeshift](https://github.com/facebook/jscodeshift) - The powerful AST transformation framework that powers this tool
+- [TypeScript](https://www.typescriptlang.org/) - JavaScript with syntax for types
 - [Inquirer](https://github.com/SBoudrias/Inquirer.js) - Interactive command-line interface
+- [Node.js](https://nodejs.org/) - JavaScript runtime built on Chrome's V8 engine
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -477,6 +486,8 @@ Project Link: [https://github.com/goorm-dev/vapor-ui](https://github.com/goorm-d
 [issues-url]: https://github.com/goorm-dev/vapor-ui/issues
 [license-shield]: https://img.shields.io/github/license/goorm-dev/vapor-ui.svg?style=for-the-badge
 [license-url]: https://github.com/goorm-dev/vapor-ui/blob/main/LICENSE
+[beta-shield]: https://img.shields.io/badge/status-beta-orange?style=for-the-badge
+[beta-url]: https://github.com/goorm-dev/vapor-ui/releases
 
 <!-- Technology badges -->
 
