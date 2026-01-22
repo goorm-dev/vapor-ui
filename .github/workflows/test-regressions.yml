@@ -1,4 +1,4 @@
-name: 'Tests'
+name: 'Visual Regression'
 
 on:
     workflow_dispatch:
@@ -25,7 +25,7 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    regressions:
+    test:
         runs-on: macos-latest
         strategy:
             fail-fast: false
@@ -33,9 +33,9 @@ jobs:
                 shard:
                     [
                         { name: firefox, project: firefox },
-                        { name: webkit, project: webkit },
-                        { name: chromium, project: chromium },
-                        { name: 'Microsoft Edge', project: msedge },
+                        { name: safari, project: webkit },
+                        { name: chrome, project: chromium },
+                        { name: edge, project: chromium },
                     ]
 
         steps:
@@ -51,7 +51,7 @@ jobs:
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
             - name: Build Icons
-              run: pnpm build --filter=@vapor-ui/icons
+              run: pnpm turbo --filter @vapor-ui/icons build
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
@@ -60,13 +60,13 @@ jobs:
               if: ${{ !cancelled() }}
               uses: actions/upload-artifact@v4
               with:
-                  name: blob-report-${{ matrix.shard.project }}
+                  name: blob-report-${{ matrix.shard.name }}
                   path: packages/core/blob-report
                   retention-days: 1
 
     merge-reports:
         if: ${{ !cancelled() }}
-        needs: [regressions]
+        needs: [test]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -144,7 +144,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ contains(needs.regressions.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ contains(needs.test.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |
