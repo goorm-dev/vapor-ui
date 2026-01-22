@@ -386,8 +386,6 @@ If you need help with @vapor-ui/codemod, here are some resources:
 ### Getting Help
 
 - **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/goorm-dev/vapor-ui/issues)
-- **Discord**: Join our community for real-time discussions at [Discord](https://discord.gg/PMqxs3xaHC)
-- **Email**: Contact the Vapor team at vapor.ui@goorm.io
 
 ### Common Issues
 
@@ -435,10 +433,6 @@ See the [open issues](https://github.com/goorm-dev/vapor-ui/issues) for a full l
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines on:
-- Setting up your development environment
-- Making changes and testing
-- Code quality standards
-- Pull request process
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
