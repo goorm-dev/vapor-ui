@@ -69,21 +69,26 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
     return (
         <Card.Header className="p-0 border-b-0 pt-v-50">
             <Box
-                paddingY="$000"
-                paddingX="$300"
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
                 gap="$050"
                 height={'$500'}
+                width="100%"
             >
-                <Tabs.List>
+                <Tabs.List
+                    width="100%"
+                    paddingX="$300"
+                    indicatorElement={
+                        <Tabs.IndicatorPrimitive renderBeforeHydration className="left-0" />
+                    }
+                    border="none"
+                >
                     {Object.values(TAB_TYPES).map((tab) => (
                         <Tabs.Button key={tab} value={tab}>
                             {tab}
                         </Tabs.Button>
                     ))}
-                    <Tabs.IndicatorPrimitive renderBeforeHydration />
                 </Tabs.List>
                 {shouldShowDeviceToggle && (
                     <ButtonToggleGroup
