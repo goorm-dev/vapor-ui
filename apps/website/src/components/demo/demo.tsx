@@ -75,10 +75,10 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
                 gap="$050"
                 height={'$500'}
                 width="100%"
+                paddingX="$300"
             >
                 <Tabs.List
                     width="100%"
-                    paddingX="$300"
                     indicatorElement={
                         <Tabs.IndicatorPrimitive renderBeforeHydration className="left-0" />
                     }
