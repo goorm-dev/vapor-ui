@@ -2,6 +2,7 @@ import './global.css';
 
 import type { ReactNode } from 'react';
 
+import { Analytics } from '@vercel/analytics/next';
 import { ThemeProvider } from '@vapor-ui/core/theme-provider';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { Inter } from 'next/font/google';
@@ -44,6 +45,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                         {children}
                     </ThemeProvider>
                 </RootProvider>
+                <Analytics />
             </body>
         </html>
     );
