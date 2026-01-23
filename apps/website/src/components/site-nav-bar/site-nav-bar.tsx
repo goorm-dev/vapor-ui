@@ -65,7 +65,7 @@ const WebNavigation = () => {
                     <NavigationMenu.Item key={item.href}>
                         <NavigationMenu.Link
                             href={item.href}
-                            selected={pathname.includes(item.href)}
+                            current={pathname.includes(item.href)}
                             render={<Link>{item.label}</Link>}
                         />
                     </NavigationMenu.Item>
