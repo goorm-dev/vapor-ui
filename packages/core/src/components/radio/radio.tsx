@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { Radio as BaseRadio, useRender } from '@base-ui-components/react';
+import { Radio as BaseRadio, useRender } from '@base-ui/react';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';
@@ -21,7 +21,7 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
-export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, ref) => {
+export const RadioRoot = forwardRef<HTMLSpanElement, RadioRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 

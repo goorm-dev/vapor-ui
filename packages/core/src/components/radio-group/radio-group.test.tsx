@@ -1,6 +1,6 @@
 import { act } from 'react';
 
-import { Radio } from '@base-ui-components/react';
+import { Radio } from '@base-ui/react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
@@ -13,10 +13,10 @@ const OPTION_2 = 'Option 2';
 const RadioGroupTest = (props: RadioGroup.Root.Props) => {
     return (
         <RadioGroup.Root {...props}>
-            <Radio.Root id="option1" value="option1" />
+            <Radio.Root id="option1" value="option1" aria-label={OPTION_1} />
             <label htmlFor="option1">{OPTION_1}</label>
 
-            <Radio.Root id="option2" value="option2" />
+            <Radio.Root id="option2" value="option2" aria-label={OPTION_2} />
             <label htmlFor="option2">{OPTION_2}</label>
         </RadioGroup.Root>
     );
@@ -69,9 +69,9 @@ describe('RadioGroup', () => {
             expect(radioGroup).toHaveAttribute('aria-disabled', 'true');
             expect(radioGroup).toHaveAttribute('data-disabled');
 
-            expect(firstItem).toBeDisabled();
+            expect(firstItem).toHaveAttribute('aria-disabled', 'true');
             expect(firstItem).toHaveAttribute('data-disabled');
-            expect(secondItem).toBeDisabled();
+            expect(secondItem).toHaveAttribute('aria-disabled', 'true');
             expect(secondItem).toHaveAttribute('data-disabled');
         });
 
