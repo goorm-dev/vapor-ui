@@ -1,4 +1,4 @@
-import { Form as BaseForm } from '@base-ui-components/react';
+import { Form as BaseForm } from '@base-ui/react';
 
 import type { VComponentProps } from '~/utils/types';
 

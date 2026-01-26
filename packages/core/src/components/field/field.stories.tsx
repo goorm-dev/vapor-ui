@@ -59,12 +59,11 @@ const submitForm = async (event: FormEvent<HTMLFormElement>) => {
 export const TestBed: Story = {
     render: (args) => {
         const { required, ...fieldArgs } = args;
-        const [errors, setErrors] = useState({});
+        const [errors] = useState({});
 
         return (
             <Form
                 errors={errors}
-                onClearErrors={setErrors}
                 onSubmit={async (event) => {
                     event.preventDefault();
 
