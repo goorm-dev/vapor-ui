@@ -260,6 +260,20 @@ describe('<NavigationMenu.Link />', () => {
         expect(link).toHaveAttribute('aria-current', 'page');
     });
 
+    it('should render with data-current attribute when given current', () => {
+        const rendered = render(<NavItemTest current />);
+        const link = rendered.getByTestId(NAV_LINK);
+
+        expect(link).toHaveAttribute('data-current');
+    });
+
+    it('should not render with data-current attribute when not given current', () => {
+        const rendered = render(<NavItemTest />);
+        const link = rendered.getByTestId(NAV_LINK);
+
+        expect(link).not.toHaveAttribute('data-current');
+    });
+
     it('should render with aria-current="page" when clicked', async () => {
         let link;
 
