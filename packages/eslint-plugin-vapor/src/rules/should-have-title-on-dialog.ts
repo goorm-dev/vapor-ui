@@ -14,8 +14,8 @@ export const shouldHaveTitleOnDialogRule: Rule.RuleModule = {
         },
         fixable: undefined,
         messages: {
-            'missing-title':
-                "The '{{ namespace }}.{{ subcomponent }}' requires an <{{ namespace }}.Title> component or 'aria-label' prop for accessibility.",
+            'missing-label':
+                "The '{{ namespace }}.{{ subcomponent }}' requires an <{{ namespace }}.Title> component or 'aria-label', 'aria-labelledby' prop for accessibility.",
         },
     },
     create(context) {
@@ -98,7 +98,9 @@ export const shouldHaveTitleOnDialogRule: Rule.RuleModule = {
                 if (!isTarget) return;
 
                 const hasAriaLabel = openingElement.attributes.some(
-                    (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'aria-label',
+                    (attr) =>
+                        attr.type === 'JSXAttribute' &&
+                        (attr.name.name === 'aria-label' || attr.name.name === 'aria-labelledby'),
                 );
 
                 if (hasAriaLabel) return;
