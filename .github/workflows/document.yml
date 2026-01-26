@@ -1,4 +1,4 @@
-name: "Promote Documentation"
+name: "Document"
 
 on:
     push:
