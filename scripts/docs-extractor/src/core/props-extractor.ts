@@ -118,11 +118,44 @@ function getPropSource(symbol: Symbol): PropSource {
     return 'custom';
 }
 
-const SOURCE_ORDER: Record<PropSource, number> = {
-    'base-ui': 0,
-    custom: 1,
-    variants: 2,
+type PropCategory = 'required' | 'variants' | 'state' | 'custom' | 'base-ui' | 'composition';
+
+const CATEGORY_ORDER: Record<PropCategory, number> = {
+    required: 0,
+    variants: 1,
+    state: 2,
+    custom: 3,
+    'base-ui': 4,
+    composition: 5,
 };
+
+const STATE_PROP_PATTERNS = [
+    /^value$/,
+    /^defaultValue$/,
+    /^onChange$/,
+    /^on[A-Z].*Change$/,
+    /^(open|checked|selected|expanded|pressed|active)$/,
+    /^default(Open|Checked|Selected|Expanded|Pressed|Active)$/,
+];
+
+const COMPOSITION_PROPS = new Set(['asChild', 'render']);
+
+function isStateProp(name: string): boolean {
+    return STATE_PROP_PATTERNS.some((pattern) => pattern.test(name));
+}
+
+function isCompositionProp(name: string): boolean {
+    return COMPOSITION_PROPS.has(name);
+}
+
+function getPropCategory(name: string, required: boolean, source: PropSource): PropCategory {
+    if (required) return 'required';
+    if (isCompositionProp(name)) return 'composition';
+    if (source === 'variants') return 'variants';
+    if (isStateProp(name)) return 'state';
+    if (source === 'base-ui') return 'base-ui';
+    return 'custom';
+}
 
 interface InternalProperty {
     name: string;
@@ -131,16 +164,17 @@ interface InternalProperty {
     description?: string;
     defaultValue?: string;
     _source: PropSource;
+    _category: PropCategory;
 }
 
 function sortProps(props: InternalProperty[]): Property[] {
     return props
         .sort((a, b) => {
-            const sourceOrder = SOURCE_ORDER[a._source] - SOURCE_ORDER[b._source];
-            if (sourceOrder !== 0) return sourceOrder;
+            const categoryOrder = CATEGORY_ORDER[a._category] - CATEGORY_ORDER[b._category];
+            if (categoryOrder !== 0) return categoryOrder;
             return a.name.localeCompare(b.name);
         })
-        .map(({ _source: _, ...prop }) => prop);
+        .map(({ _source: _, _category: __, ...prop }) => prop);
 }
 
 function toTypeArray(typeResult: { type: string; values?: string[] }): string[] {
@@ -188,13 +222,17 @@ export function extractProps(
 
             const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
 
+            const source = getPropSource(symbol);
+            const required = !symbol.isOptional();
+
             return {
                 name,
                 type: toTypeArray(typeResult),
-                required: !symbol.isOptional(),
+                required,
                 description: getJsDocDescription(symbol),
                 defaultValue,
-                _source: getPropSource(symbol),
+                _source: source,
+                _category: getPropCategory(name, required, source),
             };
         });
 

@@ -10,13 +10,13 @@ React 컴포넌트의 Props 타입을 추출하여 JSON으로 출력하는 CLI �
 ## 설치
 
 ```bash
-pnpm --filter=typescript-api-extractor build
+pnpm --filter=@vapor-ui/docs-extractor build
 ```
 
 ## 사용법
 
 ```bash
-pnpm --filter=typescript-api-extractor extract <path> [options]
+pnpm --filter=@vapor-ui/docs-extractor extract <path> [options]
 ```
 
 ### 옵션
@@ -38,20 +38,20 @@ pnpm --filter=typescript-api-extractor extract <path> [options]
 
 ```bash
 # 단일 파일 출력
-pnpm --filter=typescript-api-extractor extract ./packages/core --component Tabs --output ./tabs.json
+pnpm --filter=@vapor-ui/docs-extractor extract ./packages/core --component Tabs --output ./tabs.json
 
 # 모든 컴포넌트 추출
-pnpm --filter=typescript-api-extractor extract ./packages/core --output-dir ./output
+pnpm --filter=@vapor-ui/docs-extractor extract ./packages/core --output-dir ./output
 
 # 컴포넌트별 파일 출력
-pnpm --filter=typescript-api-extractor extract ./packages/core --component Tabs --output-dir ./output
+pnpm --filter=@vapor-ui/docs-extractor extract ./packages/core --component Tabs --output-dir ./output
 # 결과: output/tabs-root.json, output/tabs-list.json, ...
 
 # sprinkles props 포함
-pnpm --filter=typescript-api-extractor extract ./packages/core --component Button --sprinkles
+pnpm --filter=@vapor-ui/docs-extractor extract ./packages/core --component Button --sprinkles
 
 # HTML 속성 포함
-pnpm --filter=typescript-api-extractor extract ./packages/core --component Button --include-html className style
+pnpm --filter=@vapor-ui/docs-extractor extract ./packages/core --component Button --include-html className style
 ```
 
 ## 출력 형식
@@ -114,11 +114,24 @@ interface Property {
 
 Props는 다음 순서로 정렬됩니다:
 
-1. **base-ui props**: `@base-ui-components`에서 온 props
-2. **custom props**: 컴포넌트 파일에서 직접 정의된 props
-3. **variants props**: `.css.ts` 파일의 recipe variants에서 온 props
+1. **Required props**: 필수 props (`required: true`)
+2. **Variants props**: `.css.ts` 파일의 recipe variants에서 온 props
+3. **State props**: 상태 관련 props (value, defaultValue, onChange 등)
+4. **Custom props**: 컴포넌트 파일에서 직접 정의된 props
+5. **Base-UI props**: `@base-ui-components`에서 온 props
+6. **Composition props**: 컴포넌트 합성 관련 props (asChild, render)
 
 각 그룹 내에서는 알파벳순으로 정렬됩니다.
+
+### State Props 패턴
+- `value`, `defaultValue`
+- `on*Change` (onChange, onValueChange, onOpenChange 등)
+- `open`, `checked`, `selected`, `expanded`, `pressed`, `active`
+- `defaultOpen`, `defaultChecked` 등
+
+### Composition Props
+- `asChild`: polymorphic 컴포넌트 패턴
+- `render`: render props 패턴
 
 ## 타입 변환 규칙
 
