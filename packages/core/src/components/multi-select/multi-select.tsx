@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
-import { Select as BaseSelect, useRender } from '@base-ui-components/react';
+import { Select as BaseSelect, useRender } from '@base-ui/react';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 

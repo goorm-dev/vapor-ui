@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import { Fragment, isValidElement } from 'react';
 
-import type { useRender } from '@base-ui-components/react/use-render';
+import type { useRender } from '@base-ui/react/use-render';
 
 // Compatible with base-ui useRender's render prop type
 type RenderProp = NonNullable<Parameters<typeof useRender>[0]['render']>;

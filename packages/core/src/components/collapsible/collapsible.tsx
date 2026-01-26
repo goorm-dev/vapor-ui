@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { Collapsible as BaseCollapsible } from '@base-ui-components/react';
+import { Collapsible as BaseCollapsible } from '@base-ui/react';
 import clsx from 'clsx';
 
 import { resolveStyles } from '~/utils/resolve-styles';

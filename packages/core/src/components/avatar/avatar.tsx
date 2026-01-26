@@ -2,8 +2,8 @@
 
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { Avatar as BaseAvatar } from '@base-ui-components/react/avatar';
+import { useRender } from '@base-ui/react';
+import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 

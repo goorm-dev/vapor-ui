@@ -2,7 +2,7 @@
 
 import { forwardRef, useCallback, useEffect, useRef } from 'react';
 
-import { Field as BaseField, useRender } from '@base-ui-components/react';
+import { Field as BaseField, useRender } from '@base-ui/react';
 import { useControlled } from '@base-ui/utils/useControlled';
 import clsx from 'clsx';
 

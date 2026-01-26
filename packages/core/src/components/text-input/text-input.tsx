@@ -2,7 +2,7 @@
 
 import { forwardRef, useRef } from 'react';
 
-import { Input as BaseInput } from '@base-ui-components/react';
+import { Input as BaseInput } from '@base-ui/react';
 import { useControlled } from '@base-ui/utils/useControlled';
 import clsx from 'clsx';
 

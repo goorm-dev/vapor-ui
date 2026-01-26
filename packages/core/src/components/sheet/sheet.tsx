@@ -3,7 +3,7 @@
 import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
-import { Dialog as BaseDialog, useRender } from '@base-ui-components/react';
+import { Dialog as BaseDialog, useRender } from '@base-ui/react';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import clsx from 'clsx';

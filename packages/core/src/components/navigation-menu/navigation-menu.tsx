@@ -3,7 +3,7 @@
 import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { NavigationMenu as BaseNavigationMenu, useRender } from '@base-ui-components/react';
+import { NavigationMenu as BaseNavigationMenu, useRender } from '@base-ui/react';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 

@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react';
+import { useRender } from '@base-ui/react';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
