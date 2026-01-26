@@ -1,10 +1,11 @@
-import { Popover } from '@base-ui/react';
+// @ts-nocheck
+import { Popover } from '@vapor-ui/core';
 
 export const Component = ({ shouldTrack }: { shouldTrack: boolean }) => (
     <Popover.Root>
         <Popover.Trigger>Open</Popover.Trigger>
-        <Popover.Positioner trackAnchor={shouldTrack}>
+        <Popover.PositionerPrimitive disableAnchorTracking={!shouldTrack}>
             <Popover.Popup>Content</Popover.Popup>
-        </Popover.Positioner>
+        </Popover.PositionerPrimitive>
     </Popover.Root>
 );
