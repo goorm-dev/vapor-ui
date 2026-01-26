@@ -1,0 +1,24 @@
+name: "Promote Documentation"
+
+on:
+    push:
+        tags:
+            - "*"
+
+env:
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Install Vercel CLI
+              run: npm install -g vercel@latest
+
+            - name: Promote Deployment to Production
+              run: |
+                  DEPLOYMENT_ID=$(vercel ls ${{ env.VERCEL_PROJECT_ID }} --prod --scope=${{ env.VERCEL_ORG_ID }} --token=${{ env.VERCEL_TOKEN }} | awk 'NR==1 {print $1}')
+
+                  vercel promote $DEPLOYMENT_ID --token=${{ env.VERCEL_TOKEN }} --scope=${{ env.VERCEL_ORG_ID}}
