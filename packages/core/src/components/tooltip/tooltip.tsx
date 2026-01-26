@@ -3,8 +3,8 @@
 import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
+import { useRender } from '@base-ui/react';
+import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
