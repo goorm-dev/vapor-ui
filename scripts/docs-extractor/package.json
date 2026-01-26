@@ -1,5 +1,5 @@
 {
-    "name": "@vapor-ui/typescript-api-extractor",
+    "name": "@vapor-ui/docs-extractor",
     "version": "0.0.1",
     "description": "TypeScript AST-based API extractor for documentation generation",
     "type": "module",
