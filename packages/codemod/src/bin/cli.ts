@@ -208,6 +208,10 @@ const TRANSFORMER_INQUIRER_CHOICES = [
         name: 'internal/core/text-input: Migrate TextInput component to @vapor-ui/core',
         value: 'internal/core/text-input',
     },
+    {
+        name: 'internal/core/v1/migrate: Migrate to @base-ui/react v1.1.0',
+        value: 'internal/core/v1/migrate',
+    },
 ];
 const run = async () => {
     const cli = meow(
