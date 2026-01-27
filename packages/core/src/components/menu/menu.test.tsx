@@ -1,4 +1,4 @@
-import { DirectionProvider } from '@base-ui/react';
+import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { act, cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

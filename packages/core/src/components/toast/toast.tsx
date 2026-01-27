@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react';
+import { useRender } from '@base-ui/react/use-render';
 import { Toast as BaseToast, type ToastManager as BaseToastManager } from '@base-ui/react/toast';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';

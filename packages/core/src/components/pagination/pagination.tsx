@@ -4,7 +4,7 @@ import type { ComponentPropsWithoutRef, MouseEvent } from 'react';
 import type { Fragment } from 'react';
 import { forwardRef, useMemo } from 'react';
 
-import { useRender } from '@base-ui/react';
+import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import {

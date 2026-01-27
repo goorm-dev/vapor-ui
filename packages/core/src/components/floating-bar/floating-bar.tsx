@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Popover, useRender } from '@base-ui/react';
+import { Popover } from '@base-ui/react/popover';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';

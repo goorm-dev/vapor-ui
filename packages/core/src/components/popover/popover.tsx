@@ -3,7 +3,7 @@
 import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useRender } from '@base-ui/react';
+import { useRender } from '@base-ui/react/use-render';
 import { Popover as BasePopover } from '@base-ui/react/popover';
 import clsx from 'clsx';
 

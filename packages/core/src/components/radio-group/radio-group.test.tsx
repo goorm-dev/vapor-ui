@@ -1,6 +1,6 @@
 import { act } from 'react';
 
-import { Radio } from '@base-ui/react';
+import { Radio } from '@base-ui/react/radio';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';

@@ -3,7 +3,7 @@
 import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react';
+import { useRender } from '@base-ui/react/use-render';
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import clsx from 'clsx';
 

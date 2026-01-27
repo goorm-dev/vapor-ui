@@ -2,7 +2,7 @@
 
 import { type ReactElement, forwardRef } from 'react';
 
-import { Tabs as BaseTabs } from '@base-ui/react';
+import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';

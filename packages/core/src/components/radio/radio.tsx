@@ -2,7 +2,8 @@
 
 import { forwardRef } from 'react';
 
-import { Radio as BaseRadio, useRender } from '@base-ui/react';
+import { Radio as BaseRadio } from '@base-ui/react/radio';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';

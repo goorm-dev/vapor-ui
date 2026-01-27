@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { Popover } from '@base-ui/react';
+import { Popover } from '@base-ui/react/popover';
 import { Badge, Button, Card, Text } from '@vapor-ui/core';
 import {
     generateColorCSS,

@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui/react';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';
