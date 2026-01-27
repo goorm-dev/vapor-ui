@@ -174,7 +174,10 @@ export const TestBed: StoryObj = {
                 >
                     <HStack margin="$800" gap="$400" justifyContent="center" alignItems="center">
                         <Tooltip.Root open>
-                            <Tooltip.Trigger delay={0} render={<Button>Align Start Tooltip</Button>} />
+                            <Tooltip.Trigger
+                                delay={0}
+                                render={<Button>Align Start Tooltip</Button>}
+                            />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive align="start" />}
                             >
@@ -182,7 +185,10 @@ export const TestBed: StoryObj = {
                             </Tooltip.Popup>
                         </Tooltip.Root>
                         <Tooltip.Root open>
-                            <Tooltip.Trigger delay={0} render={<Button>Align Center Tooltip</Button>} />
+                            <Tooltip.Trigger
+                                delay={0}
+                                render={<Button>Align Center Tooltip</Button>}
+                            />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive align="center" />}
                             >
@@ -190,7 +196,10 @@ export const TestBed: StoryObj = {
                             </Tooltip.Popup>
                         </Tooltip.Root>
                         <Tooltip.Root open>
-                            <Tooltip.Trigger delay={0} render={<Button>Align End Tooltip</Button>} />
+                            <Tooltip.Trigger
+                                delay={0}
+                                render={<Button>Align End Tooltip</Button>}
+                            />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive align="end" />}
                             >

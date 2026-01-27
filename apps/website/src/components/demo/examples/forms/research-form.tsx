@@ -115,7 +115,11 @@ export default function ResearchForm() {
                         </Field.Item>
 
                         <Field.Item>
-                            <Radio.Root id="research-not-satisfied" value="not-satisfied" size="lg" />
+                            <Radio.Root
+                                id="research-not-satisfied"
+                                value="not-satisfied"
+                                size="lg"
+                            />
                             <Field.Label>불만족</Field.Label>
                         </Field.Item>
                     </VStack>

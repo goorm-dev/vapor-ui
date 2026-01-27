@@ -78,11 +78,10 @@ export const SheetRoot = ({
         setOpen(false);
     });
 
-    useImperativeHandle(
-        props.actionsRef,
-        () => ({ unmount: handleUnmount, close: handleClose }),
-        [handleUnmount, handleClose],
-    );
+    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount, close: handleClose }), [
+        handleUnmount,
+        handleClose,
+    ]);
 
     const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
         setOpen(open);
