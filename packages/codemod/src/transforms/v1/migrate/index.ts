@@ -6,11 +6,11 @@ import { transformLoop, transformTrackAnchor } from './migrations';
  * Codemod transform for migrating @base-ui-components/react@beta.4 to @base-ui/react@1.1.0.
  *
  * This transform applies the following migrations:
+ * - dismissible → disablePointerDismissal (Dialog)
  * - loop → loopFocus
  * - trackAnchor → disableAnchorTracking (with boolean inversion)
  *
  * Future migrations to be added:
- * - dismissible → disablePointerDismissal (Dialog)
  * - hoverable → disableHoverablePopup (Tooltip)
  * - openOnHover, delay, closeDelay position changes (Menu, Popover)
  * - Select.Placeholder → Select.Value placeholder prop
