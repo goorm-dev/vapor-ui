@@ -1,7 +1,6 @@
 import './research-form.css';
 
 import {
-    Box,
     Button,
     Checkbox,
     Field,
@@ -47,17 +46,17 @@ export default function ResearchForm() {
                 <Text typography="heading5">기본 정보를 입력해주세요.</Text>
 
                 <Field.Root>
-                    <Box render={<Field.Label />} flexDirection="column">
+                    <Field.Label flexDirection="column">
                         <Text typography="subtitle2" foreground="normal-200">
                             이름
                         </Text>
                         <TextInput id="research-name" required size="lg" />
-                    </Box>
+                    </Field.Label>
                     <Field.Error match="valueMissing">이름을 입력해주세요.</Field.Error>
                 </Field.Root>
 
                 <Field.Root>
-                    <Box render={<Field.Label htmlFor="research-jobs" />} flexDirection="column">
+                    <Field.Label htmlFor="research-jobs" flexDirection="column">
                         <Text typography="subtitle2" foreground="normal-200">
                             직업
                         </Text>
@@ -71,11 +70,11 @@ export default function ResearchForm() {
                                 ))}
                             </Select.Popup>
                         </Select.Root>
-                    </Box>
+                    </Field.Label>
                 </Field.Root>
 
                 <Field.Root>
-                    <Box render={<Field.Label htmlFor="research-stack" />} flexDirection="column">
+                    <Field.Label htmlFor="research-stack" flexDirection="column">
                         <Text typography="subtitle2" foreground="normal-200">
                             스택
                         </Text>
@@ -93,31 +92,33 @@ export default function ResearchForm() {
                                 ))}
                             </MultiSelect.Popup>
                         </MultiSelect.Root>
-                    </Box>
+                    </Field.Label>
                 </Field.Root>
             </VStack>
 
             <Field.Root>
                 <RadioGroup.Root>
                     <RadioGroup.Label>만족도를 선택해주세요.</RadioGroup.Label>
-                    <Box render={<Field.Label />} alignItems="center">
-                        <Radio.Root
-                            id="research-fully-satisfied"
-                            value="fully-satisfied"
-                            size="lg"
-                        />
-                        매우 만족
-                    </Box>
+                    <VStack gap="$100">
+                        <Field.Item>
+                            <Radio.Root
+                                id="research-fully-satisfied"
+                                value="fully-satisfied"
+                                size="lg"
+                            />
+                            <Field.Label>매우 만족</Field.Label>
+                        </Field.Item>
 
-                    <Box render={<Field.Label />} alignItems="center">
-                        <Radio.Root id="research-neutral" value="neutral" size="lg" />
-                        보통
-                    </Box>
+                        <Field.Item>
+                            <Radio.Root id="research-neutral" value="neutral" size="lg" />
+                            <Field.Label>보통</Field.Label>
+                        </Field.Item>
 
-                    <Box render={<Field.Label />} alignItems="center">
-                        <Radio.Root id="research-not-satisfied" value="not-satisfied" size="lg" />
-                        불만족
-                    </Box>
+                        <Field.Item>
+                            <Radio.Root id="research-not-satisfied" value="not-satisfied" size="lg" />
+                            <Field.Label>불만족</Field.Label>
+                        </Field.Item>
+                    </VStack>
                 </RadioGroup.Root>
             </Field.Root>
 
@@ -130,38 +131,38 @@ export default function ResearchForm() {
                 </VStack>
 
                 <Field.Root>
-                    <Box render={<Field.Label />} alignItems="center">
+                    <Field.Item>
                         <Checkbox.Root id="research-mentoring" size="lg" />
-                        멘토님 강연 능력
-                    </Box>
+                        <Field.Label>멘토님 강연 능력</Field.Label>
+                    </Field.Item>
                 </Field.Root>
 
                 <Field.Root>
-                    <Box render={<Field.Label />} alignItems="center">
+                    <Field.Item>
                         <Checkbox.Root id="research-topic" size="lg" />
-                        주제(협업 및 커뮤니케이션 스킬)
-                    </Box>
+                        <Field.Label>주제(협업 및 커뮤니케이션 스킬)</Field.Label>
+                    </Field.Item>
                 </Field.Root>
 
                 <Field.Root>
-                    <Box render={<Field.Label />} alignItems="center">
+                    <Field.Item>
                         <Checkbox.Root id="research-content" size="lg" />
-                        전반적인 강의 내용
-                    </Box>
+                        <Field.Label>전반적인 강의 내용</Field.Label>
+                    </Field.Item>
                 </Field.Root>
 
                 <Field.Root>
-                    <Box render={<Field.Label />} alignItems="center">
+                    <Field.Item>
                         <Checkbox.Root id="research-seminar" size="lg" />
-                        세미나 자료
-                    </Box>
+                        <Field.Label>세미나 자료</Field.Label>
+                    </Field.Item>
                 </Field.Root>
 
                 <Field.Root>
-                    <Box render={<Field.Label />} alignItems="center">
+                    <Field.Item>
                         <Checkbox.Root id="research-etc" size="lg" />
-                        기타
-                    </Box>
+                        <Field.Label>기타</Field.Label>
+                    </Field.Item>
                 </Field.Root>
             </VStack>
 
@@ -169,16 +170,16 @@ export default function ResearchForm() {
                 <Text typography="heading5">개인 정보 수신 동의</Text>
 
                 <Field.Root>
-                    <HStack width="100%" justifyContent="space-between" render={<Field.Label />}>
+                    <Field.Label render={<HStack width="100%" justifyContent="space-between" />}>
                         서비스 메일 수신 동의
                         <Switch.Root defaultChecked id="research-service" />
-                    </HStack>
+                    </Field.Label>
                 </Field.Root>
                 <Field.Root>
-                    <HStack width="100%" justifyContent="space-between" render={<Field.Label />}>
+                    <Field.Label render={<HStack width="100%" justifyContent="space-between" />}>
                         이벤트성 광고 수신 동의
                         <Switch.Root defaultChecked id="research-advertising" />
-                    </HStack>
+                    </Field.Label>
                 </Field.Root>
             </VStack>
 
