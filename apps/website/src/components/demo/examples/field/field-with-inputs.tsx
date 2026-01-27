@@ -1,52 +1,48 @@
 'use client';
 
-import { Box, Checkbox, Field, Select, Switch, TextInput, VStack } from '@vapor-ui/core';
+import { Checkbox, Field, HStack, Select, Switch, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldWithInputs() {
     return (
-        <VStack gap="$200" width="300px">
+        <VStack gap="$300" className="w-72">
             <Field.Root name="email">
-                <Box render={<Field.Label />} flexDirection="column">
-                    이메일
-                    <TextInput type="email" placeholder="example@domain.com" />
-                </Box>
-                <Field.Description>알림을 받을 이메일 주소를 입력하세요.</Field.Description>
-                <Field.Error match="typeMismatch">유효한 이메일 주소를 입력해주세요.</Field.Error>
+                <Field.Label className="flex flex-col gap-1">
+                    Email
+                    <TextInput type="email" placeholder="you@example.com" />
+                </Field.Label>
+                <Field.Description>Your primary contact email.</Field.Description>
             </Field.Root>
 
-            {/* Checkbox with Field */}
             <Field.Root name="newsletter">
-                <Box render={<Field.Label />} alignItems="center">
+                <HStack render={<Field.Label />} gap="$100" alignItems="center">
                     <Checkbox.Root />
-                    뉴스레터 구독
-                </Box>
-                <Field.Description>최신 소식과 업데이트를 이메일로 받아보세요.</Field.Description>
+                    Subscribe to newsletter
+                </HStack>
+                <Field.Description>Get the latest updates in your inbox.</Field.Description>
             </Field.Root>
 
-            {/* Switch with Field */}
             <Field.Root name="notifications">
-                <Box render={<Field.Label />} alignItems="center">
+                <HStack render={<Field.Label />} gap="$100" alignItems="center">
                     <Switch.Root />
-                    푸시 알림
-                </Box>
-                <Field.Description>중요한 알림을 즉시 받아보세요.</Field.Description>
+                    Push notifications
+                </HStack>
+                <Field.Description>Receive alerts on your device.</Field.Description>
             </Field.Root>
 
-            {/* Select with Field */}
             <Field.Root name="country">
-                <Select.Root placeholder="국가를 선택하세요">
-                    <Box render={<Field.Label htmlFor="country-select" />} flexDirection="column">
-                        국가
-                        <Select.Trigger id="country-select" />
-                    </Box>
+                <Select.Root>
+                    <Field.Label className="flex flex-col gap-1">
+                        Country
+                        <Select.Trigger />
+                    </Field.Label>
                     <Select.Popup>
-                        <Select.Item value="kr">대한민국</Select.Item>
-                        <Select.Item value="us">미국</Select.Item>
-                        <Select.Item value="jp">일본</Select.Item>
-                        <Select.Item value="cn">중국</Select.Item>
+                        <Select.Item value="us">United States</Select.Item>
+                        <Select.Item value="uk">United Kingdom</Select.Item>
+                        <Select.Item value="kr">South Korea</Select.Item>
+                        <Select.Item value="jp">Japan</Select.Item>
                     </Select.Popup>
                 </Select.Root>
-                <Field.Description>거주 중인 국가를 선택하세요.</Field.Description>
+                <Field.Description>Select your country of residence.</Field.Description>
             </Field.Root>
         </VStack>
     );
