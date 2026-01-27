@@ -161,6 +161,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                                                     key={typeValue}
                                                     colorPalette="hint"
                                                     size="md"
+                                                    height="auto"
                                                 >
                                                     {typeValue}
                                                 </Badge>
