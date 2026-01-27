@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { Field as BaseField } from '@base-ui-components/react/field';
+import { Field as BaseField } from '@base-ui/react/field';
 import clsx from 'clsx';
 
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -97,6 +97,19 @@ export const FieldSuccess = forwardRef<HTMLDivElement, FieldSuccess.Props>((prop
 });
 FieldSuccess.displayName = 'Field.Success';
 
+/* -------------------------------------------------------------------------------------------------
+ * Field.Item
+ * -----------------------------------------------------------------------------------------------*/
+
+export const FieldItem = forwardRef<HTMLDivElement, FieldItem.Props>((props, ref) => {
+    const { className, ...componentProps } = resolveStyles(props);
+
+    return (
+        <BaseField.Item ref={ref} className={clsx(styles.item, className)} {...componentProps} />
+    );
+});
+FieldItem.displayName = 'Field.Item';
+
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace FieldRoot {
@@ -124,4 +137,8 @@ export namespace FieldSuccess {
     export interface Props extends PrimitiveSuccessProps {
         match?: boolean | 'valid';
     }
+}
+
+export namespace FieldItem {
+    export interface Props extends VComponentProps<typeof BaseField.Item> {}
 }
