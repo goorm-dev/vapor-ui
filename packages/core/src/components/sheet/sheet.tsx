@@ -73,7 +73,15 @@ export const SheetRoot = ({
         },
     });
 
-    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
+    const handleClose = useStableCallback(() => {
+        setOpen(false);
+    });
+
+    useImperativeHandle(
+        props.actionsRef,
+        () => ({ unmount: handleUnmount, close: handleClose }),
+        [handleUnmount, handleClose],
+    );
 
     const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
         setOpen(open);

@@ -8,6 +8,7 @@ import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
+import { createContext } from '~/libs/create-context';
 import { vars } from '~/styles/themes.css';
 import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
@@ -18,12 +19,27 @@ import * as styles from './tooltip.css';
 
 /* -----------------------------------------------------------------------------------------------*/
 
+type TooltipSharedProps = Pick<BaseTooltip.Trigger.Props, 'delay' | 'closeDelay'>;
+type TooltipContext = TooltipSharedProps;
+
+const [TooltipProvider, useTooltipContext] = createContext<TooltipContext>({
+    name: 'TooltipContext',
+    hookName: 'useTooltipContext',
+    providerName: 'TooltipProvider',
+});
+
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Root
  * -----------------------------------------------------------------------------------------------*/
 
 export const TooltipRoot = (props: TooltipRoot.Props) => {
-    return <BaseTooltip.Root {...props} />;
+    const { delay, closeDelay, ...otherProps } = props;
+
+    return (
+        <TooltipProvider value={{ delay, closeDelay }}>
+            <BaseTooltip.Root {...otherProps} />
+        </TooltipProvider>
+    );
 };
 
 /* -------------------------------------------------------------------------------------------------
@@ -31,9 +47,13 @@ export const TooltipRoot = (props: TooltipRoot.Props) => {
  * -----------------------------------------------------------------------------------------------*/
 
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTrigger.Props>((props, ref) => {
-    const componentProps = resolveStyles(props);
+    const { delay: delayProp, closeDelay: closeDelayProp, ...componentProps } = resolveStyles(props);
+    const { delay: contextDelay, closeDelay: contextCloseDelay } = useTooltipContext();
 
-    return <BaseTooltip.Trigger ref={ref} {...componentProps} />;
+    const delay = delayProp ?? contextDelay;
+    const closeDelay = closeDelayProp ?? contextCloseDelay;
+
+    return <BaseTooltip.Trigger ref={ref} delay={delay} closeDelay={closeDelay} {...componentProps} />;
 });
 TooltipTrigger.displayName = 'Tooltip.Trigger';
 
@@ -227,7 +247,7 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace TooltipRoot {
-    export interface Props extends VComponentProps<typeof BaseTooltip.Root> {}
+    export interface Props extends VComponentProps<typeof BaseTooltip.Root>, TooltipSharedProps {}
     export type ChangeEventDetails = BaseTooltip.Root.ChangeEventDetails;
 }
 

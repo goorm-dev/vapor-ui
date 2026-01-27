@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Toast as BaseToast } from '@base-ui-components/react';
+import { Toast as BaseToast } from '@base-ui/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { HeartIcon, InfoCircleIcon } from '@vapor-ui/icons';
 
