@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { Popover } from '@base-ui-components/react';
+import { Popover } from '@base-ui/react';
 import { Badge, Button, Card, Text } from '@vapor-ui/core';
 import {
     generateColorCSS,
@@ -160,7 +160,7 @@ const ThemePanel = () => {
             >
                 {liveMessage}
             </div>
-            <Popover.Root open={isOpen} modal="trap-focus" closeDelay={3000}>
+            <Popover.Root open={isOpen} modal="trap-focus">
                 <Popover.Portal>
                     <Popover.Positioner
                         anchor={anchorRef}

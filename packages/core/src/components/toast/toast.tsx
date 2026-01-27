@@ -27,11 +27,11 @@ export const useToastManager = BaseToast.useToastManager as () => UseToastManage
  * ToastProvider
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToastProvider = (props: ToastProvider.Props) => {
+export const ToastProvider = ({ toastManager, ...props }: ToastProvider.Props) => {
     const { timeout = 4000, children, ...componentProps } = props;
 
     return (
-        <ToastProviderPrimitive timeout={timeout} {...componentProps}>
+        <ToastProviderPrimitive timeout={timeout} toastManager={toastManager} {...componentProps}>
             {children}
             <ToastList />
         </ToastProviderPrimitive>
@@ -342,6 +342,7 @@ export interface ToastManagerPromiseOptions<Value, Data extends object> extends 
 }
 
 export interface ToastManager extends BaseToastManager {
+    ' subscribe': (listener: (data: { action: 'add' | 'close' | 'update' | 'promise'; options: unknown }) => void) => () => void;
     add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
     update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
     close: (id: string) => void;
@@ -370,7 +371,9 @@ export namespace ToastProviderPrimitive {
 }
 
 export namespace ToastProvider {
-    export interface Props extends BaseToast.Provider.Props {}
+    export interface Props extends Omit<BaseToast.Provider.Props, 'toastManager'> {
+        toastManager?: ToastManager;
+    }
 }
 
 export namespace ToastPortalPrimitive {
