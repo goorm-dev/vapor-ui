@@ -1,5 +1,4 @@
-import type { ComponentPropsWithoutRef } from 'react';
-
+// import type { ComponentPropsWithoutRef } from 'react';
 import type { useRender } from '@base-ui-components/react/use-render';
 
 import type { Sprinkles } from '~/styles/sprinkles.css';
@@ -9,8 +8,10 @@ export type AnyProp = any;
 
 export type Assign<T, U> = Omit<T, keyof U> & U;
 
-type OmitColorProp<ElementType extends React.ElementType> =
-    string extends ComponentPropsWithoutRef<ElementType>['color'] ? 'color' : never;
+// type OmitColorProp<ElementType extends React.ElementType> =
+//     string extends ComponentPropsWithoutRef<ElementType>['color'] ? 'color' : never;
 
-export type VComponentProps<ElementType extends React.ElementType> = Sprinkles &
-    Omit<useRender.ComponentProps<ElementType>, OmitColorProp<ElementType>>;
+export type Styles = { $styles?: Sprinkles };
+
+export type VComponentProps<ElementType extends React.ElementType> =
+    useRender.ComponentProps<ElementType> & Styles;

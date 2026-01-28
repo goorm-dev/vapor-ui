@@ -12,7 +12,7 @@ export const Flex = forwardRef<HTMLDivElement, Flex.Props>((props, ref) => {
     const componentProps = resolveStyles(props);
     const [{ inline }, otherProps] = createSplitProps<FlexVariants>()(componentProps, ['inline']);
 
-    return <Box ref={ref} display={inline ? 'inline-flex' : 'flex'} {...otherProps} />;
+    return <Box ref={ref} $styles={{ display: inline ? 'inline-flex' : 'flex' }} {...otherProps} />;
 });
 Flex.displayName = 'Flex';
 

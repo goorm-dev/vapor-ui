@@ -22,11 +22,11 @@ const negativeSpaces = Object.keys(spaceTokens).reduce(
 
 const marginTokens = { ...spaceTokens, ...negativeSpaces };
 const dimensionTokens = vars.size.dimension;
-const radiusTokens = vars.size.borderRadius;
+const borderRadiusTokens = vars.size.borderRadius;
 
 const { foreground, border, black, white, ...colors } = vars.color;
 
-const bgColorTokens = {
+const backgroundColorTokens = {
     // Background colors
     'primary-100': colors.background.primary[100],
     'primary-200': colors.background.primary[200],
@@ -229,60 +229,602 @@ const sprinkleProperties = defineProperties({
         desktop: {},
     },
 
+    // Border Width는 토큰 안써도 되는지?
+    // Accent Color 같은 건 어떤 토큰을 사용해야 할까?
+    // Background Color, Border Color, Color는 모두 배타적인가?
+    // Outline은 Border랑 동일하게 적용하면 되는건가?
     dynamicProperties: {
-        // Layout
-        position: true,
+        // Composition and Blending
+        backgroundBlendMode: true,
+        isolation: true,
+        mixBlendMode: true,
+
+        // CSS Animations
+        animation: true,
+        // animationComposition: true,
+        animationDelay: true,
+        animationDirection: true,
+        animationDuration: true,
+        animationFillMode: true,
+        animationIterationCount: true,
+        animationName: true,
+        animationPlayState: true,
+        // animationRange: true,
+        // animationRangeEnd: true,
+        // animationRangeStart: true,
+        animationTimingFunction: true,
+        // animationTimeline: true,
+        // scrollTimeline: true,
+        // scrollTimelineAxis: true,
+        // scrollTimelineName: true,
+        // timelineScope: true,
+        // viewTimeline: true,
+        // viewTimelineAxis: true,
+        // viewTimelineInset: true,
+        // viewTimelineName: true,
+
+        // CSS Backgrounds and Borders
+        background: true,
+        backgroundAttachment: true,
+        backgroundClip: true,
+        backgroundColor: backgroundColorTokens,
+        backgroundImage: true,
+        backgroundOrigin: true,
+        backgroundRepeat: true,
+        backgroundSize: true,
+        backgroundPosition: true,
+        backgroundPositionX: true,
+        backgroundPositionY: true,
+        border: true, // OF SHORTHANDS!
+        borderColor: borderColorTokens,
+        borderStyle: true,
+        borderWidth: true,
+        borderBlock: true,
+        borderBlockColor: borderColorTokens,
+        borderBlockStyle: true,
+        borderBlockWidth: true,
+        borderBlockStart: true,
+        borderTop: true,
+        borderBlockStartColor: borderColorTokens,
+        borderTopColor: true,
+        borderBlockStartStyle: true,
+        borderTopStyle: true,
+        borderBlockStartWidth: true,
+        borderTopWidth: true,
+        borderBlockEnd: true,
+        borderBottom: true,
+        borderBlockEndColor: borderColorTokens,
+        borderBottomColor: borderColorTokens,
+        borderBlockEndStyle: true,
+        borderBottomStyle: true,
+        borderBlockEndWidth: true,
+        borderBottomWidth: true,
+        borderInline: true,
+        borderInlineColor: borderColorTokens,
+        borderInlineStyle: true,
+        borderInlineWidth: true,
+        borderInlineStart: true,
+        borderLeft: true,
+        borderInlineStartColor: borderColorTokens,
+        borderLeftColor: borderColorTokens,
+        borderInlineStartStyle: true,
+        borderLeftStyle: true,
+        borderInlineStartWidth: true,
+        borderLeftWidth: true,
+        borderInlineEnd: true,
+        borderRight: true,
+        borderInlineEndColor: borderColorTokens,
+        borderRightColor: borderColorTokens,
+        borderInlineEndStyle: true,
+        borderRightStyle: true,
+        borderInlineEndWidth: true,
+        borderRightWidth: true,
+        borderImage: true,
+        borderImageOutset: true,
+        borderImageRepeat: true,
+        borderImageSlice: true,
+        borderImageSource: true,
+        borderImageWidth: true,
+        borderRadius: borderRadiusTokens,
+        borderStartEndRadius: borderRadiusTokens,
+        borderStartStartRadius: borderRadiusTokens,
+        borderEndEndRadius: borderRadiusTokens,
+        borderEndStartRadius: borderRadiusTokens,
+        borderTopLeftRadius: borderRadiusTokens,
+        borderTopRightRadius: borderRadiusTokens,
+        borderBottomLeftRadius: borderRadiusTokens,
+        borderBottomRightRadius: borderRadiusTokens,
+        boxShadow: true,
+
+        // CSS Basic User Interface
+        // accentColor: true,
+        appearance: true,
+        aspectRatio: true,
+        // caret: true,
+        // caretColor: true,
+        // caretShape: true,
+        cursor: true,
+        // imeMode: true,
+        // inputSecurity: true,
+        outline: true,
+        outlineColor: true,
+        outlineOffset: true,
+        outlineStyle: true,
+        outlineWidth: true,
+        pointerEvents: true,
+        resize: true, // horizontal, vertical, block, inline, both
+        textOverflow: true,
+        userSelect: true,
+
+        // CSS Box Alignment
+        gridGap: spaceTokens, // alias for `gap`
+        gap: spaceTokens,
+        gridRowGap: spaceTokens,
+        rowGap: spaceTokens,
+        gridColumnGap: spaceTokens,
+        columnGap: spaceTokens,
+        placeContent: true,
+        alignContent: true,
+        justifyContent: true,
+        placeItems: true,
+        alignItems: true,
+        justifyItems: true,
+        placeSelf: true,
+        alignSelf: true,
+        justifySelf: true,
+
+        // CSS Box Model
+        boxSizing: true,
+        // fieldSizing: true,
+        blockSize: dimensionTokens,
+        height: dimensionTokens,
+        inlineSize: dimensionTokens,
+        width: dimensionTokens,
+        maxBlockSize: dimensionTokens,
+        maxHeight: dimensionTokens,
+        maxInlineSize: dimensionTokens,
+        maxWidth: dimensionTokens,
+        minBlockSize: dimensionTokens,
+        minHeight: dimensionTokens,
+        minInlineSize: dimensionTokens,
+        minWidth: dimensionTokens,
+        margin: marginTokens,
+        marginBlock: marginTokens,
+        marginBlockStart: marginTokens,
+        marginTop: marginTokens,
+        marginBlockEnd: marginTokens,
+        marginBottom: marginTokens,
+        marginInline: marginTokens,
+        marginInlineStart: marginTokens,
+        marginLeft: marginTokens,
+        marginInlineEnd: marginTokens,
+        marginRight: marginTokens,
+        marginTrim: marginTokens,
+        overscrollBehavior: true,
+        overscrollBehaviorBlock: true,
+        overscrollBehaviorY: true,
+        overscrollBehaviorInline: true,
+        overscrollBehaviorX: true,
+        padding: spaceTokens,
+        paddingBlock: spaceTokens,
+        paddingBlockStart: spaceTokens,
+        paddingTop: spaceTokens,
+        paddingBlockEnd: spaceTokens,
+        paddingBottom: spaceTokens,
+        paddingInline: spaceTokens,
+        paddingInlineStart: spaceTokens,
+        paddingLeft: spaceTokens,
+        paddingInlineEnd: spaceTokens,
+        paddingRight: spaceTokens,
+        visibility: true,
+
+        // CSS Color
+        color: colorTokens,
+        colorScheme: true,
+        forcedColorAdjust: true,
+        opacity: true,
+        // printColorAdjust: true,
+
+        // CSS Columns
+        columns: true,
+        columnCount: true,
+        columnWidth: true,
+        columnFill: true,
+        columnSpan: true,
+        columnRule: true,
+        columnRuleColor: true,
+        columnRuleStyle: true,
+        columnRuleWidth: true,
+
+        // CSS Containment
+        contain: true,
+        // containIntrinsicSize: true,
+        // containIntrinsicBlockSize: true,
+        // containIntrinsicWidth: true,
+        // containIntrinsicHeight: true,
+        // containIntrinsicInlineSize: true,
+        // container: true,
+        // containerName: true,
+        // containerType: true,
+        contentVisibility: true,
+
+        // CSS Counter Styles
+        counterIncrement: true,
+        counterReset: true,
+        counterSet: true,
+
+        // CSS Display
         display: true,
 
-        // Flexbox
-        alignItems: true,
-        justifyContent: true,
+        // CSS Flexible Box Layout
+        flex: true,
+        flexBasis: true,
+        flexGrow: true,
+        flexShrink: true,
+        flexFlow: true,
         flexDirection: true,
-        gap: spaceTokens,
+        flexWrap: true,
+        order: true,
 
-        // Alignment
-        alignContent: true,
+        // CSS Fonts
+        // NOTE: should apply font tokens for all components? Text components only?
+        font: true,
+        fontFamily: true,
+        fontSize: true,
+        fontStretch: true,
+        fontStyle: true,
+        fontWeight: true,
+        lineHeight: true,
+        fontVariant: true,
+        // fontVariantAlternates: true,
+        fontVariantCaps: true,
+        fontVariantEastAsian: true,
+        // fontVariantEmoji: true,
+        fontVariantLigatures: true,
+        fontVariantNumeric: true,
+        fontVariantPosition: true,
+        fontFeatureSettings: true,
+        fontKerning: true,
+        fontLanguageOverride: true,
+        fontOpticalSizing: true,
+        // fontPalette: true,
+        fontVariationSettings: true,
+        fontSizeAdjust: true,
+        fontSmooth: true, // Non-standard
+        // fontSynthesisPosition: true,
+        // fontSynthesisSmallCaps: true,
+        // fontSynthesisStyle: true,
+        // fontSynthesisWeight: true,
+        fontSynthesis: true,
+        lineHeightStep: true,
 
-        // Spacing
-        padding: spaceTokens,
-        paddingTop: spaceTokens,
-        paddingBottom: spaceTokens,
-        paddingLeft: spaceTokens,
-        paddingRight: spaceTokens,
-        margin: marginTokens,
-        marginTop: marginTokens,
-        marginBottom: marginTokens,
-        marginLeft: marginTokens,
-        marginRight: marginTokens,
+        // CSS Fragmentation
+        boxDecorationBreak: true,
+        breakAfter: true,
+        breakBefore: true,
+        breakInside: true,
+        orphans: true,
+        widows: true,
 
-        // Dimensions
-        width: dimensionTokens,
-        height: dimensionTokens,
-        minWidth: dimensionTokens,
-        minHeight: dimensionTokens,
-        maxWidth: dimensionTokens,
-        maxHeight: dimensionTokens,
+        // CSS Generated Content
+        content: true,
+        quotes: true,
 
-        // Visual
-        border: true,
-        borderColor: borderColorTokens,
-        borderRadius: radiusTokens,
-        backgroundColor: bgColorTokens,
-        color: colorTokens,
-        opacity: true,
+        // CSS Grid Layout
+        grid: true,
+        gridAutoFlow: true,
+        gridAutoRows: true,
+        gridAutoColumns: true,
+        gridTemplate: true,
+        gridTemplateAreas: true,
+        gridTemplateColumns: true,
+        gridTemplateRows: true,
+        gridArea: true,
+        gridRow: true,
+        gridRowStart: true,
+        gridRowEnd: true,
+        gridColumn: true,
+        gridColumnStart: true,
+        gridColumnEnd: true,
+        alignTracks: true,
+        justifyTracks: true,
+        // masonryAutoFlow: true,
 
-        // Behavior
-        pointerEvents: true,
+        // CSS Images
+        imageOrientation: true,
+        imageRendering: true,
+        imageResolution: true,
+        objectFit: true,
+        objectPosition: true,
+
+        // CSS Inline
+        initialLetter: true,
+        // initialLetterAlign: true,
+
+        // CSS Lists and Counters
+        listStyle: true,
+        listStyleImage: true,
+        listStylePosition: true,
+        listStyleType: true,
+
+        // CSS Masking
+        clip: true,
+        clipPath: true,
+        mask: true,
+        maskClip: true,
+        maskComposite: true,
+        maskImage: true,
+        maskMode: true,
+        maskOrigin: true,
+        maskPosition: true,
+        maskRepeat: true,
+        maskSize: true,
+        maskType: true,
+        maskBorder: true,
+        maskBorderMode: true,
+        maskBorderOutset: true,
+        maskBorderRepeat: true,
+        maskBorderSlice: true,
+        maskBorderSource: true,
+        maskBorderWidth: true,
+
+        // CSS Miscellaneous
+        all: true, // avoid!
+        textRendering: true,
+        zoom: true,
+
+        // CSS Motion Path
+        offset: true,
+        offsetAnchor: true,
+        offsetDistance: true,
+        offsetPath: true,
+        // offsetPosition: true,
+        offsetRotate: true,
+
+        // CSS Overflow
+        // WebkitBoxOrient: true,
+        // WebkitLineClamp: true,
+        lineClamp: true,
+        maxLines: true,
+        blockOverflow: true,
         overflow: true,
+        overflowBlock: true,
+        overflowY: true,
+        overflowInline: true,
+        overflowX: true,
+        overflowClipMargin: true,
+        // scrollGutter: true,
+        scrollBehavior: true,
+
+        // CSS Pages
+        // page: true,
+        pageBreakAfter: true,
+        pageBreakBefore: true,
+        pageBreakInside: true,
+
+        // CSS Positioning
+        inset: true,
+        insetBlock: spaceTokens,
+        insetBlockStart: spaceTokens,
+        top: spaceTokens,
+        insetBlockEnd: spaceTokens,
+        bottom: spaceTokens,
+        insetInline: spaceTokens,
+        insetInlineStart: spaceTokens,
+        left: spaceTokens,
+        insetInlineEnd: spaceTokens,
+        right: spaceTokens,
+        clear: true,
+        float: true,
+        // overlay: true,
+        position: true,
+        zIndex: true,
+
+        // CSS Ruby
+        rubyAlign: true,
+        rubyMerge: true,
+        rubyPosition: true,
+
+        // CSS Scroll Anchoring
+        overflowAnchor: true,
+
+        // CSS Scroll Snap
+        scrollMargin: true,
+        scrollMarginBlock: true,
+        scrollMarginBlockStart: true,
+        scrollMarginTop: true,
+        scrollMarginBlockEnd: true,
+        scrollMarginBottom: true,
+        scrollMarginInline: true,
+        scrollMarginInlineStart: true,
+        scrollMarginLeft: true,
+        scrollMarginInlineEnd: true,
+        scrollMarginRight: true,
+        scrollPadding: true,
+        scrollPaddingBlock: true,
+        scrollPaddingBlockStart: true,
+        scrollPaddingTop: true,
+        scrollPaddingBlockEnd: true,
+        scrollPaddingBottom: true,
+        scrollPaddingInline: true,
+        scrollPaddingInlineStart: true,
+        scrollPaddingLeft: true,
+        scrollPaddingInlineEnd: true,
+        scrollPaddingRight: true,
+        scrollSnapAlign: true,
+        // scrollSnapCoordinat: true,
+        // scrollSnapDestinatio: true,
+        // scrollSnapPoints: true,
+        // scrollSnapPoints: true,
+        scrollSnapStop: true,
+        scrollSnapType: true,
+        // scrollSnapType: true,
+        // scrollSnapType: true,
+
+        // CSS Scrollbars
+        scrollbarColor: true,
+        scrollbarWidth: true,
+
+        // CSS Shapes
+        shapeImageThreshold: true,
+        shapeMargin: true,
+        shapeOutside: true,
+
+        // CSS Speech
+        // azimuth: true,
+
+        // CSS Table
+        borderCollapse: true,
+        borderSpacing: true,
+        captionSide: true,
+        emptyCells: true,
+        tableLayout: true,
+        verticalAlign: true,
+
+        // CSS Text Decoration
+        textDecoration: true,
+        textDecorationColor: true,
+        textDecorationLine: true,
+        textDecorationSkip: true,
+        textDecorationSkipInk: true,
+        textDecorationStyle: true,
+        textDecorationThickness: true,
+        // WebkitTextStroke: true,
+        // WebkitTextStrokeColor: true,
+        // WebkitTextStrokeWidth: true,
+        // WebkitTextFillColor: true,
+        textEmphasis: true,
+        textEmphasisColor: true,
+        textEmphasisPosition: true,
+        textEmphasisStyle: true,
+        textShadow: true,
+        textUnderlineOffset: true,
+        textUnderlinePosition: true,
+
+        // CSS Text
+        hangingPunctuation: true,
+        // hyphenateCharacter: true,
+        // hyphenateLimitChars: true,
+        hyphens: true,
+        letterSpacing: true,
+        lineBreak: true,
+        overflowWrap: true,
+        paintOrder: true,
+        tabSize: true,
         textAlign: true,
+        textAlignLast: true,
+        textIndent: true,
+        textJustify: true,
+        textSizeAdjust: true,
+        textTransform: true,
+        // textWrap: true,
+        // textWrapMode: true,
+        // textWrapStyle: true,
+        whiteSpace: true,
+        // whiteSpaceCollapse: true,
+        // whiteSpaceTrim: true,
+        wordBreak: true,
+        wordSpacing: true,
+        wordWrap: true,
+
+        // CSS Transforms
+        backfaceVisibility: true,
+        perspective: true,
+        perspectiveOrigin: true,
+        rotate: true,
+        scale: true,
+        transform: true,
+        transformBox: true,
+        transformOrigin: true,
+        transformStyle: true,
+        translate: true,
+
+        // CSS Transitions
+        transition: true,
+        // transitionBehavior: true,
+        transitionDelay: true,
+        transitionDuration: true,
+        transitionProperty: true,
+        transitionTimingFunction: true,
+
+        // CSS View Transitions
+        // viewTransitionName: true,
+
+        // CSS Will Change
+        willChange: true,
+
+        // CSS Writing Modes
+        direction: true,
+        textCombineUpright: true,
+        textOrientation: true,
+        unicodeBidi: true,
+        writingMode: true,
+
+        // CSS Filter Effects
+        backdropFilter: true,
+        filter: true,
+
+        // MathML
+        // mathDepth: true,
+        // mathShift: true,
+        // mathStyle: true,
+
+        // CSS Pointer Events
+        touchAction: true,
+
+        // // Layout
+        // position: true,
+        // display: true,
+
+        // // Flexbox
+        // alignItems: true,
+        // justifyContent: true,
+        // flexDirection: true,
+        // gap: spaceTokens,
+
+        // // Alignment
+        // alignContent: true,
+
+        // // Spacing
+        // padding: spaceTokens,
+        // paddingTop: spaceTokens,
+        // paddingBottom: spaceTokens,
+        // paddingLeft: spaceTokens,
+        // paddingRight: spaceTokens,
+        // margin: marginTokens,
+        // marginTop: marginTokens,
+        // marginBottom: marginTokens,
+        // marginLeft: marginTokens,
+        // marginRight: marginTokens,
+
+        // // Dimensions
+        // width: dimensionTokens,
+        // height: dimensionTokens,
+        // minWidth: dimensionTokens,
+        // minHeight: dimensionTokens,
+        // maxWidth: dimensionTokens,
+        // maxHeight: dimensionTokens,
+
+        // // Visual
+        // border: true,
+        // borderColor: borderColorTokens,
+        // borderRadius: borderRadiusTokens,
+        // backgroundColor: backgroundColorTokens,
+        // color: colorTokens,
+        // opacity: true,
+
+        // // Behavior
+        // pointerEvents: true,
+        // overflow: true,
+        // textAlign: true,
     },
 
-    shorthands: {
-        paddingX: ['paddingLeft', 'paddingRight'],
-        paddingY: ['paddingTop', 'paddingBottom'],
-        marginX: ['marginLeft', 'marginRight'],
-        marginY: ['marginTop', 'marginBottom'],
-    },
+    // shorthands: {
+    //     paddingX: ['paddingLeft', 'paddingRight'],
+    //     paddingY: ['paddingTop', 'paddingBottom'],
+    //     marginX: ['marginLeft', 'marginRight'],
+    //     marginY: ['marginTop', 'marginBottom'],
+    // },
 });
 
 export const sprinkles = createRainbowSprinkles(sprinkleProperties);

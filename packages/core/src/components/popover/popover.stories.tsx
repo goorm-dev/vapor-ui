@@ -13,7 +13,14 @@ export default {
 
 export const Default: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.Props> = {
     render: (args) => (
-        <Flex gap="$400" marginTop="200px" justifyContent="center" alignItems="center">
+        <Flex
+            $styles={{
+                gap: '$400',
+                marginTop: '200px',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
             <Popover.Root {...args}>
                 <Popover.Trigger render={<Button>Open Popover</Button>} />
 
@@ -36,7 +43,14 @@ export const Customable: StoryObj<Popover.Root.Props & Popover.PositionerPrimiti
         alignOffset: { control: 'number' },
     },
     render: ({ side, align, sideOffset = 8, ...args }) => (
-        <Flex gap="$400" marginTop="200px" justifyContent="center" alignItems="center">
+        <Flex
+            $styles={{
+                gap: '$400',
+                marginTop: '200px',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
             <Popover.Root {...args}>
                 <Popover.Trigger render={<Button>Open Popover</Button>} />
 
@@ -63,11 +77,13 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
     render: (args) => (
         <>
             <HStack
-                padding="100px"
-                gap="$400"
-                justifyContent="center"
-                alignItems="center"
-                border="1px solid"
+                $styles={{
+                    padding: '100px',
+                    gap: '$400',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    border: '1px solid',
+                }}
             >
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Left Popover</Button>} />
@@ -106,11 +122,13 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
             </HStack>
 
             <HStack
-                padding="$800"
-                gap="$900"
-                justifyContent="center"
-                alignItems="center"
-                border="1px solid"
+                $styles={{
+                    padding: '$800',
+                    gap: '$900',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    border: '1px solid',
+                }}
             >
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>End Popover</Button>} />
@@ -142,7 +160,9 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
                 </Popover.Root>
             </HStack>
 
-            <HStack padding="$800" border="1px solid" justifyContent={'space-between'}>
+            <HStack
+                $styles={{ padding: '$800', border: '1px solid', justifyContent: 'space-between' }}
+            >
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Fliped Popover</Button>} />
 
@@ -172,7 +192,9 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
                 </Popover.Root>
             </HStack>
 
-            <HStack padding="$200" border="1px solid" justifyContent={'space-between'}>
+            <HStack
+                $styles={{ padding: '$200', border: '1px solid', justifyContent: 'space-between' }}
+            >
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Fliped Popover</Button>} />
 

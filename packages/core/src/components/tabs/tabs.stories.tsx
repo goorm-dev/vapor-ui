@@ -49,7 +49,7 @@ export const Default: StoryObj<typeof Tabs.Root> = {
 export const TestBed: StoryObj<typeof Tabs.Root> = {
     render: (args) => {
         return (
-            <VStack gap="$300">
+            <VStack $styles={{ gap: '$300' }}>
                 <HStack>
                     <Tabs.Root
                         variant="line"
@@ -84,7 +84,7 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
                     </Tabs.Root>
                 </HStack>
 
-                <HStack gap="$200">
+                <HStack $styles={{ gap: '$200' }}>
                     <Tabs.Root size="sm" defaultValue={'tab1'} activateOnFocus={false} {...args}>
                         <Tabs.List>
                             <Tabs.Button value="tab1">Tab 1</Tabs.Button>
@@ -125,7 +125,7 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
                     <Tabs.Panel value="tab3">Content for Tab 3</Tabs.Panel>
                 </Tabs.Root>
 
-                <HStack gap="$200">
+                <HStack $styles={{ gap: '$200' }}>
                     <Tabs.Root
                         orientation="vertical"
                         defaultValue={'tab2'}

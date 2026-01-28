@@ -51,8 +51,8 @@ const ToastList = () => {
                 {toasts.map((toast) => (
                     <ToastRootPrimitive key={toast.id} toast={toast}>
                         <ToastContentPrimitive>
-                            <HStack gap="$075">
-                                <Box marginY="3px">
+                            <HStack $styles={{ gap: '$075' }}>
+                                <Box $styles={{ marginBlock: '3px' }}>
                                     <ToastIconPrimitive />
                                 </Box>
                                 <VStack>
@@ -60,7 +60,7 @@ const ToastList = () => {
                                     <ToastDescriptionPrimitive />
                                 </VStack>
                             </HStack>
-                            <HStack gap="$100" alignItems="center">
+                            <HStack $styles={{ gap: '$100', alignItems: 'center' }}>
                                 <ToastActionPrimitive />
                                 <ToastClosePrimitive />
                             </HStack>

@@ -81,7 +81,7 @@ export const ObjectItems: StoryObj = {
         };
 
         return (
-            <HStack gap="$200">
+            <HStack $styles={{ gap: '$200' }}>
                 <VStack>
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={languages}>
@@ -151,7 +151,7 @@ export const ArrayItmes: StoryObj = {
         };
 
         return (
-            <HStack gap="$200">
+            <HStack $styles={{ gap: '$200' }}>
                 <VStack>
                     <span>Default</span>
                     <MultiSelect.Root {...args} items={fonts} defaultValue={null}>

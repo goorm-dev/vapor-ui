@@ -47,8 +47,8 @@ export const Default: Story = {
 export const TestBed: Story = {
     render: () => {
         return (
-            <VStack gap="$200">
-                <HStack gap="$100" alignItems="center">
+            <VStack $styles={{ gap: '$200' }}>
+                <HStack $styles={{ gap: '$100', alignItems: 'center' }}>
                     <Switch.Root size="md" />
                     <Switch.Root size="md" checked />
                     <Switch.Root size="md" disabled />
@@ -61,7 +61,7 @@ export const TestBed: Story = {
                     <Switch.Root size="md" checked invalid />
                 </HStack>
 
-                <HStack gap="$100" alignItems="center">
+                <HStack $styles={{ gap: '$100', alignItems: 'center' }}>
                     <Switch.Root size="lg" />
                     <Switch.Root size="lg" checked />
                     <Switch.Root size="lg" disabled />

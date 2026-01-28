@@ -10,7 +10,13 @@ type HStackVariants = { reverse?: boolean };
 export const HStack = forwardRef<HTMLDivElement, HStack.Props>((props, ref) => {
     const [{ reverse }, otherProps] = createSplitProps<HStackVariants>()(props, ['reverse']);
 
-    return <Flex ref={ref} flexDirection={reverse ? 'row-reverse' : 'row'} {...otherProps} />;
+    return (
+        <Flex
+            ref={ref}
+            $styles={{ flexDirection: reverse ? 'row-reverse' : 'row' }}
+            {...otherProps}
+        />
+    );
 });
 HStack.displayName = 'HStack';
 

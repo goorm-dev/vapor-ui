@@ -74,25 +74,30 @@ const CustomToastList = () => {
             <Toast.RootPrimitive
                 key={toast.id}
                 toast={toast}
-                backgroundColor="$white"
-                border="1px solid"
-                borderColor="$normal"
-                padding="$200"
+                $styles={{
+                    backgroundColor: '$white',
+                    border: '1px solid',
+                    borderColor: '$normal',
+                    padding: '$200',
+                }}
             >
                 <Toast.ContentPrimitive>
-                    <HStack gap="$100">
-                        <Toast.IconPrimitive marginY="3px" />
+                    <HStack $styles={{ gap: '$100' }}>
+                        <Toast.IconPrimitive $styles={{ marginBlock: '3px' }} />
 
                         <VStack>
-                            <Toast.TitlePrimitive color="$normal-200" />
-                            <Toast.DescriptionPrimitive color="$normal-200" />
+                            <Toast.TitlePrimitive $styles={{ color: '$normal-200' }} />
+                            <Toast.DescriptionPrimitive $styles={{ color: '$normal-200' }} />
                         </VStack>
                     </HStack>
                     <Toast.ClosePrimitive
                         render={<IconButton aria-label="Close toast" size="sm" variant="ghost" />}
-                        position="absolute"
-                        color="$normal-200"
-                        style={{ right: 8, top: 8 }}
+                        $styles={{
+                            position: 'absolute',
+                            color: '$normal-200',
+                            right: '8px',
+                            top: '8px',
+                        }}
                     >
                         <InfoCircleIcon />
                     </Toast.ClosePrimitive>

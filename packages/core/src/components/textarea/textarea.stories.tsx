@@ -38,7 +38,11 @@ export const Default: Story = {
 
 export const TestBed: Story = {
     render: (args) => (
-        <Grid.Root templateRows="repeat(3, 1fr)" templateColumns="repeat(3, 1fr)" gap="$300">
+        <Grid.Root
+            templateRows="repeat(3, 1fr)"
+            templateColumns="repeat(3, 1fr)"
+            $styles={{ gap: '$300' }}
+        >
             <Textarea placeholder="Enter your text here..." {...args} />
             <Textarea placeholder="Enter your text here..." {...args} disabled />
             <Textarea placeholder="Enter your text here..." {...args} invalid />
