@@ -22,13 +22,13 @@ export const Component = () => (
             <Popover.Trigger>Open</Popover.Trigger>
             <Popover.Popup>Content</Popover.Popup>
         </Popover.Root>
-        {/* Tooltip with delay only (no openOnHover) */}
+        {/* Tooltip with delay only */}
         <Tooltip.Root delay={500}>
             <Tooltip.Trigger>Hover me</Tooltip.Trigger>
             <Tooltip.Popup>Tooltip content</Tooltip.Popup>
         </Tooltip.Root>
-        {/* Tooltip with delay and closeDelay */}
-        <Tooltip.Root delay={500} closeDelay={200}>
+        {/* Tooltip with another delay value */}
+        <Tooltip.Root delay={300}>
             <Tooltip.Trigger>Hover me</Tooltip.Trigger>
             <Tooltip.Popup>Tooltip content</Tooltip.Popup>
         </Tooltip.Root>

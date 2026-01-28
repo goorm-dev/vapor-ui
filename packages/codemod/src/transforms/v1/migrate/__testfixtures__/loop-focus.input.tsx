@@ -3,30 +3,30 @@ import { Menu } from '@vapor-ui/core';
 export const Component = ({ shouldLoop }: { shouldLoop: boolean }) => (
     <>
         {/* true */}
-        <Menu.Root>
+        <Menu.Root loop={true}>
             <Menu.Trigger>Open</Menu.Trigger>
-            <Menu.Popup loop={true}>
+            <Menu.Popup>
                 <Menu.Item>Item 1</Menu.Item>
             </Menu.Popup>
         </Menu.Root>
         {/* false */}
-        <Menu.Root>
+        <Menu.Root loop={false}>
             <Menu.Trigger>Open</Menu.Trigger>
-            <Menu.Popup loop={false}>
+            <Menu.Popup>
                 <Menu.Item>Item 1</Menu.Item>
             </Menu.Popup>
         </Menu.Root>
         {/* shorthand */}
-        <Menu.Root>
+        <Menu.Root loop>
             <Menu.Trigger>Open</Menu.Trigger>
-            <Menu.Popup loop>
+            <Menu.Popup>
                 <Menu.Item>Item 1</Menu.Item>
             </Menu.Popup>
         </Menu.Root>
         {/* expression */}
-        <Menu.Root>
+        <Menu.Root loop={shouldLoop}>
             <Menu.Trigger>Open</Menu.Trigger>
-            <Menu.Popup loop={shouldLoop}>
+            <Menu.Popup>
                 <Menu.Item>Item 1</Menu.Item>
             </Menu.Popup>
         </Menu.Root>
