@@ -34,11 +34,11 @@ export default function TooltipPopup() {
                     <Tooltip.Trigger render={<Button>포맷된 텍스트</Button>} />
                     <Tooltip.Popup>
                         <VStack gap="$50">
-                            <Text typography="body3" fontWeight="bold">
+                            <Text typography="body3" className="font-bold">
                                 제목
                             </Text>
                             <Text typography="body3">설명 텍스트가 여기에 있습니다.</Text>
-                            <Text typography="caption1" foreground="hint-100">
+                            <Text typography="body4" foreground="hint-100">
                                 추가 정보
                             </Text>
                         </VStack>

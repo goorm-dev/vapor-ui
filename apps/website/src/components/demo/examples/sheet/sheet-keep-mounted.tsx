@@ -13,7 +13,7 @@ export default function SheetKeepMounted() {
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>일반 Sheet</Sheet.Trigger>
                     <Sheet.Popup>
-                        <Box position="absolute" top="$100" right="$100">
+                        <Box className="absolute top-2 right-2">
                             <Sheet.Close aria-label="Close sheet" className="flex">
                                 <CloseOutlineIcon />
                             </Sheet.Close>
@@ -42,7 +42,7 @@ export default function SheetKeepMounted() {
                         유지 Sheet
                     </Sheet.Trigger>
                     <Sheet.Popup portalElement={<Sheet.PortalPrimitive keepMounted />}>
-                        <Box position="absolute" top="$100" right="$100">
+                        <Box className="absolute top-2 right-2">
                             <Sheet.Close aria-label="Close sheet" className="flex">
                                 <CloseOutlineIcon />
                             </Sheet.Close>

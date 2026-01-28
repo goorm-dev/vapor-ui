@@ -11,7 +11,7 @@ export default function Flexible() {
                 <Sheet.OverlayPrimitive />
                 <Sheet.PositionerPrimitive>
                     <Sheet.PopupPrimitive>
-                        <Box position="absolute" top="$100" right="$100">
+                        <Box className="absolute top-2 right-2">
                             <Sheet.Close aria-label="Close sheet" className="flex">
                                 <CloseOutlineIcon />
                             </Sheet.Close>

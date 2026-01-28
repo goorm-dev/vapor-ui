@@ -31,10 +31,10 @@ export default function FormWithField() {
                 </Field.Root>
 
                 <Field.Root name="role">
-                    <Select.Root>
+                    <Select.Root placeholder="Select a role">
                         <VStack render={<Field.Label />} gap="$050">
                             Role
-                            <Select.Trigger placeholder="Select a role" />
+                            <Select.Trigger />
                         </VStack>
                         <Select.Popup>
                             <Select.Item value="developer">Developer</Select.Item>

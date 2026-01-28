@@ -13,7 +13,7 @@ export default function SheetSide() {
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>Right</Sheet.Trigger>
                     <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="right" />}>
-                        <Box position="absolute" top="$100" right="$100">
+                        <Box className="absolute top-2 right-2">
                             <Sheet.Close aria-label="Close sheet" className="flex">
                                 <CloseOutlineIcon />
                             </Sheet.Close>
@@ -36,7 +36,7 @@ export default function SheetSide() {
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>Left</Sheet.Trigger>
                     <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="left" />}>
-                        <Box position="absolute" top="$100" right="$100">
+                        <Box className="absolute top-2 right-2">
                             <Sheet.Close aria-label="Close sheet" className="flex">
                                 <CloseOutlineIcon />
                             </Sheet.Close>
@@ -57,7 +57,7 @@ export default function SheetSide() {
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>Top</Sheet.Trigger>
                     <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="top" />}>
-                        <Box position="absolute" top="$100" right="$100">
+                        <Box className="absolute top-2 right-2">
                             <Sheet.Close aria-label="Close sheet" className="flex">
                                 <CloseOutlineIcon />
                             </Sheet.Close>
@@ -78,7 +78,7 @@ export default function SheetSide() {
                 <Sheet.Root>
                     <Sheet.Trigger render={<Button variant="outline" />}>Bottom</Sheet.Trigger>
                     <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="bottom" />}>
-                        <Box position="absolute" top="$100" right="$100">
+                        <Box className="absolute top-2 right-2">
                             <Sheet.Close aria-label="Close sheet" className="flex">
                                 <CloseOutlineIcon />
                             </Sheet.Close>
