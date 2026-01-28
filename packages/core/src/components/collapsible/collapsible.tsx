@@ -31,7 +31,14 @@ export const CollapsibleTrigger = forwardRef<HTMLButtonElement, CollapsibleTrigg
         const { disabled, ...componentProps } = resolveStyles(props);
         const dataAttrs = createDataAttributes({ disabled });
 
-        return <BaseCollapsible.Trigger ref={ref} disabled={disabled} {...dataAttrs} {...componentProps} />;
+        return (
+            <BaseCollapsible.Trigger
+                ref={ref}
+                disabled={disabled}
+                {...dataAttrs}
+                {...componentProps}
+            />
+        );
     },
 );
 CollapsibleTrigger.displayName = 'Collapsible.Trigger';
