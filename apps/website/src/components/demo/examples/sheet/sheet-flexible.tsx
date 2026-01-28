@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Sheet } from '@vapor-ui/core';
+import { Box, Button, Sheet } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 export default function Flexible() {
@@ -11,11 +11,11 @@ export default function Flexible() {
                 <Sheet.OverlayPrimitive />
                 <Sheet.PositionerPrimitive>
                     <Sheet.PopupPrimitive>
-                        <div className="absolute top-4 right-4">
+                        <Box position="absolute" top="$100" right="$100">
                             <Sheet.Close aria-label="Close sheet" className="flex">
                                 <CloseOutlineIcon />
                             </Sheet.Close>
-                        </div>
+                        </Box>
                         <Sheet.Header>
                             <Sheet.Title>간단한 Sheet</Sheet.Title>
                         </Sheet.Header>

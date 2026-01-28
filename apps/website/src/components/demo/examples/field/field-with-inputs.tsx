@@ -6,10 +6,10 @@ export default function FieldWithInputs() {
     return (
         <VStack gap="$300" className="w-72">
             <Field.Root name="email">
-                <Field.Label className="flex flex-col gap-1">
+                <VStack render={<Field.Label />} gap="$050">
                     Email
                     <TextInput type="email" placeholder="you@example.com" />
-                </Field.Label>
+                </VStack>
                 <Field.Description>Your primary contact email.</Field.Description>
             </Field.Root>
 
@@ -31,10 +31,10 @@ export default function FieldWithInputs() {
 
             <Field.Root name="country">
                 <Select.Root>
-                    <Field.Label className="flex flex-col gap-1">
+                    <VStack render={<Field.Label />} gap="$050">
                         Country
                         <Select.Trigger />
-                    </Field.Label>
+                    </VStack>
                     <Select.Popup>
                         <Select.Item value="us">United States</Select.Item>
                         <Select.Item value="uk">United Kingdom</Select.Item>

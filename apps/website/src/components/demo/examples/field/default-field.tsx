@@ -1,14 +1,14 @@
 'use client';
 
-import { Field, TextInput } from '@vapor-ui/core';
+import { Field, TextInput, VStack } from '@vapor-ui/core';
 
 export default function DefaultField() {
     return (
         <Field.Root name="email" className="w-72">
-            <Field.Label className="flex flex-col gap-1">
+            <VStack render={<Field.Label />} gap="$050">
                 Email
                 <TextInput type="email" placeholder="you@example.com" />
-            </Field.Label>
+            </VStack>
             <Field.Description>We'll never share your email.</Field.Description>
         </Field.Root>
     );

@@ -1,15 +1,15 @@
-import { TextInput } from '@vapor-ui/core';
+import { TextInput, VStack } from '@vapor-ui/core';
 
 export default function TextInputInvalid() {
     return (
-        <div className="space-y-3 flex flex-col">
+        <VStack gap="$150">
             <TextInput
                 type="email"
                 invalid
-                placeholder="잘못된 이메일 형식"
+                placeholder="Invalid email"
                 defaultValue="invalid-email"
             />
-            <TextInput invalid placeholder="필수 입력 항목" />
-        </div>
+            <TextInput invalid placeholder="Required field" />
+        </VStack>
     );
 }

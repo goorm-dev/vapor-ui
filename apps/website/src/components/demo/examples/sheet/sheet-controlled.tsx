@@ -2,34 +2,34 @@
 
 import { useState } from 'react';
 
-import { Button, Sheet } from '@vapor-ui/core';
+import { Box, Button, HStack, Sheet, Text, VStack } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 export default function SheetControlled() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="space-y-4">
-            <div className="flex gap-2">
+        <VStack gap="$150" alignItems="flex-start">
+            <HStack gap="$100">
                 <Button onClick={() => setIsOpen(true)} colorPalette="primary">
                     Sheet 열기
                 </Button>
                 <Button onClick={() => setIsOpen(false)} colorPalette="danger" variant="outline">
                     Sheet 닫기
                 </Button>
-            </div>
+            </HStack>
 
-            <p className="text-sm text-gray-600">
+            <Text typography="body3" foreground="hint-100">
                 현재 상태: <strong>{isOpen ? '열림' : '닫힘'}</strong>
-            </p>
+            </Text>
 
             <Sheet.Root open={isOpen} onOpenChange={setIsOpen}>
                 <Sheet.Popup>
-                    <div className="absolute top-4 right-4">
+                    <Box position="absolute" top="$100" right="$100">
                         <Sheet.Close aria-label="Close sheet" className="flex">
                             <CloseOutlineIcon />
                         </Sheet.Close>
-                    </div>
+                    </Box>
                     <Sheet.Header>
                         <Sheet.Title>제어된 Sheet</Sheet.Title>
                     </Sheet.Header>
@@ -44,6 +44,6 @@ export default function SheetControlled() {
                     </Sheet.Footer>
                 </Sheet.Popup>
             </Sheet.Root>
-        </div>
+        </VStack>
     );
 }
