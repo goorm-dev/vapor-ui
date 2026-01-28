@@ -134,17 +134,18 @@ Migrates code from `@base-ui-components/react@beta` to `@base-ui/react@1.1.0`. T
 
 #### Transformations
 
-| Transformation                | Component              | Notes                               |
-| ----------------------------- | ---------------------- | ----------------------------------- |
-| `loop` → `loopFocus`          | Menu, Select, Toolbar  | Prop rename                         |
-| `trackAnchor` → `disableAnchorTracking` | Popover, Menu, Tooltip | Boolean inversion                   |
-| `hoverable` → `disableHoverablePopup`   | Tooltip                | Boolean inversion                   |
-| **Hover Props (Root → Trigger)** |                        |                                     |
-| `openOnHover`                 | Menu, Popover          | Moved from Root to Trigger          |
-| `delay`                       | Menu, Popover, Tooltip | Moved from Root to Trigger          |
-| `closeDelay`                  | Menu, Popover          | Moved from Root to Trigger          |
+| Transformation                          | Component              | Notes                      |
+| --------------------------------------- | ---------------------- | -------------------------- |
+| `loop` → `loopFocus`                    | Menu, Tabs             | Prop rename                |
+| `trackAnchor` → `disableAnchorTracking` | Popover, Menu, Tooltip | Boolean inversion          |
+| `hoverable` → `disableHoverablePopup`   | Tooltip                | Boolean inversion          |
+| **Hover Props (Root → Trigger)**        |                        |                            |
+| `openOnHover`                           | Menu, Popover          | Moved from Root to Trigger |
+| `delay`                                 | Menu, Popover, Tooltip | Moved from Root to Trigger |
+| `closeDelay`                            | Menu, Popover          | Moved from Root to Trigger |
 
 > **Note:**
+>
 > - Boolean props `trackAnchor` and `hoverable` are **inverted** when transformed to their `disable*` equivalents
 > - Tooltip **does not** move `closeDelay` prop (only `delay` is moved)
 
@@ -235,26 +236,31 @@ We welcome contributions to `@vapor-ui/codemod`! Here's how you can help:
 ### Development Workflow
 
 **Run tests:**
+
 ```bash
 pnpm test
 ```
 
 **Run tests in watch mode:**
+
 ```bash
 pnpm test:watch
 ```
 
 **Lint your code:**
+
 ```bash
 pnpm lint
 ```
 
 **Type check:**
+
 ```bash
 pnpm typecheck
 ```
 
 **Build the package:**
+
 ```bash
 pnpm build
 ```
@@ -264,8 +270,8 @@ pnpm build
 1. Create a new directory under `src/transforms/` (e.g., `src/transforms/v2/migrate/`)
 2. Implement your transform logic in `index.ts`
 3. Add test fixtures in `__testfixtures__/` directory:
-   - `*.input.tsx` - Input code before transformation
-   - `*.output.tsx` - Expected output after transformation
+    - `*.input.tsx` - Input code before transformation
+    - `*.output.tsx` - Expected output after transformation
 4. Create a test file in `__tests__/` directory
 5. Register your transform in `src/bin/cli.ts`
 6. Update the README.md with documentation
@@ -299,6 +305,7 @@ pnpm build
 Maintained by the Vapor UI team at [Goorm](https://goorm.io).
 
 Special thanks to all contributors who have helped improve this project:
+
 - [Contributors](https://github.com/goorm-dev/vapor-ui/graphs/contributors)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
