@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Menu, Tooltip } from 'completely-different-library';
 
 export const Component = () => (
