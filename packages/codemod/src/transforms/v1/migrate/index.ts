@@ -6,23 +6,28 @@ import {
     transformLoop,
     transformTrackAnchor,
 } from './migrations';
+import { hasTargetPackageImports } from './utils/import-verification';
 
 /**
- * Codemod transform for migrating @base-ui-components/react@beta.4 to @base-ui/react@1.1.0.
+ * Codemod transform for migrating @vapor-ui/core components.
  *
- * This transform applies the following migrations:
- * - dismissible → disablePointerDismissal (Dialog)
- * - loop → loopFocus
- * - trackAnchor → disableAnchorTracking (with boolean inversion)
- * - hoverable → disableHoverablePopup (Tooltip, with boolean inversion)
- * - openOnHover, delay, closeDelay position changes (Menu, Popover, Tooltip Root → Trigger)
+ * This transform applies the following migrations to components imported from @vapor-ui/core:
+ * - `loop` → `loopFocus`
+ * - `trackAnchor` → `disableAnchorTracking` (with boolean inversion)
+ * - `hoverable` → `disableHoverablePopup` (Tooltip only, with boolean inversion)
+ * - Moves `openOnHover`, `delay`, `closeDelay` from Root to Trigger (Menu, Popover, Tooltip)
  *
- * Future migrations to be added:
- * - Select.Placeholder → Select.Value placeholder prop
+ * Components from other libraries (including @goorm-dev/vapor-core) are not transformed.
+ * Supports aliased imports (e.g., `import { Tooltip as MyTooltip }`).
  */
 const transform: Transform = (fileInfo: FileInfo, api: API) => {
     const j = api.jscodeshift;
     const root = j(fileInfo.source);
+
+    // Early return if no @vapor-ui/core imports (performance optimization)
+    if (!hasTargetPackageImports(j, root)) {
+        return fileInfo.source;
+    }
 
     // Apply migration functions sequentially
     transformLoop(j, root);

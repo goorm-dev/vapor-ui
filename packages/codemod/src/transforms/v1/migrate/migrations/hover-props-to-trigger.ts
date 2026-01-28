@@ -85,7 +85,10 @@ export function transformHoverPropsToTrigger(j: API['jscodeshift'], root: Collec
 
             triggerElements.forEach((triggerPath) => {
                 const triggerOpening = triggerPath.value.openingElement;
-                triggerOpening.attributes = [...(triggerOpening.attributes || []), ...attributesToMove];
+                triggerOpening.attributes = [
+                    ...(triggerOpening.attributes || []),
+                    ...attributesToMove,
+                ];
             });
         });
     });

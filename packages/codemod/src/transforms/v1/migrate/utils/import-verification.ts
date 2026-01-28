@@ -9,10 +9,7 @@ export const TARGET_PACKAGE = '@vapor-ui/core';
  * Check if the file has imports from @vapor-ui/core
  * Useful for early return optimization
  */
-export function hasTargetPackageImports(
-    j: API['jscodeshift'],
-    root: Collection,
-): boolean {
+export function hasTargetPackageImports(j: API['jscodeshift'], root: Collection): boolean {
     const imports = root.find(j.ImportDeclaration, {
         source: { value: TARGET_PACKAGE },
     });
@@ -28,10 +25,7 @@ export function hasTargetPackageImports(
  * - import { Menu } from '@vapor-ui/core' → Set(['Menu'])
  * - import { Menu as VaporMenu } from '@vapor-ui/core' → Set(['VaporMenu'])
  */
-export function getImportedComponentNames(
-    j: API['jscodeshift'],
-    root: Collection,
-): Set<string> {
+export function getImportedComponentNames(j: API['jscodeshift'], root: Collection): Set<string> {
     const componentNames = new Set<string>();
 
     root.find(j.ImportDeclaration, {
@@ -69,10 +63,7 @@ export function getLocalComponentName(
         source: { value: TARGET_PACKAGE },
     }).forEach((path) => {
         path.value.specifiers?.forEach((specifier) => {
-            if (
-                specifier.type === 'ImportSpecifier' &&
-                specifier.imported.name === componentName
-            ) {
+            if (specifier.type === 'ImportSpecifier' && specifier.imported.name === componentName) {
                 // Use local name (alias) if available, otherwise use imported name
                 localName = (specifier.local?.name || specifier.imported.name) as string;
             }

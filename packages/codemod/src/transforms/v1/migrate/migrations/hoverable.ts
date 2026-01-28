@@ -1,9 +1,13 @@
 import type { API, Collection } from 'jscodeshift';
 
+import { getLocalComponentName } from '../utils/import-verification';
+
 /**
  * Transform `hoverable` prop to `disableHoverablePopup` with inverted boolean value.
  *
  * This is specific to Tooltip component.
+ * Only transforms Tooltip components imported from @vapor-ui/core.
+ * Supports aliased imports (e.g., import { Tooltip as MyTooltip }).
  *
  * | Original                  | Transformed                          |
  * |---------------------------|--------------------------------------|
@@ -13,12 +17,20 @@ import type { API, Collection } from 'jscodeshift';
  * | `hoverable={expr}`        | `disableHoverablePopup={!expr}`      |
  */
 export function transformHoverable(j: API['jscodeshift'], root: Collection): void {
-    // Find Tooltip.Root elements with hoverable prop
+    // Get the local name for Tooltip from @vapor-ui/core
+    const tooltipLocalName = getLocalComponentName(j, root, 'Tooltip');
+
+    // Early return if Tooltip is not imported from @vapor-ui/core
+    if (!tooltipLocalName) {
+        return;
+    }
+
+    // Find Tooltip.Root elements with hoverable prop (using local name)
     root.find(j.JSXElement, {
         openingElement: {
             name: {
                 type: 'JSXMemberExpression',
-                object: { name: 'Tooltip' },
+                object: { name: tooltipLocalName }, // Use local name (respects alias)
                 property: { name: 'Root' },
             },
         },
