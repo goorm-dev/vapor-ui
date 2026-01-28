@@ -1,0 +1,3 @@
+import SaintVincentAndTheGrenadinesColorIcon from './SaintVincentAndTheGrenadinesColorIcon';
+
+export default SaintVincentAndTheGrenadinesColorIcon;
