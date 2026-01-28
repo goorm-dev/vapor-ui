@@ -25,11 +25,11 @@ export default function TabsKeyboard() {
                 </Tabs.List>
             </Tabs.Root>
 
-            <Tabs.Root defaultValue="tab1" loop={true} activateOnFocus={false}>
+            <Tabs.Root defaultValue="tab1" loopFocus={false} activateOnFocus={false}>
                 <h4 className="text-sm font-medium mb-4">
-                    비순환 내비게이션 <code>(loop: false)</code>
+                    비순환 내비게이션 <code>(loopFocus: false)</code>
                 </h4>
-                <Tabs.List loop={false}>
+                <Tabs.List>
                     <Tabs.Button value="tab1">탭 1</Tabs.Button>
                     <Tabs.Button value="tab2">탭 2</Tabs.Button>
                     <Tabs.Button value="tab3">탭 3</Tabs.Button>

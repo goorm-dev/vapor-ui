@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { Radio as BaseRadio } from '@base-ui-components/react';
+import { Radio as BaseRadio } from '@base-ui/react/radio';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
