@@ -8,7 +8,7 @@ const COMPONENTS = ['Menu', 'Popover', 'Tooltip'];
 const COMPONENT_PROPS_MAP: Record<string, string[]> = {
     Menu: ['openOnHover', 'delay', 'closeDelay'],
     Popover: ['openOnHover', 'delay', 'closeDelay'],
-    Tooltip: ['delay'], // Tooltip only supports delay
+    Tooltip: ['delay', 'closeDelay'],
 };
 
 /**
@@ -20,7 +20,7 @@ const COMPONENT_PROPS_MAP: Record<string, string[]> = {
  * Moves hover-related props from Root to Trigger for:
  * - Menu: `openOnHover`, `delay`, `closeDelay`
  * - Popover: `openOnHover`, `delay`, `closeDelay`
- * - Tooltip: `delay` only
+ * - Tooltip: `delay`, `closeDelay`
  *
  * | Original (Root)                           | Transformed (Trigger)                        |
  * |-------------------------------------------|----------------------------------------------|

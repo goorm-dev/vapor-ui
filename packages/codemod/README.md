@@ -134,20 +134,21 @@ Migrates code from `@base-ui-components/react@beta` to `@base-ui/react@1.1.0`. T
 
 #### Transformations
 
-| Transformation                          | Component              | Notes                      |
-| --------------------------------------- | ---------------------- | -------------------------- |
-| `loop` → `loopFocus`                    | Menu, Tabs             | Prop rename                |
-| `trackAnchor` → `disableAnchorTracking` | Popover, Menu, Tooltip | Boolean inversion          |
-| `hoverable` → `disableHoverablePopup`   | Tooltip                | Boolean inversion          |
-| **Hover Props (Root → Trigger)**        |                        |                            |
-| `openOnHover`                           | Menu, Popover          | Moved from Root to Trigger |
-| `delay`                                 | Menu, Popover, Tooltip | Moved from Root to Trigger |
-| `closeDelay`                            | Menu, Popover          | Moved from Root to Trigger |
+| Transformation                          | Component              | Notes                           |
+| --------------------------------------- | ---------------------- | ------------------------------- |
+| `loop` → `loopFocus`                    | Menu, Tabs             | Prop rename                     |
+| `trackAnchor` → `disableAnchorTracking` | Popover, Menu, Tooltip | Boolean inversion               |
+| `hoverable` → `disableHoverablePopup`   | Tooltip                | Boolean inversion               |
+| `onClearErrors` removed                 | Form                   | Errors now auto-clear on change |
+| **Hover Props (Root → Trigger)**        |                        |                                 |
+| `openOnHover`                           | Menu, Popover          | Moved from Root to Trigger      |
+| `delay`                                 | Menu, Popover, Tooltip | Moved from Root to Trigger      |
+| `closeDelay`                            | Menu, Popover, Tooltip | Moved from Root to Trigger      |
 
 > **Note:**
 >
 > - Boolean props `trackAnchor` and `hoverable` are **inverted** when transformed to their `disable*` equivalents
-> - Tooltip **does not** move `closeDelay` prop (only `delay` is moved)
+> - Form's `onClearErrors` is removed as errors are now auto-cleared when field values change
 
 #### Examples
 
@@ -180,11 +181,34 @@ Migrates code from `@base-ui-components/react@beta` to `@base-ui/react@1.1.0`. T
   <Tooltip.Popup>Content</Tooltip.Popup>
 </Tooltip.Root>
 
-// After (closeDelay stays on Root)
-<Tooltip.Root disableHoverablePopup={true} closeDelay={200}>
-  <Tooltip.Trigger delay={500}>Hover</Tooltip.Trigger>
+// After
+<Tooltip.Root disableHoverablePopup={true}>
+  <Tooltip.Trigger delay={500} closeDelay={200}>Hover</Tooltip.Trigger>
   <Tooltip.Popup>Content</Tooltip.Popup>
 </Tooltip.Root>
+```
+
+**Form with onClearErrors removed:**
+
+```tsx
+// Before
+<Form
+  errors={errors}
+  onClearErrors={(clearedErrors) => {
+    setErrors((prev) => {
+      const next = { ...prev };
+      Object.keys(clearedErrors).forEach((name) => delete next[name]);
+      return next;
+    });
+  }}
+>
+  <input name="email" />
+</Form>
+
+// After
+<Form errors={errors}>
+  <input name="email" />
+</Form>
 ```
 
 **Aliased imports:**

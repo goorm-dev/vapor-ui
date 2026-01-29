@@ -5,6 +5,7 @@ import {
     transformHoverPropsToTrigger,
     transformHoverable,
     transformLoop,
+    transformSelectedToCurrent,
     transformTrackAnchor,
 } from './migrations';
 import { hasTargetPackageImports } from './utils/import-verification';
@@ -18,6 +19,7 @@ import { hasTargetPackageImports } from './utils/import-verification';
  * - `hoverable` → `disableHoverablePopup` (Tooltip only, with boolean inversion)
  * - Moves `openOnHover`, `delay`, `closeDelay` from Root to Trigger (Menu, Popover, Tooltip)
  * - Removes `onClearErrors` from Form (errors are now auto-cleared on value change)
+ * - `selected` → `current` on NavigationMenu.Link (Breadcrumb API consistency)
  *
  * Components from other libraries (including @goorm-dev/vapor-core) are not transformed.
  * Supports aliased imports (e.g., `import { Tooltip as MyTooltip }`).
@@ -37,6 +39,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     transformHoverable(j, root);
     transformHoverPropsToTrigger(j, root);
     transformFormOnClearErrors(j, root);
+    transformSelectedToCurrent(j, root);
 
     return root.toSource();
 };

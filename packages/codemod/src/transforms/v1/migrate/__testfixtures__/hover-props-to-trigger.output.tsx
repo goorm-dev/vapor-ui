@@ -32,9 +32,11 @@ export const Component = () => (
             <Tooltip.Trigger delay={500}>Hover me</Tooltip.Trigger>
             <Tooltip.Popup>Tooltip content</Tooltip.Popup>
         </Tooltip.Root>
-        {/* Tooltip with another delay value */}
+        {/* Tooltip with delay and closeDelay */}
         <Tooltip.Root>
-            <Tooltip.Trigger delay={300}>Hover me</Tooltip.Trigger>
+            <Tooltip.Trigger delay={300} closeDelay={100}>
+                Hover me
+            </Tooltip.Trigger>
             <Tooltip.Popup>Tooltip content</Tooltip.Popup>
         </Tooltip.Root>
         {/* No props to move - should remain unchanged */}

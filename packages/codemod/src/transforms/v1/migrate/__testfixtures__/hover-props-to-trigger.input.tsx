@@ -27,8 +27,8 @@ export const Component = () => (
             <Tooltip.Trigger>Hover me</Tooltip.Trigger>
             <Tooltip.Popup>Tooltip content</Tooltip.Popup>
         </Tooltip.Root>
-        {/* Tooltip with another delay value */}
-        <Tooltip.Root delay={300}>
+        {/* Tooltip with delay and closeDelay */}
+        <Tooltip.Root delay={300} closeDelay={100}>
             <Tooltip.Trigger>Hover me</Tooltip.Trigger>
             <Tooltip.Popup>Tooltip content</Tooltip.Popup>
         </Tooltip.Root>

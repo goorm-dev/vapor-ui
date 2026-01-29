@@ -1,4 +1,4 @@
-import { Menu, Popover, Tooltip } from '@vapor-ui/core';
+import { Menu, NavigationMenu, Popover, Tooltip } from '@vapor-ui/core';
 
 export const Component = ({ shouldLoop, shouldTrack }: any) => (
     <>
@@ -27,5 +27,14 @@ export const Component = ({ shouldLoop, shouldTrack }: any) => (
                 <Popover.Popup>Content</Popover.Popup>
             </Popover.PositionerPrimitive>
         </Popover.Root>
+
+        {/* NavigationMenu with selected to current transform */}
+        <NavigationMenu.Root>
+            <NavigationMenu.List>
+                <NavigationMenu.Item>
+                    <NavigationMenu.Link selected>Home</NavigationMenu.Link>
+                </NavigationMenu.Item>
+            </NavigationMenu.List>
+        </NavigationMenu.Root>
     </>
 );

@@ -1,11 +1,13 @@
 // @ts-nocheck
-import { Menu, Popover, Tooltip } from '@vapor-ui/core';
+import { Menu, NavigationMenu, Popover, Tooltip } from '@vapor-ui/core';
 
 export const Component = ({ shouldLoop, shouldTrack }: any) => (
     <>
         {/* Multiple transforms on same element */}
-        <Tooltip.Root disableHoverablePopup={false} closeDelay={200}>
-            <Tooltip.Trigger delay={500}>Hover</Tooltip.Trigger>
+        <Tooltip.Root disableHoverablePopup={false}>
+            <Tooltip.Trigger delay={500} closeDelay={200}>
+                Hover
+            </Tooltip.Trigger>
             <Tooltip.PositionerPrimitive disableAnchorTracking={!shouldTrack}>
                 <Tooltip.Popup>Content</Tooltip.Popup>
             </Tooltip.PositionerPrimitive>
@@ -32,5 +34,14 @@ export const Component = ({ shouldLoop, shouldTrack }: any) => (
                 <Popover.Popup>Content</Popover.Popup>
             </Popover.PositionerPrimitive>
         </Popover.Root>
+
+        {/* NavigationMenu with selected to current transform */}
+        <NavigationMenu.Root>
+            <NavigationMenu.List>
+                <NavigationMenu.Item>
+                    <NavigationMenu.Link current>Home</NavigationMenu.Link>
+                </NavigationMenu.Item>
+            </NavigationMenu.List>
+        </NavigationMenu.Root>
     </>
 );
