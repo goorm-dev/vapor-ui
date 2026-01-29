@@ -3,7 +3,7 @@
 import { forwardRef, useCallback, useEffect, useRef } from 'react';
 
 import { Field as BaseField, useRender } from '@base-ui-components/react';
-import { useControlled } from '@base-ui-components/utils/useControlled';
+import { useControlled } from '@base-ui/utils/useControlled';
 import clsx from 'clsx';
 
 import { useInputGroup } from '~/components/input-group/input-group';

@@ -47,6 +47,14 @@
     --fd-tocnav-height: 64px;
 }
 
+@layer tw-utilities {
+    .border {
+        border-color: var(--vapor-color-border-normal);
+        border-style: var(--tw-border-style);
+        border-width: 1px;
+    }
+}
+
 @theme {
     --font-mono: var(--vapor-typography-fontFamily-code);
 }
@@ -74,9 +82,7 @@ html {
 a[data-active='true'] {
     color: var(--vapor-color-foreground-primary-100);
 }
-button {
-    border-color: var(--vapor-color-border-normal);
-}
+
 code,
 code * {
     font-family: var(--font-mono);

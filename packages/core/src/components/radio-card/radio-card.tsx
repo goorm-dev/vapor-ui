@@ -16,17 +16,15 @@ import * as styles from './radio-card.css';
 
 export const RadioCard = forwardRef<HTMLButtonElement, RadioCard.Props>((props, ref) => {
     const { className, ...componentProps } = resolveStyles(props);
-    const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
+    const { invalid: contextInvalid } = useRadioGroupContext();
 
     const [variantProps, otherProps] = createSplitProps<RadioCardVariants>()(componentProps, [
         'invalid',
-        'size',
     ]);
 
-    const { size: sizeProp, invalid: invalidProp } = variantProps;
+    const { invalid: invalidProp } = variantProps;
 
     const invalid = invalidProp || contextInvalid;
-    const size = sizeProp || contextSize;
 
     const dataAttrs = createDataAttributes({ invalid });
 
@@ -34,7 +32,7 @@ export const RadioCard = forwardRef<HTMLButtonElement, RadioCard.Props>((props, 
         <BaseRadio.Root
             ref={ref}
             aria-invalid={invalid}
-            className={clsx(styles.root({ size, invalid }), className)}
+            className={clsx(styles.root({ invalid }), className)}
             {...dataAttrs}
             {...otherProps}
         />

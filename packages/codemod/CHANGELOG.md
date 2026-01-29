@@ -2,33 +2,36 @@
 
 ## 1.0.0-beta.7
 
-### Major Changes
+### CLI
 
-- 2c8f651: Add Tabs, Text, Textinput transform
-- 441e481: Add Dropdown, IconButton, Nav transformer
-- 441e481: add avatar, breadcrumb, card transform
-- 441e481: Add Popover, RadioGroup, Switch Transform
+- Add Tabs, Text, Textinput transform ([#319](https://github.com/goorm-dev/vapor-ui/pull/319)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Minor Changes
+- Add Dropdown, IconButton, Nav transformer ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-- 441e481: Add codemod for icon packages name import
-- 441e481: add codemod cli packages
+- add avatar, breadcrumb, card transform ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### Patch Changes
+- Add Popover, RadioGroup, Switch Transform ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-- 15a2f7c: add cli options
-- 88da973: add button, badge, alert component color props to colorPalette
+- Add codemod for icon packages name import ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- add codemod cli packages ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- add cli options ([#351](https://github.com/goorm-dev/vapor-ui/pull/351)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- add button, badge, alert component color props to colorPalette ([#362](https://github.com/goorm-dev/vapor-ui/pull/362)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 ## 1.0.0-beta.6
 
-### Minor Changes
+### CLI
 
-- b2d053c: add checkbox, collapsible, dialog transform
-- 939c845: add avatar, breadcrumb, card transform
-- eb3fdc7: add codemod cli packages
+- add checkbox, collapsible, dialog transform ([#316](https://github.com/goorm-dev/vapor-ui/pull/316)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- add avatar, breadcrumb, card transform ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+- add codemod cli packages ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
 ## 1.0.0-beta.5
 
-### Minor Changes
+### CLI
 
-- a8de0b0: Add codemod for icon packages name import
+- Add codemod for icon packages name import ([#317](https://github.com/goorm-dev/vapor-ui/pull/317)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
