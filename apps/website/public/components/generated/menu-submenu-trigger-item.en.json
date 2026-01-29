@@ -1,0 +1,69 @@
+{
+    "name": "MenuSubmenuTriggerItem",
+    "displayName": "MenuSubmenuTriggerItem",
+    "description": "Item that triggers a submenu to open. Renders a `<div>` element with chevron icon.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: MenuSubmenuTriggerState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the menu that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before the menu may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "defaultValue": "100"
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "label",
+            "type": ["string"],
+            "required": false,
+            "description": "Overrides the text label to use when the item is matched during keyboard text navigation."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onClick",
+            "type": ["(event: React.MouseEvent<HTMLElement, MouseEvent>) => void"],
+            "required": false
+        },
+        {
+            "name": "openOnHover",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the menu should also open when the trigger is hovered."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

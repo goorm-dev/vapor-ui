@@ -1,0 +1,91 @@
+{
+    "name": "SheetRoot",
+    "displayName": "SheetRoot",
+    "description": "Root component of Sheet that manages open/close state and settings. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<DialogRootActions | null>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the dialog will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the dialog manually.\nUseful when the dialog's animation is controlled by an external library.\n- `close`: Closes the dialog imperatively when called."
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "(arg: { payload: unknown; }) => ReactNode",
+                "boolean"
+            ],
+            "required": false,
+            "description": "The content of the dialog.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "defaultTriggerId",
+            "type": ["null", "string"],
+            "required": false,
+            "description": "ID of the trigger that the dialog is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open dialog."
+        },
+        {
+            "name": "handle",
+            "type": ["DialogHandle<unknown>"],
+            "required": false,
+            "description": "A handle to associate the dialog with a trigger.\nIf specified, allows external triggers to control the dialog's open state.\nCan be created with the Dialog.createHandle() method."
+        },
+        {
+            "name": "modal",
+            "type": ["\"trap-focus\"", "boolean"],
+            "required": false,
+            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: Sheet.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the dialog is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the dialog is opened or closed."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the dialog is currently open."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "triggerId",
+            "type": ["null", "string"],
+            "required": false,
+            "description": "ID of the trigger that the dialog is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled dialog.\nThere's no need to specify this prop when the popover is uncontrolled (i.e. when the `open` prop is not set)."
+        },
+        {
+            "name": "closeOnClickOverlay",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to close the Dialog when clicking on the overlay.",
+            "defaultValue": "true"
+        }
+    ]
+}

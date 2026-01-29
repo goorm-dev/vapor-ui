@@ -1,0 +1,33 @@
+{
+    "name": "GridRoot",
+    "displayName": "GridRoot",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "inline",
+            "type": ["boolean"],
+            "required": false
+        },
+        {
+            "name": "templateColumns",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "templateRows",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "flow",
+            "type": ["column", "row", "row-dense", "column-dense"],
+            "required": false,
+            "defaultValue": "row"
+        }
+    ]
+}

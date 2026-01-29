@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useParams } from 'next/navigation';
 
 import { Badge, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 
@@ -29,6 +30,7 @@ interface ComponentPropsTableProps {
 }
 
 export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps) => {
+    const params = useParams<{ lang: string }>();
     const [componentData, setComponentData] = React.useState<ComponentData | null>(null);
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
@@ -36,7 +38,8 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
     React.useEffect(() => {
         const loadComponentData = async () => {
             try {
-                const response = await fetch(`/components/generated/${componentName}.json`);
+                const langSuffix = params.lang === 'en' ? '.en' : '';
+                const response = await fetch(`/components/generated/${componentName}${langSuffix}.json`);
                 if (!response.ok) {
                     throw new Error(`Failed to load component data for ${componentName}`);
                 }
@@ -50,7 +53,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
         };
 
         loadComponentData();
-    }, [componentName]);
+    }, [componentName, params.lang]);
 
     if (loading) {
         return <p>Loading component documentation...</p>;

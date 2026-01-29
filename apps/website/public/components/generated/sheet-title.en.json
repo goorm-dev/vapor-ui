@@ -1,0 +1,19 @@
+{
+    "name": "SheetTitle",
+    "displayName": "SheetTitle",
+    "description": "Title text displayed in the Sheet header. Renders an `<h2>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: DialogTitleState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

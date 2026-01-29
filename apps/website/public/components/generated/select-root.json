@@ -1,13 +1,13 @@
 {
     "name": "SelectRoot",
     "displayName": "SelectRoot",
-    "description": "Root component of Select that manages the selection state and provides context. Renders a `<div>` element.",
+    "description": "선택 상태를 관리하고 context를 제공하는 Select의 루트 컴포넌트입니다. `<div>` 엘리먼트를 렌더링합니다.",
     "props": [
         {
             "name": "actionsRef",
-            "type": ["React.RefObject<SelectRoot.Actions>"],
+            "type": ["React.RefObject<SelectRootActions | null>"],
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: When specified, the select will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the select manually.\nUseful when the select's animation is controlled by an external library."
+            "description": "명령형 액션에 대한 ref입니다.\n- `unmount`: 지정된 경우, select는 닫힐 때 언마운트되지 않습니다.\n대신, select를 수동으로 언마운트하려면 `unmount` 함수를 호출해야 합니다.\nselect의 애니메이션이 외부 라이브러리에 의해 제어될 때 유용합니다."
         },
         {
             "name": "children",
@@ -18,124 +18,130 @@
             "name": "defaultOpen",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the select popup is initially open.\n\nTo render a controlled select popup, use the `open` prop instead.",
+            "description": "select popup이 초기에 열려있는지 여부입니다.\n\ncontrolled select popup을 렌더링하려면 `open` prop을 대신 사용하세요.",
             "defaultValue": "false"
         },
         {
             "name": "defaultValue",
             "type": ["unknown"],
             "required": false,
-            "description": "The uncontrolled value of the select when it’s initially rendered.\n\nTo render a controlled select, use the `value` prop instead.",
-            "defaultValue": "null"
+            "description": "초기 렌더링 시 select의 uncontrolled 값입니다.\n\ncontrolled select를 렌더링하려면 `value` prop을 대신 사용하세요."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the component should ignore user interaction.",
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부입니다.",
             "defaultValue": "false"
+        },
+        {
+            "name": "highlightItemOnHover",
+            "type": ["boolean"],
+            "required": false,
+            "description": "포인터를 항목 위로 이동할 때 하이라이트할지 여부입니다.\n이 prop을 비활성화하면 CSS `:hover`를 `:focus` (`data-highlighted`) state와 구분할 수 있습니다.",
+            "defaultValue": "true"
         },
         {
             "name": "id",
             "type": ["string"],
             "required": false,
-            "description": "The id of the Select."
+            "description": "Select의 id입니다."
         },
         {
             "name": "inputRef",
-            "type": ["Ref<HTMLInputElement>"],
+            "type": ["React.Ref<HTMLInputElement>"],
             "required": false,
-            "description": "A ref to access the hidden input element."
+            "description": "숨겨진 input 엘리먼트에 접근하기 위한 ref입니다."
         },
         {
             "name": "isItemEqualToValue",
-            "type": ["((itemValue: unknown, value: unknown) => boolean)"],
+            "type": ["(itemValue: unknown, value: unknown) => boolean"],
             "required": false,
-            "description": "Custom comparison logic used to determine if a select item value matches the current selected value. Useful when item values are objects without matching referentially.\nDefaults to `Object.is` comparison."
+            "description": "select 항목 값이 현재 선택된 값과 일치하는지 결정하는 데 사용되는 사용자 정의 비교 로직입니다. 항목 값이 참조가 일치하지 않는 객체일 때 유용합니다.\n기본값은 `Object.is` 비교입니다."
         },
         {
             "name": "items",
             "type": [
                 "Record<string, React.ReactNode>",
-                "readonly { label: React.ReactNode; value: unknown; }[]"
+                "readonly { label: React.ReactNode; value: any; }[]"
             ],
             "required": false,
-            "description": "Data structure of the items rendered in the select popup.\nWhen specified, `<Select.Value>` renders the label of the selected item instead of the raw value."
+            "description": "select popup에 렌더링되는 항목들의 데이터 구조입니다.\n지정하면, `<Select.Value>`는 원시 값 대신 선택된 항목의 레이블을 렌더링합니다."
         },
         {
             "name": "itemToStringLabel",
-            "type": ["((itemValue: unknown) => string)"],
+            "type": ["(itemValue: unknown) => string"],
             "required": false,
-            "description": "When the item values are objects (`<Select.Item value={object}>`), this function converts the object value to a string representation for display in the trigger.\nIf the shape of the object is `{ value, label }`, the label will be used automatically without needing to specify this prop."
+            "description": "항목 값이 객체일 때 (`<Select.Item value={object}>`), 이 함수는 객체 값을 트리거에 표시할 문자열 표현으로 변환합니다.\n객체의 형태가 `{ value, label }`인 경우, 이 prop을 지정할 필요 없이 레이블이 자동으로 사용됩니다."
         },
         {
             "name": "itemToStringValue",
-            "type": ["((itemValue: unknown) => string)"],
+            "type": ["(itemValue: unknown) => string"],
             "required": false,
-            "description": "When the item values are objects (`<Select.Item value={object}>`), this function converts the object value to a string representation for form submission.\nIf the shape of the object is `{ value, label }`, the value will be used automatically without needing to specify this prop."
+            "description": "항목 값이 객체일 때 (`<Select.Item value={object}>`), 이 함수는 객체 값을 form 제출용 문자열 표현으로 변환합니다.\n객체의 형태가 `{ value, label }`인 경우, 이 prop을 지정할 필요 없이 값이 자동으로 사용됩니다."
         },
         {
             "name": "modal",
             "type": ["boolean"],
             "required": false,
-            "description": "Determines if the select enters a modal state when open.\n- `true`: user interaction is limited to the select: document page scroll is locked and and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.",
+            "description": "select가 열릴 때 모달 상태로 진입할지 결정합니다.\n- `true`: 사용자 상호작용이 select로 제한됩니다: 문서 페이지 스크롤이 잠기고 외부 엘리먼트와의 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용이 허용됩니다.",
             "defaultValue": "true"
         },
         {
             "name": "name",
             "type": ["string"],
             "required": false,
-            "description": "Identifies the field when a form is submitted."
+            "description": "form 제출 시 필드를 식별합니다."
         },
         {
             "name": "onOpenChange",
-            "type": ["((open: boolean, eventDetails: SelectRoot.ChangeEventDetails) => void)"],
+            "type": ["(open: boolean, eventDetails: Select.Root.ChangeEventDetails) => void"],
             "required": false,
-            "description": "Event handler called when the select popup is opened or closed."
+            "description": "select popup이 열리거나 닫힐 때 호출되는 event handler입니다."
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["((open: boolean) => void)"],
+            "type": ["(open: boolean) => void"],
             "required": false,
-            "description": "Event handler called after any animations complete when the select popup is opened or closed."
+            "description": "select popup이 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 event handler입니다."
         },
         {
             "name": "onValueChange",
-            "type": ["((value: unknown, eventDetails: SelectRoot.ChangeEventDetails) => void)"],
+            "type": ["(value: unknown, eventDetails: Select.Root.ChangeEventDetails) => void"],
             "required": false,
-            "description": "Callback fired when the value of the select changes. Use when controlled."
+            "description": "select의 값이 변경될 때 호출되는 event handler입니다."
         },
         {
             "name": "open",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the select popup is currently open."
+            "description": "select popup이 현재 열려있는지 여부입니다."
         },
         {
             "name": "readOnly",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the user should be unable to choose a different option from the select popup.",
+            "description": "사용자가 select popup에서 다른 옵션을 선택할 수 없도록 할지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 엘리먼트를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 엘리먼트를 반환하는 함수를 받습니다."
         },
         {
             "name": "required",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the user must choose a value before submitting a form.",
+            "description": "form 제출 전에 사용자가 값을 선택해야 하는지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "value",
             "type": ["unknown"],
             "required": false,
-            "description": "The value of the select."
+            "description": "select의 값입니다. controlled로 사용할 때 사용합니다."
         },
         {
             "name": "placeholder",
@@ -146,14 +152,14 @@
             "name": "invalid",
             "type": ["boolean"],
             "required": false,
-            "description": "Determines whether the Select is in an invalid state.",
+            "description": "Select가 유효하지 않은 상태인지 여부를 결정합니다.",
             "defaultValue": "false"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "Determines the size of the Select trigger.",
+            "description": "Select 트리거의 크기를 결정합니다.",
             "defaultValue": "md"
         }
     ]

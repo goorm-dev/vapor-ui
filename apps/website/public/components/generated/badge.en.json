@@ -1,0 +1,35 @@
+{
+    "name": "Badge",
+    "displayName": "Badge",
+    "description": "A label for displaying status or categorization of content. Renders a `<span>` element.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "colorPalette",
+            "type": ["primary", "success", "warning", "danger", "hint", "contrast"],
+            "required": false,
+            "description": "Determines the color theme of the Badge.",
+            "defaultValue": "primary"
+        },
+        {
+            "name": "shape",
+            "type": ["square", "pill"],
+            "required": false,
+            "description": "Determines the shape of the Badge.",
+            "defaultValue": "square"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg"],
+            "required": false,
+            "description": "Determines the size of the Badge.",
+            "defaultValue": "md"
+        }
+    ],
+    "defaultElement": "span"
+}

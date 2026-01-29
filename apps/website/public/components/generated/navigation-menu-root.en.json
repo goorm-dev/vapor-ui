@@ -1,0 +1,93 @@
+{
+    "name": "NavigationMenuRoot",
+    "displayName": "NavigationMenuRoot",
+    "description": "Root component of NavigationMenu that manages navigation state and settings. Renders a `<nav>` element.",
+    "props": [
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<NavigationMenuRootActions | null>"],
+            "required": false,
+            "description": "A ref to imperative actions."
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: NavigationMenuRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the navigation menu. Specified in milliseconds.",
+            "defaultValue": "50"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["any"],
+            "required": false,
+            "description": "The uncontrolled value of the item that should be initially selected.\n\nTo render a controlled navigation menu, use the `value` prop instead.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before opening the navigation menu. Specified in milliseconds.",
+            "defaultValue": "50"
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the navigation menu is closed."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: any, eventDetails: NavigationMenu.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Callback fired when the value changes."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "The orientation of the navigation menu.",
+            "defaultValue": "'horizontal'"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": false,
+            "description": "The controlled value of the navigation menu item that should be currently open.\nWhen non-nullish, the menu will be open. When nullish, the menu will be closed.\n\nTo render an uncontrolled navigation menu, use the `defaultValue` prop instead.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "direction",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "Direction of the navigation menu layout",
+            "defaultValue": "horizontal"
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the entire navigation menu is disabled",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Size of the navigation links",
+            "defaultValue": "md"
+        }
+    ]
+}

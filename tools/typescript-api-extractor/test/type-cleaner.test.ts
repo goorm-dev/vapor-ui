@@ -45,7 +45,7 @@ describe('cleanType', () => {
 
     it('handles complex import paths', () => {
         const type =
-            'string | ((state: import("/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui-components+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui-components/react/esm/tabs/root/TabsRoot").TabsRoot.State) => string) | undefined';
+            'string | ((state: import("/Users/goorm/design-system/gds/vapor-ui/node_modules/.pnpm/@base-ui+react@1.0.0-beta.4_@types+react@18.3.27_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/@base-ui/react/esm/tabs/root/TabsRoot").TabsRoot.State) => string) | undefined';
         expect(cleanType(type).type).toBe('string');
     });
 

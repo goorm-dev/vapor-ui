@@ -1,119 +1,127 @@
 {
     "name": "CheckboxRoot",
     "displayName": "CheckboxRoot",
-    "description": "Root component of Checkbox that manages checked state. Renders a `<button>` element.",
+    "description": "체크 state를 관리하는 Checkbox의 루트 컴포넌트입니다. `<button>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "checked",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the checkbox is currently ticked.\n\nTo render an uncontrolled checkbox, use the `defaultChecked` prop instead.",
+            "description": "체크박스가 현재 체크되어 있는지 여부입니다.\n\nuncontrolled 체크박스를 렌더링하려면 `defaultChecked` prop을 대신 사용하세요.",
             "defaultValue": "undefined"
         },
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: CheckboxRootState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
             "name": "defaultChecked",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the checkbox is initially ticked.\n\nTo render a controlled checkbox, use the `checked` prop instead.",
+            "description": "체크박스가 초기에 체크되어 있는지 여부입니다.\n\ncontrolled 체크박스를 렌더링하려면 `checked` prop을 대신 사용하세요.",
             "defaultValue": "false"
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the component should ignore user interaction.",
+            "description": "컴포넌트가 사용자 상호작용을 무시해야 하는지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "id",
             "type": ["string"],
             "required": false,
-            "description": "The id of the input element."
+            "description": "input 요소의 id입니다."
         },
         {
             "name": "indeterminate",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the checkbox is in a mixed state: neither ticked, nor unticked.",
+            "description": "체크박스가 혼합 state에 있는지 여부입니다: 체크되지도, 체크 해제되지도 않은 상태입니다.",
             "defaultValue": "false"
         },
         {
             "name": "inputRef",
-            "type": ["Ref<HTMLInputElement>"],
+            "type": ["React.Ref<HTMLInputElement>"],
             "required": false,
-            "description": "A ref to access the hidden `<input>` element."
+            "description": "숨겨진 `<input>` 요소에 접근하기 위한 ref입니다."
         },
         {
             "name": "name",
             "type": ["string"],
             "required": false,
-            "description": "Identifies the field when a form is submitted.",
+            "description": "form 제출 시 필드를 식별합니다.",
             "defaultValue": "undefined"
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
-            "defaultValue": "true"
+            "description": "`render` prop을 통해 교체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링하는지 여부입니다.\n렌더링되는 요소가 네이티브 버튼인 경우 `true`로 설정하세요.",
+            "defaultValue": "false"
         },
         {
             "name": "onCheckedChange",
-            "type": ["((checked: boolean, eventDetails: ChangeEventDetails) => void)"],
+            "type": [
+                "(checked: boolean, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void"
+            ],
             "required": false,
-            "description": "Event handler called when the checkbox is ticked or unticked."
+            "description": "체크박스가 체크되거나 체크 해제될 때 호출되는 event handler입니다."
         },
         {
             "name": "parent",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the checkbox controls a group of child checkboxes.\n\nMust be used in a [Checkbox Group](https://base-ui.com/react/components/checkbox-group).",
+            "description": "체크박스가 자식 체크박스 그룹을 제어하는지 여부입니다.\n\n[Checkbox Group](https://base-ui.com/react/components/checkbox-group)에서 사용해야 합니다.",
             "defaultValue": "false"
         },
         {
             "name": "readOnly",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the user should be unable to tick or untick the checkbox.",
+            "description": "사용자가 체크박스를 체크하거나 체크 해제할 수 없어야 하는지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "required",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the user must tick the checkbox before submitting a form.",
+            "description": "form 제출 전에 사용자가 체크박스를 체크해야 하는지 여부입니다.",
             "defaultValue": "false"
+        },
+        {
+            "name": "uncheckedValue",
+            "type": ["string"],
+            "required": false,
+            "description": "체크박스가 체크 해제되었을 때 form과 함께 제출되는 값입니다.\n기본적으로 체크 해제된 체크박스는 네이티브 체크박스 동작과 일치하게 값을 제출하지 않습니다."
         },
         {
             "name": "value",
             "type": ["string"],
             "required": false,
-            "description": "The value of the selected checkbox."
+            "description": "선택된 체크박스의 값입니다."
         },
         {
             "name": "invalid",
             "type": ["boolean"],
             "required": false,
-            "description": "Indicates whether the Checkbox is in an invalid state.",
+            "description": "Checkbox가 유효하지 않은 state에 있는지 여부를 나타냅니다.",
             "defaultValue": "false"
         },
         {
             "name": "size",
             "type": ["md", "lg"],
             "required": false,
-            "description": "Determines the size of the Checkbox.",
+            "description": "Checkbox의 크기를 결정합니다.",
             "defaultValue": "md"
         }
     ]

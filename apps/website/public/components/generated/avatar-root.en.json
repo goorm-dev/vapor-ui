@@ -1,0 +1,51 @@
+{
+    "name": "AvatarRoot",
+    "displayName": "AvatarRoot",
+    "description": "Displays a user's profile image or fallback text. Renders a `<span>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: AvatarRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "alt",
+            "type": ["string"],
+            "required": true,
+            "description": "Alternative text for the image, also used for generating fallback initials and background color"
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "Delay in milliseconds before showing the fallback after image load failure"
+        },
+        {
+            "name": "src",
+            "type": ["string"],
+            "required": false,
+            "description": "The URL of the profile image to display"
+        },
+        {
+            "name": "shape",
+            "type": ["circle", "square"],
+            "required": false,
+            "description": "Determines the shape of the Avatar.",
+            "defaultValue": "square"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Determines the size of the Avatar.\nDetermines the typography size of the fallback text.",
+            "defaultValue": "md"
+        }
+    ]
+}

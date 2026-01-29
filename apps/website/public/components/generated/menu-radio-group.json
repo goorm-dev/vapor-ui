@@ -1,50 +1,50 @@
 {
     "name": "MenuRadioGroup",
     "displayName": "MenuRadioGroup",
-    "description": "Container for radio items in Menu. Renders a `<div>` element.",
+    "description": "Menu의 radio 항목을 위한 컨테이너입니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "children",
             "type": ["ReactNode"],
             "required": false,
-            "description": "The content of the component."
+            "description": "컴포넌트의 콘텐츠입니다."
         },
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: MenuRadioGroupState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나,\n컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
             "name": "defaultValue",
             "type": ["any"],
             "required": false,
-            "description": "The uncontrolled value of the radio item that should be initially selected.\n\nTo render a controlled radio group, use the `value` prop instead."
+            "description": "초기에 선택되어야 할 radio 항목의 uncontrolled 값입니다.\n\ncontrolled radio 그룹을 렌더링하려면 대신 `value` prop을 사용하세요."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the component should ignore user interaction.",
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "onValueChange",
-            "type": ["((value: any, eventDetails: ChangeEventDetails) => void)"],
+            "type": ["(value: any, eventDetails: MenuRadio.Group.ChangeEventDetails) => void"],
             "required": false,
-            "description": "Function called when the selected value changes."
+            "description": "선택된 값이 변경될 때 호출되는 함수입니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나\n다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "value",
             "type": ["any"],
             "required": false,
-            "description": "The controlled value of the radio item that should be currently selected.\n\nTo render an uncontrolled radio group, use the `defaultValue` prop instead."
+            "description": "현재 선택되어야 할 radio 항목의 controlled 값입니다.\n\nuncontrolled radio 그룹을 렌더링하려면 대신 `defaultValue` prop을 사용하세요."
         }
     ]
 }

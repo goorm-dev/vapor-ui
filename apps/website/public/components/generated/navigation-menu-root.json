@@ -1,92 +1,92 @@
 {
     "name": "NavigationMenuRoot",
     "displayName": "NavigationMenuRoot",
-    "description": "Root component of NavigationMenu that manages navigation state and settings. Renders a `<nav>` element.",
+    "description": "내비게이션 상태와 설정을 관리하는 NavigationMenu의 루트 컴포넌트입니다. `<nav>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "actionsRef",
-            "type": ["React.RefObject<Actions>"],
+            "type": ["React.RefObject<NavigationMenuRootActions | null>"],
             "required": false,
-            "description": "A ref to imperative actions."
+            "description": "명령형 액션에 대한 ref입니다."
         },
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: NavigationMenuRootState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
             "name": "closeDelay",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait before closing the navigation menu. Specified in milliseconds.",
+            "description": "내비게이션 메뉴를 닫기 전 대기 시간입니다. 밀리초 단위로 지정합니다.",
             "defaultValue": "50"
         },
         {
             "name": "defaultValue",
             "type": ["any"],
             "required": false,
-            "description": "The uncontrolled value of the item that should be initially selected.\n\nTo render a controlled navigation menu, use the `value` prop instead.",
+            "description": "초기에 선택되어야 하는 항목의 uncontrolled 값입니다.\n\ncontrolled 내비게이션 메뉴를 렌더링하려면 `value` prop을 대신 사용하세요.",
             "defaultValue": "null"
         },
         {
             "name": "delay",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait before opening the navigation menu. Specified in milliseconds.",
+            "description": "내비게이션 메뉴를 열기 전 대기 시간입니다. 밀리초 단위로 지정합니다.",
             "defaultValue": "50"
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["((open: boolean) => void)"],
+            "type": ["(open: boolean) => void"],
             "required": false,
-            "description": "Event handler called after any animations complete when the navigation menu is closed."
+            "description": "내비게이션 메뉴가 닫힐 때 모든 애니메이션이 완료된 후 호출되는 event handler입니다."
         },
         {
             "name": "onValueChange",
-            "type": ["((value: any, eventDetails: ChangeEventDetails) => void)"],
+            "type": ["(value: any, eventDetails: NavigationMenu.Root.ChangeEventDetails) => void"],
             "required": false,
-            "description": "Callback fired when the value changes."
+            "description": "값이 변경될 때 실행되는 callback입니다."
         },
         {
             "name": "orientation",
             "type": ["horizontal", "vertical"],
             "required": false,
-            "description": "The orientation of the navigation menu.",
+            "description": "내비게이션 메뉴의 방향입니다.",
             "defaultValue": "'horizontal'"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나, 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "value",
             "type": ["any"],
             "required": false,
-            "description": "The controlled value of the navigation menu item that should be currently open.\nWhen non-nullish, the menu will be open. When nullish, the menu will be closed.\n\nTo render an uncontrolled navigation menu, use the `defaultValue` prop instead.",
+            "description": "현재 열려 있어야 하는 내비게이션 메뉴 항목의 controlled 값입니다.\nnull이 아닌 값이면 메뉴가 열립니다. null이면 메뉴가 닫힙니다.\n\nuncontrolled 내비게이션 메뉴를 렌더링하려면 `defaultValue` prop을 대신 사용하세요.",
             "defaultValue": "null"
         },
         {
             "name": "direction",
             "type": ["horizontal", "vertical"],
             "required": false,
-            "description": "Direction of the navigation menu layout",
+            "description": "내비게이션 메뉴 레이아웃의 방향입니다.",
             "defaultValue": "horizontal"
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the entire navigation menu is disabled",
+            "description": "전체 내비게이션 메뉴의 비활성화 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "Size of the navigation links",
+            "description": "내비게이션 링크의 크기입니다.",
             "defaultValue": "md"
         }
     ]

@@ -1,26 +1,26 @@
 {
     "name": "DialogOverlayPrimitive",
     "displayName": "DialogOverlayPrimitive",
-    "description": "Background overlay for Dialog. Renders a `<div>` element.",
+    "description": "Dialog의 배경 overlay입니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: DialogBackdropState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
             "name": "forceRender",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the backdrop is forced to render even when nested.",
+            "description": "중첩된 경우에도 backdrop이 강제로 렌더링되는지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ]
 }

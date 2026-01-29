@@ -1,7 +1,7 @@
 {
     "name": "ToastProvider",
     "displayName": "ToastProvider",
-    "description": "Provider component that manages toast notifications and displays them.",
+    "description": "toast 알림을 관리하고 표시하는 Provider 컴포넌트입니다.",
     "props": [
         {
             "name": "children",
@@ -12,21 +12,20 @@
             "name": "limit",
             "type": ["number"],
             "required": false,
-            "description": "The maximum number of toasts that can be displayed at once.\nWhen the limit is reached, the oldest toast will be removed to make room for the new one.",
+            "description": "한 번에 표시할 수 있는 최대 toast 수입니다.\n제한에 도달하면 새 toast를 위해 가장 오래된 toast가 제거됩니다.",
             "defaultValue": "3"
         },
         {
             "name": "timeout",
             "type": ["number"],
             "required": false,
-            "description": "The default amount of time (in ms) before a toast is auto dismissed.\nA value of `0` will prevent the toast from being dismissed automatically.",
+            "description": "toast가 자동으로 닫히기 전까지의 기본 시간(ms)입니다.\n`0` 값은 toast가 자동으로 닫히지 않도록 합니다.",
             "defaultValue": "5000"
         },
         {
             "name": "toastManager",
-            "type": ["createToastManager.ToastManager"],
-            "required": false,
-            "description": "A global manager for toasts to use outside of a React component."
+            "type": ["ToastManager"],
+            "required": false
         }
     ]
 }

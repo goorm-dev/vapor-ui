@@ -1,114 +1,128 @@
 {
     "name": "SelectPositionerPrimitive",
     "displayName": "SelectPositionerPrimitive",
-    "description": "Positions the dropdown popup relative to the trigger. Renders a `<div>` element.",
+    "description": "트리거를 기준으로 드롭다운 popup의 위치를 지정합니다. `<div>` 엘리먼트를 렌더링합니다.",
     "props": [
         {
             "name": "align",
-            "type": ["Align"],
+            "type": ["center", "end", "start"],
             "required": false,
-            "description": "How to align the popup relative to the specified side.",
+            "description": "지정된 side를 기준으로 popup을 정렬하는 방법입니다.",
             "defaultValue": "'center'"
         },
         {
             "name": "alignItemWithTrigger",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the positioner overlaps the trigger so the selected item's text is aligned with the trigger's value text. This only applies to mouse input and is automatically disabled if there is not enough space.",
+            "description": "선택된 항목의 텍스트가 트리거의 값 텍스트와 정렬되도록 positioner가 트리거를 겹치게 할지 여부입니다. 이는 마우스 입력에만 적용되며 충분한 공간이 없으면 자동으로 비활성화됩니다.",
             "defaultValue": "true"
         },
         {
             "name": "alignOffset",
-            "type": ["number", "OffsetFunction"],
+            "type": [
+                "number",
+                "(data: { side: Side; align: Align; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number"
+            ],
             "required": false,
-            "description": "Additional offset along the alignment axis in pixels.\nAlso accepts a function that returns the offset to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",
+            "description": "정렬 축을 따라 픽셀 단위의 추가 오프셋입니다.\n앵커와 positioner 엘리먼트의 크기, side 및 align을 읽기 위해 오프셋을 반환하는 함수도 받습니다.\n\n함수는 다음 속성을 가진 `data` 객체 매개변수를 받습니다:\n- `data.anchor`: `width`와 `height` 속성을 가진 앵커 엘리먼트의 크기입니다.\n- `data.positioner`: `width`와 `height` 속성을 가진 positioner 엘리먼트의 크기입니다.\n- `data.side`: positioner가 앵커 엘리먼트의 어느 side에 정렬되어 있는지입니다.\n- `data.align`: 지정된 side를 기준으로 positioner가 어떻게 정렬되어 있는지입니다.",
             "defaultValue": "0"
         },
         {
             "name": "anchor",
             "type": [
+                "null",
                 "Element",
                 "VirtualElement",
                 "React.RefObject<Element | null>",
-                "(() => Element | VirtualElement | null)",
-                "null"
+                "() => (null | Element | VirtualElement)"
             ],
             "required": false,
-            "description": "An element to position the popup against.\nBy default, the popup will be positioned against the trigger."
+            "description": "popup을 위치시킬 기준 엘리먼트입니다.\n기본적으로 popup은 트리거를 기준으로 위치가 지정됩니다."
         },
         {
             "name": "arrowPadding",
             "type": ["number"],
             "required": false,
-            "description": "Minimum distance to maintain between the arrow and the edges of the popup.\n\nUse it to prevent the arrow element from hanging out of the rounded corners of a popup.",
+            "description": "화살표와 popup 가장자리 사이에 유지할 최소 거리입니다.\n\n화살표 엘리먼트가 popup의 둥근 모서리 밖으로 나가는 것을 방지하는 데 사용합니다.",
             "defaultValue": "5"
         },
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: SelectPositionerState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "엘리먼트에 적용되는 CSS class이거나, 컴포넌트의 state를 기반으로 class를 반환하는 함수입니다."
         },
         {
             "name": "collisionAvoidance",
-            "type": ["CollisionAvoidance"],
+            "type": ["SideFlipMode", "SideShiftMode"],
             "required": false,
-            "description": "Determines how to handle collisions when positioning the popup."
+            "description": "popup 위치 지정 시 충돌을 처리하는 방법을 결정합니다."
         },
         {
             "name": "collisionBoundary",
-            "type": ["Boundary"],
+            "type": [
+                "Element",
+                "\"clipping-ancestors\"",
+                "Element[]",
+                "{ x: number; y: number; height: number; width: number; }"
+            ],
             "required": false,
-            "description": "An element or a rectangle that delimits the area that the popup is confined to.",
+            "description": "popup이 제한되는 영역을 구분하는 엘리먼트 또는 사각형입니다.",
             "defaultValue": "'clipping-ancestors'"
         },
         {
             "name": "collisionPadding",
-            "type": ["Padding"],
+            "type": [
+                "number",
+                "{ bottom?: number | undefined; left?: number | undefined; right?: number | undefined; top?: number | undefined; }"
+            ],
             "required": false,
-            "description": "Additional space to maintain from the edge of the collision boundary.",
+            "description": "충돌 경계의 가장자리에서 유지할 추가 공간입니다.",
             "defaultValue": "5"
+        },
+        {
+            "name": "disableAnchorTracking",
+            "type": ["boolean"],
+            "required": false,
+            "description": "popup이 위치 지정 앵커의 레이아웃 변경을 추적하지 않도록 할지 여부입니다.",
+            "defaultValue": "false"
         },
         {
             "name": "positionMethod",
             "type": ["absolute", "fixed"],
             "required": false,
-            "description": "Determines which CSS `position` property to use.",
+            "description": "사용할 CSS `position` 속성을 결정합니다.",
             "defaultValue": "'absolute'"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 엘리먼트를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 엘리먼트를 반환하는 함수를 받습니다."
         },
         {
             "name": "side",
-            "type": ["Side"],
+            "type": ["bottom", "left", "right", "top", "inline-end", "inline-start"],
             "required": false,
-            "description": "Which side of the anchor element to align the popup against.\nMay automatically change to avoid collisions.",
+            "description": "앵커 엘리먼트의 어느 side에 popup을 정렬할지입니다.\n충돌을 피하기 위해 자동으로 변경될 수 있습니다.",
             "defaultValue": "'bottom'"
         },
         {
             "name": "sideOffset",
-            "type": ["number", "OffsetFunction"],
+            "type": [
+                "number",
+                "(data: { side: Side; align: Align; anchor: { width: number; height: number; }; positioner: { width: number; height: number; }; }) => number"
+            ],
             "required": false,
-            "description": "Distance between the anchor and the popup in pixels.\nAlso accepts a function that returns the distance to read the dimensions of the anchor\nand positioner elements, along with its side and alignment.\n\nThe function takes a `data` object parameter with the following properties:\n- `data.anchor`: the dimensions of the anchor element with properties `width` and `height`.\n- `data.positioner`: the dimensions of the positioner element with properties `width` and `height`.\n- `data.side`: which side of the anchor element the positioner is aligned against.\n- `data.align`: how the positioner is aligned relative to the specified side.",
+            "description": "앵커와 popup 사이의 픽셀 단위 거리입니다.\n앵커와 positioner 엘리먼트의 크기, side 및 align을 읽기 위해 거리를 반환하는 함수도 받습니다.\n\n함수는 다음 속성을 가진 `data` 객체 매개변수를 받습니다:\n- `data.anchor`: `width`와 `height` 속성을 가진 앵커 엘리먼트의 크기입니다.\n- `data.positioner`: `width`와 `height` 속성을 가진 positioner 엘리먼트의 크기입니다.\n- `data.side`: positioner가 앵커 엘리먼트의 어느 side에 정렬되어 있는지입니다.\n- `data.align`: 지정된 side를 기준으로 positioner가 어떻게 정렬되어 있는지입니다.",
             "defaultValue": "0"
         },
         {
             "name": "sticky",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether to maintain the popup in the viewport after\nthe anchor element was scrolled out of view.",
+            "description": "앵커 엘리먼트가 스크롤되어 보이지 않게 된 후에도 뷰포트 내에 popup을 유지할지 여부입니다.",
             "defaultValue": "false"
-        },
-        {
-            "name": "trackAnchor",
-            "type": ["boolean"],
-            "required": false,
-            "description": "Whether the popup tracks any layout shift of its positioning anchor.",
-            "defaultValue": "true"
         }
     ]
 }

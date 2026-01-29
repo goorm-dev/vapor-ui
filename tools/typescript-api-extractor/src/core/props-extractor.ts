@@ -112,7 +112,7 @@ function getPropSource(symbol: Symbol): PropSource {
     const filePath = getSymbolSourcePath(symbol);
     if (!filePath) return 'custom';
 
-    if (filePath.includes('@base-ui-components')) return 'base-ui';
+    if (filePath.includes('@base-ui/react')) return 'base-ui';
     if (filePath.endsWith('.css.ts')) return 'variants';
 
     return 'custom';

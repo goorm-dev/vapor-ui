@@ -1,0 +1,40 @@
+{
+    "name": "NavigationMenuLink",
+    "displayName": "NavigationMenuLink",
+    "description": "Navigation link element that navigates to a URL. Renders an `<a>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: NavigationMenuLinkState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "closeOnClick",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to close the navigation menu when the link is clicked.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the link is disabled",
+            "defaultValue": "false"
+        },
+        {
+            "name": "selected",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the link is currently selected",
+            "defaultValue": "false"
+        }
+    ]
+}

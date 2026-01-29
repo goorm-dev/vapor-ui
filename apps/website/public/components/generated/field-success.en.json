@@ -1,0 +1,26 @@
+{
+    "name": "FieldSuccess",
+    "displayName": "FieldSuccess",
+    "description": "Success message for Field validation. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: FieldRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "match",
+            "type": ["\"valid\"", "boolean"],
+            "required": false,
+            "description": "Determines when to show the success message.",
+            "defaultValue": "'valid'"
+        }
+    ]
+}

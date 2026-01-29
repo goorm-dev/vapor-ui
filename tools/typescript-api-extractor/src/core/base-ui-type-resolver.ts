@@ -17,7 +17,7 @@ export interface BaseUiTypeMap {
 
 /**
  * base-ui 타입의 텍스트에서 정규화된 경로를 추출합니다.
- * 예: import(".../@base-ui-components/.../CollapsibleRoot").CollapsibleRoot.ChangeEventDetails
+ * 예: import(".../@base-ui/.../CollapsibleRoot").CollapsibleRoot.ChangeEventDetails
  *   → "CollapsibleRoot.ChangeEventDetails"
  */
 function normalizeBaseUiTypePath(typeText: string): string | null {
@@ -55,7 +55,7 @@ function collectNestedTypes(
         const typeText = propType.getText();
 
         // base-ui 타입인 경우에만 맵에 추가
-        if (typeText.includes('@base-ui-components')) {
+        if (typeText.includes('@base-ui/react')) {
             const normalizedPath = normalizeBaseUiTypePath(typeText);
             if (normalizedPath) {
                 map[normalizedPath] = {
@@ -76,9 +76,9 @@ function collectNestedTypes(
 export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
     const map: BaseUiTypeMap = {};
 
-    // @base-ui-components/react import 찾기
+    // @base-ui/react import 찾기
     const baseUiImport = sourceFile.getImportDeclaration((decl) =>
-        decl.getModuleSpecifierValue().includes('@base-ui-components'),
+        decl.getModuleSpecifierValue().includes('@base-ui/react'),
     );
 
     if (baseUiImport) {
@@ -91,7 +91,7 @@ export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
 
             // 최상위 타입 등록
             const topLevelTypeText = importType.getText();
-            if (topLevelTypeText.includes('@base-ui-components')) {
+            if (topLevelTypeText.includes('@base-ui/react')) {
                 const normalizedPath = normalizeBaseUiTypePath(topLevelTypeText);
                 if (normalizedPath) {
                     map[normalizedPath] = {
@@ -116,7 +116,7 @@ export function buildBaseUiTypeMap(sourceFile: SourceFile): BaseUiTypeMap {
  * 타입 텍스트에서 base-ui 타입을 찾아 vapor-ui 경로로 변환합니다.
  */
 export function resolveBaseUiType(typeText: string, map: BaseUiTypeMap): string | null {
-    if (!typeText.includes('@base-ui-components')) return null;
+    if (!typeText.includes('@base-ui/react')) return null;
 
     const normalizedPath = normalizeBaseUiTypePath(typeText);
     if (!normalizedPath) return null;
@@ -165,7 +165,7 @@ export function collectNamespaceTypeAliases(sourceFile: SourceFile, map: BaseUiT
             // 1. typeText에 import 경로가 포함된 경우
             // 2. 또는 type alias 선언이 base-ui 타입을 참조하는 경우
             const declText = typeAlias.getText();
-            const hasImportPath = typeText.includes('@base-ui-components');
+            const hasImportPath = typeText.includes('@base-ui/react');
             const isBaseUiAlias =
                 (declText.includes('Base') && declText.includes('.Root.')) ||
                 (declText.includes('Base') && declText.includes('.ChangeEventDetails'));

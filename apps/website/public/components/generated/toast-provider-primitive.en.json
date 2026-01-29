@@ -1,0 +1,31 @@
+{
+    "name": "ToastProviderPrimitive",
+    "displayName": "ToastProviderPrimitive",
+    "description": "Primitive provider for toast notifications with custom toast manager support.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "required": false
+        },
+        {
+            "name": "limit",
+            "type": ["number"],
+            "required": false,
+            "description": "The maximum number of toasts that can be displayed at once.\nWhen the limit is reached, the oldest toast will be removed to make room for the new one.",
+            "defaultValue": "3"
+        },
+        {
+            "name": "timeout",
+            "type": ["number"],
+            "required": false,
+            "description": "The default amount of time (in ms) before a toast is auto dismissed.\nA value of `0` will prevent the toast from being dismissed automatically.",
+            "defaultValue": "5000"
+        },
+        {
+            "name": "toastManager",
+            "type": ["ToastManager"],
+            "required": false
+        }
+    ]
+}

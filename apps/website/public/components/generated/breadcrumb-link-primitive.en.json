@@ -1,0 +1,21 @@
+{
+    "name": "BreadcrumbLinkPrimitive",
+    "displayName": "BreadcrumbLinkPrimitive",
+    "description": "Link or text element for Breadcrumb navigation. Renders an `<a>` or `<span>` element.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "current",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether this link represents the current page",
+            "defaultValue": "false"
+        }
+    ],
+    "defaultElement": "Component"
+}

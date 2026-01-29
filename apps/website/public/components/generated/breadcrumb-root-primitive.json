@@ -1,19 +1,19 @@
 {
     "name": "BreadcrumbRootPrimitive",
     "displayName": "BreadcrumbRootPrimitive",
-    "description": "Navigation wrapper for Breadcrumb. Renders a `<nav>` element.",
+    "description": "Breadcrumb의 내비게이션 래퍼입니다. `<nav>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "Determines the typography size of the link.",
+            "description": "링크의 타이포그래피 크기를 결정합니다.",
             "defaultValue": "md"
         }
     ],

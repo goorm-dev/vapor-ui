@@ -1,0 +1,70 @@
+{
+    "name": "RadioCard",
+    "displayName": "RadioCard",
+    "description": "A card-style radio button component used with RadioGroup. Renders a `<button>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: RadioRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "required": false,
+            "description": "A ref to access the hidden input element."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user should be unable to select the radio button."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user must choose a value before submitting a form."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": true,
+            "description": "The unique identifying value of the radio in a group."
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Determines whether the RadioCard is in an invalid state.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["md", "lg"],
+            "required": false,
+            "description": "Determines the size of the RadioCard.",
+            "defaultValue": "md"
+        }
+    ]
+}

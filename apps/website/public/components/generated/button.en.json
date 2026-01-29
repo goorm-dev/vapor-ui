@@ -1,0 +1,35 @@
+{
+    "name": "Button",
+    "displayName": "Button",
+    "description": "A clickable button for triggering actions or events. Renders a `<button>` element.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "colorPalette",
+            "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
+            "required": false,
+            "description": "Determines the color theme of the Button.",
+            "defaultValue": "primary"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Determines the size of the Button.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "variant",
+            "type": ["outline", "fill", "ghost"],
+            "required": false,
+            "description": "Determines the visual style of the Button.",
+            "defaultValue": "fill"
+        }
+    ],
+    "defaultElement": "button"
+}

@@ -1,0 +1,112 @@
+{
+    "name": "SwitchRoot",
+    "displayName": "SwitchRoot",
+    "description": "Root component of Switch that manages toggle state. Renders a `<button>` element.",
+    "props": [
+        {
+            "name": "checked",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the switch is currently active.\n\nTo render an uncontrolled switch, use the `defaultChecked` prop instead."
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: SwitchRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "defaultChecked",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the switch is initially active.\n\nTo render a controlled switch, use the `checked` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false,
+            "description": "The id of the switch element."
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "required": false,
+            "description": "A ref to access the hidden `<input>` element."
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "required": false,
+            "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onCheckedChange",
+            "type": [
+                "(checked: boolean, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void"
+            ],
+            "required": false,
+            "description": "Event handler called when the switch is activated or deactivated."
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user should be unable to activate or deactivate the switch.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the user must activate the switch before submitting a form.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "uncheckedValue",
+            "type": ["string"],
+            "required": false,
+            "description": "The value submitted with the form when the switch is off.\nBy default, unchecked switches do not submit any value, matching native checkbox behavior."
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false,
+            "description": "The value submitted with the form when the switch is on.\nBy default, switch submits the \"on\" value, matching native checkbox behavior."
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Determines whether the switch is in an invalid state.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg"],
+            "required": false,
+            "description": "Determines the size of the switch.",
+            "defaultValue": "md"
+        }
+    ]
+}

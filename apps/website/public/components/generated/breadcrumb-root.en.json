@@ -1,0 +1,20 @@
+{
+    "name": "BreadcrumbRoot",
+    "displayName": "BreadcrumbRoot",
+    "description": "Complete Breadcrumb navigation with built-in list. Renders a `<nav>` element.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Determines the typography size of the link.",
+            "defaultValue": "md"
+        }
+    ]
+}

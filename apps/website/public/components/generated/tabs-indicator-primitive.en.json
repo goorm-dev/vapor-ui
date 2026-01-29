@@ -1,0 +1,26 @@
+{
+    "name": "TabsIndicatorPrimitive",
+    "displayName": "TabsIndicatorPrimitive",
+    "description": "Visual indicator that highlights the active tab. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: TabsIndicatorState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "renderBeforeHydration",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to render itself before React hydrates.\nThis minimizes the time that the indicator isn’t visible after server-side rendering.",
+            "defaultValue": "false"
+        }
+    ]
+}

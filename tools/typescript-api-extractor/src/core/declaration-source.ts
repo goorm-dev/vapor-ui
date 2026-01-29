@@ -18,7 +18,7 @@ const REACT_TYPES_PATTERNS = ['node_modules/@types/react', 'node_modules/@types/
 
 const DOM_TYPES_PATTERNS = ['node_modules/typescript/lib'];
 
-const BASE_UI_PATTERN = '@base-ui-components';
+const BASE_UI_PATTERN = '@base-ui/react';
 
 export function getDeclarationSourceType(filePath: string | undefined): DeclarationSourceType {
     if (!filePath) return DeclarationSourceType.PROJECT;

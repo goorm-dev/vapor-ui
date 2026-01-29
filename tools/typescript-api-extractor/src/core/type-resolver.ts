@@ -59,7 +59,7 @@ function getOriginalTypeText(type: Type): string | null {
             const filePath = decl.getSourceFile().getFilePath();
 
             // base-ui 파일에 선언된 타입인 경우
-            if (filePath.includes('@base-ui-components')) {
+            if (filePath.includes('@base-ui/react')) {
                 // import("...").Namespace.TypeName 형태로 반환
                 return type.getText();
             }
@@ -90,7 +90,7 @@ function resolveFunctionType(type: Type, baseUiMap?: BaseUiTypeMap): string | nu
         if (!node) {
             // fallback: 타입 텍스트에서 단순화
             const paramTypeText = param.getTypeAtLocation(signature.getDeclaration()!).getText();
-            if (paramTypeText.includes('@base-ui-components')) {
+            if (paramTypeText.includes('@base-ui/react')) {
                 return `${paramName}: ${extractSimplifiedTypeName(paramTypeText)}`;
             }
             return `${paramName}: ${paramTypeText}`;
@@ -220,7 +220,7 @@ export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap): string {
     if (functionResult) return functionResult;
 
     // base-ui 타입 변환
-    if (rawText.includes('@base-ui-components')) {
+    if (rawText.includes('@base-ui/react')) {
         if (baseUiMap) {
             const vaporPath = resolveBaseUiType(rawText, baseUiMap);
             if (vaporPath) return vaporPath;
@@ -239,7 +239,7 @@ export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap): string {
 
 /**
  * 타입 문자열에서 node_modules import 경로를 단순화된 이름으로 대체합니다.
- * 예: import(".../@base-ui-components/.../types").HTMLProps<any> → HTMLProps<any>
+ * 예: import(".../@base-ui/.../types").HTMLProps<any> → HTMLProps<any>
  * 예: import(".../@floating-ui/dom/...").VirtualElement → VirtualElement
  */
 function simplifyNodeModulesImports(typeText: string): string {

@@ -1,0 +1,98 @@
+{
+    "name": "TooltipRoot",
+    "displayName": "TooltipRoot",
+    "description": "Root component that manages tooltip state and behavior.",
+    "props": [
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<TooltipRootActions | null>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: Unmounts the tooltip popup.\n- `close`: Closes the tooltip imperatively when called."
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "(arg: { payload: unknown; }) => ReactNode",
+                "boolean"
+            ],
+            "required": false,
+            "description": "The content of the tooltip.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the tooltip is initially open.\n\nTo render a controlled tooltip, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "defaultTriggerId",
+            "type": ["null", "string"],
+            "required": false,
+            "description": "ID of the trigger that the tooltip is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open tooltip."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the tooltip is disabled.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "disableHoverablePopup",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the tooltip contents can be hovered without closing the tooltip.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "handle",
+            "type": ["TooltipHandle<unknown>"],
+            "required": false,
+            "description": "A handle to associate the tooltip with a trigger.\nIf specified, allows external triggers to control the tooltip's open state.\nCan be created with the Tooltip.createHandle() method."
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: Tooltip.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the tooltip is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the tooltip is opened or closed."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the tooltip is currently open."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "trackCursorAxis",
+            "type": ["none", "x", "y", "both"],
+            "required": false,
+            "description": "Determines which axis the tooltip should track the cursor on.",
+            "defaultValue": "'none'"
+        },
+        {
+            "name": "triggerId",
+            "type": ["null", "string"],
+            "required": false,
+            "description": "ID of the trigger that the tooltip is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled tooltip.\nThere's no need to specify this prop when the tooltip is uncontrolled (i.e. when the `open` prop is not set)."
+        }
+    ]
+}

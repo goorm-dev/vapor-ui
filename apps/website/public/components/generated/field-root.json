@@ -1,60 +1,78 @@
 {
     "name": "FieldRoot",
     "displayName": "FieldRoot",
-    "description": "Root container for Field that groups label, input, and messages. Renders a `<div>` element.",
+    "description": "label, input, 메시지를 그룹화하는 Field의 루트 컨테이너입니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
-            "name": "className",
-            "type": ["string"],
+            "name": "actionsRef",
+            "type": ["React.RefObject<FieldRootActions | null>"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "명령형 액션에 대한 ref입니다.\n- `validate`: 호출 시 필드의 유효성을 검사합니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: FieldRootState) => (undefined | string)"],
+            "required": false,
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state를 기반으로 class를 반환하는 함수입니다."
+        },
+        {
+            "name": "dirty",
+            "type": ["boolean"],
+            "required": false,
+            "description": "필드 값이 초기값에서 변경되었는지 여부입니다.\n외부 라이브러리에서 필드 state를 제어할 때 유용합니다."
         },
         {
             "name": "disabled",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the component should ignore user interaction.\nTakes precedence over the `disabled` prop on the `<Field.Control>` component.",
+            "description": "컴포넌트가 사용자 상호작용을 무시해야 하는지 여부입니다.\n`<Field.Control>` 컴포넌트의 `disabled` prop보다 우선합니다.",
             "defaultValue": "false"
         },
         {
             "name": "invalid",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the field is forcefully marked as invalid."
+            "description": "필드가 유효하지 않은지 여부입니다.\n외부 라이브러리에서 필드 state를 제어할 때 유용합니다."
         },
         {
             "name": "name",
             "type": ["string"],
             "required": false,
-            "description": "Identifies the field when a form is submitted.\nTakes precedence over the `name` prop on the `<Field.Control>` component."
+            "description": "form 제출 시 필드를 식별합니다.\n`<Field.Control>` 컴포넌트의 `name` prop보다 우선합니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        },
+        {
+            "name": "touched",
+            "type": ["boolean"],
+            "required": false,
+            "description": "필드가 터치되었는지 여부입니다.\n외부 라이브러리에서 필드 state를 제어할 때 유용합니다."
         },
         {
             "name": "validate",
             "type": [
-                "((value: unknown, formValues: Record<string, unknown>) => string | string[] | null | Promise<string | string[] | null>)"
+                "(value: unknown, formValues: Record<string, any>) => (null | string | string[] | Promise<string | string[] | null>)"
             ],
             "required": false,
-            "description": "A function for custom validation. Return a string or an array of strings with\nthe error message(s) if the value is invalid, or `null` if the value is valid."
+            "description": "커스텀 유효성 검사를 위한 함수입니다. 값이 유효하지 않으면 오류 메시지 string 또는 string 배열을 반환하고, 유효하면 `null`을 반환합니다.\n비동기 함수를 지원하지만, `validationMode=\"onSubmit\"`을 사용할 때는 form 제출을 막지 않습니다."
         },
         {
             "name": "validationDebounceTime",
             "type": ["number"],
             "required": false,
-            "description": "How long to wait between `validate` callbacks if\n`validationMode=\"onChange\"` is used. Specified in milliseconds.",
+            "description": "`validationMode=\"onChange\"`를 사용할 때 `validate` callback 사이에 대기할 시간입니다. 밀리초 단위로 지정합니다.",
             "defaultValue": "0"
         },
         {
             "name": "validationMode",
-            "type": ["onBlur", "onChange"],
+            "type": ["onBlur", "onChange", "onSubmit"],
             "required": false,
-            "description": "Determines when the field should be validated.\n\n- **onBlur** triggers validation when the control loses focus\n- **onChange** triggers validation on every change to the control value",
-            "defaultValue": "'onBlur'"
+            "description": "필드의 유효성 검사 시점을 결정합니다.\n`<Form>`의 `validationMode` prop보다 우선합니다.\n\n- `onSubmit`: form 제출 시 유효성 검사를 트리거하고, 제출 후 변경 시 재검증합니다.\n- `onBlur`: 컨트롤이 포커스를 잃을 때 유효성 검사를 트리거합니다.\n- `onChange`: 컨트롤 값이 변경될 때마다 유효성 검사를 트리거합니다.",
+            "defaultValue": "'onSubmit'"
         }
     ]
 }

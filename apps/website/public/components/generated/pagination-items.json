@@ -1,13 +1,22 @@
 {
     "name": "PaginationItems",
     "displayName": "PaginationItems",
-    "description": "Automatically renders page number buttons and ellipsis based on pagination configuration.",
+    "description": "페이지네이션 설정에 따라 페이지 번호 버튼과 말줄임표를 자동으로 렌더링합니다.",
     "props": [
         {
             "name": "children",
-            "type": ["React.ReactNode", "((pages: PageType[]) => React.ReactNode)"],
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "(pages: PageType[]) => ReactNode",
+                "boolean"
+            ],
             "required": false,
-            "description": "Custom render function or elements to display pagination items"
+            "description": "페이지네이션 항목을 표시하기 위한 커스텀 render 함수 또는 요소입니다."
         }
     ]
 }

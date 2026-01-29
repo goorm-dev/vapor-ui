@@ -1,0 +1,62 @@
+{
+    "name": "MenuRadioItemPrimitive",
+    "displayName": "MenuRadioItemPrimitive",
+    "description": "Radio item primitive for Menu. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: MenuRadioItemState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "label",
+            "type": ["string"],
+            "required": false,
+            "description": "Overrides the text label to use when the item is matched during keyboard text navigation."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onClick",
+            "type": ["(event: React.MouseEvent<HTMLElement, MouseEvent>) => void"],
+            "required": false,
+            "description": "The click handler for the menu item."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": true,
+            "description": "Value of the radio item.\nThis is the value that will be set in the MenuRadioGroup when the item is selected."
+        },
+        {
+            "name": "closeOnClick",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to close the menu when clicking the radio item."
+        }
+    ]
+}

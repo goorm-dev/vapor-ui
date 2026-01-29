@@ -1,26 +1,26 @@
 {
     "name": "CheckboxIndicatorPrimitive",
     "displayName": "CheckboxIndicatorPrimitive",
-    "description": "Displays the check or dash icon when the Checkbox is checked or indeterminate. Renders a `<div>` element.",
+    "description": "Checkbox가 체크되거나 indeterminate 상태일 때 체크 또는 대시 아이콘을 표시합니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: CheckboxIndicatorState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
             "name": "keepMounted",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether to keep the element in the DOM when the checkbox is not checked.",
+            "description": "체크박스가 체크되지 않았을 때 요소를 DOM에 유지할지 여부입니다.",
             "defaultValue": "false"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ]
 }

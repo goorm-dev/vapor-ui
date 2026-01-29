@@ -1,0 +1,59 @@
+{
+    "name": "PopoverTrigger",
+    "displayName": "PopoverTrigger",
+    "description": "Button that toggles the popover visibility. Renders a `<button>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: PopoverTriggerState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "closeDelay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before closing the popover that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "delay",
+            "type": ["number"],
+            "required": false,
+            "description": "How long to wait before the popover may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
+            "defaultValue": "300"
+        },
+        {
+            "name": "handle",
+            "type": ["PopoverHandle<unknown>"],
+            "required": false,
+            "description": "A handle to associate the trigger with a popover."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
+            "defaultValue": "true"
+        },
+        {
+            "name": "openOnHover",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the popover should also open when the trigger is hovered.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "payload",
+            "type": ["unknown"],
+            "required": false,
+            "description": "A payload to pass to the popover when it is opened."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

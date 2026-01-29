@@ -1,0 +1,79 @@
+{
+    "name": "TabsRoot",
+    "displayName": "TabsRoot",
+    "description": "Root component of Tabs that manages tab navigation and content switching. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "activateOnFocus",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to automatically change the active tab on arrow key focus.\nOtherwise, tabs will be activated using <kbd>Enter</kbd> or <kbd>Space</kbd> key press.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: TabsRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["any"],
+            "required": false,
+            "description": "The default value. Use when the component is not controlled.\nWhen the value is `null`, no Tab will be active.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the Tab is disabled.\n\nIf a first Tab on a `<Tabs.List>` is disabled, it won't initially be selected.\nInstead, the next enabled Tab will be selected.\nHowever, it does not work like this during server-side rendering, as it is not known\nduring pre-rendering which Tabs are disabled.\nTo work around it, ensure that `defaultValue` or `value` on `<Tabs.Root>` is set to an enabled Tab's value."
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: any, eventDetails: Tabs.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Callback invoked when new value is being set."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "The component orientation (layout flow direction).",
+            "defaultValue": "horizontal"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": false,
+            "description": "The value of the currently active `Tab`. Use when the component is controlled.\nWhen the value is `null`, no Tab will be active."
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Determines the size of the tab button.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "variant",
+            "type": ["fill", "line"],
+            "required": false,
+            "description": "Determines the visual style of the tab list.\nDetermines the visual style of the tab button.",
+            "defaultValue": "line"
+        }
+    ]
+}

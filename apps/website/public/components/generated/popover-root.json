@@ -1,77 +1,84 @@
 {
     "name": "PopoverRoot",
     "displayName": "PopoverRoot",
-    "description": "Root component that manages popover open/close state. Renders a context provider.",
+    "description": "Popover 열기/닫기 state를 관리하는 루트 컴포넌트입니다. context provider를 렌더링합니다.",
     "props": [
         {
             "name": "actionsRef",
-            "type": ["React.RefObject<Actions>"],
+            "type": ["React.RefObject<PopoverRootActions | null>"],
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: When specified, the popover will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the popover manually.\nUseful when the popover's animation is controlled by an external library."
+            "description": "명령형 액션에 대한 ref입니다.\n- `unmount`: 지정된 경우, popover가 닫힐 때 언마운트되지 않습니다.\n대신 수동으로 popover를 언마운트하려면 `unmount` 함수를 호출해야 합니다.\n외부 라이브러리로 popover의 애니메이션을 제어할 때 유용합니다.\n- `close`: 호출 시 dialog를 명령적으로 닫습니다."
         },
         {
             "name": "children",
-            "type": ["ReactNode"],
-            "required": false
-        },
-        {
-            "name": "closeDelay",
-            "type": ["number"],
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "(arg: { payload: unknown; }) => ReactNode",
+                "boolean"
+            ],
             "required": false,
-            "description": "How long to wait before closing the popover that was opened on hover.\nSpecified in milliseconds.\n\nRequires the `openOnHover` prop.",
-            "defaultValue": "0"
+            "description": "popover의 콘텐츠입니다.\n일반 React 노드이거나 활성 트리거의 `payload`를 받는 render 함수일 수 있습니다."
         },
         {
             "name": "defaultOpen",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the popover is initially open.\n\nTo render a controlled popover, use the `open` prop instead.",
+            "description": "popover가 초기에 열려 있는지 여부입니다.\n\ncontrolled popover를 렌더링하려면 `open` prop을 대신 사용하세요.",
             "defaultValue": "false"
         },
         {
-            "name": "delay",
-            "type": ["number"],
+            "name": "defaultTriggerId",
+            "type": ["null", "string"],
             "required": false,
-            "description": "How long to wait before the popover may be opened on hover. Specified in milliseconds.\n\nRequires the `openOnHover` prop.",
-            "defaultValue": "300"
+            "description": "popover와 연결된 트리거의 ID입니다.\n초기에 열린 popover를 만들기 위해 `defaultOpen` prop과 함께 사용하면 유용합니다."
+        },
+        {
+            "name": "handle",
+            "type": ["PopoverHandle<unknown>"],
+            "required": false,
+            "description": "popover를 트리거와 연결하기 위한 handle입니다.\n지정된 경우 외부 트리거가 popover의 열림 state를 제어할 수 있습니다."
         },
         {
             "name": "modal",
-            "type": ["boolean", "\"trap-focus\""],
+            "type": ["\"trap-focus\"", "boolean"],
             "required": false,
-            "description": "Determines if the popover enters a modal state when open.\n- `true`: user interaction is limited to the popover: document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the popover, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
+            "description": "popover가 열릴 때 모달 state로 진입하는지 결정합니다.\n- `true`: 사용자 상호작용이 popover로 제한됩니다. 문서 페이지 스크롤이 잠기고, 외부 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용이 허용됩니다.\n- `'trap-focus'`: 포커스가 popover 내부에 갇히지만, 문서 페이지 스크롤은 잠기지 않고 외부의 포인터 상호작용은 활성화된 상태로 유지됩니다.",
             "defaultValue": "false"
         },
         {
             "name": "onOpenChange",
-            "type": ["((open: boolean, eventDetails: ChangeEventDetails) => void)"],
+            "type": ["(open: boolean, eventDetails: Popover.Root.ChangeEventDetails) => void"],
             "required": false,
-            "description": "Event handler called when the popover is opened or closed."
+            "description": "popover가 열리거나 닫힐 때 호출되는 event handler입니다."
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["((open: boolean) => void)"],
+            "type": ["(open: boolean) => void"],
             "required": false,
-            "description": "Event handler called after any animations complete when the popover is opened or closed."
+            "description": "popover가 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 event handler입니다."
         },
         {
             "name": "open",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the popover is currently open."
-        },
-        {
-            "name": "openOnHover",
-            "type": ["boolean"],
-            "required": false,
-            "description": "Whether the popover should also open when the trigger is hovered.",
-            "defaultValue": "false"
+            "description": "popover가 현재 열려 있는지 여부입니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나, 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        },
+        {
+            "name": "triggerId",
+            "type": ["null", "string"],
+            "required": false,
+            "description": "popover와 연결된 트리거의 ID입니다.\ncontrolled popover를 만들기 위해 `open` prop과 함께 사용하면 유용합니다.\npopover가 uncontrolled일 때(즉, `open` prop이 설정되지 않은 경우) 이 prop을 지정할 필요가 없습니다."
         }
     ]
 }

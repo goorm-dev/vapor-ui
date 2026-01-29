@@ -1,0 +1,50 @@
+{
+    "name": "MenuRadioGroup",
+    "displayName": "MenuRadioGroup",
+    "description": "Container for radio items in Menu. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "required": false,
+            "description": "The content of the component."
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: MenuRadioGroupState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["any"],
+            "required": false,
+            "description": "The uncontrolled value of the radio item that should be initially selected.\n\nTo render a controlled radio group, use the `value` prop instead."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onValueChange",
+            "type": ["(value: any, eventDetails: MenuRadio.Group.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Function called when the selected value changes."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": false,
+            "description": "The controlled value of the radio item that should be currently selected.\n\nTo render an uncontrolled radio group, use the `defaultValue` prop instead."
+        }
+    ]
+}

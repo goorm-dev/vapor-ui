@@ -3,28 +3,43 @@
     "displayName": "Form",
     "props": [
         {
-            "name": "className",
-            "type": ["string"],
+            "name": "actionsRef",
+            "type": ["React.RefObject<FormActions | null>"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "명령형 액션에 대한 ref입니다.\n- `validate`: 호출 시 모든 필드의 유효성을 검사합니다. 선택적으로 필드 이름을 전달하여 단일 필드의 유효성을 검사할 수 있습니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: FormState) => (undefined | string)"],
+            "required": false,
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state를 기반으로 class를 반환하는 함수입니다."
         },
         {
             "name": "errors",
             "type": ["Errors"],
             "required": false,
-            "description": "An object where the keys correspond to the `name` attribute of the form fields,\nand the values correspond to the error(s) related to that field."
+            "description": "외부에서 반환된 유효성 검사 오류입니다. 일반적으로 서버 또는 form action에 의한 제출 후에 반환됩니다.\n키는 `<Field.Root>`의 `name` 속성에 해당하고, 값은 해당 필드와 관련된 오류에 해당하는 객체여야 합니다."
         },
         {
-            "name": "onClearErrors",
-            "type": ["((errors: FormContext['errors']) => void)"],
+            "name": "onFormSubmit",
+            "type": [
+                "(formValues: Record<string, any>, eventDetails: { reason: \"none\"; event: Event; }) => void"
+            ],
             "required": false,
-            "description": "Event handler called when the `errors` object is cleared."
+            "description": "form이 제출될 때 호출되는 event handler입니다.\n사용 시 네이티브 submit event에 `preventDefault()`가 호출됩니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        },
+        {
+            "name": "validationMode",
+            "type": ["onBlur", "onChange", "onSubmit"],
+            "required": false,
+            "description": "form의 유효성 검사 시점을 결정합니다.\n`<Field.Root>`의 `validationMode` prop이 이보다 우선합니다.\n\n- `onSubmit` (기본값): form이 제출될 때 필드의 유효성을 검사하고, 이후 필드는 변경 시 재검증됩니다.\n- `onBlur`: 필드가 포커스를 잃을 때 유효성을 검사합니다.\n- `onChange`: 값이 변경될 때마다 필드의 유효성을 검사합니다.",
+            "defaultValue": "'onSubmit'"
         }
     ]
 }

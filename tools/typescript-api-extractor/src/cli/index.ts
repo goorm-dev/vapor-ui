@@ -39,6 +39,7 @@ const cli = meow(
     --no-exclude-defaults  Disable default exclude patterns (.stories.tsx, .css.ts)
     --component, -n      Component name to process (e.g., Button, TextInput)
     --output-dir, -d     Output directory for per-component files
+    --lang, -l           Language suffix for output files (e.g., en -> avatar-root.en.json)
     --all, -a            Include all props (node_modules + sprinkles + html)
     --sprinkles, -s      Include sprinkles props
     --include            Include specific props (can be used multiple times)
@@ -48,6 +49,7 @@ const cli = meow(
     $ ts-api-extractor ./packages/core
     $ ts-api-extractor ./packages/core --component Tabs
     $ ts-api-extractor ./packages/core --component Tabs --output-dir ./output
+    $ ts-api-extractor ./packages/core --output-dir ./output --lang en
     $ ts-api-extractor ./packages/core --sprinkles
     $ ts-api-extractor  # Interactive mode: prompts for path and components
 `,
@@ -74,6 +76,10 @@ const cli = meow(
             outputDir: {
                 type: 'string',
                 shortFlag: 'd',
+            },
+            lang: {
+                type: 'string',
+                shortFlag: 'l',
             },
             all: {
                 type: 'boolean',
@@ -107,6 +113,7 @@ export async function run() {
         excludeDefaults: cli.flags.excludeDefaults,
         component: cli.flags.component,
         outputDir: cli.flags.outputDir,
+        lang: cli.flags.lang,
         all: cli.flags.all,
         sprinkles: cli.flags.sprinkles,
         include: cli.flags.include,
@@ -138,9 +145,10 @@ export async function run() {
             fs.mkdirSync(outputDir, { recursive: true });
         }
 
+        const langSuffix = resolved.lang ? `.${resolved.lang}` : '';
         const writtenFiles: string[] = [];
         for (const prop of allProps) {
-            const fileName = toKebabCase(prop.name) + '.json';
+            const fileName = toKebabCase(prop.name) + langSuffix + '.json';
             const filePath = path.join(outputDir, fileName);
             fs.writeFileSync(filePath, JSON.stringify(prop, null, 2));
             writtenFiles.push(filePath);

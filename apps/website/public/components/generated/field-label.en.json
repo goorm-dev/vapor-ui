@@ -1,0 +1,78 @@
+{
+    "name": "FieldLabel",
+    "displayName": "FieldLabel",
+    "description": "Label element for Field input. Renders a `<label>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: FieldRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "nativeLabel",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<label>` element when replacing it via the `render` prop.\nSet to `false` if the rendered element is not a label (e.g. `<div>`).\n\nThis is useful to avoid inheriting label behaviors on `<button>` controls (such as `<Select.Trigger>` and `<Combobox.Trigger>`), including avoiding `:hover` on the button when hovering the label, and preventing clicks on the label from firing on the button.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "foreground",
+            "type": [
+                "white",
+                "inverse",
+                "primary-100",
+                "primary-200",
+                "secondary-100",
+                "success-100",
+                "success-200",
+                "warning-100",
+                "warning-200",
+                "danger-100",
+                "danger-200",
+                "hint-100",
+                "hint-200",
+                "contrast-100",
+                "contrast-200",
+                "secondary-200",
+                "normal-100",
+                "normal-200"
+            ],
+            "required": false,
+            "description": "Determines the foreground color of the label.",
+            "defaultValue": "normal-100"
+        },
+        {
+            "name": "typography",
+            "type": [
+                "body1",
+                "display1",
+                "display2",
+                "display3",
+                "display4",
+                "heading1",
+                "heading2",
+                "heading3",
+                "heading4",
+                "heading5",
+                "heading6",
+                "subtitle1",
+                "subtitle2",
+                "body2",
+                "body3",
+                "body4",
+                "code1",
+                "code2"
+            ],
+            "required": false,
+            "description": "Determines the typography style of the label.",
+            "defaultValue": "body2"
+        }
+    ]
+}

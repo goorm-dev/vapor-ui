@@ -1,7 +1,7 @@
 {
     "name": "MenuSubmenuPopup",
     "displayName": "MenuSubmenuPopup",
-    "description": "Composed submenu popup with portal and positioner. Renders a `<div>` element.",
+    "description": "portal과 positioner가 조합된 서브메뉴 popup입니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "children",
@@ -10,19 +10,19 @@
         },
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: MenuPopupState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나,\n컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
             "name": "finalFocus",
             "type": [
-                "boolean",
                 "React.RefObject<HTMLElement | null>",
-                "((closeType: InteractionType) => boolean | HTMLElement | null | void)"
+                "(closeType: \"\" | \"touch\" | \"keyboard\" | \"mouse\" | \"pen\") => (null | void | HTMLElement | boolean)",
+                "boolean"
             ],
             "required": false,
-            "description": "Determines the element to focus when the menu is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+            "description": "메뉴가 닫힐 때 포커스할 요소를 결정합니다.\n\n- `false`: 포커스를 이동하지 않습니다.\n- `true`: 기본 동작에 따라 포커스를 이동합니다(트리거 또는 이전에 포커스된 요소).\n- `RefObject`: ref 요소로 포커스를 이동합니다.\n- `function`: 상호작용 유형(`mouse`, `touch`, `pen`, 또는 `keyboard`)과 함께 호출됩니다.\n  포커스할 요소를 반환하거나, 기본 동작을 사용하려면 `true`를, 아무것도 하지 않으려면 `false`/`undefined`를 반환합니다."
         },
         {
             "name": "id",
@@ -33,19 +33,19 @@
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나\n다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "portalElement",
-            "type": ["ReactElement<MenuPortalPrimitive.Props>"],
+            "type": ["ReactElement"],
             "required": false,
-            "description": "Custom portal element to replace the default portal."
+            "description": "기본 portal을 대체할 커스텀 portal 요소입니다."
         },
         {
             "name": "positionerElement",
-            "type": ["ReactElement<MenuPositionerPrimitive.Props>"],
+            "type": ["ReactElement"],
             "required": false,
-            "description": "Custom positioner element to replace the default positioner."
+            "description": "기본 positioner를 대체할 커스텀 positioner 요소입니다."
         }
     ]
 }

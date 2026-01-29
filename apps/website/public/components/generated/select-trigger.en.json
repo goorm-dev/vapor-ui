@@ -1,0 +1,37 @@
+{
+    "name": "SelectTrigger",
+    "displayName": "SelectTrigger",
+    "description": "Composed trigger component that includes value display and icon. Renders a `<button>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: SelectTriggerState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
+            "defaultValue": "true"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

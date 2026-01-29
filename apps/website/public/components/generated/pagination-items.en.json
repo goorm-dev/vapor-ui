@@ -1,0 +1,22 @@
+{
+    "name": "PaginationItems",
+    "displayName": "PaginationItems",
+    "description": "Automatically renders page number buttons and ellipsis based on pagination configuration.",
+    "props": [
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "(pages: PageType[]) => ReactNode",
+                "boolean"
+            ],
+            "required": false,
+            "description": "Custom render function or elements to display pagination items"
+        }
+    ]
+}

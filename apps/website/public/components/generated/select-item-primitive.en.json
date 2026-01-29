@@ -1,0 +1,51 @@
+{
+    "name": "SelectItemPrimitive",
+    "displayName": "SelectItemPrimitive",
+    "description": "Primitive selectable option item in the dropdown list. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: SelectItemState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "label",
+            "type": ["string"],
+            "required": false,
+            "description": "Specifies the text label to use when the item is matched during keyboard text navigation.\n\nDefaults to the item text content if not provided."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "value",
+            "type": ["any"],
+            "required": false,
+            "description": "A unique value that identifies this select item.",
+            "defaultValue": "null"
+        }
+    ]
+}

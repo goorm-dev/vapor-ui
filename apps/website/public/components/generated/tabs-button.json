@@ -1,32 +1,38 @@
 {
     "name": "TabsButton",
     "displayName": "TabsButton",
-    "description": "Individual tab button for switching between panels. Renders a `<button>` element.",
+    "description": "패널 간 전환을 위한 개별 탭 버튼입니다. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: TabsTabState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state에 따라 class를 반환하는 함수입니다."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Tab이 비활성화되어 있는지 여부입니다.\n\n`<Tabs.List>`의 첫 번째 Tab이 비활성화되면 초기에 선택되지 않습니다.\n대신 다음으로 활성화된 Tab이 선택됩니다.\n그러나 서버 사이드 렌더링 중에는 어떤 Tab이 비활성화되어 있는지 알 수 없으므로 이 방식이 작동하지 않습니다.\n이를 해결하려면 `<Tabs.Root>`의 `defaultValue` 또는 `value`가 활성화된 Tab의 값으로 설정되어 있는지 확인하세요."
         },
         {
             "name": "nativeButton",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `false` if the rendered element is not a button (e.g. `<div>`).",
+            "description": "`render` prop을 통해 교체할 때 컴포넌트가 네이티브 `<button>` 요소를 렌더링할지 여부입니다.\n렌더링되는 요소가 버튼이 아닌 경우(예: `<div>`) `false`로 설정하세요.",
             "defaultValue": "true"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "value",
             "type": ["any"],
-            "required": false,
-            "description": "The value of the Tab.\nWhen not specified, the value is the child position index."
+            "required": true,
+            "description": "Tab의 값입니다."
         }
     ]
 }

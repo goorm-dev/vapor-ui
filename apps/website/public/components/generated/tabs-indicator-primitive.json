@@ -1,25 +1,25 @@
 {
     "name": "TabsIndicatorPrimitive",
     "displayName": "TabsIndicatorPrimitive",
-    "description": "Visual indicator that highlights the active tab. Renders a `<div>` element.",
+    "description": "활성 탭을 강조하는 시각적 인디케이터입니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: TabsIndicatorState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "renderBeforeHydration",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether to render itself before React hydrates.\nThis minimizes the time that the indicator isn’t visible after server-side rendering.",
+            "description": "React hydration 전에 렌더링할지 여부입니다.\n서버 사이드 렌더링 후 인디케이터가 보이지 않는 시간을 최소화합니다.",
             "defaultValue": "false"
         }
     ]

@@ -1,0 +1,45 @@
+{
+    "name": "CollapsibleRoot",
+    "displayName": "CollapsibleRoot",
+    "description": "Root component of Collapsible that manages open/close state. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: CollapsibleRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the collapsible panel is initially open.\n\nTo render a controlled collapsible, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: Collapsible.Root.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the panel is opened or closed."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the collapsible panel is currently open.\n\nTo render an uncontrolled collapsible, use the `defaultOpen` prop instead."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

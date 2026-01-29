@@ -3,26 +3,27 @@
     "displayName": "SelectPortalPrimitive",
     "props": [
         {
-            "name": "children",
-            "type": ["ReactNode"],
-            "required": false
+            "name": "className",
+            "type": ["string", "(state: SelectPortal.State) => (undefined | string)"],
+            "required": false,
+            "description": "엘리먼트에 적용되는 CSS class이거나, 컴포넌트의 state를 기반으로 class를 반환하는 함수입니다."
         },
         {
             "name": "container",
             "type": [
+                "null",
                 "HTMLElement",
                 "ShadowRoot",
-                "React.RefObject<HTMLElement | ShadowRoot | null>",
-                "null"
+                "React.RefObject<HTMLElement | ShadowRoot | null>"
             ],
             "required": false,
-            "description": "A parent element to render the portal element into."
+            "description": "portal 엘리먼트를 렌더링할 부모 엘리먼트입니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 엘리먼트를 다른 태그로 대체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 엘리먼트를 반환하는 함수를 받습니다."
         }
     ]
 }

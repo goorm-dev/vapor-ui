@@ -1,33 +1,39 @@
 {
     "name": "TabsList",
     "displayName": "TabsList",
-    "description": "Composite component combining ListPrimitive and IndicatorPrimitive. Renders a `<div>` element.",
+    "description": "ListPrimitive와 IndicatorPrimitive를 결합한 복합 컴포넌트입니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "activateOnFocus",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether to automatically change the active tab on arrow key focus.\nOtherwise, tabs will be activated using Enter or Spacebar key press.",
-            "defaultValue": "true"
+            "description": "화살표 키 포커스 시 활성 탭을 자동으로 변경할지 여부입니다.\n그렇지 않으면 탭은 <kbd>Enter</kbd> 또는 <kbd>Space</kbd> 키 누름으로 활성화됩니다.",
+            "defaultValue": "false"
         },
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: TabsListState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
-            "name": "loop",
+            "name": "disabled",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
+            "description": "Tab이 비활성화되어 있는지 여부입니다.\n\n`<Tabs.List>`의 첫 번째 Tab이 비활성화되면 초기에 선택되지 않습니다.\n대신 다음으로 활성화된 Tab이 선택됩니다.\n그러나 서버 사이드 렌더링 중에는 어떤 Tab이 비활성화되어 있는지 알 수 없으므로 이 방식이 작동하지 않습니다.\n이를 해결하려면 `<Tabs.Root>`의 `defaultValue` 또는 `value`가 활성화된 Tab의 값으로 설정되어 있는지 확인하세요."
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "required": false,
+            "description": "화살표 키를 사용할 때 목록의 끝에 도달하면 키보드 포커스를 첫 번째 항목으로 되돌릴지 여부입니다.",
             "defaultValue": "true"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "indicatorElement",
@@ -38,21 +44,21 @@
             "name": "orientation",
             "type": ["horizontal", "vertical"],
             "required": false,
-            "description": "Determines the layout direction of the tab list.\nDetermines the layout direction of the tab button.",
+            "description": "탭 리스트의 레이아웃 방향을 결정합니다.\n탭 버튼의 레이아웃 방향을 결정합니다.",
             "defaultValue": "horizontal"
         },
         {
             "name": "size",
             "type": ["sm", "md", "lg", "xl"],
             "required": false,
-            "description": "Determines the size of the tab button.",
+            "description": "탭 버튼의 크기를 결정합니다.",
             "defaultValue": "md"
         },
         {
             "name": "variant",
             "type": ["fill", "line"],
             "required": false,
-            "description": "Determines the visual style of the tab list.\nDetermines the visual style of the tab button.",
+            "description": "탭 리스트의 시각적 스타일을 결정합니다.\n탭 버튼의 시각적 스타일을 결정합니다.",
             "defaultValue": "line"
         }
     ]

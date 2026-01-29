@@ -1,0 +1,112 @@
+{
+    "name": "MenuSubmenuRoot",
+    "displayName": "MenuSubmenuRoot",
+    "description": "Root component for Menu submenu that manages submenu state.",
+    "props": [
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<MenuRootActions | null>"],
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: When specified, the menu will not be unmounted when closed.\n   Instead, the `unmount` function must be called to unmount the menu manually.\n  Useful when the menu's animation is controlled by an external library.\n- `close`: When specified, the menu can be closed imperatively."
+        },
+        {
+            "name": "children",
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "(arg: { payload: unknown; }) => ReactNode",
+                "boolean"
+            ],
+            "required": false,
+            "description": "The content of the popover.\nThis can be a regular React node or a render function that receives the `payload` of the active trigger."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the menu is initially open.\n\nTo render a controlled menu, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "defaultTriggerId",
+            "type": ["null", "string"],
+            "required": false,
+            "description": "ID of the trigger that the popover is associated with.\nThis is useful in conjunction with the `defaultOpen` prop to create an initially open popover."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "handle",
+            "type": ["MenuHandle<unknown>"],
+            "required": false,
+            "description": "A handle to associate the menu with a trigger.\nIf specified, allows external triggers to control the menu's open state."
+        },
+        {
+            "name": "highlightItemOnHover",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether moving the pointer over items should highlight them.\nDisabling this prop allows CSS `:hover` to be differentiated from the `:focus` (`data-highlighted`) state.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to loop keyboard focus back to the first item\nwhen the end of the list is reached while using the arrow keys.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, eventDetails: MenuRadio.Group.ChangeEventDetails) => void"],
+            "required": false,
+            "description": "Event handler called when the menu is opened or closed."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["(open: boolean) => void"],
+            "required": false,
+            "description": "Event handler called after any animations complete when the menu is closed."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether the menu is currently open."
+        },
+        {
+            "name": "orientation",
+            "type": ["horizontal", "vertical"],
+            "required": false,
+            "description": "The visual orientation of the menu.\nControls whether roving focus uses up/down or left/right arrow keys.",
+            "defaultValue": "'vertical'"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "triggerId",
+            "type": ["null", "string"],
+            "required": false,
+            "description": "ID of the trigger that the popover is associated with.\nThis is useful in conjunction with the `open` prop to create a controlled popover.\nThere's no need to specify this prop when the popover is uncontrolled (i.e. when the `open` prop is not set)."
+        },
+        {
+            "name": "closeParentOnEsc",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to close the parent menu when pressing Escape in submenu.",
+            "defaultValue": "false"
+        }
+    ]
+}

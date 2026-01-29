@@ -1,0 +1,52 @@
+{
+    "name": "Textarea",
+    "displayName": "Textarea",
+    "description": "Input field for entering multi-line text data. Renders a `<textarea>` element.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "defaultValue",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "onValueChange",
+            "type": [
+                "(value: string, event: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element | undefined; }) => void"
+            ],
+            "required": false
+        },
+        {
+            "name": "value",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "autoResize",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Determines whether the textarea automatically resizes to fit content.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Determines whether the textarea is in an invalid state.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "required": false,
+            "description": "Determines the size of the textarea.",
+            "defaultValue": "md"
+        }
+    ],
+    "defaultElement": "BaseField"
+}

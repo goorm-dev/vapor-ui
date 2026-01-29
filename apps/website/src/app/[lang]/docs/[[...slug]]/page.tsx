@@ -1,0 +1,71 @@
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import { notFound } from 'next/navigation';
+
+import { DocsPageHeader } from '~/components/docs-page-header';
+import { source } from '~/lib/source';
+import { getMDXComponents } from '~/mdx-components';
+import { generatePageMetadata } from '~/utils/metadata';
+
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ slug?: string[]; lang: string }>;
+}) {
+    const { slug = [], lang } = await params;
+
+    // components 경로는 components 전용 페이지에서 처리하도록 제외
+    if (slug[0] === 'components') {
+        notFound();
+    }
+
+    const page = source.getPage(slug, lang);
+    if (!page) notFound();
+
+    const { body: MDX, toc, lastModified } = await page.data.load();
+    const isRoot = slug.length === 0;
+    return (
+        <DocsPage
+            toc={toc}
+            full={page.data.full}
+            tableOfContent={{
+                style: 'clerk',
+                single: false,
+            }}
+            lastUpdate={lastModified}
+            article={{
+                className: isRoot ? 'gap-v-800' : '',
+            }}
+        >
+            <DocsPageHeader
+                title={page.data.title}
+                description={page.data.description}
+                markdownUrl={`${page.url}.mdx`}
+            />
+            <DocsBody>
+                <MDX components={getMDXComponents({})} />
+            </DocsBody>
+
+            <div role="none" />
+        </DocsPage>
+    );
+}
+
+export async function generateStaticParams() {
+    const params = source.generateParams();
+    // components 경로는 제외
+    return params.filter((param) => param.slug?.[0] !== 'components');
+}
+
+export async function generateMetadata(props: {
+    params: Promise<{ slug?: string[]; lang: string }>;
+}) {
+    const { slug = [], lang } = await props.params;
+
+    // components 경로는 components 전용 페이지에서 처리하도록 제외
+    if (slug[0] === 'components') {
+        notFound();
+    }
+
+    const page = source.getPage(slug, lang);
+    return generatePageMetadata(page || null);
+}

@@ -114,7 +114,7 @@ interface Property {
 
 Props는 다음 순서로 정렬됩니다:
 
-1. **base-ui props**: `@base-ui-components`에서 온 props
+1. **base-ui props**: `@base-ui`에서 온 props
 2. **custom props**: 컴포넌트 파일에서 직접 정의된 props
 3. **variants props**: `.css.ts` 파일의 recipe variants에서 온 props
 
@@ -297,7 +297,7 @@ output/
 
 다음은 **기본적으로 필터링**됩니다:
 
-- `node_modules` 외부 라이브러리 props (단, `@base-ui-components`는 포함)
+- `node_modules` 외부 라이브러리 props (단, `@base-ui`는 포함)
 - `sprinkles.css` 파일에서 온 props
 - HTML 네이티브 속성 (`className`, `style`, `id`, `onClick` 등)
 
@@ -314,7 +314,7 @@ output/
 
 - **sprinkles props**: `sprinkles.css` 파일명으로 판단
 - **recipe variants**: `.css.ts` 파일 확장자로 판단
-- **base-ui props**: `@base-ui-components` 패키지 경로로 판단
+- **base-ui props**: `@base-ui` 패키지 경로로 판단
 
 ## tsconfig.json 감지
 
@@ -353,6 +353,6 @@ Done! Extracted 25 components.
 ## 제한사항
 
 - vapor-ui의 namespace + Props interface 패턴만 지원
-- `@base-ui-components`만 node_modules에서 예외적으로 포함
+- `@base-ui`만 node_modules에서 예외적으로 포함
 - JSDoc은 description만 추출 (@default, @example 등 미지원)
 - deprecation 정보 미추적

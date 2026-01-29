@@ -1,0 +1,26 @@
+{
+    "name": "CheckboxIndicatorPrimitive",
+    "displayName": "CheckboxIndicatorPrimitive",
+    "description": "Displays the check or dash icon when the Checkbox is checked or indeterminate. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: CheckboxIndicatorState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "keepMounted",
+            "type": ["boolean"],
+            "required": false,
+            "description": "Whether to keep the element in the DOM when the checkbox is not checked.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

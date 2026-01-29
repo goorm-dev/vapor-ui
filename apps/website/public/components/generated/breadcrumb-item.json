@@ -1,19 +1,19 @@
 {
     "name": "BreadcrumbItem",
     "displayName": "BreadcrumbItem",
-    "description": "Combined Breadcrumb item with link. Renders a `<li>` element.",
+    "description": "링크가 결합된 Breadcrumb 항목입니다. `<li>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         },
         {
             "name": "current",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether this link represents the current page",
+            "description": "이 링크가 현재 페이지를 나타내는지 여부입니다.",
             "defaultValue": "false"
         }
     ]

@@ -1,69 +1,97 @@
 {
     "name": "DialogRoot",
     "displayName": "DialogRoot",
-    "description": "Root component of Dialog that manages open/close state and settings. Renders a `<div>` element.",
+    "description": "Dialog의 열림/닫힘 state와 설정을 관리하는 루트 컴포넌트입니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "actionsRef",
-            "type": ["React.RefObject<Actions>"],
+            "type": ["React.RefObject<DialogRootActions | null>"],
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: When specified, the dialog will not be unmounted when closed.\nInstead, the `unmount` function must be called to unmount the dialog manually.\nUseful when the dialog's animation is controlled by an external library."
+            "description": "명령형 액션에 대한 ref입니다.\n- `unmount`: 지정하면 Dialog가 닫힐 때 unmount되지 않습니다.\n대신 Dialog를 수동으로 unmount하려면 `unmount` 함수를 호출해야 합니다.\nDialog의 애니메이션이 외부 라이브러리에 의해 제어될 때 유용합니다.\n- `close`: 호출 시 명령적으로 Dialog를 닫습니다."
         },
         {
             "name": "children",
-            "type": ["ReactNode"],
-            "required": false
+            "type": [
+                "null",
+                "string",
+                "number",
+                "ReactElement",
+                "Iterable<React.ReactNode>",
+                "React.ReactPortal",
+                "(arg: { payload: unknown; }) => ReactNode",
+                "boolean"
+            ],
+            "required": false,
+            "description": "Dialog의 콘텐츠입니다.\n일반 React 노드이거나 활성 트리거의 `payload`를 받는 render 함수일 수 있습니다."
         },
         {
             "name": "defaultOpen",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the dialog is initially open.\n\nTo render a controlled dialog, use the `open` prop instead.",
+            "description": "Dialog가 초기에 열려 있는지 여부입니다.\n\ncontrolled Dialog를 렌더링하려면 대신 `open` prop을 사용하세요.",
             "defaultValue": "false"
         },
         {
-            "name": "modal",
-            "type": ["boolean", "\"trap-focus\""],
+            "name": "defaultTriggerId",
+            "type": ["null", "string"],
             "required": false,
-            "description": "Determines if the dialog enters a modal state when open.\n- `true`: user interaction is limited to just the dialog: focus is trapped, document page scroll is locked, and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n- `'trap-focus'`: focus is trapped inside the dialog, but document page scroll is not locked and pointer interactions outside of it remain enabled.",
+            "description": "Dialog와 연결된 트리거의 ID입니다.\n이것은 `defaultOpen` prop과 함께 사용하여 초기에 열린 Dialog를 만들 때 유용합니다."
+        },
+        {
+            "name": "handle",
+            "type": ["DialogHandle<unknown>"],
+            "required": false,
+            "description": "Dialog를 트리거와 연결하기 위한 handle입니다.\n지정하면 외부 트리거가 Dialog의 열림 state를 제어할 수 있습니다.\nDialog.createHandle() 메서드로 생성할 수 있습니다."
+        },
+        {
+            "name": "modal",
+            "type": ["\"trap-focus\"", "boolean"],
+            "required": false,
+            "description": "Dialog가 열릴 때 모달 state로 진입하는지 여부를 결정합니다.\n- `true`: 사용자 상호작용이 Dialog로만 제한됩니다. 포커스가 트랩되고, 문서 페이지 스크롤이 잠기며, 외부 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과의 사용자 상호작용이 허용됩니다.\n- `'trap-focus'`: 포커스가 Dialog 내부에 트랩되지만, 문서 페이지 스크롤은 잠기지 않고 외부 포인터 상호작용은 활성화된 상태로 유지됩니다.",
             "defaultValue": "true"
         },
         {
             "name": "onOpenChange",
-            "type": ["((open: boolean, eventDetails: DialogRoot.ChangeEventDetails) => void)"],
+            "type": ["(open: boolean, eventDetails: Dialog.Root.ChangeEventDetails) => void"],
             "required": false,
-            "description": "Event handler called when the dialog is opened or closed."
+            "description": "Dialog가 열리거나 닫힐 때 호출되는 event handler입니다."
         },
         {
             "name": "onOpenChangeComplete",
-            "type": ["((open: boolean) => void)"],
+            "type": ["(open: boolean) => void"],
             "required": false,
-            "description": "Event handler called after any animations complete when the dialog is opened or closed."
+            "description": "Dialog가 열리거나 닫힐 때 모든 애니메이션이 완료된 후 호출되는 event handler입니다."
         },
         {
             "name": "open",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether the dialog is currently open."
+            "description": "Dialog가 현재 열려 있는지 여부입니다."
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        },
+        {
+            "name": "triggerId",
+            "type": ["null", "string"],
+            "required": false,
+            "description": "Dialog와 연결된 트리거의 ID입니다.\n이것은 `open` prop과 함께 사용하여 controlled Dialog를 만들 때 유용합니다.\nPopover가 uncontrolled일 때(즉, `open` prop이 설정되지 않은 경우)는 이 prop을 지정할 필요가 없습니다."
         },
         {
             "name": "closeOnClickOverlay",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether to close the Dialog when clicking on the overlay.",
+            "description": "overlay를 클릭할 때 Dialog를 닫을지 여부입니다.",
             "defaultValue": "true"
         },
         {
             "name": "size",
             "type": ["md", "lg", "xl"],
             "required": false,
-            "description": "Determines the width of the Dialog popup.",
+            "description": "Dialog 팝업의 너비를 결정합니다.",
             "defaultValue": "md"
         }
     ]

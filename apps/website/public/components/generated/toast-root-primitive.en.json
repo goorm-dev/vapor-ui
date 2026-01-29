@@ -1,0 +1,37 @@
+{
+    "name": "ToastRootPrimitive",
+    "displayName": "ToastRootPrimitive",
+    "description": "Root component for an individual toast notification. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string", "(state: ToastRootState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "swipeDirection",
+            "type": [
+                "\"left\"",
+                "\"right\"",
+                "\"up\"",
+                "\"down\"",
+                "(\"left\" | \"right\" | \"up\" | \"down\")[]"
+            ],
+            "required": false,
+            "description": "Direction(s) in which the toast can be swiped to dismiss.",
+            "defaultValue": "['down', 'right']"
+        },
+        {
+            "name": "toast",
+            "type": ["ToastObjectType<any>"],
+            "required": true
+        }
+    ]
+}

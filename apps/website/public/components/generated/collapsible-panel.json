@@ -1,33 +1,33 @@
 {
     "name": "CollapsiblePanel",
     "displayName": "CollapsiblePanel",
-    "description": "Container for collapsible content with smooth height transition. Renders a `<div>` element.",
+    "description": "부드러운 높이 전환이 있는 접을 수 있는 콘텐츠의 컨테이너입니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
             "name": "className",
-            "type": ["string"],
+            "type": ["string", "(state: CollapsiblePanelState) => (undefined | string)"],
             "required": false,
-            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+            "description": "요소에 적용되는 CSS class이거나, 컴포넌트의 state에 따라 class를 반환하는 함수입니다."
         },
         {
             "name": "hiddenUntilFound",
             "type": ["boolean"],
             "required": false,
-            "description": "Allows the browser’s built-in page search to find and expand the panel contents.\n\nOverrides the `keepMounted` prop and uses `hidden=\"until-found\"`\nto hide the element without removing it from the DOM.",
+            "description": "브라우저의 내장 페이지 검색이 패널 내용을 찾아 확장할 수 있도록 합니다.\n\n`keepMounted` prop을 재정의하고 `hidden=\"until-found\"`를 사용하여\n요소를 DOM에서 제거하지 않고 숨깁니다.",
             "defaultValue": "false"
         },
         {
             "name": "keepMounted",
             "type": ["boolean"],
             "required": false,
-            "description": "Whether to keep the element in the DOM while the panel is hidden.\nThis prop is ignored when `hiddenUntilFound` is used.",
+            "description": "패널이 숨겨져 있는 동안 요소를 DOM에 유지할지 여부입니다.\n이 prop은 `hiddenUntilFound`가 사용될 때 무시됩니다.",
             "defaultValue": "false"
         },
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ]
 }

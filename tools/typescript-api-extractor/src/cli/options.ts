@@ -29,6 +29,7 @@ export interface RawCliOptions {
     excludeDefaults: boolean;
     component?: string;
     outputDir?: string;
+    lang?: string;
     all: boolean;
     sprinkles: boolean;
     include?: string[];
@@ -42,6 +43,7 @@ export interface ResolvedCliOptions {
     targetFiles: string[];
     extractOptions: ExtractOptions;
     outputMode: OutputMode;
+    lang?: string;
 }
 
 export type OutputMode = { type: 'stdout' } | { type: 'directory'; path: string };
@@ -233,5 +235,6 @@ export async function resolveOptions(raw: RawCliOptions): Promise<ResolvedCliOpt
         targetFiles,
         extractOptions: buildExtractOptions(raw),
         outputMode: resolveOutputMode(raw.outputDir),
+        lang: raw.lang,
     };
 }

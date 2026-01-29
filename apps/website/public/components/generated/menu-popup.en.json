@@ -1,0 +1,51 @@
+{
+    "name": "MenuPopup",
+    "displayName": "MenuPopup",
+    "description": "Composed Menu popup with portal and positioner. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "required": false
+        },
+        {
+            "name": "className",
+            "type": ["string", "(state: MenuPopupState) => (undefined | string)"],
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component’s state."
+        },
+        {
+            "name": "finalFocus",
+            "type": [
+                "React.RefObject<HTMLElement | null>",
+                "(closeType: \"\" | \"touch\" | \"keyboard\" | \"mouse\" | \"pen\") => (null | void | HTMLElement | boolean)",
+                "boolean"
+            ],
+            "required": false,
+            "description": "Determines the element to focus when the menu is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "required": false
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
+            "required": false,
+            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        },
+        {
+            "name": "portalElement",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Custom portal element to replace the default portal."
+        },
+        {
+            "name": "positionerElement",
+            "type": ["ReactElement"],
+            "required": false,
+            "description": "Custom positioner element to replace the default positioner."
+        }
+    ]
+}

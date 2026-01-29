@@ -1,13 +1,13 @@
 {
     "name": "ToastIconPrimitive",
     "displayName": "ToastIconPrimitive",
-    "description": "Icon element that displays status-based icons for toasts. Renders an `<svg>` element.",
+    "description": "toast에 상태 기반 아이콘을 표시하는 아이콘 요소입니다. `<svg>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "render",
             "type": ["ReactElement", "(props: HTMLProps) => ReactElement"],
             "required": false,
-            "description": "Allows you to replace the component’s HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 교체하거나 다른 컴포넌트와 조합할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
         }
     ]
 }
