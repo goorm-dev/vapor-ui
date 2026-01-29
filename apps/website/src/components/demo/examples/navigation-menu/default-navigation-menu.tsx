@@ -8,8 +8,8 @@ export default function DefaultNavigationMenu() {
                     <NavigationMenu.Link href="#">Default Link</NavigationMenu.Link>
                 </NavigationMenu.Item>
                 <NavigationMenu.Item>
-                    <NavigationMenu.Link href="#" selected>
-                        Selected Link
+                    <NavigationMenu.Link href="#" current>
+                        Current Link
                     </NavigationMenu.Link>
                 </NavigationMenu.Item>
                 <NavigationMenu.Item>
