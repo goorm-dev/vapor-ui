@@ -60,6 +60,10 @@ html {
     scrollbar-gutter: stable;
 }
 
+body > main {
+    isolation: isolate;
+}
+
 /* Fallback for older browsers that don't support scrollbar-gutter */
 @supports not (scrollbar-gutter: stable) {
     html {
@@ -80,4 +84,16 @@ button {
 code,
 code * {
     font-family: var(--font-mono);
+}
+
+#nd-subnav {
+    > div {
+        @apply px-8;
+    }
+}
+
+#nd-sidebar {
+    > [data-fd-if-empty] {
+        @apply hidden;
+    }
 }

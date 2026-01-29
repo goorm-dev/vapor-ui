@@ -18,7 +18,7 @@ export const externalLinks = [
     },
 ] satisfies IconItemType[];
 
-export const navLinks = [
+export const docsLinks = [
     {
         text: 'Theme Playground',
         url: '/playground',
@@ -29,5 +29,6 @@ export const navLinks = [
         url: '/blocks',
         label: 'UI Blocks',
     },
-    ...externalLinks,
 ];
+
+export const navLinks = [...docsLinks, ...externalLinks];
