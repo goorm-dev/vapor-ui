@@ -14,18 +14,23 @@ type VaporIconsType = {
 // Create a Set of SymbolIcons constructor references for fast lookup
 const symbolIconSet = new Set(SYMBOL_ICONS);
 
+// Build icon component to name map for O(1) lookup
+const iconComponentToNameMap = new Map(
+    Object.entries(allIcons).map(([name, component]) => [component, name]),
+);
+
 // Build symbol and symbol-black categories from SYMBOL_ICONS array to preserve order
 const symbolIcons: { [key: string]: FunctionComponent<IconProps> } = {};
 const symbolBlackIcons: { [key: string]: FunctionComponent<IconProps> } = {};
 
 for (const icon of SYMBOL_ICONS) {
-    const iconName = Object.entries(allIcons).find(([, value]) => value === icon)?.[0];
-    if (iconName) {
-        if (iconName.endsWith('ColorIcon')) {
-            symbolIcons[iconName] = icon;
-        } else {
-            symbolBlackIcons[iconName] = icon;
-        }
+    const iconName = iconComponentToNameMap.get(icon);
+    if (!iconName) continue;
+
+    if (iconName.endsWith('ColorIcon')) {
+        symbolIcons[iconName] = icon;
+    } else {
+        symbolBlackIcons[iconName] = icon;
     }
 }
 
@@ -34,12 +39,13 @@ const basicIcons: { [key: string]: FunctionComponent<IconProps> } = {};
 const outlineIcons: { [key: string]: FunctionComponent<IconProps> } = {};
 
 for (const [key, value] of Object.entries(allIcons)) {
-    if (typeof value === 'function' && !symbolIconSet.has(value)) {
-        if (key.endsWith('OutlineIcon')) {
-            outlineIcons[key] = value;
-        } else if (key.endsWith('Icon')) {
-            basicIcons[key] = value;
-        }
+    if (typeof value !== 'function') continue;
+    if (symbolIconSet.has(value)) continue;
+
+    if (key.endsWith('OutlineIcon')) {
+        outlineIcons[key] = value;
+    } else if (key.endsWith('Icon')) {
+        basicIcons[key] = value;
     }
 }
 
