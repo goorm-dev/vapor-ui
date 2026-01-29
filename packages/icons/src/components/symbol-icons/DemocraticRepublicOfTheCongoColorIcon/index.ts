@@ -1,3 +1,0 @@
-import DemocraticRepublicOfTheCongoColorIcon from './DemocraticRepublicOfTheCongoColorIcon';
-
-export default DemocraticRepublicOfTheCongoColorIcon;
