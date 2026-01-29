@@ -7,12 +7,6 @@
             "description": "RadioCard의 값입니다. RadioGroup 내에서 선택된 값을 식별하는 데 사용됩니다."
         },
         {
-            "prop": "size",
-            "type": ["\"md\"", "\"lg\""],
-            "default": "\"md\"",
-            "description": "RadioCard의 크기를 설정합니다. RadioGroup 컨텍스트에서 상속받거나 개별적으로 설정할 수 있습니다."
-        },
-        {
             "prop": "invalid",
             "type": ["boolean"],
             "default": "false",

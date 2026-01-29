@@ -5,8 +5,8 @@ import type { Fragment } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import { useRender } from '@base-ui-components/react';
-import { useControlled } from '@base-ui-components/utils/useControlled';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useControlled } from '@base-ui/utils/useControlled';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import {
     ChevronLeftOutlineIcon,
     ChevronRightOutlineIcon,
@@ -79,9 +79,9 @@ export const PaginationRootPrimitive = forwardRef<HTMLElement, PaginationRootPri
             state: 'page',
         });
 
-        const onPageChange = useEventCallback(onPageChangeProp);
+        const onPageChange = useStableCallback(onPageChangeProp);
 
-        const setPage = useEventCallback(
+        const setPage = useStableCallback(
             (newPage: number, eventDetails: PaginationRootPrimitive.ChangeEventDetails) => {
                 onPageChange?.(newPage, eventDetails);
 
@@ -166,7 +166,7 @@ export const PaginationButtonPrimitive = forwardRef<
 >(({ page, render, disabled: disabledProp, className, ...props }, ref) => {
     const { page: contextPage, setPage, size, disabled: contextDisabled } = usePaginationContext();
 
-    const handleClick = useEventCallback((event: MouseEvent) => {
+    const handleClick = useStableCallback((event: MouseEvent) => {
         const details = createChangeEventDetails('item-press', event.nativeEvent);
 
         setPage(page, details);
@@ -211,7 +211,7 @@ export const PaginationPreviousPrimitive = forwardRef<
 
     const disabled = disabledProp || contextDisabled || page <= 1;
 
-    const onClick = useEventCallback((event: MouseEvent) => {
+    const onClick = useStableCallback((event: MouseEvent) => {
         if (disabled) return;
 
         const details = createChangeEventDetails('item-press', event.nativeEvent);
@@ -280,7 +280,7 @@ export const PaginationNextPrimitive = forwardRef<HTMLButtonElement, PaginationN
 
         const disabled = disabledProp || contextDisabled || page >= totalPages;
 
-        const onClick = useEventCallback((event: MouseEvent) => {
+        const onClick = useStableCallback((event: MouseEvent) => {
             if (disabled) return;
 
             const details = createChangeEventDetails('item-press', event.nativeEvent);

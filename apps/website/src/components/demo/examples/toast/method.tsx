@@ -1,5 +1,3 @@
-import './styles.css';
-
 import { Button, HStack, Toast } from '@vapor-ui/core';
 
 const toastManager = Toast.createToastManager();
