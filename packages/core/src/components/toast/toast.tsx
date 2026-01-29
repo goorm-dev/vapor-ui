@@ -379,7 +379,7 @@ export namespace ToastProvider {
 }
 
 export namespace ToastPortalPrimitive {
-    type PortalPrimitiveProps = BaseToast.Portal.Props;
+    type PortalPrimitiveProps = VComponentProps<typeof BaseToast.Portal>;
     export interface Props extends PortalPrimitiveProps {}
 }
 

@@ -171,6 +171,7 @@ export const indicator = recipe({
     variants: {
         orientation: {
             horizontal: layerStyle('components', {
+                left: 0,
                 bottom: indicatorBottomPosition,
                 transform: `translateX(var(${EXTERNAL_VARS.activeTabLeft}))`,
                 width: `var(${EXTERNAL_VARS.activeTabWidth})`,
@@ -178,6 +179,7 @@ export const indicator = recipe({
                 transitionProperty: 'transform, width',
             }),
             vertical: layerStyle('components', {
+                top: 0,
                 right: indicatorRightPosition,
                 transform: `translateY(var(${EXTERNAL_VARS.activeTabTop}))`,
                 height: `var(${EXTERNAL_VARS.activeTabHeight})`,

@@ -254,8 +254,8 @@ export namespace DialogPopupPrimitive {
 
 export namespace DialogPopup {
     export interface Props extends DialogPopupPrimitive.Props {
-        portalElement?: ReactElement<typeof DialogPortalPrimitive>;
-        overlayElement?: ReactElement<typeof DialogOverlayPrimitive>;
+        portalElement?: ReactElement<DialogPortalPrimitive.Props>;
+        overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
     }
 }
 
