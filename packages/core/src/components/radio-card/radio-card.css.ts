@@ -3,15 +3,11 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { interaction } from '~/styles/mixins/interactions.css';
 import { layerStyle } from '~/styles/mixins/layer-style.css';
-import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
 
 export const root = recipe({
     base: [
         interaction(),
-        typography({
-            style: 'subtitle1',
-        }),
         layerStyle('components', {
             display: 'flex',
             alignItems: 'center',
@@ -21,6 +17,8 @@ export const root = recipe({
             borderRadius: vars.size.borderRadius[300],
             color: vars.color.foreground.normal[200],
             cursor: 'pointer',
+            paddingBlock: '0.3125rem',
+            paddingInline: vars.size.space['150'],
 
             selectors: {
                 '&[data-checked]': {
@@ -39,22 +37,11 @@ export const root = recipe({
 
     defaultVariants: {
         invalid: false,
-        size: 'md',
     },
 
     variants: {
         invalid: {
             true: {},
-        },
-        size: {
-            md: layerStyle('components', {
-                height: vars.size.dimension['400'],
-                paddingInline: vars.size.space['150'],
-            }),
-            lg: layerStyle('components', {
-                height: vars.size.dimension['500'],
-                paddingInline: vars.size.space['200'],
-            }),
         },
     },
 });
