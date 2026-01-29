@@ -13,12 +13,7 @@ import { externalLinks } from '~/constants/site-links';
 
 import LogoVapor from '../../../public/icons/logo-vapor.svg';
 import { ThemeToggle } from '../theme-toggle';
-
-const NAVIGATION_LINKS = [
-    { href: '/docs', label: 'Docs' },
-    { href: '/playground', label: 'Playground' },
-    { href: '/blocks', label: 'Blocks' },
-];
+import { SiteNavigation } from './navigation-list';
 
 export function getLinks(links: LinkItemType[] = [], githubUrl?: string): LinkItemType[] {
     let result = links ?? [];
@@ -55,61 +50,25 @@ const WebNavigation = () => {
     const pathname = usePathname();
 
     return (
-        <NavigationMenu.Root
-            aria-label="Main"
-            size="lg"
-            className="flex flex-1 justify-between items-center gap-10"
-        >
-            <NavigationMenu.List className="flex flex-1 flex-row items-center gap-2 p-0 h-full">
-                {NAVIGATION_LINKS.map((item) => (
-                    <NavigationMenu.Item key={item.href}>
-                        <NavigationMenu.Link
-                            href={item.href}
-                            current={pathname.includes(item.href)}
-                            render={<Link>{item.label}</Link>}
-                        />
-                    </NavigationMenu.Item>
-                ))}
-            </NavigationMenu.List>
-
-            <NavigationMenu.List className="flex-row items-center gap-0">
-                {/* External Links */}
-                {externalLinks.map((item) => {
-                    return (
-                        <NavigationMenu.Item key={item.text}>
-                            <IconButton
-                                aria-label={item.text}
-                                size="lg"
-                                colorPalette="secondary"
-                                variant="ghost"
-                                render={
-                                    <NavigationMenu.Link
-                                        render={<Link href={item.url}>{item.icon}</Link>}
-                                        className="p-0"
-                                    />
-                                }
-                            />
-                        </NavigationMenu.Item>
-                    );
-                })}
-
-                {/* Divider */}
-                <div
-                    style={{
-                        strokeWidth: '1px',
-                        stroke: 'var(--vapor-color-border-normal, #E1E1E8)',
-                        width: '0',
-                        height: 'var(--vapor-size-dimension-400, 32px)',
-                    }}
-                    className="border-l mx-2"
+        <SiteNavigation
+            className="border-b border-b-transparent"
+            leftSlot={
+                <NavigationMenu.Link
+                    href={'/docs'}
+                    current={pathname.includes('/docs')}
+                    render={
+                        <Text
+                            key={'docs'}
+                            render={<Link href={'/docs'}>{'Docs'}</Link>}
+                            typography="subtitle1"
+                            className="text-v-hint-100 hover:text-v-gray-400 transition-colors"
+                        >
+                            {'Docs'}
+                        </Text>
+                    }
                 />
-
-                {/* Theme Toggle */}
-                <NavigationMenu.Item>
-                    <ThemeToggle />
-                </NavigationMenu.Item>
-            </NavigationMenu.List>
-        </NavigationMenu.Root>
+            }
+        />
     );
 };
 const MobileNavigation = () => {
@@ -206,7 +165,7 @@ export const SiteNavBar = () => {
 
     return (
         <header
-            className={`z-10 flex w-full py-3 px-4 md:px-8 gap-v-500 items-center fixed top-0 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
+            className={`z-10 flex w-full  h-16 md:px-8 gap-v-500 items-center fixed top-0 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
                 isScrolled ? 'bg-v-canvas-100 shadow-lg backdrop-blur-sm z-20' : 'bg-transparent'
             }`}
         >
