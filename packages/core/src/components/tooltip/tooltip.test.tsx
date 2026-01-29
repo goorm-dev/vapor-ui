@@ -9,10 +9,17 @@ import { Tooltip } from '.';
 const OPEN_DELAY = 1000;
 const CLOSE_DELAY = 100;
 
-const TooltipTest = (props: Tooltip.Root.Props) => {
+interface TooltipTestProps extends Tooltip.Root.Props {
+    delay?: number;
+    closeDelay?: number;
+}
+
+const TooltipTest = ({ delay, closeDelay, ...rootProps }: TooltipTestProps) => {
     return (
-        <Tooltip.Root {...props}>
-            <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+        <Tooltip.Root {...rootProps}>
+            <Tooltip.Trigger delay={delay} closeDelay={closeDelay}>
+                Hover me
+            </Tooltip.Trigger>
             <Tooltip.Popup>Tooltip content</Tooltip.Popup>
         </Tooltip.Root>
     );
@@ -87,8 +94,8 @@ describe('<Tooltip.Root />', () => {
     describe('prop: keepMounted', () => {
         it('should not close when provided keepMounted and closed', async () => {
             const rendered = render(
-                <Tooltip.Root delay={0}>
-                    <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+                <Tooltip.Root>
+                    <Tooltip.Trigger delay={0}>Hover me</Tooltip.Trigger>
                     <Tooltip.Popup portalElement={<Tooltip.PortalPrimitive keepMounted />}>
                         Tooltip content
                     </Tooltip.Popup>
@@ -147,11 +154,11 @@ describe('<Tooltip.Root />', () => {
         });
     });
 
-    describe('prop: hoverable', () => {
-        it('should apply pointer-events: none to positioner when hoverable is false', async () => {
+    describe('prop: disableHoverablePopup', () => {
+        it('should apply pointer-events: none to positioner when disableHoverablePopup is true', async () => {
             const rendered = render(
-                <Tooltip.Root delay={0} hoverable={false}>
-                    <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+                <Tooltip.Root disableHoverablePopup>
+                    <Tooltip.Trigger delay={0}>Hover me</Tooltip.Trigger>
                     <Tooltip.Popup
                         positionerElement={
                             <Tooltip.PositionerPrimitive data-testid="tooltip-positioner" />
@@ -170,10 +177,10 @@ describe('<Tooltip.Root />', () => {
             expect(positioner).toHaveStyle({ pointerEvents: 'none' });
         });
 
-        it('should not apply pointer-events to positioner when hoverable is true', async () => {
+        it('should not apply pointer-events to positioner when disableHoverablePopup is false', async () => {
             const rendered = render(
-                <Tooltip.Root delay={0} hoverable>
-                    <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+                <Tooltip.Root disableHoverablePopup={false}>
+                    <Tooltip.Trigger delay={0}>Hover me</Tooltip.Trigger>
                     <Tooltip.Popup
                         positionerElement={
                             <Tooltip.PositionerPrimitive data-testid="tooltip-positioner" />

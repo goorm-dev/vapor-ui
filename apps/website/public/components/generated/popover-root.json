@@ -49,27 +49,6 @@
             "description": "팝오버가 열리거나 닫힌 후 애니메이션이 완료되면 호출되는 이벤트 핸들러"
         },
         {
-            "name": "openOnHover",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "트리거 요소에 마우스를 올렸을 때 팝오버가 열릴지 여부입니다.",
-            "defaultValue": "false"
-        },
-        {
-            "name": "delay",
-            "type": ["number"],
-            "required": false,
-            "description": "트리거 요소에 마우스를 올렸을 때 팝오버가 열리기까지 대기하는 시간입니다. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다.",
-            "defaultValue": "300"
-        },
-        {
-            "name": "closeDelay",
-            "type": ["number"],
-            "required": false,
-            "description": "트리거 요소에 마우스를 올렸을 때 팝오버가 닫히기까지 대기하는 시간입니다. 밀리초 단위로 지정합니다.\n\n`openOnHover` prop이 필요합니다.",
-            "defaultValue": "0"
-        },
-        {
             "name": "actionsRef",
             "type": ["RefObject<Actions>"],
             "required": false,

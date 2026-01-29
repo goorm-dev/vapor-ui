@@ -1,4 +1,3 @@
-// tabs.css.ts
 import { createVar } from '@vanilla-extract/css';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
@@ -107,7 +106,7 @@ export const button = recipe({
                     opacity: 0.32,
                     pointerEvents: 'none',
                 },
-                '&[data-selected]': {
+                '&[data-active]': {
                     color: vars.color.foreground.primary['100'],
                 },
             },
@@ -151,7 +150,7 @@ export const button = recipe({
                     [buttonVerticalBorderRadius]: vars.size.borderRadius[300],
                 },
                 selectors: {
-                    '&[data-selected]': {
+                    '&[data-active]': {
                         color: vars.color.foreground.primary['100'],
                     },
                 },

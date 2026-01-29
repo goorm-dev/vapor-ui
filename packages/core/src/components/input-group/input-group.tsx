@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useMemo, useState } from 'react';
 
-import { useRender } from '@base-ui-components/react';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';

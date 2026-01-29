@@ -168,18 +168,18 @@ describe('Switch', () => {
     });
 
     describe('prop: disabled', () => {
-        it('should have the `disabled` attribute', async () => {
+        it('should have the `aria-disabled` attribute', async () => {
             const rendered = render(<SwitchTest disabled />);
             const control = rendered.getByRole('switch');
 
-            expect(control).toHaveAttribute('disabled');
+            expect(control).toHaveAttribute('aria-disabled', 'true');
         });
 
-        it('should not have the `disabled` attribute when `disabled` is not set', async () => {
+        it('should not have the `aria-disabled` attribute when `disabled` is not set', async () => {
             const rendered = render(<SwitchTest />);
             const control = rendered.getByRole('switch');
 
-            expect(control).not.toHaveAttribute('disabled');
+            expect(control).not.toHaveAttribute('aria-disabled');
         });
 
         it('should not change its state when clicked', async () => {
@@ -187,7 +187,7 @@ describe('Switch', () => {
             const rendered = render(<SwitchTest disabled onCheckedChange={onCheckedChange} />);
             const control = rendered.getByRole('switch');
 
-            expect(control).toBeDisabled();
+            expect(control).toHaveAttribute('aria-disabled', 'true');
 
             await userEvent.click(control);
             expect(onCheckedChange).not.toHaveBeenCalled();
@@ -210,7 +210,7 @@ const LABEL_TEXT = 'Test Switch';
 
 const SwitchTest = (props: Switch.Root.Props) => (
     <>
-        <Switch.Root id="switch-test" {...props} />
+        <Switch.Root id="switch-test" aria-label={LABEL_TEXT} {...props} />
         <label htmlFor="switch-test">{LABEL_TEXT}</label>
     </>
 );
