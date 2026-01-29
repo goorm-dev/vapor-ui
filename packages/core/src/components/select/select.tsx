@@ -379,6 +379,8 @@ SelectSeparator.displayName = 'Select.Separator';
 export namespace SelectRoot {
     type RootPrimitiveProps = Omit<VComponentProps<typeof BaseSelect.Root>, 'multiple'>;
     export interface Props extends RootPrimitiveProps, SelectSharedProps {}
+
+    export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 

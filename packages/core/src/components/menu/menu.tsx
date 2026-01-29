@@ -452,6 +452,8 @@ MenuRadioItem.displayName = 'Menu.RadioItem';
 export namespace MenuRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseMenu.Root>;
     export interface Props extends RootPrimitiveProps {}
+
+    export type Actions = BaseMenu.Root.Actions;
     export type ChangeEventDetails = BaseMenu.Root.ChangeEventDetails;
 }
 

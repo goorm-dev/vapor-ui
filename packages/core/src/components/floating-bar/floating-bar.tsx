@@ -125,6 +125,9 @@ FloatingBarPopup.displayName = 'FloatingBar.Popup';
 
 export namespace FloatingBarRoot {
     export type Props = Popover.Root.Props;
+
+    export type Actions = Popover.Root.Actions;
+    export type ChangeEventDetails = Popover.Root.ChangeEventDetails;
 }
 
 export namespace FloatingBarTrigger {

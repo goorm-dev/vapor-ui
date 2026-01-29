@@ -250,7 +250,9 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
 export namespace PopoverRoot {
     type RootPrimitiveProps = VComponentProps<typeof BasePopover.Root>;
     export interface Props extends RootPrimitiveProps {}
+
     export type ChangeEventDetails = BasePopover.Root.ChangeEventDetails;
+    export type Actions = BasePopover.Root.Actions;
 }
 
 export namespace PopoverTrigger {

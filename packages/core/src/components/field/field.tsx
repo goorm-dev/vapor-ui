@@ -114,6 +114,8 @@ FieldItem.displayName = 'Field.Item';
 
 export namespace FieldRoot {
     export interface Props extends VComponentProps<typeof BaseField.Root> {}
+
+    export type Actions = BaseField.Root.Actions;
 }
 
 export namespace FieldLabel {

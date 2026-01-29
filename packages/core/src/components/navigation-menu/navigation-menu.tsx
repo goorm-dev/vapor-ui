@@ -432,10 +432,11 @@ NavigationMenuViewport.displayName = 'NavigationMenu.Viewport';
 
 export namespace NavigationMenuRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
-
     export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {
         'aria-label': string;
     }
+
+    export type Actions = BaseNavigationMenu.Root.Actions;
     export type ChangeEventDetails = BaseNavigationMenu.Root.ChangeEventDetails;
 }
 
