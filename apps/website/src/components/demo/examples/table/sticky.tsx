@@ -96,6 +96,7 @@ export default function Basic() {
                                     {row.getVisibleCells().map((cell) => (
                                         <Table.Cell
                                             key={cell.id}
+                                            backgroundColor="$canvas-100"
                                             style={{ ...getCommonPinningStyles(cell.column) }}
                                         >
                                             {flexRender(
