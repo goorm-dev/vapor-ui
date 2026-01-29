@@ -4,6 +4,7 @@ on:
     push:
         tags:
             - "@vapor-ui/core**"
+            - "@vapor-ui/icons**"
 
 env:
     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
