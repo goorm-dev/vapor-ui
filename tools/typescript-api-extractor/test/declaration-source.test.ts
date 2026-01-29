@@ -37,8 +37,8 @@ describe('getDeclarationSourceType', () => {
     });
 
     describe('Base UI types', () => {
-        it('should identify @base-ui-components path as BASE_UI', () => {
-            const path = '/node_modules/@base-ui-components/react/button/index.d.ts';
+        it('should identify @base-ui path as BASE_UI', () => {
+            const path = '/node_modules/@base-ui/react/button/index.d.ts';
             expect(getDeclarationSourceType(path)).toBe(DeclarationSourceType.BASE_UI);
         });
     });
@@ -86,9 +86,7 @@ describe('isExternalDeclaration', () => {
     });
 
     it('should return false for Base UI', () => {
-        expect(isExternalDeclaration('/node_modules/@base-ui-components/react/index.d.ts')).toBe(
-            false,
-        );
+        expect(isExternalDeclaration('/node_modules/@base-ui/react/index.d.ts')).toBe(false);
     });
 
     it('should return false for project files', () => {
