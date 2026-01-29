@@ -114,6 +114,7 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
         const disabled = disabledProp ?? contextDisabled;
         const dataAttrs = createDataAttributes({
             disabled,
+            current,
         });
 
         return (
