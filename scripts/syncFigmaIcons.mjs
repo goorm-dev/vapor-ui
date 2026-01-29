@@ -14,6 +14,7 @@ import { camelCase, startCase } from 'lodash-es';
 import fs, { constants } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import pc from 'picocolors';
 import prettier from 'prettier';
 
 import {
@@ -35,10 +36,12 @@ function normalizeIconName(name) {
     return startCase(camelCase(name.replace(FIGMA_EMOJI_PREFIX_PATTERN, ''))).replace(/ /g, '');
 }
 
-console.log('\x1b[33m---------------- GDS FIGMA EXPORT -----------------\x1b[0m');
+console.log(pc.yellow('---------------- GDS FIGMA EXPORT -----------------'));
 
 if (!process.env.FIGMA_TOKEN) {
-    console.error('\x1b[31m GDS FIGMA EXPORT ERROR: FIGMA_TOKEN environment variable is not set.\x1b[0m');
+    console.error(
+        pc.red(' GDS FIGMA EXPORT ERROR: FIGMA_TOKEN environment variable is not set.'),
+    );
     process.exit(1);
 }
 
@@ -74,25 +77,27 @@ try {
         nameArr: components.map(({ name }) => normalizeIconName(name)),
     };
     console.log(
-        `\x1b[33m GDS FIGMA EXPORT: \x1b[0m ${componentsInfo.total} icons extraction complete`,
+        pc.yellow(` GDS FIGMA EXPORT: `) + `${componentsInfo.total} icons extraction complete`,
     );
 
     // Exit early if no icons found to prevent overwriting existing files
     if (components.length === 0) {
-        console.error('\x1b[31m GDS FIGMA EXPORT ERROR: No icons found! Check FIGMA_TOKEN and API access.\x1b[0m');
+        console.error(
+            pc.red(' GDS FIGMA EXPORT ERROR: No icons found! Check FIGMA_TOKEN and API access.'),
+        );
         process.exit(1);
     }
 
     // Separate the IDs of extracted icons with commas and get URLs of svg images at once.
-    console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Loading svg files...`);
+    console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `Loading svg files...`);
     const componentsWithUrl = await getNodesWithUrl({
         nodes: components,
         fileKey: FILE_KEY,
     });
-    console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m svg file loading complete!`);
+    console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `svg file loading complete!`);
 
     // Convert svg code to React components through image URLs and save locally.
-    console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Converting to React components...`);
+    console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `Converting to React components...`);
     const parentIconPath = path.join(CURRENT_DIRECTORY, targetPath);
     const newIconNameArr = [];
     const updatedIconNameArr = [];
@@ -161,17 +166,47 @@ try {
         await Promise.all([writeIconComponent, writeIconIndex]);
     });
     await Promise.all(promiseCreateIcons);
-    console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m React component conversion complete!`);
+    console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `React component conversion complete!`);
+
+    // Detect and remove deleted icons
+    console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `Checking for deleted icons...`);
+    const deletedIconNameArr = [];
+    const figmaIconNames = new Set(componentsInfo.nameArr);
+
+    // Get existing icon directories
+    const existingIconNames = (await fs.readdir(parentIconPath, { withFileTypes: true }))
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
+
+    // Find icons that exist locally but not in Figma
+    const iconsToDelete = existingIconNames.filter((iconName) => !figmaIconNames.has(iconName));
+
+    // Delete removed icons
+    if (iconsToDelete.length > 0) {
+        const promiseDeleteIcons = iconsToDelete.map(async (iconName) => {
+            const deleteTargetPath = path.join(parentIconPath, iconName);
+            await fs.rm(deleteTargetPath, { recursive: true, force: true });
+            deletedIconNameArr.push(iconName);
+            console.log(pc.red(` GDS FIGMA EXPORT: 🗑️  Deleted: ${iconName}`));
+        });
+
+        await Promise.all(promiseDeleteIcons);
+        console.log(
+            pc.yellow(` GDS FIGMA EXPORT: `) + `Removed ${deletedIconNameArr.length} deleted icons`,
+        );
+    } else {
+        console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `No deleted icons found`);
+    }
 
     // // export to entry file
-    console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Exporting to entry file...`);
+    console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `Exporting to entry file...`);
     const iconsIndex = getIconsIndex(componentsInfo.nameArr);
     await fs.writeFile(path.join(CURRENT_DIRECTORY, targetPath, 'index.ts'), iconsIndex, {
         encoding: 'utf8',
     });
 
     // Output results for workflow capture
-    console.log(`\x1b[33m GDS FIGMA EXPORT: \x1b[0m Sync complete for ${TYPE} icons`);
+    console.log(pc.yellow(` GDS FIGMA EXPORT: `) + `Sync complete for ${TYPE} icons`);
     if (newIconNameArr.length > 0) {
         console.log(`FIGMA_SYNC_NEW_ICONS_${TYPE.toUpperCase()}=${newIconNameArr.join(',')}`);
     }
@@ -180,8 +215,13 @@ try {
             `FIGMA_SYNC_UPDATED_ICONS_${TYPE.toUpperCase()}=${updatedIconNameArr.join(',')}`,
         );
     }
+    if (deletedIconNameArr.length > 0) {
+        console.log(
+            `FIGMA_SYNC_DELETED_ICONS_${TYPE.toUpperCase()}=${deletedIconNameArr.join(',')}`,
+        );
+    }
     console.log(`FIGMA_SYNC_TOTAL_${TYPE.toUpperCase()}=${componentsInfo.total}`);
 } catch (err) {
     console.error('Unhandled rejection', err);
 }
-console.log('\x1b[33m---------------------------------------------------\x1b[0m');
+console.log(pc.yellow('---------------------------------------------------'));

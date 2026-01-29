@@ -1,5 +1,3 @@
-import './styles.css';
-
 import { Button, HStack, Toast } from '@vapor-ui/core';
 import { CertificateIcon, HeartIcon, WarningIcon } from '@vapor-ui/icons';
 

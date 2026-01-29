@@ -67,7 +67,7 @@ export const Default: StoryObj<StoryProps> = {
                         </NavigationMenu.Item>
 
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link selected href="#">
+                            <NavigationMenu.Link current href="#">
                                 Link 1
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
@@ -97,7 +97,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                 <NavigationMenu.Root aria-label="Main">
                     <NavigationMenu.List>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected>
+                            <NavigationMenu.Link href="#" current>
                                 Link 1
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
