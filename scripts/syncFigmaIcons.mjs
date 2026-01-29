@@ -19,6 +19,7 @@ import prettier from 'prettier';
 
 import {
     FIGMA_ICONS_FILE_KEY,
+    FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID,
     FIGMA_ICONS_SYMBOL_COLOR_NODE_ID,
     FIGMA_NODE_TYPES,
 } from './constants/figma.js';
@@ -39,9 +40,7 @@ function normalizeIconName(name) {
 console.log(pc.yellow('---------------- GDS FIGMA EXPORT -----------------'));
 
 if (!process.env.FIGMA_TOKEN) {
-    console.error(
-        pc.red(' GDS FIGMA EXPORT ERROR: FIGMA_TOKEN environment variable is not set.'),
-    );
+    console.error(pc.red(' GDS FIGMA EXPORT ERROR: FIGMA_TOKEN environment variable is not set.'));
     process.exit(1);
 }
 
@@ -113,7 +112,9 @@ try {
         } catch {
             isNewIcon = true;
         }
-        const isColorIcon = parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID);
+        const isColorIcon =
+            parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_NODE_ID) ||
+            parentId === decodeURIComponent(FIGMA_ICONS_SYMBOL_COLOR_COUNTRY_NODE_ID);
 
         // Fetch icon JSX once
         const iconJsx = await getIconJsx({ url, isColorIcon });
