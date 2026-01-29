@@ -15,7 +15,7 @@ import {
 import { HeartIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 import Link from 'next/link';
 
-import { getCartesianProduct } from '../../utils/array';
+import { getCartesianProduct } from '../../../utils/array';
 import RenderingTemplate from './_components/rendering-template';
 
 const AVATAR_PROPS = {
@@ -165,10 +165,10 @@ const Page = () => {
             <div className="w-max flex flex-col gap-12 [&>header]:flex [&>header]:flex-col [&>header]:gap-4 [&>section]:flex [&>section]:flex-col [&>section]:gap-v-800">
                 <header>
                     <Text typography="heading1">Theme Playground</Text>
-                    <Link href="/docs/getting-started/theming">
+                    <Link href="/theme">
                         <Button variant="outline" colorPalette="secondary">
                             <OpenInNewOutlineIcon />
-                            Theme Provider Usage 보러가기
+                            Theme Tools 둘러보기
                         </Button>
                     </Link>
                 </header>
