@@ -1,6 +1,4 @@
-// tabs.css.ts
 import { createVar } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 import { recipe } from '@vanilla-extract/recipes';
 
@@ -175,7 +173,7 @@ export const indicator = recipe({
             horizontal: layerStyle('components', {
                 bottom: indicatorBottomPosition,
                 transform: `translateX(var(${EXTERNAL_VARS.activeTabLeft}))`,
-                width: calc.add(`var(${EXTERNAL_VARS.activeTabWidth})`, '0.06rem'),
+                width: `var(${EXTERNAL_VARS.activeTabWidth})`,
                 height: indicatorHorizontalHeight,
                 transitionProperty: 'transform, width',
             }),
