@@ -1,6 +1,7 @@
 import type { API, FileInfo, Transform } from 'jscodeshift';
 
 import {
+    transformFormOnClearErrors,
     transformHoverPropsToTrigger,
     transformHoverable,
     transformLoop,
@@ -16,6 +17,7 @@ import { hasTargetPackageImports } from './utils/import-verification';
  * - `trackAnchor` → `disableAnchorTracking` (with boolean inversion)
  * - `hoverable` → `disableHoverablePopup` (Tooltip only, with boolean inversion)
  * - Moves `openOnHover`, `delay`, `closeDelay` from Root to Trigger (Menu, Popover, Tooltip)
+ * - Removes `onClearErrors` from Form (errors are now auto-cleared on value change)
  *
  * Components from other libraries (including @goorm-dev/vapor-core) are not transformed.
  * Supports aliased imports (e.g., `import { Tooltip as MyTooltip }`).
@@ -34,6 +36,7 @@ const transform: Transform = (fileInfo: FileInfo, api: API) => {
     transformTrackAnchor(j, root);
     transformHoverable(j, root);
     transformHoverPropsToTrigger(j, root);
+    transformFormOnClearErrors(j, root);
 
     return root.toSource();
 };
