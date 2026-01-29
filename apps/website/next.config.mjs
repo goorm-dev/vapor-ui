@@ -5,6 +5,15 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
     reactStrictMode: true,
+    async redirects() {
+        return [
+            {
+                source: '/playground',
+                destination: '/theme/playground',
+                permanent: true,
+            },
+        ];
+    },
     async rewrites() {
         return [
             {
