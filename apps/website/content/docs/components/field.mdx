@@ -101,45 +101,15 @@ disabled 속성을 사용하여 비활성화된 Field를 만들 수 있습니다
 
 ### With RadioGroup
 
-RadioGroup과 Field를 함께 사용합니다.
+RadioGroup과 Field를 함께 사용합니다. `Field.Item`을 사용하여 각 Radio 옵션을 라벨과 함께 그룹화할 수 있습니다.
 
 <Demo name = "field/field-radio-group">
-
-```tsx
-'use client';
-
-import { Field, Radio, RadioGroup } from '@vapor-ui/core';
-
-export default function FieldRadioGroup() {
-    return (
-        <Field.Root name="gender" className="v-space-y-3">
-            <Field.Label>성별</Field.Label>
-            <RadioGroup.Root className="v-space-y-2">
-                <div className="v-flex v-items-center v-gap-2">
-                    <Radio.Root value="male">
-                        <Radio.Indicator />
-                    </Radio.Root>
-                    <Field.Label>남성</Field.Label>
-                </div>
-                <div className="v-flex v-items-center v-gap-2">
-                    <Radio.Root value="female">
-                        <Radio.Indicator />
-                    </Radio.Root>
-                    <Field.Label>여성</Field.Label>
-                </div>
-                <div className="v-flex v-items-center v-gap-2">
-                    <Radio.Root value="other">
-                        <Radio.Indicator />
-                    </Radio.Root>
-                    <Field.Label>기타</Field.Label>
-                </div>
-            </RadioGroup.Root>
-            <Field.Description>개인정보 보호를 위해 선택사항입니다.</Field.Description>
-        </Field.Root>
-    );
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/field/field-radio-group.tsx",
+    "codeblock": true
 }
 ```
-
 </Demo>
 
 ### With Form Elements
@@ -191,3 +161,7 @@ export default function FieldRadioGroup() {
 ### Field.Success
 
 <ComponentPropsTable componentName="field-success" />
+
+### Field.Item
+
+<ComponentPropsTable componentName="field-item" />

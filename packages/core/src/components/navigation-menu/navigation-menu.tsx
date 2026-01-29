@@ -3,7 +3,8 @@
 import type { CSSProperties, ComponentPropsWithoutRef, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { NavigationMenu as BaseNavigationMenu, useRender } from '@base-ui-components/react';
+import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu';
+import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -112,8 +113,8 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
 
         const disabled = disabledProp ?? contextDisabled;
         const dataAttrs = createDataAttributes({
-            current,
             disabled,
+            current,
         });
 
         return (
@@ -122,6 +123,7 @@ export const NavigationMenuLink = forwardRef<HTMLAnchorElement, NavigationMenuLi
                 href={disabled ? undefined : href}
                 aria-current={current ? 'page' : undefined}
                 aria-disabled={disabled ? 'true' : undefined}
+                active={current}
                 className={clsx(styles.link({ size }), className)}
                 {...dataAttrs}
                 {...componentProps}
@@ -431,10 +433,11 @@ NavigationMenuViewport.displayName = 'NavigationMenu.Viewport';
 
 export namespace NavigationMenuRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseNavigationMenu.Root>;
-
     export interface Props extends RootPrimitiveProps, NavigationMenuSharedProps {
         'aria-label': string;
     }
+
+    export type Actions = BaseNavigationMenu.Root.Actions;
     export type ChangeEventDetails = BaseNavigationMenu.Root.ChangeEventDetails;
 }
 

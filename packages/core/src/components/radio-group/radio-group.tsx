@@ -2,7 +2,8 @@
 
 import { forwardRef, useState } from 'react';
 
-import { RadioGroup as BaseRadioGroup, useRender } from '@base-ui-components/react';
+import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';

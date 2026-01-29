@@ -38,10 +38,10 @@
         },
         {
             "name": "validationMode",
-            "type": ["onBlur", "onChange"],
+            "type": ["onSubmit", "onBlur", "onChange"],
             "required": false,
-            "description": "필드 유효성 검사 시점\n\n- **onBlur**: 컨트롤이 포커스를 잃을 때 검사\n- **onChange**: 컨트롤 값이 변경될 때마다 검사",
-            "defaultValue": "onBlur"
+            "description": "필드 유효성 검사 시점\n\n- **onSubmit**: 폼 제출 시 검사 (기본값)\n- **onBlur**: 컨트롤이 포커스를 잃을 때 검사\n- **onChange**: 컨트롤 값이 변경될 때마다 검사",
+            "defaultValue": "onSubmit"
         },
         {
             "name": "validationDebounceTime",
