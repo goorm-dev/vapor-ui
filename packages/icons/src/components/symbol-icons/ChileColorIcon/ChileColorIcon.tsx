@@ -1,6 +1,6 @@
 import IconBase, { type IconProps } from '~/components/icon-base';
 
-const ChileColorColorIcon = (props: IconProps) => (
+const ChileColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <mask
             id="mask0_9214_1415"
@@ -29,4 +29,4 @@ const ChileColorColorIcon = (props: IconProps) => (
     </IconBase>
 );
 
-export default ChileColorColorIcon;
+export default ChileColorIcon;
