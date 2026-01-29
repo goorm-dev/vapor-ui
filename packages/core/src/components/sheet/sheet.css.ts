@@ -6,7 +6,6 @@ import { vars } from '~/styles/themes.css';
 
 export const overlay = layerStyle('components', {
     position: 'fixed',
-    zIndex: 50, // TODO: Use constant z-index value
     inset: 0,
 
     transition: 'opacity 0.15s cubic-bezier(.45,1.005,0,1.005)',
@@ -65,7 +64,6 @@ const sideSelectors = Object.entries(sideConfig).reduce(
 
 export const popup = layerStyle('components', {
     position: 'fixed',
-    zIndex: 50, // TODO: Use constant z-index value
 
     display: 'flex',
     flexDirection: 'column',

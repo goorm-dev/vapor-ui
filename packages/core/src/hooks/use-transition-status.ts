@@ -3,8 +3,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { AnimationFrame } from '@base-ui-components/utils/useAnimationFrame';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { AnimationFrame } from '@base-ui/utils/useAnimationFrame';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 
 export type TransitionStatus = 'starting' | 'ending' | 'idle' | undefined;
 
