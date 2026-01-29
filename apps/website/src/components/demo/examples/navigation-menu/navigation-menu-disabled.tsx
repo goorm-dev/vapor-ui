@@ -23,15 +23,15 @@ export default function NavigationMenuDisabled() {
             </div>
 
             <div>
-                <h4 className="text-sm font-medium mb-2">선택된 상태와 비활성화 상태</h4>
-                <NavigationMenu.Root aria-label="Navigation with selected and disabled">
+                <h4 className="text-sm font-medium mb-2">현재 상태와 비활성화 상태</h4>
+                <NavigationMenu.Root aria-label="Navigation with current and disabled">
                     <NavigationMenu.List>
                         <NavigationMenu.Item>
                             <NavigationMenu.Link href="#">홈</NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected>
-                                선택된 링크
+                            <NavigationMenu.Link href="#" current>
+                                현재 링크
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>

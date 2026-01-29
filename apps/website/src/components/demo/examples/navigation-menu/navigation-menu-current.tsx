@@ -1,18 +1,18 @@
 import { NavigationMenu } from '@vapor-ui/core';
 
-export default function NavigationMenuSelected() {
+export default function NavigationMenuCurrent() {
     return (
         <div className="space-y-4">
             <div>
-                <h4 className="text-sm font-medium mb-2">선택된 상태 표시</h4>
-                <NavigationMenu.Root aria-label="Navigation with selected link">
+                <h4 className="text-sm font-medium mb-2">현재 페이지 상태 표시</h4>
+                <NavigationMenu.Root aria-label="Navigation with current link">
                     <NavigationMenu.List>
                         <NavigationMenu.Item>
                             <NavigationMenu.Link href="#">홈</NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected>
-                                제품 (선택됨)
+                            <NavigationMenu.Link href="#" current>
+                                제품 (현재)
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>

@@ -9,8 +9,8 @@ export default function NavigationMenuSize() {
                         <NavigationMenu.Link href="#">Small</NavigationMenu.Link>
                     </NavigationMenu.Item>
                     <NavigationMenu.Item>
-                        <NavigationMenu.Link href="#" selected>
-                            Small Selected
+                        <NavigationMenu.Link href="#" current>
+                            Small Current
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
                 </NavigationMenu.List>
@@ -22,8 +22,8 @@ export default function NavigationMenuSize() {
                         <NavigationMenu.Link href="#">Medium</NavigationMenu.Link>
                     </NavigationMenu.Item>
                     <NavigationMenu.Item>
-                        <NavigationMenu.Link href="#" selected>
-                            Medium Selected
+                        <NavigationMenu.Link href="#" current>
+                            Medium Current
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
                 </NavigationMenu.List>
@@ -35,8 +35,8 @@ export default function NavigationMenuSize() {
                         <NavigationMenu.Link href="#">Large</NavigationMenu.Link>
                     </NavigationMenu.Item>
                     <NavigationMenu.Item>
-                        <NavigationMenu.Link href="#" selected>
-                            Large Selected
+                        <NavigationMenu.Link href="#" current>
+                            Large Current
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
                 </NavigationMenu.List>
@@ -48,8 +48,8 @@ export default function NavigationMenuSize() {
                         <NavigationMenu.Link href="#">Extra Large</NavigationMenu.Link>
                     </NavigationMenu.Item>
                     <NavigationMenu.Item>
-                        <NavigationMenu.Link href="#" selected>
-                            Extra Large Selected
+                        <NavigationMenu.Link href="#" current>
+                            Extra Large Current
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
                 </NavigationMenu.List>
