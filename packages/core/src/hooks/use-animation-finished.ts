@@ -3,8 +3,8 @@
 import type * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { useAnimationFrame } from '@base-ui-components/utils/useAnimationFrame';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useAnimationFrame } from '@base-ui/utils/useAnimationFrame';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 
 /**
  * Credit to the MUI/Base team
@@ -20,7 +20,7 @@ export function useAnimationsFinished(
 ) {
     const frame = useAnimationFrame();
 
-    return useEventCallback(
+    return useStableCallback(
         (
             /**
              * A function to execute once all animations have finished.

@@ -2,7 +2,7 @@
 
 import { type ReactElement, forwardRef } from 'react';
 
-import { Tabs as BaseTabs } from '@base-ui-components/react';
+import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
@@ -14,7 +14,7 @@ import * as styles from './tabs.css';
 import type { ButtonVariants, ListVariants } from './tabs.css';
 
 type TabsVariants = ListVariants & ButtonVariants;
-type TabsSharedProps = Pick<BaseTabs.List.Props, 'activateOnFocus' | 'loop'> &
+type TabsSharedProps = Pick<BaseTabs.List.Props, 'activateOnFocus' | 'loopFocus'> &
     Pick<BaseTabs.Tab.Props, 'disabled'>;
 type TabsContext = TabsVariants & TabsSharedProps;
 
@@ -35,7 +35,7 @@ export const TabsRoot = forwardRef<HTMLDivElement, TabsRoot.Props>((props, ref) 
     const { className, ...componentProps } = resolveStyles(props);
     const [contextProps, otherProps] = createSplitProps<TabsContext>()(componentProps, [
         'activateOnFocus',
-        'loop',
+        'loopFocus',
         'variant',
         'size',
         'disabled',
@@ -67,12 +67,12 @@ TabsRoot.displayName = 'Tabs.Root';
 export const TabsListPrimitive = forwardRef<HTMLDivElement, TabsListPrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
-        const { activateOnFocus, loop, variant, orientation } = useTabsContext();
+        const { activateOnFocus, loopFocus, variant, orientation } = useTabsContext();
 
         return (
             <BaseTabs.List
                 ref={ref}
-                loop={loop}
+                loopFocus={loopFocus}
                 activateOnFocus={activateOnFocus}
                 className={clsx(styles.list({ variant, orientation }), className)}
                 {...componentProps}
@@ -174,7 +174,8 @@ export namespace TabsRoot {
 export namespace TabsListPrimitive {
     type BaseProps = VComponentProps<typeof BaseTabs.List>;
 
-    export interface Props extends Assign<BaseProps, TabsContext> {}
+    export interface Props
+        extends Assign<BaseProps, Omit<TabsContext, 'loopFocus' | 'activateOnFocus'>> {}
 }
 
 export namespace TabsIndicatorPrimitive {

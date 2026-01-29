@@ -8,7 +8,7 @@
  * Licensed under the MIT License
  * https://github.com/mui/base-ui/blob/master/LICENSE
  */
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 
 /**
  * Maps an open-change `reason` string to the corresponding native event type.

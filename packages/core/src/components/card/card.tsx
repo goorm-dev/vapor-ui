@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react/use-render';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { resolveStyles } from '~/utils/resolve-styles';

@@ -3,7 +3,8 @@
 import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
-import { Menu as BaseMenu, useRender } from '@base-ui-components/react';
+import { Menu as BaseMenu } from '@base-ui/react/menu';
+import { useRender } from '@base-ui/react/use-render';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 

@@ -1,16 +1,6 @@
 import './login-form.css';
 
-import {
-    Box,
-    Button,
-    Checkbox,
-    Field,
-    Form,
-    HStack,
-    Text,
-    TextInput,
-    VStack,
-} from '@vapor-ui/core';
+import { Button, Checkbox, Field, Form, HStack, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function LoginForm() {
     return (
@@ -25,26 +15,18 @@ export default function LoginForm() {
         >
             <VStack gap="$200">
                 <Field.Root>
-                    <Box
-                        render={<Field.Label />}
-                        flexDirection="column"
-                        justifyContent="space-between"
-                    >
+                    <Field.Label flexDirection="column" justifyContent="space-between">
                         <Text typography="subtitle2" foreground="normal-200">
                             이메일
                         </Text>
                         <TextInput id="login-email" size="lg" required type="email" />
-                    </Box>
+                    </Field.Label>
                     <Field.Error match="valueMissing">이메일을 입력해주세요.</Field.Error>
                     <Field.Error match="typeMismatch">유효한 이메일 형식이 아닙니다.</Field.Error>
                 </Field.Root>
 
                 <Field.Root>
-                    <Box
-                        render={<Field.Label />}
-                        flexDirection="column"
-                        justifyContent="space-between"
-                    >
+                    <Field.Label flexDirection="column" justifyContent="space-between">
                         <Text typography="subtitle2" foreground="normal-200">
                             비밀번호
                         </Text>
@@ -55,7 +37,7 @@ export default function LoginForm() {
                             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,16}"
                             size="lg"
                         />
-                    </Box>
+                    </Field.Label>
                     <Field.Description>8~16자, 대소문자 영문, 특수문자 포함</Field.Description>
                     <Field.Error match="valueMissing">비밀번호를 입력해주세요.</Field.Error>
                     <Field.Error match="patternMismatch">
@@ -66,10 +48,10 @@ export default function LoginForm() {
             <VStack gap="$100">
                 <HStack justifyContent="space-between">
                     <Field.Root>
-                        <Box render={<Field.Label />} alignItems="center">
+                        <Field.Item>
                             <Checkbox.Root id="login-auto-login" />
-                            자동 로그인
-                        </Box>
+                            <Field.Label>자동 로그인</Field.Label>
+                        </Field.Item>
                     </Field.Root>
 
                     <Button type="button" variant="ghost" colorPalette="secondary">

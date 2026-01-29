@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useLatestRef } from '@base-ui-components/utils/useLatestRef';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useValueAsRef } from '@base-ui/utils/useValueAsRef';
 
 import { useAnimationsFinished } from './use-animation-finished';
 
@@ -21,8 +21,8 @@ export interface Parameters {
 export function useOpenChangeComplete(parameters: Parameters) {
     const { enabled = true, open, ref, onComplete: onCompleteParam } = parameters;
 
-    const openRef = useLatestRef(open);
-    const onComplete = useEventCallback(onCompleteParam);
+    const openRef = useValueAsRef(open);
+    const onComplete = useStableCallback(onCompleteParam);
     const runOnceAnimationsFinish = useAnimationsFinished(ref, open);
 
     useEffect(() => {

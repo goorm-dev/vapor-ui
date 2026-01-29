@@ -117,7 +117,7 @@ export const button = recipe({
                     opacity: 0.32,
                     pointerEvents: 'none',
                 },
-                '&[data-selected]': {
+                '&[data-active]': {
                     color: vars.color.foreground.primary['100'],
                 },
             },
@@ -170,7 +170,7 @@ export const button = recipe({
                     [buttonVerticalBorderRadius]: vars.size.borderRadius[300],
                 },
                 selectors: {
-                    '&[data-selected]': {
+                    '&[data-active]': {
                         color: vars.color.foreground.primary['100'],
                     },
                 },

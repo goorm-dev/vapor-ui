@@ -223,18 +223,18 @@ describe('Checkbox', () => {
     });
 
     describe('prop: disabled', () => {
-        it('should have the `disabled` attribute', async () => {
+        it('should have the `aria-disabled` attribute', async () => {
             const rendered = render(<CheckboxTest disabled />);
             const checkbox = rendered.getByRole('checkbox');
 
-            expect(checkbox).toHaveAttribute('disabled');
+            expect(checkbox).toHaveAttribute('aria-disabled', 'true');
         });
 
-        it('should not have the `disabled` attribute when `disabled` is not set', async () => {
+        it('should not have the `aria-disabled` attribute when `disabled` is not set', async () => {
             const rendered = render(<CheckboxTest />);
             const checkbox = rendered.getByRole('checkbox');
 
-            expect(checkbox).not.toHaveAttribute('disabled');
+            expect(checkbox).not.toHaveAttribute('aria-disabled');
         });
 
         it('should not change its state when clicked', async () => {
@@ -242,7 +242,7 @@ describe('Checkbox', () => {
             const rendered = render(<CheckboxTest disabled onCheckedChange={onCheckedChange} />);
             const checkbox = rendered.getByRole('checkbox');
 
-            expect(checkbox).toBeDisabled();
+            expect(checkbox).toHaveAttribute('aria-disabled', 'true');
 
             await userEvent.click(checkbox);
             expect(onCheckedChange).not.toHaveBeenCalled();
@@ -255,7 +255,7 @@ const LABEL_TEXT = 'Checkbox Label';
 
 const CheckboxTest = (props: Checkbox.Root.Props) => (
     <>
-        <Checkbox.Root id="checkbox" {...props} />
+        <Checkbox.Root id="checkbox" aria-label={LABEL_TEXT} {...props} />
         <label htmlFor="checkbox">{LABEL_TEXT}</label>
     </>
 );
@@ -273,7 +273,12 @@ const ControlledCheckboxTest = (props: Checkbox.Root.Props) => {
 
     return (
         <div>
-            <Checkbox.Root id="checkbox" checked={checkbox} onCheckedChange={handleCheckedChange} />
+            <Checkbox.Root
+                id="checkbox"
+                aria-label={LABEL_TEXT}
+                checked={checkbox}
+                onCheckedChange={handleCheckedChange}
+            />
             <label htmlFor="checkbox">{LABEL_TEXT}</label>
 
             <button onClick={() => setBlocker((prev) => !prev)}>Blocker Controller</button>

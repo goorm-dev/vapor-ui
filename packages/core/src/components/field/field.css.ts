@@ -71,3 +71,13 @@ export const label = recipe({
 });
 
 export type LabelVariants = NonNullable<RecipeVariants<typeof label>>;
+
+export const item = layerStyle('components', {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: vars.size.space['100'],
+
+    selectors: {
+        '&[data-disabled]': { opacity: 0.32, pointerEvents: 'none' },
+    },
+});

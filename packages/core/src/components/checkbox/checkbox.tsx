@@ -3,8 +3,8 @@
 import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { Checkbox as BaseCheckbox } from '@base-ui-components/react/checkbox';
+import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
@@ -33,7 +33,7 @@ const [CheckboxProvider, useCheckboxContext] = createContext<CheckboxSharedProps
 /**
  * Root component of Checkbox that manages checked state. Renders a `<button>` element.
  */
-export const CheckboxRoot = forwardRef<HTMLButtonElement, CheckboxRoot.Props>((props, ref) => {
+export const CheckboxRoot = forwardRef<HTMLSpanElement, CheckboxRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<CheckboxSharedProps>()(componentProps, [
         'size',

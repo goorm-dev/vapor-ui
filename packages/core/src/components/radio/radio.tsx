@@ -2,7 +2,8 @@
 
 import { forwardRef } from 'react';
 
-import { Radio as BaseRadio, useRender } from '@base-ui-components/react';
+import { Radio as BaseRadio } from '@base-ui/react/radio';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';
@@ -24,7 +25,7 @@ type RadioVariants = RootVariants;
 /**
  * Root component of Radio that renders a circular radio button. Renders a `<button>` element.
  */
-export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, ref) => {
+export const RadioRoot = forwardRef<HTMLSpanElement, RadioRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
