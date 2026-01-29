@@ -27,7 +27,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         ...defaultMdxComponents,
 
         pre: ({ ref: _ref, ...props }) => (
-            <CodeBlock {...props} className="bg-v-canvas-200 shadow-none">
+            <CodeBlock {...props} className="bg-v-canvas-200 shadow-none ">
                 <Pre>{props.children}</Pre>
             </CodeBlock>
         ),
