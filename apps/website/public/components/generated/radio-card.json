@@ -4,12 +4,6 @@
     "description": "카드 형태의 라디오 버튼 컴포넌트입니다. `<div>` 요소를 렌더링합니다.",
     "props": [
         {
-            "name": "size",
-            "type": ["md", "lg"],
-            "required": false,
-            "defaultValue": "md"
-        },
-        {
             "name": "className",
             "type": ["string", "(state: State) => string"],
             "required": false,

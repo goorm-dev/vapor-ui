@@ -11,7 +11,7 @@ export default function NavigationMenuDirection() {
                             <NavigationMenu.Link href="#">Home</NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected>
+                            <NavigationMenu.Link href="#" current>
                                 About
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
@@ -30,7 +30,7 @@ export default function NavigationMenuDirection() {
                             <NavigationMenu.Link href="#">Home</NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
-                            <NavigationMenu.Link href="#" selected>
+                            <NavigationMenu.Link href="#" current>
                                 About
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>

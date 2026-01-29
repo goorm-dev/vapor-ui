@@ -20,6 +20,9 @@ export const docsOptions: DocsLayoutProps = {
     sidebar: {
         className: 'md:bg-v-canvas',
     },
+    containerProps: {
+        className: 'isolate',
+    },
 };
 
 export const playgroundOptions: NotebookLayoutProps = {

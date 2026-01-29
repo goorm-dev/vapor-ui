@@ -16,7 +16,7 @@ export default function NavigationMenuWithIcon() {
                         <NavigationMenu.Item>
                             <NavigationMenu.Link
                                 href="#"
-                                selected
+                                current
                                 className="flex items-center gap-2"
                             >
                                 <StarIcon size={16} />
@@ -55,7 +55,7 @@ export default function NavigationMenuWithIcon() {
                         <NavigationMenu.Item>
                             <NavigationMenu.Link
                                 href="#"
-                                selected
+                                current
                                 className="flex items-center justify-center"
                                 aria-label="즐겨찾기"
                             >
@@ -100,7 +100,7 @@ export default function NavigationMenuWithIcon() {
                         <NavigationMenu.Item>
                             <NavigationMenu.Link
                                 href="#"
-                                selected
+                                current
                                 className="flex items-center gap-3"
                             >
                                 <StarIcon size={16} />
