@@ -3,8 +3,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Dialog as BaseDialog } from '@base-ui-components/react/dialog';
-import { useRender } from '@base-ui-components/react/use-render';
+import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
@@ -30,10 +30,15 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
  * Dialog
  * -----------------------------------------------------------------------------------------------*/
 
-export const DialogRoot = ({ size, closeOnClickOverlay, children, ...props }: DialogRoot.Props) => {
+export const DialogRoot = ({
+    size,
+    closeOnClickOverlay = true,
+    children,
+    ...props
+}: DialogRoot.Props) => {
     return (
         <DialogProvider value={{ size }}>
-            <BaseDialog.Root dismissible={closeOnClickOverlay} {...props}>
+            <BaseDialog.Root disablePointerDismissal={!closeOnClickOverlay} {...props}>
                 {children}
             </BaseDialog.Root>
         </DialogProvider>
@@ -225,7 +230,10 @@ DialogFooter.displayName = 'Dialog.Footer';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace DialogRoot {
-    type DialogPrimitiveProps = Omit<VComponentProps<typeof BaseDialog.Root>, 'dismissible'>;
+    type DialogPrimitiveProps = Omit<
+        VComponentProps<typeof BaseDialog.Root>,
+        'disablePointerDismissal'
+    >;
     export interface Props extends DialogPrimitiveProps, DialogSharedProps {
         closeOnClickOverlay?: boolean;
     }

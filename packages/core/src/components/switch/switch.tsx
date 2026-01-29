@@ -2,7 +2,8 @@
 
 import { forwardRef } from 'react';
 
-import { Switch as BaseSwitch, useRender } from '@base-ui-components/react';
+import { Switch as BaseSwitch } from '@base-ui/react/switch';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
@@ -28,7 +29,7 @@ const [SwitchProvider, useSwitchContext] = createContext<SwitchSharedProps>({
  * Switch.Root
  * -----------------------------------------------------------------------------------------------*/
 
-export const SwitchRoot = forwardRef<HTMLButtonElement, SwitchRoot.Props>((props, ref) => {
+export const SwitchRoot = forwardRef<HTMLSpanElement, SwitchRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const [variantProps, otherProps] = createSplitProps<SwitchSharedProps>()(componentProps, [
         'size',

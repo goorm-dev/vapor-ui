@@ -1,8 +1,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { Toast as BaseToast } from '@base-ui-components/react/toast';
+import { Toast as BaseToast, type ToastManager as BaseToastManager } from '@base-ui/react/toast';
+import { useRender } from '@base-ui/react/use-render';
 import { CheckCircleIcon, CloseOutlineIcon, WarningIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -27,11 +27,11 @@ export const useToastManager = BaseToast.useToastManager as () => UseToastManage
  * ToastProvider
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToastProvider = (props: ToastProvider.Props) => {
+export const ToastProvider = ({ toastManager, ...props }: ToastProvider.Props) => {
     const { timeout = 4000, children, ...componentProps } = props;
 
     return (
-        <ToastProviderPrimitive timeout={timeout} {...componentProps}>
+        <ToastProviderPrimitive timeout={timeout} toastManager={toastManager} {...componentProps}>
             {children}
             <ToastList />
         </ToastProviderPrimitive>
@@ -81,10 +81,7 @@ export const ToastProviderPrimitive = ({
     ...props
 }: ToastProviderPrimitive.Props) => {
     return (
-        <BaseToast.Provider
-            toastManager={toastManager as unknown as BaseToast.createToastManager.ToastManager}
-            {...props}
-        />
+        <BaseToast.Provider toastManager={toastManager as unknown as BaseToastManager} {...props} />
     );
 };
 
@@ -317,7 +314,6 @@ type ToastObject<Data extends object> = Omit<BaseToastObject<Data>, 'type' | 'ac
 
 type ToastObjectType<Data extends object> = ToastObject<Data> & ToastProps;
 
-type BaseToastManager = BaseToast.createToastManager.ToastManager;
 type BasePromiseOptions = Omit<BaseToastManager['promise'], 'loading' | 'success' | 'error'>;
 
 /* -----------------------------------------------------------------------------------------------*/
@@ -343,8 +339,15 @@ export interface ToastManagerPromiseOptions<Value, Data extends object> extends 
 }
 
 export interface ToastManager extends BaseToastManager {
-    add: <Data extends object>(options: ToastManagerUpdateOptions<Data>) => string;
+    ' subscribe': (
+        listener: (data: {
+            action: 'add' | 'close' | 'update' | 'promise';
+            options: unknown;
+        }) => void,
+    ) => () => void;
+    add: <Data extends object>(options: ToastManagerAddOptions<Data>) => string;
     update: <Data extends object>(id: string, options: ToastManagerUpdateOptions<Data>) => void;
+    close: (id: string) => void;
     promise: <Value, Data extends object>(
         promise: Promise<Value>,
         options: ToastManagerPromiseOptions<Value, Data>,
@@ -370,7 +373,9 @@ export namespace ToastProviderPrimitive {
 }
 
 export namespace ToastProvider {
-    export interface Props extends BaseToast.Provider.Props {}
+    export interface Props extends Omit<BaseToast.Provider.Props, 'toastManager'> {
+        toastManager?: ToastManager;
+    }
 }
 
 export namespace ToastPortalPrimitive {

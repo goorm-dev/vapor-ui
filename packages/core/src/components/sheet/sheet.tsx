@@ -3,9 +3,10 @@
 import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
-import { Dialog as BaseDialog, useRender } from '@base-ui-components/react';
-import { useControlled } from '@base-ui-components/utils/useControlled';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+import { useRender } from '@base-ui/react/use-render';
+import { useControlled } from '@base-ui/utils/useControlled';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import clsx from 'clsx';
 
 import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
@@ -58,7 +59,7 @@ export const SheetRoot = ({
     const popupRef = useRef<HTMLDivElement | null>(null);
 
     const { mounted, setMounted, transitionStatus } = useTransitionStatus(open);
-    const handleUnmount = useEventCallback(() => {
+    const handleUnmount = useStableCallback(() => {
         setMounted(false);
     });
 
@@ -73,7 +74,14 @@ export const SheetRoot = ({
         },
     });
 
-    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
+    const handleClose = useStableCallback(() => {
+        setOpen(false);
+    });
+
+    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount, close: handleClose }), [
+        handleUnmount,
+        handleClose,
+    ]);
 
     const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
         setOpen(open);

@@ -66,10 +66,10 @@
             "type": ["false", "true"],
             "required": false,
             "description": "포커스 시 즉시 탭을 활성화할지 여부. `false`일 경우 Enter 또는 Space 키로 활성화합니다.",
-            "defaultValue": "true"
+            "defaultValue": "false"
         },
         {
-            "name": "loop",
+            "name": "loopFocus",
             "type": ["false", "true"],
             "required": false,
             "description": "키보드 내비게이션 시 첫 번째/마지막 탭에서 순환할지 여부. `true`일 경우 마지막 탭에서 화살표 키를 누르면 첫 번째 탭으로 이동합니다.",
