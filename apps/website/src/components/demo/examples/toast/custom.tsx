@@ -1,5 +1,3 @@
-import './styles.css';
-
 import type { PropsWithChildren } from 'react';
 
 import { Button, HStack, IconButton, Toast, VStack } from '@vapor-ui/core';
