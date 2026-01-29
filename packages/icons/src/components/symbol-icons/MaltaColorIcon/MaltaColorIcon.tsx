@@ -1,6 +1,6 @@
 import IconBase, { type IconProps } from '~/components/icon-base';
 
-const MaltaColorColorIcon = (props: IconProps) => (
+const MaltaColorIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <mask
             id="mask0_9214_1313"
@@ -792,4 +792,4 @@ const MaltaColorColorIcon = (props: IconProps) => (
     </IconBase>
 );
 
-export default MaltaColorColorIcon;
+export default MaltaColorIcon;
