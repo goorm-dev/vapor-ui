@@ -14,7 +14,7 @@ export const shouldHaveTitleOnDialogRule: Rule.RuleModule = {
         },
         fixable: undefined,
         messages: {
-            'missing-label':
+            'missing-title':
                 "The '{{ namespace }}.{{ subcomponent }}' requires an <{{ namespace }}.Title> component or 'aria-label', 'aria-labelledby' prop for accessibility.",
         },
     },
