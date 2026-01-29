@@ -51,10 +51,11 @@ const WebNavigation = () => {
 
     return (
         <SiteNavigation
+            className="border-b border-b-transparent"
             leftSlot={
                 <NavigationMenu.Link
                     href={'/docs'}
-                    selected={pathname.includes('/docs')}
+                    current={pathname.includes('/docs')}
                     render={
                         <Text
                             key={'docs'}

@@ -30,7 +30,7 @@ export const SiteNavigation = ({ leftSlot, className, ...props }: SiteNavigation
                         <NavigationMenu.Item key={link.text}>
                             <NavigationMenu.Link
                                 href={link.url}
-                                selected={pathname.includes(link.url)}
+                                current={pathname.includes(link.url)}
                                 render={<Link>{link.text}</Link>}
                             />
                         </NavigationMenu.Item>
