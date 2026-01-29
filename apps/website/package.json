@@ -26,6 +26,7 @@
         "@vapor-ui/core": "workspace:*",
         "@vapor-ui/css-generator": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
+        "@vercel/analytics": "^1.6.1",
         "clsx": "^2.1.1",
         "color-convert": "^3.1.2",
         "fumadocs-core": "^15.3.0",
