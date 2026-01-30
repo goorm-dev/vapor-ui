@@ -1,0 +1,171 @@
+#!/usr/bin/env tsx
+import fs from 'node:fs';
+import path from 'node:path';
+
+import { Project, SyntaxKind, type ObjectLiteralExpression, type PropertyAssignment } from 'ts-morph';
+
+interface PropDefinition {
+    usesToken: boolean;
+    tokenPath?: string;
+    cssProperty: string;
+}
+
+interface SprinklesMeta {
+    tokenProps: string[];
+    nonTokenProps: string[];
+    propDefinitions: Record<string, PropDefinition>;
+}
+
+function getTokenPath(initializerName: string): string | undefined {
+    const tokenMapping: Record<string, string> = {
+        spaceTokens: 'vars.size.space',
+        marginTokens: 'vars.size.space',
+        dimensionTokens: 'vars.size.dimension',
+        radiusTokens: 'vars.size.borderRadius',
+        bgColorTokens: 'vars.color.background',
+        colorTokens: 'vars.color.foreground',
+        borderColorTokens: 'vars.color.border',
+    };
+
+    return tokenMapping[initializerName];
+}
+
+function analyzeSprinkles(sprinklesPath: string): SprinklesMeta {
+    const project = new Project({
+        skipFileDependencyResolution: true,
+    });
+    const sourceFile = project.addSourceFileAtPath(sprinklesPath);
+
+    const meta: SprinklesMeta = {
+        tokenProps: [],
+        nonTokenProps: [],
+        propDefinitions: {},
+    };
+
+    // Find defineProperties call
+    const definePropertiesCall = sourceFile.getDescendantsOfKind(SyntaxKind.CallExpression).find((call) => {
+        const expr = call.getExpression();
+        return expr.getText() === 'defineProperties';
+    });
+
+    if (!definePropertiesCall) {
+        console.warn('defineProperties call not found');
+        return meta;
+    }
+
+    // Get the configuration object
+    const args = definePropertiesCall.getArguments();
+    if (args.length === 0) {
+        console.warn('defineProperties has no arguments');
+        return meta;
+    }
+
+    const configObj = args[0] as ObjectLiteralExpression;
+    if (!configObj.isKind(SyntaxKind.ObjectLiteralExpression)) {
+        console.warn('First argument is not an object literal');
+        return meta;
+    }
+
+    // Find dynamicProperties
+    const dynamicPropsProperty = configObj.getProperty('dynamicProperties');
+    if (!dynamicPropsProperty?.isKind(SyntaxKind.PropertyAssignment)) {
+        console.warn('dynamicProperties not found');
+        return meta;
+    }
+
+    const dynamicPropsObj = (dynamicPropsProperty as PropertyAssignment).getInitializer();
+    if (!dynamicPropsObj?.isKind(SyntaxKind.ObjectLiteralExpression)) {
+        console.warn('dynamicProperties is not an object');
+        return meta;
+    }
+
+    // Analyze each property in dynamicProperties
+    for (const prop of (dynamicPropsObj as ObjectLiteralExpression).getProperties()) {
+        if (!prop.isKind(SyntaxKind.PropertyAssignment)) continue;
+
+        const propAssignment = prop as PropertyAssignment;
+        const propName = propAssignment.getName();
+        const initializer = propAssignment.getInitializer();
+
+        if (!initializer) continue;
+
+        const initText = initializer.getText();
+        const usesToken = initText !== 'true';
+
+        meta.propDefinitions[propName] = {
+            usesToken,
+            tokenPath: usesToken ? getTokenPath(initText) : undefined,
+            cssProperty: propName,
+        };
+
+        if (usesToken) {
+            meta.tokenProps.push(propName);
+        } else {
+            meta.nonTokenProps.push(propName);
+        }
+    }
+
+    // Handle shorthands
+    const shorthandsProperty = configObj.getProperty('shorthands');
+    if (shorthandsProperty?.isKind(SyntaxKind.PropertyAssignment)) {
+        const shorthandsObj = (shorthandsProperty as PropertyAssignment).getInitializer();
+        if (shorthandsObj?.isKind(SyntaxKind.ObjectLiteralExpression)) {
+            for (const prop of (shorthandsObj as ObjectLiteralExpression).getProperties()) {
+                if (!prop.isKind(SyntaxKind.PropertyAssignment)) continue;
+
+                const propAssignment = prop as PropertyAssignment;
+                const propName = propAssignment.getName();
+                const arrayInit = propAssignment.getInitializer();
+
+                if (!arrayInit?.isKind(SyntaxKind.ArrayLiteralExpression)) continue;
+
+                // Get the expanded prop names
+                const expandedProps = arrayInit.getElements().map((el) => {
+                    const text = el.getText();
+                    return text.replace(/['"]/g, '');
+                });
+
+                // Shorthand uses token if any of its expanded props use token
+                const usesToken = expandedProps.some((p) => meta.propDefinitions[p]?.usesToken);
+                const tokenPath = expandedProps.find((p) => meta.propDefinitions[p]?.tokenPath)
+                    ? meta.propDefinitions[expandedProps[0]]?.tokenPath
+                    : undefined;
+
+                meta.propDefinitions[propName] = {
+                    usesToken,
+                    tokenPath,
+                    cssProperty: propName,
+                };
+
+                if (usesToken) {
+                    meta.tokenProps.push(propName);
+                } else {
+                    meta.nonTokenProps.push(propName);
+                }
+            }
+        }
+    }
+
+    return meta;
+}
+
+// Main execution
+const scriptDir = path.dirname(new URL(import.meta.url).pathname);
+const sprinklesPath = path.resolve(scriptDir, '../../../packages/core/src/styles/sprinkles.css.ts');
+const outputDir = path.resolve(scriptDir, '../generated');
+const outputPath = path.join(outputDir, 'sprinkles-meta.json');
+
+if (!fs.existsSync(sprinklesPath)) {
+    console.error(`Sprinkles file not found: ${sprinklesPath}`);
+    process.exit(1);
+}
+
+const meta = analyzeSprinkles(sprinklesPath);
+
+fs.mkdirSync(outputDir, { recursive: true });
+fs.writeFileSync(outputPath, JSON.stringify(meta, null, 2));
+
+console.log(`Generated sprinkles metadata:`);
+console.log(`  Token props: ${meta.tokenProps.length}`);
+console.log(`  Non-token props: ${meta.nonTokenProps.length}`);
+console.log(`  Output: ${outputPath}`);

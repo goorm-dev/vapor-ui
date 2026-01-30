@@ -30,9 +30,11 @@ export interface RawCliOptions {
     component?: string;
     outputDir?: string;
     all: boolean;
-    sprinkles: boolean;
     include?: string[];
     includeHtml?: string[];
+    config?: string;
+    noConfig?: boolean;
+    lang?: string;
 }
 
 /** 프롬프트/검증 후 확정된 옵션 */
@@ -190,10 +192,10 @@ function resolveOutputMode(outputDir?: string): OutputMode {
 // Extract Options Builder
 // ============================================================
 
-function buildExtractOptions(raw: RawCliOptions): ExtractOptions {
+function buildExtractOptions(raw: RawCliOptions, configFilterSprinkles?: boolean): ExtractOptions {
     return {
         filterExternal: !raw.all,
-        filterSprinkles: !raw.all && !raw.sprinkles,
+        filterSprinkles: !raw.all && (configFilterSprinkles ?? true),
         filterHtml: !raw.all,
         includeHtmlWhitelist: raw.includeHtml?.length ? new Set(raw.includeHtml) : undefined,
         include: raw.include,
@@ -204,7 +206,14 @@ function buildExtractOptions(raw: RawCliOptions): ExtractOptions {
 // Main Orchestrator
 // ============================================================
 
-export async function resolveOptions(raw: RawCliOptions): Promise<ResolvedCliOptions> {
+export interface ResolveOptionsConfig {
+    filterSprinkles?: boolean;
+}
+
+export async function resolveOptions(
+    raw: RawCliOptions,
+    configOptions?: ResolveOptionsConfig,
+): Promise<ResolvedCliOptions> {
     // Step 1: Resolve path (CLI > prompt)
     const absolutePath = await resolvePath(raw.path);
 
@@ -231,7 +240,7 @@ export async function resolveOptions(raw: RawCliOptions): Promise<ResolvedCliOpt
         absolutePath,
         tsconfigPath,
         targetFiles,
-        extractOptions: buildExtractOptions(raw),
+        extractOptions: buildExtractOptions(raw, configOptions?.filterSprinkles),
         outputMode: resolveOutputMode(raw.outputDir),
     };
 }

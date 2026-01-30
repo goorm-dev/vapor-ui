@@ -1,0 +1,34 @@
+{
+  "tokenProps": ["padding", "paddingTop", "paddingBottom", "paddingLeft", "paddingRight", "paddingX", "paddingY", "margin", "gap", "color", "backgroundColor", "borderColor", "borderRadius", "width", "height"],
+  "nonTokenProps": ["display", "position", "alignItems", "justifyContent", "flexDirection", "overflow"],
+  "propDefinitions": {
+    "padding": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "padding"
+    },
+    "margin": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "margin"
+    },
+    "display": {
+      "usesToken": false,
+      "cssProperty": "display"
+    },
+    "position": {
+      "usesToken": false,
+      "cssProperty": "position"
+    },
+    "color": {
+      "usesToken": true,
+      "tokenPath": "vars.color.foreground",
+      "cssProperty": "color"
+    },
+    "backgroundColor": {
+      "usesToken": true,
+      "tokenPath": "vars.color.background",
+      "cssProperty": "backgroundColor"
+    }
+  }
+}

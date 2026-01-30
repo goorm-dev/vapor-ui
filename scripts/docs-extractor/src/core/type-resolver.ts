@@ -70,7 +70,7 @@ function getOriginalTypeText(type: Type): string | null {
             const filePath = decl.getSourceFile().getFilePath();
 
             // base-ui 파일에 선언된 타입인 경우
-            if (filePath.includes('@base-ui-components')) {
+            if (filePath.includes('@base-ui')) {
                 // import("...").Namespace.TypeName 형태로 반환
                 return type.getText();
             }
@@ -105,7 +105,7 @@ function resolveFunctionType(
         if (!node) {
             // fallback: 타입 텍스트에서 단순화
             const paramTypeText = param.getTypeAtLocation(signature.getDeclaration()!).getText();
-            if (paramTypeText.includes('@base-ui-components')) {
+            if (paramTypeText.includes('@base-ui')) {
                 return `${paramName}: ${extractSimplifiedTypeName(paramTypeText)}`;
             }
             return `${paramName}: ${paramTypeText}`;
@@ -222,7 +222,7 @@ export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap, contextNode?:
     if (functionResult) return functionResult;
 
     // base-ui 타입 변환 (contextNode 없을 때 fallback)
-    if (rawText.includes('@base-ui-components')) {
+    if (rawText.includes('@base-ui')) {
         if (baseUiMap) {
             const vaporPath = resolveBaseUiType(rawText, baseUiMap);
             if (vaporPath) return vaporPath;

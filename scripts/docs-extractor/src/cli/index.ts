@@ -1,30 +1,19 @@
 import meow from 'meow';
-import { execSync } from 'node:child_process';
-import fs from 'node:fs';
 import path from 'node:path';
 
+import { loadConfig } from '~/config';
 import { addSourceFiles, createProject } from '~/core/project';
 import { extractProps } from '~/core/props-extractor';
+import { getTargetLanguages } from '~/i18n/path-resolver';
+import { formatFileName } from '~/output/formatter';
+import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from '~/output/writer';
 
 import type { RawCliOptions } from './options.js';
 import { resolveOptions } from './options.js';
 
-function toKebabCase(str: string): string {
-    return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
 function logProgress(message: string, hasFileOutput: boolean) {
     if (hasFileOutput) {
         console.error(message);
-    }
-}
-
-function formatWithPrettier(filePaths: string[]) {
-    if (filePaths.length === 0) return;
-    try {
-        execSync(`npx prettier --write ${filePaths.join(' ')}`, { stdio: 'inherit' });
-    } catch {
-        // prettier not available, skip formatting
     }
 }
 
@@ -37,18 +26,21 @@ const cli = meow(
     --tsconfig, -c         Path to tsconfig.json (default: auto-detect)
     --exclude, -e          Additional exclude patterns (added to defaults)
     --no-exclude-defaults  Disable default exclude patterns (.stories.tsx, .css.ts)
-    --component, -n      Component name to process (e.g., Button, TextInput)
-    --output-dir, -d     Output directory for per-component files
-    --all, -a            Include all props (node_modules + sprinkles + html)
-    --sprinkles, -s      Include sprinkles props
-    --include            Include specific props (can be used multiple times)
-    --include-html       Include specific HTML attributes (e.g., --include-html className style)
+    --component, -n        Component name to process (e.g., Button, TextInput)
+    --output-dir, -d       Output directory for per-component files
+    --all, -a              Include all props (node_modules + sprinkles + html)
+    --include              Include specific props (can be used multiple times)
+    --include-html         Include specific HTML attributes (e.g., --include-html className style)
+    --config               Config file path (default: docs-extractor.config.ts)
+    --no-config            Ignore config file
+    --lang, -l             Output language (ko, en, all)
 
   Examples
     $ ts-api-extractor ./packages/core
     $ ts-api-extractor ./packages/core --component Tabs
     $ ts-api-extractor ./packages/core --component Tabs --output-dir ./output
-    $ ts-api-extractor ./packages/core --sprinkles
+    $ ts-api-extractor ./packages/core --lang en
+    $ ts-api-extractor ./packages/core --lang all
     $ ts-api-extractor  # Interactive mode: prompts for path and components
 `,
     {
@@ -80,11 +72,6 @@ const cli = meow(
                 shortFlag: 'a',
                 default: false,
             },
-            sprinkles: {
-                type: 'boolean',
-                shortFlag: 's',
-                default: false,
-            },
             include: {
                 type: 'string',
                 isMultiple: true,
@@ -93,6 +80,17 @@ const cli = meow(
                 type: 'string',
                 isMultiple: true,
             },
+            config: {
+                type: 'string',
+            },
+            noConfig: {
+                type: 'boolean',
+                default: false,
+            },
+            lang: {
+                type: 'string',
+                shortFlag: 'l',
+            },
         },
     },
 );
@@ -100,20 +98,37 @@ const cli = meow(
 const [inputPath] = cli.input;
 
 export async function run() {
+    // Load configuration
+    const { config, source: configSource } = await loadConfig({
+        configPath: cli.flags.config,
+        noConfig: cli.flags.noConfig,
+    });
+
+    if (configSource === 'file') {
+        console.error('Using config file');
+    }
+
+    // Use config outputDir if CLI option not provided
+    const outputDir = cli.flags.outputDir ?? config.global.outputDir;
+
     const rawOptions: RawCliOptions = {
         path: inputPath,
         tsconfig: cli.flags.tsconfig,
         exclude: cli.flags.exclude ?? [],
         excludeDefaults: cli.flags.excludeDefaults,
         component: cli.flags.component,
-        outputDir: cli.flags.outputDir,
+        outputDir,
         all: cli.flags.all,
-        sprinkles: cli.flags.sprinkles,
         include: cli.flags.include,
         includeHtml: cli.flags.includeHtml,
+        config: cli.flags.config,
+        noConfig: cli.flags.noConfig,
+        lang: cli.flags.lang,
     };
 
-    const resolved = await resolveOptions(rawOptions);
+    const resolved = await resolveOptions(rawOptions, {
+        filterSprinkles: config.global.filterSprinkles,
+    });
 
     const hasFileOutput = resolved.outputMode.type !== 'stdout';
 
@@ -133,20 +148,31 @@ export async function run() {
     logProgress(`Done! Extracted ${allProps.length} components.`, hasFileOutput);
 
     if (resolved.outputMode.type === 'directory') {
-        const outputDir = resolved.outputMode.path;
-        if (!fs.existsSync(outputDir)) {
-            fs.mkdirSync(outputDir, { recursive: true });
-        }
+        // Determine output directory based on config and CLI options
+        const baseOutputDir = resolved.outputMode.path;
 
-        const writtenFiles: string[] = [];
-        for (const prop of allProps) {
-            const fileName = toKebabCase(prop.name) + '.json';
-            const filePath = path.join(outputDir, fileName);
-            fs.writeFileSync(filePath, JSON.stringify(prop, null, 2));
-            writtenFiles.push(filePath);
-            console.log(`Written to ${filePath}`);
+        // Get target languages
+        const targetLanguages = getTargetLanguages(cli.flags.lang, {
+            outputDir: baseOutputDir,
+            languages: config.global.languages,
+            defaultLanguage: config.global.defaultLanguage,
+        });
+
+        // Write files for each language
+        for (const lang of targetLanguages) {
+            const langOutputDir = path.join(baseOutputDir, lang);
+            ensureDirectory(langOutputDir);
+
+            const writtenFiles = writeMultipleFiles(allProps, langOutputDir, (prop) =>
+                formatFileName(prop.name),
+            );
+
+            for (const file of writtenFiles) {
+                console.log(`Written to ${file}`);
+            }
+
+            formatWithPrettier(writtenFiles);
         }
-        formatWithPrettier(writtenFiles);
     } else {
         const output = allProps.length === 1 ? allProps[0] : allProps;
         console.log(JSON.stringify(output, null, 2));

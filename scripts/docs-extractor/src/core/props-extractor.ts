@@ -112,7 +112,7 @@ function getPropSource(symbol: Symbol): PropSource {
     const filePath = getSymbolSourcePath(symbol);
     if (!filePath) return 'custom';
 
-    if (filePath.includes('@base-ui-components')) return 'base-ui';
+    if (filePath.includes('@base-ui')) return 'base-ui';
     if (filePath.endsWith('.css.ts')) return 'variants';
 
     return 'custom';
@@ -174,11 +174,12 @@ function sortProps(props: InternalProperty[]): Property[] {
             if (categoryOrder !== 0) return categoryOrder;
             return a.name.localeCompare(b.name);
         })
-        .map(({ _source: _, _category: __, ...prop }) => prop);
+        .map(({ _source: _, _category: __, ...rest }) => rest);
 }
 
 function toTypeArray(typeResult: { type: string; values?: string[] }): string[] {
-    if (typeResult.values) {
+    // values가 있으면 사용, 없으면 type을 배열로
+    if (typeResult.values && typeResult.values.length > 0) {
         return typeResult.values;
     }
     return [typeResult.type];
