@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Popover, useRender } from '@base-ui-components/react';
+import { Popover } from '@base-ui/react/popover';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';
@@ -123,8 +124,9 @@ FloatingBarPopup.displayName = 'FloatingBar.Popup';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace FloatingBarRoot {
-    export interface Props extends Popover.Root.Props {}
+    export type Props = Popover.Root.Props;
 
+    export type Actions = Popover.Root.Actions;
     export type ChangeEventDetails = Popover.Root.ChangeEventDetails;
 }
 

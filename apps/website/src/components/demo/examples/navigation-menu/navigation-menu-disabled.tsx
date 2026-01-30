@@ -23,7 +23,7 @@ export default function NavigationMenuDisabled() {
             </div>
 
             <div>
-                <h4 className="text-sm font-medium mb-2">현재 상태와 비활성화 상태</h4>
+                <h4 className="text-sm font-medium mb-2">현재 페이지와 비활성화 상태</h4>
                 <NavigationMenu.Root aria-label="Navigation with current and disabled">
                     <NavigationMenu.List>
                         <NavigationMenu.Item>
@@ -31,7 +31,7 @@ export default function NavigationMenuDisabled() {
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>
                             <NavigationMenu.Link href="#" current>
-                                현재 링크
+                                현재 페이지
                             </NavigationMenu.Link>
                         </NavigationMenu.Item>
                         <NavigationMenu.Item>

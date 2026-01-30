@@ -3,7 +3,7 @@
 import type { ReactNode, RefObject } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Toggle, ToggleGroup } from '@base-ui-components/react';
+import { Toggle, ToggleGroup } from '@base-ui/react';
 import clsx from 'clsx';
 
 interface ToggleItem {

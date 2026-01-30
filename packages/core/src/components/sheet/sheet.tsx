@@ -3,7 +3,8 @@
 import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
-import { Dialog as BaseDialog, useRender } from '@base-ui-components/react';
+import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+import { useRender } from '@base-ui/react/use-render';
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import clsx from 'clsx';
@@ -62,6 +63,10 @@ export const SheetRoot = ({
         setMounted(false);
     });
 
+    const handleClose = useStableCallback(() => {
+        setOpen(false);
+    });
+
     useOpenChangeComplete({
         enabled: !props.actionsRef,
         open,
@@ -73,7 +78,10 @@ export const SheetRoot = ({
         },
     });
 
-    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
+    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount, close: handleClose }), [
+        handleUnmount,
+        handleClose,
+    ]);
 
     const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
         setOpen(open);
@@ -274,7 +282,9 @@ SheetDescription.displayName = 'Sheet.Description';
 export namespace SheetRoot {
     type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
     export interface Props extends RootPrimitiveProps {}
+
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
+    export type Actions = BaseDialog.Root.Actions;
 }
 
 export namespace SheetTrigger {

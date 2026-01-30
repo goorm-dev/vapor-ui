@@ -2,7 +2,8 @@
 
 import { forwardRef } from 'react';
 
-import { Radio as BaseRadio, useRender } from '@base-ui-components/react';
+import { Radio as BaseRadio } from '@base-ui/react/radio';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';
@@ -21,7 +22,7 @@ import * as styles from './radio.css';
 
 type RadioVariants = RootVariants;
 
-export const RadioRoot = forwardRef<HTMLButtonElement, RadioRoot.Props>((props, ref) => {
+export const RadioRoot = forwardRef<HTMLSpanElement, RadioRoot.Props>((props, ref) => {
     const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
     const { size: contextSize, invalid: contextInvalid } = useRadioGroupContext();
 
@@ -81,7 +82,6 @@ RadioIndicatorPrimitive.displayName = 'Radio.IndicatorPrimitive';
 
 export namespace RadioRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-
     export interface Props extends RootPrimitiveProps, RadioVariants {}
 }
 
