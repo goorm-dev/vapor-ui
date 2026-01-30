@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, NavigationMenu, Text } from '@vapor-ui/core';
@@ -124,11 +123,6 @@ const MobileNavigation = () => {
 
 export const SiteNavBar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -146,10 +140,10 @@ export const SiteNavBar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const headerContent = (
+    return (
         <header
-            className={`z-10 flex w-full  h-16 md:px-8 gap-v-500 items-center fixed top-0 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
-                isScrolled ? 'shadow-sm backdrop-blur-md z-20' : 'bg-transparent'
+            className={`flex w-full h-16 md:px-8 gap-v-500 items-center fixed top-0 left-0 right-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
+                isScrolled ? 'shadow-sm backdrop-blur-md' : 'bg-transparent'
             }`}
         >
             {/* Logo */}
@@ -169,14 +163,6 @@ export const SiteNavBar = () => {
             </div>
         </header>
     );
-
-    // SSR에서는 일반 렌더링, 클라이언트에서는 Portal로 body에 직접 렌더링
-    // 이렇게 하면 Sheet와 동일한 stacking context를 공유하여 z-index가 정상 작동
-    if (!mounted) {
-        return headerContent;
-    }
-
-    return createPortal(headerContent, document.body);
 };
 
 export default SiteNavBar;
