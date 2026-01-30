@@ -1,38 +1,79 @@
-import { VStack } from '@vapor-ui/core';
+import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function VStackJustify() {
     return (
-        <div className="flex gap-8">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Justify Start</h4>
-                <VStack gap="2" justifyContent="flex-start" className="h-40 bg-gray-50 p-2 rounded">
-                    <div className="bg-red-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-red-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-red-300 p-2 rounded text-sm">C</div>
-                </VStack>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">Justify Center</h4>
-                <VStack gap="2" justifyContent="center" className="h-40 bg-gray-50 p-2 rounded">
-                    <div className="bg-yellow-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-yellow-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-yellow-300 p-2 rounded text-sm">C</div>
-                </VStack>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-2">Space Between</h4>
+        <HStack gap="$400" alignItems="start">
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    flex-start
+                </Text>
                 <VStack
-                    gap="2"
-                    justifyContent="space-between"
-                    className="h-40 bg-gray-50 p-2 rounded"
+                    gap="$100"
+                    justifyContent="flex-start"
+                    height="$1600"
+                    backgroundColor="$gray-100"
+                    padding="$200"
+                    borderRadius="$200"
                 >
-                    <div className="bg-indigo-100 p-2 rounded text-sm">A</div>
-                    <div className="bg-indigo-200 p-2 rounded text-sm">B</div>
-                    <div className="bg-indigo-300 p-2 rounded text-sm">C</div>
+                    <Box backgroundColor="$red-100" padding="$200" borderRadius="$200">
+                        A
+                    </Box>
+                    <Box backgroundColor="$red-200" padding="$200" borderRadius="$200">
+                        B
+                    </Box>
+                    <Box backgroundColor="$red-300" padding="$200" borderRadius="$200">
+                        C
+                    </Box>
                 </VStack>
-            </div>
-        </div>
+            </VStack>
+
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    center
+                </Text>
+                <VStack
+                    gap="$100"
+                    justifyContent="center"
+                    height="$1600"
+                    backgroundColor="$gray-100"
+                    padding="$200"
+                    borderRadius="$200"
+                >
+                    <Box backgroundColor="$yellow-100" padding="$200" borderRadius="$200">
+                        A
+                    </Box>
+                    <Box backgroundColor="$yellow-200" padding="$200" borderRadius="$200">
+                        B
+                    </Box>
+                    <Box backgroundColor="$yellow-300" padding="$200" borderRadius="$200">
+                        C
+                    </Box>
+                </VStack>
+            </VStack>
+
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    space-between
+                </Text>
+                <VStack
+                    gap="$100"
+                    justifyContent="space-between"
+                    height="$1600"
+                    backgroundColor="$gray-100"
+                    padding="$200"
+                    borderRadius="$200"
+                >
+                    <Box backgroundColor="$indigo-100" padding="$200" borderRadius="$200">
+                        A
+                    </Box>
+                    <Box backgroundColor="$indigo-200" padding="$200" borderRadius="$200">
+                        B
+                    </Box>
+                    <Box backgroundColor="$indigo-300" padding="$200" borderRadius="$200">
+                        C
+                    </Box>
+                </VStack>
+            </VStack>
+        </HStack>
     );
 }

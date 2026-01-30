@@ -1,4 +1,4 @@
-import { Select, VStack } from '@vapor-ui/core';
+import { Select, Text, VStack } from '@vapor-ui/core';
 
 const fonts = [
     { label: 'Sans-serif', value: 'sans' },
@@ -18,8 +18,10 @@ const languages = {
 export default function SelectItems() {
     return (
         <VStack gap="$300" width="400px">
-            <VStack>
-                <h4 className="text-sm font-medium mb-2">배열 형태의 아이템</h4>
+            <VStack gap="$050">
+                <Text typography="body3" foreground="hint-100">
+                    배열 형태의 아이템
+                </Text>
                 <Select.Root placeholder="폰트 선택" items={fonts}>
                     <Select.Trigger />
                     <Select.Popup>
@@ -35,8 +37,10 @@ export default function SelectItems() {
                 </Select.Root>
             </VStack>
 
-            <VStack>
-                <h4 className="text-sm font-medium mb-2">객체 형태의 아이템</h4>
+            <VStack gap="$050">
+                <Text typography="body3" foreground="hint-100">
+                    객체 형태의 아이템
+                </Text>
                 <Select.Root placeholder="언어 선택" items={languages}>
                     <Select.Trigger />
                     <Select.Popup>

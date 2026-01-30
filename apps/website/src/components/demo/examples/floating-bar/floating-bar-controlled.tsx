@@ -19,7 +19,7 @@ const options = [
     { id: 'item3', label: 'Third Item', defaultChecked: false },
 ];
 
-export default function Controlled() {
+export default function FloatingBarControlled() {
     const [selectedItems, setSelectedItems] = useState(() =>
         Object.fromEntries(options.map((option) => [option.id, option.defaultChecked])),
     );

@@ -1,9 +1,9 @@
-import { Button } from '@vapor-ui/core';
+import { Button, HStack } from '@vapor-ui/core';
 import { CheckCircleIcon, ChevronRightOutlineIcon } from '@vapor-ui/icons';
 
 export default function ButtonWithIcon() {
     return (
-        <div className="flex items-center gap-2">
+        <HStack gap="$100">
             <Button>
                 <CheckCircleIcon />
                 Complete
@@ -12,6 +12,6 @@ export default function ButtonWithIcon() {
                 Next
                 <ChevronRightOutlineIcon />
             </Button>
-        </div>
+        </HStack>
     );
 }

@@ -1,13 +1,33 @@
-import { Flex, Select } from '@vapor-ui/core';
+import { HStack, Select, Text, VStack } from '@vapor-ui/core';
 
 export default function SelectSize() {
     return (
-        <Flex maxWidth="800px" width="100%" gap="$250">
-            <SelectTemplate placeholder="Small" size="sm" />
-            <SelectTemplate placeholder="Medium" size="md" />
-            <SelectTemplate placeholder="Large" size="lg" />
-            <SelectTemplate placeholder="Extra Large" size="xl" />
-        </Flex>
+        <VStack gap="$150">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-8" typography="body3" foreground="hint-100">
+                    sm
+                </Text>
+                <SelectTemplate placeholder="Small" size="sm" />
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-8" typography="body3" foreground="hint-100">
+                    md
+                </Text>
+                <SelectTemplate placeholder="Medium" size="md" />
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-8" typography="body3" foreground="hint-100">
+                    lg
+                </Text>
+                <SelectTemplate placeholder="Large" size="lg" />
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-8" typography="body3" foreground="hint-100">
+                    xl
+                </Text>
+                <SelectTemplate placeholder="Extra Large" size="xl" />
+            </HStack>
+        </VStack>
     );
 }
 

@@ -3,11 +3,11 @@ title: Design Principles
 description: Vapor UI의 컴포넌트 아키텍처와 개발 철학을 이끄는 핵심 디자인 원칙
 ---
 
-Vapor UI는 합성, 접근성, 일관성, 개발자 경험을 우선시하는 6가지 기본 디자인 원칙을 따르면서 유연한 커스터마이징 기능을 유지합니다.
+이 문서에서는 Vapor UI의 설계 철학과 6가지 핵심 원칙을 설명합니다. 이 원칙들을 이해하면 컴포넌트를 더 효과적으로 활용할 수 있습니다.
 
 ## 1. Preset 기반의 컴파운드 패턴
 
-Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 패턴**을 채택합니다. 빠른 구현을 위한 **Preset 컴포넌트**와 완전한 커스터마이징 제어를 위한 **Primitive 컴포넌트**를 함께 제공합니다.
+Vapor UI는 합성 컴포넌트 패턴을 채택하여 편의성과 유연성을 함께 제공합니다. 빠른 구현이 필요할 때는 Preset 컴포넌트를, 세밀한 제어가 필요할 때는 Primitive 컴포넌트를 사용합니다.
 
 ```tsx
 // Preset 패턴 (빠르고 간편)
@@ -27,21 +27,21 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 </Popover.Root>
 ```
 
-이러한 이중 접근법을 통해 개발자는 다음과 같은 이점을 얻을 수 있습니다:
+이 접근법의 장점은 다음과 같습니다.
 
-- **빠른 시작** - 바로 사용 가능한 preset 컴포넌트로 즉시 구현
-- **깊은 확장** - 커스텀 동작이 필요할 때 primitive 컴포넌트 활용
-- **혼합 사용** - 동일한 애플리케이션 내에서 두 패턴을 모두 사용
+- **빠른 시작**: Preset 컴포넌트로 즉시 구현할 수 있습니다.
+- **세밀한 제어**: Primitive 컴포넌트로 커스텀 동작을 구현할 수 있습니다.
+- **혼합 사용**: 같은 애플리케이션에서 두 패턴을 함께 사용할 수 있습니다.
 
 ## 2. 접근성
 
-포괄적인 [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA 준수와 [키보드 네비게이션](https://www.w3.org/TR/WCAG22/#keyboard-accessible), [포커스 형태](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance) 등의 접근성 향상을 위해 [Base UI](https://base-ui.com/react/overview/quick-start)를 기반으로 구축되었습니다.
+Vapor UI는 [Base UI](https://base-ui.com/react/overview/quick-start)를 기반으로 [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA를 준수합니다. [키보드 네비게이션](https://www.w3.org/TR/WCAG22/#keyboard-accessible)과 [포커스 표시](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance)를 기본으로 지원합니다.
 
-### 포괄적인 접근성 기능
+### 접근성 기능
 
-- **Base UI 통합** — 자동 ARIA 속성, 키보드 내비게이션, 스크린 리더 지원
-- **색상 대비 준수** — 자체 개발한 Color Generator가 WCAG AA/AAA 대비 비율을 보장
-- **수학적 디자인 토큰** — 일관된 시각적 위계를 위해 수학적 비율로 생성된 디자인 토큰
+- **Base UI 통합**: ARIA 속성, 키보드 내비게이션, 스크린 리더를 자동으로 지원합니다.
+- **색상 대비 준수**: 자체 개발한 Color Generator가 WCAG AA/AAA 대비 비율을 보장합니다.
+- **수학적 디자인 토큰**: 일관된 시각적 위계를 위해 수학적 비율로 생성된 토큰을 사용합니다.
 
 ```tsx
 // 적절한 ARIA 속성과 키보드 처리가 자동으로 포함됨
@@ -61,7 +61,7 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 
 ### Color Generator 시스템
 
-내부 Color Generator가 지각적 색상 모델을 사용하여 접근성 있는 색상 팔레트를 생성합니다:
+Color Generator는 지각적 색상 모델을 사용하여 접근성을 충족하는 색상 팔레트를 생성합니다.
 
 ```tsx
 // 색상이 자동으로 대비 요구사항을 충족함
@@ -72,10 +72,10 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 
 ## 3. 일관된 네이밍 규칙
 
-모든 컴포넌트는 예측 가능하고 직관적인 사용 경험을 제공하기 위해 일관된 네이밍 규칙을 따릅니다.
+모든 컴포넌트는 일관된 네이밍 규칙을 따릅니다. 이 규칙을 통해 컴포넌트 사용법을 예측할 수 있습니다.
 
-- 독립 컴포넌트: 단일 이름
-- 합성 컴포넌트: Dot Notation 표기법
+- **독립 컴포넌트**: 단일 이름을 사용합니다.
+- **합성 컴포넌트**: Dot Notation 표기법을 사용합니다.
 
 ```tsx
 // 단일 컴포넌트
@@ -109,9 +109,9 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 </Select.Root>
 ```
 
-## 4. 예측 가능한 명명 규칙
+## 4. 예측 가능한 속성 명명
 
-컴포넌트의 속성은 최대한의 예측 가능성을 위해 **시각적 옵션**과 **논리적 상태**를 기반으로 한 체계적 규칙을 따릅니다.
+컴포넌트 속성은 시각적 옵션과 논리적 상태를 기반으로 체계적인 규칙을 따릅니다.
 
 ### 시각적 옵션
 
@@ -140,9 +140,9 @@ Vapor UI는 편의성과 유연성을 모두 제공하는 **합성 컴포넌트 
 <Switch.Root readOnly />  // 읽기 전용 상태
 ```
 
-## 5. 완전한 TypeScript 통합
+## 5. TypeScript 통합
 
-Vapor UI는 완전한 타입 안전성, 지능적인 IntelliSense, 컴파일 타임 오류 검출을 제공하는 **포괄적인 TypeScript 지원**을 제공합니다.
+모든 컴포넌트는 TypeScript를 완벽하게 지원합니다. 타입 안전성, IntelliSense 자동 완성, 컴파일 타임 오류 검출을 활용할 수 있습니다.
 
 ```tsx
 import { Button } from '@vapor-ui/core';
@@ -162,7 +162,7 @@ const CustomButton = ({ colorPalette, size, ...props }: Button.Props) => {
 
 ## 6. Cascade Layer 아키텍처
 
-Vapor UI는 CSS Cascade Layer를 사용하여 스타일 충돌을 방지합니다:
+Vapor UI는 CSS Cascade Layer를 사용하여 스타일 충돌을 방지합니다.
 
 ```css
 @layer vapor, components;

@@ -1,41 +1,36 @@
+<p>
+  <a href="https://www.npmjs.com/package/@vapor-ui/codemod">
+    <img src="https://img.shields.io/npm/v/@vapor-ui/codemod.svg" alt="npm version">
+  </a>
+</p>
+
 # @vapor-ui/codemod
 
-Automated code migration tools for Vapor UI using jscodeshift.
-This package helps you upgrade your codebase when Vapor UI components have breaking changes.
+Automated code migration tools for safe Vapor UI component updates.
 
-> **Note:**
->
-> As there is no official major version of Vapor UI yet, this package currently only provides the codemods that were used internally for component migration.
->
-> Codemods to assist with migration **will be added in the future if breaking changes occur** in subsequent Vapor UI versions.
+## Why?
 
-## Usage
+This tool helps you safely upgrade your Vapor UI codebase when components have breaking changes. Built on jscodeshift, it handles complex restructuring including component renames, prop migrations, and import path updates.
 
-```bash
-npx @vapor-ui/codemod <transform> <path> [...options]
-```
-
-### Options
-
-- `--force` Bypass Git safety checks and forcibly run codemods
-- `--parser` Specify the parser to be used. One of: babel | babylon | flow | ts | tsx.
-  Default is tsx.
-- `--extensions` Comma-separated list of file extensions to transform.
-  Default is tsx,ts,jsx,js
-  `--dry` (Advanced) Dry run. Changes are not written to files.
-- `--jscodeshift` (Advanced) Pass options directly to jscodeshift.
-  [See more options](https://jscodeshift.com/run/cli)
-
-## Available Transforms
-
-| You can run the command without specifying a transform to be prompted with an interactive list. This allows you to see all available options and choose the one you need.
-
-### For internal
-
-#### `internal/icons/migrate-icons-import`
-
-Converts `@goorm-dev/vapor-icons` import to `@vapor-ui/icons` import.
+## Installation
 
 ```sh
-npx @vapor-ui/codemod internal/icons/migrate-icons-import src
+# Recommended: use via npx (no installation needed)
+npx @vapor-ui/codemod
+
+# Or install globally
+# pnpm
+pnpm add -g @vapor-ui/codemod
+
+# npm
+npm install -g @vapor-ui/codemod
+
+# yarn
+yarn global add @vapor-ui/codemod
 ```
+
+> For detailed usage instructions, please refer to the [official documentation](https://vapor-ui.goorm.io/docs/getting-started/codemod).
+
+## License
+
+MIT License © 2025 goorm, Inc
