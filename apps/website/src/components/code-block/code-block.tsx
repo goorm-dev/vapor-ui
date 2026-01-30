@@ -12,13 +12,7 @@ export const CodeBlock = ({
     className?: string;
 }) => {
     return (
-        <FDCodeBlock
-            className={clsx(
-                'm-0 border-0 rounded-none rounded-b-v-300 bg-v-normal-darker',
-                className,
-            )}
-            {...props}
-        >
+        <FDCodeBlock className={clsx('bg-v-canvas-200', className)} {...props}>
             {children}
         </FDCodeBlock>
     );
