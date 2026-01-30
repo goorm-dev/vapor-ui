@@ -36,7 +36,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
     React.useEffect(() => {
         const loadComponentData = async () => {
             try {
-                const response = await fetch(`/components/generated/${componentName}.json`);
+                const response = await fetch(`/components/generated/en/${componentName}.json`);
                 if (!response.ok) {
                     throw new Error(`Failed to load component data for ${componentName}`);
                 }
