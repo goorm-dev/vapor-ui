@@ -1,20 +1,32 @@
-import { Grid, Textarea } from '@vapor-ui/core';
+import { HStack, Text, Textarea, VStack } from '@vapor-ui/core';
 
 export default function TextareaStates() {
     return (
-        <Grid.Root templateColumns="1" gap="$100">
-            <Grid.Item>
-                <Textarea placeholder="Default state" />
-            </Grid.Item>
-            <Grid.Item>
-                <Textarea disabled placeholder="Disabled state" />
-            </Grid.Item>
-            <Grid.Item>
-                <Textarea invalid placeholder="Invalid state" />
-            </Grid.Item>
-            <Grid.Item>
+        <VStack gap="$150">
+            <HStack gap="$150" alignItems="start">
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    default
+                </Text>
+                <Textarea placeholder="Enter text" />
+            </HStack>
+            <HStack gap="$150" alignItems="start">
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    disabled
+                </Text>
+                <Textarea disabled placeholder="Disabled" />
+            </HStack>
+            <HStack gap="$150" alignItems="start">
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    invalid
+                </Text>
+                <Textarea invalid placeholder="Invalid" />
+            </HStack>
+            <HStack gap="$150" alignItems="start">
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    readOnly
+                </Text>
                 <Textarea readOnly defaultValue="Read only content" />
-            </Grid.Item>
-        </Grid.Root>
+            </HStack>
+        </VStack>
     );
 }

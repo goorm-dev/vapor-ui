@@ -1,29 +1,44 @@
-import { Box } from '@vapor-ui/core';
+import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function BoxSpacing() {
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
+        <VStack gap="$200">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-28" typography="body3" foreground="hint-100">
+                    padding
+                </Text>
                 <Box padding="$400" backgroundColor="$blue-200" borderRadius="$200">
-                    Padding
+                    Content with padding
                 </Box>
-            </div>
+            </HStack>
 
-            <div className="flex items-center gap-4">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-28" typography="body3" foreground="hint-100">
+                    margin
+                </Text>
                 <Box margin="$400" padding="$300" backgroundColor="$green-200" borderRadius="$200">
-                    Margin
+                    Content with margin
                 </Box>
-            </div>
+            </HStack>
 
-            <div className="flex items-center gap-4">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-28" typography="body3" foreground="hint-100">
+                    paddingX/Y
+                </Text>
                 <Box
                     paddingX="$500"
                     paddingY="$200"
                     backgroundColor="$grape-100"
                     borderRadius="$200"
                 >
-                    Horizontal Padding
+                    Horizontal padding
                 </Box>
+            </HStack>
+
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-28" typography="body3" foreground="hint-100">
+                    marginX/Y
+                </Text>
                 <Box
                     marginX="$300"
                     marginY="$100"
@@ -31,9 +46,9 @@ export default function BoxSpacing() {
                     backgroundColor="$grape-200"
                     borderRadius="$200"
                 >
-                    Asymmetric Margins
+                    Asymmetric margins
                 </Box>
-            </div>
-        </div>
+            </HStack>
+        </VStack>
     );
 }

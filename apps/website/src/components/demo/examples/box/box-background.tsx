@@ -1,8 +1,8 @@
-import { Box } from '@vapor-ui/core';
+import { Box, HStack } from '@vapor-ui/core';
 
 export default function BoxBackground() {
     return (
-        <div className="flex flex-wrap items-center gap-4">
+        <HStack gap="$200" className="flex-wrap">
             <Box padding="$400" backgroundColor="$primary-200" color="$primary-100">
                 Primary
             </Box>
@@ -19,14 +19,14 @@ export default function BoxBackground() {
                 Danger
             </Box>
             <Box padding="$400" backgroundColor="$gray-200" color="$primary-100">
-                Gray 200
+                Gray
             </Box>
             <Box padding="$400" backgroundColor="$blue-500" color="$contrast-100">
-                Blue 500
+                Blue
             </Box>
             <Box padding="$400" backgroundColor="$green-300" color="$primary-100">
-                Green 300
+                Green
             </Box>
-        </div>
+        </HStack>
     );
 }

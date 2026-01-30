@@ -67,7 +67,7 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
     const shouldShowDeviceToggle = selectedTab === TAB_TYPES['PREVIEW'] && showResponsiveToggle;
 
     return (
-        <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-t-v-300">
+        <Card.Header className="p-0 border-b-0 pt-v-50 bg-v-canvas-100 rounded-t-v-300 relative z-10">
             <Box
                 display="flex"
                 justifyContent="space-between"
@@ -75,15 +75,9 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
                 gap="$050"
                 height={'$500'}
                 width="100%"
-                paddingX="$300"
+                paddingBottom="$050"
             >
-                <Tabs.List
-                    width="100%"
-                    indicatorElement={
-                        <Tabs.IndicatorPrimitive renderBeforeHydration className="left-0" />
-                    }
-                    border="none"
-                >
+                <Tabs.List width="100%" paddingX="$300">
                     {Object.values(TAB_TYPES).map((tab) => (
                         <Tabs.Button key={tab} value={tab}>
                             {tab}
@@ -158,7 +152,7 @@ const DemoContent = ({
                     onDeviceChange={onDeviceChange}
                 />
 
-                <Card.Body className="p-0 bg-v-canvas rounded-b-v-300">
+                <Card.Body className="p-0 bg-v-canvas rounded-b-v-300 overflow-hidden">
                     <Tabs.Panel value={TAB_TYPES['PREVIEW']} className="rounded-t-none" keepMounted>
                         <DemoPreviewPanel
                             name={name}
@@ -168,7 +162,7 @@ const DemoContent = ({
                     </Tabs.Panel>
                     <Tabs.Panel
                         value="Code"
-                        className="flex flex-col gap-v-250 rounded-t-none rounded-b-v-300 bg-v-normal"
+                        className="flex flex-col gap-v-250 rounded-t-none rounded-b-v-300 bg-v-normal [&>figure]:m-0 [&>figure]:border-0 [&>figure]:rounded-none [&>figure:last-child]:rounded-b-v-300"
                     >
                         {children}
                     </Tabs.Panel>

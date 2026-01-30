@@ -4,40 +4,36 @@ import { Checkbox, Field, Select, Switch, TextInput, VStack } from '@vapor-ui/co
 
 export default function FieldWithInputs() {
     return (
-        <VStack gap="$200" width="300px">
+        <VStack gap="$300" className="w-72">
             <Field.Root name="email">
-                <Field.Label flexDirection="column">
-                    이메일
-                    <TextInput type="email" placeholder="example@domain.com" />
+                <Field.Label flexDirection="column" gap="$050">
+                    Email
+                    <TextInput type="email" placeholder="you@example.com" />
                 </Field.Label>
-                <Field.Description>알림을 받을 이메일 주소를 입력하세요.</Field.Description>
-                <Field.Error match="typeMismatch">유효한 이메일 주소를 입력해주세요.</Field.Error>
+                <Field.Description>Your primary contact email.</Field.Description>
             </Field.Root>
 
-            {/* Checkbox with Field */}
             <Field.Root name="newsletter">
-                <Field.Item alignItems="center">
+                <Field.Label flexDirection="row" gap="$100" alignItems="center">
                     <Checkbox.Root />
-                    <Field.Label>뉴스레터 구독</Field.Label>
-                </Field.Item>
-                <Field.Description>최신 소식과 업데이트를 이메일로 받아보세요.</Field.Description>
+                    Subscribe to newsletter
+                </Field.Label>
+                <Field.Description>Get the latest updates in your inbox.</Field.Description>
             </Field.Root>
 
-            {/* Switch with Field */}
             <Field.Root name="notifications">
-                <Field.Item alignItems="center">
+                <Field.Label flexDirection="row" gap="$100" alignItems="center">
                     <Switch.Root />
-                    <Field.Label>푸시 알림</Field.Label>
-                </Field.Item>
-                <Field.Description>중요한 알림을 즉시 받아보세요.</Field.Description>
+                    Push notifications
+                </Field.Label>
+                <Field.Description>Receive alerts on your device.</Field.Description>
             </Field.Root>
 
-            {/* Select with Field */}
             <Field.Root name="country">
                 <Select.Root placeholder="국가를 선택하세요" items={countries}>
-                    <Field.Label htmlFor="country-select" flexDirection="column">
+                    <Field.Label flexDirection="column" gap="$050">
                         국가
-                        <Select.Trigger id="country-select" />
+                        <Select.Trigger />
                     </Field.Label>
                     <Select.Popup>
                         {countries.map((country) => (
@@ -47,7 +43,7 @@ export default function FieldWithInputs() {
                         ))}
                     </Select.Popup>
                 </Select.Root>
-                <Field.Description>거주 중인 국가를 선택하세요.</Field.Description>
+                <Field.Description>Select your country of residence.</Field.Description>
             </Field.Root>
         </VStack>
     );
