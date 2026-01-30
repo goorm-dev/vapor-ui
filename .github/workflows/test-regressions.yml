@@ -2,6 +2,11 @@ name: 'Visual Regression'
 
 on:
     workflow_dispatch:
+        inputs:
+            components:
+                description: 'Comma-separated component names to test (empty = auto-detect)'
+                required: false
+                type: string
     pull_request:
         types:
             - opened
@@ -19,13 +24,76 @@ env:
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
     REPORT_PATH: ''
+    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
     cancel-in-progress: true
 
 jobs:
+    detect-changes:
+        runs-on: ubuntu-latest
+        outputs:
+            affected_components: ${{ steps.detect.outputs.components }}
+            should_run_all: ${{ steps.detect.outputs.run_all }}
+            skip_tests: ${{ steps.detect.outputs.skip }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Detect affected components
+              id: detect
+              run: |
+                  # Use manual input if provided
+                  if [ -n "${{ github.event.inputs.components }}" ]; then
+                      echo "components=${{ github.event.inputs.components }}" >> $GITHUB_OUTPUT
+                      echo "run_all=false" >> $GITHUB_OUTPUT
+                      echo "skip=false" >> $GITHUB_OUTPUT
+                      exit 0
+                  fi
+
+                  chmod +x ./scripts/detect-affected-components.sh
+                  RESULT=$(./scripts/detect-affected-components.sh)
+                  echo "Detected components: $RESULT"
+                  echo "components=$RESULT" >> $GITHUB_OUTPUT
+
+                  if echo "$RESULT" | grep -q "ALL"; then
+                      echo "run_all=true" >> $GITHUB_OUTPUT
+                  else
+                      echo "run_all=false" >> $GITHUB_OUTPUT
+                  fi
+
+                  if [ -z "$RESULT" ] || [ "$RESULT" = "NONE" ]; then
+                      echo "skip=true" >> $GITHUB_OUTPUT
+                  else
+                      echo "skip=false" >> $GITHUB_OUTPUT
+                  fi
+
+    build-storybook:
+        needs: detect-changes
+        if: needs.detect-changes.outputs.skip_tests != 'true'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              uses: ./.github/composite/install
+
+            - name: Build Storybook (with Turbo cache)
+              run: pnpm turbo build:storybook
+
+            - name: Upload storybook-static
+              uses: actions/upload-artifact@v4
+              with:
+                  name: storybook-static
+                  path: apps/storybook/storybook-static
+                  retention-days: 1
+
     test:
+        needs: [detect-changes, build-storybook]
+        if: needs.detect-changes.outputs.skip_tests != 'true'
         runs-on: macos-latest
         strategy:
             fail-fast: false
@@ -47,14 +115,25 @@ jobs:
             - name: Install Dependencies
               uses: ./.github/composite/install
 
+            - name: Download storybook-static
+              uses: actions/download-artifact@v4
+              with:
+                  name: storybook-static
+                  path: apps/storybook/storybook-static
+
             - name: Install Playwright Browsers
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
-            - name: Build Icons
-              run: pnpm turbo --filter @vapor-ui/icons build
-
             - name: Run Playwright tests
-              run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
+              env:
+                  COMPONENT: ${{ needs.detect-changes.outputs.should_run_all == 'true' && '' || needs.detect-changes.outputs.affected_components }}
+              run: |
+                  if [ -n "$COMPONENT" ]; then
+                      echo "Running tests for components: $COMPONENT"
+                  else
+                      echo "Running all tests"
+                  fi
+                  pnpm test:regressions -- --project="${{ matrix.shard.name }}"
 
             - name: Upload blob report to GitHub Actions Artifacts
               if: ${{ !cancelled() }}
@@ -65,8 +144,8 @@ jobs:
                   retention-days: 1
 
     merge-reports:
-        if: ${{ !cancelled() }}
-        needs: [test]
+        if: ${{ !cancelled() && needs.build-storybook.result != 'skipped' }}
+        needs: [detect-changes, build-storybook, test]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -118,7 +197,7 @@ jobs:
                   # Extract passed count
                   PASSED=$(echo "$SUMMARY" | grep -oE '\*\*[0-9]+ passed\*\*' | grep -oE '[0-9]+' || echo "0")
 
-                  # Extract failed count  
+                  # Extract failed count
                   FAILED=$(echo "$SUMMARY" | grep -oE '\*\*[0-9]+ failed\*\*' | grep -oE '[0-9]+' || echo "0")
 
                   # Calculate total
@@ -141,10 +220,24 @@ jobs:
                   echo "total=$TOTAL" >> $GITHUB_OUTPUT
                   echo "duration=$DURATION" >> $GITHUB_OUTPUT
 
+            - name: Generate comment message
+              id: comment-message
+              run: |
+                  COMPONENTS="${{ needs.detect-changes.outputs.affected_components }}"
+                  RUN_ALL="${{ needs.detect-changes.outputs.should_run_all }}"
+
+                  if [ "$RUN_ALL" = "true" ] || [ -z "$COMPONENTS" ]; then
+                      echo "scope=All components" >> $GITHUB_OUTPUT
+                  else
+                      echo "scope=$COMPONENTS" >> $GITHUB_OUTPUT
+                  fi
+
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
                       ${{ contains(needs.test.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+
+                      **Tested:** ${{ steps.comment-message.outputs.scope }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |

@@ -17,13 +17,27 @@
         },
         "typecheck": { "dependsOn": ["^build"] },
         "test": { "outputs": [], "dependsOn": ["^build"] },
-        "test:regressions": { "dependsOn": ["storybook#build:storybook"] },
+        "test:regressions": {
+            "dependsOn": ["storybook#build:storybook"],
+            "cache": false
+        },
         "lint": { "outputs": [] },
         "format": { "outputs": [], "cache": false },
         "format:check": { "outputs": [] },
         "clean": { "cache": false },
-        "build:storybook": {}
+        "build:storybook": {
+            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
+            "inputs": [
+                "packages/core/src/**/*.tsx",
+                "packages/core/src/**/*.ts",
+                "packages/core/src/**/*.css.ts",
+                "apps/storybook/**/*.tsx",
+                "apps/storybook/**/*.ts",
+                "apps/storybook/.storybook/**"
+            ],
+            "outputs": ["apps/storybook/storybook-static/**"]
+        }
     },
-    "globalEnv": ["NODE_ENV", "CI", "TEST_URL", "PORT", "npm_lifecycle_event"],
+    "globalEnv": ["NODE_ENV", "CI", "TEST_URL", "PORT", "npm_lifecycle_event", "COMPONENT"],
     "globalPassThroughEnv": ["FIGMA_API_KEY"]
 }
