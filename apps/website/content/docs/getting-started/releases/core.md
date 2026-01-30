@@ -5,6 +5,64 @@ description: '@vapor-ui/core 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/core
 
+## 1.0.0
+
+### Dialog
+
+- fix(dialog): correct ReactElement type parameters in DialogPopup props ([#438](https://github.com/goorm-dev/vapor-ui/pull/438)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    Fixed incorrect type parameters for `portalElement` and `overlayElement` in `DialogPopup.Props` from `typeof Component` to `Component.Props`.
+
+### Eslint Plugin Vapor
+
+- remove typescript error for aria-label, alt ([#457](https://github.com/goorm-dev/vapor-ui/pull/457)) - Thanks [@noahchoii](https://github.com/noahchoii)!
+
+### Floatingbar
+
+- feat(FloatingBar): export `EventDetails` type ([#437](https://github.com/goorm-dev/vapor-ui/pull/437)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    Export `ChangeEventDetails` type from `FloatingBarRoot` namespace for docs-extractor compatibility.
+
+### Radio Card
+
+- removed the size prop from the RadioCard component and simplified its styling by removing typography mixins ([#442](https://github.com/goorm-dev/vapor-ui/pull/442)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+### Tabs
+
+- fix(tabs): correct indicator position when list has padding ([#434](https://github.com/goorm-dev/vapor-ui/pull/434)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    Fix indicator positioning issue when Tabs.List has padding-inline (horizontal) or padding-block (vertical). The indicator now correctly positions itself by explicitly setting `left: 0` (horizontal) or `top: 0` (vertical), ensuring it uses only the CSS variables for positioning regardless of padding.
+
+### Etc.
+
+- Migrate to Base UI v1.1.0 ([#453](https://github.com/goorm-dev/vapor-ui/pull/453)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+    ### Breaking Changes
+    - **Checkbox/Switch/Radio**: Root element changed from `HTMLButtonElement` to `HTMLSpanElement`
+    - **Tabs.Root**: `loop` prop renamed to `loopFocus`
+    - **Tooltip.Root**: `hoverable` prop renamed to `disableHoverablePopup` (logic inverted)
+    - **Tooltip**: `delay`, `closeDelay` props moved from `Tooltip.Root` to `Tooltip.Trigger`
+    - **Popover**: `openOnHover`, `delay`, `closeDelay` props moved from `Popover.Root` to `Popover.Trigger`
+    - **Menu**: `openOnHover`, `delay`, `closeDelay` props moved from `Menu.Root` to `Menu.Trigger`
+    - **Form**: `onClearErrors` prop removed (now auto-handled internally)
+    - **NavigationMenu.Link**: `selected` prop renamed to `current` (for Breadcrumb API consistency)
+    - **Field**: `validationMode` default changed from `onBlur` to `onSubmit`
+    - **Tabs**: `activateOnFocus` default changed from `true` to `false`
+    - **CSS**: `data-selected` attribute changed to `data-active` in Tabs and NavigationMenu
+
+    ### New Features
+    - **Field.Item**: New component added for improved accessibility when using Checkbox, Radio, Switch with Field
+
+- Updated internal utilities to use official @base-ui/utils package (v0.2.4) ([#443](https://github.com/goorm-dev/vapor-ui/pull/443)) - Thanks [@ZeroChoi2781](https://github.com/ZeroChoi2781)!
+
+- fix: prevent passing props to Fragment in `createRender` ([#403](https://github.com/goorm-dev/vapor-ui/pull/403)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    Fixed React warning `Invalid prop 'ref' supplied to 'React.Fragment'` by wrapping Fragment returns in a render callback to avoid `cloneElement` props merging.
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.0.0
+
 ## 1.0.0-beta.12
 
 ### Button
