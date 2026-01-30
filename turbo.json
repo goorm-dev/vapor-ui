@@ -27,15 +27,8 @@
         "clean": { "cache": false },
         "build:storybook": {
             "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
-            "inputs": [
-                "packages/core/src/**/*.tsx",
-                "packages/core/src/**/*.ts",
-                "packages/core/src/**/*.css.ts",
-                "apps/storybook/**/*.tsx",
-                "apps/storybook/**/*.ts",
-                "apps/storybook/.storybook/**"
-            ],
-            "outputs": ["apps/storybook/storybook-static/**"]
+            "inputs": ["$TURBO_DEFAULT$"],
+            "outputs": ["storybook-static/**"]
         }
     },
     "globalEnv": [
