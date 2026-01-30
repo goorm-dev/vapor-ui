@@ -1,4 +1,3 @@
-// Test change for visual regression caching optimization
 import { forwardRef } from 'react';
 
 import { useRender } from '@base-ui/react/use-render';

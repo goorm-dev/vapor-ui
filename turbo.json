@@ -38,6 +38,14 @@
             "outputs": ["apps/storybook/storybook-static/**"]
         }
     },
-    "globalEnv": ["NODE_ENV", "CI", "TEST_URL", "PORT", "npm_lifecycle_event", "COMPONENT"],
+    "globalEnv": [
+        "NODE_ENV",
+        "CI",
+        "TEST_URL",
+        "PORT",
+        "npm_lifecycle_event",
+        "COMPONENT",
+        "STORYBOOK_SKIP_DOCGEN"
+    ],
     "globalPassThroughEnv": ["FIGMA_API_KEY"]
 }
