@@ -12,6 +12,11 @@ const config = {
                 destination: '/theme/playground',
                 permanent: true,
             },
+            {
+                source: '/docs/getting-started/theming',
+                destination: '/theme/theme-provider',
+                permanent: true,
+            },
         ];
     },
     async rewrites() {
