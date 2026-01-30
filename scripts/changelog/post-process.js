@@ -168,13 +168,14 @@ function postProcessChangelog(changelogContent) {
     if (!parsed) return changelogContent;
 
     const { preamble: packageName, header, content, rest } = parsed;
-    const { groupedEntries, otherEntries } = processVersionContent(content);
+    const { groupedEntries, otherEntries, updatedDependencies } = processVersionContent(content);
 
     return reconstructChangelog({
         packageName,
         versionHeader: header,
         groupedEntries,
         otherEntries,
+        updatedDependencies,
         afterTargetVersion: rest,
     });
 }
@@ -232,7 +233,7 @@ function processVersionContent(versionContent) {
             commitBuffer();
             const [, rawScope] = isScope;
 
-            currentScope = rawScope === 'etc' ? null : titleCase(rawScope);
+            currentScope = rawScope === 'Etc.' ? null : titleCase(rawScope);
             currentBuffer.push(line.replace(/^\s*\[SCOPE:[^\]]+\]\s*/, ''));
 
             return;
@@ -246,6 +247,7 @@ function processVersionContent(versionContent) {
 
     const groupedEntries = {};
     const otherEntries = [];
+    const updatedDependencies = [];
 
     entries.forEach(({ scope, content }) => {
         if (!content) return;
@@ -255,11 +257,16 @@ function processVersionContent(versionContent) {
             return;
         }
 
+        if (scope === 'Updated Dependencies') {
+            updatedDependencies.push(content);
+            return;
+        }
+
         if (!groupedEntries[scope]) groupedEntries[scope] = [];
         groupedEntries[scope].push(content);
     });
 
-    return { groupedEntries, otherEntries };
+    return { groupedEntries, otherEntries, updatedDependencies };
 }
 
 /**
@@ -273,6 +280,7 @@ function reconstructChangelog({
     versionHeader,
     groupedEntries,
     otherEntries,
+    updatedDependencies,
     afterTargetVersion,
 }) {
     const parts = [];
@@ -289,16 +297,22 @@ function reconstructChangelog({
 
     // 그룹화된 엔트리들이 있는 경우
     if (Object.keys(groupedEntries).length > 0 || otherEntries.length > 0) {
-        // 스코프별 엔트리 추가 (알파벳 순으로 정렬)
+        // 1. 스코프별 엔트리 추가 (알파벳 순으로 정렬)
         Object.keys(groupedEntries)
             .sort()
             .forEach((scope) => {
                 pushEntry({ parts, title: titleCase(scope), entries: groupedEntries[scope] });
             });
 
-        // 기타 엔트리 추가
+        // 2. 기타 엔트리 추가
         if (otherEntries.length > 0) {
-            pushEntry({ parts, title: 'etc', entries: otherEntries });
+            pushEntry({ parts, title: 'Etc.', entries: otherEntries });
+        }
+
+        // 3. 업데이트된 의존성 엔트리 추가
+        if (updatedDependencies.length > 0) {
+            // const depEntries = updatedDependencies.map((depContent) => `- ${depContent}`);
+            pushEntry({ parts, title: 'Updated Dependencies', entries: updatedDependencies });
         }
     }
 

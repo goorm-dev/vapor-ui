@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Popover, useRender } from '@base-ui-components/react';
+import { Popover } from '@base-ui/react/popover';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';
@@ -124,26 +125,29 @@ FloatingBarPopup.displayName = 'FloatingBar.Popup';
 
 export namespace FloatingBarRoot {
     export type Props = Popover.Root.Props;
+
+    export type Actions = Popover.Root.Actions;
+    export type ChangeEventDetails = Popover.Root.ChangeEventDetails;
 }
 
 export namespace FloatingBarTrigger {
-    export type Props = VComponentProps<typeof Popover.Trigger>;
+    export interface Props extends VComponentProps<typeof Popover.Trigger> {}
 }
 
 export namespace FloatingBarClose {
-    export type Props = VComponentProps<typeof Popover.Close>;
+    export interface Props extends VComponentProps<typeof Popover.Close> {}
 }
 
 export namespace FloatingBarPortalPrimitive {
-    export type Props = Popover.Portal.Props;
+    export interface Props extends VComponentProps<typeof Popover.Portal> {}
 }
 
 export namespace FloatingBarPositionerPrimitive {
-    export type Props = VComponentProps<'div'>;
+    export interface Props extends VComponentProps<typeof Popover.Positioner> {}
 }
 
 export namespace FloatingBarPopupPrimitive {
-    export type Props = VComponentProps<typeof Popover.Popup>;
+    export interface Props extends VComponentProps<typeof Popover.Popup> {}
 }
 
 export namespace FloatingBarPopup {

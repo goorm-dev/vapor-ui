@@ -13,7 +13,7 @@ export default {
         orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
         disabled: { control: 'boolean' },
         activateOnFocus: { control: 'boolean' },
-        loop: { control: 'boolean' },
+        loopFocus: { control: 'boolean' },
     },
 } satisfies Meta<typeof Tabs.Root>;
 

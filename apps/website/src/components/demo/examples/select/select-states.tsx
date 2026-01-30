@@ -1,12 +1,32 @@
-import { Select, VStack } from '@vapor-ui/core';
+import { HStack, Select, Text, VStack } from '@vapor-ui/core';
 
 export default function SelectStates() {
     return (
-        <VStack gap="$200" width="400px" className="flex-wrap">
-            <SelectTemplate placeholder="기본 상태" />
-            <SelectTemplate placeholder="비활성화" disabled />
-            <SelectTemplate placeholder="읽기 전용" readOnly />
-            <SelectTemplate placeholder="오류 상태" invalid />
+        <VStack gap="$150" width="400px">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    default
+                </Text>
+                <SelectTemplate placeholder="기본 상태" />
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    disabled
+                </Text>
+                <SelectTemplate placeholder="비활성화" disabled />
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    readOnly
+                </Text>
+                <SelectTemplate placeholder="읽기 전용" readOnly />
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    invalid
+                </Text>
+                <SelectTemplate placeholder="오류 상태" invalid />
+            </HStack>
         </VStack>
     );
 }

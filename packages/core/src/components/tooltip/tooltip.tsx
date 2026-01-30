@@ -3,8 +3,8 @@
 import type { CSSProperties, ComponentProps, ReactElement } from 'react';
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
+import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { useMutationObserver } from '~/hooks/use-mutation-observer';
@@ -15,8 +15,6 @@ import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
 import * as styles from './tooltip.css';
-
-/* -----------------------------------------------------------------------------------------------*/
 
 /* -------------------------------------------------------------------------------------------------
  * Tooltip.Root
@@ -228,6 +226,8 @@ const ArrowIcon = (props: ComponentProps<'svg'>) => {
 
 export namespace TooltipRoot {
     export interface Props extends VComponentProps<typeof BaseTooltip.Root> {}
+
+    export type Actions = BaseTooltip.Root.Actions;
     export type ChangeEventDetails = BaseTooltip.Root.ChangeEventDetails;
 }
 

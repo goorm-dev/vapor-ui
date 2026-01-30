@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react/use-render';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import type { Foregrounds } from '~/styles/mixins/foreground.css';

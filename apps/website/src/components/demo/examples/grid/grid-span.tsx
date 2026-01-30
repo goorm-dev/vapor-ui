@@ -1,35 +1,127 @@
-import { Grid } from '@vapor-ui/core';
+import { Box, Grid, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function GridSpan() {
     return (
-        <div className="flex flex-wrap gap-4">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Column Span</h4>
-                <Grid.Root templateColumns="repeat(4, 1fr)" gap="2">
-                    <Grid.Item className="bg-red-100 p-2 rounded text-center">1</Grid.Item>
-                    <Grid.Item colSpan="2" className="bg-red-200 p-2 rounded text-center">
-                        Span 2
+        <HStack gap="$400" alignItems="start">
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    colSpan
+                </Text>
+                <Grid.Root templateColumns="repeat(4, 1fr)" gap="$100">
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$red-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            1
+                        </Box>
                     </Grid.Item>
-                    <Grid.Item className="bg-red-100 p-2 rounded text-center">4</Grid.Item>
-                    <Grid.Item colSpan="3" className="bg-red-200 p-2 rounded text-center">
-                        Span 3
+                    <Grid.Item colSpan="2">
+                        <Box
+                            backgroundColor="$red-200"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            Span 2
+                        </Box>
                     </Grid.Item>
-                    <Grid.Item className="bg-red-100 p-2 rounded text-center">8</Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$red-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            4
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item colSpan="3">
+                        <Box
+                            backgroundColor="$red-200"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            Span 3
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$red-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            8
+                        </Box>
+                    </Grid.Item>
                 </Grid.Root>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Row Span</h4>
-                <Grid.Root templateColumns="repeat(3, 1fr)" gap="2">
-                    <Grid.Item rowSpan="2" className="bg-teal-200 p-2 rounded text-center">
-                        Row Span 2
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    rowSpan
+                </Text>
+                <Grid.Root templateColumns="repeat(3, 1fr)" gap="$100">
+                    <Grid.Item rowSpan="2">
+                        <Box
+                            backgroundColor="$teal-200"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                            height="100%"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            Row Span 2
+                        </Box>
                     </Grid.Item>
-                    <Grid.Item className="bg-teal-100 p-2 rounded text-center">2</Grid.Item>
-                    <Grid.Item className="bg-teal-100 p-2 rounded text-center">3</Grid.Item>
-                    <Grid.Item className="bg-teal-100 p-2 rounded text-center">5</Grid.Item>
-                    <Grid.Item className="bg-teal-100 p-2 rounded text-center">6</Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$teal-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            2
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$teal-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            3
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$teal-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            5
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$teal-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            6
+                        </Box>
+                    </Grid.Item>
                 </Grid.Root>
-            </div>
-        </div>
+            </VStack>
+        </HStack>
     );
 }
