@@ -1,14 +1,44 @@
-import { Button } from '@vapor-ui/core';
+import { Button, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function ButtonColor() {
     return (
-        <div className="flex flex-wrap gap-2">
-            <Button colorPalette="primary">Primary</Button>
-            <Button colorPalette="secondary">Secondary</Button>
-            <Button colorPalette="success">Success</Button>
-            <Button colorPalette="warning">Warning</Button>
-            <Button colorPalette="danger">Danger</Button>
-            <Button colorPalette="contrast">Contrast</Button>
-        </div>
+        <VStack gap="$150">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    primary
+                </Text>
+                <Button colorPalette="primary">Save</Button>
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    secondary
+                </Text>
+                <Button colorPalette="secondary">Save</Button>
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    success
+                </Text>
+                <Button colorPalette="success">Save</Button>
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    warning
+                </Text>
+                <Button colorPalette="warning">Save</Button>
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    danger
+                </Text>
+                <Button colorPalette="danger">Save</Button>
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-20" typography="body3" foreground="hint-100">
+                    contrast
+                </Text>
+                <Button colorPalette="contrast">Save</Button>
+            </HStack>
+        </VStack>
     );
 }

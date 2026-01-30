@@ -1,6 +1,6 @@
 import { Box, Button, FloatingBar } from '@vapor-ui/core';
 
-export default function WithActions() {
+export default function FloatingBarWithActions() {
     return (
         <FloatingBar.Root>
             <FloatingBar.Trigger render={<Button />}>Open FloatingBar</FloatingBar.Trigger>

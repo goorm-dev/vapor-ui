@@ -19,25 +19,12 @@ description: 'Collapsible은 콘텐츠를 접었다 펼칠 수 있는 대화형 
 
 ### Open State
 
-Collapsible의 열림/닫힘 상태를 설정합니다.
+`defaultOpen`으로 초기 열림 상태를 설정하거나, `open`과 `onOpenChange`로 제어 모드로 사용합니다.
 
 <Demo name="collapsible/collapsible-open-state">
 ```json doc-gen:file
 {
     "file": "./src/components/demo/examples/collapsible/collapsible-open-state.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Keep Mounted
-
-패널이 닫힌 상태에서도 DOM에 유지합니다.
-
-<Demo name="collapsible/collapsible-keep-mounted">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/collapsible/collapsible-keep-mounted.tsx",
     "codeblock": true
 }
 ```
@@ -51,6 +38,19 @@ Collapsible의 비활성화 상태를 설정합니다.
 ```json doc-gen:file
 {
     "file": "./src/components/demo/examples/collapsible/collapsible-disabled.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Keep Mounted
+
+`keepMounted`를 사용하면 패널이 닫힌 상태에서도 DOM에 유지됩니다.
+
+<Demo name="collapsible/collapsible-keep-mounted">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/collapsible/collapsible-keep-mounted.tsx",
     "codeblock": true
 }
 ```
