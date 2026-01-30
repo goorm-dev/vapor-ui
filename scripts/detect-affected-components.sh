@@ -11,12 +11,6 @@ set -e
 # Default base branch
 BASE_BRANCH="${1:-origin/main}"
 
-# Get the script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Load dependency graph
-DEPENDENCY_GRAPH="$SCRIPT_DIR/dependency-graph.json"
-
 # Get changed files between base branch and HEAD
 get_changed_files() {
     git diff --name-only "$BASE_BRANCH"...HEAD 2>/dev/null || git diff --name-only "$BASE_BRANCH" HEAD
@@ -31,123 +25,129 @@ if [ -z "$CHANGED_FILES" ]; then
 fi
 
 # Check if shared files are changed (affects all components)
-SHARED_PATTERNS=(
-    "packages/core/src/styles/"
-    "packages/core/src/utils/"
-    "packages/core/src/libs/"
-    "packages/core/src/index.ts"
-    "packages/icons/src/"
-    "packages/hooks/src/"
-)
+check_shared_files() {
+    local patterns="
+        packages/core/src/styles/
+        packages/core/src/utils/
+        packages/core/src/libs/
+        packages/core/src/index.ts
+        packages/icons/src/
+        packages/hooks/src/
+        apps/storybook/.storybook/
+    "
 
-for pattern in "${SHARED_PATTERNS[@]}"; do
-    if echo "$CHANGED_FILES" | grep -q "$pattern"; then
-        echo "ALL"
-        exit 0
+    for pattern in $patterns; do
+        if echo "$CHANGED_FILES" | grep -q "$pattern"; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+if check_shared_files; then
+    echo "ALL"
+    exit 0
+fi
+
+# Map component directory to test filter name
+get_component_name() {
+    case "$1" in
+        "avatar") echo "avatar" ;;
+        "badge") echo "badge" ;;
+        "box") echo "box" ;;
+        "breadcrumb") echo "breadcrumb" ;;
+        "button") echo "button" ;;
+        "callout") echo "callout" ;;
+        "card") echo "card" ;;
+        "checkbox") echo "checkbox" ;;
+        "collapsible") echo "collapsible" ;;
+        "dialog") echo "dialog" ;;
+        "field") echo "field" ;;
+        "flex") echo "flex" ;;
+        "floating-bar") echo "floatingbar" ;;
+        "form") echo "form" ;;
+        "grid") echo "grid" ;;
+        "h-stack") echo "hstack" ;;
+        "icon-button") echo "iconbutton" ;;
+        "input-group") echo "inputgroup" ;;
+        "menu") echo "menu" ;;
+        "multi-select") echo "multiselect" ;;
+        "navigation-menu") echo "navigationmenu" ;;
+        "pagination") echo "pagination" ;;
+        "popover") echo "popover" ;;
+        "radio") echo "radio" ;;
+        "radio-card") echo "radiocard" ;;
+        "radio-group") echo "radiogroup" ;;
+        "select") echo "select" ;;
+        "sheet") echo "sheet" ;;
+        "switch") echo "switch" ;;
+        "table") echo "table" ;;
+        "tabs") echo "tabs" ;;
+        "text") echo "text" ;;
+        "text-input") echo "textinput" ;;
+        "textarea") echo "textarea" ;;
+        "toast") echo "toast" ;;
+        "tooltip") echo "tooltip" ;;
+        "v-stack") echo "vstack" ;;
+        "theme-provider") echo "themeprovider" ;;
+        *) echo "" ;;
+    esac
+}
+
+# Get dependent components for a given component
+get_dependents() {
+    case "$1" in
+        "box") echo "flex grid hstack vstack toast sheet collapsible floatingbar" ;;
+        "flex") echo "hstack vstack" ;;
+        "button") echo "iconbutton toast" ;;
+        "icon-button") echo "toast collapsible" ;;
+        "badge") echo "multiselect floatingbar" ;;
+        "dialog") echo "sheet" ;;
+        "radio-group") echo "radio radiocard" ;;
+        "input-group") echo "textinput textarea" ;;
+        "h-stack") echo "toast navigationmenu" ;;
+        "v-stack") echo "toast navigationmenu" ;;
+        *) echo "" ;;
+    esac
+}
+
+# Collect affected components (using a simple list with deduplication)
+AFFECTED=""
+
+add_component() {
+    local comp="$1"
+    if [ -n "$comp" ] && ! echo "$AFFECTED" | grep -q -w "$comp"; then
+        if [ -z "$AFFECTED" ]; then
+            AFFECTED="$comp"
+        else
+            AFFECTED="$AFFECTED $comp"
+        fi
     fi
-done
-
-# Component name mapping (directory name -> test filter name)
-declare -A COMPONENT_MAP
-COMPONENT_MAP=(
-    ["avatar"]="avatar"
-    ["badge"]="badge"
-    ["box"]="box"
-    ["breadcrumb"]="breadcrumb"
-    ["button"]="button"
-    ["callout"]="callout"
-    ["card"]="card"
-    ["checkbox"]="checkbox"
-    ["collapsible"]="collapsible"
-    ["dialog"]="dialog"
-    ["field"]="field"
-    ["flex"]="flex"
-    ["floating-bar"]="floatingbar"
-    ["form"]="form"
-    ["grid"]="grid"
-    ["h-stack"]="hstack"
-    ["icon-button"]="iconbutton"
-    ["input-group"]="inputgroup"
-    ["menu"]="menu"
-    ["multi-select"]="multiselect"
-    ["navigation-menu"]="navigationmenu"
-    ["pagination"]="pagination"
-    ["popover"]="popover"
-    ["radio"]="radio"
-    ["radio-card"]="radiocard"
-    ["radio-group"]="radiogroup"
-    ["select"]="select"
-    ["sheet"]="sheet"
-    ["switch"]="switch"
-    ["table"]="table"
-    ["tabs"]="tabs"
-    ["text"]="text"
-    ["text-input"]="textinput"
-    ["textarea"]="textarea"
-    ["toast"]="toast"
-    ["tooltip"]="tooltip"
-    ["v-stack"]="vstack"
-    ["theme-provider"]="themeprovider"
-)
-
-# Dependency graph: if component A changes, also test components in the list
-# Format: component -> "dependent1 dependent2 ..."
-declare -A DEPENDENCIES
-DEPENDENCIES=(
-    ["box"]="flex grid hstack vstack toast sheet collapsible floatingbar"
-    ["flex"]="hstack vstack"
-    ["button"]="iconbutton toast"
-    ["icon-button"]="toast collapsible"
-    ["badge"]="multiselect floatingbar"
-    ["dialog"]="sheet"
-    ["radio-group"]="radio radiocard"
-    ["input-group"]="textinput textarea"
-    ["h-stack"]="toast navigationmenu"
-    ["v-stack"]="toast navigationmenu"
-)
-
-# Collect affected components
-declare -A AFFECTED_SET
+}
 
 for file in $CHANGED_FILES; do
     # Check if it's a component file
-    if [[ $file == packages/core/src/components/* ]]; then
+    if echo "$file" | grep -q "^packages/core/src/components/"; then
         # Extract component directory name
         COMPONENT_DIR=$(echo "$file" | sed 's|packages/core/src/components/||' | cut -d'/' -f1)
 
-        if [[ -n "${COMPONENT_MAP[$COMPONENT_DIR]}" ]]; then
+        COMP_NAME=$(get_component_name "$COMPONENT_DIR")
+        if [ -n "$COMP_NAME" ]; then
             # Add the changed component
-            AFFECTED_SET["${COMPONENT_MAP[$COMPONENT_DIR]}"]=1
+            add_component "$COMP_NAME"
 
             # Add dependent components
-            if [[ -n "${DEPENDENCIES[$COMPONENT_DIR]}" ]]; then
-                for dep in ${DEPENDENCIES[$COMPONENT_DIR]}; do
-                    AFFECTED_SET["$dep"]=1
-                done
-            fi
+            DEPS=$(get_dependents "$COMPONENT_DIR")
+            for dep in $DEPS; do
+                add_component "$dep"
+            done
         fi
     fi
-
-    # Check if it's a storybook file change
-    if [[ $file == apps/storybook/.storybook/* ]]; then
-        echo "ALL"
-        exit 0
-    fi
 done
 
-# Convert set to comma-separated string
-RESULT=""
-for component in "${!AFFECTED_SET[@]}"; do
-    if [ -z "$RESULT" ]; then
-        RESULT="$component"
-    else
-        RESULT="$RESULT,$component"
-    fi
-done
-
-# Output result
-if [ -z "$RESULT" ]; then
+# Convert space-separated to comma-separated
+if [ -z "$AFFECTED" ]; then
     echo "NONE"
 else
-    echo "$RESULT"
+    echo "$AFFECTED" | tr ' ' ','
 fi
