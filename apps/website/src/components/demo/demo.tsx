@@ -75,16 +75,9 @@ const DemoHeader = ({ selectedTab, showResponsiveToggle, onDeviceChange }: DemoH
                 gap="$050"
                 height={'$500'}
                 width="100%"
-                paddingX="$300"
                 paddingBottom="$050"
             >
-                <Tabs.List
-                    width="100%"
-                    indicatorElement={
-                        <Tabs.IndicatorPrimitive renderBeforeHydration className="left-0" />
-                    }
-                    border="none"
-                >
+                <Tabs.List width="100%" paddingX="$300">
                     {Object.values(TAB_TYPES).map((tab) => (
                         <Tabs.Button key={tab} value={tab}>
                             {tab}
