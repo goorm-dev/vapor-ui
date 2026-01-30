@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { IconButton, NavigationMenu, Text } from '@vapor-ui/core';
@@ -16,7 +17,7 @@ import { ThemeToggle } from '../theme-toggle';
 
 const NAVIGATION_LINKS = [
     { href: '/docs', label: 'Docs' },
-    { href: '/playground', label: 'Playground' },
+    { href: '/theme', label: 'Theme' },
     { href: '/blocks', label: 'Blocks' },
 ];
 
@@ -186,7 +187,15 @@ const MobileNavigation = () => {
 };
 
 export const SiteNavBar = () => {
+    const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    const isHomePage = pathname === '/';
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -204,10 +213,18 @@ export const SiteNavBar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    return (
+    // 메인 페이지: 기본 투명, 스크롤 시 배경색
+    // 다른 페이지: 항상 배경색
+    const bgClass = isHomePage
+        ? isScrolled
+            ? 'bg-v-canvas-100'
+            : 'bg-transparent'
+        : 'bg-v-canvas-100';
+
+    const headerContent = (
         <header
-            className={`z-10 flex w-full py-3 px-4 md:px-8 gap-v-500 items-center fixed top-0 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
-                isScrolled ? 'bg-v-canvas-100 shadow-lg backdrop-blur-sm z-20' : 'bg-transparent'
+            className={`z-40 flex w-full py-3 px-4 md:px-8 gap-v-500 items-center fixed top-0 transition-[box-shadow,backdrop-filter,background-color] duration-500 ${bgClass} ${
+                isScrolled ? 'shadow-lg backdrop-blur-sm' : ''
             }`}
         >
             {/* Logo */}
@@ -229,6 +246,14 @@ export const SiteNavBar = () => {
             </div>
         </header>
     );
+
+    // SSR에서는 일반 렌더링, 클라이언트에서는 Portal로 body에 직접 렌더링
+    // 이렇게 하면 Sheet와 동일한 stacking context를 공유하여 z-index가 정상 작동
+    if (!mounted) {
+        return headerContent;
+    }
+
+    return createPortal(headerContent, document.body);
 };
 
 export default SiteNavBar;
