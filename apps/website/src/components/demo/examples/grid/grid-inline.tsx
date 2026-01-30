@@ -1,25 +1,66 @@
-import { Grid } from '@vapor-ui/core';
+import { Box, Grid, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function GridInline() {
     return (
-        <div className="flex flex-wrap gap-4">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Block Grid (default)</h4>
-                <Grid.Root templateColumns="repeat(2, 1fr)" gap="2">
-                    <Grid.Item className="bg-indigo-100 p-2 rounded text-center">1</Grid.Item>
-                    <Grid.Item className="bg-indigo-100 p-2 rounded text-center">2</Grid.Item>
+        <HStack gap="$400" alignItems="start">
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    block (default)
+                </Text>
+                <Grid.Root templateColumns="repeat(2, 1fr)" gap="$100">
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$indigo-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            1
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$indigo-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            2
+                        </Box>
+                    </Grid.Item>
                 </Grid.Root>
-                <p className="text-sm text-gray-600 mt-1">Block level grid</p>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Inline Grid</h4>
-                <Grid.Root inline templateColumns="repeat(2, 1fr)" gap="2">
-                    <Grid.Item className="bg-pink-100 p-2 rounded text-center">1</Grid.Item>
-                    <Grid.Item className="bg-pink-100 p-2 rounded text-center">2</Grid.Item>
-                </Grid.Root>
-                <span className="text-sm text-gray-600 ml-2">Inline grid</span>
-            </div>
-        </div>
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    inline
+                </Text>
+                <Box>
+                    <Grid.Root inline templateColumns="repeat(2, 1fr)" gap="$100">
+                        <Grid.Item>
+                            <Box
+                                backgroundColor="$pink-100"
+                                padding="$200"
+                                borderRadius="$200"
+                                textAlign="center"
+                            >
+                                1
+                            </Box>
+                        </Grid.Item>
+                        <Grid.Item>
+                            <Box
+                                backgroundColor="$pink-100"
+                                padding="$200"
+                                borderRadius="$200"
+                                textAlign="center"
+                            >
+                                2
+                            </Box>
+                        </Grid.Item>
+                    </Grid.Root>
+                    <Text render={<span />}> inline grid</Text>
+                </Box>
+            </VStack>
+        </HStack>
     );
 }
