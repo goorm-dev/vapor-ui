@@ -20,9 +20,9 @@ export const externalLinks = [
 
 export const docsLinks = [
     {
-        text: 'Theme Playground',
-        url: '/playground',
-        label: 'Playground for theme customization',
+        text: 'Theme',
+        url: '/theme',
+        label: 'Theme Customization',
     },
     {
         text: 'Blocks',

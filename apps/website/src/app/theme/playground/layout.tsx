@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { PageWrapper } from './_components/page-wrapper';
 
 export const metadata: Metadata = {
-    title: 'Playground - Vapor UI',
+    title: 'Theme Playground - Vapor UI',
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
