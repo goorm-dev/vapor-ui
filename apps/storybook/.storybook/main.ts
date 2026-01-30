@@ -23,7 +23,7 @@ const config: StorybookConfig = {
     },
 
     typescript: {
-        reactDocgen: 'react-docgen-typescript',
+        reactDocgen: false,
         reactDocgenTypescriptOptions: {
             tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
         },
