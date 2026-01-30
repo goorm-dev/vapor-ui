@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
     build-storybook:
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
         steps:
             - name: Git clone the repository
               uses: actions/checkout@v4
