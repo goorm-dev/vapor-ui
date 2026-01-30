@@ -1,25 +1,41 @@
-import { HStack } from '@vapor-ui/core';
+import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function HStackReverse() {
     return (
-        <div className="flex flex-wrap gap-2">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Normal Stack</h4>
-                <HStack gap="3">
-                    <div className="bg-green-100 p-3 rounded text-center">First</div>
-                    <div className="bg-green-200 p-3 rounded text-center">Second</div>
-                    <div className="bg-green-300 p-3 rounded text-center">Third</div>
+        <VStack gap="$200">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    normal
+                </Text>
+                <HStack gap="$150">
+                    <Box backgroundColor="$green-100" padding="$300" borderRadius="$200">
+                        First
+                    </Box>
+                    <Box backgroundColor="$green-200" padding="$300" borderRadius="$200">
+                        Second
+                    </Box>
+                    <Box backgroundColor="$green-300" padding="$300" borderRadius="$200">
+                        Third
+                    </Box>
                 </HStack>
-            </div>
+            </HStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Reverse Stack</h4>
-                <HStack reverse gap="3">
-                    <div className="bg-purple-100 p-3 rounded text-center">First</div>
-                    <div className="bg-purple-200 p-3 rounded text-center">Second</div>
-                    <div className="bg-purple-300 p-3 rounded text-center">Third</div>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    reverse
+                </Text>
+                <HStack reverse gap="$150">
+                    <Box backgroundColor="$purple-100" padding="$300" borderRadius="$200">
+                        First
+                    </Box>
+                    <Box backgroundColor="$purple-200" padding="$300" borderRadius="$200">
+                        Second
+                    </Box>
+                    <Box backgroundColor="$purple-300" padding="$300" borderRadius="$200">
+                        Third
+                    </Box>
                 </HStack>
-            </div>
-        </div>
+            </HStack>
+        </VStack>
     );
 }

@@ -13,36 +13,6 @@ description: Field는 폼 요소들을 감싸는 컨테이너 컴포넌트로, �
 ```
 </Demo>
 
-## Property
-
----
-
-### Invalid State
-
-Field의 유효하지 않은 상태를 설정합니다.
-
-<Demo name="field/field-invalid">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/field/field-invalid.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Validation Mode
-
-유효성 검사 타이밍을 설정합니다.
-
-<Demo name="field/field-validation-mode">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/field/field-validation-mode.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
 ## Examples
 
 ---
@@ -60,14 +30,14 @@ Field에 대한 추가 설명을 표시합니다.
 ```
 </Demo>
 
-### Validation
+### Error and Success
 
-입력된 값에 대한 유효성을 검사합니다.
+`Field.Error`와 `Field.Success`를 사용하여 유효성 검사 결과를 표시합니다.
 
-<Demo name="field/field-validation">
+<Demo name="field/field-error">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/field/field-validation.tsx",
+    "file": "./src/components/demo/examples/field/field-error.tsx",
     "codeblock": true
 }
 ```
@@ -114,7 +84,7 @@ RadioGroup과 Field를 함께 사용합니다. `Field.Item`을 사용하여 각 
 
 ### With Form Elements
 
-다양한 폼 요소(TextInput, Checkbox, Switch, Select 등)와 Field를 함께 사용합니다.
+TextInput, Checkbox, Switch, Select 등 다양한 폼 요소와 함께 사용합니다.
 
 <Demo name="field/field-with-inputs">
 ```json doc-gen:file
@@ -125,14 +95,31 @@ RadioGroup과 Field를 함께 사용합니다. `Field.Item`을 사용하여 각 
 ```
 </Demo>
 
-### Controlled
+## Property
 
-제어 컴포넌트로 Field를 관리하고 실시간으로 상태를 표시합니다.
+---
 
-<Demo name="field/field-controlled">
+### Validation
+
+`validationMode`를 통해 유효성 검사 타이밍을 설정합니다. `match` prop으로 특정 에러 타입에 대한 메시지를 표시합니다.
+
+<Demo name="field/field-validation">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/field/field-controlled.tsx",
+    "file": "./src/components/demo/examples/field/field-validation.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Disabled
+
+Field의 비활성화 상태를 설정합니다.
+
+<Demo name="field/field-disabled">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/field/field-disabled.tsx",
     "codeblock": true
 }
 ```

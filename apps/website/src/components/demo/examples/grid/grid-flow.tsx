@@ -1,29 +1,123 @@
-import { Grid } from '@vapor-ui/core';
+import { Box, Grid, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function GridFlow() {
     return (
-        <div className="flex flex-wrap gap-4">
-            <div>
-                <h4 className="text-sm font-medium mb-2">Row Flow</h4>
-                <Grid.Root templateColumns="repeat(3, 1fr)" flow="row" gap="2">
-                    <Grid.Item className="bg-purple-100 p-2 rounded text-center">1</Grid.Item>
-                    <Grid.Item className="bg-purple-100 p-2 rounded text-center">2</Grid.Item>
-                    <Grid.Item className="bg-purple-100 p-2 rounded text-center">3</Grid.Item>
-                    <Grid.Item className="bg-purple-100 p-2 rounded text-center">4</Grid.Item>
-                    <Grid.Item className="bg-purple-100 p-2 rounded text-center">5</Grid.Item>
+        <HStack gap="$400" alignItems="start">
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    row
+                </Text>
+                <Grid.Root templateColumns="repeat(3, 1fr)" flow="row" gap="$100">
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$purple-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            1
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$purple-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            2
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$purple-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            3
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$purple-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            4
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$purple-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            5
+                        </Box>
+                    </Grid.Item>
                 </Grid.Root>
-            </div>
+            </VStack>
 
-            <div>
-                <h4 className="text-sm font-medium mb-2">Column Flow</h4>
-                <Grid.Root templateRows="repeat(3, 1fr)" flow="column" gap="2" className="h-32">
-                    <Grid.Item className="bg-orange-100 p-2 rounded text-center">1</Grid.Item>
-                    <Grid.Item className="bg-orange-100 p-2 rounded text-center">2</Grid.Item>
-                    <Grid.Item className="bg-orange-100 p-2 rounded text-center">3</Grid.Item>
-                    <Grid.Item className="bg-orange-100 p-2 rounded text-center">4</Grid.Item>
-                    <Grid.Item className="bg-orange-100 p-2 rounded text-center">5</Grid.Item>
+            <VStack gap="$150">
+                <Text typography="body3" foreground="hint-100">
+                    column
+                </Text>
+                <Grid.Root templateRows="repeat(3, 1fr)" flow="column" gap="$100" height="$1600">
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$orange-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            1
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$orange-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            2
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$orange-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            3
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$orange-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            4
+                        </Box>
+                    </Grid.Item>
+                    <Grid.Item>
+                        <Box
+                            backgroundColor="$orange-100"
+                            padding="$200"
+                            borderRadius="$200"
+                            textAlign="center"
+                        >
+                            5
+                        </Box>
+                    </Grid.Item>
                 </Grid.Root>
-            </div>
-        </div>
+            </VStack>
+        </HStack>
     );
 }

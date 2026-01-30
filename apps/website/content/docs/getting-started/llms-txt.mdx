@@ -3,40 +3,42 @@ title: LLMs.txt
 description: Cursor 등 AI 도구에서 Vapor Design System 문서를 활용하는 방법
 ---
 
-## LLMs.txt란 무엇인가?
+이 문서에서는 LLMs.txt 파일의 구성과 AI 도구에서 활용하는 방법을 설명합니다.
 
-Vapor Design System의 문서를 LLM(Large Language Model)이 잘 이해하도록 구조화한 텍스트 파일입니다. 컨텍스트 창(context window)이 제한된 AI 도구에서 핵심 정보를 빠르게 파악할 수 있게 돕습니다.
+## LLMs.txt 개요
 
----
+LLMs.txt는 LLM(Large Language Model)이 Vapor Design System 문서를 이해하도록 구조화한 텍스트 파일입니다. 컨텍스트 창이 제한된 AI 도구에서 핵심 정보를 빠르게 파악할 수 있습니다.
 
-## 제공 파일 구성
+## 파일 구성
 
-| 파일명        | 설명                                                                              |
-| ------------- | --------------------------------------------------------------------------------- |
-| llms.txt      | 전체 라우트 및 카테고리 개요를 포함한 메인 인덱스 파일                            |
-| llms-full.txt | Vapor Design System의 모든 문서(컴포넌트, 가이드, API 등)를 포함한 전체 문서 세트 |
+| 파일명        | 설명                                                           |
+| ------------- | -------------------------------------------------------------- |
+| llms.txt      | 전체 라우트 및 카테고리 개요를 포함한 메인 인덱스 파일         |
+| llms-full.txt | 모든 문서(컴포넌트, 가이드, API 등)를 포함한 전체 문서 세트    |
 
-### 메인 인덱스
+### 인덱스 파일
 
-- [llms.txt](/llms.txt) : 각 문서에 대한 요약과 링크가 포함되어 있으며, AI가 필요한 자료를 따라갈 수 있도록 구성됩니다
-- [llms-full.txt](/llms-full.txt) : 모든 내용을 담아 큰 컨텍스트를 사용하는 워크플로우에 적합합니다
+- [llms.txt](/llms.txt): 각 문서에 대한 요약과 링크를 포함합니다.
+- [llms-full.txt](/llms-full.txt): 모든 내용을 포함하며 큰 컨텍스트 워크플로우에 적합합니다.
 
-### 세부 문서
+### 문서 경로
 
-- 가이드: [`/docs/getting-started/installation.mdx](/docs/getting-started/installation.mdx): Vapor UI 설치를 위한 가이드.
-- 디자인 토큰
-    - [/docs/tokens/color.mdx](/docs/tokens/color.mdx): 디자인 토큰에 대한 상세 문서로, 색상 시스템을 정의합니다.
-    - [/docs/tokens/size.mdx](/docs/tokens/size.mdx): 디자인 토큰에 대한 상세 문서로, 크기 및 여백을 정의합니다.
-    - [/docs/tokens/typography.mdx](/docs/tokens/typography.mdx): 디자인 토큰에 대한 상세 문서로, 타이포그래피 시스템을
-- 테마 변경:
-    - [/docs/getting-started/theming.mdx](/docs/getting-started/theming.mdx): Next.js 앱에서 테마를 변경하는 방법에 대한 가이드.
-- 컴포넌트
-    - [/docs/components/[component-name].mdx](/docs/components/avatar.mdx): 컴포넌트별 상세 문서로, 각 컴포넌트의 사용법과 API를 포함합니다. (예: Avatar)
+**가이드**
+- [/docs/getting-started/installation.mdx](/docs/getting-started/installation.mdx): 설치 가이드
 
----
+**디자인 토큰**
+- [/docs/tokens/color.mdx](/docs/tokens/color.mdx): 색상 시스템
+- [/docs/tokens/size.mdx](/docs/tokens/size.mdx): 크기 및 여백
+- [/docs/tokens/typography.mdx](/docs/tokens/typography.mdx): 타이포그래피 시스템
 
-## AI 도구와 함께 사용하기
+**테마**
+- [/docs/getting-started/theming.mdx](/docs/getting-started/theming.mdx): 테마 설정 가이드
 
-Cursor 등 LLM 기반 코드 도구에서 LLMs 텍스트 파일을 활용하려면 `@Docs` 기능을 사용하세요.
+**컴포넌트**
+- [/docs/components/[component-name].mdx](/docs/components/avatar.mdx): 컴포넌트별 사용법과 API (예: Avatar)
 
-[Cursor @Docs](https://docs.cursor.com/context/@-symbols/@-docs)
+## AI 도구에서 사용
+
+Cursor 등 LLM 기반 코드 도구에서 LLMs.txt 파일을 활용하려면 `@Docs` 기능을 사용합니다.
+
+- [Cursor @Docs 문서](https://docs.cursor.com/context/@-symbols/@-docs)

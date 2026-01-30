@@ -1,25 +1,26 @@
-import { Breadcrumb } from '@vapor-ui/core';
+import { Breadcrumb, Text, VStack } from '@vapor-ui/core';
 import { ChevronRightOutlineIcon, HomeIcon } from '@vapor-ui/icons';
 
 export default function BreadcrumbComposition() {
     return (
-        <div className="space-y-6">
-            {/* Basic composition */}
-            <div>
-                <h4 className="mb-2 text-sm font-medium">기본 구성</h4>
-                <Breadcrumb.Root size="md">
+        <VStack gap="$300">
+            <VStack gap="$100">
+                <Text typography="body3" foreground="hint-100">
+                    Basic
+                </Text>
+                <Breadcrumb.Root>
                     <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
                     <Breadcrumb.Separator />
                     <Breadcrumb.Item href="#">Products</Breadcrumb.Item>
                     <Breadcrumb.Separator />
                     <Breadcrumb.Item current>Details</Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-
-            {/* With custom separator */}
-            <div>
-                <h4 className="mb-2 text-sm font-medium">커스텀 구분자</h4>
-                <Breadcrumb.Root size="md">
+            </VStack>
+            <VStack gap="$100">
+                <Text typography="body3" foreground="hint-100">
+                    Custom Separator
+                </Text>
+                <Breadcrumb.Root>
                     <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
                     <Breadcrumb.Separator>
                         <ChevronRightOutlineIcon />
@@ -30,14 +31,14 @@ export default function BreadcrumbComposition() {
                     </Breadcrumb.Separator>
                     <Breadcrumb.Item current>Details</Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-
-            {/* With icons in links */}
-            <div>
-                <h4 className="mb-2 text-sm font-medium">링크에 아이콘 포함</h4>
-                <Breadcrumb.Root size="md">
+            </VStack>
+            <VStack gap="$100">
+                <Text typography="body3" foreground="hint-100">
+                    With Icon
+                </Text>
+                <Breadcrumb.Root>
                     <Breadcrumb.Item href="#" className="flex items-center gap-1">
-                        <HomeIcon className="w-4 h-4" />
+                        <HomeIcon className="size-4" />
                         Home
                     </Breadcrumb.Item>
                     <Breadcrumb.Separator />
@@ -45,7 +46,7 @@ export default function BreadcrumbComposition() {
                     <Breadcrumb.Separator />
                     <Breadcrumb.Item current>Settings</Breadcrumb.Item>
                 </Breadcrumb.Root>
-            </div>
-        </div>
+            </VStack>
+        </VStack>
     );
 }

@@ -1,31 +1,50 @@
-import { Button, Collapsible, HStack } from '@vapor-ui/core';
+import { Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
+import { ChevronRightOutlineIcon } from '@vapor-ui/icons';
 
 export default function CollapsibleKeepMounted() {
     return (
-        <HStack gap="$500">
-            <Collapsible.Root className="w-72 h-36">
-                <h4 className="text-lg font-medium mb-3">기본 (DOM에서 제거됨)</h4>
-                <Collapsible.Trigger render={<Button colorPalette="secondary" />}>
-                    기본 동작
-                </Collapsible.Trigger>
-                <Collapsible.Panel>
-                    <div className="mt-2 p-4 border border-v-gray-200 rounded bg-v-purple-50">
-                        닫힌 상태에서는 DOM에서 제거됩니다.
-                    </div>
-                </Collapsible.Panel>
-            </Collapsible.Root>
+        <HStack gap="$400" alignItems="flex-start">
+            <VStack gap="$100">
+                <Text typography="body3" foreground="hint-100">
+                    default
+                </Text>
+                <Collapsible.Root className="w-56">
+                    <Collapsible.Trigger className="group flex w-full items-center gap-2 rounded-md bg-v-gray-100 px-3 py-2 text-sm font-medium hover:bg-v-gray-200">
+                        <ChevronRightOutlineIcon className="size-3 transition-transform ease-out group-data-[panel-open]:rotate-90" />
+                        Help Section
+                    </Collapsible.Trigger>
+                    <Collapsible.Panel>
+                        <Text
+                            typography="body3"
+                            foreground="hint-100"
+                            className="mt-2 rounded-md bg-v-gray-50 p-3"
+                        >
+                            Removed from DOM when closed.
+                        </Text>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
+            </VStack>
 
-            <Collapsible.Root className="w-72 h-36">
-                <h4 className="text-lg font-medium mb-3">keepMounted (DOM에 유지됨)</h4>
-                <Collapsible.Trigger render={<Button colorPalette="warning" variant="outline" />}>
-                    keepMounted 사용
-                </Collapsible.Trigger>
-                <Collapsible.Panel keepMounted>
-                    <div className="mt-2 p-4 border border-v-gray-200 rounded bg-v-orange-50">
-                        닫힌 상태에서도 DOM에 유지됩니다.
-                    </div>
-                </Collapsible.Panel>
-            </Collapsible.Root>
+            <VStack gap="$100">
+                <Text typography="body3" foreground="hint-100">
+                    keepMounted
+                </Text>
+                <Collapsible.Root className="w-56">
+                    <Collapsible.Trigger className="group flex w-full items-center gap-2 rounded-md bg-v-blue-100 px-3 py-2 text-sm font-medium hover:bg-v-blue-200">
+                        <ChevronRightOutlineIcon className="size-3 transition-transform ease-out group-data-[panel-open]:rotate-90" />
+                        Help Section
+                    </Collapsible.Trigger>
+                    <Collapsible.Panel keepMounted>
+                        <Text
+                            typography="body3"
+                            foreground="hint-100"
+                            className="mt-2 rounded-md bg-v-blue-50 p-3"
+                        >
+                            Stays in DOM when closed.
+                        </Text>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
+            </VStack>
         </HStack>
     );
 }

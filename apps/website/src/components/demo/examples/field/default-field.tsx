@@ -1,21 +1,15 @@
 'use client';
 
-import { Box, Field, Text, TextInput } from '@vapor-ui/core';
+import { Field, TextInput } from '@vapor-ui/core';
 
 export default function DefaultField() {
     return (
-        <Box width="300px">
-            <Field.Root name="username">
-                <Field.Label flexDirection="column">
-                    <Text typography="subtitle2" foreground="normal-200">
-                        Field.Label
-                    </Text>
-                    <TextInput placeholder="사용자명을 입력하세요" />
-                </Field.Label>
-                <Field.Description>Field.Description</Field.Description>
-                <Field.Error match={true}>Field.Error</Field.Error>
-                <Field.Success>Field.Success</Field.Success>
-            </Field.Root>
-        </Box>
+        <Field.Root name="email" className="w-72">
+            <Field.Label gap="$050" flexDirection="column">
+                Email
+                <TextInput type="email" placeholder="you@example.com" />
+            </Field.Label>
+            <Field.Description>We'll never share your email.</Field.Description>
+        </Field.Root>
     );
 }
