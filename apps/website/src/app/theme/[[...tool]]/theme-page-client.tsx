@@ -34,9 +34,9 @@ export function ThemePageClient({ activeToolId, sheetContent }: ThemePageClientP
     };
 
     return (
-        <div>
+        <main>
             <SiteNavBar />
-            <main className="pt-[62px]">
+            <div className="pt-[62px]">
                 <div className="flex flex-col py-[100px] px-[146px] gap-[100px] max-lg:pt-v-900 max-lg:px-v-400 max-lg:gap-v-900 max-sm:py-v-800 max-sm:gap-v-400">
                     <PageHeader />
 
@@ -52,7 +52,7 @@ export function ThemePageClient({ activeToolId, sheetContent }: ThemePageClientP
                         ))}
                     </div>
                 </div>
-            </main>
+            </div>
 
             {/* Tool Detail Sheet - URL 파라미터에 따라 자동으로 열림/닫힘 */}
             {sheetContent && (
@@ -65,6 +65,6 @@ export function ThemePageClient({ activeToolId, sheetContent }: ThemePageClientP
                     {sheetContent.children}
                 </ToolDetailSheetClient>
             )}
-        </div>
+        </main>
     );
 }
