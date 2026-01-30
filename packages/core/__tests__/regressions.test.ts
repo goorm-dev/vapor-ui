@@ -38,12 +38,23 @@ async function navigate(page, storybookUrl, id) {
     }
 }
 
+// Popup 계열 컴포넌트 (Base UI 1.1.0의 auto resize 로직으로 인해 위치 안정화 대기 필요)
+const POPUP_COMPONENTS = ['menu', 'select', 'popover', 'tooltip'];
+
 const visualStories = filterStories(Object.values(manifest.entries));
 const BASE_URL = 'http://localhost:9999';
 
 visualStories.forEach((story) => {
     test(story.id, async ({ page }, meta) => {
         await navigate(page, BASE_URL, meta.title);
+
+        // Popup 계열 컴포넌트는 위치 안정화를 위한 추가 대기
+        const isPopupComponent = POPUP_COMPONENTS.some((c) =>
+            story.id.toLowerCase().includes(c),
+        );
+        if (isPopupComponent) {
+            await page.waitForTimeout(150);
+        }
 
         await expect(page).toHaveScreenshot({
             fullPage: true,

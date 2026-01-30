@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-import { Slider } from '@base-ui-components/react/slider';
+import { Slider } from '@base-ui/react/slider';
 import { getColorLightness } from '@vapor-ui/color-generator';
 import type { ColorThemeConfig } from '@vapor-ui/css-generator';
 import { DarkIcon, LightIcon } from '@vapor-ui/icons';

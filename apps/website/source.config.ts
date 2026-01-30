@@ -51,7 +51,7 @@ export default defineConfig({
             inline: 'tailing-curly-colon',
             themes: {
                 light: 'github-light',
-                dark: 'slack-dark',
+                dark: 'github-dark',
             },
         },
     },

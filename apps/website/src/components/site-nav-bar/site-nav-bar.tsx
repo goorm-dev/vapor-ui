@@ -14,12 +14,7 @@ import { externalLinks } from '~/constants/site-links';
 
 import LogoVapor from '../../../public/icons/logo-vapor.svg';
 import { ThemeToggle } from '../theme-toggle';
-
-const NAVIGATION_LINKS = [
-    { href: '/docs', label: 'Docs' },
-    { href: '/theme', label: 'Theme' },
-    { href: '/blocks', label: 'Blocks' },
-];
+import { SiteNavigation } from './navigation-list';
 
 function hasText(item: LinkItemType): item is LinkItemType & { text: string } {
     return 'text' in item && typeof (item as { text?: unknown }).text === 'string';
@@ -33,61 +28,25 @@ const WebNavigation = () => {
     const pathname = usePathname();
 
     return (
-        <NavigationMenu.Root
-            aria-label="Main"
-            size="lg"
-            className="flex flex-1 justify-between items-center gap-10"
-        >
-            <NavigationMenu.List className="flex flex-1 flex-row items-center gap-2 p-0 h-full">
-                {NAVIGATION_LINKS.map((item) => (
-                    <NavigationMenu.Item key={item.href}>
-                        <NavigationMenu.Link
-                            href={item.href}
-                            selected={pathname.includes(item.href)}
-                            render={<Link>{item.label}</Link>}
-                        />
-                    </NavigationMenu.Item>
-                ))}
-            </NavigationMenu.List>
-
-            <NavigationMenu.List className="flex-row items-center gap-0">
-                {/* External Links */}
-                {externalLinks.map((item) => {
-                    return (
-                        <NavigationMenu.Item key={item.text}>
-                            <IconButton
-                                aria-label={item.text}
-                                size="lg"
-                                colorPalette="secondary"
-                                variant="ghost"
-                                render={
-                                    <NavigationMenu.Link
-                                        render={<Link href={item.url}>{item.icon}</Link>}
-                                        className="p-0"
-                                    />
-                                }
-                            />
-                        </NavigationMenu.Item>
-                    );
-                })}
-
-                {/* Divider */}
-                <div
-                    style={{
-                        strokeWidth: '1px',
-                        stroke: 'var(--vapor-color-border-normal, #E1E1E8)',
-                        width: '0',
-                        height: 'var(--vapor-size-dimension-400, 32px)',
-                    }}
-                    className="border-l mx-2"
+        <SiteNavigation
+            className="border-b border-b-transparent"
+            leftSlot={
+                <NavigationMenu.Link
+                    href={'/docs'}
+                    current={pathname.includes('/docs')}
+                    render={
+                        <Text
+                            key={'docs'}
+                            render={<Link href={'/docs'}>{'Docs'}</Link>}
+                            typography="subtitle1"
+                            className="text-v-hint-100 hover:text-v-gray-400 transition-colors"
+                        >
+                            {'Docs'}
+                        </Text>
+                    }
                 />
-
-                {/* Theme Toggle */}
-                <NavigationMenu.Item>
-                    <ThemeToggle />
-                </NavigationMenu.Item>
-            </NavigationMenu.List>
-        </NavigationMenu.Root>
+            }
+        />
     );
 };
 const MobileNavigation = () => {
@@ -164,11 +123,8 @@ const MobileNavigation = () => {
 };
 
 export const SiteNavBar = () => {
-    const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
     const [mounted, setMounted] = useState(false);
-
-    const isHomePage = pathname === '/';
 
     useEffect(() => {
         setMounted(true);
@@ -190,20 +146,13 @@ export const SiteNavBar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // 메인 페이지: 기본 투명, 스크롤 시 배경색
-    // 다른 페이지: 항상 배경색
-    const bgClass = isHomePage
-        ? isScrolled
-            ? 'bg-v-canvas-100'
-            : 'bg-transparent'
-        : 'bg-v-canvas-100';
-
     const headerContent = (
         <header
-            className={`z-40 flex w-full py-3 px-4 md:px-8 gap-v-500 items-center fixed top-0 transition-[box-shadow,backdrop-filter,background-color] duration-500 ${bgClass} ${
-                isScrolled ? 'shadow-lg backdrop-blur-sm' : ''
+            className={`z-10 flex w-full  h-16 md:px-8 gap-v-500 items-center fixed top-0 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
+                isScrolled ? 'shadow-sm backdrop-blur-md z-20' : 'bg-transparent'
             }`}
         >
+            23
             {/* Logo */}
             <Link href="/" className="inline-flex items-center gap-2.5 font-semibold text-v-logo">
                 <LogoVapor
@@ -213,11 +162,9 @@ export const SiteNavBar = () => {
                     aria-label="Goorm Design System: Vapor"
                 />
             </Link>
-
             <div className="hidden md:flex flex-1">
                 <WebNavigation />
             </div>
-
             <div className="flex md:hidden flex-1">
                 <MobileNavigation />
             </div>
