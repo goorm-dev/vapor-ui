@@ -1,0 +1,138 @@
+---
+title: ESLint Plugin
+description: ESLint Plugin Vapor를 사용하여 접근성 규칙을 자동으로 검사하고 코드 품질을 향상시키세요.
+---
+
+**ESLint Plugin Vapor**는 Vapor UI 컴포넌트의 **접근성 규칙을 자동으로 검사**하여 더 나은 사용자 경험을 보장합니다.
+
+## Why
+
+- Vapor UI 컴포넌트를 사용할 때 자주 발생하는 접근성 문제들을 **개발 단계에서 미리 발견**할 수 있습니다.
+- 수동으로 검토하기 어려운 접근성 가이드라인을 **자동으로 체크**합니다. 이제 개발자는 더 나은 코드를 작성하는 데에만 집중할 수 있습니다.
+- 웹사이트의 전반적인 사용자 경험을 향상시키고, 더 넓은 사용자층에게 다가갈 수 있습니다.
+
+## Installation
+
+프로젝트에서 사용 중인 패키지 매니저로 플러그인을 설치하세요. `eslint-plugin-vapor`는 eslint-plugin-jsx-a11y, typescript-eslint와 함께 사용할 수 있습니다.
+
+```package-install
+npm install --save-dev eslint-plugin-vapor eslint-plugin-jsx-a11y typescript-eslint
+```
+
+## Configuration
+
+### Flat Config
+
+ESLint 9.0+ 버전을 사용하는 경우, `eslint.config.js` 파일에 다음과 같이 설정하세요:
+
+```js
+import vapor from 'eslint-plugin-vapor';
+
+export default [
+    {
+        plugins: {
+            vapor,
+        },
+        rules: {
+            'vapor/icon-button-has-aria-label': 'error',
+            'vapor/navigation-has-aria-label': 'error',
+        },
+    },
+    // 또는 recommended 설정 사용
+    vapor.configs.recommended,
+];
+```
+
+### Legacy Config
+
+ESLint 8.x 버전을 사용하는 경우, `.eslintrc.js` 파일에 다음과 같이 설정하세요:
+
+```js
+module.exports = {
+    plugins: ['vapor'],
+    extends: ['plugin:vapor/legacy'],
+    // 또는 개별 규칙 설정
+    rules: {
+        'vapor/icon-button-has-aria-label': 'error',
+        'vapor/navigation-has-aria-label': 'error',
+    },
+};
+```
+
+## Rules
+
+### icon-button-has-aria-label
+
+`IconButton` 컴포넌트에 `aria-label` 속성이 있는지 검사합니다.
+
+```tsx
+// ❌
+<IconButton>
+  <CloseIcon />
+</IconButton>
+
+// ✅
+<IconButton aria-label="닫기">
+  <CloseIcon />
+</IconButton>
+```
+
+### navigation-has-aria-label
+
+`NavigationMenu.Root`와 `Breadcrumb.Root` 컴포넌트에 `aria-label` 속성이 있는지 검사합니다.
+
+```tsx
+// ❌
+<NavigationMenu.Root>
+  <NavigationMenu.List>...</NavigationMenu.List>
+</NavigationMenu.Root>
+
+<Breadcrumb.Root>
+  <Breadcrumb.List>...</Breadcrumb.List>
+</Breadcrumb.Root>
+
+// ✅
+<NavigationMenu.Root aria-label="Main">
+  <NavigationMenu.List>...</NavigationMenu.List>
+</NavigationMenu.Root>
+
+<Breadcrumb.Root aria-label="Page Path">
+  <Breadcrumb.List>...</Breadcrumb.List>
+</Breadcrumb.Root>
+```
+
+### alt-text-on-avatar
+
+`Avatar` 컴포넌트를 이미지로 사용할 때, `src`와 `alt` 속성이 있는지 검사합니다.
+
+```tsx
+// ❌
+<Avatar src="user-profile.jpg" />
+
+// ✅
+<Avatar src="user-profile.jpg" alt="사용자 프로필 사진" />
+```
+
+### should-have-title-on-dialog
+
+`Dialog` 컴포넌트에 `Dialog.Title`, 혹은 `aria-label` 속성이 포함되어 있는지 검사합니다.
+
+```tsx
+// ❌
+<Dialog>
+  <Dialog.Content>...</Dialog.Content>
+</Dialog>
+
+// ✅
+<Dialog>
+  <Dialog.Title>정보 입력</Dialog.Title>
+  <Dialog.Content>...</Dialog.Content>
+</Dialog>
+
+// 또는
+<Dialog>
+  <Dialog.Content aria-label="정보 입력">
+    ...
+  </Dialog.Content>
+</Dialog>
+```
