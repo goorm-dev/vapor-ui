@@ -1,0 +1,363 @@
+---
+title: Codemod
+description: Vapor UI v1 마이그레이션을 자동으로 수행하는 CLI 도구
+---
+
+`@vapor-ui/codemod`를 사용하면 `@vapor-ui/core` v1의 breaking changes를 자동으로 마이그레이션할 수 있습니다.
+
+## 시작하기 전에
+
+<Callout type="warn">
+`@vapor-ui/core`에서 import한 컴포넌트만 변환됩니다. 다른 라이브러리의 동일한 이름의 컴포넌트는 변환되지 않습니다.
+</Callout>
+
+- **Git 상태 확인**: uncommitted changes가 있으면 실행되지 않습니다. `--force` 옵션으로 우회할 수 있습니다.
+- **Dry Run 권장**: `--dry` 옵션으로 변경 사항을 먼저 확인하세요.
+
+---
+
+## 빠른 시작
+
+별도 설치 없이 `npx`로 실행합니다:
+
+```bash
+npx @vapor-ui/codemod v1/migrate ./src
+```
+
+이 명령어는 아래의 모든 변환을 한 번에 적용합니다.
+
+### 옵션
+
+| 옵션                 | 설명                                             |
+| -------------------- | ------------------------------------------------ |
+| `--dry`              | 변경 사항을 미리보기만 하고 파일에 적용하지 않음 |
+| `--force`            | Git 안전 검사를 우회하고 강제 실행               |
+| `--parser <parser>`  | 파서 지정: `babel`, `ts`, `tsx` (기본값: `tsx`)  |
+| `--extensions <ext>` | 변환할 파일 확장자 (기본값: `tsx,ts,jsx,js`)     |
+
+---
+
+## 변환 목록
+
+### `loop` → `loopFocus`
+
+포커스 루프 동작을 제어하는 prop 이름이 변경됩니다.
+
+**대상 컴포넌트:** `Menu`, `Tabs`
+
+```tsx
+// Before
+<Menu.Root loop>
+  <Menu.Trigger>Open</Menu.Trigger>
+  <Menu.Popup>...</Menu.Popup>
+</Menu.Root>
+
+// After
+<Menu.Root loopFocus>
+  <Menu.Trigger>Open</Menu.Trigger>
+  <Menu.Popup>...</Menu.Popup>
+</Menu.Root>
+```
+
+```tsx
+// Before
+<Tabs.Root loop={false}>
+  <Tabs.List>...</Tabs.List>
+</Tabs.Root>
+
+// After
+<Tabs.Root loopFocus={false}>
+  <Tabs.List>...</Tabs.List>
+</Tabs.Root>
+```
+
+---
+
+### `trackAnchor` → `disableAnchorTracking`
+
+앵커 추적 prop이 부정형으로 변경됩니다. boolean 값이 반전됩니다.
+
+**대상 컴포넌트:** `Popover`, `Menu`, `Tooltip`
+
+```tsx
+// Before
+<Popover.Positioner trackAnchor>
+  <Popover.Popup>Content</Popover.Popup>
+</Popover.Positioner>
+
+// After
+<Popover.Positioner disableAnchorTracking={false}>
+  <Popover.Popup>Content</Popover.Popup>
+</Popover.Positioner>
+```
+
+```tsx
+// Before
+<Menu.Positioner trackAnchor={false}>
+  <Menu.Popup>...</Menu.Popup>
+</Menu.Positioner>
+
+// After
+<Menu.Positioner disableAnchorTracking={true}>
+  <Menu.Popup>...</Menu.Popup>
+</Menu.Positioner>
+```
+
+표현식에는 `!` 연산자가 자동으로 추가됩니다:
+
+```tsx
+// Before
+<Tooltip.Positioner trackAnchor={shouldTrack}>
+
+// After
+<Tooltip.Positioner disableAnchorTracking={!shouldTrack}>
+```
+
+---
+
+### `hoverable` → `disableHoverablePopup`
+
+Tooltip 팝업의 hover 가능 여부를 제어하는 prop이 부정형으로 변경됩니다. boolean 값이 반전됩니다.
+
+**대상 컴포넌트:** `Tooltip`
+
+```tsx
+// Before
+<Tooltip.Root hoverable>
+  <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+  <Tooltip.Popup>Content</Tooltip.Popup>
+</Tooltip.Root>
+
+// After
+<Tooltip.Root disableHoverablePopup={false}>
+  <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+  <Tooltip.Popup>Content</Tooltip.Popup>
+</Tooltip.Root>
+```
+
+```tsx
+// Before
+<Tooltip.Root hoverable={false}>
+
+// After
+<Tooltip.Root disableHoverablePopup={true}>
+```
+
+---
+
+### Hover props를 `Root`에서 `Trigger`로 이동
+
+hover 관련 props가 `Root`에서 `Trigger`로 이동합니다.
+
+**대상 컴포넌트 및 props:**
+
+| Prop          | Menu | Popover | Tooltip |
+| ------------- | :--: | :-----: | :-----: |
+| `openOnHover` |  O   |    O    |    -    |
+| `delay`       |  O   |    O    |    O    |
+| `closeDelay`  |  O   |    O    |    O    |
+
+**Menu:**
+
+```tsx
+// Before
+<Menu.Root openOnHover delay={200} closeDelay={100}>
+  <Menu.Trigger>Open</Menu.Trigger>
+  <Menu.Popup>...</Menu.Popup>
+</Menu.Root>
+
+// After
+<Menu.Root>
+  <Menu.Trigger openOnHover delay={200} closeDelay={100}>Open</Menu.Trigger>
+  <Menu.Popup>...</Menu.Popup>
+</Menu.Root>
+```
+
+**Popover:**
+
+```tsx
+// Before
+<Popover.Root openOnHover delay={300}>
+  <Popover.Trigger>Hover</Popover.Trigger>
+  <Popover.Popup>Content</Popover.Popup>
+</Popover.Root>
+
+// After
+<Popover.Root>
+  <Popover.Trigger openOnHover delay={300}>Hover</Popover.Trigger>
+  <Popover.Popup>Content</Popover.Popup>
+</Popover.Root>
+```
+
+**Tooltip:**
+
+```tsx
+// Before
+<Tooltip.Root delay={500} closeDelay={100}>
+  <Tooltip.Trigger>Hover</Tooltip.Trigger>
+  <Tooltip.Popup>Content</Tooltip.Popup>
+</Tooltip.Root>
+
+// After
+<Tooltip.Root>
+  <Tooltip.Trigger delay={500} closeDelay={100}>Hover</Tooltip.Trigger>
+  <Tooltip.Popup>Content</Tooltip.Popup>
+</Tooltip.Root>
+```
+
+---
+
+### `onClearErrors` 제거
+
+`Form.Root`에서 `onClearErrors` prop이 제거됩니다. v1에서는 `errors` prop으로 전달한 에러가 필드 값 변경 시 자동으로 클리어됩니다.
+
+**대상 컴포넌트:** `Form`
+
+```tsx
+// Before
+<Form.Root
+  errors={errors}
+  onClearErrors={(clearedErrors) => {
+    setErrors((prev) => {
+      const next = { ...prev };
+      Object.keys(clearedErrors).forEach((name) => delete next[name]);
+      return next;
+    });
+  }}
+>
+  <input name="email" />
+</Form.Root>
+
+// After
+<Form.Root errors={errors}>
+  <input name="email" />
+</Form.Root>
+```
+
+---
+
+### `selected` → `current`
+
+현재 선택된 링크를 나타내는 prop 이름이 Breadcrumb API와 일관성을 맞추기 위해 변경됩니다.
+
+**대상 컴포넌트:** `NavigationMenu`
+
+```tsx
+// Before
+<NavigationMenu.Link selected>Home</NavigationMenu.Link>
+
+// After
+<NavigationMenu.Link current>Home</NavigationMenu.Link>
+```
+
+```tsx
+// Before
+<NavigationMenu.Link selected={isActive}>Dashboard</NavigationMenu.Link>
+
+// After
+<NavigationMenu.Link current={isActive}>Dashboard</NavigationMenu.Link>
+```
+
+---
+
+## 고급 사용법
+
+### 여러 변환이 적용되는 경우
+
+```tsx
+// Before
+import { Menu, Tooltip } from '@vapor-ui/core';
+
+function App() {
+  return (
+    <>
+      <Menu.Root openOnHover delay={200} closeDelay={100} loop>
+        <Menu.Trigger>Menu</Menu.Trigger>
+        <Menu.Positioner trackAnchor>
+          <Menu.Popup>
+            <Menu.Item>Item 1</Menu.Item>
+            <Menu.Item>Item 2</Menu.Item>
+          </Menu.Popup>
+        </Menu.Positioner>
+      </Menu.Root>
+
+      <Tooltip.Root hoverable delay={500} closeDelay={100}>
+        <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+        <Tooltip.Popup>Tooltip content</Tooltip.Popup>
+      </Tooltip.Root>
+    </>
+  );
+}
+
+// After
+import { Menu, Tooltip } from '@vapor-ui/core';
+
+function App() {
+  return (
+    <>
+      <Menu.Root loopFocus>
+        <Menu.Trigger openOnHover delay={200} closeDelay={100}>Menu</Menu.Trigger>
+        <Menu.Positioner disableAnchorTracking={false}>
+          <Menu.Popup>
+            <Menu.Item>Item 1</Menu.Item>
+            <Menu.Item>Item 2</Menu.Item>
+          </Menu.Popup>
+        </Menu.Positioner>
+      </Menu.Root>
+
+      <Tooltip.Root disableHoverablePopup={false}>
+        <Tooltip.Trigger delay={500} closeDelay={100}>Hover me</Tooltip.Trigger>
+        <Tooltip.Popup>Tooltip content</Tooltip.Popup>
+      </Tooltip.Root>
+    </>
+  );
+}
+```
+
+### Alias import 처리
+
+alias로 import한 컴포넌트도 올바르게 변환됩니다:
+
+```tsx
+// Before
+import { Menu as VaporMenu } from '@vapor-ui/core';
+
+<VaporMenu.Root loop>
+  <VaporMenu.Trigger>Open</VaporMenu.Trigger>
+</VaporMenu.Root>
+
+// After
+<VaporMenu.Root loopFocus>
+  <VaporMenu.Trigger>Open</VaporMenu.Trigger>
+</VaporMenu.Root>
+```
+
+---
+
+## 수동 마이그레이션
+
+codemod로 자동 변환할 수 없는 항목입니다. 직접 검색하여 수정하세요.
+
+### `data-selected` → `data-active`
+
+CSS 선택자에서 사용되는 data attribute가 변경됩니다.
+
+**대상 컴포넌트:** `Tabs`, `NavigationMenu`
+
+기존 Tabs는 상태 이름이 `selected`, `highlighted`, `active`가 혼재되어 있어 "현재 활성 탭"이 무엇인지 직관적이지 않았습니다. v1에서는 `data-active`로 통일합니다.
+
+```css
+/* Before */
+[data-selected] {
+  background-color: var(--color-primary);
+}
+
+/* After */
+[data-active] {
+  background-color: var(--color-primary);
+}
+```
+
+<Callout type="info">
+CSS 선택자는 컴포넌트 import와 무관하게 사용되므로 codemod로 자동 변환할 수 없습니다. `data-selected`를 검색하여 직접 수정하세요.
+</Callout>

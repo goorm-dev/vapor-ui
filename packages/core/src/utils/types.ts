@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 
-import type { useRender } from '@base-ui-components/react/use-render';
+import type { useRender } from '@base-ui/react/use-render';
 
 import type { Sprinkles } from '~/styles/sprinkles.css';
 

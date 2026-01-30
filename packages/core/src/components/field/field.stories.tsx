@@ -5,7 +5,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CheckCircleIcon } from '@vapor-ui/icons';
 
 import { Field } from '.';
-import { Box } from '../box';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Flex } from '../flex';
@@ -59,12 +58,11 @@ const submitForm = async (event: FormEvent<HTMLFormElement>) => {
 export const TestBed: Story = {
     render: (args) => {
         const { required, ...fieldArgs } = args;
-        const [errors, setErrors] = useState({});
+        const [errors] = useState({});
 
         return (
             <Form
                 errors={errors}
-                onClearErrors={setErrors}
                 onSubmit={async (event) => {
                     event.preventDefault();
 
@@ -82,19 +80,14 @@ export const TestBed: Story = {
                         {...fieldArgs}
                     >
                         <Field.Description>non-required checkbox</Field.Description>
-                        <Box render={<Field.Label />} alignItems="center">
+                        <Field.Label alignItems="center">
                             <Checkbox.Root />
                             멘토님 강연 능력
-                        </Box>
+                        </Field.Label>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
-                        <Box
-                            render={<Field.Success match />}
-                            display="flex"
-                            alignItems="center"
-                            gap="$050"
-                        >
+                        <Field.Success match display="flex" alignItems="center" gap="$050">
                             <CheckCircleIcon /> 강의 평가가 완료되었습니다
-                        </Box>
+                        </Field.Success>
                     </Field.Root>
                     <Field.Root
                         name="vapor-policy-agreement2"
@@ -102,20 +95,19 @@ export const TestBed: Story = {
                         {...fieldArgs}
                     >
                         <Field.Description>required checkbox</Field.Description>
-
-                        <Box render={<Field.Label />} alignItems="center">
+                        <Field.Label alignItems="center">
                             <Checkbox.Root required />
                             멘토님 강연 능력
-                        </Box>
+                        </Field.Label>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
                         <Field.Success match>✓ 강의 평가가 완료되었습니다</Field.Success>
                     </Field.Root>
                     {/* Switch Component Example */}
                     <Field.Root name="notifications" validationMode="onChange" {...fieldArgs}>
-                        <Box render={<Field.Label />} alignItems="center">
+                        <Field.Label alignItems="center">
                             서비스 메일 수신 동의 - required
                             <Switch.Root required />
-                        </Box>
+                        </Field.Label>
                         <Field.Description>
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
                         </Field.Description>
@@ -123,10 +115,10 @@ export const TestBed: Story = {
                         <Field.Success match>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="notifications2" validationMode="onChange" {...fieldArgs}>
-                        <Box render={<Field.Label />} alignItems="center">
+                        <Field.Label alignItems="center">
                             이벤트성 광고 수신 동의 - non required
                             <Switch.Root />
-                        </Box>
+                        </Field.Label>
                         <Field.Description>
                             서비스 관련 메일과 이벤트 정보를 받아보실 수 있습니다
                         </Field.Description>
@@ -139,30 +131,33 @@ export const TestBed: Story = {
                         render={<RadioGroup.Root required />}
                         {...fieldArgs}
                     >
-                        <Box render={<Field.Label />} alignItems="center">
-                            <Radio.Root value="male" />
-                            남성
-                        </Box>
+                        <Field.Label>성별 선택</Field.Label>
+                        <Flex flexDirection="column" gap="$100">
+                            <Field.Item>
+                                <Radio.Root value="male" />
+                                <Field.Label>남성</Field.Label>
+                            </Field.Item>
 
-                        <Box render={<Field.Label />} alignItems="center">
-                            <Radio.Root value="female" />
-                            여성
-                        </Box>
+                            <Field.Item>
+                                <Radio.Root value="female" />
+                                <Field.Label>여성</Field.Label>
+                            </Field.Item>
 
-                        <Box render={<Field.Label />} alignItems="center">
-                            <Radio.Root value="other" />
-                            기타
-                        </Box>
+                            <Field.Item>
+                                <Radio.Root value="other" />
+                                <Field.Label>기타</Field.Label>
+                            </Field.Item>
+                        </Flex>
                         <Field.Error match>성별을 반드시 선택해주세요.</Field.Error>
                         <Field.Success match>✓ 성별이 선택되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
-                        <Box render={<Field.Label />} flexDirection="column">
-                            <Text typography="subtitle2" foreground="normal-200">
-                                이름
-                            </Text>
-                            <TextInput required />
-                        </Box>
+                        <Field.Label
+                            render={<Text typography="subtitle2" foreground="normal-200" />}
+                        >
+                            이름
+                        </Field.Label>
+                        <TextInput required />
                         <Field.Description>
                             계정 생성을 위해 유효한 이름을 입력해주세요
                         </Field.Description>

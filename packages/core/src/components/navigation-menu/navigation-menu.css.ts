@@ -42,7 +42,7 @@ export const link = recipe({
             color: vars.color.foreground.normal[100],
 
             selectors: {
-                '&[data-selected]': {
+                '&[data-active]': {
                     color: vars.color.foreground.primary[200],
                 },
 

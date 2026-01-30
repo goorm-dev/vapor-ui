@@ -1,9 +1,10 @@
 'use client';
 
-import { forwardRef } from 'react';
+import type { ReactElement } from 'react';
+import { forwardRef, useMemo } from 'react';
 
-import { useRender } from '@base-ui-components/react';
-import { Avatar as BaseAvatar } from '@base-ui-components/react/avatar';
+import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
+import { useRender } from '@base-ui/react/use-render';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import clsx from 'clsx';
 
@@ -12,15 +13,12 @@ import { vars } from '~/styles/themes.css';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
-import type { VComponentProps } from '~/utils/types';
+import type { Assign, VComponentProps } from '~/utils/types';
 
 import type { FallbackVariants, RootVariants } from './avatar.css';
 import * as styles from './avatar.css';
 
-type AvatarVariants = RootVariants & FallbackVariants;
-type AvatarSharedProps = AvatarVariants & { src?: string; alt: string; delay?: number };
-
-const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
+const [AvatarProvider, useAvatarContext] = createContext<AvatarContext>({
     name: 'AvatarContext',
     providerName: 'AvatarProvider',
     hookName: 'useAvatarContext',
@@ -29,34 +27,49 @@ const [AvatarProvider, useAvatarContext] = createContext<AvatarSharedProps>({
 /* -----------------------------------------------------------------------------------------------*/
 
 export const AvatarRoot = forwardRef<HTMLSpanElement, AvatarRoot.Props>((props, ref) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
-    const [variantProps, otherProps] = createSplitProps<AvatarSharedProps>()(componentProps, [
+    const { imageElement, fallbackElement, className, children, ...componentProps } =
+        resolveStyles(props);
+
+    const [variantProps, otherProps] = createSplitProps<AvatarContext>()(componentProps, [
         'src',
         'alt',
         'size',
         'shape',
         'delay',
+        'crossOrigin',
+        'decoding',
+        'fetchPriority',
+        'height',
+        'loading',
+        'onLoadingStatusChange',
+        'referrerPolicy',
+        'sizes',
+        'srcSet',
+        'width',
+        'useMap',
     ]);
-    const { shape, size } = variantProps;
 
-    const children = useRender({
-        render: createRender(
-            childrenProp,
-            <>
-                <AvatarImagePrimitive />
-                <AvatarFallbackPrimitive />
-            </>,
-        ),
+    const { shape, size } = variantProps;
+    const contextValue = useMemo(() => variantProps, [variantProps]);
+
+    const image = useRender({
+        render: createRender(imageElement, <AvatarImagePrimitive />),
+    });
+
+    const fallback = useRender({
+        render: createRender(fallbackElement, <AvatarFallbackPrimitive />),
+        props: { children },
     });
 
     return (
-        <AvatarProvider value={variantProps}>
+        <AvatarProvider value={contextValue}>
             <BaseAvatar.Root
                 ref={ref}
                 className={clsx(styles.root({ shape, size }), className)}
                 {...otherProps}
             >
-                {children}
+                {image}
+                {fallback}
             </BaseAvatar.Root>
         </AvatarProvider>
     );
@@ -70,14 +83,29 @@ AvatarRoot.displayName = 'Avatar.Root';
 export const AvatarImagePrimitive = forwardRef<HTMLImageElement, AvatarImagePrimitive.Props>(
     (props, ref) => {
         const { className, ...componentProps } = resolveStyles(props);
-        const { src, alt } = useAvatarContext();
+        const context = useAvatarContext();
+
+        const [imageProps] = createSplitProps<ImageProps>()(context, [
+            'alt',
+            'src',
+            'crossOrigin',
+            'decoding',
+            'fetchPriority',
+            'height',
+            'loading',
+            'onLoadingStatusChange',
+            'referrerPolicy',
+            'sizes',
+            'srcSet',
+            'width',
+            'useMap',
+        ]);
 
         return (
             <BaseAvatar.Image
                 ref={ref}
-                src={src}
-                alt={alt}
                 className={clsx(styles.image, className)}
+                {...imageProps}
                 {...componentProps}
             />
         );
@@ -93,7 +121,7 @@ export const AvatarFallbackPrimitive = forwardRef<HTMLSpanElement, AvatarFallbac
     (props, ref) => {
         const { className, style, children, ...componentProps } = resolveStyles(props);
         const { size, alt, delay } = useAvatarContext();
-        const background = getRandomColor(alt);
+        const background = getRandomColor(alt ?? '');
 
         const mergedStyle = {
             ...assignInlineVars({ [styles.fallbackBgVar]: background }),
@@ -174,17 +202,30 @@ const getRandomColor = (value: string, colors: string[] = DEFAULT_COLORS) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+type ImageProps = Omit<BaseAvatar.Image.Props, keyof BaseAvatar.Root.Props>;
+
+type AvatarVariants = RootVariants & FallbackVariants;
+type AvatarContext = AvatarVariants & ImageProps & Pick<BaseAvatar.Fallback.Props, 'delay'>;
+
 export namespace AvatarRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseAvatar.Root>;
-    export interface Props extends RootPrimitiveProps, AvatarSharedProps {}
+    type SubElementProps = {
+        imageElement?: ReactElement<AvatarImagePrimitive.Props>;
+        fallbackElement?: ReactElement<AvatarFallbackPrimitive.Props>;
+    };
+
+    export interface Props extends Assign<RootPrimitiveProps, AvatarContext>, SubElementProps {}
+    export interface State extends BaseAvatar.Root.State {}
 }
 
 export namespace AvatarImagePrimitive {
     type ImagePrimitiveProps = VComponentProps<typeof BaseAvatar.Image>;
-    export interface Props extends Omit<ImagePrimitiveProps, keyof AvatarSharedProps> {}
+
+    export interface Props extends Omit<ImagePrimitiveProps, keyof AvatarContext> {}
 }
 
 export namespace AvatarFallbackPrimitive {
     type FallbackPrimitiveProps = VComponentProps<typeof BaseAvatar.Fallback>;
-    export interface Props extends Omit<FallbackPrimitiveProps, keyof AvatarSharedProps> {}
+
+    export interface Props extends Omit<FallbackPrimitiveProps, keyof AvatarContext> {}
 }

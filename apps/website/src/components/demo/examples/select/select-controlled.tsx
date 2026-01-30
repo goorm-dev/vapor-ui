@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Button, HStack, Select, Text } from '@vapor-ui/core';
+import { Button, HStack, Select, Text, VStack } from '@vapor-ui/core';
 
 export default function SelectControlled() {
     const [value, setValue] = useState<string>('');
@@ -12,7 +12,7 @@ export default function SelectControlled() {
     };
 
     return (
-        <div className="space-y-4">
+        <VStack gap="$200">
             <Select.Root placeholder="폰트 선택" value={value} onValueChange={handleValueChange}>
                 <Select.Trigger />
 
@@ -39,6 +39,6 @@ export default function SelectControlled() {
                     선택 해제
                 </Button>
             </HStack>
-        </div>
+        </VStack>
     );
 }
