@@ -8,6 +8,7 @@
         "releases",
         "llms-txt",
         "tailwindcss-v4",
+        "eslint",
         "codemod"
     ],
     "defaultOpen": true
