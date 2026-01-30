@@ -20,12 +20,14 @@ export default async function ThemePage({ params }: PageProps) {
     const activeToolId = tool?.[0];
 
     // Sheet 콘텐츠 준비 (서버에서 MDX 로드)
-    let sheetContent: {
-        title: string;
-        description: string;
-        markdownUrl: string;
-        children: React.ReactNode;
-    } | undefined;
+    let sheetContent:
+        | {
+              title: string;
+              description: string;
+              markdownUrl: string;
+              children: React.ReactNode;
+          }
+        | undefined;
 
     if (activeToolId) {
         const page = themeSource.getPage([activeToolId]);

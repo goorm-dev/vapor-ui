@@ -1,12 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
+
+import { useRouter } from 'next/navigation';
 
 import { SiteNavBar } from '~/components/site-nav-bar/site-nav-bar';
 import { THEME_SECTIONS } from '~/constants/theme-tools';
 
-import { PageHeader, ToolSection, ToolDetailSheetClient } from './_components';
+import { PageHeader, ToolDetailSheetClient, ToolSection } from './_components';
 
 /* -------------------------------------------------------------------------------------------------
  * Types
