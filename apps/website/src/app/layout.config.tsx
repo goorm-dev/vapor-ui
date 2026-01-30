@@ -1,5 +1,4 @@
 import type { DocsLayoutProps } from 'fumadocs-ui/layouts/docs';
-import type { DocsLayoutProps as NotebookLayoutProps } from 'fumadocs-ui/layouts/notebook';
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 
 import { ThemeToggle } from '~/components/theme-toggle';
@@ -27,10 +26,4 @@ export const docsOptions: DocsLayoutProps = {
     sidebar: {
         className: 'md:bg-v-canvas',
     },
-};
-
-export const playgroundOptions: NotebookLayoutProps = {
-    ...baseOptions,
-    tree: source.pageTree,
-    tabMode: 'sidebar',
 };
