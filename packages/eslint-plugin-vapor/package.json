@@ -1,6 +1,6 @@
 {
     "name": "eslint-plugin-vapor",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "ESLint configuration for Vapor UI projects",
     "type": "module",
     "exports": {
