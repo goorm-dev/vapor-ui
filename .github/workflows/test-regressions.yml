@@ -19,14 +19,29 @@ env:
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
     REPORT_PATH: ''
+    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
     cancel-in-progress: true
 
 jobs:
+    build-storybook:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Git clone the repository
+              uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              uses: ./.github/composite/install
+
+            - name: Build Storybook
+              run: pnpm build:storybook
+
     test:
         runs-on: macos-latest
+        needs: [build-storybook]
         strategy:
             fail-fast: false
             matrix:
@@ -49,9 +64,6 @@ jobs:
 
             - name: Install Playwright Browsers
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
-
-            - name: Build Icons
-              run: pnpm turbo --filter @vapor-ui/icons build
 
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
