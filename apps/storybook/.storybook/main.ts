@@ -23,7 +23,7 @@ const config: StorybookConfig = {
     },
 
     typescript: {
-        reactDocgen: false,
+        reactDocgen: process.env.STORYBOOK_SKIP_DOCGEN ? false : 'react-docgen-typescript',
         reactDocgenTypescriptOptions: {
             tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
         },
