@@ -16,7 +16,7 @@ export default function FieldWithInputs() {
 
             {/* Checkbox with Field */}
             <Field.Root name="newsletter">
-                <Field.Item>
+                <Field.Item alignItems="center">
                     <Checkbox.Root />
                     <Field.Label>뉴스레터 구독</Field.Label>
                 </Field.Item>
@@ -25,7 +25,7 @@ export default function FieldWithInputs() {
 
             {/* Switch with Field */}
             <Field.Root name="notifications">
-                <Field.Item>
+                <Field.Item alignItems="center">
                     <Switch.Root />
                     <Field.Label>푸시 알림</Field.Label>
                 </Field.Item>
@@ -34,16 +34,17 @@ export default function FieldWithInputs() {
 
             {/* Select with Field */}
             <Field.Root name="country">
-                <Select.Root placeholder="국가를 선택하세요">
+                <Select.Root placeholder="국가를 선택하세요" items={countries}>
                     <Field.Label htmlFor="country-select" flexDirection="column">
                         국가
                         <Select.Trigger id="country-select" />
                     </Field.Label>
                     <Select.Popup>
-                        <Select.Item value="kr">대한민국</Select.Item>
-                        <Select.Item value="us">미국</Select.Item>
-                        <Select.Item value="jp">일본</Select.Item>
-                        <Select.Item value="cn">중국</Select.Item>
+                        {countries.map((country) => (
+                            <Select.Item key={country.value} value={country.value}>
+                                {country.label}
+                            </Select.Item>
+                        ))}
                     </Select.Popup>
                 </Select.Root>
                 <Field.Description>거주 중인 국가를 선택하세요.</Field.Description>
@@ -51,3 +52,10 @@ export default function FieldWithInputs() {
         </VStack>
     );
 }
+
+const countries = [
+    { label: '대한민국', value: 'kr' },
+    { label: '미국', value: 'us' },
+    { label: '일본', value: 'jp' },
+    { label: '중국', value: 'cn' },
+];

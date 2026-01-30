@@ -1,4 +1,4 @@
-import { Button, Tabs } from '@vapor-ui/core';
+import { Tabs } from '@vapor-ui/core';
 
 export default function TabsCustomIndicator() {
     return (
@@ -11,7 +11,6 @@ export default function TabsCustomIndicator() {
                     />
                 }
             >
-                <Button width="5rem">hi</Button>
                 <Tabs.Button value="home" width="5rem">
                     홈
                 </Tabs.Button>

@@ -30,12 +30,21 @@ export default function PopoverPopup() {
                     <Popover.Title>설정</Popover.Title>
                     <Popover.Description>원하는 설정을 선택하세요.</Popover.Description>
                     <div className="mt-4 space-y-2">
-                        <Button size="sm" className="w-full">
-                            옵션 1
-                        </Button>
-                        <Button size="sm" variant="outline" className="w-full">
-                            옵션 2
-                        </Button>
+                        <Popover.Close
+                            render={
+                                <Button size="sm" className="w-full">
+                                    옵션 1
+                                </Button>
+                            }
+                        />
+
+                        <Popover.Close
+                            render={
+                                <Button size="sm" variant="outline" className="w-full">
+                                    옵션 2
+                                </Button>
+                            }
+                        />
                     </div>
                 </Popover.Popup>
             </Popover.Root>

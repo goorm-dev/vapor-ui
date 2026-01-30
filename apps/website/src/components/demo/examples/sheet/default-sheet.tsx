@@ -24,7 +24,7 @@ export default function DefaultSheet() {
                 </Sheet.Body>
                 <Sheet.Footer>
                     <Sheet.Close render={<Button variant="ghost" />}>닫기</Sheet.Close>
-                    <Button colorPalette="primary">확인</Button>
+                    <Sheet.Close render={<Button colorPalette="primary">확인</Button>} />
                 </Sheet.Footer>
             </Sheet.Popup>
         </Sheet.Root>

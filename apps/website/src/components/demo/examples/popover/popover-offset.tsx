@@ -42,7 +42,7 @@ export default function PopoverOffset() {
                             정렬 오프셋 20px
                         </Popover.Trigger>
                         <Popover.Popup
-                            positionerElement={<Popover.PositionerPrimitive alignOffset={1000} />}
+                            positionerElement={<Popover.PositionerPrimitive alignOffset={100} />}
                         >
                             <Popover.Title>정렬 오프셋 100px</Popover.Title>
                             <Popover.Description>

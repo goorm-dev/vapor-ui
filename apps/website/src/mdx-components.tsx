@@ -1,4 +1,4 @@
-import { Box, Text } from '@vapor-ui/core';
+import { Badge, Box, Text } from '@vapor-ui/core';
 import { Pre } from 'fumadocs-ui/components/codeblock';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 import * as TabsComponents from 'fumadocs-ui/components/tabs';
@@ -40,11 +40,13 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         ComponentsCard,
         FoundationSizeTabs,
         FoundationTypographyTabs,
+
         IconList,
         PropsTable,
         ColorPalette,
         Text,
         Box,
+        Badge,
         BasicColor,
         SemanticColor,
         Tabs,
