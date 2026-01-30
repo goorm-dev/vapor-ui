@@ -6,7 +6,7 @@
 
 - remove iconType ([#231](https://github.com/goorm-dev/vapor-ui/pull/231)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-### etc
+### Etc.
 
 - Update icons from Figma ([#406](https://github.com/goorm-dev/vapor-ui/pull/406)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
@@ -14,92 +14,74 @@
 
 ## 1.0.0-beta.6
 
-### Minor Changes
+### Etc.
 
-- e9e83a8: Add new icons from Figma
+- clone elements & enhance customizability ([#359](https://github.com/goorm-dev/vapor-ui/pull/359)) - Thanks [@noahchoii](https://github.com/noahchoii)!
 
-    **New Basic Icons:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
+- Add new icons from Figma ([#396](https://github.com/goorm-dev/vapor-ui/pull/396)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-### Patch Changes
-
-- 8c5c755: clone elements & enhance customizability
+    **New:** `ChecklistOutlineIcon`, `StrikeOutlineIcon`, `Heading3OutlineIcon`, `Heading2OutlineIcon`, `Heading1OutlineIcon`, `Heading4OutlineIcon`
 
 ## 1.0.0-beta.5
 
-### Minor Changes
+### Etc.
 
-- 8217749: Add new icons from Figma
+- Add new icons from Figma ([#264](https://github.com/goorm-dev/vapor-ui/pull/264)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
+    **New:** `DocktoBottomIcon`, `SideNavIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
 
-    **Also Updated:**
+    **Updated:**
     - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
 
-- 402284e: Add new icons from Figma
+- Update icons from Figma ([#285](https://github.com/goorm-dev/vapor-ui/pull/285)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `DocktoBottomIcon`, `SideNavIcon`, `DocktoBottomOutlineIcon`, `SideNavOutlineIcon`
-
-    **Also Updated:**
-    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
-
-- fd4acaa: Add new icons from Figma
-
-    **New Basic Icons:** `SideNavIcon`, `DocktoBottomIcon`, `SideNavOutlineIcon`, `DocktoBottomOutlineIcon`
-
-    **Also Updated:**
-    - Basic Icons: `PanelOpenIcon`, `PanelOpenOutlineIcon`
-
-### Patch Changes
-
-- f2950ee: Update icons from Figma
-
-    **Updated Basic Icons:** `TreeCollapseIcon`
+    **Updated:** `TreeCollapseIcon`
 
 ## 0.4.0
 
-### Minor Changes
+### Icon Base
 
-- e381247: Add new icons from Figma
+- adjust prop precedence for dimensions(width, height, size) ([#182](https://github.com/goorm-dev/vapor-ui/pull/182)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-    **New Symbol Icons:** `MediumIcon`
+### Etc.
 
-    **Also Updated:**
+- Add new icons from Figma ([#207](https://github.com/goorm-dev/vapor-ui/pull/207)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
+
+    **New:** `MediumIcon`
+
+    **Updated:**
     - Symbol Icons: `FirefoxColorIcon`
 
-### Patch Changes
+- update icons from Figma ([#217](https://github.com/goorm-dev/vapor-ui/pull/217)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-- 450b324: conditionally add CSS variables only when isCssVariable is true
-- 2b756c5: fix icon size
-- 3bfda49: Update icons from Figma
-
-    **Updated Basic Icons:** `TerminalWindowOutlineIcon`
+    **Updated:** `TerminalWindowOutlineIcon`
 
 ## 0.3.0
 
-### Minor Changes
+### Etc.
 
-- c4d0e8e: Add new icons from Figma
+- add new icons from Figma ([#179](https://github.com/goorm-dev/vapor-ui/pull/179)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `LinearScaleOutlineIcon`
+    **New:** `LinearScaleOutlineIcon`
 
-    **Also Updated:**
+    **Updated:**
     - Basic Icons: `PlayIcon`, `ReplaceIcon`, `ClassIcon`, `ArrowUpOutlineIcon`, `ArrowDownOutlineIcon`, `TerminalOutlineIcon`, `ViewShrinkOutlineIcon`, `FolderSearchIcon`, `StarOutlineIcon`, `PriceOutlineIcon`, `HistoryOutlineIcon`, `CardsOutlineIcon`, `ZoomOutOutlineIcon`, `IntelliSensePropertyOutlineIcon`, `CorrectOutlineIcon`, `ChevronDoubleRightOutlineIcon`, `AutoCodeOutlineIcon`, `ChapterOutlineIcon`
     - Symbol Icons: `RstudioColorIcon`
 
-- a156f82: Add new icons from Figma
+- add new icons from Figma ([#198](https://github.com/goorm-dev/vapor-ui/pull/198)) - Thanks [@github-actions](https://github.com/apps/github-actions)!
 
-    **New Basic Icons:** `SidenavIcon`
+    **New:** `SidenavIcon`
 
 ## 0.2.0
 
-### Minor Changes
+### Etc.
 
-- 30ebcde: feat: Add new icons and update existing icon components
+- add new icons and update existing icon components ([#119](https://github.com/goorm-dev/vapor-ui/pull/119)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
 
-    ## New Icons Added
+    **New Icons Added**
     - `AlignJustifyOutlineIcon`, `CopyAsMarkdownOutlineIcon`, `IndentDecreaseOutlineIcon`, `SlotIcon`, `TextScanOutlineIcon`
 
-    ## Updated Icons
+    **Updated**
     - Updated approximately 190 existing icons with refined SVG paths and improved rendering
     - Minor coordinate adjustments for better visual consistency
     - Enhanced clipPath definitions where needed

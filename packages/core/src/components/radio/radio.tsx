@@ -82,7 +82,6 @@ RadioIndicatorPrimitive.displayName = 'Radio.IndicatorPrimitive';
 
 export namespace RadioRoot {
     type RootPrimitiveProps = VComponentProps<typeof BaseRadio.Root>;
-
     export interface Props extends RootPrimitiveProps, RadioVariants {}
 }
 

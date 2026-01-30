@@ -63,6 +63,10 @@ export const SheetRoot = ({
         setMounted(false);
     });
 
+    const handleClose = useStableCallback(() => {
+        setOpen(false);
+    });
+
     useOpenChangeComplete({
         enabled: !props.actionsRef,
         open,
@@ -72,10 +76,6 @@ export const SheetRoot = ({
                 handleUnmount();
             }
         },
-    });
-
-    const handleClose = useStableCallback(() => {
-        setOpen(false);
     });
 
     useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount, close: handleClose }), [
@@ -282,7 +282,9 @@ SheetDescription.displayName = 'Sheet.Description';
 export namespace SheetRoot {
     type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
     export interface Props extends RootPrimitiveProps {}
+
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
+    export type Actions = BaseDialog.Root.Actions;
 }
 
 export namespace SheetTrigger {

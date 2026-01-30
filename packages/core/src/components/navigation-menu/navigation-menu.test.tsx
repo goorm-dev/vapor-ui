@@ -253,17 +253,31 @@ describe('<NavigationMenu.Link />', () => {
         </NavigationMenu.Root>
     );
 
-    it('should render with aria-current="page" when given selected', () => {
-        const rendered = render(<NavItemTest selected />);
+    it('should render with aria-current="page" when given current', () => {
+        const rendered = render(<NavItemTest current />);
         const link = rendered.getByTestId(NAV_LINK);
 
         expect(link).toHaveAttribute('aria-current', 'page');
     });
 
+    it('should render with data-current attribute when given current', () => {
+        const rendered = render(<NavItemTest current />);
+        const link = rendered.getByTestId(NAV_LINK);
+
+        expect(link).toHaveAttribute('data-current');
+    });
+
+    it('should not render with data-current attribute when not given current', () => {
+        const rendered = render(<NavItemTest />);
+        const link = rendered.getByTestId(NAV_LINK);
+
+        expect(link).not.toHaveAttribute('data-current');
+    });
+
     it('should render with aria-current="page" when clicked', async () => {
         let link;
 
-        const rendered = render(<NavItemTest selected />);
+        const rendered = render(<NavItemTest current />);
         link = rendered.getByTestId(NAV_LINK);
 
         await userEvent.click(link);
