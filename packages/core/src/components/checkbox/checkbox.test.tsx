@@ -249,6 +249,53 @@ describe('Checkbox', () => {
             expect(checkbox).not.toBeChecked();
         });
     });
+
+    describe('prop: readOnly', () => {
+        it('should have the `aria-readonly` attribute', async () => {
+            const rendered = render(<CheckboxTest readOnly />);
+            const checkbox = rendered.getByRole('checkbox');
+
+            expect(checkbox).toHaveAttribute('aria-readonly', 'true');
+        });
+
+        it('should not have the `aria-readonly` attribute when `readOnly` is not set', async () => {
+            const rendered = render(<CheckboxTest />);
+            const checkbox = rendered.getByRole('checkbox');
+
+            expect(checkbox).not.toHaveAttribute('aria-readonly');
+        });
+
+        it('should not change its state when clicked', async () => {
+            const onCheckedChange = vi.fn();
+            const rendered = render(<CheckboxTest readOnly onCheckedChange={onCheckedChange} />);
+            const checkbox = rendered.getByRole('checkbox');
+
+            expect(checkbox).toHaveAttribute('aria-readonly', 'true');
+
+            await userEvent.click(checkbox);
+            expect(onCheckedChange).not.toHaveBeenCalled();
+            expect(checkbox).not.toBeChecked();
+        });
+
+        it('should move focus when pressed tab', async () => {
+            const rendered = render(
+                <>
+                    <CheckboxTest readOnly />
+                    <button>Next Focusable</button>
+                </>,
+            );
+            const checkbox = rendered.getByRole('checkbox');
+            const nextButton = rendered.getByText('Next Focusable');
+
+            expect(checkbox).toHaveAttribute('aria-readonly', 'true');
+
+            await userEvent.tab();
+            expect(checkbox).toHaveFocus();
+
+            await userEvent.tab();
+            expect(nextButton).toHaveFocus();
+        });
+    });
 });
 
 const LABEL_TEXT = 'Checkbox Label';
