@@ -237,6 +237,8 @@ export namespace DialogRoot {
     export interface Props extends DialogPrimitiveProps, DialogSharedProps {
         closeOnClickOverlay?: boolean;
     }
+
+    export type Actions = BaseDialog.Root.Actions;
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
 }
 
@@ -254,8 +256,8 @@ export namespace DialogPopupPrimitive {
 
 export namespace DialogPopup {
     export interface Props extends DialogPopupPrimitive.Props {
-        portalElement?: ReactElement<typeof DialogPortalPrimitive>;
-        overlayElement?: ReactElement<typeof DialogOverlayPrimitive>;
+        portalElement?: ReactElement<DialogPortalPrimitive.Props>;
+        overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
     }
 }
 
