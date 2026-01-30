@@ -1,8 +1,8 @@
 ---
-'@vapor-ui/codemod': minor
+'@vapor-ui/codemod': major
 ---
 
-Add v1/migrate transform for @base-ui/react v1.1.0 migration
+Add v1/migrate transform for @vapor-ui/core v1.0.0 migration
 
 - `trackAnchor` → `disableAnchorTracking` (boolean inversion)
 - `loop` → `loopFocus` (Menu, Tabs)
