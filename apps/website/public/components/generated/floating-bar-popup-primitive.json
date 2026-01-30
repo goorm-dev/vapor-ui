@@ -1,0 +1,28 @@
+{
+    "name": "PopupPrimitive",
+    "displayName": "FloatingBar.PopupPrimitive",
+    "description": "FloatingBar의 팝업 기본 요소로, 팝업의 기본 구조와 동작을 제공합니다. HTML `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "className",
+            "type": ["string"],
+            "defaultValue": "undefined",
+            "description": "FloatingBar 팝업에 적용할 CSS 클래스명입니다."
+        },
+        {
+            "name": "style",
+            "type": ["CSSProperties"],
+            "defaultValue": "undefined",
+            "description": "FloatingBar 팝업에 적용할 인라인 스타일입니다."
+        },
+        {
+            "name": "render",
+            "type": [
+                "React.ReactElement",
+                "(props: PopupProps, state: PopupState) => React.ReactElement"
+            ],
+            "defaultValue": "undefined",
+            "description": "팝업 요소를 렌더링하는 함수 또는 컴포넌트입니다."
+        }
+    ]
+}
