@@ -57,7 +57,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@base-ui-components/react": "1.0.0-beta.4",
+        "@base-ui/react": "^1.1.0",
         "@base-ui/utils": "^0.2.4",
         "@vanilla-extract/css": "^1.18.0",
         "@vanilla-extract/css-utils": "^0.1.6",

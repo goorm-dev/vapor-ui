@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createRender } from '~/utils/create-renderer';
@@ -48,7 +48,5 @@ IconButton.displayName = 'IconButton';
 export namespace IconButton {
     type IconButtonPrimitiveProps = VComponentProps<typeof Button>;
 
-    export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {
-        'aria-label': string;
-    }
+    export interface Props extends IconButtonVariants, IconButtonPrimitiveProps {}
 }
