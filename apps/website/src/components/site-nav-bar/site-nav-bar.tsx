@@ -152,7 +152,6 @@ export const SiteNavBar = () => {
                 isScrolled ? 'shadow-sm backdrop-blur-md z-20' : 'bg-transparent'
             }`}
         >
-            23
             {/* Logo */}
             <Link href="/" className="inline-flex items-center gap-2.5 font-semibold text-v-logo">
                 <LogoVapor
