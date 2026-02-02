@@ -100,7 +100,7 @@ async function main() {
 }
 
 function convertMarkdownToSlack(text) {
-    if (!text) return '';
+    if (!text) return [];
 
     // 1. Basic Markdown to Slack formatting
     let formatted = text
@@ -112,6 +112,11 @@ function convertMarkdownToSlack(text) {
     // 2. Split by headers
     const parts = formatted.split(/^### (.*)$/gm);
     const sections = [];
+
+    // Handle initial content before headers if exists
+    if (parts[0] && parts[0].trim()) {
+        sections.push(parts[0].trim());
+    }
 
     for (let i = 1; i < parts.length; i += 2) {
         const title = parts[i].trim();
@@ -125,9 +130,9 @@ function convertMarkdownToSlack(text) {
         sections.push(`*${title}*\n\n${quotedContent}`);
     }
 
-    if (sections.length === 0) return formatted;
+    if (sections.length === 0) return [formatted];
 
-    return sections.join('\n\n\n');
+    return sections;
 }
 
 async function sendSlackNotification(packages) {
@@ -153,13 +158,25 @@ async function sendSlackNotification(packages) {
 
     // 2. Core Package
     if (corePackage) {
+        const sections = convertMarkdownToSlack(corePackage.content);
+
         blocks.push({
             type: 'section',
             text: {
                 type: 'mrkdwn',
-                text: `<https://vapor-ui.goorm.io/docs/getting-started/releases/core|[*${corePackage.name} v${corePackage.version}*]>\n\n${convertMarkdownToSlack(corePackage.content)}`,
+                text: `<https://vapor-ui.goorm.io/docs/getting-started/releases/core|[*${corePackage.name} v${corePackage.version}*]>`,
             },
         });
+
+        for (const sectionContent of sections) {
+            blocks.push({
+                type: 'section',
+                text: {
+                    type: 'mrkdwn',
+                    text: sectionContent,
+                },
+            });
+        }
     }
 
     // 3. Other Packages
@@ -179,6 +196,7 @@ async function sendSlackNotification(packages) {
             });
         }
     }
+    console.log(blocks);
 
     try {
         const response = await fetch(SLACK_WEBHOOK_URL, {
