@@ -1,14 +1,14 @@
 import { Fragment } from 'react';
 
-import { Menu, Text } from '@vapor-ui/core';
-import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
+import { HStack, Menu, Text } from '@vapor-ui/core';
+import { ChevronDownOutlineIcon, OpenInNewOutlineIcon } from '@vapor-ui/icons';
 
 import pkg from '../../../../packages/core/package.json' with { type: 'json' };
 
 const currentVersion = pkg?.version;
 const items = [
-    { label: `v${currentVersion.split('.').at(0)}`, value: currentVersion },
-    { label: 'beta', value: 'beta.x', url: 'https://beta.vapor-ui.goorm.io' },
+    { label: `v${currentVersion.split('.').at(0)}`, type: 'latest', value: currentVersion },
+    { label: 'beta', type: 'legacy', value: 'beta.x', url: 'https://beta.vapor-ui.goorm.io' },
 ];
 
 export const VersionSelector = () => {
@@ -33,8 +33,14 @@ export const VersionSelector = () => {
                             <Menu.Item
                                 justifyContent="space-between"
                                 render={
-                                    <a href={item.url}>
-                                        <Text typography="subtitle1">{item.label}</Text>
+                                    <a href={item.url} target="_blank" rel="noreferrer">
+                                        <HStack gap="$075" alignItems="center">
+                                            <Text typography="subtitle1">{item.label}</Text>
+
+                                            {item.type === 'legacy' && (
+                                                <OpenInNewOutlineIcon size={12} />
+                                            )}
+                                        </HStack>
                                         <Text color="$hint-100" typography="subtitle2">
                                             {item.value}
                                         </Text>
