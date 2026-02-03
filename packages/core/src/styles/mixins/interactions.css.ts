@@ -26,8 +26,8 @@ export const interaction = recipe({
                 backgroundColor: vars.color.gray[900],
                 pointerEvents: 'none',
 
-                width: 'inherit',
-                height: 'inherit',
+                width: '100%',
+                height: '100%',
                 content: '',
             },
 
