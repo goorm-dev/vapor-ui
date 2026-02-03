@@ -196,7 +196,6 @@ async function sendSlackNotification(packages) {
             });
         }
     }
-    console.log(blocks);
 
     try {
         const response = await fetch(SLACK_WEBHOOK_URL, {
