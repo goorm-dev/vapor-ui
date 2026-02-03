@@ -3,7 +3,8 @@
 import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
-import { Select as BaseSelect, useRender } from '@base-ui-components/react';
+import { Select as BaseSelect } from '@base-ui/react/select';
+import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
@@ -415,6 +416,8 @@ export namespace MultiSelectRoot {
     export interface Props<Value>
         extends Omit<RootPrimitiveProps<Value>, 'multiple'>,
             MultiSelectSharedProps {}
+
+    export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 

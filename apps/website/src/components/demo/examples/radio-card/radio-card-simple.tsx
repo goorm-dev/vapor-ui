@@ -1,13 +1,15 @@
 import { useState } from 'react';
 
-import { HStack, RadioCard, RadioGroup } from '@vapor-ui/core';
+import { HStack, RadioCard, RadioGroup, Text, VStack } from '@vapor-ui/core';
 
 export default function RadioCardSimple() {
     const [value, setValue] = useState('option1');
 
     return (
-        <div className="space-y-4">
-            <p className="text-sm text-gray-600">선택된 값: {value}</p>
+        <VStack gap="$150">
+            <Text typography="body3" foreground="hint-100">
+                Selected: {value}
+            </Text>
             <RadioGroup.Root
                 name="simple-radio-card"
                 value={value}
@@ -19,6 +21,6 @@ export default function RadioCardSimple() {
                     <RadioCard value="option3">Third Option</RadioCard>
                 </HStack>
             </RadioGroup.Root>
-        </div>
+        </VStack>
     );
 }

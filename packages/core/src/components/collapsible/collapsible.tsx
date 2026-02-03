@@ -2,9 +2,10 @@
 
 import { forwardRef } from 'react';
 
-import { Collapsible as BaseCollapsible } from '@base-ui-components/react';
+import { Collapsible as BaseCollapsible } from '@base-ui/react/collapsible';
 import clsx from 'clsx';
 
+import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -27,9 +28,17 @@ CollapsibleRoot.displayName = 'Collapsible.Root';
 
 export const CollapsibleTrigger = forwardRef<HTMLButtonElement, CollapsibleTrigger.Props>(
     (props, ref) => {
-        const componentProps = resolveStyles(props);
+        const { disabled, ...componentProps } = resolveStyles(props);
+        const dataAttrs = createDataAttributes({ disabled });
 
-        return <BaseCollapsible.Trigger ref={ref} {...componentProps} />;
+        return (
+            <BaseCollapsible.Trigger
+                ref={ref}
+                disabled={disabled}
+                {...dataAttrs}
+                {...componentProps}
+            />
+        );
     },
 );
 CollapsibleTrigger.displayName = 'Collapsible.Trigger';

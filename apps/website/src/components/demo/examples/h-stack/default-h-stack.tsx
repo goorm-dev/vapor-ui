@@ -1,11 +1,17 @@
-import { HStack } from '@vapor-ui/core';
+import { Box, HStack } from '@vapor-ui/core';
 
 export default function DefaultHStack() {
     return (
-        <HStack gap="4">
-            <div className="bg-blue-100 p-4 rounded">Item 1</div>
-            <div className="bg-blue-100 p-4 rounded">Item 2</div>
-            <div className="bg-blue-100 p-4 rounded">Item 3</div>
+        <HStack gap="$200">
+            <Box backgroundColor="$blue-100" padding="$400" borderRadius="$200">
+                Item 1
+            </Box>
+            <Box backgroundColor="$blue-100" padding="$400" borderRadius="$200">
+                Item 2
+            </Box>
+            <Box backgroundColor="$blue-100" padding="$400" borderRadius="$200">
+                Item 3
+            </Box>
         </HStack>
     );
 }

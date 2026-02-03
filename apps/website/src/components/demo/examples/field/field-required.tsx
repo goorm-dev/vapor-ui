@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Field, Text, TextInput, VStack } from '@vapor-ui/core';
+import { Field, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldRequired() {
     return (
@@ -21,7 +21,7 @@ export default function FieldRequired() {
 
             {/* Optional Field */}
             <Field.Root name="optional-field">
-                <Box render={<Field.Label />} flexDirection="column">
+                <Field.Label flexDirection="column">
                     <Text typography="subtitle2" foreground="secondary-100">
                         선택 입력 필드{' '}
                         <Text foreground="hint-100" typography="subtitle2">
@@ -29,7 +29,7 @@ export default function FieldRequired() {
                         </Text>
                     </Text>
                     <TextInput placeholder="선택적으로 입력하세요" />
-                </Box>
+                </Field.Label>
                 <Field.Description>이 필드는 선택적으로 입력할 수 있습니다.</Field.Description>
             </Field.Root>
         </VStack>

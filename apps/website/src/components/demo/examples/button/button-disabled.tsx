@@ -1,10 +1,20 @@
-import { Button } from '@vapor-ui/core';
+import { Button, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function ButtonDisabled() {
     return (
-        <div className="flex items-center gap-2">
-            <Button disabled>Disabled</Button>
-            <Button>Enabled</Button>
-        </div>
+        <VStack gap="$150">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    enabled
+                </Text>
+                <Button>Save</Button>
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-16" typography="body3" foreground="hint-100">
+                    disabled
+                </Text>
+                <Button disabled>Save</Button>
+            </HStack>
+        </VStack>
     );
 }

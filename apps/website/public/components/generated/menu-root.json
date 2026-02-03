@@ -85,26 +85,6 @@
             "defaultValue": "true"
         },
         {
-            "name": "delay",
-            "type": ["number"],
-            "required": false,
-            "description": "메뉴가 열리기 전에 기다리는 시간입니다.\n지연 시간은 밀리초 단위로 지정됩니다.\n\n`openOnHover` 속성이 필요합니다.",
-            "defaultValue": "100"
-        },
-        {
-            "name": "closeDelay",
-            "type": ["number"],
-            "required": false,
-            "description": "마우스를 올려놓아 열린 메뉴를 닫기 전에 기다리는 시간입니다.\n지연 시간은 밀리초 단위로 지정됩니다.\n\n`openOnHover` 속성이 필요합니다.",
-            "defaultValue": "0"
-        },
-        {
-            "name": "openOnHover",
-            "type": ["false", "true"],
-            "required": false,
-            "description": "트리거에 마우스를 올려놓았을 때 메뉴도 열려야 하는지 여부입니다."
-        },
-        {
             "name": "actionsRef",
             "type": ["RefObject<Actions>"],
             "required": false,
