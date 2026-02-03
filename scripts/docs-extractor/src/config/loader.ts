@@ -2,9 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { CONFIG_FILE_NAMES, DEFAULT_CONFIG } from './defaults';
 import type { ExtractorConfig } from './schema';
 import { ExtractorConfigSchema } from './schema';
-import { CONFIG_FILE_NAMES, DEFAULT_CONFIG } from './defaults';
 
 export interface LoadConfigOptions {
     configPath?: string;
@@ -75,7 +75,10 @@ export function getComponentConfig(
 
     for (const [pattern, componentConfig] of Object.entries(config.components)) {
         const normalizedPattern = pattern.replace(/\\/g, '/');
-        if (normalizedPath.endsWith(normalizedPattern) || normalizedPath.includes(normalizedPattern)) {
+        if (
+            normalizedPath.endsWith(normalizedPattern) ||
+            normalizedPath.includes(normalizedPattern)
+        ) {
             return componentConfig;
         }
     }

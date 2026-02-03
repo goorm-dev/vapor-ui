@@ -25,7 +25,9 @@ export function loadSprinklesMeta(metaPath: string): SprinklesMeta | null {
     }
 
     if (!fs.existsSync(resolvedPath)) {
-        console.warn(`sprinkles-meta.json not found at ${resolvedPath}. Sprinkles filtering disabled.`);
+        console.warn(
+            `sprinkles-meta.json not found at ${resolvedPath}. Sprinkles filtering disabled.`,
+        );
         return null;
     }
 

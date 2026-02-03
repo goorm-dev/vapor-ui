@@ -6,7 +6,11 @@ export interface PathResolverOptions {
     defaultLanguage: string;
 }
 
-export function resolveOutputPath(fileName: string, lang: string, options: PathResolverOptions): string {
+export function resolveOutputPath(
+    fileName: string,
+    lang: string,
+    options: PathResolverOptions,
+): string {
     return path.join(options.outputDir, lang, fileName);
 }
 

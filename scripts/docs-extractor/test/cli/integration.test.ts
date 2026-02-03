@@ -29,10 +29,13 @@ describe('CLI Integration', () => {
             return;
         }
 
-        const result = execSync(`node ${CLI_PATH} ${fixturesComponentPath} --output-dir ${TMP_OUTPUT_PATH}`, {
-            encoding: 'utf-8',
-            cwd: path.resolve(__dirname, '../..'),
-        });
+        const result = execSync(
+            `node ${CLI_PATH} ${fixturesComponentPath} --output-dir ${TMP_OUTPUT_PATH}`,
+            {
+                encoding: 'utf-8',
+                cwd: path.resolve(__dirname, '../..'),
+            },
+        );
 
         // Verify output directory has JSON files
         const outputFiles = fs.readdirSync(TMP_OUTPUT_PATH).filter((f) => f.endsWith('.json'));
@@ -85,10 +88,13 @@ describe('CLI Integration', () => {
         }
 
         try {
-            execSync(`node ${CLI_PATH} ${fixturesComponentPath} --output-dir ${TMP_OUTPUT_PATH} --no-config`, {
-                encoding: 'utf-8',
-                cwd: path.resolve(__dirname, '../..'),
-            });
+            execSync(
+                `node ${CLI_PATH} ${fixturesComponentPath} --output-dir ${TMP_OUTPUT_PATH} --no-config`,
+                {
+                    encoding: 'utf-8',
+                    cwd: path.resolve(__dirname, '../..'),
+                },
+            );
         } catch {
             // May fail due to missing fixtures
         }

@@ -14,7 +14,11 @@ export function ensureDirectory(dirPath: string): void {
     }
 }
 
-export function writeJsonFile(filePath: string, data: PropsInfo, _options: WriteOptions = {}): void {
+export function writeJsonFile(
+    filePath: string,
+    data: PropsInfo,
+    _options: WriteOptions = {},
+): void {
     ensureDirectory(path.dirname(filePath));
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }

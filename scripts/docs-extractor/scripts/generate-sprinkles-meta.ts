@@ -1,8 +1,12 @@
 #!/usr/bin/env tsx
 import fs from 'node:fs';
 import path from 'node:path';
-
-import { Project, SyntaxKind, type ObjectLiteralExpression, type PropertyAssignment } from 'ts-morph';
+import {
+    type ObjectLiteralExpression,
+    Project,
+    type PropertyAssignment,
+    SyntaxKind,
+} from 'ts-morph';
 
 interface PropDefinition {
     usesToken: boolean;
@@ -43,10 +47,12 @@ function analyzeSprinkles(sprinklesPath: string): SprinklesMeta {
     };
 
     // Find defineProperties call
-    const definePropertiesCall = sourceFile.getDescendantsOfKind(SyntaxKind.CallExpression).find((call) => {
-        const expr = call.getExpression();
-        return expr.getText() === 'defineProperties';
-    });
+    const definePropertiesCall = sourceFile
+        .getDescendantsOfKind(SyntaxKind.CallExpression)
+        .find((call) => {
+            const expr = call.getExpression();
+            return expr.getText() === 'defineProperties';
+        });
 
     if (!definePropertiesCall) {
         console.warn('defineProperties call not found');

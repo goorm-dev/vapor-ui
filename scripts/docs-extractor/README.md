@@ -31,18 +31,18 @@ pnpm --filter @vapor-ui/ts-api-extractor exec ts-api-extractor ./packages/core/s
 
 ### CLI 옵션
 
-| 옵션 | 단축 | 설명 |
-|------|------|------|
-| `--tsconfig` | `-c` | tsconfig.json 경로 (기본: 자동 감지) |
-| `--exclude` | `-e` | 제외 패턴 (여러 번 사용 가능) |
-| `--component` | `-n` | 특정 컴포넌트만 추출 |
-| `--output-dir` | `-d` | 출력 디렉토리 |
-| `--all` | `-a` | 모든 props 포함 (node_modules + sprinkles + html) |
-| `--include` | | 특정 props 포함 |
-| `--include-html` | | HTML 속성 화이트리스트 |
-| `--config` | | 설정 파일 경로 |
-| `--no-config` | | 설정 파일 무시 |
-| `--lang` | `-l` | 출력 언어 (ko, en, all) |
+| 옵션             | 단축 | 설명                                              |
+| ---------------- | ---- | ------------------------------------------------- |
+| `--tsconfig`     | `-c` | tsconfig.json 경로 (기본: 자동 감지)              |
+| `--exclude`      | `-e` | 제외 패턴 (여러 번 사용 가능)                     |
+| `--component`    | `-n` | 특정 컴포넌트만 추출                              |
+| `--output-dir`   | `-d` | 출력 디렉토리                                     |
+| `--all`          | `-a` | 모든 props 포함 (node_modules + sprinkles + html) |
+| `--include`      |      | 특정 props 포함                                   |
+| `--include-html` |      | HTML 속성 화이트리스트                            |
+| `--config`       |      | 설정 파일 경로                                    |
+| `--no-config`    |      | 설정 파일 무시                                    |
+| `--lang`         | `-l` | 출력 언어 (ko, en, all)                           |
 
 ## 설정 파일
 
@@ -56,10 +56,10 @@ export default defineConfig({
         outputDir: './output',
         languages: ['ko', 'en'],
         defaultLanguage: 'ko',
-        filterExternal: true,      // React/DOM 타입 제외
-        filterSprinkles: true,     // Sprinkles props 제외
-        filterHtml: true,          // HTML 속성 제외
-        includeHtml: ['className', 'style'],  // 허용할 HTML 속성
+        filterExternal: true, // React/DOM 타입 제외
+        filterSprinkles: true, // Sprinkles props 제외
+        filterHtml: true, // HTML 속성 제외
+        includeHtml: ['className', 'style'], // 허용할 HTML 속성
     },
     sprinkles: {
         metaPath: './generated/sprinkles-meta.json',
@@ -67,7 +67,7 @@ export default defineConfig({
     },
     components: {
         'box/box.tsx': {
-            sprinklesAll: true,    // Box는 모든 sprinkles 포함
+            sprinklesAll: true, // Box는 모든 sprinkles 포함
         },
         'flex/flex.tsx': {
             sprinkles: ['gap', 'alignItems', 'justifyContent'],

@@ -1,7 +1,11 @@
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { getTargetLanguages, resolveAllLanguagePaths, resolveOutputPath } from '~/i18n/path-resolver';
+import {
+    getTargetLanguages,
+    resolveAllLanguagePaths,
+    resolveOutputPath,
+} from '~/i18n/path-resolver';
 
 describe('resolveOutputPath', () => {
     const options = {
