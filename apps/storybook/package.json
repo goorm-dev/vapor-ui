@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build:storybook": "storybook build",
+        "build:storybook": "STORYBOOK_SKIP_DOCGEN=1 storybook build",
         "clean": "rimraf dist node_modules .turbo",
         "dev": "storybook dev -p 9009",
         "format": "prettier --write \"./**/*.{ts,tsx,md}\"",

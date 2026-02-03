@@ -1,0 +1,13 @@
+{
+    "name": "Close",
+    "displayName": "FloatingBar.Close",
+    "description": "FloatingBar의 닫기 버튼 요소로, 사용자가 상호작용하여 FloatingBar를 닫는 역할을 합니다. HTML `<button>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "render",
+            "type": ["React.ReactElement", "(props: CloseProps) => React.ReactElement"],
+            "defaultValue": "undefined",
+            "description": "닫기 버튼을 렌더링하는 함수 또는 컴포넌트입니다."
+        }
+    ]
+}

@@ -18,7 +18,7 @@ export default function DialogSize() {
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Dialog.Close render={<Button variant="ghost">취소</Button>} />
-                            <Button>확인</Button>
+                            <Dialog.Close render={<Button>확인</Button>} />
                         </Dialog.Footer>
                     </Dialog.Popup>
                 </Dialog.Root>
@@ -38,7 +38,7 @@ export default function DialogSize() {
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Dialog.Close render={<Button variant="ghost">취소</Button>} />
-                            <Button>확인</Button>
+                            <Dialog.Close render={<Button>확인</Button>} />
                         </Dialog.Footer>
                     </Dialog.Popup>
                 </Dialog.Root>
@@ -60,7 +60,7 @@ export default function DialogSize() {
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Dialog.Close render={<Button variant="ghost">취소</Button>} />
-                            <Button>확인</Button>
+                            <Dialog.Close render={<Button>확인</Button>} />
                         </Dialog.Footer>
                     </Dialog.Popup>
                 </Dialog.Root>

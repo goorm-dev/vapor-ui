@@ -5,6 +5,20 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
     reactStrictMode: true,
+    async redirects() {
+        return [
+            {
+                source: '/playground',
+                destination: '/theme/playground',
+                permanent: true,
+            },
+            {
+                source: '/docs/getting-started/theming',
+                destination: '/theme/theme-provider',
+                permanent: true,
+            },
+        ];
+    },
     async rewrites() {
         return [
             {
@@ -14,6 +28,10 @@ const config = {
             {
                 source: '/blocks/:path*.mdx',
                 destination: '/llms.mdx/blocks/:path*',
+            },
+            {
+                source: '/theme/:path*.mdx',
+                destination: '/llms.mdx/theme/:path*',
             },
         ];
     },

@@ -30,16 +30,17 @@ export default function FieldWithInputs() {
             </Field.Root>
 
             <Field.Root name="country">
-                <Select.Root>
+                <Select.Root placeholder="국가를 선택하세요" items={countries}>
                     <Field.Label flexDirection="column" gap="$050">
-                        Country
+                        국가
                         <Select.Trigger />
                     </Field.Label>
                     <Select.Popup>
-                        <Select.Item value="us">United States</Select.Item>
-                        <Select.Item value="uk">United Kingdom</Select.Item>
-                        <Select.Item value="kr">South Korea</Select.Item>
-                        <Select.Item value="jp">Japan</Select.Item>
+                        {countries.map((country) => (
+                            <Select.Item key={country.value} value={country.value}>
+                                {country.label}
+                            </Select.Item>
+                        ))}
                     </Select.Popup>
                 </Select.Root>
                 <Field.Description>Select your country of residence.</Field.Description>
@@ -47,3 +48,10 @@ export default function FieldWithInputs() {
         </VStack>
     );
 }
+
+const countries = [
+    { label: '대한민국', value: 'kr' },
+    { label: '미국', value: 'us' },
+    { label: '일본', value: 'jp' },
+    { label: '중국', value: 'cn' },
+];
