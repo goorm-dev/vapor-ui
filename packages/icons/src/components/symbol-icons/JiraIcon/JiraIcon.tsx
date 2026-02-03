@@ -1,6 +1,6 @@
-import IconBase, { type IconType } from '~/components/icon-base';
+import IconBase, { type IconProps } from '~/components/icon-base';
 
-const JiraIcon: IconType = (props) => (
+const JiraIcon = (props: IconProps) => (
     <IconBase viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path d="M15.3315 0H7.62114C7.62114 1.91644 9.18102 3.47633 11.0975 3.47633H12.5236V4.83566C12.5236 6.75208 14.0836 8.31201 16 8.31201V0.668526C16 0.289696 15.7103 0 15.3315 0Z" />
         <path d="M11.5211 3.83252H3.81072C3.81072 5.74896 5.37062 7.30883 7.28708 7.30883H8.71325V8.69047C8.71325 10.6069 10.2732 12.1668 12.1896 12.1668V4.50102C12.1896 4.1445 11.8999 3.83252 11.5211 3.83252Z" />

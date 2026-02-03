@@ -32,7 +32,7 @@ export const root = recipe({
         }),
     ],
 
-    defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill', stretch: false },
+    defaultVariants: { colorPalette: 'primary', size: 'md', variant: 'fill' },
     variants: {
         size: {
             sm: [
@@ -81,7 +81,7 @@ export const root = recipe({
             }),
             secondary: layerStyle('components', {
                 vars: {
-                    [fg]: vars.color.foreground.secondary[100],
+                    [fg]: vars.color.foreground.secondary[200],
                     [outlineFg]: vars.color.foreground.secondary[200],
                     [ghostFg]: vars.color.foreground.secondary[100],
                     [bg]: vars.color.background.secondary[200],
@@ -141,8 +141,6 @@ export const root = recipe({
                 color: ghostFg,
             }),
         },
-
-        stretch: { true: layerStyle('components', { width: '100%' }) },
     },
 });
 

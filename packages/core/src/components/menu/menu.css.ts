@@ -8,7 +8,6 @@ import { vars } from '~/styles/themes.css';
 
 export const positioner = layerStyle('components', {
     position: 'relative',
-    zIndex: 50, // TODO: move to vars
 });
 
 export const popup = layerStyle('components', {
@@ -58,7 +57,7 @@ export const item = style([
 
         borderRadius: vars.size.borderRadius['300'],
         cursor: 'pointer',
-        paddingRight: vars.size.space['075'],
+        paddingRight: vars.size.space['150'],
         paddingLeft: vars.size.space['250'],
         paddingBlock: vars.size.space['050'],
 

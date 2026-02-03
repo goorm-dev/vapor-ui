@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react/use-render';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createSplitProps } from '~/utils/create-split-props';
@@ -16,7 +16,6 @@ export const Button = forwardRef<HTMLButtonElement, Button.Props>((props, ref) =
         'colorPalette',
         'size',
         'variant',
-        'stretch',
     ]);
 
     const { disabled } = otherProps;

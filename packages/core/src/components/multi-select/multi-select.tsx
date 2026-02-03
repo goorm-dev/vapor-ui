@@ -3,12 +3,13 @@
 import type { ReactElement } from 'react';
 import { forwardRef, useMemo } from 'react';
 
-import { Select as BaseSelect } from '@base-ui-components/react';
+import { Select as BaseSelect } from '@base-ui/react/select';
+import { useRender } from '@base-ui/react/use-render';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -178,10 +179,14 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
     HTMLDivElement,
     MultiSelectTriggerIconPrimitive.Props
 >((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
     const { size } = useMultiSelectContext();
-    const IconElement = createSlot(children || <ChevronDownOutlineIcon size="100%" />);
+
+    const children = useRender({
+        render: createRender(childrenProp, <ChevronDownOutlineIcon />),
+        props: { width: '100%', height: '100%' },
+    });
 
     return (
         <BaseSelect.Icon
@@ -189,7 +194,7 @@ export const MultiSelectTriggerIconPrimitive = forwardRef<
             className={clsx(styles.triggerIcon({ size }), className)}
             {...componentProps}
         >
-            <IconElement />
+            {children}
         </BaseSelect.Icon>
     );
 });
@@ -273,18 +278,19 @@ MultiSelectPopupPrimitive.displayName = 'MultiSelect.PopupPrimitive';
 
 export const MultiSelectPopup = forwardRef<HTMLDivElement, MultiSelectPopup.Props>(
     ({ portalElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <MultiSelectPortalPrimitive />);
-        const PositionerElement = createSlot(
-            positionerElement || <MultiSelectPositionerPrimitive />,
-        );
+        const popup = <MultiSelectPopupPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <PositionerElement>
-                    <MultiSelectPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const positioner = useRender({
+            render: createRender(positionerElement, <MultiSelectPositionerPrimitive />),
+            props: { children: popup },
+        });
+
+        const portal = useRender({
+            render: createRender(portalElement, <MultiSelectPortalPrimitive />),
+            props: { children: positioner },
+        });
+
+        return portal;
     },
 );
 MultiSelectPopup.displayName = 'MultiSelect.Popup';
@@ -316,9 +322,12 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
     HTMLSpanElement,
     MultiSelectItemIndicatorPrimitive.Props
 >((props, ref) => {
-    const { className, children, ...componentProps } = resolveStyles(props);
+    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
 
-    const IconElement = createSlot(children || <ConfirmOutlineIcon size="100%" />);
+    const children = useRender({
+        render: createRender(childrenProp, <ConfirmOutlineIcon />),
+        props: { width: '100%', height: '100%' },
+    });
 
     return (
         <BaseSelect.ItemIndicator
@@ -326,7 +335,7 @@ export const MultiSelectItemIndicatorPrimitive = forwardRef<
             className={clsx(styles.itemIndicator, className)}
             {...componentProps}
         >
-            <IconElement />
+            {children}
         </BaseSelect.ItemIndicator>
     );
 });
@@ -407,6 +416,8 @@ export namespace MultiSelectRoot {
     export interface Props<Value>
         extends Omit<RootPrimitiveProps<Value>, 'multiple'>,
             MultiSelectSharedProps {}
+
+    export type Actions = BaseSelect.Root.Actions;
     export type ChangeEventDetails = BaseSelect.Root.ChangeEventDetails;
 }
 

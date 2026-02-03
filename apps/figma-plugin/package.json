@@ -1,21 +1,21 @@
 {
     "name": "figma-plugin",
-    "private": true,
     "version": "1.0.0-beta.6",
+    "private": true,
     "type": "module",
     "scripts": {
+        "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts && cp manifest.json dist/",
+        "build:plugin": "vite build --config vite.config.plugin.ts",
+        "build:ui": "vite build --config vite.config.ui.ts",
+        "clean": "rimraf dist node_modules .turbo",
         "dev": "vite --config vite.config.ui.ts",
         "predev:figma": "mkdir -p dist && cp manifest.json dist/",
         "dev:figma": "concurrently \"vite build --config vite.config.ui.ts --watch\" \"vite build --config vite.config.plugin.ts --watch\"",
-        "build": "rimraf dist && tsc -b && vite build --config vite.config.ui.ts && vite build --config vite.config.plugin.ts && cp manifest.json dist/",
-        "build:ui": "vite build --config vite.config.ui.ts",
-        "build:plugin": "vite build --config vite.config.plugin.ts",
-        "lint": "eslint ./src",
         "format": "prettier --write \"./**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./**/*.{ts,tsx,md}\"",
-        "clean": "rimraf dist node_modules .turbo",
-        "typecheck": "tsc --noEmit",
-        "preview": "vite preview"
+        "lint": "eslint ./src",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "@vapor-ui/color-generator": "workspace:*",
@@ -32,7 +32,7 @@
         "@repo/typescript-config": "workspace:*",
         "@tailwindcss/vite": "^4.1.12",
         "@types/culori": "^4.0.0",
-        "@types/react": "^18.3.23",
+        "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "@vitejs/plugin-react": "^5.0.0",
         "concurrently": "^8.2.2",

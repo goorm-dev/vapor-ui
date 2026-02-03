@@ -3,12 +3,12 @@
 import type { ReactElement } from 'react';
 import { forwardRef } from 'react';
 
-import { Dialog as BaseDialog } from '@base-ui-components/react/dialog';
-import { useRender } from '@base-ui-components/react/use-render';
+import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+import { useRender } from '@base-ui/react/use-render';
 import clsx from 'clsx';
 
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
+import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VComponentProps } from '~/utils/types';
 
@@ -30,10 +30,15 @@ const [DialogProvider, useDialogContext] = createContext<DialogContext>({
  * Dialog
  * -----------------------------------------------------------------------------------------------*/
 
-export const DialogRoot = ({ size, closeOnClickOverlay, children, ...props }: DialogRoot.Props) => {
+export const DialogRoot = ({
+    size,
+    closeOnClickOverlay = true,
+    children,
+    ...props
+}: DialogRoot.Props) => {
     return (
         <DialogProvider value={{ size }}>
-            <BaseDialog.Root dismissible={closeOnClickOverlay} {...props}>
+            <BaseDialog.Root disablePointerDismissal={!closeOnClickOverlay} {...props}>
                 {children}
             </BaseDialog.Root>
         </DialogProvider>
@@ -89,19 +94,29 @@ DialogPopupPrimitive.displayName = 'Dialog.PopupPrimitive';
  * Dialog.Popup
  * -----------------------------------------------------------------------------------------------*/
 
-export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>((props, ref) => {
-    const { portalElement, overlayElement, ...componentProps } = resolveStyles(props);
+export const DialogPopup = forwardRef<HTMLDivElement, DialogPopup.Props>(
+    ({ portalElement, overlayElement, ...props }, ref) => {
+        const popup = <DialogPopupPrimitive ref={ref} {...props} />;
 
-    const PortalElement = createSlot(portalElement || <DialogPortalPrimitive />);
-    const DialogOverlayPrimitiveElement = createSlot(overlayElement || <DialogOverlayPrimitive />);
+        const overlay = useRender({
+            render: createRender(overlayElement ?? <DialogOverlayPrimitive />),
+        });
 
-    return (
-        <PortalElement>
-            <DialogOverlayPrimitiveElement />
-            <DialogPopupPrimitive ref={ref} {...componentProps} />
-        </PortalElement>
-    );
-});
+        const portal = useRender({
+            render: createRender(portalElement, <DialogPortalPrimitive />),
+            props: {
+                children: (
+                    <>
+                        {overlay}
+                        {popup}
+                    </>
+                ),
+            },
+        });
+
+        return portal;
+    },
+);
 DialogPopup.displayName = 'Dialog.Popup';
 
 /* -------------------------------------------------------------------------------------------------
@@ -215,10 +230,15 @@ DialogFooter.displayName = 'Dialog.Footer';
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace DialogRoot {
-    type DialogPrimitiveProps = Omit<VComponentProps<typeof BaseDialog.Root>, 'dismissible'>;
+    type DialogPrimitiveProps = Omit<
+        VComponentProps<typeof BaseDialog.Root>,
+        'disablePointerDismissal'
+    >;
     export interface Props extends DialogPrimitiveProps, DialogSharedProps {
         closeOnClickOverlay?: boolean;
     }
+
+    export type Actions = BaseDialog.Root.Actions;
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
 }
 
@@ -236,8 +256,8 @@ export namespace DialogPopupPrimitive {
 
 export namespace DialogPopup {
     export interface Props extends DialogPopupPrimitive.Props {
-        portalElement?: ReactElement<typeof DialogPortalPrimitive>;
-        overlayElement?: ReactElement<typeof DialogOverlayPrimitive>;
+        portalElement?: ReactElement<DialogPortalPrimitive.Props>;
+        overlayElement?: ReactElement<DialogOverlayPrimitive.Props>;
     }
 }
 

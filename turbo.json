@@ -17,13 +17,28 @@
         },
         "typecheck": { "dependsOn": ["^build"] },
         "test": { "outputs": [], "dependsOn": ["^build"] },
-        "test:regressions": { "dependsOn": ["storybook#build:storybook"] },
+        "test:regressions": {
+            "dependsOn": ["storybook#build:storybook"],
+            "cache": false
+        },
         "lint": { "outputs": [] },
         "format": { "outputs": [], "cache": false },
         "format:check": { "outputs": [] },
         "clean": { "cache": false },
-        "build:storybook": {}
+        "build:storybook": {
+            "dependsOn": ["@vapor-ui/core#build", "@vapor-ui/icons#build"],
+            "inputs": ["$TURBO_DEFAULT$"],
+            "outputs": ["storybook-static/**"]
+        }
     },
-    "globalEnv": ["NODE_ENV", "CI", "TEST_URL", "PORT", "npm_lifecycle_event"],
+    "globalEnv": [
+        "NODE_ENV",
+        "CI",
+        "TEST_URL",
+        "PORT",
+        "npm_lifecycle_event",
+        "COMPONENT",
+        "STORYBOOK_SKIP_DOCGEN"
+    ],
     "globalPassThroughEnv": ["FIGMA_API_KEY"]
 }

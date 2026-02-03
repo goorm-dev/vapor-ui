@@ -1,29 +1,50 @@
 ---
 title: Installation
-description: Vapor UI 설치를 위한 가이드.
+description: Vapor UI를 프로젝트에 설치하고 첫 컴포넌트를 사용해보세요.
 ---
 
-<b style={{ marginBottom: 0 }}>요구사항:</b>
-<ul style={{ marginTop: 0 }}>
-    <li>React 17 or later</li>
-    <li>Node.js 16 or later</li>
-</ul>
+이 문서를 완료하면 Vapor UI 패키지를 설치하고, 첫 번째 컴포넌트를 화면에 렌더링할 수 있습니다.
 
----
+## 사전 준비
 
-## 패키지 설치
+다음 환경이 필요합니다.
 
-다음 중 하나의 패키지 매니저를 사용하여 Vapor UI를 설치하세요:
+| 요구사항 | 버전 |
+| :------- | :--- |
+| React    | 17 이상 |
+| Node.js  | 16 이상 |
+
+## 1단계: 패키지 설치
+
+패키지 매니저를 사용하여 Vapor UI를 설치합니다.
 
 ```package-install
-npm install @vapor-ui/core@beta @vapor-ui/icons@beta
+npm install @vapor-ui/core @vapor-ui/icons
 ```
 
----
+## 2단계: Portal 설정
 
-## 컴포넌트 사용하기
+Vapor UI는 Dialog, Popover 같은 팝업 컴포넌트에 Portal을 사용합니다. Portal 컴포넌트가 항상 페이지 최상단에 표시되도록 애플리케이션 레이아웃 루트에 다음 스타일을 추가합니다.
 
-이제 React 애플리케이션에서 Vapor UI 컴포넌트를 사용할 수 있습니다:
+```tsx title="layout.tsx"
+<body>
+  <div className="root">
+    {children}
+  </div>
+</body>
+```
+
+```css title="styles.css"
+.root {
+  isolation: isolate;
+}
+```
+
+이 스타일은 `.root` 요소에 별도의 stacking context를 생성합니다. 이를 통해 팝업이 항상 페이지 콘텐츠 위에 표시되며, 다른 스타일의 `z-index` 속성과 충돌하지 않습니다.
+
+## 3단계: 컴포넌트 사용
+
+컴포넌트를 import하여 사용합니다.
 
 <Demo name="assemble-component">
 ```json doc-gen:file
@@ -33,3 +54,8 @@ npm install @vapor-ui/core@beta @vapor-ui/icons@beta
 }
 ```
 </Demo>
+
+## 다음 단계
+
+- [테마 설정하기](/theme/theme-provider) - 라이트/다크 모드 및 커스텀 테마 설정 방법
+- [컴포넌트 살펴보기](./overview#components) - 다양한 UI 컴포넌트 사용법

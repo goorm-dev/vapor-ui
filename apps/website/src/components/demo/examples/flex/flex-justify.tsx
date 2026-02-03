@@ -1,145 +1,139 @@
-import { Flex } from '@vapor-ui/core';
+import { Box, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function FlexJustify() {
     return (
-        <div className="flex flex-col gap-4">
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Flex Start</h4>
+        <VStack gap="$200">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-24" typography="body3" foreground="hint-100">
+                    flex-start
+                </Text>
                 <Flex
                     justifyContent="flex-start"
                     gap="$200"
                     padding="$300"
-                    backgroundColor="gray-100"
+                    backgroundColor="$gray-100"
                     borderRadius="$200"
+                    width="$2400"
                 >
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#3b82f6',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    <Box
+                        padding="$200"
+                        backgroundColor="$blue-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         A
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#10b981',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    </Box>
+                    <Box
+                        padding="$200"
+                        backgroundColor="$green-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         B
-                    </div>
+                    </Box>
                 </Flex>
-            </div>
+            </HStack>
 
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Center</h4>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-24" typography="body3" foreground="hint-100">
+                    center
+                </Text>
                 <Flex
                     justifyContent="center"
                     gap="$200"
                     padding="$300"
-                    backgroundColor="gray-100"
+                    backgroundColor="$gray-100"
                     borderRadius="$200"
+                    width="$2400"
                 >
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#3b82f6',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    <Box
+                        padding="$200"
+                        backgroundColor="$blue-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         A
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#10b981',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    </Box>
+                    <Box
+                        padding="$200"
+                        backgroundColor="$green-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         B
-                    </div>
+                    </Box>
                 </Flex>
-            </div>
+            </HStack>
 
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Flex End</h4>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-24" typography="body3" foreground="hint-100">
+                    flex-end
+                </Text>
                 <Flex
                     justifyContent="flex-end"
                     gap="$200"
                     padding="$300"
-                    backgroundColor="gray-100"
+                    backgroundColor="$gray-100"
                     borderRadius="$200"
+                    width="$2400"
                 >
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#3b82f6',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    <Box
+                        padding="$200"
+                        backgroundColor="$blue-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         A
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#10b981',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    </Box>
+                    <Box
+                        padding="$200"
+                        backgroundColor="$green-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         B
-                    </div>
+                    </Box>
                 </Flex>
-            </div>
+            </HStack>
 
-            <div>
-                <h4 className="mb-2 text-sm font-medium">Space Between</h4>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-24" typography="body3" foreground="hint-100">
+                    space-between
+                </Text>
                 <Flex
                     justifyContent="space-between"
                     gap="$200"
                     padding="$300"
-                    backgroundColor="gray-100"
+                    backgroundColor="$gray-100"
                     borderRadius="$200"
+                    width="$2400"
                 >
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#3b82f6',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    <Box
+                        padding="$200"
+                        backgroundColor="$blue-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         A
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#10b981',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    </Box>
+                    <Box
+                        padding="$200"
+                        backgroundColor="$green-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         B
-                    </div>
-                    <div
-                        style={{
-                            padding: '8px',
-                            backgroundColor: '#f59e0b',
-                            borderRadius: '4px',
-                            color: 'white',
-                        }}
+                    </Box>
+                    <Box
+                        padding="$200"
+                        backgroundColor="$orange-400"
+                        borderRadius="$100"
+                        color="$contrast-100"
                     >
                         C
-                    </div>
+                    </Box>
                 </Flex>
-            </div>
-        </div>
+            </HStack>
+        </VStack>
     );
 }

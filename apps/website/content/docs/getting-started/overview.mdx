@@ -1,24 +1,31 @@
 ---
 title: Overview
-description: Vapor는 구름의 세 번째 디자인 시스템으로, 일관된 UI와 개발 생산성을 위해 설계되었습니다.
+description: 빠른 개발과 일관된 디자인을 위한 Vapor UI 디자인 시스템을 살펴보세요.
 ---
 
-## Vapor Design System란?
+이 문서에서는 Vapor UI의 핵심 기능과 제공하는 컴포넌트 목록을 확인할 수 있습니다.
 
-Vapor는 구름에서 개발한 통합 디자인 시스템으로, 다양한 제품과 서비스에 일관된 사용자 경험을 제공합니다.
+## Vapor UI 소개
 
-### 주요 특징
+Vapor UI는 개발자 경험과 디자인 일관성을 모두 만족시키는 React 컴포넌트 라이브러리입니다. 구름에서 개발한 세 번째 디자인 시스템으로, 실제 프로덕션에서 검증된 컴포넌트들을 제공합니다.
 
-- **모듈화**: Theme, Hooks, Icons, Core 등 서브 패키지로 구성
-- **높은 커스터마이즈성**: 최소한의 제약, 최대한의 확장성
-- **웹 접근성 준수**: A11Y, ARIA 속성, 키보드 네비게이션 등 기본 지원
-- **유지보수 용이**: 재사용 가능한 토큰과 컴포넌트 구조
+## 핵심 기능
 
-### 목적
+- **모듈화된 구조**: 필요한 패키지만 선택적으로 설치하여 번들 크기를 최적화합니다.
+- **TypeScript 지원**: 모든 컴포넌트에 타입 정의가 포함되어 자동 완성과 타입 검사를 지원합니다.
+- **접근성 내장**: WCAG 2.1 AA 수준의 웹 접근성을 기본으로 제공합니다.
+- **Tailwind CSS 통합**: Tailwind 유틸리티 클래스로 컴포넌트를 빠르게 커스터마이징할 수 있습니다.
+- **다크 모드**: 라이트/다크 테마 자동 전환 시스템을 제공합니다.
 
-- 빠르고 일관된 UI 개발 지원
-- 다양한 서비스 요구사항에 유연하게 대응
-- 디자인과 개발 간의 효율적인 협업 촉진
+## 적합한 프로젝트
+
+Vapor UI는 다음과 같은 프로젝트에서 효과적으로 활용할 수 있습니다.
+
+- 빠른 프로토타이핑이 필요한 스타트업과 신규 프로젝트
+- 일관된 디자인 시스템을 구축하려는 중대형 팀
+- 접근성을 중요시하는 공공 서비스나 글로벌 서비스
+- TypeScript 환경의 모던 React 프로젝트
+- 디자인과 개발 간 협업이 중요한 조직
 
 ---
 
@@ -38,6 +45,13 @@ Vapor는 구름에서 개발한 통합 디자인 시스템으로, 다양한 제�
         imageUrl="https://statics.goorm.io/gds/docs/all-components/core/badge.svg"
         componentType="Data Display"
         href="/docs/components/badge"
+    />
+    <ComponentsCard
+        name="Breadcrumb"
+        description="사용자의 현재 위치를 계층적으로 표시하여 탐색을 돕습니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/core/breadcrumb.svg"
+        componentType="Navigation"
+        href="/docs/components/breadcrumb"
     />
     <ComponentsCard
         name="Button"
@@ -68,11 +82,25 @@ Vapor는 구름에서 개발한 통합 디자인 시스템으로, 다양한 제�
         href="/docs/components/checkbox"
     />
     <ComponentsCard
+        name="Collapsible"
+        description="콘텐츠를 접고 펼칠 수 있는 인터랙티브 컴포넌트입니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/core/collapsible.svg"
+        componentType="Data Display"
+        href="/docs/components/collapsible"
+    />
+    <ComponentsCard
         name="Dialog"
         description="사용자에게 모달 형태로 중요한 정보를 전달하고, 사용자의 응답을 요청합니다."
         imageUrl="https://statics.goorm.io/gds/docs/all-components/core/dialog.svg"
         componentType="Feedback"
         href="/docs/components/dialog"
+    />
+    <ComponentsCard
+        name="Field"
+        description="입력 요소와 라벨, 에러 메시지 등을 그룹화하는 폼 필드 컴포넌트입니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/field.svg"
+        componentType="Inputs"
+        href="/docs/components/field"
     />
     <ComponentsCard
         name="IconButton"
@@ -82,11 +110,53 @@ Vapor는 구름에서 개발한 통합 디자인 시스템으로, 다양한 제�
         href="/docs/components/icon-button"
     />
     <ComponentsCard
-        name="Nav"
+        name="InputGroup"
+        description="여러 입력 요소를 시각적으로 그룹화하여 관련성을 표현합니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/input-group.svg"
+        componentType="Inputs"
+        href="/docs/components/input-group"
+    />
+    <ComponentsCard
+        name="Menu"
+        description="사용자에게 선택 가능한 옵션 목록을 드롭다운 형태로 제공합니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/menu.svg"
+        componentType="Navigation"
+        href="/docs/components/menu"
+    />
+    <ComponentsCard
+        name="MultiSelect"
+        description="여러 옵션을 동시에 선택할 수 있는 드롭다운 컴포넌트입니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/multi-select.svg"
+        componentType="Inputs"
+        href="/docs/components/multi-select"
+    />
+    <ComponentsCard
+        name="NavigationMenu"
         description="여러 콘텐츠 섹션 간에 전환할 수 있도록 돕는 요소로 클릭 시 페이지가 이동합니다."
         imageUrl="https://statics.goorm.io/gds/docs/all-components/core/nav.svg"
         componentType="Navigation"
-        href="/docs/components/nav"
+        href="/docs/components/navigation-menu"
+    />
+    <ComponentsCard
+        name="Popover"
+        description="특정 요소 위에 부가 정보나 옵션을 팝업 형태로 표시합니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/core/popover.svg"
+        componentType="Overlay"
+        href="/docs/components/popover"
+    />
+    <ComponentsCard
+        name="Radio"
+        description="단일 선택 옵션을 제공하는 라디오 버튼 컴포넌트입니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/radio.svg"
+        componentType="Inputs"
+        href="/docs/components/radio"
+    />
+    <ComponentsCard
+        name="RadioCard"
+        description="카드 형태의 라디오 버튼으로 선택 가능한 옵션을 시각적으로 표현합니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/radio-card.svg"
+        componentType="Inputs"
+        href="/docs/components/radio-card"
     />
     <ComponentsCard
         name="RadioGroup"
@@ -96,11 +166,32 @@ Vapor는 구름에서 개발한 통합 디자인 시스템으로, 다양한 제�
         href="/docs/components/radio-group"
     />
     <ComponentsCard
+        name="Select"
+        description="드롭다운 형태로 옵션을 선택할 수 있는 선택 컴포넌트입니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/core/select.svg"
+        componentType="Inputs"
+        href="/docs/components/select"
+    />
+    <ComponentsCard
+        name="Sheet"
+        description="화면 측면에서 슬라이드되어 나타나는 패널 컴포넌트입니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/sheet.svg"
+        componentType="Overlay"
+        href="/docs/components/sheet"
+    />
+    <ComponentsCard
         name="Switch"
         description="설정 값을 켜기/끄기로 토글할 수 있는 스위치 컴포넌트입니다."
         imageUrl="https://statics.goorm.io/gds/docs/all-components/core/switch.svg"
         componentType="Inputs"
         href="/docs/components/switch"
+    />
+    <ComponentsCard
+        name="Tabs"
+        description="여러 콘텐츠 패널 간에 전환할 수 있는 탭 인터페이스를 제공합니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/core/tabs.svg"
+        componentType="Navigation"
+        href="/docs/components/tabs"
     />
     <ComponentsCard
         name="Text"
@@ -115,5 +206,26 @@ Vapor는 구름에서 개발한 통합 디자인 시스템으로, 다양한 제�
         imageUrl="https://statics.goorm.io/gds/docs/all-components/core/textinput.svg"
         componentType="Inputs"
         href="/docs/components/text-input"
+    />
+    <ComponentsCard
+        name="Textarea"
+        description="여러 줄의 텍스트를 입력할 수 있는 확장 가능한 입력 영역을 제공합니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/textarea.svg"
+        componentType="Inputs"
+        href="/docs/components/textarea"
+    />
+    <ComponentsCard
+        name="Toast"
+        description="화면 하단에 일시적으로 나타나는 알림 메시지 컴포넌트입니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/toast.svg"
+        componentType="Feedback"
+        href="/docs/components/toast"
+    />
+    <ComponentsCard
+        name="Tooltip"
+        description="요소에 마우스를 올렸을 때 추가 정보를 툴팁으로 표시합니다."
+        imageUrl="https://statics.goorm.io/gds/docs/all-components/tooltip.svg"
+        componentType="Overlay"
+        href="/docs/components/tooltip"
     />
 </AllComponentsContainer>

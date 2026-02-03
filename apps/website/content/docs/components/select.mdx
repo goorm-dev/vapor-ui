@@ -19,7 +19,7 @@ description: 'Select는 사용자가 여러 옵션 중에서 하나를 선택할
 
 ### Size
 
-Select의 크기는 sm, md, lg, xl 로 제공합니다.
+Select의 크기를 설정합니다.
 
 <Demo name="select/select-size">
 ```json doc-gen:file
@@ -32,7 +32,7 @@ Select의 크기는 sm, md, lg, xl 로 제공합니다.
 
 ### Positioning
 
-Select 드롭다운이 나타날 위치를 설정할 수 있습니다. 기본값은 'bottom'입니다.
+Select 드롭다운이 나타날 위치를 설정합니다. 기본값은 'bottom'입니다.
 
 <Demo name="select/select-positioning">
 ```json doc-gen:file
@@ -45,7 +45,7 @@ Select 드롭다운이 나타날 위치를 설정할 수 있습니다. 기본값
 
 ### Controlled State
 
-Select의 선택 상태를 외부에서 제어할 수 있습니다.
+Select의 선택 상태를 외부에서 제어합니다.
 
 <Demo name="select/select-controlled">
 ```json doc-gen:file
@@ -58,7 +58,7 @@ Select의 선택 상태를 외부에서 제어할 수 있습니다.
 
 ### States
 
-Select의 다양한 상태(비활성화, 읽기 전용, 오류)를 설정할 수 있습니다.
+Select의 다양한 상태(비활성화, 읽기 전용, 오류)를 설정합니다.
 
 <Demo name="select/select-states">
 ```json doc-gen:file
@@ -75,7 +75,7 @@ Select의 다양한 상태(비활성화, 읽기 전용, 오류)를 설정할 수
 
 ### Items Configuration
 
-Select는 배열 형태와 객체 형태의 아이템 데이터를 모두 지원합니다. items prop을 사용하면 자동으로 값이 포맷팅됩니다.
+배열 형태와 객체 형태의 아이템 데이터를 모두 지원합니다.
 
 <Demo name="select/select-items">
 ```json doc-gen:file
@@ -118,84 +118,56 @@ Select.Value에 함수형 children을 제공하여 선택된 값을 커스터마
 
 ### Select.Root
 
-Select의 루트 컨테이너로, 전체 Select 컴포넌트의 상태와 동작을 관리합니다.
-
-<ComponentPropsTable file="select" section="rootProps" />
+<ComponentPropsTable componentName="select-root" />
 
 ### Select.Trigger
 
-Select 드롭다운을 여는 트리거 요소입니다.
+<ComponentPropsTable componentName="select-trigger" />
 
-<ComponentPropsTable file="select" section="triggerProps" />
+#### Select.ValuePrimitive
 
-### Select.ValuePrimitive
+<ComponentPropsTable componentName="select-value-primitive" />
 
-선택된 값을 표시하는 컴포넌트입니다. 함수형 children을 통해 커스텀 값 표시가 가능합니다.
+#### Select.PlaceholderPrimitive
 
-<ComponentPropsTable file="select" section="valuePrimitiveProps" />
+<ComponentPropsTable componentName="select-placeholder-primitive" />
 
-### Select.PlaceholderPrimitive
+#### Select.TriggerIconPrimitive
 
-값이 선택되지 않았을 때 표시되는 플레이스홀더 컴포넌트입니다.
-
-<ComponentPropsTable file="select" section="placeholderPrimitiveProps" />
-
-### Select.TriggerIconPrimitive
-
-트리거 버튼의 드롭다운 아이콘을 표시하는 컴포넌트입니다.
-
-<ComponentPropsTable file="select" section="triggerIconPrimitiveProps" />
-
-### Select.PortalPrimitive
-
-Select 드롭다운을 DOM의 다른 위치에 렌더링하는 포털 컴포넌트입니다.
-
-<ComponentPropsTable file="select" section="portalPrimitiveProps" />
-
-### Select.PositionerPrimitive
-
-Select 드롭다운의 위치를 설정하는 컴포넌트입니다.
-
-<ComponentPropsTable file="select" section="positionerPrimitiveProps" />
-
-### Select.PopupPrimitive
-
-Select의 실제 드롭다운 팝업 영역입니다.
-
-<ComponentPropsTable file="select" section="popupPrimitiveProps" />
+<ComponentPropsTable componentName="select-trigger-icon-primitive" />
 
 ### Select.Popup
 
-Select의 드롭다운 콘텐츠를 담는 컨테이너입니다. Portal과 Positioner를 조합하여 구성됩니다.
+<ComponentPropsTable componentName="select-popup" />
 
-<ComponentPropsTable file="select" section="popupProps" />
+#### Select.PositionerPrimitive
+
+<ComponentPropsTable componentName="select-positioner-primitive" />
+
+#### Select.PopupPrimitive
+
+<ComponentPropsTable componentName="select-popup-primitive" />
 
 ### Select.Item
 
-개별 선택 옵션을 나타내는 컴포넌트입니다.
+<ComponentPropsTable componentName="select-item" />
 
-<ComponentPropsTable file="select" section="itemProps" />
+#### Select.ItemPrimitive
 
-### Select.ItemIndicatorPrimitive
+<ComponentPropsTable componentName="select-item-primitive" />
 
-선택된 아이템에 표시되는 인디케이터 아이콘 컴포넌트입니다.
+#### Select.ItemIndicatorPrimitive
 
-<ComponentPropsTable file="select" section="itemIndicatorPrimitiveProps" />
+<ComponentPropsTable componentName="select-item-indicator-primitive" />
 
 ### Select.Group
 
-관련된 아이템들을 그룹화하는 컴포넌트입니다.
-
-<ComponentPropsTable file="select" section="groupProps" />
+<ComponentPropsTable componentName="select-group" />
 
 ### Select.GroupLabel
 
-그룹의 라벨을 표시하는 컴포넌트입니다.
-
-<ComponentPropsTable file="select" section="groupLabelProps" />
+<ComponentPropsTable componentName="select-group-label" />
 
 ### Select.Separator
 
-그룹 간의 구분선을 표시하는 컴포넌트입니다.
-
-<ComponentPropsTable file="select" section="separatorProps" />
+<ComponentPropsTable componentName="select-separator" />

@@ -17,35 +17,9 @@ description: 'Button은 사용자가 주요 작업을 수행하도록 돕는 핵
 
 ---
 
-### ColorPalette
-
-Button 색상은 primary, secondary, success, warning, danger, contrast 로 제공합니다.
-
-<Demo name="button/button-color">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/button/button-color.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
-### Size
-
-Button 사이즈는 sm, md, lg, xl 로 제공합니다.
-
-<Demo name="button/button-size">
-```json doc-gen:file
-{
-    "file": "./src/components/demo/examples/button/button-size.tsx",
-    "codeblock": true
-}
-```
-</Demo>
-
 ### Variant
 
-Button 스타일은 fill, outline, ghost 로 제공합니다.
+Button의 시각적 스타일을 설정합니다.
 
 <Demo name="button/button-variant">
 ```json doc-gen:file
@@ -56,14 +30,14 @@ Button 스타일은 fill, outline, ghost 로 제공합니다.
 ```
 </Demo>
 
-### Stretch
+### ColorPalette
 
-`stretch`가 true일 경우 버튼이 컨테이너의 전체 너비를 차지합니다.
+Button의 역할에 따른 색상을 설정합니다.
 
-<Demo name="button/button-stretch">
+<Demo name="button/button-color">
 ```json doc-gen:file
 {
-    "file": "./src/components/demo/examples/button/button-stretch.tsx",
+    "file": "./src/components/demo/examples/button/button-color.tsx",
     "codeblock": true
 }
 ```
@@ -71,12 +45,25 @@ Button 스타일은 fill, outline, ghost 로 제공합니다.
 
 ### Disabled
 
-`disabled` 속성을 사용하여 버튼을 비활성화할 수 있습니다.
+Button의 비활성화 상태를 설정합니다.
 
 <Demo name="button/button-disabled">
 ```json doc-gen:file
 {
     "file": "./src/components/demo/examples/button/button-disabled.tsx",
+    "codeblock": true
+}
+```
+</Demo>
+
+### Size
+
+Button의 크기를 설정합니다.
+
+<Demo name="button/button-size">
+```json doc-gen:file
+{
+    "file": "./src/components/demo/examples/button/button-size.tsx",
     "codeblock": true
 }
 ```
@@ -88,7 +75,7 @@ Button 스타일은 fill, outline, ghost 로 제공합니다.
 
 ### Button with Icon
 
-아이콘과 함께 사용하는 버튼 예제입니다.
+Button의 역할을 직관적으로 표현하기 위해 아이콘과 함께 사용합니다.
 
 <Demo name="button/button-with-icon">
 ```json doc-gen:file
@@ -103,6 +90,6 @@ Button 스타일은 fill, outline, ghost 로 제공합니다.
 
 ---
 
-이 컴포넌트는 `button` 요소를 기반으로, 표준 HTML 속성(`className`, `style` 등)을 지원합니다.
+### Button
 
-<ComponentPropsTable file="button" section="props" />
+<ComponentPropsTable componentName="button" />

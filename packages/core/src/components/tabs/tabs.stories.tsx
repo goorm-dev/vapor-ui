@@ -9,11 +9,11 @@ export default {
     component: Tabs.Root,
     argTypes: {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg', 'xl'] },
-        variant: { control: 'inline-radio', options: ['line', 'plain'] },
+        variant: { control: 'inline-radio', options: ['line', 'fill'] },
         orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
         disabled: { control: 'boolean' },
         activateOnFocus: { control: 'boolean' },
-        loop: { control: 'boolean' },
+        loopFocus: { control: 'boolean' },
     },
 } satisfies Meta<typeof Tabs.Root>;
 
@@ -23,15 +23,14 @@ export const Default: StoryObj<typeof Tabs.Root> = {
             <>
                 <Tabs.Root variant="line" defaultValue={'tab1'} activateOnFocus={false} {...args}>
                     <Tabs.List>
-                        <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                        <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                        <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                        <Tabs.Trigger value="tab4">Tab 4</Tabs.Trigger>
-                        <Tabs.Trigger value="tab5">Tab 5</Tabs.Trigger>
-                        <Tabs.Trigger value="tab6">Tab 6</Tabs.Trigger>
-                        <Tabs.Trigger value="tab7">Tab 7</Tabs.Trigger>
-                        <Tabs.Trigger value="tab8">Tab 8</Tabs.Trigger>
-                        <Tabs.Indicator />
+                        <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                        <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                        <Tabs.Button value="tab3">Tab 3</Tabs.Button>
+                        <Tabs.Button value="tab4">Tab 4</Tabs.Button>
+                        <Tabs.Button value="tab5">Tab 5</Tabs.Button>
+                        <Tabs.Button value="tab6">Tab 6</Tabs.Button>
+                        <Tabs.Button value="tab7">Tab 7</Tabs.Button>
+                        <Tabs.Button value="tab8">Tab 8</Tabs.Button>
                     </Tabs.List>
                     <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                     <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
@@ -53,16 +52,15 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
             <VStack gap="$300">
                 <HStack>
                     <Tabs.Root
-                        variant="plain"
+                        variant="line"
                         defaultValue={'tab1'}
                         activateOnFocus={false}
                         {...args}
                     >
                         <Tabs.List>
-                            <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                            <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                            <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                            <Tabs.Indicator />
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                            <Tabs.Button value="tab3">Tab 3</Tabs.Button>
                         </Tabs.List>
                         <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                         <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
@@ -76,10 +74,9 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
                         {...args}
                     >
                         <Tabs.List>
-                            <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                            <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                            <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                            <Tabs.Indicator />
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                            <Tabs.Button value="tab3">Tab 3</Tabs.Button>
                         </Tabs.List>
                         <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                         <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
@@ -90,32 +87,28 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
                 <HStack gap="$200">
                     <Tabs.Root size="sm" defaultValue={'tab1'} activateOnFocus={false} {...args}>
                         <Tabs.List>
-                            <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                            <Tabs.Indicator />
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
                         </Tabs.List>
                         <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                     </Tabs.Root>
 
                     <Tabs.Root size="md" defaultValue={'tab1'} activateOnFocus={false} {...args}>
                         <Tabs.List>
-                            <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                            <Tabs.Indicator />
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
                         </Tabs.List>
                         <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                     </Tabs.Root>
 
                     <Tabs.Root size="lg" defaultValue={'tab1'} activateOnFocus={false} {...args}>
                         <Tabs.List>
-                            <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                            <Tabs.Indicator />
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
                         </Tabs.List>
                         <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                     </Tabs.Root>
 
                     <Tabs.Root size="xl" defaultValue={'tab1'} activateOnFocus={false} {...args}>
                         <Tabs.List>
-                            <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                            <Tabs.Indicator />
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
                         </Tabs.List>
                         <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                     </Tabs.Root>
@@ -123,10 +116,9 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
 
                 <Tabs.Root disabled defaultValue={'tab2'} activateOnFocus={false} {...args}>
                     <Tabs.List>
-                        <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                        <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                        <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                        <Tabs.Indicator />
+                        <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                        <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                        <Tabs.Button value="tab3">Tab 3</Tabs.Button>
                     </Tabs.List>
                     <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                     <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
@@ -141,10 +133,9 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
                         {...args}
                     >
                         <Tabs.List>
-                            <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                            <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                            <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                            <Tabs.Indicator />
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                            <Tabs.Button value="tab3">Tab 3</Tabs.Button>
                         </Tabs.List>
                         <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                         <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>
@@ -153,16 +144,15 @@ export const TestBed: StoryObj<typeof Tabs.Root> = {
 
                     <Tabs.Root
                         orientation="vertical"
-                        variant="plain"
+                        variant="line"
                         defaultValue={'tab2'}
                         activateOnFocus={false}
                         {...args}
                     >
                         <Tabs.List>
-                            <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-                            <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-                            <Tabs.Trigger value="tab3">Tab 3</Tabs.Trigger>
-                            <Tabs.Indicator />
+                            <Tabs.Button value="tab1">Tab 1</Tabs.Button>
+                            <Tabs.Button value="tab2">Tab 2</Tabs.Button>
+                            <Tabs.Button value="tab3">Tab 3</Tabs.Button>
                         </Tabs.List>
                         <Tabs.Panel value="tab1">Content for Tab 1</Tabs.Panel>
                         <Tabs.Panel value="tab2">Content for Tab 2</Tabs.Panel>

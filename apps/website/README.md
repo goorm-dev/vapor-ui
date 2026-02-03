@@ -45,7 +45,7 @@ To learn more about the technologies used in this project:
 
 ## Contributing
 
-Please refer to the [contributing guide](https://vapor-ui.goorm.io/guides/contributing) for information on how to contribute to the documentation.
+Please refer to the [contributing guide](../../CONTRIBUTING.md) for information on how to contribute to the documentation.
 
 ## Deploy
 

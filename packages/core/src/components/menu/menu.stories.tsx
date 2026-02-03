@@ -52,14 +52,14 @@ export const TestBed = {
     render: () => (
         <Menu.Root open>
             <Menu.Trigger>메뉴 열기</Menu.Trigger>
-            <Menu.Popup>
+            <Menu.Popup style={{ transition: 'none' }}>
                 <Menu.Item disabled>항목 1</Menu.Item>
                 <Menu.Item>항목 2</Menu.Item>
                 <Menu.Item>항목 3</Menu.Item>
                 <Menu.Separator />
                 <Menu.SubmenuRoot open>
                     <Menu.SubmenuTriggerItem>서브 메뉴</Menu.SubmenuTriggerItem>
-                    <Menu.SubmenuPopup>
+                    <Menu.SubmenuPopup style={{ transition: 'none' }}>
                         <Menu.Item disabled>서브 항목 1</Menu.Item>
                         <Menu.Item>서브 항목 2</Menu.Item>
                     </Menu.SubmenuPopup>

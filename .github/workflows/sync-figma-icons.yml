@@ -27,14 +27,16 @@ jobs:
                   TYPE: basic
               run: |
                   echo "🚀 Syncing basic icons"
-                  TYPE=basic node ./scripts/syncFigmaIcons.js | tee basic_sync_output.txt
+                  TYPE=basic node --experimental-fetch ./scripts/syncFigmaIcons.mjs | tee basic_sync_output.txt
 
                   # Extract sync results from output
                   NEW_BASIC=$(grep "FIGMA_SYNC_NEW_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
                   UPDATED_BASIC=$(grep "FIGMA_SYNC_UPDATED_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
+                  DELETED_BASIC=$(grep "FIGMA_SYNC_DELETED_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
 
                   echo "new_icons=$NEW_BASIC" >> $GITHUB_OUTPUT
                   echo "updated_icons=$UPDATED_BASIC" >> $GITHUB_OUTPUT
+                  echo "deleted_icons=$DELETED_BASIC" >> $GITHUB_OUTPUT
 
             - name: Sync Symbol Icons
               id: sync_symbol
@@ -43,14 +45,16 @@ jobs:
                   TYPE: symbol
               run: |
                   echo "🚀 Syncing symbol icons"
-                  TYPE=symbol node ./scripts/syncFigmaIcons.js | tee symbol_sync_output.txt
+                  TYPE=symbol node --experimental-fetch ./scripts/syncFigmaIcons.mjs | tee symbol_sync_output.txt
 
                   # Extract sync results from output
                   NEW_SYMBOL=$(grep "FIGMA_SYNC_NEW_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
                   UPDATED_SYMBOL=$(grep "FIGMA_SYNC_UPDATED_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
+                  DELETED_SYMBOL=$(grep "FIGMA_SYNC_DELETED_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
 
                   echo "new_icons=$NEW_SYMBOL" >> $GITHUB_OUTPUT
                   echo "updated_icons=$UPDATED_SYMBOL" >> $GITHUB_OUTPUT
+                  echo "deleted_icons=$DELETED_SYMBOL" >> $GITHUB_OUTPUT
 
             - name: Format generated files
               run: |
@@ -82,6 +86,8 @@ jobs:
                       NEW_SYMBOL=$(grep "FIGMA_SYNC_NEW_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
                       UPDATED_BASIC=$(grep "FIGMA_SYNC_UPDATED_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
                       UPDATED_SYMBOL=$(grep "FIGMA_SYNC_UPDATED_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
+                      DELETED_BASIC=$(grep "FIGMA_SYNC_DELETED_ICONS_BASIC=" basic_sync_output.txt | cut -d'=' -f2 || echo "")
+                      DELETED_SYMBOL=$(grep "FIGMA_SYNC_DELETED_ICONS_SYMBOL=" symbol_sync_output.txt | cut -d'=' -f2 || echo "")
 
                       # Determine if we have new icons (minor) or just updates (patch)
                       if [[ -n "$NEW_BASIC" || -n "$NEW_SYMBOL" ]]; then
@@ -113,27 +119,51 @@ jobs:
                                   echo "- Symbol Icons: \`$(echo $UPDATED_SYMBOL | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
                               fi
                           fi
+
+                          # Add deleted icons if any
+                          if [[ -n "$DELETED_BASIC" || -n "$DELETED_SYMBOL" ]]; then
+                              echo "" >> "$CHANGESET_FILE"
+                              echo "**Removed:**" >> "$CHANGESET_FILE"
+                              if [[ -n "$DELETED_BASIC" ]]; then
+                                  echo "- Basic Icons: \`$(echo $DELETED_BASIC | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                              fi
+                              if [[ -n "$DELETED_SYMBOL" ]]; then
+                                  echo "- Symbol Icons: \`$(echo $DELETED_SYMBOL | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                              fi
+                          fi
                       else
                           # Patch version for updated icons only
                           echo "---" > "$CHANGESET_FILE"
                           echo "\"@vapor-ui/icons\": patch" >> "$CHANGESET_FILE"
                           echo "---" >> "$CHANGESET_FILE"
                           echo "" >> "$CHANGESET_FILE"
-                          
+
                           # Create title with updated icons list
                           echo "Update icons from Figma" >> "$CHANGESET_FILE"
                           echo "" >> "$CHANGESET_FILE"
-                          
+
                           if [[ -n "$UPDATED_BASIC" ]]; then
                               echo "**Updated Basic Icons:** \`$(echo $UPDATED_BASIC | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
                           fi
                           if [[ -n "$UPDATED_SYMBOL" ]]; then
                               echo "**Updated Symbol Icons:** \`$(echo $UPDATED_SYMBOL | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
                           fi
-                          
+
+                          # Add deleted icons if any
+                          if [[ -n "$DELETED_BASIC" || -n "$DELETED_SYMBOL" ]]; then
+                              echo "" >> "$CHANGESET_FILE"
+                              echo "**Removed:**" >> "$CHANGESET_FILE"
+                              if [[ -n "$DELETED_BASIC" ]]; then
+                                  echo "- Basic Icons: \`$(echo $DELETED_BASIC | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                              fi
+                              if [[ -n "$DELETED_SYMBOL" ]]; then
+                                  echo "- Symbol Icons: \`$(echo $DELETED_SYMBOL | sed 's/,/\`, \`/g')\`" >> "$CHANGESET_FILE"
+                              fi
+                          fi
+
                           # Fallback if no specific icons listed
-                          if [[ -z "$UPDATED_BASIC" && -z "$UPDATED_SYMBOL" ]]; then
-                              echo "Some icons have been updated with the latest changes from Figma." >> "$CHANGESET_FILE"
+                          if [[ -z "$UPDATED_BASIC" && -z "$UPDATED_SYMBOL" && -z "$DELETED_BASIC" && -z "$DELETED_SYMBOL" ]]; then
+                              echo "Sync icons with the latest changes from Figma." >> "$CHANGESET_FILE"
                           fi
                       fi
 
@@ -158,6 +188,8 @@ jobs:
                       NEW_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.new_icons }}"
                       UPDATED_BASIC_ICONS="${{ steps.sync_basic.outputs.updated_icons }}"
                       UPDATED_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.updated_icons }}"
+                      DELETED_BASIC_ICONS="${{ steps.sync_basic.outputs.deleted_icons }}"
+                      DELETED_SYMBOL_ICONS="${{ steps.sync_symbol.outputs.deleted_icons }}"
 
                       # Determine version bump type for PR body
                       if [[ -n "$NEW_BASIC_ICONS" || -n "$NEW_SYMBOL_ICONS" ]]; then
@@ -194,6 +226,14 @@ jobs:
                       fi
                       if [[ -n "$UPDATED_SYMBOL_ICONS" ]]; then
                           echo "**Updated Symbol Icons:** \`$(echo $UPDATED_SYMBOL_ICONS | sed 's/,/\`, \`/g')\`" >> pr_body.txt
+                          echo "" >> pr_body.txt
+                      fi
+                      if [[ -n "$DELETED_BASIC_ICONS" ]]; then
+                          echo "**Removed Basic Icons:** \`$(echo $DELETED_BASIC_ICONS | sed 's/,/\`, \`/g')\`" >> pr_body.txt
+                          echo "" >> pr_body.txt
+                      fi
+                      if [[ -n "$DELETED_SYMBOL_ICONS" ]]; then
+                          echo "**Removed Symbol Icons:** \`$(echo $DELETED_SYMBOL_ICONS | sed 's/,/\`, \`/g')\`" >> pr_body.txt
                           echo "" >> pr_body.txt
                       fi
 

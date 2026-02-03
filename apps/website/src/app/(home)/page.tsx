@@ -93,7 +93,7 @@ const ThemeSection = () => {
         <LocalTabs defaultValue="vapor" onValueChange={handleTabChange}>
             <LocalTabsList>
                 <LocalTab value="vapor">
-                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                    <div className="flex gap-v-100 justify-center items-center">
                         <RemoteIcon />
                         <Text typography="subtitle1" foreground="normal-100">
                             Vapor
@@ -101,7 +101,7 @@ const ThemeSection = () => {
                     </div>
                 </LocalTab>
                 <LocalTab value="aurora">
-                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                    <div className="flex gap-v-100 justify-center items-center">
                         <AiSmartieIcon />
                         <Text typography="subtitle1" foreground="normal-100">
                             Aurora
@@ -109,7 +109,7 @@ const ThemeSection = () => {
                     </div>
                 </LocalTab>
                 <LocalTab value="pop">
-                    <div className="flex gap-[var(--vapor-size-space-100)] justify-center items-center">
+                    <div className="flex gap-v-100 justify-center items-center">
                         <StarIcon />
                         <Text typography="subtitle1" foreground="normal-100">
                             Pop
@@ -118,11 +118,11 @@ const ThemeSection = () => {
                 </LocalTab>
             </LocalTabsList>
             <LocalTabsContent value="vapor">
-                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                <div className="flex flex-col gap-v-150 items-center">
                     <Text foreground="normal-200" typography="subtitle1">
                         Vapor 테마는 기본 속성값을 바탕으로 안정적이고 균형 잡힌 디자인을 제공합니다
                     </Text>
-                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
+                    <div className="flex items-center gap-v-100 flex-wrap justify-center">
                         <Badge colorPalette="hint">Primary: #3174dc</Badge>
                         <Badge colorPalette="hint">Border-radius: md</Badge>
                         <Badge colorPalette="hint">Scaling: 100%</Badge>
@@ -130,12 +130,12 @@ const ThemeSection = () => {
                 </div>
             </LocalTabsContent>
             <LocalTabsContent value="aurora">
-                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                <div className="flex flex-col gap-v-150 items-center">
                     <Text foreground="normal-200" typography="subtitle1">
                         Aurora 테마는 신비롭고 미래적인 분위기로,혁신적이고 실험적인 서비스에
                         적합합니다
                     </Text>
-                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
+                    <div className="flex items-center gap-v-100 flex-wrap justify-center">
                         <Badge colorPalette="hint">Primary: #8b5cf6</Badge>
                         <Badge colorPalette="hint">Border-radius: xl</Badge>
                         <Badge colorPalette="hint">Scaling: 100%</Badge>
@@ -143,12 +143,12 @@ const ThemeSection = () => {
                 </div>
             </LocalTabsContent>
             <LocalTabsContent value="pop">
-                <div className="flex flex-col gap-[var(--vapor-size-space-150)] items-center">
+                <div className="flex flex-col gap-v-150 items-center">
                     <Text foreground="normal-200" typography="subtitle1">
                         Pop 테마는 활기차고 생동감 있는 디자인으로, 창의적이고 역동적인 서비스에
                         적합합니다
                     </Text>
-                    <div className="flex items-center gap-[var(--vapor-size-space-100)] flex-wrap justify-center">
+                    <div className="flex items-center gap-v-100 flex-wrap justify-center">
                         <Badge colorPalette="hint">Primary: #ec4899</Badge>
                         <Badge colorPalette="hint">Border-radius: full</Badge>
                         <Badge colorPalette="hint">Scaling: 120%</Badge>
@@ -179,8 +179,8 @@ export default function HomePage() {
                         style={{
                             background:
                                 resolvedTheme === 'light'
-                                    ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--vapor-color-background-canvas, #FFF) 100%)'
-                                    : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--vapor-color-background-canvas, #23272E) 100%)',
+                                    ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, var(--vapor-color-canvas, #FFF) 100%)'
+                                    : 'linear-gradient(180deg, rgba(35, 39, 46, 0.00) 0%, var(--vapor-color-canvas, #23272E) 100%)',
                         }}
                     />
                     <DefaultSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
@@ -188,7 +188,7 @@ export default function HomePage() {
                     <div className="flex flex-col items-center gap-4 self-stretch">
                         <div className="flex flex-col items-center gap-10 self-stretch">
                             <div className="flex flex-col items-center gap-4 self-stretch">
-                                <div className="flex flex-col items-center gap-[var(--vapor-size-space-050)] self-stretch">
+                                <div className="flex flex-col items-center gap-v-50 self-stretch">
                                     <Badge size="lg" colorPalette="hint" shape="pill">
                                         구름 디자인 시스템 3.0
                                     </Badge>
@@ -236,11 +236,11 @@ export default function HomePage() {
                             </div>
                             <button
                                 type="button"
-                                className="max-w-[720px] w-full rounded-[var(--vapor-size-borderRadius-400)] flex flex-col items-center gap-4 bg-[rgba(0,0,0,0.16)] border border-[var(--vapor-color-border-normal)] shadow-[var(--vapor-shadow-100)] p-3 md:p-4"
+                                className="max-w-[720px] w-full rounded-v-400 flex flex-col items-center gap-4 bg-[rgba(0,0,0,0.16)] border border-v-normal shadow-[var(--vapor-shadow-100)] p-3 md:p-4"
                                 onClick={() => setIsSearchOpen(true)}
                             >
-                                <div className="flex items-center w-full px-6 h-12 justify-between rounded-[var(--vapor-size-borderRadius-300)] border border-[var(--vapor-color-border-normal)] bg-[var(--vapor-color-background-surface-100)]">
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                <div className="flex items-center w-full px-6 h-12 justify-between rounded-v-300 border border-v-normal bg-v-overlay-100">
+                                    <div className="flex items-center gap-v-100">
                                         <SearchOutlineIcon
                                             size={24}
                                             color="var(--vapor-color-foreground-hint-100)"
@@ -260,7 +260,7 @@ export default function HomePage() {
                                             컴포넌트 이름으로 검색
                                         </Text>
                                     </div>
-                                    <div className="flex items-center gap-[var(--vapor-size-space-100)]">
+                                    <div className="flex items-center gap-v-100">
                                         <Badge
                                             render={<kbd />}
                                             colorPalette="hint"
@@ -301,9 +301,9 @@ export default function HomePage() {
                         ></Button>
                     </div>
                 </section>
-                <section className="min-h-[100vh] flex py-[var(--vapor-size-space-500)]  px-[var(--vapor-size-space-400)] max-[767px]:px-[var(--vapor-size-space-250)] flex-col items-center gap-[var(--vapor-size-space-300)] self-stretch bg-[var(--vapor-color-background-canvas)]">
-                    <div className="w-full justify-center flex flex-col items-center gap-[var(--vapor-size-space-200)] ">
-                        <div className="flex flex-col items-center gap-[var(--vapor-size-space-100)] text-center">
+                <section className="min-h-[100vh] flex py-v-500  px-v-400 max-[767px]:px-v-250 flex-col items-center gap-v-300 self-stretch bg-v-canvas-100">
+                    <div className="w-full justify-center flex flex-col items-center gap-v-200 ">
+                        <div className="flex flex-col items-center gap-v-100 text-center">
                             <Text
                                 typography="heading2"
                                 foreground="normal-200"

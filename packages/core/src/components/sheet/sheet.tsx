@@ -3,17 +3,18 @@
 import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
-import { Dialog as BaseDialog, useRender } from '@base-ui-components/react';
-import { useControlled } from '@base-ui-components/utils/useControlled';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+import { useRender } from '@base-ui/react/use-render';
+import { useControlled } from '@base-ui/utils/useControlled';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import clsx from 'clsx';
 
 import { useOpenChangeComplete } from '~/hooks/use-open-change-complete';
 import type { TransitionStatus } from '~/hooks/use-transition-status';
 import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { createContext } from '~/libs/create-context';
-import { createSlot } from '~/libs/create-slot';
 import { composeRefs } from '~/utils/compose-refs';
+import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
 import { resolveStyles } from '~/utils/resolve-styles';
@@ -58,8 +59,12 @@ export const SheetRoot = ({
     const popupRef = useRef<HTMLDivElement | null>(null);
 
     const { mounted, setMounted, transitionStatus } = useTransitionStatus(open);
-    const handleUnmount = useEventCallback(() => {
+    const handleUnmount = useStableCallback(() => {
         setMounted(false);
+    });
+
+    const handleClose = useStableCallback(() => {
+        setOpen(false);
     });
 
     useOpenChangeComplete({
@@ -73,7 +78,10 @@ export const SheetRoot = ({
         },
     });
 
-    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount }), [handleUnmount]);
+    useImperativeHandle(props.actionsRef, () => ({ unmount: handleUnmount, close: handleClose }), [
+        handleUnmount,
+        handleClose,
+    ]);
 
     const handleOpenChange = (open: boolean, eventDetails: SheetRoot.ChangeEventDetails) => {
         setOpen(open);
@@ -190,18 +198,30 @@ SheetPopupPrimitive.displayName = 'Sheet.PopupPrimitive';
 
 export const SheetPopup = forwardRef<HTMLDivElement, SheetPopup.Props>(
     ({ portalElement, overlayElement, positionerElement, ...props }, ref) => {
-        const PortalElement = createSlot(portalElement || <SheetPortalPrimitive />);
-        const OverlayElement = createSlot(overlayElement || <SheetOverlayPrimitive />);
-        const PositionerElement = createSlot(positionerElement || <SheetPositionerPrimitive />);
+        const popup = <SheetPopupPrimitive ref={ref} {...props} />;
 
-        return (
-            <PortalElement>
-                <OverlayElement />
-                <PositionerElement>
-                    <SheetPopupPrimitive ref={ref} {...props} />
-                </PositionerElement>
-            </PortalElement>
-        );
+        const positioner = useRender({
+            render: createRender(positionerElement, <SheetPositionerPrimitive />),
+            props: { children: popup },
+        });
+
+        const overlay = useRender({
+            render: createRender(overlayElement, <SheetOverlayPrimitive />),
+        });
+
+        const portal = useRender({
+            render: createRender(portalElement, <SheetPortalPrimitive />),
+            props: {
+                children: (
+                    <>
+                        {overlay}
+                        {positioner}
+                    </>
+                ),
+            },
+        });
+
+        return portal;
     },
 );
 SheetPopup.displayName = 'Sheet.Popup';
@@ -262,7 +282,9 @@ SheetDescription.displayName = 'Sheet.Description';
 export namespace SheetRoot {
     type RootPrimitiveProps = Omit<VComponentProps<typeof Dialog.Root>, 'size'>;
     export interface Props extends RootPrimitiveProps {}
+
     export type ChangeEventDetails = BaseDialog.Root.ChangeEventDetails;
+    export type Actions = BaseDialog.Root.Actions;
 }
 
 export namespace SheetTrigger {

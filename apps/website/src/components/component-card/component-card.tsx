@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge, Card, Text } from '@vapor-ui/core';
-import cn from 'clsx';
+import { Badge, Card, HStack, Text } from '@vapor-ui/core';
+import cn, { clsx } from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -36,16 +36,20 @@ const CardWrapper = ({
                     priority
                 />
             </Card.Header>
-            <Card.Body className={styles.body}>
-                <div className={styles.componentName}>
+            <Card.Body className={styles.body} overflow="hidden">
+                <HStack gap="$050" justifyContent="start" alignItems="center">
                     <Text typography="heading5">{name}</Text>
                     {componentType && (
-                        <Badge colorPalette="primary" size="md" shape="pill" className="gap-7">
+                        <Badge size="sm" shape="pill" className="whitespace-nowrap">
                             {componentType}
                         </Badge>
                     )}
-                </div>
-                <Text typography="body2" foreground="secondary-100" className={styles.description}>
+                </HStack>
+                <Text
+                    typography="body2"
+                    foreground="secondary-100"
+                    className={clsx(styles.description, 'overflow-hidden line-clamp-2 text-wrap')}
+                >
                     {description}
                 </Text>
             </Card.Body>

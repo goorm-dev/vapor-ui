@@ -1,5 +1,14 @@
 {
     "title": "Getting Started",
-    "pages": ["overview", "installation", "theming", "releases", "llms-txt", "tailwindcss-v4"],
+    "pages": [
+        "overview",
+        "principles",
+        "installation",
+        "releases",
+        "llms-txt",
+        "tailwindcss-v4",
+        "eslint",
+        "codemod"
+    ],
     "defaultOpen": true
 }

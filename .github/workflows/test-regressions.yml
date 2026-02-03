@@ -1,6 +1,6 @@
-name: "Tests"
+name: 'Visual Regression'
 
-"on":
+on:
     workflow_dispatch:
     pull_request:
         types:
@@ -18,20 +18,39 @@ env:
     AWS_REGION: ${{ secrets.AWS_REGION }}
     AWS_IAM_ROLE_NAME: ${{ secrets.AWS_IAM_ROLE_NAME }}
     AWS_IAM_ROLE_SESSION_NAME: ${{ secrets.AWS_IAM_ROLE_SESSION_NAME }}
-    REPORT_PATH: ""
+    REPORT_PATH: ''
+    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+    cancel-in-progress: true
 
 jobs:
-    regressions:
+    build-storybook:
         runs-on: macos-latest
+        steps:
+            - name: Git clone the repository
+              uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              uses: ./.github/composite/install
+
+            - name: Build Storybook
+              run: pnpm build:storybook
+
+    test:
+        runs-on: macos-latest
+        needs: [build-storybook]
         strategy:
             fail-fast: false
             matrix:
                 shard:
                     [
                         { name: firefox, project: firefox },
-                        { name: webkit, project: webkit },
-                        { name: chromium, project: chromium },
-                        { name: "Microsoft Edge", project: msedge },
+                        { name: safari, project: webkit },
+                        { name: chrome, project: chromium },
+                        { name: edge, project: chromium },
                     ]
 
         steps:
@@ -46,9 +65,6 @@ jobs:
             - name: Install Playwright Browsers
               run: pnpm core exec playwright install ${{ matrix.shard.project }}
 
-            - name: Build Icons
-              run: pnpm build --filter=@vapor-ui/icons
-
             - name: Run Playwright tests
               run: pnpm test:regressions -- --project="${{ matrix.shard.name }}"
 
@@ -56,13 +72,13 @@ jobs:
               if: ${{ !cancelled() }}
               uses: actions/upload-artifact@v4
               with:
-                  name: blob-report-${{ matrix.shard.project }}
+                  name: blob-report-${{ matrix.shard.name }}
                   path: packages/core/blob-report
                   retention-days: 1
 
     merge-reports:
         if: ${{ !cancelled() }}
-        needs: [regressions]
+        needs: [test]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -140,7 +156,7 @@ jobs:
             - uses: marocchino/sticky-pull-request-comment@v2
               with:
                   message: |
-                      ${{ contains(needs.regressions.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
+                      ${{ contains(needs.test.result, 'failure') && format('🚫 **{0} tests failed!**', steps.parse-results.outputs.failed) || '✅ **All tests passed!**' }}
 
                       | Tests | Passed | Failed | Duration | Report |
                       | :---- | :----- | :----- | :------- | :----- |

@@ -1,4 +1,4 @@
-import { DiscordColorIcon, FigmaColorIcon, GithubIcon } from '@vapor-ui/icons';
+import { FigmaColorIcon, GithubIcon } from '@vapor-ui/icons';
 import type { IconItemType } from 'fumadocs-ui/layouts/links';
 
 export const externalLinks = [
@@ -10,13 +10,6 @@ export const externalLinks = [
         type: 'icon',
     },
     {
-        icon: <DiscordColorIcon size={20} />,
-        text: 'Discord',
-        url: 'https://discord.gg/7Z8Ecur63D',
-        label: 'Vapor Discord comunity',
-        type: 'icon',
-    },
-    {
         icon: <GithubIcon size={20} />,
         text: 'Github',
         url: 'https://github.com/goorm-dev/vapor-ui',
@@ -25,16 +18,17 @@ export const externalLinks = [
     },
 ] satisfies IconItemType[];
 
-export const navLinks = [
+export const docsLinks = [
     {
-        text: 'Theme Playground',
-        url: '/playground',
-        label: 'Playground for theme customization',
+        text: 'Theme',
+        url: '/theme',
+        label: 'Theme Customization',
     },
     {
         text: 'Blocks',
         url: '/blocks',
         label: 'UI Blocks',
     },
-    ...externalLinks,
 ];
+
+export const navLinks = [...docsLinks, ...externalLinks];

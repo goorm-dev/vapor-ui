@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { Tabs } from '@base-ui-components/react/tabs';
+import { Tabs } from '@base-ui/react/tabs';
 
 interface LocalTabsProps {
     defaultValue?: string;
@@ -31,7 +31,7 @@ const LocalTabs = ({ children, value, defaultValue, onValueChange }: LocalTabsPr
             defaultValue={defaultValue}
             value={value}
             onValueChange={onValueChange}
-            className="w-full flex flex-col gap-[var(--vapor-size-space-150)] items-center"
+            className="w-full flex flex-col gap-v-150 items-center"
         >
             {children}
         </Tabs.Root>
@@ -42,7 +42,7 @@ const LocalTabsIndicator = forwardRef<HTMLDivElement, {}>((props, ref) => {
     return (
         <Tabs.Indicator
             ref={ref}
-            className="absolute bottom-[-1px] left-0 h-[2px] bg-[var(--vapor-color-border-primary)] transition-all duration-200 ease-in-out"
+            className="absolute bottom-[-1px] left-0 h-[2px] bg-v-primary transition-all duration-200 ease-in-out"
             style={{
                 width: 'var(--active-tab-width)',
                 transform: 'translateX(var(--active-tab-left))',
@@ -57,7 +57,7 @@ const LocalTabsList = forwardRef<HTMLDivElement, LocalTabsListProps>(({ children
     return (
         <Tabs.List
             ref={ref}
-            className="relative justify-center flex w-[600px] max-[991px]:w-full h-[var(--vapor-size-dimension-500)] px-[var(--vapor-size-space-000)] py-0 items-start gap-[var(--vapor-size-space-100)] border-b border-[var(--vapor-color-border-normal)]"
+            className="relative justify-center flex w-[600px] max-[991px]:w-full h-v-500 px-v-0 py-0 items-start gap-v-100 border-b border-v-normal"
         >
             {children}
             <LocalTabsIndicator />
@@ -70,7 +70,7 @@ const LocalTab = forwardRef<HTMLButtonElement, LocalTabProps>(({ children, value
         <Tabs.Tab
             ref={ref}
             value={value}
-            className="flex px-[var(--vapor-size-space-000)] py-0 justify-center items-center gap-[var(--space-075)] flex-1 self-stretch bg-transparent border-none cursor-pointer text-[var(--vapor-color-foreground-hint)] text-sm font-normal transition-all duration-200 ease-in-out data-[selected]:text-[var(--vapor-color-foreground-primary)] data-[selected]:font-medium [&[data-selected]_span]:!text-[var(--vapor-color-foreground-primary)]"
+            className="flex px-v-0 py-0 justify-center items-center gap-v-075 flex-1 self-stretch bg-transparent border-none cursor-pointer text-v-hint-100 text-sm font-normal transition-all duration-200 ease-in-out data-[selected]:text-v-primary-100 data-[selected]:font-medium [&[data-selected]_span]:!text-v-primary-100"
         >
             {children}
         </Tabs.Tab>
