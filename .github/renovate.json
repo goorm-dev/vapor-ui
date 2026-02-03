@@ -1,7 +1,7 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:recommended", "group:monorepos", ":dependencyDashboard"],
-    "baseBranchPatterns": ["main"],
+    "baseBranches": ["main"],
     "rebaseWhen": "auto",
     "labels": ["type: dependencies"],
     "automergeStrategy": "squash",
@@ -10,30 +10,40 @@
     "vulnerabilityAlerts": {
         "enabled": true,
         "labels": ["type: security"],
-        "automerge": false,
-        "dependencyDashboardApproval": true
+        "automerge": false
     },
     "packageRules": [
         {
-            "description": "patch make auto PR, auto merge",
+            "description": "patch: auto PR, auto merge after 3 days",
             "matchUpdateTypes": ["patch"],
+            "minimumReleaseAge": "3 days",
             "automerge": true,
-            "dependencyDashboardApproval": false,
             "labels": ["type: dependencies"]
         },
         {
-            "description": "minor make auto PR, no auto merge",
+            "description": "minor: auto PR, no auto merge",
             "matchUpdateTypes": ["minor"],
             "automerge": false,
-            "dependencyDashboardApproval": false,
             "labels": ["type: dependencies"]
         },
         {
-            "description": "major make auto PR, require dashboard approval",
+            "description": "major: require dashboard approval",
             "matchUpdateTypes": ["major"],
             "automerge": false,
             "dependencyDashboardApproval": true,
             "labels": ["type: dependencies", "major"]
+        },
+        {
+            "description": "Group patch updates for other dependencies",
+            "groupName": "Other Dependencies (patch)",
+            "matchUpdateTypes": ["patch"],
+            "matchPackageNames": ["*"]
+        },
+        {
+            "description": "Group minor updates for other dependencies",
+            "groupName": "Other Dependencies (minor)",
+            "matchUpdateTypes": ["minor"],
+            "matchPackageNames": ["*"]
         },
         {
             "description": "React and React DOM - Core framework",
@@ -54,39 +64,7 @@
             "groupName": "Base UI",
             "labels": ["type: dependencies"],
             "automerge": false,
-            "matchPackageNames": ["/^@base-ui-components\\/.*/"]
-        },
-        {
-            "description": "Group patch updates for other dependencies",
-            "groupName": "Other Dependencies (patch)",
-            "matchUpdateTypes": ["patch"],
-            "automerge": true,
-            "labels": ["type: dependencies"],
-            "matchPackageNames": ["*"],
-            "excludePackageNames": [
-                "react",
-                "react-dom",
-                "@types/react",
-                "@types/react-dom",
-                "/^@vanilla-extract\\/.*/",
-                "/^@base-ui-components\\/.*/"
-            ]
-        },
-        {
-            "description": "Group minor updates for other dependencies",
-            "groupName": "Other Dependencies (minor)",
-            "matchUpdateTypes": ["minor"],
-            "automerge": false,
-            "labels": ["type: dependencies"],
-            "matchPackageNames": ["*"],
-            "excludePackageNames": [
-                "react",
-                "react-dom",
-                "@types/react",
-                "@types/react-dom",
-                "/^@vanilla-extract\\/.*/",
-                "/^@base-ui-components\\/.*/"
-            ]
+            "matchPackageNames": ["@base-ui/react"]
         }
     ]
 }
