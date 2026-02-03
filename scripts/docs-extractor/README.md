@@ -88,7 +88,7 @@ scripts/docs-extractor/
 │   ├── config/                 # Zod 기반 설정 시스템
 │   │   ├── loader.ts           # 설정 파일 로딩 및 검증
 │   │   ├── schema.ts           # Zod 스키마 정의
-│   │   └── defaults.ts         # 기본값
+│   │   └── defaults.ts         # 기본값 (defineConfig로 오버라이드 가능)
 │   ├── core/                   # Props 추출 핵심 로직
 │   │   ├── props-extractor.ts  # Props 추출
 │   │   ├── type-resolver.ts    # 타입 변환
@@ -108,7 +108,7 @@ scripts/docs-extractor/
 - **목적**: Sprinkles CSS props의 메타데이터 (토큰 사용 여부, CSS 속성 매핑 등)
 - **생성 시점**: 빌드 전 (`scripts/generate-sprinkles-meta.ts` 실행)
 - **사용처**: Props 추출 시 sprinkles props 필터링에 활용
-- **위치 이유**: 빌드 산출물이므로 소스 코드(`src/`)와 분리, `.gitignore`에 포함 가능
+- **위치 이유**: 빌드 산출물이므로 소스 코드(`src/`)와 분리, `.gitignore`에 포함됨
 
 ## 출력 형식
 

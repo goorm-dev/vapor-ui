@@ -1,0 +1,5 @@
+# Build outputs
+dist/
+
+# Generated files (created by prebuild script)
+generated/

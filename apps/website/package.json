@@ -60,7 +60,7 @@
         "@types/node": "^22.15.4",
         "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
-        "@vapor-ui/docs-extractor": "workspace:*",
+        "@vapor-ui/ts-api-extractor": "workspace:*",
         "eslint": "^9.20.1",
         "postcss": "^8.5.4",
         "shiki": "^3.7.0",

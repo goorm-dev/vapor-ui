@@ -1,4 +1,19 @@
 #!/usr/bin/env tsx
+/**
+ * Sprinkles 메타데이터 생성 스크립트
+ *
+ * 이 스크립트는 @vanilla-extract/sprinkles의 defineProperties 호출을 분석하여
+ * 각 CSS prop이 디자인 토큰을 사용하는지 여부를 추출합니다.
+ *
+ * 생성된 메타데이터는 ts-api-extractor가 컴포넌트 props를 추출할 때
+ * sprinkles props를 필터링하거나 토큰 정보를 문서화하는 데 사용됩니다.
+ *
+ * 실행 시점:
+ * - `pnpm build` 전 (prebuild hook)
+ * - `pnpm generate:sprinkles` 수동 실행
+ *
+ * 출력: generated/sprinkles-meta.json
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 import {
