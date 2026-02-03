@@ -5,6 +5,7 @@ export interface PropDefinition {
     usesToken: boolean;
     tokenPath?: string;
     cssProperty: string;
+    displayTypeName?: string;
 }
 
 export interface SprinklesMeta {
@@ -69,4 +70,15 @@ export function getNonTokenSprinklesProps(meta: SprinklesMeta): string[] {
 export function clearCache(): void {
     cachedMeta = null;
     cachedMetaPath = null;
+}
+
+/**
+ * sprinkles prop의 displayTypeName을 반환합니다.
+ * 해당 prop이 sprinkles prop이 아니거나 displayTypeName이 없으면 null 반환
+ */
+export function getSprinklesDisplayType(propName: string, meta: SprinklesMeta): string | null {
+    const definition = meta.propDefinitions[propName];
+    if (!definition) return null;
+
+    return definition.displayTypeName ?? null;
 }

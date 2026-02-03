@@ -1,6 +1,6 @@
+import { createJiti } from 'jiti';
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 import { CONFIG_FILE_NAMES, DEFAULT_CONFIG } from './defaults';
 import type { ExtractorConfig } from './schema';
@@ -42,8 +42,12 @@ export async function loadConfig(options: LoadConfigOptions = {}): Promise<LoadC
     }
 
     try {
-        const fileUrl = pathToFileURL(resolvedPath).href;
-        const module = await import(fileUrl);
+        // jiti를 사용하여 TypeScript/JavaScript config 파일 로드
+        const jiti = createJiti(import.meta.url, {
+            interopDefault: true, // export default 자동 처리
+        });
+
+        const module = jiti(resolvedPath);
         const rawConfig = module.default ?? module;
 
         const parsed = ExtractorConfigSchema.safeParse(rawConfig);

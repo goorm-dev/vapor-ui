@@ -40,6 +40,7 @@ export {
     getAllSprinklesProps,
     getTokenSprinklesProps,
     getNonTokenSprinklesProps,
+    getSprinklesDisplayType,
     type SprinklesMeta,
     type PropDefinition,
 } from './core/sprinkles-analyzer';

@@ -6,6 +6,11 @@ import { buildBaseUiTypeMap } from './base-ui-type-resolver';
 import { getSymbolSourcePath, isSymbolFromExternalSource } from './declaration-source';
 import { getDefaultVariantsForNamespace } from './default-variants';
 import { isHtmlAttribute } from './html-attributes';
+import {
+    type SprinklesMeta,
+    getSprinklesDisplayType,
+    isSprinklesProp as isSprinklesPropFromMeta,
+} from './sprinkles-analyzer';
 import { cleanType } from './type-cleaner';
 import { resolveType } from './type-resolver';
 
@@ -60,6 +65,7 @@ export interface ExtractOptions {
     filterHtml?: boolean;
     includeHtmlWhitelist?: Set<string>;
     include?: string[];
+    sprinklesMeta?: SprinklesMeta;
 }
 
 function getJsDocDescription(symbol: Symbol): string | undefined {
@@ -217,9 +223,25 @@ export function extractProps(
         const propsWithSource: InternalProperty[] = filteredSymbols.map((symbol) => {
             const name = symbol.getName();
             const declNode = symbol.getDeclarations()[0] ?? exportedInterfaceProps;
-            const typeResult = cleanType(
-                resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode),
-            );
+
+            // sprinkles prop인 경우 displayTypeName 사용
+            let typeArray: string[];
+            if (options.sprinklesMeta && isSprinklesPropFromMeta(name, options.sprinklesMeta)) {
+                const displayType = getSprinklesDisplayType(name, options.sprinklesMeta);
+                if (displayType) {
+                    typeArray = [displayType];
+                } else {
+                    const typeResult = cleanType(
+                        resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode),
+                    );
+                    typeArray = toTypeArray(typeResult);
+                }
+            } else {
+                const typeResult = cleanType(
+                    resolveType(symbol.getTypeAtLocation(declNode), baseUiMap, declNode),
+                );
+                typeArray = toTypeArray(typeResult);
+            }
 
             const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
 
@@ -228,7 +250,7 @@ export function extractProps(
 
             return {
                 name,
-                type: toTypeArray(typeResult),
+                type: typeArray,
                 required,
                 description: getJsDocDescription(symbol),
                 defaultValue,

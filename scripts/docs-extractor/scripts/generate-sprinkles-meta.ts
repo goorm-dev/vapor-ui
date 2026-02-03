@@ -27,6 +27,7 @@ interface PropDefinition {
     usesToken: boolean;
     tokenPath?: string;
     cssProperty: string;
+    displayTypeName?: string;
 }
 
 interface SprinklesMeta {
@@ -47,6 +48,45 @@ function getTokenPath(initializerName: string): string | undefined {
     };
 
     return tokenMapping[initializerName];
+}
+
+// tokenPath -> displayTypeName 매핑
+const TOKEN_DISPLAY_TYPE_MAPPING: Record<string, string> = {
+    'vars.size.space': 'SpaceToken',
+    'vars.size.dimension': 'DimensionToken',
+    'vars.size.borderRadius': 'BorderRadiusToken',
+    'vars.color.foreground': 'ForegroundColorToken',
+    'vars.color.background': 'BackgroundColorToken',
+    'vars.color.border': 'BorderColorToken',
+};
+
+// margin 계열 props (negative 값 지원)
+const MARGIN_PROPS = new Set([
+    'margin',
+    'marginTop',
+    'marginBottom',
+    'marginLeft',
+    'marginRight',
+    'marginX',
+    'marginY',
+]);
+
+function getDisplayTypeName(propName: string, tokenPath?: string): string | undefined {
+    if (!tokenPath) return undefined;
+
+    const baseType = TOKEN_DISPLAY_TYPE_MAPPING[tokenPath];
+    if (!baseType) return undefined;
+
+    // margin 계열은 negative 토큰도 포함
+    if (MARGIN_PROPS.has(propName)) {
+        return `${baseType} | NegativeSpaceToken`;
+    }
+
+    return baseType;
+}
+
+function getCssPropertyDisplayType(cssProperty: string): string {
+    return `CSSProperties['${cssProperty}']`;
 }
 
 function analyzeSprinkles(sprinklesPath: string): SprinklesMeta {
@@ -112,11 +152,15 @@ function analyzeSprinkles(sprinklesPath: string): SprinklesMeta {
 
         const initText = initializer.getText();
         const usesToken = initText !== 'true';
+        const tokenPath = usesToken ? getTokenPath(initText) : undefined;
 
         meta.propDefinitions[propName] = {
             usesToken,
-            tokenPath: usesToken ? getTokenPath(initText) : undefined,
+            tokenPath,
             cssProperty: propName,
+            displayTypeName: usesToken
+                ? getDisplayTypeName(propName, tokenPath)
+                : getCssPropertyDisplayType(propName),
         };
 
         if (usesToken) {
@@ -156,6 +200,9 @@ function analyzeSprinkles(sprinklesPath: string): SprinklesMeta {
                     usesToken,
                     tokenPath,
                     cssProperty: propName,
+                    displayTypeName: usesToken
+                        ? getDisplayTypeName(propName, tokenPath)
+                        : getCssPropertyDisplayType(propName),
                 };
 
                 if (usesToken) {

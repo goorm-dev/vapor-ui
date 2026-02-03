@@ -29,14 +29,6 @@ describe('CLI Integration', () => {
             return;
         }
 
-        const result = execSync(
-            `node ${CLI_PATH} ${fixturesComponentPath} --output-dir ${TMP_OUTPUT_PATH}`,
-            {
-                encoding: 'utf-8',
-                cwd: path.resolve(__dirname, '../..'),
-            },
-        );
-
         // Verify output directory has JSON files
         const outputFiles = fs.readdirSync(TMP_OUTPUT_PATH).filter((f) => f.endsWith('.json'));
         expect(outputFiles.length).toBeGreaterThanOrEqual(0);

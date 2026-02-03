@@ -1,15 +1,52 @@
 import meow from 'meow';
 import path from 'node:path';
 
-import { loadConfig } from '~/config';
+import { getComponentConfig, loadConfig } from '~/config';
+import type { ExtractorConfig } from '~/config';
 import { addSourceFiles, createProject } from '~/core/project';
-import { extractProps } from '~/core/props-extractor';
+import { type ExtractOptions, extractProps } from '~/core/props-extractor';
+import { type SprinklesMeta, loadSprinklesMeta } from '~/core/sprinkles-analyzer';
 import { getTargetLanguages } from '~/i18n/path-resolver';
 import { formatFileName } from '~/output/formatter';
 import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from '~/output/writer';
 
 import type { RawCliOptions } from './options.js';
 import { resolveOptions } from './options.js';
+
+/**
+ * Build component-specific extract options based on config
+ */
+function buildComponentExtractOptions(
+    baseOptions: ExtractOptions,
+    componentConfig: ExtractorConfig['components'][string] | undefined,
+    sprinklesMeta: SprinklesMeta | null,
+): ExtractOptions {
+    const options: ExtractOptions = {
+        ...baseOptions,
+        sprinklesMeta: sprinklesMeta ?? undefined,
+    };
+
+    if (!componentConfig) {
+        return options;
+    }
+
+    // sprinklesAll: include all sprinkles props
+    if (componentConfig.sprinklesAll) {
+        options.filterSprinkles = false;
+    }
+
+    // sprinkles: include specific sprinkles props
+    if (componentConfig.sprinkles?.length) {
+        options.include = [...(options.include ?? []), ...componentConfig.sprinkles];
+    }
+
+    // component-specific include
+    if (componentConfig.include?.length) {
+        options.include = [...(options.include ?? []), ...componentConfig.include];
+    }
+
+    return options;
+}
 
 function logProgress(message: string, hasFileOutput: boolean) {
     if (hasFileOutput) {
@@ -134,14 +171,29 @@ export async function run() {
 
     logProgress('Parsing components...', hasFileOutput);
 
+    // Load sprinkles metadata if available
+    const sprinklesMeta = config.sprinkles?.metaPath
+        ? loadSprinklesMeta(config.sprinkles.metaPath)
+        : null;
+
     const project = createProject(resolved.tsconfigPath);
     const sourceFiles = addSourceFiles(project, resolved.targetFiles);
 
     const total = sourceFiles.length;
     const results = sourceFiles.map((file, index) => {
-        const componentName = path.basename(file.getFilePath(), '.tsx');
+        const filePath = file.getFilePath();
+        const componentName = path.basename(filePath, '.tsx');
         logProgress(`Processing ${componentName} (${index + 1}/${total})`, hasFileOutput);
-        return extractProps(file, resolved.extractOptions);
+
+        // Get component-specific config
+        const componentConfig = getComponentConfig(config, filePath);
+        const extractOptions = buildComponentExtractOptions(
+            resolved.extractOptions,
+            componentConfig,
+            sprinklesMeta,
+        );
+
+        return extractProps(file, extractOptions);
     });
 
     const allProps = results.flatMap((r) => r.props);

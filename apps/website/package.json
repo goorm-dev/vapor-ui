@@ -2,6 +2,7 @@
     "name": "website",
     "version": "1.0.0-beta.6",
     "private": true,
+    "type": "module",
     "scripts": {
         "build": "next build",
         "clean": "rm -rf node_modules .next .turbo .source",
