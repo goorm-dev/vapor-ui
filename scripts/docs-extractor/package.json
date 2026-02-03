@@ -1,6 +1,7 @@
 {
-    "name": "@vapor-ui/docs-extractor",
+    "name": "@vapor-ui/ts-api-extractor",
     "version": "0.0.1",
+    "private": true,
     "description": "TypeScript AST-based API extractor for documentation generation",
     "type": "module",
     "exports": {
