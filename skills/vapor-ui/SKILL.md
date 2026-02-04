@@ -1,10 +1,10 @@
 ---
 name: vapor-ui
-description: Vapor UI design system component guide and UI mockup generator with MCP integration. Provides component catalog, usage patterns, props documentation, and generates production-ready UI prototypes. Use when user asks "vapor-ui components", "vapor-ui component usage", "vapor-ui 사용법", "vapor-ui를 사용해서 시안 구현", "create page design", or mentions specific components like "Button", "Input", "Modal".
+description: Vapor UI design system component guide, UI mockup generator, and Figma design converter. Provides component catalog, usage patterns, props documentation, and converts Figma designs to production-ready vapor-ui code. Use when user asks "vapor-ui components", "vapor-ui 사용법", "vapor-ui를 사용해서 시안 구현", "convert figma", "figma to code", "implement design from figma", provides a Figma URL, or mentions specific components like "Button", "Input", "Modal".
 metadata:
     author: goorm
-    version: 1.0.0
-    mcp-server: vapor-ui
+    version: 1.1.0
+    mcp-server: vapor-ui, figma-dev-mode-mcp-server
 ---
 
 # Vapor UI Design Skill
@@ -19,6 +19,7 @@ metadata:
     - **Component lookup**: User wants to know available components or specific component details
     - **Usage guidance**: User needs props, variants, or example code
     - **Mockup generation**: User wants to create a UI prototype
+    - **Figma conversion**: User wants to convert Figma design to code
 
 2. **Detect Vapor UI version in codebase**:
     ```bash
@@ -66,6 +67,45 @@ For mockup requests:
 4. Generate code using Vapor UI components only
 5. Provide complete, copy-paste ready code
 
+### Step 5: Figma Design Conversion
+
+For Figma conversion requests:
+
+1. **Parse Figma URL** to extract `file_key` and `node_id`:
+   ```
+   https://www.figma.com/design/{file_key}/...?node-id={node_id}
+   ```
+
+2. **Get design context** using MCP:
+   ```
+   mcp__figma-dev-mode-mcp-server__get_design_context
+     - file_key: extracted from URL
+     - node_id: extracted from URL (format: "X-Y" or "X:Y")
+     - depth: 5 (or higher for complex designs)
+   ```
+
+3. **Analyze node tree**:
+   - **💙 prefix nodes**: Design system components (see `references/design-system-recognition.md`)
+   - **Auto-layout frames**: Convert to VStack/HStack/Box/Grid (see `references/figma-layout-mapping.md`)
+   - **TEXT nodes**: Extract text content
+
+4. **Convert layout properties**:
+   - `layoutMode: VERTICAL` → VStack
+   - `layoutMode: HORIZONTAL` → HStack
+   - `itemSpacing` → gap token
+   - `padding*` → padding tokens
+   - See `references/token-mapping.md` for full mapping
+
+5. **Recognize design system components**:
+   - Nodes starting with **💙** are vapor-ui components
+   - Extract `componentProperties` for variant → props mapping
+   - Example: `💙Button` with `Size: md, ColorPalette: primary` → `<Button size="md" colorPalette="primary">`
+
+6. **Generate code**:
+   - Build JSX from node tree (bottom-up)
+   - Apply style utility props using design tokens
+   - Output production-ready code
+
 ---
 
 ## Examples
@@ -109,6 +149,62 @@ For mockup requests:
 
 ---
 
+**Example 4: Figma Design Conversion**
+
+**User**: "Convert this Figma design: https://www.figma.com/design/ABC123/...?node-id=1-234"
+
+**Action**:
+1. Extract file_key=ABC123, node_id=1-234
+2. Call `mcp__figma-dev-mode-mcp-server__get_design_context`
+3. Analyze response:
+   - Root: Frame with `layoutMode: VERTICAL`, `itemSpacing: 16`
+   - Child 1: `💙Field` with Label "Email"
+   - Child 2: `💙Field` with Label "Password"
+   - Child 3: `💙Button` with `ColorPalette: primary`
+
+**Result**:
+```tsx
+<VStack gap="$200">
+  <Field.Root>
+    <Field.Label>Email</Field.Label>
+    <TextInput />
+  </Field.Root>
+  <Field.Root>
+    <Field.Label>Password</Field.Label>
+    <TextInput type="password" />
+  </Field.Root>
+  <Button colorPalette="primary">Submit</Button>
+</VStack>
+```
+
+---
+
+**Example 5: Custom Layout Conversion**
+
+**User**: "Implement this card layout from Figma"
+
+**Figma node** (no 💙 prefix):
+```json
+{
+  "name": "Card Container",
+  "layoutMode": "HORIZONTAL",
+  "itemSpacing": 16,
+  "paddingTop": 24,
+  "paddingBottom": 24,
+  "paddingLeft": 16,
+  "paddingRight": 16
+}
+```
+
+**Result**:
+```tsx
+<HStack gap="$200" paddingY="$300" paddingX="$200">
+  {/* children */}
+</HStack>
+```
+
+---
+
 ## Troubleshooting
 
 **Error**: Component not found
@@ -132,10 +228,34 @@ For mockup requests:
 
 ---
 
+**Error**: Figma node not recognized as component
+
+**Cause**: Node name doesn't have 💙 prefix
+
+**Solution**: Treat as custom layout and convert based on auto-layout properties. Use Box, Flex, VStack, HStack, or Grid.
+
+---
+
+**Error**: Spacing values don't match tokens
+
+**Cause**: Design uses non-standard spacing values
+
+**Solution**: Round to nearest token value. See `references/token-mapping.md` for approximate matching rules.
+
+---
+
 ## References
 
+### Component Documentation
 - `references/url-patterns.md`: GitHub URL patterns for fetching component data
 - `references/component-structure.md`: Component file structure and JSON schema
+
+### Figma Conversion
+- `references/figma-layout-mapping.md`: Auto-layout to component mapping
+- `references/design-system-recognition.md`: 💙 prefix component recognition
+- `references/token-mapping.md`: Figma values to vapor-ui tokens
+
+### Examples
 - `examples/`: Ready-to-use mockup templates
 
 ## Scripts
@@ -146,3 +266,11 @@ For mockup requests:
 | `get-component-list.mjs` | List all available components |
 | `get-component-info.mjs` | Get component props and documentation |
 | `get-component-examples.mjs` | Get component example code |
+
+## MCP Tools
+
+| Tool | Purpose |
+|------|---------|
+| `mcp__figma-dev-mode-mcp-server__get_design_context` | Fetch Figma design node tree |
+| `mcp__figma-dev-mode-mcp-server__get_screenshot` | Get visual reference image |
+| `mcp__figma-dev-mode-mcp-server__get_metadata` | Get Figma file metadata |
