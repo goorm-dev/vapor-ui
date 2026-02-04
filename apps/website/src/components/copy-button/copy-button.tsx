@@ -9,7 +9,15 @@ import {
     CopyAsMarkdownOutlineIcon,
     OpenInNewOutlineIcon,
 } from '@vapor-ui/icons';
+import { track } from '@vercel/analytics';
 import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
+
+import {
+    ANALYTICS_EVENTS,
+    COPY_BUTTON_ACTIONS,
+    extractDocPath,
+    type CopyButtonAction,
+} from '~/constants/analytics';
 
 import { AnthropicIcon, OpenAIIcon } from './copy-button.icons';
 
@@ -54,11 +62,21 @@ const openLLMChat = (llmType: keyof typeof LLM_URLS, docUrl: string) => {
     window.open(url, '_blank');
 };
 
+const trackCopyButtonEvent = (action: CopyButtonAction, markdownUrl: string) => {
+    track(ANALYTICS_EVENTS.COPY_BUTTON_CLICK, {
+        action,
+        doc_url: markdownUrl,
+        doc_path: extractDocPath(markdownUrl),
+    });
+};
+
 export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
     const [checked, onCopy] = useCopyButton(() => handleCopyContent());
     const [isLoading, setIsLoading] = useState(false);
 
     const handleCopyContent = async () => {
+        trackCopyButtonEvent(COPY_BUTTON_ACTIONS.COPY_MARKDOWN, markdownUrl);
+
         const cached = cache.get(markdownUrl);
         if (cached) {
             await navigator.clipboard.writeText(cached);
@@ -88,6 +106,7 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
                 icon: markdownIcon,
                 onClick: () => {
                     if (isValidMarkdownUrl(markdownUrl)) {
+                        trackCopyButtonEvent(COPY_BUTTON_ACTIONS.VIEW_MARKDOWN, markdownUrl);
                         window.open(markdownUrl, '_blank');
                     }
                 },
@@ -96,13 +115,19 @@ export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
             {
                 label: 'Claude에게 질문하기',
                 icon: anthropicIcon,
-                onClick: () => openLLMChat('claude', markdownUrl),
+                onClick: () => {
+                    trackCopyButtonEvent(COPY_BUTTON_ACTIONS.ASK_CLAUDE, markdownUrl);
+                    openLLMChat('claude', markdownUrl);
+                },
                 isExternal: true,
             },
             {
                 label: 'ChatGPT에게 질문하기',
                 icon: openAIIcon,
-                onClick: () => openLLMChat('chatgpt', markdownUrl),
+                onClick: () => {
+                    trackCopyButtonEvent(COPY_BUTTON_ACTIONS.ASK_CHATGPT, markdownUrl);
+                    openLLMChat('chatgpt', markdownUrl);
+                },
                 isExternal: true,
             },
         ],
