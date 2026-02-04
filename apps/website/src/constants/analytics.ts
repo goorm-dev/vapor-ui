@@ -13,12 +13,12 @@ export type CopyButtonAction = (typeof COPY_BUTTON_ACTIONS)[keyof typeof COPY_BU
 
 /**
  * 문서 URL에서 컴포넌트 이름 추출
- * 예: /llms/components/button.md → button
+ * 예: /docs/components/navigation-menu.mdx → navigation-menu
  */
 export const extractComponentName = (markdownUrl: string): string => {
     try {
         const url = new URL(markdownUrl);
-        const pathname = url.pathname.replace('/llms', '').replace('.md', '');
+        const pathname = url.pathname.replace('/docs', '').replace('.mdx', '');
         const segments = pathname.split('/').filter(Boolean);
         return segments[segments.length - 1] || 'unknown';
     } catch {
@@ -28,9 +28,12 @@ export const extractComponentName = (markdownUrl: string): string => {
 
 /**
  * CopyButton 이벤트 이름 생성
- * 예: copy_markdown:button, ask_claude:dialog
+ * 예: copy_markdown:navigation-menu, ask_claude:button
  */
-export const createCopyButtonEventName = (action: CopyButtonAction, markdownUrl: string): string => {
+export const createCopyButtonEventName = (
+    action: CopyButtonAction,
+    markdownUrl: string,
+): string => {
     const componentName = extractComponentName(markdownUrl);
     return `${action}:${componentName}`;
 };
