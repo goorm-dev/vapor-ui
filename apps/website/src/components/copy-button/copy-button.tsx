@@ -13,10 +13,9 @@ import { track } from '@vercel/analytics';
 import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 
 import {
-    ANALYTICS_EVENTS,
     COPY_BUTTON_ACTIONS,
     type CopyButtonAction,
-    extractDocPath,
+    createCopyButtonEventName,
 } from '~/constants/analytics';
 
 import { AnthropicIcon, OpenAIIcon } from './copy-button.icons';
@@ -63,11 +62,8 @@ const openLLMChat = (llmType: keyof typeof LLM_URLS, docUrl: string) => {
 };
 
 const trackCopyButtonEvent = (action: CopyButtonAction, markdownUrl: string) => {
-    track(ANALYTICS_EVENTS.COPY_BUTTON_CLICK, {
-        action,
-        doc_url: markdownUrl,
-        doc_path: extractDocPath(markdownUrl),
-    });
+    const eventName = createCopyButtonEventName(action, markdownUrl);
+    track(eventName);
 };
 
 export const CopyButton = ({ markdownUrl }: CopyButtonProps) => {
