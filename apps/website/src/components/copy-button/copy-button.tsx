@@ -15,8 +15,8 @@ import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 import {
     ANALYTICS_EVENTS,
     COPY_BUTTON_ACTIONS,
-    extractDocPath,
     type CopyButtonAction,
+    extractDocPath,
 } from '~/constants/analytics';
 
 import { AnthropicIcon, OpenAIIcon } from './copy-button.icons';
