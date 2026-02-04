@@ -60,7 +60,9 @@ async function getComponentExamples() {
 
         // Filter by specific example if provided
         if (specificExample) {
-            examples = examples.filter((e) => e.name.toLowerCase().includes(specificExample.toLowerCase()));
+            examples = examples.filter((e) =>
+                e.name.toLowerCase().includes(specificExample.toLowerCase()),
+            );
         }
 
         console.log(`Found ${examples.length} example(s):\n`);
