@@ -7,9 +7,15 @@ interface BlockPageHeaderProps {
     title: string;
     description?: string;
     previewImageUrl?: string;
+    markdownUrl?: string;
 }
 
-export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPageHeaderProps) => {
+export const BlockPageHeader = ({
+    title,
+    description,
+    previewImageUrl,
+    markdownUrl,
+}: BlockPageHeaderProps) => {
     return (
         <div className="flex gap-v-400 items-start justify-between w-full max-[1200px]:flex-col">
             {/* Header Section */}
@@ -41,7 +47,7 @@ export const BlockPageHeader = ({ title, description, previewImageUrl }: BlockPa
                         />
                     )}
                 </div>
-                <CopyButton markdownUrl="/" />
+                {markdownUrl && <CopyButton markdownUrl={markdownUrl} />}
             </div>
 
             {/* Preview Section */}

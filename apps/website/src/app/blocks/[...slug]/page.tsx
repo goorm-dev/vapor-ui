@@ -23,6 +23,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
                 title={title}
                 description={description}
                 previewImageUrl={previewImageUrl}
+                markdownUrl={`https://vapor-ui.goorm.io${page.url}.mdx`}
             />
             <BlockPageBody toc={toc}>
                 <MDX components={getMDXComponents({})} />

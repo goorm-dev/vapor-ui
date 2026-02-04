@@ -35,7 +35,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
             <DocsPageHeader
                 title={page.data.title}
                 description={page.data.description}
-                markdownUrl={`${page.url}.mdx`}
+                markdownUrl={`https://vapor-ui.goorm.io${page.url}.mdx`}
             />
             <DocsBody>
                 <MDX components={getMDXComponents({})} />
