@@ -54,7 +54,8 @@ function generateAnatomy() {
     }
 
     // Find all index.parts.ts files
-    const componentDirs = fs.readdirSync(CORE_COMPONENTS_PATH, { withFileTypes: true })
+    const componentDirs = fs
+        .readdirSync(CORE_COMPONENTS_PATH, { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name);
 

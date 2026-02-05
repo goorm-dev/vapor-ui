@@ -1,5 +1,7 @@
 'use client';
 
+import { memo } from 'react';
+
 import { Text } from '@vapor-ui/core';
 import clsx from 'clsx';
 
@@ -14,7 +16,7 @@ interface PartButtonProps {
     onBlur?: () => void;
 }
 
-export function PartButton({
+export const PartButton = memo(function PartButton({
     partName,
     displayName,
     isHovered,
@@ -33,9 +35,7 @@ export function PartButton({
                 'transition-colors duration-150 ease-out',
                 'motion-reduce:transition-none',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-v-primary-500 focus-visible:ring-offset-1',
-                isHovered
-                    ? 'bg-v-primary-100'
-                    : 'hover:bg-v-normal-100',
+                isHovered ? 'bg-v-primary-100' : 'hover:bg-v-normal-100',
                 isPrimitive && 'opacity-50',
             )}
             onMouseEnter={onMouseEnter}
@@ -98,4 +98,4 @@ export function PartButton({
             />
         </button>
     );
-}
+});

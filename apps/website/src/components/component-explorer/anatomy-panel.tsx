@@ -1,5 +1,7 @@
 'use client';
 
+import { useCallback, useMemo } from 'react';
+
 import { Text } from '@vapor-ui/core';
 
 import { PartButton } from './part-button';
@@ -20,9 +22,20 @@ export function AnatomyPanel({
     onPartHover,
     showPrimitives = false,
 }: AnatomyPanelProps) {
-    const filteredParts = showPrimitives ? parts : parts.filter((part) => !part.isPrimitive);
-    const mainParts = filteredParts.filter((p) => !p.isPrimitive);
-    const primitiveParts = filteredParts.filter((p) => p.isPrimitive);
+    const { filteredParts, mainParts, primitiveParts } = useMemo(() => {
+        const filtered = showPrimitives ? parts : parts.filter((part) => !part.isPrimitive);
+        return {
+            filteredParts: filtered,
+            mainParts: filtered.filter((p) => !p.isPrimitive),
+            primitiveParts: filtered.filter((p) => p.isPrimitive),
+        };
+    }, [parts, showPrimitives]);
+
+    const handleMouseEnter = useCallback(
+        (partName: string) => () => onPartHover(partName),
+        [onPartHover],
+    );
+    const handleMouseLeave = useCallback(() => onPartHover(null), [onPartHover]);
 
     return (
         <nav
@@ -32,7 +45,11 @@ export function AnatomyPanel({
             {/* Header */}
             <div className="px-3 py-3 border-b border-v-normal-200">
                 <div className="flex items-center justify-between">
-                    <Text typography="body3" foreground="normal-100" className="font-semibold uppercase tracking-wide">
+                    <Text
+                        typography="body3"
+                        foreground="normal-100"
+                        className="font-semibold uppercase tracking-wide"
+                    >
                         Parts
                     </Text>
                     <Text typography="body3" foreground="normal-100" className="opacity-50">
@@ -50,8 +67,8 @@ export function AnatomyPanel({
                             displayName={componentName}
                             isHovered={hoveredPart === part.name}
                             isPrimitive={part.isPrimitive}
-                            onMouseEnter={() => onPartHover(part.name)}
-                            onMouseLeave={() => onPartHover(null)}
+                            onMouseEnter={handleMouseEnter(part.name)}
+                            onMouseLeave={handleMouseLeave}
                         />
                     </div>
                 ))}
@@ -61,7 +78,11 @@ export function AnatomyPanel({
             {primitiveParts.length > 0 && (
                 <div className="border-t border-v-normal-200">
                     <div className="px-3 py-2">
-                        <Text typography="body3" foreground="normal-100" className="uppercase tracking-wider opacity-50">
+                        <Text
+                            typography="body3"
+                            foreground="normal-100"
+                            className="uppercase tracking-wider opacity-50"
+                        >
                             Primitives
                         </Text>
                     </div>
@@ -73,8 +94,8 @@ export function AnatomyPanel({
                                     displayName={componentName}
                                     isHovered={hoveredPart === part.name}
                                     isPrimitive={part.isPrimitive}
-                                    onMouseEnter={() => onPartHover(part.name)}
-                                    onMouseLeave={() => onPartHover(null)}
+                                    onMouseEnter={handleMouseEnter(part.name)}
+                                    onMouseLeave={handleMouseLeave}
                                 />
                             </div>
                         ))}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { type CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useHighlightReceiver } from './use-highlight-receiver';
 
@@ -11,9 +11,20 @@ interface OverlayRect {
     height: number;
 }
 
-// Check if user prefers reduced motion
-const prefersReducedMotion =
-    typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+function usePrefersReducedMotion() {
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        setPrefersReducedMotion(mediaQuery.matches);
+
+        const handler = (event: MediaQueryListEvent) => setPrefersReducedMotion(event.matches);
+        mediaQuery.addEventListener('change', handler);
+        return () => mediaQuery.removeEventListener('change', handler);
+    }, []);
+
+    return prefersReducedMotion;
+}
 
 export function HighlightOverlay() {
     const { highlightedPart } = useHighlightReceiver();
@@ -21,44 +32,49 @@ export function HighlightOverlay() {
     const [isVisible, setIsVisible] = useState(false);
     const [displayedPart, setDisplayedPart] = useState<string | null>(null);
     const lastRectRef = useRef<OverlayRect>({ top: 0, left: 0, width: 0, height: 0 });
+    const prefersReducedMotion = usePrefersReducedMotion();
 
-    useEffect(() => {
+    const findAndHighlight = useCallback(() => {
         if (!highlightedPart) {
             setIsVisible(false);
             return;
         }
 
-        const findAndHighlight = () => {
-            const selector = `[data-part="${highlightedPart}"]`;
-            const element = document.querySelector(selector);
+        const selector = `[data-part="${highlightedPart}"]`;
+        const element = document.querySelector(selector);
 
-            // Dialog가 열려있을 때 Trigger 하이라이트 비활성화
-            if (highlightedPart === 'Trigger') {
-                const dialogPopup = document.querySelector('[data-part="PopupPrimitive"], [data-part="Popup"]');
-                if (dialogPopup) {
-                    setIsVisible(false);
-                    return;
-                }
-            }
-
-            if (element) {
-                const rect = element.getBoundingClientRect();
-                const newRect = {
-                    top: rect.top,
-                    left: rect.left,
-                    width: rect.width,
-                    height: rect.height,
-                };
-                lastRectRef.current = newRect;
-                setOverlayRect(newRect);
-                setDisplayedPart(highlightedPart);
-                setIsVisible(true);
-            } else {
+        // Dialog가 열려있을 때 Trigger 하이라이트 비활성화
+        if (highlightedPart === 'Trigger') {
+            const dialogPopup = document.querySelector(
+                '[data-part="PopupPrimitive"], [data-part="Popup"]',
+            );
+            if (dialogPopup) {
                 setIsVisible(false);
+                return;
             }
-        };
+        }
 
+        if (element) {
+            const rect = element.getBoundingClientRect();
+            const newRect = {
+                top: rect.top,
+                left: rect.left,
+                width: rect.width,
+                height: rect.height,
+            };
+            lastRectRef.current = newRect;
+            setOverlayRect(newRect);
+            setDisplayedPart(highlightedPart);
+            setIsVisible(true);
+        } else {
+            setIsVisible(false);
+        }
+    }, [highlightedPart]);
+
+    useEffect(() => {
         findAndHighlight();
+
+        if (!highlightedPart) return;
 
         // Re-calculate position on scroll/resize
         window.addEventListener('scroll', findAndHighlight, true);
@@ -68,7 +84,7 @@ export function HighlightOverlay() {
             window.removeEventListener('scroll', findAndHighlight, true);
             window.removeEventListener('resize', findAndHighlight);
         };
-    }, [highlightedPart]);
+    }, [highlightedPart, findAndHighlight]);
 
     // Use last known rect when hiding to maintain position during fade out
     const currentRect = overlayRect || lastRectRef.current;
