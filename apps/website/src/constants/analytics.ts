@@ -1,5 +1,5 @@
 /**
- * Vercel Analytics 이벤트 상수 및 타입 정의
+ * Vercel Analytics event constants and type definitions
  */
 
 export const COPY_BUTTON_ACTIONS = {
@@ -12,23 +12,27 @@ export const COPY_BUTTON_ACTIONS = {
 export type CopyButtonAction = (typeof COPY_BUTTON_ACTIONS)[keyof typeof COPY_BUTTON_ACTIONS];
 
 /**
- * 문서 URL에서 컴포넌트 이름 추출
- * 예: /docs/components/navigation-menu.mdx → navigation-menu
+ * Extracts docs path from document URL
+ * Example: /docs/components/navigation-menu.mdx → components/navigation-menu
  */
 export const extractComponentName = (markdownUrl: string): string => {
     try {
         const url = new URL(markdownUrl);
-        const pathname = url.pathname.replace('/docs', '').replace('.mdx', '');
+        const pathname = url.pathname
+            .split('/')
+            .slice(-2)
+            .join('/')
+            .replace(/\.mdx?$/, '');
         const segments = pathname.split('/').filter(Boolean);
-        return segments[segments.length - 1] || 'unknown';
+        return segments.join('/') || 'unknown';
     } catch {
         return 'unknown';
     }
 };
 
 /**
- * CopyButton 이벤트 이름 생성
- * 예: copy_markdown:navigation-menu, ask_claude:button
+ * Creates CopyButton event name
+ * Example: copy_markdown:components/navigation-menu, ask_claude:components/button
  */
 export const createCopyButtonEventName = (
     action: CopyButtonAction,

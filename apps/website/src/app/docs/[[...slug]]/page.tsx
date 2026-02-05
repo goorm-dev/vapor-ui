@@ -2,6 +2,7 @@ import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
 import { DocsPageHeader } from '~/components/docs-page-header';
+import { SITE_URL } from '~/constants/domain';
 import { source } from '~/lib/source';
 import { getMDXComponents } from '~/mdx-components';
 import { generatePageMetadata } from '~/utils/metadata';
@@ -35,7 +36,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
             <DocsPageHeader
                 title={page.data.title}
                 description={page.data.description}
-                markdownUrl={`https://vapor-ui.goorm.io${page.url}.mdx`}
+                markdownUrl={`${SITE_URL}${page.url}.mdx`}
             />
             <DocsBody>
                 <MDX components={getMDXComponents({})} />
