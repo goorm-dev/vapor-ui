@@ -66,7 +66,6 @@ export function AnatomyPanel({
                             partName={part.name}
                             displayName={componentName}
                             isHovered={hoveredPart === part.name}
-                            isPrimitive={part.isPrimitive}
                             onMouseEnter={handleMouseEnter(part.name)}
                             onMouseLeave={handleMouseLeave}
                         />
@@ -93,7 +92,6 @@ export function AnatomyPanel({
                                     partName={part.name}
                                     displayName={componentName}
                                     isHovered={hoveredPart === part.name}
-                                    isPrimitive={part.isPrimitive}
                                     onMouseEnter={handleMouseEnter(part.name)}
                                     onMouseLeave={handleMouseLeave}
                                 />
