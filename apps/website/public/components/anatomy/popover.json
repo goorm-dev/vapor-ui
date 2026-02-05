@@ -1,0 +1,51 @@
+{
+  "componentName": "Popover",
+  "displayNamePrefix": "Popover",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "PopoverRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "PopoverTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "Popup",
+      "fullName": "PopoverPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "Title",
+      "fullName": "PopoverTitle",
+      "isPrimitive": false
+    },
+    {
+      "name": "Description",
+      "fullName": "PopoverDescription",
+      "isPrimitive": false
+    },
+    {
+      "name": "Close",
+      "fullName": "PopoverClose",
+      "isPrimitive": false
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "PopoverPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PositionerPrimitive",
+      "fullName": "PopoverPositionerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "PopoverPopupPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

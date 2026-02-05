@@ -1,0 +1,36 @@
+{
+  "componentName": "Tabs",
+  "displayNamePrefix": "Tabs",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "TabsRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "ListPrimitive",
+      "fullName": "TabsListPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "List",
+      "fullName": "TabsList",
+      "isPrimitive": false
+    },
+    {
+      "name": "Button",
+      "fullName": "TabsButton",
+      "isPrimitive": false
+    },
+    {
+      "name": "IndicatorPrimitive",
+      "fullName": "TabsIndicatorPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "Panel",
+      "fullName": "TabsPanel",
+      "isPrimitive": false
+    }
+  ]
+}

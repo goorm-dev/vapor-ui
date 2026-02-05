@@ -1,0 +1,26 @@
+{
+  "componentName": "Card",
+  "displayNamePrefix": "Card",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "CardRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Header",
+      "fullName": "CardHeader",
+      "isPrimitive": false
+    },
+    {
+      "name": "Body",
+      "fullName": "CardBody",
+      "isPrimitive": false
+    },
+    {
+      "name": "Footer",
+      "fullName": "CardFooter",
+      "isPrimitive": false
+    }
+  ]
+}

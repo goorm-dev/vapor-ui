@@ -1,0 +1,36 @@
+{
+  "componentName": "Tooltip",
+  "displayNamePrefix": "Tooltip",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "TooltipRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "TooltipTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "Popup",
+      "fullName": "TooltipPopup",
+      "isPrimitive": false
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "TooltipPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PositionerPrimitive",
+      "fullName": "TooltipPositionerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "TooltipPopupPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}
