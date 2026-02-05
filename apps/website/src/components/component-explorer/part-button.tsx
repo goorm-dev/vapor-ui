@@ -1,5 +1,6 @@
 'use client';
 
+import { Text } from '@vapor-ui/core';
 import clsx from 'clsx';
 
 interface PartButtonProps {
@@ -7,7 +8,6 @@ interface PartButtonProps {
     displayName: string;
     isHovered: boolean;
     isPrimitive?: boolean;
-    index?: number;
     onMouseEnter: () => void;
     onMouseLeave: () => void;
     onFocus?: () => void;
@@ -53,24 +53,24 @@ export function PartButton({
                 />
 
                 {/* Part name */}
-                <span className="flex-1 min-w-0 truncate">
-                    <span
-                        className={clsx(
-                            'text-xs transition-colors duration-150',
-                            isHovered ? 'text-v-primary-400' : 'text-v-normal-400',
-                        )}
+                <div className="flex-1 min-w-0 truncate">
+                    <Text
+                        typography="body3"
+                        foreground={isHovered ? 'primary-100' : 'normal-100'}
+                        className="transition-colors duration-150 opacity-60"
+                        render={<span />}
                     >
                         {displayName}.
-                    </span>
-                    <span
-                        className={clsx(
-                            'text-sm font-medium font-mono transition-colors duration-150',
-                            isHovered ? 'text-v-primary-600' : 'text-v-normal-800',
-                        )}
+                    </Text>
+                    <Text
+                        typography="body3"
+                        foreground={isHovered ? 'primary-100' : 'normal-100'}
+                        className="font-mono font-medium transition-colors duration-150"
+                        render={<span />}
                     >
                         {partName}
-                    </span>
-                </span>
+                    </Text>
+                </div>
 
                 {/* Arrow */}
                 <svg

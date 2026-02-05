@@ -83,9 +83,13 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                 <div className="flex-1 relative bg-v-canvas border-l border-v-normal-200">
                     {/* Preview header */}
                     <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
-                        <span className="px-2 py-1 text-[10px] font-medium text-v-normal-500 bg-v-canvas-100/80 backdrop-blur-sm rounded-md border border-v-normal-200/50 uppercase tracking-wider">
+                        <Text
+                            typography="body3"
+                            foreground="normal-100"
+                            className="px-2 py-1 bg-v-canvas-100/80 backdrop-blur-sm rounded-md border border-v-normal-200/50 uppercase tracking-wider opacity-60"
+                        >
                             Live Preview
-                        </span>
+                        </Text>
                     </div>
 
                     {!iframeLoaded && (
