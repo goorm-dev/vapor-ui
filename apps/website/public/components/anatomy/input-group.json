@@ -1,0 +1,16 @@
+{
+  "componentName": "InputGroup",
+  "displayNamePrefix": "InputGroup",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "InputGroupRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Counter",
+      "fullName": "InputGroupCounter",
+      "isPrimitive": false
+    }
+  ]
+}

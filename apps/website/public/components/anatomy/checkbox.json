@@ -1,0 +1,16 @@
+{
+  "componentName": "Checkbox",
+  "displayNamePrefix": "Checkbox",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "CheckboxRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "IndicatorPrimitive",
+      "fullName": "CheckboxIndicatorPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

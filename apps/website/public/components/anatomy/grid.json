@@ -1,0 +1,16 @@
+{
+  "componentName": "Grid",
+  "displayNamePrefix": "Grid",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "GridRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Item",
+      "fullName": "GridItem",
+      "isPrimitive": false
+    }
+  ]
+}

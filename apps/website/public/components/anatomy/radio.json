@@ -1,0 +1,16 @@
+{
+  "componentName": "Radio",
+  "displayNamePrefix": "Radio",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "RadioRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "IndicatorPrimitive",
+      "fullName": "RadioIndicatorPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}

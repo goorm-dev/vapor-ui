@@ -1,0 +1,36 @@
+{
+  "componentName": "Field",
+  "displayNamePrefix": "Field",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "FieldRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "Label",
+      "fullName": "FieldLabel",
+      "isPrimitive": false
+    },
+    {
+      "name": "Description",
+      "fullName": "FieldDescription",
+      "isPrimitive": false
+    },
+    {
+      "name": "Error",
+      "fullName": "FieldError",
+      "isPrimitive": false
+    },
+    {
+      "name": "Success",
+      "fullName": "FieldSuccess",
+      "isPrimitive": false
+    },
+    {
+      "name": "Item",
+      "fullName": "FieldItem",
+      "isPrimitive": false
+    }
+  ]
+}

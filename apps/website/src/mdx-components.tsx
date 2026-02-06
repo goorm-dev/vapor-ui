@@ -9,6 +9,7 @@ import Image from 'next/image';
 import AllComponentsContainer from '~/components/all-components-container';
 import { CodeBlock } from '~/components/code-block/code-block';
 import ComponentsCard from '~/components/component-card/component-card';
+import { ComponentExplorer } from '~/components/component-explorer';
 import { ComponentPropsTable } from '~/components/component-props-table';
 import { Demo } from '~/components/demo/demo';
 import FoundationSizeTabs from '~/components/foundation-size-tabs';
@@ -36,6 +37,7 @@ export const getMDXComponents = (components?: MDXComponents): MDXComponents => {
         Demo,
         InstallSelector,
         AllComponentsContainer,
+        ComponentExplorer,
         ComponentPropsTable,
         ComponentsCard,
         FoundationSizeTabs,

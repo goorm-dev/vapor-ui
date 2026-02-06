@@ -1,0 +1,71 @@
+{
+  "componentName": "NavigationMenu",
+  "displayNamePrefix": "NavigationMenu",
+  "parts": [
+    {
+      "name": "Root",
+      "fullName": "NavigationMenuRoot",
+      "isPrimitive": false
+    },
+    {
+      "name": "List",
+      "fullName": "NavigationMenuList",
+      "isPrimitive": false
+    },
+    {
+      "name": "Item",
+      "fullName": "NavigationMenuItem",
+      "isPrimitive": false
+    },
+    {
+      "name": "Link",
+      "fullName": "NavigationMenuLink",
+      "isPrimitive": false
+    },
+    {
+      "name": "Trigger",
+      "fullName": "NavigationMenuTrigger",
+      "isPrimitive": false
+    },
+    {
+      "name": "Viewport",
+      "fullName": "NavigationMenuViewport",
+      "isPrimitive": false
+    },
+    {
+      "name": "Content",
+      "fullName": "NavigationMenuContent",
+      "isPrimitive": false
+    },
+    {
+      "name": "TriggerPrimitive",
+      "fullName": "NavigationMenuTriggerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "TriggerIndicatorPrimitive",
+      "fullName": "NavigationMenuTriggerIndicatorPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PortalPrimitive",
+      "fullName": "NavigationMenuPortalPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PositionerPrimitive",
+      "fullName": "NavigationMenuPositionerPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "PopupPrimitive",
+      "fullName": "NavigationMenuPopupPrimitive",
+      "isPrimitive": true
+    },
+    {
+      "name": "ViewportPrimitive",
+      "fullName": "NavigationMenuViewportPrimitive",
+      "isPrimitive": true
+    }
+  ]
+}
