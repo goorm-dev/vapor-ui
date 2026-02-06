@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { addSourceFiles, createProject } from '~/core/project';
 import { extractProps } from '~/core/props-extractor';
 
-const FIXTURES_DIR = path.join(__dirname, 'fixtures');
+const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 
 function setup() {
     const tsconfigPath = path.join(FIXTURES_DIR, 'tsconfig.json');

@@ -7,7 +7,7 @@ import {
     normalizeComponentName,
 } from '~/core/scanner';
 
-const FIXTURES_DIR = path.join(__dirname, 'fixtures');
+const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 
 describe('findComponentFiles', () => {
     it('should find .tsx files in given path', async () => {

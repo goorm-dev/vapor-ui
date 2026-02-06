@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { addSourceFiles, createProject, getExportedNodes, getNamespaces } from '~/core/project';
 
-const FIXTURES_DIR = path.join(__dirname, 'fixtures');
+const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 
 describe('createProject', () => {
     it('should create a ts-morph Project with tsconfig', () => {

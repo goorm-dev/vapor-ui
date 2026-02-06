@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 import { addSourceFiles, createProject } from '~/core/project';
 
-const FIXTURES_DIR = path.join(__dirname, 'fixtures');
+const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 const CORE_PACKAGE_DIR = path.resolve(__dirname, '../../../packages/core');
 const TABS_PATH = path.join(CORE_PACKAGE_DIR, 'src/components/tabs/tabs.tsx');
 const CORE_TSCONFIG_PATH = path.join(CORE_PACKAGE_DIR, 'tsconfig.json');

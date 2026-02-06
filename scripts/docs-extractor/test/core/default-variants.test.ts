@@ -9,7 +9,7 @@ import {
 } from '~/core/default-variants';
 import { addSourceFiles, createProject } from '~/core/project';
 
-const FIXTURES_DIR = path.join(__dirname, 'fixtures');
+const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 
 function setupProject() {
     const tsconfigPath = path.join(FIXTURES_DIR, 'tsconfig.json');

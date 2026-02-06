@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { findTsconfig } from '~/core/config';
 
-const FIXTURES_DIR = path.join(__dirname, 'fixtures');
+const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 
 describe('findTsconfig', () => {
     it('should find tsconfig.json in the same directory', () => {
