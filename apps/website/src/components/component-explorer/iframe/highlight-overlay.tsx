@@ -87,7 +87,7 @@ export function HighlightOverlay() {
                 isVisible
                     ? 'opacity-100 scale-100 shadow-[0_0_0_1px_rgba(59,130,246,0.1),0_4px_12px_rgba(59,130,246,0.15),inset_0_0_0_1px_rgba(255,255,255,0.1)]'
                     : 'opacity-0 scale-[0.98] shadow-none',
-                'z-1',
+                'z-10',
             )}
             style={{
                 top: currentRect.top - PADDING,

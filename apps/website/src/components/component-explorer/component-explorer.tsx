@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 
-import { Text, useTheme } from '@vapor-ui/core';
+import { Button, Text, useTheme } from '@vapor-ui/core';
+import { ErrorCircleOutlineIcon } from '@vapor-ui/icons';
 
 import { AnatomyPanel } from './anatomy-panel';
 import type { AnatomyData, Part } from './types';
@@ -19,23 +20,52 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
     const [parts, setParts] = React.useState<Part[]>([]);
     const [anatomyData, setAnatomyData] = React.useState<AnatomyData | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [error, setError] = React.useState<string | null>(null);
+    const [retryCount, setRetryCount] = React.useState(0);
     const [iframeLoaded, setIframeLoaded] = React.useState(false);
     const { highlightPart } = useExplorerCommunication(iframeRef);
     const { resolvedTheme } = useTheme();
 
     React.useEffect(() => {
+        const abortController = new AbortController();
+
         setIsLoading(true);
-        fetch(`/components/anatomy/${componentName}.json`)
-            .then((res) => res.json())
+        setError(null);
+
+        fetch(`/components/anatomy/${componentName}.json`, {
+            signal: abortController.signal,
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: Failed to load anatomy data`);
+                }
+                return res.json();
+            })
             .then((data: AnatomyData) => {
                 setAnatomyData(data);
                 setParts(data.parts);
+                setError(null);
             })
             .catch((err) => {
-                console.error(`Failed to load anatomy data for ${componentName}:`, err);
+                if (err.name !== 'AbortError') {
+                    console.error(`Failed to load anatomy data for ${componentName}:`, err);
+                    setError(err.message || 'Failed to load anatomy data');
+                }
             })
-            .finally(() => setIsLoading(false));
-    }, [componentName]);
+            .finally(() => {
+                if (!abortController.signal.aborted) {
+                    setIsLoading(false);
+                }
+            });
+
+        return () => {
+            abortController.abort();
+        };
+    }, [componentName, retryCount]);
+
+    const handleRetry = React.useCallback(() => {
+        setRetryCount((prev) => prev + 1);
+    }, []);
 
     React.useEffect(() => {
         if (iframeRef.current) {
@@ -69,6 +99,36 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                             <Text typography="body3" foreground="normal-100" className="opacity-60">
                                 Loading…
                             </Text>
+                        </div>
+                    </div>
+                ) : error ? (
+                    <div className="w-64 flex-shrink-0 bg-v-canvas-100 p-4 flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-4 text-center px-4">
+                            <ErrorCircleOutlineIcon className="w-10 h-10 text-v-danger-500" />
+                            <div className="flex flex-col gap-2">
+                                <Text
+                                    typography="body2"
+                                    foreground="danger-100"
+                                    className="font-semibold"
+                                >
+                                    Failed to load anatomy
+                                </Text>
+                                <Text
+                                    typography="body3"
+                                    foreground="normal-100"
+                                    className="opacity-80"
+                                >
+                                    {error}
+                                </Text>
+                            </div>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                color="neutral"
+                                onClick={handleRetry}
+                            >
+                                Retry
+                            </Button>
                         </div>
                     </div>
                 ) : (
