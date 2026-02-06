@@ -14,6 +14,9 @@ import {
 import { cleanType } from './type-cleaner';
 import { resolveType } from './type-resolver';
 
+/** Sprinkles CSS 파일 패턴 */
+const SPRINKLES_FILE_PATTERN = 'sprinkles.css';
+
 function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
     return sourceFile
         .getVariableStatements()
@@ -84,7 +87,7 @@ function getJsDocDefault(symbol: Symbol): string | undefined {
 function isSprinklesProp(symbol: Symbol): boolean {
     const filePath = getSymbolSourcePath(symbol);
     if (!filePath) return false;
-    return filePath.includes('sprinkles.css');
+    return filePath.includes(SPRINKLES_FILE_PATTERN);
 }
 
 function shouldIncludeSymbol(
@@ -217,7 +220,11 @@ export function extractProps(
 
         // namespace별로 defaultVariants 추출 (compound component 지원)
         // recipe defaults + destructuring defaults 모두 수집
-        const defaultVariants = getDefaultVariantsForNamespace(sourceFile, namespaceName, validPropNames);
+        const defaultVariants = getDefaultVariantsForNamespace(
+            sourceFile,
+            namespaceName,
+            validPropNames,
+        );
         const includeSet = new Set(options.include ?? []);
 
         const filteredSymbols = allSymbols.filter((symbol) =>
@@ -278,7 +285,11 @@ export function extractProps(
     const diagnostics = collectDiagnostics(props);
     const hierarchy = buildHierarchy(props, namespaces);
 
-    return { props, ...(diagnostics.length > 0 && { diagnostics }), ...(hierarchy && { hierarchy }) };
+    return {
+        props,
+        ...(diagnostics.length > 0 && { diagnostics }),
+        ...(hierarchy && { hierarchy }),
+    };
 }
 
 /**

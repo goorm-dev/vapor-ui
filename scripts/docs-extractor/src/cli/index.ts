@@ -136,10 +136,21 @@ const [inputPath] = cli.input;
 
 export async function run() {
     // Load configuration
-    const { config, source: configSource } = await loadConfig({
-        configPath: cli.flags.config,
-        noConfig: cli.flags.noConfig,
-    });
+    let config: ExtractorConfig;
+    let configSource: 'file' | 'default';
+
+    try {
+        const result = await loadConfig({
+            configPath: cli.flags.config,
+            noConfig: cli.flags.noConfig,
+        });
+        config = result.config;
+        configSource = result.source;
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`Failed to load configuration: ${message}`);
+        process.exit(1);
+    }
 
     if (configSource === 'file') {
         console.error('Using config file');
