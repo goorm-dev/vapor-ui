@@ -50,15 +50,28 @@ function getTokenPath(initializerName: string): string | undefined {
     return tokenMapping[initializerName];
 }
 
-// tokenPath -> displayTypeName 매핑
-const TOKEN_DISPLAY_TYPE_MAPPING: Record<string, string> = {
-    'vars.size.space': 'SpaceToken',
-    'vars.size.dimension': 'DimensionToken',
-    'vars.size.borderRadius': 'BorderRadiusToken',
-    'vars.color.foreground': 'ForegroundColorToken',
-    'vars.color.background': 'BackgroundColorToken',
-    'vars.color.border': 'BorderColorToken',
-};
+/**
+ * tokenPath에서 displayTypeName을 자동 생성합니다.
+ *
+ * 예: "vars.size.space" → "SpaceToken"
+ * 예: "vars.color.foreground" → "ForegroundColorToken"
+ * 예: "vars.size.borderRadius" → "BorderRadiusToken"
+ */
+function generateDisplayTypeFromPath(tokenPath: string): string | undefined {
+    const parts = tokenPath.split('.');
+    if (parts.length < 3) return undefined;
+
+    const category = parts[1]; // "size" | "color"
+    const name = parts[2]; // "space" | "foreground" | "borderRadius"
+
+    // camelCase → PascalCase
+    const pascalName = name.charAt(0).toUpperCase() + name.slice(1);
+
+    if (category === 'color') {
+        return `${pascalName}ColorToken`;
+    }
+    return `${pascalName}Token`;
+}
 
 // margin 계열 props (negative 값 지원)
 const MARGIN_PROPS = new Set([
@@ -74,7 +87,7 @@ const MARGIN_PROPS = new Set([
 function getDisplayTypeName(propName: string, tokenPath?: string): string | undefined {
     if (!tokenPath) return undefined;
 
-    const baseType = TOKEN_DISPLAY_TYPE_MAPPING[tokenPath];
+    const baseType = generateDisplayTypeFromPath(tokenPath);
     if (!baseType) return undefined;
 
     // margin 계열은 negative 토큰도 포함

@@ -1,6 +1,17 @@
-import { checkbox, input } from '@inquirer/prompts';
 import fs from 'node:fs';
 import path from 'node:path';
+
+// Dynamic import to avoid loading @inquirer/prompts in CI environments
+async function getPrompts() {
+    try {
+        return await import('@inquirer/prompts');
+    } catch {
+        throw new CliError(
+            'Interactive mode requires @inquirer/prompts. ' +
+                'Provide --path and --component CLI arguments instead, or install: pnpm add @inquirer/prompts',
+        );
+    }
+}
 
 import { findTsconfig } from '~/core/config';
 import type { ExtractOptions } from '~/core/props-extractor';
@@ -72,10 +83,11 @@ export async function resolvePath(filePath?: string): Promise<string> {
         return absolutePath;
     }
 
+    const { input } = await getPrompts();
     const inputPath = await input({
         message: '컴포넌트 경로를 입력하세요:',
         default: '.',
-        validate: (value) => {
+        validate: (value: string) => {
             const resolved = path.resolve(cwd, value.trim());
             if (!fs.existsSync(resolved)) {
                 return `경로가 존재하지 않습니다: ${resolved}`;
@@ -142,6 +154,7 @@ export async function resolveComponentSelection(
         })),
     ];
 
+    const { checkbox } = await getPrompts();
     const selected = await checkbox({
         message: '추출할 컴포넌트를 선택하세요:',
         choices,

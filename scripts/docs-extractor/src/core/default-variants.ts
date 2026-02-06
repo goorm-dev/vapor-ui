@@ -219,17 +219,72 @@ export function parseRecipeDefaultVariants(
 }
 
 /**
- * Phase 5: Extracts defaultVariants for a namespace.
+ * Phase 5a: Extracts destructuring default values from component function body.
  *
- * Collects defaultVariants from two sources:
- * 1. Recipes directly used by the component (styles.root() calls)
- * 2. Original recipes from imported Variants types (ButtonVariants → button recipe)
+ * Detects patterns like:
+ *   const { side = 'bottom', align = 'start', sideOffset = 4 } = resolveStyles(props);
+ *   const { closeOnClickOverlay = true, ...rest } = props;
+ *
+ * Only includes defaults for properties that exist in the given validPropNames set,
+ * preventing false positives from internal variables.
+ */
+export function extractDestructuringDefaults(
+    sourceFile: SourceFile,
+    componentName: string,
+    validPropNames?: Set<string>,
+): DefaultVariants {
+    const result: DefaultVariants = {};
+
+    const componentVar = sourceFile.getVariableDeclaration(componentName);
+    if (!componentVar) return result;
+
+    const initializer = componentVar.getInitializer();
+    if (!initializer) return result;
+
+    initializer.forEachDescendant((node) => {
+        if (!node.isKind(SyntaxKind.BindingElement)) return;
+
+        const initNode = node.getInitializer();
+        if (!initNode) return;
+
+        const nameNode = node.getNameNode();
+        if (!nameNode.isKind(SyntaxKind.Identifier)) return;
+
+        const name = nameNode.getText();
+
+        // Skip if not a known prop (prevents picking up internal variable defaults)
+        if (validPropNames && !validPropNames.has(name)) return;
+
+        // Skip if already found (first occurrence wins)
+        if (name in result) return;
+
+        const rawValue = initNode.getText();
+        // Clean up: remove quotes, convert boolean/number literals as-is
+        result[name] = rawValue.replace(/^['"`]|['"`]$/g, '');
+    });
+
+    return result;
+}
+
+/**
+ * Phase 5b: Extracts defaultVariants for a namespace.
+ *
+ * Collects defaultVariants from three sources:
+ * 1. Destructuring defaults from component function body (lowest priority)
+ * 2. Recipes directly used by the component (styles.root() calls)
+ * 3. Original recipes from imported Variants types (ButtonVariants → button recipe)
+ *
+ * Recipe defaults override destructuring defaults when both exist.
  */
 export function getDefaultVariantsForNamespace(
     sourceFile: SourceFile,
     namespaceName: string,
+    validPropNames?: Set<string>,
 ): DefaultVariants {
-    const result: DefaultVariants = {};
+    // Start with destructuring defaults (lowest priority)
+    const result: DefaultVariants = {
+        ...extractDestructuringDefaults(sourceFile, namespaceName, validPropNames),
+    };
 
     // === Method 1: Extract from directly used recipes ===
     const styleImports = findStyleImports(sourceFile);

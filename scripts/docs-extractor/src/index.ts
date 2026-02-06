@@ -16,7 +16,7 @@ export { findTsconfig } from './core/config';
 export { extractProps } from './core/props-extractor';
 
 // Types
-export type { Property, PropsInfo, FilePropsResult } from './types/props';
+export type { Property, PropsInfo, FilePropsResult, ExtractDiagnostic } from './types/props';
 
 // Config System (NEW)
 export {

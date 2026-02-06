@@ -181,62 +181,111 @@ const PRESERVED_REACT_ALIASES = new Set([
     'ReactFragment',
 ]);
 
-export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap, contextNode?: Node): string {
-    // contextNode가 있으면 TypeFormatFlags를 사용하여 import 경로를 alias로 변환
-    const rawText = contextNode ? type.getText(contextNode, TYPE_FORMAT_FLAGS) : type.getText();
+/**
+ * Type resolver plugin interface.
+ * 각 plugin은 특정 타입 패턴을 처리합니다.
+ * chain 순서대로 실행되며, 첫 번째로 결과를 반환한 plugin이 우선합니다.
+ */
+export interface TypeResolverPlugin {
+    name: string;
+    resolve(ctx: TypeResolverContext): string | null;
+}
 
-    // Ref<T> 타입은 컴파일러가 union으로 풀어버리므로 먼저 확인
-    const refType = preserveRefType(rawText);
-    if (refType) return refType;
+export interface TypeResolverContext {
+    type: Type;
+    rawText: string;
+    baseUiMap?: BaseUiTypeMap;
+    contextNode?: Node;
+}
 
-    // Union 타입 처리 전에 alias 확인 (ReactNode 등은 spread하지 않음)
-    const aliasSymbol = type.getAliasSymbol();
-    if (aliasSymbol) {
-        const aliasName = aliasSymbol.getName();
-        if (PRESERVED_REACT_ALIASES.has(aliasName)) {
-            return aliasName;
+// --- Built-in resolver plugins ---
+
+const refTypeResolver: TypeResolverPlugin = {
+    name: 'ref-type',
+    resolve: ({ rawText }) => preserveRefType(rawText),
+};
+
+const reactAliasResolver: TypeResolverPlugin = {
+    name: 'react-alias',
+    resolve: ({ type }) => {
+        const aliasSymbol = type.getAliasSymbol();
+        if (aliasSymbol && PRESERVED_REACT_ALIASES.has(aliasSymbol.getName())) {
+            return aliasSymbol.getName();
         }
-    }
+        return null;
+    },
+};
 
-    if (type.isBooleanLiteral()) {
-        return type.getText();
-    }
+const primitiveResolver: TypeResolverPlugin = {
+    name: 'primitives',
+    resolve: ({ type }) => {
+        if (type.isBooleanLiteral()) return type.getText();
+        if (type.isLiteral()) {
+            const value = type.getLiteralValue();
+            return typeof value === 'string' ? `"${value}"` : String(value);
+        }
+        if (type.isUndefined()) return 'undefined';
+        if (type.isNull()) return 'null';
+        if (type.isBoolean()) return 'boolean';
+        if (type.isString()) return 'string';
+        if (type.isNumber()) return 'number';
+        return null;
+    },
+};
 
-    if (type.isLiteral()) {
-        const value = type.getLiteralValue();
-        return typeof value === 'string' ? `"${value}"` : String(value);
-    }
+const reactElementResolver: TypeResolverPlugin = {
+    name: 'react-element',
+    resolve: ({ type }) => simplifyReactElementType(type),
+};
 
-    if (type.isUndefined()) return 'undefined';
-    if (type.isNull()) return 'null';
-    if (type.isBoolean()) return 'boolean';
-    if (type.isString()) return 'string';
-    if (type.isNumber()) return 'number';
+const functionTypeResolver: TypeResolverPlugin = {
+    name: 'function-type',
+    resolve: ({ type, baseUiMap, contextNode }) => resolveFunctionType(type, baseUiMap, contextNode),
+};
 
-    // ReactElement<ComplexType> 단순화
-    const simplified = simplifyReactElementType(type);
-    if (simplified) return simplified;
-
-    // 함수 타입 처리 (base-ui 타입 포함 여부와 관계없이)
-    const functionResult = resolveFunctionType(type, baseUiMap, contextNode);
-    if (functionResult) return functionResult;
-
-    // base-ui 타입 변환 (contextNode 없을 때 fallback)
-    if (rawText.includes('@base-ui')) {
+const baseUiTypeResolver: TypeResolverPlugin = {
+    name: 'base-ui-type',
+    resolve: ({ rawText, baseUiMap }) => {
+        if (!rawText.includes('@base-ui')) return null;
         if (baseUiMap) {
             const vaporPath = resolveBaseUiType(rawText, baseUiMap);
             if (vaporPath) return vaporPath;
         }
         return simplifyNodeModulesImports(rawText);
-    }
+    },
+};
 
-    // import 경로가 남아있으면 제거
-    if (rawText.includes('import(')) {
+const importPathResolver: TypeResolverPlugin = {
+    name: 'import-path',
+    resolve: ({ rawText }) => {
+        if (!rawText.includes('import(')) return null;
         return simplifyNodeModulesImports(rawText);
+    },
+};
+
+/**
+ * 기본 resolver chain. 순서가 결과에 영향을 줍니다.
+ */
+const DEFAULT_RESOLVER_CHAIN: TypeResolverPlugin[] = [
+    refTypeResolver,
+    reactAliasResolver,
+    primitiveResolver,
+    reactElementResolver,
+    functionTypeResolver,
+    baseUiTypeResolver,
+    importPathResolver,
+];
+
+export function resolveType(type: Type, baseUiMap?: BaseUiTypeMap, contextNode?: Node): string {
+    const rawText = contextNode ? type.getText(contextNode, TYPE_FORMAT_FLAGS) : type.getText();
+    const ctx: TypeResolverContext = { type, rawText, baseUiMap, contextNode };
+
+    for (const plugin of DEFAULT_RESOLVER_CHAIN) {
+        const result = plugin.resolve(ctx);
+        if (result !== null) return result;
     }
 
-    // ForwardRefExoticComponent<Omit<X.Props, "ref"> & ...> → X.Props
-    // ReactElement<X, string | React.JSXElementConstructor<any>> → ReactElement<X>
+    // Fallback: ForwardRef/ReactElement generic 정리
     return simplifyReactElementGeneric(simplifyForwardRefType(rawText));
 }
 

@@ -1,8 +1,8 @@
 import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
 
-import type { FilePropsResult, Property, PropsInfo } from '~/types/props';
+import type { ExtractDiagnostic, FilePropsResult, Property, PropsInfo } from '~/types/props';
 
-import { buildBaseUiTypeMap } from './base-ui-type-resolver';
+import { buildBaseUiTypeMap, findComponentPrefix } from './base-ui-type-resolver';
 import { getSymbolSourcePath, isSymbolFromExternalSource } from './declaration-source';
 import { getDefaultVariantsForNamespace } from './default-variants';
 import { isHtmlAttribute } from './html-attributes';
@@ -208,12 +208,16 @@ export function extractProps(
 
         if (!exportedInterfaceProps) continue;
 
-        // namespace별로 defaultVariants 추출 (compound component 지원)
-        const defaultVariants = getDefaultVariantsForNamespace(sourceFile, namespaceName);
-
         const description = getComponentDescription(sourceFile, namespaceName);
         const propsType = exportedInterfaceProps.getType();
         const allSymbols = propsType.getProperties();
+
+        // Props에 정의된 property 이름 목록 (destructuring defaults의 false positive 방지)
+        const validPropNames = new Set(allSymbols.map((s) => s.getName()));
+
+        // namespace별로 defaultVariants 추출 (compound component 지원)
+        // recipe defaults + destructuring defaults 모두 수집
+        const defaultVariants = getDefaultVariantsForNamespace(sourceFile, namespaceName, validPropNames);
         const includeSet = new Set(options.include ?? []);
 
         const filteredSymbols = allSymbols.filter((symbol) =>
@@ -271,5 +275,60 @@ export function extractProps(
         });
     }
 
-    return { props };
+    const diagnostics = collectDiagnostics(props);
+    const hierarchy = buildHierarchy(props, namespaces);
+
+    return { props, ...(diagnostics.length > 0 && { diagnostics }), ...(hierarchy && { hierarchy }) };
+}
+
+/**
+ * 추출 결과에서 진단 정보를 수집합니다.
+ */
+function collectDiagnostics(props: PropsInfo[]): ExtractDiagnostic[] {
+    const diagnostics: ExtractDiagnostic[] = [];
+
+    for (const component of props) {
+        if (!component.description) {
+            diagnostics.push({
+                type: 'missing-description',
+                componentName: component.name,
+                message: `Component "${component.name}" has no JSDoc description`,
+            });
+        }
+    }
+
+    return diagnostics;
+}
+
+/**
+ * Compound component의 namespace를 계층적으로 그룹핑합니다.
+ * Root namespace를 부모로 하고 나머지를 subComponents로 묶습니다.
+ */
+function buildHierarchy(
+    props: PropsInfo[],
+    namespaces: ReturnType<typeof getExportedNamespaces>,
+): PropsInfo[] | undefined {
+    if (props.length <= 1) return undefined;
+
+    const componentPrefix = findComponentPrefix(namespaces);
+    if (!componentPrefix) return undefined;
+
+    // Root를 찾아서 나머지를 sub로 분류
+    const rootName = `${componentPrefix}Root`;
+    const root = props.find((p) => p.name === rootName);
+    if (!root) return undefined;
+
+    const subComponents = props
+        .filter((p) => p.name !== rootName)
+        .map((p) => ({
+            ...p,
+            parentComponent: componentPrefix,
+        }));
+
+    return [
+        {
+            ...root,
+            subComponents,
+        },
+    ];
 }

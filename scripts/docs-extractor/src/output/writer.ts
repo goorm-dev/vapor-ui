@@ -47,7 +47,8 @@ export function formatWithPrettier(filePaths: string[]): void {
     if (filePaths.length === 0) return;
     try {
         execSync(`npx prettier --write ${filePaths.join(' ')}`, { stdio: 'inherit' });
-    } catch {
-        // prettier not available, skip formatting
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.warn(`Prettier formatting skipped: ${message}`);
     }
 }
