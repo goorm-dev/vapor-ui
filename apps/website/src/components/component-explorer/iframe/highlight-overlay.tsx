@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import clsx from 'clsx';
+import { throttle } from 'lodash-es';
 
 import { useHighlightReceiver } from './use-highlight-receiver';
 
@@ -64,13 +65,15 @@ export function HighlightOverlay() {
 
         if (!highlightedPart) return;
 
+        const throttleFindAndHighlight = throttle(findAndHighlight, 100);
+
         // Re-calculate position on scroll/resize
-        window.addEventListener('scroll', findAndHighlight, true);
-        window.addEventListener('resize', findAndHighlight);
+        window.addEventListener('scroll', throttleFindAndHighlight, true);
+        window.addEventListener('resize', throttleFindAndHighlight);
 
         return () => {
-            window.removeEventListener('scroll', findAndHighlight, true);
-            window.removeEventListener('resize', findAndHighlight);
+            window.removeEventListener('scroll', throttleFindAndHighlight, true);
+            window.removeEventListener('resize', throttleFindAndHighlight);
         };
     }, [highlightedPart, findAndHighlight]);
 
