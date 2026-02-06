@@ -13,7 +13,12 @@ interface PreviewWrapperProps {
     children?: React.ReactNode;
 }
 
-export function PreviewWrapper({ theme, componentPath, explorer = false, children }: PreviewWrapperProps) {
+export function PreviewWrapper({
+    theme,
+    componentPath,
+    explorer = false,
+    children,
+}: PreviewWrapperProps) {
     // Sync theme changes (e.g., when user switches theme while iframe is open)
     React.useEffect(() => {
         const root = document.documentElement;

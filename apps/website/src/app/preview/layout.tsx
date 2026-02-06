@@ -26,7 +26,10 @@ export default function PreviewLayout({ children }: { children: ReactNode }) {
                     }}
                 />
             </head>
-            <body className="h-full bg-v-canvas flex items-center justify-center p-4" suppressHydrationWarning>
+            <body
+                className="h-full bg-v-canvas flex items-center justify-center p-4"
+                suppressHydrationWarning
+            >
                 {children}
             </body>
         </html>

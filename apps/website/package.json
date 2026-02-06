@@ -4,11 +4,11 @@
     "private": true,
     "scripts": {
         "build": "next build",
-        "generate:anatomy": "node scripts/generate-anatomy.mjs",
         "clean": "rm -rf node_modules .next .turbo .source",
         "dev": "next dev --turbo",
         "format": "prettier --write \"./src/**/*.{ts,tsx,md}\"",
         "format:check": "prettier --check \"./src/**/*.{ts,tsx,md}\"",
+        "generate:anatomy": "node scripts/generate-anatomy.mjs",
         "postinstall": "fumadocs-mdx",
         "lint": "eslint ./src",
         "start": "next start",

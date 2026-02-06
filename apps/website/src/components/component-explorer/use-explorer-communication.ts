@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, type RefObject } from 'react';
+import { type RefObject, useCallback } from 'react';
 
 import { EXPLORER_MESSAGES } from './types';
 

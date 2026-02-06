@@ -3,7 +3,6 @@
 import { memo } from 'react';
 
 import { Button, Text } from '@vapor-ui/core';
-import { ChevronRightOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 
 interface PartButtonProps {
@@ -59,16 +58,6 @@ export const PartButton = memo(function PartButton({
                         {partName}
                     </Text>
                 </div>
-
-                {/* Arrow */}
-                <ChevronRightOutlineIcon
-                    className={clsx(
-                        'w-3.5 h-3.5 flex-shrink-0 transition-all duration-150',
-                        isHovered
-                            ? 'text-v-primary-200 translate-x-0.5'
-                            : 'text-v-normal-100 opacity-0 group-hover:opacity-100',
-                    )}
-                />
             </div>
 
             {/* Left border indicator */}

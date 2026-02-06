@@ -81,17 +81,6 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                     />
                 )}
                 <div className="flex-1 relative bg-v-canvas border-l border-v-normal-200">
-                    {/* Preview header */}
-                    <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
-                        <Text
-                            typography="body3"
-                            foreground="normal-100"
-                            className="px-2 py-1 bg-v-canvas-100/80 backdrop-blur-sm rounded-md border border-v-normal-200/50 uppercase tracking-wider opacity-60"
-                        >
-                            Live Preview
-                        </Text>
-                    </div>
-
                     {!iframeLoaded && (
                         <div className="absolute inset-0 flex items-center justify-center bg-v-canvas/90 backdrop-blur-sm z-10">
                             <div className="flex flex-col items-center gap-3">
@@ -99,7 +88,11 @@ export function ComponentExplorer({ name, componentName }: ComponentExplorerProp
                                     <div className="w-10 h-10 border-2 border-v-normal-200 rounded-full" />
                                     <div className="absolute inset-0 w-10 h-10 border-2 border-transparent border-t-v-primary-500 rounded-full animate-spin" />
                                 </div>
-                                <Text typography="body3" foreground="normal-100" className="opacity-60">
+                                <Text
+                                    typography="body3"
+                                    foreground="normal-100"
+                                    className="opacity-60"
+                                >
                                     Loading preview…
                                 </Text>
                             </div>

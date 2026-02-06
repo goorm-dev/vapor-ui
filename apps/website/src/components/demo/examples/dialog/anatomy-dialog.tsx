@@ -20,7 +20,10 @@ export default function AnatomyDialog() {
                         </Dialog.Description>
                     </Dialog.Body>
                     <Dialog.Footer data-part="Footer" style={{ marginLeft: 'auto' }}>
-                        <Dialog.Close data-part="Close" render={<Button colorPalette="primary">Close</Button>} />
+                        <Dialog.Close
+                            data-part="Close"
+                            render={<Button colorPalette="primary">Close</Button>}
+                        />
                     </Dialog.Footer>
                 </Dialog.PopupPrimitive>
             </Dialog.PortalPrimitive>
