@@ -42,13 +42,11 @@ export async function loadConfig(options: LoadConfigOptions = {}): Promise<LoadC
     }
 
     try {
-        // jiti를 사용하여 TypeScript/JavaScript config 파일 로드
         const jiti = createJiti(import.meta.url, {
-            interopDefault: true, // export default 자동 처리
+            interopDefault: true,
         });
 
-        const module = jiti(resolvedPath);
-        const rawConfig = module.default ?? module;
+        const rawConfig = await jiti.import(resolvedPath, { default: true });
 
         const parsed = ExtractorConfigSchema.safeParse(rawConfig);
         if (!parsed.success) {

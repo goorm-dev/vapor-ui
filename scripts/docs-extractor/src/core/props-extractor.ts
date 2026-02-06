@@ -14,7 +14,7 @@ import {
 import { cleanType } from './type-cleaner';
 import { resolveType } from './type-resolver';
 
-/** Sprinkles CSS 파일 패턴 */
+/** Sprinkles CSS file pattern */
 const SPRINKLES_FILE_PATTERN = 'sprinkles.css';
 
 function findComponentVariableStatement(sourceFile: SourceFile, namespaceName: string) {
@@ -35,22 +35,37 @@ function getComponentDescription(
     const jsDocs = variableStatement.getJsDocs();
     if (jsDocs.length === 0) return undefined;
 
-    return jsDocs[0].getDescription().trim() || undefined;
+    // Use the last JSDoc comment (closest to the declaration)
+    return jsDocs.at(-1)!.getDescription().trim() || undefined;
 }
 
 function getDefaultElement(sourceFile: SourceFile, namespaceName: string): string | undefined {
     const variableStatement = findComponentVariableStatement(sourceFile, namespaceName);
     if (!variableStatement) return undefined;
 
-    const text = variableStatement.getText();
-    const match = text.match(/render:\s*render\s*\|\|\s*<(\w+)/);
-    return match?.[1];
+    // Find the 'render' property assignment in the component definition
+    const renderProp = variableStatement
+        .getDescendantsOfKind(SyntaxKind.PropertyAssignment)
+        .find((prop) => prop.getName() === 'render');
+
+    if (!renderProp) return undefined;
+
+    // Extract the fallback JSX element from: render || <element />
+    const selfClosing = renderProp.getFirstDescendantByKind(SyntaxKind.JsxSelfClosingElement);
+    if (selfClosing) {
+        return selfClosing.getTagNameNode().getText();
+    }
+
+    const jsxElement = renderProp.getFirstDescendantByKind(SyntaxKind.JsxElement);
+    if (jsxElement) {
+        return jsxElement.getOpeningElement().getTagNameNode().getText();
+    }
+
+    return undefined;
 }
 
 function getExportedNamespaces(sourceFile: SourceFile) {
-    return sourceFile
-        .getDescendantsOfKind(SyntaxKind.ModuleDeclaration)
-        .filter((module) => module.isExported());
+    return sourceFile.getModules().filter((module) => module.isExported());
 }
 
 function findExportedInterfaceProps(namespace: ModuleDeclaration) {
@@ -71,7 +86,7 @@ export interface ExtractOptions {
     sprinklesMeta?: SprinklesMeta;
 }
 
-function getJsDocDescription(symbol: Symbol): string | undefined {
+function getPropDescription(symbol: Symbol): string | undefined {
     const docs = symbol.compilerSymbol.getDocumentationComment(undefined);
     if (docs.length === 0) return undefined;
     return ts.displayPartsToString(docs) || undefined;
@@ -97,19 +112,15 @@ function shouldIncludeSymbol(
 ): boolean {
     const name = symbol.getName();
 
-    // include 옵션에 있으면 항상 포함
     if (includeSet.has(name)) return true;
 
-    // includeHtmlWhitelist에 있으면 다른 필터를 무시하고 포함
     if (options.includeHtmlWhitelist?.has(name)) return true;
 
-    // filterExternal: React/DOM/외부 라이브러리 타입 제외 (선언 위치 기반)
+    // Exclude React/DOM/external library types (based on declaration source)
     if (options.filterExternal && isSymbolFromExternalSource(symbol)) return false;
 
-    // filterSprinkles: sprinkles.css 제외
     if (options.filterSprinkles && isSprinklesProp(symbol)) return false;
 
-    // filterHtml: HTML 네이티브 속성 제외
     if (options.filterHtml !== false && isHtmlAttribute(name)) return false;
 
     return true;
@@ -187,7 +198,7 @@ function sortProps(props: InternalProperty[]): Property[] {
 }
 
 function toTypeArray(typeResult: { type: string; values?: string[] }): string[] {
-    // values가 있으면 사용, 없으면 type을 배열로
+    // Use values if available, otherwise wrap type in an array
     if (typeResult.values && typeResult.values.length > 0) {
         return typeResult.values;
     }
@@ -200,7 +211,7 @@ export function extractProps(
 ): FilePropsResult {
     const props: PropsInfo[] = [];
 
-    // base-ui 타입 맵 빌드
+    // Build base-ui type map
     const baseUiMap = buildBaseUiTypeMap(sourceFile);
 
     const namespaces = getExportedNamespaces(sourceFile);
@@ -215,11 +226,11 @@ export function extractProps(
         const propsType = exportedInterfaceProps.getType();
         const allSymbols = propsType.getProperties();
 
-        // Props에 정의된 property 이름 목록 (destructuring defaults의 false positive 방지)
+        // Prop names defined in Props interface (prevents false positives from destructuring defaults)
         const validPropNames = new Set(allSymbols.map((s) => s.getName()));
 
-        // namespace별로 defaultVariants 추출 (compound component 지원)
-        // recipe defaults + destructuring defaults 모두 수집
+        // Extract defaultVariants per namespace (supports compound components)
+        // Collects both recipe defaults and destructuring defaults
         const defaultVariants = getDefaultVariantsForNamespace(
             sourceFile,
             namespaceName,
@@ -235,7 +246,7 @@ export function extractProps(
             const name = symbol.getName();
             const declNode = symbol.getDeclarations()[0] ?? exportedInterfaceProps;
 
-            // sprinkles prop인 경우 displayTypeName 사용
+            // Use displayTypeName for sprinkles props
             let typeArray: string[];
             if (options.sprinklesMeta && isSprinklesPropFromMeta(name, options.sprinklesMeta)) {
                 const displayType = getSprinklesDisplayType(name, options.sprinklesMeta);
@@ -263,7 +274,7 @@ export function extractProps(
                 name,
                 type: typeArray,
                 required,
-                description: getJsDocDescription(symbol),
+                description: getPropDescription(symbol),
                 defaultValue,
                 _source: source,
                 _category: getPropCategory(name, required, source),
@@ -292,9 +303,7 @@ export function extractProps(
     };
 }
 
-/**
- * 추출 결과에서 진단 정보를 수집합니다.
- */
+/** Collects diagnostics from the extraction result. */
 function collectDiagnostics(props: PropsInfo[]): ExtractDiagnostic[] {
     const diagnostics: ExtractDiagnostic[] = [];
 
@@ -312,8 +321,8 @@ function collectDiagnostics(props: PropsInfo[]): ExtractDiagnostic[] {
 }
 
 /**
- * Compound component의 namespace를 계층적으로 그룹핑합니다.
- * Root namespace를 부모로 하고 나머지를 subComponents로 묶습니다.
+ * Groups compound component namespaces into a hierarchy.
+ * Uses the Root namespace as the parent and nests the rest as subComponents.
  */
 function buildHierarchy(
     props: PropsInfo[],
@@ -324,7 +333,7 @@ function buildHierarchy(
     const componentPrefix = findComponentPrefix(namespaces);
     if (!componentPrefix) return undefined;
 
-    // Root를 찾아서 나머지를 sub로 분류
+    // Find Root and classify the rest as sub-components
     const rootName = `${componentPrefix}Root`;
     const root = props.find((p) => p.name === rootName);
     if (!root) return undefined;
