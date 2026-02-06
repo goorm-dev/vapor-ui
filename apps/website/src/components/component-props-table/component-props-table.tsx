@@ -8,7 +8,7 @@ import { Badge, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 import { InfoPopover } from '~/components/info';
 
 // TODO: When i18n routing is implemented, derive language from URL path or context
-const DEFAULT_LANGUAGE = 'kr';
+const DEFAULT_LANGUAGE = 'ko';
 
 interface PropDefinition {
     name: string;

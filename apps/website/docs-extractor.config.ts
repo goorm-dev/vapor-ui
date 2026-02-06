@@ -3,8 +3,8 @@ import { defineConfig } from '@vapor-ui/ts-api-extractor';
 export default defineConfig({
     global: {
         outputDir: './public/components/generated',
-        languages: ['kr', 'en'],
-        defaultLanguage: 'kr',
+        languages: ['ko', 'en'],
+        defaultLanguage: 'ko',
         filterExternal: true,
         filterSprinkles: true,
         filterHtml: true,
