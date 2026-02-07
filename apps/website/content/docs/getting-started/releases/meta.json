@@ -1,5 +1,12 @@
 {
     "title": "Releases",
-    "pages": ["core", "icons", "color-generator", "css-generator", "codemod"],
+    "pages": [
+        "core",
+        "icons",
+        "color-generator",
+        "css-generator",
+        "eslint-plugin-vapor",
+        "codemod"
+    ],
     "defaultOpen": false
 }

@@ -39,8 +39,9 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                         alignItems: 'center',
                     }}
                 >
-                    <Tooltip.Root delay={0} {...args}>
+                    <Tooltip.Root {...args}>
                         <Tooltip.Trigger
+                            delay={0}
                             render={<Button style={{ flexShrink: 0 }}>Left Tooltip</Button>}
                         />
                         <Tooltip.Popup
@@ -66,8 +67,9 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                         alignItems: 'center',
                     }}
                 >
-                    <Tooltip.Root delay={0}>
+                    <Tooltip.Root>
                         <Tooltip.Trigger
+                            delay={0}
                             render={<Button style={{ flexShrink: 0 }}>Left Tooltip</Button>}
                         />
                         <Tooltip.Popup
@@ -76,8 +78,9 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                             Tooltip content
                         </Tooltip.Popup>
                     </Tooltip.Root>
-                    <Tooltip.Root delay={0}>
+                    <Tooltip.Root>
                         <Tooltip.Trigger
+                            delay={0}
                             render={<Button style={{ flexShrink: 0 }}>Top Tooltip</Button>}
                         />
                         <Tooltip.Popup
@@ -86,8 +89,9 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                             Tooltip content
                         </Tooltip.Popup>
                     </Tooltip.Root>
-                    <Tooltip.Root delay={0}>
+                    <Tooltip.Root>
                         <Tooltip.Trigger
+                            delay={0}
                             render={<Button style={{ flexShrink: 0 }}>Bottom Tooltip</Button>}
                         />
                         <Tooltip.Popup
@@ -96,8 +100,9 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                             Tooltip content
                         </Tooltip.Popup>
                     </Tooltip.Root>
-                    <Tooltip.Root delay={0}>
+                    <Tooltip.Root>
                         <Tooltip.Trigger
+                            delay={0}
                             render={<Button style={{ flexShrink: 0 }}>Right Tooltip</Button>}
                         />
                         <Tooltip.Popup
@@ -118,8 +123,8 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                 >
                     <Text>Wait for 0.5s </Text>
 
-                    <Tooltip.Root delay={500}>
-                        <Tooltip.Trigger render={<Button>Delayed Tooltip</Button>} />
+                    <Tooltip.Root>
+                        <Tooltip.Trigger delay={500} render={<Button>Delayed Tooltip</Button>} />
                         <Tooltip.Popup>Tooltip content</Tooltip.Popup>
                     </Tooltip.Root>
                 </VStack>
@@ -155,32 +160,32 @@ export const TestBed: StoryObj = {
                             alignItems: 'center',
                         }}
                     >
-                        <Tooltip.Root delay={0} open>
-                            <Tooltip.Trigger render={<Button>Left Tooltip</Button>} />
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger delay={0} render={<Button>Left Tooltip</Button>} />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive side="left" />}
                             >
                                 Tooltip content
                             </Tooltip.Popup>
                         </Tooltip.Root>
-                        <Tooltip.Root delay={0} open>
-                            <Tooltip.Trigger render={<Button>Top Tooltip</Button>} />
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger delay={0} render={<Button>Top Tooltip</Button>} />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive side="top" />}
                             >
                                 Tooltip content
                             </Tooltip.Popup>
                         </Tooltip.Root>
-                        <Tooltip.Root delay={0} open>
-                            <Tooltip.Trigger render={<Button>Bottom Tooltip</Button>} />
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger delay={0} render={<Button>Bottom Tooltip</Button>} />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive side="bottom" />}
                             >
                                 Tooltip content
                             </Tooltip.Popup>
                         </Tooltip.Root>
-                        <Tooltip.Root delay={0} open>
-                            <Tooltip.Trigger render={<Button>Right Tooltip</Button>} />
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger delay={0} render={<Button>Right Tooltip</Button>} />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive side="right" />}
                             >
@@ -207,24 +212,33 @@ export const TestBed: StoryObj = {
                             alignItems: 'center',
                         }}
                     >
-                        <Tooltip.Root delay={0} open>
-                            <Tooltip.Trigger render={<Button>Align Start Tooltip</Button>} />
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger
+                                delay={0}
+                                render={<Button>Align Start Tooltip</Button>}
+                            />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive align="start" />}
                             >
                                 Tooltip content
                             </Tooltip.Popup>
                         </Tooltip.Root>
-                        <Tooltip.Root delay={0} open>
-                            <Tooltip.Trigger render={<Button>Align Center Tooltip</Button>} />
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger
+                                delay={0}
+                                render={<Button>Align Center Tooltip</Button>}
+                            />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive align="center" />}
                             >
                                 Tooltip content
                             </Tooltip.Popup>
                         </Tooltip.Root>
-                        <Tooltip.Root delay={0} open>
-                            <Tooltip.Trigger render={<Button>Align End Tooltip</Button>} />
+                        <Tooltip.Root open>
+                            <Tooltip.Trigger
+                                delay={0}
+                                render={<Button>Align End Tooltip</Button>}
+                            />
                             <Tooltip.Popup
                                 positionerElement={<Tooltip.PositionerPrimitive align="end" />}
                             >
@@ -234,9 +248,15 @@ export const TestBed: StoryObj = {
                     </HStack>
                 </VStack>
 
-                <HStack $styles={{ margin: '$800', padding: '$200', border: '1px solid black' }}>
-                    <Tooltip.Root delay={0} open>
-                        <Tooltip.Trigger render={<Button>Left Collision</Button>} />
+                <HStack
+                    $styles={{
+                        margin: '$800',
+                        padding: '$200',
+                        border: '1px solid black',
+                    }}
+                >
+                    <Tooltip.Root open>
+                        <Tooltip.Trigger delay={0} render={<Button>Left Collision</Button>} />
                         <Tooltip.Popup
                             positionerElement={<Tooltip.PositionerPrimitive side="left" />}
                         >

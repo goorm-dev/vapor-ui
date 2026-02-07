@@ -1,23 +1,30 @@
-import { Radio } from '@vapor-ui/core';
+import { HStack, Radio, Text, VStack } from '@vapor-ui/core';
 
 export default function RadioSize() {
     return (
-        <div className="space-y-6">
-            <div>
-                <h4 className="text-sm font-medium mb-3 text-gray-700">Medium (기본 크기)</h4>
-                <label className="flex items-center gap-2 cursor-pointer">
-                    <Radio.Root size="md" value="md-1" />
-                    Medium Size
-                </label>
-            </div>
-
-            <div>
-                <h4 className="text-sm font-medium mb-3 text-gray-700">Large</h4>
-                <label className="flex items-center gap-2 cursor-pointer">
-                    <Radio.Root size="lg" value="lg-1" />
-                    Large Size
-                </label>
-            </div>
-        </div>
+        <VStack gap="$150">
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    md
+                </Text>
+                <Text render={<label />} typography="body2">
+                    <HStack gap="$100" alignItems="center">
+                        <Radio.Root size="md" value="md-1" />
+                        Medium Size
+                    </HStack>
+                </Text>
+            </HStack>
+            <HStack gap="$150" alignItems="center">
+                <Text className="w-6" typography="body3" foreground="hint-100">
+                    lg
+                </Text>
+                <Text render={<label />} typography="body2">
+                    <HStack gap="$100" alignItems="center">
+                        <Radio.Root size="lg" value="lg-1" />
+                        Large Size
+                    </HStack>
+                </Text>
+            </HStack>
+        </VStack>
     );
 }

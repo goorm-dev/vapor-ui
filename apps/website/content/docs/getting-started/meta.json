@@ -4,10 +4,11 @@
         "overview",
         "principles",
         "installation",
-        "theming",
         "releases",
         "llms-txt",
-        "tailwindcss-v4"
+        "tailwindcss-v4",
+        "eslint",
+        "codemod"
     ],
     "defaultOpen": true
 }

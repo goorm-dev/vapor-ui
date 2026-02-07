@@ -14,22 +14,28 @@ import { getAppVersion } from './get-app-version';
 
 const processor = remark().use(remarkMdx).use(remarkInclude).use(remarkGfm);
 
-function processContent(content: string, contentType: 'docs' | 'blocks'): string {
+type ContentType = 'docs' | 'blocks' | 'theme';
+
+function processContent(content: string, contentType: ContentType): string {
     const baseContent = replaceFoundationDoc(replaceIconDoc(content));
 
     if (contentType === 'blocks') {
         return replaceBlockDoc(replaceComponentDoc(baseContent));
     }
 
+    if (contentType === 'theme') {
+        return baseContent;
+    }
+
     return replaceComponentDoc(baseContent);
 }
-function getSourceUrl(contentType: 'docs' | 'blocks', path: string): string {
+function getSourceUrl(contentType: ContentType, path: string): string {
     return `https://raw.githubusercontent.com/goorm-dev/vapor-ui/refs/heads/main/apps/website/content/${contentType}/${path}`;
 }
 
 export async function getLLMText(
     page: InferPageType<typeof source>,
-    contentType: 'docs' | 'blocks' = 'docs',
+    contentType: ContentType = 'docs',
 ): Promise<string> {
     try {
         const content = processContent(page.data.content ?? '', contentType);

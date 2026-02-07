@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import { useRender } from '@base-ui-components/react';
+import { useRender } from '@base-ui/react/use-render';
 import { MoreCommonOutlineIcon, SlashOutlineIcon } from '@vapor-ui/icons';
 import clsx from 'clsx';
 

@@ -3,11 +3,11 @@ title: Tailwind CSS v4
 description: Vapor UI와 함께 Tailwind CSS v4를 사용하세요.
 ---
 
-Vapor UI는 Tailwind CSS v4와 완벽하게 호환됩니다. **기본적으로 아름다운 컴포넌트**와 **무한한 커스터마이징**이라는 두 가지 장점을 모두 얻을 수 있습니다.
+이 문서에서는 Vapor UI와 Tailwind CSS v4를 함께 설정하는 방법을 설명합니다. 설정을 완료하면 Vapor UI 컴포넌트와 Tailwind 유틸리티 클래스를 함께 사용할 수 있습니다.
 
-## 시작하기
+## 설정
 
-메인 CSS 파일(예: `global.css`)에 아래 코드를 복사하면 바로 사용할 수 있습니다:
+메인 CSS 파일(예: `global.css`)에 아래 코드를 추가합니다.
 
 ```css
 /* global.css */
@@ -22,50 +22,46 @@ Vapor UI는 Tailwind CSS v4와 완벽하게 호환됩니다. **기본적으로 �
 @import 'tailwindcss/utilities.css' layer(tw-utilities);
 ```
 
-이제 Vapor UI 컴포넌트와 Tailwind 유틸리티를 자유롭게 조합할 수 있습니다.
+설정이 완료되면 Vapor UI 컴포넌트와 Tailwind 유틸리티를 함께 사용할 수 있습니다.
 
-## Vapor 유틸리티로 스타일링하기
+## Vapor 유틸리티 클래스
 
-이제 `v-` 접두사가 붙은 **Vapor 전용 유틸리티 클래스**를 사용할 수 있습니다. Vapor UI의 디자인 시스템이 Tailwind와 완벽하게 통합됩니다.
+`v-` 접두사가 붙은 Vapor 전용 유틸리티 클래스를 사용할 수 있습니다.
 
 ### 디자인 토큰 클래스
 
-Vapor의 모든 색상, 간격, 둥근 모서리를 **Tailwind 방식**으로 사용할 수 있습니다.
-`v-` 접두사를 추가하여 Tailwind의 익숙한 문법으로 Vapor 디자인을 적용할 수 있습니다.
+Vapor의 색상, 간격, 둥근 모서리를 Tailwind 문법으로 사용합니다. `v-` 접두사를 추가하여 Vapor 디자인 토큰을 적용합니다.
 
 - **색상**: `bg-v-blue-500`, `text-v-red-300`, `border-v-gray-900`
 - **간격**: `p-v-100`, `m-v-200`, `gap-v-400`, `w-v-400`
 - **둥근 모서리**: `rounded-v-200`, `rounded-t-v-400`
 - **폰트 굵기**: `font-v-400`, `font-v-700`
 
-> 💡 팁: Tailwind의 모든 [유틸리티 클래스](https://tailwindcss.com/docs/theme#theme-variable-namespaces)와 조합할 수 있습니다.
+Tailwind의 모든 [유틸리티 클래스](https://tailwindcss.com/docs/theme#theme-variable-namespaces)와 조합할 수 있습니다.
 
 ### 시맨틱 유틸리티 클래스
 
-**의미 기반 클래스**를 제공합니다. Primary, Success, Warning 등의 역할에 맞는 색상을 쉽게 적용할 수 있습니다.
+의미 기반 색상 클래스를 제공합니다. Primary, Success, Warning 등의 역할에 맞는 색상을 적용합니다.
 
-- **배경색**: `bg-v-primary`, `bg-v-secondary`, `bg-v-success`, `bg-v-warning`, `bg-v-danger`, ...
-- **텍스트색**: `text-v-primary`, `text-v-success`, `text-v-warning`, `text-v-danger`, `text-v-accent`, ...
-- **테두리색**: `border-v-primary`, `border-v-success`, `border-v-warning`, `border-v-danger`, ...
+- **배경색**: `bg-v-primary`, `bg-v-secondary`, `bg-v-success`, `bg-v-warning`, `bg-v-danger`
+- **텍스트색**: `text-v-primary`, `text-v-success`, `text-v-warning`, `text-v-danger`, `text-v-accent`
+- **테두리색**: `border-v-primary`, `border-v-success`, `border-v-warning`, `border-v-danger`
 
-## 더 깊이 알아보기
+## 스타일 우선순위
 
-### 스타일 우선순위 이해하기
-
-**왜 Tailwind 클래스가 항상 적용될까요?**
-CSS `@layer` 규칙 덕분입니다. 위에서 설정한 코드는 스마트한 우선순위 계층을 만듭니다.
+CSS `@layer` 규칙으로 스타일 우선순위 계층을 정의합니다.
 
 1. Vapor 컴포넌트 기본 스타일
 2. Vapor 유틸리티 클래스
-3. **Tailwind 유틸리티** ← 가장 높은 우선순위
+3. Tailwind 유틸리티 (가장 높은 우선순위)
 
-**결과**: `className="bg-blue-500"`와 같은 Tailwind 유틸리티로 Vapor 컴포넌트를 직접 커스터마이징할 수 있습니다.
+Tailwind 유틸리티가 가장 높은 우선순위를 가지므로 `className="bg-blue-500"`와 같은 클래스로 Vapor 컴포넌트를 커스터마이징할 수 있습니다.
 
-### CSS Reset: 충돌 없는 설정
+## CSS Reset 설정
 
-Vapor UI가 이미 필요한 스타일 초기화를 처리합니다. 따라서 Tailwind의 `preflight.css`는 사용하지 않는 것을 권장합니다.
+Vapor UI는 필요한 스타일 초기화를 포함합니다. Tailwind의 `preflight.css`는 사용하지 않는 것을 권장합니다.
 
-`preflight.css`를 꼭 써야 한다면, 레이어 순서를 조정해서 충돌을 방지할 수 있습니다:
+`preflight.css`가 필요한 경우 레이어 순서를 다음과 같이 조정합니다.
 
 ```css
 /* preflight를 사용해야 하는 경우 */
@@ -78,4 +74,4 @@ Vapor UI가 이미 필요한 스타일 초기화를 처리합니다. 따라서 T
 @import 'tailwindcss/utilities.css' layer(tw-utilities);
 ```
 
-> ⚠️ **주의**: 이 방법은 스타일 충돌 가능성이 있으므로 꼭 필요한 경우에만 사용하세요.
+> 이 설정은 스타일 충돌 가능성이 있으므로 필요한 경우에만 사용합니다.

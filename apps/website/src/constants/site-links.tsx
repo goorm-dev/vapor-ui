@@ -18,16 +18,17 @@ export const externalLinks = [
     },
 ] satisfies IconItemType[];
 
-export const navLinks = [
+export const docsLinks = [
     {
-        text: 'Theme Playground',
-        url: '/playground',
-        label: 'Playground for theme customization',
+        text: 'Theme',
+        url: '/theme',
+        label: 'Theme Customization',
     },
     {
         text: 'Blocks',
         url: '/blocks',
         label: 'UI Blocks',
     },
-    ...externalLinks,
 ];
+
+export const navLinks = [...docsLinks, ...externalLinks];

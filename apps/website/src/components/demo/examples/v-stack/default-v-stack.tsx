@@ -1,11 +1,17 @@
-import { VStack } from '@vapor-ui/core';
+import { Box, VStack } from '@vapor-ui/core';
 
 export default function DefaultVStack() {
     return (
-        <VStack gap="4">
-            <div className="bg-blue-100 p-4 rounded">Item 1</div>
-            <div className="bg-blue-100 p-4 rounded">Item 2</div>
-            <div className="bg-blue-100 p-4 rounded">Item 3</div>
+        <VStack gap="$200">
+            <Box backgroundColor="$blue-100" padding="$400" borderRadius="$200">
+                Item 1
+            </Box>
+            <Box backgroundColor="$blue-100" padding="$400" borderRadius="$200">
+                Item 2
+            </Box>
+            <Box backgroundColor="$blue-100" padding="$400" borderRadius="$200">
+                Item 3
+            </Box>
         </VStack>
     );
 }

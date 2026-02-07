@@ -58,12 +58,11 @@ const submitForm = async (event: FormEvent<HTMLFormElement>) => {
 export const TestBed: Story = {
     render: (args) => {
         const { required, ...fieldArgs } = args;
-        const [errors, setErrors] = useState({});
+        const [errors] = useState({});
 
         return (
             <Form
                 errors={errors}
-                onClearErrors={setErrors}
                 onSubmit={async (event) => {
                     event.preventDefault();
 
@@ -136,30 +135,33 @@ export const TestBed: Story = {
                         render={<RadioGroup.Root required />}
                         {...fieldArgs}
                     >
-                        <Field.Label $styles={{ alignItems: 'center' }}>
-                            <Radio.Root value="male" />
-                            남성
-                        </Field.Label>
+                        <Field.Label>성별 선택</Field.Label>
+                        <Flex $styles={{ flexDirection: 'column', gap: '$100' }}>
+                            <Field.Item>
+                                <Radio.Root value="male" />
+                                <Field.Label>남성</Field.Label>
+                            </Field.Item>
 
-                        <Field.Label $styles={{ alignItems: 'center' }}>
-                            <Radio.Root value="female" />
-                            여성
-                        </Field.Label>
+                            <Field.Item>
+                                <Radio.Root value="female" />
+                                <Field.Label>여성</Field.Label>
+                            </Field.Item>
 
-                        <Field.Label $styles={{ alignItems: 'center' }}>
-                            <Radio.Root value="other" />
-                            기타
-                        </Field.Label>
+                            <Field.Item>
+                                <Radio.Root value="other" />
+                                <Field.Label>기타</Field.Label>
+                            </Field.Item>
+                        </Flex>
                         <Field.Error match>성별을 반드시 선택해주세요.</Field.Error>
                         <Field.Success match>✓ 성별이 선택되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="email" validationMode="onChange" {...fieldArgs}>
-                        <Field.Label $styles={{ flexDirection: 'column' }}>
-                            <Text typography="subtitle2" foreground="normal-200">
-                                이름
-                            </Text>
-                            <TextInput required />
+                        <Field.Label
+                            render={<Text typography="subtitle2" foreground="normal-200" />}
+                        >
+                            이름
                         </Field.Label>
+                        <TextInput required />
                         <Field.Description>
                             계정 생성을 위해 유효한 이름을 입력해주세요
                         </Field.Description>

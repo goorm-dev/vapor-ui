@@ -1,0 +1,43 @@
+{
+    "name": "Root",
+    "displayName": "FloatingBar.Root",
+    "description": "FloatingBar의 루트 컨테이너로, 전체 FloatingBar 컴포넌트의 상태와 동작을 관리합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "defaultValue": "undefined",
+            "description": "FloatingBar의 열림 상태를 제어합니다. 이 prop이 제공되면 컴포넌트가 제어 모드로 동작합니다."
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "defaultValue": "false",
+            "description": "FloatingBar의 초기 열림 상태를 설정합니다. 비제어 모드에서만 사용됩니다."
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["(open: boolean, event?: Event, reason?: string) => void"],
+            "defaultValue": "undefined",
+            "description": "FloatingBar의 열림 상태가 변경될 때 호출되는 콜백 함수입니다. open 상태, 이벤트, 그리고 변경 이유를 인자로 받습니다."
+        },
+        {
+            "name": "modal",
+            "type": ["boolean", "{ trapFocus?: boolean }"],
+            "defaultValue": "true",
+            "description": "FloatingBar가 모달 형태로 동작할지 여부를 설정합니다. true일 때 배경을 클릭하면 FloatingBar가 닫히고 포커스 트랩이 적용됩니다."
+        },
+        {
+            "name": "openOnHover",
+            "type": ["boolean"],
+            "defaultValue": "false",
+            "description": "마우스 호버 시 FloatingBar를 열지 여부를 설정합니다."
+        },
+        {
+            "name": "delay",
+            "type": ["number", "{ open?: number; close?: number }"],
+            "defaultValue": "0",
+            "description": "FloatingBar 열기/닫기 지연 시간을 밀리초 단위로 설정합니다."
+        }
+    ]
+}
