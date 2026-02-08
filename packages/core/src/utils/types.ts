@@ -7,9 +7,6 @@ export type AnyProp = any;
 
 export type Assign<T, U> = Omit<T, keyof U> & U;
 
-// type OmitColorProp<ElementType extends React.ElementType> =
-//     string extends ComponentPropsWithoutRef<ElementType>['color'] ? 'color' : never;
-
 export type Styles = { $styles?: Sprinkles };
 
 export type VComponentProps<ElementType extends React.ElementType> =
