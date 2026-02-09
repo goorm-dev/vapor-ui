@@ -89,9 +89,11 @@ export const ToastProviderPrimitive = ({
  * Toast.PortalPrimitive
  * -----------------------------------------------------------------------------------------------*/
 
-export const ToastPortalPrimitive = (props: ToastPortalPrimitive.Props) => {
-    return <BaseToast.Portal {...props} />;
-};
+export const ToastPortalPrimitive = forwardRef<HTMLDivElement, ToastPortalPrimitive.Props>(
+    (props, ref) => {
+        return <BaseToast.Portal ref={ref} {...props} />;
+    },
+);
 ToastPortalPrimitive.displayName = 'Toast.PortalPrimitive';
 
 /* -------------------------------------------------------------------------------------------------
@@ -275,7 +277,7 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const render = renderProp ?? (
             <IconButton
                 aria-label="Close Toast"
-                color="$inverse"
+                $styles={{ color: '$fg-inverse' }}
                 colorPalette="secondary"
                 variant="ghost"
             />

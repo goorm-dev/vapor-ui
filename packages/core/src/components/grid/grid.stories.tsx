@@ -63,7 +63,7 @@ export const TestBed: StoryObj<typeof Grid> = {
         return (
             <Grid.Root
                 $styles={{
-                    width: 400,
+                    width: '400px',
                     backgroundColor: 'GrayText',
                     justifyContent: 'center',
                     alignItems: 'center',
