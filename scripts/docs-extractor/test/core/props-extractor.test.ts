@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { addSourceFiles, createProject } from '~/core/project';
+import { addSourceFiles, createProject } from '~/core/discovery';
 import { extractProps } from '~/core/props-extractor';
 
 const FIXTURES_DIR = path.join(__dirname, '../fixtures');

@@ -3,9 +3,9 @@ import path from 'node:path';
 
 import { getComponentConfig, loadConfig } from '~/config';
 import type { ExtractorConfig } from '~/config';
-import { addSourceFiles, createProject } from '~/core/project';
+import { type SprinklesMeta, loadSprinklesMeta } from '~/core/defaults';
+import { addSourceFiles, createProject } from '~/core/discovery';
 import { type ExtractOptions, extractProps } from '~/core/props-extractor';
-import { type SprinklesMeta, loadSprinklesMeta } from '~/core/sprinkles-analyzer';
 import { getTargetLanguages } from '~/i18n/path-resolver';
 import { formatFileName } from '~/output/formatter';
 import { ensureDirectory, formatWithPrettier, writeMultipleFiles } from '~/output/writer';

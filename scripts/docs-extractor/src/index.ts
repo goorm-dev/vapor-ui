@@ -4,13 +4,13 @@ export {
     findFileByComponentName,
     normalizeComponentName,
     type ScannerOptions,
-} from './core/scanner';
+} from './core/discovery';
 
 // Project
-export { createProject, addSourceFiles, getExportedNodes, getNamespaces } from './core/project';
+export { createProject, addSourceFiles, getExportedNodes, getNamespaces } from './core/discovery';
 
 // Config
-export { findTsconfig } from './core/config';
+export { findTsconfig } from './core/discovery';
 
 // Extractor
 export { extractProps } from './core/props-extractor';
@@ -43,7 +43,7 @@ export {
     getSprinklesDisplayType,
     type SprinklesMeta,
     type PropDefinition,
-} from './core/sprinkles-analyzer';
+} from './core/defaults';
 
 // i18n (NEW)
 export {

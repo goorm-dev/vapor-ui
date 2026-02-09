@@ -9,7 +9,7 @@ import {
     isSprinklesProp,
     isTokenBasedSprinklesProp,
     loadSprinklesMeta,
-} from '~/core/sprinkles-analyzer';
+} from '~/core/defaults';
 
 const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 const META_PATH = path.join(FIXTURES_DIR, 'sprinkles-meta.json');

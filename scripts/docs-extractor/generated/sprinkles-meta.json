@@ -1,249 +1,249 @@
 {
-    "tokenProps": [
-        "gap",
-        "padding",
-        "paddingTop",
-        "paddingBottom",
-        "paddingLeft",
-        "paddingRight",
-        "margin",
-        "marginTop",
-        "marginBottom",
-        "marginLeft",
-        "marginRight",
-        "width",
-        "height",
-        "minWidth",
-        "minHeight",
-        "maxWidth",
-        "maxHeight",
-        "borderColor",
-        "borderRadius",
-        "backgroundColor",
-        "color",
-        "paddingX",
-        "paddingY",
-        "marginX",
-        "marginY"
-    ],
-    "nonTokenProps": [
-        "position",
-        "display",
-        "alignItems",
-        "justifyContent",
-        "flexDirection",
-        "alignContent",
-        "border",
-        "opacity",
-        "pointerEvents",
-        "overflow",
-        "textAlign"
-    ],
-    "propDefinitions": {
-        "position": {
-            "usesToken": false,
-            "cssProperty": "position",
-            "displayTypeName": "CSSProperties['position']"
-        },
-        "display": {
-            "usesToken": false,
-            "cssProperty": "display",
-            "displayTypeName": "CSSProperties['display']"
-        },
-        "alignItems": {
-            "usesToken": false,
-            "cssProperty": "alignItems",
-            "displayTypeName": "CSSProperties['alignItems']"
-        },
-        "justifyContent": {
-            "usesToken": false,
-            "cssProperty": "justifyContent",
-            "displayTypeName": "CSSProperties['justifyContent']"
-        },
-        "flexDirection": {
-            "usesToken": false,
-            "cssProperty": "flexDirection",
-            "displayTypeName": "CSSProperties['flexDirection']"
-        },
-        "gap": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "gap",
-            "displayTypeName": "SpaceToken"
-        },
-        "alignContent": {
-            "usesToken": false,
-            "cssProperty": "alignContent",
-            "displayTypeName": "CSSProperties['alignContent']"
-        },
-        "padding": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "padding",
-            "displayTypeName": "SpaceToken"
-        },
-        "paddingTop": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "paddingTop",
-            "displayTypeName": "SpaceToken"
-        },
-        "paddingBottom": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "paddingBottom",
-            "displayTypeName": "SpaceToken"
-        },
-        "paddingLeft": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "paddingLeft",
-            "displayTypeName": "SpaceToken"
-        },
-        "paddingRight": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "paddingRight",
-            "displayTypeName": "SpaceToken"
-        },
-        "margin": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "margin",
-            "displayTypeName": "SpaceToken | NegativeSpaceToken"
-        },
-        "marginTop": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "marginTop",
-            "displayTypeName": "SpaceToken | NegativeSpaceToken"
-        },
-        "marginBottom": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "marginBottom",
-            "displayTypeName": "SpaceToken | NegativeSpaceToken"
-        },
-        "marginLeft": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "marginLeft",
-            "displayTypeName": "SpaceToken | NegativeSpaceToken"
-        },
-        "marginRight": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "marginRight",
-            "displayTypeName": "SpaceToken | NegativeSpaceToken"
-        },
-        "width": {
-            "usesToken": true,
-            "tokenPath": "vars.size.dimension",
-            "cssProperty": "width",
-            "displayTypeName": "DimensionToken"
-        },
-        "height": {
-            "usesToken": true,
-            "tokenPath": "vars.size.dimension",
-            "cssProperty": "height",
-            "displayTypeName": "DimensionToken"
-        },
-        "minWidth": {
-            "usesToken": true,
-            "tokenPath": "vars.size.dimension",
-            "cssProperty": "minWidth",
-            "displayTypeName": "DimensionToken"
-        },
-        "minHeight": {
-            "usesToken": true,
-            "tokenPath": "vars.size.dimension",
-            "cssProperty": "minHeight",
-            "displayTypeName": "DimensionToken"
-        },
-        "maxWidth": {
-            "usesToken": true,
-            "tokenPath": "vars.size.dimension",
-            "cssProperty": "maxWidth",
-            "displayTypeName": "DimensionToken"
-        },
-        "maxHeight": {
-            "usesToken": true,
-            "tokenPath": "vars.size.dimension",
-            "cssProperty": "maxHeight",
-            "displayTypeName": "DimensionToken"
-        },
-        "border": {
-            "usesToken": false,
-            "cssProperty": "border",
-            "displayTypeName": "CSSProperties['border']"
-        },
-        "borderColor": {
-            "usesToken": true,
-            "tokenPath": "vars.color.border",
-            "cssProperty": "borderColor",
-            "displayTypeName": "BorderColorToken"
-        },
-        "borderRadius": {
-            "usesToken": true,
-            "tokenPath": "vars.size.borderRadius",
-            "cssProperty": "borderRadius",
-            "displayTypeName": "BorderRadiusToken"
-        },
-        "backgroundColor": {
-            "usesToken": true,
-            "tokenPath": "vars.color.background",
-            "cssProperty": "backgroundColor",
-            "displayTypeName": "BackgroundColorToken"
-        },
-        "color": {
-            "usesToken": true,
-            "tokenPath": "vars.color.foreground",
-            "cssProperty": "color",
-            "displayTypeName": "ForegroundColorToken"
-        },
-        "opacity": {
-            "usesToken": false,
-            "cssProperty": "opacity",
-            "displayTypeName": "CSSProperties['opacity']"
-        },
-        "pointerEvents": {
-            "usesToken": false,
-            "cssProperty": "pointerEvents",
-            "displayTypeName": "CSSProperties['pointerEvents']"
-        },
-        "overflow": {
-            "usesToken": false,
-            "cssProperty": "overflow",
-            "displayTypeName": "CSSProperties['overflow']"
-        },
-        "textAlign": {
-            "usesToken": false,
-            "cssProperty": "textAlign",
-            "displayTypeName": "CSSProperties['textAlign']"
-        },
-        "paddingX": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "paddingX",
-            "displayTypeName": "SpaceToken"
-        },
-        "paddingY": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "paddingY",
-            "displayTypeName": "SpaceToken"
-        },
-        "marginX": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "marginX",
-            "displayTypeName": "SpaceToken | NegativeSpaceToken"
-        },
-        "marginY": {
-            "usesToken": true,
-            "tokenPath": "vars.size.space",
-            "cssProperty": "marginY",
-            "displayTypeName": "SpaceToken | NegativeSpaceToken"
-        }
+  "tokenProps": [
+    "gap",
+    "padding",
+    "paddingTop",
+    "paddingBottom",
+    "paddingLeft",
+    "paddingRight",
+    "margin",
+    "marginTop",
+    "marginBottom",
+    "marginLeft",
+    "marginRight",
+    "width",
+    "height",
+    "minWidth",
+    "minHeight",
+    "maxWidth",
+    "maxHeight",
+    "borderColor",
+    "borderRadius",
+    "backgroundColor",
+    "color",
+    "paddingX",
+    "paddingY",
+    "marginX",
+    "marginY"
+  ],
+  "nonTokenProps": [
+    "position",
+    "display",
+    "alignItems",
+    "justifyContent",
+    "flexDirection",
+    "alignContent",
+    "border",
+    "opacity",
+    "pointerEvents",
+    "overflow",
+    "textAlign"
+  ],
+  "propDefinitions": {
+    "position": {
+      "usesToken": false,
+      "cssProperty": "position",
+      "displayTypeName": "CSSProperties['position']"
+    },
+    "display": {
+      "usesToken": false,
+      "cssProperty": "display",
+      "displayTypeName": "CSSProperties['display']"
+    },
+    "alignItems": {
+      "usesToken": false,
+      "cssProperty": "alignItems",
+      "displayTypeName": "CSSProperties['alignItems']"
+    },
+    "justifyContent": {
+      "usesToken": false,
+      "cssProperty": "justifyContent",
+      "displayTypeName": "CSSProperties['justifyContent']"
+    },
+    "flexDirection": {
+      "usesToken": false,
+      "cssProperty": "flexDirection",
+      "displayTypeName": "CSSProperties['flexDirection']"
+    },
+    "gap": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "gap",
+      "displayTypeName": "SpaceToken"
+    },
+    "alignContent": {
+      "usesToken": false,
+      "cssProperty": "alignContent",
+      "displayTypeName": "CSSProperties['alignContent']"
+    },
+    "padding": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "padding",
+      "displayTypeName": "SpaceToken"
+    },
+    "paddingTop": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "paddingTop",
+      "displayTypeName": "SpaceToken"
+    },
+    "paddingBottom": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "paddingBottom",
+      "displayTypeName": "SpaceToken"
+    },
+    "paddingLeft": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "paddingLeft",
+      "displayTypeName": "SpaceToken"
+    },
+    "paddingRight": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "paddingRight",
+      "displayTypeName": "SpaceToken"
+    },
+    "margin": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "margin",
+      "displayTypeName": "SpaceToken | NegativeSpaceToken"
+    },
+    "marginTop": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "marginTop",
+      "displayTypeName": "SpaceToken | NegativeSpaceToken"
+    },
+    "marginBottom": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "marginBottom",
+      "displayTypeName": "SpaceToken | NegativeSpaceToken"
+    },
+    "marginLeft": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "marginLeft",
+      "displayTypeName": "SpaceToken | NegativeSpaceToken"
+    },
+    "marginRight": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "marginRight",
+      "displayTypeName": "SpaceToken | NegativeSpaceToken"
+    },
+    "width": {
+      "usesToken": true,
+      "tokenPath": "vars.size.dimension",
+      "cssProperty": "width",
+      "displayTypeName": "DimensionToken"
+    },
+    "height": {
+      "usesToken": true,
+      "tokenPath": "vars.size.dimension",
+      "cssProperty": "height",
+      "displayTypeName": "DimensionToken"
+    },
+    "minWidth": {
+      "usesToken": true,
+      "tokenPath": "vars.size.dimension",
+      "cssProperty": "minWidth",
+      "displayTypeName": "DimensionToken"
+    },
+    "minHeight": {
+      "usesToken": true,
+      "tokenPath": "vars.size.dimension",
+      "cssProperty": "minHeight",
+      "displayTypeName": "DimensionToken"
+    },
+    "maxWidth": {
+      "usesToken": true,
+      "tokenPath": "vars.size.dimension",
+      "cssProperty": "maxWidth",
+      "displayTypeName": "DimensionToken"
+    },
+    "maxHeight": {
+      "usesToken": true,
+      "tokenPath": "vars.size.dimension",
+      "cssProperty": "maxHeight",
+      "displayTypeName": "DimensionToken"
+    },
+    "border": {
+      "usesToken": false,
+      "cssProperty": "border",
+      "displayTypeName": "CSSProperties['border']"
+    },
+    "borderColor": {
+      "usesToken": true,
+      "tokenPath": "vars.color.border",
+      "cssProperty": "borderColor",
+      "displayTypeName": "BorderColorToken"
+    },
+    "borderRadius": {
+      "usesToken": true,
+      "tokenPath": "vars.size.borderRadius",
+      "cssProperty": "borderRadius",
+      "displayTypeName": "BorderRadiusToken"
+    },
+    "backgroundColor": {
+      "usesToken": true,
+      "tokenPath": "vars.color.background",
+      "cssProperty": "backgroundColor",
+      "displayTypeName": "BackgroundColorToken"
+    },
+    "color": {
+      "usesToken": true,
+      "tokenPath": "vars.color.foreground",
+      "cssProperty": "color",
+      "displayTypeName": "ForegroundColorToken"
+    },
+    "opacity": {
+      "usesToken": false,
+      "cssProperty": "opacity",
+      "displayTypeName": "CSSProperties['opacity']"
+    },
+    "pointerEvents": {
+      "usesToken": false,
+      "cssProperty": "pointerEvents",
+      "displayTypeName": "CSSProperties['pointerEvents']"
+    },
+    "overflow": {
+      "usesToken": false,
+      "cssProperty": "overflow",
+      "displayTypeName": "CSSProperties['overflow']"
+    },
+    "textAlign": {
+      "usesToken": false,
+      "cssProperty": "textAlign",
+      "displayTypeName": "CSSProperties['textAlign']"
+    },
+    "paddingX": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "paddingX",
+      "displayTypeName": "SpaceToken"
+    },
+    "paddingY": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "paddingY",
+      "displayTypeName": "SpaceToken"
+    },
+    "marginX": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "marginX",
+      "displayTypeName": "SpaceToken | NegativeSpaceToken"
+    },
+    "marginY": {
+      "usesToken": true,
+      "tokenPath": "vars.size.space",
+      "cssProperty": "marginY",
+      "displayTypeName": "SpaceToken | NegativeSpaceToken"
     }
+  }
 }

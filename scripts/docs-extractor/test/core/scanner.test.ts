@@ -5,7 +5,7 @@ import {
     findComponentFiles,
     findFileByComponentName,
     normalizeComponentName,
-} from '~/core/scanner';
+} from '~/core/discovery';
 
 const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 

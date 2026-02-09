@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { cleanType, containsStateCallback, simplifyStateCallback } from '~/core/type-cleaner';
+import { cleanType, containsStateCallback, simplifyStateCallback } from '~/core/types';
 
 describe('containsStateCallback', () => {
     it('detects state callback pattern', () => {

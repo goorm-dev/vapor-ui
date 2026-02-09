@@ -3,7 +3,7 @@ import path from 'node:path';
 import { TypeFormatFlags } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
 
-import { addSourceFiles, createProject } from '~/core/project';
+import { addSourceFiles, createProject } from '~/core/discovery';
 
 const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 const CORE_PACKAGE_DIR = path.resolve(__dirname, '../../../packages/core');

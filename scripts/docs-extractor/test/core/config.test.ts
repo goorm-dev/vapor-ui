@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { findTsconfig } from '~/core/config';
+import { findTsconfig } from '~/core/discovery';
 
 const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 

@@ -5,9 +5,9 @@ import {
     findRecipeUsageInComponent,
     getDefaultValuesForNamespace,
     parseRecipeDefaultVariants,
-} from '~/core/default-variants';
-import { addSourceFiles, createProject } from '~/core/project';
-import { findCssImports } from '~/core/style-imports';
+} from '~/core/defaults';
+import { addSourceFiles, createProject } from '~/core/discovery';
+import { findCssImports } from '~/core/defaults';
 
 const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 

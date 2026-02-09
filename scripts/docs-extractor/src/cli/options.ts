@@ -13,9 +13,8 @@ async function getPrompts() {
     }
 }
 
-import { findTsconfig } from '~/core/config';
+import { findComponentFiles, findFileByComponentName, findTsconfig } from '~/core/discovery';
 import type { ExtractOptions } from '~/core/props-extractor';
-import { findComponentFiles, findFileByComponentName } from '~/core/scanner';
 
 // ============================================================
 // Error Classes
