@@ -38,7 +38,7 @@ export const Default: StoryObj<typeof Grid.Root> = {
     render: (args) => {
         return (
             <Grid.Root
-                $styles={{
+                $css={{
                     width: 400,
                     backgroundColor: 'GrayText',
                     justifyContent: 'center',
@@ -62,7 +62,7 @@ export const TestBed: StoryObj<typeof Grid> = {
     render: (args) => {
         return (
             <Grid.Root
-                $styles={{
+                $css={{
                     width: '400px',
                     backgroundColor: 'GrayText',
                     justifyContent: 'center',

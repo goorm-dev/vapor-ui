@@ -11,8 +11,8 @@ export default function Ordering() {
             {
                 id: 'select',
 
-                header: () => <Box $styles={{ textAlign: 'center' }}>ID</Box>,
-                cell: ({ row }) => <Box $styles={{ textAlign: 'center' }}>{row.index + 1}</Box>,
+                header: () => <Box $css={{ textAlign: 'center' }}>ID</Box>,
+                cell: ({ row }) => <Box $css={{ textAlign: 'center' }}>{row.index + 1}</Box>,
             },
 
             {
@@ -57,14 +57,14 @@ export default function Ordering() {
     });
 
     return (
-        <Card.Root $styles={{ width: '100%' }}>
-            <Card.Body $styles={{ padding: '$000' }}>
-                <Table.Root $styles={{ width: '100%' }}>
+        <Card.Root $css={{ width: '100%' }}>
+            <Card.Body $css={{ padding: '$000' }}>
+                <Table.Root $css={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
-                    <Table.Header $styles={{ backgroundColor: '$basic-gray-050' }}>
+                    <Table.Header $css={{ backgroundColor: '$basic-gray-050' }}>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (

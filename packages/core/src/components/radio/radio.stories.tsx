@@ -27,8 +27,8 @@ export const Default: Story = {
 
 export const TestBed: Story = {
     render: () => (
-        <VStack $styles={{ gap: '$200' }}>
-            <HStack $styles={{ gap: '$100', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$100', alignItems: 'center' }}>
                 <Radio.Root value="default" />
                 <Radio.Root invalid value="invalid" />
                 <Radio.Root disabled value="disabled" />
@@ -36,7 +36,7 @@ export const TestBed: Story = {
                 <Radio.Root readOnly value="readOnly" />
             </HStack>
 
-            <HStack $styles={{ gap: '$100', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$100', alignItems: 'center' }}>
                 <Radio.Root size="lg" value="default" />
                 <Radio.Root size="lg" invalid value="invalid" />
                 <Radio.Root size="lg" disabled value="disabled" />

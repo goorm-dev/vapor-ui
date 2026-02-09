@@ -2,18 +2,18 @@ import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function BoxLayout() {
     return (
-        <VStack $styles={{ gap: '$300' }}>
-            <VStack $styles={{ gap: '$150' }}>
+        <VStack $css={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     flexDirection
                 </Text>
-                <VStack $styles={{ gap: '$200' }}>
-                    <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+                <VStack $css={{ gap: '$200' }}>
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                         <Text className="w-24" typography="body3" foreground="hint-100">
                             row
                         </Text>
                         <Box
-                            $styles={{
+                            $css={{
                                 display: 'flex',
                                 flexDirection: 'row',
                                 gap: '$200',
@@ -23,7 +23,7 @@ export default function BoxLayout() {
                             }}
                         >
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-blue-300',
                                     borderRadius: '$100',
@@ -32,7 +32,7 @@ export default function BoxLayout() {
                                 1
                             </Box>
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-blue-300',
                                     borderRadius: '$100',
@@ -41,7 +41,7 @@ export default function BoxLayout() {
                                 2
                             </Box>
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-blue-300',
                                     borderRadius: '$100',
@@ -51,12 +51,12 @@ export default function BoxLayout() {
                             </Box>
                         </Box>
                     </HStack>
-                    <HStack $styles={{ gap: '$150', alignItems: 'start' }}>
+                    <HStack $css={{ gap: '$150', alignItems: 'start' }}>
                         <Text className="w-24" typography="body3" foreground="hint-100">
                             column
                         </Text>
                         <Box
-                            $styles={{
+                            $css={{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: '$200',
@@ -66,7 +66,7 @@ export default function BoxLayout() {
                             }}
                         >
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-green-300',
                                     borderRadius: '$100',
@@ -75,7 +75,7 @@ export default function BoxLayout() {
                                 A
                             </Box>
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-green-300',
                                     borderRadius: '$100',
@@ -84,7 +84,7 @@ export default function BoxLayout() {
                                 B
                             </Box>
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-green-300',
                                     borderRadius: '$100',
@@ -97,17 +97,17 @@ export default function BoxLayout() {
                 </VStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     justifyContent
                 </Text>
-                <VStack $styles={{ gap: '$200' }}>
-                    <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+                <VStack $css={{ gap: '$200' }}>
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                         <Text className="w-24" typography="body3" foreground="hint-100">
                             flex-start
                         </Text>
                         <Box
-                            $styles={{
+                            $css={{
                                 display: 'flex',
                                 justifyContent: 'flex-start',
                                 gap: '$200',
@@ -118,7 +118,7 @@ export default function BoxLayout() {
                             }}
                         >
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-grape-300',
                                     borderRadius: '$100',
@@ -127,7 +127,7 @@ export default function BoxLayout() {
                                 Start
                             </Box>
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-grape-300',
                                     borderRadius: '$100',
@@ -137,12 +137,12 @@ export default function BoxLayout() {
                             </Box>
                         </Box>
                     </HStack>
-                    <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                         <Text className="w-24" typography="body3" foreground="hint-100">
                             center
                         </Text>
                         <Box
-                            $styles={{
+                            $css={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 gap: '$200',
@@ -153,7 +153,7 @@ export default function BoxLayout() {
                             }}
                         >
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-grape-300',
                                     borderRadius: '$100',
@@ -162,7 +162,7 @@ export default function BoxLayout() {
                                 Center
                             </Box>
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-grape-300',
                                     borderRadius: '$100',
@@ -172,12 +172,12 @@ export default function BoxLayout() {
                             </Box>
                         </Box>
                     </HStack>
-                    <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+                    <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                         <Text className="w-24" typography="body3" foreground="hint-100">
                             space-between
                         </Text>
                         <Box
-                            $styles={{
+                            $css={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 gap: '$200',
@@ -188,7 +188,7 @@ export default function BoxLayout() {
                             }}
                         >
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-grape-300',
                                     borderRadius: '$100',
@@ -197,7 +197,7 @@ export default function BoxLayout() {
                                 Space
                             </Box>
                             <Box
-                                $styles={{
+                                $css={{
                                     padding: '$200',
                                     backgroundColor: '$basic-grape-300',
                                     borderRadius: '$100',
@@ -210,12 +210,12 @@ export default function BoxLayout() {
                 </VStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     alignItems
                 </Text>
                 <Box
-                    $styles={{
+                    $css={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-around',
@@ -227,7 +227,7 @@ export default function BoxLayout() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-orange-300',
                             borderRadius: '$100',
@@ -237,7 +237,7 @@ export default function BoxLayout() {
                         Small
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-orange-300',
                             borderRadius: '$100',
@@ -247,7 +247,7 @@ export default function BoxLayout() {
                         Medium
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-orange-300',
                             borderRadius: '$100',

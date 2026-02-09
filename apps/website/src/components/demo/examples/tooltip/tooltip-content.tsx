@@ -10,8 +10,8 @@ import {
 
 export default function TooltipPopup() {
     return (
-        <VStack $styles={{ gap: '$150' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     왼쪽 정렬
                 </Text>
@@ -22,7 +22,7 @@ export default function TooltipPopup() {
                     <Tooltip.Popup>왼쪽 정렬</Tooltip.Popup>
                 </Tooltip.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     중앙 정렬
                 </Text>
@@ -33,7 +33,7 @@ export default function TooltipPopup() {
                     <Tooltip.Popup>중앙 정렬</Tooltip.Popup>
                 </Tooltip.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     오른쪽 정렬
                 </Text>
@@ -45,7 +45,7 @@ export default function TooltipPopup() {
                     <Tooltip.Popup>오른쪽 정렬</Tooltip.Popup>
                 </Tooltip.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     양쪽 정렬
                 </Text>

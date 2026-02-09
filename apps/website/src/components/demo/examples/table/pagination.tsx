@@ -36,10 +36,10 @@ export default function WithPagination() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: () => <Box $styles={{ textAlign: 'center' }}>ID</Box>,
+                header: () => <Box $css={{ textAlign: 'center' }}>ID</Box>,
                 accessorKey: 'id',
                 size: 0, // prevent cumulative layout shift
-                cell: ({ row }) => <Box $styles={{ textAlign: 'center' }}>{row.index + 1}</Box>,
+                cell: ({ row }) => <Box $css={{ textAlign: 'center' }}>{row.index + 1}</Box>,
             },
 
             {
@@ -93,16 +93,16 @@ export default function WithPagination() {
     });
 
     return (
-        <Card.Root $styles={{ width: '100%' }}>
+        <Card.Root $css={{ width: '100%' }}>
             <Card.Header>
-                <HStack $styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text typography="heading6" foreground="normal-200" style={{ flexShrink: 0 }}>
                         출석부
                     </Text>
 
-                    <HStack $styles={{ alignItems: 'center', gap: '$100' }}>
+                    <HStack $css={{ alignItems: 'center', gap: '$100' }}>
                         <HStack
-                            $styles={{
+                            $css={{
                                 alignItems: 'center',
                                 gap: '10px',
                                 paddingInline: '$150',
@@ -113,7 +113,7 @@ export default function WithPagination() {
                             <SearchOutlineIcon />
                             <TextInput
                                 placeholder="이름으로 검색"
-                                $styles={{ border: 'none', paddingInline: '$000' }}
+                                $css={{ border: 'none', paddingInline: '$000' }}
                                 onValueChange={(value) =>
                                     table.getColumn('name')?.setFilterValue(value)
                                 }
@@ -172,8 +172,8 @@ export default function WithPagination() {
                     </HStack>
                 </HStack>
             </Card.Header>
-            <Card.Body $styles={{ overflow: 'auto', padding: '$000' }}>
-                <Table.Root $styles={{ width: '100%' }}>
+            <Card.Body $css={{ overflow: 'auto', padding: '$000' }}>
+                <Table.Root $css={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
@@ -182,7 +182,7 @@ export default function WithPagination() {
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row
                                 key={headerGroup.id}
-                                $styles={{ backgroundColor: '$basic-gray-050' }}
+                                $css={{ backgroundColor: '$basic-gray-050' }}
                             >
                                 {headerGroup.headers.map((header) => (
                                     <Table.Heading key={header.id}>
@@ -216,7 +216,7 @@ export default function WithPagination() {
                             <Table.Row>
                                 <Table.Cell
                                     colSpan={columns.length}
-                                    $styles={{ textAlign: 'center', height: '410px' }}
+                                    $css={{ textAlign: 'center', height: '410px' }}
                                 >
                                     검색 결과가 없습니다.
                                 </Table.Cell>
@@ -225,7 +225,7 @@ export default function WithPagination() {
                     </Table.Body>
                 </Table.Root>
                 <Card.Footer
-                    $styles={{ position: 'relative', display: 'flex', justifyContent: 'center' }}
+                    $css={{ position: 'relative', display: 'flex', justifyContent: 'center' }}
                 >
                     <Pagination.Root
                         totalPages={table.getPageCount()}
@@ -242,7 +242,7 @@ export default function WithPagination() {
                         onValueChange={(value) => table.setPageSize(Number(value))}
                     >
                         <Select.TriggerPrimitive
-                            $styles={{ position: 'absolute' }}
+                            $css={{ position: 'absolute' }}
                             style={{ right: 24, top: '50%', transform: 'translateY(-50%)' }}
                         >
                             <Select.ValuePrimitive>

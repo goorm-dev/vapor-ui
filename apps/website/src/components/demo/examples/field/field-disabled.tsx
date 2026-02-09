@@ -4,8 +4,8 @@ import { Field, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldDisabled() {
     return (
-        <VStack className="w-72" $styles={{ gap: '$200' }}>
-            <VStack $styles={{ gap: '$100' }}>
+        <VStack className="w-72" $css={{ gap: '$200' }}>
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     enabled
                 </Text>
@@ -18,7 +18,7 @@ export default function FieldDisabled() {
                 </Field.Root>
             </VStack>
 
-            <VStack $styles={{ gap: '$100' }}>
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     disabled
                 </Text>

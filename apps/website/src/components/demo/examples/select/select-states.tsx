@@ -2,26 +2,26 @@ import { HStack, Select, Text, VStack } from '@vapor-ui/core';
 
 export default function SelectStates() {
     return (
-        <VStack $styles={{ gap: '$150', width: '400px' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$150', width: '400px' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     default
                 </Text>
                 <SelectTemplate placeholder="기본 상태" />
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     disabled
                 </Text>
                 <SelectTemplate placeholder="비활성화" disabled />
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     readOnly
                 </Text>
                 <SelectTemplate placeholder="읽기 전용" readOnly />
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     invalid
                 </Text>

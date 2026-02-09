@@ -11,9 +11,9 @@ export default function FormWithField() {
                 console.log('Form submitted:', Object.fromEntries(formData));
             }}
         >
-            <VStack className="w-80" $styles={{ gap: '$300' }}>
+            <VStack className="w-80" $css={{ gap: '$300' }}>
                 <Field.Root name="fullName">
-                    <VStack render={<Field.Label />} $styles={{ gap: '$050' }}>
+                    <VStack render={<Field.Label />} $css={{ gap: '$050' }}>
                         Full Name
                         <TextInput placeholder="John Doe" required />
                     </VStack>
@@ -21,7 +21,7 @@ export default function FormWithField() {
                 </Field.Root>
 
                 <Field.Root name="email">
-                    <VStack render={<Field.Label />} $styles={{ gap: '$050' }}>
+                    <VStack render={<Field.Label />} $css={{ gap: '$050' }}>
                         Email
                         <TextInput type="email" placeholder="john@example.com" required />
                     </VStack>
@@ -32,7 +32,7 @@ export default function FormWithField() {
 
                 <Field.Root name="role">
                     <Select.Root placeholder="Select a role">
-                        <VStack render={<Field.Label />} $styles={{ gap: '$050' }}>
+                        <VStack render={<Field.Label />} $css={{ gap: '$050' }}>
                             Role
                             <Select.Trigger />
                         </VStack>
@@ -45,7 +45,7 @@ export default function FormWithField() {
                 </Field.Root>
 
                 <Field.Root name="terms">
-                    <HStack render={<Field.Label />} $styles={{ gap: '$100', alignItems: 'center' }}>
+                    <HStack render={<Field.Label />} $css={{ gap: '$100', alignItems: 'center' }}>
                         <Checkbox.Root required />I agree to the terms and conditions
                     </HStack>
                     <Field.Error match="valueMissing">You must accept the terms</Field.Error>

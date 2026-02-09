@@ -41,7 +41,7 @@ export const TestBed: Story = {
         <Grid.Root
             templateRows="repeat(3, 1fr)"
             templateColumns="repeat(3, 1fr)"
-            $styles={{ gap: '$300' }}
+            $css={{ gap: '$300' }}
         >
             <Textarea placeholder="Enter your text here..." {...args} />
             <Textarea placeholder="Enter your text here..." {...args} disabled />

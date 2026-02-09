@@ -2,14 +2,14 @@ import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function HStackSpacing() {
     return (
-        <VStack $styles={{ gap: '$200' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     $100
                 </Text>
-                <HStack $styles={{ gap: '$100' }}>
+                <HStack $css={{ gap: '$100' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -18,7 +18,7 @@ export default function HStackSpacing() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -27,7 +27,7 @@ export default function HStackSpacing() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -38,13 +38,13 @@ export default function HStackSpacing() {
                 </HStack>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     $400
                 </Text>
-                <HStack $styles={{ gap: '$400' }}>
+                <HStack $css={{ gap: '$400' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -53,7 +53,7 @@ export default function HStackSpacing() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -62,7 +62,7 @@ export default function HStackSpacing() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -73,13 +73,13 @@ export default function HStackSpacing() {
                 </HStack>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     $800
                 </Text>
-                <HStack $styles={{ gap: '$800' }}>
+                <HStack $css={{ gap: '$800' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -88,7 +88,7 @@ export default function HStackSpacing() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -97,7 +97,7 @@ export default function HStackSpacing() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',

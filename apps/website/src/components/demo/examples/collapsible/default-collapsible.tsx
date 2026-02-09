@@ -10,7 +10,7 @@ export default function DefaultCollapsible() {
             </Collapsible.Trigger>
             <Collapsible.Panel>
                 <VStack
-                    $styles={{
+                    $css={{
                         gap: '$050',
                         backgroundColor: '$basic-blue-050',
                         paddingBlock: '$150',

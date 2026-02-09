@@ -2,8 +2,8 @@ import { Box, Flex, Text, VStack } from '@vapor-ui/core';
 
 export default function FlexInline() {
     return (
-        <VStack $styles={{ gap: '$200' }}>
-            <VStack $styles={{ gap: '$150' }}>
+        <VStack $css={{ gap: '$200' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     inline flex
                 </Text>
@@ -11,7 +11,7 @@ export default function FlexInline() {
                     <Text render={<span />}>Text before </Text>
                     <Flex
                         inline
-                        $styles={{
+                        $css={{
                             gap: '$100',
                             padding: '$200',
                             backgroundColor: '$basic-blue-100',
@@ -19,7 +19,7 @@ export default function FlexInline() {
                         }}
                     >
                         <Box
-                            $styles={{
+                            $css={{
                                 padding: '$100',
                                 backgroundColor: '$basic-blue-400',
                                 borderRadius: '$050',
@@ -29,7 +29,7 @@ export default function FlexInline() {
                             Inline
                         </Box>
                         <Box
-                            $styles={{
+                            $css={{
                                 padding: '$100',
                                 backgroundColor: '$basic-green-400',
                                 borderRadius: '$050',
@@ -43,12 +43,12 @@ export default function FlexInline() {
                 </Box>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     block flex (default)
                 </Text>
                 <Flex
-                    $styles={{
+                    $css={{
                         gap: '$200',
                         padding: '$300',
                         backgroundColor: '$basic-gray-100',
@@ -56,7 +56,7 @@ export default function FlexInline() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-blue-400',
                             borderRadius: '$100',
@@ -66,7 +66,7 @@ export default function FlexInline() {
                         Block
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-green-400',
                             borderRadius: '$100',

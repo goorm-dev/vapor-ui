@@ -4,7 +4,7 @@ import { Field, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldValidation() {
     return (
-        <VStack className="w-72" $styles={{ gap: '$300' }}>
+        <VStack className="w-72" $css={{ gap: '$300' }}>
             <Field.Root name="email" validationMode="onBlur">
                 <Field.Label className="flex flex-col gap-1">
                     Email

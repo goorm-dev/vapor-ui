@@ -40,7 +40,7 @@ export default {
 export const Default: StoryObj<StoryProps> = {
     render: ({ side, align, ...args }) => {
         return (
-            <HStack $styles={{ justifyContent: 'start', margin: '-$200' }}>
+            <HStack $css={{ justifyContent: 'start', margin: '-$200' }}>
                 <NavigationMenu.Root {...args} defaultValue={'1'} aria-label="Main">
                     <NavigationMenu.List>
                         <NavigationMenu.Item value="1">
@@ -88,7 +88,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
     render: () => {
         return (
             <VStack
-                $styles={{
+                $css={{
                     padding: '200px',
                     gap: '96px',
                     justifyContent: 'center',
@@ -112,7 +112,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                     </NavigationMenu.List>
                 </NavigationMenu.Root>
 
-                <HStack $styles={{ gap: '$250' }}>
+                <HStack $css={{ gap: '$250' }}>
                     {/* Left Navigation Menu */}
                     <NavigationMenu.Root aria-label="Main" value="1">
                         <NavigationMenu.List>
@@ -180,7 +180,7 @@ export const TestBed: StoryObj<typeof NavigationMenu.Root> = {
                     </NavigationMenu.Root>
                 </HStack>
 
-                <HStack $styles={{ gap: '$250' }}>
+                <HStack $css={{ gap: '$250' }}>
                     {/* Start Navigation Menu */}
                     <NavigationMenu.Root aria-label="Main" value="1">
                         <NavigationMenu.List>

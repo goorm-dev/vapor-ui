@@ -84,7 +84,15 @@ export default function SheetForm() {
     return (
         <VStack
             className="sheet-form"
-            render={<Form id="sheet-form" onReset={handleReset} />} $styles={{ gap: '$250', width: '100%', padding: '$300', borderRadius: '$300', border: '1px solid #eee' }}>
+            render={<Form id="sheet-form" onReset={handleReset} />}
+            $css={{
+                gap: '$250',
+                width: '100%',
+                padding: '$300',
+                borderRadius: '$300',
+                border: '1px solid #eee',
+            }}
+        >
             <Sheet.Root>
                 <Sheet.Trigger render={<Button />}>Open Filter</Sheet.Trigger>
 
@@ -104,7 +112,7 @@ export default function SheetForm() {
                                 <Tabs.Button value="tag">Tag</Tabs.Button>
                             </Tabs.List>
                             <Tabs.Panel value="sort" className={'tabs-panel'}>
-                                <VStack $styles={{ gap: '$100' }}>
+                                <VStack $css={{ gap: '$100' }}>
                                     {/* Sort */}
                                     <Field.Root>
                                         <Field.Item>
@@ -210,7 +218,7 @@ export default function SheetForm() {
                             </Tabs.Panel>
                             {/* Package */}
                             <Tabs.Panel value="package" className={'tabs-panel'}>
-                                <VStack $styles={{ gap: '$100' }}>
+                                <VStack $css={{ gap: '$100' }}>
                                     <Field.Root>
                                         <Field.Item>
                                             <Checkbox.Root
@@ -263,7 +271,7 @@ export default function SheetForm() {
                             </Tabs.Panel>
                             {/* Status */}
                             <Tabs.Panel value="status" className={'tabs-panel'}>
-                                <VStack $styles={{ gap: '$100' }}>
+                                <VStack $css={{ gap: '$100' }}>
                                     <Field.Root>
                                         <Field.Item>
                                             <Checkbox.Root
@@ -310,7 +318,7 @@ export default function SheetForm() {
                             </Tabs.Panel>
                             {/* Tag */}
                             <Tabs.Panel value="tag" className={'tabs-panel'}>
-                                <VStack $styles={{ gap: '$100' }}>
+                                <VStack $css={{ gap: '$100' }}>
                                     <Field.Root>
                                         <Field.Item>
                                             <Checkbox.Root

@@ -14,7 +14,7 @@ export default {
 export const Default: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.Props> = {
     render: (args) => (
         <Flex
-            $styles={{
+            $css={{
                 gap: '$400',
                 marginTop: '200px',
                 justifyContent: 'center',
@@ -44,7 +44,7 @@ export const Customable: StoryObj<Popover.Root.Props & Popover.PositionerPrimiti
     },
     render: ({ side, align, sideOffset = 8, ...args }) => (
         <Flex
-            $styles={{
+            $css={{
                 gap: '$400',
                 marginTop: '200px',
                 justifyContent: 'center',
@@ -77,7 +77,7 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
     render: (args) => (
         <>
             <HStack
-                $styles={{
+                $css={{
                     padding: '100px',
                     gap: '$400',
                     justifyContent: 'center',
@@ -122,7 +122,7 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
             </HStack>
 
             <HStack
-                $styles={{
+                $css={{
                     padding: '$800',
                     gap: '$900',
                     justifyContent: 'center',
@@ -161,7 +161,7 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
             </HStack>
 
             <HStack
-                $styles={{ padding: '$800', border: '1px solid', justifyContent: 'space-between' }}
+                $css={{ padding: '$800', border: '1px solid', justifyContent: 'space-between' }}
             >
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Fliped Popover</Button>} />
@@ -193,7 +193,7 @@ export const TestBed: StoryObj<Popover.Root.Props & Popover.PositionerPrimitive.
             </HStack>
 
             <HStack
-                $styles={{ padding: '$200', border: '1px solid', justifyContent: 'space-between' }}
+                $css={{ padding: '$200', border: '1px solid', justifyContent: 'space-between' }}
             >
                 <Popover.Root {...args} open>
                     <Popover.Trigger render={<Button>Fliped Popover</Button>} />

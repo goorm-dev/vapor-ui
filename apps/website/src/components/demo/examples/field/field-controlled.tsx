@@ -16,9 +16,9 @@ export default function FieldControlled() {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <VStack $styles={{ gap: '$200', width: '300px' }}>
+            <VStack $css={{ gap: '$200', width: '300px' }}>
                 <Field.Root name="firstName">
-                    <Field.Label $styles={{ flexDirection: 'column' }}>
+                    <Field.Label $css={{ flexDirection: 'column' }}>
                         이름
                         <TextInput
                             value={firstName}
@@ -33,7 +33,7 @@ export default function FieldControlled() {
                 </Field.Root>
 
                 <Field.Root name="lastName">
-                    <Field.Label $styles={{ flexDirection: 'column' }}>
+                    <Field.Label $css={{ flexDirection: 'column' }}>
                         성
                         <TextInput
                             value={lastName}
@@ -48,7 +48,7 @@ export default function FieldControlled() {
                 </Field.Root>
 
                 <Field.Root name="email" validationMode="onChange">
-                    <Field.Label $styles={{ flexDirection: 'column' }}>
+                    <Field.Label $css={{ flexDirection: 'column' }}>
                         이메일
                         <TextInput
                             type="email"

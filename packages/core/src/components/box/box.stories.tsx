@@ -9,7 +9,7 @@ export const Default = {
     render: () => {
         return (
             <Box
-                $styles={{
+                $css={{
                     borderRadius: '$300',
                     display: 'flex',
                     flexDirection: 'column',
@@ -21,7 +21,7 @@ export const Default = {
             >
                 <Box style={{ backgroundColor: 'red' }} render={<Button>sadfasdf</Button>} />
                 <Box
-                    $styles={{
+                    $css={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -32,7 +32,7 @@ export const Default = {
                     1
                 </Box>
                 <Box
-                    $styles={{
+                    $css={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -42,7 +42,7 @@ export const Default = {
                     1
                 </Box>
                 <Box
-                    $styles={{
+                    $css={{
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}
@@ -51,7 +51,7 @@ export const Default = {
                     1
                 </Box>
                 <Box
-                    $styles={{
+                    $css={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -63,11 +63,11 @@ export const Default = {
 
                 <Box render={<a href="asd">as anchor</a>} />
 
-                <Box $styles={{ display: 'flex', flexDirection: 'row', gap: '$200' }}>
+                <Box $css={{ display: 'flex', flexDirection: 'row', gap: '$200' }}>
                     <span style={{ border: '1px solid' }}>row 1</span>
                     <span style={{ border: '1px solid' }}>row 2</span>
 
-                    <Box $styles={{ display: 'flex', flexDirection: 'column', gap: '$100' }}>
+                    <Box $css={{ display: 'flex', flexDirection: 'column', gap: '$100' }}>
                         <span style={{ border: '1px solid' }}>row {'>'} nested column 1</span>
                         <span style={{ border: '1px solid' }}>row {'>'} nested column 2</span>
                     </Box>
@@ -81,7 +81,7 @@ export const TestBed = {
     render: () => {
         return (
             <Box
-                $styles={{
+                $css={{
                     borderRadius: '$300',
                     display: 'flex',
                     flexDirection: 'column',
@@ -91,11 +91,11 @@ export const TestBed = {
                 }}
             >
                 <Box
-                    $styles={{ backgroundColor: '$basic-red-500' }}
+                    $css={{ backgroundColor: '$basic-red-500' }}
                     render={<Button>I'm Button</Button>}
                 />
                 <Box
-                    $styles={{
+                    $css={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -106,7 +106,7 @@ export const TestBed = {
                     1
                 </Box>
                 <Box
-                    $styles={{
+                    $css={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -116,7 +116,7 @@ export const TestBed = {
                     1
                 </Box>
                 <Box
-                    $styles={{
+                    $css={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -126,7 +126,7 @@ export const TestBed = {
                     1
                 </Box>
                 <Box
-                    $styles={{
+                    $css={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -138,11 +138,11 @@ export const TestBed = {
 
                 <Box render={<a href="asd">as anchor</a>} />
 
-                <Box $styles={{ display: 'flex', flexDirection: 'row', gap: '$200' }}>
+                <Box $css={{ display: 'flex', flexDirection: 'row', gap: '$200' }}>
                     <span style={{ border: '1px solid' }}>row 1</span>
                     <span style={{ border: '1px solid' }}>row 2</span>
 
-                    <Box $styles={{ display: 'flex', flexDirection: 'column', gap: '$100' }}>
+                    <Box $css={{ display: 'flex', flexDirection: 'column', gap: '$100' }}>
                         <span style={{ border: '1px solid' }}>row {'>'} nested column 1</span>
                         <span style={{ border: '1px solid' }}>row {'>'} nested column 2</span>
                     </Box>

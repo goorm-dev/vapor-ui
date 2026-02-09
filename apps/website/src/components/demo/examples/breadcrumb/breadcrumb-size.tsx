@@ -2,8 +2,8 @@ import { Breadcrumb, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function BreadcrumbSize() {
     return (
-        <VStack $styles={{ gap: '$200' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-6" typography="body3" foreground="hint-100">
                     sm
                 </Text>
@@ -17,7 +17,7 @@ export default function BreadcrumbSize() {
                     </Breadcrumb.Item>
                 </Breadcrumb.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-6" typography="body3" foreground="hint-100">
                     md
                 </Text>
@@ -31,7 +31,7 @@ export default function BreadcrumbSize() {
                     </Breadcrumb.Item>
                 </Breadcrumb.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-6" typography="body3" foreground="hint-100">
                     lg
                 </Text>
@@ -45,7 +45,7 @@ export default function BreadcrumbSize() {
                     </Breadcrumb.Item>
                 </Breadcrumb.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-6" typography="body3" foreground="hint-100">
                     xl
                 </Text>

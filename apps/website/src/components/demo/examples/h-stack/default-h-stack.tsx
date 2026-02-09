@@ -2,9 +2,9 @@ import { Box, HStack } from '@vapor-ui/core';
 
 export default function DefaultHStack() {
     return (
-        <HStack $styles={{ gap: '$200' }}>
+        <HStack $css={{ gap: '$200' }}>
             <Box
-                $styles={{
+                $css={{
                     backgroundColor: '$basic-blue-100',
                     padding: '$400',
                     borderRadius: '$200',
@@ -13,7 +13,7 @@ export default function DefaultHStack() {
                 Item 1
             </Box>
             <Box
-                $styles={{
+                $css={{
                     backgroundColor: '$basic-blue-100',
                     padding: '$400',
                     borderRadius: '$200',
@@ -22,7 +22,7 @@ export default function DefaultHStack() {
                 Item 2
             </Box>
             <Box
-                $styles={{
+                $css={{
                     backgroundColor: '$basic-blue-100',
                     padding: '$400',
                     borderRadius: '$200',

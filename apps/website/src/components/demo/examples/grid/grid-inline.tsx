@@ -2,15 +2,15 @@ import { Box, Grid, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function GridInline() {
     return (
-        <HStack $styles={{ gap: '$400', alignItems: 'start' }}>
-            <VStack $styles={{ gap: '$150' }}>
+        <HStack $css={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     block (default)
                 </Text>
-                <Grid.Root templateColumns="repeat(2, 1fr)" $styles={{ gap: '$100' }}>
+                <Grid.Root templateColumns="repeat(2, 1fr)" $css={{ gap: '$100' }}>
                     <Grid.Item>
                         <Box
-                            $styles={{
+                            $css={{
                                 backgroundColor: '$basic-violet-100',
                                 padding: '$200',
                                 borderRadius: '$200',
@@ -22,7 +22,7 @@ export default function GridInline() {
                     </Grid.Item>
                     <Grid.Item>
                         <Box
-                            $styles={{
+                            $css={{
                                 backgroundColor: '$basic-violet-100',
                                 padding: '$200',
                                 borderRadius: '$200',
@@ -35,15 +35,15 @@ export default function GridInline() {
                 </Grid.Root>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     inline
                 </Text>
                 <Box>
-                    <Grid.Root inline templateColumns="repeat(2, 1fr)" $styles={{ gap: '$100' }}>
+                    <Grid.Root inline templateColumns="repeat(2, 1fr)" $css={{ gap: '$100' }}>
                         <Grid.Item>
                             <Box
-                                $styles={{
+                                $css={{
                                     backgroundColor: '$basic-pink-100',
                                     padding: '$200',
                                     borderRadius: '$200',
@@ -55,7 +55,7 @@ export default function GridInline() {
                         </Grid.Item>
                         <Grid.Item>
                             <Box
-                                $styles={{
+                                $css={{
                                     backgroundColor: '$basic-pink-100',
                                     padding: '$200',
                                     borderRadius: '$200',

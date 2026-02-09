@@ -2,14 +2,14 @@ import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function VStackSpacing() {
     return (
-        <HStack $styles={{ gap: '$400', alignItems: 'start' }}>
-            <VStack $styles={{ gap: '$150' }}>
+        <HStack $css={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     $100
                 </Text>
-                <VStack $styles={{ gap: '$100' }}>
+                <VStack $css={{ gap: '$100' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -18,7 +18,7 @@ export default function VStackSpacing() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -27,7 +27,7 @@ export default function VStackSpacing() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -38,13 +38,13 @@ export default function VStackSpacing() {
                 </VStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     $400
                 </Text>
-                <VStack $styles={{ gap: '$400' }}>
+                <VStack $css={{ gap: '$400' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -53,7 +53,7 @@ export default function VStackSpacing() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -62,7 +62,7 @@ export default function VStackSpacing() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -73,13 +73,13 @@ export default function VStackSpacing() {
                 </VStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     $800
                 </Text>
-                <VStack $styles={{ gap: '$800' }}>
+                <VStack $css={{ gap: '$800' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -88,7 +88,7 @@ export default function VStackSpacing() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -97,7 +97,7 @@ export default function VStackSpacing() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',

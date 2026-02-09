@@ -5,8 +5,8 @@ import { mergeProps } from './merge-props';
 import type { Styles } from './types';
 
 export const resolveStyles = <T extends object>(props: T) => {
-    const [{ $styles }, otherProps] = createSplitProps<Styles>()(props, ['$styles']);
-    const { className, style } = sprinkles({ ...$styles });
+    const [{ $css }, otherProps] = createSplitProps<Styles>()(props, ['$css']);
+    const { className, style } = sprinkles({ ...$css });
 
     return mergeProps({ className, style } as T, otherProps);
 };

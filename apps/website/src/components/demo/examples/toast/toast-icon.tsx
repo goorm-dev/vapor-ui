@@ -18,7 +18,7 @@ export default function Icon() {
 
     return (
         <Toast.Provider toastManager={toastManager}>
-            <HStack $styles={{ gap: '$400', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$400', alignItems: 'center' }}>
                 <Button
                     colorPalette="secondary"
                     onClick={() => addToast('info', <HeartIcon color="white" />)}

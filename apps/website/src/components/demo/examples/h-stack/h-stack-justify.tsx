@@ -2,13 +2,13 @@ import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function HStackJustify() {
     return (
-        <VStack $styles={{ gap: '$200' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     flex-start
                 </Text>
                 <HStack
-                    $styles={{
+                    $css={{
                         gap: '$100',
                         justifyContent: 'flex-start',
                         width: '$2400',
@@ -18,7 +18,7 @@ export default function HStackJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -27,7 +27,7 @@ export default function HStackJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-200',
                             padding: '$200',
                             borderRadius: '$200',
@@ -36,7 +36,7 @@ export default function HStackJustify() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-300',
                             padding: '$200',
                             borderRadius: '$200',
@@ -47,12 +47,12 @@ export default function HStackJustify() {
                 </HStack>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     center
                 </Text>
                 <HStack
-                    $styles={{
+                    $css={{
                         gap: '$100',
                         justifyContent: 'center',
                         width: '$2400',
@@ -62,7 +62,7 @@ export default function HStackJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-yellow-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -71,7 +71,7 @@ export default function HStackJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-yellow-200',
                             padding: '$200',
                             borderRadius: '$200',
@@ -80,7 +80,7 @@ export default function HStackJustify() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-yellow-300',
                             padding: '$200',
                             borderRadius: '$200',
@@ -91,12 +91,12 @@ export default function HStackJustify() {
                 </HStack>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     space-between
                 </Text>
                 <HStack
-                    $styles={{
+                    $css={{
                         gap: '$100',
                         justifyContent: 'space-between',
                         width: '$2400',
@@ -106,7 +106,7 @@ export default function HStackJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$indigo-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -115,7 +115,7 @@ export default function HStackJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$indigo-200',
                             padding: '$200',
                             borderRadius: '$200',
@@ -124,7 +124,7 @@ export default function HStackJustify() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$indigo-300',
                             padding: '$200',
                             borderRadius: '$200',

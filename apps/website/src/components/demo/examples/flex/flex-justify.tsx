@@ -2,13 +2,13 @@ import { Box, Flex, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function FlexJustify() {
     return (
-        <VStack $styles={{ gap: '$200' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     flex-start
                 </Text>
                 <Flex
-                    $styles={{
+                    $css={{
                         justifyContent: 'flex-start',
                         gap: '$200',
                         padding: '$300',
@@ -18,7 +18,7 @@ export default function FlexJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-blue-400',
                             borderRadius: '$100',
@@ -28,7 +28,7 @@ export default function FlexJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-green-400',
                             borderRadius: '$100',
@@ -40,12 +40,12 @@ export default function FlexJustify() {
                 </Flex>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     center
                 </Text>
                 <Flex
-                    $styles={{
+                    $css={{
                         justifyContent: 'center',
                         gap: '$200',
                         padding: '$300',
@@ -55,7 +55,7 @@ export default function FlexJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-blue-400',
                             borderRadius: '$100',
@@ -65,7 +65,7 @@ export default function FlexJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-green-400',
                             borderRadius: '$100',
@@ -77,12 +77,12 @@ export default function FlexJustify() {
                 </Flex>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     flex-end
                 </Text>
                 <Flex
-                    $styles={{
+                    $css={{
                         justifyContent: 'flex-end',
                         gap: '$200',
                         padding: '$300',
@@ -92,7 +92,7 @@ export default function FlexJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-blue-400',
                             borderRadius: '$100',
@@ -102,7 +102,7 @@ export default function FlexJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-green-400',
                             borderRadius: '$100',
@@ -114,12 +114,12 @@ export default function FlexJustify() {
                 </Flex>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     space-between
                 </Text>
                 <Flex
-                    $styles={{
+                    $css={{
                         justifyContent: 'space-between',
                         gap: '$200',
                         padding: '$300',
@@ -129,7 +129,7 @@ export default function FlexJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-blue-400',
                             borderRadius: '$100',
@@ -139,7 +139,7 @@ export default function FlexJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-green-400',
                             borderRadius: '$100',
@@ -149,7 +149,7 @@ export default function FlexJustify() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$200',
                             backgroundColor: '$basic-orange-400',
                             borderRadius: '$100',

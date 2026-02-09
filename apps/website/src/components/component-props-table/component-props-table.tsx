@@ -65,7 +65,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
     }
 
     return (
-        <VStack className="w-full not-prose" $styles={{ alignItems: 'flex-start', gap: '$200' }}>
+        <VStack className="w-full not-prose" $css={{ alignItems: 'flex-start', gap: '$200' }}>
             <Text typography="body1" foreground="normal-200">
                 <ReactMarkdown
                     components={{
@@ -80,7 +80,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                 </ReactMarkdown>
             </Text>
             <VStack
-                $styles={{
+                $css={{
                     width: '100%',
                     overflow: 'auto',
                     alignItems: 'flex-start',
@@ -119,7 +119,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                                     className={` px-v-300 py-v-200 border-b border-b-v-normal min-w-[140px] w-px ${index === componentData.props.length - 1 ? 'rounded-bl-v-300 border-b-0' : ''}`}
                                 >
                                     <HStack
-                                        $styles={{
+                                        $css={{
                                             alignItems: 'center',
                                             gap: '$100',
                                             width: 'fit-content',
@@ -162,14 +162,14 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                                 <td
                                     className={`px-v-300 py-v-200 border-b border-b-v-normal ${index === componentData.props.length - 1 ? 'rounded-br-v-300 border-b-0' : ''}`}
                                 >
-                                    <Flex $styles={{ gap: '$100' }} className="flex-wrap">
+                                    <Flex $css={{ gap: '$100' }} className="flex-wrap">
                                         {Array.isArray(prop.type) ? (
                                             prop.type.map((typeValue) => (
                                                 <Badge
                                                     key={typeValue}
                                                     colorPalette="hint"
                                                     size="md"
-                                                    $styles={{ height: 'auto' }}
+                                                    $css={{ height: 'auto' }}
                                                 >
                                                     {typeValue}
                                                 </Badge>

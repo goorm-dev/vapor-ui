@@ -2,8 +2,8 @@ import { Button, Dialog, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function DialogModal() {
     return (
-        <VStack $styles={{ gap: '$150' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     modal
                 </Text>
@@ -24,7 +24,7 @@ export default function DialogModal() {
                     </Dialog.Popup>
                 </Dialog.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     non-modal
                 </Text>

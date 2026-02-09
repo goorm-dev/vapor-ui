@@ -73,21 +73,21 @@ export const TestBed: Story = {
                     });
                 }}
             >
-                <Flex $styles={{ flexDirection: 'column', gap: '$300' }}>
+                <Flex $css={{ flexDirection: 'column', gap: '$300' }}>
                     <Field.Root
                         name="vapor-policy-agreement"
                         validationMode="onChange"
                         {...fieldArgs}
                     >
                         <Field.Description>non-required checkbox</Field.Description>
-                        <Field.Label $styles={{ alignItems: 'center' }}>
+                        <Field.Label $css={{ alignItems: 'center' }}>
                             <Checkbox.Root />
                             멘토님 강연 능력
                         </Field.Label>
                         <Field.Error match>좋았던 강의를 최소 하나 이상 선택해주세요</Field.Error>
                         <Field.Success
                             match
-                            $styles={{ display: 'flex', alignItems: 'center', gap: '$050' }}
+                            $css={{ display: 'flex', alignItems: 'center', gap: '$050' }}
                         >
                             <CheckCircleIcon /> 강의 평가가 완료되었습니다
                         </Field.Success>
@@ -99,7 +99,7 @@ export const TestBed: Story = {
                     >
                         <Field.Description>required checkbox</Field.Description>
 
-                        <Field.Label $styles={{ alignItems: 'center' }}>
+                        <Field.Label $css={{ alignItems: 'center' }}>
                             <Checkbox.Root required />
                             멘토님 강연 능력
                         </Field.Label>
@@ -108,7 +108,7 @@ export const TestBed: Story = {
                     </Field.Root>
                     {/* Switch Component Example */}
                     <Field.Root name="notifications" validationMode="onChange" {...fieldArgs}>
-                        <Field.Label $styles={{ alignItems: 'center' }}>
+                        <Field.Label $css={{ alignItems: 'center' }}>
                             서비스 메일 수신 동의 - required
                             <Switch.Root required />
                         </Field.Label>
@@ -119,7 +119,7 @@ export const TestBed: Story = {
                         <Field.Success match>✓ 개인 정보 수신 동의가 완료되었습니다</Field.Success>
                     </Field.Root>
                     <Field.Root name="notifications2" validationMode="onChange" {...fieldArgs}>
-                        <Field.Label $styles={{ alignItems: 'center' }}>
+                        <Field.Label $css={{ alignItems: 'center' }}>
                             이벤트성 광고 수신 동의 - non required
                             <Switch.Root />
                         </Field.Label>
@@ -136,7 +136,7 @@ export const TestBed: Story = {
                         {...fieldArgs}
                     >
                         <Field.Label>성별 선택</Field.Label>
-                        <Flex $styles={{ flexDirection: 'column', gap: '$100' }}>
+                        <Flex $css={{ flexDirection: 'column', gap: '$100' }}>
                             <Field.Item>
                                 <Radio.Root value="male" />
                                 <Field.Label>남성</Field.Label>

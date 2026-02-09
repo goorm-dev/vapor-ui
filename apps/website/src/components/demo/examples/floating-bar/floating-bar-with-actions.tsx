@@ -7,7 +7,7 @@ export default function FloatingBarWithActions() {
             <FloatingBar.Popup>
                 <Button colorPalette="primary">Select All</Button>
                 <Box
-                    $styles={{
+                    $css={{
                         width: '1px',
                         backgroundColor: '$basic-gray-300',
                         alignSelf: 'stretch',

@@ -13,9 +13,9 @@ export default function RadioCardWithContent() {
                 value={value}
                 onValueChange={(newValue) => setValue(newValue as string)}
             >
-                <HStack $styles={{ gap: '$150' }}>
+                <HStack $css={{ gap: '$150' }}>
                     <RadioCard value="basic">
-                        <VStack $styles={{ gap: '$50' }}>
+                        <VStack $css={{ gap: '$50' }}>
                             <Text typography="subtitle1">Basic</Text>
                             <Text typography="body2" foreground="hint-100">
                                 $9/month
@@ -26,7 +26,7 @@ export default function RadioCardWithContent() {
                         </VStack>
                     </RadioCard>
                     <RadioCard value="pro">
-                        <VStack $styles={{ gap: '$50' }}>
+                        <VStack $css={{ gap: '$50' }}>
                             <Text typography="subtitle1">Pro</Text>
                             <Text typography="body2" foreground="hint-100">
                                 $29/month
@@ -37,7 +37,7 @@ export default function RadioCardWithContent() {
                         </VStack>
                     </RadioCard>
                     <RadioCard value="enterprise">
-                        <VStack $styles={{ gap: '$50' }}>
+                        <VStack $css={{ gap: '$50' }}>
                             <Text typography="subtitle1">Enterprise</Text>
                             <Text typography="body2" foreground="hint-100">
                                 Custom pricing

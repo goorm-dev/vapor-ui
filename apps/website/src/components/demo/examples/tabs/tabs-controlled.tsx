@@ -8,7 +8,7 @@ export default function TabsControlled() {
     const [activeTab, setActiveTab] = useState('profile');
 
     return (
-        <VStack $styles={{ gap: '$200' }}>
+        <VStack $css={{ gap: '$200' }}>
             <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
                 <Tabs.List>
                     <Tabs.Button value="profile">프로필</Tabs.Button>

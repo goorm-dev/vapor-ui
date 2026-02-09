@@ -7,7 +7,7 @@ export type AnyProp = any;
 
 export type Assign<T, U> = Omit<T, keyof U> & U;
 
-export type Styles = { $styles?: Sprinkles };
+export type Styles = { $css?: Sprinkles };
 
 export type VComponentProps<ElementType extends React.ElementType> =
     useRender.ComponentProps<ElementType> & Styles;

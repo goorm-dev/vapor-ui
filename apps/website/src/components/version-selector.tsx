@@ -15,7 +15,7 @@ export const VersionSelector = () => {
     return (
         <Menu.Root>
             <Menu.Trigger
-                $styles={{
+                $css={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '$050',
@@ -33,10 +33,10 @@ export const VersionSelector = () => {
                     return (
                         <Fragment key={item.label}>
                             <Menu.Item
-                                $styles={{ justifyContent: 'space-between' }}
+                                $css={{ justifyContent: 'space-between' }}
                                 render={
                                     <a href={item.url} target="_blank" rel="noreferrer">
-                                        <HStack $styles={{ gap: '$075', alignItems: 'center' }}>
+                                        <HStack $css={{ gap: '$075', alignItems: 'center' }}>
                                             <Text typography="subtitle1">{item.label}</Text>
 
                                             {item.type === 'legacy' && (
@@ -44,7 +44,7 @@ export const VersionSelector = () => {
                                             )}
                                         </HStack>
                                         <Text
-                                            $styles={{ color: '$fg-hint-100' }}
+                                            $css={{ color: '$fg-hint-100' }}
                                             typography="subtitle2"
                                         >
                                             {item.value}

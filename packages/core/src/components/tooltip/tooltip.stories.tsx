@@ -32,7 +32,7 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
         return (
             <>
                 <HStack
-                    $styles={{
+                    $css={{
                         gap: '20px',
                         margin: '100px',
                         justifyContent: 'center',
@@ -60,7 +60,7 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                 </HStack>
 
                 <HStack
-                    $styles={{
+                    $css={{
                         gap: '20px',
                         margin: '100px',
                         justifyContent: 'center',
@@ -114,7 +114,7 @@ export const Default: StoryObj<TooltipRootProps & PositionerProps> = {
                 </HStack>
 
                 <VStack
-                    $styles={{
+                    $css={{
                         gap: '20px',
                         margin: '100px',
                         justifyContent: 'center',
@@ -144,7 +144,7 @@ export const TestBed: StoryObj = {
         return (
             <>
                 <VStack
-                    $styles={{
+                    $css={{
                         margin: '$800',
                         gap: '$400',
                         justifyContent: 'center',
@@ -153,7 +153,7 @@ export const TestBed: StoryObj = {
                     }}
                 >
                     <HStack
-                        $styles={{
+                        $css={{
                             margin: '$800',
                             gap: '$400',
                             justifyContent: 'center',
@@ -196,7 +196,7 @@ export const TestBed: StoryObj = {
                 </VStack>
 
                 <VStack
-                    $styles={{
+                    $css={{
                         margin: '$800',
                         gap: '$400',
                         justifyContent: 'center',
@@ -205,7 +205,7 @@ export const TestBed: StoryObj = {
                     }}
                 >
                     <HStack
-                        $styles={{
+                        $css={{
                             margin: '$800',
                             gap: '$400',
                             justifyContent: 'center',
@@ -249,7 +249,7 @@ export const TestBed: StoryObj = {
                 </VStack>
 
                 <HStack
-                    $styles={{
+                    $css={{
                         margin: '$800',
                         padding: '$200',
                         border: '1px solid black',

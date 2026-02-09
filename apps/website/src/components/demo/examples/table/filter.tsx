@@ -35,10 +35,10 @@ export default function Scroll() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: () => <Box $styles={{ textAlign: 'center' }}> ID</Box>,
+                header: () => <Box $css={{ textAlign: 'center' }}> ID</Box>,
                 accessorKey: 'id',
                 size: 0, // prevent cumulative layout shift
-                cell: ({ row }) => <Box $styles={{ textAlign: 'center' }}>{row.index + 1}</Box>,
+                cell: ({ row }) => <Box $css={{ textAlign: 'center' }}>{row.index + 1}</Box>,
             },
 
             {
@@ -92,16 +92,16 @@ export default function Scroll() {
     });
 
     return (
-        <Card.Root $styles={{ width: '100%' }}>
+        <Card.Root $css={{ width: '100%' }}>
             <Card.Header>
-                <HStack $styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text typography="heading6" foreground="normal-200" style={{ flexShrink: 0 }}>
                         출석부
                     </Text>
 
-                    <HStack $styles={{ alignItems: 'center', gap: '$100' }}>
+                    <HStack $css={{ alignItems: 'center', gap: '$100' }}>
                         <HStack
-                            $styles={{
+                            $css={{
                                 alignItems: 'center',
                                 gap: '10px',
                                 paddingInline: '$150',
@@ -113,7 +113,7 @@ export default function Scroll() {
                             <SearchOutlineIcon />
                             <TextInput
                                 placeholder="이름으로 검색"
-                                $styles={{ border: 'none', paddingInline: '$000' }}
+                                $css={{ border: 'none', paddingInline: '$000' }}
                                 onValueChange={(value) =>
                                     table.getColumn('name')?.setFilterValue(value)
                                 }
@@ -172,8 +172,8 @@ export default function Scroll() {
                     </HStack>
                 </HStack>
             </Card.Header>
-            <Card.Body $styles={{ overflow: 'auto', padding: '$000' }}>
-                <Table.Root $styles={{ width: '100%' }}>
+            <Card.Body $css={{ overflow: 'auto', padding: '$000' }}>
+                <Table.Root $css={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
@@ -184,7 +184,7 @@ export default function Scroll() {
                                 {headerGroup.headers.map((header) => (
                                     <Table.Heading
                                         key={header.id}
-                                        $styles={{ backgroundColor: '$basic-gray-050' }}
+                                        $css={{ backgroundColor: '$basic-gray-050' }}
                                     >
                                         {flexRender(
                                             header.column.columnDef.header,
@@ -216,7 +216,7 @@ export default function Scroll() {
                             <Table.Row>
                                 <Table.Cell
                                     colSpan={columns.length}
-                                    $styles={{ textAlign: 'center', height: '410px' }}
+                                    $css={{ textAlign: 'center', height: '410px' }}
                                 >
                                     검색 결과가 없습니다.
                                 </Table.Cell>
@@ -224,7 +224,7 @@ export default function Scroll() {
                         )}
                     </Table.Body>
                 </Table.Root>
-                <Card.Footer $styles={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Card.Footer $css={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Select.Root
                         value={table.getState().pagination.pageSize}
                         onValueChange={(value) => table.setPageSize(Number(value))}

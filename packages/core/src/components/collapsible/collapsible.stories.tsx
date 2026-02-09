@@ -34,12 +34,12 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
 
         return (
             <Grid.Root
-                $styles={{ height: '100px' }}
+                $css={{ height: '100px' }}
                 templateRows="1fr 1fr"
                 templateColumns="repeat(3, 14rem)"
             >
                 <Grid.Item
-                    $styles={{ padding: '$200' }}
+                    $css={{ padding: '$200' }}
                     style={{
                         borderBottom: '1px solid',
                         borderRight: '1px solid',
@@ -47,7 +47,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                     }}
                 >
                     <Collapsible.Root open={open1} onOpenChange={setOpen1} {...args}>
-                        <HStack $styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                        <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
                             <Collapsible.Trigger render={<Button />}>
                                 <ChevronDownOutlineIcon
                                     style={{
@@ -61,7 +61,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
 
                         <Collapsible.Panel>
                             <Flex
-                                $styles={{
+                                $css={{
                                     marginTop: '$100',
                                     border: '1px solid #e1e1e1',
                                     borderRadius: '$300',
@@ -76,7 +76,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                 </Grid.Item>
 
                 <Grid.Item
-                    $styles={{ padding: '$200' }}
+                    $css={{ padding: '$200' }}
                     style={{
                         borderBottom: '1px solid',
                         borderRight: '1px solid',
@@ -104,7 +104,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
 
                         <Collapsible.Panel>
                             <Flex
-                                $styles={{
+                                $css={{
                                     marginTop: '$100',
                                     borderRadius: '$300',
                                     paddingInline: '$200',
@@ -119,7 +119,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                 </Grid.Item>
 
                 <Grid.Item
-                    $styles={{ padding: '$200' }}
+                    $css={{ padding: '$200' }}
                     style={{
                         borderBottom: '1px solid',
                         borderColor: '#e1e1e1',
@@ -130,7 +130,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                         onOpenChange={setOpen3}
                         render={
                             <VStack
-                                $styles={{
+                                $css={{
                                     borderRadius: '$300',
                                     justifyContent: 'start',
                                     border: '1px solid #e1e1e1',
@@ -143,7 +143,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                         {...args}
                     >
                         <HStack
-                            $styles={{
+                            $css={{
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                             }}
@@ -169,7 +169,7 @@ export const TestBed: StoryObj<typeof Collapsible.Root> = {
                 </Grid.Item>
 
                 <Grid.Item
-                    $styles={{ padding: '$200' }}
+                    $css={{ padding: '$200' }}
                     style={{
                         borderRight: '1px solid',
                         borderColor: '#e1e1e1',

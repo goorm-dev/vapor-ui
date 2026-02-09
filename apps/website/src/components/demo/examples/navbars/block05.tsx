@@ -7,7 +7,7 @@ import { Button, HStack } from '@vapor-ui/core';
 export default function Block5() {
     return (
         <HStack
-            $styles={{
+            $css={{
                 width: '100%',
                 justifyContent: 'space-between',
                 paddingInline: { lg: '$400', sm: '$200' },

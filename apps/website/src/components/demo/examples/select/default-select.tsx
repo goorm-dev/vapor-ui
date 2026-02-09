@@ -10,7 +10,7 @@ const fonts = [
 export default function DefaultSelect() {
     return (
         <Select.Root placeholder="폰트를 선택하세요" items={fonts}>
-            <Select.Trigger $styles={{ width: '400px' }}/>
+            <Select.Trigger $css={{ width: '400px' }} />
 
             <Select.Popup>
                 <Select.Group>

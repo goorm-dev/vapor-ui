@@ -6,8 +6,8 @@ export default function CollapsibleOpenState() {
     const [open, setOpen] = useState(true);
 
     return (
-        <HStack $styles={{ gap: '$400', alignItems: 'flex-start' }}>
-            <VStack $styles={{ gap: '$100' }}>
+        <HStack $css={{ gap: '$400', alignItems: 'flex-start' }}>
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     defaultOpen
                 </Text>
@@ -27,7 +27,7 @@ export default function CollapsibleOpenState() {
                 </Collapsible.Root>
             </VStack>
 
-            <VStack $styles={{ gap: '$100' }}>
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     controlled
                 </Text>
@@ -44,7 +44,7 @@ export default function CollapsibleOpenState() {
                             This panel is controlled externally via state.
                         </Text>
                     </Collapsible.Panel>
-                    <HStack $styles={{ gap: '$100', marginTop: '$150' }}>
+                    <HStack $css={{ gap: '$100', marginTop: '$150' }}>
                         <Button size="sm" onClick={() => setOpen(true)}>
                             Open
                         </Button>

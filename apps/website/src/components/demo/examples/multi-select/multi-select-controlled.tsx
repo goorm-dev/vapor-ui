@@ -19,7 +19,7 @@ export default function MultiSelectControlled() {
     };
 
     return (
-        <VStack $styles={{ gap: '$200', width: '400px' }}>
+        <VStack $css={{ gap: '$200', width: '400px' }}>
             <MultiSelect.Root
                 items={fonts}
                 value={value}
@@ -44,7 +44,7 @@ export default function MultiSelectControlled() {
                 </code>
             </Text>
 
-            <HStack $styles={{ gap: '$100' }}>
+            <HStack $css={{ gap: '$100' }}>
                 <Button colorPalette="primary" onClick={() => setValue(['serif', 'mono'])}>
                     Serif, Mono 선택
                 </Button>

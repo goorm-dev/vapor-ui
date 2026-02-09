@@ -20,9 +20,9 @@ const activeness: Record<string, Badge.Props['colorPalette']> = {
 
 export default function Basic() {
     return (
-        <Table.Root $styles={{ width: '100%' }}>
+        <Table.Root $css={{ width: '100%' }}>
             <Table.Header>
-                <Table.Row $styles={{ backgroundColor: '$basic-gray-050' }}>
+                <Table.Row $css={{ backgroundColor: '$basic-gray-050' }}>
                     <Table.Heading>Name</Table.Heading>
                     <Table.Heading>Status</Table.Heading>
                     <Table.Heading>Role</Table.Heading>

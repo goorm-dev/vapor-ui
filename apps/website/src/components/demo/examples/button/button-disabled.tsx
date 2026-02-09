@@ -2,14 +2,14 @@ import { Button, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function ButtonDisabled() {
     return (
-        <VStack $styles={{ gap: '$150' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     enabled
                 </Text>
                 <Button>Save</Button>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     disabled
                 </Text>

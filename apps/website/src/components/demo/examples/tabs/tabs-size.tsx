@@ -2,8 +2,8 @@ import { HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 
 export default function TabsSize() {
     return (
-        <VStack $styles={{ gap: '$200' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'start' }}>
+        <VStack $css={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
                 <Text className="w-6" typography="body3" foreground="hint-100">
                     sm
                 </Text>
@@ -16,7 +16,7 @@ export default function TabsSize() {
                 </Tabs.Root>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'start' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
                 <Text className="w-6" typography="body3" foreground="hint-100">
                     md
                 </Text>
@@ -29,7 +29,7 @@ export default function TabsSize() {
                 </Tabs.Root>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'start' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
                 <Text className="w-6" typography="body3" foreground="hint-100">
                     lg
                 </Text>
@@ -42,7 +42,7 @@ export default function TabsSize() {
                 </Tabs.Root>
             </HStack>
 
-            <HStack $styles={{ gap: '$150', alignItems: 'start' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'start' }}>
                 <Text className="w-6" typography="body3" foreground="hint-100">
                     xl
                 </Text>

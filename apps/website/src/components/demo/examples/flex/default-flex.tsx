@@ -3,7 +3,7 @@ import { Box, Flex } from '@vapor-ui/core';
 export default function DefaultFlex() {
     return (
         <Flex
-            $styles={{
+            $css={{
                 gap: '$200',
                 padding: '$300',
                 backgroundColor: '$basic-gray-100',
@@ -11,7 +11,7 @@ export default function DefaultFlex() {
             }}
         >
             <Box
-                $styles={{
+                $css={{
                     padding: '$200',
                     backgroundColor: '$basic-blue-400',
                     borderRadius: '$100',
@@ -21,7 +21,7 @@ export default function DefaultFlex() {
                 Item 1
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$200',
                     backgroundColor: '$basic-green-400',
                     borderRadius: '$100',
@@ -31,7 +31,7 @@ export default function DefaultFlex() {
                 Item 2
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$200',
                     backgroundColor: '$basic-orange-400',
                     borderRadius: '$100',

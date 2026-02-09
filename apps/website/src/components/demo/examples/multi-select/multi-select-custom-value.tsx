@@ -18,7 +18,7 @@ const renderRestValue = (value: string[]) => {
     const remainingCount = value.length - 2;
 
     return (
-        <Flex className="flex-wrap" $styles={{ gap: '$050' }}>
+        <Flex className="flex-wrap" $css={{ gap: '$050' }}>
             {displayValues.map((val) => (
                 <Badge key={val} size="sm">
                     {languages[val as keyof typeof languages]}
@@ -43,8 +43,8 @@ const renderStringValue = (value: string[]) => {
 
 export default function MultiSelectCustomValue() {
     return (
-        <HStack $styles={{ gap: '$300' }}>
-            <VStack $styles={{ gap: '$050', width: '250px' }}>
+        <HStack $css={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$050', width: '250px' }}>
                 <Text typography="body3" foreground="hint-100">
                     커스텀 값 표시 (최대 2개 + 더보기)
                 </Text>
@@ -63,7 +63,7 @@ export default function MultiSelectCustomValue() {
                 </MultiSelect.Root>
             </VStack>
 
-            <VStack $styles={{ gap: '$050', width: '250px' }}>
+            <VStack $css={{ gap: '$050', width: '250px' }}>
                 <Text typography="body3" foreground="hint-100">
                     문자열 형태 표시
                 </Text>

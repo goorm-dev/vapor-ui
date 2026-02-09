@@ -36,7 +36,7 @@ export default function ResearchForm() {
     return (
         <VStack
             render={<Form onSubmit={(event) => event.preventDefault()} />}
-            $styles={{
+            $css={{
                 gap: '$500',
                 padding: '$300',
                 borderRadius: '$300',
@@ -44,11 +44,11 @@ export default function ResearchForm() {
                 border: '1px solid var(--vapor-color-border-normal)',
             }}
         >
-            <VStack $styles={{ gap: '$200' }}>
+            <VStack $css={{ gap: '$200' }}>
                 <Text typography="heading5">기본 정보를 입력해주세요.</Text>
 
                 <Field.Root>
-                    <Field.Label $styles={{ flexDirection: 'column' }}>
+                    <Field.Label $css={{ flexDirection: 'column' }}>
                         <Text typography="subtitle2" foreground="normal-200">
                             이름
                         </Text>
@@ -58,7 +58,7 @@ export default function ResearchForm() {
                 </Field.Root>
 
                 <Field.Root>
-                    <Field.Label htmlFor="research-jobs" $styles={{ flexDirection: 'column' }}>
+                    <Field.Label htmlFor="research-jobs" $css={{ flexDirection: 'column' }}>
                         <Text typography="subtitle2" foreground="normal-200">
                             직업
                         </Text>
@@ -76,7 +76,7 @@ export default function ResearchForm() {
                 </Field.Root>
 
                 <Field.Root>
-                    <Field.Label htmlFor="research-stack" $styles={{ flexDirection: 'column' }}>
+                    <Field.Label htmlFor="research-stack" $css={{ flexDirection: 'column' }}>
                         <Text typography="subtitle2" foreground="normal-200">
                             스택
                         </Text>
@@ -101,7 +101,7 @@ export default function ResearchForm() {
             <Field.Root>
                 <RadioGroup.Root>
                     <RadioGroup.Label>만족도를 선택해주세요.</RadioGroup.Label>
-                    <VStack $styles={{ gap: '$100' }}>
+                    <VStack $css={{ gap: '$100' }}>
                         <Field.Item>
                             <Radio.Root
                                 id="research-fully-satisfied"
@@ -128,8 +128,8 @@ export default function ResearchForm() {
                 </RadioGroup.Root>
             </Field.Root>
 
-            <VStack $styles={{ gap: '$100' }}>
-                <VStack $styles={{ marginBottom: '$050' }}>
+            <VStack $css={{ gap: '$100' }}>
+                <VStack $css={{ marginBottom: '$050' }}>
                     <Text typography="heading5">좋았던 강의는 무엇인가요?</Text>
                     <Text typography="body2" foreground="normal-100">
                         중복 선택 가능
@@ -172,13 +172,13 @@ export default function ResearchForm() {
                 </Field.Root>
             </VStack>
 
-            <VStack $styles={{ gap: '$100' }}>
+            <VStack $css={{ gap: '$100' }}>
                 <Text typography="heading5">개인 정보 수신 동의</Text>
 
                 <Field.Root>
                     <Field.Label
                         render={
-                            <HStack $styles={{ width: '100%', justifyContent: 'space-between' }} />
+                            <HStack $css={{ width: '100%', justifyContent: 'space-between' }} />
                         }
                     >
                         서비스 메일 수신 동의
@@ -188,7 +188,7 @@ export default function ResearchForm() {
                 <Field.Root>
                     <Field.Label
                         render={
-                            <HStack $styles={{ width: '100%', justifyContent: 'space-between' }} />
+                            <HStack $css={{ width: '100%', justifyContent: 'space-between' }} />
                         }
                     >
                         이벤트성 광고 수신 동의

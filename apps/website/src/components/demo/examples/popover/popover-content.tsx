@@ -4,8 +4,8 @@ import { Button, HStack, Popover, Text, VStack } from '@vapor-ui/core';
 
 export default function PopoverPopup() {
     return (
-        <VStack $styles={{ gap: '$150' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     text
                 </Text>
@@ -16,7 +16,7 @@ export default function PopoverPopup() {
                     <Popover.Popup>간단한 팝오버 메시지입니다.</Popover.Popup>
                 </Popover.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     title + desc
                 </Text>
@@ -32,7 +32,7 @@ export default function PopoverPopup() {
                     </Popover.Popup>
                 </Popover.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-24" typography="body3" foreground="hint-100">
                     interactive
                 </Text>
@@ -43,7 +43,7 @@ export default function PopoverPopup() {
                     <Popover.Popup>
                         <Popover.Title>설정</Popover.Title>
                         <Popover.Description>원하는 설정을 선택하세요.</Popover.Description>
-                        <VStack $styles={{ gap: '$100', marginTop: '$100' }}>
+                        <VStack $css={{ gap: '$100', marginTop: '$100' }}>
                             <Popover.Close
                                 render={
                                     <Button size="sm" className="w-full">

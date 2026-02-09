@@ -19,7 +19,7 @@ export default function Sort() {
                 header: 'ID',
                 accessorFn: (_, index) => index + 1,
                 cell: ({ getValue }) => (
-                    <Box $styles={{ textAlign: 'center' }}>{String(getValue() ?? '.')}</Box>
+                    <Box $css={{ textAlign: 'center' }}>{String(getValue() ?? '.')}</Box>
                 ),
             },
 
@@ -69,22 +69,22 @@ export default function Sort() {
     });
 
     return (
-        <Card.Root $styles={{ width: '100%' }}>
-            <Card.Body $styles={{ padding: '$000' }}>
-                <Table.Root $styles={{ width: '100%' }}>
+        <Card.Root $css={{ width: '100%' }}>
+            <Card.Body $css={{ padding: '$000' }}>
+                <Table.Root $css={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
-                    <Table.Header $styles={{ borderRadius: 'inherit' }}>
+                    <Table.Header $css={{ borderRadius: 'inherit' }}>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row
                                 key={headerGroup.id}
-                                $styles={{ backgroundColor: '$basic-gray-050' }}
+                                $css={{ backgroundColor: '$basic-gray-050' }}
                             >
                                 {headerGroup.headers.map((header) => (
                                     <Table.Heading key={header.id}>
                                         <HStack
-                                            $styles={{
+                                            $css={{
                                                 justifyContent:
                                                     header.id === 'index' ? 'center' : 'flex-start',
                                             }}

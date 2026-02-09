@@ -2,9 +2,9 @@ import { Box, VStack } from '@vapor-ui/core';
 
 export default function DefaultVStack() {
     return (
-        <VStack $styles={{ gap: '$200' }}>
+        <VStack $css={{ gap: '$200' }}>
             <Box
-                $styles={{
+                $css={{
                     backgroundColor: '$basic-blue-100',
                     padding: '$400',
                     borderRadius: '$200',
@@ -13,7 +13,7 @@ export default function DefaultVStack() {
                 Item 1
             </Box>
             <Box
-                $styles={{
+                $css={{
                     backgroundColor: '$basic-blue-100',
                     padding: '$400',
                     borderRadius: '$200',
@@ -22,7 +22,7 @@ export default function DefaultVStack() {
                 Item 2
             </Box>
             <Box
-                $styles={{
+                $css={{
                     backgroundColor: '$basic-blue-100',
                     padding: '$400',
                     borderRadius: '$200',

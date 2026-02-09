@@ -51,8 +51,8 @@ const ToastList = () => {
                 {toasts.map((toast) => (
                     <ToastRootPrimitive key={toast.id} toast={toast}>
                         <ToastContentPrimitive>
-                            <HStack $styles={{ gap: '$075' }}>
-                                <Box $styles={{ marginBlock: '3px' }}>
+                            <HStack $css={{ gap: '$075' }}>
+                                <Box $css={{ marginBlock: '3px' }}>
                                     <ToastIconPrimitive />
                                 </Box>
                                 <VStack>
@@ -60,7 +60,7 @@ const ToastList = () => {
                                     <ToastDescriptionPrimitive />
                                 </VStack>
                             </HStack>
-                            <HStack $styles={{ gap: '$100', alignItems: 'center' }}>
+                            <HStack $css={{ gap: '$100', alignItems: 'center' }}>
                                 <ToastActionPrimitive />
                                 <ToastClosePrimitive />
                             </HStack>
@@ -277,7 +277,7 @@ export const ToastClosePrimitive = forwardRef<HTMLButtonElement, ToastClosePrimi
         const render = renderProp ?? (
             <IconButton
                 aria-label="Close Toast"
-                $styles={{ color: '$fg-inverse' }}
+                $css={{ color: '$fg-inverse' }}
                 colorPalette="secondary"
                 variant="ghost"
             />

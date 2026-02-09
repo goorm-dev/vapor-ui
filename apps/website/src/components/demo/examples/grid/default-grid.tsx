@@ -2,10 +2,10 @@ import { Box, Grid } from '@vapor-ui/core';
 
 export default function DefaultGrid() {
     return (
-        <Grid.Root templateColumns="repeat(3, 1fr)" $styles={{ gap: '$200' }}>
+        <Grid.Root templateColumns="repeat(3, 1fr)" $css={{ gap: '$200' }}>
             <Grid.Item>
                 <Box
-                    $styles={{
+                    $css={{
                         backgroundColor: '$basic-gray-100',
                         padding: '$400',
                         borderRadius: '$200',
@@ -16,7 +16,7 @@ export default function DefaultGrid() {
             </Grid.Item>
             <Grid.Item>
                 <Box
-                    $styles={{
+                    $css={{
                         backgroundColor: '$basic-gray-100',
                         padding: '$400',
                         borderRadius: '$200',
@@ -27,7 +27,7 @@ export default function DefaultGrid() {
             </Grid.Item>
             <Grid.Item>
                 <Box
-                    $styles={{
+                    $css={{
                         backgroundColor: '$basic-gray-100',
                         padding: '$400',
                         borderRadius: '$200',
@@ -38,7 +38,7 @@ export default function DefaultGrid() {
             </Grid.Item>
             <Grid.Item>
                 <Box
-                    $styles={{
+                    $css={{
                         backgroundColor: '$basic-gray-100',
                         padding: '$400',
                         borderRadius: '$200',
@@ -49,7 +49,7 @@ export default function DefaultGrid() {
             </Grid.Item>
             <Grid.Item>
                 <Box
-                    $styles={{
+                    $css={{
                         backgroundColor: '$basic-gray-100',
                         padding: '$400',
                         borderRadius: '$200',
@@ -60,7 +60,7 @@ export default function DefaultGrid() {
             </Grid.Item>
             <Grid.Item>
                 <Box
-                    $styles={{
+                    $css={{
                         backgroundColor: '$basic-gray-100',
                         padding: '$400',
                         borderRadius: '$200',

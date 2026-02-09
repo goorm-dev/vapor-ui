@@ -17,8 +17,8 @@ const languages = {
 
 export default function MultiSelectItems() {
     return (
-        <VStack $styles={{ gap: '$300', width: '300px' }}>
-            <VStack $styles={{ gap: '$050' }}>
+        <VStack $css={{ gap: '$300', width: '300px' }}>
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     배열 형태의 아이템
                 </Text>
@@ -34,7 +34,7 @@ export default function MultiSelectItems() {
                 </MultiSelect.Root>
             </VStack>
 
-            <VStack $styles={{ gap: '$050' }}>
+            <VStack $css={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     객체 형태의 아이템
                 </Text>

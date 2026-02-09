@@ -4,8 +4,8 @@ import { Button, HStack, Menu, Text, VStack } from '@vapor-ui/core';
 
 export default function MenuPositioning() {
     return (
-        <VStack $styles={{ gap: '$150' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     top
                 </Text>
@@ -22,7 +22,7 @@ export default function MenuPositioning() {
                     </Menu.PortalPrimitive>
                 </Menu.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     right
                 </Text>
@@ -39,7 +39,7 @@ export default function MenuPositioning() {
                     </Menu.PortalPrimitive>
                 </Menu.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     bottom
                 </Text>
@@ -56,7 +56,7 @@ export default function MenuPositioning() {
                     </Menu.PortalPrimitive>
                 </Menu.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     left
                 </Text>

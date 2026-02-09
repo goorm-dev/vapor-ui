@@ -6,14 +6,14 @@ export default function PaginationControlled() {
     const [page, setPage] = useState(7);
 
     return (
-        <VStack $styles={{ gap: '$200' }}>
+        <VStack $css={{ gap: '$200' }}>
             <Pagination.Root totalPages={20} page={page} onPageChange={setPage}>
                 <Pagination.Previous />
                 <Pagination.Items />
                 <Pagination.Next />
             </Pagination.Root>
 
-            <HStack $styles={{ justifyContent: 'space-between', alignItems: 'center', gap: '$100' }}>
+            <HStack $css={{ justifyContent: 'space-between', alignItems: 'center', gap: '$100' }}>
                 <Text typography="subtitle1">Current Page is, {page}</Text>
 
                 <Button variant="ghost" onClick={() => setPage(7)}>

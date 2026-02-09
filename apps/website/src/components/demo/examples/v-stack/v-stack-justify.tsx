@@ -2,13 +2,13 @@ import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function VStackJustify() {
     return (
-        <HStack $styles={{ gap: '$400', alignItems: 'start' }}>
-            <VStack $styles={{ gap: '$150' }}>
+        <HStack $css={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     flex-start
                 </Text>
                 <VStack
-                    $styles={{
+                    $css={{
                         gap: '$100',
                         justifyContent: 'flex-start',
                         height: '$1600',
@@ -18,7 +18,7 @@ export default function VStackJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -27,7 +27,7 @@ export default function VStackJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-200',
                             padding: '$200',
                             borderRadius: '$200',
@@ -36,7 +36,7 @@ export default function VStackJustify() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-red-300',
                             padding: '$200',
                             borderRadius: '$200',
@@ -47,12 +47,12 @@ export default function VStackJustify() {
                 </VStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     center
                 </Text>
                 <VStack
-                    $styles={{
+                    $css={{
                         gap: '$100',
                         justifyContent: 'center',
                         height: '$1600',
@@ -62,7 +62,7 @@ export default function VStackJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-yellow-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -71,7 +71,7 @@ export default function VStackJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-yellow-200',
                             padding: '$200',
                             borderRadius: '$200',
@@ -80,7 +80,7 @@ export default function VStackJustify() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$basic-yellow-300',
                             padding: '$200',
                             borderRadius: '$200',
@@ -91,12 +91,12 @@ export default function VStackJustify() {
                 </VStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     space-between
                 </Text>
                 <VStack
-                    $styles={{
+                    $css={{
                         gap: '$100',
                         justifyContent: 'space-between',
                         height: '$1600',
@@ -106,7 +106,7 @@ export default function VStackJustify() {
                     }}
                 >
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$indigo-100',
                             padding: '$200',
                             borderRadius: '$200',
@@ -115,7 +115,7 @@ export default function VStackJustify() {
                         A
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$indigo-200',
                             padding: '$200',
                             borderRadius: '$200',
@@ -124,7 +124,7 @@ export default function VStackJustify() {
                         B
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             backgroundColor: '$indigo-300',
                             padding: '$200',
                             borderRadius: '$200',

@@ -49,15 +49,15 @@ export default function FloatingBarControlled() {
 
     return (
         <>
-            <Text render={<div />} $styles={{ marginBottom: '$200' }}>
+            <Text render={<div />} $css={{ marginBottom: '$200' }}>
                 Select options below to see the FloatingBar.
             </Text>
 
-            <VStack $styles={{ justifyContent: 'center' }}>
+            <VStack $css={{ justifyContent: 'center' }}>
                 {options.map((option) => (
                     <Field.Root
                         key={option.id}
-                        $styles={{
+                        $css={{
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center',
@@ -78,7 +78,7 @@ export default function FloatingBarControlled() {
                     <Badge colorPalette="primary">{selectedCount} Selected</Badge>
 
                     <Box
-                        $styles={{
+                        $css={{
                             width: '1px',
                             backgroundColor: '$basic-gray-300',
                             alignSelf: 'stretch',

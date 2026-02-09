@@ -19,9 +19,9 @@ export default function Collapsed() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: () => <Box $styles={{ textAlign: 'center' }}>ID</Box>,
+                header: () => <Box $css={{ textAlign: 'center' }}>ID</Box>,
                 accessorKey: 'id',
-                cell: ({ row }) => <Box $styles={{ textAlign: 'center' }}>{row.index + 1}</Box>,
+                cell: ({ row }) => <Box $css={{ textAlign: 'center' }}>{row.index + 1}</Box>,
             },
 
             {
@@ -32,7 +32,7 @@ export default function Collapsed() {
                         : ChevronDoubleLeftOutlineIcon;
 
                     return (
-                        <HStack $styles={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                        <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
                             {isCollapsed ? '' : 'Name'}
 
                             <IconButton
@@ -53,7 +53,7 @@ export default function Collapsed() {
 
                     return (
                         <Box
-                            $styles={{
+                            $css={{
                                 display: isCollapsed ? 'block' : 'flex',
                                 width: isCollapsed ? '32px' : '240px',
                                 overflow: 'hidden',
@@ -115,9 +115,9 @@ export default function Collapsed() {
     });
 
     return (
-        <Card.Root $styles={{ width: '100%' }}>
-            <Card.Body $styles={{ overflow: 'auto', padding: '$000' }}>
-                <Table.Root $styles={{ width: '100%' }}>
+        <Card.Root $css={{ width: '100%' }}>
+            <Card.Body $css={{ overflow: 'auto', padding: '$000' }}>
+                <Table.Root $css={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                         <Table.Column width="10%" />
@@ -132,7 +132,7 @@ export default function Collapsed() {
                                         ref={(thElem) =>
                                             columnSizingHandler(thElem, table, header.column)
                                         }
-                                        $styles={{ backgroundColor: '$basic-gray-050' }}
+                                        $css={{ backgroundColor: '$basic-gray-050' }}
                                         style={{ ...getCommonPinningStyles(header.column) }}
                                     >
                                         {flexRender(

@@ -18,7 +18,7 @@ export const VStack = forwardRef<HTMLDivElement, VStack.Props>((props, ref) => {
     return (
         <Flex
             ref={ref}
-            $styles={{ flexDirection: vStackProps.reverse ? 'column-reverse' : 'column' }}
+            $css={{ flexDirection: vStackProps.reverse ? 'column-reverse' : 'column' }}
             {...otherProps}
         />
     );

@@ -3,7 +3,7 @@ import { Box, Text } from '@vapor-ui/core';
 export default function DefaultBox() {
     return (
         <Box
-            $styles={{
+            $css={{
                 padding: '$400',
                 backgroundColor: '$basic-gray-100',
                 borderRadius: '$300',

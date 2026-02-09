@@ -22,7 +22,7 @@ export const Default: SheetStory = {
     },
     render: ({ open, defaultOpen, side, ...args }) => {
         return (
-            <VStack $styles={{ height: '1000vh' }}>
+            <VStack $css={{ height: '1000vh' }}>
                 <Sheet.Root {...args}>
                     <Sheet.Trigger>Open Sheet</Sheet.Trigger>
                     <Sheet.Popup
@@ -31,7 +31,7 @@ export const Default: SheetStory = {
                     >
                         <Box
                             aria-label="Close sheet"
-                            $styles={{
+                            $css={{
                                 position: 'absolute',
                                 display: 'flex',
                                 top: '1rem',
@@ -57,7 +57,7 @@ export const Default: SheetStory = {
                     <Sheet.Popup>
                         <Box
                             aria-label="Close sheet"
-                            $styles={{
+                            $css={{
                                 position: 'absolute',
                                 display: 'flex',
                                 top: '1rem',
@@ -92,7 +92,7 @@ export const TestBed: StoryObj<Sheet.Root.Props> = {
                     <Sheet.Popup>
                         <Box
                             aria-label="Close sheet"
-                            $styles={{
+                            $css={{
                                 position: 'absolute',
                                 display: 'flex',
                                 top: '1rem',

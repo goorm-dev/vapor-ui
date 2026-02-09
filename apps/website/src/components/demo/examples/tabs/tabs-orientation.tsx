@@ -2,8 +2,8 @@ import { HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 
 export default function TabsOrientation() {
     return (
-        <HStack $styles={{ gap: '$400', alignItems: 'start' }}>
-            <VStack $styles={{ gap: '$150' }}>
+        <HStack $css={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     horizontal
                 </Text>
@@ -16,7 +16,7 @@ export default function TabsOrientation() {
                 </Tabs.Root>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     vertical
                 </Text>

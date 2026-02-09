@@ -32,7 +32,7 @@ export default function SignupForm() {
         <VStack
             className="login"
             render={<Form onSubmit={(event) => event.preventDefault()} />}
-            $styles={{
+            $css={{
                 gap: '$250',
                 width: '100%',
                 padding: '$300',
@@ -40,13 +40,13 @@ export default function SignupForm() {
                 border: '1px solid var(--vapor-color-border-normal)',
             }}
         >
-            <VStack $styles={{ gap: '$400' }}>
-                <VStack $styles={{ gap: '$200' }}>
+            <VStack $css={{ gap: '$400' }}>
+                <VStack $css={{ gap: '$200' }}>
                     <Field.Root>
                         <Box
                             render={<Field.Label />}
                             className="input-label"
-                            $styles={{ flexDirection: 'column' }}
+                            $css={{ flexDirection: 'column' }}
                         >
                             이메일
                             <TextInput id="signup-email" size="lg" required type="email" />
@@ -61,7 +61,7 @@ export default function SignupForm() {
                         <Box
                             render={<Field.Label />}
                             className="input-label"
-                            $styles={{ flexDirection: 'column' }}
+                            $css={{ flexDirection: 'column' }}
                         >
                             비밀번호
                             <TextInput
@@ -86,7 +86,7 @@ export default function SignupForm() {
                         <Box
                             render={<Field.Label />}
                             className="input-label"
-                            $styles={{ flexDirection: 'column' }}
+                            $css={{ flexDirection: 'column' }}
                         >
                             비밀번호 확인
                             <TextInput
@@ -108,7 +108,7 @@ export default function SignupForm() {
                         <Box
                             render={<Field.Label />}
                             className="input-label"
-                            $styles={{ flexDirection: 'column' }}
+                            $css={{ flexDirection: 'column' }}
                         >
                             이름
                             <TextInput id="signup-name" size="lg" required />
@@ -121,7 +121,7 @@ export default function SignupForm() {
                             <Box
                                 render={<Field.Label htmlFor="signup-jobs" />}
                                 className="input-label"
-                                $styles={{ flexDirection: 'column' }}
+                                $css={{ flexDirection: 'column' }}
                             >
                                 직업
                                 <Select.Trigger id="signup-jobs" />
@@ -138,13 +138,13 @@ export default function SignupForm() {
                     </Field.Root>
                 </VStack>
 
-                <VStack $styles={{ gap: '$300' }}>
-                    <VStack $styles={{ justifyContent: 'space-between', gap: '$050' }}>
+                <VStack $css={{ gap: '$300' }}>
+                    <VStack $css={{ justifyContent: 'space-between', gap: '$050' }}>
                         <Field.Root>
                             <Box
                                 render={<Field.Label />}
                                 className="checkbox-label"
-                                $styles={{ alignItems: 'center' }}
+                                $css={{ alignItems: 'center' }}
                             >
                                 <Checkbox.Root id="signup-agree-all" />
                                 필수 약관에 모두 동의
@@ -152,7 +152,7 @@ export default function SignupForm() {
                         </Field.Root>
                         <Field.Root>
                             <HStack
-                                $styles={{
+                                $css={{
                                     width: '100%',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
@@ -161,7 +161,7 @@ export default function SignupForm() {
                                 <Box
                                     render={<Field.Label />}
                                     className="checkbox-label"
-                                    $styles={{ alignItems: 'center' }}
+                                    $css={{ alignItems: 'center' }}
                                 >
                                     <Checkbox.Root id="signup-terms-of-service" />
                                     이용 약관 동의
@@ -179,7 +179,7 @@ export default function SignupForm() {
                         </Field.Root>
                         <Field.Root>
                             <HStack
-                                $styles={{
+                                $css={{
                                     width: '100%',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
@@ -188,7 +188,7 @@ export default function SignupForm() {
                                 <Box
                                     render={<Field.Label />}
                                     className="checkbox-label"
-                                    $styles={{ alignItems: 'center' }}
+                                    $css={{ alignItems: 'center' }}
                                 >
                                     <Checkbox.Root id="signup-personal-info-collection" />
                                     개인 정보 수집 이용 동의
@@ -210,7 +210,7 @@ export default function SignupForm() {
                 </VStack>
             </VStack>
 
-            <HStack $styles={{ justifyContent: 'center' }}>
+            <HStack $css={{ justifyContent: 'center' }}>
                 <Text typography="body2">이미 계정이 있으세요?</Text>
                 <Button type="button" size="sm" variant="ghost">
                     로그인

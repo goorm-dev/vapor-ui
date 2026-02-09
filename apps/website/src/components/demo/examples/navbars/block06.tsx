@@ -8,7 +8,7 @@ import { BackPageOutlineIcon, ForwardPageOutlineIcon } from '@vapor-ui/icons';
 export default function Block6() {
     return (
         <HStack
-            $styles={{
+            $css={{
                 width: '100%',
                 justifyContent: 'space-between',
                 paddingInline: { lg: '$400', sm: '$200' },

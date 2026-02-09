@@ -6,10 +6,20 @@ export default function LoginForm() {
     return (
         <VStack
             className="login"
-            render={<Form onSubmit={(event) => event.preventDefault()} />} $styles={{ gap: '$250', width: '100%', padding: '$300', borderRadius: '$300', border: '1px solid var(--vapor-color-border-normal)' }}>
-            <VStack $styles={{ gap: '$200' }}>
+            render={<Form onSubmit={(event) => event.preventDefault()} />}
+            $css={{
+                gap: '$250',
+                width: '100%',
+                padding: '$300',
+                borderRadius: '$300',
+                border: '1px solid var(--vapor-color-border-normal)',
+            }}
+        >
+            <VStack $css={{ gap: '$200' }}>
                 <Field.Root>
-                    <Field.Label $styles={{ flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <Field.Label
+                        $css={{ flexDirection: 'column', justifyContent: 'space-between' }}
+                    >
                         <Text typography="subtitle2" foreground="normal-200">
                             이메일
                         </Text>
@@ -20,7 +30,9 @@ export default function LoginForm() {
                 </Field.Root>
 
                 <Field.Root>
-                    <Field.Label $styles={{ flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <Field.Label
+                        $css={{ flexDirection: 'column', justifyContent: 'space-between' }}
+                    >
                         <Text typography="subtitle2" foreground="normal-200">
                             비밀번호
                         </Text>
@@ -39,8 +51,8 @@ export default function LoginForm() {
                     </Field.Error>
                 </Field.Root>
             </VStack>
-            <VStack $styles={{ gap: '$100' }}>
-                <HStack $styles={{ justifyContent: 'space-between' }}>
+            <VStack $css={{ gap: '$100' }}>
+                <HStack $css={{ justifyContent: 'space-between' }}>
                     <Field.Root>
                         <Field.Item>
                             <Checkbox.Root id="login-auto-login" />

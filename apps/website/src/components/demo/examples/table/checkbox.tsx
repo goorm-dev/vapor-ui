@@ -16,7 +16,7 @@ export default function Basic() {
                         checked={table.getIsAllRowsSelected()}
                         indeterminate={table.getIsSomeRowsSelected()}
                         onCheckedChange={(value) => table.toggleAllRowsSelected(value)}
-                        $styles={{ justifySelf: 'center' }}
+                        $css={{ justifySelf: 'center' }}
                     />
                 ),
                 cell: ({ row }) => (
@@ -26,7 +26,7 @@ export default function Basic() {
                         disabled={!row.getCanSelect()}
                         indeterminate={row.getIsSomeSelected()}
                         onCheckedChange={(value) => row.toggleSelected(value)}
-                        $styles={{ justifySelf: 'center' }}
+                        $css={{ justifySelf: 'center' }}
                     />
                 ),
             },
@@ -72,14 +72,14 @@ export default function Basic() {
     });
 
     return (
-        <Card.Root $styles={{ width: '100%' }}>
-            <Card.Body $styles={{ padding: '$000' }}>
-                <Table.Root $styles={{ width: '100%' }}>
+        <Card.Root $css={{ width: '100%' }}>
+            <Card.Body $css={{ padding: '$000' }}>
+                <Table.Root $css={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
-                    <Table.Header $styles={{ backgroundColor: '$basic-gray-050' }}>
+                    <Table.Header $css={{ backgroundColor: '$basic-gray-050' }}>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
@@ -99,7 +99,7 @@ export default function Basic() {
                             return (
                                 <Table.Row
                                     key={row.id}
-                                    $styles={{
+                                    $css={{
                                         backgroundColor: row.getIsSelected()
                                             ? '$bg-primary-100'
                                             : 'inherit',

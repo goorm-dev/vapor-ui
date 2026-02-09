@@ -4,9 +4,9 @@ import { Checkbox, Field, Select, Switch, TextInput, VStack } from '@vapor-ui/co
 
 export default function FieldWithInputs() {
     return (
-        <VStack className="w-72" $styles={{ gap: '$300' }}>
+        <VStack className="w-72" $css={{ gap: '$300' }}>
             <Field.Root name="email">
-                <Field.Label $styles={{ flexDirection: 'column', gap: '$050' }}>
+                <Field.Label $css={{ flexDirection: 'column', gap: '$050' }}>
                     Email
                     <TextInput type="email" placeholder="you@example.com" />
                 </Field.Label>
@@ -14,7 +14,7 @@ export default function FieldWithInputs() {
             </Field.Root>
 
             <Field.Root name="newsletter">
-                <Field.Label $styles={{ flexDirection: 'row', gap: '$100', alignItems: 'center' }}>
+                <Field.Label $css={{ flexDirection: 'row', gap: '$100', alignItems: 'center' }}>
                     <Checkbox.Root />
                     Subscribe to newsletter
                 </Field.Label>
@@ -22,7 +22,7 @@ export default function FieldWithInputs() {
             </Field.Root>
 
             <Field.Root name="notifications">
-                <Field.Label $styles={{ flexDirection: 'row', gap: '$100', alignItems: 'center' }}>
+                <Field.Label $css={{ flexDirection: 'row', gap: '$100', alignItems: 'center' }}>
                     <Switch.Root />
                     Push notifications
                 </Field.Label>
@@ -31,7 +31,7 @@ export default function FieldWithInputs() {
 
             <Field.Root name="country">
                 <Select.Root placeholder="국가를 선택하세요" items={countries}>
-                    <Field.Label $styles={{ flexDirection: 'column', gap: '$050' }}>
+                    <Field.Label $css={{ flexDirection: 'column', gap: '$050' }}>
                         국가
                         <Select.Trigger />
                     </Field.Label>

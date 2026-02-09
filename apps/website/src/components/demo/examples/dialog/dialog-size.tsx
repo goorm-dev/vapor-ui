@@ -2,8 +2,8 @@ import { Button, Dialog, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function DialogSize() {
     return (
-        <VStack $styles={{ gap: '$150' }}>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+        <VStack $css={{ gap: '$150' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     md
                 </Text>
@@ -23,7 +23,7 @@ export default function DialogSize() {
                     </Dialog.Popup>
                 </Dialog.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     lg
                 </Text>
@@ -43,7 +43,7 @@ export default function DialogSize() {
                     </Dialog.Popup>
                 </Dialog.Root>
             </HStack>
-            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
+            <HStack $css={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     xl
                 </Text>

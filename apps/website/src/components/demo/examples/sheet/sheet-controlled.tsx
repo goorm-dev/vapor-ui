@@ -26,7 +26,7 @@ export default function SheetControlled() {
     }, [count, isOpen]);
 
     return (
-        <VStack $styles={{ gap: '$150', alignItems: 'flex-start' }}>
+        <VStack $css={{ gap: '$150', alignItems: 'flex-start' }}>
             <Button onClick={() => setIsOpen(true)} colorPalette="primary">
                 Sheet 열기
             </Button>

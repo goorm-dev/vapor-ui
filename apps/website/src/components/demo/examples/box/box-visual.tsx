@@ -2,14 +2,14 @@ import { Box, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function BoxVisual() {
     return (
-        <VStack $styles={{ gap: '$300' }}>
-            <VStack $styles={{ gap: '$150' }}>
+        <VStack $css={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     borderRadius
                 </Text>
-                <HStack $styles={{ gap: '$200', alignItems: 'center' }}>
+                <HStack $css={{ gap: '$200', alignItems: 'center' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-blue-200',
                             borderRadius: '$100',
@@ -18,7 +18,7 @@ export default function BoxVisual() {
                         Small
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-blue-300',
                             borderRadius: '$300',
@@ -27,7 +27,7 @@ export default function BoxVisual() {
                         Medium
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-blue-400',
                             borderRadius: '$600',
@@ -36,7 +36,7 @@ export default function BoxVisual() {
                         Large
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-blue-500',
                             borderRadius: '$900',
@@ -48,13 +48,13 @@ export default function BoxVisual() {
                 </HStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     opacity
                 </Text>
-                <HStack $styles={{ gap: '$200', alignItems: 'center' }}>
+                <HStack $css={{ gap: '$200', alignItems: 'center' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-green-500',
                             opacity: '0.3',
@@ -64,7 +64,7 @@ export default function BoxVisual() {
                         30%
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-green-500',
                             opacity: '0.6',
@@ -74,7 +74,7 @@ export default function BoxVisual() {
                         60%
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-green-500',
                             opacity: '0.9',
@@ -84,7 +84,7 @@ export default function BoxVisual() {
                         90%
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-green-500',
                             borderRadius: '$200',
@@ -95,13 +95,13 @@ export default function BoxVisual() {
                 </HStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     textAlign
                 </Text>
-                <VStack $styles={{ gap: '$100' }}>
+                <VStack $css={{ gap: '$100' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-grape-100',
                             borderRadius: '$200',
@@ -111,7 +111,7 @@ export default function BoxVisual() {
                         Left aligned
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-grape-200',
                             borderRadius: '$200',
@@ -121,7 +121,7 @@ export default function BoxVisual() {
                         Center aligned
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             padding: '$400',
                             backgroundColor: '$basic-grape-300',
                             borderRadius: '$200',
@@ -133,13 +133,13 @@ export default function BoxVisual() {
                 </VStack>
             </VStack>
 
-            <VStack $styles={{ gap: '$150' }}>
+            <VStack $css={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     overflow
                 </Text>
-                <VStack $styles={{ gap: '$200' }}>
+                <VStack $css={{ gap: '$200' }}>
                     <Box
-                        $styles={{
+                        $css={{
                             height: '$800',
                             padding: '$300',
                             backgroundColor: '$basic-orange-200',
@@ -151,7 +151,7 @@ export default function BoxVisual() {
                         overflow is set to hidden.
                     </Box>
                     <Box
-                        $styles={{
+                        $css={{
                             height: '$300',
                             padding: '$300',
                             backgroundColor: '$basic-orange-300',

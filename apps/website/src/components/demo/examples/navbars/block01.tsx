@@ -13,14 +13,14 @@ import {
 export default function Block1() {
     return (
         <HStack
-            $styles={{
+            $css={{
                 width: '100%',
                 justifyContent: 'space-between',
                 paddingInline: { lg: '$400', sm: '$200' },
                 paddingBlock: { lg: '$100', sm: '$050' },
             }}
         >
-            <HStack $styles={{ gap: '$200' }}>
+            <HStack $css={{ gap: '$200' }}>
                 <LogoSvg className="logo" />
 
                 <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
@@ -38,7 +38,7 @@ export default function Block1() {
                 </NavigationMenu.Root>
             </HStack>
 
-            <HStack $styles={{ gap: '$100' }}>
+            <HStack $css={{ gap: '$100' }}>
                 <Avatar.Root shape="circle" alt="bell" render={<button />}>
                     <BellOnIcon />
                 </Avatar.Root>
@@ -61,7 +61,7 @@ export default function Block1() {
                     <Sheet.Popup positionerElement={<Sheet.PositionerPrimitive side="top" />}>
                         <Sheet.Header>
                             <HStack
-                                $styles={{
+                                $css={{
                                     gap: '$200',
                                     justifyContent: 'space-between',
                                     width: '100%',
@@ -69,7 +69,7 @@ export default function Block1() {
                             >
                                 <LogoSvg className="logo" />
 
-                                <HStack $styles={{ gap: '$100' }}>
+                                <HStack $css={{ gap: '$100' }}>
                                     <Avatar.Root shape="circle" alt="bell" render={<button />}>
                                         <BellOnIcon />
                                     </Avatar.Root>

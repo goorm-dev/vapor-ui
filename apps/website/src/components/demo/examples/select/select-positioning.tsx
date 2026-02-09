@@ -2,7 +2,7 @@ import { HStack, Select } from '@vapor-ui/core';
 
 export default function SelectPositioning() {
     return (
-        <HStack $styles={{ maxWidth: '800px', width: '100%', gap: '$250' }}>
+        <HStack $css={{ maxWidth: '800px', width: '100%', gap: '$250' }}>
             <Select.Root placeholder="Top">
                 <Select.Trigger />
                 <Select.Popup positionerElement={<Select.PositionerPrimitive side="top" />}>

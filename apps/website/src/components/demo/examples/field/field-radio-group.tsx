@@ -5,22 +5,22 @@ import { Field, Radio, RadioGroup, VStack } from '@vapor-ui/core';
 export default function FieldRadioGroup() {
     return (
         <Field.Root name="gender">
-            <VStack $styles={{ gap: '$300' }}>
+            <VStack $css={{ gap: '$300' }}>
                 <RadioGroup.Root>
-                    <VStack $styles={{ gap: '$100' }}>
+                    <VStack $css={{ gap: '$100' }}>
                         <RadioGroup.Label>성별</RadioGroup.Label>
-                        <VStack $styles={{ gap: '$050' }}>
-                            <Field.Item $styles={{ alignItems: 'center' }}>
+                        <VStack $css={{ gap: '$050' }}>
+                            <Field.Item $css={{ alignItems: 'center' }}>
                                 <Radio.Root value="male" />
                                 <Field.Label>남성</Field.Label>
                             </Field.Item>
 
-                            <Field.Item $styles={{ alignItems: 'center' }}>
+                            <Field.Item $css={{ alignItems: 'center' }}>
                                 <Radio.Root value="female" />
                                 <Field.Label>여성</Field.Label>
                             </Field.Item>
 
-                            <Field.Item $styles={{ alignItems: 'center' }}>
+                            <Field.Item $css={{ alignItems: 'center' }}>
                                 <Radio.Root value="other" />
                                 <Field.Label>기타</Field.Label>
                             </Field.Item>

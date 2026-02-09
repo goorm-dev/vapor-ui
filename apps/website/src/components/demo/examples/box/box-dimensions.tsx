@@ -3,7 +3,7 @@ import { Box } from '@vapor-ui/core';
 export default function BoxDimensions() {
     return (
         <Box
-            $styles={{
+            $css={{
                 width: '$800',
                 height: '$800',
                 backgroundColor: '$basic-blue-300',

@@ -2,9 +2,9 @@ import { Box, HStack } from '@vapor-ui/core';
 
 export default function BoxBackground() {
     return (
-        <HStack $styles={{ gap: '$200' }} className="flex-wrap">
+        <HStack $css={{ gap: '$200' }} className="flex-wrap">
             <Box
-                $styles={{
+                $css={{
                     padding: '$400',
                     backgroundColor: '$bg-primary-200',
                     color: '$fg-primary-100',
@@ -13,7 +13,7 @@ export default function BoxBackground() {
                 Primary
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$400',
                     backgroundColor: '$bg-secondary-200',
                     color: '$fg-contrast-100',
@@ -22,7 +22,7 @@ export default function BoxBackground() {
                 Secondary
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$400',
                     backgroundColor: '$bg-success-200',
                     color: '$fg-contrast-100',
@@ -31,7 +31,7 @@ export default function BoxBackground() {
                 Success
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$400',
                     backgroundColor: '$bg-warning-200',
                     color: '$fg-contrast-100',
@@ -40,7 +40,7 @@ export default function BoxBackground() {
                 Warning
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$400',
                     backgroundColor: '$bg-danger-200',
                     color: '$fg-contrast-100',
@@ -49,7 +49,7 @@ export default function BoxBackground() {
                 Danger
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$400',
                     backgroundColor: '$basic-gray-200',
                     color: '$fg-primary-100',
@@ -58,7 +58,7 @@ export default function BoxBackground() {
                 Gray
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$400',
                     backgroundColor: '$basic-blue-500',
                     color: '$fg-contrast-100',
@@ -67,7 +67,7 @@ export default function BoxBackground() {
                 Blue
             </Box>
             <Box
-                $styles={{
+                $css={{
                     padding: '$400',
                     backgroundColor: '$basic-green-300',
                     color: '$fg-primary-100',
