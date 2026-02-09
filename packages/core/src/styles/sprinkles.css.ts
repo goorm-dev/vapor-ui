@@ -240,6 +240,7 @@ const sprinkleProperties = defineProperties({
         _hover: { '@media': '(hover: hover)', selector: '&:hover' },
         _focus: { selector: '&:focus' },
         _focusVisible: { selector: '&:focus-visible' },
+        _focusWithin: { selector: '&:focus-within' },
         // _selected: { selector: '&:active' },
         // _checked: { selector: '&:checked, &[data-checked]' },
         // _indeterminate: { selector: '&:indeterminate, &[data-indeterminate]' },
