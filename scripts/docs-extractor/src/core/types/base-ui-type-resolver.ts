@@ -81,13 +81,6 @@ function collectNestedTypes(
 const baseUiTypeMapCache = new Map<string, BaseUiTypeMap>();
 
 /**
- * 캐시를 초기화합니다. 테스트 또는 새 프로젝트 분석 시 호출합니다.
- */
-export function clearBaseUiTypeMapCache(): void {
-    baseUiTypeMapCache.clear();
-}
-
-/**
  * 소스 파일에서 base-ui import를 찾아 타입 맵을 빌드합니다.
  * 동일 파일에 대한 결과를 캐싱하여 중복 분석을 방지합니다.
  */

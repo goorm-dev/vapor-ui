@@ -43,25 +43,6 @@ export function getRecipeNameFromVariantsType(
 }
 
 /**
- * Extracts defaultVariants from all recipes in a CSS file.
- * Returns a map with recipe names as keys.
- */
-export function getAllRecipeDefaults(cssFile: SourceFile): Map<string, DefaultValues> {
-    const recipeDefaults = new Map<string, DefaultValues>();
-
-    // Iterate through all variable declarations
-    for (const variableDeclaration of cssFile.getVariableDeclarations()) {
-        const variableName = variableDeclaration.getName();
-        const defaults = parseRecipeDefaultVariants(cssFile, variableName);
-        if (defaults) {
-            recipeDefaults.set(variableName, defaults);
-        }
-    }
-
-    return recipeDefaults;
-}
-
-/**
  * Phase 2: Finds recipes used within a specific component function.
  * e.g. Finding styles.root() calls inside const TabsRoot = forwardRef(...)
  */

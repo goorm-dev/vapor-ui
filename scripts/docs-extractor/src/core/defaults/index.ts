@@ -2,7 +2,6 @@
 export {
     getDefaultValuesForNamespace,
     getRecipeNameFromVariantsType,
-    getAllRecipeDefaults,
     findRecipeUsageInComponent,
     parseRecipeDefaultVariants,
     type DefaultValues,
@@ -18,7 +17,6 @@ export { findCssImports, findVariantsTypeImports, type CssImport, type VariantsT
 export {
     loadSprinklesMeta,
     isTokenBasedSprinklesProp,
-    isNonTokenSprinklesProp,
     isSprinklesProp,
     getAllSprinklesProps,
     getTokenSprinklesProps,

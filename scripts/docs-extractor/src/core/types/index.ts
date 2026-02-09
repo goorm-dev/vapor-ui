@@ -16,7 +16,6 @@ export {
     buildBaseUiTypeMap,
     resolveBaseUiType,
     extractSimplifiedTypeName,
-    clearBaseUiTypeMapCache,
     collectNamespaceTypeAliases,
     findComponentPrefix,
     formatVaporTypePath,

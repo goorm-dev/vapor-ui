@@ -47,10 +47,6 @@ export function isTokenBasedSprinklesProp(propName: string, meta: SprinklesMeta)
     return meta.tokenProps.includes(propName);
 }
 
-export function isNonTokenSprinklesProp(propName: string, meta: SprinklesMeta): boolean {
-    return meta.nonTokenProps.includes(propName);
-}
-
 export function isSprinklesProp(propName: string, meta: SprinklesMeta): boolean {
     return propName in meta.propDefinitions;
 }

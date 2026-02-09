@@ -6,7 +6,7 @@
  */
 import type { SourceFile } from 'ts-morph';
 
-import type { ExtractDiagnostic, FilePropsResult, PropsInfo } from '~/types/props';
+import type { FilePropsResult, PropsInfo } from '~/types/props';
 
 import {
     getDefaultValuesForNamespace,
@@ -30,7 +30,7 @@ import {
     sortProps,
     toTypeArray,
 } from './props';
-import { buildBaseUiTypeMap, cleanType, findComponentPrefix, resolveType } from './types';
+import { buildBaseUiTypeMap, cleanType, resolveType } from './types';
 
 export type { ExtractOptions } from './props';
 
@@ -121,62 +121,5 @@ export function extractProps(
         });
     }
 
-    const diagnostics = collectDiagnostics(props);
-    const hierarchy = buildHierarchy(props, namespaces);
-
-    return {
-        props,
-        ...(diagnostics.length > 0 && { diagnostics }),
-        ...(hierarchy && { hierarchy }),
-    };
-}
-
-/** Collects diagnostics from the extraction result. */
-function collectDiagnostics(props: PropsInfo[]): ExtractDiagnostic[] {
-    const diagnostics: ExtractDiagnostic[] = [];
-
-    for (const component of props) {
-        if (!component.description) {
-            diagnostics.push({
-                type: 'missing-description',
-                componentName: component.name,
-                message: `Component "${component.name}" has no JSDoc description`,
-            });
-        }
-    }
-
-    return diagnostics;
-}
-
-/**
- * Groups compound component namespaces into a hierarchy.
- * Uses the Root namespace as the parent and nests the rest as subComponents.
- */
-function buildHierarchy(
-    props: PropsInfo[],
-    namespaces: ReturnType<typeof getExportedNamespaces>,
-): PropsInfo[] | undefined {
-    if (props.length <= 1) return undefined;
-
-    const componentPrefix = findComponentPrefix(namespaces);
-    if (!componentPrefix) return undefined;
-
-    // Find Root and classify the rest as sub-components
-    const rootName = `${componentPrefix}Root`;
-    const root = props.find((p) => p.name === rootName);
-    if (!root) return undefined;
-
-    const subComponents = props
-        .filter((p) => p.name !== rootName)
-        .map((p) => ({
-            ...p,
-            parentComponent: componentPrefix,
-        }));
-
-    return [
-        {
-            ...root,
-            subComponents,
-        },
-    ];
+    return { props };
 }
