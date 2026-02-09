@@ -3,7 +3,7 @@ import { CheckCircleIcon, HeartIcon, InfoCircleOutlineIcon } from '@vapor-ui/ico
 
 export default function CalloutWithIcon() {
     return (
-        <VStack gap="$100" className="w-full max-w-xl">
+        <VStack $styles={{ gap: '$100' }} className="w-full max-w-xl">
             <Callout.Root colorPalette="success">
                 <Callout.Icon>
                     <CheckCircleIcon />

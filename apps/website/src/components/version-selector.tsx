@@ -15,9 +15,11 @@ export const VersionSelector = () => {
     return (
         <Menu.Root>
             <Menu.Trigger
-                display="flex"
-                alignItems="center"
-                gap="$050"
+                $styles={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '$050',
+                }}
                 className="text-v-hint-100 hover:text-v-gray-400 transition-colors"
             >
                 <Text color="inherit" typography="subtitle1">
@@ -31,17 +33,20 @@ export const VersionSelector = () => {
                     return (
                         <Fragment key={item.label}>
                             <Menu.Item
-                                justifyContent="space-between"
+                                $styles={{ justifyContent: 'space-between' }}
                                 render={
                                     <a href={item.url} target="_blank" rel="noreferrer">
-                                        <HStack gap="$075" alignItems="center">
+                                        <HStack $styles={{ gap: '$075', alignItems: 'center' }}>
                                             <Text typography="subtitle1">{item.label}</Text>
 
                                             {item.type === 'legacy' && (
                                                 <OpenInNewOutlineIcon size={12} />
                                             )}
                                         </HStack>
-                                        <Text color="$hint-100" typography="subtitle2">
+                                        <Text
+                                            $styles={{ color: '$fg-hint-100' }}
+                                            typography="subtitle2"
+                                        >
                                             {item.value}
                                         </Text>
                                     </a>

@@ -3,8 +3,8 @@ import { ChevronRightOutlineIcon } from '@vapor-ui/icons';
 
 export default function CollapsibleKeepMounted() {
     return (
-        <HStack gap="$400" alignItems="flex-start">
-            <VStack gap="$100">
+        <HStack $styles={{ gap: '$400', alignItems: 'flex-start' }}>
+            <VStack $styles={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     default
                 </Text>
@@ -25,7 +25,7 @@ export default function CollapsibleKeepMounted() {
                 </Collapsible.Root>
             </VStack>
 
-            <VStack gap="$100">
+            <VStack $styles={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     keepMounted
                 </Text>

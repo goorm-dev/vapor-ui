@@ -25,9 +25,9 @@ export default function FieldValidationMode() {
     };
 
     return (
-        <VStack gap="$200">
+        <VStack $styles={{ gap: '$200' }}>
             <Field.Root name="username" validationMode="onChange" validate={validateUsername}>
-                <Field.Label flexDirection="column">
+                <Field.Label $styles={{ flexDirection: 'column' }}>
                     사용자 이름 (onChange 검증)
                     <TextInput placeholder="영문, 숫자, _ 만 허용" />
                 </Field.Label>
@@ -38,7 +38,7 @@ export default function FieldValidationMode() {
             </Field.Root>
 
             <Field.Root name="email" validationMode="onBlur" validate={validateEmail}>
-                <Field.Label flexDirection="column">
+                <Field.Label $styles={{ flexDirection: 'column' }}>
                     이메일 (onBlur 검증)
                     <TextInput type="email" placeholder="이메일을 입력하세요" />
                 </Field.Label>

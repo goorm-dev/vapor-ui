@@ -2,7 +2,7 @@ import { Tabs, VStack } from '@vapor-ui/core';
 
 export default function TabsKeyboard() {
     return (
-        <VStack gap="$400">
+        <VStack $styles={{ gap: '$400' }}>
             <Tabs.Root defaultValue="tab1" activateOnFocus={true}>
                 <h4 className="text-sm font-medium mb-4">
                     포커스 시 활성화 <code>(activateOnFocus: true)</code>

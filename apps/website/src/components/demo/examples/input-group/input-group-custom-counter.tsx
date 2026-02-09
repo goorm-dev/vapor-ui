@@ -4,8 +4,8 @@ import { InputGroup, Text, TextInput, VStack } from '@vapor-ui/core';
 
 export default function InputGroupCustomCounter() {
     return (
-        <VStack gap="$300">
-            <VStack gap="$050">
+        <VStack $styles={{ gap: '$300' }}>
+            <VStack $styles={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     커스텀 카운터 예시 1
                 </Text>
@@ -16,7 +16,7 @@ export default function InputGroupCustomCounter() {
                     </InputGroup.Counter>
                 </InputGroup.Root>
             </VStack>
-            <VStack gap="$050">
+            <VStack $styles={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     커스텀 카운터 예시 2
                 </Text>

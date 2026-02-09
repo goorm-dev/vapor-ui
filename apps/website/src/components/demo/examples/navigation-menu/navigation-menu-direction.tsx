@@ -2,8 +2,8 @@ import { HStack, NavigationMenu, Text, VStack } from '@vapor-ui/core';
 
 export default function NavigationMenuDirection() {
     return (
-        <HStack gap="$400" alignItems="start">
-            <VStack gap="$150">
+        <HStack $styles={{ gap: '$400', alignItems: 'start' }}>
+            <VStack $styles={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     horizontal
                 </Text>
@@ -24,7 +24,7 @@ export default function NavigationMenuDirection() {
                 </NavigationMenu.Root>
             </VStack>
 
-            <VStack gap="$150">
+            <VStack $styles={{ gap: '$150' }}>
                 <Text typography="body3" foreground="hint-100">
                     vertical
                 </Text>

@@ -36,8 +36,8 @@ const CardWrapper = ({
                     priority
                 />
             </Card.Header>
-            <Card.Body className={styles.body} overflow="hidden">
-                <HStack gap="$050" justifyContent="start" alignItems="center">
+            <Card.Body className={styles.body} $styles={{ overflow: 'hidden' }}>
+                <HStack $styles={{ gap: '$050', justifyContent: 'start', alignItems: 'center' }}>
                     <Text typography="heading5">{name}</Text>
                     {componentType && (
                         <Badge size="sm" shape="pill" className="whitespace-nowrap">

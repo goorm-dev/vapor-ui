@@ -2,8 +2,8 @@ import { Button, HStack, Text, Tooltip, VStack } from '@vapor-ui/core';
 
 export default function TooltipDelay() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $styles={{ gap: '$150' }}>
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     0ms
                 </Text>
@@ -12,7 +12,7 @@ export default function TooltipDelay() {
                     <Tooltip.Popup>지연 없이 바로 표시되는 툴팁</Tooltip.Popup>
                 </Tooltip.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     500ms
                 </Text>
@@ -21,7 +21,7 @@ export default function TooltipDelay() {
                     <Tooltip.Popup>0.5초 후에 표시되는 툴팁</Tooltip.Popup>
                 </Tooltip.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     1000ms
                 </Text>
@@ -30,7 +30,7 @@ export default function TooltipDelay() {
                     <Tooltip.Popup>1초 후에 표시되는 툴팁</Tooltip.Popup>
                 </Tooltip.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     2000ms
                 </Text>

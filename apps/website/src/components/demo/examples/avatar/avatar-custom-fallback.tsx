@@ -2,8 +2,8 @@ import { Avatar, HStack, Text, VStack } from '@vapor-ui/core';
 
 export default function AvatarCustomFallback() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $styles={{ gap: '$150' }}>
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-28" typography="body3" foreground="hint-100">
                     auto initial
                 </Text>
@@ -11,7 +11,7 @@ export default function AvatarCustomFallback() {
                     <Avatar.FallbackPrimitive />
                 </Avatar.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-28" typography="body3" foreground="hint-100">
                     custom text
                 </Text>

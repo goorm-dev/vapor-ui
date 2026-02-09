@@ -13,7 +13,7 @@ export default function ColorPalette() {
 
     return (
         <Toast.Provider toastManager={toastManager}>
-            <HStack gap="$400" alignItems="center">
+            <HStack $styles={{ gap: '$400', alignItems: 'center' }}>
                 <Button colorPalette="secondary" onClick={() => addToast('info')}>
                     Info Toast
                 </Button>

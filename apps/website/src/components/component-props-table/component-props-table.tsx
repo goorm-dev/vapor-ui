@@ -65,7 +65,7 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
     }
 
     return (
-        <VStack className="w-full not-prose" alignItems="flex-start" gap="$200">
+        <VStack className="w-full not-prose" $styles={{ alignItems: 'flex-start', gap: '$200' }}>
             <Text typography="body1" foreground="normal-200">
                 <ReactMarkdown
                     components={{
@@ -80,12 +80,14 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                 </ReactMarkdown>
             </Text>
             <VStack
-                width="100%"
-                overflow="auto"
-                alignItems="flex-start"
-                gap="$0"
-                alignContent="stretch"
-                borderRadius="$300"
+                $styles={{
+                    width: '100%',
+                    overflow: 'auto',
+                    alignItems: 'flex-start',
+                    gap: '$000',
+                    alignContent: 'stretch',
+                    borderRadius: '$300',
+                }}
             >
                 <table
                     className="w-full  border-separate border-spacing-0 overflow-hidden border border-v-normal rounded-v-300"
@@ -116,7 +118,13 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                                 <td
                                     className={` px-v-300 py-v-200 border-b border-b-v-normal min-w-[140px] w-px ${index === componentData.props.length - 1 ? 'rounded-bl-v-300 border-b-0' : ''}`}
                                 >
-                                    <HStack alignItems="center" gap="$100" width="fit-content">
+                                    <HStack
+                                        $styles={{
+                                            alignItems: 'center',
+                                            gap: '$100',
+                                            width: 'fit-content',
+                                        }}
+                                    >
                                         <Text typography="body2" foreground="normal-200">
                                             <span>
                                                 {prop.name}
@@ -154,14 +162,14 @@ export const ComponentPropsTable = ({ componentName }: ComponentPropsTableProps)
                                 <td
                                     className={`px-v-300 py-v-200 border-b border-b-v-normal ${index === componentData.props.length - 1 ? 'rounded-br-v-300 border-b-0' : ''}`}
                                 >
-                                    <Flex gap="$100" className="flex-wrap">
+                                    <Flex $styles={{ gap: '$100' }} className="flex-wrap">
                                         {Array.isArray(prop.type) ? (
                                             prop.type.map((typeValue) => (
                                                 <Badge
                                                     key={typeValue}
                                                     colorPalette="hint"
                                                     size="md"
-                                                    height="auto"
+                                                    $styles={{ height: 'auto' }}
                                                 >
                                                     {typeValue}
                                                 </Badge>

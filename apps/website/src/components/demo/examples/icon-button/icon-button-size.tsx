@@ -3,8 +3,8 @@ import { HeartIcon } from '@vapor-ui/icons';
 
 export default function IconButtonSize() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $styles={{ gap: '$150' }}>
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     sm
                 </Text>
@@ -12,7 +12,7 @@ export default function IconButtonSize() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     md
                 </Text>
@@ -20,7 +20,7 @@ export default function IconButtonSize() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     lg
                 </Text>
@@ -28,7 +28,7 @@ export default function IconButtonSize() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-8" typography="body3" foreground="hint-100">
                     xl
                 </Text>

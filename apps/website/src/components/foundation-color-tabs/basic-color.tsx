@@ -7,7 +7,7 @@ import { ColorPalette } from '../color-swatch';
 
 export const BasicColor = () => {
     return (
-        <Box paddingY="$400">
+        <Box $styles={{ paddingBlock: '$400' }}>
             {BasicColorData.map((colorGroup): JSX.Element => {
                 const sectionTitle =
                     colorGroup.title === 'base'
@@ -15,7 +15,7 @@ export const BasicColor = () => {
                         : `${colorGroup.title.charAt(0).toUpperCase() + colorGroup.title.slice(1)} Scales`;
 
                 return (
-                    <Box key={colorGroup.title} marginBottom="$600">
+                    <Box key={colorGroup.title} $styles={{ marginBottom: '$600' }}>
                         <Text typography="heading5">{sectionTitle}</Text>
                         <ColorPalette colors={transformToColorSwatchItems([colorGroup])} />
                     </Box>

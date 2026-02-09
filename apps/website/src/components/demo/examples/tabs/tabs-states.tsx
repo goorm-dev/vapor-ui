@@ -2,8 +2,8 @@ import { HStack, Tabs, Text, VStack } from '@vapor-ui/core';
 
 export default function TabsStates() {
     return (
-        <VStack gap="$200">
-            <HStack gap="$150" alignItems="start">
+        <VStack $styles={{ gap: '$200' }}>
+            <HStack $styles={{ gap: '$150', alignItems: 'start' }}>
                 <Text className="w-32" typography="body3" foreground="hint-100">
                     tab disabled
                 </Text>
@@ -18,7 +18,7 @@ export default function TabsStates() {
                 </Tabs.Root>
             </HStack>
 
-            <HStack gap="$150" alignItems="start">
+            <HStack $styles={{ gap: '$150', alignItems: 'start' }}>
                 <Text className="w-32" typography="body3" foreground="hint-100">
                     group disabled
                 </Text>

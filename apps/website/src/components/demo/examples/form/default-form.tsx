@@ -11,16 +11,16 @@ export default function DefaultForm() {
                 console.log('Form submitted:', Object.fromEntries(formData));
             }}
         >
-            <VStack gap="$200" className="w-72">
+            <VStack className="w-72" $styles={{ gap: '$200' }}>
                 <Field.Root name="username">
-                    <VStack render={<Field.Label />} gap="$050">
+                    <VStack render={<Field.Label />} $styles={{ gap: '$050' }}>
                         Username
                         <TextInput placeholder="Enter username" />
                     </VStack>
                 </Field.Root>
 
                 <Field.Root name="email">
-                    <VStack render={<Field.Label />} gap="$050">
+                    <VStack render={<Field.Label />} $styles={{ gap: '$050' }}>
                         Email
                         <TextInput type="email" placeholder="you@example.com" />
                     </VStack>

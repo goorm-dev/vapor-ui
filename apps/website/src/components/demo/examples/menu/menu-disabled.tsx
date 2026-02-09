@@ -4,8 +4,8 @@ import { Button, HStack, Menu, Text, VStack } from '@vapor-ui/core';
 
 export default function MenuDisabled() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $styles={{ gap: '$150' }}>
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-28" typography="body3" foreground="hint-100">
                     disabled item
                 </Text>
@@ -21,7 +21,7 @@ export default function MenuDisabled() {
                     </Menu.Popup>
                 </Menu.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-28" typography="body3" foreground="hint-100">
                     disabled menu
                 </Text>

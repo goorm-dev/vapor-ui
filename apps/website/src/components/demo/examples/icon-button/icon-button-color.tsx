@@ -3,8 +3,8 @@ import { HeartIcon } from '@vapor-ui/icons';
 
 export default function IconButtonColor() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $styles={{ gap: '$150' }}>
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     primary
                 </Text>
@@ -12,7 +12,7 @@ export default function IconButtonColor() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     secondary
                 </Text>
@@ -20,7 +20,7 @@ export default function IconButtonColor() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     success
                 </Text>
@@ -28,7 +28,7 @@ export default function IconButtonColor() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     warning
                 </Text>
@@ -36,7 +36,7 @@ export default function IconButtonColor() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     danger
                 </Text>
@@ -44,7 +44,7 @@ export default function IconButtonColor() {
                     <HeartIcon />
                 </IconButton>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-20" typography="body3" foreground="hint-100">
                     contrast
                 </Text>

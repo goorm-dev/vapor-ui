@@ -2,7 +2,7 @@ import { Select, VStack } from '@vapor-ui/core';
 
 export default function SelectGrouping() {
     return (
-        <VStack width="400px">
+        <VStack $styles={{ width: '400px' }}>
             <Select.Root placeholder="개발 도구 선택">
                 <Select.Trigger />
 

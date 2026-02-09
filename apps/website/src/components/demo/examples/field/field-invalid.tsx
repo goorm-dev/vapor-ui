@@ -15,9 +15,9 @@ export default function FieldInvalid() {
     };
 
     return (
-        <Box width="300px">
+        <Box $styles={{ width: '300px' }}>
             <Field.Root name="email" validationMode="onChange" validate={validate}>
-                <Field.Label flexDirection="column">
+                <Field.Label $styles={{ flexDirection: 'column' }}>
                     이메일
                     <TextInput type="email" placeholder="이메일을 입력하세요" />
                 </Field.Label>

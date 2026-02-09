@@ -15,10 +15,10 @@ export const SemanticColor = () => {
     };
 
     return (
-        <Box paddingY="$400">
+        <Box $styles={{ paddingBlock: '$400' }}>
             {SemanticColorData.map(
                 (colorGroup): JSX.Element => (
-                    <Box key={colorGroup.title} marginBottom="$600">
+                    <Box key={colorGroup.title} $styles={{ marginBottom: '$600' }}>
                         <Text typography="heading5">
                             {sectionTitles[colorGroup.title] || colorGroup.title}
                         </Text>

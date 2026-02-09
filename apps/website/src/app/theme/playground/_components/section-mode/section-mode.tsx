@@ -26,7 +26,7 @@ const SectionMode = () => {
                     size="md"
                     onValueChange={handleModeChange}
                 >
-                    <HStack gap="$100">
+                    <HStack $styles={{ gap: '$100' }}>
                         <RadioCard className="flex-1" value="light">
                             Light
                         </RadioCard>

@@ -38,9 +38,9 @@ export default function Collapsed() {
                             <IconButton
                                 aria-label="Toggle Name column"
                                 size="sm"
-                                color="secondary"
                                 variant="ghost"
                                 onClick={() => column.toggleCollapsed()}
+                                color="secondary"
                             >
                                 <IconElement />
                             </IconButton>

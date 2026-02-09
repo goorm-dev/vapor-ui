@@ -19,7 +19,7 @@ export default function SelectControlled() {
     };
 
     return (
-        <VStack gap="$200">
+        <VStack $styles={{ gap: '$200' }}>
             <Select.Root
                 placeholder="폰트 선택"
                 items={fonts}
@@ -44,7 +44,7 @@ export default function SelectControlled() {
                 선택된 값: <code className="bg-gray-100 px-1 rounded">{value || '없음'}</code>
             </Text>
 
-            <HStack gap="$100">
+            <HStack $styles={{ gap: '$100' }}>
                 <Button colorPalette="primary" onClick={() => setValue('serif')}>
                     Serif 선택
                 </Button>

@@ -5,8 +5,8 @@ import { CloseOutlineIcon } from '@vapor-ui/icons';
 
 export default function SheetSide() {
     return (
-        <VStack gap="$150">
-            <HStack gap="$150" alignItems="center">
+        <VStack $styles={{ gap: '$150' }}>
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     right
                 </Text>
@@ -29,7 +29,7 @@ export default function SheetSide() {
                     </Sheet.Popup>
                 </Sheet.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     left
                 </Text>
@@ -50,7 +50,7 @@ export default function SheetSide() {
                     </Sheet.Popup>
                 </Sheet.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     top
                 </Text>
@@ -71,7 +71,7 @@ export default function SheetSide() {
                     </Sheet.Popup>
                 </Sheet.Root>
             </HStack>
-            <HStack gap="$150" alignItems="center">
+            <HStack $styles={{ gap: '$150', alignItems: 'center' }}>
                 <Text className="w-16" typography="body3" foreground="hint-100">
                     bottom
                 </Text>

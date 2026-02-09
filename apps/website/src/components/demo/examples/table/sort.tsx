@@ -96,10 +96,10 @@ export default function Sort() {
 
                                             <IconButton
                                                 aria-label={`${header.id} sort`}
-                                                color="secondary"
                                                 variant="ghost"
                                                 size="sm"
                                                 onClick={header.column.getToggleSortingHandler()}
+                                                color="secondary"
                                             >
                                                 <ControlCommonIcon />
                                             </IconButton>

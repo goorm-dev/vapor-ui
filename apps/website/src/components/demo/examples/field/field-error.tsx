@@ -4,7 +4,7 @@ import { Field, TextInput, VStack } from '@vapor-ui/core';
 
 export default function FieldError() {
     return (
-        <VStack gap="$300" className="w-72">
+        <VStack className="w-72" $styles={{ gap: '$300' }}>
             <Field.Root name="email-error" invalid>
                 <Field.Label className="flex flex-col gap-1">
                     Email

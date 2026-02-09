@@ -3,7 +3,7 @@ import { Box, MultiSelect } from '@vapor-ui/core';
 export default function MultiSelectGrouping() {
     return (
         <MultiSelect.Root placeholder="개발 기술 선택">
-            <Box render={<MultiSelect.Trigger />} width="400px" />
+            <Box render={<MultiSelect.Trigger />} $styles={{ width: '400px' }}/>
 
             <MultiSelect.Popup>
                 <MultiSelect.Group>

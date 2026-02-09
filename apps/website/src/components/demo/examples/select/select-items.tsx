@@ -17,8 +17,8 @@ const languages = {
 
 export default function SelectItems() {
     return (
-        <VStack gap="$300" width="400px">
-            <VStack gap="$050">
+        <VStack $styles={{ gap: '$300', width: '400px' }}>
+            <VStack $styles={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     배열 형태의 아이템
                 </Text>
@@ -37,7 +37,7 @@ export default function SelectItems() {
                 </Select.Root>
             </VStack>
 
-            <VStack gap="$050">
+            <VStack $styles={{ gap: '$050' }}>
                 <Text typography="body3" foreground="hint-100">
                     객체 형태의 아이템
                 </Text>

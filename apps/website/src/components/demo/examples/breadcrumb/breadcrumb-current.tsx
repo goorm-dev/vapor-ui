@@ -2,8 +2,8 @@ import { Breadcrumb, Text, VStack } from '@vapor-ui/core';
 
 export default function BreadcrumbCurrent() {
     return (
-        <VStack gap="$200">
-            <VStack gap="$100">
+        <VStack $styles={{ gap: '$200' }}>
+            <VStack $styles={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     Normal Links
                 </Text>
@@ -15,7 +15,7 @@ export default function BreadcrumbCurrent() {
                     <Breadcrumb.Item href="#">Details</Breadcrumb.Item>
                 </Breadcrumb.Root>
             </VStack>
-            <VStack gap="$100">
+            <VStack $styles={{ gap: '$100' }}>
                 <Text typography="body3" foreground="hint-100">
                     With Current Page
                 </Text>
