@@ -142,6 +142,22 @@ const createOutput = ({ dir, format, extension, ...outputOptions }) => {
     };
 };
 
+const kebabCase = (str) =>
+    str &&
+    str
+        .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+        .map((x) => x.toLowerCase())
+        .join('-');
+
+const identifiers = ({ hash: hashProp, filePath, debugId }) => {
+    const componentName = path.basename(filePath, '.css.ts');
+    const prefix = componentName === 'sprinkles' ? 'v' : componentName;
+    const id = debugId ? kebabCase(debugId).replace('_', '-') : '';
+    const hash = componentName === 'sprinkles' ? '' : `-${hashProp}`;
+
+    return `${prefix}${id ? `-${id}` : ''}${hash}`;
+};
+
 const commonPlugins = [
     alias({
         entries: [{ find: '~', replacement: path.resolve('./src') }],
@@ -149,7 +165,7 @@ const commonPlugins = [
             extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx'],
         }),
     }),
-    vanillaExtractPlugin(),
+    vanillaExtractPlugin({ identifiers }),
     depsExternal(),
 ];
 

@@ -23,6 +23,7 @@ const negativeSpaces = Object.keys(spaceTokens).reduce(
 const marginTokens = { ...spaceTokens, ...negativeSpaces };
 const dimensionTokens = vars.size.dimension;
 const borderRadiusTokens = vars.size.borderRadius;
+const boxShadowTokens = vars.shadow;
 
 const { foreground, border, black, white, ...colors } = vars.color;
 
@@ -224,14 +225,14 @@ const borderColorTokens = {
 const sprinkleProperties = defineProperties({
     '@layer': layers.utilities,
 
-    defaultCondition: 'default',
+    defaultCondition: 'lg',
     conditions: {
         // breakpoints
         // '@media': `screen and (max-width: env(--mobile))`,
-        // sm: { '@media': `screen and (max-width: 767px)` },
+        sm: { '@media': `screen and (max-width: 767px)` },
         // '@media': `screen and (max-width: env(--tablet))`,
-        // md: { '@media': `screen and (max-width: 1024px)` },
-        default: {},
+        md: { '@media': `screen and (max-width: 1024px)` },
+        lg: {},
 
         // states
         _before: { selector: '&::before' },
@@ -239,19 +240,15 @@ const sprinkleProperties = defineProperties({
         _hover: { '@media': '(hover: hover)', selector: '&:hover' },
         _focus: { selector: '&:focus' },
         _focusVisible: { selector: '&:focus-visible' },
-        _selected: { selector: '&:active' },
-        _checked: { selector: '&:checked, &[data-checked]' },
-        _indeterminate: { selector: '&:indeterminate, &[data-indeterminate]' },
-        _disabled: { selector: '&:disabled, &[data-disabled]' },
-        _readonly: { selector: '&:readonly, &[data-readonly]' },
-        _required: { selector: '&:required, &[data-required]' },
-        _invalid: { selector: '&:invalid, &[data-invalid]' },
+        // _selected: { selector: '&:active' },
+        // _checked: { selector: '&:checked, &[data-checked]' },
+        // _indeterminate: { selector: '&:indeterminate, &[data-indeterminate]' },
+        // _disabled: { selector: '&:disabled, &[data-disabled]' },
+        // _readonly: { selector: '&:readonly, &[data-readonly]' },
+        // _required: { selector: '&:required, &[data-required]' },
+        // _invalid: { selector: '&:invalid, &[data-invalid]' },
     },
 
-    // Border Width는 토큰 안써도 되는지?
-    // Accent Color 같은 건 어떤 토큰을 사용해야 할까?
-    // Background Color, Border Color, Color는 모두 배타적인가?
-    // Outline은 Border랑 동일하게 적용하면 되는건가?
     dynamicProperties: {
         // Composition and Blending
         backgroundBlendMode: true,
@@ -260,8 +257,6 @@ const sprinkleProperties = defineProperties({
 
         // CSS Animations
         animation: true,
-        // animationComposition: true,
-
         animationDelay: true,
         animationDirection: true,
         animationDuration: true,
@@ -269,19 +264,7 @@ const sprinkleProperties = defineProperties({
         animationIterationCount: true,
         animationName: true,
         animationPlayState: true,
-        // animationRange: true,
-        // animationRangeEnd: true,
-        // animationRangeStart: true,
         animationTimingFunction: true,
-        // animationTimeline: true,
-        // scrollTimeline: true,
-        // scrollTimelineAxis: true,
-        // scrollTimelineName: true,
-        // timelineScope: true,
-        // viewTimeline: true,
-        // viewTimelineAxis: true,
-        // viewTimelineInset: true,
-        // viewTimelineName: true,
 
         // CSS Backgrounds and Borders
         background: true,
@@ -293,8 +276,6 @@ const sprinkleProperties = defineProperties({
         backgroundRepeat: true,
         backgroundSize: true,
         backgroundPosition: true,
-        backgroundPositionX: true,
-        backgroundPositionY: true,
         border: true, // OF SHORTHANDS!
         borderColor: borderColorTokens,
         borderStyle: true,
@@ -306,7 +287,7 @@ const sprinkleProperties = defineProperties({
         borderBlockStart: true,
         borderTop: true,
         borderBlockStartColor: borderColorTokens,
-        borderTopColor: true,
+        borderTopColor: borderColorTokens,
         borderBlockStartStyle: true,
         borderTopStyle: true,
         borderBlockStartWidth: true,
@@ -339,12 +320,6 @@ const sprinkleProperties = defineProperties({
         borderRightStyle: true,
         borderInlineEndWidth: true,
         borderRightWidth: true,
-        borderImage: true,
-        borderImageOutset: true,
-        borderImageRepeat: true,
-        borderImageSlice: true,
-        borderImageSource: true,
-        borderImageWidth: true,
         borderRadius: borderRadiusTokens,
         borderStartEndRadius: borderRadiusTokens,
         borderStartStartRadius: borderRadiusTokens,
@@ -354,20 +329,16 @@ const sprinkleProperties = defineProperties({
         borderTopRightRadius: borderRadiusTokens,
         borderBottomLeftRadius: borderRadiusTokens,
         borderBottomRightRadius: borderRadiusTokens,
-        boxShadow: true,
+        boxShadow: boxShadowTokens,
 
         // CSS Basic User Interface
-        // accentColor: true,
+        // accentColor: true, // NOTE: supported in tailwindcss
         appearance: true,
         aspectRatio: true,
-        // caret: true,
-        // caretColor: true,
-        // caretShape: true,
+        caretColor: colorTokens,
         cursor: true,
-        // imeMode: true,
-        // inputSecurity: true,
         outline: true,
-        outlineColor: true,
+        outlineColor: borderColorTokens,
         outlineOffset: true,
         outlineStyle: true,
         outlineWidth: true,
@@ -395,7 +366,7 @@ const sprinkleProperties = defineProperties({
 
         // CSS Box Model
         boxSizing: true,
-        // fieldSizing: true,
+        // fieldSizing: true,  // NOTE: supported in tailwindcss
         blockSize: dimensionTokens,
         height: dimensionTokens,
         inlineSize: dimensionTokens,
@@ -440,10 +411,7 @@ const sprinkleProperties = defineProperties({
 
         // CSS Color
         color: colorTokens,
-        colorScheme: true,
-        forcedColorAdjust: true,
         opacity: true,
-        // printColorAdjust: true,
 
         // CSS Columns
         columns: true,
@@ -458,20 +426,9 @@ const sprinkleProperties = defineProperties({
 
         // CSS Containment
         contain: true,
-        // containIntrinsicSize: true,
-        // containIntrinsicBlockSize: true,
-        // containIntrinsicWidth: true,
-        // containIntrinsicHeight: true,
-        // containIntrinsicInlineSize: true,
-        // container: true,
-        // containerName: true,
-        // containerType: true,
         contentVisibility: true,
 
         // CSS Counter Styles
-        counterIncrement: true,
-        counterReset: true,
-        counterSet: true,
 
         // CSS Display
         display: true,
@@ -496,35 +453,14 @@ const sprinkleProperties = defineProperties({
         fontWeight: true,
         lineHeight: true,
         fontVariant: true,
-        // fontVariantAlternates: true,
-        fontVariantCaps: true,
-        fontVariantEastAsian: true,
-        // fontVariantEmoji: true,
-        fontVariantLigatures: true,
         fontVariantNumeric: true,
-        fontVariantPosition: true,
-        fontFeatureSettings: true,
-        fontKerning: true,
-        fontLanguageOverride: true,
-        fontOpticalSizing: true,
-        // fontPalette: true,
-        fontVariationSettings: true,
-        fontSizeAdjust: true,
         fontSmooth: true, // Non-standard
-        // fontSynthesisPosition: true,
-        // fontSynthesisSmallCaps: true,
-        // fontSynthesisStyle: true,
-        // fontSynthesisWeight: true,
-        fontSynthesis: true,
-        lineHeightStep: true,
 
         // CSS Fragmentation
         boxDecorationBreak: true,
         breakAfter: true,
         breakBefore: true,
         breakInside: true,
-        orphans: true,
-        widows: true,
 
         // CSS Generated Content
         content: true,
@@ -546,20 +482,13 @@ const sprinkleProperties = defineProperties({
         gridColumn: true,
         gridColumnStart: true,
         gridColumnEnd: true,
-        alignTracks: true,
-        justifyTracks: true,
-        // masonryAutoFlow: true,
 
         // CSS Images
-        imageOrientation: true,
         imageRendering: true,
-        imageResolution: true,
         objectFit: true,
         objectPosition: true,
 
         // CSS Inline
-        initialLetter: true,
-        // initialLetterAlign: true,
 
         // CSS Lists and Counters
         listStyle: true,
@@ -568,9 +497,6 @@ const sprinkleProperties = defineProperties({
         listStyleType: true,
 
         // CSS Masking
-        clip: true,
-        clipPath: true,
-        mask: true,
         maskClip: true,
         maskComposite: true,
         maskImage: true,
@@ -580,47 +506,25 @@ const sprinkleProperties = defineProperties({
         maskRepeat: true,
         maskSize: true,
         maskType: true,
-        maskBorder: true,
-        maskBorderMode: true,
-        maskBorderOutset: true,
-        maskBorderRepeat: true,
-        maskBorderSlice: true,
-        maskBorderSource: true,
-        maskBorderWidth: true,
 
         // CSS Miscellaneous
         all: true, // avoid!
         textRendering: true,
-        zoom: true,
 
         // CSS Motion Path
-        offset: true,
-        offsetAnchor: true,
-        offsetDistance: true,
-        offsetPath: true,
-        // offsetPosition: true,
-        offsetRotate: true,
 
         // CSS Overflow
         // WebkitBoxOrient: true,
         // WebkitLineClamp: true,
         lineClamp: true,
-        maxLines: true,
-        blockOverflow: true,
         overflow: true,
         overflowBlock: true,
         overflowY: true,
         overflowInline: true,
         overflowX: true,
-        overflowClipMargin: true,
-        // scrollGutter: true,
         scrollBehavior: true,
 
         // CSS Pages
-        // page: true,
-        pageBreakAfter: true,
-        pageBreakBefore: true,
-        pageBreakInside: true,
 
         // CSS Positioning
         inset: true,
@@ -636,62 +540,45 @@ const sprinkleProperties = defineProperties({
         right: spaceTokens,
         clear: true,
         float: true,
-        // overlay: true,
         position: true,
         zIndex: true,
 
         // CSS Ruby
-        rubyAlign: true,
-        rubyMerge: true,
-        rubyPosition: true,
 
         // CSS Scroll Anchoring
-        overflowAnchor: true,
 
         // CSS Scroll Snap
-        scrollMargin: true,
-        scrollMarginBlock: true,
+        scrollMargin: marginTokens,
+        scrollMarginBlock: marginTokens,
         scrollMarginBlockStart: true,
         scrollMarginTop: true,
         scrollMarginBlockEnd: true,
         scrollMarginBottom: true,
-        scrollMarginInline: true,
+        scrollMarginInline: marginTokens,
         scrollMarginInlineStart: true,
         scrollMarginLeft: true,
         scrollMarginInlineEnd: true,
         scrollMarginRight: true,
-        scrollPadding: true,
-        scrollPaddingBlock: true,
-        scrollPaddingBlockStart: true,
-        scrollPaddingTop: true,
-        scrollPaddingBlockEnd: true,
-        scrollPaddingBottom: true,
-        scrollPaddingInline: true,
-        scrollPaddingInlineStart: true,
-        scrollPaddingLeft: true,
-        scrollPaddingInlineEnd: true,
-        scrollPaddingRight: true,
+        scrollPadding: spaceTokens,
+        scrollPaddingBlock: spaceTokens,
+        scrollPaddingBlockStart: spaceTokens,
+        scrollPaddingTop: spaceTokens,
+        scrollPaddingBlockEnd: spaceTokens,
+        scrollPaddingBottom: spaceTokens,
+        scrollPaddingInline: spaceTokens,
+        scrollPaddingInlineStart: spaceTokens,
+        scrollPaddingLeft: spaceTokens,
+        scrollPaddingInlineEnd: spaceTokens,
+        scrollPaddingRight: spaceTokens,
         scrollSnapAlign: true,
-        // scrollSnapCoordinat: true,
-        // scrollSnapDestinatio: true,
-        // scrollSnapPoints: true,
-        // scrollSnapPoints: true,
         scrollSnapStop: true,
         scrollSnapType: true,
-        // scrollSnapType: true,
-        // scrollSnapType: true,
 
         // CSS Scrollbars
-        scrollbarColor: true,
-        scrollbarWidth: true,
 
         // CSS Shapes
-        shapeImageThreshold: true,
-        shapeMargin: true,
-        shapeOutside: true,
 
         // CSS Speech
-        // azimuth: true,
 
         // CSS Table
         borderCollapse: true,
@@ -705,44 +592,20 @@ const sprinkleProperties = defineProperties({
         textDecoration: true,
         textDecorationColor: true,
         textDecorationLine: true,
-        textDecorationSkip: true,
-        textDecorationSkipInk: true,
         textDecorationStyle: true,
         textDecorationThickness: true,
-        // WebkitTextStroke: true,
-        // WebkitTextStrokeColor: true,
-        // WebkitTextStrokeWidth: true,
-        // WebkitTextFillColor: true,
-        textEmphasis: true,
-        textEmphasisColor: true,
-        textEmphasisPosition: true,
-        textEmphasisStyle: true,
         textShadow: true,
         textUnderlineOffset: true,
         textUnderlinePosition: true,
 
         // CSS Text
-        hangingPunctuation: true,
-        // hyphenateCharacter: true,
-        // hyphenateLimitChars: true,
         hyphens: true,
         letterSpacing: true,
-        lineBreak: true,
         overflowWrap: true,
-        paintOrder: true,
-        tabSize: true,
         textAlign: true,
-        textAlignLast: true,
-        textIndent: true,
-        textJustify: true,
-        textSizeAdjust: true,
         textTransform: true,
-        // textWrap: true,
-        // textWrapMode: true,
-        // textWrapStyle: true,
+        // textWrap: true,  // NOTE: supported in tailwindcss
         whiteSpace: true,
-        // whiteSpaceCollapse: true,
-        // whiteSpaceTrim: true,
         wordBreak: true,
         wordSpacing: true,
         wordWrap: true,
@@ -754,97 +617,34 @@ const sprinkleProperties = defineProperties({
         rotate: true,
         scale: true,
         transform: true,
-        transformBox: true,
         transformOrigin: true,
-        transformStyle: true,
         translate: true,
 
         // CSS Transitions
         transition: true,
-        // transitionBehavior: true,
+        // transitionBehavior: true, // NOTE: supported in tailwindcss
         transitionDelay: true,
         transitionDuration: true,
         transitionProperty: true,
         transitionTimingFunction: true,
 
         // CSS View Transitions
-        // viewTransitionName: true,
 
         // CSS Will Change
         willChange: true,
 
         // CSS Writing Modes
         direction: true,
-        textCombineUpright: true,
-        textOrientation: true,
-        unicodeBidi: true,
-        writingMode: true,
 
         // CSS Filter Effects
         backdropFilter: true,
         filter: true,
 
         // MathML
-        // mathDepth: true,
-        // mathShift: true,
-        // mathStyle: true,
 
         // CSS Pointer Events
         touchAction: true,
-
-        // // Layout
-        // position: true,
-        // display: true,
-
-        // // Flexbox
-        // alignItems: true,
-        // justifyContent: true,
-        // flexDirection: true,
-        // gap: spaceTokens,
-
-        // // Alignment
-        // alignContent: true,
-
-        // // Spacing
-        // padding: spaceTokens,
-        // paddingTop: spaceTokens,
-        // paddingBottom: spaceTokens,
-        // paddingLeft: spaceTokens,
-        // paddingRight: spaceTokens,
-        // margin: marginTokens,
-        // marginTop: marginTokens,
-        // marginBottom: marginTokens,
-        // marginLeft: marginTokens,
-        // marginRight: marginTokens,
-
-        // // Dimensions
-        // width: dimensionTokens,
-        // height: dimensionTokens,
-        // minWidth: dimensionTokens,
-        // minHeight: dimensionTokens,
-        // maxWidth: dimensionTokens,
-        // maxHeight: dimensionTokens,
-
-        // // Visual
-        // border: true,
-        // borderColor: borderColorTokens,
-        // borderRadius: borderRadiusTokens,
-        // backgroundColor: backgroundColorTokens,
-        // color: colorTokens,
-        // opacity: true,
-
-        // // Behavior
-        // pointerEvents: true,
-        // overflow: true,
-        // textAlign: true,
     },
-
-    // shorthands: {
-    //     paddingX: ['paddingLeft', 'paddingRight'],
-    //     paddingY: ['paddingTop', 'paddingBottom'],
-    //     marginX: ['marginLeft', 'marginRight'],
-    //     marginY: ['marginTop', 'marginBottom'],
-    // },
 });
 
 export const sprinkles = createRainbowSprinkles(sprinkleProperties);
