@@ -12,14 +12,14 @@ export default function HStackAlignment() {
                         gap: '$100',
                         alignItems: 'start',
                         height: '$800',
-                        backgroundColor: '$gray-100',
+                        backgroundColor: '$basic-gray-100',
                         padding: '$200',
                         borderRadius: '$200',
                     }}
                 >
                     <Box
                         $styles={{
-                            backgroundColor: '$blue-100',
+                            backgroundColor: '$basic-blue-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -28,7 +28,7 @@ export default function HStackAlignment() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$blue-200',
+                            backgroundColor: '$basic-blue-200',
                             padding: '$400',
                             borderRadius: '$200',
                         }}
@@ -37,7 +37,7 @@ export default function HStackAlignment() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$blue-300',
+                            backgroundColor: '$basic-blue-300',
                             padding: '$100',
                             borderRadius: '$200',
                         }}
@@ -56,14 +56,14 @@ export default function HStackAlignment() {
                         gap: '$100',
                         alignItems: 'center',
                         height: '$800',
-                        backgroundColor: '$gray-100',
+                        backgroundColor: '$basic-gray-100',
                         padding: '$200',
                         borderRadius: '$200',
                     }}
                 >
                     <Box
                         $styles={{
-                            backgroundColor: '$green-100',
+                            backgroundColor: '$basic-green-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -72,7 +72,7 @@ export default function HStackAlignment() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$green-200',
+                            backgroundColor: '$basic-green-200',
                             padding: '$400',
                             borderRadius: '$200',
                         }}
@@ -81,7 +81,7 @@ export default function HStackAlignment() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$green-300',
+                            backgroundColor: '$basic-green-300',
                             padding: '$100',
                             borderRadius: '$200',
                         }}
@@ -100,14 +100,14 @@ export default function HStackAlignment() {
                         gap: '$100',
                         alignItems: 'end',
                         height: '$800',
-                        backgroundColor: '$gray-100',
+                        backgroundColor: '$basic-gray-100',
                         padding: '$200',
                         borderRadius: '$200',
                     }}
                 >
                     <Box
                         $styles={{
-                            backgroundColor: '$purple-100',
+                            backgroundColor: '$basic-purple-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -116,7 +116,7 @@ export default function HStackAlignment() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$purple-200',
+                            backgroundColor: '$basic-purple-200',
                             padding: '$400',
                             borderRadius: '$200',
                         }}
@@ -125,7 +125,7 @@ export default function HStackAlignment() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$purple-300',
+                            backgroundColor: '$basic-purple-300',
                             padding: '$100',
                             borderRadius: '$200',
                         }}

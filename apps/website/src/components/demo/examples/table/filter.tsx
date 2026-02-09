@@ -184,7 +184,7 @@ export default function Scroll() {
                                 {headerGroup.headers.map((header) => (
                                     <Table.Heading
                                         key={header.id}
-                                        $styles={{ backgroundColor: '$gray-050' }}
+                                        $styles={{ backgroundColor: '$basic-gray-050' }}
                                     >
                                         {flexRender(
                                             header.column.columnDef.header,

@@ -15,7 +15,7 @@ export const Default = {
                     flexDirection: 'column',
                     gap: '$500',
                     padding: '$800',
-                    backgroundColor: '$gray-500',
+                    backgroundColor: '$basic-gray-500',
                 }}
                 className="te"
             >
@@ -87,11 +87,11 @@ export const TestBed = {
                     flexDirection: 'column',
                     gap: '$200',
                     padding: '$500',
-                    backgroundColor: '$gray-500',
+                    backgroundColor: '$basic-gray-500',
                 }}
             >
                 <Box
-                    $styles={{ backgroundColor: '$red-500' }}
+                    $styles={{ backgroundColor: '$basic-red-500' }}
                     render={<Button>I'm Button</Button>}
                 />
                 <Box

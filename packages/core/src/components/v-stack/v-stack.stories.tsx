@@ -56,7 +56,7 @@ const CustomBox = ({ size = 50, ...props }: ComponentProps<typeof Box> & { size?
     return (
         <Box
             $styles={{
-                backgroundColor: '$primary-200',
+                backgroundColor: '$bg-primary-200',
                 width: `${size}px`,
                 height: `${size}px`,
                 border: '1px solid white',

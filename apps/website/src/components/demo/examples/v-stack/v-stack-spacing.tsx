@@ -10,7 +10,7 @@ export default function VStackSpacing() {
                 <VStack $styles={{ gap: '$100' }}>
                     <Box
                         $styles={{
-                            backgroundColor: '$red-100',
+                            backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -19,7 +19,7 @@ export default function VStackSpacing() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$red-100',
+                            backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -28,7 +28,7 @@ export default function VStackSpacing() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$red-100',
+                            backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -45,7 +45,7 @@ export default function VStackSpacing() {
                 <VStack $styles={{ gap: '$400' }}>
                     <Box
                         $styles={{
-                            backgroundColor: '$orange-100',
+                            backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -54,7 +54,7 @@ export default function VStackSpacing() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$orange-100',
+                            backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -63,7 +63,7 @@ export default function VStackSpacing() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$orange-100',
+                            backgroundColor: '$basic-orange-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -80,7 +80,7 @@ export default function VStackSpacing() {
                 <VStack $styles={{ gap: '$800' }}>
                     <Box
                         $styles={{
-                            backgroundColor: '$teal-100',
+                            backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -89,7 +89,7 @@ export default function VStackSpacing() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$teal-100',
+                            backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -98,7 +98,7 @@ export default function VStackSpacing() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$teal-100',
+                            backgroundColor: '$basic-teal-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}

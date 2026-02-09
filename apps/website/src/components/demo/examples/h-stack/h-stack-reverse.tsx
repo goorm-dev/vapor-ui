@@ -10,7 +10,7 @@ export default function HStackReverse() {
                 <HStack $styles={{ gap: '$150' }}>
                     <Box
                         $styles={{
-                            backgroundColor: '$green-100',
+                            backgroundColor: '$basic-green-100',
                             padding: '$300',
                             borderRadius: '$200',
                         }}
@@ -19,7 +19,7 @@ export default function HStackReverse() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$green-200',
+                            backgroundColor: '$basic-green-200',
                             padding: '$300',
                             borderRadius: '$200',
                         }}
@@ -28,7 +28,7 @@ export default function HStackReverse() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$green-300',
+                            backgroundColor: '$basic-green-300',
                             padding: '$300',
                             borderRadius: '$200',
                         }}
@@ -45,7 +45,7 @@ export default function HStackReverse() {
                 <HStack reverse $styles={{ gap: '$150' }}>
                     <Box
                         $styles={{
-                            backgroundColor: '$purple-100',
+                            backgroundColor: '$basic-purple-100',
                             padding: '$300',
                             borderRadius: '$200',
                         }}
@@ -54,7 +54,7 @@ export default function HStackReverse() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$purple-200',
+                            backgroundColor: '$basic-purple-200',
                             padding: '$300',
                             borderRadius: '$200',
                         }}
@@ -63,7 +63,7 @@ export default function HStackReverse() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$purple-300',
+                            backgroundColor: '$basic-purple-300',
                             padding: '$300',
                             borderRadius: '$200',
                         }}

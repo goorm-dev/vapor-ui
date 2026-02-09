@@ -12,14 +12,14 @@ export default function HStackJustify() {
                         gap: '$100',
                         justifyContent: 'flex-start',
                         width: '$2400',
-                        backgroundColor: '$gray-100',
+                        backgroundColor: '$basic-gray-100',
                         padding: '$200',
                         borderRadius: '$200',
                     }}
                 >
                     <Box
                         $styles={{
-                            backgroundColor: '$red-100',
+                            backgroundColor: '$basic-red-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -28,7 +28,7 @@ export default function HStackJustify() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$red-200',
+                            backgroundColor: '$basic-red-200',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -37,7 +37,7 @@ export default function HStackJustify() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$red-300',
+                            backgroundColor: '$basic-red-300',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -56,14 +56,14 @@ export default function HStackJustify() {
                         gap: '$100',
                         justifyContent: 'center',
                         width: '$2400',
-                        backgroundColor: '$gray-100',
+                        backgroundColor: '$basic-gray-100',
                         padding: '$200',
                         borderRadius: '$200',
                     }}
                 >
                     <Box
                         $styles={{
-                            backgroundColor: '$yellow-100',
+                            backgroundColor: '$basic-yellow-100',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -72,7 +72,7 @@ export default function HStackJustify() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$yellow-200',
+                            backgroundColor: '$basic-yellow-200',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -81,7 +81,7 @@ export default function HStackJustify() {
                     </Box>
                     <Box
                         $styles={{
-                            backgroundColor: '$yellow-300',
+                            backgroundColor: '$basic-yellow-300',
                             padding: '$200',
                             borderRadius: '$200',
                         }}
@@ -100,7 +100,7 @@ export default function HStackJustify() {
                         gap: '$100',
                         justifyContent: 'space-between',
                         width: '$2400',
-                        backgroundColor: '$gray-100',
+                        backgroundColor: '$basic-gray-100',
                         padding: '$200',
                         borderRadius: '$200',
                     }}

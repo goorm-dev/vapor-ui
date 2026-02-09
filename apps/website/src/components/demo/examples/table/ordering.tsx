@@ -64,7 +64,7 @@ export default function Ordering() {
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
-                    <Table.Header $styles={{ backgroundColor: '$gray-050' }}>
+                    <Table.Header $styles={{ backgroundColor: '$basic-gray-050' }}>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (

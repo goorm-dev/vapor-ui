@@ -79,7 +79,7 @@ export default function Basic() {
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
-                    <Table.Header $styles={{ backgroundColor: '$gray-050' }}>
+                    <Table.Header $styles={{ backgroundColor: '$basic-gray-050' }}>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
@@ -101,7 +101,7 @@ export default function Basic() {
                                     key={row.id}
                                     $styles={{
                                         backgroundColor: row.getIsSelected()
-                                            ? '$primary-100'
+                                            ? '$bg-primary-100'
                                             : 'inherit',
                                     }}
                                 >

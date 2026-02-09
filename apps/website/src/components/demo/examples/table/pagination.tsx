@@ -182,7 +182,7 @@ export default function WithPagination() {
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row
                                 key={headerGroup.id}
-                                $styles={{ backgroundColor: '$gray-050' }}
+                                $styles={{ backgroundColor: '$basic-gray-050' }}
                             >
                                 {headerGroup.headers.map((header) => (
                                     <Table.Heading key={header.id}>

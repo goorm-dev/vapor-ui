@@ -132,7 +132,7 @@ export default function Collapsed() {
                                         ref={(thElem) =>
                                             columnSizingHandler(thElem, table, header.column)
                                         }
-                                        $styles={{ backgroundColor: '$gray-050' }}
+                                        $styles={{ backgroundColor: '$basic-gray-050' }}
                                         style={{ ...getCommonPinningStyles(header.column) }}
                                     >
                                         {flexRender(

@@ -75,7 +75,7 @@ const CustomToastList = () => {
                 key={toast.id}
                 toast={toast}
                 $styles={{
-                    backgroundColor: '$white',
+                    backgroundColor: '$basic-white',
                     border: '1px solid',
                     borderColor: '$normal',
                     padding: '$200',

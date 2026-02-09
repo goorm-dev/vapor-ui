@@ -195,7 +195,7 @@ export const TestBed: Story = {
                         <Box
                             $styles={{
                                 width: '1px',
-                                backgroundColor: '$gray-300',
+                                backgroundColor: '$basic-gray-300',
                                 alignSelf: 'stretch',
                             }}
                         />

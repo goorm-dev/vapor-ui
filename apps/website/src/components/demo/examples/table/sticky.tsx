@@ -76,7 +76,7 @@ export default function Basic() {
                                         ref={(thElem) =>
                                             columnSizingHandler(thElem, table, header.column)
                                         }
-                                        $styles={{ backgroundColor: '$gray-050' }}
+                                        $styles={{ backgroundColor: '$basic-gray-050' }}
                                         style={{ ...getCommonPinningStyles(header.column) }}
                                     >
                                         {flexRender(
@@ -96,7 +96,7 @@ export default function Basic() {
                                     {row.getVisibleCells().map((cell) => (
                                         <Table.Cell
                                             key={cell.id}
-                                            $styles={{ backgroundColor: '$canvas-100' }}
+                                            $styles={{ backgroundColor: '$bg-canvas-100' }}
                                             style={{ ...getCommonPinningStyles(cell.column) }}
                                         >
                                             {flexRender(
