@@ -10,8 +10,8 @@ export default function Scroll() {
         () => [
             {
                 accessorKey: 'id',
-                header: () => <Box textAlign="center">ID</Box>,
-                cell: ({ row }) => <Box textAlign="center">{row.index + 1}</Box>,
+                header: () => <Box $styles={{ textAlign: 'center' }}>ID</Box>,
+                cell: ({ row }) => <Box $styles={{ textAlign: 'center' }}>{row.index + 1}</Box>,
             },
 
             {
@@ -57,16 +57,19 @@ export default function Scroll() {
     });
 
     return (
-        <Card.Root width="100%">
-            <Card.Body overflow="auto" padding="$000">
-                <Table.Root width="200%">
+        <Card.Root $styles={{ width: '100%' }}>
+            <Card.Body $styles={{ overflow: 'auto', padding: '$000' }}>
+                <Table.Root $styles={{ width: '200%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="5%" />
                     </Table.ColumnGroup>
 
                     <Table.Header>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <Table.Row key={headerGroup.id} backgroundColor="$gray-050">
+                            <Table.Row
+                                key={headerGroup.id}
+                                $styles={{ backgroundColor: '$gray-050' }}
+                            >
                                 {headerGroup.headers.map((header) => (
                                     <Table.Heading key={header.id}>
                                         {flexRender(

@@ -11,9 +11,9 @@ export default function Basic() {
     const columns = useMemo<ColumnDef<Data>[]>(
         () => [
             {
-                header: () => <Box textAlign="center">ID</Box>,
+                header: () => <Box $styles={{ textAlign: 'center' }}>ID</Box>,
                 accessorKey: 'id',
-                cell: ({ row }) => <Box textAlign="center">{row.index + 1}</Box>,
+                cell: ({ row }) => <Box $styles={{ textAlign: 'center' }}>{row.index + 1}</Box>,
             },
 
             {
@@ -59,9 +59,9 @@ export default function Basic() {
     });
 
     return (
-        <Card.Root width="100%">
-            <Card.Body overflow="auto" padding="$000">
-                <Table.Root width="200%">
+        <Card.Root $styles={{ width: '100%' }}>
+            <Card.Body $styles={{ overflow: 'auto', padding: '$000' }}>
+                <Table.Root $styles={{ width: '200%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="0" />
                         <Table.Column width="0" />
@@ -76,7 +76,7 @@ export default function Basic() {
                                         ref={(thElem) =>
                                             columnSizingHandler(thElem, table, header.column)
                                         }
-                                        backgroundColor="$gray-050"
+                                        $styles={{ backgroundColor: '$gray-050' }}
                                         style={{ ...getCommonPinningStyles(header.column) }}
                                     >
                                         {flexRender(
@@ -96,7 +96,7 @@ export default function Basic() {
                                     {row.getVisibleCells().map((cell) => (
                                         <Table.Cell
                                             key={cell.id}
-                                            backgroundColor="$canvas-100"
+                                            $styles={{ backgroundColor: '$canvas-100' }}
                                             style={{ ...getCommonPinningStyles(cell.column) }}
                                         >
                                             {flexRender(

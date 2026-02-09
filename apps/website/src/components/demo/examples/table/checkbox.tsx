@@ -16,7 +16,7 @@ export default function Basic() {
                         checked={table.getIsAllRowsSelected()}
                         indeterminate={table.getIsSomeRowsSelected()}
                         onCheckedChange={(value) => table.toggleAllRowsSelected(value)}
-                        style={{ justifySelf: 'center' }}
+                        $styles={{ justifySelf: 'center' }}
                     />
                 ),
                 cell: ({ row }) => (
@@ -26,7 +26,7 @@ export default function Basic() {
                         disabled={!row.getCanSelect()}
                         indeterminate={row.getIsSomeSelected()}
                         onCheckedChange={(value) => row.toggleSelected(value)}
-                        style={{ justifySelf: 'center' }}
+                        $styles={{ justifySelf: 'center' }}
                     />
                 ),
             },
@@ -72,14 +72,14 @@ export default function Basic() {
     });
 
     return (
-        <Card.Root width="100%">
-            <Card.Body padding="$000">
-                <Table.Root width="100%">
+        <Card.Root $styles={{ width: '100%' }}>
+            <Card.Body $styles={{ padding: '$000' }}>
+                <Table.Root $styles={{ width: '100%' }}>
                     <Table.ColumnGroup>
                         <Table.Column width="10%" />
                     </Table.ColumnGroup>
 
-                    <Table.Header backgroundColor="$gray-050">
+                    <Table.Header $styles={{ backgroundColor: '$gray-050' }}>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <Table.Row key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
@@ -99,9 +99,11 @@ export default function Basic() {
                             return (
                                 <Table.Row
                                     key={row.id}
-                                    backgroundColor={
-                                        row.getIsSelected() ? '$primary-100' : 'inherit'
-                                    }
+                                    $styles={{
+                                        backgroundColor: row.getIsSelected()
+                                            ? '$primary-100'
+                                            : 'inherit',
+                                    }}
                                 >
                                     {row.getVisibleCells().map((cell) => {
                                         return (
