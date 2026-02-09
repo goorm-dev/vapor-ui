@@ -238,15 +238,15 @@ export function extractProps(
         const description = getComponentDescription(sourceFile, namespaceName);
         const allSymbols = exportedInterfaceProps.getType().getProperties();
 
-        // Prop names defined in Props interface (prevents false positives from destructuring defaults)
-        const validPropNames = new Set(allSymbols.map((symbol) => symbol.getName()));
+        // Prop names declared in the Props interface (filters out internal variable defaults)
+        const declaredPropNames = new Set(allSymbols.map((symbol) => symbol.getName()));
 
         // Extract default values per namespace (supports compound components)
         // Collects both recipe defaults and destructuring defaults
         const defaultValues = getDefaultValuesForNamespace(
             sourceFile,
             namespaceName,
-            validPropNames,
+            declaredPropNames,
         );
         const includeSet = new Set(options.include ?? []);
 

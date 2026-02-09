@@ -225,13 +225,13 @@ export function parseRecipeDefaultVariants(
  *   const { side = 'bottom', align = 'start', sideOffset = 4 } = resolveStyles(props);
  *   const { closeOnClickOverlay = true, ...rest } = props;
  *
- * Only includes defaults for properties that exist in the given validPropNames set,
+ * Only includes defaults for properties that exist in the given declaredPropNames set,
  * preventing false positives from internal variables.
  */
 export function extractDestructuringDefaults(
     sourceFile: SourceFile,
     componentName: string,
-    validPropNames?: Set<string>,
+    declaredPropNames?: Set<string>,
 ): DefaultValues {
     const result: DefaultValues = {};
 
@@ -252,8 +252,8 @@ export function extractDestructuringDefaults(
 
         const name = nameNode.getText();
 
-        // Skip if not a known prop (prevents picking up internal variable defaults)
-        if (validPropNames && !validPropNames.has(name)) return;
+        // Skip if not declared in Props interface (prevents picking up internal variable defaults)
+        if (declaredPropNames && !declaredPropNames.has(name)) return;
 
         // Skip if already found (first occurrence wins)
         if (name in result) return;
@@ -279,11 +279,11 @@ export function extractDestructuringDefaults(
 export function getDefaultValuesForNamespace(
     sourceFile: SourceFile,
     namespaceName: string,
-    validPropNames?: Set<string>,
+    declaredPropNames?: Set<string>,
 ): DefaultValues {
     // Start with destructuring defaults (lowest priority)
     const result: DefaultValues = {
-        ...extractDestructuringDefaults(sourceFile, namespaceName, validPropNames),
+        ...extractDestructuringDefaults(sourceFile, namespaceName, declaredPropNames),
     };
 
     // === Method 1: Extract from directly used recipes ===
