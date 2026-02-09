@@ -1,92 +1,19 @@
 /**
- * defaultVariants extraction module
+ * Default values extraction module
  *
- * Tracks .css.ts files imported from component files,
- * and extracts the defaultVariants of recipes used per namespace.
- *
- * Extracts defaultVariants in two ways:
+ * Extracts default values for component props from multiple sources:
  * 1. Recipes directly used by the component (tracking styles.root() calls)
  * 2. Variants type extended by the props interface (ButtonVariants → button recipe)
+ * 3. Destructuring defaults from component function body
  */
-import path from 'node:path';
 import { type SourceFile, SyntaxKind } from 'ts-morph';
 
+import { findNamespaceImportName } from '~/utils/module';
+
+import { extractDestructuringDefaults } from './destructuring-defaults';
+import { findCssImports, findVariantsTypeImports } from './style-imports';
+
 export type DefaultValues = Record<string, string>;
-
-export interface StyleImport {
-    localName: string;
-    modulePath: string;
-    resolvedPath: string;
-}
-
-export interface VariantsTypeImport {
-    typeName: string;
-    modulePath: string;
-    resolvedPath: string;
-}
-
-/**
- * Phase 1: Finds .css file imports from a component file.
- * e.g. import * as styles from './button.css'
- */
-export function findStyleImports(sourceFile: SourceFile): StyleImport[] {
-    const imports: StyleImport[] = [];
-    const filePath = sourceFile.getFilePath();
-    const fileDir = path.dirname(filePath);
-
-    for (const importDecl of sourceFile.getImportDeclarations()) {
-        const modulePath = importDecl.getModuleSpecifierValue();
-
-        // Only process imports ending with .css (vanilla-extract pattern)
-        if (!modulePath.endsWith('.css')) continue;
-
-        // Only process namespace imports (import * as styles)
-        const namespaceImport = importDecl.getNamespaceImport();
-        if (!namespaceImport) continue;
-
-        // Resolve actual file path (.css → .css.ts)
-        const resolvedPath = path.resolve(fileDir, `${modulePath}.ts`);
-
-        imports.push({
-            localName: namespaceImport.getText(),
-            modulePath,
-            resolvedPath,
-        });
-    }
-
-    return imports;
-}
-
-/**
- * Finds type imports from .css files.
- * e.g. import type { ButtonVariants, ListVariants } from './tabs.css'
- */
-export function findVariantsTypeImports(sourceFile: SourceFile): VariantsTypeImport[] {
-    const imports: VariantsTypeImport[] = [];
-    const filePath = sourceFile.getFilePath();
-    const fileDir = path.dirname(filePath);
-
-    for (const importDecl of sourceFile.getImportDeclarations()) {
-        const modulePath = importDecl.getModuleSpecifierValue();
-
-        // Only process imports ending with .css
-        if (!modulePath.endsWith('.css')) continue;
-
-        // Find types ending with 'Variants' from named imports
-        for (const namedImport of importDecl.getNamedImports()) {
-            const typeName = namedImport.getName();
-            if (typeName.endsWith('Variants')) {
-                imports.push({
-                    typeName,
-                    modulePath,
-                    resolvedPath: path.resolve(fileDir, `${modulePath}.ts`),
-                });
-            }
-        }
-    }
-
-    return imports;
-}
 
 /**
  * Extracts the original recipe variable name from a Variants type in a CSS file.
@@ -219,55 +146,7 @@ export function parseRecipeDefaultVariants(
 }
 
 /**
- * Phase 5a: Extracts destructuring default values from component function body.
- *
- * Detects patterns like:
- *   const { side = 'bottom', align = 'start', sideOffset = 4 } = resolveStyles(props);
- *   const { closeOnClickOverlay = true, ...rest } = props;
- *
- * Only includes defaults for properties that exist in the given declaredPropNames set,
- * preventing false positives from internal variables.
- */
-export function extractDestructuringDefaults(
-    sourceFile: SourceFile,
-    componentName: string,
-    declaredPropNames?: Set<string>,
-): DefaultValues {
-    const result: DefaultValues = {};
-
-    const componentVar = sourceFile.getVariableDeclaration(componentName);
-    if (!componentVar) return result;
-
-    const initializer = componentVar.getInitializer();
-    if (!initializer) return result;
-
-    initializer.forEachDescendant((node) => {
-        if (!node.isKind(SyntaxKind.BindingElement)) return;
-
-        const initNode = node.getInitializer();
-        if (!initNode) return;
-
-        const nameNode = node.getNameNode();
-        if (!nameNode.isKind(SyntaxKind.Identifier)) return;
-
-        const name = nameNode.getText();
-
-        // Skip if not declared in Props interface (prevents picking up internal variable defaults)
-        if (declaredPropNames && !declaredPropNames.has(name)) return;
-
-        // Skip if already found (first occurrence wins)
-        if (name in result) return;
-
-        const rawValue = initNode.getText();
-        // Clean up: remove quotes, convert boolean/number literals as-is
-        result[name] = rawValue.replace(/^['"`]|['"`]$/g, '');
-    });
-
-    return result;
-}
-
-/**
- * Phase 5b: Extracts defaultVariants for a namespace.
+ * Phase 5: Extracts defaultVariants for a namespace.
  *
  * Collects defaultVariants from three sources:
  * 1. Destructuring defaults from component function body (lowest priority)
@@ -287,9 +166,12 @@ export function getDefaultValuesForNamespace(
     };
 
     // === Method 1: Extract from directly used recipes ===
-    const styleImports = findStyleImports(sourceFile);
-    for (const imp of styleImports) {
-        const recipeName = findRecipeUsageInComponent(sourceFile, namespaceName, imp.localName);
+    const cssImports = findCssImports(sourceFile);
+    for (const imp of cssImports) {
+        const styleName = findNamespaceImportName(sourceFile, imp.modulePath);
+        if (!styleName) continue;
+
+        const recipeName = findRecipeUsageInComponent(sourceFile, namespaceName, styleName);
         if (!recipeName) continue;
 
         const cssFile = sourceFile.getProject().getSourceFile(imp.resolvedPath);

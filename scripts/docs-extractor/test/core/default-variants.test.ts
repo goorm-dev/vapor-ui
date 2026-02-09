@@ -3,11 +3,11 @@ import { describe, expect, it } from 'vitest';
 
 import {
     findRecipeUsageInComponent,
-    findStyleImports,
     getDefaultValuesForNamespace,
     parseRecipeDefaultVariants,
 } from '~/core/default-variants';
 import { addSourceFiles, createProject } from '~/core/project';
+import { findCssImports } from '~/core/style-imports';
 
 const FIXTURES_DIR = path.join(__dirname, '../fixtures');
 
@@ -16,17 +16,16 @@ function setupProject() {
     return createProject(tsconfigPath);
 }
 
-describe('findStyleImports', () => {
-    it('should find wildcard imports from .css files', () => {
+describe('findCssImports', () => {
+    it('should find .css imports from component files', () => {
         const project = setupProject();
         const [sourceFile] = addSourceFiles(project, [
             path.join(FIXTURES_DIR, 'simple-component.tsx'),
         ]);
 
-        const imports = findStyleImports(sourceFile);
+        const imports = findCssImports(sourceFile);
 
         expect(imports).toHaveLength(1);
-        expect(imports[0].localName).toBe('styles');
         expect(imports[0].modulePath).toBe('./simple-component.css');
         expect(imports[0].resolvedPath).toContain('simple-component.css.ts');
     });
@@ -37,10 +36,9 @@ describe('findStyleImports', () => {
             path.join(FIXTURES_DIR, 'compound-component.tsx'),
         ]);
 
-        const imports = findStyleImports(sourceFile);
+        const imports = findCssImports(sourceFile);
 
         expect(imports).toHaveLength(1);
-        expect(imports[0].localName).toBe('styles');
         expect(imports[0].modulePath).toBe('./compound-component.css');
     });
 
@@ -48,7 +46,7 @@ describe('findStyleImports', () => {
         const project = setupProject();
         const [sourceFile] = addSourceFiles(project, [path.join(FIXTURES_DIR, 'props-sample.tsx')]);
 
-        const imports = findStyleImports(sourceFile);
+        const imports = findCssImports(sourceFile);
 
         expect(imports).toHaveLength(0);
     });
