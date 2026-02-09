@@ -149,11 +149,10 @@ const kebabCase = (str) =>
         .map((x) => x.toLowerCase())
         .join('-');
 
-const identifiers = ({ hash: hashProp, filePath, debugId }) => {
+const identifiers = ({ hash, filePath, debugId }) => {
     const componentName = path.basename(filePath, '.css.ts');
     const prefix = componentName === 'sprinkles' ? 'v' : componentName;
     const id = debugId ? kebabCase(debugId).replace('_', '-') : '';
-    const hash = componentName === 'sprinkles' ? '' : `-${hashProp}`;
 
     return `${prefix}${id ? `-${id}` : ''}${hash}`;
 };
