@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
     findRecipeUsageInComponent,
     findStyleImports,
-    getDefaultVariantsForNamespace,
+    getDefaultValuesForNamespace,
     parseRecipeDefaultVariants,
 } from '~/core/default-variants';
 import { addSourceFiles, createProject } from '~/core/project';
@@ -160,7 +160,7 @@ describe('parseRecipeDefaultVariants', () => {
     });
 });
 
-describe('getDefaultVariantsForNamespace', () => {
+describe('getDefaultValuesForNamespace', () => {
     it('should get defaults for single-component file', () => {
         const project = setupProject();
         const [sourceFile] = addSourceFiles(project, [
@@ -168,7 +168,7 @@ describe('getDefaultVariantsForNamespace', () => {
             path.join(FIXTURES_DIR, 'simple-component.css.ts'),
         ]);
 
-        const defaults = getDefaultVariantsForNamespace(sourceFile, 'SimpleButton');
+        const defaults = getDefaultValuesForNamespace(sourceFile, 'SimpleButton');
 
         expect(defaults).toEqual({ colorPalette: 'primary', size: 'md', variant: 'fill' });
     });
@@ -180,10 +180,10 @@ describe('getDefaultVariantsForNamespace', () => {
             path.join(FIXTURES_DIR, 'compound-component.css.ts'),
         ]);
 
-        const rootDefaults = getDefaultVariantsForNamespace(sourceFile, 'TabsRoot');
-        const listDefaults = getDefaultVariantsForNamespace(sourceFile, 'TabsList');
-        const buttonDefaults = getDefaultVariantsForNamespace(sourceFile, 'TabsButton');
-        const indicatorDefaults = getDefaultVariantsForNamespace(sourceFile, 'TabsIndicator');
+        const rootDefaults = getDefaultValuesForNamespace(sourceFile, 'TabsRoot');
+        const listDefaults = getDefaultValuesForNamespace(sourceFile, 'TabsList');
+        const buttonDefaults = getDefaultValuesForNamespace(sourceFile, 'TabsButton');
+        const indicatorDefaults = getDefaultValuesForNamespace(sourceFile, 'TabsIndicator');
 
         expect(rootDefaults).toEqual({ orientation: 'horizontal' });
         expect(listDefaults).toEqual({ variant: 'line', orientation: 'horizontal' });
@@ -195,7 +195,7 @@ describe('getDefaultVariantsForNamespace', () => {
         const project = setupProject();
         const [sourceFile] = addSourceFiles(project, [path.join(FIXTURES_DIR, 'props-sample.tsx')]);
 
-        const defaults = getDefaultVariantsForNamespace(sourceFile, 'Simple');
+        const defaults = getDefaultValuesForNamespace(sourceFile, 'Simple');
 
         expect(defaults).toEqual({});
     });
@@ -207,7 +207,7 @@ describe('getDefaultVariantsForNamespace', () => {
             path.join(FIXTURES_DIR, 'simple-component.css.ts'),
         ]);
 
-        const defaults = getDefaultVariantsForNamespace(sourceFile, 'NonExistent');
+        const defaults = getDefaultValuesForNamespace(sourceFile, 'NonExistent');
 
         expect(defaults).toEqual({});
     });

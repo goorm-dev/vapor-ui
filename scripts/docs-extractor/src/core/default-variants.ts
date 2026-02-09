@@ -11,7 +11,7 @@
 import path from 'node:path';
 import { type SourceFile, SyntaxKind } from 'ts-morph';
 
-export type DefaultVariants = Record<string, string>;
+export type DefaultValues = Record<string, string>;
 
 export interface StyleImport {
     localName: string;
@@ -119,8 +119,8 @@ export function getRecipeNameFromVariantsType(
  * Extracts defaultVariants from all recipes in a CSS file.
  * Returns a map with recipe names as keys.
  */
-export function getAllRecipeDefaults(cssFile: SourceFile): Map<string, DefaultVariants> {
-    const recipeDefaults = new Map<string, DefaultVariants>();
+export function getAllRecipeDefaults(cssFile: SourceFile): Map<string, DefaultValues> {
+    const recipeDefaults = new Map<string, DefaultValues>();
 
     // Iterate through all variable declarations
     for (const variableDeclaration of cssFile.getVariableDeclarations()) {
@@ -179,7 +179,7 @@ export function findRecipeUsageInComponent(
 export function parseRecipeDefaultVariants(
     cssFile: SourceFile,
     variableName: string,
-): DefaultVariants | null {
+): DefaultValues | null {
     // 1. Find variable declaration
     const variableDecl = cssFile.getVariableDeclaration(variableName);
     if (!variableDecl) return null;
@@ -206,7 +206,7 @@ export function parseRecipeDefaultVariants(
     if (!defaultVariantsValue) return null;
 
     // 5. Extract values
-    const result: DefaultVariants = {};
+    const result: DefaultValues = {};
     defaultVariantsValue.getProperties().forEach((prop) => {
         if (prop.isKind(SyntaxKind.PropertyAssignment)) {
             const key = prop.getName();
@@ -232,8 +232,8 @@ export function extractDestructuringDefaults(
     sourceFile: SourceFile,
     componentName: string,
     validPropNames?: Set<string>,
-): DefaultVariants {
-    const result: DefaultVariants = {};
+): DefaultValues {
+    const result: DefaultValues = {};
 
     const componentVar = sourceFile.getVariableDeclaration(componentName);
     if (!componentVar) return result;
@@ -276,13 +276,13 @@ export function extractDestructuringDefaults(
  *
  * Recipe defaults override destructuring defaults when both exist.
  */
-export function getDefaultVariantsForNamespace(
+export function getDefaultValuesForNamespace(
     sourceFile: SourceFile,
     namespaceName: string,
     validPropNames?: Set<string>,
-): DefaultVariants {
+): DefaultValues {
     // Start with destructuring defaults (lowest priority)
-    const result: DefaultVariants = {
+    const result: DefaultValues = {
         ...extractDestructuringDefaults(sourceFile, namespaceName, validPropNames),
     };
 

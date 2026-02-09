@@ -1,10 +1,17 @@
-import { type ModuleDeclaration, type SourceFile, type Symbol, SyntaxKind, ts } from 'ts-morph';
+import {
+    type ModuleDeclaration,
+    ModuleDeclarationKind,
+    type SourceFile,
+    type Symbol,
+    SyntaxKind,
+    ts,
+} from 'ts-morph';
 
 import type { ExtractDiagnostic, FilePropsResult, Property, PropsInfo } from '~/types/props';
 
 import { buildBaseUiTypeMap, findComponentPrefix } from './base-ui-type-resolver';
 import { getSymbolSourcePath, isSymbolFromExternalSource } from './declaration-source';
-import { getDefaultVariantsForNamespace } from './default-variants';
+import { getDefaultValuesForNamespace } from './default-variants';
 import { isHtmlAttribute } from './html-attributes';
 import {
     type SprinklesMeta,
@@ -65,7 +72,13 @@ function getDefaultElement(sourceFile: SourceFile, namespaceName: string): strin
 }
 
 function getExportedNamespaces(sourceFile: SourceFile) {
-    return sourceFile.getModules().filter((module) => module.isExported());
+    return sourceFile
+        .getModules()
+        .filter(
+            (module) =>
+                module.getDeclarationKind() === ModuleDeclarationKind.Namespace &&
+                module.isExported,
+        );
 }
 
 function findExportedInterfaceProps(namespace: ModuleDeclaration) {
@@ -223,15 +236,14 @@ export function extractProps(
         if (!exportedInterfaceProps) continue;
 
         const description = getComponentDescription(sourceFile, namespaceName);
-        const propsType = exportedInterfaceProps.getType();
-        const allSymbols = propsType.getProperties();
+        const allSymbols = exportedInterfaceProps.getType().getProperties();
 
         // Prop names defined in Props interface (prevents false positives from destructuring defaults)
-        const validPropNames = new Set(allSymbols.map((s) => s.getName()));
+        const validPropNames = new Set(allSymbols.map((symbol) => symbol.getName()));
 
-        // Extract defaultVariants per namespace (supports compound components)
+        // Extract default values per namespace (supports compound components)
         // Collects both recipe defaults and destructuring defaults
-        const defaultVariants = getDefaultVariantsForNamespace(
+        const defaultValues = getDefaultValuesForNamespace(
             sourceFile,
             namespaceName,
             validPropNames,
@@ -265,7 +277,7 @@ export function extractProps(
                 typeArray = toTypeArray(typeResult);
             }
 
-            const defaultValue = defaultVariants[name] ?? getJsDocDefault(symbol);
+            const defaultValue = defaultValues[name] ?? getJsDocDefault(symbol);
 
             const source = getPropSource(symbol);
             const required = !symbol.isOptional();
