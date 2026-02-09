@@ -13,14 +13,16 @@ import {
 export default function Block3() {
     return (
         <HStack
-            width="100%"
-            justifyContent="space-between"
-            paddingX={{ desktop: '$400', mobile: '$200' }}
-            paddingY={{ desktop: '$100', mobile: '$050' }}
+            $styles={{
+                width: '100%',
+                justifyContent: 'space-between',
+                paddingInline: { lg: '$400', sm: '$200' },
+                paddingBlock: { lg: '$100', sm: '$050' },
+            }}
         >
             <LogoSvg className="logo" />
 
-            <HStack gap="$200">
+            <HStack $styles={{ gap: '$200' }}>
                 <NavigationMenu.Root aria-label="Main" className="navbar-desktop">
                     <NavigationMenu.List>
                         <NavigationMenu.Item>
@@ -35,7 +37,7 @@ export default function Block3() {
                     </NavigationMenu.List>
                 </NavigationMenu.Root>
 
-                <HStack gap="$100">
+                <HStack $styles={{ gap: '$100' }}>
                     <Avatar.Root shape="circle" alt="bell" render={<button />}>
                         <BellOnIcon />
                     </Avatar.Root>
@@ -61,10 +63,16 @@ export default function Block3() {
                             }
                         >
                             <Sheet.Header>
-                                <HStack gap="$200" justifyContent="space-between" width="100%">
+                                <HStack
+                                    $styles={{
+                                        gap: '$200',
+                                        justifyContent: 'space-between',
+                                        width: '100%',
+                                    }}
+                                >
                                     <LogoSvg className="logo" />
 
-                                    <HStack gap="$100">
+                                    <HStack $styles={{ gap: '$100' }}>
                                         <Avatar.Root shape="circle" alt="bell" render={<button />}>
                                             <BellOnIcon />
                                         </Avatar.Root>

@@ -7,10 +7,12 @@ import { Button, HStack } from '@vapor-ui/core';
 export default function Block5() {
     return (
         <HStack
-            width="100%"
-            justifyContent="space-between"
-            paddingX={{ desktop: '$400', mobile: '$200' }}
-            paddingY={{ desktop: '$100', mobile: '$050' }}
+            $styles={{
+                width: '100%',
+                justifyContent: 'space-between',
+                paddingInline: { lg: '$400', sm: '$200' },
+                paddingBlock: { lg: '$100', sm: '$050' },
+            }}
         >
             <Button colorPalette="secondary">뒤로가기</Button>
             <LogoSvg className="logo" />
