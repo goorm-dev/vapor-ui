@@ -1,3 +1,21 @@
 packages:
     - apps/*
     - packages/*
+
+# Default catalog: React 18 for library packages
+# catalog:react19: React 19 for apps (website, storybook)
+catalog:
+    react: ^18.3.1
+    react-dom: ^18.3.1
+    "@types/react": ^18.3.27
+    "@types/react-dom": ^18.3.7
+    typescript: ^5.9.2
+    eslint: ^9.37.0
+    prettier: ^3.3.0
+
+catalogs:
+    react19:
+        react: ^19.2.4
+        react-dom: ^19.2.4
+        "@types/react": ^19.2.10
+        "@types/react-dom": ^19.2.3
