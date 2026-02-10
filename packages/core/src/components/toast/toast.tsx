@@ -318,13 +318,16 @@ type BasePromiseOptions = Omit<BaseToastManager['promise'], 'loading' | 'success
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export interface ToastManagerAddOptions<Data extends object>
-    extends Omit<ToastObjectType<Data>, 'id' | 'animation' | 'height' | 'ref' | 'limited'> {
+export interface ToastManagerAddOptions<Data extends object> extends Omit<
+    ToastObjectType<Data>,
+    'id' | 'animation' | 'height' | 'ref' | 'limited'
+> {
     id?: string;
 }
 
-export interface ToastManagerUpdateOptions<Data extends object>
-    extends Partial<ToastManagerAddOptions<Data>> {}
+export interface ToastManagerUpdateOptions<Data extends object> extends Partial<
+    ToastManagerAddOptions<Data>
+> {}
 
 export interface ToastManagerPromiseOptions<Value, Data extends object> extends BasePromiseOptions {
     loading: string | ToastManagerUpdateOptions<Data>;

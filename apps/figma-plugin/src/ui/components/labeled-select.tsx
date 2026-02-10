@@ -5,8 +5,10 @@ export interface SelectOption<T = string> {
     label: string;
 }
 
-interface LabeledSelectProps<T = string>
-    extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value'> {
+interface LabeledSelectProps<T = string> extends Omit<
+    SelectHTMLAttributes<HTMLSelectElement>,
+    'onChange' | 'value'
+> {
     label: string;
     value: T;
     onChange: (value: T) => void;
